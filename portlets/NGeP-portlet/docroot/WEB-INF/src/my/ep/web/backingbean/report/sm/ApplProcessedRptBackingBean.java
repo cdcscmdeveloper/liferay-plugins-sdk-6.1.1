@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.constants.CommonConstants;
@@ -32,11 +33,10 @@ public class ApplProcessedRptBackingBean extends SmReportBackingBean<ApplProcess
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 
-		if(getManagedBean().getSelectedOrgProfile() != null){
-			if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
-				params.put(SmReportConst.PARAM_COMPANY_NAME, 
-						getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
-			}
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_SUPPLIER_ID,
+					String.valueOf(getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
 		}
 		
 		if(getManagedBean().getSupplierType()  != null){
@@ -62,6 +62,11 @@ public class ApplProcessedRptBackingBean extends SmReportBackingBean<ApplProcess
 	}
 	
 	public void resetSearch(){
+		//#38227 - START
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		getManagedBean().setApplStatus(StringUtils.EMPTY);
+		//#38227 - END
 		setDefaultDateFromAndDateTo();
 		getManagedBean().setSupplierType(null);
 		getManagedBean().setSelectedOrgProfile(null);

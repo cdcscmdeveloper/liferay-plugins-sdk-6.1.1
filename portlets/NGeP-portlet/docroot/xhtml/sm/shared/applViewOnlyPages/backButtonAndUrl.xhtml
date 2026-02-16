@@ -28,7 +28,8 @@
 							process="@this" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
-				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'}">
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'
+				and viewSmApplBackingBean.managedBean.smAppl.applType ne 'C'}">   <!-- #38273 -->
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
 							action="#{viewSmApplBackingBean.reminderToResubmit()}"
 							process="@this" update=":form"

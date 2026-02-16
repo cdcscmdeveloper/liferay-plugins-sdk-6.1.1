@@ -28,7 +28,9 @@
               <p:column 
 						headerText="#{lbl['lbl.sc.qt.spec.sample.question.requird.sample']}"
 						style="width:20%; white-space:normal;"><!-- #11104 Reendorse -->
-						<h:outputText value="#{lbl[samplerequired ? 'lbl.txt.yes' : 'lbl.txt.no']}"></h:outputText>
+						<div style="text-align: center;">
+						<h:outputText  value="#{lbl[samplerequired ? 'lbl.txt.yes' : 'lbl.txt.no']}"></h:outputText>
+						</div>
 			</p:column><!-- #11104 Reendorse -->         
             <p:column style="width:15%;text-align: center;">
 				<f:facet name="header">

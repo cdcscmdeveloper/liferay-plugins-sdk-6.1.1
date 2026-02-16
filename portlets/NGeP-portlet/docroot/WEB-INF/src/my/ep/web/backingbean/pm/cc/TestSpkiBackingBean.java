@@ -294,6 +294,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 //		}
 		@Override
 		public List<String> getChallengeQuestion() {
+			log.info("------>GET CHALL QUES TG IDNO:"+idNo+" EPNO:"+epNo);
 			return SPKIHelper.getInstance().getChallengeQuestion(
 					SupplierManagementConst.CERT_TRUSTGATE, idNo, epNo, null);
 		}
@@ -314,6 +315,8 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		public SpkiVO getSignedData(String identificationNo, String epNo,
 				String pin, Map<Object, Object> challenges,
 				String dataForSigning) {
+			log.info("--->GET SIGNED DATA  FOR TG IDNO:" + identificationNo + " EPNO:"
+					+ epNo + " DATA SIGNING:" + dataForSigning);
 			return SPKIHelper.getInstance().getSignedData(
 					SupplierManagementConst.CERT_TRUSTGATE, identificationNo,
 					epNo, pin, challenges, dataForSigning);
@@ -328,8 +331,9 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		
 		@Override
 		public List<String> getChallengeQuestion() {
+			log.info("------>GET CHALL QUES DG IDNO:"+idNo+" EPNO:"+epNo);
 			return SPKIHelper.getInstance().getChallengeQuestion(
-					SupplierManagementConst.CERT_DIGICERT, null, epNo, null);
+					SupplierManagementConst.CERT_DIGICERT, idNo, epNo, null);
 		}
 		
 //		@Override
@@ -361,6 +365,8 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		public SpkiVO getSignedData(String identificationNo, String epNo,
 				String pin, Map<Object, Object> challenges,
 				String dataForSigning) {
+			log.info("--->GET SIGNED DATA  FOR DG IDNO:" + identificationNo + " EPNO:"
+					+ epNo + " DATA SIGNING:" + dataForSigning);
 			return SPKIHelper.getInstance().getSignedData(
 					SupplierManagementConst.CERT_DIGICERT, identificationNo,
 					epNo, pin, challenges, dataForSigning);

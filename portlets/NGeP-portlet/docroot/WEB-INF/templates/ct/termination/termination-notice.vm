@@ -243,43 +243,39 @@
     <div style="font-weight: normal; text-align: left;">
         <strong>$ministryName</strong>
     </div>
-    <div class="Section2">
-        <!-- Header and Footer Table -->
-        <div class="pageBreak2">
-            <table id="tblforheader" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td>
-                        <div style="mso-element:header" id="fh1">
-                           <table>
-                                <tbody>
-                                    <tr>
-                                        <td><p><strong>Notis Kemungkiran Bagi </strong></p></td>
-                                        <td><p><strong>:</strong></p></td>
-                                    </tr>
-                                    <tr>
-                                        <td><p><strong>Kontrak </strong></p></td>
-                                        <td><p>: $contractTitle</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td><p><strong>No. Kontrak </strong></p></td>
-                                        <td><p>: $contractNo</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td><p><strong>Tempoh Kontrak </strong></p></td>
-                                        <td><p>: $effDate sehingga $expDate</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td><p><strong>Rujukan </strong></p></td>
-                                        <td><p>: $fileRefNo</p></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-							<hr/>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+	<div class="Section2">
+    <div class="pageBreak2">
+        <table id="tblforheader" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <div style="mso-element:header" id="fh1">
+                        <table style="width: 100%; border-bottom: 1px solid black;">
+                            <tr>
+                                <td><p><strong>Notis Kemungkiran Bagi </strong></p></td>
+                                <td><p><strong>:</strong></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><strong>Kontrak </strong></p></td>
+                                <td><p>: $contractTitle</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><strong>No. Kontrak </strong></p></td>
+                                <td><p>: $contractNo</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><strong>Tempoh Kontrak </strong></p></td>
+                                <td><p>: $effDate sehingga $expDate</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><strong>Rujukan </strong></p></td>
+                                <td><p>: $fileRefNo</p></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
+	</div>
 </body>
 </html>

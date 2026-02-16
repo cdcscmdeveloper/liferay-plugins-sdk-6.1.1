@@ -23,13 +23,22 @@
 		    padding-bottom: 5px;
 		}	
 		
-		a.blue_font_wrap {
-			font-family: Tahoma, Arial;
-			font-size: 11px;
-			font-weight: bold;
-			color: #3c8bc2;
-			text-decoration: none;
-			overflow-wrap: anywhere;
+		a.blue_font_custom {
+			font-family: Tahoma, Arial !important;
+			font-size: 11px !important;
+			font-weight: normal !important;
+			color: #3c8bc2 !important;
+			text-decoration: underline !important;
+			overflow-wrap: anywhere !important;
+		}
+
+		a:hover.blue_font_custom {
+			font-family: Tahoma, Arial !important;
+			font-size: 11px !important;
+			font-weight: normal !important;
+			color: #95caee !important;
+			text-decoration: underline !important;
+			overflow-wrap: anywhere !important;
 		}
 		
 		label.approval {
@@ -90,7 +99,7 @@
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableContractAmount}">
-				   			<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+				   			<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
@@ -118,7 +127,7 @@
 						     		or ctBackingBean.managedBean.disableGstAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.gstAmount}" label="#{lbl['lbl.ct.gst.amt']}" >
-			   				<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+			   				<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:130px;"
@@ -149,7 +158,7 @@
 						     or ctBackingBean.managedBean.disableStaxAmount}"	
 						     rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"		   				 
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.staxAmount}" label="#{lbl['lbl.ct.stax.amt']}" >
-			   				<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+			   				<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:130px;"
@@ -276,10 +285,9 @@
 		      <p:dataGrid id="ApprovalLetterPegawaiPengawal" value="#{ctBackingBean.getApprovalLetter()}"
 					var="attachFile" rowIndexVar="attachFileIndex" columns="1" styleClass="ui-datagrid-content-empty"
 					emptyMessage ="#{lbl['lbl.txt.na']}">
-					
 						<h:commandLink value="#{attachFile.fileName}"
-									styleClass="blue_font_wrap"  action="#{ctBackingBean.downloadScAttachmentFile(attachFile)}" />
-				
+							styleClass="blue_font_custom"  
+							action="#{ctBackingBean.downloadScAttachmentFile(attachFile)}" />
 				</p:dataGrid>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approval.letter.of.pegawai']}" style="padding-top:2px;" />
 				</h:panelGrid> 	

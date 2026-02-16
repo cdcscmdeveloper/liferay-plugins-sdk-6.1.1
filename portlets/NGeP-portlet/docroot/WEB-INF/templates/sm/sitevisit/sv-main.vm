@@ -3,7 +3,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.checklist')</font>
+	            <font style='color:#ffffff;font-weight: bold;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.checklist')</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
@@ -11,7 +11,7 @@
 	
 	<table style="border: 1px solid black;">
 		<tr align="center" style="background-color: #99ccff;">
-			<td>File Name</td>
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.file')</td>
 		</tr>
 		<tr align="center">
 			<td>K/KEW/PK/PS/1100/000000/165/47-(<span style="padding-left:150px" />)</td>
@@ -136,7 +136,7 @@
 	<br /><br />
 	<table width="100%"  class="descTable">
 		<tr  style="background-color:#99ccff;">
-			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.num')</th>
+			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.num').</th>
 			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.desc')</th>
 			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date.if')</th>
 			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.remarks')</th>

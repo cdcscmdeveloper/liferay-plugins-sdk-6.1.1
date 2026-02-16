@@ -25,62 +25,11 @@
 						itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
 						itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
+					<p:ajax event="change" update="@form" />
 				</p:selectOneMenu>
 				<p:message id="zoneIdMsg" for="zoneId" display="icon" />
 			</td>
-			<td class="tdTitle"><p:outputLabel
-					value="#{lbl['lbl.rpt.supplierType']}" /> <p:outputLabel value="*"
-					styleClass="mandatory" /></td>
-			<td class="tdContent"><ac:smReportSupplierType
-					bBean="#{applProcessedRptBB}"
-					showAll="true" selectOne="false" />
-			</td>
-		</tr>
-		
-		<tr>
-			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.applicationStatus']}" /></td>
-			<td class="tdContent">
-			<!-- 32521 - START -->
-				<ac:smReportApplStatus bBean="#{applProcessedRptBB}" statusApplication="true"/>
-			</td>
-			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" />
-			</td>
-			<td class="tdContent">
-				<p:selectOneMenu value="#{applProcessedRptBB.managedBean.applType}" style="width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.newAccRegMOF']}" itemValue="N"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.renewAccMOF']}" itemValue="R"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.updateAccMOF']}" itemValue="U"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.addCatCode']}" itemValue="A"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiStatus']}" itemValue="B"></f:selectItem>
-					<!-- 32521 - END -->
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
-				
-			</td>
-		</tr>
-		
-		<tr>
-			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.processingofficername']}"  />
-			</td>
-			<td class="tdContent">
-						<ac:lov id="lovUser" lovId="PM_USER_ID" style="width:289px;" size="40"
-		            	readonly="true" 
-						headerText="#{lbl['lbl.pm.ta.user.lov']}"
-						value="#{applProcessedRptBB.managedBean.selectedUser.userName}" 
-						saveObject="applProcessedRptBB.managedBean.selectedUser" />
-			</td>
-			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.applicationsubmitpodate']}" />
-			</td>
-			<td>
-				<ac:smReportDateFromTo bBean="#{applProcessedRptBB}" limitYearRange="true" dateRange="12" />
-			</td>
-		</tr>
-		<tr>
+			
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
 			</td>
@@ -89,7 +38,66 @@
 					lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT" size="40"
 					headerText="#{lbl['lbl.rpt.cmpName']}" 
 					value="#{applProcessedRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					saveObject="applProcessedRptBB.managedBean.selectedOrgProfile" />
+					saveObject="applProcessedRptBB.managedBean.selectedOrgProfile" 
+					conditionField="#{applProcessedRptBB.getConditionFieldsCompany()}"/>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportSupplierType bBean="#{applProcessedRptBB}"
+					showAll="true" selectOne="false" />
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" />
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{applProcessedRptBB.managedBean.applType}" style="width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.all']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.newAccRegMOF']}" itemValue="N" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.renewAccMOF']}" itemValue="R" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.updateAccMOF']}" itemValue="U" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.addCatCode']}" itemValue="A" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.bumiStatus']}" itemValue="B" />
+					<!-- 32521 - END -->
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.applicationsubmitpodate']}" />
+			</td>
+			<td>
+				<ac:smReportDateFromTo bBean="#{applProcessedRptBB}" limitYearRange="true" dateRange="12" />
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.applicationStatus']}" />
+			</td>
+			<td class="tdContent">
+			<!-- 32521 - START -->
+				<ac:smReportApplStatus bBean="#{applProcessedRptBB}" statusApplication="true"/>
+			</td>
+		</tr>
+
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.processingofficername']}"  />
+			</td>
+			<td class="tdContent">
+						<ac:lov id="lovUser" lovId="PM_USER_ID_RPT" style="width:289px;" size="40"
+		            	readonly="true" 
+						headerText="#{lbl['lbl.pm.ta.user.lov']}"
+						value="#{applProcessedRptBB.managedBean.selectedUser.userName}" 
+						saveObject="applProcessedRptBB.managedBean.selectedUser" 
+						conditionField="#{applProcessedRptBB.getConditionFieldsPO(false)}"/>
 			</td>
 		</tr>
 	</table>

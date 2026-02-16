@@ -30,13 +30,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set; //#35238
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -61,6 +61,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;//#31341
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849  #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -85,6 +86,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;//#31341
+import my.ep.dto.cm.codification.CodificationResDTO;//#31341
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
@@ -96,11 +99,11 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -108,6 +111,12 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.cm.catalog.CmBrand;//#31341
+import my.ep.persistence.entity.cm.catalog.CmColor;//#31341
+import my.ep.persistence.entity.cm.catalog.CmItem;//#31341
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;//#31341
+import my.ep.persistence.entity.cm.catalog.CmType;//#31341
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;//#31341
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -124,12 +133,14 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRequestItem;//#31341
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmPersonBlacklist;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -149,8 +160,11 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;//#31341
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.SSTConstant; //#27868
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
@@ -173,12 +187,13 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -201,6 +216,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(BaseBackingBean.class);
+	private static final int MAX_LENGTH = 53; //#29418
 
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
@@ -628,8 +644,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			items = new SelectItem[parameterDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
+			
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				
+				SelectItem item = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				 
+				items[i++] = item;
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -638,6 +658,75 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+
+	// new #25725/25726 - Start
+	
+	
+	/**
+	 * Check for italic if language code = "ms" and parameter code in the list
+	 * @param parameterId
+	 * @return
+	 */
+	public boolean checkItalicCodeNameForMy(Long parameterId) {
+
+		PmParameter newPmParameter = new PmParameter();
+
+		if (parameterId != null) {
+			newPmParameter = ParameterHelper.getInstance().getPmParameterById(parameterId);
+		}
+
+		if (newPmParameter == null) {
+			return false;
+		}
+
+		String paramType = newPmParameter.getParameterType();
+		String paramCode = newPmParameter.getParameterCode();
+
+		Map<String, List<String>> listParameter = new HashMap<>();
+
+		// Store multiple FULFILMENT_TYPE values in a list
+		List<String> fulfilmentTypes = new ArrayList<>();
+		fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		listParameter.put(ParameterTypeConst.FULFILMENT_TYPE, fulfilmentTypes);
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParameter.containsKey(paramType)) {
+			List<String> validTypes = listParameter.get(paramType);
+
+			if (validTypes.contains(paramCode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	
+	/**
+	 * Get list code names is italic
+	 * @param type
+	 * @return
+	 */
+	public List<String> getItalicCodeNames(String type) {
+		List<String> codeNames = new ArrayList<>();
+
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(type,
+				null);
+		for (PmParameterDesc p : parameterDescs) {
+			Long id = p.getPmParameter().getParameterId();
+
+			if (checkItalicCodeNameForMy(id)) {
+				codeNames.add(p.getCodeName());
+			}
+		}
+		return codeNames;
+	}
+	
+
+	// new #25725/25726 - End
 	
 	/** #21695 FARID START*/	
 	/**
@@ -699,6 +788,173 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return items;
 	}
+	
+	// 27868 - start
+	/**
+	 * Combines current WIP reason into dropdown items if not already present.
+	 * Preserves existing order and keeps "Select" as the first entry.
+	 */
+	public SelectItem[] getReasonCodeDropdownValuesCombineWIPCode(Long currentReasonId, SelectItem[] items) {
+		try {
+			if (items == null || items.length == 0) {
+				return items;
+			}
+
+			PmReasonDesc reasonDesc = getReasonDescByReasonId(currentReasonId);
+			if (reasonDesc == null || reasonDesc.getPmReason() == null) {
+				return items;
+			}
+
+			String currentReasonCode = reasonDesc.getPmReason().getReasonCode();
+
+			// check if WIP reason already exists
+			for (SelectItem item : items) {
+				if (item != null && currentReasonCode.equals(item.getValue())) {
+					return items;
+				}
+			}
+
+			// create new array (+1)
+			SelectItem[] combinedItems = new SelectItem[items.length + 1];
+
+			// keep "Select" at index 0
+			combinedItems[0] = items[0];
+
+			// insert WIP reason as first selectable item
+			combinedItems[1] = new SelectItem(currentReasonCode, reasonDesc.getReasonDesc());
+
+			// copy remaining items
+			System.arraycopy(items, 1, combinedItems, 2, items.length - 1);
+
+			return combinedItems;
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+
+	/**
+	 * Retrieves dropdown values for Reason codes based on profile ID and
+	 * category code. If no reasons are found for the given profile ID, it will
+	 * load reasons without profile filtering.
+	 * 
+	 * @param profileId
+	 *            the profile ID used to filter reasons
+	 * @param categoryCode
+	 *            the category code of the reason
+	 * @return an array of SelectItem objects for use in a dropdown list
+	 */
+	public SelectItem[] getReasonCodeDropdownValues(Long profileId, String categoryCode) {
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(profileId, categoryCode);
+
+			List<PmReasonDesc> distinctList = new ArrayList<>();
+			Set<Long> addedReasonIds = new HashSet<>();
+
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				Long reasonId = reasonDesc.getPmReason().getReasonId();
+				if (!addedReasonIds.contains(reasonId)) {
+					addedReasonIds.add(reasonId);
+					distinctList.add(reasonDesc);
+				}
+			}
+
+			if (distinctList.isEmpty()) {
+				List<PmReasonDesc> reasonDescsWithoutProfileId = ReasonHelper.getInstance().getReasonDescList(
+						categoryCode);
+
+				for (PmReasonDesc reasonDesc : reasonDescsWithoutProfileId) {
+					Long reasonId = reasonDesc.getPmReason().getReasonId();
+					if (!addedReasonIds.contains(reasonId)) {
+						addedReasonIds.add(reasonId);
+						distinctList.add(reasonDesc);
+					}
+				}
+			}
+
+			SelectItem[] items = new SelectItem[distinctList.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
+			int i = 1;
+			for (PmReasonDesc reasonDesc : distinctList) {
+				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
+			}
+
+			return items;
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES,
+					getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return new SelectItem[0];
+	}
+	
+	/**
+	 * Retrieves drop down values from new and old parameter types.
+	 * Includes the old parameter only if its code matches the given
+	 * oldParameterCode.
+	 * 
+	 * @param newParameterType
+	 *            the parameter type for new values
+	 * @param oldParameterType
+	 *            the parameter type for old values
+	 * @param oldParameterCode
+	 *            the specific old parameter code to include
+	 * @return an array of SelectItem objects representing the combined radio
+	 *         button options
+	 */
+	public SelectItem[] getDropDownValuesCombineWIPParameter(String newParameterType, String oldParameterType,
+			String oldParameterCode) {
+
+		List<SelectItem> items = new ArrayList<>();
+
+		try {
+			List<PmParameterDesc> newParameterDescs = ParameterHelper.getInstance().getParameterDescList(
+					newParameterType);
+
+			for (PmParameterDesc desc : newParameterDescs) {
+				if (CommonConstants.PK7.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(CommonConstants.PK7_NEW, desc.getCodeName()));
+				} else {
+					items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+				}
+			}
+
+			List<PmParameterDesc> oldParameterDescs = ParameterHelper.getInstance().getParameterDescList(
+					oldParameterType);
+
+			for (PmParameterDesc desc : oldParameterDescs) {
+				if (oldParameterCode != null
+						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(CommonConstants.PK7_OLD, desc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance()
+					.logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, SSTConstant.EMPTY_STRING,
+							SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM,
+							getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[0]);
+	}	
+	//27868 - end
 
 	/**
 	 * Get reason by reason category code and reason code
@@ -1669,6 +1925,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return filename;
 	}
+	
+	//#29418 start
+	/**
+	 * Gets the medium file name.
+	 *
+	 * @param filename the filename
+	 * @return the short file name
+	 */
+	public String getMediumFileName(String filename) {
+        if (StringUtils.isEmpty(filename) || filename.length() <= MAX_LENGTH) {
+            return filename;
+        }
+
+        StringBuilder truncatedFilename = new StringBuilder(filename.substring(0, MAX_LENGTH));
+        truncatedFilename.append("...");
+        
+        return truncatedFilename.toString();
+    }
+	//#29418 end
 
 	/**
 	 * Retrieve jabatan by org profile id.
@@ -2349,6 +2624,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
 			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
 			// 25037 - end
+			// #29007 Start Vinod
+			this.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo());
+			// #29007 End Vinod
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -3935,7 +4213,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				if(reasonCategory.equals(ParameterConst.JUSTIFICATION)){// filter for Justification category
 					for (PmParameterDesc parameterDesc: parameterDescs) {
 						if (!parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
-				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())) {
+				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())
+				        				&& !parameterDesc.getPmParameter().getParameterCode().equals(ParameterConst.SPECIAL_ITEM_PK_7)) { //#28962
 							newParameterDescs.add(parameterDesc);
 				        }
 				    }
@@ -4235,28 +4514,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//START #29956
+	/**
+	 * This method manages the popup and role downgrades based on the application and personnel details.
+	 * It clears roles, adjusts flags, and triggers UI changes as needed. It also includes logging for TDD validation.
+	 *
+	 * @param smAppl The application object
+	 * @param ssmResDTO The personnel and role data
+	 * @return boolean indicating whether the downgrade role is set
+	 */
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl, SsmResDTO ssmResDTO) {
 	    LoggerUtils logger = LoggerUtils.getInstance();
-	    logger.logCodeCoverage("Test Case: Starting method execution");
-
+	    // Test Case 1: Clear roles and flags
+	    logger.logCodeCoverage("Test Case 1: Start clearing roles and flags");
 	    getManagedBean().getPersonnelsRole().clear();
 	    getManagedBean().setDowngradeRole(false);
 	    getManagedBean().setDisAllowOwnerEdit(false);
-
+	    logger.logCodeCoverage("Test Case 1: Roles and flags cleared");
+	    
 	    SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 	    Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
-	    logger.logCodeCoverage("Test Case 3: isMofAccEffDatePassed6MonthCurrDate = " + isMofAccEffDatePassed6MonthCurrDate);
 
 	    String applType = smAppl.getApplType();
 	    Boolean disallowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
 	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
-	    logger.logCodeCoverage("Test Case 3: disallowEditApplType = " + disallowEditApplType);
-
+	    
 	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
-	    reqDto.setApplId(smAppl.getApplId());
+	    reqDto.setApplId(getManagedBean().isResubmitAppl() ? smAppl.getApplId() : supplier.getSmAppl().getApplId());
 	    PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-
+	    // Test Case 2: Ensure that personnel list is populated based on conditions
+	    logger.logCodeCoverage("Test Case 2: Start checking and adding personnel to roles");
+	    
 	    if (resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()) {
 	        for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 	            SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
@@ -4266,35 +4554,42 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	            Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 
 	            Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull && (!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
-	            logger.logCodeCoverage("Test Case 1: shouldAddPersonnel = " + shouldAddPersonnel);
-
+	            
 	            if (shouldAddPersonnel) {
 	                getManagedBean().getPersonnelsRole().add(personnel);
 	            }
-
+	            
 	            if (isPersonnelAdminRole && isMofAccEffDatePassed6MonthCurrDate && disallowEditApplType) {
 	                getManagedBean().setDisAllowOwnerEdit(true);
-	                logger.logCodeCoverage("Test Case 2: disallowOwnerEdit set to true");
 	                break;
 	            }
 	        }
 	    }
-
+	    
+	    // Log personnel role population completion
+	    logger.logCodeCoverage("Test Case 2: Personnel added to roles list");
+	    
+	    // Test Case 3: Check if disallow owner edit flag is set correctly
+	    logger.logCodeCoverage("Test Case 3: Check if disallow owner edit flag is set");
 	    if (getManagedBean().getPersonnelsRole() != null && !getManagedBean().getPersonnelsRole().isEmpty()) {
+	    	// Test Case 4: Set downgrade role flag if personnel is added
+	    	logger.logCodeCoverage("Test Case 4: Setting downgrade role flag");
 	        getManagedBean().setDowngradeRole(true);
-	        logger.logCodeCoverage("Test Case 1: downgradeRole set to true");
 
 	        String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
 	        getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
 	        getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[]{epRole}));
 	        getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[]{epRole}));
 	        getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
-
+	        // Log the downgrade role and popup actions
+	        logger.logCodeCoverage("Test Case 3: Downgrade role set, displaying term and condition popup");
+	        
 	        RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	        RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+	        logger.logCodeCoverage("Test Case 4: Downgrade role flag set and UI updated");
 	    }
-
-	    logger.logCodeCoverage("Test Case: Method execution completed");
+	 // Log downgrade role setting completion
+	    logger.logCodeCoverage("Test Case 4: Method displayPopupDowngradeSSMOwner completed");
 	    return getManagedBean().isDowngradeRole();
 	}
 
@@ -4392,5 +4687,193 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #25000 - End
 	
+	@Deprecated
+	/**
+	 * Retrieves a list of personnel blacklisted under a specific supplier.
+	 *
+	 * @param supplierId
+	 * @param isActive
+	 * @return A list of {@code SmPersonBlacklist} objects representing blacklisted personnel associated with the supplier.
+	 */
+	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId, boolean isActive) {
+		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveSupplierHasPersonnelBlacklist(supplierId, isActive);
+		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
+		if (blacklistPersonnel.isEmpty()){
+			return blacklist;
+		}
+		for (SmPersonBlacklist per : blacklistPersonnel){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			
+			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
+					.retrieveAllPersonBlacklistByIdentificationNO(per.getIdentificationNo(), isActive);
+			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
+				blacklistOwner.setIcNo(per.getIdentificationNo());
+				blacklist.add(blacklistOwner);
+			}
+		}
+		return blacklist;
+	}
+	
+	/**
+	 * Retrieve all blacklist owners/directors
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	public static List<BlacklistOwnerDirectorVO> getPersonnelBlacklist(Long disciplinaryActionId){
+		List<BlacklistOwnerDirectorVO> blacklistVO = new ArrayList<>();
+		List<SmPersonBlacklist> pblList = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveAllBlacklist(disciplinaryActionId);
+		if(EntityHelper.isCollectionEmpty(pblList)){
+			return blacklistVO;
+		}
+		for(SmPersonBlacklist pbl : pblList){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			blacklistOwner.setIcNo(pbl.getIdentificationNo());
+			blacklistVO.add(blacklistOwner);
+		}
+		return blacklistVO;
+	}
+	
+	//26238 - START
+	/**
+	 * Retrieves the list of active disciplinary actions for the given supplier.
+	 * 
+	 * @param smSupplier The supplier for whom disciplinary actions are being retrieved.
+	 * @return A list of {@link DisciplinaryActionVO} representing the active disciplinary actions
+	 *         associated with the given supplier. If an error occurs, an {@link EpException} is thrown.
+	 * @throws EpException If there is an issue retrieving disciplinary actions.
+	 */
+	public static List<DisciplinaryActionVO> onDisplayActiveDisciplinaryAction(SmSupplier smSupplier) {
+		try {
+			// #30756 start
+			smSupplier.setFlagSupplier(true);
+			smSupplier.setFlagDASuppProfile(true);
+			// #30756 end
+
+			return ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+		} catch (Exception e) {
+			log.error("An error occurred while handling disciplinary actions for supplier: ", e);
+			throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
+		}
+	} 
+	//26238 - END
+	
+	//#35238 start
+	/**
+	 * Common utility method to check if user has any role from the given set.
+	 * 
+	 * @param roles Array of roles
+	 * @return true if user has any role in the given set.
+	 */
+	public boolean hasAnyRoleUser(Set<String> roles) {
+		FacesScopes facesScopes = new FacesScopes();
+	    if (roles == null || roles.isEmpty()) {
+	        return false;
+	    }
+	    for (String role : roles) {
+	        if (facesScopes.hasRoleUser(role)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	//#35238 end
+	
+	//Start - #31341
+	/**
+	 * Retrieves and displays UNSPSC-related details for the given SC request item.
+	 * <p>
+	 * This method looks up the corresponding {@link CmItem} using the item ID
+	 * from the provided {@link ScRequestItem} via the Codification service.
+	 * If an item is found, its extension details are populated for display.
+	 * </p>
+	 *
+	 * <p>
+	 * Any exception encountered during processing is caught and logged
+	 * using the SLA logging mechanism.
+	 * </p>
+	 *
+	 * @param scRequestItem
+	 *        the SC request item containing the CM item reference whose
+	 *        UNSPSC details need to be viewed
+	 */
+	public void viewItemUnspscDetails(ScRequestItem scRequestItem) {
+		try {
+			CmItem item = null;
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+			if (scRequestItem.getCmItem().getItemId() != null) {
+				cReqDTO.setItemId(scRequestItem.getCmItem().getItemId());
+			}
+			CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
+			if (cResDTO != null) {
+				item = cResDTO.getCmItem();
+				populateItemExtensionDtls(item);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("CT", "viewItemUnspscDetails", "viewItemUnspscDetails", null,
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	
+	/**
+	 * Populates item extension and codification details based on the given {@link CmItem}.
+	 * <p>
+	 * This method extracts UNSPSC, type, brand, measurement, and color information
+	 * from the provided {@code CmItem} and constructs the corresponding segment,
+	 * commodity, and family details. These details are then set into the
+	 * {@link CodificationBackingBean} for display or further processing.
+	 * </p>
+	 *
+	 * <p>
+	 * If the provided {@code CmItem} is {@code null}, the method logs the condition
+	 * and exits without performing any processing.
+	 * </p>
+	 *
+	 * <p>
+	 * The extension section visibility is controlled based on whether the item name
+	 * is present or empty.
+	 * </p>
+	 *
+	 * @param cmitem
+	 *        the catalog item containing UNSPSC classification and
+	 *        extension-related attributes such as type, brand, measurement,
+	 *        and color
+	 */
+	public void populateItemExtensionDtls(CmItem cmitem) {
+		if (cmitem == null) {
+			log.info("populateItemExtensionDtls called with null CmItem");
+			return;
+		}
+		CommonUtils common = new CommonUtils();
+		CodificationBackingBean codificationBB = new CodificationBackingBean();
+		// Extract objects once
+		CmType type = cmitem.getCmType();
+		CmBrand brand = cmitem.getCmBrand();
+		CmMeasurement measurement = cmitem.getCmMeasurement();
+		CmColor color = cmitem.getCmColor();
+		CmUnspsc unspsc = cmitem.getCmUnspsc();
+		// segment title
+		String itemName = common.removeItemNameNA(type.getTypeName()) + " "
+				+ common.removeItemNameNA(brand.getBrandName()) + " "
+				+ common.removeItemNameNA(measurement.getMeasurementName()) + " "
+				+ common.removeItemNameNA(color.getColorName());
+		// segment code
+		String extCode = type.getTypeCode() + brand.getBrandCode() + measurement.getMeasurementCode()
+				+ color.getColorCode();
+		// Family title combines UNSPSC Title + segment details
+		String completeItemName = unspsc.getUnspscTitle() + " " + itemName;
+		codificationBB.getManagedBean().setFamilyCode(cmitem.getExtensionCode());
+		codificationBB.getManagedBean().setCommodityCode(unspsc.getUnspscCode());
+		codificationBB.getManagedBean().setCommodityTitle(unspsc.getUnspscTitle());
+		codificationBB.getManagedBean().setSegmentTitle(itemName);
+		codificationBB.getManagedBean().setSegmentCode(extCode);
+		codificationBB.getManagedBean().setFamilyTitle(completeItemName);		
+		codificationBB.getManagedBean().setHideExtension(itemName.trim().isEmpty());
+	}
+	//End - #31341
 }
 

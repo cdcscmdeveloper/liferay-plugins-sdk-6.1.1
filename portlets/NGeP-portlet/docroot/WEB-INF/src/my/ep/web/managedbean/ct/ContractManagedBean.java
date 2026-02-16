@@ -145,15 +145,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencySelected;
 	
 	private boolean contractExpired;
-	//LOG : 13847, by Fahmi 22032019 start
-	private Date waiverStartDate;
-	private Date waiverEndDate;
-	private String referenceNo;
-	private CtAttachment ctAttachment;
-	private List<ScLoa> bondDetail;
 	// #24333 - Start
+	private List<ScLoa> bondDetail;
 	private boolean extendContract = false;
 	private boolean disableOriginalBond = false;
+	private BigDecimal originalOverallAmount;
 	// #24333 - End
 	
 	// Start - 28479	
@@ -215,6 +211,33 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
 	//End Fix - #33674
+	
+	//24333 - Start
+	private BigDecimal bondPercentage;
+	private BigDecimal totalBondAmt;
+	//24333 - End
+	
+	//32418 - Start
+	private int contractDaysPeriod;
+	//32418 - End
+	
+	//#24336 - Start
+	private boolean disableReductionContractAmount;
+	private boolean disableAdditionContractAmount;
+	private boolean disableNewCtAmountEffDate;
+	
+	private boolean contractExtendChecklist;
+	private boolean itemPriceChangeChecklist;
+	private boolean quantityChangeChecklist;
+	private boolean valueChangeChecklist;
+	private boolean clauseChangeChecklist;
+	private boolean valueChangeByGstChecklist;
+	private boolean otherChangeChecklist;
+	private boolean initPage = false;
+	//#24336 - End
+	
+	private boolean isDefaultMinistryExist = false; //Fix - #30045
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1279,40 +1302,6 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.ctAgreementList = ctAgreementList;
 	}
 	
-	//13847 start
-	public Date getWaiverStartDate() {
-		return waiverStartDate;
-	}
-
-	public void setWaiverStartDate(Date waiverStartDate) {
-		this.waiverStartDate = waiverStartDate;
-	}
-
-	public Date getWaiverEndDate() {
-		return waiverEndDate;
-	}
-
-	public void setWaiverEndDate(Date waiverEndDate) {
-		this.waiverEndDate = waiverEndDate;
-	}
-
-	public String getReferenceNo() {
-		return referenceNo;
-	}
-
-	public void setReferenceNo(String referenceNo) {
-		this.referenceNo = referenceNo;
-	}
-
-	public CtAttachment getCtAttachment() {
-		return ctAttachment;
-	}
-
-	public void setCtAttachment(CtAttachment ctAttachment) {
-		this.ctAttachment = ctAttachment;
-	}
-	//13847 end
-	
 	public CtContractItem getServiceselectedItem() {
 		return serviceselectedItem;
 	}
@@ -1703,4 +1692,141 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.inPage = inPage;
 	}
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
+	//#24333 - Start
+	public BigDecimal getOriginalOverallAmount() {
+		return originalOverallAmount;
+	}
+
+	public void setOriginalOverallAmount(BigDecimal originalOverallAmount) {
+		this.originalOverallAmount = originalOverallAmount;
+	}
+	
+	public BigDecimal getBondPercentage() {
+		return bondPercentage;
+	}
+
+	public void setBondPercentage(BigDecimal bondPercentage) {
+		this.bondPercentage = bondPercentage;
+	}
+	
+	public BigDecimal getTotalBondAmt() {
+		return totalBondAmt;
+	}
+
+	public void setTotalBondAmt(BigDecimal totalBondAmt) {
+		this.totalBondAmt = totalBondAmt;
+	}
+	//#24333 - End
+	
+	//32418 - Start
+	public int getContractDaysPeriod() {
+		return contractDaysPeriod;
+	}
+
+	public void setContractDaysPeriod(int contractDaysPeriod) {
+		this.contractDaysPeriod = contractDaysPeriod;
+	}
+	//32418 - End
+
+	//#24336 - Start
+	public boolean isDisableReductionContractAmount() {
+		return disableReductionContractAmount;
+	}
+
+	public void setDisableReductionContractAmount(
+			boolean disableReductionContractAmount) {
+		this.disableReductionContractAmount = disableReductionContractAmount;
+	}
+
+	public boolean isDisableAdditionContractAmount() {
+		return disableAdditionContractAmount;
+	}
+
+	public void setDisableAdditionContractAmount(
+			boolean disableAdditionContractAmount) {
+		this.disableAdditionContractAmount = disableAdditionContractAmount;
+	}
+
+	public boolean isDisableNewCtAmountEffDate() {
+		return disableNewCtAmountEffDate;
+	}
+
+	public void setDisableNewCtAmountEffDate(boolean disableNewCtAmountEffDate) {
+		this.disableNewCtAmountEffDate = disableNewCtAmountEffDate;
+	}
+
+	public boolean isContractExtendChecklist() {
+		return contractExtendChecklist;
+	}
+
+	public void setContractExtendChecklist(boolean contractExtendChecklist) {
+		this.contractExtendChecklist = contractExtendChecklist;
+	}
+
+	public boolean isItemPriceChangeChecklist() {
+		return itemPriceChangeChecklist;
+	}
+
+	public void setItemPriceChangeChecklist(boolean itemPriceChangeChecklist) {
+		this.itemPriceChangeChecklist = itemPriceChangeChecklist;
+	}
+
+	public boolean isQuantityChangeChecklist() {
+		return quantityChangeChecklist;
+	}
+
+	public void setQuantityChangeChecklist(boolean quantityChangeChecklist) {
+		this.quantityChangeChecklist = quantityChangeChecklist;
+	}
+
+	public boolean isValueChangeChecklist() {
+		return valueChangeChecklist;
+	}
+
+	public void setValueChangeChecklist(boolean valueChangeChecklist) {
+		this.valueChangeChecklist = valueChangeChecklist;
+	}
+
+	public boolean isClauseChangeChecklist() {
+		return clauseChangeChecklist;
+	}
+
+	public void setClauseChangeChecklist(boolean clauseChangeChecklist) {
+		this.clauseChangeChecklist = clauseChangeChecklist;
+	}
+
+	public boolean isValueChangeByGstChecklist() {
+		return valueChangeByGstChecklist;
+	}
+
+	public void setValueChangeByGstChecklist(boolean valueChangeByGstChecklist) {
+		this.valueChangeByGstChecklist = valueChangeByGstChecklist;
+	}
+
+	public boolean isOtherChangeChecklist() {
+		return otherChangeChecklist;
+	}
+
+	public void setOtherChangeChecklist(boolean otherChangeChecklist) {
+		this.otherChangeChecklist = otherChangeChecklist;
+	}
+
+	public boolean isInitPage() {
+		return initPage;
+	}
+
+	public void setInitPage(boolean initPage) {
+		this.initPage = initPage;
+	}
+	//#24336 - End
+	
+	//Start - #30045
+	public boolean isDefaultMinistryExist() {
+		return isDefaultMinistryExist;
+	}
+
+	public void setDefaultMinistryExist(boolean isDefaultMinistryExist) {
+		this.isDefaultMinistryExist = isDefaultMinistryExist;
+	}
+	//End - #30045
 }

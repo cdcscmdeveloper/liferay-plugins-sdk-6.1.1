@@ -33,7 +33,9 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.ICtPanelCategorySO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
+import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -200,7 +202,7 @@ public class CreateQtBackingBean extends
 			ScQt scQt = getManagedBean().getQt();
 			scQt.setCircularVer(circular);
 			scQt.setItemGroup(new CtPanelItemGroup());
-			
+
 			List<CtPanelItemGroup> panelGroupItems = null;
 			if (circular.getCircularVerId() != null) {
 				panelGroupItems = getPanelGroupItemsByCirculerVer(circular);
@@ -210,11 +212,12 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setCircularExpDate(circular.getEndDate());
 			this.getManagedBean().setCircularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
-			
-			if(null!=scQt.getItemGroup() && null!=scQt.getItemGroup().getPanelItemGroupId()){
-			deleteTemplateSpecs(getManagedBean().getQt());
+			this.getManagedBean().setCircularVer(circular);// #29661
+
+			if (null != scQt.getItemGroup() && null != scQt.getItemGroup().getPanelItemGroupId()) {
+				deleteTemplateSpecs(getManagedBean().getQt());
 			}
-			
+
 		}
 
 	}
@@ -1462,8 +1465,7 @@ public class CreateQtBackingBean extends
 								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			} else if ((ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN
-							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()))) {
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) ) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
@@ -1471,8 +1473,7 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setTotalProgressivePayment(0);
 
 			} else if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())))) {
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) )) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
@@ -1569,11 +1570,8 @@ public class CreateQtBackingBean extends
 	 */
 	private boolean updatefullfillmentDetails(PmParameter newFulfilmentType,PmParameter previousFulfilmentType ) {
 		
-		if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()) || 
-			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()))&&
-			(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()) || 
-			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()))){
-			
+		if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode())&&
+			ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()) ){
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
 
@@ -3025,10 +3023,31 @@ public class CreateQtBackingBean extends
 	 * 		the scQt
 	 */
 	public void setFileNo(ScQt scQt) {
-		scQt.getFileNo();
-		
+		//#29661 start
+		if (scQt != null){
+		String fileNo = scQt.getFileNo();
+		fileNo = trimFileNo(fileNo);
+		scQt.setFileNo(fileNo);		
+		}
+		//#29961 end
 	}
 	
+	/**
+	 * #29661
+	 * trim file no from quotation tender's general details
+	 * @param fileNo
+	 * @return
+	 */
+	private String trimFileNo(String fileNo) {
+		if (!(fileNo == null || fileNo.isEmpty())){
+			fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");//first character condition
+			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");//last character condition
+			fileNo = fileNo.trim().replaceAll(" +", " ");//one white space only condition
+		}
+		return fileNo;
+		
+	}
+
 	/**
 	 * QT Title value change listener
 	 * 
@@ -4158,18 +4177,18 @@ public class CreateQtBackingBean extends
 			String type = (String) event.getComponent().getAttributes().get("value");
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
 
-			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
-			for (ScQtCheckList checklist : scQtTechChecklist) {
-				boolean isDemoDoc = checklist.getDefinationType().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
-				if (isDemoDoc && ((type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired)
-						|| type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER))) {
+			//28748 - 38426 - start
+			if (this.isStatusLessThanOrEquals(status,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
+					QTStatusConst.QT_ORDERED_STATUSES)) {
+				//note937 Issue 2 - Start
+				boolean oneTier = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER) && demoRequired;
+				if (oneTier) {
 					RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-					break;
-
 				}
-			} 			
-			
+				//note937 Issue 2 - End
+			} 
+			//28748 - 38426 - end
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				this.getManagedBean().setDemoType(true);
 			} else {
@@ -4221,16 +4240,7 @@ public class CreateQtBackingBean extends
 				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 				scQtTechChecklist = specSo.retrieveCheckLists(reqDTO).getTechnicalCheckList();
 			}
-
-			if (null != scQtTechChecklist) {
-				for (ScQtCheckList checklist : scQtTechChecklist) {
-					if (checklist.getDefinationType().getParameterCode()
-							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-					}
-				}
-			}
-
+			RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");//note937 Issue 1
 		} else {
 			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
 		}
@@ -4282,6 +4292,7 @@ public class CreateQtBackingBean extends
 		this.getManagedBean().getQt().setEvaluationType(ParameterConst.EVALUATION_TYPES_TWO_TIER);
 		this.getManagedBean().setDemoType(true);
 		this.getManagedBean().getQt().setDemoRequired(true);
+		this.getManagedBean().setDemoEvalDisabled(false);//#28784 disable evaluation method during sc maintenance
 	}
 	
 	//#29521 - start

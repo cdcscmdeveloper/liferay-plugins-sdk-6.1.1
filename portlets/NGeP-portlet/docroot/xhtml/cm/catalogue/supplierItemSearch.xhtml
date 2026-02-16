@@ -393,6 +393,10 @@
 							style="white-space: normal">
 							<h:outputText value="#{supplierItem.companyName}" />
 							<!-- [#26282] - start -->
+							<!-- #38972 - Start -->
+							<br/>
+							<h:outputText value="#{supplierItem.mofNo}" />
+							<!-- #38972 - End -->
 							<p:spacer width="5" />
 							<p:commandLink id="daSupplierAlertCL"
 								action="#{catalogueBackingBean.onViewDisciplinaryAction(supplierItem.supplierId, supplierItem.mofNo)}"
@@ -624,7 +628,9 @@
 		<!-- [#26282] - start -->
 		<ac:disciplinaryActionHistory
 			voList="#{catalogueBackingBean.managedBean.disciplineVOs}"
-			dialogMessage="#{catalogueBackingBean.managedBean.disciplinaryMsg}" />
+			dialogMessage="#{catalogueBackingBean.managedBean.disciplinaryMsg}"
+			btnView="true"
+			dialogHeader=""/> <ui:remove>set null value for title at popup DA history</ui:remove>
 		<!-- [#26282] - end -->
 
 		<!-- #27654 start -->

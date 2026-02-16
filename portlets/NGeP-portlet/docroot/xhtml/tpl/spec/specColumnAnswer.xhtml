@@ -169,7 +169,10 @@
 		<!-- Enhancement #3657@Syazani 04/10/2023 - Start -->
 		<h:panelGroup
 			rendered="#{editable and (tplSpecAnswer.componentEmpty) and (!facesContext.validationFailed)}">
+			<ui:remove> #28777#29729, 35592 </ui:remove>
+			<ui:remove>#34363 added rendered for note #91</ui:remove>
 			<h:panelGroup
+				rendered="#{!isZonal or (isZonal and !templateSpecBean.checkListCompleted)}"
 				class="ui-message-error ui-widget ui-corner-all ui-message-icon-only ui-helper-clearfix">
 				<h:outputText class="ui-message-error-icon" />
 			</h:panelGroup>

@@ -1,0 +1,193 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<style>
+.command-link {
+	display: inline-block;
+	/* Ensures the command link is treated like an inline element */
+	color: #009ae5 !important; /* Ensures the link color is applied */
+	text-decoration: none; /* Removes the underline */
+}
+</style>
+
+	<p:panel id="requestNoteItemDetails" toggleable="true"
+		toggleSpeed="500">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.sc.item.details']}" />
+		</f:facet>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.bpk.approver.instruction']}" />
+		<ac:lovPopup />
+
+		<h:panelGrid width="100%" id="itemDtlId">
+			<table style="width: 100%">
+				<ui:repeat
+					value="#{requestNoteBackingBean.managedBean.commodityGroups}"
+					var="commodityGroup">
+
+
+					<table
+						style="border: 1px solid #e8e8e8; width: 100%; border-collapse: collapse;">
+						<tr bgcolor="#2c576e"
+							style="border: 1px solid #e8e8e8;">
+							<td
+								style="border: 1px solid #e8e8e8; text-align: center; width: 7%;">
+								<h:outputText value="#{lbl['lbl.sc.item.code.name']}"
+									style="color: white; font-size: 12px; font-weight: bold; font-family: Arial;" />
+							</td>
+							<td
+								style="border: 1px solid #e8e8e8; text-align: center; width: 7%;">
+								<h:outputText value="#{lbl['lbl.sc.current.item.total.amount']}"
+									style="color: white; font-size: 12px; font-weight: bold; font-family: Arial;" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.tooltip.current.item.total.amount']}" />
+							</td>
+							<td
+								style="border: 1px solid #e8e8e8; text-align: center; width: 7%;">
+								<h:outputText
+									value="#{lbl['lbl.sc.accumulative.amount.per.item']}"
+									style="color: white; font-size: 12px; font-weight: bold; font-family: Arial;" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.tooltip.accumulative.amount.per.item']}" />
+							</td>
+							<td
+								style="border: 1px solid #e8e8e8; text-align: center; width: 7%;">
+								<h:outputText value="* " styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.decision']}"
+									style="color: white; font-size: 12px; font-weight: bold; font-family: Arial;" />
+							</td>
+						</tr>
+						<tr>
+							<td><h:outputText value="#{empty commodityGroup.itemCodeName ? lbl['lbl.txt.na'] : commodityGroup.itemCodeName}" /></td>
+							<td><h:outputText
+									value="#{commodityGroup.currentItemTotalAmount}" /></td>
+							<td><h:outputText
+									value="#{commodityGroup.accumulativeAmountPerItemGroup}" /></td>
+							<td><p:selectOneMenu
+									value="#{commodityGroup.decision}" style="width:calc(100% - 15px);">
+									<f:selectItem itemLabel="#{lbl['lbl.sc.decision.please.select']}"
+										itemValue=""></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.sc.decision.approve']}" itemValue="1"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.sc.decision.reject']}" itemValue="0"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true" />
+								</p:selectOneMenu></td>
+						</tr>
+					</table>
+
+					<p:dataTable
+						id="requestListDataTable_#{commodityGroup.itemCodeName.replace(' ', '_').replace('-', '_').replace('.', '_').replace(',', '_').replace('(', '_').replace(')', '_')}"
+						rows="10" var="requestNoteDtl" style="white-space: normal;"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{commodityGroup.items}" rowKey="#{requestNoteDtl.requestNoteDtlId}"
+						rowIndexVar="rowIndex">
+
+						<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}" style="white-space: normal;">
+							<p:commandLink styleClass="command-link"
+								actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
+								update=":form:itemInfoPopup" partialSubmit="true" process="@this"
+								oncomplete="itemInfoPopup.show();">
+								<h:outputText
+									value="#{requestNoteBackingBean.handleSpecialCharacterForView(requestNoteDtl.requestItem.itemName)}"
+									escape="false" />
+							</p:commandLink>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}"
+							style="width:7%; white-space: normal;">
+							<ui:fragment
+								rendered="#{requestNoteDtl.procurementType.parameterCode eq 'N'}">
+								<h:outputText
+									value="#{lbl['lbl.sc.request.note.proc.type.normal']}" />
+							</ui:fragment>
+							<ui:fragment
+								rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A' or requestNoteDtl.procurementType.parameterCode eq 'P'}">
+								<p:commandLink
+									value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}"
+									styleClass="command-link" partialSubmit="true" process="@this"
+									update=":form:justPopup"
+									actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
+									oncomplete="justPopup.show();" />
+							</ui:fragment>
+
+							<ui:fragment
+								rendered="#{requestNoteDtl.procurementType.parameterCode eq 'G'}">
+								<h:outputText
+									value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}" />
+							</ui:fragment>
+						</p:column>
+
+						<p:column style="width:170px;">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
+							</f:facet>
+
+							<p:panelGrid styleClass="ppPanelGrid"
+								style="border:hidden;word-spacing: -1px;margin-top: 8px;">
+								<p:row>
+									<p:column styleClass="ppPanelGrid"
+										style="border:none !important;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;width: 88%;">										
+										<h:outputText value="#{requestNoteDtl.scRequestSupplierItem.supplierName}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"
+							style="width: 45px;white-space: normal;">
+							<h:panelGroup id="offerPriceId">
+								<h:panelGroup
+									rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypeStandard or
+						          requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypePromotion}">
+									<div style="text-align: right;">
+										<h:outputText
+											value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.itemPrice}"
+											disabled="true">
+											<f:convertNumber
+												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										</h:outputText>
+									</div>
+								</h:panelGroup>
+
+								<h:panelGroup
+									rendered="#{requestNoteBackingBean.checkPriceOffered(requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode)}">
+									<div style="text-align: center;">
+										<p:commandLink partialSubmit="true"
+											update=":form:pricingPopup" styleClass="command-link"
+											process="@this"
+											actionListener="#{requestNoteBackingBean.showPricing(requestNoteDtl)}"
+											oncomplete="pricingPopup.show();">
+											<p:graphicImage value="/css/images/design/ico-price.png"
+												style="vertical-align:middle"></p:graphicImage>
+										</p:commandLink>
+									</div>
+								</h:panelGroup>
+							</h:panelGroup>
+						</p:column>
+
+						<p:column style="width:35%; white-space: normal;">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.direct.purchase.title']}" />
+							</f:facet>
+							<p:inputTextarea id="procTypeCatTitle" rows="2" maxlength="100"
+								disabled="true"
+								value="#{requestNoteDtl.procurementTitle}" autoResize="false" style="width:calc(100% - 15px);">
+							</p:inputTextarea>
+						</p:column>
+					</p:dataTable>
+					<h:panelGroup
+						rendered="#{requestNoteBackingBean.managedBean.commodityGroups.indexOf(commodityGroup) lt (fn:length(requestNoteBackingBean.managedBean.commodityGroups) - 1)}">
+						<br />
+						<hr />
+						<br />
+					</h:panelGroup>
+
+				</ui:repeat>
+			</table>
+		</h:panelGrid>
+	</p:panel>
+</ui:composition>

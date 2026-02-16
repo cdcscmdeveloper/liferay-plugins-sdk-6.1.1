@@ -26,7 +26,7 @@
 				<ul>
 					<li><h:outputText class="ui-messages-info-detail" />
 						#{paymentMatchBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink
-							id="sharedcommand" onstart="blockWidget.show()"
+							id="sharedcommand" onstart="blockWidget.show()" style="text-decoration: underline; color: inherit;"
 							oncomplete="blockWidget.hide()"
 							rendered="#{not empty paymentMatchBackingBean.managedBean.disciplinaryActionMessage}"
 							action="#{paymentMatchBackingBean.viewDisciplinaryAction(paymentMatchBackingBean.managedBean.smDisciplinaryAction)}"
@@ -219,23 +219,25 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<ui:remove>#34443 start</ui:remove>
-		<p:confirmDialog
-			message="#{lbl['lbl.fl.confirmation.match.dialogue.pm']}"
-			severity="alert" widgetVar="matchConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
-					update="@form"
-					action="#{paymentMatchBackingBean.gpkiSignAction(BpmOutcomeConstant.bpmMatch)}"
-					onstart="matchConfirmDlg.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-					onclick="matchConfirmDlg.hide();" />
-			</div>
-		</p:confirmDialog>
-		<ui:remove>#34443 end</ui:remove>
+	<!--#26279 Start-->
 	<ac:disciplinaryActionHistory voList="#{paymentMatchBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />		
+	<!--#26279 End-->
+	<ui:remove>#34443 start</ui:remove>
+	<p:confirmDialog
+		message="#{lbl['lbl.fl.confirmation.match.dialogue.pm']}"
+		severity="alert" widgetVar="matchConfirmDlg" closable="true"
+		appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+				update="@form"
+				action="#{paymentMatchBackingBean.gpkiSignAction(BpmOutcomeConstant.bpmMatch)}"
+				onstart="matchConfirmDlg.hide();blockWidget.show();"
+				oncomplete="blockWidget.hide();" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				onclick="matchConfirmDlg.hide();" />
+		</div>
+	</p:confirmDialog>
+	<ui:remove>#34443 end</ui:remove>
 	</ui:define>
 </ui:composition>

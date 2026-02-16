@@ -24,20 +24,20 @@
 		
 		<p:outputPanel id="supplierProfilePanelId">
 		#{viewSmApplBackingBean.rePopulateApplFacilitiesList()} <!-- #34209 -->
-		<!-- Enhancement 26238 - START -->
-		<p:outputPanel style="color:red;font-weight:bold;" rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
+		<!-- Enhancement 26238, 38284 - START -->
+		<p:outputPanel style="font-size:13px; color:red" rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
 			and !viewApplHistoryBackingBean.managedBean.noDisciplinary}">
-			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.supplier.disciplinary.action.msg']}" escape="false"/><p:spacer width="2"/>
-			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+			<h:outputText value="#{lbl['lbl.sm.supplier.disciplinary.action.msg']}" escape="false"/><p:spacer width="2"/>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{viewApplHistoryBackingBean.onViewDisciplinaryAction}" 
 				process="@this" partialSubmit="true" update=":#{p:component('disciplinaryActionHistoryDlgId')}" >
-					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" escape="false" style="text-decoration: underline; font-weight: bold; color:red; font-size:13px;"/>
 			</p:commandLink><p:spacer width="2"/>
-			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
 			<p:spacer height="2"/>
 		</p:outputPanel>
-		<!-- 26238 - END -->
+		<!-- 26238, 38284 - END -->
 		
 			<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
 			

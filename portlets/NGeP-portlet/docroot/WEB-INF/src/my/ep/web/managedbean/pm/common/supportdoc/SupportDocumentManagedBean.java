@@ -3,16 +3,21 @@
  */
 package my.ep.web.managedbean.pm.common.supportdoc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -57,6 +62,37 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private boolean isPersonnelBranchChanged;
 	private boolean isCapitalEquityChanged;
 	private boolean isBankChanged;
+	/************ AUDIT #28895_35509 *************/
+	private PmDocument selectedDocumentOld;
+	private DocumentReqDTO reqDTO;
+	private DocumentResDTO resDTO;
+	private List<PmDocumentRestr> pmDocumentRestrList;
+	private List<PmDocumentRestr> deletedPmDocumentRestrList;
+	private List<PmDocumentRestr> updatedPmDocumentRestrList;
+	private List<PmDocumentRestr> mandatoryUpdatedPmDocumentRestrList;
+	private List<PmDocumentRestr> deleteAppTypeRestrictionsAuditList;
+	private List<PmDocumentRestr> deleteComTypeRestrictionsAudit;
+	private List<PmDocumentRestr> deleteSuppTypeRestrictionsAudit;
+	private List<PmDocumentRestr> deleteCategoryRestrictionsAudit;
+	private List<PmDocumentRestr> deleteCertBodyRestrictionsAudit;
+	boolean updated;
+	private List<PmDocumentRestr> appTypeRestrictionsOld;
+	private List<PmDocumentRestr> comTypeRestrictionsOld;
+	private List<PmDocumentRestr> suppTypeRestrictionsOld;
+	private List<PmDocumentRestr> categoryRestrictionsOld;
+	private List<PmDocumentRestr> certBodyRestrictionsOld;
+	private List<PmDocumentRestr> appTypeRestrictionsNew = new ArrayList<>();
+	private List<PmDocumentRestr> comTypeRestrictionsNew = new ArrayList<>();
+	private List<PmDocumentRestr> suppTypeRestrictionsNew = new ArrayList<>();
+	private List<PmDocumentRestr> categoryRestrictionsNew = new ArrayList<>();
+	private List<PmDocumentRestr> certBodyRestrictionsNew = new ArrayList<>();
+	private List<PmDocumentRestr> appTypeRestrictionsUpdated = new ArrayList<>();
+	private List<PmDocumentRestr> newCompanyCodeTypeAuditList = new ArrayList<>();
+	private List<PmDocumentRestr> newCategoryL3AuditList = new ArrayList<>();
+	private boolean deletedAuditList;
+	private PmZone auditPmZone;
+
+	/************ AUDIT #28895_35509 *************/
 	
 	public SupportDocumentManagedBean(){}
 
@@ -455,5 +491,235 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 		this.isBankChanged = isBankChanged;
 	}
 
-	
+	/************ AUDIT #28895_35509 *************/
+	public PmDocument getSelectedDocumentOld() {
+		return selectedDocumentOld;
+	}
+
+	public void setSelectedDocumentOld(PmDocument selectedDocumentOld) {
+		this.selectedDocumentOld = selectedDocumentOld;
+	}
+
+	public DocumentReqDTO getReqDTO() {
+		return reqDTO;
+	}
+
+	public void setReqDTO(DocumentReqDTO reqDTO) {
+		this.reqDTO = reqDTO;
+	}
+
+	public DocumentResDTO getResDTO() {
+		return resDTO;
+	}
+
+	public void setResDTO(DocumentResDTO resDTO) {
+		this.resDTO = resDTO;
+	}
+
+	public List<PmDocumentRestr> getPmDocumentRestrList() {
+		return pmDocumentRestrList;
+	}
+
+	public void setPmDocumentRestrList(List<PmDocumentRestr> pmDocumentRestrList) {
+		this.pmDocumentRestrList = pmDocumentRestrList;
+	}
+
+	public boolean isUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(boolean updated) {
+		this.updated = updated;
+	}
+
+	public List<PmDocumentRestr> getDeletedPmDocumentRestrList() {
+		return deletedPmDocumentRestrList;
+	}
+
+	public void setDeletedPmDocumentRestrList(List<PmDocumentRestr> deletedPmDocumentRestrList) {
+		this.deletedPmDocumentRestrList = deletedPmDocumentRestrList;
+	}
+
+	public List<PmDocumentRestr> getUpdatedPmDocumentRestrList() {
+		return updatedPmDocumentRestrList;
+	}
+
+	public void setUpdatedPmDocumentRestrList(List<PmDocumentRestr> updatedPmDocumentRestrList) {
+		this.updatedPmDocumentRestrList = updatedPmDocumentRestrList;
+	}
+
+	public List<PmDocumentRestr> getMandatoryUpdatedPmDocumentRestrList() {
+		return mandatoryUpdatedPmDocumentRestrList;
+	}
+
+	public void setMandatoryUpdatedPmDocumentRestrList(List<PmDocumentRestr> mandatoryUpdatedPmDocumentRestrList) {
+		this.mandatoryUpdatedPmDocumentRestrList = mandatoryUpdatedPmDocumentRestrList;
+	}
+
+	public List<PmDocumentRestr> getAppTypeRestrictionsOld() {
+		return appTypeRestrictionsOld;
+	}
+
+	public void setAppTypeRestrictionsOld(List<PmDocumentRestr> appTypeRestrictionsOld) {
+		this.appTypeRestrictionsOld = appTypeRestrictionsOld;
+	}
+
+	public List<PmDocumentRestr> getComTypeRestrictionsOld() {
+		return comTypeRestrictionsOld;
+	}
+
+	public void setComTypeRestrictionsOld(List<PmDocumentRestr> comTypeRestrictionsOld) {
+		this.comTypeRestrictionsOld = comTypeRestrictionsOld;
+	}
+
+	public List<PmDocumentRestr> getSuppTypeRestrictionsOld() {
+		return suppTypeRestrictionsOld;
+	}
+
+	public void setSuppTypeRestrictionsOld(List<PmDocumentRestr> suppTypeRestrictionsOld) {
+		this.suppTypeRestrictionsOld = suppTypeRestrictionsOld;
+	}
+
+	public List<PmDocumentRestr> getCategoryRestrictionsOld() {
+		return categoryRestrictionsOld;
+	}
+
+	public void setCategoryRestrictionsOld(List<PmDocumentRestr> categoryRestrictionsOld) {
+		this.categoryRestrictionsOld = categoryRestrictionsOld;
+	}
+
+	public List<PmDocumentRestr> getCertBodyRestrictionsOld() {
+		return certBodyRestrictionsOld;
+	}
+
+	public void setCertBodyRestrictionsOld(List<PmDocumentRestr> certBodyRestrictionsOld) {
+		this.certBodyRestrictionsOld = certBodyRestrictionsOld;
+	}
+
+	public List<PmDocumentRestr> getDeleteAppTypeRestrictionsAuditList() {
+		return deleteAppTypeRestrictionsAuditList;
+	}
+
+	public void setDeleteAppTypeRestrictionsAuditList(List<PmDocumentRestr> deleteAppTypeRestrictionsAuditList) {
+		this.deleteAppTypeRestrictionsAuditList = deleteAppTypeRestrictionsAuditList;
+	}
+
+	public List<PmDocumentRestr> getDeleteComTypeRestrictionsAudit() {
+		return deleteComTypeRestrictionsAudit;
+	}
+
+	public void setDeleteComTypeRestrictionsAudit(List<PmDocumentRestr> deleteComTypeRestrictionsAudit) {
+		this.deleteComTypeRestrictionsAudit = deleteComTypeRestrictionsAudit;
+	}
+
+	public List<PmDocumentRestr> getDeleteSuppTypeRestrictionsAudit() {
+		return deleteSuppTypeRestrictionsAudit;
+	}
+
+	public void setDeleteSuppTypeRestrictionsAudit(List<PmDocumentRestr> deleteSuppTypeRestrictionsAudit) {
+		this.deleteSuppTypeRestrictionsAudit = deleteSuppTypeRestrictionsAudit;
+	}
+
+	public List<PmDocumentRestr> getDeleteCategoryRestrictionsAudit() {
+		return deleteCategoryRestrictionsAudit;
+	}
+
+	public void setDeleteCategoryRestrictionsAudit(List<PmDocumentRestr> deleteCategoryRestrictionsAudit) {
+		this.deleteCategoryRestrictionsAudit = deleteCategoryRestrictionsAudit;
+	}
+
+	public List<PmDocumentRestr> getDeleteCertBodyRestrictionsAudit() {
+		return deleteCertBodyRestrictionsAudit;
+	}
+
+	public void setDeleteCertBodyRestrictionsAudit(List<PmDocumentRestr> deleteCertBodyRestrictionsAudit) {
+		this.deleteCertBodyRestrictionsAudit = deleteCertBodyRestrictionsAudit;
+	}
+
+	public boolean isDeletedAuditList() {
+		return deletedAuditList;
+	}
+
+	public void setDeletedAuditList(boolean deletedAuditList) {
+		this.deletedAuditList = deletedAuditList;
+	}
+
+	public List<PmDocumentRestr> getAppTypeRestrictionsNew() {
+		return appTypeRestrictionsNew;
+	}
+
+	public void setAppTypeRestrictionsNew(List<PmDocumentRestr> appTypeRestrictionsNew) {
+		this.appTypeRestrictionsNew = appTypeRestrictionsNew;
+	}
+
+	public List<PmDocumentRestr> getComTypeRestrictionsNew() {
+		return comTypeRestrictionsNew;
+	}
+
+	public void setComTypeRestrictionsNew(List<PmDocumentRestr> comTypeRestrictionsNew) {
+		this.comTypeRestrictionsNew = comTypeRestrictionsNew;
+	}
+
+	public List<PmDocumentRestr> getSuppTypeRestrictionsNew() {
+		return suppTypeRestrictionsNew;
+	}
+
+	public void setSuppTypeRestrictionsNew(List<PmDocumentRestr> suppTypeRestrictionsNew) {
+		this.suppTypeRestrictionsNew = suppTypeRestrictionsNew;
+	}
+
+	public List<PmDocumentRestr> getCategoryRestrictionsNew() {
+		return categoryRestrictionsNew;
+	}
+
+	public void setCategoryRestrictionsNew(List<PmDocumentRestr> categoryRestrictionsNew) {
+		this.categoryRestrictionsNew = categoryRestrictionsNew;
+	}
+
+	public List<PmDocumentRestr> getCertBodyRestrictionsNew() {
+		return certBodyRestrictionsNew;
+	}
+
+	public void setCertBodyRestrictionsNew(List<PmDocumentRestr> certBodyRestrictionsNew) {
+		this.certBodyRestrictionsNew = certBodyRestrictionsNew;
+	}
+
+	public List<PmDocumentRestr> getAppTypeRestrictionsUpdated() {
+		return appTypeRestrictionsUpdated;
+	}
+
+	public void setAppTypeRestrictionsUpdated(List<PmDocumentRestr> appTypeRestrictionsUpdated) {
+		this.appTypeRestrictionsUpdated = appTypeRestrictionsUpdated;
+	}
+
+	public List<PmDocumentRestr> getNewCompanyCodeTypeAuditList() {
+		return newCompanyCodeTypeAuditList;
+	}
+
+	public void setNewCompanyCodeTypeAuditList(List<PmDocumentRestr> newCompanyCodeTypeAuditList) {
+		this.newCompanyCodeTypeAuditList = newCompanyCodeTypeAuditList;
+	}
+
+	public List<PmDocumentRestr> getNewCategoryL3AuditList() {
+		return newCategoryL3AuditList;
+	}
+
+	public void setNewCategoryL3AuditList(List<PmDocumentRestr> newCategoryL3AuditList) {
+		this.newCategoryL3AuditList = newCategoryL3AuditList;
+	}
+
+	/**
+	 * @return the auditPmZone
+	 */
+	public PmZone getAuditPmZone() {
+		return auditPmZone;
+	}
+
+	/**
+	 * @param auditPmZone the auditPmZone to set
+	 */
+	public void setAuditPmZone(PmZone auditPmZone) {
+		this.auditPmZone = auditPmZone;
+	}
+	/************ AUDIT #28895_35509 *************/
 }
