@@ -10965,7 +10965,15 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
-		getManagedBean().setChangeCurrRegStatus(false); //#37925
+		getManagedBean().setChangeCurrRegStatus(false); //#37925 - start
+		if (StringUtils.isBlank(getManagedBean().getCurrRegStatus())) {
+			PmStatusDesc statusDesc = SmApplicationUtil
+					.getCurrRegStatusDesc(getManagedBean().getSmAppl());
+			if (statusDesc != null){
+				getManagedBean().setCurrRegStatus(statusDesc.getStatusName());
+			}
+		}
+		//#37925 - end
 		//30974 - start
 
 		getManagedBean().setSearchRecommendRejectReason(null);
@@ -11455,7 +11463,7 @@ public class SmApplicationBackingBean extends
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
 		//log.info("*** Submit Approve *** " + decision);
-//		assignValReqdToFalse(); #37925 submit requirement problem
+		assignValReqdToFalse();
 		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		// #28777 & #29727 - Start
@@ -18115,6 +18123,15 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//12492 - END
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = getManagedBean().getSelectedShareHolder().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			getManagedBean().getSelectedShareHolder().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	//30713 & 36474 - Start
 	private SmWorkflowStatus rejectedApplExist(Long supplierId){
@@ -19353,20 +19370,34 @@ public class SmApplicationBackingBean extends
 	 * </p>
 	 */
 	public void updateApproverRegistrationStatusValue() {
+	    Long statusId = resolveCurrentStatusId();
+	    if (statusId == null) {
+	        return;
+	    }
 
-		Long statusId = resolveCurrentStatusId();
-		if (statusId == null) {
-			return;
-		}
+	    if (shouldOverrideWithLatestReview()) {
+	        applyLatestStatusToApproved(statusId);
+	        return;
+	    }
+	    
+	    if (!getManagedBean().isChangeCurrRegStatus()) {
+	        if (getManagedBean().isPoUser()) {
+	            getManagedBean().setPoRecommendStatusId(statusId);
+	        }
+	        
+	        if (getManagedBean().isApproverUser()) {
+	            applyLatestStatusToApproved(statusId);
+	        }
+	    }
+	}
 
-		if (shouldOverrideWithLatestReview()) {
-			Long latestStatusId = resolveLatestReviewStatusId();
-			if (latestStatusId != null) {
-				statusId = latestStatusId;
-			}
-		}
-
-		getManagedBean().setApprovedStatusId(statusId);
+	/** 
+	 * Helper to centralize the 'Latest Review' resolution logic 
+	 */
+	private void applyLatestStatusToApproved(Long defaultStatusId) {
+	    Long latestStatusId = resolveLatestReviewStatusId();
+	    Long finalStatus = (latestStatusId != null) ? latestStatusId : defaultStatusId;
+	    getManagedBean().setApprovedStatusId(finalStatus);
 	}
 
 	/**
