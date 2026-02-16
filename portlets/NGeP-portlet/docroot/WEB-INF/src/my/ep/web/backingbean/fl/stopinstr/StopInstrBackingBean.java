@@ -1053,7 +1053,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String confirmDialogueTrigger(String action) throws Exception {
 		validateStopFulfilment(action);
-		String dialogCommand = null;
+		String dialogCommand;
 		switch (action) {
 		case BpmOutcomeConst.BPM_STOP_FULFILMENT:
 			dialogCommand = "stopFlConfirmDlg.show()";
@@ -1073,9 +1073,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		default:
 			return signingAction(action);
 		}
-		if (dialogCommand != null) {
-			RequestContext.getCurrentInstance().execute(dialogCommand);
-		}
+		
+		RequestContext.getCurrentInstance().execute(dialogCommand);
+		
 
 		return null;
 	}
