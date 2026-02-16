@@ -313,10 +313,19 @@
 						value="#{registrationBackingBean.managedBean.smPersonnel.email}" validatorMessage="#{lbl['lbl.sm.invalidEmail']}">
 						<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						<ui:remove>#28720 Start</ui:remove>
+						<p:ajax event="change" process="@this"
+							listener="#{registrationBackingBean.onChangeEmail()}"
+								update="usrEmail" />
+						<ui:remove>#28720 End</ui:remove>
 					</p:inputText> &#160;
-					<p:graphicImage id="emailti" value="/css/images/design/tooltips.png" />
-					<p:tooltip id="emailtt" for="emailti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.email']}"  />
+					<ui:remove>#28720 Start</ui:remove>
+					<p:graphicImage id="toolTipIcon"
+						value="/css/images/design/tooltips.png" />
+					<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false"
+							value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					<ui:remove>#28720 End</ui:remove>
 					</p:tooltip>
 					<p:message id="usrEmailMsg" for="usrEmail" display="icon" />
 				</td>
@@ -328,13 +337,26 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent">
-				<p:inputText size="40" id="conEmail" value="#{registrationBackingBean.managedBean.confirmEmail}" 
-				required="#{!empty param['disableValidation']}"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80"/>
+				<ui:remove>#28720 Start</ui:remove>
+				<p:inputText size="40" id="conEmail"
+					value="#{registrationBackingBean.managedBean.confirmEmail}"
+					required="#{!empty param['disableValidation']}"
+					label="#{lbl['lbl.sm.confirmemail']}" maxlength="80">
+					<p:ajax event="change" process="@this"
+						listener="#{registrationBackingBean.onChangeConfirmEmail()}"
+						update="conEmail" />
+				</p:inputText>
+				<ui:remove>#28720 End</ui:remove>
 				<p:message id="conEmailMsg" for="conEmail" display="icon" /></td>
 			</tr>
 	</table>
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
 	</c:if>
+	<ui:remove>#28720 Start</ui:remove>
+	<ac:smEmailAlertPopup bBean="#{backingBean}"
+		title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	<ui:remove>#28720 End</ui:remove>
 	</p:panel>
 </ui:composition>
