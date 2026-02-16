@@ -420,10 +420,12 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td>
+				     <ui:remove>#39995 Start Vinod 11/02/2026 Added maxlength</ui:remove>
 				     <p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
-						label="#{lbl['lbl.sc.qt.fileno']}" size="28" >
+						label="#{lbl['lbl.sc.qt.fileno']}" size="28" maxlength="50" >
+					 <ui:remove>#39995 End Vinod 11/02/2026</ui:remove>
 						<!-- #29661 start -->
 						<p:ajax event="blur" process="fileNoId" update="fileNoId"
 						partialSubmit="true" 
@@ -1163,7 +1165,8 @@
 											oncomplete="uploadApprovalLetterDlg.show();return false;"
 					 						icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
 					 						rendered="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment eq null}"/>								
-											<p:commandLink
+											<!-- #25725/25726 note 267/458 -->
+											<h:commandLink
 											title="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 											value="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
 											action="#{directLOABackingBean.fileDownload}"
@@ -1190,8 +1193,8 @@
 									</td>
 									<td>
 										<p:outputPanel id="uploadedPage2">						
-																			
-											<p:commandLink
+											<!-- #25725/25726 note 267/458 -->								
+											<h:commandLink
 											title="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 											value="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
 											action="#{directLOABackingBean.fileDownload}"

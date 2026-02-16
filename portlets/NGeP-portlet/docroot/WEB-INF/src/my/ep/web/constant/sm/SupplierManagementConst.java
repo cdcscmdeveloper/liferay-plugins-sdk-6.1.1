@@ -770,6 +770,7 @@ public class SupplierManagementConst {
 	// #9299 Start
 	public static final String SM_COMP_EXP_FILE_PATH = "/SM/COMPEXP/";
 	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
+	public static final int PHASE_1 = 1;
 	// #9299 End
 	
 	//26238 - START
