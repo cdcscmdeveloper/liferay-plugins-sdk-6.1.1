@@ -147,7 +147,8 @@
 					rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.saPendingCreation
 						or agreement.status.statusId == CtStatusConst.saPendingApproval or agreement.status.statusId == CtStatusConst.saPendingRevision 
 						or agreement.status.statusId == CtStatusConst.saPendingRevisionApproval}"
-					ajax="false" value="#{lbl['lbl.btn.download']}">
+					ajax="false" value="#{lbl['lbl.btn.download']}"
+					style="white-space:normal; word-wrap:break-word; text-align:center;">
 					<p:fileDownload
 						value="#{ctBackingBean.generateReportPDF(agreement)}" />
 				</p:commandButton>
