@@ -637,7 +637,7 @@
 
 		</p:dataTable>
 
-		<h:panelGroup style="text-align: right; float: right; min-height: 30px;" id="addButtonDiv">
+		<h:panelGroup style="text-align: right; float: right; min-height: 30px;" id="addButtonDiv"><!-- #36738 -->
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}"
@@ -676,7 +676,7 @@
 				action="#{ruleCatalogueBackingBean.initPtjPopup}">
 			</p:commandButton>
 			<!-- 27827 - END -->
-		</h:panelGroup>
+		</h:panelGroup> <!-- #36738 -->
 		
 		<ac:confirmationPopup id="ruleValueDeleteId"
 				widget="ruleValueDeletePopUp"
