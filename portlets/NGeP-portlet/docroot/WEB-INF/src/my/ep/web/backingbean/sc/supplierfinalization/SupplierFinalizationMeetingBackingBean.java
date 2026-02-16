@@ -2382,7 +2382,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
 			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
-			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
+			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())//#35500 Fix Reopen 11th Feb
 					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
 				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
 			}
