@@ -12,12 +12,10 @@
 			<h:outputText value="#{lbl['lbl.ct.agreement.detail']}" />
 			<ac:iconTooltip value="#{lbl['lbl.ct.agreement.detail.tooltip']}" />
 		</f:facet>
-		<!-- #29418 start -->
 		<p:dataTable id="contractAgreementTableID" lazy="true"
 			value="#{ctBackingBean.filterAgreementList()}" var="agreement"
 			width="100%" rows="10" rowIndexVar="index"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<!-- #29418 end -->
 			<p:column style="width:5%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.agreement.no']}" />
@@ -35,19 +33,16 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.agreement.signed.date']}" />
 				</f:facet>
-				<!-- Enhancement 29418 - shaqimi start -->
 				<h:outputText
 					value="#{ctBackingBean.getAgreementSignedDate(agreement)}"
 					rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.acComplete}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
-				<!-- Enhancement 29418 - shaqimi start 11102022 -->
 				<p:outputPanel
 					rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
 					<h:outputText value="#{lbl['lbl.ct.view.value.na']}" />
 				</p:outputPanel>
-				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
 			<p:column style="width:60%;">
 				<f:facet name="header">
@@ -129,12 +124,10 @@
 						<br />
 					</ui:repeat>
 				</p:outputPanel>
-				<!-- Enhancement 29418 - shaqimi start 11102022 -->
 				<p:outputPanel
 					rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
 					<h:outputText value="#{lbl['lbl.ct.view.value.na']}" />
 				</p:outputPanel>
-				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
 			<p:column style="text-align:center; width:10%; white-space:normal;">
 				<f:facet name="header">
@@ -142,19 +135,18 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.ct.tooltip.view.amendment.details']}" />
 				</f:facet>
-				<!-- Enhancement 29418 - shaqimi end 11102022 -->
+				<!-- #40014 start -->
 				<p:commandButton
 					rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.saPendingCreation
 						or agreement.status.statusId == CtStatusConst.saPendingApproval or agreement.status.statusId == CtStatusConst.saPendingRevision 
 						or agreement.status.statusId == CtStatusConst.saPendingRevisionApproval}"
 					ajax="false" value="#{lbl['lbl.btn.download']}"
-					style="white-space:normal; word-wrap:break-word; text-align:center;">
+					style="text-wrap-mode: nowrap;">
 					<p:fileDownload
 						value="#{ctBackingBean.generateReportPDF(agreement)}" />
 				</p:commandButton>
-				<!-- Enhancement 29418 - shaqimi end 11102022 -->
+				<!-- #40014 end -->
 			</p:column>
-			<!-- Enhancement 29418- shaqimi end -->
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
