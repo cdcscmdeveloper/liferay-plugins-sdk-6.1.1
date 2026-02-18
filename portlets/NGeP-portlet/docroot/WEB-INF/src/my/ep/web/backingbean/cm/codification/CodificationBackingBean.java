@@ -4124,24 +4124,20 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 *             {@code saveScAssignItemDetail} fails during persistence.
 	 */
 	private void insertIntoAssignCodeDetail(ScRequestItem scRequestItem) {
-		
-		if(scRequestItem !=null){
-			
-			List<ScAssignItemDtl> listAssignItemDtls = scRequestItem.getScAssignItemDtlList();
+	    
+	    if (scRequestItem != null) {
 	        
-	        if (listAssignItemDtls == null) {
-	            listAssignItemDtls = new ArrayList<ScAssignItemDtl>();
-	        }
-			
-			ScAssignItemDtl assignItemDtl = new ScAssignItemDtl();
-		    assignItemDtl.setScRequestItem(scRequestItem);
-		    assignItemDtl.setItemName(scRequestItem.getItemName());
-		    assignItemDtl.setItemDescription(scRequestItem.getItemDesc());
-		    
-		    listAssignItemDtls.add(assignItemDtl);
-		    
-		    scRequestItem.setScAssignItemDtlList(listAssignItemDtls);
-		} 
+	        List<ScAssignItemDtl> listAssignItemDtls = new ArrayList<ScAssignItemDtl>();
+	        
+	        ScAssignItemDtl assignItemDtl = new ScAssignItemDtl();
+	        assignItemDtl.setScRequestItem(scRequestItem); // Link Parent
+	        assignItemDtl.setItemName(scRequestItem.getItemName());
+	        assignItemDtl.setItemDescription(scRequestItem.getItemDesc());
+	        
+	        listAssignItemDtls.add(assignItemDtl);
+	        
+	        scRequestItem.setScAssignItemDtlList(listAssignItemDtls);
+	    } 
 	}
 	// #26059 - End
 
