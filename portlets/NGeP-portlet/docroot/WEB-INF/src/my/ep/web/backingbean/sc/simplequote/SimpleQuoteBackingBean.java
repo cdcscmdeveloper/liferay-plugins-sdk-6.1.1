@@ -9916,11 +9916,8 @@ public class SimpleQuoteBackingBean extends
 	 * * @return {@code false} if the quote exists and is marked as a panel; 
 	 * {@code true} otherwise (indicating the panel check passed or is not applicable).
 	 */
-	public boolean checkPanel() {
-		if (getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel()) {
-			return false;
-		}
-		return true;
+	public boolean checkIsPanel() {
+	    return getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel();
 	}
 	// #26059 - End
 }
