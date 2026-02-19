@@ -2184,12 +2184,15 @@ public class QTSupplierQulCriteriaBackingBean extends
 			getManagedBean().setHisCatCode(catCode);
 
 			List<PmRemarkCategory> listCategoryDB = new ArrayList();
-			for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
-				if (null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)
-						&& removeIndex.getChangedDate().before(qtCatChangedDate)) {
-					listCategoryDB.add(removeIndex);
+			if(null != getManagedBean().getHistoryList()){
+				for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+					if (null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)
+							&& removeIndex.getChangedDate().before(qtCatChangedDate)) {
+						listCategoryDB.add(removeIndex);
+					}
 				}
 			}
+			
 			getManagedBean().setHistoryList(listCategoryDB);
 		}
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
@@ -2382,9 +2385,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	// #29732 -start-
 	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
-		for (PmRemarkCategory rc : remarkList) {
-			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
-			rc.setCreatedUsername(user.getUserName());
+		if(null != remarkList){
+			for (PmRemarkCategory rc : remarkList) {
+				PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
+				rc.setCreatedUsername(user.getUserName());
+			}
 		}
 		return remarkList;
 	}
