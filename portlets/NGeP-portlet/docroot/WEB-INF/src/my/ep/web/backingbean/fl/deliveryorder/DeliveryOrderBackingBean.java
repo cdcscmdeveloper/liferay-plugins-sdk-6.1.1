@@ -52,6 +52,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.fl.AuditFLConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -2239,12 +2240,16 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	* #29556
 	* Download file GARIS_PANDUAN_PENGGUNAAN_SISTEM_ePEROLEHAN_BAGI_PENYEDIAAN_ITEM_DAN_SPESIFIKASI.pdf
 	*/
-	public void downloadFile(String filePath) throws IOException {
-		StringBuilder downloadPath = new StringBuilder();
-		downloadPath
-				.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR))
-				.append(filePath);
+	public void downloadItemSpecGuideline() throws IOException {
+		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
 
-		super.downloadFile(downloadPath.toString());
+		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
+
+		commonDownload(filePath.toString(), ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 	}
 }
