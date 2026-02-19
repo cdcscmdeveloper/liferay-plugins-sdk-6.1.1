@@ -70,6 +70,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		getManagedBean().setCentralPanelContractSelected(false);
 		getManagedBean().setDisableReason(false);
 		initializeOrgFieldValue();
+		resetSearch();
 	}
 
 	/**
@@ -150,9 +151,11 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 				if (getManagedBean().getCentralPanelContract()) {
 					// panel
 					this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_PANEL);
+					this.getManagedBean().setReportCode(DpReportConst.DP_ITEM_EXCEED_THRESHOLD_PANEL);
 				} else {
 					// non panel
 					this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL);
+					this.getManagedBean().setReportCode(DpReportConst.DP_ITEM_EXCEED_THRESHOLD_NON_PANEL);
 				}
 			}
 
