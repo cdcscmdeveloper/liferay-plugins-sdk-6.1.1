@@ -83,14 +83,16 @@ a.blue_font {
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			    <td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+			    <!-- Bug #40022@Syazani - Start 16/02/2026 -->
 				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER" label="#{lbl['lbl.sc.supplier.name']}" 
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
+						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.tempSmSupplier)"
 						headerText="#{lbl['lbl.sc.supp.name']}" selectionMode="single"
-						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
+						saveObject="directLOABackingBean.managedBean.tempSmSupplier"
 						conditionField="recordStatus^1|smMofAccounts.recordStatus^1" readonly="true" size="106"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						update="@form" required="true" /></td>
+						<!-- Bug #40022@Syazani - End 16/02/2026 -->
 			</tr>
 			
 			<tr>
