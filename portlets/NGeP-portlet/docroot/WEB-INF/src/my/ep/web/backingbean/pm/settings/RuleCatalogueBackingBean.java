@@ -6991,9 +6991,6 @@ public class RuleCatalogueBackingBean extends
 				configValueId);
 
 		value.setExpDate(merged.getExpDate());
-		/*35323 - Audit Start*/
-		value.setModified(true);
-		/*35323 - Audit End*/
 
 		return value;
 	}
