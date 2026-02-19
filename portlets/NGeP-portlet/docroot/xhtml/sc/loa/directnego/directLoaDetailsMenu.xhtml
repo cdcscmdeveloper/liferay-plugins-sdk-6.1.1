@@ -1009,7 +1009,7 @@ a.blue_font {
 							<td>
 								<h:panelGroup id="agreementReqPG">
 								<c:choose>
-									<c:when test="#{!directLOABackingBean.isAgreementDropDown() and !directLOABackingBean.checkAgreementMandatory() and !directLOABackingBean.managedBean.readOnly}">
+									<c:when test="#{!directLOABackingBean.isAgreementDropDown()  and !directLOABackingBean.managedBean.readOnly}">
 										<c:choose>
 												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 													<p:selectOneMenu id="agreementReqPk7Per" required="true"
