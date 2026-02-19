@@ -199,7 +199,7 @@ public class RuleCatalogueBackingBean extends
 		
 		private static final Map<Long, Integer> SUPPLIER_PRIORITY;
 		static {
-		    Map<Long, Integer> map = new HashMap<Long, Integer>();
+		    Map<Long, Integer> map = new HashMap<>();
 		    map.put(RuleTypeConst.BASIC, 1);
 		    map.put(RuleTypeConst.MOF, 2);
 		    map.put(RuleTypeConst.G2G, 3);
