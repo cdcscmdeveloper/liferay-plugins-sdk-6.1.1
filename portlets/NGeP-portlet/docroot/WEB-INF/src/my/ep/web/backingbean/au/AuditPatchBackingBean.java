@@ -64,17 +64,14 @@ import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
 @ManagedBean(name = "auditPatchBackingBean")
 @ViewScoped
 public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean> {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AuditPatchBackingBean.class);
 	private transient IPagingDataModel<VAuditPatchDTO> searchMaster = new SearchMasterPagingDataModel();
 	private transient IPagingDataModel<VAuditPatchDTO> searchDetail = new SearchDetailPagingDataModel();
-	/* Navigation Details */
+	
 	public static final String NAV_TO_SEARCH = "auditPatchMain";
 	public static final String NAV_TO_MAINTAIN = "auditPatchDetailMain";
-	/* Default value */
+	
 	public static final boolean SEARCH_DEFAULT = false;
 	
 	private transient Workbook wb;
@@ -85,24 +82,21 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	AuditPatchReqDTO auditPatchReqDTO = new AuditPatchReqDTO();
 
 	public AuditPatchBackingBean() {
-		/*
-		 * This constructor is intentionally empty. Initialization is handled
-		 * via dependency injection or setter methods.
-		 */
+		
 	}
 
 	/**
-	 * preLoading()
+	 * this method resets data
+	 * this method also initializes data on first load
 	 */
 	public void preLoading() {
 		this.resetSearchBean();
-		log.info("preLoading Location");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
 
 	/**
-	 * searchMaster()
+	 * this method returns master data for search
 	 */
 	public void searchMaster() {
 		this.getManagedBean().setLazy(true);
@@ -111,7 +105,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 
 	/**
-	 * searchDetail()
+	 * this method loads detail data for selected search data
 	 */
 	public void searchDetail() {
 		this.getManagedBean().setLazy(true);
@@ -119,7 +113,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 
 	/**
-	 * @return
+	 * method to return to the previous page                                                                 
 	 */
 	public String backToSearch() {
 		getManagedBean().setSelectedType(null);
@@ -135,25 +129,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	 * @return
 	 * @throws Exception
 	 */
-	public String redirectToDetails(Integer changeTypeID, String eAduanNo, Integer docTypeID, String docNo)
-			throws AuditPatchException {
-		if (changeTypeID == null) {
-			throw new AuditPatchException("Missing required parameters for redirectToDetails Audit Patch Search. "
-					+ "<changeType>");
-		}
-		if (eAduanNo == null) {
-			throw new AuditPatchException("Missing required parameters for redirectToDetails Audit Patch Search. "
-					+ "<eAduanNo>");
-		}
-		if (docTypeID == null) {
-			throw new AuditPatchException("Missing required parameters for redirectToDetails Audit Patch Search. "
-					+ "<docTypeID>");
-		}
-		if (docNo == null) {
-			throw new AuditPatchException("Missing required parameters for redirectToDetails Audit Patch Search. "
-					+ "<docNo>");
-		}
-		
+	public String redirectToDetails(Integer changeTypeID, String eAduanNo, Integer docTypeID, String docNo) {
 		getManagedBean().getSearchBean().setChangeTypeID(changeTypeID);
 		getManagedBean().getSearchBean().seteAduanNo(eAduanNo);
 		getManagedBean().getSearchBean().setDocTypeID(docTypeID);
@@ -168,7 +144,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean searching(boolean search) throws AuditPatchException {
+	public boolean searching(boolean search) {
 		getManagedBean().getSearchBean().setSearching(search);
 		return getManagedBean().getSearchBean().isSearching();
 	}
@@ -254,7 +230,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 
 	/**
-	 * search Details Location
+	 * get Details for selected master row
 	 * 
 	 */
 	private class SearchDetailPagingDataModel extends PagingDataModel<VAuditPatchDTO> {
@@ -300,7 +276,6 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	 * reset search bean fields
 	 */
 	public void resetSearchBean() {
-		log.info("resetLocationSearchBean");
 		changeType();
 		AuditPatchSearchBean searchBean = new AuditPatchSearchBean();
 		this.getManagedBean().setSearchBean(searchBean);
@@ -308,13 +283,13 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		getManagedBean().setLazy(false);
 		getSearchMaster().resetData();
 		searchMaster = new SearchMasterPagingDataModel();
-		
-		log.info("RoleCode after reset: " + getManagedBean().getSearchBean().getRoleCode());
-
 	}
 
 	/**
-	 * changeType()
+	 * resets the whole search paramaters when changed
+	 */
+	/**
+	 * 
 	 */
 	public void changeType() {
 		this.getManagedBean().getSearchBean().setChangeType(null);
@@ -369,6 +344,9 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		wb = null;
 	}
 	
+	/**
+	 * creates excel sheetlayout row by row 
+	 */
 	private void createSheetLayout(){
 		if (wb == null){
 			wb = new XSSFWorkbook();
@@ -460,6 +438,10 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);
 		
 	}
+	
+	/**
+	 * sets excel column widths manually for each row 
+	 */
 	
 	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
 		

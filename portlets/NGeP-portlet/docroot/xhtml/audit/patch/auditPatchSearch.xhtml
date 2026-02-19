@@ -10,10 +10,10 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	<p:panel id="auditPatchSearchPanel"
-		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
+		header="#{lbl['lbl.audit.patch.search']}" toggleable="true">
 		<p:outputPanel>
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.audit.patch.audit.instruction']}" escape="false" />
+				value="#{lbl['lbl.audit.patch.instruction']}" escape="false" />
 			<br />
 			<br />
 		</p:outputPanel>
@@ -78,7 +78,7 @@
 				<td colspan="4" width="100%">
 					<div class="ppRightBtn">
 						<p:commandButton id="panelSearchId"
-							value="#{lbl['lbl.audit.patch.search']}"
+							value="#{lbl['lbl.btn.search']}"
 							onstart="blkPanelSearchTable.show();"
 							oncomplete="blkPanelSearchTable.hide();" update="searchPatchMaster"
 							process="auditPatchSearchPanel"
@@ -86,7 +86,7 @@
 							disabled="#{empty auditPatchBackingBean.managedBean.searchBean.changeTypeID}" />
 							
 						<p:commandButton id="searchButtonId"
-							value="#{lbl['lbl.audit.patch.reset']}" process="@this"
+							value="#{lbl['lbl.btn.reset']}" process="@this"
 							action="#{auditPatchBackingBean.preLoading}"
 							update="@form"
 							 ></p:commandButton>
@@ -94,6 +94,5 @@
 				</td>
 			</tr>
 		</table>
-		<ac:lovPopupAudit />
 	</p:panel>
 </ui:composition>
