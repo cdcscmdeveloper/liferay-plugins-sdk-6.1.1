@@ -9670,9 +9670,7 @@ public class SimpleQuoteBackingBean extends
 	 * @throws Exception If the service lookup fails.
 	 */
 	private CmItem refreshCmItem(CmItem cmItem) throws Exception {
-	    if (cmItem != null && cmItem.getCmUnspsc() != null) {
-	        return cmItem;
-	    }
+		
 	    ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
 	            ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 	    
