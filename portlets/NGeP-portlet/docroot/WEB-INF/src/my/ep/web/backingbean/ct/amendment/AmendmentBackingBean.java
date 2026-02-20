@@ -2200,6 +2200,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage(ContractConst.PID_REASON_MENU_LABEL, 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				//24333 - End
 			}
 			// Validation for PID Reason
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
@@ -2732,7 +2733,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// Validation for amendment when extension period - 0 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
-				setTabValue("AD");
+
+				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
 				throw new EpException(MessageConst.ERROR_750048);
 			}
 			//End Fix - #38613, #33287
@@ -7695,7 +7699,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		if (message != null
 				&& ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (supplierRemark == null || supplierRemark.length() == 0))) {
-			setTabValue("AD");
+
 			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()) }); //#25956
 		}
@@ -8245,7 +8249,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	/**
 	 * Determines whether the amendment effective date should be reset.
 	 * 
-	// #34097/#26186 end
+	 * <p>
+	 * The effective date should be reset only when:
+	 * <ul>
+	 * <li>The amendment is NOT a contract extension</li>
+	 * <li>There are NO changes to item, value, clause or other attributes</li>
+	 * <li>The current amendment effective date is NOT equal to today's date</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param amendment
+	 *            the amendment being evaluated
+	 * @param cal
+	 *            the current date reference used for comparison
+	 * @return true if the amendment effective date should be reset, otherwise
+	 *         false
+	 */
+	private boolean amendmentFlagCheck(CtAmendment amendment, Calendar cal) {
+		boolean isAmendItemFlag = amendment.isItemPriceChange() || amendment.isQuantityChange();
+		boolean isAmendValueFlag = amendment.isValueChange() || amendment.isValueChangeByGst() || amendment.isValueChangeByStax();
+		boolean isAmendClauseAndOtherFlag = amendment.isClauseChange() || amendment.isOtherChange();
+		boolean overallChange = isAmendItemFlag || isAmendValueFlag || isAmendClauseAndOtherFlag;
+		return !amendment.isContractExtend() && !overallChange && !amendment.getAmendmentEffDate().equals(cal.getTime());
+	}
+	// End Fix - #39538
 	
 	//#38823 start
 	/**

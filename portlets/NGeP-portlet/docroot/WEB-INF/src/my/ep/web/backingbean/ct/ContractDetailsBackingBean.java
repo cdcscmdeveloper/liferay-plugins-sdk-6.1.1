@@ -84,6 +84,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg; //#24333
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
@@ -3064,9 +3065,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				return url;
 			}
 		} catch (PortalException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (SystemException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		return null;
 	}
