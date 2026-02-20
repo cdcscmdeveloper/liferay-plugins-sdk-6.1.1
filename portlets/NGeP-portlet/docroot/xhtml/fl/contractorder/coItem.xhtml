@@ -10,9 +10,12 @@
 	<p:graphicImage value="/css/images/icon-expand.png" />&#160;
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.summary2']}" escape="false"/>
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.items.spec.guideline']}" escape="false"  />
-	<p:commandLink value="#{lbl['lbl.fl.instruction.items.spec.click.here']}" ajax="false" 
-				style="font-size:10px;font-style:italic" process="@this"
-				action="#{flOrderBB.downloadFile('/shared/FL/GARIS_PANDUAN_PENGGUNAAN_SISTEM_ePEROLEHAN_BAGI_PENYEDIAAN_ITEM_DAN_SPESIFIKASI.pdf')}"></p:commandLink><ui:remove>#29556</ui:remove>
+		<ui:remove>#29556-Start</ui:remove>
+		<p:commandLink
+			value="#{lbl['lbl.fl.instruction.items.spec.click.here']}"
+			ajax="false" style="font-size:10px;font-style:italic" process="@this"
+			action="#{flOrderBB.downloadItemSpecGuideline()}"></p:commandLink>
+		<ui:remove>#29556-End</ui:remove>
 		<p:dataTable id="delAddressSummary" var="delAddressSummary"
 			styleClass="orderSummaryChange"
 			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
