@@ -18123,6 +18123,15 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//12492 - END
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = getManagedBean().getSelectedShareHolder().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			getManagedBean().getSelectedShareHolder().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	//30713 & 36474 - Start
 	private SmWorkflowStatus rejectedApplExist(Long supplierId){
@@ -18954,25 +18963,26 @@ public class SmApplicationBackingBean extends
 	 * @param ssmCountryCode the SSM country code to resolve
 	 */
 	public void setCountryOriginLabel(String ssmCountryCode) {
+	    String countryName = null;
 
-	    if (ssmCountryCode == null) {
-	        return;
+	    if (ssmCountryCode != null) {
+	        PmCountry pmCountry = SmCommonUtil.retrievePmCountryByCountryCodeSSM(ssmCountryCode);
+	        if (pmCountry != null && pmCountry.getCountryName() != null 
+	                && !pmCountry.getCountryName().isEmpty()) {
+	            countryName = pmCountry.getCountryName();
+	        }
 	    }
 
-	    PmCountry pmCountry;
+	    if (countryName == null) {
+	        PmCountry pmCountry = SmCommonUtil.retrieveCountryByCountryCode(
+	                SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
 
-	    // Use UNKNOWN country handler when code matches the special value
-	    if (SupplierManagementConst.COUNTRY_UNKNOWN_CODE.equalsIgnoreCase(ssmCountryCode)) {
-	        pmCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
-	    } else {
-	        pmCountry = SmCommonUtil.retrievePmCountryByCountryCodeSSM(ssmCountryCode);
+	        if (pmCountry != null) {
+	            countryName = pmCountry.getCountryName();
+	        }
 	    }
 
-	    if (pmCountry == null || pmCountry.getCountryName() == null) {
-	        return;
-	    }
-
-	    getManagedBean().setStrLabelCountryOrigin(pmCountry.getCountryName());
+	    getManagedBean().setStrLabelCountryOrigin(countryName);
 	}
 
 	private boolean isRocBusinessType(String businessType) {
