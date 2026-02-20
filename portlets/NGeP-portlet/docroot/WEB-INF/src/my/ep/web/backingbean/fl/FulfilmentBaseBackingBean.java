@@ -897,29 +897,26 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return void
 	 */
 	public void showItemDescPopup(Long cmItemId) {
-        if (cmItemId == null) {
-            return;
-        }
-        
-        try {
-        	CodificationReqDTO cReqDTO = new CodificationReqDTO();
-            cReqDTO.setItemId(cmItemId);
-            ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
-                    ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-            CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
-            if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
-                return;
-            }
-
-            CmItem item = codificationResDTO.getCmItem();
-            populateItemDescPopup(item);
-        } catch (Exception e) {
-        	SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
-					getUserIdSessionFromLoginId(), e);
+		if (cmItemId == null) {
 			return;
-        }
-        
-    }
+		}
+
+		try {
+			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+			cReqDTO.setItemId(cmItemId);
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+			CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
+			if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
+				return;
+			}
+			CmItem item = codificationResDTO.getCmItem();
+			populateItemDescPopup(item);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
 
     /**
      * Populate the item description for pop up
@@ -927,29 +924,27 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
      * @return void
      */
 	private void populateItemDescPopup(CmItem item) {
-        CommonUtils common = new CommonUtils();
-        CodificationBackingBean cdbb = new CodificationBackingBean();
-        
-        String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " " +
-        		common.removeItemNameNA(item.getCmBrand().getBrandName()) + " " +
-        		common.removeItemNameNA(item.getCmMeasurement().getMeasurementName()) + " " +
-        		common.removeItemNameNA(item.getCmColor().getColorName());
+		CommonUtils common = new CommonUtils();
+		CodificationBackingBean cdbb = new CodificationBackingBean();
 
-        String segmentCode = item.getCmType().getTypeCode() +
-                             item.getCmBrand().getBrandCode() +
-                             item.getCmMeasurement().getMeasurementCode() +
-                             item.getCmColor().getColorCode();
-        
-        String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " + segmentTitle;
+		String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " "
+				+ common.removeItemNameNA(item.getCmBrand().getBrandName()) + " "
+				+ common.removeItemNameNA(item.getCmMeasurement().getMeasurementName()) + " "
+				+ common.removeItemNameNA(item.getCmColor().getColorName());
 
-        cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
-        cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
-        cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
-        cdbb.getManagedBean().setSegmentTitle(segmentTitle);
-        cdbb.getManagedBean().setSegmentCode(segmentCode);
-        cdbb.getManagedBean().setFamilyTitle(familyTitle);
-        cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
-    }
+		String segmentCode = item.getCmType().getTypeCode() + item.getCmBrand().getBrandCode()
+				+ item.getCmMeasurement().getMeasurementCode() + item.getCmColor().getColorCode();
+
+		String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " + segmentTitle;
+
+		cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
+		cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
+		cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
+		cdbb.getManagedBean().setSegmentTitle(segmentTitle);
+		cdbb.getManagedBean().setSegmentCode(segmentCode);
+		cdbb.getManagedBean().setFamilyTitle(familyTitle);
+		cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
+	}
 	
 	/**
 	 * Filter item contain NA, N A, N/A
