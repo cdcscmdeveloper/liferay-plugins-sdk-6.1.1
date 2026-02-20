@@ -2671,6 +2671,15 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null != newValue) {
 				qtDtl.validateNewValueForValidityDays((int) newValue);
 			}
+
+			//#21692 - Start
+			if (null != newValue && null != valueBean.getOldValue()
+					&& (int) newValue > (int) valueBean.getOldValue()) {
+				this.getManagedBean().setProposalValidityChangeValue(true);
+			} else {
+				this.getManagedBean().setProposalValidityChangeValue(false);
+			}
+			//#21692 - End
 		}
 		// #29425 - end
 
