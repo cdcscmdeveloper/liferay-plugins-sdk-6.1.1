@@ -2,7 +2,6 @@ package my.ep.web.backingbean.au;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,17 +29,11 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.au.IAuditPatchSO;
-import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.au.AuditPatchConst;
-import my.ep.constant.au.AuditReportExcelConst;
-import my.ep.constant.pm.AuditConst;
-import my.ep.constant.pm.AuditPMDaoConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
 import my.ep.dto.au.AuditPatchReqDTO;
 import my.ep.dto.au.VAuditPatchDTO;
-import my.ep.dto.pm.common.audit.AuditPMReqDTO;
-import my.ep.dto.pm.common.audit.VAuditPMDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.SLAUtils;
@@ -49,7 +42,6 @@ import my.ep.web.bean.au.AuditPatchSearchBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.AuditReportConst;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.au.AuditPatchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -353,7 +345,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		}
 		Sheet sheetRptAudit = wb.createSheet("Sheet1");
 		// Setting Report - Populate Table Header Cell Value
-		String[] colHeaderDataTableRpt = AuditReportExcelConst.ColHeaderListType1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ;
+		String[] colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType5;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ;
 		CellStyle cellStyleTitleRpt = new ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
 		// Section - Setting Table Header Cell Style for each cell
 		CellStyle colHeaderDataTableRptStyle = new ExcelCellStyleBuilder(wb).setHAlignment(HorizontalAlignment.CENTER)
