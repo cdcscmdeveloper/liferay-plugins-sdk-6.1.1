@@ -3698,13 +3698,13 @@ public class SmApplicationUtil {
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
 			//13362
-
+			
 			// #39422 - Start - Add checking
 			if (managedBean.getApplnOverLapRemarks().isEmpty()) {
 				managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
 			}
 			// #39422 - End
-
+			
 			managedBean.setOverLappedCategoryExists(true); //#31018
 		} else{
 			managedBean.setOverlapDocs(null);//#31018

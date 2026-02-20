@@ -32,6 +32,13 @@
 		<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instruction']}"
 				escape="false" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}" />
+				
+		<ui:remove>21692 - Start</ui:remove>
+		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(suppFinalizationBackingBean.managedBean.scQt.qtId)}">
+			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']}" />
+		</c:if>
+		<ui:remove>21692 - End</ui:remove>
+		
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
 		<h:outputText styleClass="instruction" value="#{suppFinalizationBackingBean.managedBean.scQt.closingDate}">
 		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
@@ -309,8 +316,11 @@
 
 				<p:column selectionMode="single" rendered="#{showSelectionColumn}"
 					disabledSelection="#{!(isSecretaryUser or isBPKTaskAndClaimed) or 
-													shortlistedSupp.suppSelectionDisabled or 
-														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding }" />
+											shortlistedSupp.suppSelectionDisabled or 
+											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding
+											or shortlistedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod
+												eq SourcingConstants.extendProposalValidityPeriodRejected}" />
+				<ui:remove>#21692</ui:remove>
 			</p:dataTable>
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp"
@@ -577,7 +587,9 @@
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}"
 						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
-											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding}">
+											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding
+											or shortlistedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod
+												eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>#21692</ui:remove>
 						<!-- 19336 note-142 -end- -->
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])"
 							listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
