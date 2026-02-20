@@ -2443,6 +2443,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				onChangePriceType();
 				// #28789 - end
 			}
+			
+			//#26059 - Start
+			if(cmSupplierItem.getCmItem() !=null){
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				CmItem cmItem = cmSupplierItem.getCmItem();
+				catalogueBackingBean.cleanItemNameNA(cmItem);
+				cmSupplierItem.setCmItem(cmItem);
+			}
+			//#26059 - End	
+			
 		} else {
 			// remove after catalogue team had add the filtering in view.
 			throw new EpException(MessageConst.ERROR_760159);
@@ -2913,6 +2923,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			VCmSupplierItem vCmSupplierItem = new VCmSupplierItem();
 			vCmSupplierItem.setCompanyName(selectedSupplierItem.getSmSupplier().getCompanyName());
 			scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
+			
+			//#26059 - Start
+			if(scRequestItem !=null && scRequestItem.getCmItem() !=null){
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				CmItem cmItem = scRequestItem.getCmItem();
+				catalogueBackingBean.cleanItemNameNA(cmItem);
+				scRequestItem.setCmItem(cmItem);
+			}
+			//#26059 - End
 
 			scRequestItem.setRequestNote(requestNote);
 		}

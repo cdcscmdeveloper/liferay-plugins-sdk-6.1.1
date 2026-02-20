@@ -18938,25 +18938,26 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @param ssmCountryCode the SSM country code to resolve
 	 */
 	public void setCountryOriginLabel(String ssmCountryCode) {
+	    String countryName = null;
 
-	    if (ssmCountryCode == null) {
-	        return;
+	    if (ssmCountryCode != null) {
+	        PmCountry pmCountry = SmCommonUtil.retrievePmCountryByCountryCodeSSM(ssmCountryCode);
+	        if (pmCountry != null && pmCountry.getCountryName() != null 
+	                && !pmCountry.getCountryName().isEmpty()) {
+	            countryName = pmCountry.getCountryName();
+	        }
 	    }
 
-	    PmCountry pmCountry;
+	    if (countryName == null) {
+	        PmCountry pmCountry = SmCommonUtil.retrieveCountryByCountryCode(
+	                SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
 
-	    // Use UNKNOWN country handler when code matches the special value
-	    if (SupplierManagementConst.COUNTRY_UNKNOWN_CODE.equalsIgnoreCase(ssmCountryCode)) {
-	        pmCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
-	    } else {
-	        pmCountry = SmCommonUtil.retrievePmCountryByCountryCodeSSM(ssmCountryCode);
+	        if (pmCountry != null) {
+	            countryName = pmCountry.getCountryName();
+	        }
 	    }
 
-	    if (pmCountry == null || pmCountry.getCountryName() == null) {
-	        return;
-	    }
-
-	    getManagedBean().setStrLabelCountryOrigin(pmCountry.getCountryName());
+	    getManagedBean().setStrLabelCountryOrigin(countryName);
 	}
 
 	private boolean isRocBusinessType(String businessType) {
@@ -19345,30 +19346,34 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * </p>
 	 */
 	public void updateApproverRegistrationStatusValue() {
+	    Long statusId = resolveCurrentStatusId();
+	    if (statusId == null) {
+	        return;
+	    }
 
-		Long statusId = resolveCurrentStatusId();
-		if (statusId == null) {
-			return;
-		}
-
-		if (shouldOverrideWithLatestReview()) {
-			Long latestStatusId = resolveLatestReviewStatusId();
-			if (latestStatusId != null) {
-				statusId = latestStatusId;
-			}
-			getManagedBean().setApprovedStatusId(statusId);
-			return;
-		}
-
-		if (getManagedBean().isApproverUser()) {
-			SmApplSectionReview latestPOSectionReview = findLatestPOSectionReview();
-			Long latestPORecommendationID = null;
-			if (isValidApplSectionReview(latestPOSectionReview)) {
-				latestPORecommendationID = latestPOSectionReview
-						.getPmRegStatus().getPmStatus().getStatusId();
-			}
-			getManagedBean().setApprovedStatusId(latestPORecommendationID);
-		}
+	    if (shouldOverrideWithLatestReview()) {
+	        applyLatestStatusToApproved(statusId);
+	        return;
+	    }
+	    
+	    if (!getManagedBean().isChangeCurrRegStatus()) {
+	        if (getManagedBean().isPoUser()) {
+	            getManagedBean().setPoRecommendStatusId(statusId);
+	        }
+	        
+	        if (getManagedBean().isApproverUser()) {
+	            applyLatestStatusToApproved(statusId);
+	        }
+	    }
+	}
+	
+	/** 
+	 * Helper to centralize the 'Latest Review' resolution logic 
+	 */
+	private void applyLatestStatusToApproved(Long defaultStatusId) {
+	    Long latestStatusId = resolveLatestReviewStatusId();
+	    Long finalStatus = (latestStatusId != null) ? latestStatusId : defaultStatusId;
+	    getManagedBean().setApprovedStatusId(finalStatus);
 	}
 
 	/**
