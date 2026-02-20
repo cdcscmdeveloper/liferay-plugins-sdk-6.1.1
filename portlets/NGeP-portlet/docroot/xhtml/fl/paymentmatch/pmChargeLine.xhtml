@@ -17,7 +17,7 @@
 			rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"
 			value="#{lbl['lbl.fl.instruction.items.spec.click.here']}"
 			ajax="false" style="font-size:10px;font-style:italic" process="@this"
-			action="#{paymentMatchBackingBean.downloadFile('/shared/FL/GARIS_PANDUAN_PENGGUNAAN_SISTEM_ePEROLEHAN_BAGI_PENYEDIAAN_ITEM_DAN_SPESIFIKASI.pdf')}"></p:commandLink>
+			action="#{paymentMatchBackingBean.downloadItemSpecGuideline()}"></p:commandLink>
 		<ui:remove>#29556-End</ui:remove>
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			selection="#{paymentMatchBackingBean.managedBean.selectedNode}"
