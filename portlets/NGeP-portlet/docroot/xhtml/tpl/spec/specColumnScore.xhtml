@@ -67,6 +67,20 @@
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:130px;">
-		<p:inputTextarea style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+		<ui:remove>21692 - Start</ui:remove>
+		<p:inputTextarea style="width:calc(100% - 15px);"
+			value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+			rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq null
+					or (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected
+					and evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified)}"
+			onmouseout="limitTextArea(this,500);"/>
+		<p:inputTextarea style="width:calc(100% - 15px);"
+			value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+			rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne null
+					and (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"
+			disabled="true"
+			onmouseout="limitTextArea(this,500);"/>
+		<ui:remove>21692 - End</ui:remove>
 	</p:column>
 </ui:composition>
