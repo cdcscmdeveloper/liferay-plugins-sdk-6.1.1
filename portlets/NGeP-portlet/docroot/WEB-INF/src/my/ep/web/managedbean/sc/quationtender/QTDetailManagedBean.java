@@ -50,6 +50,7 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;//#29732
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -1738,6 +1739,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
 
+	// #29732 Start
+	private String hisCatCode;
+	private List<PmRemarkCategory> historyList;
+	private String catCodeList;
+	private boolean currentInSpecMaint; // first time spec maint
+	private boolean categoryDescriptionChange; // flag to check category has change
+	private boolean updateCatDesc; //#29732
+	private boolean updateCatInPm; //#29732
+	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
+	private boolean resetHistoryCatCode;
+	// #29732 End
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10780,6 +10794,79 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.mainTaskNames = mainTaskNames;
 	}
 
+	// #29732 Start
+	public String getHisCatCode() {
+		return hisCatCode;
+	}
+
+	public void setHisCatCode(String hisCatCode) {
+		this.hisCatCode = hisCatCode;
+	}
+
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	}
+
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	}
+
+	public String getCatCodeList() {
+		return catCodeList;
+	}
+
+	public void setCatCodeList(String catCodeList) {
+		this.catCodeList = catCodeList;
+	}
+
+	public boolean isCurrentInSpecMaint() {
+		return currentInSpecMaint;
+	}
+
+	public void setCurrentInSpecMaint(boolean currentInSpecMaint) {
+		this.currentInSpecMaint = currentInSpecMaint;
+	}
+
+	public boolean isCategoryDescriptionChange() {
+		return categoryDescriptionChange;
+	}
+
+	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
+		this.categoryDescriptionChange = categoryDescriptionChange;
+	}
+
+	/**
+	 * @return the isFromSubmitCatChange
+	 */
+	public boolean isFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isFromSubmitCatChange
+	 *            the isFromSubmitCatChange to set
+	 */
+	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
+
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
+
+	// #29732 End
+	
 	// Bug 32277 - start
 	public List<TabBean> getReadOnlyCommitteeTabBean() {
 		return readOnlyCommitteeTabBean;
@@ -11185,4 +11272,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
 	//#21692 - End
+	
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
+	}
+	// #29732
 }
