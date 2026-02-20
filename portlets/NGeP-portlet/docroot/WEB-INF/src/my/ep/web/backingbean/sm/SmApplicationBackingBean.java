@@ -10970,39 +10970,54 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	// #37925 START
 	/**
-	 * Handles approver change of current registration status based on the
-	 * latest PO section review.
+	 * Handles the logic for updating the current status when an approver change occurs.
+	 * Evaluates registration status IDs to determine if the current status should be updated.
 	 */
 	public void handleApproverChangeCurrentStatus() {
-		if (!getManagedBean().isDisplayCheckboxChangeCurrentStatus()) {
-			return;
-		}
+	    if (!getManagedBean().isDisplayCheckboxChangeCurrentStatus() || !isEligibleApprover()) {
+	        return;
+	    }
 
-		assignValReqdToTrue();
+	    assignValReqdToTrue();
 
-		if (!isEligibleApprover()) {
-			return;
-		}
+	    SmApplSectionReview latestPOChange = findLatestPOSectionReview();
+	    if (!isValidApplSectionReview(latestPOChange)) {
+	        return;
+	    }
 
-		SmApplSectionReview latestPOChange = findLatestPOSectionReview();
-		if (!isValidApplSectionReview(latestPOChange)) {
-			return;
-		}
+	    updateRegistrationStatus(latestPOChange);
+	}
 
-		Long currentRegStatusId = getCurrRegStatusId();
-		Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
-		
-		if(prevRegStatusId != null && currentRegStatusId != prevRegStatusId){
-			getManagedBean().setApprovedStatusId(getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
-			return;
-		}
-		
-		if(latestPOChange.getPmRegStatus().getRegStatusId() == prevRegStatusId){
-			getManagedBean().setChangeCurrRegStatus(false);
-		} else {
-			getManagedBean().setChangeCurrRegStatus(true);
-		}		
-		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
+	/**
+	 * Evaluates the status IDs and updates the Managed Bean properties.
+	 * 
+	 * @param latestPOChange the current section review being processed.
+	 */
+	private void updateRegistrationStatus(SmApplSectionReview latestPOChange) {
+	    Long currentRegStatusId = getCurrRegStatusId();
+	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
+	    
+	    // S1125: Simplified boolean expressions
+	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);
+	    boolean isNotChangeRegistrationStatus = latestPOChange.getPmRegStatus().getRegStatusId().equals(prevRegStatusId);
+
+	    // Default assignment
+	    getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
+	    
+	    // S1066: Merged conditions and simplified logic flow
+	    if (isNotChangeRegistrationStatus) {
+	        getManagedBean().setChangeCurrRegStatus(false);
+	        applySdmStatusIfRequired(sdmAfterPOSubmit);
+	    } else {
+	        getManagedBean().setChangeCurrRegStatus(true);
+	    }
+	}
+
+	private void applySdmStatusIfRequired(boolean sdmAfterPOSubmit) {
+	    if (sdmAfterPOSubmit) {
+	        Long sdmStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId();
+	        getManagedBean().setApprovedStatusId(sdmStatusId);
+	    }
 	}
 
 	public Long getCurrRegStatusId() {
@@ -19346,83 +19361,30 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * </p>
 	 */
 	public void updateApproverRegistrationStatusValue() {
-	    Long statusId = resolveCurrentStatusId();
-	    if (statusId == null) {
-	        return;
-	    }
-
-	    if (shouldOverrideWithLatestReview()) {
-	        applyLatestStatusToApproved(statusId);
-	        return;
-	    }
+		if(!getManagedBean().isApproverUser()){
+			return;
+		}
+		
+		SmApplSectionReview latestPOChange = findLatestPOSectionReview();
+		if(latestPOChange == null
+				|| latestPOChange.getPmRegStatus() == null
+				|| latestPOChange.getPmRegStatus().getPmStatus() == null
+				|| latestPOChange.getPmRegStatus().getPmStatus().getStatusId() == null){
+			return;
+		}
+		
+		Long currentRegStatusId = getCurrRegStatusId();
+	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
+	    
+	 	// is SDM changes after PO submit
+	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);
+	    
+	    // Default approved registration status value
+	    getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
 	    
 	    if (!getManagedBean().isChangeCurrRegStatus()) {
-	        if (getManagedBean().isPoUser()) {
-	            getManagedBean().setPoRecommendStatusId(statusId);
-	        }
-	        
-	        if (getManagedBean().isApproverUser()) {
-	            applyLatestStatusToApproved(statusId);
-	        }
+	        applySdmStatusIfRequired(sdmAfterPOSubmit);
 	    }
-	}
-	
-	/** 
-	 * Helper to centralize the 'Latest Review' resolution logic 
-	 */
-	private void applyLatestStatusToApproved(Long defaultStatusId) {
-	    Long latestStatusId = resolveLatestReviewStatusId();
-	    Long finalStatus = (latestStatusId != null) ? latestStatusId : defaultStatusId;
-	    getManagedBean().setApprovedStatusId(finalStatus);
-	}
-
-	/**
-	 * Resolves the current registration status ID safely.
-	 */
-	private Long resolveCurrentStatusId() {
-		if (getManagedBean() == null
-				|| getManagedBean().getSmSupplier() == null
-				|| getManagedBean().getSmSupplier().getSmAppl() == null
-				|| getManagedBean().getSmSupplier().getSmAppl()
-						.getPmRegStatus() == null
-				|| getManagedBean().getSmSupplier().getSmAppl()
-						.getPmRegStatus().getPmStatus() == null) {
-			return null;
-		}
-
-		return getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus()
-				.getPmStatus().getStatusId();
-	}
-
-	/**
-	 * Determines whether the status should be overridden with the latest PO
-	 * section review status.
-	 */
-	private boolean shouldOverrideWithLatestReview() {
-		if (getManagedBean() == null) {
-			return false;
-		}
-
-		if (!getManagedBean().isChangeCurrRegStatus()) {
-			return false;
-		}
-
-		assignValReqdToTrue();
-
-		return getManagedBean().isApproverUser();
-	}
-
-	/**
-	 * Resolves the status ID from the latest PO section review if valid.
-	 */
-	private Long resolveLatestReviewStatusId() {
-		SmApplSectionReview latestReview = findLatestPOSectionReview();
-
-		if (latestReview != null && validStatusId(latestReview)) {
-			return latestReview.getPmRegStatus().getPmStatus().getStatusId();
-		}
-
-		return null;
 	}
 
 	/**
