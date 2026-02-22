@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:blockUI widgetVar="blkPanelSearchTable" block=":form"
+		trigger="panelSearchId">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	<p:panel id="auditPatchSearchPanel"
+		header="#{lbl['lbl.audit.patch.search']}" toggleable="true">
+		<p:outputPanel>
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.audit.patch.instruction']}" escape="false" />
+			<br />
+			<br />
+		</p:outputPanel>
+		<table class="ppTwoTable">
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.audit.patch.change.type']}" /> <h:outputLabel
+						value="*" styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="changeTypeList"
+						styleClass="ppDropDownWidthM" required="true"
+						label="#{lbl['lbl.audit.patch.change.type']}"
+						value="#{auditPatchBackingBean.managedBean.searchBean.changeTypeID}"
+						style="width: 265px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{auditPatchBackingBean.getChangeTypeList()}"
+							var="changeType" itemLabel="#{changeType.changeTypeName}"
+							itemValue="#{changeType.auPatchChangeTypeID}" />
+						<p:ajax event="change" update=":form:auditPatchSearchPanel,:form:searchPatchMaster"
+							listener="#{auditPatchBackingBean.changeType()}" />
+					</p:selectOneMenu>
+					<ac:iconTooltip value="#{lbl['lbl.audit.patch.change.type.tooltip']}" />
+				</td>					
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.audit.header.docType']}" /></th>
+				<td><p:selectOneMenu id="docTypeList"
+						styleClass="ppDropDownWidthM"
+						label="#{lbl['lbl.audit.header.docType']}"
+						value="#{auditPatchBackingBean.managedBean.searchBean.docTypeID}"
+						style="width: 265px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" 
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{auditPatchBackingBean.getDocumentTypeList()}"
+							var="docType" itemLabel="#{docType.docTypeName}"
+							itemValue="#{docType.auPatchDocumentTypeID}" />
+					</p:selectOneMenu></td>
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td width="20%"><p:outputLabel
+						value="#{lbl['lbl.audit.header.docNo']}"></p:outputLabel></td>
+				<td width="275px;"><p:inputText
+						value="#{auditPatchBackingBean.managedBean.searchBean.docNo}"
+						id="itemCode" styleClass="ppDisplayTextM" size="36" /></td>
+						
+			</tr>
+			<tr>
+				<td width="20%"><p:outputLabel
+						value="#{lbl['lbl.audit.patch.eaduan.no']}"></p:outputLabel></td>
+				<td width="275px;"><p:inputText
+						value="#{auditPatchBackingBean.managedBean.searchBean.eAduanNo}"
+						id="itemName" styleClass="ppDisplayTextM" size="36" /></td>
+			</tr>
+			<tr>
+				<td colspan="4" width="100%">
+					<div class="ppRightBtn">
+						<p:commandButton id="panelSearchId"
+							value="#{lbl['lbl.btn.search']}"
+							onstart="blkPanelSearchTable.show();"
+							oncomplete="blkPanelSearchTable.hide();" update="searchPatchMaster"
+							process="auditPatchSearchPanel"
+							action="#{auditPatchBackingBean.searchMaster}" 
+							disabled="#{empty auditPatchBackingBean.managedBean.searchBean.changeTypeID}" />
+							
+						<p:commandButton id="searchButtonId"
+							value="#{lbl['lbl.btn.reset']}" process="@this"
+							action="#{auditPatchBackingBean.preLoading}"
+							update="@form"
+							 ></p:commandButton>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

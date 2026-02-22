@@ -9670,9 +9670,7 @@ public class SimpleQuoteBackingBean extends
 	 * @throws Exception If the service lookup fails.
 	 */
 	private CmItem refreshCmItem(CmItem cmItem) throws Exception {
-	    if (cmItem != null && cmItem.getCmUnspsc() != null) {
-	        return cmItem;
-	    }
+		
 	    ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
 	            ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 	    
@@ -9916,11 +9914,8 @@ public class SimpleQuoteBackingBean extends
 	 * * @return {@code false} if the quote exists and is marked as a panel; 
 	 * {@code true} otherwise (indicating the panel check passed or is not applicable).
 	 */
-	public boolean checkPanel() {
-		if (getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel()) {
-			return false;
-		}
-		return true;
+	public boolean checkIsPanel() {
+	    return getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel();
 	}
 	// #26059 - End
 }
