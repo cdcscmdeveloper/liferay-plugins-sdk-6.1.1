@@ -110,6 +110,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
@@ -1517,7 +1518,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				approval.setScQtApprovalDtls(this.getManagedBean()
 						.getScQtApprovalRequestList());
 				qt.setScQtApprovals(qtApproval);
-
+				
 				List<TabBean> qtCommittes = this.getManagedBean()
 						.getScCommitteeMemberTabList();
 
@@ -1607,7 +1608,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tenderResDTO.setQtDetail(qt);			
 				
 			} else {
-				
+				log.info("harun pening check changes here 22222=================");
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
 				List<String> approvalTypes = null;
@@ -1635,6 +1636,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<ScQtApprovalRequest> approvalRequests = this.getManagedBean().getScQtApprovalRequestList();
 				
 				if (ParameterConst.APPROVAL_CATEGORY_BPK.equalsIgnoreCase(approvalCategoryCode)) { //BPK
+					log.info("harun pening check revise or reject BPK================");
 					approvalDocType = ParameterConst.DOCTYPE_BPK_APPROVAL;
 					approval.setApproverSettings(null);
 
@@ -1651,7 +1653,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equalsIgnoreCase(approvalCategoryCode)) { //FC
-
+					log.info("harun pening check revise or reject FC================");
 					approvalRequests = proposalValidityWip(outcome);//#21692
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
@@ -1671,6 +1673,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approvalCategoryCode)) {
+					log.info("harun pening check approve or reject PTJ================");
 					List<ScQtBsv> scQtBsvs = new QTDetailBackingBean()
 						.constructBriefingSiteVisitList(qt);
 					qtReqDTO.setScQtBsvs(scQtBsvs);
@@ -1687,14 +1690,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				updateApprovalRequest(approvalRequests, outcome);
 
-				finalizeRemarks(approval.getScQtApprovalRemarks());
+				log.info("harun pening check changes here 3333=================");
+				finalizeRemarks(approval.getScQtApprovalRemarks()); //disabled temporary by harun
 				// approval.getScQtApprovalDtls().clear();
 
 				approval.setScQtApprovalDtls(approvalRequests);
 
+				log.info("harun pening check changes here 3333 VVVVV=================");
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
 				qt.setScQtApprovals(qtApproval);
+				log.info("harun pening check changes here 5555=================");
 
 				qt.setScQtCommittees(null);
 				qtReqDTO.setPayLoad(dataType);
@@ -2508,8 +2514,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				ScQtApprovalRequest approvalRequest = approvalRequests.get(i);
 				String approvalType = approvalRequest.getApprovalType()
 						.getParameterCode();
+				log.info("harun pening check revertToOldValues approvalType==================="+approvalType);
 				if (ParameterConst.APPROVAL_REQUEST_RESTRICTED_TENDER
 						.equalsIgnoreCase(approvalType)) {
+					
 					if (approvalRequest.getApproverAction() == null) {
 						revertQTTypeAsOpen(scQt);
 					}
@@ -2550,12 +2558,33 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 
 				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(approvalType)) {
+					log.info("harun pening check revertToOldValues approvalType UBD TRUE===================");
 					// Proposal Start Date
 					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
 					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
 						scQt.setProposalStartDate((Date)valueBean.getOldValue());
 						updatePublishClosingDate(scQt);
 					}
+					
+//					//Status
+//					QtAmendMentValueBean valueBeanProposalDate = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+//					log.info("harun cek STATUS valueBeanProposalDate.getOldValue() =============="+valueBeanProposalDate.getOldValue());
+//					log.info("harun cek STATUS valueBeanProposalDate.getNewValue() =============="+valueBeanProposalDate.getNewValue());
+	
+//					for (ScQtBsv briefing : scQt.getScQtBriefings()) {
+//						for (ScQtBsvDtl dtl : briefing.getScQtBsvDtls()) {
+//							if (dtl.getBsvStatus() != null) {
+//								Long oldStatusId = dtl.getBsvStatus().getStatusId();
+//								log.info("Old STATUS = " + oldStatusId);
+//								// update status
+//								//dtl.setBsvStatus(rejectStatus);
+//								if(QTStatusConst.BSV_POSTPONE.equals(oldStatusId)){
+//									dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_REQUEST_REJECT);
+//									log.info("harun cek dtl.getBsvStatus().getStatusId()============="+dtl.getBsvStatus().getStatusId());
+//								}
+//							}
+//						}
+//					}
 				}
 			}
 		}

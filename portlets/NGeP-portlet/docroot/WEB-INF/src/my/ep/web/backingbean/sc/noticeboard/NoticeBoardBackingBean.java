@@ -1694,9 +1694,13 @@ public class NoticeBoardBackingBean extends
 						.searchQTNoticeBoard(reqDTO);
 				
 				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
+					log.info("harun cek NOTICE_BOARD_STATUS_CHANGES==================");
+					log.info("harun cek resDTO.getQtAmendMentBeans().size()=========="+resDTO.getQtAmendMentBeans().size());
 					populateClosingQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBeans());
+					populateBsvQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBeans());//#28188
 				} else {
 					getManagedBean().setAmendmentClosingDateMap(null);
+					getManagedBean().setAmendmentBSVDateMap(null);
 				}
 				getManagedBean().setCommitteeFormed(resDTO.getCommitteeFormed());
 				return resDTO.getQtResultBean();
@@ -1730,6 +1734,123 @@ public class NoticeBoardBackingBean extends
 		
 		this.getManagedBean().setAmendmentClosingDateMap(amendmentClosingDateMap);
 	}
+	
+	//#28188 - Start
+	private void populateBsvQtAmendIntoAmendmentBeanMap(List<QtAmendMentBean> qtAmendMentBeans) {
+		log.info("harun cek populateBsvQtAmendIntoAmendmentBeanMap==========");
+		Map<BigDecimal, Date> amendmentBSVDateMap = new HashMap<BigDecimal, Date>();
+		
+		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
+			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
+				log.info("harun cek amendMentBean.getQtId()======"+amendMentBean.getQtId());
+				if (amendMentBean.getValueMap() != null) {
+					
+//					// Cache map & key once
+//					Map<String, QtAmendMentValueBean> valueMap = amendMentBean.getValueMap();
+//					//BigDecimal qtIdKey = BigDecimal.valueOf(amendMentBean.getQtId());
+//
+//					// locate FIELD_QT_PUBLISH_PERIOD bean
+//					QtAmendMentValueBean publishPeriodBean =
+//					        valueMap.get(QTFieldConst.FIELD_QT_PUBLISH_PERIOD);
+//
+//					// locate FIELD_QT_BSV_DATE bean (supports combined keys)
+//					QtAmendMentValueBean bsvDateBean = null;
+//					for (Map.Entry<String, QtAmendMentValueBean> entry : valueMap.entrySet()) {
+//					    if (entry.getKey().startsWith(QTFieldConst.FIELD_QT_BSV_DATE)) {
+//					        bsvDateBean = entry.getValue();
+//					        break;
+//					    }
+//					}
+//
+//					for (Map.Entry<String, QtAmendMentValueBean> amendMentBeanValue : valueMap.entrySet()) {
+//					    QtAmendMentValueBean currentBean = amendMentBeanValue.getValue();
+//					    Date approvalDate = currentBean.getApprovalDate();
+//
+//					    log.info("harun cek valueBean.getApprovalDate()============"+approvalDate);
+//						log.info("harun cek valueBean.getOldValue()============"+currentBean.getOldValue());
+//						log.info("harun cek valueBean.getNewValue()============"+currentBean.getNewValue());
+//
+//					    if (approvalDate == null) {
+//					        continue;
+//					    }
+//
+//					    boolean publishApproved =
+//					            publishPeriodBean != null &&
+//					            BooleanUtils.isTrue(publishPeriodBean.getIsApproved());
+//
+//					    boolean bsvApproved =
+//					            bsvDateBean != null &&
+//					            BooleanUtils.isTrue(bsvDateBean.getIsApproved());
+//
+//					    if (publishApproved || bsvApproved) {
+//					        Date prevApprovalDate = amendmentBSVDateMap.get(amendMentBeanValue.getKey());
+//
+//					        // keep the latest approval date
+//					        if (prevApprovalDate == null || !prevApprovalDate.after(approvalDate)) {
+//					            amendmentBSVDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);
+//					        }
+//					    }
+//					}
+					
+					
+					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
+						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
+						log.info("harun cek valueBean.getApprovalDate() XXXX============"+valueBean.getApprovalDate());
+						
+					
+						Date approvalDate = valueBean.getApprovalDate();
+//						if (approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
+//							Date prevApprovalDate = amendmentBSVDateMap.get(amendMentBeanValue.getKey());
+//							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
+//								continue;
+//							}
+//							amendmentBSVDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);	
+//						}
+						valueBean = amendMentBean.getValueMap().get(QTFieldConst.FIELD_QT_PUBLISH_PERIOD);
+//						log.info("harun cek valueBean.getOldValue() FIELD_QT_PUBLISH_PERIOD AAA============"+valueBean.getOldValue());
+//						log.info("harun cek valueBean.getNewValue() FIELD_QT_PUBLISH_PERIOD AAA============"+valueBean.getNewValue());
+//						log.info("harun cek valueBean.getIsApproved() AAA============"+valueBean.getIsApproved());
+						if (valueBean != null && approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
+							
+							log.info("harun cek valueBean.getOldValue() FIELD_QT_PUBLISH_PERIOD BBB============"+valueBean.getOldValue());
+							log.info("harun cek valueBean.getNewValue() FIELD_QT_PUBLISH_PERIOD BBB============"+valueBean.getNewValue());
+							Date prevApprovalDate = amendmentBSVDateMap.get(amendMentBeanValue.getKey());
+							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
+								continue;
+							}
+							amendmentBSVDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);
+						}
+						
+						for (Map.Entry<String, QtAmendMentValueBean> entry
+						        : amendMentBean.getValueMap().entrySet()) {
+
+						    if (entry.getKey().startsWith(QTFieldConst.FIELD_QT_BSV_DATE)) {
+						        valueBean = entry.getValue();
+						        break;
+						    }
+						}
+						
+//						log.info("harun cek valueBean.getOldValue() FIELD_QT_BSV_DATE AAA============"+valueBean.getOldValue());
+//						log.info("harun cek valueBean.getNewValue() FIELD_QT_BSV_DATE AAA============"+valueBean.getNewValue());
+//						log.info("harun cek valueBean.getIsApproved() AAA============"+valueBean.getIsApproved());
+						if (valueBean != null && approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
+							Date prevApprovalDate = amendmentBSVDateMap.get(amendMentBeanValue.getKey());
+							log.info("harun cek valueBean.getOldValue() FIELD_QT_BSV_DATE BBB============"+valueBean.getOldValue());
+							log.info("harun cek valueBean.getNewValue() FIELD_QT_BSV_DATE BBB============"+valueBean.getNewValue());
+							
+							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
+								continue;
+							}
+							amendmentBSVDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);
+						}
+					}
+					
+				}
+			}	
+		}
+		this.getManagedBean().setAmendmentBSVDateMap(amendmentBSVDateMap);
+	}	
+	//#28188 - End
 
 	private SearchFilterBean getSearchFilterBeanByDataBean(String searchField,
 			NoticeBoardSearchDataBean searchDataBean) {

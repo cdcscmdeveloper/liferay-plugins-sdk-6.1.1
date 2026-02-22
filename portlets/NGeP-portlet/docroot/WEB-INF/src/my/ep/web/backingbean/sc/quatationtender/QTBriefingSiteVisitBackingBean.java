@@ -1226,6 +1226,10 @@ public class QTBriefingSiteVisitBackingBean extends
 	 */
 	private void updateQtAmmendMentDtls(String bsvType,
 			ScQtBsvDtl oldBsvDtl, ScQtBsvDtl newBsvDtl) {
+		log.info("harun cek updateQtAmmendMentDtls=====================");
+		log.info("harun cek oldBsvDtl.getQtBsvDtlId()====================="+oldBsvDtl.getQtBsvDtlId());
+		log.info("harun cek newBsvDtl.getQtBsvDtlId()====================="+newBsvDtl.getQtBsvDtlId());
+		
 
 		String fieldPrefix = oldBsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR;
 		QtAmendMentBean amendMentBean = this.getManagedBean().getAmendMentBean();
@@ -1235,16 +1239,20 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		
 		// bsvDesc
-		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DESC, 
-				oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc(),
-				true);
+		if(!newBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)){
+			putIntoAmendMentBeanIfChanged(amendMentBean, 
+					fieldPrefix + QTFieldConst.FIELD_QT_BSV_DESC, 
+					oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc(),
+					true);
+		}
 		
 		// bsvDate
-		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DATE, 
-				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate(),
-				true);
+		if(!newBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)){
+			putIntoAmendMentBeanIfChanged(amendMentBean, 
+					fieldPrefix + QTFieldConst.FIELD_QT_BSV_DATE, 
+					oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate(),
+					true);
+		}
 		
 		// Proposal Start Date
 		ScQt scQt = getManagedBean().getQt();
@@ -1263,7 +1271,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				oldBsvDtl.getLocation(), newBsvDtl.getLocation(),
 				true);
 		}
-		//#28188 - Start
+		//#28188 - End
 
 		// address
 		ScAddress oldAddress = oldBsvDtl.getAddress();
@@ -1310,6 +1318,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					oldAddress.getPmCity().getCityId(), newAddress.getPmCity().getCityId(),
 					true);
 		}
+		//#28188 - End
 
 		// coordinatingOfficer
 		//#28188 - Start
@@ -1319,6 +1328,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				oldBsvDtl.getCoordinatingOfficer(), newBsvDtl.getCoordinatingOfficer(),
 				true);
 		}
+		//#28188 - End
 
 		// maxNoOfAttendance
 		//#28188 - Start
@@ -1328,7 +1338,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance(),
 				true);
 		}
-		
+		//#28188 - End
 
 		// bsvStatus
 		Long oldBsvStatusId = oldBsvDtl.getBsvStatus() != null ? oldBsvDtl.getBsvStatus().getStatusId() : null;
@@ -1337,9 +1347,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		if(newBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)){	
 			oldBsvStatusId = retrieveOldBsvStatus(bsvType, newBsvDtl);
 
+			// bsvRecordStatus
 			putIntoAmendMentBeanIfChanged(amendMentBean, 
 					fieldPrefix + QTFieldConst.FIELD_QT_BSV_RECORD_STATUS, 
-					DbValueConst.RECORD_STATUS_IN_PROGRESS, DbValueConst.RECORD_STATUS_ACTIVE,
+					//DbValueConst.RECORD_STATUS_IN_PROGRESS, DbValueConst.RECORD_STATUS_ACTIVE,
+					DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_ACTIVE,
 					true);
 			
 		}
@@ -1348,7 +1360,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_STATUS, 
 				oldBsvStatusId, newBsvStatusId,
 				true);
-
+		
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 		this.getManagedBean().setTempScQtBsvDtl(null);
 
@@ -1368,6 +1380,9 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * @return	the indicator field is changed.
 	 */
 	public boolean putIntoAmendMentBeanIfChanged(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue, boolean ptjApprovalReqFlg) {
+		log.info("harun cek putIntoAmendMentBeanIfChanged======================");
+		log.info("harun cek putIntoAmendMentBeanIfChanged key======================"+key);
+		
 		boolean isChanged = false;
 		QtAmendMentValueBean oldValueBean = amendMentBean.getValueMap().get(key);
 		
@@ -1713,6 +1728,196 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		return oldBsvStatusId;
 	}
+	
+	private void updateQtAmmendMentDtlsPostpone(String bsvType,
+			ScQtBsvDtl oldBsvDtl, ScQtBsvDtl newBsvDtl) {
+		log.info("harun cek updateQtAmmendMentDtlsPostpone XXXX=====================");
+
+		String fieldPrefix = oldBsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR;
+		QtAmendMentBean amendMentBean = this.getManagedBean().getAmendMentBean();
+		
+		log.info("harun cek fieldPrefix CIBAIIII================="+fieldPrefix);
+		
+		if (null == amendMentBean) {
+			amendMentBean = new QtAmendMentBean();
+		}
+		
+		
+		// bsvDesc
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DESC, 
+				oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc(),
+				true);
+		
+		// bsvDate
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DATE, 
+				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate(),
+				true);
+		
+		// Proposal Start Date
+		ScQt scQt = getManagedBean().getQt();
+		Date oldProposalStartDate = scQt.getProposalStartDate();
+		updateLatestBsvDate();
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				QTFieldConst.FIELD_QT_PROPOSAL_START_DATE, 
+				oldProposalStartDate, scQt.getProposalStartDate(),
+				true);
+		
+		// location
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+			fieldPrefix + QTFieldConst.FIELD_QT_BSV_LOCATION, 
+			oldBsvDtl.getLocation(), newBsvDtl.getLocation(),
+			true);
+
+		// address
+		ScAddress oldAddress = oldBsvDtl.getAddress();
+		ScAddress newAddress = newBsvDtl.getAddress();
+		if (newAddress.getAddress2().equals("")) {
+			newAddress.setAddress2(null);
+		}
+		if (newAddress.getAddress3().equals("")) {
+			newAddress.setAddress3(null);
+		}
+		/*if (newAddress.getAddress4().equals("")) {
+			newAddress.setAddress4(null);
+		}*/
+		// address1
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+			fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_1, 
+			oldAddress.getAddress1(), newAddress.getAddress1(),
+			true);
+		// address2
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_2, 
+				oldAddress.getAddress2(), newAddress.getAddress2(),
+				true);
+		// address3
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_3, 
+				oldAddress.getAddress3(), newAddress.getAddress3(),
+				true);
+		// address4
+		/*putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_4, 
+				oldAddress.getAddress4(), newAddress.getAddress4());*/
+		// postcode
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_POSTCODE, 
+				oldAddress.getPostcode(), newAddress.getPostcode(),
+				true);
+		
+		// cityId
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_CITY, 
+				oldAddress.getPmCity().getCityId(), newAddress.getPmCity().getCityId(),
+				true);
+
+		// coordinatingOfficer
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_COORDINATING_OFFICER, 
+				oldBsvDtl.getCoordinatingOfficer(), newBsvDtl.getCoordinatingOfficer(),
+				true);
+
+		// maxNoOfAttendance
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_MAX_NO_OF_ATTENDANCE, 
+				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance(),
+				true);
+
+		// bsvStatus
+		putIntoAmendMentBeanIfChangedPostpone(amendMentBean, 
+				fieldPrefix + QTFieldConst.FIELD_QT_BSV_STATUS, 
+				oldBsvDtl.getBsvStatus().getStatusId(), newBsvDtl.getBsvStatus().getStatusId(),
+				true);
+
+		this.getManagedBean().setAmendMentBean(amendMentBean);
+		this.getManagedBean().setTempScQtBsvDtl(null);
+
+	}
+	
+	/**
+	 * Put into AmendmentBean if any changes.
+	 * 
+	 * @param amendMentBean
+	 * 		the QtAmendMentBean instance
+	 * @param key
+	 * 		the field key
+	 * @param oldValue
+	 * 		the old value
+	 * @param newValue
+	 * 		the new value
+	 * @return	the indicator field is changed.
+	 */
+	public boolean putIntoAmendMentBeanIfChangedPostpone(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue, boolean ptjApprovalReqFlg) {
+		log.info("harun cek putIntoAmendMentBeanIfChangedPostpone======================");
+		log.info("harun cek putIntoAmendMentBeanIfChangedPostpone key======================"+key);
+		boolean isChanged = false;
+		QtAmendMentValueBean oldValueBean = amendMentBean.getValueMap().get(key);
+		
+		
+		// Always get the original old value. 
+		if (oldValueBean != null) {
+			log.info("harun cek oldValueBean IS NOT NULL======================");
+			oldValue = oldValueBean.getOldValue();
+		}else{
+			log.info("harun cek oldValueBean IS NULL======================");
+		}
+		
+		if(oldValue != null){
+			log.info("harun cek oldValue adalah======================"+oldValue);
+		}
+		if(newValue != null){
+			log.info("harun cek newValue adalah======================"+newValue);
+		}
+		
+//		if (oldValue instanceof String || newValue instanceof String) {
+//			if (!StringUtils.equals((String)oldValue, (String)newValue)) {
+//				isChanged = true;
+//			}
+//		} else {
+//			if (oldValue != null && newValue != null &&
+//					!oldValue.equals(newValue)) {
+//				isChanged = true;
+//			}	
+//		}
+//		
+//		if (isChanged) {
+//			QtAmendMentValueBean valueBean = new QtAmendMentValueBean();
+//			valueBean.setOldValue(oldValue);
+//			valueBean.setNewValue(newValue);
+//			amendMentBean.getValueMap().put(key, valueBean);
+//			
+//			if (ptjApprovalReqFlg) {
+//				amendMentBean.setPTJApprovalReq(true);	
+//			} else {
+//				valueBean.setApprovalDate(new Date());
+//				valueBean.setIsApproved(true);
+//			}
+//		} else {
+//			// remove if had been revert to old value.
+//			if (oldValueBean != null) {
+//				amendMentBean.getValueMap().remove(key);
+//			}
+//		}
+		
+		
+		QtAmendMentValueBean valueBean = new QtAmendMentValueBean();
+		valueBean.setOldValue(newValue);
+		valueBean.setNewValue(newValue);
+		amendMentBean.getValueMap().put(key, valueBean);
+		
+		if (ptjApprovalReqFlg) {
+			amendMentBean.setPTJApprovalReq(true);	
+		} else {
+			valueBean.setApprovalDate(new Date());
+			valueBean.setIsApproved(true);
+		}
+		
+		return isChanged;
+	}
+	
+	
 	//#28188 - End
 		
 }
