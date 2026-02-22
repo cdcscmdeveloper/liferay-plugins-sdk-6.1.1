@@ -23,12 +23,24 @@
 								postUpdateListener="#{itemInquirySummaryRptBackingBean.onSupplierChange()}" /></td>
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.request.note.header.status']}" /></td>
-			<td width="35%"><p:selectOneMenu
-					value="#{itemInquirySummaryRptBackingBean.managedBean.status}">
-					<f:selectItems
-						value="#{itemInquirySummaryRptBackingBean.searchStatusDesc(ParameterConst.doctypePurchaseInquiry)}" />
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu></td>
+			<td width="35%">
+				<ui:remove>#29558 start</ui:remove>
+				<p:accordionPanel multiple="true" id="accPanel">
+				    <p:tab title="#{lbl['lbl.sc.status']}:">
+				        <p:scrollPanel style="width:270px;height:100px">
+				            <p:selectManyCheckbox id="manyMenusts" value="#{itemInquirySummaryRptBackingBean.managedBean.scStatusManyMenuTemp}" layout="pageDirection">
+				                <f:selectItem itemValue="#{lbl['lbl.rpt.all']}" itemLabel="#{lbl['lbl.rpt.all']}"/>
+				                <f:selectItems value="#{itemInquirySummaryRptBackingBean.reportStatusDropdownValuesSelectManyMenu(ParameterConst.doctypePurchaseInquiry)}" 
+				                var="status" itemValue="#{status}" itemLabel="#{status}" 
+				                itemDisabled="#{itemInquirySummaryRptBackingBean.isDisabled(status,ParameterConst.doctypePurchaseInquiry)}"/>
+				                <p:ajax event="change" update="manyMenusts" process="@form" 
+    					 		 listener="#{itemInquirySummaryRptBackingBean.onSelectAll(ParameterConst.doctypePurchaseInquiry)}"/>
+    			            </p:selectManyCheckbox>
+				        </p:scrollPanel>
+				    </p:tab>
+    			</p:accordionPanel>
+    			<ui:remove>#29558 end</ui:remove>
+			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel
