@@ -8363,18 +8363,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			trimExtensionCode(requestItem.getCmItem());
 		}
 	}
-	
-	/**
-	 * Checks whether the assign code detail exists. This method retrieves the
-	 * status from the managed bean and safely handles potential null values to
-	 * prevent NullPointerException.
-	 * 
-	 * @return {@code true} if the assign code detail exists; {@code false} if
-	 *         it does not exist or if the retrieved status is null.
-	 */
-	private boolean checkAssignCodeDetail() {
-		return Boolean.TRUE.equals(getManagedBean().isExistInAssignItemDetail());
-	}
 
 	/**
 	 * Helper to clean item names by removing 'N/A' and trimming whitespace. * @param
