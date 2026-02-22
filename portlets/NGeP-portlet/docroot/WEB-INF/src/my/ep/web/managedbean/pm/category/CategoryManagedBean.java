@@ -1383,6 +1383,5 @@ public class CategoryManagedBean extends BaseManagedBean {
 	public void setDisableSection(Integer disableSection) {
 		this.disableSection = disableSection;
 	}
-
 	//end #29665
 }

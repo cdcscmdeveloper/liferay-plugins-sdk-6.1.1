@@ -1,7 +1,8 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -11,7 +12,8 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" severity="error,info" showSummary="false"></p:messages>
+			closable="true" severity="error,info" showSummary="false">
+		</p:messages>
 		<table style="width: 100%;">
 			<tr>
 				<td>
@@ -34,8 +36,7 @@
 			</tr>
 		</table>
 
-		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
-			id="catParent">
+		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true" id="catParent">
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 17%"><p:outputLabel
@@ -161,8 +162,7 @@
 					<td rowspan="2">
 						<!-- Start #29665 Add action -->
 						<c:if test="#{categoryBackingBean.managedBean.newCategory}">
-							<!-- 34445 Remove required inputText -->
-							<p:inputTextarea
+							<p:inputTextarea required="true"
 								id="catCodeDescId" label="#{lbl['lbl.pm.desc']}" 
 								style="text-transform:uppercase"
 								valueChangeListener="#{categoryBackingBean.categoryNameChanges}"
@@ -191,8 +191,8 @@
 						<!-- End #29665 Add action -->
 					</td>
 					<td>
-					<p:outputLabel value="#{lbl['lbl.pm.facility.type']}" />
-						</td>
+						<p:outputLabel value="#{lbl['lbl.pm.facility.type']}" />
+					</td>
 					<td>
 						<p:selectOneMenu id="facilityTypeId" required="#{categoryBackingBean.managedBean.facilityTypeChoosable}" label="#{lbl['lbl.pm.facility.type']}"
 					       disabled="#{!categoryBackingBean.managedBean.facilityTypeChoosable}"
@@ -490,13 +490,16 @@
 
 									<table style="width: 100%;">
 										<tr>
-											<td style="text-align: right;"><p:commandButton
-													value="#{lbl['lbl.btn.search']}"
-													action="#{categoryBackingBean.searchLOV}" update="lovTb2">
-												</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}"
+											<td style="text-align: right;">
+												<p:commandButton value="#{lbl['lbl.btn.search']}"
+													action="#{categoryBackingBean.searchLOV}"
+													update="lovTb2">
+												</p:commandButton>
+												<p:commandButton value="#{lbl['lbl.btn.reset']}"
 													action="#{categoryBackingBean.resetLOV}"
 													update="searchPanel,resultPanel">
-												</p:commandButton></td>
+												</p:commandButton>
+											</td>
 										</tr>
 									</table>
 								</h:panelGroup>
@@ -734,31 +737,28 @@
 
 							<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
 								<h:panelGroup id="searchPanel2" style="width:100%;">
-									<h:panelGrid columns="3" id="lovCriteria2" cellpadding="0"
-										cellspacing="0">
-
-										<p:selectOneMenu
-											value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems
-												value="#{categoryBackingBean.managedBean.searchField}" />
+									<h:panelGrid columns="3" id="lovCriteria2" cellpadding="0" cellspacing="0">
+										<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItems value="#{categoryBackingBean.managedBean.searchField}" />
 										</p:selectOneMenu>
-										<p:inputText
-											value="#{categoryBackingBean.managedBean.searchValue[1]}"
-											style="margin-top:2.5%;" />
+										<p:inputText value="#{categoryBackingBean.managedBean.searchValue[1]}" style="margin-top:2.5%;" />
 									</h:panelGrid>
 
 									<table style="width: 100%;">
 										<tr>
-											<td style="text-align: right;"><p:commandButton
+											<td style="text-align: right;">
+												<p:commandButton
 													value="#{lbl['lbl.btn.search']}"
 													action="#{categoryBackingBean.searchPmMachineLOV}"
 													update="lovTb22">
-												</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}"
+												</p:commandButton>
+												<p:commandButton
+													value="#{lbl['lbl.btn.reset']}"
 													action="#{categoryBackingBean.resetPmMachineLOV}"
 													update="searchPanel2,resultPanel2">
-												</p:commandButton></td>
+												</p:commandButton>
+											</td>
 										</tr>
 									</table>
 								</h:panelGroup>
@@ -802,7 +802,7 @@
 												action="#{categoryBackingBean.populateToSavePmMachineLOV}"
 												oncomplete="lovPopupPmMachine.hide();" />
 											<!-- end #29665 add listener and update remark -->
-
+											
 											<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 												action="#{categoryBackingBean.resetPmMachineLOV}"
 												oncomplete="lovPopupPmMachine.hide();"
