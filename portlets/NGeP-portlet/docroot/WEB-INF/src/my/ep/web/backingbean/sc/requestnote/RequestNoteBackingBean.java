@@ -8359,7 +8359,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean namesDiffer = !cmItemName.equalsIgnoreCase(itemName);
 		boolean tempUnspscBlank = StringUtils.isBlank(requestItem.getTempUnspscCode());
 
-		if (namesDiffer && tempUnspscBlank && checkAssignCodeDetail()) {
+		if (namesDiffer && tempUnspscBlank) {
 			trimExtensionCode(requestItem.getCmItem());
 		}
 	}
