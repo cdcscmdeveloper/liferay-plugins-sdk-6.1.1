@@ -7713,7 +7713,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Compares the supplier’s account type with allowed types for PK7 and Special Item procurements.
+	 * Compares the suppliers account type with allowed types for PK7 and Special Item procurements.
 	 * Displays an error message if the supplier account type does not match the restriction list.
 	 *
 	 * @param rnDtl        the request note detail containing justification and reason info
@@ -7783,7 +7783,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * Validates supplier’s MOF account; returns basic account if missing, otherwise keeps the supplied type.
+	 * Validates suppliers MOF account; returns basic account if missing, otherwise keeps the supplied type.
 	 *
 	 * @param supplierItem supplier data to check MOF account
 	 * @param suppAccType  current supplier account type
@@ -8185,7 +8185,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Determines actual date using quote’s created date; defaults to current
+	 * Determines actual date using quotes created date; defaults to current
 	 * date.
 	 * 
 	 * @return resolved actual date
