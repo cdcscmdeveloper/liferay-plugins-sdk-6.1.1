@@ -10305,6 +10305,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// #39422 - Start - Comment method
 		// getlatestPoOverlappingRemarks();
 		// #39422 - End
+		// #39679 - Start
+		getManagedBean().setApplnOverLapRemarks(null);
+		SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+		// #39679 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
