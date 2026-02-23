@@ -12254,7 +12254,6 @@ public class SmApplicationBackingBean extends
 					doc.getNewAddedFiles().add(file);
 					//#34392 - end
 					//#34552 - end
-					/*commonUploadFile(event, filePath);*/
 					SmCommonUtil.processUpload(filePath, event, file.getFileName()); //#39282
 				}
 			}
@@ -12301,7 +12300,7 @@ public class SmApplicationBackingBean extends
 					//log.info(i+". NAME -> " + doc.getSmApplDocFiles().get(i).getFileName());
 				}
 				//#28807 - END
-				//doc.getSmApplDocFiles().get(0).setFilePath(filePath); #39282
+				//doc.getSmApplDocFiles().get(0).setFilePath(filePath); //#39282
 
 				getManagedBean()
 						.getSmAppl()
@@ -12311,7 +12310,6 @@ public class SmApplicationBackingBean extends
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
 
-				/*commonUploadFile(event, filePath);*/
 				SmCommonUtil.processUpload(filePath, event, aaa.getFileName()); //#39282
 			}
 		}
