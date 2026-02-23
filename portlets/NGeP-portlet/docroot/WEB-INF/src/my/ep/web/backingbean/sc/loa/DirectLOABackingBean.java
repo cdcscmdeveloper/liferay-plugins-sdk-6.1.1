@@ -3995,9 +3995,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	
 		boolean isContractPeriodAbove4 = isContractPeriodAbove4();
 		//#25726 - note 441 - Start
-		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? this
-				.getManagedBean().getScLoa().getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL
+				.equals(this.getManagedBean().getScLoa().getContractType().getParameterCode()) : false;
 
 		if (!isPK7 && isContractTypeCentral) {
 			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
@@ -8453,8 +8452,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		//#25726 - note 441
 		boolean isContractTypeCentral = loa.getContractType() != null
-				&& loa.getContractType().getParameterCode() != null ? loa.getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+				&& loa.getContractType().getParameterCode() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL.equals(loa
+				.getContractType().getParameterCode()) : false;
 
 		if ( loa.getScLoiLoa().getFulfilmentTypeCode() != null && loa.isBrandNew() && !isPk7Periodic()) {
 
