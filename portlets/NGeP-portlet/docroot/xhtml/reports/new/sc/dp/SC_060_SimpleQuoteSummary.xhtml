@@ -30,12 +30,24 @@
 		<tr>
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.status']}" /></td>
-			<td width="35%"><p:selectOneMenu
-					value="#{sqSummaryRptBackingBean.managedBean.status}">
-					<f:selectItems
-						value="#{sqSummaryRptBackingBean.searchStatusDesc(ParameterConst.doctypeSimpleQuote)}" />
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu></td>
+			<td width="35%">
+				<ui:remove>#29558 start</ui:remove>
+				<p:accordionPanel multiple="true" id="accPanel">
+				    <p:tab title="#{lbl['lbl.sc.status']}:">
+				        <p:scrollPanel style="width:300px;height:200px">
+				            <p:selectManyCheckbox id="manyMenusts" value="#{sqSummaryRptBackingBean.managedBean.scStatusManyMenuTemp}" layout="pageDirection">
+				                <f:selectItem itemValue="#{lbl['lbl.rpt.all']}" itemLabel="#{lbl['lbl.rpt.all']}"/>
+				                <f:selectItems value="#{sqSummaryRptBackingBean.reportStatusDropdownValuesSelectManyMenu(ParameterConst.doctypeSimpleQuote)}" 
+				                var="status" itemValue="#{status}" itemLabel="#{status}" 
+				                itemDisabled="#{sqSummaryRptBackingBean.isDisabled(status,ParameterConst.doctypeSimpleQuote)}"/>
+				                <p:ajax event="change" update="manyMenusts" process="@form" 
+    					 		 listener="#{sqSummaryRptBackingBean.onSelectAll(ParameterConst.doctypeSimpleQuote)}"/>
+    			            </p:selectManyCheckbox>
+				        </p:scrollPanel>
+				    </p:tab>
+    			</p:accordionPanel>
+				<ui:remove>#29558 end</ui:remove>
+			</td>
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.request.note.proc.type']}" /></td>
 			<td width="35%"><p:selectOneMenu
