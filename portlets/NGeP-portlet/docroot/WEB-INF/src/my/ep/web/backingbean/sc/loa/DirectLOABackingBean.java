@@ -11764,8 +11764,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			// #25726 - note 424 - start
 			if (scLoa.getContractType() != null) {
-				isContractTypeAsMinistry = scLoa.getContractType().getParameterCode()
-						.equals(ParameterConst.CONTRACT_TYPE_MINISTRY);
+				isContractTypeAsMinistry = ParameterConst.CONTRACT_TYPE_MINISTRY.equals(scLoa.getContractType()
+						.getParameterCode());
 			}
 			// #25726 - note 424 - end
 			
