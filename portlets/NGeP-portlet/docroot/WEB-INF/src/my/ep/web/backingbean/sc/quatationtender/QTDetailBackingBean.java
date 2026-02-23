@@ -3381,9 +3381,7 @@ public class QTDetailBackingBean extends
 	 *            the outcome
 	 * @return the string
 	 */
-	// #29732 start
-	public void updateBpmTask(String outcome) {
-	// #29732 end
+	public String updateBpmTask(String outcome) {
 		
 		//25037 - start - remove after clone(25635) enter production
 		assertSpecificationUpdateInProgress(false);
@@ -3403,7 +3401,7 @@ public class QTDetailBackingBean extends
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
 				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
-				return;
+				return changedCatCodeList;
 			}
 		}
 		// #29732 End
@@ -3699,7 +3697,7 @@ public class QTDetailBackingBean extends
 			detailSO = null;
 			committeSO=null;
 		}
-//		return null; // #29732 remove
+		return null; 
 	}
 
 	// #30477/#25426 -start-
