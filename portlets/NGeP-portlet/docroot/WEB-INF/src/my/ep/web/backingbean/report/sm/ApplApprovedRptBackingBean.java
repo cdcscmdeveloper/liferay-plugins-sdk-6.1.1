@@ -71,6 +71,11 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		getManagedBean().setMofNo(null);
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setZone(null);
+		// #38227 - START
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		setDefaultDateFromAndDateTo();
+		// #38227 - END
 		// #32521 - START
 		getManagedBean().setSelectedUser(null);
 		getManagedBean().setApplType(null);

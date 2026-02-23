@@ -64,11 +64,11 @@ public class ApplProcessedRptBackingBean extends SmReportBackingBean<ApplProcess
 	}
 	
 	public void resetSearch(){
-		//#38227 - START
+		// #38227 - START
 		getManagedBean().setDateFrom(null);
 		getManagedBean().setDateTo(null);
 		getManagedBean().setApplStatus(StringUtils.EMPTY);
-		//#38227 - END
+		// #38227 - END
 		setDefaultDateFromAndDateTo();
 		getManagedBean().setSupplierType(null);
 		getManagedBean().setSelectedOrgProfile(null);
