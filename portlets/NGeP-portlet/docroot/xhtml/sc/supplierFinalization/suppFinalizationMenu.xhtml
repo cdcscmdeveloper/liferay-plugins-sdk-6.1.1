@@ -12,6 +12,20 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"/>
 		</p:blockUI>
+		
+		<ui:remove>21692 - Start</ui:remove>
+		<c:if test="#{!suppFinalizationBackingBean.checkProposalValidityDateReach(
+		     				suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate) and suppFinalizationBackingBean.managedBean.allSupplierDisagreeEPV}">
+			<div class="ui-messages ui-widget">
+				<div class="ui-messages-warn ui-corner-all">
+					<span class="ui-messages-warn-icon"></span>
+					<ul>
+						<li><span class="ui-messages-warn-detail">#{suppFinalizationBackingBean.getNoSupplierWarningMessage()}</span></li>
+					</ul>
+				</div>
+			</div>
+		</c:if>
+		<ui:remove>21692 - End</ui:remove>
 
 		<ui:param name="isQTStatusReFinalized"
 			value="#{suppFinalizationBackingBean.managedBean.qtRefinalized}" />
@@ -87,13 +101,31 @@
 						<h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
 							<!-- ***28834 ends -->
 							<!-- 19336,25201,17376,19287 -start- -->
+							<ui:remove>21692 - Start</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								action="#{suppFinalizationBackingBean.submitAction}"
 								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 								partialSubmit="true" process="@form" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+								rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen() and (bpmAction == 'SUBMIT')}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								action="#{suppFinalizationBackingBean.submitAction}"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								partialSubmit="true" process="@form" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								rendered="#{(suppFinalizationBackingBean.managedBean.qtRefinalized or
+									suppFinalizationBackingBean.checkMeetingDoneLessThanValidityEndDate(suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate))
+									and !suppFinalizationBackingBean.isQTMaintenanceScreen() and bpmAction != 'SUBMIT' and bpmAction != 'REVISE'}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								action="#{suppFinalizationBackingBean.submitAction}"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								partialSubmit="true" process="@form" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen() and bpmAction == 'REVISE'}" />
+							<ui:remove>21692 - End</ui:remove>
 							<!-- 19336,25201,17376,19287 -end- -->
 							<!-- ***28834 starts -->
 						</h:panelGroup>

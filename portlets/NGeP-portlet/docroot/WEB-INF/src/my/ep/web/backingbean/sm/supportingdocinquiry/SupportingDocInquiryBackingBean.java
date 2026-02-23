@@ -573,7 +573,6 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
 
-				/*commonUploadFile(event, filePath);*/
 				SmCommonUtil.processUpload(filePath, event, smApplDocFile.getFileName()); //#39282
 				
 				List<SmApplDocFile> smApplDocFiles = new ArrayList<SmApplDocFile>();
