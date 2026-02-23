@@ -2443,6 +2443,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				onChangePriceType();
 				// #28789 - end
 			}
+			
+			//#26059 - Start
+			if(cmSupplierItem.getCmItem() !=null){
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				CmItem cmItem = cmSupplierItem.getCmItem();
+				catalogueBackingBean.cleanItemNameNA(cmItem);
+				cmSupplierItem.setCmItem(cmItem);
+			}
+			//#26059 - End	
+			
 		} else {
 			// remove after catalogue team had add the filtering in view.
 			throw new EpException(MessageConst.ERROR_760159);
@@ -2913,6 +2923,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			VCmSupplierItem vCmSupplierItem = new VCmSupplierItem();
 			vCmSupplierItem.setCompanyName(selectedSupplierItem.getSmSupplier().getCompanyName());
 			scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
+			
+			//#26059 - Start
+			if(scRequestItem !=null && scRequestItem.getCmItem() !=null){
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				CmItem cmItem = scRequestItem.getCmItem();
+				catalogueBackingBean.cleanItemNameNA(cmItem);
+				scRequestItem.setCmItem(cmItem);
+			}
+			//#26059 - End
 
 			scRequestItem.setRequestNote(requestNote);
 		}
@@ -8310,7 +8329,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    int codeLength = extensionCode.replaceAll("\\s+", "").length();
 
 	    // Logic: Return false if length is NOT between 8 and 18
-	    if (codeLength < DPConstants.NUMBER_EIGHT || codeLength > DPConstants.NUMBER_EIGHTEEN) {
+	    if (codeLength <= DPConstants.NUMBER_EIGHT) {
 	        return false;
 	    }
 
@@ -8340,9 +8359,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean namesDiffer = !cmItemName.equalsIgnoreCase(itemName);
 		boolean tempUnspscBlank = StringUtils.isBlank(requestItem.getTempUnspscCode());
 
-		if (namesDiffer && tempUnspscBlank) {
+		if (namesDiffer && tempUnspscBlank && checkAssignCodeDetail()) {
 			trimExtensionCode(requestItem.getCmItem());
 		}
+	}
+	
+	/**
+	 * Checks whether the assign code detail exists. This method retrieves the
+	 * status from the managed bean and safely handles potential null values to
+	 * prevent NullPointerException.
+	 * 
+	 * @return {@code true} if the assign code detail exists; {@code false} if
+	 *         it does not exist or if the retrieved status is null.
+	 */
+	private boolean checkAssignCodeDetail() {
+		return Boolean.TRUE.equals(getManagedBean().isExistInAssignItemDetail());
 	}
 
 	/**

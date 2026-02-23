@@ -2701,8 +2701,6 @@ public class SimpleQuoteBackingBean extends
 						.getPmOrgProfile().getOrgProfileId());
 			}
 			//#39230 - End
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -5298,6 +5296,7 @@ public class SimpleQuoteBackingBean extends
 		//#26284 - Start
 		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_SUSPENDED).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
 		
 		criteria.append("recordStatus")
@@ -9671,9 +9670,7 @@ public class SimpleQuoteBackingBean extends
 	 * @throws Exception If the service lookup fails.
 	 */
 	private CmItem refreshCmItem(CmItem cmItem) throws Exception {
-	    if (cmItem != null && cmItem.getCmUnspsc() != null) {
-	        return cmItem;
-	    }
+		
 	    ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
 	            ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 	    
@@ -9906,6 +9903,19 @@ public class SimpleQuoteBackingBean extends
 					: StringUtils.EMPTY;
 			question.setClItem(question.getCmTitleValue() + DPConstants.SPACE + extension);
 		}
+	}
+	
+	
+	/**
+	 * Determines whether the specific question column should be displayed or enabled.
+	 * This method checks the current quote's panel status. It is specifically utilized 
+	 * by the {@code specColumnQuestion} component to toggle visibility/functionality 
+	 * based on whether the quote is classified as a panel.
+	 * * @return {@code false} if the quote exists and is marked as a panel; 
+	 * {@code true} otherwise (indicating the panel check passed or is not applicable).
+	 */
+	public boolean checkIsPanel() {
+	    return getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel();
 	}
 	// #26059 - End
 }

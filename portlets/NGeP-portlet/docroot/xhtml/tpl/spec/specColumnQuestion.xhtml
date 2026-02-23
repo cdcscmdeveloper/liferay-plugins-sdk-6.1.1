@@ -49,9 +49,13 @@
 	<ui:param name="specificationrequired"
 		value="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }" />
 	<ui:param name="isPanel"
-		value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}" />
+		value="#{simpleQuoteBackingBean.checkIsPanel()}" />
 	<ui:param name="isColumnItemDisable"
-		value="#{question.disabledColumnItem}" />							
+		value="#{question.disabledColumnItem}" />
+
+	<h:outputText value="#{specificationrequired}"></h:outputText>
+	<h:outputText value="#{isPanel}"></h:outputText>
+	<h:outputText value="#{isColumnItemDisable}"></h:outputText>]
 
 	<p:column>
 		<c:if test="#{updateSpec}">
