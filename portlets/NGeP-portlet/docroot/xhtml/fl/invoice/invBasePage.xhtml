@@ -93,7 +93,8 @@
 								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 								<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								action="#{invoiceBackingBean.confirmDialogueTrigger(bpmAction)}" /><ui:remove>#34443 change to confirmDialogueTrigger</ui:remove>
+								action="#{invoiceBackingBean.confirmDialogueTrigger(bpmAction)}" />
+								<ui:remove>#34443 change to confirmDialogueTrigger</ui:remove>
 							</ui:repeat>
 						</ui:define>
 					</ui:decorate>

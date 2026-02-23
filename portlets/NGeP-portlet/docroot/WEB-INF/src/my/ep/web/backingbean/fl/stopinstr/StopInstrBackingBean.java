@@ -1087,15 +1087,17 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 *            the action button
 	 */
 	private void validateStopFulfilment(String outcome) {
-	FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		validatePOCOCurrentStatus(outcome); //29870-38104
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		validatePOCOCurrentStatus(outcome); // 29870-38104
 
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null
+					|| flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
 			}
 		} else {
-			
+
 			// 39692-Start
 			if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
 					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome
@@ -1105,13 +1107,16 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				throw new EpException(MessageConst.ERROR_760823);
 			}
 			// 39692-End
-			
-			if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
-				throw new EpException(MessageConst.ERROR_100022, new String[]{
-						ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+
+			if (getManagedBean().getStopInstr().getPmReason().getReasonCode() == null) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.fl.stop.instuc.reason.justification", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
 			}
-			if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
-				if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
+			if (FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason()
+					.getReasonCode())) {
+				if (null == getManagedBean().getStopInstr().getReasonDesc()
+						|| getManagedBean().getStopInstr().getReasonDesc().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_740026);
 				}
 			}

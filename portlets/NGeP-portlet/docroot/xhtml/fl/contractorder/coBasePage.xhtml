@@ -109,7 +109,8 @@
 			<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.cancel']}" update="@form"
-						action="#{flOrderBB.confirmDialogueTrigger(BpmOutcomeConstant.bpmCancel)}"><!--#34443 change method-->
+						action="#{flOrderBB.confirmDialogueTrigger(BpmOutcomeConstant.bpmCancel)}">
+						<ui:remove>#34443 change method</ui:remove>
 						<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 					</p:commandButton></td>
 			</c:if>
