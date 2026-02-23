@@ -49,9 +49,11 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
@@ -863,7 +865,6 @@ public class QTScheduleDetailBackingBean extends
 		this.getManagedBean().setAutoUpdate(true);
 	}
 	
-	
 	/**
 	 * Get value for sample, Bug #39486 - #39877.
 	 * 
@@ -879,6 +880,104 @@ public class QTScheduleDetailBackingBean extends
 
         return Boolean.TRUE.equals(sampleExistCache);
     }
+	
+	//#21692 attachment - Start
+	/**
+	 * delete existing attachment and reset decision
+	 */
+	public void deleteEpvAttachments() {
+		ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
+		//only remove decision and attachment, do not save data - Start
+		apprvRequest.setEpvApprovalReqAttachmentR1(null);
+		apprvRequest.setEpvApprovalReqAttachmentR2(null);
+		apprvRequest.setEpvApprovalReqAttachmentR3(null);
+		if (CollectionUtils.isEmpty(this.getManagedBean().getToBeRemoveEPVAttachments())) {
+			this.getManagedBean().setToBeRemoveEPVAttachments(new ArrayList<String>());
+		}
+		this.getManagedBean().getToBeRemoveEPVAttachments().add(ParameterConst.EPV_TYPE_REQUEST_1);
+		this.getManagedBean().getToBeRemoveEPVAttachments().add(ParameterConst.EPV_TYPE_REQUEST_2);
+		this.getManagedBean().getToBeRemoveEPVAttachments().add(ParameterConst.EPV_TYPE_REQUEST_3);
+		apprvRequest.setDecisionCertPBM(null);
+		apprvRequest.setDecisionType(null);
+		
+		List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+		if (this.getManagedBean().getQt().isApprovalPBM()) {
+			apprvRequest.setDecisionCertPBM(new PmParameter());
+		}
+		apprvRequest.setDecisionType(new PmParameter());
+		newApprovalReqList.add(apprvRequest);
+		//only remove decision and attachment, do not save data - End
+		this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
+	}
+	//#21692 attachment - End
+	
+	//#21692 - Start
+	public void handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
+		ScQt scQt = this.getManagedBean().getQt();
+		Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
+		if (chmnFinalizationDate != null) {
+			scQt.setChmnFinalizationDate(DateUtils.setDefaultDateTime(chmnFinalizationDate));
+		}
+		Boolean oldApprovalPBM = scQt.isApprovalPBM();
+		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
+		if (!enableDateMOF) {
+			scQt.setMofDate(null);
+		}
+		scQt.setApprovalPBM(enableDateMOF);
+		resetDecisionCertPBM(enableDateMOF);
+		if ((oldApprovalPBM && !enableDateMOF)
+				|| (!oldApprovalPBM && enableDateMOF)) {
+			deleteEpvAttachments();
+		}
+	}
+	//#21692 - End
 
+	//#21692 - Start
+	private void resetDecisionCertPBM(Boolean enableDateMOF) {
+		List<ScQtApprovalRequest> approvalRequests = getManagedBean().getScQtApprovalRequestList();
+		if (CollectionUtils.isNotEmpty(approvalRequests)) {
+			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+				PmParameter pmParameter = new PmParameter();
+				if (enableDateMOF) {
+					if (approvalRequest.getDecisionCertPBM() == null) {
+						approvalRequest.setDecisionCertPBM(pmParameter);
+					}
+				} else {
+					approvalRequest.setDecisionCertPBM(null);
+				}
+			}
+		}
+	}
+	//#21692 - End
 
+	//#21692 - Start
+	public boolean enableApprovalDateMOF(boolean validityDaysExpiredQt) {
+		ScQt scQt = this.getManagedBean().getQt();
+		boolean enableApprovalDateMOF = Boolean.FALSE;
+		if (!validityDaysExpiredQt) {
+			Date proposalValidityEndDate = scQt.getProposalValidityEndDate();
+			Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
+			if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
+
+				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
+				int day = (int) days;
+				if (day > 0) {
+					return Boolean.TRUE;
+				}
+			}
+		}
+
+		return enableApprovalDateMOF;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void handleMofDate() {
+		ScQt scQt = this.getManagedBean().getQt();
+		Date mofDate = scQt.getMofDate();
+		if (mofDate != null) {
+			scQt.setMofDate(DateUtils.setDefaultDateTime(mofDate));
+		}
+	}
+	//#21692 - End
 }

@@ -3829,7 +3829,7 @@ public class SmApplicationUtil {
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
 			//13362
-
+			
 			// #39422 - Start - Add checking
 			if (managedBean.getApplnOverLapRemarks().isEmpty()) {
 				managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());

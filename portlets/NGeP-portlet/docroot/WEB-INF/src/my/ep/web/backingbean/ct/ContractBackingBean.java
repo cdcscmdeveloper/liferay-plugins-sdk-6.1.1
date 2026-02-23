@@ -80,7 +80,7 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO; // Fix - #33491
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -119,10 +119,10 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;//#28854
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.quationtender.ScQtCategory; // Fix - #33491
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -133,9 +133,9 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.util.shared.PerformanceBondUtil; // Fix - #33491
+import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;//#15851
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
@@ -154,7 +154,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;//Fix - #34961
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
@@ -166,10 +166,7 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
-//Fix -#34961
-//Fix -#34961
-//Fix -#34961
-//Fix - #34961
+
 
 /**
  * Backing Bean For Contract

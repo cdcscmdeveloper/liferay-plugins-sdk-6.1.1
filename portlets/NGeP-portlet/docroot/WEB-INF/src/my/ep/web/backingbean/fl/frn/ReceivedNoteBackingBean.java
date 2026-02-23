@@ -1823,19 +1823,17 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * 
 	 */
 	private void validatePOCOCurrentStatus(String action, Long deliveryOrderId) {// 36361
-		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
-				IFulfilmentOrderSO.class);
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 
-		reqDTO.setFlOrderId(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()
-				.getFulfilmentOrderId());
+		reqDTO.setFlOrderId(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
 		reqDTO.setDocType(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType());
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 		reqDTO.setActionCode(action);// 36361
 		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361
+
 		// 38104-Start
-		if (getManagedBean().getFulfilmentNote() != null
-				&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
+		if (getManagedBean().getFulfilmentNote() != null && getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
 			reqDTO.setFulfilmentNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
 		}
 		// 38104-End
