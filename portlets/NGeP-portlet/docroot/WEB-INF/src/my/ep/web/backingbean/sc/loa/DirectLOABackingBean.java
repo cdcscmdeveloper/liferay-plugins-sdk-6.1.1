@@ -3934,9 +3934,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// new #25726 - Start
 	public void updateBondAndAgreement(boolean isPK7, boolean isOneOff) {
 		//#25726 - note 441 - Start
-		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? this
-				.getManagedBean().getScLoa().getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL
+				.equals(this.getManagedBean().getScLoa().getContractType().getParameterCode()) : false;
 
 		if (!isPK7 && isContractTypeCentral) {
 			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
