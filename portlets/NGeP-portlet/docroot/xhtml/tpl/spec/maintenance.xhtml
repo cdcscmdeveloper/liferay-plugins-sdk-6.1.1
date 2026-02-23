@@ -45,7 +45,11 @@
 		<p:panel id="smpg" header="#{lbl['lbl.tpl.spec.maintenance.header']}" toggleable="true">
 			<table style="width:100%">
 			<tr>
-			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
+			<ui:remove>#30432 - Start</ui:remove>
+			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
+				<ui:param name="number" value="" /> 
+			</ui:include>
+			<ui:remove>#30432 - End</ui:remove>
 			<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include>
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.spec.instruction.import.export']}" escape="false" rendered="#{specMaster.brandNew}"/>
 			</tr>

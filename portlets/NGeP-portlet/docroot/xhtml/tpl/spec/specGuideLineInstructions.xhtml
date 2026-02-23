@@ -5,9 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
+	<ui:remove>#30432 - Start</ui:remove>
 	<h:outputText styleClass="instruction" escape="false"
-		value="#{lbl['lbl.sc.spec.items.guideline.pdf']}" />
+		value="#{number} #{lbl['lbl.sc.spec.items.guideline.pdf']}" />
+	<ui:remove>#30432 - End</ui:remove>
 
 	<p:commandLink styleClass="instruction"
 		style="padding-left: 4px;padding-right: 4px;font-size: 13px;"
