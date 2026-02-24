@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -25,6 +26,7 @@ import my.ep.web.bean.pm.AuditPMSearchBean;
 import my.ep.web.managedbean.pm.audit.AuditPMManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * #35509
@@ -79,9 +81,8 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	public void searchMaster() {
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getSearchBean().setSearching(true);
+		validateAtLeastOneSearchCriteria();
 		searchMaster.reloadData();
-<<<<<<< HEAD
-=======
 	}
 
 	protected void validateAtLeastOneSearchCriteria() {
@@ -95,7 +96,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		if (hasPrimaryCriteria && hasNoSecondaryCriteria) {
 			throw new EpException(SmCommonUtil.getMessage("lbl.pm.audit.search.instruction1", null));
 		}
->>>>>>> refs/remotes/origin/release-sit
 	}
 
 	boolean hasNoSecondaryCriteria(AuditPMSearchBean search) {

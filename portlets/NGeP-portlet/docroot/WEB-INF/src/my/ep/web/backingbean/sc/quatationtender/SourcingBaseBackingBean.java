@@ -68,6 +68,7 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -304,7 +305,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 			  SourcingConstants.MALAYSIA_COUNTRY_CODE);
 
-	
+	private final Map<String, String> recordStatusParamMap = new HashMap<>();
+
 	/**
 	 * Logger instance.
 	 */
@@ -851,8 +853,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
-<<<<<<< HEAD
-=======
 	//38343 - start
 	protected IDocumentSO getDocumentSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
@@ -883,7 +883,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// 38523 - end
 
 
->>>>>>> refs/remotes/origin/release-sit
 	/**
 	 * To initialize remarks.
 	 * 
@@ -7219,8 +7218,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// #29007 End vinod
-<<<<<<< HEAD
-=======
 	
 	
 	// 26247 - start
@@ -8128,5 +8125,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	//#35320 - END
->>>>>>> refs/remotes/origin/release-sit
 }

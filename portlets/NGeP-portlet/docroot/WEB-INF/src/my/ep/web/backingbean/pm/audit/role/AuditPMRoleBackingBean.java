@@ -203,12 +203,6 @@ public class AuditPMRoleBackingBean {
 	 * @return
 	 */
 	public String roleUsrGroup() {
-<<<<<<< HEAD
-		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
-				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
-				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : getFacesScopes().hasRoleUser(
-				RoleCode.PTJ_ADMIN.value()) ? RoleCode.PTJ_ADMIN.value() : null;
-=======
 		List<RoleCode> rolePriority = Arrays.asList(RoleCode.EP_ADMIN, RoleCode.EP_ADMIN_2, RoleCode.PTJ_ADMIN,
 				RoleCode.MINISTRY_ADMIN, RoleCode.JABATAN_ADMIN);
 
@@ -218,7 +212,6 @@ public class AuditPMRoleBackingBean {
 			}
 		}
 		return null;
->>>>>>> refs/remotes/origin/release-sit
 	}
 
 	/**
@@ -241,11 +234,6 @@ public class AuditPMRoleBackingBean {
 	 * @return
 	 */
 	public String roleOrganizationProfile() {
-<<<<<<< HEAD
-		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
-				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
-				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : null;
-=======
 		List<RoleCode> rolePriority = Arrays.asList(RoleCode.EP_ADMIN, RoleCode.EP_ADMIN_2, RoleCode.PTJ_ADMIN,
 				RoleCode.MINISTRY_ADMIN, RoleCode.JABATAN_ADMIN, RoleCode.BPK_ADMIN, RoleCode.SUPPORT_ADMIN);
 
@@ -255,7 +243,6 @@ public class AuditPMRoleBackingBean {
 			}
 		}
 		return null;
->>>>>>> refs/remotes/origin/release-sit
 	}
 	
 	/**

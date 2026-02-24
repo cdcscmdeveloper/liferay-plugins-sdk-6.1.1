@@ -55,8 +55,6 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private String recordSearchStatusFlg;
 	//27629 end
 
-<<<<<<< HEAD
-=======
 	/** AUDIT 28895_35509 START **/
 	private PmUserGroup userGroupOld;
 	private PmUserGroup userGroupUpdate;
@@ -64,7 +62,6 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private String roleDesc;
 	/** AUDIT 28895_35509 END **/
 
->>>>>>> refs/remotes/origin/release-sit
 	public UsergroupManagedBean() {
 	}
 
@@ -420,8 +417,6 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 	
 	//#27629 end
-<<<<<<< HEAD
-=======
 	
 	/** AUDIT 28895_35509 START **/
 	public PmUserGroup getUserGroupOld() {
@@ -456,6 +451,5 @@ public class UsergroupManagedBean extends BaseManagedBean {
 		this.roleDesc = roleDesc;
 	}
 	/** AUDIT 28895_35509 END **/
->>>>>>> refs/remotes/origin/release-sit
 
 }

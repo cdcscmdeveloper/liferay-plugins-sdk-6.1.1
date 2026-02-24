@@ -898,56 +898,6 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 	}
-<<<<<<< HEAD
-	//9569 - Start
-	public void onTickSameAsPermForMail(SmAddress srcAddr,SmPersonnelAddress destAddr){
-		 Long sourceCountry = srcAddr.getPmCountry().getCountryId();
-		 Long sourceState =  srcAddr.getPmState().getStateId();
-		 PmDivision sourceDivision = srcAddr.getPmDivision();
-		 Long sourceDistrict = srcAddr.getPmDistrict().getDistrictId();
-		 Long sourceCity = srcAddr.getPmCity().getCityId();
-		 
-		if(destAddr.isSameAsPerm() == true){
-			//#36718 - START - check src address if any field not fill 
-			if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
-					|| srcAddr.getPmCountry() == null //#36717
-					|| srcAddr.getPmCountry().getCountryId() == null //#36717
-					|| srcAddr.getPmState() == null
-					|| srcAddr.getPmState().getStateId() == null
-					|| srcAddr.getPmDistrict() == null
-					|| srcAddr.getPmDistrict().getDistrictId() == null
-					|| srcAddr.getPmCity() == null
-					|| srcAddr.getPmCity().getCityId() == null
-					|| StringUtils.isBlank(srcAddr.getPostcode())) {
-				String addrType = SmCommonUtil.getMessage(
-						"lbl.sm.permenantaddress", null);
-				destAddr.setSameAsPerm(false);
-				throw new EpException(MessageConst.ERROR_722656,
-						new String[] { addrType });
-			} else {
-				destAddr.setSmAddress(srcAddr);
-				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
-			}
-		}else{
-			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().deepCopy();
-			Long prevCountry = prevAddr.getPmCountry().getCountryId();
-			Long prevState = prevAddr.getPmState().getStateId();
-			PmDivision prevDivision = prevAddr.getPmDivision();
-			Long prevDistrict = prevAddr.getPmDistrict().getDistrictId();
-			Long prevCity = prevAddr.getPmCity().getCityId();
-			//#36718 - END
-		if(prevAddr.getAddress1() == null && prevCountry == null){
-				destAddr.setSmAddress(new SmAddress());
-				destAddr.getSmAddress().setPmCountry(new PmCountry());
-				destAddr.getSmAddress().setPmState(new PmState());
-				destAddr.getSmAddress().setPmDivision(new PmDivision());
-				destAddr.getSmAddress().setPmDistrict(new PmDistrict());
-				destAddr.getSmAddress().setPmCity(new PmCity());			
-			}else{	
-					destAddr.setSmAddress(prevAddr);
-					updateMailAddLists(prevCountry.toString(), prevState.toString(), prevDivision, prevDistrict.toString());
-			}
-=======
 	
 	// #36718 - Start
 	/**
@@ -980,7 +930,6 @@ public class SmPersonnelBackingBean extends
 			destAddr.setSameAsPerm(false);
 			String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress", null);
 			throw new EpException(MessageConst.ERROR_722656, new String[] { addrType });
->>>>>>> refs/remotes/origin/release-sit
 		}
 	}
 
@@ -1632,6 +1581,7 @@ public class SmPersonnelBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	/**
@@ -1719,6 +1669,7 @@ public class SmPersonnelBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	/**
@@ -1761,6 +1712,7 @@ public class SmPersonnelBackingBean extends
 		}
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	/**
@@ -1795,6 +1747,11 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+	
+	public void onChangeCity(SmAddress addr, String addrType){
+		addr.setPostcode("");
 	}
 	//#34159 - End
 		

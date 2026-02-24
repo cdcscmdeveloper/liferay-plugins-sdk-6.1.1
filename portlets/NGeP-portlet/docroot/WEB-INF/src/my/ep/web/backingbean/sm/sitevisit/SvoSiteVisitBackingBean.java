@@ -3528,17 +3528,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	//29379 - Site Visit Grouping Enhancement - 28775 - start
 	private void prepareWorkshopWorkers(){
-<<<<<<< HEAD
-		SmSvTask svTask = getManagedBean().getSmSvTask();
-		if(svTask.getSmSvTemplate().getSmSvWorkers() != null 
-			&& !svTask.getSmSvTemplate().getSmSvWorkers().isEmpty()) {
-				return;
-		}
-=======
 		SmSvTask svTask = getManagedBean().getSmSvTask(); //#38233
 		String siteType = svTask.getSmSvAddress().getSiteType();
 		boolean isHQ = my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ.equalsIgnoreCase(siteType);
->>>>>>> refs/remotes/origin/release-sit
 		//max loop: 39
 		for(SmSvTemplate template : getManagedBean().getTemplates()){
 			if(template.getSuppCategory() == null){

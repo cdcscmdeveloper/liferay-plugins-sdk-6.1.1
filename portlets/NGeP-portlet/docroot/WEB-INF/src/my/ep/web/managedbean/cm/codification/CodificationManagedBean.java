@@ -200,20 +200,12 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private boolean assignCodeFlg = false;
 	
-<<<<<<< HEAD
-	// #31503 - Start
-	private String itemCodeDesc;
-	private Object[] objSelected;
-	private boolean renderButtonAssignCode;
-	// #31503 - End
-=======
 	//35503 Start
 	private String segmentTitleEng;
 	private String familyTitleEng;
 	private String classTitleEng;
 	private String commodityTitleEng;
 	//35503 End
->>>>>>> refs/remotes/origin/release-sit
 	
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
@@ -1575,34 +1567,6 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
-<<<<<<< HEAD
-	
-	// #31503 -start-
-	public String getItemCodeDesc() {
-		return itemCodeDesc;
-	}
-
-	public void setItemCodeDesc(String itemCodeDesc) {
-		this.itemCodeDesc = itemCodeDesc;
-	}
-
-	public Object[] getObjSelected() {
-		return objSelected;
-	}
-
-	public void setObjSelected(Object[] objSelected) {
-		this.objSelected = objSelected;
-	}
-
-	public boolean isRenderButtonAssignCode() {
-		return renderButtonAssignCode;
-	}
-
-	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
-		this.renderButtonAssignCode = renderButtonAssignCode;
-	}
-	// #31503 -end-
-=======
 
 	//35503 Start
 	public String getSegmentTitleEng() {
@@ -1637,5 +1601,4 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.commodityTitleEng = commodityTitleEng;
 	}
 	//35503 End
->>>>>>> refs/remotes/origin/release-sit
 }

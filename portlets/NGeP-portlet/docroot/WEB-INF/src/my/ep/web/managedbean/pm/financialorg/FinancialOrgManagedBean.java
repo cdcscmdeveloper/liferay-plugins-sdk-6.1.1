@@ -65,8 +65,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	public boolean facCompanyInformation = false;
 	// #29487 - View bank details by factoring user_endorsed - End
 
-<<<<<<< HEAD
-=======
 	/************ AUDIT #28895-35509 *************/
 	private PmFinancialOrg oldFinancialOrg;
 	private PmFinancialOrg savedFinancialOrg;
@@ -78,7 +76,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	private List<PmFinancialAcc> newFinancialAccList;
 	/************ AUDIT #28895-35509 *************/
 	
->>>>>>> refs/remotes/origin/release-sit
 	public FinancialOrgManagedBean(){}
 
 	/**
@@ -352,8 +349,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 		this.facCompanyInformation = facCompanyInformation;
 	}
 	// #29487 - View bank details by factoring user_endorsed - End
-<<<<<<< HEAD
-=======
 	
 	/************ AUDIT START #28895-35509 *************/
 	public PmFinancialOrg getOldFinancialOrg() {
@@ -450,6 +445,5 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 		this.newFinancialAccList = newFinancialAccList;
 	}
 	/************ AUDIT END #28895-35509 *************/
->>>>>>> refs/remotes/origin/release-sit
 	
 }

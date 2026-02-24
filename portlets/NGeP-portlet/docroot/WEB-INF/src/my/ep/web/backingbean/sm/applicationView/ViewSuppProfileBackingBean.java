@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -13,9 +14,9 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
-import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -31,6 +32,8 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -43,6 +46,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -445,8 +449,6 @@ public class ViewSuppProfileBackingBean extends
 		return isExpired;
 	}
 	//35336 END
-<<<<<<< HEAD
-=======
 	
 	// 26247 - start	
 	/**
@@ -573,5 +575,4 @@ public class ViewSuppProfileBackingBean extends
 	}
 	// 26247 - end
 
->>>>>>> refs/remotes/origin/release-sit
 }

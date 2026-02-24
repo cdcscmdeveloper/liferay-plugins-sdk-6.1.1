@@ -20,6 +20,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -27,6 +28,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -62,6 +64,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMUserGroupBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserGroupSearchBean;
@@ -649,22 +653,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				}
 			}
 
-<<<<<<< HEAD
-		UserGroupReqDTO reqDto = new UserGroupReqDTO();
-		reqDto.setUserGroup(userGroup);
-		reqDto.setRoleCode(PmCommonUtil.getUserRoleValue());
-		reqDto.setPmUser(getFacesScopes().getUserSessionBean());
-
-		UserGroupResDTO resDTO = userGrpSo.saveOrUpdateUserGroup(reqDto);
-
-		this.getManagedBean().setUserGroup(resDTO.getUserGroup());
-		if (resDTO.isSuccessful()) {
-
-			logger.info("resDTO.getUserGroup().getGroupCode() :" + resDTO.getUserGroup().getGroupCode());
-=======
 			changeUserGroupStatus(pmUserGroupUsers);
 			userGroup.setPmUserGroupUsers(pmUserGroupUsers);
->>>>>>> refs/remotes/origin/release-sit
 			if (userGroup.isBrandNew()) {
 				findDuplicateGroup(userGroup);
 			}
@@ -722,12 +712,9 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			} else {
 				return gotoMaintanance(resDTO.getUserGroup());
 			}
-<<<<<<< HEAD
-=======
 		} catch (EpException e) {
 			handleException(e);
 			return NAV_TO_MAINTAIN;
->>>>>>> refs/remotes/origin/release-sit
 		}
 		//#34445 End
 	}

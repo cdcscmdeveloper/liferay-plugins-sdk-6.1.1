@@ -26,6 +26,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
@@ -41,6 +42,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 //20201105@Jacky - Enhancement#28836 - Start
 import my.ep.constant.fl.FulfilmentStatusConst;
+import my.ep.constant.pm.AuditConst;
 //20201105@Jacky - Enhancement#28836 - End
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -103,6 +105,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMOrganizationProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
@@ -983,12 +987,9 @@ public class OrganisationBackingBean extends
 							&& !pmAddressType.getPmContacts().isEmpty()) {
 						this.getManagedBean().setOfficeContactPerson(
 								pmAddressType.getPmContacts().get(0));
-<<<<<<< HEAD
-=======
 						/**AUDIT 35509 - start **/
 						this.getManagedBean().setPmAddressTypeId(pmAddressType.getAddressTypeId());
 						/**AUDIT 35509 - end **/
->>>>>>> refs/remotes/origin/release-sit
 						log.info("Contact Exist");
 						contactExist = true;
 					}
@@ -1295,9 +1296,6 @@ public class OrganisationBackingBean extends
 			reqDTO.setUserId(userLoginId.getUserId());
 			reqDTO.setUser(currentUser);
 			//#30651 - end
-<<<<<<< HEAD
-			
-=======
 			/************ AUDIT 35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMOrganizationProfileBackingBean(); 
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1426,7 +1424,6 @@ public class OrganisationBackingBean extends
 						new ArrayList<PmProfileGroup>() : auditProfileGroup);
 			}
 			/************ AUDIT 35509*************/
->>>>>>> refs/remotes/origin/release-sit
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
 			 * reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1459,8 +1456,6 @@ public class OrganisationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								message));
-<<<<<<< HEAD
-=======
 				/************ AUDIT 35509 - shaqimi start*************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)) {
 					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());
@@ -1532,7 +1527,6 @@ public class OrganisationBackingBean extends
 				getManagedBean().setAuditProfileGroup(new ArrayList<PmProfileGroup>());
 				getManagedBean().setNewAuditProfileGroup(new ArrayList<PmProfileGroup>());
 				/************ AUDIT 35509 - shaqimi end  *************/
->>>>>>> refs/remotes/origin/release-sit
 			}
 		} finally {
 			orgProfileSO = null;

@@ -149,8 +149,6 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private String selectedAddrDistrictName;
 	private Long selectedAddrCityId;
 	private String selectedAddrCityName;
-<<<<<<< HEAD
-=======
 	
 	/************ AUDIT START #28895-35509 *************/
 	private PmOrgProfile auditOldPMOrgProfile;
@@ -173,7 +171,6 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	/************ AUDIT END #28895-35509 *************/
 	
 	private List<PmAddressType> addressTypesCheckingList = new ArrayList<PmAddressType>(); //#34445, Fix as-is bug: #39639
->>>>>>> refs/remotes/origin/release-sit
 
 	public OrganisationManagedBean() {
 
@@ -1273,9 +1270,6 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setStatus(Long status) {
 		this.status = status;
 	}
-<<<<<<< HEAD
-
-=======
 	
 	/************ AUDIT START #28895-35509 *************/
 	public PmOrgProfile getAuditOldPMOrgProfile() {
@@ -1285,11 +1279,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setAuditOldPMOrgProfile(PmOrgProfile auditOldPMOrgProfile) {
 		this.auditOldPMOrgProfile = auditOldPMOrgProfile;
 	}
->>>>>>> refs/remotes/origin/release-sit
 	
-<<<<<<< HEAD
-	
-=======
 	public PmAddress getAuditBillingAddress() {
 		return auditBillingAddress;
 	}
@@ -1466,5 +1456,4 @@ public class OrganisationManagedBean extends BaseManagedBean{
 		this.addressTypesCheckingList = addressTypesCheckingList;
 	}
 	//#34445, Fix as-is bug: #39639 - End
->>>>>>> refs/remotes/origin/release-sit
 }

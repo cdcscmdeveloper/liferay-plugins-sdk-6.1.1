@@ -12882,79 +12882,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//#21692 - End
 	
-<<<<<<< HEAD
-	// #31503 -start-
-	/**
-	 * #31503 - Show Details Items in popup
-	 * 
-	 * @param reqItem
-	 * @return void
-	 */
-	public void showItemDescPopup(ScRequestItem reqItem) {
-
-		try {
-
-			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-			CodificationReqDTO cReqDTO = new CodificationReqDTO();
-			CommonUtils common = new CommonUtils();
-			CodificationBackingBean cdbb = new CodificationBackingBean();
-
-			cReqDTO.setItemId(reqItem.getCmItem().getItemId());
-
-			CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
-			CmItem item = cResDTO.getCmItem();
-
-			codeReqDTO.setUnspscCode(item.getCmUnspsc().getUnspscCode());
-
-			CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
-
-			cdbb.getManagedBean().setCommodityCode(codeResDTO.getCommodityObj().getUnspscCode());
-			cdbb.getManagedBean().setCommodityTitle(codeResDTO.getCommodityObj().getUnspscTitle());
-			cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
-
-			CmType typeObj = cdbb.searchTypeOjbyTypeId(item.getCmType().getTypeId());
-
-			CmBrand brandObj = cdbb.searchBrandObjByBrandId(item.getCmBrand().getBrandId());
-
-			CmMeasurement meaObj = cdbb.searchMeasurementByMeasurementId(item.getCmMeasurement().getMeasurementId());
-
-			CmColor colorObj = cdbb.searchColorObjByColorCode(item.getCmColor().getColorCode());
-
-			CmItem newItem = new CmItem();
-
-			newItem.setCmUnspsc(codeResDTO.getCommodityObj());
-			newItem.setCmType(typeObj);
-			newItem.setCmBrand(brandObj);
-			newItem.setCmMeasurement(meaObj);
-			newItem.setCmColor(colorObj);
-			newItem.setItemName(common.removeItemNameNA(typeObj.getTypeName()) + " "
-					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
-					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
-					+ common.removeItemNameNA(colorObj.getColorName()));
-
-			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle() + " "
-					+ common.removeItemNameNA(typeObj.getTypeName()) + " "
-					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
-					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
-					+ common.removeItemNameNA(colorObj.getColorName());
-
-			newItem.setExtensionCode(typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
-					+ colorObj.getColorCode());
-
-			cdbb.getManagedBean().setSegmentCode(newItem.getExtensionCode());
-			cdbb.getManagedBean().setSegmentTitle(newItem.getItemName());
-			cdbb.getManagedBean().setFamilyTitle(completeItemName);
-
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "showItemDescPopup", "showItemDescPopup", null,
-					getUserIdSessionFromLoginId(), e);
-		}
-
-	}
-	// #31503 -end-
-=======
 	//#21692 - Start
 	/**
 	 * Must validate html for LOA first
@@ -13019,6 +12946,5 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//#21692 - End
->>>>>>> refs/remotes/origin/release-sit
 }
 

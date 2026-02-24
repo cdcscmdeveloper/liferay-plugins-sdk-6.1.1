@@ -95,8 +95,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	//#35489 - End
 	private boolean suppGovSellerUser = false; // #36489
 
-<<<<<<< HEAD
-=======
 	/************ AUDIT #28895-35509 *************/
 	private Long brandNewUserOrgId;
 	private PmUser oldAuditPmUser;
@@ -109,7 +107,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmAddressType> newAuditPmAddressTypes;
 	/************ AUDIT #28895-35509 *************/
 	
->>>>>>> refs/remotes/origin/release-sit
 	public ProfileManagementManagedBean(){}
 	
 	/**
@@ -855,8 +852,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 		this.suppGovSellerUser = suppGovSellerUser;
 	}
 	//#36489 - End
-<<<<<<< HEAD
-=======
 
 	/************ START: AUDIT #35509 *************/
 	public PmUser getOldAuditPmUser() {
@@ -974,5 +969,4 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 		this.brandNewUserOrgId = brandNewUserOrgId;
 	}
 	/************ END: AUDIT #35509 *************/
->>>>>>> refs/remotes/origin/release-sit
 }

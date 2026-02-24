@@ -1276,23 +1276,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (ctBB.getManagedBean().getCtContractAmount().isBondReq()
 					&& (!ctBB.getManagedBean().isDirectPurchase() ||  ctBB.isPk7FromDp())
 					&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
-<<<<<<< HEAD
-				for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()){
-					//#24333 - Start
-			        boolean hasNewBonds = contractAmt.getCtPerformanceBondsNew() != null
-			                && !contractAmt.getCtPerformanceBondsNew().isEmpty();
-			        boolean hasOriginalBonds = contractAmt.getCtPerformanceBondsOriginal() != null
-			                && !contractAmt.getCtPerformanceBondsOriginal().isEmpty();
-					//#24333 - End
-			        if ((contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
-							&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue())
-							|| (hasNewBonds || hasOriginalBonds) ){ //#34012,#24333
-						contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
-						//#24333 - Start	
-						if(ctBB.isContractExtendOrIsBond() && hasNewBonds){
-							List<CtPerformanceBond> originalBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());
-					        List<CtPerformanceBond> newBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew());
-=======
 				
 				Date currentDate = new Date();
 		        CtContractAmount uiBondData = ctBB.getManagedBean().getCtContractAmount();
@@ -1306,7 +1289,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		        if (uiBondData.getCtPerformanceBondsNew() != null) {
 		            allBondsFromUI.addAll(uiBondData.getCtPerformanceBondsNew());
 		        }
->>>>>>> refs/remotes/origin/release-sit
 
 		        for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()) {
 		            Date eff = contractAmt.getEffDate();
@@ -1427,6 +1409,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						auCtData.setDocType(resDTO.getCtContractVer().getDocType());
 						auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
 						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
 
 						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
 								|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean().getContractVer().getDocType()
@@ -2071,6 +2054,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		Long status = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
 		CtBondWaiverDetail latestWaiver = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
 
+		validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
 		if (isBondValidationRequired(action)) {
 			if (!isBondWaiverConditionsMet(latestWaiver)) {
 				setTabValue("PB");
@@ -2084,8 +2068,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-
-		validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
 	}
 
 	/**

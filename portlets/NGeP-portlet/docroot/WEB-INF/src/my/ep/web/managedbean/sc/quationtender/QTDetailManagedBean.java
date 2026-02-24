@@ -140,15 +140,12 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;//#25138 Reendorsed
 import org.primefaces.model.TreeNode;
 
-<<<<<<< HEAD
-=======
 //25791 -start-
 import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 
 //25791 -end-
 
 
->>>>>>> refs/remotes/origin/release-sit
 /**
  * The Class QTDetailManagedBean.
  * 
@@ -1940,10 +1937,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls;
 	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
 	private Map<Long, VCtContract> checkLoaContract;
-<<<<<<< HEAD
-=======
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
->>>>>>> refs/remotes/origin/release-sit
 	// 25791-End
 	//28895 - 35500 start
 	/** The newly added sc qt committee */
@@ -12265,8 +12259,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCheckLoaContract(Map<Long, VCtContract> checkLoaContract) {
 		this.checkLoaContract = checkLoaContract;
 	}
-<<<<<<< HEAD
-=======
 	
 	/**
 	 * @return the searchBidScheduleDataModel
@@ -12283,7 +12275,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
 	}
 	
->>>>>>> refs/remotes/origin/release-sit
 	// 25791-End
 
 	//28895 - 35500 start

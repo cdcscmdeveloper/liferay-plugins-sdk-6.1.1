@@ -65,11 +65,13 @@ import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
@@ -1362,7 +1364,7 @@ public class ConsolidationReportBackingBean extends
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-			reqDTO.setDoRankRequired(true);
+//			reqDTO.setDoRankRequired(true);
 			reqDTO.setCountOfQualiedSuppliersReq(true);
 
 			if (specZone != null) {
@@ -1513,7 +1515,6 @@ public class ConsolidationReportBackingBean extends
 			qualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
 		}
-
 		// #28777 & #29729 - Start
 		if (scQt.isZonal() && specZoneDtl != null
 				&& checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), specZoneDtl.getSpecZoneId())
@@ -1526,14 +1527,11 @@ public class ConsolidationReportBackingBean extends
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
 		}
 		// #28777 & #29729 - End
-<<<<<<< HEAD
-=======
 		
 		// 26247 - start
 		int countDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
 		totalQualifiedSuppliers = totalQualifiedSuppliers - countDisabled;
 		// 26247 - end
->>>>>>> refs/remotes/origin/release-sit
 
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
@@ -1575,13 +1573,10 @@ public class ConsolidationReportBackingBean extends
 				}
 				// #28777 & #29729 - End
 				
-<<<<<<< HEAD
-=======
 				// 26247 - start
 				int countItemDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
 				totalQualifiedSuppliers = totalQualifiedSuppliers - countItemDisabled;
 				// 26247 - end
->>>>>>> refs/remotes/origin/release-sit
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(specZoneDtl, item.getRequestItem(), itemQualifiedSuppliers);
 				// #31443 Start -exclude validate if quantity 0
 				if (scQt != null && !scQt.isPartial() && item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0) {
@@ -2938,7 +2933,9 @@ public class ConsolidationReportBackingBean extends
 			int condition = SourcingConstants.DEFAULT_INSTRUCTIONS_MESSAGE_NUMBERING;//Initial instruction number, after 3 default (as-is) instructions
 			
 			//#28777#29729 condition
-			condition = condition + 1;
+			if (checkInstructionSupplierBranchDeleted(qtId)) {
+				condition = condition + 1;
+			}
 			
 			//#21692 condition, should be 5th instruction if above condition is TRUE, else 4th
 			if (new ApprovalBackingBean().isEPVApprovalRequestAccepted(qtId)) {

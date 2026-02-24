@@ -7875,76 +7875,9 @@ public class SmApplicationUtil {
 		managedBean.setShowFactoryPanel(false);
 		managedBean.setShowWorkShopPanel(false);
 
-<<<<<<< HEAD
-		// if site after approval, show panel if facility type has records
-		if (managedBean.isSiteVisitAfterApproval()) {
-			for (SmFacility facility : managedBean.getSmAppl()
-					.getSmFacilities()) {
-				if (!StringUtils.isBlank(facility.getFacilityType())) {
-					if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
-						managedBean.setShowFactoryPanel(true);
-					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
-						managedBean.setShowStorePanel(true);
-					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
-						managedBean.setShowWorkShopPanel(true);
-					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
-						managedBean.setShowDockyardPanel(true);
-					}
-				}
-			}
-		}
-		// if not site visit after approval, check based on pending activation
-		// cat code
-		else {
-			for (SmSupplierCategory cat : managedBean.getSmAppl()
-					.getSmSupplierCategories()) {
-				if (cat.isSpecialCategory()
-						&& cat.getPmCategoryL3() != null
-						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-						&& cat.getPmCategoryL3().getCategoryTypeCode()
-								.getParameterId() != null
-						&& cat.getRecordStatusFlg() != null
-						&& (cat.getRecordStatusFlg().compareTo(
-								SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-								.getRecordStatusFlg()
-								.compareTo(
-										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
-						//#30766 - START
-						&& ( ((cat.getApprvrDecFlg()!=null && cat.getApprvrDecFlg() == 1) || (cat.getPoDecFlg()!=null && cat.getPoDecFlg()==1)) ||  (cat.getPoDecFlg()==null && cat.getApprvrDecFlg()==null))) { 
-						//&& !isCategoryRejected(cat)) {
-					   //#30766 - END
-					String facType = "";
-					if (cat.getPmCategoryL3().getFacilityType() != null) {
-						facType = cat.getPmCategoryL3().getFacilityType();
-					}
-					if (facType
-							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
-						managedBean.setShowFactoryPanel(true);
-					} else if (facType.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
-							|| facType.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) { //#30043
-						managedBean.setShowStorePanel(true);
-					} else if (facType
-							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
-						managedBean.setShowWorkShopPanel(true);
-					} else if (facType
-							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
-						managedBean.setShowDockyardPanel(true);
-					}
-				}
-			}
-		}
-
-		managedBean.setDockYardFacilitiesVOList(SmApplicationUtil
-				.getCategoryFacilityVO(managedBean.getSmAppl(),
-=======
 		//#28775, 39894 - start
 		SmAppl appl = managedBean.getSmAppl();
 		managedBean.setDockYardFacilitiesVOList(SmApplicationUtil.getCategoryFacilityVO(appl,
->>>>>>> refs/remotes/origin/release-sit
 						SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD));
 		managedBean.setWorkshopFacilitiesVOList(SmApplicationUtil.getCategoryFacilityVO(appl,
 						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
@@ -16043,9 +15976,6 @@ public class SmApplicationUtil {
 	    }
 	}
 	//#37605 END
-<<<<<<< HEAD
-}
-=======
 	// #37784 -STRAT
 	/**
 	 * Checks the application record status. If it is either DELETED or
@@ -16383,4 +16313,3 @@ public class SmApplicationUtil {
 	// #9299 - End
 
 }
->>>>>>> refs/remotes/origin/release-sit

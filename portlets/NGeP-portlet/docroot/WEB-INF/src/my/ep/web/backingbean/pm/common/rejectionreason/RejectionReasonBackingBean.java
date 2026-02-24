@@ -543,6 +543,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				this.getManagedBean().getSelectedReason().setByAppType(true);
 				for(PmSupplierReason tempReason:this.getManagedBean().getAppTypeRestrictions()){
 					if(tempReason.isBrandNew()){
+						addAuditAppTypeRestrictions(tempReason); // 35509
 						if(!tempReason.isSelected()){
 							if(this.getManagedBean().getSelectedReason().getPmSupplierReasons()==null){
 								this.getManagedBean().getSelectedReason().setPmSupplierReasons(new ArrayList<PmSupplierReason>());
@@ -579,6 +580,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 							this.getManagedBean().getSelectedReason().addPmSupplierReason(tempReason);
 							tempReason.setSelected(true);
 						}
+						addAuditComTypeRestrictions(tempReason);// 35509
 					}else{
 						if(!tempReason.isSelected()){
 							for (int i=0; i <this.getManagedBean().getSelectedReason().getPmSupplierReasons().size(); i++){
@@ -609,6 +611,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 							this.getManagedBean().getSelectedReason().addPmSupplierReason(tempReason);
 							tempReason.setSelected(true);
 						}
+						addAuditSuppTypeRestrictions(tempReason);// 35509
 					}else{
 						if(!tempReason.isSelected()){
 							for (int i=0; i <this.getManagedBean().getSelectedReason().getPmSupplierReasons().size(); i++){
@@ -844,13 +847,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		try{
 			List<PmPIDReason> toDeletePReasons  = new ArrayList<PmPIDReason>();
 			List<PmPIDReason> toReplacePReasons  = new ArrayList<PmPIDReason>();
-			List<PmPIDReason> auditPIDReason  = new ArrayList<>(); // 28895-35509
+			List<PmPIDReason> auditPIDReason  = new ArrayList<>(); // 35509
 			for(PmPIDReason pidReason: rejectReason.getPmPIDReasonList()){
 				log.info(".............pidReason="+pidReason.getDocType());
 				if(pidReason.isBrandNew()){
 					log.info(".......pidReason.isBrandNew()"+pidReason.isBrandNew());
 					log.info(".......this.getPmPidListOrigin().size()"+this.getManagedBean().getPmPidListOrigin().size());
-					auditPIDReason.add(pidReason); // 28895-35509
+					auditPIDReason.add(pidReason); // 35509
 					for(PmPIDReason pReason: this.getManagedBean().getPmPidListOrigin()){
 						log.info(".......pReason.getDocType="+pReason.getDocType());
 					    if(pidReason.getDocType().equals(pReason.getDocType())){
@@ -1837,8 +1840,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 		}
 	}
-<<<<<<< HEAD
-=======
 	
 	//35509
 		/**
@@ -1959,5 +1960,4 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	//#39618 - End
 	
->>>>>>> refs/remotes/origin/release-sit
 }

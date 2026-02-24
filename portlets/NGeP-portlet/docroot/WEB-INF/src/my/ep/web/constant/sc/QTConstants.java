@@ -307,7 +307,11 @@ public interface QTConstants {
 	// 21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
-	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//#21692
+	//#21692 - Start
+	public static final String PORTLET_NAME_QT_LOI_LIST = "scLoiList_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOA_REVIEW = "scLoaReview_WAR_NGePportlet";
+	//#21692 - End
 
 	// #29007 Start Vinod
 	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
@@ -483,10 +487,6 @@ public interface QTConstants {
 	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
 	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
 	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
-<<<<<<< HEAD
-	// 25791 -end-
-
-=======
 	public static final String QT_SEARCH_BID_SCHEDULE_ID = "searchQTBidSchedules";
 	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
 	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
@@ -497,7 +497,6 @@ public interface QTConstants {
 	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
 	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
->>>>>>> refs/remotes/origin/release-sit
 	// #36757 Start Vinod 04/12/2024
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 End Vinod 04/12/2024

@@ -334,10 +334,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.constant.sc.SLALogConstant;
-<<<<<<< HEAD
-=======
 import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
->>>>>>> refs/remotes/origin/release-sit
 //25791-end
 
 /**
@@ -594,21 +591,37 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		return searchLoaDataModel;
 	}
-	
-	public String toggleView(){
-		RequestContext rc = ((RequestContext) FacesContext.getCurrentInstance().getAttributes().get(Constants.REQUEST_CONTEXT_ATTR));
-		//if(getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO()||getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
-		if(getManagedSearchBeanDocumentTypeIsLOA()||getManagedSearchBeanDocumentTypeIsLOI()){
-			if(rc!=null)rc.execute("toggleView('"+ParameterConst.DOCTYPE_LETTER_OF_AWARD+"');");
+
+	// 25791 -start-
+	/**
+	 * based on doctype it will return datable.
+	 * 
+	 * @return String of doctype.
+	 */
+	public String toggleView() {
+		RequestContext rc = (RequestContext) FacesContext.getCurrentInstance()
+				.getAttributes().get(Constants.REQUEST_CONTEXT_ATTR);
+		if ((getManagedSearchBeanDocumentTypeIsLOA() || getManagedSearchBeanDocumentTypeIsLOI())
+				&& null != rc) {
+
+			rc.execute("toggleView('" + ParameterConst.DOCTYPE_LETTER_OF_AWARD
+					+ "');");
+
 			return ParameterConst.DOCTYPE_LETTER_OF_AWARD;
-		}
-		else{
-			if(rc!=null)rc.execute("toggleView('"+ParameterConst.DOCTYPE_QUOTATION+"');");
+		} else if (getManagedSearchBeanDocumentTypeIsBidding() && null != rc) {
+			rc.execute("toggleView('" + ParameterConst.DOCTYPE_BIDDING + "');");
+			return ParameterConst.DOCTYPE_BIDDING;
+		} else {
+			if (rc != null) {
+				rc.execute("toggleView('" + ParameterConst.DOCTYPE_QUOTATION
+						+ "');");
+			}
 			return ParameterConst.DOCTYPE_QUOTATION;
 		}
-		
-		
+
 	}
+
+	// 25791 -end-
 	
 	private void renewQTSesionObject() {
 		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
@@ -1053,13 +1066,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void searchQTAction() {
 		if(this.getManagedSearchBeanDocumentTypeIsLOA()){
 			getManagedBean().getSearchLoaForQtDataModel().reloadData();
-		}
-		else if(this.getManagedSearchBeanDocumentTypeIsLOI()){
+		}else if(this.getManagedSearchBeanDocumentTypeIsLOI()) {
 			getManagedBean().getSearchLoiForQtDataModel().reloadData();
 		}
-		else;
-		getManagedBean().getSearchQTDataModel().reloadData();
+
+		// 25791 -start-
+		else if (this.getManagedSearchBeanDocumentTypeIsBidding()) {
+			getManagedBean().getSearchBidScheduleDataModel().reloadData();
+		}
+		// 25791 -end-
 		
+        else {
+			getManagedBean().getSearchQTDataModel().reloadData();
+		}
 	}
 
 	/**
@@ -1220,8 +1239,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			//#21692 05/02/2024 - Start
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
-			if (editable && (this.getManagedBean().getAmendMentBean() == null
-					|| this.getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) == null)) {//#21692 note-#418 issue 2/note #469
+			if (checkProposalValidityExtensionStatus(selectedScQt.getQtId())) {//#21692 note-#418 issue 2/note #469/note-#612 (only using status as checking)
 				//Reopen #452 remove null checking
 				selectedScQt.setResponsePeriod(result);
 			}
@@ -1449,10 +1467,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(docType) || 
 				ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)) {
 			return new SPDetailBackingBean().retriveSupplierProposalDtl(qtId, previousPageUrl, true);
-		} else if (ParameterConst.DOCTYPE_BIDDING.equals(docType)) {
-			return viewOnlineBidding(scQt,previousPageUrl); //#17376-144
-			//return QTConstants.ONLINE_BIDDING_MAIN_PAGE; //#17376-144
-		} else {
+		}
+		
+		//25791 - remove bidding codes start -
+		
+		//25791 - remove bidding codes end -
+		
+		else {
 			Long docId = findDocIdByDocType(qtId, null);			
 			if (docId != null) {
 				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
@@ -1565,10 +1586,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				||  ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)){
 				return new SPDetailBackingBean().retriveSupplierProposalDtl(scQt.getQtId(), previousPageUrl, true);
 			}
-			else if(ParameterConst.DOCTYPE_BIDDING.equals(docType)) {
-				//return QTConstants.ONLINE_BIDDING_MAIN_PAGE;//#17376-144
-				return viewOnlineBidding(scQt,previousPageUrl); //#17376-144
-			}
+			
+			//25791 - remove bidding codes start -
+		
+			//25791 - remove bidding codes end -
 		}
 		else;
 		
@@ -5760,13 +5781,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					for(int i = 0; i< resDTO.getQtResultBean().getResultList().size(); i++){
 						resDTO.getQtResultBean().getResultList().get(i).setActionRender(actionRender(resDTO.getQtResultBean().getResultList().get(i)));
 
-						// 25791-start
-						getManagedBean().setBdSfFlow(isBidding);
-
-						ScQt scQt = resDTO.getQtResultBean().getResultList().get(i);
-
-						setBiddingStatusForQt(isBidding, qtnTenderSearchBean, scQt);
-						// 25791-end
+						// 25791 - removed bidding codes start-
+						
+						// 25791- removed bidding codes end-
 					}
 				}
 				// ***17376#66 - end
@@ -5784,56 +5801,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return null;
 		}
 
-		// 25791-start
-		/**
-		 * set bidding status for qt.
-		 * 
-		 * @param isBidding
-		 * @param qtnTenderSearchBean
-		 * @param scQt
-		 * @retrun Bidding Status QT.
-		 */
-		private ScQt setBiddingStatusForQt(boolean isBidding,
-				QtnTenderSearchBean qtnTenderSearchBean, ScQt scQt) {
-			if (isBidding) {
-				String status = qtnTenderSearchBean.getQtStatus();
-				Long statusId = getBiddingStatus(status, scQt);
-				scQt.setStatusDesc(getStatusDescById(statusId));
-			}
-
-			return scQt;
-		}
-		// 25791 -end-
-
-		// 25791 -start-
-		/**
-		 * Get bidding status for qt.
-		 * 
-		 * @param status
-		 * @param scQt
-		 * @retrun Bidding Status QT.
-		 */
-		private Long getBiddingStatus(String status, ScQt scQt) {
-			if (StringUtils.isNotBlank(status)
-					|| StringUtils.isNotEmpty(status)) {
-				return Long.valueOf(status);
-			} else {
-				// 25791 -stat-
-				IBiddingSO biddingSO;
-				biddingSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-				BiddingReqDTO biddingReqDTo = new BiddingReqDTO();
-				Long docId = scQt.getQtId();
-				biddingReqDTo.setDocId(docId);
-				return biddingSO
-						.retrieveBidScheduleDetailsStatus(biddingReqDTo)
-						.getScBidSchedule().getPmStatus().getStatusId();
-				// 25791 -end-
-
-			}
-		}
-		// 25791-End
-
+// 25791- removed bidding codes start-
+	
+// 25791- removed bidding codes end	-	
 	}
 	
 	
@@ -10692,14 +10662,31 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
 
 		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
-		if(status!=null){
-			if(status.isCurrent() 
-					&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED)
-					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE))){
-				return getQTDetailSO().getExtensionResponseDueDate(qtId, resPeriod);
-			}
+		if (status != null && status.isCurrent()
+				&& status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE)) {
+			return getQTDetailSO().getExtensionResponseDueDate(qtId, resPeriod);
 		}
 		return null;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean checkProposalValidityExtensionStatus(Long qtId) {
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(qtId);
+		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+
+		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if (status != null
+				&& status.isCurrent()
+				&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_ACCEPTED)
+						|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_REJECTED) || status
+						.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED))) {
+			return true;
+		}
+		return false;
 	}
 	//#21692 - End
 	
@@ -11378,35 +11365,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// 26095@hatta - end
             
             
-<<<<<<< HEAD
-          //Start 19287      
-            public void resetSearchDataResults(){
-            	log.info("==========resetSearchDataResults========");
-            	if(isQTSearchScreen()){
-            		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
-            				.getSearchQTDataModel();
-            		
-            			searchQTDataModel = new QTPagingDataModel("searchQTs", getManagedBean()
-            					.getQtnTenderSearchBean());
-            			getManagedBean().setSearchQTDataModel(searchQTDataModel);
-            			getManagedBean().getSearchQTDataModel().resetData();
-            			IPagingDataModel<ScLoaForQt> searchLoaDataModel = getManagedBean()
-            					.getSearchLoaForQtDataModel();          			
-            				searchLoaDataModel = new LOAPagingDataModel("searchQTLoaLois", getManagedBean()
-            						.getQtnTenderSearchBean());
-            				getManagedBean().setSearchLoaForQtDataModel(searchLoaDataModel);
-            				getManagedBean().getSearchLoaForQtDataModel().resetData();
-            				IPagingDataModel<ScLoiForQt> searchLoiDataModel = getManagedBean()
-            						.getSearchLoiForQtDataModel();
-            					searchLoiDataModel = new LOIPagingDataModel("searchQTLoaLois", getManagedBean()
-            							.getQtnTenderSearchBean());
-            					getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
-            					getManagedBean().getSearchLoiForQtDataModel().resetData();
-            		
-            	}
-            }
-            //End 19287 
-=======
      //Start 19287
 	// 25791 -start-
 	/**
@@ -11446,7 +11404,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	// 25791 -end-
 	// End 19287
->>>>>>> refs/remotes/origin/release-sit
    //#25692-start         
     public Long retirveStatusId() {
     	if(((null!=this.getManagedBean().getTaskName()&&(SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(this
@@ -11462,44 +11419,29 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
     }
 	// #25692-End
 
-	// #17376-start onlineBiddingcodes
-	// 25791 -start-
+	// 25791 -start- onlineBiddingcodes
 	/**
-	 * This method is used to view Bidding section screen based on qt.
+	 * This method is used to view Bidding section screen based on BidSchedule
+	 * Details.
 	 * 
-	 * @param scQt
+	 * @param scBidSchedule
 	 * @param previousPageUrl
 	 * @return BiddingDetailsScreen
 	 */
-<<<<<<< HEAD
-	public String viewOnlineBidding(ScQt scQt, String previousPageUrl) {
-		// 25791-start-
-		IBiddingSO biddingSO;
-		biddingSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-		BiddingReqDTO biddingReqDTo = new BiddingReqDTO();
-		Long docId = scQt.getQtId();
-		biddingReqDTo.setDocId(docId);
-		BiddingResDTO biddingResDTO = biddingSO
-				.retrieveBidScheduleDetailsStatus(biddingReqDTo);
-=======
 	public String viewOnlineBidding(ScBidScheduleForQT scBidSchedule,
 			String previousPageUrl) {
 		
 
->>>>>>> refs/remotes/origin/release-sit
 		BiddingBackingBean biddingBB = new BiddingBackingBean();
-		// 25791 -start-
-		if (null != biddingResDTO && null != biddingResDTO.getScBidSchedule()) {
-			// 25791 -end-
-			biddingBB.renewSesionObject();
-			return biddingBB.bidManagementQuotationTenderAction(
-					biddingResDTO.getScBidSchedule(), previousPageUrl);
-		}
-		// 25791-end-
+
+		biddingBB.renewSesionObject();
+		biddingBB.bidManagementQuotationTenderAction(scBidSchedule,
+				previousPageUrl);
 
 		return QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW; // 25791
-	} //#17376-End onlineBiddingcodes
+	}
+
+	// 25791 -end-
     
 	// 25037 - start
 	/**
@@ -14362,8 +14304,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	// 25791 -end-
-<<<<<<< HEAD
-=======
 	
 	// 25791 -start-
 	/**
@@ -14381,10 +14321,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			getManagedBean().setSearchBidScheduleDataModel(
 					searchBidScheduleDataModel);
 		}
->>>>>>> refs/remotes/origin/release-sit
 
-<<<<<<< HEAD
-=======
 		boolean isQtScreen = isQTMaintenanceScreen() || isQTSearchScreen()
 				|| isQtTechSupportSearchScreen();
 		
@@ -14831,7 +14768,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 	
 	
 	
->>>>>>> refs/remotes/origin/release-sit
 	// 25791 -start-
 	/**
 	 * set document number during LOI or LOA seach in qtmaintenance and Audit

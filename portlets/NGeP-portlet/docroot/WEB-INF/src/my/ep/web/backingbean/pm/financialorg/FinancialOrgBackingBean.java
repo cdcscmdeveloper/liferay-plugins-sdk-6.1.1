@@ -84,8 +84,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-<<<<<<< HEAD
-=======
 import my.ep.biz.service.pm.common.address.IAddressSO;
 // 35509 START
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
@@ -93,7 +91,6 @@ import my.ep.constant.pm.AuditConst;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMFinancialOrgBackingBean;
 //35509 END
->>>>>>> refs/remotes/origin/release-sit
 /**
  * Backing Bean for Financial Org
  * 
@@ -1117,8 +1114,6 @@ public class FinancialOrgBackingBean extends
 			
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IFinancialOrgSO.class);
-<<<<<<< HEAD
-=======
 			
 			/************ AUDIT #28895-35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMFinancialOrgBackingBean();
@@ -1155,7 +1150,6 @@ public class FinancialOrgBackingBean extends
 			}
 			/************ AUDIT #28895-35509 *************/
 			
->>>>>>> refs/remotes/origin/release-sit
 			FinancialOrgResDTO resDTO = financialOrgSO.saveOrUpdateFinancialOrgDetails(reqDTO);
 	
 			if (resDTO.isSuccessful()) {
@@ -1182,8 +1176,6 @@ public class FinancialOrgBackingBean extends
 						    message
 				    		));
 	
-<<<<<<< HEAD
-=======
 				/************ AUDIT #28895-35509 *************/
 				getManagedBean().setSavedFinancialOrg(resDTO.getPmFinancialOrg());
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION)) {
@@ -1201,7 +1193,6 @@ public class FinancialOrgBackingBean extends
 				retrieveServiceTypeMap();
 				maintainFinancialOrg(resDTO.getPmFinancialOrg().getFinancialOrgId());
 				/************ AUDIT #28895-35509 *************/
->>>>>>> refs/remotes/origin/release-sit
 			}
 		}
 		catch (Exception e) {

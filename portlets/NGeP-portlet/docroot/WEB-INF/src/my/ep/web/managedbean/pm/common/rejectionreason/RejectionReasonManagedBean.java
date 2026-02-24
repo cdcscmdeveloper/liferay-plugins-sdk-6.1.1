@@ -52,11 +52,6 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private PmReason newPmReason;
 	private List<PmPIDReason> deletePIDReasonList;
 	private List<PmPIDReason> auditAddPIDReasonList;
-<<<<<<< HEAD
-	private List <PmSupplierReason> auditDeleteAppTypeRestrictions;
-	private List <PmSupplierReason> auditDeleteComTypeRestrictions;
-	private List <PmSupplierReason> auditDeleteSuppTypeRestrictions;
-=======
 
 	private List <PmSupplierReason> auditAddAppTypeRestrictions;
 	private List <PmSupplierReason> auditAddComTypeRestrictions;
@@ -65,7 +60,6 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private List <PmSupplierReason> auditDeleteAppRestrictions;
 	private List <PmSupplierReason> auditDeleteComRestrictions;
 	private List <PmSupplierReason> auditDeleteSuppRestrictions;
->>>>>>> refs/remotes/origin/release-sit
 	/************ AUDIT END #28895-35509 *************/
 	
 	private boolean isReasonApplicabilityDuplicate = false; //39618
@@ -349,10 +343,6 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.auditAddPIDReasonList = auditAddPIDReasonList;
 	}
 
-<<<<<<< HEAD
-	
-	/************ AUDIT START #28895-35509 *************/
-=======
 	public List<PmSupplierReason> getAuditAddAppTypeRestrictions() {
 		return auditAddAppTypeRestrictions;
 	}
@@ -413,6 +403,5 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.isReasonApplicabilityDuplicate = isReasonApplicabilityDuplicate;
 	}
 	//#39618 - End
->>>>>>> refs/remotes/origin/release-sit
 	
 }

@@ -656,21 +656,18 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
 				if (auditCtBean.getAuditCtConfigState()) {
 					if (getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_UPDATE_FACTORING)
-							&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE))) {
 						
 						Long factoringId = resDTO.getFactoring().getFactoringId();
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(getManagedBean().getCtContract().getContractId());
 						auCtData.setContractVerId(getManagedBean().getContractVer().getContractVerId());
-<<<<<<< HEAD
-						auCtData.setPrevContractVerId(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
-=======
 						auCtData.setPrevContractVerId(factoringId != null ? factoringId : 0L);
->>>>>>> refs/remotes/origin/release-sit
 						auCtData.setDocType(getManagedBean().getDocType());
 						auCtData.setCtType(getManagedBean().getCtContract().getContractType().getParameterCode());
 						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
 
 						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
