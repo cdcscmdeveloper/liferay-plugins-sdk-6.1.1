@@ -5,6 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<style>
+		.no-header .ui-accordion-header {
+	    	display: none;
+		}	
+	</style>
 
 	<ui:param name="requisitionerEnableDisable"
 			value="#{itemInquiryDetailRptBackingBean.retrieveUserRoles()}"></ui:param>
@@ -25,7 +31,8 @@
 					value="#{lbl['lbl.sc.request.note.header.status']}" /></td>
 			<td width="35%">
 				<ui:remove>#29558 start</ui:remove>
-				<p:accordionPanel multiple="true" id="accPanel">		  
+				<p:accordionPanel multiple="true" id="accPanel" styleClass="no-header">	
+					<p:tab title="">	  
 				        <p:scrollPanel style="width:270px;height:100px">
 				            <p:selectManyCheckbox id="manyMenusts" value="#{itemInquiryDetailRptBackingBean.managedBean.scStatusManyMenuTemp}" layout="pageDirection">
 				                <f:selectItem itemValue="#{lbl['lbl.rpt.all']}" itemLabel="#{lbl['lbl.rpt.all']}"/>
@@ -36,6 +43,7 @@
     					 		 listener="#{itemInquiryDetailRptBackingBean.onSelectAll(ParameterConst.doctypePurchaseInquiry)}"/>
     			            </p:selectManyCheckbox>
 				        </p:scrollPanel>
+				    </p:tab>
     			</p:accordionPanel>
     			<ui:remove>#29558 end</ui:remove>
 			</td>
