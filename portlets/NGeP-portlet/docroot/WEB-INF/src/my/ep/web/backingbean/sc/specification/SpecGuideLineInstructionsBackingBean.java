@@ -96,6 +96,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		return specGuideLineStreamContent;
 	}
 	
+	//	#30432 - Start
 	public StreamedContent getSpecItemPreparationGuideLineStreamContent() throws Exception {
 		if (specGuideLineStreamContent == null) {
 			ScSpecGuideLineAttachment specGuideLineAttachment = new ScSpecGuideLineAttachment();
@@ -106,6 +107,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		}
 		return specGuideLineStreamContent;
 	}
+	//	#30432 - End
 
 	private void generateSpecGuideLinePdfFromSharedrepository(ScAttachment attachment, String prefixFileName,
 			String constFileName) throws Exception {

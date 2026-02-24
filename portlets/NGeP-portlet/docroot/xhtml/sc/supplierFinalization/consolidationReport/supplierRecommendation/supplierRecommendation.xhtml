@@ -30,6 +30,10 @@
 
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	
+	<ui:remove>#30432 - Start</ui:remove>
+	<ui:include src="/xhtml/tpl/spec/specGuideLinePopup.xhtml" />
+	<ui:remove>#30432 - End</ui:remove>
+	
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
@@ -48,12 +52,18 @@
 				</c:if>
 				
 				<td class="tdWidth" valign="top">
+					<ui:remove>#30432 - Start</ui:remove>
 					<h:panelGroup rendered="#{consolidationReportBackingBean.managedBean.itemized}">
-						<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/itemList.xhtml" />
+						<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/itemList.xhtml">
+							<ui:param name="includePopup" value="#{false}" />
+						</ui:include>
 					</h:panelGroup>
 					<h:panelGroup id="supplierPanel">
-						<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/qualifiedSupplierList.xhtml" />
+						<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/qualifiedSupplierList.xhtml">
+							<ui:param name="includePopup" value="#{false}" />
+						</ui:include>
 					</h:panelGroup>
+					<ui:remove>#30432 - End</ui:remove>
 				</td>
 			</tr>
 		</table>	

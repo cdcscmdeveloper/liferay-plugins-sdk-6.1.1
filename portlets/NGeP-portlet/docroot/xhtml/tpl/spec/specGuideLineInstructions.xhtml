@@ -14,7 +14,11 @@
 		style="padding-left: 4px;padding-right: 4px;font-size: 13px;"
 		immediate="true" action="#{specGuideLineInstructionBB.specGuideLineWindow()}"
 		value="#{lbl['lbl.sc.spec.items.guideline2.pdf']}." />
-<br/>
+	<br/>
 
-<ui:include src="specGuideLinePopup.xhtml"></ui:include>
+	<ui:remove>#30432 - Start</ui:remove>
+	<c:if test="#{empty includePopup or includePopup}">
+	    <ui:include src="specGuideLinePopup.xhtml" />
+	</c:if>
+	<ui:remove>#30432 - End</ui:remove>
 </ui:composition>

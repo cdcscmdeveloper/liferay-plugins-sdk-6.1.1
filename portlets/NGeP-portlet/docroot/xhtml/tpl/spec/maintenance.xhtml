@@ -46,9 +46,7 @@
 			<table style="width:100%">
 			<tr>
 			<ui:remove>#30432 - Start</ui:remove>
-			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
-				<ui:param name="number" value="" /> 
-			</ui:include>
+			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml" /> 
 			<ui:remove>#30432 - End</ui:remove>
 			<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include>
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.spec.instruction.import.export']}" escape="false" rendered="#{specMaster.brandNew}"/>

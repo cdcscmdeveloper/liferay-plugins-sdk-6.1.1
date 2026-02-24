@@ -16,9 +16,7 @@
 			value="#{lbl['lbl.sc.spec.tech.check.list.panel.instruction']}"
 			escape="false" />
 			<ui:remove>#30432 - Start</ui:remove>
-			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
-				<ui:param name="number" value="" /> 
-			</ui:include>
+			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml" /> 
 			<ui:remove>#30432 - End</ui:remove>
 			<h:outputText styleClass="instruction"  rendered="#{!specificationBackingBean.managedBean.qt.panel}"
 			value="#{lbl['lbl.sc.spec.tech.check.list.instruction1']}"
