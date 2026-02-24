@@ -91,6 +91,7 @@
 			<portlet id="softCertProvider"></portlet>
 			<portlet id="pmSystemConfiguration"></portlet>
 			<portlet id="pmAuSearch"></portlet><!-- #35509 -->
+			<portlet id="pmAuUserOrgSearch"></portlet><!-- #35509 -->
 			<portlet id="pmSpecialService"></portlet><!-- #29644 -->
 			<portlet id="pmApproveAuthority"></portlet><!-- #27827 -->
 		</category>
@@ -190,6 +191,8 @@
 			<portlet id="maintenanceRequestRevision"/>
 			<portlet id="demoInvitation"/><!-- #28784 -->
 			<portlet id="disciplinaryActionDp"/><!-- #26284 -->
+			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->
+			<portlet id="QTBSVChange"/><!-- #28188 -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -391,6 +394,10 @@
 		<!-- LOG :12491 Finish Button -->
 		<portlet id="FirstTimeMessage"></portlet>
 		<portlet id="spkiTest"></portlet>
+		<!-- #9299 start -->
+		<portlet id="smCompExp"></portlet>
+		<portlet id="smCompExpAlert"></portlet>
+		<!-- #9299 end -->
 	</category>
 
 	<category name="category.ep.wp">

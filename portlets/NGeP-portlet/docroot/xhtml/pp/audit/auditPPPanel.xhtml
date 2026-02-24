@@ -68,14 +68,16 @@
 								<h:outputText rendered="#{obj.oldValue == null}"
 									value="#{lbl['lbl.audit.no.available']}" />
 								<h:outputText rendered="#{obj.oldValue != null}"
-									value="#{obj.oldValue}" />
+									value="#{auditProcurementPlanReportBackingBean.getFormattedValue(obj.oldValue)}"
+									escape="false" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
 								style="max-width:100px;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 								<h:outputText rendered="#{obj.newValue == null}"
 									value="#{lbl['lbl.audit.no.available']}" />
 								<h:outputText rendered="#{obj.newValue != null}"
-									value="#{obj.newValue}" />
+									value="#{auditProcurementPlanReportBackingBean.getFormattedValue(obj.newValue)}"
+									escape="false" />
 							</p:column>
 						</p:dataTable>
 					</div>

@@ -32,6 +32,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
+import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -444,4 +445,133 @@ public class ViewSuppProfileBackingBean extends
 		return isExpired;
 	}
 	//35336 END
+<<<<<<< HEAD
+=======
+	
+	// 26247 - start	
+	/**
+	 * Evaluate suspension status based on supplier. 
+	 * This supposed to be from SM. 
+	 * 
+	 * @param scQt
+	 * @param supplier
+	 * @return
+	 */
+	public String evaluateQTWarningMessage(SmSupplier supplier) {
+		if (null == supplier) {
+			return null;
+		}
+		Locale locale = new FacesScopes().getUserLocale();
+		List<String> messages = new ArrayList<>();
+	
+		if (DisciplinaryActionUtils.evaluateCancellationBlacklist(supplier)) {
+			messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
+		}
+		List<String> cancelledCategoryCodes = new ArrayList<>();
+		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+
+		if (CollectionUtils.isNotEmpty(cancelledCategoryCodes)) {
+			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760557,
+					new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		}
+
+		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+				&& !supplier.isBumi() && (!supplier.isDisciplinaryActions() || !DisciplinaryActionUtils.evaluateCancelledBumiAccount(supplier));
+		if (noBumiAccount) {
+			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760556, new String[] {},
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		} 
+		return composeWarningMessages(messages);
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Retrieve message and set message to QT DA warning dialog
+	 * @param messages
+	 */
+	public void onViewQTAlertMessage(List<String> messages) {
+		this.getManagedBean().setDisciplinaryActionMsg(composeWarningMessages(messages));
+		RequestContext.getCurrentInstance().execute(
+				"$('[id=\"suspendAlertWidgetId\"]').detach().appendTo('body');suspendAlertWidget.show();");
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Evaluate the flag to show warning flag( for yes/no hyperlink) for
+	 * non/disciplinary action
+	 * 
+	 * @param supplier
+	 * @return flag to display alert icon
+	 */
+	public List<String> evaluateWarningTooltip(SmSupplier supplier) {
+		List<String> messages = new ArrayList<>();
+		if (supplier != null) {
+			Locale locale = new FacesScopes().getUserLocale();
+			if (DisciplinaryActionUtils.evaluateCancellationBlacklist(supplier)) {
+				messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
+			}
+
+			List<String> cancelledCategoryCodes = new ArrayList<>();
+			cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+
+			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
+			if (noCancelledCategory) {
+				messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
+						new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
+						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			}
+
+			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+					&& !supplier.isBumi()
+					&& (!supplier.isDisciplinaryActions() || !DisciplinaryActionUtils.evaluateCancelledBumiAccount(supplier));
+			if (noBumiAccount) {
+				messages.add(MessageUtils.getMessage(MessageConst.ERROR_760559, new String[] {},
+						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			}
+		}
+		return messages;
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	private String getCancelRegistrationOrBlacklistMessage(SmSupplier supplier, Locale locale) {
+		SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+		String statusDescription = ResourceBundleUtils.getMessage("lbl.sm.status.deleted.with.transaction", null,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		String status = null;
+		if (disciplinaryAction.isBlacklistOwner() && disciplinaryAction.isPendingBlacklist()) {
+			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		} else if (disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel()) {
+			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.cancel.registration", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		}
+
+		statusDescription = statusDescription.concat(" (" + status + ")");
+		return MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { statusDescription },
+				MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
+	}
+	// 26247 - end
+
+	// 26247 - start
+	private String composeWarningMessages(List<String> messages) {
+		StringBuilder messageSb = new StringBuilder();
+		int count = 0;
+		for (String message : messages) {
+			count++;
+			messageSb
+					.append("<img style='vertical-align: sub;' src='/NGeP-portlet/css/images/design/icon_error.png'>&nbsp;&nbsp;");
+			messageSb.append(message);
+			if (count < messages.size()) {
+				messageSb.append("<br/>");
+			}
+		}
+		return messageSb.toString();
+	}
+	// 26247 - end
+
+>>>>>>> refs/remotes/origin/release-sit
 }

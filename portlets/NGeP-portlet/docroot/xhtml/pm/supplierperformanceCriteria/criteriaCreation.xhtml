@@ -32,21 +32,28 @@
 					<!-- List of languages with description -->
 					<th><p:outputLabel value="#{lbl['lbl.pm.criteria.name']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></th>
-					<td><p:dataTable id="dtCriteriaDesc" styleClass="criteriaDescList"
+					<td>
+					<!-- 39577 Start -->
+					<p:dataTable id="dtCriteriaDesc" styleClass="criteriaDescList"
 							var="criteriaDesc"
-							value="#{criteriaBackingBean.managedBean.selectedCriteria.pmCriteriaDescs}" sortBy="#{criteriaDesc.pmLanguage.languageName}">
+							value="#{criteriaBackingBean.managedBean.selectedCriteria.pmCriteriaDescs}">
+					<!-- 39577 End -->
 							<p:column headerText="#{lbl['lbl.pm.settings.language']}"
 								width="10%">  
 								#{criteriaDesc.pmLanguage.languageName}
 					        </p:column>
+					        <!-- #34445, Fix as-is bug: #39087 Start -->
 							<p:column headerText="* #{lbl['lbl.pm.criteria.name']}">
-								<p:inputTextarea id="itCriteriaDesc" 
-									value="#{criteriaDesc.criteria}" cols="50" rows="5"
-									required="true" maxlength="255"
-									label="#{lbl['lbl.pm.criteria.name']}" autoResize="false" />
-								<p:message id="itCriteriaDescMsg" for="itCriteriaDesc"
+							<p:inputTextarea id="itCriteriaDesc" 
+								value="#{criteriaDesc.criteria}" cols="50" rows="5"
+								required="true" maxlength="50"
+								label="#{lbl['lbl.pm.criteria.name']}" autoResize="false">
+								<f:validateLength maximum="50" />
+							</p:inputTextarea>
+							<p:message id="itCriteriaDescMsg" for="itCriteriaDesc"
 									display="icon" />
 							</p:column>
+							<!-- #34445, Fix as-is bug: #39087 End -->
 						</p:dataTable></td>
 				</tr>
 	   

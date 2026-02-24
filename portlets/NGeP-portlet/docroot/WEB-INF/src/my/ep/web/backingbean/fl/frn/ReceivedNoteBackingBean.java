@@ -519,8 +519,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			/*#14650 - Logan - Beginning*/
 			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			
-			if(getManagedBean().getFulfilmentRequest().getCtContract() !=null 
-					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() !=null){
+			if (getManagedBean().getFulfilmentRequest().getCtContract() != null
+					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() != null
+					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {//24956 -Disable blocking rules for CC
 				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
 							
 				BigDecimal sumReceivedAmt = BigDecimal.ZERO;
@@ -919,6 +921,17 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				throw new EpException(MessageConst.ERROR_100048);
 			}
 		}
+		
+		// 39692-Start
+		if ((outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SAVE)
+				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT) || outcome
+					.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE))
+				&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentNote().getFlRequest()
+						.getFulfilmentReqId())) {
+
+			throw new EpException(MessageConst.ERROR_760823);
+		}
+		// 39692-End
 		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {		
 			validateFulfilmentNote(outcome);
@@ -1944,6 +1957,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 		reqDTO.setActionCode(action);// 36361
 		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361
+		// 38104-Start
+		if (getManagedBean().getFulfilmentNote() != null
+				&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
+			reqDTO.setFulfilmentNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+		}
+		// 38104-End
 		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
 
 		Boolean allowToProceed = resDTO.isFlag();
@@ -1952,4 +1971,19 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	// 36247-end
+	
+	/**
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
+	 * @param fulfilmentReqId
+	 * @return true if invalid FRN data is detected
+	 */
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
+	}
 }

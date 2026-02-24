@@ -30,11 +30,13 @@
 				<h:outputText value="#{lbl[scQtBriefReg.attended ? 'lbl.txt.yes' : 'lbl.txt.no']}" />
 			</p:column>
 			
-			<p:column style="text-align: center;">
+			<ui:remove>26247 - start</ui:remove>
+			<p:column style="white-space:normal;width:18%;text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
+<<<<<<< HEAD
 				
 				<!-- #31033 start -->
 				<p:commandLink  style="color:red; font-weight:bold;" 
@@ -48,8 +50,12 @@
 				
 				<h:outputText rendered="#{!scQtBriefReg.supplier.disciplinaryActions}"
 				 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+=======
+				<ac:disciplinaryActionYesNo
+					supplier="#{scQtBriefReg.supplier}" maxRow="0" index="#{index}"/>
+>>>>>>> refs/remotes/origin/release-sit
 			</p:column>
-
+			<ui:remove>26247 - end</ui:remove>
 		</p:dataTable>
 
 		<table style="width: 100%">

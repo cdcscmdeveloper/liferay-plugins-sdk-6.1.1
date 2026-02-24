@@ -407,14 +407,21 @@
 							<f:validateRegex 
 								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							<p:ajax process="@this" partialSubmit="true"/>
+							<ui:remove>#28720 Start</ui:remove>
+							<p:ajax event="change" process="@this"
+									listener="#{selfRequestSupplierAdminBackingBean.onChangeEmail()}"
+									update="suppAdminEmail" />
+							<ui:remove>#28720 End</ui:remove>
 						</p:inputText> 
 					</p:outputPanel>
-					&#160; <p:graphicImage id="tooltip2"
-						value="/css/images/design/tooltips.png" /> <p:tooltip
-						id="toolinfo2" for="tooltip2">
-						<p:outputLabel escape="false"
-							value="#{lbl['tt.sm.registration.equity.owner.email']}" />
-					</p:tooltip>&#160;
+					<ui:remove>#28720 Start</ui:remove>
+					&#160;&#160;
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" />
+					<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false"
+							value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip>
+					<ui:remove>#28720 End</ui:remove>
 					<p:message id="suppAdminEmailMsg" for="suppAdminEmail"
 						showSummary="true" showDetail="false" display="icon" />
 				</td>
@@ -505,6 +512,11 @@
 				</td>
 			</tr>
 		</table>
+		<ui:remove>#28720 Start</ui:remove>
+		<ac:smEmailAlertPopup bBean="#{backingBean}"
+			title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+			btnOkLabel="#{lbl['lbl.btn.ok']}" />
+		<ui:remove>#28720 End</ui:remove>
 	</p:panel>
 
 </ui:composition>

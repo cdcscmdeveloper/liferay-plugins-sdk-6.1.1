@@ -237,16 +237,20 @@ public class AuditProcurementPlanBackingBeanTemplate extends BaseBackingBean imp
 
 		} else {
 
-			if (AuditPPConst.PP_PENDING_REVISION_APPROVAL.equals(resDTO.getWorkflowStatus().getPmStatus().getStatusId())) {
+			if (AuditPPConst.PP_PENDING_APPROVAL.equals(resDTO.getWorkflowStatus().getPmStatus().getStatusId())
+					|| AuditPPConst.PP_PENDING_REVISION_APPROVAL.equals(resDTO.getWorkflowStatus().getPmStatus()
+							.getStatusId())) {
 				auSpDTO.setStatusId(AuditPPConst.PP_PENDING_REVISION);
-				auSpDTO.setRoleCode(AuditPPConst.PLAN_APPROVER_OFFICER); // ni revise selepas verify revise - betul dah
+				auSpDTO.setRoleCode(AuditPPConst.PLAN_APPROVER_OFFICER);
 			} else if (AuditPPConst.PP_PENDING_VERIFICATION.equals(resDTO.getWorkflowStatus().getPmStatus().getStatusId())
 					|| AuditPPConst.PP_PENDING_REVISION_VERIFICATION.equals(resDTO.getWorkflowStatus().getPmStatus().getStatusId())) {
 				auSpDTO.setStatusId(AuditPPConst.PP_PENDING_REVISION);
-				auSpDTO.setRoleCode(AuditPPConst.PLAN_VERIFICATION_OFFICER); // ni revise verify revise - betul dah
+				auSpDTO.setRoleCode(AuditPPConst.PLAN_VERIFICATION_OFFICER);
 			} else {
 				auSpDTO.setStatusId(resDTO.getWorkflowStatus().getPmStatus().getStatusId());
-				if (AuditPPConst.PP_PENDING_REVISION_VERIFICATION.equals(ppBB.getManagedBean().getAuditReviseStatusID())) { // ni pon dah betul
+				if (AuditPPConst.PP_PENDING_REVISION_VERIFICATION
+						.equals(ppBB.getManagedBean().getAuditReviseStatusID())
+						|| AuditPPConst.PP_PENDING_VERIFICATION.equals(ppBB.getManagedBean().getAuditReviseStatusID())) {
 					auSpDTO.setRoleCode(AuditPPConst.PLAN_VERIFICATION_OFFICER);
 				} else {
 					auSpDTO.setRoleCode(AuditPPConst.PLAN_APPROVER_OFFICER);

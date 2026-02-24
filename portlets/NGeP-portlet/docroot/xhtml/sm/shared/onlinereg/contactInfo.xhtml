@@ -190,6 +190,12 @@
 						<f:selectItems var="city"
 							value="#{registrationBackingBean.managedBean.residentialCityLs}"
 							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
+<<<<<<< HEAD
+=======
+						<!-- #36718 - add ajax -->
+						<p:ajax event="change" update="conPostCodeMy" process="pnlContactInfo"
+							listener="#{registrationBackingBean.onSelectCity('residential')}" />
+>>>>>>> refs/remotes/origin/release-sit
 					</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
 			</tr>
 

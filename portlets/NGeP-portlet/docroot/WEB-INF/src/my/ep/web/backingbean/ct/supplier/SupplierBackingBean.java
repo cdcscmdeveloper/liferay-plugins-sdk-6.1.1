@@ -659,10 +659,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 							&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 						
+						Long factoringId = resDTO.getFactoring().getFactoringId();
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(getManagedBean().getCtContract().getContractId());
 						auCtData.setContractVerId(getManagedBean().getContractVer().getContractVerId());
+<<<<<<< HEAD
 						auCtData.setPrevContractVerId(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+=======
+						auCtData.setPrevContractVerId(factoringId != null ? factoringId : 0L);
+>>>>>>> refs/remotes/origin/release-sit
 						auCtData.setDocType(getManagedBean().getDocType());
 						auCtData.setCtType(getManagedBean().getCtContract().getContractType().getParameterCode());
 						auCtData.setRoleName(getUserRole());
@@ -985,7 +990,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						getManagedBean().setFullBankInfo(account); // Fix - #33856
 						changeAccountActionListener();
 					}
-					getManagedBean().setApplID(smSupplierBank.getSmAppl().getApplId()); // Fix - #33856
+					//Start Fix - #38748 
+					if (smSupplierBank.getSmAppl() != null) {
+						getManagedBean().setApplID(smSupplierBank.getSmAppl().getApplId()); // Fix - #33856
+					}
+					//End Fix - #38748 
 				}
 				//End Fix - #33399
 				getManagedBean().setPopulateBankAccountList(items);	

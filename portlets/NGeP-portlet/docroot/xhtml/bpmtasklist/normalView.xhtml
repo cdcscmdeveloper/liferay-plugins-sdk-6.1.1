@@ -217,14 +217,13 @@
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 			</h:outputText>
-			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PO_REVIEW}">
+			<!-- #12483, 30747 - START -->
+			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PO_REVIEW
+					or tasks.docStatus eq SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE
+					or tasks.docStatus eq SupplierManagementConst.PM_STATUS_PO_ESCALTED_TO_APPROVER}">
 				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
 			</p:outputPanel>
-			<!-- #12483 - START -->
-			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE}">
-				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
-			</p:outputPanel>
-			<!-- #12483 - END -->
+			<!-- #12483, 30747 - END -->
 		</p:column>
 		<!--#29810-START-->
 		<p:column width="18%;" style="white-space:normal;">

@@ -344,9 +344,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				ScheduleInfo schInfo = new ScheduleInfo();
 				schInfo.setSchNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
 				schInfo.setCrNo(detail.getDocNo());
-				schInfo.setCrNoStatus("(" + getPmStatusDesc(detail.getDocStatus()) + ")");
-				schInfo.setCoNo(detail.getFlOrderDocNo());
-				schInfo.setCoNoStatus("(" + getPmStatusDesc(detail.getFlOrderDocStatus()) + ")");
+				
+				String crStatus = getStatusDescById(detail.getDocStatus()) !=null ? getStatusDescById(detail.getDocStatus()) :"";
+				schInfo.setCrNoStatus("(" + crStatus + ")");
+				schInfo.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
+				
+				String pocoStatus = getStatusDescById(detail.getFlOrderDocStatus()) !=null ? getStatusDescById(detail.getFlOrderDocStatus()) :"";
+				schInfo.setCoNoStatus("(" + pocoStatus + ")");
 
 				scheduleInfo.add(schInfo);
 
@@ -380,24 +384,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 	
-	/**
-	 * #38255
-	 * Retrieves the PM status description based on the given statusId
-	 *
-	 * @param statusId 
-	 * @return statusDesc
-	 */
-	private String getPmStatusDesc(Long statusId) {
-		String statusDesc = StringUtils.EMPTY;
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setStatusId(statusId);
-		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		StatusResDTO resDTO = SmServiceLookup.getStatusSO().retrieveStatusDescById(reqDTO);
-		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-			statusDesc = resDTO.getPmStatusDesc().getStatusName();
-		}
-		return statusDesc;
-	}
 
 	public String getOrgCode() {
 		return orgCode;
@@ -11961,7 +11947,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {
 		SmSupplier currSupp = smSupplier;
 		if (currSupp != null) {
-			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
+			List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
 			if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
 				getManagedBean().setDisciplineVOs(voList);
 			} else {

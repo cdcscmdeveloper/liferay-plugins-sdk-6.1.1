@@ -62,6 +62,7 @@
 				style="width:290px;" label="#{lbl['lbl.rpt.mofRegNo']}"/>
 			</td>
 			<!-- 32521 - START -->
+<<<<<<< HEAD
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" /></td>
 			<td class="tdContent">
@@ -75,6 +76,17 @@
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
+=======
+			<td class="tdTitle"><p:outputLabel
+					value="#{lbl['lbl.rpt.approvedBy']}" /></td>
+			<td class="tdContent"><ac:lov id="lovUser" lovId="PM_USER_ID_RPT"
+					style="width:289px;" size="40" readonly="true"
+					headerText="#{lbl['lbl.pm.ta.user.lov']}"
+					value="#{applApprovedRptBB.managedBean.selectedUser.userName}"
+					saveObject="applApprovedRptBB.managedBean.selectedUser"
+					conditionField="#{applApprovedRptBB.getConditionFieldsPO(true)}" />
+				<!-- #32521 --></td>
+>>>>>>> refs/remotes/origin/release-sit
 			<!-- 32521 - END -->
 		</tr>
 		

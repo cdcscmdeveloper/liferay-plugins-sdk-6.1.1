@@ -56,10 +56,14 @@
 						    	#{reasonDesc.pmLanguage.languageName}
 					        </p:column>
 							<p:column headerText="* #{lbl['lbl.pm.reason.desc']}">
+								<!-- #34445, Fix as-is bug: #39087 Start -->
 								<p:inputTextarea id="itReasonDesc" disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 									value="#{reasonDesc.reasonDesc}" cols="50" rows="5"
 									required="true" maxlength="255"
-									label="#{lbl['lbl.pm.reason.desc']}" autoResize="false" />
+									label="#{lbl['lbl.pm.reason.desc']}" autoResize="false">
+									<f:validateLength maximum="255" />
+								</p:inputTextarea>
+								<!-- #34445, Fix as-is bug: #39087 End -->
 								<p:message id="itReasonDescMsg" for="itReasonDesc"
 									display="icon" />
 							</p:column>
@@ -118,9 +122,11 @@
 										value="#{lbl['lbl.pm.reason.purchase.form']}" /></th>
 								<td width="5%"><p:selectBooleanCheckbox id="chkPrchaseContract"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}">
+										<!-- #39618, Fix as-is bug Start -->
 										<p:ajax event="change" process="@this"
-											update="circularCategory, sourcingMethod,circularCriteriaLabel"
+											update="circularCategory, sourcingMethod, circularCriteriaLabel, dtReasonApplicaility"
 											listener="#{rejectionReasonBackingBean.purchaseFromContractChange()}" />
+											<!-- #39618, Fix as-is bug END -->
 									</p:selectBooleanCheckbox></td>
 								<th width="20%"><p:outputLabel
 										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> 
