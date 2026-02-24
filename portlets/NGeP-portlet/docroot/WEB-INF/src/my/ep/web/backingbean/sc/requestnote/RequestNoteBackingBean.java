@@ -8291,16 +8291,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * false otherwise.
 	 */
 	public boolean checkExtensionCode(ScRequestNoteDtl requestNoteDtl) {
-	    if (isInvalidRequestDetail(requestNoteDtl)) {
-	        return false;
-	    }
+		if (isInvalidRequestDetail(requestNoteDtl)) {
+			return false;
+		}
 
-	    if (getManagedBean().isExistInAssignItemDetail()) {
-	        return true;
-	    }
+		if (getManagedBean().isExistInAssignItemDetail()) {
+			return true;
+		}
 
-	    CmItem cmItem = requestNoteDtl.getRequestItem().getCmItem();
-	    return isValidExtensionLength(cmItem.getExtensionCode());
+		ScRequestItem item = requestNoteDtl.getRequestItem();
+
+		if (item.getItemType().getParameterId().equals(DbValueConst.ITEM_TYPE_SERVICE)
+				&& StringUtils.isEmpty(item.getTempUnspscCode())) {
+			return false;
+		}
+
+		CmItem cmItem = item.getCmItem();
+		return isValidExtensionLength(cmItem.getExtensionCode());
 	}
 
 	/**
