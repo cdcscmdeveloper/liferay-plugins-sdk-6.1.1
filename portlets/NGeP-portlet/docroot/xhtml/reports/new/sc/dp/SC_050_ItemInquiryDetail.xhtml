@@ -10,6 +10,10 @@
 		.no-header .ui-accordion-header {
 	    	display: none;
 		}	
+		
+		.custom-scroll-border.ui-scrollpanel {
+		    border: 1px solid #dcdcdc !important;
+		}
 	</style>
 
 	<ui:param name="requisitionerEnableDisable"
@@ -33,7 +37,7 @@
 				<ui:remove>#29558 start</ui:remove>
 				<p:accordionPanel multiple="true" id="accPanel" styleClass="no-header">	
 					<p:tab title="">	  
-				        <p:scrollPanel style="width:270px;height:100px; border:1px solid #ccc; padding:10px; border-radius:4px;">
+				        <p:scrollPanel style="width:270px;height:100px;" styleClass="custom-scroll-border">
 				            <p:selectManyCheckbox id="manyMenusts" value="#{itemInquiryDetailRptBackingBean.managedBean.scStatusManyMenuTemp}" layout="pageDirection">
 				                <f:selectItem itemValue="#{lbl['lbl.rpt.all']}" itemLabel="#{lbl['lbl.rpt.all']}"/>
 				                <f:selectItems value="#{itemInquiryDetailRptBackingBean.reportStatusDropdownValuesSelectManyMenu(ParameterConst.doctypePurchaseInquiry)}" 
