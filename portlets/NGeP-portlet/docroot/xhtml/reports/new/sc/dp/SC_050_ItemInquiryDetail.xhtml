@@ -25,8 +25,7 @@
 					value="#{lbl['lbl.sc.request.note.header.status']}" /></td>
 			<td width="35%">
 				<ui:remove>#29558 start</ui:remove>
-				<p:accordionPanel multiple="true" id="accPanel">
-				    <p:tab title="#{lbl['lbl.sc.status']}:">
+				<p:accordionPanel multiple="true" id="accPanel">		  
 				        <p:scrollPanel style="width:270px;height:100px">
 				            <p:selectManyCheckbox id="manyMenusts" value="#{itemInquiryDetailRptBackingBean.managedBean.scStatusManyMenuTemp}" layout="pageDirection">
 				                <f:selectItem itemValue="#{lbl['lbl.rpt.all']}" itemLabel="#{lbl['lbl.rpt.all']}"/>
@@ -37,7 +36,6 @@
     					 		 listener="#{itemInquiryDetailRptBackingBean.onSelectAll(ParameterConst.doctypePurchaseInquiry)}"/>
     			            </p:selectManyCheckbox>
 				        </p:scrollPanel>
-				    </p:tab>
     			</p:accordionPanel>
     			<ui:remove>#29558 end</ui:remove>
 			</td>
