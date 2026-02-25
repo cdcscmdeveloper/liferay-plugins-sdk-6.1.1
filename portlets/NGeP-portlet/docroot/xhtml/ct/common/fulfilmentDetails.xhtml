@@ -23,21 +23,7 @@
 		    padding-bottom: 5px;
 		}	
 		
-		a.blue_font_custom {
-			font-family: Tahoma, Arial !important;
-			font-size: 11px !important;
-			font-weight: normal !important;
-			color: #3c8bc2 !important;
-			text-decoration: underline !important;
-			overflow-wrap: anywhere !important;
-		}
-
-		a:hover.blue_font_custom {
-			font-family: Tahoma, Arial !important;
-			font-size: 11px !important;
-			font-weight: normal !important;
-			color: #95caee !important;
-			text-decoration: underline !important;
+		a.blue_font_wrap {
 			overflow-wrap: anywhere !important;
 		}
 		
@@ -286,7 +272,7 @@
 					var="attachFile" rowIndexVar="attachFileIndex" columns="1" styleClass="ui-datagrid-content-empty"
 					emptyMessage ="#{lbl['lbl.txt.na']}">
 						<h:commandLink value="#{attachFile.fileName}"
-							styleClass="blue_font_custom"  
+							styleClass="blue_font blue_font_wrap"  
 							action="#{ctBackingBean.downloadScAttachmentFile(attachFile)}" />
 				</p:dataGrid>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approval.letter.of.pegawai']}" style="padding-top:2px;" />
