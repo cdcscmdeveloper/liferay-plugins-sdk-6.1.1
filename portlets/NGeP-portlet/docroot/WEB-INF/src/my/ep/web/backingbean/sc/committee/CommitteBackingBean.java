@@ -548,7 +548,7 @@ public class CommitteBackingBean extends
 				toCreatedDate = toDate.getTime();
 				
 				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.CREATED_DATE);
+				bean.setSearchField("scQt.createdDate"); //#35320
 				/*bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(fromCreatedDate);*/
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
