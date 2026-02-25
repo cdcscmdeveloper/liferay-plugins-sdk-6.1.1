@@ -1634,12 +1634,17 @@ public class RuleCatalogueBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
 
+			// #35323 - Start
+			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())) {
+				setupPurchaseRequestRule(this.getManagedBean().getSelectedRuleDescType().getRuleType());
+			}
+			// #35323 - End
 			List<PmConfigRule> ruleTypeList = new ArrayList<>(); //#35323 and sonarlint Fixing
 			for (PmConfigRuleDesc desc : getManagedBean()
 					.getConfigRuleDescList()) {
 				if (desc.getRuleType() != null) {
 					//#35323 - Start
-					setupPurchaseRequestRule(desc.getRuleType());
+					validateValueForPR(desc.getRuleType());
 					//#35323 - End
 					ruleTypeList.add(desc.getRuleType());
 				}
@@ -6954,7 +6959,7 @@ public class RuleCatalogueBackingBean extends
 			return createNewRuleValue(merged, supplAcctTypeId, first, parameterSO, reqDTO);
 		}
 
-		return updateExistingRuleValue(merged, configValueId, reqDTO);
+		return updateExistingRuleValue(merged, configValueId);
 	}
 
 	private PmConfigRuleValue createNewRuleValue(PmConfigRuleValue merged, Long supplAcctTypeId, boolean first,
@@ -6983,7 +6988,7 @@ public class RuleCatalogueBackingBean extends
 		return value;
 	}
 
-	private PmConfigRuleValue updateExistingRuleValue(PmConfigRuleValue merged, Long configValueId, ParameterReqDTO reqDTO) {
+	private PmConfigRuleValue updateExistingRuleValue(PmConfigRuleValue merged, Long configValueId) {
 
 		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IRuleSO.class);
@@ -7162,6 +7167,15 @@ public class RuleCatalogueBackingBean extends
 	    }
 
 	    return true;
+	}
+
+	private void validateValueForPR(PmConfigRule descRuleType){
+		if (!RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean()
+				.getSelectedRuleDescType().getRuleType().getRuleType())
+				&& RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(descRuleType.getRuleType())
+				&& descRuleType.getConfigRuleValues().get(0).getRuleValueId() == 0L) {
+			setupPurchaseRequestRule(descRuleType);
+		}
 	}
 
 	private String getExpiryDateErrorCode() {
