@@ -93,6 +93,12 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	public void searchMaster() {
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getSearchBean().setSearching(true);
+		
+		this.getManagedBean().getSearchBean().setChangeTypeIDOldVal(this.getManagedBean().getSearchBean().getChangeTypeID());
+		this.getManagedBean().getSearchBean().setDocTypeIDOldVal(this.getManagedBean().getSearchBean().getDocTypeID());
+		this.getManagedBean().getSearchBean().setDocNoOldVal(this.getManagedBean().getSearchBean().getDocNo());
+		this.getManagedBean().getSearchBean().seteAduanNoOldVal(this.getManagedBean().getSearchBean().geteAduanNo());
+		
 		searchMaster.reloadData();
 	}
 
@@ -110,16 +116,21 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	public String backToSearch() {
 		getManagedBean().setSelectedType(null);
 		getManagedBean().getSearchBean().setSearching(false);
+		
+		getManagedBean().getSearchBean().setChangeTypeID(getManagedBean().getSearchBean().getChangeTypeIDOldVal());
+		getManagedBean().getSearchBean().setDocTypeID(getManagedBean().getSearchBean().getDocTypeIDOldVal());
+		getManagedBean().getSearchBean().setDocNo(getManagedBean().getSearchBean().getDocNoOldVal());
+		getManagedBean().getSearchBean().seteAduanNo(getManagedBean().getSearchBean().geteAduanNoOldVal());
+		
 		return NAV_TO_SEARCH;
 	}
 
 	/**
-	 * @param changeType
-	 * @param pmParameterLvlId
-	 * @param createBy
-	 * @param roleCode
+	 * @param changeTypeID
+	 * @param eAduanNo
+	 * @param docTypeID
+	 * @param docNo
 	 * @return
-	 * @throws Exception
 	 */
 	public String redirectToDetails(Integer changeTypeID, String eAduanNo, Integer docTypeID, String docNo) {
 		getManagedBean().getSearchBean().setChangeTypeID(changeTypeID);
@@ -134,7 +145,6 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	/**
 	 * @param search
 	 * @return
-	 * @throws Exception
 	 */
 	public boolean searching(boolean search) {
 		getManagedBean().getSearchBean().setSearching(search);
@@ -164,7 +174,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 
 	/**
-	 * search Master Location
+	 * search Audit Patch Result
 	 * 
 	 */
 	private class SearchMasterPagingDataModel extends PagingDataModel<VAuditPatchDTO> {
@@ -280,15 +290,13 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	/**
 	 * resets the whole search paramaters when changed
 	 */
-	/**
-	 * 
-	 */
 	public void changeType() {
 		this.getManagedBean().getSearchBean().setChangeType(null);
 		this.getManagedBean().getSearchBean().setDocType(null);
 		this.getManagedBean().getSearchBean().setDocNo(null);
 		this.getManagedBean().getSearchBean().seteAduanNo(null);
 	}
+	
 	/**
 	 * Generate report for single tab in PDF format.
 	 * @param reqDTO
@@ -412,10 +420,10 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 				cellChangeType.setCellValue(vapdto.getChangeTypeName());
 				cellChangeType.setCellStyle(cellStyleString);
 				Cell cellReqBy = currRow.createCell(12);
-				cellReqBy.setCellValue(vapdto.getPtjUsername());
+				cellReqBy.setCellValue(vapdto.getRequestBy());
 				cellReqBy.setCellStyle(cellStyleString);
 				Cell cellReqOrg = currRow.createCell(13);
-				cellReqOrg.setCellValue(vapdto.getPtjUserOrganization());
+				cellReqOrg.setCellValue(vapdto.getRequestOrg());
 				cellReqOrg.setCellStyle(cellStyleString);
 				Cell celleAduanNo = currRow.createCell(14);
 				celleAduanNo.setCellValue(vapdto.geteAduanNo());
