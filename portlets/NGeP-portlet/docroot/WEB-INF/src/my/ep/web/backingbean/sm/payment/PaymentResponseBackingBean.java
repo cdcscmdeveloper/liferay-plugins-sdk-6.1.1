@@ -1218,6 +1218,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("paymentRefNo", paymentRefNo);
 		reqMap.put("providerTransId", providerTransId);
 		reqMap.put("bankName", bankName);
+		reqMap.put("cardMaskedNum", cardMaskedNum);
 
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
 		log.info("######38377#####tranID: " + reqMap.get("tranID"));
