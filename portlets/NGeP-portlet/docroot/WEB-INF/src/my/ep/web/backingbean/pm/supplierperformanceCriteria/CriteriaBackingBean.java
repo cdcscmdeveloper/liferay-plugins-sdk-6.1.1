@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -17,9 +18,11 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
@@ -39,6 +42,8 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMCriteriaBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.CriteriaSearchBean;
@@ -300,8 +305,25 @@ public class CriteriaBackingBean extends
 				CriteriaReqDTO reqDTO = new CriteriaReqDTO();
 				reqDTO.setPmCriteria(newCriteria);
 				ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+				
+				/************ START: AUDIT #28895_35509 *************/
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
+				reqDTO.setCriteriaId(newCriteria.getCriteriaId());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA) && newCriteria.getCriteriaId() != null) {
+					getManagedBean().setPmCriteriaOld(reqSO.retrieveCriteriaById(reqDTO).getPmCriteria());
+				}
+				/************ END: AUDIT #28895_35509 *************/
+				
 				CriteriaResDTO resDTO = reqSO.updateSupCriteria(reqDTO);
 				if(resDTO.isSuccessful()){
+					/************ AUDIT #28895_35509 *************/
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
+						getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
+						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
+					}
+					/************ END AUDIT #28895_35509 *************/
 					loadCriteria(resDTO.getPmCriteria().getCriteriaId());
 					log.info("updateCriteria - successful");
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
@@ -361,6 +383,11 @@ public class CriteriaBackingBean extends
 					}
 				}
 				}
+				//39577 - shaqimi start
+				if(pmCriteria.getPmCriteriaDescs().get(0).getPmLanguage().getLanguageCode().equals(CommonConstants.DEFAULT_LANGUAGE_CODE)){
+					Collections.swap(pmCriteria.getPmCriteriaDescs(), 0, 1);
+				}
+				//39577 - shaqimi end
 				this.getManagedBean().setSelectedCriteria(pmCriteria);
 				
 				
@@ -489,6 +516,16 @@ public class CriteriaBackingBean extends
 												.getCriteriaCode() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				
+				/************ START: AUDIT #28895_35509 *************/
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
+					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
+				}
+				/************ END: AUDIT #28895_35509 *************/
 
 				return redirectSupCriteriaSearch();
 			}
@@ -515,6 +552,12 @@ public class CriteriaBackingBean extends
 								pmCriteria.addPmCriteriaDescs(criteriaDesc);
 			
 						}
+					
+					//39577 - shaqimi start
+					if(pmCriteria.getPmCriteriaDescs().get(0).getPmLanguage().getLanguageCode().equals(CommonConstants.DEFAULT_LANGUAGE_CODE)){
+						Collections.swap(pmCriteria.getPmCriteriaDescs(), 0, 1);
+					}
+					//39577 - shaqimi end
 	
 				this.getManagedBean().setSelectedCriteria(pmCriteria);
 				
