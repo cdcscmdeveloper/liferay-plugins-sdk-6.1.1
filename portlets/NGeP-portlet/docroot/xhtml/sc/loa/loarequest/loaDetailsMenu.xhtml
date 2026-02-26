@@ -5,12 +5,24 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-<!-- #25726/25725 - Check and display Italic value -->
+<!-- #25726/25725 - Check and display Italic value - Start -->
+<!-- #25725/25726 - note 276/467  -->	
 <style>
+a.blue_font {
+	font-weight: normal !important;
+	color: #009ae5 !important;
+	overflow-wrap: anywhere;
+}
+
+a:hover.blue_font {
+	font-weight: normal !important;
+}
 .italic-item {
 	font-style: italic !important;
 }
 </style>
+
+<!-- #25726/25725 - Check and display Italic value - End -->
 
 	<ui:include src="../shared/loaInstructionHeader.xhtml"/>
 
@@ -725,7 +737,8 @@
 												update="uploadApprovalLetterDlg"
 												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null and isEditableStatus}" />
 											<!-- #25725 note 165  -->
-											<p:commandLink
+											<!-- #25725/25726 note 267/458 -->
+											<h:commandLink
 												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 												action="#{lOADetailBackingBean.fileDownload}"
@@ -756,7 +769,8 @@
 										</td>
 										<td>
 											<p:outputPanel id="uploadedPage2">																			
-												<p:commandLink
+												<!-- #25725/25726 note 267/458 -->
+												<h:commandLink
 												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
 												action="#{lOADetailBackingBean.fileDownload}"
