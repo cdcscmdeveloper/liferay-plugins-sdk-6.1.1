@@ -82,8 +82,7 @@
 							onstart="blkPanelSearchTable.show();"
 							oncomplete="blkPanelSearchTable.hide();" update="searchPatchMaster"
 							process="auditPatchSearchPanel"
-							action="#{auditPatchBackingBean.searchMaster}" 
-							disabled="#{empty auditPatchBackingBean.managedBean.searchBean.changeTypeID}" />
+							action="#{auditPatchBackingBean.searchMaster}"  />
 							
 						<p:commandButton id="searchButtonId"
 							value="#{lbl['lbl.btn.reset']}" process="@this"
