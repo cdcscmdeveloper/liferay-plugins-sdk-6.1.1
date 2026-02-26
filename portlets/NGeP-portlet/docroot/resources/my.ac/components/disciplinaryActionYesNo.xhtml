@@ -16,16 +16,11 @@
 	    <cc:attribute name="immediate" default="false" />
 	</cc:interface>
 	<cc:implementation>
-		<script>
-      		function moveDialogToBody() {
-  				$("[id='disciplinaryActionHistoryDlgId']").detach().appendTo('body');
-	  		}
-		</script>	
 		<ui:fragment rendered="#{not cc.attrs.showTooltip}">
 			<div style="position: relative; width: 100% !important; pointer-events: none;">
 				<div style="margin: auto !important; width: 70px !important;">
 					<div style="display: inline-block; width: 50% !important; text-align: center;">
-						<p:commandLink onstart="blockWidget.show(); moveDialogToBody();"
+						<p:commandLink onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide()"
 							style="color:red; font-weight:bold; pointer-events: auto;"
 							rendered="#{cc.attrs.supplier.disciplinaryActions}"
@@ -81,6 +76,12 @@
 				[id*="disciplinaryActionHistoryDlgId"].ui-dialog .ui-datatable {
 				 	width: auto !important;
 				 	pointer-events: none !important;
+				}
+				[id*="disciplinaryActionHistoryDlgId"].ui-dialog .ui-icon {
+    				background-image: url("#{resource['primefaces-nextgen:images/ui-icons_222222_256x240.png']}") !important;
+				}
+				[id*="suspendAlertWidgetId"].ui-dialog .ui-icon {
+    				background-image: url("#{resource['primefaces-nextgen:images/ui-icons_222222_256x240.png']}") !important;
 				}
 			</style>
 			<ac:disciplinaryActionHistory dynamic="true" 

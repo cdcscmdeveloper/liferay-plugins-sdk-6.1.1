@@ -69,8 +69,8 @@ public class DpReportConst implements Serializable {
 	public static final String DP_LOA_CONTENT_RPT_VAL = "SC_070";
 	//26059 - start
 	public static final String DP_ITEM_EXCEED_THRESHOLD_RPT = "SC_093";
-	public static final Long PARAM_ID_SPECIAL_ITEM = 1015L;
-	public static final Long PARAM_ID_PK7 = 1014L;
+	public static final String PARAM_ID_SPECIAL_ITEM = "1015";
+	public static final String PARAM_ID_PK7 = "1014";
 	public static final String REPORT_CODE_RPT_PK7 = "PK7W";
 	public static final String REPORT_CODE_RPT_SPECIAL_ITEM = "SIT";
 	//Report Constant
@@ -89,7 +89,10 @@ public class DpReportConst implements Serializable {
 	public static final String PARAM_KEY_FINANCIAL_YEAR = "PFINANCIALYEAR";
 	public static final String PARAM_KEY_REPORT_ID = "PREPORTID";
 	public static final String PARAM_KEY_USER_ID = "PUSER";
-	
+	public static final String DP_ITEM_EXCEED_THRESHOLD_NON_PANEL = "SC_095";
+	public static final String DP_ITEM_EXCEED_THRESHOLD_PANEL = "SC_094";
+	public static final String YES_FLAG  = "Y";
+	public static final String NO_FLAG = "N";
 	//26059 - end
 	
 	public DpReportConst() {

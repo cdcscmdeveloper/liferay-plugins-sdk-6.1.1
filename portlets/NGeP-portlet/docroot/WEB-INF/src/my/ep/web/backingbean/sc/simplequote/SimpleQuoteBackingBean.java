@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -43,6 +44,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;//#27868
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.pm.map.IPmPK7MapSO;//#27868
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886 
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
@@ -65,6 +67,8 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO; 
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -100,8 +104,12 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.cm.catalog.CmBrand;
+import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -110,6 +118,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;//#27868
+import my.ep.persistence.entity.pm.map.PmPK7Mapping;//#27868
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -119,6 +128,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;//#27868
 import my.ep.persistence.entity.pm.common.PmReasonRestr;//#27868
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -162,6 +172,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;//#25790
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -174,10 +185,12 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;//#27868
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -248,6 +261,9 @@ public class SimpleQuoteBackingBean extends
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		ScRequestNote scRequestNote =  null;
+		//#26059 - Start
+		CommonUtils commonUtils = new CommonUtils();
+		//#26059 - End
 		try{
 			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 			quoteReqDTO.setQuoteId(scQuoteId);
@@ -275,6 +291,14 @@ public class SimpleQuoteBackingBean extends
 								specMaster
 								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 							}
+							//#26059 - Start
+							else{
+								
+								for(TplSpecQuestion question : specMaster.getTplSpecQuestions()){
+									question.setClItem(commonUtils.removeItemNameNA(question.getClItem())) ;
+								}
+							}
+							//#26059 - End
 							productTplSpecBean.setSpecMaster(specMaster);
 							getManagedBean().setProductTemplateSpecBean(
 									productTplSpecBean);
@@ -287,6 +311,13 @@ public class SimpleQuoteBackingBean extends
 								specMaster
 								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 							}
+							//#26059 - Start
+							else{
+								for(TplSpecQuestion question : specMaster.getTplSpecQuestions()){
+									question.setClItem(commonUtils.removeItemNameNA(question.getClItem())) ;
+								}
+							}
+							//#26059 - End
 							serviceTplSpecBean.setSpecMaster(specMaster);
 							getManagedBean().setServiceTemplateSpecBean(
 									serviceTplSpecBean);
@@ -457,10 +488,10 @@ public class SimpleQuoteBackingBean extends
 		if (scQuote.getProcurementType() != null) {
 			if (scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate), Boolean.TRUE));
+						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT, Boolean.TRUE));
 			} else {
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate), Boolean.FALSE));
+						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT, Boolean.FALSE));
 			}
 		}
 
@@ -468,7 +499,7 @@ public class SimpleQuoteBackingBean extends
 			disableSpecialItemRadioButton();
 		}
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(validateProcurementTypeisRPT(dataCreatedDate));
+		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)
@@ -791,7 +822,7 @@ public class SimpleQuoteBackingBean extends
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
 			getManagedBean().setProcurementTypes(
-					getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate)));
+					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));
 			if (!isAgencyAllowedForSpecialItem()) {
 				disableSpecialItemRadioButton();
 			}
@@ -925,7 +956,7 @@ public class SimpleQuoteBackingBean extends
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(validateProcurementTypeisRPT(dataCreatedDate));
+		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 		// 27868 - end
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -1259,6 +1290,10 @@ public class SimpleQuoteBackingBean extends
 				isProduct = false;
 			}
 		}
+		
+		//#26059 - Start
+		CommonUtils commonUtils = new CommonUtils();
+		//#26059 - End
 
 		// set user info
 		if (quoteDocs != null && CollectionUtils.isNotEmpty(quoteDocs)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
@@ -1292,7 +1327,10 @@ public class SimpleQuoteBackingBean extends
 						specQuestion.setClUom(uom);
 						specQuestion.setCmItem(cmItem);
 						specQuestion.setCtPanelItem(ctPanelItem);
-						specQuestion.setClItem(ItemName);
+						//#26059 - Start
+						specQuestion.setClItem(commonUtils.removeItemNameNA(ItemName));
+						specQuestion.setDisabledColumnItem(true);
+						//#26059 - End
 						setUserDetails(specQuestion);
 						addSpecficationQuestions(ctPanelItem, serviceTpl, tplSpecQuestions);
 					}
@@ -1336,7 +1374,11 @@ public class SimpleQuoteBackingBean extends
 						prodQuestion.setClUom(uom);
 						prodQuestion.setCmItem(cmItem);
 						prodQuestion.setCtPanelItem(ctPanelItem);
-						prodQuestion.setClItem(ItemName);
+						//#26059 - Start
+						prodQuestion.setClItem(commonUtils.removeItemNameNA(ItemName));
+						fetchItemNameAndExtension(prodQuestion, cmItem);
+						prodQuestion.setDisabledColumnItem(true);
+						//#26059 - End
 						setUserDetails(prodQuestion);
 						addSpecficationQuestions(ctPanelItem, prodTpl, productQuestions);
 					}
@@ -1474,11 +1516,20 @@ public class SimpleQuoteBackingBean extends
 			Date dataCreatedDate;
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
-			// 27868 - end
-			quote.setProcurementType(getParameterByTypeAndCode(
-					validateProcurementTypeisRPT(dataCreatedDate), quote
+			if (quote.getProcurementType() != null && quote.getProcurementType().getParameterCode() != null) {
+				if (!ParameterConst.PROC_TYPE_SPECIAL_ITEM.equalsIgnoreCase(quote.getProcurementType()
+						.getParameterCode())
+						&& !ParameterConst.PROC_TYPE_PK7
+								.equalsIgnoreCase(quote.getProcurementType().getParameterCode())) {
+					quote.setProcurementType(getParameterByTypeAndCode(validateProcurementTypeisRPT(dataCreatedDate),
+							quote.getProcurementType().getParameterCode()));
+				} else {
+					quote.setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, quote
 							.getProcurementType().getParameterCode()));
+				}
 
+			}
+			// 27868 - end
 			// location level
 			if (quote.isZonal()) {
 				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
@@ -1514,7 +1565,7 @@ public class SimpleQuoteBackingBean extends
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 					if (quote.getJustificationType().getReasonCode() != null) {
 						quote.setJustificationType(getReasonByCategoryAndCode(
-								getParameterCodeForPK7(dataCreatedDate), quote
+								 ReasonCategory.JUSTIFICATION_PK7W.value(), quote
 								.getJustificationType().getReasonCode()));//27868 
 	
 					}
@@ -1612,8 +1663,7 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
 							.equals(quote.getProcurementType().getParameterCode())
-							|| (ParameterConst.PROC_TYPE_PK7.equals(quote.getProcurementType().getParameterCode()) && getManagedBean()
-									.isNewPK7Code())) {
+							|| (ParameterConst.PROC_TYPE_PK7.equals(quote.getProcurementType().getParameterCode()))) {
 						if (getManagedBean().getGovtSellers() != null) {
 							suppliers.addAll(getManagedBean().getGovtSellers());
 						}
@@ -1668,6 +1718,14 @@ public class SimpleQuoteBackingBean extends
 					if (doc.getSpecMaster().getItemTypeCode()
 							.getParameterCode()
 							.equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
+   
+						//#26059 - Start
+						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
+								.getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+							combineClItemAndExtension(tplSpecQuestion);
+						}
+						//#26059 - End
+						
 						doc.setSpecMaster(getManagedBean()
 								.getProductTemplateSpecBean().getSpecMaster());
 						quoteDocs.add(doc);
@@ -1717,6 +1775,14 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+   
+						//#26059 - Start
+						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
+								.getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+							combineClItemAndExtension(tplSpecQuestion);
+						}
+						//#26059 - End
+   
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -1750,8 +1816,14 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			//29194 - Start
 			reqDTO.setRoleCode(getUserRoleCodeSQ());
@@ -1940,6 +2012,20 @@ public class SimpleQuoteBackingBean extends
 								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 					}
 					//#21423
+  
+					//#26059 - Start
+					for(TplSpecQuestion prodQuestion : specMaster.getTplSpecQuestions()){
+						
+						if(prodQuestion.getCmItem() != null){
+							getCltemNameFromQuestion(prodQuestion);
+							prodQuestion.setDisabledColumnItem(true);
+						}else {
+							prodQuestion.setDisabledColumnItem(false);
+							prodQuestion.setCmTitleValue(prodQuestion.getClItem());
+						}
+					}
+					//#26059 - End
+					
 					specMaster.setTechnicalSpecQuestionsToDelete(null);
 					productTplSpecBean.setSpecMaster(specMaster);
 					getManagedBean().setProductTemplateSpecBean(
@@ -2180,7 +2266,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(validateProcurementTypeisRPT(dataCreatedDate));
+		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 		// 27868 - end
 
 		getManagedBean().setScQuote(scQuote);
@@ -2236,11 +2322,18 @@ public class SimpleQuoteBackingBean extends
 			Date dataCreatedDate;
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
+			String procParameterType = validateProcurementTypeisRPT(dataCreatedDate);
+
+			if (ParameterConst.PROC_TYPE_PK7.equalsIgnoreCase(quote.getProcurementType().getParameterCode())
+					|| ParameterConst.PROC_TYPE_SPECIAL_ITEM.equalsIgnoreCase(quote.getProcurementType()
+							.getParameterCode())) {
+				procParameterType = ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+
+			}
+
+			quote.setProcurementType(getParameterByTypeAndCode(procParameterType, getManagedBean().getScQuote()
+					.getProcurementType().getParameterCode()));
 			// 27868 - end
-			quote.setProcurementType(getParameterByTypeAndCode(
-					validateProcurementTypeisRPT(dataCreatedDate), getManagedBean()
-							.getScQuote().getProcurementType()
-							.getParameterCode()));
 
 			// location level
 			if (quote.isZonal()) {
@@ -2316,9 +2409,9 @@ public class SimpleQuoteBackingBean extends
 				}
 
 				quote.setJustificationType(getReasonByCategoryAndCode(
-						finalizePK7Code(), quote.getJustificationType().getReasonCode()));
-				validateUserProfileAgency(quote);
-				if (!getManagedBean().isNewPK7Code()) {
+						ReasonCategory.JUSTIFICATION_PK7W.value(), quote.getJustificationType().getReasonCode()));
+
+				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateSupplierAccountType(quote);
 				}
 				
@@ -2335,7 +2428,11 @@ public class SimpleQuoteBackingBean extends
 				}
 				quote.setJustificationType(getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_SIT.value(), quote
 						.getJustificationType().getReasonCode()));
-				validateUserProfileAgency(quote);
+
+				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
+					validateUserProfileAgency(quote);
+					validateSupplierAccountType(quote);
+				}
 				
 			}// 27868 - end
 			else {
@@ -2386,8 +2483,7 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
 							.equals(quote.getProcurementType().getParameterCode())
-							|| (ParameterConst.PROC_TYPE_PK7.equals(quote.getProcurementType().getParameterCode()) && getManagedBean()
-									.isNewPK7Code())) {
+							|| (ParameterConst.PROC_TYPE_PK7.equals(quote.getProcurementType().getParameterCode()))) {
 						if (getManagedBean().getGovtSellers() != null) {
 							suppliers.addAll(getManagedBean().getGovtSellers());
 						}
@@ -2453,6 +2549,14 @@ public class SimpleQuoteBackingBean extends
 					if (doc.getSpecMaster().getItemTypeCode()
 							.getParameterCode()
 							.equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
+   
+					  	//#26059 - Start
+						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
+								.getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+							combineClItemAndExtension(tplSpecQuestion);
+						}
+						//#26059 - End
+   
 						doc.setSpecMaster(getManagedBean()
 								.getProductTemplateSpecBean().getSpecMaster());
 						quoteDocs.add(doc);
@@ -2491,8 +2595,9 @@ public class SimpleQuoteBackingBean extends
 				// tpl spec - product
 				if (getManagedBean().getProductTemplateSpecBean()
 						.getSpecMaster() != null) {
-					if (getManagedBean().getProductTemplateSpecBean()
-							.getSpecMaster().getTplSpecQuestions() != null
+					//#26059 - Start
+					List<TplSpecQuestion> listQuestions = getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
+					if (listQuestions != null
 							&& getManagedBean().getProductTemplateSpecBean()
 									.getSpecMaster().getTplSpecQuestions()
 									.size() > 0) {
@@ -2504,8 +2609,8 @@ public class SimpleQuoteBackingBean extends
 						}
 						
 						// Bug #35514 - start
-						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
-								.getSpecMaster().getTplSpecQuestions()) {
+						for (TplSpecQuestion tplSpecQuestion : listQuestions) { //#26059 - call list
+						
 							if (tplSpecQuestion.getCmItem() != null
 									&& tplSpecQuestion.getCmItem().getExtensionCode() != null) {
 								ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance()
@@ -2528,7 +2633,12 @@ public class SimpleQuoteBackingBean extends
 									}
 								}
 							}
+							
+							//#26059 - Start
+							combineClItemAndExtension(tplSpecQuestion);
+							//#26059 - End
 						}
+   
 						// Bug #35514 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
@@ -2583,8 +2693,14 @@ public class SimpleQuoteBackingBean extends
 
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -2838,9 +2954,14 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 			// 27868 - start
-			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(getParameterCodeForPK7(dataCreatedDate)));
-			finalizePK7Dropdown(dataCreatedDate);
-			inactiveReasonChecking();
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+				finalizeWIPDropdownPK7();
+			}
+			else{
+				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				inactiveReasonChecking();
+			}	
 			// 27868 - end
 		    getManagedBean().getScQuote().setJustificationRemark("");
 		    getManagedBean().getScQuote().setJustificationType(null);
@@ -2902,6 +3023,12 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setIncludeMofSupplier(Boolean.FALSE);
 		getManagedBean().setIncludeBasicSupplier(Boolean.FALSE);
 		getManagedBean().setIncludeG2gSupplier(Boolean.FALSE);
+		
+		if (procurementType == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.procurement.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
 		// 27868 - end
 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
@@ -2928,10 +3055,20 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 			//27868 - start
-			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(getParameterCodeForPK7(dataCreatedDate)));
-			finalizePK7Dropdown(dataCreatedDate);
-			inactiveReasonChecking();
-			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())) {
+			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+				getManagedBean()
+						.setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_PK7W.value());
+				finalizeWIPDropdownPK7();
+				if (ReasonCategory.JUSTIFICATION_PK7W.value().equalsIgnoreCase(getManagedBean().getWipReasonCategory())) {
+					controlSupplierList(ReasonCategory.JUSTIFICATION_PK7W.value());
+				} else {
+					controlSupplierList(ReasonCategory.JUSTIFICATION_SIT.value());
+				}
+			} else {
+				getManagedBean()
+						.setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				inactiveReasonChecking();
 				controlSupplierList(ReasonCategory.JUSTIFICATION_PK7W.value());
 			}
 			//27868 - end
@@ -4585,9 +4722,21 @@ public class SimpleQuoteBackingBean extends
 												question.setClUomFrequency(null);
 											}
 											//#35514 @zaim end
+	 
+											//#26059 - Start
+											getCltemNameFromQuestion(question);
+											question.setDisabledColumnItem(true);
+											//#26059 - End
+		   
 											prodItemQuestions.add(question);											
 										} else if (pOrS.equalsIgnoreCase(CommonConstants.SERVICE_INITIAL)) {
 											isProduct = false;
+	 
+											//#26059 - Start
+											preparedClItemName(question);
+											question.setDisabledColumnItem(true);
+											//#26059 - End
+		   
 											serviceItemQuestions.add(question);
 										}
 									}
@@ -4595,8 +4744,20 @@ public class SimpleQuoteBackingBean extends
 							} else if(question != null && question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)){
 								if(question.getParentSpecQuestion().getSpecQuestionId().equals(itemSpecQuestionId)) {
 									if(isProduct != null && isProduct.equals(true)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+	
+										//#26059 - Start
+										getCltemNameFromQuestion(question);
+										question.setDisabledColumnItem(true);
+										//#26059 - End
+		  
 										prodItemQuestions.add(question);
 									} else {
+	
+										//#26059 - Start
+										preparedClItemName(question);
+										question.setDisabledColumnItem(true);
+										//#26059 - End
+		  
 										serviceItemQuestions.add(question);
 									}								
 								}
@@ -5135,6 +5296,7 @@ public class SimpleQuoteBackingBean extends
 		//#26284 - Start
 		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_SUSPENDED).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
 		
 		criteria.append("recordStatus")
@@ -5288,7 +5450,7 @@ public class SimpleQuoteBackingBean extends
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
 			getManagedBean().setProcurementTypes(
-					getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate)));
+					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));
 			if (!isAgencyAllowedForSpecialItem()) {
 				disableSpecialItemRadioButton();
 			}
@@ -5392,7 +5554,7 @@ public class SimpleQuoteBackingBean extends
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(validateProcurementTypeisRPT(dataCreatedDate));
+		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 		// 27868 - end
 
 		// page navigation to simple quote
@@ -5469,6 +5631,18 @@ public class SimpleQuoteBackingBean extends
 					List<TplSpecAnswer> productAnswersTpl = quoteResDTO
 							.getProductAnswersTpl();
 					specAnswers.addAll(productAnswersTpl);
+  
+					//#26059 - Start
+					for(TplSpecAnswer answer : productAnswersTpl){
+						
+						if (answer != null) {
+							TplSpecQuestion question = answer.getTplSpecQuestion();
+							preparedClItemName(question);
+							answer.setTplSpecQuestion(question);
+						}
+
+					}
+					//#26059 - End
 
 					productTplSpecBean.setSpecAnswerList(productAnswersTpl);
 					productTplSpecBean.setSpecMaster(productMaster);
@@ -5483,7 +5657,6 @@ public class SimpleQuoteBackingBean extends
 					List<TplSpecAnswer> serviceAnswersTpl = quoteResDTO
 							.getServiceAnswersTpl();
 					specAnswers.addAll(serviceAnswersTpl);
-
 					serviceTplSpecBean.setSpecAnswerList(serviceAnswersTpl);
 					serviceTplSpecBean.setSpecMaster(serviceMaster);
 					serviceTplSpecBean
@@ -6595,7 +6768,7 @@ public class SimpleQuoteBackingBean extends
 		dataCreatedDate = assignActualDate();
 		// 27868 - end
 		getManagedBean().setProcurementTypes(
-				getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate)));//27868
+				getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));//27868
 		if(!isAgencyAllowedForSpecialItem()){
 			disableSpecialItemRadioButton();
 		}
@@ -7170,6 +7343,20 @@ public class SimpleQuoteBackingBean extends
 						specMaster
 						.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 					}
+					
+					//#26059 - Start
+					for(TplSpecQuestion prodQuestion : specMaster.getTplSpecQuestions()){
+						
+						if(prodQuestion.getCmItem() != null){
+							getCltemNameFromQuestion(prodQuestion);
+							prodQuestion.setDisabledColumnItem(true);
+						}else {
+							prodQuestion.setCmTitleValue(prodQuestion.getClItem());
+							prodQuestion.setDisabledColumnItem(false);
+						}
+					}
+					//#26059 - End
+
 					productTplSpecBean.setSpecMaster(specMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
@@ -7314,7 +7501,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setCreatedDate(dataCreatedDate);
 
 			getManagedBean().setProcurementTypes(
-					getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate)));
+					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));
 			if (!isAgencyAllowedForSpecialItem()) {
 				disableSpecialItemRadioButton();
 			}
@@ -8745,21 +8932,116 @@ public class SimpleQuoteBackingBean extends
 	}
 
 	/**
-	 * Finalizes the PK7 dropdown selection based on the PK7 parameter code and updates the managed bean accordingly.
-	 * <p>
-	 * Sets new PK7 code flag and resets related procurement and justification fields if the current selection exists in WIP PK7 list.
-	 *
-	 * @param dataCreatedDate the date used to determine the PK7 parameter code
+	 * Finalize PK7 justification dropdown by resolving old-to-new reason mapping,
+	 * handling special item cases, and filtering inactive justification reasons.
 	 */
-	private void finalizePK7Dropdown(Date dataCreatedDate) {
-		if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())) {
-			getManagedBean().setNewPK7Code(Boolean.TRUE);
-			SelectItem[] wipPK7 = getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value());
+	private void finalizeWIPDropdownPK7() {
+		if (getManagedBean().getScQuote().getJustificationType() != null && getManagedBean().getScQuote().getJustificationType().getReasonId() != null) {
+			IPmPK7MapSO pk7MapSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IPmPK7MapSO.class);
+			
+			PmPK7Mapping pmPK7Mapping = pk7MapSO.findByOldReasonId(getManagedBean().getScQuote().getJustificationType().getReasonId());
 
-			if (wipPK7 != null && wipPK7.length > 0) {
-				List<SelectItem> wipPK7List = new ArrayList<>(Arrays.asList(wipPK7));
-				resetQuotationForMatchingPK7Reason(wipPK7List);
+			if (pmPK7Mapping != null){
+				defaultToPK7W(pmPK7Mapping);
 			}
+			else {
+				defaultToSpecialtem();				
+			}			
+		} else {
+			//set default PK7
+			getManagedBean().getScQuote().setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_PK7));
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+			inactiveReasonChecking();
+		}
+	}
+
+	/**
+	 * Defaults quotation to Special Item flow when justification matches SIT list.
+	 * Falls back to PK7W when no matching Special Item is found.
+	 */
+	protected void defaultToSpecialtem() {
+		// special item
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(getManagedBean().getScQuote().getJustificationType().getReasonId());
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+
+		ReasonResDTO resDTO = reasonSO.retrieveReasonDescById(reqDTO);
+		PmReasonDesc reasonDesc = (resDTO != null) ? resDTO.getReasonDesc() : null;
+		boolean matched = false;
+
+		if (reasonDesc != null && reasonDesc.getReasonDesc() != null) {
+
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(
+					ReasonCategory.JUSTIFICATION_SIT.value());
+
+			for (PmReasonDesc sitReason : reasonDescs) {
+				if (sitReason != null && reasonDesc.getReasonDesc().trim().equalsIgnoreCase(sitReason.getReasonDesc().trim())) {
+					matched = true;
+					// set procurement type = Special Item
+					getManagedBean().getScQuote().setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_SPECIAL_ITEM));
+					getManagedBean().getScQuote().setJustificationType(sitReason.getPmReason());
+
+					PmOrgProfile pmOrgProfile = retrievePmOrgProfile();
+
+					finaliseSpecialItemDropDown(pmOrgProfile);
+
+					inactiveReasonChecking();
+					getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_SIT.value());
+					break;
+				}
+			}
+			
+			if (!matched) {
+				//set default PK7
+				getManagedBean().getScQuote().setProcurementType(getManagedBean().getScQuote().getProcurementType());
+				getManagedBean().getScQuote().setJustificationType(getManagedBean().getScQuote().getJustificationType());
+				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				inactiveReasonChecking();
+			}
+		}
+	}
+
+	/**
+	 * Finalises Special Item justification dropdown based on organisation profile.
+	 * Includes current WIP reason when applicable.
+	 */
+	protected void finaliseSpecialItemDropDown(PmOrgProfile pmOrgProfile) {
+		if (pmOrgProfile != null) {
+			getManagedBean().setJustDropdown(
+					getReasonCodeDropdownValuesCombineWIPCode(
+							getManagedBean().getScQuote().getJustificationType().getReasonId(),
+							getReasonCodeDropdownValues(pmOrgProfile.getOrgProfileId(),
+									ReasonCategory.JUSTIFICATION_SIT.value())));
+		} else {
+			getManagedBean().setJustDropdown(
+					getReasonCodeDropdownValuesCombineWIPCode(getManagedBean().getScQuote()
+							.getJustificationType().getReasonId(),
+							getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value())));
+		}
+	}
+
+	/**
+	 * Applies PK7W defaults based on PK7 mapping.
+	 * Handles inactive old PK7 or mapped PK7W justification.
+	 */
+	protected void defaultToPK7W(PmPK7Mapping pmPK7Mapping) {
+		if(pmPK7Mapping.getNewReason() == null){
+			//no PK7 New mapping, basically the old PK7 data already inactive
+			getManagedBean().getScQuote().setProcurementType(getManagedBean().getScQuote().getProcurementType());
+			getManagedBean().getScQuote().setJustificationType(getManagedBean().getScQuote().getJustificationType());
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+			inactiveReasonChecking();
+		}
+		else if(pmPK7Mapping.getNewParameterCode().equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())){
+			//PK7 New
+			getManagedBean().getScQuote().setProcurementType(pmPK7Mapping.getNewProcurementType());
+			getManagedBean().getScQuote().setJustificationType(pmPK7Mapping.getNewReason());
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+			inactiveReasonChecking();					
 		}
 	}
 
@@ -8788,21 +9070,6 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().getScQuote().setJustificationType(new PmReason());
 			}
 		}
-	}
-	
-	/**
-	 * Returns the appropriate PK7 justification code.
-	 * <p>
-	 * Returns JUSTIFICATION_PK7W if it's a new PK7 code, otherwise returns JUSTIFICATION_PK7.
-	 *
-	 * @return the PK7 justification code
-	 */
-	private String finalizePK7Code() {
-		if (getManagedBean().isNewPK7Code()) {
-			return ReasonCategory.JUSTIFICATION_PK7W.value();
-		}
-
-		return ReasonCategory.JUSTIFICATION_PK7.value();
 	}
 	
 	/**
@@ -8913,8 +9180,6 @@ public class SimpleQuoteBackingBean extends
 	protected void assignSuppAcctType(List<String> suppAcctTypes, PmReasonRestr pmReasonRestr) {
 		if (pmReasonRestr.getSupplAcctTypeId() != null) {
 			suppAcctTypes.add(pmReasonRestr.getSupplAcctTypeId().getParameterCode());
-		} else {
-			suppAcctTypes.add(DPConstants.PARAMETER_CODE_G2G_ACCOUNT);
 		}
 	}
 
@@ -9022,6 +9287,8 @@ public class SimpleQuoteBackingBean extends
 			if (restr.getAgencyId() != null
 					&& userAgency.getOrgProfileId().equals(restr.getAgencyId().getOrgProfileId())) {
 				return true;
+			} else if (restr.getAgencyId() == null) {
+				return true;
 			}
 		}
 		return false;
@@ -9046,6 +9313,10 @@ public class SimpleQuoteBackingBean extends
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonId(quote.getJustificationType().getReasonId());
 		List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
+		List<PmReasonRestr> distinctReasonRestrList = new ArrayList<>();
+
+		distinctSupplierAccType(listReasonRestr, distinctReasonRestrList);
+
 		StringBuilder suppAccTypeSb = new StringBuilder();
 		String suppAccType = null;
 
@@ -9059,8 +9330,8 @@ public class SimpleQuoteBackingBean extends
 						.getSupplierType());
 			}
 
-			if ((listReasonRestr != null && !listReasonRestr.isEmpty()) && suppAccType != null) {
-				isSupplierAccTypeMatch = initializeReasonRestr(listReasonRestr, isSupplierAccTypeMatch,
+			if (distinctReasonRestrList != null && !distinctReasonRestrList.isEmpty() && suppAccType != null) {
+				isSupplierAccTypeMatch = initializeReasonRestr(distinctReasonRestrList, isSupplierAccTypeMatch,
 						suppAccTypeSb, suppAccType);
 
 				if (!isSupplierAccTypeMatch) {
@@ -9068,6 +9339,42 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+	}
+
+	/**
+	 * Builds a distinct list of {@link PmReasonRestr} based on supplier account
+	 * type.
+	 * <p>
+	 * A record is considered duplicate if its {@code supplAcctTypeId} is null
+	 * or has the same {@code parameterCode} (case-insensitive) as an existing
+	 * entry.
+	 * </p>
+	 * 
+	 * @param listReasonRestr
+	 *            source list containing possible duplicates
+	 * @param distinctReasonRestrList
+	 *            target list to store distinct records
+	 */
+	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
+			List<PmReasonRestr> distinctReasonRestrList) {
+		for (PmReasonRestr rr : listReasonRestr) {
+			PmParameter param = rr.getSupplAcctTypeId();
+			boolean exists = false;
+
+			for (PmReasonRestr dr : distinctReasonRestrList) {
+				PmParameter existingParam = dr.getSupplAcctTypeId();
+
+				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+						existingParam != null ? existingParam.getParameterCode() : "")) {
+					exists = true;
+					break;
+				}
+			}
+
+			if (!exists) {
+	            distinctReasonRestrList.add(rr);
+	        }
+	    }
 	}
 	
 	/**
@@ -9165,21 +9472,11 @@ public class SimpleQuoteBackingBean extends
 	 * @return true if at least one active restriction exists, false otherwise
 	 */
 	public boolean isAgencyAllowedForSpecialItem() {
-		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IReasonSO.class);
 		PmOrgProfile pmOrgProfile = retrievePmOrgProfile();
-		if (pmOrgProfile != null) {
-			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
 
-			for (PmReasonRestr pmReasonRestr : listReasonRestr) {
-				if (pmReasonRestr.getPmReason().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return pmOrgProfile != null ? getReasonCodeDropdownValues(pmOrgProfile.getOrgProfileId(),
+				ReasonCategory.JUSTIFICATION_SIT.value()).length > 1
+				: getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value()).length > 1;
 	}
 	
 	/**
@@ -9331,4 +9628,294 @@ public class SimpleQuoteBackingBean extends
 		}
 	}
 	//#38916 - End
+	
+	// #26059 - Start	 
+	/**
+	 * Main entry point to populate item title and extension details.
+	 * * @param specQuestion The question object to be updated.
+	 * @param cmItem The source item data.
+	 */
+	public void fetchItemNameAndExtension(TplSpecQuestion specQuestion, CmItem cmItem) {
+	    try {
+	        if (cmItem == null || cmItem.getItemId() == null) {
+	            handleMissingItem(specQuestion);
+	            return;
+	        }
+
+	        CmItem refreshedItem = refreshCmItem(cmItem);
+	        specQuestion.setCmTitleValue(fetchUnspscTitle(refreshedItem));
+	        specQuestion.setCmExtensionValue(buildExtensionName(refreshedItem));
+
+	    } catch (Exception e) {
+	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "fetchCmTypeName", 
+	            StringUtils.EMPTY, "fetchCmTypeName", getUserIdSessionFromLoginId(), e);
+	    }
+	}
+
+	/**
+	 * Handles logic when the CmItem is null by cleaning the existing classification item.
+	 * * @param specQuestion The question object containing the ClItem string.
+	 */
+	private void handleMissingItem(TplSpecQuestion specQuestion) {
+	    if (StringUtils.isNotEmpty(specQuestion.getClItem())) {
+	        CommonUtils common = new CommonUtils();
+	        specQuestion.setClItem(common.removeItemNameNA(specQuestion.getClItem()));
+	    }
+	}
+
+	/**
+	 * Re-fetches the full item object from the database using the item ID.
+	 * * @param cmItem The initial item containing the ID.
+	 * @return The fully populated CmItem object.
+	 * @throws Exception If the service lookup fails.
+	 */
+	private CmItem refreshCmItem(CmItem cmItem) throws Exception {
+		
+	    ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+	            ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+	    
+	    CodificationReqDTO cReqDTO = new CodificationReqDTO();
+	    cReqDTO.setItemId(cmItem.getItemId());
+	    
+	    CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
+	    
+	    if (cResDTO == null || cResDTO.getCmItem() == null) {
+	        return cmItem; 
+	    }
+	    
+	    return cResDTO.getCmItem();
+	}
+
+	/**
+	 * Retrieves the UNSPSC title associated with the item's commodity code.
+	 * * @param cmItem The item containing UNSPSC information.
+	 * @return The trimmed UNSPSC title, or an empty string if not found.
+	 * @throws Exception If the commodity search fails.
+	 */
+	private String fetchUnspscTitle(CmItem cmItem){
+	    if (cmItem.getCmUnspsc() == null) {
+	        return StringUtils.EMPTY;
+	    }
+
+	    ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+	            ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+	    
+	    CodificationReqDTO cReqDTO = new CodificationReqDTO();
+	    cReqDTO.setUnspscCode(cmItem.getCmUnspsc().getUnspscCode());
+	    CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(cReqDTO);
+
+	    if (codeResDTO.getCommodityObj() != null && codeResDTO.getCommodityObj().getUnspscTitle() != null) {
+	        return codeResDTO.getCommodityObj().getUnspscTitle().trim();
+	    }
+	    
+	    return StringUtils.EMPTY;
+	}
+
+	/**
+	 * Constructs a descriptive extension name by concatenating Type, Brand, 
+	 * Measurement, and Color while removing "N/A" values.
+	 * * @param cmItem The item containing metadata IDs.
+	 * @return A space-separated string of descriptive attributes.
+	 */
+	private String buildExtensionName(CmItem cmItem) {
+	    CodificationBackingBean bean = new CodificationBackingBean();
+	    StringBuilder extensionBuilder = new StringBuilder();
+
+	    // Fetch and append each component individually
+	    if (cmItem.getCmType() != null) {
+	        CmType type = bean.searchTypeOjbyTypeId(cmItem.getCmType().getTypeId());
+	        appendComponent(extensionBuilder, type != null ? type.getTypeName() : null);
+	    }
+
+	    if (cmItem.getCmBrand() != null) {
+	        CmBrand brand = bean.searchBrandObjByBrandId(cmItem.getCmBrand().getBrandId());
+	        appendComponent(extensionBuilder, brand != null ? brand.getBrandName() : null);
+	    }
+
+	    if (cmItem.getCmMeasurement() != null) {
+	        CmMeasurement mea = bean.searchMeasurementByMeasurementId(cmItem.getCmMeasurement().getMeasurementId());
+	        appendComponent(extensionBuilder, mea != null ? mea.getMeasurementName() : null);
+	    }
+
+	    if (cmItem.getCmColor() != null) {
+	        CmColor color = bean.searchColorObjByColorCode(cmItem.getCmColor().getColorCode());
+	        appendComponent(extensionBuilder, color != null ? color.getColorName() : null);
+	    }
+
+	    return extensionBuilder.toString().trim();
+	}
+
+	/**
+	 * Helper to clean and append a string component to the builder with a space.
+	 * * @param builder The StringBuilder to append to.
+	 * @param value The raw string value to be cleaned and added.
+	 */
+	private void appendComponent(StringBuilder builder, String value) {
+	    if (StringUtils.isNotEmpty(value)) {
+	        CommonUtils common = new CommonUtils();
+	        String cleanedValue = common.removeItemNameNA(value);
+	        
+	        if (StringUtils.isNotEmpty(cleanedValue)) {
+	            if (builder.length() > 0) {
+	                builder.append(DPConstants.SPACE);
+	            }
+	            builder.append(cleanedValue);
+	        }
+	    }
+	}
+		
+	/**
+	 * Populates classification item name fields for cloning purposes.
+	 * Refactored to reduce complexity below 10.
+	 * * @param specQuestion The template question to update.
+	 */
+	public void getCltemNameFromQuestion(TplSpecQuestion specQuestion) {
+	    try {
+	        if (isInvalidQuestion(specQuestion)) {
+	            return;
+	        }
+
+	        String unspscTitle = fetchUnspscTitleFromQuestion(specQuestion);
+	        
+	        if (StringUtils.isNotEmpty(unspscTitle)) {
+	            CommonUtils common = new CommonUtils();
+	            specQuestion.setCmTitleValue(unspscTitle);
+
+	            String clItem = common.removeItemNameNA(specQuestion.getClItem());
+	            String extension = compareTwoTitleNameAndTrim(unspscTitle, clItem);
+	            specQuestion.setCmExtensionValue(extension);
+	        }
+
+	    } catch (Exception e) {
+	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "getCltemNameForClone",
+	                StringUtils.EMPTY, "getCltemNameForClone", getUserIdSessionFromLoginId(), e);
+	    }
+	}
+
+	/**
+	 * Validates if the question or its item ID is missing.
+	 */
+	private boolean isInvalidQuestion(TplSpecQuestion specQuestion) {
+	    return specQuestion == null 
+	            || specQuestion.getCmItem() == null 
+	            || specQuestion.getCmItem().getItemId() == null;
+	}
+
+	/**
+	 * Orchestrates service calls to retrieve the UNSPSC title.
+	 * * @param specQuestion The question containing item details.
+	 * @return The UNSPSC title or an empty string.
+	 * @throws Exception for service-level failures.
+	 */
+	private String fetchUnspscTitleFromQuestion(TplSpecQuestion specQuestion){
+	    ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+	            ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+
+	    CodificationReqDTO req = new CodificationReqDTO();
+	    req.setItemId(specQuestion.getCmItem().getItemId());
+
+	    CodificationResDTO itemRes = codificationSO.searchItemObj(req);
+
+	    if (itemRes != null && itemRes.getCmItem() != null && itemRes.getCmItem().getCmUnspsc() != null) {
+	        req.setUnspscCode(itemRes.getCmItem().getCmUnspsc().getUnspscCode());
+	        CodificationResDTO commodityRes = codificationSO.searchCommodityObj(req);
+
+	        if (commodityRes != null && commodityRes.getCommodityObj() != null) {
+	            return commodityRes.getCommodityObj().getUnspscTitle();
+	        }
+	    }
+	    return StringUtils.EMPTY;
+	}
+
+	/**
+	 * Prepares the classification item name by removing any unwanted parts such
+	 * as "NA". This method uses a utility class to sanitize or clean the item
+	 * name before further processing or storing. It modifies the given
+	 * {@code TplSpecQuestion} object directly.
+	 * 
+	 * @param question
+	 *            The {@code TplSpecQuestion} object whose classification item
+	 *            name will be cleaned.
+	 */
+	private void preparedClItemName(TplSpecQuestion question) {
+		CommonUtils common = new CommonUtils();
+		question.setClItem(common.removeItemNameNA(question.getClItem()));
+	}
+
+	/**
+	 * Compares two title strings word-by-word and trims the matching prefix.
+	 * This method is useful for identifying the additional or differing part of
+	 * a longer title (`clItem`) when compared to a reference or base title
+	 * (`unspscTitle`). The comparison is case-insensitive and proceeds
+	 * word-by-word from the beginning. It returns the remaining part of
+	 * `clItem` after all matching leading words.
+	 * 
+	 * @param unspscTitle
+	 *            The reference/base title to compare from (e.g., UNSPSC title).
+	 * @param clItem
+	 *            The full title to compare and trim (e.g., classification item
+	 *            title).
+	 * @return A string containing the remaining words in {@code clItem} after
+	 *         the common prefix.
+	 */
+	private String compareTwoTitleNameAndTrim(String unspscTitle, String clItem) {
+
+		String[] words1 = unspscTitle.split(" ");
+		String[] words2 = clItem.split(" ");
+
+		int minLength = Math.min(words1.length, words2.length);
+		int diffIndex = 0;
+
+		// Compare words until they differ
+		for (int i = 0; i < minLength; i++) {
+			if (!words1[i].equalsIgnoreCase(words2[i])) {
+				break;
+			}
+			diffIndex++;
+		}
+
+		// Extract the remaining (different) part from title2
+		StringBuilder result = new StringBuilder();
+		for (int i = diffIndex; i < words2.length; i++) {
+			result.append(words2[i]);
+			if (i < words2.length - 1) {
+				result.append(" ");
+			}
+		}
+
+		return result.toString();
+	}
+
+	/**
+	 * Combines the UNSPSC title value and the extension value of a given
+	 * {@link TplSpecQuestion} into the `clItem` field. If the `cmTitleValue` is
+	 * not empty, this method appends the `cmExtensionValue` (if present) to the
+	 * title with a space in between and sets the result as the `clItem`. If
+	 * `cmExtensionValue` is blank or null, only `cmTitleValue` is used.
+	 * 
+	 * @param question
+	 *            the {@code TplSpecQuestion} object whose values are being
+	 *            combined; must not be {@code null}.
+	 */
+	private void combineClItemAndExtension(TplSpecQuestion question) {
+		if (StringUtils.isNotEmpty(question.getCmTitleValue())) {
+			String extension = StringUtils.isNotBlank(question.getCmExtensionValue()) ? question.getCmExtensionValue()
+					: StringUtils.EMPTY;
+			question.setClItem(question.getCmTitleValue() + DPConstants.SPACE + extension);
+		}
+	}
+	
+	
+	/**
+	 * Determines whether the specific question column should be displayed or enabled.
+	 * This method checks the current quote's panel status. It is specifically utilized 
+	 * by the {@code specColumnQuestion} component to toggle visibility/functionality 
+	 * based on whether the quote is classified as a panel.
+	 * * @return {@code false} if the quote exists and is marked as a panel; 
+	 * {@code true} otherwise (indicating the panel check passed or is not applicable).
+	 */
+	public boolean checkIsPanel() {
+	    return getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel();
+	}
+	// #26059 - End
 }

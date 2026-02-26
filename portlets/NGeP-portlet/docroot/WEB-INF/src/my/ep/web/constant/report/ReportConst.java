@@ -1198,6 +1198,12 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REPORT_FLOWTYPE = "flowType";
 	// #38526 End Vinod 24/07/2025
 	
+	//#38977 - Start
+	public static final String PARAM_PAYMENT_PREPRINT = "P_REPRINT";
+	public static final String PARAM_PAYMENT_PREPRINT_SALINAN = "Y";
+	public static final String PARAM_PAYMENT_PREPRINT_ASAL = "N";
+	//#38977 - End
+	
 	public ReportConst(){}
 	
 	/**
