@@ -7,13 +7,28 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<style>
-		.no-header .ui-accordion-header {
-	    	display: none;
-		}	
-		
-		.custom-scroll-border.ui-scrollpanel {
-		    border: 1px solid #dcdcdc !important;
-		}
+	    .no-header .ui-accordion-header {
+	        display: none;
+	    }
+	
+	    /* Fix scroll clipping */
+	    .custom-scroll-border .ui-scrollpanel-content {
+	        border: 1px solid #dcdcdc !important;
+	        padding: 10px !important;
+	        box-sizing: border-box;
+	    }
+	
+	    /* IMPORTANT: allow proper overflow rendering */
+	    .custom-scroll-border .ui-scrollpanel-wrapper {
+	        overflow-y: auto !important;
+	        overflow-x: hidden !important;
+	    }
+	
+	    /* Prevent text clipping */
+	    .custom-scroll-border .ui-selectmanycheckbox label {
+	        line-height: 1.5 !important;
+	        white-space: normal !important;
+	    }
 	</style>
 	
 	<ui:param name="requisitionerEnableDisable"
