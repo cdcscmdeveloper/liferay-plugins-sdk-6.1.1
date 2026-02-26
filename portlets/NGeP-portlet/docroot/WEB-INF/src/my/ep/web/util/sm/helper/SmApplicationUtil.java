@@ -14,10 +14,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -3849,11 +3851,23 @@ public class SmApplicationUtil {
 			String mofNo = "";
 			String catCode = "";
 			String catCodeCombine = "";
+			//#39679 - Start
+			Set<String> catCodeList = new HashSet<>();
+			boolean duplicateCatCode = false;
+			//#39679 - End
 			int index = 0;
 			
 			if(resultList != null){
 				for (Object[] arrI : resultList){ 
 					catCode = arrI[0].toString() + arrI[1] + arrI[2];
+					//#39679 - Start
+					if(arrI[4].toString().equalsIgnoreCase(companyName)){
+						duplicateCatCode = checkDuplicateCatCode(catCodeList, catCode);
+					}else{
+						catCodeList = new HashSet<>();
+					}
+					catCodeList.add(catCode);
+					//#39679 - End
 					if("".equalsIgnoreCase(companyName)){
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
@@ -3867,7 +3881,11 @@ public class SmApplicationUtil {
 						catCodeCombine = catCodeCombine + catCode;
 					}
 					if(arrI[4].toString().equalsIgnoreCase(companyName) && index != 1){
-						catCodeCombine = catCodeCombine + ", " + catCode;
+						//#39679 - Start
+						if(!duplicateCatCode){
+							catCodeCombine = catCodeCombine + ", " + catCode;	
+						}
+						//#39679 - End
 					}else{
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
@@ -3891,6 +3909,20 @@ public class SmApplicationUtil {
 		}
 		return retVal;
 	}
+	
+	// #39679 - Start
+	private static boolean checkDuplicateCatCode(Set<String> catCodeList,
+			String catCode) {
+		if (!catCodeList.isEmpty()) {
+			for (String item : catCodeList) {
+				if (item.contains(catCode)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	// #39679 - End
 
 	private static void resetAddedCategoryOverlapStatus(SmAppl appl,
 			SmOverlapCategoryVO vo) {
