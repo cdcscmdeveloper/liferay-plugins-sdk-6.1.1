@@ -3381,7 +3381,7 @@ public class QTDetailBackingBean extends
 	 *            the outcome
 	 * @return the string
 	 */
-	public String updateBpmTask(String outcome) {
+	public void updateBpmTask(String outcome) {
 		
 		//25037 - start - remove after clone(25635) enter production
 		assertSpecificationUpdateInProgress(false);
@@ -3693,7 +3693,6 @@ public class QTDetailBackingBean extends
 			detailSO = null;
 			committeSO=null;
 		}
-		return null; 
 	}
 
 	// #30477/#25426 -start-
