@@ -56,13 +56,13 @@
 		
 		<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}" rendered="#{isScoringReq}">
-		<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}" rendered="#{isSpecTypeTechnical and !isWeightageWipP2}"/> <!-- #38151 -->		
+		<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}" rendered="#{isSpecTypeTechnical and templateSpecBackingBean.hasWeightage(templateSpecBean) and !isWeightageWipP2}"/> <!-- #38151 -->		
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}" rendered="#{isScoringReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
-			<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}"  rendered="#{isSpecTypeTechnical and !isWeightageWipP2}"/> <!-- #38151 -->				
+			<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}"  rendered="#{isSpecTypeTechnical and templateSpecBackingBean.hasWeightage(templateSpecBean) and !isWeightageWipP2}"/> <!-- #38151 -->				
 		</f:facet>
 		</p:column>
 		<ui:remove>#29187 Start Vinod</ui:remove>
