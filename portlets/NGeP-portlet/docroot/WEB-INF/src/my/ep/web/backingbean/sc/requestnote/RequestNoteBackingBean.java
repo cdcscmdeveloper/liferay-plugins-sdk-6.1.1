@@ -8300,12 +8300,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		ScRequestItem item = requestNoteDtl.getRequestItem();
-
-		if (item.getItemType().getParameterId().equals(DbValueConst.ITEM_TYPE_SERVICE)
-				&& StringUtils.isEmpty(item.getTempUnspscCode())) {
-			return false;
-		}
-
 		CmItem cmItem = item.getCmItem();
 		return isValidExtensionLength(cmItem.getExtensionCode());
 	}
@@ -8468,17 +8462,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return              {@code true} if the "Assign" button should be active (enabled or shown); {@code false} otherwise.
 	 */
 	public boolean validateAssignButton(boolean readOnly, ScRequestNoteDtl requestNoteDtl) {
-		if (readOnly) {
+	    if (readOnly) {
+	        return true;
+	    }
+
+	    if (requestNoteDtl == null || requestNoteDtl.getRequestItem() == null) {
+	        return false; 
+	    }
+	    
+	    if (getManagedBean().isExistInAssignItemDetail()) {
+			return false;
+		}
+	    
+	    if(DbValueConst.ITEM_TYPE_PRODUCT.equals(requestNoteDtl.getRequestItem().getItemType().getParameterId())){
+	    	return false;
+	    }
+
+	    String tempUnspscCode = requestNoteDtl.getRequestItem().getTempUnspscCode();
+	    CmItem cmItem = requestNoteDtl.getRequestItem().getCmItem();
+	    
+	    
+		if (StringUtils.isEmpty(tempUnspscCode) && cmItem != null && StringUtils.isNotEmpty(cmItem.getExtensionCode())
+				&& cmItem.getExtensionCode().length() != 8) {
 			return true;
 		}
 
-		if (requestNoteDtl.getProcurementTypeCategory().getParameterId().equals(DbValueConst.PROCUMENT_TYPE_SERVICE)
-				&& StringUtils.isEmpty(requestNoteDtl.getRequestItem().getTempUnspscCode())
-				&& requestNoteDtl.getRequestItem().getCmItem() != null) {
-			return true;
-		}
-
-		return false;
+	    return false; 
 	}
 	//#26059 - End			 
 }
