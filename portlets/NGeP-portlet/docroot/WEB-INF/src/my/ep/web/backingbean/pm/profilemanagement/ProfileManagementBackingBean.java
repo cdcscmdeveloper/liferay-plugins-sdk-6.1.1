@@ -1585,7 +1585,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 				}
 				
-				if (ProfileManagementConst.RECEIVING_OFFICER.equals(pmUserRole.getPmRole().getRoleCode()) //#34445, Fix as-is bug: #39638
+				if (RoleCode.RECEIVING_OFFICER.value().equals(pmUserRole.getPmRole().getRoleCode()) //#34445, Fix as-is bug: #39638
 						&& getManagedBean().getSelectedReceivingAddrTypes() != null
 						&& !getManagedBean().getSelectedReceivingAddrTypes().isEmpty()) {
 					//Bug #32656 - start
