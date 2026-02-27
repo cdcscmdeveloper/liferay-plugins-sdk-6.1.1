@@ -619,6 +619,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean specialCategoryRechecked;
 	// #28778 - End
 	
+	//29727
+	private String deleteBranchMsg;
+	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	//13362
@@ -4616,9 +4619,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.displayBranches = displayBranches;
 	}
 	//#34135 END
-	public boolean isSpecialCategoryRechecked() {
-		return specialCategoryRechecked;
+
+	// 29727 - START
+	public String getDeleteBranchMsg() {
+		return deleteBranchMsg;
 	}
+
+	public void setDeleteBranchMsg(String deleteBranchMsg) {
+		this.deleteBranchMsg = deleteBranchMsg;
+	}
+	// 29727 - END
 
 	public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
 		this.specialCategoryRechecked = specialCategoryRechecked;
