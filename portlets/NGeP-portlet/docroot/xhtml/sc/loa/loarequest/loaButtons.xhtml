@@ -37,8 +37,9 @@
 					style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOADetailBackingBean.saveAction(false)}"
-					rendered="#{isEditableStatus and !isSaveHideSqExpired}" process="@form" update="@form"
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					rendered="#{isEditableStatus and !isSaveHideSqExpired
+					and !(!qtLOABackingBean.managedBean.ableToSubmitLOA and lOADetailBackingBean.isApproverAbleToSave())}" process="@form" update="@form"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
@@ -113,11 +114,8 @@
 			   <p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOADetailBackingBean.saveAction(false)}"
 					rendered="#{(isPendingApprovalStatus or isPendingRevApprovalStatus or isPendingRevisionStatus) and !isTrackingDairyView
-								 and isSqStillValid}"
+								 and isSqStillValid and !(!qtLOABackingBean.managedBean.ableToSubmitLOA and lOADetailBackingBean.isApproverAbleToSave())}"
 				    process="@form" update="@form"
-<<<<<<< HEAD
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-=======
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 				
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
@@ -133,7 +131,6 @@
 					action="#{lOADetailBackingBean.validateBeforePopupWIP()}"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
->>>>>>> refs/remotes/origin/release-sit
 					
 				<ui:decorate
 					template="/WEB-INF/facelets/templates/claim_template.xhtml">
@@ -179,11 +176,21 @@
 								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
-									rendered="#{!isPendingVerification and isSqStillValid}"
+									rendered="#{!isPendingVerification and isSqStillValid and bpmAction != 'APPROVE' and bpmAction != 'SUBMIT'}"
 									oncomplete="blockWidget.hide();"
 									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>
+									update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
+								<ui:remove>21692 - Start</ui:remove>
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" onstart="blockWidget.show();"
+									rendered="#{!isPendingVerification and isSqStillValid and (bpmAction == 'APPROVE' or bpmAction == 'SUBMIT')
+									and qtLOABackingBean.managedBean.ableToSubmitLOA}"
+									oncomplete="blockWidget.hide();"
+									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
+									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+									update="#{isReject ? '@this' : '@form'}" />
+								<ui:remove>21692 - End</ui:remove>
 	
 								<ui:remove> #29007 Vinod Start changed action </ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}"

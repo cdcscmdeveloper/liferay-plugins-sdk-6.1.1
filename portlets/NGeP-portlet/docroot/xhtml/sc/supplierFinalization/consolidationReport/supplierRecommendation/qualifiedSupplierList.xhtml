@@ -99,19 +99,17 @@
 								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
 								<br />
 								<p:commandLink
-									oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'},{name:'isDisqualifiedId', value:'1'}]);"
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
 									rendered="#{isOneTierWithTechnical or isTwoTier}"
 									process="@this">
-									<ui:remove> #28777#29729 </ui:remove>
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.technical']}"
 										styleClass="commandLink" />
 								</p:commandLink>
 								<br />
 								<p:commandLink
-									oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'},{name:'isDisqualifiedId', value:'1'}]);"
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
 									process="@this">
-									<ui:remove> #28777#29729 </ui:remove>
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.financial']}"
 										styleClass="commandLink" />
@@ -257,12 +255,6 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
-<<<<<<< HEAD
-				
-				<p:column rendered="#{!empty qualifiedSupp.smMofAccount and qualifiedSupp.smMofAccount.recordStatusFlg
-								  	 								eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
-=======
 				<ui:remove>26247 - start</ui:remove>
 				<ui:param name="supplier"
 					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
@@ -271,34 +263,12 @@
 				<p:column styleClass="#{mofExpired ? 'red-background':''}">
 					<h:outputText
 						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
->>>>>>> refs/remotes/origin/release-sit
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty qualifiedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
-				</p:column>
-						
 				<p:column>
-				<!-- #31033 start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<!-- #31033 End -->
-					
-					<h:outputText rendered="#{!qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
-<<<<<<< HEAD
-				
-				<p:column rendered="#{false}" >
-=======
 				<ui:remove>26247 - end</ui:remove>
 				<p:column rendered="#{false}">
->>>>>>> refs/remotes/origin/release-sit
 					<h:outputText value="" />
 				</p:column>
 
@@ -321,13 +291,6 @@
 						ADDED : disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0}
 					</ui:remove>
 					<ui:remove>#21692 - start</ui:remove>
-<<<<<<< HEAD
-					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
-								 size="5" maxlength="3" required="false" autocomplete="false" 
-								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
-								 disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or (qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
-						<ac:validateNumber 
-=======
 					<p:inputText id="deskOfficerRankInput"
 						value="#{qualifiedSupp.deskOfficerRank}" size="5" maxlength="3"
 						required="false" autocomplete="false"
@@ -335,7 +298,6 @@
 						disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or consolidationReportBackingBean.disabledQTProcess(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier) or (qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
 						<ui:remove> #28777#29729 </ui:remove>
 						<ac:validateNumber
->>>>>>> refs/remotes/origin/release-sit
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="4" integerOnly="true" />
 						<f:attribute name="min" value="1" />
@@ -410,11 +372,7 @@
 								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
 								<br />
 								<p:commandLink
-<<<<<<< HEAD
-									oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'},{name:'isDisqualifiedId', value:'7'}]);"
-=======
 									oncomplete="fetchDisqualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
->>>>>>> refs/remotes/origin/release-sit
 									rendered="#{isOneTierWithTechnical or isTwoTier}"
 									process="@this">
 									<ui:remove> #34840 </ui:remove>
@@ -423,11 +381,7 @@
 								</p:commandLink>
 								<br />
 								<p:commandLink
-<<<<<<< HEAD
-									oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'},{name:'isDisqualifiedId', value:'7'}]);"
-=======
 									oncomplete="fetchDisqualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
->>>>>>> refs/remotes/origin/release-sit
 									process="@this">
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.financial']}"
@@ -559,11 +513,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
-<<<<<<< HEAD
-				<ui:remove>26247 - start</ui:remove>
-=======
 
->>>>>>> refs/remotes/origin/release-sit
 				<ui:param name="supplier"
 					value="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="mofExpired"
@@ -576,11 +526,7 @@
 				<p:column>
 					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
-<<<<<<< HEAD
-				<ui:remove>26247 - end</ui:remove>
-=======
 
->>>>>>> refs/remotes/origin/release-sit
 				<p:column rendered="#{false}">
 					<h:outputText value="" />
 				</p:column>
@@ -608,9 +554,7 @@
 						maxlength="3" required="false" autocomplete="false"
 						label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
 						disabled="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0 
-								 or consolidationReportBackingBean.disabledQTProcess(disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
 								 or (disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified) or isDisqualified}">
-						<ui:remove>26247 - add disabledQTProcess</ui:remove>
 					</h:outputText>
 				</p:column>
 
@@ -641,14 +585,6 @@
 
 		</p:outputPanel>
 	</p:panel>
-<<<<<<< HEAD
-	<!--  #31033 #32560 Start -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<!--  #31033 #32560 End -->
-=======
 
 	<ui:remove>
 		<!-- #38151 datatable value popup-->
@@ -723,5 +659,4 @@
 		</p:dataTable>
 	</p:dialog>
 	<!-- #38151 datatable value popup - end -->
->>>>>>> refs/remotes/origin/release-sit
 </ui:composition>

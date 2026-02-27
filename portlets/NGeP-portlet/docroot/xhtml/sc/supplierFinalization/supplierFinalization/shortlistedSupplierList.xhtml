@@ -131,7 +131,7 @@
 								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
 								<br />
 								<p:commandLink
-									oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'},{name:'isDisqualifiedId', value:'1'}]);"
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
 									rendered="#{isOneTierWithTechnical or isTwoTier}"
 									process="@this">
 									<ui:remove> #28777#29729 </ui:remove>
@@ -141,7 +141,7 @@
 								</p:commandLink>
 								<br />
 								<p:commandLink
-									oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'},{name:'isDisqualifiedId', value:'1'}]);"
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
 									process="@this">
 									<ui:remove> #28777#29729 </ui:remove>
 									<ui:remove> #34840 </ui:remove>
@@ -292,12 +292,6 @@
 					</c:choose>
 				</p:column>
 				
-<<<<<<< HEAD
-				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and 
-									   shortlistedSupp.smMofAccount.recordStatusFlg
-								  	 			eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
-=======
 				<ui:remove>26247 - start</ui:remove>
 				<ui:param name="supplier"
 					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
@@ -306,27 +300,13 @@
 				<p:column styleClass="#{mofExpired ? 'red-background':''}">
 					<h:outputText
 						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
->>>>>>> refs/remotes/origin/release-sit
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty shortlistedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
-				</p:column>
-						
 				<p:column>
-				<!-- #31033 start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<!-- #31033 End -->
-					
-					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ac:disciplinaryActionYesNo
+						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+						index="#{index}" />
 				</p:column>
+				<ui:remove>26247 - end</ui:remove>
 				
 				<p:column rendered="#{false}">
 					<h:outputText value="" />
@@ -413,21 +393,33 @@
 							</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
-		               		<f:facet name="header">
-								<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
-								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
-									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
-								</p:commandLink><br/>		               		
-			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+							<f:facet name="header">
+								<ui:remove> #34840 </ui:remove>
+								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
+								<br />
+								<p:commandLink
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
+									rendered="#{isOneTierWithTechnical or isTwoTier}"
+									process="@this">
+									<ui:remove> #34840 </ui:remove>
+									<h:outputText value="#{lbl['lbl.sc.technical']}"
+										styleClass="commandLink" />
+								</p:commandLink>
+								<br />
+								<p:commandLink
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
+									process="@this">
+									<ui:remove> #34840 </ui:remove>
+									<h:outputText value="#{lbl['lbl.sc.financial']}"
+										styleClass="commandLink" />
 									<!--  #29466 - START -->
-									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
-												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
-									<!--  #29466 - END -->					   	 	
-								</p:commandLink>								
-		               		</f:facet>
-		               	</p:column>
+									<f:setPropertyActionListener
+										value="#{suppFinalizationBackingBean.managedBean.scQt}"
+										target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
+									<!--  #29466 - END -->
+								</p:commandLink>
+							</f:facet>
+						</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
 		               	<p:column rowspan="2" style="width:7%; white-space:normal;">
 							<f:facet name="header">
@@ -563,12 +555,6 @@
 					</c:choose>
 				</p:column>
 				
-<<<<<<< HEAD
-				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and 
-									   shortlistedSupp.smMofAccount.recordStatusFlg
-								  	 			eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
-=======
 				<ui:remove>26247 - start</ui:remove>
 				<ui:param name="supplier"
 					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
@@ -577,27 +563,12 @@
 				<p:column styleClass="#{mofExpired ? 'red-background':''}">
 					<h:outputText
 						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
->>>>>>> refs/remotes/origin/release-sit
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty shortlistedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
-				</p:column>
-						
+
 				<p:column>
-				<!-- #31033 Start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<!-- #31033 End -->
-					
-					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
+				<ui:remove>26247 - end</ui:remove>
 				
 				<p:column  rendered="#{false}">
 					<h:outputText value="" />
@@ -696,11 +667,7 @@
 								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
 								<br />
 								<p:commandLink
-<<<<<<< HEAD
-									oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'},{name:'isDisqualifiedId', value:'7'}]);"
-=======
 									oncomplete="fetchDisqualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
->>>>>>> refs/remotes/origin/release-sit
 									rendered="#{isOneTierWithTechnical or isTwoTier}"
 									process="@this">
 									<ui:remove> #34840 </ui:remove>
@@ -709,11 +676,7 @@
 								</p:commandLink>
 								<br />
 								<p:commandLink
-<<<<<<< HEAD
-									oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'},{name:'isDisqualifiedId', value:'7'}]);"
-=======
 									oncomplete="fetchDisqualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
->>>>>>> refs/remotes/origin/release-sit
 									process="@this">
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.financial']}"
@@ -941,10 +904,4 @@
 		</p:outputPanel>
 		
 	</p:panel>
-	<!-- #30823, #31033 #32560 Start -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<!-- #30823, #31033, #32560 End -->
 </ui:composition>
