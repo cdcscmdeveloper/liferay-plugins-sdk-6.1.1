@@ -1555,7 +1555,10 @@ public class ConsolidationReportBackingBean extends
 
 		// #28777 & #29729 - End
 
+		// 26247 - start
 		int countDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
+		totalQualifiedSuppliers = totalQualifiedSuppliers - countDisabled;
+		// 26247 - end
 		
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer

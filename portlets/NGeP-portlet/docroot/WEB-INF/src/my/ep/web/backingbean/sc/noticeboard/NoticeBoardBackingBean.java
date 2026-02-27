@@ -3538,9 +3538,11 @@ public class NoticeBoardBackingBean extends
 		}
 		
 		List<PmRemarkCategory> listCategoryDB = new ArrayList();
-		for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
-			if (null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
-				listCategoryDB.add(removeIndex);
+		if (null != getManagedBean().getHistoryList()) {
+			for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+				if (null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
+					listCategoryDB.add(removeIndex);
+				}
 			}
 		}
 		getManagedBean().setHistoryList(listCategoryDB);
@@ -3551,11 +3553,12 @@ public class NoticeBoardBackingBean extends
 
 	// #29732 -start-
 	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
-		for (PmRemarkCategory rc : remarkList) {
-			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
-			rc.setCreatedUsername(user.getUserName());
+		if (null != remarkList) {
+			for (PmRemarkCategory rc : remarkList) {
+				PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
+				rc.setCreatedUsername(user.getUserName());
+			}
 		}
-
 		return remarkList;
 	}
 	// #29732 End
