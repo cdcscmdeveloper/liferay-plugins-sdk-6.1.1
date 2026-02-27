@@ -4629,7 +4629,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.deleteBranchMsg = deleteBranchMsg;
 	}
 	// 29727 - END
-
+	
+	public boolean isSpecialCategoryRechecked() {
+		return specialCategoryRechecked;
+	}
+	
 	public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
 		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
