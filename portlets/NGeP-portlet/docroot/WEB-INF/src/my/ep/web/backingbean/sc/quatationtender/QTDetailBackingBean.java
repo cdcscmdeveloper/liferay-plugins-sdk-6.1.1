@@ -3401,7 +3401,7 @@ public class QTDetailBackingBean extends
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
 				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
-				return changedCatCodeList;
+				return;
 			}
 		}
 		// #29732 End
