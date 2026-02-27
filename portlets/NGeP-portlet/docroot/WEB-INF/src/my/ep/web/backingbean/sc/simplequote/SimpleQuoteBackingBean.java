@@ -1669,8 +1669,14 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			//29194 - Start
 			reqDTO.setRoleCode(getUserRoleCodeSQ());
@@ -2449,8 +2455,14 @@ public class SimpleQuoteBackingBean extends
 
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -4056,7 +4068,8 @@ public class SimpleQuoteBackingBean extends
 	public void submitPromptAction() {
 		debugLogger("submitPromptAction");
 		ScQuote quote = getManagedBean().getScQuote();
-		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+				
 		
 		// validate quote
 		validateQuote(quote, true);
@@ -4916,6 +4929,7 @@ public class SimpleQuoteBackingBean extends
 		// #26284 - Start
 		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_SUSPENDED).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
 
 		criteria.append("recordStatus")
@@ -8215,7 +8229,6 @@ public class SimpleQuoteBackingBean extends
 			return getManagedBean();
 		}
 		// #29832 end
-		
 		
 		//29832 start
 		public String excludeLevelCodeSupplier(){

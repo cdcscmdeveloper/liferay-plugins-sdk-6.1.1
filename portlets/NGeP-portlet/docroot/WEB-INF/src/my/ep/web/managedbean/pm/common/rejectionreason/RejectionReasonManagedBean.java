@@ -62,6 +62,8 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private List <PmSupplierReason> auditDeleteSuppRestrictions;
 	/************ AUDIT END #28895-35509 *************/
 	
+	private boolean isReasonApplicabilityDuplicate = false; //39618
+	
 	public RejectionReasonManagedBean(){}
 	
 	/**
@@ -391,5 +393,15 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 
 
 	/************ AUDIT END #28895-35509 *************/
+	
+	//#39618 - Start
+	public boolean isReasonApplicabilityDuplicate() {
+		return isReasonApplicabilityDuplicate;
+	}
+
+	public void setReasonApplicabilityDuplicate(boolean isReasonApplicabilityDuplicate) {
+		this.isReasonApplicabilityDuplicate = isReasonApplicabilityDuplicate;
+	}
+	//#39618 - End
 	
 }

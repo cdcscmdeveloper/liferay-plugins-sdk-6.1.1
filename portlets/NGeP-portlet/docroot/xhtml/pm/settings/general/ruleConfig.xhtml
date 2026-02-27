@@ -26,7 +26,8 @@
 		
 		<!-- 36738 Start -->
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
-			id="ruleTypeSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
+			id="ruleTypeSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.ruleTypeCollapsePanel}">
+			<p:ajax event="toggle" listener="#{ruleCatalogueBackingBean.onRuleTypeSearchToggle}" />
 			<h:panelGrid id="ruleTypePanelGrid" columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.rule.type']}" />
 				<p:inputText
@@ -36,11 +37,11 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{ruleCatalogueBackingBean.searchRuleType}"
-					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch"/>
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch addButtonDiv"/>
 				&#160;
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{ruleCatalogueBackingBean.resetRuleType}" process="@this"
-					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch ruleTypePanelGrid" />
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch ruleTypePanelGrid addButtonDiv" />
 			</div>
 		</p:panel>
 		<!-- 36738 End -->
@@ -64,7 +65,7 @@
 			<ac:paginator for="ruleTypeTableID" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
 				listener="#{ruleCatalogueBackingBean.onRuleType}" 
-				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738 -->
+				update=":form:settingTabId:ruleConfigId :form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738, #35323 -->
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"				
 				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738 -->
 			 <p:ajax event="page" process="@this"				
@@ -98,8 +99,8 @@
          	style="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or
                  	(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC') ? '' : 'display:none'}"
          	id="ruleTypeValueSearch"
-         	collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
-
+         	collapsed="#{ruleCatalogueBackingBean.managedBean.ruleValueCollapsePanel}">
+         	
 			<h:panelGrid id="ruleTypeValuePanelGrid" columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
 				<p:inputText value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeValues}" maxlength="20" style="width:250px;"/>
@@ -521,7 +522,7 @@
 
 		</p:dataTable>
 
-		<div style="text-align: right; float: right; min-height: 30px;">
+		<h:panelGroup style="text-align: right; float: right; min-height: 30px;" id="addButtonDiv"><!-- #36738 -->
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}"
@@ -547,7 +548,7 @@
 				action="#{ruleCatalogueBackingBean.initPtjPopup}">
 			</p:commandButton>
 			<!-- 27827 - END -->
-		</div>
+		</h:panelGroup><!-- #36738 -->
 		
 		<ac:confirmationPopup id="ruleValueDeleteId"
 				widget="ruleValueDeletePopUp"

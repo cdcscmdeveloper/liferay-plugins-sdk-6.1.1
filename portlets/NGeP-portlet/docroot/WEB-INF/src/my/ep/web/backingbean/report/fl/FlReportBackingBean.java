@@ -844,7 +844,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		String[] rowHeaderItems = {"Pejabat Perakaunan","Kadar Fi Perkhidmatan (%)"};
 		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh", "No. Dokumen",
 				"Kategori Jenis Perolehan", "Kod Kumpulan PTJ", "PTJ Pembayar", "Kadar Fi Perkhidmatan (%)", "Perihal",
-				"Nilai Transaksi Termasuk CBP (RM)", "Nilai Potongan (RM)", "CBP (RM)", "Perkhidmatan Fi (RM)",
+				"Nilai Transaksi Termasuk CBP (RM)", "Nilai Potongan (RM)", "CBP (RM)", "Fi Perkhidmatan (RM)",
 				"Bayaran Kepada Pembekal (RM)", "Status"));
 		ArrayList<String> columnsSummaryList = new ArrayList<String>(Arrays.asList("Bil", "Pejabat Perakaunan",
 				"Kadar Fi Perkhidmatan (%)", "Bil. Pesanan Kerajaan", "Nilai Transaksi Termasuk CBP (RM)",
@@ -872,20 +872,20 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				
 				fiList.put(fiCount, new Object[] {
 						//need to recheck query
-						row[6].toString(), //POCO DATE
-						row[3].toString(), // POCO NO
-						row[8].toString(), //PROCUMENT CATEGORY
-						row[10].toString(), //PTJ CODE
-						row[9].toString(), //PTJ NAME
-						row[15].toString(), //SERVICE FEE
-						row[11].toString(), //POCO TITLE
+						String.valueOf(row[6]), //POCO DATE
+						String.valueOf(row[3]), // POCO NO
+						String.valueOf(row[8]), //PROCUMENT CATEGORY
+						String.valueOf(row[10]), //PTJ CODE
+						String.valueOf(row[9]), //PTJ NAME
+						String.valueOf(row[15]), //SERVICE FEE
+						String.valueOf(row[11]), //POCO TITLE
 						amtTransIncCBP, //TOTAL AMOUNT
 						amtDeduction, //DEDUCTION AMOUNT
 						amtCBP, //GST AMOUNT
 						amtServiceFee, //SERVICE FEE AMOUNT
 						amtSupplier, //AMT PAYABLE SUPPLIER
-						row[21].toString(), //POCO STATUS
-						row[4].toString(), //AG Office Code
+						String.valueOf(row[21]), //POCO STATUS
+						String.valueOf(row[4]), //AG Office Code
 					});
 				fiCount++;
 			}
@@ -919,8 +919,8 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				//end summary calculation
 				
 				summaryFiList.put(summaryfiCount, new Object[] {
-						row[8].toString() + " - " + row[0].toString(), //PEJABAT PERAKAUNAN
-						row[1].toString(), //SERVICE FEE
+						String.valueOf(row[8]) + " - " + String.valueOf(row[0]), //PEJABAT PERAKAUNAN
+						String.valueOf(row[1]), //SERVICE FEE
 						sumpoco, //TOTAL POCO
 						sumTotalAmtWithGST, //NILAI TRANSAKSI CBP
 						sumTotalDeduc, //NILAI POTONGAN
@@ -1450,7 +1450,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				//end calculate
 				
 				fiList.put(fiCount, new Object[] {
-						row[1].toString() +" - " + row[2].toString(),
+						String.valueOf(row[1]) +" - " + String.valueOf(row[2]),
 						(BigDecimal)row[3] != null ? (BigDecimal)row[3] : "-", //jan
 						(BigDecimal)row[4] != null ? (BigDecimal)row[4] : "-", //feb
 						(BigDecimal)row[5] != null ? (BigDecimal)row[5] : "-", //mar
