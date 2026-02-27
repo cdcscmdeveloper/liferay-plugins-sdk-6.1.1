@@ -255,4 +255,15 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
+		
+    <!-- #29727 -->
+	<ac:confirmationPopup id="pendingQTPopUpId"
+		widget="pendingQTPopUp"
+		okAction="backingBean.deleteSelectedBranches"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}" 
+		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')} @this"/>
+		
+	<!-- #29727 END -->
 </ui:composition>
