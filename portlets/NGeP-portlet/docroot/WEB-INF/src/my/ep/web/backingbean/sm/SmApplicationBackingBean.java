@@ -5296,9 +5296,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		if (getManagedBean().getSelectedBranches().size() > 0) {
 			for (SmSupplierBranch brn : getManagedBean().getSelectedBranches()) {
-				getManagedBean().getSmAppl().getSmSupplierBranches().remove(brn);
+				brn.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED); //#29727
+			//Prevent data company branch remove from sm_supplier_brach. - START
+//				getManagedBean().getSmAppl().getSmSupplierBranches()
+//						.remove(brn);
 			}
-			getManagedBean().getSelectedBranches().clear();
+//			getManagedBean().getSelectedBranches().clear();
+			//Prevent data company branch remove from sm_supplier_brach. - END
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { SmCommonUtil.getMessage("lbl.sm.branch",
