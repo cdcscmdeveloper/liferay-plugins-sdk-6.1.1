@@ -397,7 +397,7 @@ public class RuleCatalogueBackingBean extends
 					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
-					"RuleCatalogueBackingBean.preRenderView", null, e);
+					"RuleCatalogueBackingBean.preRenderView", null, e); //#35323
 			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					null, e.getMessage()));
 			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
