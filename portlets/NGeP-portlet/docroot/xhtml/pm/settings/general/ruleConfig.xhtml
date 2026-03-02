@@ -37,11 +37,11 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{ruleCatalogueBackingBean.searchRuleType}"
-					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch"/>
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch addButtonDiv"/>
 				&#160;
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{ruleCatalogueBackingBean.resetRuleType}" process="@this"
-					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch ruleTypePanelGrid" />
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch ruleTypePanelGrid addButtonDiv" />
 			</div>
 		</p:panel>
 		<!-- 36738 End -->
@@ -198,6 +198,7 @@
 					<f:converter converterId="pmNumberConverter"/> <!-- #34397, #34398 -->
                     <f:attribute name="numberType" value="INTEGER"/>
                     <f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
+                    <f:attribute name="zoneName" value="#{ruleCatalogueBackingBean.getZoneName(typeValueObj.zoneId)}"/> <!-- #34397, #34398 -->
 					<f:attribute name="min" value="0"/>	
 		  			<f:attribute name="max" value="9999"/>
 					<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -636,7 +637,7 @@
 
 		</p:dataTable>
 
-		<div style="text-align: right; float: right; min-height: 30px;">
+		<h:panelGroup style="text-align: right; float: right; min-height: 30px;" id="addButtonDiv"><!-- #36738 -->
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}"
@@ -675,7 +676,7 @@
 				action="#{ruleCatalogueBackingBean.initPtjPopup}">
 			</p:commandButton>
 			<!-- 27827 - END -->
-		</div>
+		</h:panelGroup> <!-- #36738 -->
 		
 		<ac:confirmationPopup id="ruleValueDeleteId"
 				widget="ruleValueDeletePopUp"
@@ -751,6 +752,4 @@
 		<!-- #35323 - End -->
 		<div class="clear"></div>
 	</p:panel>
-	<ac:lovPopup />
-	<ui:include src="/xhtml/pm/settings/general/common/supplierAccountTypePopUp.xhtml" /> <!-- #35323 -->
 </ui:composition>

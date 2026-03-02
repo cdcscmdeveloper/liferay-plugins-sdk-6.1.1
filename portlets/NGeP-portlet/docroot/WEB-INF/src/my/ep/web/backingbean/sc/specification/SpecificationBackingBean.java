@@ -17012,7 +17012,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				//To apply the same scoring settings/calculation for both packages and items.
 				recommendationItem.setOverallTechnical(recommendationPackage.getOverallTechnical());
 				recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
-				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());			
+				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
+				//#38151 && 40044 -start-
+				recommendationItem.setOverallOtherTechnical(BigDecimal.ZERO);
+				recommendationItem.setOverallOtherFin(BigDecimal.ZERO);
+				//#38151 && 40044 -end-
 			}
 			//#38151 end
 			int itemPassingScore = 0;
@@ -17940,7 +17944,6 @@ if (null != checklist && !checklist.isEmpty()) {
 		CommitteResDTO resDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		this.getManagedBean().setMaintanceFlow(true);
-		checkWeightage35384WIP();// #38151
 
 		ScCommitteeMember member = resDTO.getCommMember();
 		if (null != member) {
@@ -17955,6 +17958,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
+		checkWeightage35384WIP();// #38151
 		ScQt scQt = this.getManagedBean().getQt();
 		if (null == this.getManagedBean().getQt().getContractType()) {
 			this.getManagedBean().getQt().setContractType(new PmParameter());
@@ -25088,8 +25092,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #38151 end
 
-	// #38151 Start
-	private void checkWeightage35384WIP() {
+	// #38151 && 40044 Start
+	public void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getQt();

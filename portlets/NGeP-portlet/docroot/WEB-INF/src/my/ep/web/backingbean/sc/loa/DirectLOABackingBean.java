@@ -483,7 +483,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		downloadFile(scLoaReportAttachmentGenerated);
 		//#25726 - start
-		scLoaReport.setIsPK42BondCalc(true);
+		// #25726 - note 449 - Start
+		if (QTConstants.SURAT_SETUJU_TERIMA.equals(scLoaReport.getTitle())
+				&& scLoaReport.getScLoaReportAttachment() != null && scLoaReport.getIsPK42BondCalc() == null) {
+			checkSetReport(scLoaReport);
+		} else {
+			scLoaReport.setIsPK42BondCalc(true);
+		}
+		// #25726 - note 449 - End
 		//#25726 - end
 	}
 	
@@ -567,7 +574,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #25726 START
 			//new #25726 - Start
 			
-			boolean newBond = validateNewBond(scLoa);
+			boolean newBond = validateNewBond(scLoa, outcome);// #25726 - note 449
 			boolean approvalLetter = validateApprovalLetter(scLoa);
 
 			if (!approvalLetter || !newBond) {
@@ -3917,9 +3924,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void updateBondAndAgreement(boolean isPK7, boolean isOneOff) {
 
 		// #25726 - note 441 - Start
-		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? this
-				.getManagedBean().getScLoa().getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL
+				.equals(this.getManagedBean().getScLoa().getContractType().getParameterCode()) : false;
 
 		if (!isPK7 && isContractTypeCentral) {
 			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
@@ -3984,9 +3990,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 
 		// #25726 - note 441 - Start
-		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? this
-				.getManagedBean().getScLoa().getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL
+				.equals(this.getManagedBean().getScLoa().getContractType().getParameterCode()) : false;
 
 		if (!isPK7 && isContractTypeCentral) {
 			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
@@ -5606,7 +5611,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			// new #25726 - start
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-			boolean newBond = validateNewBond(scLoa);
+			boolean newBond = validateNewBond(scLoa, outcome);// #25726 - note 449
 
 			boolean approvalLetter = validateApprovalLetter(scLoa);
 
@@ -8504,9 +8509,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return isAgreementMandatory;
 		}
 		// #25726 - note 441
-		boolean isContractTypeCentral = loa.getContractType() != null
-				&& loa.getContractType().getParameterCode() != null ? loa.getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+		boolean isContractTypeCentral = loa.getContractType() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL.equals(loa
+				.getContractType().getParameterCode()) : false;
 
 		if ( loa.getScLoiLoa().getFulfilmentTypeCode() != null && loa.isBrandNew() && !isPk7Periodic()) {
 
@@ -11736,8 +11740,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			// #25726 - note 424 - start
 			if (scLoa.getContractType() != null) {
-				isContractTypeAsMinistry = scLoa.getContractType().getParameterCode()
-						.equals(ParameterConst.CONTRACT_TYPE_MINISTRY);
+				isContractTypeAsMinistry = ParameterConst.CONTRACT_TYPE_MINISTRY.equals(scLoa.getContractType()
+						.getParameterCode());
 			}
 			// #25726 - note 424 - end
 		}
@@ -13019,34 +13023,72 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//#26130 - end	
 			
 	//new #25726 - start
+	// #25726 - note 449 - Start
+	
 	/**
 	 * @param scLoa
+	 * @param outcome
 	 * @return
 	 */
-	private boolean validateNewBond(ScLoa scLoa) {
+	private boolean validateNewBond(ScLoa scLoa, String outcome) {
 
 		boolean isCheckLOAReport = false;
-		if (scLoa != null && CollectionUtils.isNotEmpty(scLoa.getScLoaReports()) && !scLoa.isBrandNew()
-				&& scLoa.getScLoiLoa() != null) {
+		if (scLoa != null && CollectionUtils.isNotEmpty(scLoa.getScLoaReports()) && null == scLoa.getScQuote()
+				&& !scLoa.isBrandNew() && scLoa.getScLoiLoa() != null) {
+
+			Long statusId = scLoa.getPmStatus().getStatusId();
+			boolean isAvailableStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
+					QTStatusConst.LOA_PENDING_REVISION, QTStatusConst.LOA_PENDING_APPROVAL,
+					QTStatusConst.LOA_PENDING_REVISION_APPROVAL).contains(statusId);
 
 			String fulfilmentCode = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
-
-			isCheckLOAReport = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
-
+			boolean isOneOff = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
+			isCheckLOAReport = isAvailableStatus && isOneOff;
 		}
-
 		if (isCheckLOAReport) {
 			for (ScLoaReport report : scLoa.getScLoaReports()) {
 				if (report != null && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())
-						&& report.getScLoaReportAttachment() != null && report.getIsPK42BondCalc() == null) {
-					RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
-					return false;
+						&& report.getScLoaReportAttachment() != null) {
 
+					Boolean pk42 = report.getIsPK42BondCalc();
+					boolean isShowAlert = (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && pk42 == null)
+							|| (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && !Boolean.TRUE.equals(pk42));
+					if (isShowAlert) {
+						RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
+						return false;
+					}
 				}
 			}
 		}
 		return true;
 	}
+
+	/**
+	 * @param report
+	 */
+	private void checkSetReport(ScLoaReport report) {
+
+		boolean isSetLOAReport = false;
+		ScLoa scLoa = getManagedBean().getScLoa();
+		if (!scLoa.isBrandNew() && scLoa.getScQuote() == null) {
+
+			Long statusId = scLoa.getPmStatus().getStatusId();
+			boolean isAvailableStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
+					QTStatusConst.LOA_PENDING_REVISION).contains(statusId);
+
+			String fulfilmentCode = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
+			boolean isOneOff = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
+
+			isSetLOAReport = isAvailableStatus && isOneOff;
+		}
+
+		if (isSetLOAReport) {
+			report.setIsPK42BondCalc(false);
+		} else {
+			report.setIsPK42BondCalc(true);
+		}
+	}
+	// #25726 - note 449 - End
 	//new #25726 - end
 			
 	// Bug #33674@Syazani -- Start 14/09/2022
