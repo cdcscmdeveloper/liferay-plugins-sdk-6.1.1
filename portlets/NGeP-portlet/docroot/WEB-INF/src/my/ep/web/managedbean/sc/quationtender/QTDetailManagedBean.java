@@ -32,6 +32,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -217,6 +218,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The circular exp date. */
 	private Date circularExpDate;
+	
+	//#29661 start
+	/** The circular exp date. */
+	private List<CtPanelCategory> ctPanelCategoryCode;
+	
+	/** The boolean determine ct panel category */
+	private boolean ctPanelCategory;
+	//#29661 end
 	
 	// Drop down Listing for Approver
 	private List<PmUser> ministrySpecApprovers; 
@@ -1713,6 +1722,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.panelSuppliers = panelSuppliers;
 	}
 
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	private IPagingDataModel<ScLoi> searchLoiDataModel;
@@ -12416,4 +12428,33 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setAfterSF(boolean afterSF) {
 		this.afterSF = afterSF;
 	}// #35320 - End
+	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
+	
+	//#29661 start
+	public List<CtPanelCategory> getCtPanelCategoryCode() {
+		return ctPanelCategoryCode;
+	}
+
+	public void setCtPanelCategoryCode(List<CtPanelCategory> ctPanelCategoryCode) {
+		this.ctPanelCategoryCode = ctPanelCategoryCode;
+	}
+
+	public boolean isCtPanelCategory() {
+		return ctPanelCategory;
+	}
+
+	public void setCtPanelCategory(boolean ctPanelCategory) {
+		this.ctPanelCategory = ctPanelCategory;
+	}
+	//#29661 end
+	
 }

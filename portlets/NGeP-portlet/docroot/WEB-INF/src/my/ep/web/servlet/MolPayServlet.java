@@ -102,6 +102,7 @@ public class MolPayServlet extends HttpServlet {
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
 		String customerEmail = reqMap.get("customerEmail");
+		String customerContactNo = reqMap.get("customerContactNo");
 		
 		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
 		String cardMaskedNum = reqMap.get("cardMaskedNum");
@@ -206,8 +207,11 @@ public class MolPayServlet extends HttpServlet {
 					//32422 END
 					// #26307 start
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+					
 					//#38377
 					pymtReqDTO.setCustomerEmail(customerEmail);
+					pymtReqDTO.setContactNo(customerContactNo);
+					
 					log.info("Card type=============="+cardType);
 					if (cardType != null) {
 						if (cardType.equalsIgnoreCase("Credit")) {
@@ -389,7 +393,10 @@ public class MolPayServlet extends HttpServlet {
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
 					
 					log.info(">>>>#38377 enable payment update<<<");
-					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+					PaymentResDTO pymtResDTO = reqSO.saveSuccessPaymentEmailTemplateParams(pymtReqDTO);
+					pymtReqDTO.setNotifyMessageId(pymtResDTO.getNotifyMessageId());
+					reqSO.sendSuccessPaymentEmail(pymtReqDTO);
+					pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						
@@ -516,6 +523,7 @@ public class MolPayServlet extends HttpServlet {
 		String providerTransId = "";
 		String customerEmail = "";
 		String cardMaskedNum = "";
+		String customerContactNo = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
@@ -544,6 +552,8 @@ public class MolPayServlet extends HttpServlet {
 				log.info("######38377#####json currency: " + currency);
 				customerEmail = jsonObject.optString("customerEmail", null);
 				log.info("######38377#####json customerEmail: " + customerEmail);
+				customerContactNo = jsonObject.optString("customerContactNo", null);
+				log.info("######38377#####json customerContactNo: " + customerContactNo);
 				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
 					cardType = ParameterConst.CARD_TYPES_CREDIT;
 					
@@ -595,6 +605,7 @@ public class MolPayServlet extends HttpServlet {
 		reqMap.put("providerTransId", providerTransId);
 		reqMap.put("bankName", bankName);
 		reqMap.put("customerEmail", customerEmail);
+		reqMap.put("customerContactNo", customerContactNo);
 		
 		//do not include to PROD. Used for generate dummy transaction list excel
 		reqMap.put("cardMaskedNum", cardMaskedNum);
@@ -621,6 +632,7 @@ public class MolPayServlet extends HttpServlet {
 		log.info("######38377#####paymentRefNo:" + reqMap.get("paymentRefNo"));
 		log.info("######38377#####providerTransId:" + reqMap.get("providerTransId"));
 		log.info("######38377#####customerEmail:" + reqMap.get("customerEmail"));
+		log.info("######38377#####customerContactNo:" + reqMap.get("customerContactNo"));
 		
 		//do not include to PROD. Used for generate dummy transaction list excel
 		log.info("######38377#####cardMaskedNum:" + reqMap.get("cardMaskedNum"));
