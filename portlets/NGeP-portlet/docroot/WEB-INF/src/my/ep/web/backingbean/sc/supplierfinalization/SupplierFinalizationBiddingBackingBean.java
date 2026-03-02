@@ -480,7 +480,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			getManagedBean().setBidItemSuppliersDisqualified(null); // #28777&#29729
 		} else {
 			getManagedBean().setBiddingPackagePriceList(null);
-			getManagedBean().setBidItemSuppliersDisqualified(null); // #28777&#29729
+			getManagedBean().setBiddingPackagePriceListDisqualified(null); // #28777&#29729
 		}
 		
 		retrieveBiddingSummary();
