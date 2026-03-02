@@ -33,6 +33,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.fl.SLALogFulfilmentConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
@@ -483,14 +484,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 *
 	 */
 	public void defaultPtjAndMinistryValues() {
-		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())
-			//Enhancement 29550 - start
-			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
-			|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-			|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
-			//Enhancement 29550 - end 
-			) {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())
+				|| (hasSupplierRole() && !hasGovernmentUserRole())
+				// Enhancement 29550 - start
+				|| hasFactoringUserRole() 
+				|| hasRoleWithoutFlApprover(RoleCode.BPK_CCA.value())
+				|| hasRoleWithoutFlApprover(RoleCode.BPK_CC_APPROVER.value())
+				|| hasRoleWithoutFlApprover(RoleCode.MIN_CONTRACT_ADMIN.value())
+				|| hasRoleWithoutFlApprover(RoleCode.CT_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
+				// Enhancement 29550 - end
+		) {
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -770,17 +776,22 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	public void retrieveParameterCodeType() {
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			String parameterCodeType = getParameterCodeTypeString();
+			log.info("ROLE CODE: " + parameterCodeType);
 			if (StringUtils.isNotEmpty(parameterCodeType)
 					&& (parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ)
 							|| parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))) {
 				getManagedBean().setSupplier(false);
 			} else if (StringUtils.isNotEmpty(parameterCodeType)
-					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATUTORY_BODY)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_GOVT) 
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY))) {
 				getManagedBean().setSupplier(true);
-				retrieveSupplierCompName();
-				//Enhancement 29550 -start
-				retrieveSuppDataByUserId();
-				//Enhancement 29550 - end
+				//retrieveSupplierCompName();
+				// Enhancement 29550 -start
+				retrieveSupplierDetailByUserId();
+				// Enhancement 29550 - end
 			} 
 		}
 	}
@@ -2034,6 +2045,43 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return items;
 	}
 	
+	public void retrieveSupplierDetailByUserId() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+				IPMReportSO.class);
+		Object[] supplierDetailList = reportSO.retrieveSupplierDetailByUserId(getFacesScopes()
+				.getUserSessionBean().getUserId());
+		if(supplierDetailList != null){
+			getManagedBean().setSupplierCompName(supplierDetailList[0].toString());
+			getManagedBean().setSupplierId(supplierDetailList[1].toString());
+			getManagedBean().setBusinessRegNo(supplierDetailList[2].toString());
+			getManagedBean().setEpNo(supplierDetailList[3].toString());
+			getManagedBean().setMofNo(supplierDetailList[4] != null ? supplierDetailList[4].toString() : "");
+		}
+
+	}
+	
+	public void retrieveSupplierDetailBySupplierId(Long supplierId) {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+				IPMReportSO.class);
+		Object[] supplierDetailList = reportSO.retrieveSupplierDetailBySupplierId(supplierId);
+		
+		if(supplierDetailList != null){
+			getManagedBean().setSupplierCompName(supplierDetailList[0].toString());
+			getManagedBean().setSupplierId(supplierDetailList[1].toString());
+			getManagedBean().setBusinessRegNo(supplierDetailList[2].toString());
+			getManagedBean().setEpNo(supplierDetailList[3].toString());
+			getManagedBean().setMofNo(supplierDetailList[4] != null ? supplierDetailList[4].toString() : "");
+		}
+
+	}
+	
+	public void autopopSuppData(){
+		if(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId() != null){
+			log.info("**inside autopopSuppData**");
+			log.info(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId());
+			retrieveSupplierDetailBySupplierId(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId());	
+		}
+	}
 	//Enhancement 29550 - end
 	
 	// #31344 start
@@ -2331,5 +2379,11 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return financialYearOpt;
 	}
 	//#31344 end
+	
+	//Enhancement 29550 - start
+	private boolean hasRoleWithoutFlApprover(String userRole) {
+		return getFacesScopes().hasRoleUser(userRole) && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	//Enhancement 29550 - end
 
 }

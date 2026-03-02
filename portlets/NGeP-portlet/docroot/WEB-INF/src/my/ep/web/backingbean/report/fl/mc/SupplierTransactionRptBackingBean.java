@@ -173,14 +173,6 @@ private static final long serialVersionUID = 1L;
 		getContractDuration(this.getManagedBean().getFromDate(), this.getManagedBean().getToDate());
 	}
 	
-	public void autopopSuppData(){
-		if(StringUtils.isNotBlank(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName())){
-			log.info("**inside autopopSuppData**");
-			retrieveSuppDataByCompName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName(),
-					this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getRegNo());	
-		}
-	}
-	
 	/**
 	 * Get status select items by module and report category for dropdown.
 	 * 
