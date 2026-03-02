@@ -97,6 +97,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private boolean isDemoReq; // #28784
 	private boolean allSupplierDisagreeEPV;//#21692
 	
+	@SuppressWarnings("serial")
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
