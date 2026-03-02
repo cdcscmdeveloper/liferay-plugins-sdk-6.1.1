@@ -48,13 +48,19 @@
 				style="width:70%;text-align: center;">
 				
 				<h:outputText 
-					value="#{lbl['lbl.sc.eva.compliance.stage.completed']}" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and complianceTechnicalSupplier.compliance ne null and complianceTechnicalSupplier.compliance ne 2}"/>
+					value="#{lbl['lbl.sc.eva.compliance.stage.completed']}" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and complianceTechnicalSupplier.compliance ne null and complianceTechnicalSupplier.compliance ne 2
+								and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+								or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"/><ui:remove>21692</ui:remove>
 				
 				<h:outputText
-					value="#{lbl['lbl.sc.eva.compliance.stage.pending']}" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and (complianceTechnicalSupplier.compliance eq null or complianceTechnicalSupplier.compliance eq 2)}"/>
+					value="#{lbl['lbl.sc.eva.compliance.stage.pending']}" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and (complianceTechnicalSupplier.compliance eq null or complianceTechnicalSupplier.compliance eq 2)
+								and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+								or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"/><ui:remove>21692</ui:remove>
 					
 				<h:outputText 
-					value="#{lbl['lbl.sc.eva.compliance.stage.completed']}" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null}"/>
+					value="#{lbl['lbl.sc.eva.compliance.stage.completed']}" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null
+								or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+								or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}"/><ui:remove>21692</ui:remove>
 				
 			</p:column>
 
@@ -63,17 +69,21 @@
 
 				<ui:remove>6906, add disabled -start-</ui:remove>
 				<p:commandButton value="#{lbl['lbl.sc.btn.compliance']}"
-					rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and (complianceTechnicalSupplier.compliance eq null or complianceTechnicalSupplier.compliance eq 2)}"
+					rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and (complianceTechnicalSupplier.compliance eq null or complianceTechnicalSupplier.compliance eq 2)
+								and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+								or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}"
-					disabled="#{isRejected}" />
+					disabled="#{isRejected}" /><ui:remove>21692</ui:remove>
 
 				<p:commandButton value="
 					#{lbl['lbl.btn.view']}"
-					rendered="#{(complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and complianceTechnicalSupplier.compliance ne null and complianceTechnicalSupplier.compliance ne 2) or complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null}"
+					rendered="#{(complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and complianceTechnicalSupplier.compliance ne null and complianceTechnicalSupplier.compliance ne 2) or complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null
+								or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+								or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}"
-					disabled="#{isRejected}" />
+					disabled="#{isRejected}" /><ui:remove>21692</ui:remove>
 				<ui:remove>6906, add disabled -end-</ui:remove>
 					
 			</p:column>

@@ -36,6 +36,12 @@ public interface QTConstants {
 	// #9019 -start-
 	public static final String QT_SEARCHING_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true";
 	// #9019 -end-
+	//#21692 - Start
+	public static final String MAINT_EPV_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovalEpv.xhtml";
+	public static final String EXTEND_PROPOSAL_VALIDITY_SUPPLIER_ACCEPTANCE = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";
+	public static final String EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";
+	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";
+	//#21692 - End
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -278,6 +284,13 @@ public interface QTConstants {
 	
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
 
+	//#21692 - Start
+	//QT Bpm Composite Version Validity ID
+	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOA_REVIEW = "scLoaReview_WAR_NGePportlet";
+	//#21692 - End
+
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
 	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
@@ -395,4 +408,13 @@ public interface QTConstants {
 	// #36757 End Vinod
 
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
+	
+	//#29732 -Start
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A = "lbl.sc.category.has.changes.on.prerender.view.2.a";
+	public static final String QT_CAT_CODE_CHANGE_ALERT_SHOW = "catCodeChangeAlert.show()";
+	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
+	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
+	//#29732 -End
 }
