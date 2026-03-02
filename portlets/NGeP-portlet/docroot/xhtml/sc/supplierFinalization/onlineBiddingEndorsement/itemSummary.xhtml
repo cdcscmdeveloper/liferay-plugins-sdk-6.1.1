@@ -17,7 +17,10 @@
 			selectionMode="single">
 			<ac:paginator for="itemListTbl" />
 
-			<p:ajax event="rowSelect" listener="#{suppFinalBiddingBackingBean.selectBiddingItem}" update="@([id$=supplierItemTbl])" />
+			<p:ajax event="rowSelect"
+				listener="#{suppFinalBiddingBackingBean.selectBiddingItem}"
+				update="@([id$=supplierItemTbl],[id$=supplierItemTblDisqualified])" />
+			<ui:remove> #28777#29729 </ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
 				<h:outputText value="#{item.scRequestItem.itemName}" />
