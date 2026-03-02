@@ -114,17 +114,26 @@
 							value="#{codificationMaintenanceBackingBean.managedBean.segmentCode}" disabled="true"></p:inputText>
 					</p:column>
 					<p:column>
-						<p:inputText id="segTitle" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.segmentTitle}" disabled="#{codificationMaintenanceBackingBean.managedBean.editMode}">
+							<!--#35503 Fix as-is bug: #38727 - Start -->
+							<p:inputText id="segTitle" style="width:420px;"
+								value="#{codificationMaintenanceBackingBean.managedBean.segmentTitle}"
+								maxlength="200"
+								disabled="#{codificationMaintenanceBackingBean.managedBean.editMode}">
 							</p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - End -->
 							<p:spacer width="5px" />
 							<p:commandLink action="#{codificationMaintenanceBackingBean.editSegment()}" partialSubmit="true" update=":form:segTitle">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
 							</p:commandLink>
 					</p:column>
 					<p:column>
-						<p:inputText id="segTitleEng" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.segmentTitleEng}" disabled="#{codificationMaintenanceBackingBean.managedBean.editMode}"></p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - Start -->
+							<p:inputText id="segTitleEng" style="width:420px;"
+								value="#{codificationMaintenanceBackingBean.managedBean.segmentTitleEng}"
+								maxlength="200"
+								disabled="#{codificationMaintenanceBackingBean.managedBean.editMode}">
+							</p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - End -->
 							<p:spacer width="5px" />
 							<p:commandLink action="#{codificationMaintenanceBackingBean.editSegment()}" partialSubmit="true" update=":form:segTitleEng">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
@@ -141,16 +150,26 @@
 							value="#{codificationMaintenanceBackingBean.managedBean.familyCode}"  disabled="true"></p:inputText>
 					</p:column>
 					<p:column>
-						<p:inputText id="famTitle" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.familyTitle}" disabled="#{codificationMaintenanceBackingBean.managedBean.editModeFamily}"></p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - Start -->
+							<p:inputText id="famTitle" style="width:420px;"
+								value="#{codificationMaintenanceBackingBean.managedBean.familyTitle}"
+								maxlength="200"
+								disabled="#{codificationMaintenanceBackingBean.managedBean.editModeFamily}">
+							</p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - End -->
 							<p:spacer width="5px" />
 								<p:commandLink action="#{codificationMaintenanceBackingBean.editFamily()}" partialSubmit="true" update=":form:famTitle">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
 							</p:commandLink>
 					</p:column>
 					<p:column>
-						<p:inputText id="famTitleEng" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.familyTitleEng}" disabled="#{codificationMaintenanceBackingBean.managedBean.editModeFamily}"></p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - Start -->
+							<p:inputText id="famTitleEng" style="width:420px;"
+								value="#{codificationMaintenanceBackingBean.managedBean.familyTitleEng}"
+								maxlength="200"
+								disabled="#{codificationMaintenanceBackingBean.managedBean.editModeFamily}">
+							</p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - End -->
 							<p:spacer width="5px" />
 								<p:commandLink action="#{codificationMaintenanceBackingBean.editFamily()}" partialSubmit="true" update=":form:famTitleEng">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
@@ -168,16 +187,26 @@
 							value="#{codificationMaintenanceBackingBean.managedBean.classCode}"  disabled="true"></p:inputText>
 					</p:column>
 					<p:column>
-						<p:inputText id="classTitle" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.classTitle}" disabled="#{codificationMaintenanceBackingBean.managedBean.editModeClass}"></p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - Start -->
+							<p:inputText id="classTitle" style="width:420px;"
+								value="#{codificationMaintenanceBackingBean.managedBean.classTitle}"
+								maxlength="200"
+								disabled="#{codificationMaintenanceBackingBean.managedBean.editModeClass}">
+							</p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - End -->
 							<p:spacer width="8px" />
 							<p:commandLink action="#{codificationMaintenanceBackingBean.editClass()}" partialSubmit="true" update=":form:classTitle">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
 							</p:commandLink>
 					</p:column>
 					<p:column>
-					<p:inputText id="classTitleEng" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.classTitleEng}" disabled="#{codificationMaintenanceBackingBean.managedBean.editModeClass}"></p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - Start -->
+							<p:inputText id="classTitleEng" style="width:420px;"
+								value="#{codificationMaintenanceBackingBean.managedBean.classTitleEng}"
+								maxlength="200"
+								disabled="#{codificationMaintenanceBackingBean.managedBean.editModeClass}">
+							</p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - End -->
 							<p:spacer width="8px" />
 							<p:commandLink action="#{codificationMaintenanceBackingBean.editClass()}" partialSubmit="true" update=":form:classTitleEng">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
@@ -195,13 +224,21 @@
 							value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" disabled="true"></p:inputText>
 					</p:column>
 					<p:column>
-						<p:inputText style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" ></p:inputText>
-					</p:column>
+							<!--#35503 Fix as-is bug: #38727 - Start -->
+							<p:inputText style="width:420px;"
+								value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+								maxlength="200">
+							</p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - End -->
+						</p:column>
 					<p:column>
-						<p:inputText style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitleEng}" ></p:inputText>
-					</p:column>
+							<!--#35503 Fix as-is bug: #38727 - Start -->
+							<p:inputText style="width:420px;"
+								value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitleEng}"
+								maxlength="200">
+							</p:inputText>
+							<!--#35503 Fix as-is bug: #38727 - End -->
+						</p:column>
 				</p:row>
 
 			

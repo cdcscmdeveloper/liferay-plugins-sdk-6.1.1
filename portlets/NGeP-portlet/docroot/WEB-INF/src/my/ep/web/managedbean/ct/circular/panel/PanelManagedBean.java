@@ -25,6 +25,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory; //#30014
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -80,6 +81,7 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode rootZoanlTree;
+	private boolean hasExistingLocations; //#39762
 
 	private CtCircular circular;
 	private CtCircularVer circularVer;
@@ -117,6 +119,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelSupplier ctPanelSupplier;
 	private SmMofAccount smMofAccount;
 	private List<CtCircularPidReason> ctCircularPidReasons;
+	private List<CtCircularPidReason> selectedPidReason; //#39594
 	
 	private int attachFileIndex;
 	
@@ -137,6 +140,10 @@ public class PanelManagedBean extends BaseManagedBean {
 	
 	//#25790
 	private boolean sqEditableMode = false;
+
+	//#30014 - Start
+	private List<CtPanelCategory> selectedCategoryList;
+	//#30014 - End
 	
 	/**
 	 * @return the circular
@@ -876,6 +883,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	 * @return the ctCircularPidReasons
 	 */
 	public List<CtCircularPidReason> getCtCircularPidReasons() {
+		if (ctCircularPidReasons == null) {
+			ctCircularPidReasons = new ArrayList<>(); //#39594
+		}
 		return ctCircularPidReasons;
 	}
 
@@ -1042,4 +1052,52 @@ public class PanelManagedBean extends BaseManagedBean {
 	}
 	// #25790 - end
 
+	//#30014 - Start
+	/**
+	 * Gets the list of selected category codes from the data table.
+	 * 
+	 * @return the list of selected {@link CtPanelCategory} items
+	 */
+	public List<CtPanelCategory> getSelectedCategoryList() {
+		return selectedCategoryList;
+	}
+	
+	/**
+	 * Sets the list of selected category code from the data table.
+	 * 
+	 * @param selectedCategoryList the selected category list to set
+	 */
+	public void setSelectedCategoryList(List<CtPanelCategory> selectedCategoryList) {
+		this.selectedCategoryList = selectedCategoryList;
+	}
+	//#30014 - End
+	//#39594 - Start
+	public List<CtCircularPidReason> getSelectedPidReason() {
+		return selectedPidReason;
+	}
+
+	public void setSelectedPidReason(List<CtCircularPidReason> selectedPidReason) {
+		this.selectedPidReason = selectedPidReason;
+	}
+	//#39594 - End
+	
+	//#39762 - Start
+	/**
+	 * Returns {@code true} if the zone has existing location data, {@code false} otherwise.
+	 *
+	 * @return {@code true} if locations exist, {@code false} otherwise
+	 */
+	public boolean isHasExistingLocations() {
+		return hasExistingLocations;
+	}
+	
+	/**
+	 * Sets whether the zone has existing location data.
+	 *
+	 * @param hasExistingLocations {@code true} if locations exist, {@code false} otherwise
+	 */
+	public void setHasExistingLocations(boolean hasExistingLocations) {
+		this.hasExistingLocations = hasExistingLocations;
+	}
+	//#39762 - End
 }

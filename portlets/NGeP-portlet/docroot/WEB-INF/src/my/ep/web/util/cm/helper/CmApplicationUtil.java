@@ -91,7 +91,7 @@ public class CmApplicationUtil {
 		List<SmDisciplinaryAction> disciplinaryActList = null;
 		
 		if(smSupplier.getSupplierId() != null) {
-			disciplinaryActList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(smSupplier);
+			disciplinaryActList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForCMCD(smSupplier);
 		}
 		
 		return disciplinaryActList;

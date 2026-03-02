@@ -62,14 +62,16 @@
 		</p:menuitem>
 		
 		<p:menuitem>
+			<!-- 36504 - START -->
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
 				suppEdit="false"
-				poEdit="false"
-				appEdit="false"
+				poEdit="#{backingBean.managedBean.editVO.poEditCategory}"
+				appEdit="#{backingBean.managedBean.editVO.appEditCategory}"
 				hasOverlap="#{backingBean.managedBean.editVO.hasOverlapped}"
 				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY}" 
 				tabNo="5" label="#{lbl['lbl.sm.catCodeStepLbl']}" />
+			<!-- 36504 - END -->
 		</p:menuitem>
 
 		<c:choose>

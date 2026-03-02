@@ -81,10 +81,9 @@
 					</ui:repeat>
 				</p:column>
 				<p:column
-					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
-					<h:outputText value="#{revisit.revisitRemark}" />
+					style="overflow-wrap: break-word; white-space: pre-wrap;">
 					<h:outputText
-						value="#{cc.attrs.backingBean.getExtendedRemarks(revisit)}"
+						value="#{cc.attrs.backingBean.getRemarks(revisit)}"
 						escape="false" />
 				</p:column>
 				<p:column
@@ -103,7 +102,7 @@
 				<div align="right">
 					<p:commandButton id="downloadRevisitHistoryId"
 						value="#{lbl['lbl.sm.rv.history.btn.download']}"
-						rendered="#{!cc.attrs.backingBean.managedBean.supplierUser}">
+						rendered="#{!cc.attrs.backingBean.managedBean.supplierUser}" ajax="false">
 						<p:fileDownload
 							value="#{cc.attrs.backingBean.downloadRevisitHistory()}" />
 					</p:commandButton>

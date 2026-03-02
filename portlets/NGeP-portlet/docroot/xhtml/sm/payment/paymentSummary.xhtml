@@ -105,11 +105,6 @@
 						<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="btnSubmit1" 
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{paymentBackingBean.submitPayment}" />
-						<!-- START 34136 -->	
-					    <p:commandButton value="#{lbl['lbl.sm.button.proceed.to.cdc.pymnt']}" id="btnSubmit2" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							action="#{paymentBackingBean.submitNewPaymentGateway}" />
-						<!-- END 34136 -->
 					</p:outputPanel>
 				</div>
 				

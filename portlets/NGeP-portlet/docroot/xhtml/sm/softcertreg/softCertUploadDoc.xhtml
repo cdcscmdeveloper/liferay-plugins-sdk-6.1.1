@@ -163,7 +163,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.userprofile.name']}" />
 					</f:facet>
-					<h:outputText value="#{offline.personnel.name}" />
+					<h:outputText value="#{offline.personnel.pmUser.salutationCode.salutationName} #{offline.personnel.name}" /> <!-- #29659 -->
 				</p:column>
 				
 				<!-- #10729 start -->
