@@ -1140,7 +1140,12 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 					|| currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK_REJECT.longValue()){
 				SmComplaintReview complReview = getFirstReview();
 				getManagedBean().setSmComplReview(complReview);
-				populateAttachedDocsByReviewIdAndStatus(getManagedBean().getSmComplReview().getComplaintReviewId(), currentStatus);
+				//#38637 - START
+				if(getManagedBean().getSmComplReview() != null)
+				{
+					populateAttachedDocsByReviewIdAndStatus(getManagedBean().getSmComplReview().getComplaintReviewId(), currentStatus);
+				}
+				//#38637 - END
 				//37855 - END
 			}else{
 				getManagedBean().setSmComplReview(new SmComplaintReview());
