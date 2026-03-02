@@ -17059,7 +17059,11 @@ public class SpecificationBackingBean extends
 				//To apply the same scoring settings/calculation for both packages and items.
 				recommendationItem.setOverallTechnical(recommendationPackage.getOverallTechnical());
 				recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
-				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());			
+				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
+				//#38151 && 40044 -start-
+				recommendationItem.setOverallOtherTechnical(BigDecimal.ZERO);
+				recommendationItem.setOverallOtherFin(BigDecimal.ZERO);
+				//#38151 && 40044 -end-
 			}
 			//#38151 end
 			int itemPassingScore = 0;
@@ -24295,8 +24299,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #38151 end
 
-	// #38151 Start
-	private void checkWeightage35384WIP() {
+	// #38151 && 40044 Start
+	public void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getQt();
