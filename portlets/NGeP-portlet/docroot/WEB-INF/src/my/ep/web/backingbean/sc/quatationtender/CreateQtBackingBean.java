@@ -1999,6 +1999,7 @@ public class CreateQtBackingBean extends
 
 						if (zoneTree.getChildren().size() == 0) {
 							rootTrees.remove(row--);
+							tplSpecZoneDtl.setDeleted(null != tplSpecZoneDtl.getSpecZoneId());	//37851
 						}
 					}
 					tplSpecZoneDtl.setDeletedSpecZoneLocs(deletedSpecZoneLocsList);	//37851
@@ -4351,6 +4352,7 @@ public class CreateQtBackingBean extends
 		SpecZoneLocReqDTO specZoneLocReqDTO = new SpecZoneLocReqDTO();
 		specZoneLocReqDTO.setTplSpecZone(zonCriteria);
 		specZoneLocSO.deleteSpecZoneLocs(specZoneLocReqDTO);
+		specZoneLocSO.deleteSpecZoneDtls(specZoneLocReqDTO);
 	}
 	
 	private List<TplSpecZoneLoc> initTplSpecZoneLocList(TplSpecZoneDtl tplSpecZoneDtl) {
