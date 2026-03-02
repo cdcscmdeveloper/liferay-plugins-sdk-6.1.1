@@ -84,7 +84,9 @@
 		</p:dialog>
 		
 		<p:dialog id="firstUserTncDialog" header="#{lbl['lbl.sm.suppadmin.appointment.header']}"
-			widgetVar="firstUserTncDialog" modal="true" width="600px" height="500px">
+			widgetVar="firstUserTncDialog" modal="true" width="600px" height="520px"> <!-- #34400 -->
+			<!-- #34400 -->
+			<h:outputText value="#{lbl['lbl.sm.confirm.supp.register']}"/>
 			<p:panel id="firstUserTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
 				
 				<p:scrollPanel style="height:350px;border:0;" mode="native">
