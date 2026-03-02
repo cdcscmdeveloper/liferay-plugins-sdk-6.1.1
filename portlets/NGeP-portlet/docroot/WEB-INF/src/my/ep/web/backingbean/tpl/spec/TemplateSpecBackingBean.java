@@ -2007,9 +2007,6 @@ public class TemplateSpecBackingBean extends
 		debugLogger("scoringOkAction");
 
 		ITemplateSpecSO templateSpecSO = null;
-		// #10098 Start Vinod
-		SpecificationBackingBean specBean = new SpecificationBackingBean();
-		// #10098 End Vinod
 		try {
 			TplSpecQuestion selectedSpecQuestion = templateSpecBean
 					.getSelectedSpecQuestion();
@@ -2029,13 +2026,6 @@ public class TemplateSpecBackingBean extends
 			if (maxScore != null) {
 				selectedSpecQuestion.setMaxScore(maxScore);
 			}
-			// #10098 Start Vinod
-			if (templateSpecBean.isTechTemplateUpdateFromQT() || templateSpecBean.isFinTemplateUpdateFromQT()) {
-				String docType = templateSpecBean.isTechTemplateUpdateFromQT() ? QTConstants.TECHNICAL_DOC_TYPE
-						: QTConstants.FINANCIAL_DOC_TYPE;
-				specBean.saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, docType);
-			}
-			// #10098 End Vinod
 
 		} finally {
 			templateSpecSO = null;
@@ -2047,6 +2037,14 @@ public class TemplateSpecBackingBean extends
 		RequestContext.getCurrentInstance().execute(
 				templateSpecBean.getSpecComponentId()
 						+ "scoringSetPopup.hide()");
+		// #10098 Start Vinod
+		if (templateSpecBean.isTechTemplateUpdateFromQT() || templateSpecBean.isFinTemplateUpdateFromQT()) {
+			SpecificationBackingBean specBean = new SpecificationBackingBean();
+			String docType = templateSpecBean.isTechTemplateUpdateFromQT() ? QTConstants.TECHNICAL_DOC_TYPE
+					: QTConstants.FINANCIAL_DOC_TYPE;
+			specBean.saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, docType);
+		}
+		// #10098 End Vinod
 	}
 
 	/**
@@ -3401,6 +3399,14 @@ public class TemplateSpecBackingBean extends
 		RequestContext.getCurrentInstance().execute(
 				templateSpecBean.getSpecComponentId()
 						+ "zoneEstimationPopup.hide()");
+		// #10098 Start Vinod
+		if (templateSpecBean.isFinTemplateUpdateFromQT()) {
+			SpecificationBackingBean specBean = new SpecificationBackingBean();
+			
+			specBean.saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, QTConstants.FINANCIAL_DOC_TYPE);
+		}
+		// #10098 End Vinod
+
 	}
 	
 	/**

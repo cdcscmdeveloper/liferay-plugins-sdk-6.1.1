@@ -5778,7 +5778,8 @@ public class SpecificationBackingBean extends
 				List<Long> specPrepareStatus = Arrays.asList(new Long[] {
 						QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
 						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION });
-				if (specPrepareStatus.contains(statusId)) {
+				if (specPrepareStatus.contains(statusId)
+						|| (this.getManagedBean().isMaintanceFlow() && !this.getManagedBean().isReadOnly())) {
 					templateSpecBean.setTechTemplateUpdateFromQT(true);
 				}
 				// #10098 End Vinod
@@ -6302,7 +6303,8 @@ public class SpecificationBackingBean extends
 				List<Long> specPrepareStatus = Arrays.asList(new Long[] {
 						QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
 						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION });
-				if (specPrepareStatus.contains(statusId)) {
+				if (specPrepareStatus.contains(statusId)
+						|| (this.getManagedBean().isMaintanceFlow() && !this.getManagedBean().isReadOnly())) {
 					templateSpecBean.setFinTemplateUpdateFromQT(true);
 				}
 				// #10098 End Vinod
@@ -15392,7 +15394,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			List<Long> specPrepareStatus = Arrays.asList(new Long[] {
 					QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
 					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION });
-			if (specPrepareStatus.contains(statusId)) {
+			if (specPrepareStatus.contains(statusId)
+					|| (this.getManagedBean().isMaintanceFlow() && !this.getManagedBean().isReadOnly())) {
 				templateSpecBean.setTechTemplateUpdateFromQT(true);
 			}
 			// #10098 Start Vinod
@@ -25133,11 +25136,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	public void autoSaveTemplateChecklist() {
 		TemplateSpecBean templateSpecBean = this.getManagedBean().getTemplateSpecBean();
-		if (templateSpecBean.isTechTemplateUpdateFromQT() || templateSpecBean.isFinTemplateUpdateFromQT()) {
-			String docType = templateSpecBean.isTechTemplateUpdateFromQT() ? QTConstants.TECHNICAL_DOC_TYPE
-					: QTConstants.FINANCIAL_DOC_TYPE;
-			saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, docType);
-		}
+		String docType = templateSpecBean.isTechTemplateUpdateFromQT() ? QTConstants.TECHNICAL_DOC_TYPE
+				: QTConstants.FINANCIAL_DOC_TYPE;
+		saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, docType);
 	}
 	//#10098 End Vinod
 }

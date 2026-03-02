@@ -530,7 +530,9 @@
 				    <f:param name="skipvalidation" value="0" />
 			    </p:commandButton>    
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-					onclick="confirmAutosave.hide();" type="button" partialSubmit="true"  process="@this"/>
+					onclick="confirmAutosave.hide();" type="button" partialSubmit="true"  process="@this">
+					<f:setPropertyActionListener target="#{qTDetailBB.managedBean.indexForAutoSave}" value="" />
+				</p:commandButton>
 			</div>
 		</p:dialog>
 		<ui:remove>#10098 End Vinod</ui:remove>

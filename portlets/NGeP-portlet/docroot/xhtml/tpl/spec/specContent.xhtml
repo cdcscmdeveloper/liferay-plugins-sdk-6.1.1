@@ -118,6 +118,7 @@
 			<ui:param name="isPackageItemSpec" value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
 			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial eq null ? 'false': templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
 			<ui:param name="isWeightageReq" value="#{templateSpecBean.specMaster.weightageReq}" />	<!-- Bug #35307@Syazani 12/12/2023 -->
+			<ui:param name="isTemplateUpdateFromQT" value="#{templateSpecBean.techTemplateUpdateFromQT || templateSpecBean.finTemplateUpdateFromQT}" />
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
@@ -211,14 +212,23 @@
 						</h:panelGroup>
 						
 						<div class="ppRightBtn">
-							<ui:remove>#10098 Start Vinod - Changed update to @all to reset poll for auto save.</ui:remove>
+							<ui:remove>#10098 Start Vinod - Added new button and rendered to update poll for autosave.</ui:remove>
 							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+								rendered="#{isTemplateUpdateFromQT}"
+								action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
+								partialSubmit="true"
+								process="@all"
+								onclick="blockWidgetAutoSave.show();"
+								oncomplete="blockWidgetAutoSave.hide();"
+								update="@all">
+								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
+							</p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+								rendered="#{!isTemplateUpdateFromQT}"
 								action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
 								partialSubmit="true"
 								process="@this, scoreSettPnl"
-								onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								update="@all">
+								update="scoreSettPnl, @(.scoringBtn)">
 								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 							</p:commandButton>
 							<ui:remove>#10098 End Vinod</ui:remove>
@@ -272,13 +282,26 @@
 						</div>
 						
 						<div class="ppRightBtn">
+							<ui:remove>#10098 Start Vinod - Added new button and rendered to update poll for autosave.</ui:remove>
 							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 								action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
+								rendered="#{isTemplateUpdateFromQT}"
+								partialSubmit="true"
+								process="@all"
+								onclick="blockWidgetAutoSave.show();"
+								oncomplete="blockWidgetAutoSave.hide();"
+								update="@all"> 
+								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
+							</p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+								action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
+								rendered="#{!isTemplateUpdateFromQT}"
 								partialSubmit="true"
 								process="@this, zoneEstimationPnl"
 								update="zoneEstimationPnl, @(.calcEstAmount)"> <!--#25039#67 add indicativeBtn -->
 								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 							</p:commandButton>
+							<ui:remove>#10098 End Vinod</ui:remove>
 							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 								partialSubmit="true" process="@this" update="@this"
 								action="#{templateSpecBackingBean.zoneEstCostCancelAction(templateSpecBean)}"

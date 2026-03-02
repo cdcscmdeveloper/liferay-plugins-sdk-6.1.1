@@ -16,6 +16,20 @@
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 			</p:blockUI>
+			<ui:remove>#10098 Start Vinod</ui:remove>
+			<p:blockUI block=":form" widgetVar="blockWidgetAutoSave">
+				<div
+					style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+					<h:panelGrid columns="1">
+						<h:graphicImage value="/css/images/ajax-loader-autosave.gif" />
+					</h:panelGrid>
+					<h:panelGrid columns="1">
+						<h:outputText escape="false" style="font-weight: bold;"
+							value="#{lbl['lbl.tpl.autosave.loading.msg']}" />
+					</h:panelGrid>
+				</div>
+			</p:blockUI>
+			<ui:remove>#10098 End Vinod</ui:remove>
 			<p:messages id="financialSpecEvaluationmsgId" autoUpdate="true"
 				closable="true" showDetail="true" showSummary="false"
 				severity="error,info"></p:messages>
@@ -25,6 +39,16 @@
 			<ui:include src="financialspeccompliancelist.xhtml"></ui:include>
 
 
+			<ui:remove>#10098 Start Vinod</ui:remove>
+			<p:poll interval="900" id="autoSaveTemplateId"
+				rendered="#{evaluationBackingBean.managedBean.templateSpecBean.finTemplateUpdateFromQT 
+				and !(evaluationBackingBean.managedBean.readOnly 
+				or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired)}"
+				listener="#{evaluationBackingBean.autoSaveTemplateChecklist}"
+				onstart="blockWidgetAutoSave.show();"
+				oncomplete="blockWidgetAutoSave.hide();"
+				update="@all" />
+			<ui:remove>#10098 End Vinod</ui:remove>
 
 			<ac:templateSpec
 				templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}"

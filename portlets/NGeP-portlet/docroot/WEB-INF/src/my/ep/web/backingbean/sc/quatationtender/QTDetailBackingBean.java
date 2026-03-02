@@ -7682,13 +7682,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
+	// #10098 Start Vinod changed activeIndex to local varible to avoid
+	// SonarLint issue
+	// because of the activeIndex need to be updated for autosave.
 	/**
 	 * Qt details tab change.
 	 * 
-	 * @param activeIndex
+	 * @param activeIndexMain
 	 *            the active index
 	 */
-	public void qtDetailsTabChange(Integer activeIndex) {
+	public void qtDetailsTabChange(Integer activeIndexMain) {
+		Integer activeIndex = activeIndexMain;
+		// #10098 End Vinod
 		int priviousIndex = this.getManagedBean().getActiveIndex();
 		getManagedBean().getQt().setMitiApproval(false);
 		getManagedBean().getQt().setOtherApproval(false);
@@ -7734,10 +7739,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
 				// #10098 Start Vinod
-				if(null == this.getManagedBean().getQt().getQtNo()){
-					RequestContext.getCurrentInstance().execute("confirmAutosave.show()"); //new dialog box
-					activeIndex = 0; //for remain at QT Details screen while autosave
-				}else{
+				if (null == this.getManagedBean().getQt().getQtNo()) {
+					RequestContext.getCurrentInstance().execute(QTConstants.QT_AUTOSAVE_POPUP); // new dialog
+					activeIndex = priviousIndex; // To Stay in QT Details screen.
+				} else {
 					saveSidemenuQtDetailsAction(reqDTO);
 				}
 				// #10098 End Vinod
@@ -15201,13 +15206,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 		this.getManagedBean().setScQtRemarksEmpty(false);
 		initializeQtRemark();
 
-		if (null == this.getManagedBean().getQt().getItemGroup()) {
-			this.getManagedBean().getQt().setCircularVer(null);
-		} else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()
-				|| this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
-			this.getManagedBean().getQt().setItemGroup(null);
-			this.getManagedBean().getQt().setCircularVer(null);
-		}
+		resetItemGroup();
 
 		IQTDetailSO detailSO;
 		QuationTenderResDTO quationTenderResDTO = null;
@@ -15239,6 +15238,18 @@ public void retrieveDemoQtDetails(Long qtId) {
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatus);
 		this.getManagedBean().setPayLoad(payLoad);
+	}
+
+	// #10098 End Vinod
+	// #10098 Start Vinod
+	private void resetItemGroup() {
+		if (null == this.getManagedBean().getQt().getItemGroup()) {
+			this.getManagedBean().getQt().setCircularVer(null);
+		} else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()
+				|| this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
+			this.getManagedBean().getQt().setItemGroup(null);
+			this.getManagedBean().getQt().setCircularVer(null);
+		}
 	}
 
 	// #10098 End Vinod

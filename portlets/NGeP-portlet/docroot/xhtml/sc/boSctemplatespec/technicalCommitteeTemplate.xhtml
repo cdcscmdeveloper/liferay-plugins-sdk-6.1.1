@@ -52,10 +52,13 @@
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
-						update="@all" /> <p:commandButton value="#{lbl['lbl.btn.save']}"
-						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
+						update="@all" /> 
+					<ui:remove>#10098 Start Vinod updated blockWidget</ui:remove>
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						style="float:right;" update="@all" onstart="blockWidgetAutoSave.show();"
+						oncomplete="blockWidgetAutoSave.hide();"
 						action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}" />
+					<ui:remove>#10098 End Vinod</ui:remove>
 
 				</td>
 			</tr>
@@ -63,11 +66,11 @@
 		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true"
 			style="width:100%;">
 			<ui:remove>#10098 Start Vinod</ui:remove>
-			<p:poll interval="60" id="autoSaveTemplateId"
+			<p:poll interval="900" id="autoSaveTemplateId"
 				rendered="#{specificationBackingBean.managedBean.templateSpecBean.techTemplateUpdateFromQT}"
 				listener="#{specificationBackingBean.autoSaveTemplateChecklist}"
 				onstart="blockWidgetAutoSave.show();"
-				oncomplete="blockWidgetAutoSave.hide(); blockWidget.hide();"
+				oncomplete="blockWidgetAutoSave.hide();"
 				update="@all" />
 			<ui:remove>#10098 End Vinod</ui:remove>
 		<ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>

@@ -603,8 +603,6 @@ public interface QTConstants {
 	public static final String RPT_ALL_LBL = "lbl.rpt.all";
 	// #29580-end
 	//#10098 Start 
-	public static final int AUTOSAVE_SETTING_LOADING_HIDE = 30;
-	public static final int AUTOSAVE_SETTING_BUFFERTIME_POSTSAVE = 30;
-	public static final int AUTOSAVE_SETTING_BUFFERTIME_PRESAVE = 200;
+	public static final String QT_AUTOSAVE_POPUP = "confirmAutosave.show()";
 	//#10098 end
 }
