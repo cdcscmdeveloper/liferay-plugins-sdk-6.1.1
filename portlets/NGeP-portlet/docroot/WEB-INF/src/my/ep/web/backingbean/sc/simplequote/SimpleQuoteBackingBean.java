@@ -518,13 +518,13 @@ public class SimpleQuoteBackingBean extends
 			if(existPanelItem != null) {
 				if(panelItem.getItemCategoryId()
 									.getParameterCode()
-									.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
+									.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {//#26059 - Fix simpleQuotePanel
 					addable = false;
 				} else {
 					CtPanelItemGroup existGroup = existPanelItem.getCtPanelItemGroup();
 					CtPanelItemGroup newGroup = panelItem.getCtPanelItemGroup();
-					if(existGroup != null && newGroup != null && 
-							existGroup.getPanelItemGroupId() == newGroup.getPanelItemGroupId()) {
+					if (existGroup != null && newGroup != null
+							&& (existGroup.getPanelItemGroupId().equals(newGroup.getPanelItemGroupId()))) {//#26059 - Fix simpleQuotePanel
 						//check both item zonal
 						PmParameter existCoverage = existPanelItem.getPanelCoverageId();
 						PmParameter newCoverage = panelItem.getPanelCoverageId();
@@ -590,8 +590,7 @@ public class SimpleQuoteBackingBean extends
 						isPanelItemAdded = false;
 					}
 					else if(panelItem != null && panelItem.getItemCategoryId()
-							.getParameterCode()
-							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
+							.getParameterCode().equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_GENERAL)) { //#26059 - Fix simpleQuotePanel
 						// add only one general panel item(can't add multiple)
 						//ERR-760160 = Simple quote must have only one Panel Item.
 						// #29800 - start
@@ -604,7 +603,7 @@ public class SimpleQuoteBackingBean extends
 					} 
 					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
-							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
+							.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) { //#26059 - Fix simpleQuotePanel
 						// add multiple panel specific items
 						isPanelItemAdded = Boolean.FALSE;
 						isZoneEventRequired = false;
@@ -657,7 +656,7 @@ public class SimpleQuoteBackingBean extends
 					
 					if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
-							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
+							.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_GENERAL)) { //#26059 - Fix simpleQuotePanel
 						// panel item general
 						isGeneralOrSpecific = Boolean.FALSE;
 						
@@ -666,7 +665,7 @@ public class SimpleQuoteBackingBean extends
 						
 					} else if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
-							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
+							.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) { //#26059 - Fix simpleQuotePanel
 						// panel item specific
 						isGeneralOrSpecific = Boolean.TRUE;
 						//#3761 - start
@@ -692,7 +691,7 @@ public class SimpleQuoteBackingBean extends
 							} 
 							
 							if (selectedPanelItem.getItemCategoryId().getParameterCode()
-									.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
+									.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {//#26059 - Fix simpleQuotePanel
 								itemName = selectedPanelItem.getItemName();
 							}
 						}
@@ -720,7 +719,7 @@ public class SimpleQuoteBackingBean extends
 							
 						} else if (selectedPanelItem.getItemCategoryId()
 								.getParameterCode()
-								.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
+								.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {//#26059 - Fix simpleQuotePanel
 							// panel item specific
 							getManagedBean().setPanelItemFlag(Boolean.FALSE);
 							getManagedBean().setNewableFlag(Boolean.FALSE);
@@ -730,7 +729,7 @@ public class SimpleQuoteBackingBean extends
 						// for panel zone
 						if (selectedPanelItem.getPanelCoverageId()
 								.getParameterCode()
-								.equals(ParameterConst.SQ_PANEL_ITEM_ZONE)) {
+								.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_ZONE)) {
 							preparePanelZones(selectedPanelItem, scQuote);
 							zoneEvent();
 
