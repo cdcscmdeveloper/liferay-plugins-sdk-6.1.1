@@ -23917,9 +23917,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, "");
 		}
 
-		String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
+		if (this.getManagedBean().isSingleItem()) {
+			paramMap.put(QtReportConst.PARAM_MAP_P_SCORE_TYPE, null);
+		} else {
+			String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
 
-		paramMap.put(QtReportConst.PARAM_MAP_P_SCORE_TYPE, scoreType);
+			paramMap.put(QtReportConst.PARAM_MAP_P_SCORE_TYPE, scoreType);
+		}
 		
 		String docId = String.valueOf(finScoreSetting.getSettingType());
 
