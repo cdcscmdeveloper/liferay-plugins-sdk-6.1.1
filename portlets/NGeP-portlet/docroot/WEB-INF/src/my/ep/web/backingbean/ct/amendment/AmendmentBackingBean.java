@@ -230,7 +230,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean spToCheck = false;
 	//End Fix - #33287
 	//#35238 start
-	private AmendmentCommitteeHelper amendmentCommitteeHelper;
+	private transient AmendmentCommitteeHelper amendmentCommitteeHelper;
 	private AmendmentManagedBean lastManagedBean;
 	private FacesScopes lastFacesScopes;
 	//#35238 end
@@ -5178,44 +5178,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 //  End Fix - #33674 
-
+	
+	//#29549 start
 	/**
 	 * The method used for validating the duplicate chairperson.
 	 * A warning message will display on screen when more than one chairperson
 	 * is added as committee.
 	 * 
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
+	 * @param curCommitteeMember the object of current committee member 
+	 * @param parameterId current parameter id for representative type
 	 */
-	public void validateDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { //#29549
+	public void validateDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) { 
 		if (parameterId == null || parameterId.intValue() == 0) {
 			return;
 		}
-		int counter = 0;
 		String parametercode = ParameterHelper.getInstance().getPmParameterById(parameterId).getParameterCode();
 		if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-			for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {  
-				if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null
-						&& committeMember.getMemberRoleId().longValue() == parameterId.longValue()) {
-					// #26520 - to reset existing value saved before
-					if(committeMember.getRepresentativeType() != null && committeMember.getRepresentativeType().getParameterId() != null) {
-						committeMember.setRepresentativeType(null);
-					}
-					// #26520 - end
-					counter++;
-					if (counter == 2) {
-						throw new EpException(MessageConst.ERROR_750008);
-					}
-				}else{
-					if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
-						if(committeMember.getRepresentativeType() != null && committeMember.equals(curCommitteeMember)) //#29549
-							committeMember.getRepresentativeType().setParameterId(null);
-				}
-			}
+			getAmendmentCommitteeHelper().validateDuplicateChairperson(curCommitteeMember, parametercode, parameterId);
 		}
 		
-		sortCTCommitteeMemberRoleMeeting(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()); //#29549
+		sortCTCommitteeMemberRole(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
 	}
+	//#29549 end
 
 	/**
 	 * The method used for validating the meeting attendance.
@@ -7654,62 +7638,49 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setHasChanges(Boolean.FALSE); //#29403
 		}   
 		
-		
-		/**
-		 * The method used for validating the duplicate chairperson.
-		 * A warning message will display on screen when more than one chairperson
-		 * is added as committee. Also updating current committee member role id.
-		 * 
-		 * @throws Exception  if an exception occurred
-		 * @see    Exception
-		 */
-		//#29403 start
-//		public void validateUpdatedCommitteeListDuplicateChairperson(Long parameterId) throws Exception {
-		public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { 
-		
-			int counter = 0;
-			String curParameterCode = "";
-			
-			if (parameterId != null) {
-				if(curCommitteeMember.getMemberRoleId()!=null && !curCommitteeMember.getMemberRoleId().equals(parameterId)){
-					//curCommitteeMember.getRepresentativeType().setParameterId(null); //#29549
-					curCommitteeMember.setRepresentativeType(null);
+	//#29549 start
+	/**
+	 * The method used during update committee to validate the duplicate
+	 * chairperson. A warning message will display on screen when more than one
+	 * chairperson is added as committee. Also updating current committee member
+	 * role id.
+	 * 
+	 * The updated committee member list will be sorted after validation.
+	 * 
+	 * @param curCommitteeMember the committee member being updated
+	 * @param parameterId the selected role parameter ID
+	 */
+	public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) {
+
+		getAmendmentCommitteeHelper().checkCurrentUpdatedCommittee(curCommitteeMember, parameterId);
+
+		int counter = 0;
+		Long memberRoleId = curCommitteeMember.getMemberRoleId() != null ? curCommitteeMember.getMemberRoleId()
+				: curCommitteeMember.getMemberRole().getParameterId();
+		String curParameterCode = ParameterHelper.getInstance().getPmParameterById(memberRoleId).getParameterCode();
+
+		if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+			for (CtCommitteeMember allCommitteMember : getFilteredCommitteeMembers()) {
+				String allParameterCode = "";
+				if (allCommitteMember.getMemberRoleId() != null) {
+					allParameterCode = ParameterHelper.getInstance()
+							.getPmParameterById(allCommitteMember.getMemberRoleId()).getParameterCode();
 				}
-				if (curCommitteeMember.getRepresentativeType()==null){
-					curCommitteeMember.setRepresentativeType(new PmParameter());
-				}
-				curCommitteeMember.setMemberRole(ParameterHelper.getInstance().getPmParameterById(parameterId));
-				curCommitteeMember.setMemberRoleId(parameterId);
-			}
-			
-			if (curCommitteeMember.getMemberRoleId() != null){
-				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId()).getParameterCode();
-			}else{
-				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId()).getParameterCode();
-			}
-			
-			if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-				for (CtCommitteeMember allCommitteMember : getFilteredCommitteeMembers()) {
-					String allParameterCode = "";
-					if (allCommitteMember.getMemberRoleId() != null){
-						allParameterCode = ParameterHelper.getInstance().getPmParameterById(allCommitteMember.getMemberRoleId()).getParameterCode();
-					}
-					
-					if (allCommitteMember.getMemberRole() != null && allCommitteMember.getMemberRole().getParameterId() != null
-							&& allParameterCode == curParameterCode) {
-						counter++;
-					}
+
+				if (allCommitteMember.getMemberRole() != null
+						&& allCommitteMember.getMemberRole().getParameterId() != null
+						&& allParameterCode == curParameterCode) {
+					counter++;
 				}
 			}
-			
-			if (counter > 1) {
-				throw new EpException(MessageConst.ERROR_750008);
-			}
-			//#29549 start
-			sortCTCommitteeMemberRole(getManagedBean().getUpdatedCommitteeMembers());
-			//#29549 end
 		}
-		//29403 end
+
+		if (counter > 1) {
+			throw new EpException(MessageConst.ERROR_750008);
+		}
+		sortCTCommitteeMemberRole(getManagedBean().getUpdatedCommitteeMembers());
+	}
+	// #29549 end
 		
 		/**
 		 * The method used to delete the selected meeting committee(s).
@@ -8111,48 +8082,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 		//#30428 - End
 		
-		//#29549 start
-		public void sortCTCommitteeMemberRole (List<CtCommitteeMember> list){
-			if(list!=null){
-				Collections.sort(list, new Comparator<CtCommitteeMember>() {
-					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
-					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
-						if(o1.getMemberRole()!=null && o2.getMemberRole()!=null && o1.getMemberRole().getParameterCode()!=null && o2.getMemberRole().getParameterCode()!=null){
-							return Integer.valueOf(sortOrder.indexOf(o1.getMemberRole().getParameterCode())).compareTo(Integer.valueOf(sortOrder.indexOf(o2.getMemberRole().getParameterCode())));
-						}else if (o1.getMemberRoleId()!=null && o2.getMemberRoleId()!=null){
-							return Integer.valueOf(
-									sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o1.getMemberRoleId()).getParameterCode())).compareTo(
-									Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
-						}else{
-							return 0;
-						}
-					}
-				});
-			}
-		}
-		
-		public void sortCTCommitteeMemberRoleMeeting (List<CtCommitteeMember> list){
-			if(list!=null){
-				Collections.sort(list, new Comparator<CtCommitteeMember>() {
-					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
-					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
-						if(o1.getMemberRoleId()!=null && o2.getMemberRoleId()!=null){
-							return Integer.valueOf(
-									sortOrder.indexOf(ParameterHelper.getInstance().getPmParameterById(o1.getMemberRoleId())
-											.getParameterCode())).compareTo(
-									Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
-						}
-						else{
-							return 0;
-						}
-					}
-				});
-			}
-		}
-		//#29549 end
+	//#29549 start
+	/**
+	 * Sorts committee members according to predefined role priority:
+	 * Chairperson -> Secretary -> Member.
+	 *
+	 * @param list list of committee members to be sorted
+	 */
+	public void sortCTCommitteeMemberRole (List<CtCommitteeMember> list){
+		getAmendmentCommitteeHelper().sortCommitteeList(list);
+	}
+	//#29549 end
 		
 		// Start Fix - #30022	
 		/**

@@ -13509,7 +13509,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	        if (loaItem != null && loaItem.getScRequestItem() != null) {
 	            ScRequestItem requestItem = loaItem.getScRequestItem();
 
-	            boolean isServiceType = DbValueConst.PROCUMENT_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId());
+	            boolean isServiceType = DbValueConst.ITEM_TYPE_PRODUCT.equals(requestItem.getItemType().getParameterId());
 	            boolean isEmptyUnspsc = StringUtils.isEmpty(requestItem.getTempUnspscCode());
 	            boolean hasAssociatedCmItem = requestItem.getCmItem() != null;
 
