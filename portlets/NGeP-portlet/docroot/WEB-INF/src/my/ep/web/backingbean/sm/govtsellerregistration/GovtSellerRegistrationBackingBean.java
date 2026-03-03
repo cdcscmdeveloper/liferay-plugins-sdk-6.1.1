@@ -1965,4 +1965,10 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 	//13320-End
+	
+	//#34400
+	public void onCallFirstUserTncDialog(){
+		getManagedBean().setAggreeDeclareAdmin(false);
+	}
 }
+
