@@ -392,10 +392,16 @@ public class MolPayServlet extends HttpServlet {
 					log.info("#38377########pymtReqDTO.setPaymentType : "+pymtReqDTO.getPaymentType());
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
 					
-					log.info(">>>>#38377 enable payment update<<<");
-					PaymentResDTO pymtResDTO = reqSO.saveSuccessPaymentEmailTemplateParams(pymtReqDTO);
-					pymtReqDTO.setNotifyMessageId(pymtResDTO.getNotifyMessageId());
-					reqSO.sendSuccessPaymentEmail(pymtReqDTO);
+					PaymentResDTO pymtResDTO = new PaymentResDTO();
+					
+					//#38377 send success payment email
+					if(statusCode == SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT){
+						log.info(">>>>start send success email payment<<<");
+						pymtResDTO = reqSO.saveSuccessPaymentEmailTemplateParams(pymtReqDTO);
+						pymtReqDTO.setNotifyMessageId(pymtResDTO.getNotifyMessageId());
+						reqSO.sendSuccessPaymentEmail(pymtReqDTO);
+					}
+					
 					pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
