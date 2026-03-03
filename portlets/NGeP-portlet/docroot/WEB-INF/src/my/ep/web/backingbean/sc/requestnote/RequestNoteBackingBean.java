@@ -7713,7 +7713,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Compares the supplier’s account type with allowed types for PK7 and Special Item procurements.
+	 * Compares the suppliers account type with allowed types for PK7 and Special Item procurements.
 	 * Displays an error message if the supplier account type does not match the restriction list.
 	 *
 	 * @param rnDtl        the request note detail containing justification and reason info
@@ -7783,7 +7783,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * Validates supplier’s MOF account; returns basic account if missing, otherwise keeps the supplied type.
+	 * Validates suppliers MOF account; returns basic account if missing, otherwise keeps the supplied type.
 	 *
 	 * @param supplierItem supplier data to check MOF account
 	 * @param suppAccType  current supplier account type
@@ -8185,7 +8185,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Determines actual date using quote’s created date; defaults to current
+	 * Determines actual date using quotes created date; defaults to current
 	 * date.
 	 * 
 	 * @return resolved actual date
@@ -8291,16 +8291,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * false otherwise.
 	 */
 	public boolean checkExtensionCode(ScRequestNoteDtl requestNoteDtl) {
-	    if (isInvalidRequestDetail(requestNoteDtl)) {
-	        return false;
-	    }
+		if (isInvalidRequestDetail(requestNoteDtl)) {
+			return false;
+		}
 
-	    if (getManagedBean().isExistInAssignItemDetail()) {
-	        return true;
-	    }
+		if (getManagedBean().isExistInAssignItemDetail()) {
+			return true;
+		}
 
-	    CmItem cmItem = requestNoteDtl.getRequestItem().getCmItem();
-	    return isValidExtensionLength(cmItem.getExtensionCode());
+		ScRequestItem item = requestNoteDtl.getRequestItem();
+		CmItem cmItem = item.getCmItem();
+		return isValidExtensionLength(cmItem.getExtensionCode());
 	}
 
 	/**
@@ -8329,7 +8330,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    int codeLength = extensionCode.replaceAll("\\s+", "").length();
 
 	    // Logic: Return false if length is NOT between 8 and 18
-	    if (codeLength < DPConstants.NUMBER_EIGHT || codeLength > DPConstants.NUMBER_EIGHTEEN) {
+	    if (codeLength <= DPConstants.NUMBER_EIGHT) {
 	        return false;
 	    }
 
@@ -8363,7 +8364,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			trimExtensionCode(requestItem.getCmItem());
 		}
 	}
-
+	
 	/**
 	 * Helper to clean item names by removing 'N/A' and trimming whitespace. * @param
 	 * rawName The raw name string from the item.
@@ -8461,17 +8462,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return              {@code true} if the "Assign" button should be active (enabled or shown); {@code false} otherwise.
 	 */
 	public boolean validateAssignButton(boolean readOnly, ScRequestNoteDtl requestNoteDtl) {
-		if (readOnly) {
+	    if (readOnly) {
+	        return true;
+	    }
+
+	    if (requestNoteDtl == null || requestNoteDtl.getRequestItem() == null) {
+	        return false; 
+	    }
+	    
+	    if (getManagedBean().isExistInAssignItemDetail()) {
+			return false;
+		}
+	    
+	    if(DbValueConst.ITEM_TYPE_PRODUCT.equals(requestNoteDtl.getRequestItem().getItemType().getParameterId())){
+	    	return false;
+	    }
+
+	    String tempUnspscCode = requestNoteDtl.getRequestItem().getTempUnspscCode();
+	    CmItem cmItem = requestNoteDtl.getRequestItem().getCmItem();
+	    
+	    
+		if (StringUtils.isEmpty(tempUnspscCode) && cmItem != null && StringUtils.isNotEmpty(cmItem.getExtensionCode())
+				&& cmItem.getExtensionCode().length() != 8) {
 			return true;
 		}
 
-		if (requestNoteDtl.getProcurementTypeCategory().getParameterId().equals(DbValueConst.PROCUMENT_TYPE_SERVICE)
-				&& StringUtils.isEmpty(requestNoteDtl.getRequestItem().getTempUnspscCode())
-				&& requestNoteDtl.getRequestItem().getCmItem() != null) {
-			return true;
-		}
-
-		return false;
+	    return false; 
 	}
 	//#26059 - End			 
 }

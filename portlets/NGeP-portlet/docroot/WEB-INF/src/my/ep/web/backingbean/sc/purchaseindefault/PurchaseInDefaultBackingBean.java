@@ -264,7 +264,7 @@ public class PurchaseInDefaultBackingBean extends
 				
 				//#26059 - Start
 				CommonUtils commonUtils = new CommonUtils();
-				ctPanelItem.setItemName(commonUtils.removeItemNameNA(ctPanelItem.getItemName()));
+				ctPanelItem.getScRequestItem().getCmItem().setItemName(commonUtils.removeItemNameNA(ctPanelItem.getScRequestItem().getCmItem().getItemName()));
 				//#26059 - End
 
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
