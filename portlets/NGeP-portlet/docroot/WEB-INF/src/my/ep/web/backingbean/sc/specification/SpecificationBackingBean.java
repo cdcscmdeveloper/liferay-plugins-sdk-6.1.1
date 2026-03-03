@@ -23918,7 +23918,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 
 		if (this.getManagedBean().isSingleItem()) {
-			paramMap.put(QtReportConst.PARAM_MAP_P_SCORE_TYPE, null);
+			paramMap.put(QtReportConst.PARAM_MAP_P_SCORE_TYPE, "");
 		} else {
 			String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
 
