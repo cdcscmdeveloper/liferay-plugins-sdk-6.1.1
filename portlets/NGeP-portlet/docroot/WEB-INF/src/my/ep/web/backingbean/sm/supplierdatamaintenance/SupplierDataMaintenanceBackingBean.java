@@ -1241,7 +1241,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			
 			// 28147, 28494 - START
-			if (EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
+			if (getManagedBean().isBlacklistOwnerOrDirector() 
+					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.owner", null));
 			}
 			// 28147, 40029, 26238 - END
