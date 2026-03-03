@@ -23221,9 +23221,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			int activeZoneIndex = getManagedBean().getSpecZoneTabIndex();
 			TplSpecZoneDtl activeZone = zones.get(activeZoneIndex);
 			
-			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, activeZone.getSpecZoneId().toString());
+			paramMap.put(QtReportConst.PARAM_MAP_P_ZONALID, activeZone.getSpecZoneId().toString());
 		} else {
-			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, "");
+			paramMap.put(QtReportConst.PARAM_MAP_P_ZONALID, "");
 		}
 
 		if (this.getManagedBean().isSingleItem()) {
