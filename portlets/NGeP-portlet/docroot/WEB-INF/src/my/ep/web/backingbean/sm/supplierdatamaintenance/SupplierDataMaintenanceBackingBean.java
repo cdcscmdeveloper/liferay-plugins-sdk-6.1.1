@@ -607,7 +607,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
-		validateAddedCategory(getManagedBean().getActiveCategoryList());
+		// #34031#note-162
+		validateCategory(getManagedBean().getApprovedCategoryList(), getManagedBean().getActiveCategoryList());
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<>();
@@ -1246,19 +1247,21 @@ public class SupplierDataMaintenanceBackingBean extends
 		//27460 : Disciplinary Action, //32827
 		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
 		validateCancelManufacturer();	//38742
-		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
+		// 40029, 26238 - START
+		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null || 
+				getManagedBean().isBlacklistOwnerOrDirector() ){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
 			}
 			
-			//#28147 - start - #28494
+			// 28147, 28494 - START
 			if (getManagedBean().isBlacklistOwnerOrDirector() 
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.owner", null));
 			}
-			//#28147 - end
+			// 28147, 40029, 26238 - END
 		}
 		// #34031 Start
 		if (this.getManagedBean().getSmRevisit().getRevisitDate() != null) {
@@ -3279,5 +3282,27 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(MessageConst.ERROR_723103, new String[] { suppDoc.getPmDocument().getDocName() });
 		}
 	}
+	// #34031#note-162 Start
+	private void validateCategory(List<SmSupplierCategory> approvedCategoryList, List<SmSupplierCategory> activeCategoryList) {
+		List<SmSupplierCategory> catList = new ArrayList<>();
+		catList.addAll(approvedCategoryList);
+		catList.addAll(activeCategoryList);
+
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+
+		for (SmSupplierCategory cat : catList) {
+			if (cat.getPmCategoryL3().getOtherDescReq() != null && cat.getPmCategoryL3().getOtherDescReq().equals(ParameterConst.FLAG_INT_YES)
+					&& StringUtils.isEmpty(cat.getOtherDesc())) {
+				sb.append("<br/>").append(++i).append(".) ").append(cat.getPmCategoryL1().getCategoryL1Code())
+						.append(cat.getPmCategoryL2().getCategoryL2Code()).append(cat.getPmCategoryL3().getCategoryL3Code());
+			}
+		}
+
+		if (!StringUtils.isBlank(sb.toString())) {
+			throw new EpException(MessageConst.ERROR_722514, new String[] { sb.toString() });
+		}
+	}
+	// #34031#note-162 End
 	// #34031 End
 }

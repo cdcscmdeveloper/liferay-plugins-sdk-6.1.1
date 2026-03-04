@@ -1319,6 +1319,9 @@ public class ViewApplHistoryBackingBean extends
 					voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21]
 							+ ""
 							: applStatus);
+					//#29659 - START 
+					voSubTmp.setTitle(arr[23] + "");
+					//#29659 - END
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
 				}
@@ -2000,6 +2003,23 @@ public class ViewApplHistoryBackingBean extends
 		}
 		return true;
 	}//#32002 - end
+	
+	/**
+	 * Reminder before to resubmit page
+	 */
+	//#31270 - START
+	public void reminderToResubmit() {
+		String businessType = this.getManagedBean().getSmSupplier().getBusinessType();
+		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+																|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+																		|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+																						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+			RequestContext.getCurrentInstance().execute("reminderConfirmDialog.show()");
+		} else {
+			redirectToResubmit();
+		}
+	}
+	//#31270 - END
 	
 	// #32628 - start
 		public void validateResubmitApplication() {

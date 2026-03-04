@@ -52,7 +52,9 @@
 	<ui:param name="addItemSpecOnComplete" value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
 <!-- 	#25039 Begin - version zonal -->	
 	<ui:param name="zoneEstimationPopup" value="#{templateSpecId}zoneEstimationPopup" />
-<!-- 	#25039 End - version zonal -->		
+<!-- 	#25039 End - version zonal -->
+	<ui:param name="specScorePopup" value="#{templateSpecId}specScorePopup" /> <!-- #38151 -->	
+	
 	<p:blockUI block="spg" widgetVar="#{templateSpecId}specBlockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
