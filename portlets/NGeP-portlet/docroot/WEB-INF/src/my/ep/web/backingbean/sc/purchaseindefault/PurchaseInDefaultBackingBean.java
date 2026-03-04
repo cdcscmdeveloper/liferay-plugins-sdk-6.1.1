@@ -263,8 +263,11 @@ public class PurchaseInDefaultBackingBean extends
 				}
 				
 				//#26059 - Start
-				CommonUtils commonUtils = new CommonUtils();
-				ctPanelItem.getScRequestItem().getCmItem().setItemName(commonUtils.removeItemNameNA(ctPanelItem.getScRequestItem().getCmItem().getItemName()));
+				if (ctPanelItem.getScRequestItem() != null && ctPanelItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(ctPanelItem.getScRequestItem().getCmItem().getItemName());
+					ctPanelItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
 				//#26059 - End
 
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
