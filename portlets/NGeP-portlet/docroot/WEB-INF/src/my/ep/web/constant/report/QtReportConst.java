@@ -113,7 +113,7 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_MAP_P_LANGUAGE = "P_LANGUAGE";
 	public static final String PARAM_MAP_P_WEIGHTAGE = "P_WEIGHTAGE";
 	public static final String PARAM_MAP_P_QTID = "P_QTID";
-	public static final String PARAM_MAP_P_ZONEID = "P_ZONEID";
+	public static final String PARAM_MAP_P_ZONALID = "P_ZONALID";
 	public static final String PARAM_MAP_P_SCORE_TYPE = "P_STYPE";
 	public static final String PARAM_MAP_P_DOCID = "P_DOCID";
 	// #10141 End Vinod
