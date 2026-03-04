@@ -1768,6 +1768,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setSupplierId(supplierId);
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
 				requestNoteReqDTO);
+		getManagedBean().setScQuote(requestNoteResDTO.getQuote()!=null ? requestNoteResDTO.getQuote() : null); //#26059 - Start
 		reloadRequestNoteForCodification(requestNoteResDTO);
 
 		if (!pidExpiredFlag) {
@@ -8469,25 +8470,31 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    if (requestNoteDtl == null || requestNoteDtl.getRequestItem() == null) {
 	        return false; 
 	    }
-	    
+
 	    if (getManagedBean().isExistInAssignItemDetail()) {
-			return false;
-		}
-	    
-	    if(DbValueConst.ITEM_TYPE_PRODUCT.equals(requestNoteDtl.getRequestItem().getItemType().getParameterId())){
-	    	return false;
+	        return false;
 	    }
 
-	    String tempUnspscCode = requestNoteDtl.getRequestItem().getTempUnspscCode();
-	    CmItem cmItem = requestNoteDtl.getRequestItem().getCmItem();
-	    
-	    
-		if (StringUtils.isEmpty(tempUnspscCode) && cmItem != null && StringUtils.isNotEmpty(cmItem.getExtensionCode())
-				&& cmItem.getExtensionCode().length() != 8) {
-			return true;
-		}
+	    ScRequestItem requestItem = requestNoteDtl.getRequestItem();
+	    String tempUnspscCode = requestItem.getTempUnspscCode();
+	    CmItem cmItem = requestItem.getCmItem();
+	    ScQuote quote = getManagedBean().getScQuote();
+
+	    if (quote != null && quote.isPanel()) {
+	        return cmItem != null;
+	    }
+
+	    if (requestItem.getItemType() != null && 
+	        DbValueConst.ITEM_TYPE_PRODUCT.equals(requestItem.getItemType().getParameterId())) {
+	        return false;
+	    }
+
+	    if (StringUtils.isEmpty(tempUnspscCode) && cmItem != null 
+	            && StringUtils.isNotEmpty(cmItem.getExtensionCode())
+	            && cmItem.getExtensionCode().length() != 8) {
+	        return true;
+	    }
 
 	    return false; 
-	}
-	//#26059 - End			 
+	}		 
 }
