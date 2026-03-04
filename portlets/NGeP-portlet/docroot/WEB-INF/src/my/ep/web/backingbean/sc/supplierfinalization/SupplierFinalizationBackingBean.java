@@ -1916,6 +1916,53 @@ public class SupplierFinalizationBackingBean extends
 		setTaskDetails(activeIndex, prepareActiveIndex, taskId, outComes, processName, currentStatusId, taskName);
 		// 25037 - end
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to set flag if have supplier branch deleted
+	 **/
+	private void setFlagForSupplierBranchDeleted() {
+
+		ScQt scqt = this.getManagedBean().getScQt();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		ScWorkFlowStatus currentStatus = scQtFinalization.getCurrentStatus();
+		boolean statusRevision = currentStatus != null
+				&& QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.equals(currentStatus.getPmStatus()
+						.getStatusId());
+		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
+
+		if (statusRevision && CollectionUtils.isNotEmpty(recommendedItems)) {
+			setDetailForSupplierBranchDeleted(recommendedItems, scqt);
+		}
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check details if have supplier branch deleted
+	 * 
+	 * @param recommendedItems
+	 * @param scQt
+	 * 
+	 **/
+	private void setDetailForSupplierBranchDeleted(List<ScQtRecommend> recommendedItems, ScQt scqt) {
+		for (ScQtRecommend recommend : recommendedItems) {
+			TplSpecZoneDtl tplSpecZoneDtl = recommend.getTplSpecZoneDtl();
+			if (tplSpecZoneDtl != null) {
+				Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+				if (checkListZonesDisqualifiedSupplierBranchDeleted(scqt.getQtId(), specZoneId)) {
+					this.getManagedBean().setFlagBranchDeleted(true);
+				}
+			} else {
+				if (checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())) {
+					this.getManagedBean().setFlagBranchDeleted(true);
+				}
+			}
+		}
+	}
+
+	// #28777 & #29729 - End
 
 	// 25037 - start
 	private SuppFinalizationReqDTO validateInfo(int index) {
@@ -1999,8 +2046,10 @@ public class SupplierFinalizationBackingBean extends
 					}
 					
 					processSuppliersBeforeSaving();
+					
+					setFlagForSupplierBranchDeleted(); //#28777#29729
+					
 					validateSupplierByPackageAndItem(skipValidation);// 26247
-					checkNeedSupplierIfHaveBranchDeleted();//#28777#29729
 
 						List<QtEvaluationResultDtlBean> cachedSupplierBeans = null;
 						Map<MapKey,List<QtEvaluationResultDtlBean>> cachedSuppliersMap = 
@@ -2067,6 +2116,67 @@ public class SupplierFinalizationBackingBean extends
 
 		}
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation revision for supplier branch deleted
+	 * 
+	 * @param specZone
+	 * @param scQtRecommend
+	 * @param supplierSelected
+	 * 
+	 **/
+	private void validationRevisionSupplierBranchDeleted(TplSpecZoneDtl specZone, ScQtRecommend scQtRecommend, boolean supplierSelected) {
+		boolean itemized = this.getManagedBean().isItemize();
+		if (this.getManagedBean().isFlagBranchDeleted()) {
+			if (itemized) {
+				validationRevisionItemized(specZone, scQtRecommend);
+			} else {
+				validationRevisionPackage(specZone, supplierSelected);
+			}
+		}
+	}
+	
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation revision for itemized
+	 * 
+	 * @param specZone
+	 * @param scQtRecommend
+	 * 
+	 **/
+	private void validationRevisionItemized(TplSpecZoneDtl specZone, ScQtRecommend scQtRecommend) {
+		if (specZone != null) {
+			throw new EpException(MessageConst.ERROR_760628, new String[] { specZone.getZoneName(),
+					scQtRecommend.getRequestItem().getItemName() });
+		} else {
+			throw new EpException(MessageConst.ERROR_760629, new String[] { scQtRecommend.getRequestItem()
+					.getItemName() });
+		}
+	}
+	
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation revision for package
+	 * 
+	 * @param specZone
+	 * @param supplierSelected
+	 * 
+	 **/
+	private void validationRevisionPackage(TplSpecZoneDtl specZone, boolean supplierSelected) {
+		if (specZone != null) {
+			throw new EpException(MessageConst.ERROR_760626, new String[] { specZone.getZoneName() });
+		} else {
+			if (!supplierSelected) {
+				throw new EpException(MessageConst.ERROR_760627);
+			}
+		}
+	}
+	// #28777 & #29729 - End
 	
 	// 26247 - start
 	private void validateSupplierByPackageAndItem(boolean skipValidation) {
@@ -2608,6 +2718,18 @@ public class SupplierFinalizationBackingBean extends
 			checkSupplierAwardedRejectValidityExtension();
 		}
 		//#21692 - End
+		
+		// #39620 - start
+		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
+		if (isRecommendByAward() && recommendedSupplier != null) {
+			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
+		}// #39620 - End
+		
+		//#28777#29729 - Start
+		if(checkFlagForSupplierBranchDeleted()){
+		    checkNeedSupplierIfHaveBranchDeleted();
+		}
+		//#28777#29729 - End
 
 		//25638 - Start
 		if (revise.length == 0 && BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
@@ -2873,6 +2995,13 @@ public class SupplierFinalizationBackingBean extends
 				  .getParameterCode();
 	log.info("decisionTypeCode"+decisionTypeCode);
 		this.checkIfLoggedinUserIsSecretary();
+		
+		// #39620 - start
+		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
+		if (isRecommendByAward() && recommendedSupplier != null) {
+			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
+		}// #39620 - End
+				
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
 				List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
@@ -6323,6 +6452,15 @@ return	remarksNotFound;
 			CommType = getManagedBean().getCommitteeType();
 			*/	
 			
+			// #35320 - Start
+			String committeeType = getManagedBean().getCommitteeType();
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
+				checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+			}
+			// #35320 - Start	
+			
 			for (PmReasonDesc reasonDesc : reasonList) {
 				//Include checking/control for #26169 #38 based on SF Decision, Forward To Higher Authority
 				//#26169 - 25082020 Fix START
@@ -8412,6 +8550,9 @@ return	remarksNotFound;
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
 			} else {
+				
+				validationRevisionSupplierBranchDeleted(zoneDtl, scQtRecommend, supplierSelected); //#28777&#29729
+				
 				//#21695 allow no records validation start
 				if(CollectionUtils.isNotEmpty(
 						scQtRecommend.getRecommendDtls())){
@@ -8426,6 +8567,7 @@ return	remarksNotFound;
 		
 		//#28834 - Start
 		if(!supplierSelected && (isNotSelectedRadioButton > 0)){ 
+		   validationRevisionSupplierBranchDeleted(zoneDtl, scQtRecommend, supplierSelected); //#28777&#29729
 		   throw new EpException(MessageConst.ERROR_760206);
 		} 
 		//#28834 - End
@@ -8479,6 +8621,9 @@ return	remarksNotFound;
 		if ((StringUtils.equals(ParameterConst.RECOMMEND_BY_AWARD,
 						finalizationMethodStr) && activeSupplCount != 1)) {
 			setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
+			
+			validationRevisionSupplierBranchDeleted(scQtRecommend.getTplSpecZoneDtl(), scQtRecommend, true); //#28777&#29729
+			
 			throw new EpException(MessageConst.ERROR_760213, new String[] {
 					scQtRecommend.getRequestItem().getItemName() });
 		}
@@ -9158,6 +9303,7 @@ return	remarksNotFound;
 							if (!disabledSupplier) {
 								if (recommendationBean.isAwarded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
+									getManagedBean().setTempRecommendedSupplier(qualSupplier);//#39620 
 								}
 							} else {
 								if (getManagedBean().getDisabledSupplierIds() == null) {
@@ -10586,7 +10732,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - Start
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - End
 		}
 	}
 
@@ -11515,13 +11663,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	// #28777 & #29729 - Start
 	/**
-	 * Method to check outcome is endorse or signoff and recommend details
+	 * Method to check if have supplier branch deleted
 	 * 
 	 **/
-	private void checkNeedSupplierIfHaveBranchDeleted() {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-
+	private Boolean checkFlagForSupplierBranchDeleted() {
+		
 		String outcome = this.getManagedBean().getOutcome();
 		boolean isEndorseOrSignOff = false;
 		if (outcome != null
@@ -11530,10 +11676,62 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 
 		ScQt scqt = this.getManagedBean().getScQt();
-		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-		reqDTO.setScQt(scqt);
-		SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationDtls(reqDTO);
-		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
+
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
+				&& checkDetailForSupplierBranchDeleted(recommendedItems, scqt)) {
+			return true;
+		}
+		return false;
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check details if have supplier branch deleted
+	 * 
+	 * @param recommendedItems
+	 * @param scQt
+	 * 
+	 **/
+	private Boolean checkDetailForSupplierBranchDeleted(List<ScQtRecommend> recommendedItems, ScQt scqt) {
+
+		for (ScQtRecommend recommend : recommendedItems) {
+			TplSpecZoneDtl tplSpecZoneDtl = recommend.getTplSpecZoneDtl();
+			if (tplSpecZoneDtl != null) {
+				Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+				if (checkListZonesDisqualifiedSupplierBranchDeleted(scqt.getQtId(), specZoneId)) {
+					return true;
+				}
+			} else {
+				if (checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check outcome is endorse or signoff and recommend details
+	 * 
+	 **/
+	private void checkNeedSupplierIfHaveBranchDeleted() {
+	
+		String outcome = this.getManagedBean().getOutcome();
+		boolean isEndorseOrSignOff = false;
+		if (outcome != null
+				&& (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
+			isEndorseOrSignOff = true;
+		}
+
+		ScQt scqt = this.getManagedBean().getScQt();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
 
 		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)) {
@@ -11569,7 +11767,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
 				Long supplierId = recommendDtl.getSupplier().getSupplierId();
-				if (checkFlagIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId)
+				if (checkIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId)
 						&& identifierMap.containsKey(recommendId)) {
 					identifierMap.put(recommendId, true);
 				}
@@ -11595,16 +11793,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @param supplierId
 	 * 
 	 **/
-	private Boolean checkFlagIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
+	private Boolean checkIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
 			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId) {
+		int recordStatusFlg = recommendDtl.getRecordStatusFlg().intValue();
 
 		if (tplSpecZoneDtl != null) {
 			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
 			List<Long> qualifiedZoneSupplierList = retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
 					specZoneId);
 			for (Long qualifiedZoneSupplier : qualifiedZoneSupplierList) {
-				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-						qualifiedZoneSupplier)) {
+				if (recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE && qualifiedZoneSupplier.equals(supplierId)) {
 					return true;
 				}
 			}
@@ -11613,46 +11811,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			List<Long> qualifiedSupplierList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
 			for (Long qualifiedSupplier : qualifiedSupplierList) {
-				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-						qualifiedSupplier)) {
+				if (recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE && qualifiedSupplier.equals(supplierId)) {
 					return true;
 				}
 			}
 
-		}
-		return false;
-	}
-
-	// #28777 & #29729 - End
-	
-	// #28777 & #29729 - Start
-	/**
-	 * Method to check detail identifier if have supplier branch deleted
-	 * 
-	 * @param tplSpecZoneDtl
-	 * @param recommendDtl
-	 * @param scQt
-	 * @param supplierId
-	 * @param qualifiedSupplier
-	 * 
-	 **/
-	private Boolean checkDetailIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
-			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long qualifiedSupplier) {
-		int recordStatusFlg = recommendDtl.getRecordStatusFlg().intValue();
-
-		if (tplSpecZoneDtl != null) {
-			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
-			if (checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), specZoneId)
-					&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE
-					&& qualifiedSupplier.equals(supplierId)) {
-				return true;
-			}
-		} else {
-			if (checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())
-					&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE
-					&& qualifiedSupplier.equals(supplierId)) {
-				return true;
-			}
 		}
 		return false;
 	}
@@ -11719,9 +11882,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		if (foundFalse) {
 			ScQtRecommend recommend = recommendMap.get(falseKey);
 			if (scQt.isZonal()) {
+				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_760623, new String[] {
 						recommend.getTplSpecZoneDtl().getZoneName(), recommend.getRequestItem().getItemName() });
 			} else {
+				navigateToSupplierFinalizationTab();
 				throw new EpException(MessageConst.ERROR_760622, new String[] { recommend.getRequestItem()
 						.getItemName() });
 			}
@@ -11746,9 +11911,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if (!entry.getValue()) {
 				ScQtRecommend recommend = recommendMap.get(entry.getKey());
 				if (scQt.isZonal()) {
+					setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
 							.getZoneName() });
 				} else {
+					navigateToSupplierFinalizationTab();
 					throw new EpException(MessageConst.ERROR_760624);
 				}
 			}
@@ -13018,10 +13185,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		for (ScQtEvaluationResultDtl qualifiedSuppDM : this.getManagedBean().getShortlistedSuppliersByRecommendType()
 				.getList()) {
 			currentEvalStage = qualifiedSuppDM.getQtEvaluationResult().getEvaluationStage();
-			// recommendationTotalScore = qualifiedSuppDM.getTotalScore();
 			qualifiedSuppDM.getQtEvaluationResult().getEvaluationResultDtls();
 			if (null != this.getManagedBean().getSelectedItem()) {
-				this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
+				requestNoteItemId = this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 			}
 			if (null != this.getManagedBean().getCurrentZone()) {
 				selectedZoneId = this.getManagedBean().getCurrentZone().getSpecZoneId();

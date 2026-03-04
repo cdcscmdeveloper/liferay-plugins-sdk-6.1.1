@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ * Copyright Â© 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.managedbean.pm.settings;
 
@@ -29,6 +29,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
+import my.ep.persistence.entity.pm.common.PmParameterDesc; //#35323
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
@@ -180,10 +181,12 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	private String auditLevelCode;
 	private String auditFeeExemptionType;
+	/************ AUDIT #28895_35509 *************/
 	
 	//#36738 Start
 	private List<PmConfigRuleDesc> originalConfigRuleDescList;
 	private List<PmConfigRuleValue> originalConfigRuleValueList;
+	private HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap;
 	private List<PmPtjSpecialApproval> originalPtjSpecialApprovalList;
 	private String searchRuleType;
 	private String searchRuleDataTypeValues;
@@ -194,10 +197,19 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String searchPtjCode;
 	private String searchPtjName;
 	private BigDecimal searchQtValueLimit;
-	private Boolean collapsePanel;
+	private Boolean ruleTypeCollapsePanel;
+	private Boolean ruleValueCollapsePanel;
+	private Boolean qtValueCollapsePanel;
 	//#36738 End
 
-	/************ AUDIT #28895_35509 *************/
+	// #35323 - Start
+	private boolean selectedAllSuppAccountType;
+	private boolean newPRList;
+	private List<Long> selectedSuppAccountType;
+	private List<PmParameterDesc> supplierType;
+	private Integer index;
+	private boolean firstExpiryDateIsNull;
+	// #35323 - End
 
 	public RuleCatalogueManageBean() {
 
@@ -1968,12 +1980,134 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
 	}
 
-	public Boolean getCollapsePanel() {
-		return collapsePanel;
+	public Boolean getRuleTypeCollapsePanel() {
+		return ruleTypeCollapsePanel;
+	}
+	
+	public void setRuleTypeCollapsePanel(Boolean ruleTypeCollapsePanel) {
+		this.ruleTypeCollapsePanel = ruleTypeCollapsePanel;
+	}
+	
+	public Boolean getRuleValueCollapsePanel() {
+		return ruleValueCollapsePanel;
 	}
 
-	public void setCollapsePanel(Boolean collapsePanel) {
-		this.collapsePanel = collapsePanel;
+	public void setRuleValueCollapsePanel(Boolean ruleValueCollapsePanel) {
+		this.ruleValueCollapsePanel = ruleValueCollapsePanel;
+	}
+
+	public Boolean getQtValueCollapsePanel() {
+		return qtValueCollapsePanel;
+	}
+	
+	public void setQtValueCollapsePanel(Boolean qtValueCollapsePanel) {
+		this.qtValueCollapsePanel = qtValueCollapsePanel;
+	}
+	
+	public HashMap<Long, List<PmConfigRuleValue>> getOriginalConfigRuleValueMap() {
+		return originalConfigRuleValueMap;
+	}
+	
+	public void setOriginalConfigRuleValueMap(HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap) {
+		this.originalConfigRuleValueMap = originalConfigRuleValueMap;
 	}
 	//#36738 End
+	
+	//#35323 - Start
+	/**
+	 * selectedAllSuppAccountType
+	 * 
+	 * @return the selectedAllSuppAccountType
+	 */
+	public boolean isSelectedAllSuppAccountType() {
+		return selectedAllSuppAccountType;
+	}
+
+	/**
+	 * @param selectedAllSuppAccountType
+	 *            the selectedAllSuppAccountType to set
+	 */
+	public void setSelectedAllSuppAccountType(boolean selectedAllSuppAccountType) {
+		this.selectedAllSuppAccountType = selectedAllSuppAccountType;
+	}
+
+	/**
+	 * selectedSuppAccountType
+	 * 
+	 * @return the selectedSuppAccountType
+	 */
+	public List<Long> getSelectedSuppAccountType() {
+		if (selectedSuppAccountType == null) {
+			selectedSuppAccountType = new ArrayList<Long>();
+		}
+		return selectedSuppAccountType;
+	}
+
+	/**
+	 * @param selectedSuppAccountType
+	 *            the selectedSuppAccountType to set
+	 */
+	public void setSelectedSuppAccountType(List<Long> selectedSuppAccountType) {
+		this.selectedSuppAccountType = selectedSuppAccountType;
+	}
+
+	/**
+	 * Gets the supplier type.
+	 * 
+	 * @return the supplier type
+	 */
+	public List<PmParameterDesc> getSupplierType() {
+		return supplierType;
+	}
+
+	/**
+	 * Sets the supplier type.
+	 * 
+	 * @param supplierType
+	 *            the new supplier type
+	 */
+	public void setSupplierType(List<PmParameterDesc> supplierType) {
+		this.supplierType = supplierType;
+	}
+
+	/**
+	 * @return the index
+	 */
+	public Integer getIndex() {
+		return index;
+	}
+
+	/**
+	 * @param index
+	 *            the index to set
+	 */
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+	
+	public boolean isNewPRList() {
+		return newPRList;
+	}
+
+	public void setNewPRList(boolean newPRList) {
+		this.newPRList = newPRList;
+	}
+	
+	/**
+	 * firstExpiryDateIsNull
+	 * 
+	 * @return the firstExpiryDateIsNull
+	 */
+	public boolean isFirstExpiryDateIsNull() {
+		return firstExpiryDateIsNull;
+	}
+
+	/**
+	 * @param firstExpiryDateIsNull
+	 *            the firstExpiryDateIsNull to set
+	 */
+	public void setFirstExpiryDateIsNull(boolean firstExpiryDateIsNull) {
+		this.firstExpiryDateIsNull = firstExpiryDateIsNull;
+	}
+	// #35323 - End
 }

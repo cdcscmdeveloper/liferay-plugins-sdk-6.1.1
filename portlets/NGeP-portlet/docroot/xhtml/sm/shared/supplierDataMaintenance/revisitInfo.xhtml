@@ -87,7 +87,7 @@
 				<p:outputPanel
 					rendered="#{viewSmApplBackingBean.managedBean.supplierUser}">
 					<td
-						style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+						style="width: 75%; overflow-wrap: break-word; white-space: pre-wrap;">
 						<p:outputLabel styleClass="outputLabel-view"
 							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
 					</td>
@@ -95,11 +95,9 @@
 				<p:outputPanel
 					rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}">
 					<td
-						style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+						style="width: 75%; overflow-wrap: break-word; white-space: pre-wrap;">
 						<h:outputText
-							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
-						<h:outputText
-							value="#{viewSmApplBackingBean.getExtendedRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}"
+							value="#{viewSmApplBackingBean.getRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}"
 							escape="false" />
 					</td>
 				</p:outputPanel>

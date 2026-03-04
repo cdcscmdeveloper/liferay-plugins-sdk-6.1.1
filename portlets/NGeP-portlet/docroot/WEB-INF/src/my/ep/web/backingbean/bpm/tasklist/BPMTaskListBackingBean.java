@@ -562,6 +562,12 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			//#28784 - end
 			
+			//#28188-START
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE,
+					SourcingConstants.NAV_PAGE_QT_BSV_UPDATE);
+			//#28188-END
+			
 			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"]");
 			temp.put(getProcessNameRemoveSpace("UNSPSC Code Request"), "review-unspsc-code");
 			temp.put(getProcessNameRemoveSpace("Extension Code Request"), "review-extension");
@@ -1110,7 +1116,15 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					+ SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			//#28784 - end
-			
+			// 34491 - start
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME)
+					+ SCProcessNameConst.COORDINATE_FC_MEETING, SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
+			// 34491 - end
+			//#28188-START
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					)+ SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE,
+					SourcingConstants.NAV_PAGE_QT_BSV_UPDATE);
+			//#28188-END
 			
 			this.getManagedBean().setBpmMap(temp);
 		}

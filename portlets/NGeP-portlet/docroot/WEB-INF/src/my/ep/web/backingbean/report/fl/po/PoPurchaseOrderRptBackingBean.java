@@ -97,6 +97,11 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
+		// #27476 start
+		if (StringUtils.isNotBlank(getManagedBean().getProcumentType())) {
+			params.put(FlReportConst.FL_RPT_PROCUMENT_TYPE_CODE, getManagedBean().getProcumentType());
+		}
+		// #27476 end
 		
 		generateFlReport(params);
 		

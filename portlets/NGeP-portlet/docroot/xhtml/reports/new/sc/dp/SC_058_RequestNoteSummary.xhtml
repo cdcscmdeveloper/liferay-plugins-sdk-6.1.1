@@ -6,6 +6,16 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
+	<style>
+		.no-header .ui-accordion-header {
+	    	display: none;
+		}	
+		
+		.custom-scroll-border.ui-scrollpanel {
+		    border: 1px solid #dcdcdc !important;
+		}
+	</style>
+	
 	<ui:param name="requisitionerEnableDisable"
 			value="#{rnSummaryRptBackingBean.retrieveUserRoles()}"></ui:param>
 	<ui:param name="ptjEnableDisable"
@@ -23,12 +33,24 @@
 								postUpdateListener="#{rnSummaryRptBackingBean.onSupplierChange()}" /></td>
 			<td width="15%"><p:outputLabel
 					value="#{lbl['lbl.sc.status']}" /></td>
-			<td width="35%"><p:selectOneMenu
-					value="#{rnSummaryRptBackingBean.managedBean.status}">
-					<f:selectItems
-						value="#{rnSummaryRptBackingBean.searchStatusDesc(ParameterConst.doctypeRequestNote)}" />
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu></td>
+			<td width="35%">
+				<ui:remove>#29558 start</ui:remove>
+				<p:accordionPanel multiple="true" id="accPanel" styleClass="no-header">
+				    <p:tab title="">
+				        <p:scrollPanel style="width:300px;height:200px" styleClass="custom-scroll-border">
+				            <p:selectManyCheckbox id="manyMenusts" value="#{rnSummaryRptBackingBean.managedBean.scStatusManyMenuTemp}" layout="pageDirection">
+				                <f:selectItem itemValue="#{lbl['lbl.rpt.all']}" itemLabel="#{lbl['lbl.rpt.all']}"/>
+				                <f:selectItems value="#{rnSummaryRptBackingBean.reportStatusDropdownValuesSelectManyMenu(ParameterConst.doctypeRequestNote)}" 
+				                var="status" itemValue="#{status}" itemLabel="#{status}" 
+				                itemDisabled="#{rnSummaryRptBackingBean.isDisabled(status,ParameterConst.doctypeRequestNote)}"/>
+				                <p:ajax event="change" update="manyMenusts" process="@form" 
+    					 		 listener="#{rnSummaryRptBackingBean.onSelectAll(ParameterConst.doctypeRequestNote)}"/>
+    			            </p:selectManyCheckbox>
+				        </p:scrollPanel>
+				    </p:tab>
+    			</p:accordionPanel>
+    			<ui:remove>#29558 end</ui:remove>
+			</td>
 		</tr>
 		<tr>
 			<td width="15%"><p:outputLabel
@@ -43,7 +65,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems
-						value="#{rnSummaryRptBackingBean.getRadioButtonCodeValuesCombineWIPParameter(ParameterTypeConst.procurementTypeRpt,ParameterTypeConst.procurementType,ParameterTypeConst.procurementCodePk7)}" />
+						value="#{rnSummaryRptBackingBean.getDropDownValuesCombineWIPParameter(ParameterTypeConst.procurementTypeRpt,ParameterTypeConst.procurementType,ParameterTypeConst.procurementCodePk7)}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>

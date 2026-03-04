@@ -37,6 +37,40 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+	<!-- 35740 - shaqimi start -->
+	<portlet>
+		<portlet-name>auPatchSearch</portlet-name>
+		<display-name>Audit Search</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/audit/patch/auditPatchPreRender.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Audit Search</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- 35740 - shaqimi end -->
 	<!-- Audit - END-->
 	<portlet>
 		<portlet-name>directPurchaseMaintenance</portlet-name>
@@ -11539,4 +11573,38 @@
 		</security-role-ref>
 	</portlet>
 	<!--#35320-end-->
+	
+	<!--#28188-start-->
+	<portlet>
+		<portlet-name>QTBSVChange</portlet-name>
+		<display-name>Briefing/Site Visit Update</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/approval/prerenderapprovaldtls.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Briefing/Site Visit Update</title>
+			<short-title>Briefing/Site Visit Update</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!--#28188-start-->
 </portlet-app>
