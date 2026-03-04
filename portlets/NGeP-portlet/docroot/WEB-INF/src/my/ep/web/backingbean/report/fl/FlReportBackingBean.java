@@ -28,6 +28,7 @@ import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -45,6 +46,8 @@ import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -788,9 +791,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_GOVT) 
 							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY))) {
 				getManagedBean().setSupplier(true);
-				//retrieveSupplierCompName();
+				retrieveSupplierCompName();
 				// Enhancement 29550 -start
-				retrieveSupplierDetailByUserId();
+				populateSupplierData(Long.valueOf(getManagedBean().getSupplierId()));
 				// Enhancement 29550 - end
 			} 
 		}
@@ -2045,41 +2048,26 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return items;
 	}
 	
-	public void retrieveSupplierDetailByUserId() {
-		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-				IPMReportSO.class);
-		Object[] supplierDetailList = reportSO.retrieveSupplierDetailByUserId(getFacesScopes()
-				.getUserSessionBean().getUserId());
-		if(supplierDetailList != null){
-			getManagedBean().setSupplierCompName(supplierDetailList[0].toString());
-			getManagedBean().setSupplierId(supplierDetailList[1].toString());
-			getManagedBean().setBusinessRegNo(supplierDetailList[2].toString());
-			getManagedBean().setEpNo(supplierDetailList[3].toString());
-			getManagedBean().setMofNo(supplierDetailList[4] != null ? supplierDetailList[4].toString() : "");
+	public void autopopSuppData() {
+		if (this.getManagedBean().getSelectedOrgProfile().getSmSupplier() == null) {
+			return;
 		}
-
+		populateSupplierData(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId());
 	}
 	
-	public void retrieveSupplierDetailBySupplierId(Long supplierId) {
-		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-				IPMReportSO.class);
-		Object[] supplierDetailList = reportSO.retrieveSupplierDetailBySupplierId(supplierId);
-		
-		if(supplierDetailList != null){
-			getManagedBean().setSupplierCompName(supplierDetailList[0].toString());
-			getManagedBean().setSupplierId(supplierDetailList[1].toString());
-			getManagedBean().setBusinessRegNo(supplierDetailList[2].toString());
-			getManagedBean().setEpNo(supplierDetailList[3].toString());
-			getManagedBean().setMofNo(supplierDetailList[4] != null ? supplierDetailList[4].toString() : "");
-		}
-
-	}
-	
-	public void autopopSuppData(){
-		if(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId() != null){
-			log.info("**inside autopopSuppData**");
-			log.info(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId());
-			retrieveSupplierDetailBySupplierId(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId());	
+	public void populateSupplierData(Long suppplierId){
+		ISupplierSearchSO supplierSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		SmSupplier smSupplier = supplierSO.retrieveSupplierAndMofAccountBySupplierId(suppplierId);
+		if (smSupplier != null) {
+			getManagedBean().setSupplierCompName(smSupplier.getCompanyName());
+			getManagedBean().setBusinessRegNo(smSupplier.getRegNo());
+			getManagedBean().setEpNo(smSupplier.getEpNo());
+			if (smSupplier.getMofNo() != null && !smSupplier.getMofNo().isEmpty()) {
+				getManagedBean().setMofNo(smSupplier.getMofNo());
+			} else {
+				getManagedBean().setMofNo("");
+			}
 		}
 	}
 	//Enhancement 29550 - end
