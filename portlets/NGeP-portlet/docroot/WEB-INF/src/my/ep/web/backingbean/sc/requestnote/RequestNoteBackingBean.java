@@ -1768,6 +1768,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setSupplierId(supplierId);
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
 				requestNoteReqDTO);
+		getManagedBean().setScQuote(requestNoteResDTO.getQuote()!=null ? requestNoteResDTO.getQuote() : null); //#26059 - Start
 		reloadRequestNoteForCodification(requestNoteResDTO);
 
 		if (!pidExpiredFlag) {
@@ -8300,12 +8301,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		ScRequestItem item = requestNoteDtl.getRequestItem();
-
-		if (item.getItemType().getParameterId().equals(DbValueConst.ITEM_TYPE_SERVICE)
-				&& StringUtils.isEmpty(item.getTempUnspscCode())) {
-			return false;
-		}
-
 		CmItem cmItem = item.getCmItem();
 		return isValidExtensionLength(cmItem.getExtensionCode());
 	}
@@ -8468,17 +8463,38 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return              {@code true} if the "Assign" button should be active (enabled or shown); {@code false} otherwise.
 	 */
 	public boolean validateAssignButton(boolean readOnly, ScRequestNoteDtl requestNoteDtl) {
-		if (readOnly) {
-			return true;
-		}
+	    if (readOnly) {
+	        return true;
+	    }
 
-		if (requestNoteDtl.getProcurementTypeCategory().getParameterId().equals(DbValueConst.PROCUMENT_TYPE_SERVICE)
-				&& StringUtils.isEmpty(requestNoteDtl.getRequestItem().getTempUnspscCode())
-				&& requestNoteDtl.getRequestItem().getCmItem() != null) {
-			return true;
-		}
+	    if (requestNoteDtl == null || requestNoteDtl.getRequestItem() == null) {
+	        return false; 
+	    }
 
-		return false;
-	}
-	//#26059 - End			 
+	    if (getManagedBean().isExistInAssignItemDetail()) {
+	        return false;
+	    }
+
+	    ScRequestItem requestItem = requestNoteDtl.getRequestItem();
+	    String tempUnspscCode = requestItem.getTempUnspscCode();
+	    CmItem cmItem = requestItem.getCmItem();
+	    ScQuote quote = getManagedBean().getScQuote();
+
+	    if (quote != null && quote.isPanel()) {
+	        return cmItem != null;
+	    }
+
+	    if (requestItem.getItemType() != null && 
+	        DbValueConst.ITEM_TYPE_PRODUCT.equals(requestItem.getItemType().getParameterId())) {
+	        return false;
+	    }
+
+	    if (StringUtils.isEmpty(tempUnspscCode) && cmItem != null 
+	            && StringUtils.isNotEmpty(cmItem.getExtensionCode())
+	            && cmItem.getExtensionCode().length() != 8) {
+	        return true;
+	    }
+
+	    return false; 
+	}		 
 }
