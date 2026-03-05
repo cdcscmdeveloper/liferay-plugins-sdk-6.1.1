@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -83,6 +84,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	String orgName;
 	BigInteger orgProfileId;
 	String orgType;
+	
+	DecimalFormat df = new DecimalFormat("#,##0.00");
 
 	@Override
 	public String getRoleCode() {
@@ -438,8 +441,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 					if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)){
 						if((oldPmUserRole.getApprovalLimit() != null && newPmUserRole.getApprovalLimit() != null)
 								&& (!oldPmUserRole.getApprovalLimit().setScale(2).equals(newPmUserRole.getApprovalLimit().setScale(2)))) {
-							detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, oldPmUserRole.getApprovalLimit().setScale(2).toString(), 
-									newPmUserRole.getApprovalLimit().setScale(2).toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+							detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, df.format(oldPmUserRole.getApprovalLimit()), 
+									df.format(newPmUserRole.getApprovalLimit()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 						}
 					}
 					
@@ -453,7 +456,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 							PmCommonUtil.getRoleDescByRoleCodeAndLanguage(newPmUserRole.getPmRole().getRoleCode(), AuditConst.PM_LANGUAGECODE_MS), 
 							AuditConst.PM_AUD_ACTION_TYPE_INS);
 					if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ) && newPmUserRole.getApprovalLimit() != null){
-						detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, null, newPmUserRole.getApprovalLimit().setScale(2).toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+						detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, null, df.format(newPmUserRole.getApprovalLimit()), AuditConst.PM_AUD_ACTION_TYPE_INS);
 					}
 					detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, null, statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_INS);
 				}
@@ -578,3 +581,4 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		return map;
 	}
 }
+
