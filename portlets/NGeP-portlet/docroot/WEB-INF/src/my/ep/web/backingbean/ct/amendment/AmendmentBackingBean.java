@@ -4830,6 +4830,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	// End Fix #39722
 
+	// End Fix #39722
+
 	// End fix - #33287
 	
 	//Start Fix - #33287
