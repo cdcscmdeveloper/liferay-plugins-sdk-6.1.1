@@ -58,10 +58,9 @@
 		<tr>
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.rpt.categoryRegistered']}" /></td>
-			<td>
-				<!-- 32521 - START --> <ac:smReportDateFromTo
+			<td><!-- 32521 - START --> <ac:smReportDateFromTo
 					bBean="#{categoryStatRptBB}" limitYearRange="true" dateRange="36"
-					mandatoryDateTo="true" /> <!-- 32521 - END -->
+					mandatoryDateTo="false" required="false" /> <!-- 32521 - END -->
 			</td>
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.rpt.disciplinaryActionStatus']}" /></td>
