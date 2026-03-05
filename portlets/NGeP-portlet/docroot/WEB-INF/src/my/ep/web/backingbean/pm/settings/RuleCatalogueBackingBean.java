@@ -1950,11 +1950,11 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			// hit error and return
 
 			throw new EpException(MessageConst.ERROR_770213, new String[] {
-				ResourceBundleUtils.getMessage(
-					"lbl.pm.settings.fee.organisation.type",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()),
-				this.dupplicateOrgTypeName });
+					ResourceBundleUtils.getMessage(
+							"lbl.pm.settings.fee.organisation.type",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()),
+					this.dupplicateOrgTypeName });
 		}
 		// add deleted records before update
 		exemptionList.addAll(this.getManagedBean()
