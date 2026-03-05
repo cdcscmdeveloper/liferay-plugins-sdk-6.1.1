@@ -4701,6 +4701,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			resetMOFApprovingAuthReq();
 			//End Fix - #39722
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			//Start Fix - #33287
@@ -4712,6 +4713,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			resetMOFApprovingAuthReq();
 			//End Fix - #39722
 			isCentralContractTypeCheck();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
@@ -8007,4 +8009,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return !amendment.isContractExtend() && !overallChange && !amendment.getAmendmentEffDate().equals(cal.getTime());
 	}
 	// End Fix - #39538
+	
+	// Start Fix - #39722
+	/**
+	 * <b>**Only applicable for Untick Scenario**</b></br> Resets the MOF
+	 * (Ministry of Finance) approving authority required flag.
+	 * 
+	 * <p>
+	 * This method checks whether the MOF authority required is currently
+	 * enabled for the active contract amendment. If the flag is set to
+	 * {@code true}, it will be reset to {@code false}.
+	 * </p>
+	 * 
+	 * <p>
+	 * No action is taken if the MOF authority required is already disabled.
+	 * </p>
+	 */
+	public void resetMOFApprovingAuthReq() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofAuthorityReq(false);
+		}
+	}
+	// End Fix - #39722
 }
