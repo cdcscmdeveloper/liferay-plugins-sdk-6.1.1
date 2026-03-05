@@ -105,12 +105,14 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 			addDistrictParam(params);
 			
 			// #32521 - START
-			SimpleDateFormat df = new SimpleDateFormat(
-					CommonConstants.DEFAULT_DATE_FORMAT);
-			params.put(SmReportConst.PARAM_DATE_FROM,
-					df.format(getManagedBean().getDateFrom()));
-			params.put(SmReportConst.PARAM_DATE_TO,
-					df.format(getManagedBean().getDateTo()));
+			if(getManagedBean().getDateFrom() != null){
+				SimpleDateFormat df = new SimpleDateFormat(
+						CommonConstants.DEFAULT_DATE_FORMAT);
+				params.put(SmReportConst.PARAM_DATE_FROM,
+						df.format(getManagedBean().getDateFrom()));
+				params.put(SmReportConst.PARAM_DATE_TO,
+						df.format(getManagedBean().getDateTo()));	
+			}
 
 			if (StringUtils.isNotBlank(getManagedBean()
 					.getDisciplinaryActionStatus())) {
