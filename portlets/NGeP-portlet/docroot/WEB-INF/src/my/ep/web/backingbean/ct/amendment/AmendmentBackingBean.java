@@ -676,13 +676,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (taskId == null) {
 				ConstructTabSideMenu();
 				
-				// #24336 - Start
-				// Runs all initial setup when the page is first loaded
-				if (!ctBackingBean.getManagedBean().isInitPage()) {
-				    initializePage();
-				}
-				// #24336 - End
-
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -809,6 +802,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSignOffDecision(false);
 			
 //			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
+			
+			// #24336 - Start
+			// Runs all initial setup when the page is first loaded
+			if (!ctBackingBean.getManagedBean().isInitPage()) {
+			    initializePage();
+			}
+			// #24336 - End
 
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
@@ -9430,8 +9430,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Validate all required amendment checklist items are completed */
 	private void validateAmendmentChecklist(){
-		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		ContractManagedBean bean = ctBackingBean.getManagedBean();
+		
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+		CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
 		
 		boolean[] amendmentFlags = new boolean[]{
 		        amendment.isContractExtend(),
@@ -9443,13 +9444,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		        amendment.isOtherChange()
 		    };
 	    boolean[] checklistFlags = new boolean[]{
-	        bean.isContractExtendChecklist(),
-	        bean.isItemPriceChangeChecklist(),
-	        bean.isQuantityChangeChecklist(),
-	        bean.isValueChangeChecklist(),
-	        bean.isClauseChangeChecklist(),
-	        bean.isValueChangeByGstChecklist(),
-	        bean.isOtherChangeChecklist()
+	    		contractManagedBean.isContractExtendChecklist(),
+	    		contractManagedBean.isItemPriceChangeChecklist(),
+	    		contractManagedBean.isQuantityChangeChecklist(),
+	    		contractManagedBean.isValueChangeChecklist(),
+	    		contractManagedBean.isClauseChangeChecklist(),
+	    		contractManagedBean.isValueChangeByGstChecklist(),
+	    		contractManagedBean.isOtherChangeChecklist()
 	    };
 	    boolean isError = false;
 	    for (int i = 0; i < amendmentFlags.length; i++) {
@@ -9581,7 +9582,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Initializes the committee type during page first load. */
 	private void initCommitteeType() {
-	    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
+		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (ctAmendment == null) {
+	        return;
+	    }
+		
+	    if (ctAmendment.getCommitteeType() == null) {
 	    	// Sets default desk officer committee from QT
 	        handleOriginalDeskOfficerCommitteeQT();
 	    }else{
@@ -9634,9 +9640,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Loads the correct checklist options based on data */
 	private void handleSelectedAmendmentChecklistValue() {
-	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-	    ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
-
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
+	    if(amendment == null){
+	    	return;
+	    }
+	    
 	    if (isCtApproverSetting()) {
 	    	contractManagedBean.setContractExtendChecklist(amendment.isContractExtend());
 	    	contractManagedBean.setItemPriceChangeChecklist(amendment.isItemPriceChange());
@@ -9652,7 +9661,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Updates values when amendment type changes. */
 	private void handleAmendmentTypeValueChange() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
+	    if(amendment == null){
+	    	return;
+	    }
+	    
+		if (amendment.isValueChange()){
 			handleContractValueTypeChange();
 		}
 	}
