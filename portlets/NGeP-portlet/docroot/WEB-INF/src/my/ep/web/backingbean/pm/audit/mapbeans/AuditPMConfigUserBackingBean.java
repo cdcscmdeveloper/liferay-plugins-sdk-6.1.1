@@ -581,4 +581,3 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		return map;
 	}
 }
-
