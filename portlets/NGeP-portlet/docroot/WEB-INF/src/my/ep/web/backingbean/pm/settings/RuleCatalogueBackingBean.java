@@ -1707,9 +1707,11 @@ public class RuleCatalogueBackingBean extends
 	boolean isDateOverlaped(Date start1, Date end1, Date start2, Date end2) {
 		this.getManagedBean().setFirstExpiryDateIsNull(false);
 
-		if (isEmptyDate(end1) && !isEmptyDate(start2)) {
-		    this.getManagedBean().setFirstExpiryDateIsNull(true);
-		    return true;
+		if (this.getManagedBean().getTabActiveIndex() == 0) {
+			if (isEmptyDate(end1) && !isEmptyDate(start2)) {
+				this.getManagedBean().setFirstExpiryDateIsNull(true);
+				return true;
+			}
 		}
 		if (end1 == null && end2 == null) {
 			return true;
