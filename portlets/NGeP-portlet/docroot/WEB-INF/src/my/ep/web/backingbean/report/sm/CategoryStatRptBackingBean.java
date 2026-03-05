@@ -37,7 +37,7 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 		//#7754_#35954 - End
 		getManagedBean().setRegStatusLs(retrieveRegStatusList());
 		//#32521 - START
-		setDefaultDateFromAndDateTo();
+		//setDefaultDateFromAndDateTo();
 		//#32521 - END
 	}
 	
