@@ -1,0 +1,60 @@
+<!-- #29732 Start -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<cc:interface>
+		<cc:attribute name="catCodeList" />
+		<cc:attribute name="widget" default="" />
+	</cc:interface>
+	<cc:implementation>
+		<ui:param name="catCodeList" value="#{cc.attrs.catCodeList}" />
+		<ui:param name="widget" value="#{cc.attrs.widget}" />
+		<style>
+.dialogContainer {
+	width: 70% !important;
+}
+
+.gridContainer {
+	width: 100%;
+}
+
+.sp-centered {
+	text-align: center;
+	display: block;
+}
+</style>
+		<p:dialog id="catCodeChangeAlertPopup"
+			header="#{lbl['lbl.sc.category.history.header']}" closable="true"
+			widgetVar="#{widget}" modal="true" styleClass="dialogContainer"
+			position="center" resizable="false">
+			<h:panelGroup id="catCodeChangeAlertGroupId" layout="block">
+				<h:panelGrid styleClass="gridContainer">
+					<p:panel id="catCodeChangeAlertPanelId">
+						<span> <h:outputText
+								value="#{lbl['lbl.sc.category.change.alert.text.one']}" />
+						</span>
+						<br />
+						<br />
+						<span> <h:outputText  rendered="#{!specificationBackingBean.managedBean.checkUserCanRevise}"
+								value="#{lbl['lbl.sc.category.change.alert.text.two']}" />&#160;
+								<h:outputText rendered="#{specificationBackingBean.managedBean.checkUserCanRevise}"
+								value="#{lbl['lbl.sc.category.change.alert.text.two.a']}" />&#160;
+							<h:outputText value="#{catCodeList}" />&#160; <h:outputText
+								value="#{lbl['lbl.sc.category.change.alert.text.three']}" />
+						</span>
+					</p:panel>
+				</h:panelGrid>
+				<h:panelGrid style="float:right">
+					<p:commandButton value="#{lbl['lbl.sc.category.change.alert.ok']}"
+						immediate="true" oncomplete="#{widget}.hide()" />
+				</h:panelGrid>
+			</h:panelGroup>
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>
+<!-- #29732 End -->
