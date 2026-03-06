@@ -377,11 +377,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 				// Start Fix - #30856
 				if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
-
-					if (!ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty()) {
-						removePerformanceDatatableRow();
-					}
-
+					//Remove Code for removePerformanceDatatableRow - #40072 
+				
 					// Start - Fix #29368
 					if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)) {
 						checkandResetBondExempted();
@@ -1298,6 +1295,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		        }
 		    }
 		// 24333 - End
+		
+		//#40072 - Start
+		if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()
+				&& !ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty()) {
+			removePerformanceDatatableRow();
+		}
+		//#40072 - End
 		
 		//#13847 start
 		if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
@@ -4307,9 +4311,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				Iterator<CtPerformanceBond> performanceBond = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
 				while (performanceBond.hasNext()) {
 					CtPerformanceBond  bond = performanceBond.next();
-				      if (bond != null){
-						performanceBond.remove();
-				    }
+					if (bond != null) {
+						//#40072 - Start
+	                    if (ctBB.isContractExtendOrIsBond()) {
+	                        // Hanya hapus yang bondNew == 1
+	                        if (bond.isBondNew()) {
+	                            performanceBond.remove();
+	                        }
+	                    } else {
+	                        // Hapus semua
+	                        performanceBond.remove();
+	                    }
+	                  //#40072 - End
+	                }
 				}
 			}
 	
