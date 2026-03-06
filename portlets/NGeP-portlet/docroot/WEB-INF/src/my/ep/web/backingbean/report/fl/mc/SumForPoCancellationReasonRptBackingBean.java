@@ -36,7 +36,7 @@ public class SumForPoCancellationReasonRptBackingBean extends FlReportBackingBea
 	
 	public SumForPoCancellationReasonRptBackingBean() {
 		if(getManagedBean().getMinistry() == null){
-			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
 				defaultPtjGrpAndPtjValues();
 			}else{
 				defaultPtjAndMinistryValues();
