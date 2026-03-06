@@ -37,7 +37,7 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 		// #7754_#35954 - End
 		getManagedBean().setRegStatusLs(retrieveRegStatusList());
 		// #32521 - START
-		setDefaultDateFromAndDateTo();
+		//setDefaultDateFromAndDateTo();
 		// #32521 - END
 	}
 	
@@ -105,12 +105,14 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 			addDistrictParam(params);
 			
 			// #32521 - START
-			SimpleDateFormat df = new SimpleDateFormat(
-					CommonConstants.DEFAULT_DATE_FORMAT);
-			params.put(SmReportConst.PARAM_DATE_FROM,
-					df.format(getManagedBean().getDateFrom()));
-			params.put(SmReportConst.PARAM_DATE_TO,
-					df.format(getManagedBean().getDateTo()));
+			if(getManagedBean().getDateFrom() != null){
+				SimpleDateFormat df = new SimpleDateFormat(
+						CommonConstants.DEFAULT_DATE_FORMAT);
+				params.put(SmReportConst.PARAM_DATE_FROM,
+						df.format(getManagedBean().getDateFrom()));
+				params.put(SmReportConst.PARAM_DATE_TO,
+						df.format(getManagedBean().getDateTo()));	
+			}
 
 			if (StringUtils.isNotBlank(getManagedBean()
 					.getDisciplinaryActionStatus())) {
@@ -162,7 +164,7 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 		getManagedBean().setDateTo(null);
 		// #38227 - END
 		// #32521 - START
-		setDefaultDateFromAndDateTo();
+		//setDefaultDateFromAndDateTo();
 		getManagedBean().setDisciplinaryActionStatus(null);
 		// #32521 - END
 		// #7754_#35984 - Start
