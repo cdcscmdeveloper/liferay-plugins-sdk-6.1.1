@@ -14,7 +14,7 @@
 					<div align="right" style="width: 100%">
 						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="budgetThreSaveBtn" process="@([id$=budgetThresholdPanel])"
-							partialSubmit="true" oncomplete="if (!args.validationFailed) saveBudgetThreInfoDlg.show();"/> <!-- #40055 -->
+							partialSubmit="true" oncomplete="if (!args.validationFailed) saveBudgetThreInfoDlg.show();"/> <!-- #34445, Fix as-is bug:#40055 -->
 						<!-- 34445 end -->
 					</div>
 				</td>
@@ -30,7 +30,7 @@
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pm.btn.save.msg']}" 
 			update="@([id$=budgetThresholdPanel])"
-			loadingWidget="blockWidget" /> <!-- #40055 Change update -->
+			loadingWidget="blockWidget" /> <!-- #34445, Fix as-is bug:#40055 Change update -->
 		<!-- 34445 end -->
 		
 		<table width="80%">
