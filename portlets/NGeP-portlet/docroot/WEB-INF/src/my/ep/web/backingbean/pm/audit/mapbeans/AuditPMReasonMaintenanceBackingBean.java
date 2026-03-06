@@ -4,11 +4,13 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmPIDReason;
@@ -624,14 +626,18 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	 */
 	private String checkPIDReason(String pidDocType) {
 
-		PmParameter pmParameter = getParameterByTypeAndCode("DT", pidDocType);
 		String description = null;
+//		PmParameter pmParameter = getParameterByTypeAndCode("DT", pidDocType);
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		description = ParameterHelper.getInstance().getParameterDesc("DT", pidDocType, locale);
+				   
+		/**String description = null;
 
-		for (PmParameterDesc desc : pmParameter.getPmParameterDescsSpecCallOnly()) {
+		for (PmParameterDesc desc : pmParameter.getPmParameterDescs()) {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 				description = desc.getCodeName();
 			}
-		}
+		}*/
 		return description;
 
 	}
@@ -654,7 +660,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 
 		if (pmParameter.getParameterId() != null) {
 			PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(pmParameter.getParameterId());
-			for (PmParameterDesc desc : parameter.getPmParameterDescsSpecCallOnly()) {
+			for (PmParameterDesc desc : parameter.getPmParameterDescs()) {
 				if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 					description = desc.getCodeName();
 				}
