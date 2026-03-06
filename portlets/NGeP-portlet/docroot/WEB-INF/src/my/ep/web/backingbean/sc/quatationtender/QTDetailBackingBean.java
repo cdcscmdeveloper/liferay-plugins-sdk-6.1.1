@@ -3344,7 +3344,7 @@ public class QTDetailBackingBean extends
 	 *            the outcome
 	 * @return the string
 	 */
-	public String updateBpmTask(String outcome) {
+	public void updateBpmTask(String outcome) {
 		
 		//25037 - start - remove after clone(25635) enter production
 		assertSpecificationUpdateInProgress(false);
@@ -3645,24 +3645,18 @@ public class QTDetailBackingBean extends
 								procurementMode, qtNo }, true);
 					}
 				} else {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-									getMsgCodeByTaskName(taskName),
-									new String[] {
-											getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
-													ParameterConst.DOCTYPE_QUOTATION), qt.getQtNo() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					successMessage(getMsgCodeByTaskName(taskName), ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_QUOTATION, qt.getQtNo(), Boolean.TRUE);
 				}
+				renewSesionObject();
 				// 25037 - end
+
 				debugLogger("end of updateBpmTask");
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
 			detailSO = null;
 			committeSO=null;
 		}
-		return null;
 	}
 
 	// #30477/#25426 -start-
@@ -7080,7 +7074,7 @@ public class QTDetailBackingBean extends
 	 * 
 	 * @return the string
 	 */
-	public String submitQtCancelDetails() {
+	public void submitQtCancelDetails() {
 
 		IQTDetailSO detailSO;
 		try {
@@ -7133,17 +7127,7 @@ public class QTDetailBackingBean extends
 						.getUserSessionBean());
 				quationTenderReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 				
-				ackMsg = MessageUtils
-						.getMessage(
-								MessageConst.INFO_700052,
-								new String[] {
-										getParameterDesc(
-												ParameterTypeConst.DOCUMENT_TYPES,
-												ParameterConst.DOCTYPE_QUOTATION),
-										qt.getQtNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes()
-										.getUserLocale());
+				ackMsg = MessageConst.INFO_700052;
 			} else {
 				quationTenderReqDTO.setQtId(this.getManagedBean().getQt()
 						.getQtId());
@@ -7170,37 +7154,15 @@ public class QTDetailBackingBean extends
 				quationTenderReqDTO.setPmUser(new FacesScopes()
 						.getUserSessionBean());
 				
-				ackMsg = MessageUtils
-						.getMessage(
-								MessageConst.INFO_700031,
-								new String[] {
-										getParameterDesc(
-												ParameterTypeConst.DOCUMENT_TYPES,
-												ParameterConst.DOCTYPE_QUOTATION),
-										qt.getQtNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes()
-										.getUserLocale());
-
+				ackMsg = MessageConst.INFO_700031;
 			}
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.cancleQT(quationTenderReqDTO);
 
 			if (quationTenderResDTO.isSuccessful()) {
-				FacesContext
-				.getCurrentInstance()
-				.addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								ackMsg));
-				
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				successMessage(ackMsg, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+						qt.getQtNo(), Boolean.TRUE);
 			}
-			
-			return null;
-
 		} finally {
 			detailSO = null;
 		}
