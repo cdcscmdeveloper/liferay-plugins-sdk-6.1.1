@@ -149,10 +149,13 @@
 					action="#{backingBean.assignNewBranchBean}" partialSubmit="true"
 					process="@this" update=":form:tt:banchDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #27297, #28777 - START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
-					partialSubmit="true" process="brnInfPan"
+					action="#{backingBean.validateCompanyBranch(backingBean.managedBean)}"
+					partialSubmit="true" process="brnInfPan, pendingQTPopUpId"
 					id="delBranchBtnId" disabled="#{empty backingBean.managedBean.smAppl.smSupplierBranches}"
-					update=":form:tt:dt" oncomplete="branchDeletePopUp.show()" />
+					update=":form:tt:dt, pendingQTPopUpId" />
+				<!-- #27297, #28777 - END -->
 
 			</div>
 			<br />
