@@ -1,6 +1,3 @@
-/*
- * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
- */
 package my.ep.web.managedbean.au;
 
 import javax.faces.bean.ManagedBean;

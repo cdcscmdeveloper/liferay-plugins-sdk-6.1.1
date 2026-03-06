@@ -1,6 +1,3 @@
-/*
- * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
- */
 package my.ep.web.bean.au;
 
 import java.io.Serializable;
@@ -177,7 +174,7 @@ public class AuditPatchSearchBean implements Serializable {
 	/**
 	 * @return the docTypeCodeOldVal
 	 */
-	public Integer getDocTypeCodeOldVal() {
+	public Integer getDocTypeIDOldVal() {
 		return docTypeIDOldVal;
 	}
 
