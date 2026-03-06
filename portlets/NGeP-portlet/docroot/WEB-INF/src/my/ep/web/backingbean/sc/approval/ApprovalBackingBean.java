@@ -33,6 +33,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;//#28188
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -102,6 +103,7 @@ import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtAmend;
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -1608,7 +1610,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tenderResDTO.setQtDetail(qt);			
 				
 			} else {
-				log.info("harun pening check changes here 22222=================");
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
 				List<String> approvalTypes = null;
@@ -1636,7 +1637,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<ScQtApprovalRequest> approvalRequests = this.getManagedBean().getScQtApprovalRequestList();
 				
 				if (ParameterConst.APPROVAL_CATEGORY_BPK.equalsIgnoreCase(approvalCategoryCode)) { //BPK
-					log.info("harun pening check revise or reject BPK================");
 					approvalDocType = ParameterConst.DOCTYPE_BPK_APPROVAL;
 					approval.setApproverSettings(null);
 
@@ -1653,7 +1653,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equalsIgnoreCase(approvalCategoryCode)) { //FC
-					log.info("harun pening check revise or reject FC================");
 					approvalRequests = proposalValidityWip(outcome);//#21692
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
@@ -1673,7 +1672,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approvalCategoryCode)) {
-					log.info("harun pening check approve or reject PTJ================");
 					List<ScQtBsv> scQtBsvs = new QTDetailBackingBean()
 						.constructBriefingSiteVisitList(qt);
 					qtReqDTO.setScQtBsvs(scQtBsvs);
@@ -1690,18 +1688,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				updateApprovalRequest(approvalRequests, outcome);
 
-				log.info("harun pening check changes here 3333=================");
-				finalizeRemarks(approval.getScQtApprovalRemarks()); //disabled temporary by harun
+				finalizeRemarks(approval.getScQtApprovalRemarks());
 				// approval.getScQtApprovalDtls().clear();
 
 				approval.setScQtApprovalDtls(approvalRequests);
 
-				log.info("harun pening check changes here 3333 VVVVV=================");
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
 				qt.setScQtApprovals(qtApproval);
-				log.info("harun pening check changes here 5555=================");
-
+	
 				qt.setScQtCommittees(null);
 				qtReqDTO.setPayLoad(dataType);
 				
@@ -1784,8 +1779,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						prepareQtMaintenanceAuditTrail(qt, tenderResDTO.getGroupTabSection(), null);
 					}
 					//28895-35500 End
-				}				
-				
+				}
 			}
 			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
 		} catch (Exception e) {
@@ -2514,7 +2508,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				ScQtApprovalRequest approvalRequest = approvalRequests.get(i);
 				String approvalType = approvalRequest.getApprovalType()
 						.getParameterCode();
-				log.info("harun pening check revertToOldValues approvalType==================="+approvalType);
 				if (ParameterConst.APPROVAL_REQUEST_RESTRICTED_TENDER
 						.equalsIgnoreCase(approvalType)) {
 					
@@ -2558,33 +2551,66 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 
 				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(approvalType)) {
-					log.info("harun pening check revertToOldValues approvalType UBD TRUE===================");
+					//#28188 - Start
 					// Proposal Start Date
-					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
-					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
-						scQt.setProposalStartDate((Date)valueBean.getOldValue());
-						updatePublishClosingDate(scQt);
-					}
-					
-//					//Status
-//					QtAmendMentValueBean valueBeanProposalDate = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
-//					log.info("harun cek STATUS valueBeanProposalDate.getOldValue() =============="+valueBeanProposalDate.getOldValue());
-//					log.info("harun cek STATUS valueBeanProposalDate.getNewValue() =============="+valueBeanProposalDate.getNewValue());
-	
-//					for (ScQtBsv briefing : scQt.getScQtBriefings()) {
-//						for (ScQtBsvDtl dtl : briefing.getScQtBsvDtls()) {
-//							if (dtl.getBsvStatus() != null) {
-//								Long oldStatusId = dtl.getBsvStatus().getStatusId();
-//								log.info("Old STATUS = " + oldStatusId);
-//								// update status
-//								//dtl.setBsvStatus(rejectStatus);
-//								if(QTStatusConst.BSV_POSTPONE.equals(oldStatusId)){
-//									dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_REQUEST_REJECT);
-//									log.info("harun cek dtl.getBsvStatus().getStatusId()============="+dtl.getBsvStatus().getStatusId());
-//								}
-//							}
-//						}
+					//Disabled  old code as getAmendMentBean() could be NPE(Null Pointer Exception) and change with NPE handler
+					//With added Closing date amend data
+//					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+//					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
+//						scQt.setProposalStartDate((Date)valueBean.getOldValue());
+//						updatePublishClosingDate(scQt);
 //					}
+					
+					if (this.getManagedBean() != null && this.getManagedBean().getAmendMentBean() != null) {
+						// Proposal Start Date
+						QtAmendMentValueBean valueBean = this.getManagedBean().getAmendMentBean()
+					                    				.getValueMap()
+					                    				.get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+
+					    if (valueBean != null) {
+					        Object oldValue = valueBean.getOldValue();
+
+					        if (oldValue instanceof Date) {
+					            scQt.setProposalStartDate((Date) oldValue);
+					            updatePublishClosingDate(scQt);
+					        }
+					    }
+					}else{
+						QtAmendMentBean amendMentBean = null;
+						IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						
+						ScQtAmend scQtAmend = detailSO.retrieveQtAmend(scQt.getQtId());
+						
+						if (null != scQtAmend) {
+							amendMentBean = detailSO.getQtAmendMentBean(scQtAmend);
+
+							if (amendMentBean != null) {
+								QtAmendMentValueBean valueBean = amendMentBean.getValueMap()
+										.get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+								// Proposal Start Date
+							    if (valueBean != null) {
+							        Object oldValue = valueBean.getOldValue();
+
+							        if (oldValue instanceof Date) {
+							            scQt.setProposalStartDate((Date) oldValue);
+							            updatePublishClosingDate(scQt);
+							        }
+							    }
+								
+								// Closing Date
+							    if (valueBean != null) {
+							        Object oldValue = valueBean.getOldValue();
+
+							        if (oldValue instanceof Date) {
+							        	scQt.setClosingDate((Date) oldValue);
+							            updatePublishClosingDate(scQt);
+							        }
+							    }
+							}
+						}
+					}
+					//#28188 - End
 				}
 			}
 		}
@@ -4351,4 +4377,5 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End
+	
 }

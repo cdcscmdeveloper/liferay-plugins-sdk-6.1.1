@@ -11,6 +11,7 @@
 		<cc:attribute name="required" default="false" />
 		<cc:attribute name="disabled" default="false" />
 		<cc:attribute name="mindate" />
+		<cc:attribute name="minDateTime" /><ui:remove>#28188 </ui:remove>
 		<cc:attribute name="maxdate" />
 		<cc:attribute name="label" />
 		<cc:attribute name="size" />
@@ -33,10 +34,13 @@
 			disabled="#{cc.attrs.disabled}"
 			readonlyInput="true" 
 			mindate="#{cc.attrs.mindate}" 
+			minDateTime="#{cc.attrs.minDateTime}" 
 			maxdate="#{cc.attrs.maxdate}" 
 			label="#{cc.attrs.label}"
 			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-			<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<ui:remove>#28188 - Start Change attribute </ui:remove>
+			<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="#{cc.id}sb:calHour" immediate="false" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<ui:remove>#28188 - End Change attribute </ui:remove>
 			
 			<cc:insertChildren />
 		</p:calendar>
@@ -45,7 +49,9 @@
 			disabled="#{cc.attrs.disabled}"
 			required="#{cc.attrs.required}"
 			label="#{cc.attrs.label} #{lbl['lbl.txt.hour']}">
-			<f:selectItems value="#{dateTimeBackingBean.hoursDropdownValues}" />
+			<ui:remove>#28188 - Start Change selectItem method </ui:remove>
+			<f:selectItems value="#{dateTimeBackingBean.getHoursDropdownValues(cc)}" />
+			<ui:remove>#28188 - End Change selectItem method </ui:remove>
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 		</h:selectOneMenu>
 		<h:selectOneMenu id="calMin" style="width: 72px;"
