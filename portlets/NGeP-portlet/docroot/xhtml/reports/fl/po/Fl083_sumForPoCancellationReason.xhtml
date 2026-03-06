@@ -37,12 +37,12 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{poSumForPoCancelReasonRptBB.disablePtjGroupLovByReportCode()}"
+					disabled="#{poSumForPoCancelReasonRptBB.disablePtjGroupLovAdhocPO()}"
 					value="#{poSumForPoCancelReasonRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="poSumForPoCancelReasonRptBB.resetPtjProfile()"
 					update=":form"
 					saveObject="poSumForPoCancelReasonRptBB.managedBean.ptjGroup"
-					conditionField="#{poSumForPoCancelReasonRptBB.constuctConditionFieldsForPTJGroup()}">
+					conditionField="#{poSumForPoCancelReasonRptBB.constuctConditionForPTJGroupAdhocReport()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -54,11 +54,11 @@
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{poSumForPoCancelReasonRptBB.disablePtjLovByReportCode()}"
+					disabled="#{poSumForPoCancelReasonRptBB.disablePtjLovAdhocPO()}"
 					value="#{poSumForPoCancelReasonRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="poSumForPoCancelReasonRptBB.managedBean.ptj"
-					conditionField="#{poSumForPoCancelReasonRptBB.getPTJCondition()}">
+					conditionField="#{poSumForPoCancelReasonRptBB.constuctConditionForPTJAdhocReport()}">
 				</ac:lov>
 			</td>
 		</tr>
