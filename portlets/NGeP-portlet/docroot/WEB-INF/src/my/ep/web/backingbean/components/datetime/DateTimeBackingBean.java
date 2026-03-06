@@ -121,32 +121,30 @@ public class DateTimeBackingBean {
 	 * @param component the component
 	 * @return the date
 	 */
-//	public Date timeChangedAction(UIComponent component) {
-//		debugLogger("timeChangedAction");
-//		
-//		Date dateValue = null;
-//		FacesScopes facesScopes = new FacesScopes();
-//		org.primefaces.component.calendar.Calendar calDateObj = (org.primefaces.component.calendar.Calendar)facesScopes.findComponentById(component, "calDate");
-//		Object dateObj = calDateObj.getValue();
-//		Object hourObj = ((HtmlSelectOneMenu)facesScopes.findComponentById(component, "calHour")).getValue();
-//		Object minuteObj = ((HtmlSelectOneMenu)facesScopes.findComponentById(component, "calMin")).getValue();
-//		
-//		if (dateObj != null && hourObj != null && minuteObj != null) {
-//			int hourValue = Integer.parseInt((String)hourObj);
-//			int minuteValue = Integer.parseInt((String)minuteObj);
-//			
-//			Calendar c1 = Calendar.getInstance();
-//			c1.setTime((Date)dateObj);
-//			c1.set(Calendar.HOUR_OF_DAY, hourValue);
-//			c1.set(Calendar.MINUTE, minuteValue);
-//			
-//			dateValue = c1.getTime();
-//		}
-//		
-//		return dateValue;
-//	}
-	
-
+	public Date timeChangedAction(UIComponent component) {
+		debugLogger("timeChangedAction");
+		
+		Date dateValue = null;
+		FacesScopes facesScopes = new FacesScopes();
+		org.primefaces.component.calendar.Calendar calDateObj = (org.primefaces.component.calendar.Calendar)facesScopes.findComponentById(component, "calDate");
+		Object dateObj = calDateObj.getValue();
+		Object hourObj = ((HtmlSelectOneMenu)facesScopes.findComponentById(component, "calHour")).getValue();
+		Object minuteObj = ((HtmlSelectOneMenu)facesScopes.findComponentById(component, "calMin")).getValue();
+		
+		if (dateObj != null && hourObj != null && minuteObj != null) {
+			int hourValue = Integer.parseInt((String)hourObj);
+			int minuteValue = Integer.parseInt((String)minuteObj);
+			
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime((Date)dateObj);
+			c1.set(Calendar.HOUR_OF_DAY, hourValue);
+			c1.set(Calendar.MINUTE, minuteValue);
+			
+			dateValue = c1.getTime();
+		}
+		
+		return dateValue;
+	}
 	
 	/**
 	 * Post update listener.
@@ -173,7 +171,7 @@ public class DateTimeBackingBean {
 	 * @param component the component
 	 * @return the date
 	 */
-	public Date timeChangedAction(UIComponent component) {
+	public Date timeChangedActionBSV(UIComponent component) {
 		debugLogger("timeChangedAction");
 
 	    Date dateValue = null;
@@ -260,7 +258,6 @@ public class DateTimeBackingBean {
 	        }
 	    }
 
-
 	    log.info("MIN DATE = " + minDate);
 	    log.info("SELECTED DATE = " + selectedDate);
 
@@ -293,5 +290,6 @@ public class DateTimeBackingBean {
 	    return hours;
 	}
 	//#28188 - End
+	
 	
 }
