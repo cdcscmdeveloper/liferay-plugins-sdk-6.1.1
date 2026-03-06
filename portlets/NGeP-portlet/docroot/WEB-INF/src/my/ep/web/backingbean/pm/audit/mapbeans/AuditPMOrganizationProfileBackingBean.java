@@ -715,11 +715,12 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	private String checkOrgType() {
 		String description = null;
 
-		for (PmParameterDesc desc : orgProfile.getOrgTypeCode().getPmParameterDescsSpecCallOnly()) {
+		/**for (PmParameterDesc desc : orgProfile.getOrgTypeCode().getPmParameterDescsSpecCallOnly()) {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 				description = desc.getCodeName();
 			}
-		}
+		}*/
+		description = ParameterHelper.getInstance().getPmParameterAuditById(orgProfile.getOrgTypeCode().getParameterId());
 		return description;
 
 	}
