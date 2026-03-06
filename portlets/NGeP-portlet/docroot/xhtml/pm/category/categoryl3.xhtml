@@ -1,7 +1,8 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -11,7 +12,8 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" severity="error,info" showSummary="false"></p:messages>
+			closable="true" severity="error,info" showSummary="false">
+		</p:messages>
 		<table style="width: 100%;">
 			<tr>
 				<td>
@@ -34,8 +36,7 @@
 			</tr>
 		</table>
 
-		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
-			id="catParent">
+		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true" id="catParent">
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 17%"><p:outputLabel
@@ -95,7 +96,7 @@
 							<f:validateDoubleRange maximum="99999999999999" />
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							<p:ajax event="blur" process="@this" update="@this" />
-
+							
 							<!-- start #29665 add listener and update remark -->
 							<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 								<p:ajax event="change" process="@this" update="@this,remarkFieldId" 
@@ -106,7 +107,7 @@
 								<p:ajax event="blur" process="@this" update="@this"/> 
 							</c:if>
 							<!-- end #29665 add listener and update remark -->
-
+							
 						</p:inputText> <p:message id="paidUpCapIdMsg" for="paidUpCapId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
@@ -189,9 +190,11 @@
 						</c:if>
 						<!-- End #29665 Add action -->
 					</td>
-					<td><p:outputLabel value="#{lbl['lbl.pm.facility.type']}" />
-						</td>
-					<td><p:selectOneMenu id="facilityTypeId" required="#{categoryBackingBean.managedBean.facilityTypeChoosable}" label="#{lbl['lbl.pm.facility.type']}"
+					<td>
+						<p:outputLabel value="#{lbl['lbl.pm.facility.type']}" />
+					</td>
+					<td>
+						<p:selectOneMenu id="facilityTypeId" required="#{categoryBackingBean.managedBean.facilityTypeChoosable}" label="#{lbl['lbl.pm.facility.type']}"
 					       disabled="#{!categoryBackingBean.managedBean.facilityTypeChoosable}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.facilityType}">
 							<f:selectItems value="#{categoryBackingBean.getDropdownCodeValuesBySearchBean(ParameterTypeConst.supplierFacilityType , facilityTypeSearchBean)}" />
@@ -200,8 +203,8 @@
 								<p:ajax event="change" update="remarkFieldId" listener="#{categoryBackingBean.onChangeDescription}" disabled="#{!categoryBackingBean.remarkDisable}" />
 							</c:if>
 							<!-- end #29665 add ajax-->
-						</p:selectOneMenu></td>
-
+						</p:selectOneMenu>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.group']}" /></td>
@@ -223,7 +226,6 @@
 							</c:if>
 							<!-- end #29665 add ajax -->
 						</p:selectBooleanCheckbox></td>
-
 				</tr>
 				<!-- Start #29665: Add History Field -->
 				<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
@@ -327,7 +329,8 @@
 							<!-- end #29665 add ajax -->
 						</p:selectOneMenu> <p:message id="supplierTypeUpdateIdMsg"
 							for="supplierTypeUpdateId" showSummary="true" showDetail="false"
-							display="icon" /> <p:selectOneMenu id="supplierTypeCreateId"
+							display="icon" />
+						<p:selectOneMenu id="supplierTypeCreateId"
 							required="true" label="#{lbl['lbl.pm.supplier.type']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
@@ -441,23 +444,23 @@
 								headerText="#{lbl['lbl.pm.action']}">
 								<!-- #29665 add update remark-->
 								<p:commandLink
-										disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
-										action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
-										update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable 
-												?'groupdetailsId,:form:remarkFieldId' 
-												:'groupdetailsId'}">
-										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-									</p:commandLink>
-								</p:column>
-							</p:dataTable>
-
-							<div class="ppRightBtn">
-								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
-									action="#{categoryBackingBean.addBasicCategory()}"
-									oncomplete="lovPopupCategory.show();" process="@this"
-									partialSubmit="true" update="lovPopupCategory" />
-							</div>
+									action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
+									update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable 
+										?'groupdetailsId,:form:remarkFieldId' 
+										:'groupdetailsId'}">
+										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
+								action="#{categoryBackingBean.addBasicCategory()}"
+								oncomplete="lovPopupCategory.show();" process="@this"
+								partialSubmit="true" update="lovPopupCategory" />
+						</div>
 						</p:outputPanel> <!-- #29665 -->
 
 						<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory"
@@ -487,13 +490,16 @@
 
 									<table style="width: 100%;">
 										<tr>
-											<td style="text-align: right;"><p:commandButton
-													value="#{lbl['lbl.btn.search']}"
-													action="#{categoryBackingBean.searchLOV}" update="lovTb2">
-												</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}"
+											<td style="text-align: right;">
+												<p:commandButton value="#{lbl['lbl.btn.search']}"
+													action="#{categoryBackingBean.searchLOV}"
+													update="lovTb2">
+												</p:commandButton>
+												<p:commandButton value="#{lbl['lbl.btn.reset']}"
 													action="#{categoryBackingBean.resetLOV}"
 													update="searchPanel,resultPanel">
-												</p:commandButton></td>
+												</p:commandButton>
+											</td>
 										</tr>
 									</table>
 								</h:panelGroup>
@@ -541,7 +547,8 @@
 												action="#{categoryBackingBean.resetLOV}"
 												oncomplete="lovPopupCategory.hide();"
 												update="searchPanel,resultPanel">
-											</p:commandButton></td>
+											</p:commandButton>
+										</td>
 									</tr>
 								</table>
 							</p:panel>
@@ -590,7 +597,7 @@
 
 							<p:column style="width:7%;text-align:center;"
 								headerText="#{lbl['lbl.pm.action']}">
-
+								
 								<!--start #29665 add update remark field -->
 								<p:commandLink partialSubmit="true" process="@this"
 									disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}"
@@ -675,7 +682,7 @@
 									</p:selectManyCheckbox>
 									<!-- end #29665 new checkbox -->
 							</p:column>
-						
+
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="*" styleClass="mandatory" />
@@ -730,31 +737,28 @@
 
 							<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
 								<h:panelGroup id="searchPanel2" style="width:100%;">
-									<h:panelGrid columns="3" id="lovCriteria2" cellpadding="0"
-										cellspacing="0">
-
-										<p:selectOneMenu
-											value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems
-												value="#{categoryBackingBean.managedBean.searchField}" />
+									<h:panelGrid columns="3" id="lovCriteria2" cellpadding="0" cellspacing="0">
+										<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItems value="#{categoryBackingBean.managedBean.searchField}" />
 										</p:selectOneMenu>
-										<p:inputText
-											value="#{categoryBackingBean.managedBean.searchValue[1]}"
-											style="margin-top:2.5%;" />
+										<p:inputText value="#{categoryBackingBean.managedBean.searchValue[1]}" style="margin-top:2.5%;" />
 									</h:panelGrid>
 
 									<table style="width: 100%;">
 										<tr>
-											<td style="text-align: right;"><p:commandButton
+											<td style="text-align: right;">
+												<p:commandButton
 													value="#{lbl['lbl.btn.search']}"
 													action="#{categoryBackingBean.searchPmMachineLOV}"
 													update="lovTb22">
-												</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}"
+												</p:commandButton>
+												<p:commandButton
+													value="#{lbl['lbl.btn.reset']}"
 													action="#{categoryBackingBean.resetPmMachineLOV}"
 													update="searchPanel2,resultPanel2">
-												</p:commandButton></td>
+												</p:commandButton>
+											</td>
 										</tr>
 									</table>
 								</h:panelGroup>
@@ -798,7 +802,7 @@
 												action="#{categoryBackingBean.populateToSavePmMachineLOV}"
 												oncomplete="lovPopupPmMachine.hide();" />
 											<!-- end #29665 add listener and update remark -->
-
+											
 											<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 												action="#{categoryBackingBean.resetPmMachineLOV}"
 												oncomplete="lovPopupPmMachine.hide();"

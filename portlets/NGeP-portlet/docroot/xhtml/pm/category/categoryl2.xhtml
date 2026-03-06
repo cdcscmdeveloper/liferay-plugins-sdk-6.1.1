@@ -28,7 +28,7 @@
 						update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
 				</td>
-				
+
 				<!-- Start #29665 remove save button, replace by update and save, change update button behaviour -->
 				<!-- #29665 - Start -->
 				<td style="display: #{!categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
@@ -41,7 +41,7 @@
 						action="#{categoryBackingBean.saveSubCategory}"
 						update="@([id$=Msg])" style="float:right;width: auto;" /></td>
 				<!-- #29665 - End -->
-				<!-- End #29665 remove save button, replace by update and save, change update button behaviour -->		
+				<!-- End #29665 remove save button, replace by update and save, change update button behaviour -->
 			</tr>
 			
 		</table>
@@ -247,7 +247,7 @@
 
 			</p:panel>
 		</c:if>
-
+		
 		<!-- Start #29665 Add confirmation dialog -->
 		<ac:confirmationPopup id="updateCategDialog" widget="updateCategDialog"
 				okAction="categoryBackingBean.saveSubCategory"
