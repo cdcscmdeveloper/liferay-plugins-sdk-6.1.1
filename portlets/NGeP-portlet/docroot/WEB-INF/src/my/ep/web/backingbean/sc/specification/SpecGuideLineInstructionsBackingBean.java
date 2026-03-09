@@ -20,6 +20,7 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -101,7 +102,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		if (specGuideLineStreamContent == null) {
 			ScSpecGuideLineAttachment specGuideLineAttachment = new ScSpecGuideLineAttachment();
 			generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
-					SourcingConstants.DOCNAME_QT_SPEC_ITEM_PREP_GUIDELINE);
+					ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 			specGuideLineStreamContent = getAttachmentStreamContent(specGuideLineAttachment,
 					CommonConstants.FILE_CONTENT_TYPE_PDF);
 		}
@@ -133,7 +134,9 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 
 		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		// #30432 - Start
+		filePath.append(ModuleCodeConst.COMMON.toLowerCase());
+		// #30432 - End
 		attachment.setFilePath(filePath.toString());
 
 		File theDir = new File(getActualFilePath(attachment));
