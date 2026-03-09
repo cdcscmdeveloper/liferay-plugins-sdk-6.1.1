@@ -33,6 +33,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;//#28188
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -102,6 +103,7 @@ import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtAmend;
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -110,6 +112,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
@@ -1517,7 +1520,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				approval.setScQtApprovalDtls(this.getManagedBean()
 						.getScQtApprovalRequestList());
 				qt.setScQtApprovals(qtApproval);
-
+				
 				List<TabBean> qtCommittes = this.getManagedBean()
 						.getScCommitteeMemberTabList();
 
@@ -1607,7 +1610,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tenderResDTO.setQtDetail(qt);			
 				
 			} else {
-				
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
 				List<String> approvalTypes = null;
@@ -1651,7 +1653,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equalsIgnoreCase(approvalCategoryCode)) { //FC
-
 					approvalRequests = proposalValidityWip(outcome);//#21692
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
@@ -1695,7 +1696,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
 				qt.setScQtApprovals(qtApproval);
-
+	
 				qt.setScQtCommittees(null);
 				qtReqDTO.setPayLoad(dataType);
 				
@@ -1778,8 +1779,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						prepareQtMaintenanceAuditTrail(qt, tenderResDTO.getGroupTabSection(), null);
 					}
 					//28895-35500 End
-				}				
-				
+				}
 			}
 			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
 		} catch (Exception e) {
@@ -2510,6 +2510,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getParameterCode();
 				if (ParameterConst.APPROVAL_REQUEST_RESTRICTED_TENDER
 						.equalsIgnoreCase(approvalType)) {
+					
 					if (approvalRequest.getApproverAction() == null) {
 						revertQTTypeAsOpen(scQt);
 					}
@@ -2550,12 +2551,66 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 
 				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(approvalType)) {
+					//#28188 - Start
 					// Proposal Start Date
-					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
-					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
-						scQt.setProposalStartDate((Date)valueBean.getOldValue());
-						updatePublishClosingDate(scQt);
+					//Disabled  old code as getAmendMentBean() could be NPE(Null Pointer Exception) and change with NPE handler
+					//With added Closing date amend data
+//					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+//					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
+//						scQt.setProposalStartDate((Date)valueBean.getOldValue());
+//						updatePublishClosingDate(scQt);
+//					}
+					
+					if (this.getManagedBean() != null && this.getManagedBean().getAmendMentBean() != null) {
+						// Proposal Start Date
+						QtAmendMentValueBean valueBean = this.getManagedBean().getAmendMentBean()
+					                    				.getValueMap()
+					                    				.get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+
+					    if (valueBean != null) {
+					        Object oldValue = valueBean.getOldValue();
+
+					        if (oldValue instanceof Date) {
+					            scQt.setProposalStartDate((Date) oldValue);
+					            updatePublishClosingDate(scQt);
+					        }
+					    }
+					}else{
+						QtAmendMentBean amendMentBean = null;
+						IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						
+						ScQtAmend scQtAmend = detailSO.retrieveQtAmend(scQt.getQtId());
+						
+						if (null != scQtAmend) {
+							amendMentBean = detailSO.getQtAmendMentBean(scQtAmend);
+
+							if (amendMentBean != null) {
+								QtAmendMentValueBean valueBean = amendMentBean.getValueMap()
+										.get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+								// Proposal Start Date
+							    if (valueBean != null) {
+							        Object oldValue = valueBean.getOldValue();
+
+							        if (oldValue instanceof Date) {
+							            scQt.setProposalStartDate((Date) oldValue);
+							            updatePublishClosingDate(scQt);
+							        }
+							    }
+								
+								// Closing Date
+							    if (valueBean != null) {
+							        Object oldValue = valueBean.getOldValue();
+
+							        if (oldValue instanceof Date) {
+							        	scQt.setClosingDate((Date) oldValue);
+							            updatePublishClosingDate(scQt);
+							        }
+							    }
+							}
+						}
 					}
+					//#28188 - End
 				}
 			}
 		}
@@ -4322,4 +4377,5 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End
+	
 }

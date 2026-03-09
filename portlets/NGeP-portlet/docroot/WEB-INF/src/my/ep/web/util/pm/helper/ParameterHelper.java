@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
@@ -32,6 +33,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -800,6 +802,46 @@ public class ParameterHelper implements Serializable{
 			parameterSO = null;
 		}
 	}
+	
+	//35509 - START
+	/**
+	 * To get PmParameterBy parameter id..
+	 * 
+	 * @param parameterId
+	 *            the parameter id
+	 * @return the pm parameter by id
+	 */
+	public String getPmParameterAuditById(Long parameterId) {
+		IParameterSO parameterSO;
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterId(parameterId);
+		String description = null;
+		
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterById(parameterReqDTO);
+			PmParameter pm = resDTO.getPmParameter();
+			
+			if(CollectionUtils.isNotEmpty(pm.getPmParameterDescs())) {
+				for (PmParameterDesc desc : pm.getPmParameterDescs()) {
+					if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
+						description = desc.getCodeName();
+					}
+				}
+			}
+			
+			return description;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			parameterSO = null;
+		}
+	}
+	//35509 END
 	
 	/**
 	 * Debug logger.
