@@ -2011,7 +2011,12 @@ public class RuleCatalogueBackingBean extends
 			}
 			// hit error and return
 
-			throw new EpException(MessageConst.ERROR_770112, new String[] {}); //#34445, Fix as-is bug: #40054
+			throw new EpException(MessageConst.ERROR_770213, new String[] {
+					ResourceBundleUtils.getMessage(
+							"lbl.pm.settings.fee.organisation.type",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()),
+					this.dupplicateOrgTypeName });
 		}
 		// add deleted records before update
 		exemptionList.addAll(this.getManagedBean()
