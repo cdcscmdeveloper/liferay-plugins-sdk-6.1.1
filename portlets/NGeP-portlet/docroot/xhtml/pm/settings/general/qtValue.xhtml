@@ -15,7 +15,8 @@
 					<div align="right" style="width: 100%">
 						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="qtValueSaveBtnId"
-							partialSubmit="true" oncomplete="saveQtValueInfoDlg.show();"/>
+							partialSubmit="true" oncomplete="saveQtValueInfoDlg.show();"
+							process="@this" immediate="true"/><!-- 39352 -->
 						<!-- 34445 end -->
 					</div>
 				</td>
@@ -172,7 +173,7 @@
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="saveQtValueInfoDlg" widget="saveQtValueInfoDlg"
 			okAction="ruleCatalogueBackingBean.saveQtValues"
-			okProcess=":form:settingTabId:qtValuePnlId"
+			okProcess=":form:settingTabId:qtValuePnlId :form:settingTabId:qtValuePnlId"
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pm.btn.save.msg']}" 
