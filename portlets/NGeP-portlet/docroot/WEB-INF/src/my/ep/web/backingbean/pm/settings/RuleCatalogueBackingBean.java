@@ -181,32 +181,32 @@ public class RuleCatalogueBackingBean extends
 	private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
 	
-	   //#35323 - Start
-		private static final List<Long> SUPPL_ACC_TYPE_ORDER =
-		        Arrays.asList(
-		            RuleTypeConst.BASIC,
-		            RuleTypeConst.MOF,
-		            RuleTypeConst.G2G
-		        );
-		
-		private static final Map<Long, String> ACC_TYPE_KEYS;
-		static {
-		    Map<Long, String> m = new HashMap<>();
-		    m.put(RuleTypeConst.BASIC, "lbl.pm.rule.supp.acc.type.basic");
-		    m.put(RuleTypeConst.MOF,   "lbl.pm.rule.supp.acc.type.mof");
-		    m.put(RuleTypeConst.G2G,   "lbl.pm.rule.supp.acc.type.g2g");
-		    ACC_TYPE_KEYS = Collections.unmodifiableMap(m);
-		}
-		
-		private static final Map<Long, Integer> SUPPLIER_PRIORITY;
-		static {
-		    Map<Long, Integer> map = new HashMap<>();
-		    map.put(RuleTypeConst.BASIC, 1);
-		    map.put(RuleTypeConst.MOF, 2);
-		    map.put(RuleTypeConst.G2G, 3);
-		    SUPPLIER_PRIORITY = Collections.unmodifiableMap(map);
-		}
-	    //#35323 - End
+	//#35323 - Start
+	private static final List<Long> SUPPL_ACC_TYPE_ORDER =
+	        Arrays.asList(
+	            RuleTypeConst.BASIC,
+	            RuleTypeConst.MOF,
+	            RuleTypeConst.G2G
+	        );
+
+	private static final Map<Long, String> ACC_TYPE_KEYS;
+	static {
+		Map<Long, String> m = new HashMap<>();
+		m.put(RuleTypeConst.BASIC, "lbl.pm.rule.supp.acc.type.basic");
+		m.put(RuleTypeConst.MOF, "lbl.pm.rule.supp.acc.type.mof");
+		m.put(RuleTypeConst.G2G, "lbl.pm.rule.supp.acc.type.g2g");
+		ACC_TYPE_KEYS = Collections.unmodifiableMap(m);
+	}
+
+	private static final Map<Long, Integer> SUPPLIER_PRIORITY;
+	static {
+		Map<Long, Integer> map = new HashMap<>();
+		map.put(RuleTypeConst.BASIC, 1);
+		map.put(RuleTypeConst.MOF, 2);
+		map.put(RuleTypeConst.G2G, 3);
+		SUPPLIER_PRIORITY = Collections.unmodifiableMap(map);
+	}
+	//#35323 - End
 
 	public String getDupplicateOrgTypeName() {
 		return dupplicateOrgTypeName;
