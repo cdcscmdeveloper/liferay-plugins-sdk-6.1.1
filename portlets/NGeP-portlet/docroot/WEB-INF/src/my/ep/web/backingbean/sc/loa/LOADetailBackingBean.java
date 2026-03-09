@@ -1841,7 +1841,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	private ScLoaReportAttachment generateDocumentAttachment(ScLoaReport scLoaReport) {
 		ScLoa scLoa = getManagedBean().getScLoa();
-		//ScQt scQt = getManagedBean().getScQt();//26226
+		ScQt scQt = getManagedBean().getScQt();//26226
 		String definitionType = scLoaReport.getDefinationType().getParameterCode();
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
 		StringBuilder filename = new StringBuilder();//26226

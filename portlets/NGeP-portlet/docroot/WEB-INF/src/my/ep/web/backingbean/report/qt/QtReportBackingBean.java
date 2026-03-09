@@ -578,17 +578,14 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public List<SelectItem> retrieveDescOfficer() {
 		log.info("ReportBackingBean-retrieveDescOfficer");
-	List<SelectItem>	scDescOfficerList = new ArrayList<SelectItem>();
+		List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IPMReportSO.class);
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 			Long orgProfileId = null;
 			/*if (StringUtils.isNotEmpty(this.getScPtj())) {
 				orgProfileId = Long.parseLong(this.getScPtj());
 			}*/
-			List<Object[]> reqLst = reportSO.retrieveDeskOfficer( new FacesScopes().getUserSessionBean().getUserId(),
-					orgProfileId);
+			List<Object[]> reqLst = reportSO.retrieveDeskOfficer(new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
 			if (CollectionUtils.isNotEmpty(reqLst)) {
 				for (Object[] object : reqLst) {
 					SelectItem selectItem = new SelectItem();

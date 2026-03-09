@@ -167,7 +167,6 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
-
 /**
  * Backing Bean For Contract
  * 
@@ -3226,7 +3225,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),e.getMessage()));
 		}
 	}
-		//#34961 end
+	//#34961 end
 
 	/**
 	 * The method used to render the selected product item information.
