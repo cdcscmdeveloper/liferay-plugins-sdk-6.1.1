@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:panel header="#{lbl['lbl.sm.workshop.details']}" toggleable="true"
 		id="smWorkShopDtPanel">
@@ -12,12 +13,17 @@
 		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}">
 			<h:outputText value="#{lbl['lbl.sm.workShop.notApplicable']}" />
 		</p:outputPanel>
+		<!-- #28175 -->
+		<ui:param name="isSuppProfile" 
+			value="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}"/>
 		
 		<ui:repeat var="workshopCatVar" value="#{viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
 					<td style="white-space: nowrap; float: left;">
-					    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} (#{workshopCatVar.categoryName})" />
+					    <!-- #28175 -->
+					    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} 
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(workshopCatVar, isSuppProfile)})" />
 					</td>
 				</tr>
 			</table>
@@ -77,8 +83,8 @@
 							<p:outputLabel value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{catFac.pmCategoryL3.categoryName})" 
-								styleClass="outputLabel-view" /><br />
+									 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile)})" 
+								styleClass="outputLabel-view" /><br /> <!-- #28175 -->
 						</ui:repeat>
 					</td>
 				</tr>
