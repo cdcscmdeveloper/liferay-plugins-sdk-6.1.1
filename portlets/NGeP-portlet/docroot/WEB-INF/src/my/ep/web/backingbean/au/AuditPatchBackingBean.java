@@ -288,12 +288,15 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 				auditPatchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditPatchSO.class);
 
 				ISearchResultBean<VAuditPatchDTO> resDTO;
+				
 
 				auditPatchReqDTO.setpType(getManagedBean().getSearchBean().getpType());
 				auditPatchReqDTO.setChangeTypeID(getManagedBean().getSearchBean().getChangeTypeID());
 				auditPatchReqDTO.seteAduanNo(getManagedBean().getSearchBean().geteAduanNo());
 				auditPatchReqDTO.setDocTypeID(getManagedBean().getSearchBean().getDocTypeID());
 				auditPatchReqDTO.setDocNo(getManagedBean().getSearchBean().getDocNo());
+				
+				getManagedBean().setHideAduan(!getManagedBean().getSearchBean().geteAduanNo().isEmpty());
 				
 				resDTO = auditPatchSO.searchDetailResultList(auditPatchReqDTO, searchBean);
 				return resDTO;
@@ -340,7 +343,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		try {
 			Map<String, String> paramMap = new HashMap<>();
 
-			paramMap.put(AuditPatchConst.P_LANGUAGE, reqDTO.getpLanguage());
+			paramMap.put(AuditPatchConst.P_LANGUAGE, AuditPatchConst.LANGUAGE_MY);
 			paramMap.put(AuditPatchConst.P_CHANGE_TYPE, reqDTO.getChangeTypeID().toString());
 			paramMap.put(AuditPatchConst.P_DOC_TYPE, reqDTO.getDocTypeID().toString());
 			paramMap.put(AuditPatchConst.P_DOC_NO, reqDTO.getDocNo());
@@ -366,7 +369,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		String oriLanguange = reqDTO.getpLanguage();
 		try {
 			reqDTO.setFetchAll(true);
-			reqDTO.setpLanguage(reqDTO.getpLanguage());
+			reqDTO.setpLanguage(AuditPatchConst.LANGUAGE_MY);
 			ISearchResultBean<VAuditPatchDTO> res = getAuditPatchSO().searchDetailResultList(reqDTO, searchDetail.getSearchBean());
 			details = res.getResultList();
 			
