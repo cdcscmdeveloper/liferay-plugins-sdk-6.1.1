@@ -46,7 +46,7 @@ private static final long serialVersionUID = 1L;
 	
 	public SupplierTransactionRptBackingBean() {
 		if(getManagedBean().getMinistry() == null){
-			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
 				defaultPtjGrpAndPtjValues();
 			}else{
 				defaultPtjAndMinistryValues();
@@ -178,14 +178,6 @@ private static final long serialVersionUID = 1L;
 		}
 		
 		getContractDuration(this.getManagedBean().getFromDate(), this.getManagedBean().getToDate());
-	}
-	
-	public void autopopSuppData(){
-		if(StringUtils.isNotBlank(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName())){
-			log.info("**inside autopopSuppData**");
-			retrieveSuppDataByCompName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName(),
-					this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getRegNo());	
-		}
 	}
 	
 	/**
