@@ -168,7 +168,8 @@
 			okAction="ruleCatalogueBackingBean.deleteQtValue()" width="400"
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}"
-			update=":form:settingTabId:qtValueTableId" />
+			update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValuePnlId"
+			okProcess=":form:settingTabId:qtValuePnlId"/><!-- 40071 -->
 			
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="saveQtValueInfoDlg" widget="saveQtValueInfoDlg"
@@ -177,7 +178,7 @@
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pm.btn.save.msg']}" 
-			update=":form:settingTabId:qtValuePnlId :form:settingTabId:qtValuePnlId" "
+			update=":form:settingTabId:qtValuePnlId"
 			loadingWidget="blockWidget" />
 		<!-- 34445 end -->
 	</p:panel>
