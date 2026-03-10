@@ -4632,34 +4632,6 @@ public class RuleCatalogueBackingBean extends
 		}//#36738 #40071 End
 	}
 	
-	/**
-	 * #36738 #40071
-	 * Get ministry list based on the deleted ptj
-	 * @param deletedSpecialApproval
-	 * @return
-	 */
-	public Boolean getDeletedMinistryList(PmPtjSpecialApproval deletedSpecialApproval) {
-		List<PmPtjSpecialApproval> ptjSpecialApprovalList = this.getManagedBean().getPtjSpecialApprovalList();
-		String deletedMinistryName = deletedSpecialApproval.getPmOrgProfile().getMinistryName();
-		Map<String, Integer> countMinistryMap = new HashMap<String, Integer>();
-		List<String> deleteMinistryString = this.getManagedBean().getDeletedMinistryNameList() != null
-				? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
-		Boolean	resetMinistryDropdown = false;		
-		
-		for (PmPtjSpecialApproval ptjSpecialApproval : ptjSpecialApprovalList) {
-			String ministryName = ptjSpecialApproval.getPmOrgProfile().getMinistryName();
-			countMinistryMap.put(ministryName,
-					countMinistryMap.containsKey(ministryName) ? countMinistryMap.get(ministryName) + 1 : 1);
-		}	
-
-		if (countMinistryMap.containsKey(deletedMinistryName) && countMinistryMap.get(deletedMinistryName) == 1) {
-			deleteMinistryString.add(deletedSpecialApproval.getPmOrgProfile().getMinistryName());
-			resetMinistryDropdown = true;
-		}
-		this.getManagedBean().setDeletedMinistryNameList(deleteMinistryString);
-		return resetMinistryDropdown;
-	}
-
 	/*** AUDIT 28895_35509 ***/
 	/**
 	 * @param itr
@@ -6184,6 +6156,34 @@ public class RuleCatalogueBackingBean extends
 	
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
 	    this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
+	}
+	
+	/**
+	 * #36738 #40071
+	 * Get ministry list based on the deleted ptj
+	 * @param deletedSpecialApproval
+	 * @return
+	 */
+	public Boolean getDeletedMinistryList(PmPtjSpecialApproval deletedSpecialApproval) {
+		List<PmPtjSpecialApproval> ptjSpecialApprovalList = this.getManagedBean().getPtjSpecialApprovalList();
+		String deletedMinistryName = deletedSpecialApproval.getPmOrgProfile().getMinistryName();
+		Map<String, Integer> countMinistryMap = new HashMap<String, Integer>();
+		List<String> deleteMinistryString = this.getManagedBean().getDeletedMinistryNameList() != null
+				? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
+		Boolean	resetMinistryDropdown = false;		
+		
+		for (PmPtjSpecialApproval ptjSpecialApproval : ptjSpecialApprovalList) {
+			String ministryName = ptjSpecialApproval.getPmOrgProfile().getMinistryName();
+			countMinistryMap.put(ministryName,
+					countMinistryMap.containsKey(ministryName) ? countMinistryMap.get(ministryName) + 1 : 1);
+		}	
+
+		if (countMinistryMap.containsKey(deletedMinistryName) && countMinistryMap.get(deletedMinistryName) == 1) {
+			deleteMinistryString.add(deletedSpecialApproval.getPmOrgProfile().getMinistryName());
+			resetMinistryDropdown = true;
+		}
+		this.getManagedBean().setDeletedMinistryNameList(deleteMinistryString);
+		return resetMinistryDropdown;
 	}
 	//#36738 End
 	
