@@ -388,8 +388,8 @@ public class MolPayServlet extends HttpServlet {
 					PaymentResDTO pymtResDTO = new PaymentResDTO();
 					
 					//#38377 send success payment email
-					log.info(">>>>before send success email payment status:"+status+"<<<<<");
-					if (SupplierManagementConst.MOL_SUCCESS.equals(status)) {
+					log.info(">>>>before send success email payment statusCode:"+statusCode+"<<<<<");
+					if (statusCode == SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT) {
 						log.info(">>>>start send success email payment<<<");
 						pymtResDTO = reqSO.saveSuccessPaymentEmailTemplateParams(pymtReqDTO);
 						pymtReqDTO.setNotifyMessageId(pymtResDTO.getNotifyMessageId());
