@@ -2130,16 +2130,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			//20231122@asyrafhaziq_25726 - Issue 16
 			//new #25726 - Start
 			
-			List<String> flTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
-					ParameterConst.FULFILMENT_TYPE_SCHEDULED,
-					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			boolean isQTtypePK7 = null != scLoa.getQtType() && null != scLoa.getQtType().getParameterId()
 					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode());
-			boolean isFulfilmentType = null != scLoa.getScQt() && null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& flTypeCodes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
-
-			if (isQTtypePK7 && isFulfilmentType) {
+			
+			if (isQTtypePK7 ) {
 		
 			//new #25726 - End
 				setBondReq = false;

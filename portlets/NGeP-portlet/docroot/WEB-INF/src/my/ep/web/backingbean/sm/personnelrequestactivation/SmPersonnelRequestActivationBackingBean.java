@@ -21,6 +21,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+//#28720
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "smPersonnelRequestActivationBackingBean")
 @ViewScoped
@@ -102,5 +104,15 @@ public class SmPersonnelRequestActivationBackingBean extends
 				.getExpiredActivationPersonnels());
 
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		// managedBean.selectedAdmin.email
+		String email = this.getManagedBean().getSelectedExpiredActivationPersonnel().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			this.getManagedBean().getSelectedExpiredActivationPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 
 }

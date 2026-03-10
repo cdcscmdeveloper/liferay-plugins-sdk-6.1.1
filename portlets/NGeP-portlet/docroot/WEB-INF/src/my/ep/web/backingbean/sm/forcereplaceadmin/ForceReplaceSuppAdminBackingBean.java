@@ -2004,6 +2004,15 @@ public class ForceReplaceSuppAdminBackingBean extends
         this.selectedOption = selectedOption;
     }
 	//END 28765 - Replace Supplier Admin
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getNewAdmin().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			this.getManagedBean().getNewAdmin().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
     
     //28765
     public static boolean disableNationalityDropDown(List<SmPersonnel> smPersonnelList) {

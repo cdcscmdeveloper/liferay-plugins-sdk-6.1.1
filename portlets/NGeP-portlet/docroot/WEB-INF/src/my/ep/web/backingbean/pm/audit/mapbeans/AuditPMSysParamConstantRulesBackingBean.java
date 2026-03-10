@@ -9,9 +9,11 @@ import java.util.List;
 
 
 import my.ep.constant.pm.AuditConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
 
@@ -46,6 +48,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);	
 	String amtFormatter = "#,##0.00";
 	String groupingBasePattern = "#,##0";
+	PmConfigRuleDesc pmConfigRuleDesc = new PmConfigRuleDesc();
 
 	/**
 	 * @param managedBeans
@@ -55,7 +58,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	public AuditPMReqDTO spRulesValueTypeProcess(RuleCatalogueManageBean managedBeans, String roleCode) {
 		this.roleCode = roleCode;
 		this.lvlCode2 = AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE;
-
+		pmConfigRuleDesc = managedBeans.getSelectedRuleDescType();
 		getAuditAddedData(managedBeans.getAuditResDTOSelectedRuleValueList(), managedBeans.getAuditAddedSelectedRuleValueList(),
 				managedBeans);
 
@@ -131,18 +134,18 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			}
 		}
 		*/
+		
 		for (PmConfigRuleValue updateVal : update) {
 			PmConfigRuleValue matchingIdUpdatedOldVal = findMatchingSPRulesTypeValue(ruleValueOld, updateVal);
 			if (matchingIdUpdatedOldVal != null) {
-				
-				if("PC".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleType().getRuleDataTypeId().getParameterCode())) {
+				if("PC".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
 					hasDocNo = true;
-					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
 				}
 					
-				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleType().getRuleDataTypeId().getParameterCode())) {
+				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
 					hasDocNoCategory = true;
-					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
 				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
 				processSPRuleTypeValEffExpDate(matchingIdUpdatedOldVal, updateVal);
@@ -252,7 +255,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 					toValueNewCreated(newCreatedItem), toValueDeleted(deletedItem));
 		}
 		// Rule Description
-		if (ruleValueType.getRuleDescription() != null) {
+		if (ruleValueType.getRuleDescription() != null && !pmConfigRuleDesc.getRuleType().getRuleType().equalsIgnoreCase(RuleTypeConst.PTJCO)) {
 			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_DESCRIPTION_FIELDLABELID,
 					ruleDescNewCreated(newCreatedItem), ruleDescDeleted(deletedItem));
 		}
