@@ -201,7 +201,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Boolean ruleValueCollapsePanel;
 	private Boolean qtValueCollapsePanel;
 	//#36738 End
-	private List<String> deletedMinistryNameList;//#40071
+	private List<String> deletedMinistryNameList;//#36738 #40071
 
 	// #35323 - Start
 	private boolean selectedAllSuppAccountType;
@@ -2111,7 +2111,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.firstExpiryDateIsNull = firstExpiryDateIsNull;
 	}
 	// #35323 - End
-	//#40071 Start
+	// #36738 #40071 Start
 	public List<String> getDeletedMinistryNameList() {
 		return deletedMinistryNameList;
 	}
@@ -2119,5 +2119,5 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setDeletedMinistryNameList(List<String> deletedMinistryNameList) {
 		this.deletedMinistryNameList = deletedMinistryNameList;
 	}
-	//#40071 End
+	// #36738 #40071 End
 }

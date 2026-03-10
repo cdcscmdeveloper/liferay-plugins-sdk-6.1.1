@@ -4594,16 +4594,16 @@ public class RuleCatalogueBackingBean extends
 
 	public void deleteQtValue() {
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
-		Boolean resetMinistryDropdown = false;//#40071
+		Boolean resetMinistryDropdown = false;//#36738 #40071
 		if (rowIndex != null) {
 			PmPtjSpecialApproval deletedSpecialApproval = this.getManagedBean()
 					.getPtjSpecialApprovalList().get(rowIndex.intValue());
 			if (deletedSpecialApproval != null) {
 				deletedSpecialApproval.setDeleted(true);
 				this.getManagedBean().getDeletedPtjSpecialApprovalList().add(deletedSpecialApproval);// should
-				//#40071 Start				
+				//#36738 #40071 Start				
 				resetMinistryDropdown = getDeletedMinistryList(deletedSpecialApproval);
-				//#40071 End	
+				//#36738 #40071 End	
 				/*** AUDIT 28895_35509 ***/
 				// added
 				CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedPtjSpecialApprovalList()); // list
@@ -4626,14 +4626,14 @@ public class RuleCatalogueBackingBean extends
 				/*** AUDIT 28895_35509 ***/
 			}
 		}
-		//#40071 Start
+		//#36738 #40071 Start
 		if (resetMinistryDropdown){
 			resetQtValues();			
-		}//#40071 End
+		}//#36738 #40071 End
 	}
 	
 	/**
-	 * #40071
+	 * #36738 #40071
 	 * Get ministry list based on the deleted ptj
 	 * @param deletedSpecialApproval
 	 * @return
@@ -4697,7 +4697,7 @@ public class RuleCatalogueBackingBean extends
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
-			//#40071 Start 
+			//#36738 #40071 Start 
 			List<String> deletedMinistryNameList = this.getManagedBean().getDeletedMinistryNameList() !=  null
 					? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();			
 			for (PmOrgProfile orgProfile : list) {
@@ -4708,7 +4708,7 @@ public class RuleCatalogueBackingBean extends
 						orgProfile.getOrgName());
 			}
 			items = Arrays.copyOf(items, i);
-			//#40071 end
+			//#36738 #40071 end
 		} catch (Exception e) {
 			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(
@@ -6179,7 +6179,7 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setRuleTypeCollapsePanel(true);
 		this.getManagedBean().setRuleValueCollapsePanel(true);
 		this.getManagedBean().setQtValueCollapsePanel(true);
-		this.getManagedBean().setDeletedMinistryNameList(null);//#40071
+		this.getManagedBean().setDeletedMinistryNameList(null);//#36738 #40071
 	}
 	
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
