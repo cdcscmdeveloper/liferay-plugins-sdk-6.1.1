@@ -832,6 +832,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("reloadRequestNoteForCodification");
 		ScRequestNote requestNote = null;
 		List<ScRequestNoteDtl> requestNoteDtlList = null;
+		//#26059 - Start
+		ScQuote scQuote = null;
+		//#26059 - End
 
 		if (requestNoteResDTO.getRequestNoteDtlList() != null) {
 			requestNoteDtlList = requestNoteResDTO.getRequestNoteDtlList();
@@ -847,6 +850,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//#26059 - Start
 		if(requestNoteResDTO.getAssignItemDtl()!=null){
 			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
+		}
+		
+		if(requestNoteResDTO.getQuote() !=null){
+			scQuote = requestNoteResDTO.getQuote();
 		}
 		//#26059 - End
 
@@ -890,7 +897,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//#26059 - Start
 					CommonUtils commonUtils = new CommonUtils();
 					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
-					compareItemName(requestItem);
+					compareItemName(requestItem,scQuote);
 					//#26059 - End
 				}
 			}
@@ -8346,12 +8353,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestItem
 	 *            the request item containing the CmItem to compare and update
 	 */
-	public void compareItemName(ScRequestItem requestItem) {
+	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote) {
 		if (requestItem == null || requestItem.getCmItem() == null) {
 			return;
 		}
 
 		if (getManagedBean().isExistInAssignItemDetail()) {
+			return;
+		}
+		
+		if(scQuote !=null && scQuote.isPanel() && DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId()) && requestItem.getCmItem() !=null){
 			return;
 		}
 
