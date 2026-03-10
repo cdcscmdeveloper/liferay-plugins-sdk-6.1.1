@@ -81,6 +81,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
