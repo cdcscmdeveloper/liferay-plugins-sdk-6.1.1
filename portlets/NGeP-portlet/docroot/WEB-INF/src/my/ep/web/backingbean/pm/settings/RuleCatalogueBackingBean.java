@@ -4601,9 +4601,9 @@ public class RuleCatalogueBackingBean extends
 			if (deletedSpecialApproval != null) {
 				deletedSpecialApproval.setDeleted(true);
 				this.getManagedBean().getDeletedPtjSpecialApprovalList().add(deletedSpecialApproval);// should
-				//#36738 #40071 Start				
+				//#36738 #40071 Start
 				resetMinistryDropdown = getDeletedMinistryList(deletedSpecialApproval);
-				//#36738 #40071 End	
+				//#36738 #40071 End
 				/*** AUDIT 28895_35509 ***/
 				// added
 				CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedPtjSpecialApprovalList()); // list
@@ -4628,10 +4628,10 @@ public class RuleCatalogueBackingBean extends
 		}
 		//#36738 #40071 Start
 		if (resetMinistryDropdown){
-			resetQtValues();			
+			resetQtValues();
 		}//#36738 #40071 End
 	}
-	
+
 	/*** AUDIT 28895_35509 ***/
 	/**
 	 * @param itr
@@ -4669,7 +4669,7 @@ public class RuleCatalogueBackingBean extends
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
-			//#36738 #40071 Start 
+			//#36738 #40071 Start
 			List<String> deletedMinistryNameList = this.getManagedBean().getDeletedMinistryNameList() !=  null
 					? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();			
 			for (PmOrgProfile orgProfile : list) {

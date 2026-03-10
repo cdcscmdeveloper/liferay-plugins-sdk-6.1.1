@@ -2016,7 +2016,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public List<String> getDeletedMinistryNameList() {
 		return deletedMinistryNameList;
 	}
-	
+
 	public void setDeletedMinistryNameList(List<String> deletedMinistryNameList) {
 		this.deletedMinistryNameList = deletedMinistryNameList;
 	}
@@ -2119,5 +2119,4 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.firstExpiryDateIsNull = firstExpiryDateIsNull;
 	}
 	// #35323 - End
-
 }
