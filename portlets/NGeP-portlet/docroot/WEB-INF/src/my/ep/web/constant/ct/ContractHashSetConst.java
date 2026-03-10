@@ -6,6 +6,7 @@ package my.ep.web.constant.ct;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List; //#29549
 import java.util.Set;
 
 import my.ep.constant.ct.ContractStatusConst;
@@ -190,6 +191,14 @@ public final class ContractHashSetConst {
 	            RoleCode.QQC_CHAIRPERSON.value()
 	)));
 	//#35238 end
+	
+	//#29549 start
+	public static final List<String> ROLE_SORT_ORDER_COMMITTEE =
+	        Arrays.asList(
+	                ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
+	                ParameterConst.COMMITTEE_ROLE_SECRETARY,
+	                ParameterConst.COMMITTEE_ROLE_MEMBER);
+	//#29549 end
 	
 	// Private constructor to prevent instantiation
     private ContractHashSetConst() {

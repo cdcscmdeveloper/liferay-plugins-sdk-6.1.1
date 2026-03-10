@@ -446,32 +446,38 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	private void setNewReceivingAddress(List<PmAddressType> receivingAddress) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 		
-		for(int i = 0; i < receivingAddress.size(); i++){
-			PmAddressType addressType = receivingAddress.get(i);
-			
-			if(addressType.isSelected()){
-				docId = addressType.getAddressTypeId();
-				detailObj(AuditConst.PM_AUD_OPM_RECEIVING_ADDRESS_FIELDLABELCODE, null, addressType.getPmAddress()
-						.getAddressName());
-			}
+		for (PmAddressType addressType : receivingAddress) {
+		    if (addressType.isSelected()) {
+		        docId = addressType.getAddressTypeId();
+		        detailObj(
+		            AuditConst.PM_AUD_OPM_RECEIVING_ADDRESS_FIELDLABELCODE,
+		            null,
+		            addressType.getPmAddress().getAddressName()
+		        );
+		    }
 		}
 	}
 
 	private void setExistingReceivingAddress(List<PmAddressType> editedAddressType, List<PmAddressType> oldAddressType) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-		for(int i = 0; i < editedAddressType.size(); i++){
+		
+		for (int i = 0, size = editedAddressType.size(); i < size; i++) {
 			PmAddressType edited = editedAddressType.get(i);
-			PmAddressType current = oldAddressType.get(i);
 			
-			if(edited.isSelected()){
-				docId = edited.getAddressTypeId();
-				detailObj(AuditConst.PM_AUD_OPM_RECEIVING_ADDRESS_FIELDLABELCODE, 
-						current.getPmAddress().getAddressName(), 
-						edited.getPmAddress().getAddressName());
-
+			if (!edited.isSelected()) {
+				continue;
 			}
+			
+			PmAddressType current = oldAddressType.get(i);
+			docId = edited.getAddressTypeId();
+			detailObj(
+					AuditConst.PM_AUD_OPM_RECEIVING_ADDRESS_FIELDLABELCODE,
+					current.getPmAddress().getAddressName(),
+					edited.getPmAddress().getAddressName()
+			);
 		}
 	}
+
 
 	private void setSupplierBank() {
 		if(managedBean.getNewAuditSmSupplierBanks().size() > 0){
@@ -715,11 +721,12 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	private String checkOrgType() {
 		String description = null;
 
-		for (PmParameterDesc desc : orgProfile.getOrgTypeCode().getPmParameterDescsSpecCallOnly()) {
+		/**for (PmParameterDesc desc : orgProfile.getOrgTypeCode().getPmParameterDescsSpecCallOnly()) {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 				description = desc.getCodeName();
 			}
-		}
+		}*/
+		description = ParameterHelper.getInstance().getPmParameterAuditById(orgProfile.getOrgTypeCode().getParameterId());
 		return description;
 
 	}
