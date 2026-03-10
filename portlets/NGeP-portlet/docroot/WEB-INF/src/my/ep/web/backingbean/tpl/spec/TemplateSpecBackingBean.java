@@ -4105,8 +4105,8 @@ public class TemplateSpecBackingBean extends
 
 		if (hasWeightage) {
 			if (this.getManagedBean().isWeightage35384WIP()) {
-				BigDecimal wieghtage = answer.getTplSpecQuestion().getWeightage();
-				maxScore = maxScore.multiply(wieghtage);
+				BigDecimal weightage = answer.getTplSpecQuestion().getWeightage();
+				maxScore = maxScore.multiply(weightage);
 			}
 			BigDecimal result = maxScore.setScale(2, RoundingMode.HALF_UP);
 			return result.toPlainString(); // returns 20.00
