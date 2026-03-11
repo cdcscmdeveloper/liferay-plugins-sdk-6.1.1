@@ -11,9 +11,10 @@
 
 	<p:panel header="#{lbl['lbl.sm.wizard.catCodeStepLbl']}" toggleable="true">
 		<!-- 36504 - START -->
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputPanel align="left">
+		<p:outputPanel align="left" rendered="#{viewSmApplBackingBean.managedBean.otherDescChangeSupplier}">
+			<table style="width: 100%">
+				<tr>
+					<td>
 						<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
 							escape="false" />
 						<p:commandLink onstart="blockWidget.show()"
@@ -30,9 +31,10 @@
 							escape="false" />
 						<br />
 						<p:spacer height="2" />
-					</p:outputPanel></td>
-			</tr>
-		</table>
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
 		<!-- 36504 - END -->
 		<!-- #14150 - added sortBy -->
 		<p:dataTable var="aprvdCatBean"
