@@ -8,9 +8,10 @@
 	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true" id="catcodeMainPanelId">
 		<!-- 36504 - START -->
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputPanel align="left">
+		<p:outputPanel align="left" rendered="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeSupplier}">
+			<table style="width: 100%">
+				<tr>
+					<td>
 						<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
 							escape="false" />
 						<p:commandLink onstart="blockWidget.show()"
@@ -27,9 +28,10 @@
 							escape="false" />
 						<br />
 						<p:spacer height="2" />
-					</p:outputPanel></td>
-			</tr>
-		</table>
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
 		<!-- 36504 - END -->
 		<ui:include src="regCatCodesApprovedMaintenance.xhtml" />
 			
