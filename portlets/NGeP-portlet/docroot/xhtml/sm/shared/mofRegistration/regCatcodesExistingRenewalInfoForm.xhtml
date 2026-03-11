@@ -20,10 +20,10 @@
 		
 		<p:panel header="#{lbl['lbl.sm.catCodes.existing.panHdr']}" toggleable="true" >
 			<!-- 36504 - START -->
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputPanel
-							align="left">
+			<p:outputPanel align="left" rendered="#{backingBean.managedBean.otherDescChangeSupplier}">
+				<table style="width: 100%">
+					<tr>
+						<td>
 							<h:outputText
 								value="#{lbl['lbl.sm.other.desc.history.click']}"
 								escape="false" />
@@ -45,9 +45,10 @@
 								escape="false" />
 							<br />
 							<p:spacer height="2" />
-						</p:outputPanel></td>
-				</tr>
-			</table>
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
 			<!-- 36504 - END -->
 			<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
 				<div align="right" style="width: 99%">
@@ -527,7 +528,12 @@
 	</p:confirmDialog>
 	
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory categoryCodeList="#{backingBean.managedBean.approvedCategoryList}" applNo="#{backingBean.managedBean.smAppl.applNo}" />
+	<ac:otherDescriptionHistory
+		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
+		applNo="#{backingBean.managedBean.smAppl.applNo}"
+		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
 	<ac:otherDescriptionEdit />
     <!-- 36504 - END -->
     
