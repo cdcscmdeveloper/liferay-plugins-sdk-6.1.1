@@ -232,7 +232,7 @@ public class DateTimeBackingBean {
 	    return dateValue;
 	}
 	
-	public List<SelectItem> getHoursDropdownValues(UIComponent component) {
+	public List<SelectItem> getHoursDropdownValuesBSV(UIComponent component) {
 	    List<SelectItem> hours = new ArrayList<>();
 
 	    FacesContext context = FacesContext.getCurrentInstance();

@@ -627,17 +627,9 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	private String checkPIDReason(String pidDocType) {
 
 		String description = null;
-//		PmParameter pmParameter = getParameterByTypeAndCode("DT", pidDocType);
 		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		description = ParameterHelper.getInstance().getParameterDesc("DT", pidDocType, locale);
 				   
-		/**String description = null;
-
-		for (PmParameterDesc desc : pmParameter.getPmParameterDescs()) {
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
-				description = desc.getCodeName();
-			}
-		}*/
 		return description;
 
 	}

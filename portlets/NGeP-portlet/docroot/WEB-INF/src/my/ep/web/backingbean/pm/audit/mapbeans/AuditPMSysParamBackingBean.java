@@ -7,11 +7,13 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import my.ep.constant.pm.AuditConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
@@ -20,6 +22,7 @@ import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMSysParamBackingBean #28895-35509 - GATE3
@@ -429,7 +432,9 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 			String newValue, BigInteger lvlId) {
 		docId = BigInteger.valueOf(exemption.getFeeExemptionId());
 		docNo = "";
-		addAuditDetail(exemption.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeName(), lvlId, lvlCode,
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		
+		addAuditDetail(ParameterHelper.getInstance().getParameterDesc(exemption.getOrgTypeId().getParameterType(), exemption.getOrgTypeId().getParameterCode(), locale), lvlId, lvlCode,
 				fieldLabelCode, oldValue, newValue, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
 

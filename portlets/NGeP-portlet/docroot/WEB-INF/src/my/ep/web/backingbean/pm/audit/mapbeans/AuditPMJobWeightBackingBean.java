@@ -89,15 +89,7 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 
 	private String checkDocType(String parameterCode) {
 
-//		PmParameter pmParameter = getParameterByTypeAndCode("DT", parameterCode);
 		String description = null;
-
-		/**for (PmParameterDesc desc : pmParameter.getPmParameterDescs()) {
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
-				description = desc.getCodeName();
-			}
-		}*/
-		
 		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		description = ParameterHelper.getInstance().getParameterDesc("DT", parameterCode, locale);
 		

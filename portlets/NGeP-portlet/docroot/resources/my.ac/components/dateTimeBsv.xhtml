@@ -50,7 +50,7 @@
 			required="#{cc.attrs.required}"
 			label="#{cc.attrs.label} #{lbl['lbl.txt.hour']}">
 			<ui:remove>#28188 - Start Change selectItem method </ui:remove>
-			<f:selectItems value="#{dateTimeBackingBean.getHoursDropdownValues(cc)}" />
+			<f:selectItems value="#{dateTimeBackingBean.getHoursDropdownValuesBSV(cc)}" />
 			<ui:remove>#28188 - End Change selectItem method </ui:remove>
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 		</h:selectOneMenu>
