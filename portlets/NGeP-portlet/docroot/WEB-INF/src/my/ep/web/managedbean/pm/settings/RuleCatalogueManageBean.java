@@ -204,7 +204,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Boolean ruleTypeCollapsePanel;
 	private Boolean ruleValueCollapsePanel;
 	private Boolean qtValueCollapsePanel;
-	private List<String> deletedMinistryNameList;//#40071
+	private List<String> deletedMinistryNameList;//#36738 #40071
 	// #36738 End
 
 	/************ END: AUDIT #28895_35509 *************/

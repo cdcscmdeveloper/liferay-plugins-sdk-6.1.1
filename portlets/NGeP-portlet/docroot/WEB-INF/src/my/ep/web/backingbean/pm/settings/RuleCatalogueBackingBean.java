@@ -5161,9 +5161,11 @@ public class RuleCatalogueBackingBean extends
 				/*** END: AUDIT 28895_35509 ***/
 			}
 		}
+		//#36738 #40071 Start
 		if (resetMinistryDropdown){
 			resetQtValues();
 		}
+		//#36738 #40071 End
 	}
 	
 	/*** START: AUDIT 28895_35509 ***/
@@ -5204,7 +5206,7 @@ public class RuleCatalogueBackingBean extends
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
-			//#36738 #40071 Start 
+			//#36738 #40071 Start
 			List<String> deletedMinistryNameList = this.getManagedBean().getDeletedMinistryNameList() !=  null
 					? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
 			for (PmOrgProfile orgProfile : list) {
