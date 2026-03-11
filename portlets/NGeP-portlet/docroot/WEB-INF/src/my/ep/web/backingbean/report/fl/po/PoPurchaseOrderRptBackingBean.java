@@ -146,8 +146,8 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 	 */
 	public boolean hasRoleForProcumentType() {
 		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
-				&& getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && hasAuditorRole()
-				&& getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
+				|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) || hasAuditorRole()
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
 			return true;
 		}
 		return false;
@@ -160,8 +160,8 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 	 */
 	public boolean hasAuditorRole() {
 		if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				&& getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				&& getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
 			return true;
 		}
 		return false;
