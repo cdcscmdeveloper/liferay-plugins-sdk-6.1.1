@@ -263,7 +263,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			     </p:selectOneMenu>
 			  </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton id="btnIdBulkUpdate" value="#{lbl['lbl.btn.yes']}"  update="@([id$=panelItemDt])"
+           <!-- #35506 -->
+		     <p:commandButton id="btnIdBulkUpdate" value="#{lbl['lbl.btn.yes']}"  update="@([id$=panelItemDt],[id$=itemZone],[id$=itemSupplier])"
 		       process="@all" actionListener="#{panelBackingBean.bulkUpdateRow()}" onclick="bulkUpdateDlg.hide();"
 		       disabled="#{panelBackingBean.managedBean.panelCoverageId == null and panelBackingBean.managedBean.itemCategoryId == null }"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="bulkUpdateDlg.hide();" type="button" />
