@@ -16,7 +16,8 @@
 					<div align="right" style="width: 100%">
 						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="qtValueSaveBtnId"
-							partialSubmit="true" oncomplete="saveQtValueInfoDlg.show();"/>
+							partialSubmit="true" oncomplete="saveQtValueInfoDlg.show();"
+							process="@this" immediate="true"/><!-- 39352 -->
 						<!-- 34445 end -->
 					</div>
 				</td>
@@ -168,7 +169,8 @@
 			okAction="ruleCatalogueBackingBean.deleteQtValue()" width="400"
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}"
-			update=":form:settingTabId:qtValueTableId" />
+			update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValuePnlId" 
+			okProcess=":form:settingTabId:qtValuePnlId"/>
 			
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="saveQtValueInfoDlg" widget="saveQtValueInfoDlg"
