@@ -6004,15 +6004,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			//Bug #38267 start
 			if (null != scQtProposalChecklist.getProposalScore() && !scQtProposalChecklist.getProposalScore().isEmpty()){
 				ScQtProposalScore propScore = scQtProposalChecklist.getProposalScore().get(0);
-				//Bug #39725 start
-				if (suppExpList != null && !suppExpList.isEmpty()){
-					if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
-						//Query without F filter
-						reqDTO.setComExpClientType(null);
-						sdto = proposalSO.getCompanyExperience(reqDTO);
-						suppExpList = sdto.getCompExperienceList();
-					}
-				}//Bug #39725 end
+				if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
+					//Query without F filter
+					reqDTO.setComExpClientType(null);
+					sdto = proposalSO.getCompanyExperience(reqDTO);
+					suppExpList = sdto.getCompExperienceList();
+				}
 			}
 			//Bug #38267 end
 			
