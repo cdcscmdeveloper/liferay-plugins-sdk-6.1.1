@@ -4603,6 +4603,7 @@ public class RuleCatalogueBackingBean extends
 				this.getManagedBean().getDeletedPtjSpecialApprovalList().add(deletedSpecialApproval);// should
 				//#36738 #40071 Start
 				resetMinistryDropdown = getDeletedMinistryList(deletedSpecialApproval);
+				this.getManagedBean().getOriginalPtjSpecialApprovalList().remove(deletedSpecialApproval);
 				//#36738 #40071 End
 				/*** AUDIT 28895_35509 ***/
 				// added
