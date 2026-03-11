@@ -17,6 +17,13 @@
 	<br/>
 
 	<ui:remove>#30432 - Start</ui:remove>
+	<ui:remove>
+        includePopup: controls whether specGuideLinePopup.xhtml is rendered.
+        Default: true (omit param for single-use pages).
+        Pass false when this fragment is included multiple times on the same page
+        to avoid duplicate dialog definitions. The parent page is then responsible
+        for including specGuideLinePopup.xhtml once at its own level.
+    </ui:remove>
 	<c:if test="#{empty includePopup or includePopup}">
 	    <ui:include src="specGuideLinePopup.xhtml" />
 	</c:if>
