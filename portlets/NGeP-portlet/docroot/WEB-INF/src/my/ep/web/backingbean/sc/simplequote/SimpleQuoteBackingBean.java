@@ -1241,10 +1241,15 @@ public class SimpleQuoteBackingBean extends
 				if (scRequestItem.getCmItem() != null) {
 					extensionCode = cmItem.getExtensionCode();
 					ItemName = cmItem.getItemName();
-				} else {
-					// panel item - product by default when the cmItem is null
+					
+				//#26059 - Start
+				}else if(DbValueConst.ITEM_TYPE_SERVICE.equals(ctPanelItem.getItemType().getParameterId())){
+					isProduct = false;
+				} else if(DbValueConst.ITEM_TYPE_PRODUCT.equals(ctPanelItem.getItemType().getParameterId())){
 					isProduct = true;
 				}
+				//#26059 - End
+				
 				if (ctPanelItem.getItemCategoryId().getParameterCode()
 						.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 					ItemName = ctPanelItem.getItemName();
