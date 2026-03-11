@@ -345,7 +345,7 @@
 												<table
 													style="width: 100%; height: 100%; padding-left: 10px; padding-right: 10px; padding-bottom: 10px; padding-top: 10px; vertical-align: top;">
 													<tr>
-													<!-- #10747, Fix as-is bug: #10747 Start -->
+														<!-- #10747 Start -->
 														<td align="center"
 															style="text-align: center; padding-top: 14px; padding-bottom: 16px;"><h:panelGroup
 																rendered="#{supplierItem[7] == null}">
@@ -364,7 +364,7 @@
 																	src="/NGeP-portlet/image?imageName=#{supplierItem[5]}/#{supplierItem[7]}"
 																	style="height: 100px; width: 100px; left: 0px !important;" />
 															</h:panelGroup></td>
-													<!-- #10747, Fix as-is bug: #10747 End -->
+															<!-- #10747 End -->
 													</tr>
 													<tr>
 													    <!-- Enhancement #31245 - start -->
@@ -394,12 +394,10 @@
 														</td>
 													</tr>
 													<tr>
-													<!-- #10747, Fix as-is bug: #10747 Start -->
 														<td style="text-align: center; padding-bottom: 14px;">
-															<h:outputText style="text-decoration: line-through;" value=" RM #{supplierItem[10]}" />
+															<h:outputText style="text-decoration: line-through;" value=" RM #{supplierItem[10]}" /><!-- #10747 -->
 															<h:outputText value="	-#{supplierItem[6]}%" />
 														</td>
-													<!-- #10747, Fix as-is bug: #10747 End -->
 													</tr>
 													</ui:fragment>
 												</table>
