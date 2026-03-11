@@ -5140,6 +5140,7 @@ public class RuleCatalogueBackingBean extends
 						.add(deletedSpecialApproval);// should added to original list before save
 				//#35678 #40071 Start
 				resetMinistryDropdown = getDeletedMinistryList(deletedSpecialApproval);
+				this.getManagedBean().getOriginalPtjSpecialApprovalList().remove(deletedSpecialApproval);
 				//#36738 #40071 End
 				
 				/*** START: AUDIT 28895_35509 ***/
