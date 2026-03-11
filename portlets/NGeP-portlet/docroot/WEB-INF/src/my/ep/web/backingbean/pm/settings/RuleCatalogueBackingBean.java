@@ -5164,8 +5164,7 @@ public class RuleCatalogueBackingBean extends
 		//#36738 #40071 Start
 		if (resetMinistryDropdown){
 			resetQtValues();
-		}
-		//#36738 #40071 End
+		}//#36738 #40071 End
 	}
 	
 	/*** START: AUDIT 28895_35509 ***/
