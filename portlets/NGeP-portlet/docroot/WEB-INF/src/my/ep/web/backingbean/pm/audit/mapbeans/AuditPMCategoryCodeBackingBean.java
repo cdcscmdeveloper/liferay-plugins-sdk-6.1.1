@@ -640,10 +640,10 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	private String checkPmParameterDesc(PmParameter pmParameter) {
 		String description = null;
 
-		if(pmParameter.getParameterId() != null) {
+		if (pmParameter.getParameterId() != null) {
 			PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(pmParameter.getParameterId());
-		
-			if(CollectionUtils.isNotEmpty(parameter.getPmParameterDescs())) {
+
+			if (CollectionUtils.isNotEmpty(parameter.getPmParameterDescs())) {
 				for (PmParameterDesc desc : parameter.getPmParameterDescs()) {
 					if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 						description = desc.getCodeName();
@@ -651,7 +651,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				}
 			}
 		}
-		
+
 		return description;
 
 	}
