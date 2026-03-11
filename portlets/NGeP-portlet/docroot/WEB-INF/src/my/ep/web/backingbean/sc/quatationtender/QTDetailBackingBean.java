@@ -4338,12 +4338,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 * qt.setClosingDate(getManagedBean().getQt().getClosingDate());
 				 */
 			}
-			//#29661 & 40098 Start
+			//#29661 & 40089 Start
 			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
 					.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION)) || checkPanelCategoryCodesReviseCommittee()){
 				convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),true);
 			}
-			//#29661 & 40098 End
+			//#29661 & 40089 End
 			
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
