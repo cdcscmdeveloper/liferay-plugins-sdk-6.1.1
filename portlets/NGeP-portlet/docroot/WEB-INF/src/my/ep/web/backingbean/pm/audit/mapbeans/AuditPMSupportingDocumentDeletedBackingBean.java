@@ -3,14 +3,17 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.AuditPMSupplierMgtConfigConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMSupportingDocumentBackingBean
@@ -38,30 +41,22 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 		this.docType = managedBeans.getSelectedDocument().getDocName();
 		Integer rowIndex = managedBeans.getDeleteRowIndex();
 		log.info("rowIndex ::: >>> ::: " + rowIndex);
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteAppTypeRestrictionsAuditList()) {
 			if (null != pmDocumentRestr.getAppTypeCode() && null != pmDocumentRestr.getAppTypeCode().getParameterId()
 					&& pmDocumentRestr.getDocumentRestrId() != null) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
 				/*
-				 * Restriction Document - AppTypeList - Application Type
+				 * Restriction Document - AppTypeList - Application Type #14
 				 */
-				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_APPTYPE_FIELDLABELID, pmDocumentRestr
-						.getAppTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null,
+				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_APPTYPE_FIELDLABELID, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr
+						.getAppTypeCode().getParameterType(), pmDocumentRestr
+						.getAppTypeCode().getParameterCode(), locale), null,
 						AuditConst.PM_AUD_ACTION_TYPE_DEL));
-
 				/*
 				 * Restriction Document - AppTypeList - Section : TextList -
-				 * isAsscProjChanged()
-				 */
-				if (pmDocumentRestr.isAsscProjChanged()) {
-					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_ASSCPROJECT_FIELDLABELID,
-							yesNo(pmDocumentRestr.isAsscProjChanged()), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
-				}
-
-				/*
-				 * Restriction Document - AppTypeList - Section : TextList -
-				 * isCompanyInfoChanged
+				 * isCompanyInfoChanged #15
 				 */
 				if (pmDocumentRestr.isCompanyInfoChanged()) {
 					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPANYINFO_FIELDLABELID,
@@ -70,36 +65,44 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 
 				/*
 				 * Restriction Document - AppTypeList - Section : TextList -
-				 * isPersonnelBranchChanged()
+				 * isAsscProjChanged() #16
+				 */
+				if (pmDocumentRestr.isAsscProjChanged()) {
+					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_ASSCPROJECT_FIELDLABELID,
+							yesNo(pmDocumentRestr.isAsscProjChanged()), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
+				}
+
+				/*
+				 * Restriction Document - AppTypeList - Section : TextList -
+				 * isPersonnelBranchChanged() #17
 				 */
 				if (pmDocumentRestr.isPersonnelBranchChanged()) {
 					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PERSONALBRANCH_FIELDLABELID,
 							yesNo(pmDocumentRestr.isPersonnelBranchChanged()), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
 				}
-
 				/*
 				 * Restriction Document - AppTypeList - Section : TextList -
-				 * isBankChanged()
-				 */
-				if (pmDocumentRestr.isBankChanged()) {
-					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_BANKINFO_FIELDLABELID,
-							yesNo(pmDocumentRestr.isBankChanged()), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
-				}
-
-				/*
-				 * Restriction Document - AppTypeList - Section : TextList -
-				 * isCapitalEquityChanged()
+				 * isCapitalEquityChanged() #18
 				 */
 				if (pmDocumentRestr.isCapitalEquityChanged()) {
 					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CAPITALEQUITY_FIELDLABELID,
 							yesNo(pmDocumentRestr.isCapitalEquityChanged()), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
 				}
 
-				/* Facility Type : Home Office (Y/N) */
+				/*
+				 * Restriction Document - AppTypeList - Section : TextList -
+				 * isBankChanged() #19
+				 */
+				if (pmDocumentRestr.isBankChanged()) {
+					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_BANKINFO_FIELDLABELID,
+							yesNo(pmDocumentRestr.isBankChanged()), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
+				}
+
+				/* Facility Type : Home Office (Y/N) #20 */
 				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_FACILITYHOME_FIELDLABELID,
 						yesNo(pmDocumentRestr.isHomeOffice()), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
 
-				/* Facility Type : Business Office (Y/N) */
+				/* Facility Type : Business Office (Y/N) #21 */
 				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_FACILITYOFFICE_FIELDLABELID,
 						yesNo(pmDocumentRestr.isBusinessOffice()), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
 			}
@@ -110,20 +113,23 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	/**
 	 * @param managedBeans
 	 * @param roleCode
-	 * @return
+	 * @return #22
 	 */
 	public List<AuditPMSPDTO> deleteComType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
 		this.docType = managedBeans.getSelectedDocument().getDocName();
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteComTypeRestrictionsAudit()) {
 			if (null != pmDocumentRestr.getCompanyTypeCode() && null != pmDocumentRestr.getCompanyTypeCode().getParameterId()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPTYPE_FIELDLABELID, pmDocumentRestr
-						.getCompanyTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null,
-						AuditConst.PM_AUD_ACTION_TYPE_DEL));
+				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());			
+				
+						objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPTYPE_FIELDLABELID, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr
+								.getCompanyTypeCode().getParameterType(), pmDocumentRestr
+								.getCompanyTypeCode().getParameterCode(), locale), null,
+								AuditConst.PM_AUD_ACTION_TYPE_DEL));	
 			}
 		}
 		return objList;
@@ -132,7 +138,7 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	/**
 	 * @param managedBeans
 	 * @param roleCode
-	 * @return
+	 * @return #23
 	 */
 	public List<AuditPMSPDTO> deleteSuppType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
@@ -140,15 +146,20 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
 		this.docType = managedBeans.getSelectedDocument().getDocName();
 		// deletesuppresrictOld << untick checkbox suppTypeRestrictionOld
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		if (managedBeans.getDeleteSuppTypeRestrictionsAudit() != null) { // managedBeans.getSuppTypeRestrictionsOld()managedBeans.getComTypeRestrictionsOld()
 			for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteSuppTypeRestrictionsAudit()) {
 				if (null != pmDocumentRestr.getSupplierTypeCode()
 						&& null != pmDocumentRestr.getSupplierTypeCode().getParameterId()) {
 					this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 					this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPTYPE_FIELDLABELID, pmDocumentRestr
-							.getSupplierTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null,
-							AuditConst.PM_AUD_ACTION_TYPE_DEL));
+					
+					
+							
+							objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPTYPE_FIELDLABELID, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr
+									.getSupplierTypeCode().getParameterType(), pmDocumentRestr
+									.getSupplierTypeCode().getParameterCode(), locale), null,
+									AuditConst.PM_AUD_ACTION_TYPE_DEL));
 				}
 			}
 		}
@@ -169,20 +180,21 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 			if (null != pmDocumentRestr.getPmCategoryL3().getCategoryL3Id()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+				/* 24 */
 				objList.add(detailObj(
 						AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYCODETYPE_FIELDLABELID,
 						pmDocumentRestr.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 								.concat(pmDocumentRestr.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code())
 								.concat(pmDocumentRestr.getPmCategoryL3().getCategoryL3Code()), null,
 						AuditConst.PM_AUD_ACTION_TYPE_DEL));
-
+				/* 25 */
 				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYMAINTYPE_FIELDLABELID, pmDocumentRestr
 						.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryName(), null,
 						AuditConst.PM_AUD_ACTION_TYPE_DEL));
-
+				/* 26 */
 				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBTYPE_FIELDLABELID, pmDocumentRestr
 						.getPmCategoryL3().getPmCategoryL2().getCategoryName(), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
-
+				/* 27 */
 				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBDIVTYPE_FIELDLABELID, pmDocumentRestr
 						.getPmCategoryL3().getCategoryName(), null, AuditConst.PM_AUD_ACTION_TYPE_DEL));
 			}
@@ -193,7 +205,7 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	/**
 	 * @param managedBeans
 	 * @param roleCode
-	 * @return
+	 * @return #28
 	 */
 	public List<AuditPMSPDTO> deleteCertBodyType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();

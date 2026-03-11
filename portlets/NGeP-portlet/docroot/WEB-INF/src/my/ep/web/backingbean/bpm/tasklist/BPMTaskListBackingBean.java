@@ -562,6 +562,12 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			//#28784 - end
 			
+			//#28188-START
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE,
+					SourcingConstants.NAV_PAGE_QT_BSV_UPDATE);
+			//#28188-END
+			
 			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"]");
 			temp.put(getProcessNameRemoveSpace("UNSPSC Code Request"), "review-unspsc-code");
 			temp.put(getProcessNameRemoveSpace("Extension Code Request"), "review-extension");
@@ -1110,7 +1116,15 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					+ SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			//#28784 - end
-			
+			// 34491 - start
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME)
+					+ SCProcessNameConst.COORDINATE_FC_MEETING, SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
+			// 34491 - end
+			//#28188-START
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					)+ SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE,
+					SourcingConstants.NAV_PAGE_QT_BSV_UPDATE);
+			//#28188-END
 			
 			this.getManagedBean().setBpmMap(temp);
 		}
@@ -1239,10 +1253,17 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
+			//#26186 start
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				externalContext.redirect(commonUrl + "/" + url + "?taskId="
+						+ taskId +"&claim=" + claim+"&docNo="+docNo+"&taskName=" + taskName);
+			}else{
 			//26238 -  Disciplinary Action - 28111
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
 					+ taskId +"&claim=" + claim+"&docNo="+docNo);/*#31422-basri 190821*/
+			}
+			//#26186 end
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {

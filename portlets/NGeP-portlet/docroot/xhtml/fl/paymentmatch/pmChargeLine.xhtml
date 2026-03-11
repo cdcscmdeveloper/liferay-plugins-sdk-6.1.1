@@ -8,6 +8,17 @@
 
 	<p:panel header="#{lbl['lbl.fl.menu.charge.line.summary']}" toggleable="true" styleClass="pmChargeLinePnlClass">
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.line.summary']}" escape="false"/>
+		<ui:remove>#29556-Start</ui:remove>
+		<h:outputText styleClass="instruction"
+			rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"
+			value="#{lbl['lbl.fl.instruction.items.spec.guideline']}"
+			escape="false" />
+		<p:commandLink
+			rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"
+			value="#{lbl['lbl.fl.instruction.items.spec.click.here']}"
+			ajax="false" style="font-size:12px;font-style:italic" process="@this"
+			action="#{paymentMatchBackingBean.downloadItemSpecGuideline()}"></p:commandLink>
+		<ui:remove>#29556-End</ui:remove>
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			selection="#{paymentMatchBackingBean.managedBean.selectedNode}"
 			selectionMode="single"
@@ -24,9 +35,12 @@
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-			<!--#21416 filter item name-->
-				<h:outputText value="#{paymentMatchBackingBean.filterItemName(chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemName)}" id="itemDesc"
-				rendered="#{chargeLineNode.level == 1}" style="text-align:left; float:left;" title="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}"/>
+				<!--#31344 filter item name-->
+				<h:outputText
+					value="#{paymentMatchBackingBean.filterNARequestItemName(chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.requestNoteItemId)}"
+					id="itemDesc" rendered="#{chargeLineNode.level == 1}"
+					style="text-align:left; float:left;"
+					title="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 			<f:facet name="footer">

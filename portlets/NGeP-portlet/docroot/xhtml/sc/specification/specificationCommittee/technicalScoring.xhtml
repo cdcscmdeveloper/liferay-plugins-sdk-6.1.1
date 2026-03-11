@@ -7,8 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:remove>#10141 Start Vinod</ui:remove>
-	<ui:include src="specScorePreview.xhtml" />
-	<p:spacer height="35"></p:spacer>
+	<c:if test="#{!specificationBackingBean.managedBean.readOnly}">
+		<ui:include src="specScorePreview.xhtml" />
+		<p:spacer height="35"></p:spacer>
+	</c:if>
 	<ui:remove>#10141 End Vinod</ui:remove>
 <ui:remove>
 	<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
@@ -226,10 +228,12 @@
 					</ui:fragment></td>
 				<td>
 				<!-- #21695 FARID START DISABLE SCQT PARTIAL-->
-
+				<ui:remove><!-- #38679 adjust disable condition with new requirement --></ui:remove>
 							<p:selectOneRadio required="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly or 
-								specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial}"
+								(specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial 
+								or specificationBackingBean.managedBean.qt.partial ne null and !specificationBackingBean.managedBean.qt.partial 
+								and specificationBackingBean.managedBean.zoneQtyHasZeroVal)}"
 								label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
 								value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 								<f:selectItems

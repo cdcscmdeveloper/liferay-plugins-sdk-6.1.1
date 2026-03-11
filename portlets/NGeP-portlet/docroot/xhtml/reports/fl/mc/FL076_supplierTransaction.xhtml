@@ -42,7 +42,7 @@
 					postUpdateListener="mcSuppTransRptBB.resetPtjProfile()"
 					update=":form"
 					saveObject="mcSuppTransRptBB.managedBean.ptjGroup"
-					conditionField="#{mcSuppTransRptBB.constuctConditionFieldsForPTJGroup()}">
+					conditionField="#{mcSuppTransRptBB.constuctConditionForPTJGroupAdhocReport()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -58,7 +58,7 @@
 					value="#{mcSuppTransRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="mcSuppTransRptBB.managedBean.ptj"
-					conditionField="#{mcSuppTransRptBB.getPTJCondition()}">
+					conditionField="#{mcSuppTransRptBB.constuctConditionForPTJAdhocReport()}">
 				</ac:lov>
 			</td>
 		</tr>

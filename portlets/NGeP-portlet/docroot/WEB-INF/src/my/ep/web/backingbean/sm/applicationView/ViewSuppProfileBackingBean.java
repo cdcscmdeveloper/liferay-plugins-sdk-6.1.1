@@ -34,6 +34,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
+import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -59,10 +60,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import javax.servlet.http.HttpServletRequest;
 import com.liferay.compat.portal.util.PortalUtil;
 //#28895_35501 End
-//#34031 Start
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sm.SmRevisit;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -441,78 +438,6 @@ public class ViewSuppProfileBackingBean extends
 	}
 	// #28175 end
 
-	// #34031 Start
-	/**
-	 * Retrieves remarks related to a given revisit.
-	 * @param revisit
-	 * @return List<String>
-	 */
-	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
-		List<String> remarks = new ArrayList<>();
-		if (null != revisit) {
-			StringBuilder remarkOne = new StringBuilder();
-			remarkOne.append(
-					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())).append(" ");
-			if (null != revisit.getRevisitPrevRemark()) {
-				remarkOne.append(revisit.getRevisitPrevRemark());
-			} else {
-				remarkOne.append(
-						ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
-						.append(" ");
-			}
-			remarkOne.append(
-					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())).append(" ");
-			if (null != revisit.getRevisitRemark()) {
-				remarkOne.append(revisit.getRevisitRemark());
-			} else {
-				remarkOne.append(
-						ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
-						.append(" ");
-			}
-			remarks.add(remarkOne.toString());
-			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
-				List<PmStatusDesc> descList;
-				StatusReqDTO reqDTO = new StatusReqDTO();
-				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-				descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
-				StringBuilder remarkTwo = new StringBuilder();
-				remarkTwo
-						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()))
-						.append(" ")
-						.append(getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId()))
-						.append(" ")
-						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())).append(" ")
-						.append(getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId()));
-				remarks.add(remarkTwo.toString());
-			}
-			if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
-				String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.three", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-				remarks.add(remarkThree);
-			}
-		}
-		return remarks;
-	}
-
-	private String getPmStatusDescs(List<PmStatusDesc> statusList, Long pmStatusId) {
-		String statusName = "";
-
-		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
-			// Expected Max Size in loop (5) based on NGEP_PDS database
-			for (PmStatusDesc status : statusList) {
-				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
-					statusName = status.getStatusName();
-					break;
-				}
-			}
-		}
-		return statusName;
-	}
-	// #34031 End
 
 	// 26247 - start	
 	/**
@@ -530,17 +455,21 @@ public class ViewSuppProfileBackingBean extends
 		Locale locale = new FacesScopes().getUserLocale();
 		List<String> messages = new ArrayList<>();
 	
-		if (evaluateCancellationBlacklist(supplier)) {
+		if (DisciplinaryActionUtils.evaluateCancellationBlacklist(supplier)) {
 			messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
 		}
 
-		if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
-			messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
-					new String[] { StringUtils.join(supplier.getCancelledCategoryCodes().toArray(), ", ") },
+		List<String> cancelledCategoryCodes = new ArrayList<>();
+		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+
+		if (CollectionUtils.isNotEmpty(cancelledCategoryCodes)) {
+			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760557,
+					new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
 					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 		}
 
-		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor()) && !supplier.isBumi();
+		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+				&& !supplier.isBumi() && (!supplier.isDisciplinaryActions() || !DisciplinaryActionUtils.evaluateCancelledBumiAccount(supplier));
 		if (noBumiAccount) {
 			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760556, new String[] {},
 					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
@@ -556,7 +485,8 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	public void onViewQTAlertMessage(List<String> messages) {
 		this.getManagedBean().setDisciplinaryActionMsg(composeWarningMessages(messages));
-		RequestContext.getCurrentInstance().execute("suspendAlertWidget.show()");
+		RequestContext.getCurrentInstance().execute(
+				"$('[id=\"suspendAlertWidgetId\"]').detach().appendTo('body');suspendAlertWidget.show();");
 	}
 	// 26247 - end
 	
@@ -572,16 +502,14 @@ public class ViewSuppProfileBackingBean extends
 		List<String> messages = new ArrayList<>();
 		if (supplier != null) {
 			Locale locale = new FacesScopes().getUserLocale();
-			if (evaluateCancellationBlacklist(supplier)) {
+			if (DisciplinaryActionUtils.evaluateCancellationBlacklist(supplier)) {
 				messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
 			}
 
 			List<String> cancelledCategoryCodes = new ArrayList<>();
-			cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
 			cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
 
-			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes)
-					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledCategories(supplier));
+			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
 			if (noCancelledCategory) {
 				messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
 						new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
@@ -590,7 +518,7 @@ public class ViewSuppProfileBackingBean extends
 
 			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
 					&& !supplier.isBumi()
-					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledBumiAccount(supplier));
+					&& (!supplier.isDisciplinaryActions() || !DisciplinaryActionUtils.evaluateCancelledBumiAccount(supplier));
 			if (noBumiAccount) {
 				messages.add(MessageUtils.getMessage(MessageConst.ERROR_760559, new String[] {},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
@@ -619,70 +547,7 @@ public class ViewSuppProfileBackingBean extends
 				MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
 	}
 	// 26247 - end
-	
-	// 26247 - start
-	private boolean evaluateCancelledCategories(SmSupplier supplier) {
-		boolean cancelledCategory = false;
-		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			cancelledCategory = supplier.isDisciplinaryActions()
-					&& (disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel());
-		}
-		return cancelledCategory;
-	}
-	// 26247 - end
-	
-	// 26247 - start
-	private boolean evaluateCancelledBumiAccount(SmSupplier supplier){
-		boolean cancelledBumiAccount = false;
-		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			cancelledBumiAccount = supplier.isDisciplinaryActions() && disciplinaryAction.isBumiputeraCancel();
-		}
-		return cancelledBumiAccount;
-	}
-	// 26247 - end
-	
-	// 26247 - start
-	/**
-	 * Evaluate for suspend registration disciplinary action
-	 * @param supplier
-	 * @return
-	 */
-	public boolean evaluateSuspendRegistration(SmSupplier supplier){
-		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			return disciplinaryAction.isSuspendRegistration();
-		}
-		return false;
-	}
-	// 26247 - end
-	
-	// 26247 - start
-	/**
-	 * Evaluate for pending register cancellation or blacklist owner disciplinary action
-	 * @param supplier
-	 * @return
-	 */
-	public boolean evaluateCancellationBlacklist(SmSupplier supplier) {
-		if(null == supplier){
-			return false;
-		}
-		boolean suspendedBlacklisted = false;
-		boolean suspendedCancelled = false;
-
-		if (CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			suspendedBlacklisted = disciplinaryAction.isBlacklistOwner() && disciplinaryAction.isPendingBlacklist();
-			suspendedCancelled = disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel();
-		}
-		boolean blacklistedOrCancelled = suspendedBlacklisted || suspendedCancelled;
-		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
-		return ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus) && blacklistedOrCancelled
-				&& !supplier.isDisciplinaryActions();
-	}
-	// 26247 - end
-	
+		
 	// 26247 - start
 	private String composeWarningMessages(List<String> messages) {
 		StringBuilder messageSb = new StringBuilder();

@@ -32,7 +32,7 @@
 			<h:outputText value="P" rendered="#{cc.attrs.poEdit}" title="#{lbl['tt.sm.edit.by.po']}" style="color:red !important;"/>
 			<h:outputText value="A" rendered="#{cc.attrs.appEdit}" title="#{lbl['tt.sm.edit.by.app']}" style="color:red !important;"/>
 			<h:outputText value="O" rendered="#{cc.attrs.hasOverlap}" title="#{lbl['tt.sm.has.overlap']}" style="color:red !important;"/>
-			<f:param name="disableValidation" value="true" /> <!-- #34159 - add param disablevalidation -->
+			<f:param name="disableValidation" value="true" /> <!-- #39097 & #34159 - add param disablevalidation -->
 			<ui:remove>
 				<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.smAppl.applType eq 'A' 
 					and cc.attrs.backingBean.managedBean.overLappedCategoryExists}">
@@ -40,6 +40,11 @@
 					<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
 				</p:outputPanel>
 			</ui:remove>
+			<!-- #38890 -->
+			&#160;<p:graphicImage value="/css/images/ai/icon.png" style="vertical-align:top !important;"
+						rendered="#{cc.attrs.label eq lbl['lbl.sm.companyStepLbl']
+								or cc.attrs.label eq lbl['lbl.sm.personStepLbl']
+								or cc.attrs.label eq lbl['lbl.sm.docsReviewLbl']}"/>
 		</p:commandLink>
 	</cc:implementation>
 

@@ -37,12 +37,12 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{poSumTotalNumValofPoRptBB.disablePtjGroupLovByReportCode()}"
+					disabled="#{poSumTotalNumValofPoRptBB.disablePtjGroupLovAdhocPO()}"
 					value="#{poSumTotalNumValofPoRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="poSumTotalNumValofPoRptBB.resetPtjProfile()"
 					update=":form"
 					saveObject="poSumTotalNumValofPoRptBB.managedBean.ptjGroup"
-					conditionField="#{poSumTotalNumValofPoRptBB.constuctConditionFieldsForPTJGroup()}">
+					conditionField="#{poSumTotalNumValofPoRptBB.constuctConditionForPTJGroupAdhocReport()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -54,11 +54,11 @@
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{poSumTotalNumValofPoRptBB.disablePtjLovByReportCode()}"
+					disabled="#{poSumTotalNumValofPoRptBB.disablePtjLovAdhocPO()}"
 					value="#{poSumTotalNumValofPoRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="poSumTotalNumValofPoRptBB.managedBean.ptj"
-					conditionField="#{poSumTotalNumValofPoRptBB.getPTJCondition()}">
+					conditionField="#{poSumTotalNumValofPoRptBB.constuctConditionForPTJAdhocReport()}">
 				</ac:lov>
 			</td>
 		</tr>

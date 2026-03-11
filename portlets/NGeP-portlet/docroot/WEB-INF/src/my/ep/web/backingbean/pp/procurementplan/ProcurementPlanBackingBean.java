@@ -1498,7 +1498,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param reqSPDTO
 	 */
 	private void recordAudit(String action, AuditProcurementPlanSPDTO reqSPDTO) {
-		if (reqSPDTO.getCurrentStatusID() != null) {
+		
+		IAuditProcurementPlanSO reqSubmitSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
+		AuditProcurementPlanReqDTO reqSubmitDTO = new AuditProcurementPlanReqDTO();
+
+		reqSubmitDTO.setApproveCode(getApprovalCode());
+		reqSubmitDTO.setPlanId(this.getManagedBean().getPlanId());
+
+		AuditProcurementPlanResDTO resApproveDTO = reqSubmitSO.retrieveApproveStatus(reqSubmitDTO);
+		
+		if (reqSPDTO.getCurrentStatusID() != null || resApproveDTO.isSuccessful()) {
 			saveAuditData(action, Long.valueOf(1));
 		}
 	}
@@ -3760,36 +3770,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if(epItem.getPmGlAccount().getGlAccountId()==null){
 							throw new EpException(MessageConst.ERROR_730003);
 						}
-						if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
+						//#39764 - Start
+						if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().compareTo(BigDecimal.ZERO)<=0){
 							throw new EpException(MessageConst.ERROR_730004);
 						}
-						if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
+						if(epItem.getPlanAmt()==null || epItem.getPlanAmt().compareTo(BigDecimal.ZERO)<=0){
 							throw new EpException(MessageConst.ERROR_730005);
 						}
 						//01032021@Bug #30476 - start
-						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0
+						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().compareTo(BigDecimal.ZERO)<0
 								|| epItem.getNonEpAmt().doubleValue()<-epItem.getNonEpAmt().doubleValue()){
 							throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
 						}	//01032021@Bug #30476 - end
-						
-						if(epItem.getNonEpAmt().intValue()>0){
-							if(epItem.getJustifications()==null 
-									|| (epItem.getJustifications()!=null && epItem.getJustifications().isEmpty())
-									|| (epItem.getJustifications()!=null 
-										&& epItem.getJustifications().isEmpty() 
-										&& epItem.getJustifications().get(0)==null)  
-									|| (epItem.getJustifications()!=null &&(
-										 epItem.getJustifications().isEmpty() 
-										|| epItem.getJustifications().get(0)==null
-										|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())))){
-								//03122020@24975 - Start
-								epItem.setNotUsingEp(true);
-								ppItemNotUsingEp.add(epItem);
-								indicatorIndex++;
-								//03122020@24975 - End
-							}
+						if(epItem.getNonEpAmt().compareTo(BigDecimal.ZERO) > 0 && isJustificationInvalid(epItem)) {
+							//03122020@24975 - Start
+							epItem.setNotUsingEp(true);
+							ppItemNotUsingEp.add(epItem);
+							indicatorIndex++;
+							//03122020@24975 - End
 						}
-						//#25549@24022021 - remove 
+						//#39764 - End
+						//#25549@24022021 - remove
 						soIds.add(epItem.getPmGlAccount().getGlAccountId());
 					}
 				}
@@ -4524,18 +4525,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedJustifications(null);
 		this.getManagedBean().setSelectedJustificationDesc("");
 		boolean newRemark = false;
-		
-		
+		this.getManagedBean().setDimmedJustification(false); //#35502, Fix as-is bug: #38652
+
 		if(epItem.getJustifications()==null){
 			epItem.setJustifications(new ArrayList<PpRemark>());
 		}
-		/* enable for phase 2
-		//if first remark is not new
-		if (!epItem.getJustifications().isEmpty()){
-			if(!epItem.getJustifications().get(0).isBrandNew()){
-				newRemark = true;
-			}
-		}*/
 
 		// if reason is empty
 		if (epItem.getJustifications().isEmpty() || epItem.getJustifications().size() == 0) {
@@ -4546,31 +4540,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(!this.getManagedBean().isModeEditable() || !epItem.isEditable()){
 			newRemark = false;
 		}
-	
-		
-		/* enable for phase 2
-		// for user to edit draft remark
-		if(newRemark){
-			if(!epItem.getJustifications().isEmpty() && compareUserNameInsensitive(epItem.getJustifications().get(0).getUserId())){
-				//if both statuses are null
-				if(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
-						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
-					epItem.getJustifications().get(0).setEditable(true);
-					newRemark = false;
-				//if both plan status!=null && justification status == null
-				}else if(this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()!=null && 
-						(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
-							|| (epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
-									epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId()==null))){
-				// if remark status == plan status
-				}else if(epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
-						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
-					epItem.getJustifications().get(0).setEditable(true);
-					newRemark = false;
-				}
-			}
-		} */
 		
 		if(newRemark){
 			log.info("new justification added");
@@ -4588,16 +4557,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			remark.setRoleCode(roleCode);
 			epItem.getJustifications().add(0, remark);
-
 		}
+		
+		//#35502, Fix as-is bug: #38652 Start
+		if(epItem.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+			this.getManagedBean().setDimmedJustification(true);
+		}
+		//#35502, Fix as-is bug: #38652 End
 	
 		this.getManagedBean().setSelectedJustifications(epItem.getJustifications());
 		this.getManagedBean().setSelectedJustificationDesc(epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark());
 		
-		
-		
 		log.info("loadJustification - End");
-		
 	}
 	
 	/**
@@ -4837,7 +4808,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if(ppItem.getInvitationDate()==null){
 						throw new EpException(MessageConst.ERROR_730012);
 					}
-					if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().intValue()<=0){
+					if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().compareTo(BigDecimal.ZERO)<=0){ //#39764
 						throw new EpException(MessageConst.ERROR_730014);
 					}
 					// Set Reason For Update to be mandatory
@@ -4888,11 +4859,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 		}
+		
+		//#35502 Fix as-is bug Start
 		if(this.getManagedBean().getDeletePpItems()==null){
 			this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
-		} else {
-			this.getManagedBean().getDeletePpItems().clear();
-		}
+		} 
+		//#35502 Fix as-is bug End
+
 		//add deleted item to list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
 			//log.info("[SIR#12802] - Procurement item delete status:" + procurementItem.isDeleted());
@@ -8737,6 +8710,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				    	copyJustifications.setRoleCode(oldJustifications.getRoleCode());
 				    	copyJustifications.setRemarkType(oldJustifications.getRemarkType());
 				    	copyJustifications.setRemark(oldJustifications.getRemark());
+				    	//#35502, Fix as-is bug: #38802 Start
+				    	copyJustifications.setCreatedBy(getUserIdSessionFromLoginId());
+				    	copyJustifications.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
+				    	copyJustifications.setChangedDate(new Timestamp(System.currentTimeMillis()));
+				    	//#35502, Fix as-is bug: #38802 End
 				    	
 				    	newJustifications.add(copyJustifications);
 				    }
@@ -9349,10 +9327,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			System.out.println("unSelectRow is Disable Button !!:" + this.getManagedBean().isDisableSelectBtn());
 		}
 	}//#25549@24022021 - end
+	
+	//#39764 - Start
+	private boolean isJustificationInvalid(PpExpenditureItem epItem) {
+	    List<PpRemark> justifications = epItem.getJustifications();
+
+	    if (justifications == null || justifications.isEmpty()) {
+	        return true;
+	    }
+	    PpRemark remark = justifications.get(0);
+	    if (remark == null) {
+	        return true;
+	    }
+	    return StringUtils.isBlank(remark.getRemark());
+	}
+	//#39764 - End
 }
-	   
-
-
-
-
-			

@@ -267,16 +267,15 @@
 				<p:message id="branchCityMsg" for="branchCity" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
-		</p:panel>
-		<!-- #36718 - END -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
 			<td><p:outputPanel id="postCodeBranchPanelId">
 					<p:outputPanel
 						rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+						<!-- #36718 - change required condition -->
 						<p:inputText maxlength="5"
-							required="#{backingBean.managedBean.valueReqd}"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeMy"
 							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
 							disabled="#{backingBean.managedBean.upsCannotEdit
@@ -299,8 +298,9 @@
 					</p:outputPanel>
 					<p:outputPanel
 						rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+						<!-- #36718 - change required condition -->
 						<p:inputText maxlength="10"
-							required="#{backingBean.managedBean.valueReqd}"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeForeign"
 							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
 							size="35">
@@ -318,6 +318,8 @@
 					</p:outputPanel>
 				</p:outputPanel></td>
 		</tr>
+		</p:panel>
+		<!-- #36718 - END -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 			<td>

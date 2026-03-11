@@ -73,7 +73,8 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false"  escape="false" />
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="firstUserTncDialog" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
-				action="#{registrationBackingBean.onCallFirstUserTncDialog}">
+				action="#{registrationBackingBean.onCallFirstUserTncDialog}"
+				process="@form"><!-- #26238 - 39681 -->
 				<f:param name="disableValidation" value="true" />
 		</p:commandButton>
 	</div>
@@ -222,27 +223,27 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent">
-						<c:choose>
-						<c:when test="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
-							<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
+						<!-- #26238 - 39681 - start -->
+						<h:panelGroup id="txtIdNumber">
+							<p:inputText id="txtIdNumber1" required="#{!empty param['disableValidation']}"
 								requiredMessage="#{lbl['lbl.sm.icNo.required']}"
 								label="#{lbl['lbl.sm.identificationno']}" disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
-								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}">
+								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}"
+								rendered="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
-								<p:ajax event="change" partialSubmit="true"></p:ajax>
+								<!-- #26238 - 39681 -->
 							</p:inputText>
-						</c:when>
 						
-						<c:otherwise>
-							<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
+							<p:inputText id="txtIdNumber2" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.identificationno']}" disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
-								size="30" maxlength="15">
+								size="30" maxlength="15"
+								rendered="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode != SupplierManagementConst.NEW_IC}">
 								<p:ajax process="@this" partialSubmit="true" update="@this" listener="#{registrationBackingBean.trimPersonnelPassportValue}"/>
 							</p:inputText>
-						</c:otherwise>
-						</c:choose>
+						</h:panelGroup>
+						<!-- #26238 - 39681 - end -->
 						&#160;
 						<p:graphicImage id="uidti" value="/css/images/design/tooltips.png" />
 						<p:tooltip id="uidtt" for="uidti">
@@ -390,7 +391,7 @@
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
-							<p:ajax event="change"
+							<p:ajax event="change" process="@this @([id$=pnlUsrInfo])"
 								listener="#{registrationBackingBean.populateStateByAddType('permenant',true)}"
 								update="cmbPermState,divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDivision,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu> 
@@ -452,7 +453,7 @@
 							value="#{registrationBackingBean.managedBean.permenantDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this"
+						<p:ajax event="change" process="@this @([id$=pnlUsrInfo])"
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant', true)}"
 							update="cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
 					</p:selectOneMenu>
@@ -480,7 +481,7 @@
 								value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 								itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 							<!-- #36718 - update postcode, listener -->
-							<p:ajax event="change"
+							<p:ajax event="change" process="@([id$=pnlUsrInfo])"
 								listener="#{registrationBackingBean.populateCityByAddType('permenant', true)}"
 								update="cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu>
@@ -502,6 +503,7 @@
 								itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
 							<!-- #36718 - add ajax -->
 							<p:ajax event="change" update="txtPermPostcodePanelId"
+								process="@([id$=pnlUsrInfo])"
 								listener="#{registrationBackingBean.onSelectCity('permenant')}" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" />

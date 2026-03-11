@@ -20,10 +20,11 @@
 						<!-- 34445 start -->
 						<c:choose>
 							<c:when test="#{rejectionReasonBackingBean.managedBean.selectedReason.brandNew}">
-								<p:commandButton id="btnReasonSave" value="#{lbl['lbl.btn.save']}" oncomplete="saveInfoDlg.show()"/>
+								<p:commandButton id="btnReasonSave" value="#{lbl['lbl.btn.save']}" oncomplete="if (!args.validationFailed) saveInfoDlg.show()"/>
 							</c:when>
 							<c:otherwise>
-								<p:commandButton id="btnReasonUpdate" value="#{lbl['lbl.btn.update']}" oncomplete="updateInfoDlg.show()"/>
+								<p:commandButton id="btnReasonUpdate" value="#{lbl['lbl.btn.update']}" action="#{rejectionReasonBackingBean.validationForUpdate}" 
+									oncomplete="if (!args || !args.validationFailed) updateInfoDlg.show()"/> <!--#28962, #39618-->
 							</c:otherwise>
 						</c:choose>
 						<!-- 34445 end -->
@@ -34,7 +35,8 @@
 
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
-			okAction="rejectionReasonBackingBean.saveRejectReason"
+			okParam="#{rejectionReasonBackingBean.saveRejectReason()}"
+			hasParam="true"
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pm.btn.save.msg']}"

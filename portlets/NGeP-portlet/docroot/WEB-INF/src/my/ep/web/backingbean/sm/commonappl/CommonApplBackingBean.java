@@ -226,6 +226,7 @@ public class CommonApplBackingBean extends
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
+				appl.setProcessingOfficerProcess(smObj.getProcessingOfficerProcess()); //#39771
 
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set
@@ -723,6 +724,8 @@ public class CommonApplBackingBean extends
 						srcObj.getSupplierList());
 			}*/
 			smApplBB.getManagedBean().setPayLoad(srcObj);
+			smApplBB.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo()); //#38195
+			
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());

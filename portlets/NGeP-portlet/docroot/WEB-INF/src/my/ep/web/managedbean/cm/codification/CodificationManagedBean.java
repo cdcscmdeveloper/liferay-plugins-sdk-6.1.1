@@ -206,7 +206,15 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String itemCodeDesc;
 	private Object[] objSelected;
 	private boolean renderButtonAssignCode;
+	private boolean isHideExtension;
 	// #31503 - End
+	
+	//35503 Start
+	private String segmentTitleEng;
+	private String familyTitleEng;
+	private String classTitleEng;
+	private String commodityTitleEng;
+	//35503 End
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -216,6 +224,10 @@ public class CodificationManagedBean extends BaseManagedBean {
 			IPagingDataModel<Object[]> extensionSearchItemDataModel) {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
+	
+	//#26059 - Start
+	private String cmItemCode;
+	//#26059 - End
 
 	
 	public void initRefreshPageNoFlag(){
@@ -1544,5 +1556,72 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
 		this.renderButtonAssignCode = renderButtonAssignCode;
 	}
+	
+	/**
+	 * @return the isHideExtension
+	 */
+	public boolean isHideExtension() {
+		return isHideExtension;
+	}
+
+	/**
+	 * @param isHideExtension the isHideExtension to set
+	 */
+	public void setHideExtension(boolean isHideExtension) {
+		this.isHideExtension = isHideExtension;
+	}
 	// #31503 -end-
+
+	//35503 Start
+	public String getSegmentTitleEng() {
+		return segmentTitleEng;
+	}
+
+	public void setSegmentTitleEng(String segmentTitleEng) {
+		this.segmentTitleEng = segmentTitleEng;
+	}
+
+	public String getFamilyTitleEng() {
+		return familyTitleEng;
+	}
+
+	public void setFamilyTitleEng(String familyTitleEng) {
+		this.familyTitleEng = familyTitleEng;
+	}
+
+	public String getClassTitleEng() {
+		return classTitleEng;
+	}
+
+	public void setClassTitleEng(String classTitleEng) {
+		this.classTitleEng = classTitleEng;
+	}
+
+	public String getCommodityTitleEng() {
+		return commodityTitleEng;
+	}
+
+	public void setCommodityTitleEng(String commodityTitleEng) {
+		this.commodityTitleEng = commodityTitleEng;
+	}
+	//35503 End
+
+	//#26059 - Start
+	/**
+	 * @return the cmItemCode
+	 */
+	public String getCmItemCode() {
+		return cmItemCode;
+	}
+
+	/**
+	 * @param cmItemCode the cmItemCode to set
+	 */
+	public void setCmItemCode(String cmItemCode) {
+		this.cmItemCode = cmItemCode;
+	}
+	//#26059 - End
+	
+	
+	
 }
