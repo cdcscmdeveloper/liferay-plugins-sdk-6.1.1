@@ -17,7 +17,7 @@
 						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="qtValueSaveBtnId"
 							partialSubmit="true" oncomplete="saveQtValueInfoDlg.show();"
-							process="@this" immediate="true"/><!-- 39352 -->
+							process="@this" immediate="true"/><!-- #36738, #39352 -->
 						<!-- 34445 end -->
 					</div>
 				</td>
@@ -170,7 +170,7 @@
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}"
 			update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValuePnlId" 
-			okProcess=":form:settingTabId:qtValuePnlId"/>
+			okProcess=":form:settingTabId:qtValuePnlId"/><!-- #36738, #40071 -->
 			
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="saveQtValueInfoDlg" widget="saveQtValueInfoDlg"
