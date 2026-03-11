@@ -106,14 +106,7 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 	
 	private String checkSoftCert(String parameterCode){
 		 
-//		PmParameter pmParameter = getParameterByTypeAndCode(Par/ameterTypeConst.SOFTCERT_PROVIDER, parameter);
 		String description = null;
-		
-		/**for(PmParameterDesc desc : pmParameter.getPmParameterDescs()){
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)){
-				description = desc.getCodeName();
-			}
-		}*/
 		
 		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		description = ParameterHelper.getInstance().getParameterDesc("DT", parameterCode, locale);
