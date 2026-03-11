@@ -3,11 +3,13 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmPIDReason;
@@ -367,14 +369,17 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			restrictionSuppType.setDocType(docType);
 			restrictionSuppType.setDocNo(existingReason.getReasonCode());
 			restrictionSuppType.setDocGroupId(docGroupId);
-			restrictionSuppType.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
+			restrictionSuppType
+					.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
 			restrictionSuppType.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			restrictionSuppType.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
 			restrictionSuppType.setLvlCode3(parameterCode);
 			restrictionSuppType.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
 			restrictionSuppType.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_SUPPL_TYPE_FIELDLABELCODE);
-			restrictionSuppType.setOldValue(oldReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			restrictionSuppType.setNewValue(existingReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionSuppType
+					.setOldValue(oldReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionSuppType.setNewValue(existingReason.isBySupplierType() ? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO);
 			restrictionSuppType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(restrictionSuppType);
 		}
@@ -442,7 +447,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				restrictionDetails.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 				restrictionDetails.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
 				restrictionDetails.setLvlCode3(parameterCode);
-				
+
 				// ST / AT / SBT
 				restrictionDetails.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_DTL_SUPPL_TYPE_FIELDLABELCODE);
 				restrictionDetails.setOldValue(checkPmParameterDesc(suppReason.getRestrType()));
@@ -594,14 +599,10 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	 */
 	private String checkPIDReason(String pidDocType) {
 
-		PmParameter pmParameter = getParameterByTypeAndCode("DT", pidDocType);
 		String description = null;
-
-		for (PmParameterDesc desc : pmParameter.getPmParameterDescsSpecCallOnly()) {
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
-				description = desc.getCodeName();
-			}
-		}
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		description = ParameterHelper.getInstance().getParameterDesc("DT", pidDocType, locale);
+				   
 		return description;
 
 	}
@@ -624,7 +625,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 
 		if (pmParameter.getParameterId() != null) {
 			PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(pmParameter.getParameterId());
-			for (PmParameterDesc desc : parameter.getPmParameterDescsSpecCallOnly()) {
+			for (PmParameterDesc desc : parameter.getPmParameterDescs()) {
 				if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 					description = desc.getCodeName();
 				}
@@ -650,7 +651,8 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	}
 
 	private BigInteger checkDocIdSupplierReason(Long pmParameterId) {
-		PmReason pmReason = managedBeans.getNewPmReason() == null ? managedBeans.getSelectedReason() : managedBeans.getNewPmReason();
+		PmReason pmReason = managedBeans.getNewPmReason() == null ? managedBeans.getSelectedReason() : managedBeans
+				.getNewPmReason();
 		BigInteger docId = null;
 
 		for (PmSupplierReason pmSupplierReason : pmReason.getPmSupplierReasons()) {
