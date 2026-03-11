@@ -81,6 +81,7 @@ import my.ep.web.util.pm.helper.ReasonHelper;
 import org.apache.commons.collections.CollectionUtils; //#28962
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext; //#28962
 /**
  * Backing Bean for Rejection Reason
  * 
@@ -254,6 +255,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setSuppAppCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppComCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppTypeCheck(Boolean.FALSE);
+			this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618 
 	
 			if(id!=null && id>0){
 				loadRejectReason(id);
@@ -1976,6 +1978,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setAuditDeleteComRestrictions(null);
 		this.getManagedBean().setAuditDeleteSuppRestrictions(null);
 		
+		this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618
+		
 		// 28962-Audit START
 		this.getManagedBean().setAuditAddSupplAcctType(null);
 		this.getManagedBean().setAuditUpdateSupplAcctType(null);
@@ -2366,6 +2370,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 		agencyList.add(agency);
 		existingOrgProfileIds.add(orgId);
+		RequestContext.getCurrentInstance().execute("dtSuppAccTypeWidget.paginator.endLink.click()");
 
 		log.info(".......agencyList.size.......=" + agencyList.size());
 	}
@@ -2598,7 +2603,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	
 	//#39618 - Start
 	public void validationForUpdate(){
-		log.info(" rejectionreasonbackingbean  in validationCheck()  :::::::::::::::::::::::::::::::: "+getManagedBean().isReasonApplicabilityDuplicate());
+		log.info(" rejectionreasonbackingbean  in validationForUpdate()  :::::::::::::::::::::::::::::::: "+getManagedBean().isReasonApplicabilityDuplicate());
 		if(getManagedBean().isReasonApplicabilityDuplicate()){
 			FacesContext.getCurrentInstance().validationFailed();
 			throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(

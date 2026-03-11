@@ -70,6 +70,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		getManagedBean().setCentralPanelContractSelected(false);
 		getManagedBean().setDisableReason(false);
 		initializeOrgFieldValue();
+		resetSearch();
 	}
 
 	/**
@@ -130,14 +131,14 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		validateCriteria();
 
-		addIfNotNull(map, DpReportConst.PARAM_KEY_MINISTRY, getManagedBean().getSelectedMinistry());
-		addIfNotNull(map, DpReportConst.PARAM_KEY_KUMPULAN_PTJ, getManagedBean().getSelectedKumpulanPTJ());
-		addIfNotNull(map, DpReportConst.PARAM_KEY_PTJ, getManagedBean().getSelectedPTJ());
-		addIfNotNull(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract());
+		addIfNotEmpty(map, DpReportConst.PARAM_KEY_MINISTRY, getManagedBean().getSelectedMinistry().getOrgProfileId().toString());
+		addIfNotEmpty(map, DpReportConst.PARAM_KEY_KUMPULAN_PTJ, getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId().toString());
+		addIfNotEmpty(map, DpReportConst.PARAM_KEY_PTJ, getManagedBean().getSelectedPTJ().getOrgProfileId().toString());
+		addIfNotEmpty(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract()? DpReportConst.YES_FLAG:DpReportConst.NO_FLAG);
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_CIRCULAR_NO, getManagedBean().getCircularNo());
-		addIfNotNull(map, DpReportConst.PARAM_KEY_STATUS, getManagedBean().getStatus());
+		addIfNotEmpty(map, DpReportConst.PARAM_KEY_STATUS, getManagedBean().getDpStatus());
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_CODE, getManagedBean().getItemCode());
-		addIfNotNull(map, DpReportConst.PARAM_KEY_PROCUREMENT_TYPE, getManagedBean().getProcurementType());
+		addIfNotEmpty(map, DpReportConst.PARAM_KEY_PROCUREMENT_TYPE, getManagedBean().getProcurementType());
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_NAME, getManagedBean().getItemName());
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_REASON, getManagedBean().getReason());
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_RN_NO, getManagedBean().getRnNo());
@@ -150,9 +151,11 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 				if (getManagedBean().getCentralPanelContract()) {
 					// panel
 					this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_PANEL);
+					this.getManagedBean().setReportCode(DpReportConst.DP_ITEM_EXCEED_THRESHOLD_PANEL);
 				} else {
 					// non panel
 					this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL);
+					this.getManagedBean().setReportCode(DpReportConst.DP_ITEM_EXCEED_THRESHOLD_NON_PANEL);
 				}
 			}
 
@@ -483,7 +486,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		getManagedBean().setDisableReason(isReasonRequired);
 
 		try {
-			getManagedBean().setProcurementType(Long.valueOf(procType));
+			getManagedBean().setProcurementType(procType);
 		} catch (NumberFormatException e) {
 			getManagedBean().setProcurementType(null);
 		}
@@ -503,9 +506,9 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())) };
 		}
 
-		if (getManagedBean().getProcurementType().compareTo(DpReportConst.PARAM_ID_SPECIAL_ITEM) == 0) {
+		if (getManagedBean().getProcurementType().equalsIgnoreCase(DpReportConst.PARAM_ID_SPECIAL_ITEM)) {
 			param = DpReportConst.REPORT_CODE_RPT_SPECIAL_ITEM;
-		} else if (getManagedBean().getProcurementType().compareTo(DpReportConst.PARAM_ID_PK7) == 0) {
+		} else if (getManagedBean().getProcurementType().equalsIgnoreCase(DpReportConst.PARAM_ID_PK7)) {
 			param = DpReportConst.REPORT_CODE_RPT_PK7;
 		}
 		SelectItem[] items = getReasonCodeDropdownValues(param);
@@ -680,6 +683,10 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * JSF view.
 	 */
 	public void onChangeStatus(){
-		getManagedBean().setStatus(getManagedBean().getStatus());
+		if (getManagedBean().getStatus() == null){
+			getManagedBean().setDpStatus(null);
+		}else {
+			getManagedBean().setDpStatus(String.valueOf(getManagedBean().getStatus()));
+		}
 	}
 }

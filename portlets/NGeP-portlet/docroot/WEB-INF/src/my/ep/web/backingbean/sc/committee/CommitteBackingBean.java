@@ -548,7 +548,7 @@ public class CommitteBackingBean extends
 				toCreatedDate = toDate.getTime();
 				
 				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.CREATED_DATE);
+				bean.setSearchField("scQt.createdDate"); //#35320
 				/*bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(fromCreatedDate);*/
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
@@ -2721,6 +2721,7 @@ public class CommitteBackingBean extends
 			List<TplCommMember> latestCommittee = resDto.getTplMemberList();
 			if (null != latestCommittee) {
 				Collections.sort(latestCommittee, new TplMemberRoleComparator());
+				setTplCommMemberRepresentativeType(latestCommittee);
 			}
 
 			TplCommittee scCommittee = resDto.getTplCommittee();
@@ -3471,6 +3472,16 @@ public class CommitteBackingBean extends
 			}
 		}
 		return hasChairperson;
+	}
+	// #35320 - END
+	
+	// #35320 - START
+	private void setTplCommMemberRepresentativeType(List<TplCommMember> latestCommittee){
+		for(TplCommMember mem : latestCommittee){
+			if(mem.getRepresentativeType() != null){
+				mem.setRepresentativeTypeId(mem.getRepresentativeType().getParameterId());
+			}
+		}
 	}
 	// #35320 - END
 }

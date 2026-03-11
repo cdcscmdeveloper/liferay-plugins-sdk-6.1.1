@@ -230,7 +230,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean spToCheck = false;
 	//End Fix - #33287
 	//#35238 start
-	private AmendmentCommitteeHelper amendmentCommitteeHelper;
+	private transient AmendmentCommitteeHelper amendmentCommitteeHelper;
 	private AmendmentManagedBean lastManagedBean;
 	private FacesScopes lastFacesScopes;
 	//#35238 end
@@ -676,13 +676,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (taskId == null) {
 				ConstructTabSideMenu();
 				
-				// #24336 - Start
-				// Runs all initial setup when the page is first loaded
-				if (!ctBackingBean.getManagedBean().isInitPage()) {
-				    initializePage();
-				}
-				// #24336 - End
-
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -809,6 +802,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSignOffDecision(false);
 			
 //			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
+			
+			// #24336 - Start
+			// Runs all initial setup when the page is first loaded
+			if (!ctBackingBean.getManagedBean().isInitPage()) {
+			    initializePage();
+			}
+			// #24336 - End
 
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
@@ -1263,6 +1263,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(supplierSigner);
 			}
+			
+			ctBackingBean.getManagedBean().setDirectPurchase(isDirectPurchase());//#40005
 
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
@@ -5176,44 +5178,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 //  End Fix - #33674 
-
+	
+	//#29549 start
 	/**
 	 * The method used for validating the duplicate chairperson.
 	 * A warning message will display on screen when more than one chairperson
 	 * is added as committee.
 	 * 
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
+	 * @param curCommitteeMember the object of current committee member 
+	 * @param parameterId current parameter id for representative type
 	 */
-	public void validateDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { //#29549
+	public void validateDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) { 
 		if (parameterId == null || parameterId.intValue() == 0) {
 			return;
 		}
-		int counter = 0;
 		String parametercode = ParameterHelper.getInstance().getPmParameterById(parameterId).getParameterCode();
 		if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-			for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {  
-				if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null
-						&& committeMember.getMemberRoleId().longValue() == parameterId.longValue()) {
-					// #26520 - to reset existing value saved before
-					if(committeMember.getRepresentativeType() != null && committeMember.getRepresentativeType().getParameterId() != null) {
-						committeMember.setRepresentativeType(null);
-					}
-					// #26520 - end
-					counter++;
-					if (counter == 2) {
-						throw new EpException(MessageConst.ERROR_750008);
-					}
-				}else{
-					if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
-						if(committeMember.getRepresentativeType() != null && committeMember.equals(curCommitteeMember)) //#29549
-							committeMember.getRepresentativeType().setParameterId(null);
-				}
-			}
+			getAmendmentCommitteeHelper().validateDuplicateChairperson(curCommitteeMember, parametercode, parameterId);
 		}
 		
-		sortCTCommitteeMemberRoleMeeting(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()); //#29549
+		sortCTCommitteeMemberRole(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
 	}
+	//#29549 end
 
 	/**
 	 * The method used for validating the meeting attendance.
@@ -7652,62 +7638,49 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setHasChanges(Boolean.FALSE); //#29403
 		}   
 		
-		
-		/**
-		 * The method used for validating the duplicate chairperson.
-		 * A warning message will display on screen when more than one chairperson
-		 * is added as committee. Also updating current committee member role id.
-		 * 
-		 * @throws Exception  if an exception occurred
-		 * @see    Exception
-		 */
-		//#29403 start
-//		public void validateUpdatedCommitteeListDuplicateChairperson(Long parameterId) throws Exception {
-		public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { 
-		
-			int counter = 0;
-			String curParameterCode = "";
-			
-			if (parameterId != null) {
-				if(curCommitteeMember.getMemberRoleId()!=null && !curCommitteeMember.getMemberRoleId().equals(parameterId)){
-					//curCommitteeMember.getRepresentativeType().setParameterId(null); //#29549
-					curCommitteeMember.setRepresentativeType(null);
+	//#29549 start
+	/**
+	 * The method used during update committee to validate the duplicate
+	 * chairperson. A warning message will display on screen when more than one
+	 * chairperson is added as committee. Also updating current committee member
+	 * role id.
+	 * 
+	 * The updated committee member list will be sorted after validation.
+	 * 
+	 * @param curCommitteeMember the committee member being updated
+	 * @param parameterId the selected role parameter ID
+	 */
+	public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) {
+
+		getAmendmentCommitteeHelper().checkCurrentUpdatedCommittee(curCommitteeMember, parameterId);
+
+		int counter = 0;
+		Long memberRoleId = curCommitteeMember.getMemberRoleId() != null ? curCommitteeMember.getMemberRoleId()
+				: curCommitteeMember.getMemberRole().getParameterId();
+		String curParameterCode = ParameterHelper.getInstance().getPmParameterById(memberRoleId).getParameterCode();
+
+		if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+			for (CtCommitteeMember allCommitteMember : getFilteredCommitteeMembers()) {
+				String allParameterCode = "";
+				if (allCommitteMember.getMemberRoleId() != null) {
+					allParameterCode = ParameterHelper.getInstance()
+							.getPmParameterById(allCommitteMember.getMemberRoleId()).getParameterCode();
 				}
-				if (curCommitteeMember.getRepresentativeType()==null){
-					curCommitteeMember.setRepresentativeType(new PmParameter());
-				}
-				curCommitteeMember.setMemberRole(ParameterHelper.getInstance().getPmParameterById(parameterId));
-				curCommitteeMember.setMemberRoleId(parameterId);
-			}
-			
-			if (curCommitteeMember.getMemberRoleId() != null){
-				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId()).getParameterCode();
-			}else{
-				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId()).getParameterCode();
-			}
-			
-			if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-				for (CtCommitteeMember allCommitteMember : getFilteredCommitteeMembers()) {
-					String allParameterCode = "";
-					if (allCommitteMember.getMemberRoleId() != null){
-						allParameterCode = ParameterHelper.getInstance().getPmParameterById(allCommitteMember.getMemberRoleId()).getParameterCode();
-					}
-					
-					if (allCommitteMember.getMemberRole() != null && allCommitteMember.getMemberRole().getParameterId() != null
-							&& allParameterCode == curParameterCode) {
-						counter++;
-					}
+
+				if (allCommitteMember.getMemberRole() != null
+						&& allCommitteMember.getMemberRole().getParameterId() != null
+						&& allParameterCode == curParameterCode) {
+					counter++;
 				}
 			}
-			
-			if (counter > 1) {
-				throw new EpException(MessageConst.ERROR_750008);
-			}
-			//#29549 start
-			sortCTCommitteeMemberRole(getManagedBean().getUpdatedCommitteeMembers());
-			//#29549 end
 		}
-		//29403 end
+
+		if (counter > 1) {
+			throw new EpException(MessageConst.ERROR_750008);
+		}
+		sortCTCommitteeMemberRole(getManagedBean().getUpdatedCommitteeMembers());
+	}
+	// #29549 end
 		
 		/**
 		 * The method used to delete the selected meeting committee(s).
@@ -8109,48 +8082,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 		//#30428 - End
 		
-		//#29549 start
-		public void sortCTCommitteeMemberRole (List<CtCommitteeMember> list){
-			if(list!=null){
-				Collections.sort(list, new Comparator<CtCommitteeMember>() {
-					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
-					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
-						if(o1.getMemberRole()!=null && o2.getMemberRole()!=null && o1.getMemberRole().getParameterCode()!=null && o2.getMemberRole().getParameterCode()!=null){
-							return Integer.valueOf(sortOrder.indexOf(o1.getMemberRole().getParameterCode())).compareTo(Integer.valueOf(sortOrder.indexOf(o2.getMemberRole().getParameterCode())));
-						}else if (o1.getMemberRoleId()!=null && o2.getMemberRoleId()!=null){
-							return Integer.valueOf(
-									sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o1.getMemberRoleId()).getParameterCode())).compareTo(
-									Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
-						}else{
-							return 0;
-						}
-					}
-				});
-			}
-		}
-		
-		public void sortCTCommitteeMemberRoleMeeting (List<CtCommitteeMember> list){
-			if(list!=null){
-				Collections.sort(list, new Comparator<CtCommitteeMember>() {
-					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
-					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
-						if(o1.getMemberRoleId()!=null && o2.getMemberRoleId()!=null){
-							return Integer.valueOf(
-									sortOrder.indexOf(ParameterHelper.getInstance().getPmParameterById(o1.getMemberRoleId())
-											.getParameterCode())).compareTo(
-									Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
-						}
-						else{
-							return 0;
-						}
-					}
-				});
-			}
-		}
-		//#29549 end
+	//#29549 start
+	/**
+	 * Sorts committee members according to predefined role priority:
+	 * Chairperson -> Secretary -> Member.
+	 *
+	 * @param list list of committee members to be sorted
+	 */
+	public void sortCTCommitteeMemberRole (List<CtCommitteeMember> list){
+		getAmendmentCommitteeHelper().sortCommitteeList(list);
+	}
+	//#29549 end
 		
 		// Start Fix - #30022	
 		/**
@@ -9488,8 +9430,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Validate all required amendment checklist items are completed */
 	private void validateAmendmentChecklist(){
-		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		ContractManagedBean bean = ctBackingBean.getManagedBean();
+		
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+		CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
 		
 		boolean[] amendmentFlags = new boolean[]{
 		        amendment.isContractExtend(),
@@ -9501,13 +9444,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		        amendment.isOtherChange()
 		    };
 	    boolean[] checklistFlags = new boolean[]{
-	        bean.isContractExtendChecklist(),
-	        bean.isItemPriceChangeChecklist(),
-	        bean.isQuantityChangeChecklist(),
-	        bean.isValueChangeChecklist(),
-	        bean.isClauseChangeChecklist(),
-	        bean.isValueChangeByGstChecklist(),
-	        bean.isOtherChangeChecklist()
+	    		contractManagedBean.isContractExtendChecklist(),
+	    		contractManagedBean.isItemPriceChangeChecklist(),
+	    		contractManagedBean.isQuantityChangeChecklist(),
+	    		contractManagedBean.isValueChangeChecklist(),
+	    		contractManagedBean.isClauseChangeChecklist(),
+	    		contractManagedBean.isValueChangeByGstChecklist(),
+	    		contractManagedBean.isOtherChangeChecklist()
 	    };
 	    boolean isError = false;
 	    for (int i = 0; i < amendmentFlags.length; i++) {
@@ -9639,7 +9582,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Initializes the committee type during page first load. */
 	private void initCommitteeType() {
-	    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
+		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (ctAmendment == null) {
+	        return;
+	    }
+		
+	    if (ctAmendment.getCommitteeType() == null) {
 	    	// Sets default desk officer committee from QT
 	        handleOriginalDeskOfficerCommitteeQT();
 	    }else{
@@ -9692,9 +9640,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Loads the correct checklist options based on data */
 	private void handleSelectedAmendmentChecklistValue() {
-	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-	    ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
-
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
+	    if(amendment == null){
+	    	return;
+	    }
+	    
 	    if (isCtApproverSetting()) {
 	    	contractManagedBean.setContractExtendChecklist(amendment.isContractExtend());
 	    	contractManagedBean.setItemPriceChangeChecklist(amendment.isItemPriceChange());
@@ -9710,7 +9661,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Updates values when amendment type changes. */
 	private void handleAmendmentTypeValueChange() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
+	    if(amendment == null){
+	    	return;
+	    }
+	    
+		if (amendment.isValueChange()){
 			handleContractValueTypeChange();
 		}
 	}
@@ -9775,4 +9732,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	//#24336 - End
 	
+	//#40005 start
+	/**
+	 * Method to check contract is from direct purchase or not.
+	 * 
+	 * @return true if contract is from direct purchase, otherwise return false.
+	 */
+	public boolean isDirectPurchase() {
+		if (ctBackingBean.getManagedBean().getContractVer() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtContract() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode() == null) {
+			return false;
+		}
+
+		if (ctBackingBean
+				.getManagedBean()
+				.getContractVer()
+				.getCtContract()
+				.getProcurementMode()
+				.getParameterCode()
+				.equalsIgnoreCase(
+						ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			return true;
+		}
+		return false;
+	}
+	//#40005 end
 }
