@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Arrays; //#36738 #40071
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
