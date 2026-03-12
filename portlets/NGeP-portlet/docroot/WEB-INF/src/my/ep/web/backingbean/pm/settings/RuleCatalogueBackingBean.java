@@ -6879,7 +6879,7 @@ public class RuleCatalogueBackingBean extends
 
 		for (Object[] row : rows) {
 			PmConfigRuleValue v = new PmConfigRuleValue();
-
+			
 			v.setBrandNew(false);
 
 			Object rawRuleType = row[1];
