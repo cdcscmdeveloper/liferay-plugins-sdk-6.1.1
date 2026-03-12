@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -4811,6 +4812,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	public void deleteQtValue() {
 		log.info(".................deleteQtValue...................");
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		Boolean resetMinistryDropdown = false;//#36738 #40071
 		if (rowIndex != null) {
 			PmPtjSpecialApproval deletedSpecialApproval = this.getManagedBean()
 					.getPtjSpecialApprovalList().get(rowIndex.intValue());
@@ -4820,6 +4822,11 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 						.add(deletedSpecialApproval);// should added to original list
 												// before
 												// save
+				//#35678 #40071 Start
+				resetMinistryDropdown = getDeletedMinistryList(deletedSpecialApproval);
+				this.getManagedBean().getOriginalPtjSpecialApprovalList().remove(deletedSpecialApproval);
+				//#36738 #40071 End
+				
 				this.getManagedBean().getPtjSpecialApprovalList()
 						.remove(deletedSpecialApproval);
 				
@@ -4827,6 +4834,10 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 					.remove(deletedSpecialApproval);
 			}
 		}
+		// #36738 #40071 Start
+		if (resetMinistryDropdown) {
+			resetQtValues();
+		}// #36738 #40071 End
 	}
 	
 	public void selectPtjAction(List<PmOrgProfile> orgProfileList){
@@ -4850,10 +4861,18 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
+			//#36738 #40071 Start
+			List<String> deletedMinistryNameList = this.getManagedBean().getDeletedMinistryNameList() !=  null
+					? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
 			for (PmOrgProfile orgProfile : list) {
+				if (deletedMinistryNameList.contains(orgProfile.getPmOrgValidity().getOrgName())){
+					continue;
+				}
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
 						orgProfile.getOrgName());
 			}
+			items = Arrays.copyOf(items, i);
+			//#36738 #40071 end
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -6133,10 +6152,38 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		this.getManagedBean().setRuleTypeCollapsePanel(true);
 		this.getManagedBean().setRuleValueCollapsePanel(true);
 		this.getManagedBean().setQtValueCollapsePanel(true);
+		this.getManagedBean().setDeletedMinistryNameList(null);//#36738 #40071
 	}
 
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
 		this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
+	}
+	/**
+	 * #36738 #40071
+	 * Get ministry list based on the deleted ptj
+	 * @param deletedSpecialApproval
+	 * @return
+	 */
+	public Boolean getDeletedMinistryList(PmPtjSpecialApproval deletedSpecialApproval) {
+		List<PmPtjSpecialApproval> ptjSpecialApprovalList = this.getManagedBean().getPtjSpecialApprovalList();
+		String deletedMinistryName = deletedSpecialApproval.getPmOrgProfile().getMinistryName();
+		Map<String, Integer> countMinistryMap = new HashMap<String, Integer>();
+		List<String> deleteMinistryString = this.getManagedBean().getDeletedMinistryNameList() != null
+				? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
+		Boolean	resetMinistryDropdown = false;		
+		
+		for (PmPtjSpecialApproval ptjSpecialApproval : ptjSpecialApprovalList) {
+			String ministryName = ptjSpecialApproval.getPmOrgProfile().getMinistryName();
+			countMinistryMap.put(ministryName,
+					countMinistryMap.containsKey(ministryName) ? countMinistryMap.get(ministryName) + 1 : 1);
+		}	
+
+		if (countMinistryMap.containsKey(deletedMinistryName) && countMinistryMap.get(deletedMinistryName) == 1) {
+			deleteMinistryString.add(deletedSpecialApproval.getPmOrgProfile().getMinistryName());
+			resetMinistryDropdown = true;
+		}
+		this.getManagedBean().setDeletedMinistryNameList(deleteMinistryString);
+		return resetMinistryDropdown;
 	}
 	// #36738 End
 }
