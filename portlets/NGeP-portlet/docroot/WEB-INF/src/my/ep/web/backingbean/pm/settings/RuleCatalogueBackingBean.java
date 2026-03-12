@@ -4835,7 +4835,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			}
 		}
 		// #36738 #40071 Start
-		if (resetMinistryDropdown) {
+		if(resetMinistryDropdown){
 			resetQtValues();
 		}// #36738 #40071 End
 	}
@@ -6158,6 +6158,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
 		this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
 	}
+	
 	/**
 	 * #36738 #40071
 	 * Get ministry list based on the deleted ptj
