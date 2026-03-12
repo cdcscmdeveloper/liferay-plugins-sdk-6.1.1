@@ -426,7 +426,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean existInAssignItemDetail = Boolean.FALSE;
 	private ScQuote scQuote;
 	// #26059 - End
-    
+
     /**
      * Instantiates a new request note managed bean.
      */
