@@ -1,0 +1,226 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:messages id="confirmMeeting" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" severity="error, info" />
+		<ui:param name="scQt" value="#{lOIDetailBackingBean.managedBean.scQt}" />
+		<ui:param name="taskName"
+			value="#{lOIDetailBackingBean.managedBean.taskName}" />
+		<ui:param name="scQtFinalization"
+			value="#{lOIDetailBackingBean.managedBean.scQtFinalization}" />
+		<ui:param name="finalizationQtCommittee"
+			value="#{lOIDetailBackingBean.managedBean.finalizationQtCommittee}" />
+		<ui:param name="finalizationCommittee"
+			value="#{finalizationQtCommittee.scCommittee}" />
+		<ui:param name="isFinalizationStage"
+			value="#{lOIDetailBackingBean.isFinalizationStage()}" />
+		<ui:param name="committeeMembers"
+			value="#{finalizationCommittee.scCommitteeMembers}" />
+		<ui:param name="isCommitteeUpdatable"
+			value="#{lOIDetailBackingBean.isCommitteeEditable(taskName)}" />
+
+
+		<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton widgetVar="backUpdate"
+						value="#{lbl['lbl.btn.back']}" process="@this"
+						onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+						style="float:left;"
+						action="#{lOIDetailBackingBean.navigateToUpdateMember('back')}" />
+					<p:commandButton style="float: right" process="@this"
+						widgetVar="confirmUpdate" oncomplete="blockWidget.hide()"
+						onclick="blockWidget.show()" value="#{lbl['lbl.btn.update']}"
+						disabled="#{!isCommitteeUpdatable}"
+						action="#{lOIDetailBackingBean.navigateToUpdateMember('confirm')}" /></td>
+			</tr>
+		</table>
+		<div align="left" class="header-info header-spacing">
+			<ui:param name="scQt"
+				value="#{lOIDetailBackingBean.managedBean.scQt}" />
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 10%;"><h:outputLabel
+							value="#{lbl['lbl.sc.qtn.no']}" /></td>
+					<td style="width: 27%;" class="header-info-text"><p:commandLink
+							process="@this" partialSubmit="true"
+							action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
+							<h:outputText value="#{scQt.qtNo}" escape="false" />
+						</p:commandLink></td>
+					<td style="width: 5%;"><h:outputLabel
+							value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td style="width: 32%;" class="header-info-text">
+						#{lOIDetailBackingBean.retrievePTJByOrgProfileId
+						(scQt.ownerOrgProfileId,
+						lOIDetailBackingBean.isQTStatusPublished(lOIDetailBackingBean.managedBean.currentStatusId)?scQt.publishDate
+						: scQt.createdDate)}</td>
+					<td style="width: 5%;"><h:outputLabel
+							value="#{lbl['lbl.sc.status']}" /></td>
+					<td style="width: 32%;" class="header-info-text">
+						#{(finalizationQtCommittee.recordStatusFlg==1)?lbl['lbl.txt.active']
+						: lbl['lbl.txt.inactive']}</td>
+				</tr>
+			</table>
+		</div>
+		<p:panel id="committeeHistoryId"
+			header="#{lbl['lbl.sc.header.committeelist']}" toggleable="true">
+			<ac:committeeHistoryPanel
+				historyPaginator="#{lOIDetailBackingBean.managedBean.historyPaginator}"
+				selectedHistory="#{lOIDetailBackingBean.managedBean.selectedCommitteeHistory}"
+				memberHistoryPaginator="#{lOIDetailBackingBean.managedBean.memberHistoryPaginator}"
+				onSelectHistory="onSelectHistory"
+				committeeName="#{lOIDetailBackingBean.managedBean.finalizationCommitteeDesc}"
+				backingBean="#{lOIDetailBackingBean}" isSFCommittee="true" />
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.header.update.committee']}"
+			styleClass="header-spacing" id="memberListPanel" toggleable="true">
+			<p:blockUI block="memberListPanel" widgetVar="committeeBlockWidget">
+				<p:graphicImage
+					value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+			<p:dataTable id="memberListTbl" var="committeeMember"
+				widgetVar="committeeMemberWidVar" value="#{committeeMembers}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowKey="#{committeeMember}" update="@this" selectionMode="single"
+				rowIndexVar="index">
+				<ac:paginator for="memberListTbl" />
+				<p:column styleClass="td-check-box-spacing"
+					rendered="#{isCommitteeUpdatable}">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selAllMemChk"
+							value="#{lOIDetailBackingBean.managedBean.selectAllMembers}">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@([id$=memberListPanel])"
+								onstart="committeeBlockWidget.show()"
+								oncomplete="committeeBlockWidget.hide()"
+								listener="#{lOIDetailBackingBean.selectAll(committeeMembers, lOIDetailBackingBean.managedBean.selectAllMembers)}" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox id="selectMember"
+						value="#{committeeMember.selected}"
+						disabled="#{committeeMember.disableRow}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=memberListPanel])" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.name']}"
+					style="white-space:normal;">
+					<p:commandLink
+						actionListener="#{suppFinalMeetingBackingBean.onClickMemberInfo(committeeMember.pmUser)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						process="@this" update="@([id$=memberInfoPopup])">
+						<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+					<h:outputText value="#{committeeMember.icPassport}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.designation']}"
+					style="white-space:normal;">
+					<h:outputText value="#{committeeMember.designation}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+					<h:outputText value="#{committeeMember.email}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.grade']}">
+					<h:outputText value="#{committeeMember.grade}"></h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+						<ac:iconTooltip id="pnpTT#{index}"
+							value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{committeeMember.PNP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.role']}">
+					<ui:fragment
+						rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
+						<h:outputText
+							value="#{lOIDetailBackingBean.getFCMemberRole(committeeMember.memberRole)}" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
+						<ui:param name="filteredRoles" value="#{fn:split('S',',')}" />
+						<p:selectOneMenu id="meetingRoleId" required="true"
+							label="#{lbl['lbl.sc.role']}"
+							value="#{committeeMember.memberRoleId}"
+							style="width: 110px;margin-bottom: 5px;"
+							disabled="#{committeeMember.disableRow or !isCommitteeUpdatable}">
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{lOIDetailBackingBean.roleChangedListener(committeeMember)}" />
+							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+								value="#{lOIDetailBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(committeeMember.PNP,lOIDetailBackingBean.managedBean.scQt,committeeMember.pmUser, filteredRoles)}"
+								itemLabel="#{role.codeName}"
+								itemValue="#{role.pmParameter.parameterId}" />
+						</p:selectOneMenu>
+						<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
+					</ui:fragment>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.representative.type']}">
+					<p:selectOneMenu value="#{committeeMember.representativeTypeId}"
+						label="#{lbl['lbl.sc.representative.type']}"
+						style="width: 100%; margin-bottom: 5px; white-space:normal"
+						rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}"
+						disabled="#{committeeMember.disableRow or !isCommitteeUpdatable}">
+						<f:selectItems
+							value="#{lOIDetailBackingBean.getRepresentativeTypeDropdownValues(lOIDetailBackingBean.managedBean.committeeType)}" />
+						<p:ajax event="change"
+							listener="#{lOIDetailBackingBean.representiveTypeChangedListener(committeeMember)}"
+							process="@this" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:dataTable>
+			<ac:qtCommitteMemberInfoPopup bBean="#{suppFinalMeetingBackingBean}"
+				widget="memberInfoPopUp" />
+			<ui:fragment rendered="#{isCommitteeUpdatable}">
+				<div align="right" class="BtnSpacing">
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
+						actionListener="#{lOIDetailBackingBean.addPopupAction}"
+						update="@([id$=memberDialogId])"
+						oncomplete="memberWidgetVar.show();" />
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						oncomplete="dlgPerformDel.show();" process="@this,memberListTbl"
+						partialSubmit="true"
+						update="@([id$=#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}])"
+						disabled="#{lOIDetailBackingBean.deleteselectedList(committeeMembers)}" />
+				</div>
+			</ui:fragment>
+			<ui:param
+				name="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"
+				value="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"></ui:param>
+			<ac:confirmationPopup
+				id="#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}"
+				widget="dlgPerformDel" loadingWidget="blockWidget"
+				okAction="lOIDetailBackingBean.deleteCommitteeMembers"
+				title="#{lbl['lbl.sc.committee.member.list']}"
+				content="#{lbl['lbl.sc.dialog.confirm.message']}"
+				update="@([id$=memberListPanel])" />
+		</p:panel>
+
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOIDetailBackingBean.managedBean.committeeApproval.scQtApprovalRemarks}"
+			showAttachment="false" readonly="#{!isCommitteeUpdatable}" />
+		<ui:include src="addExistingCommittee.xhtml" />
+
+	</ui:define>
+</ui:composition>
