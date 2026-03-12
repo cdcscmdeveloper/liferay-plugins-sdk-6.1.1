@@ -2269,8 +2269,6 @@ public class ConsolidationReportBackingBean extends
 						}
 						setRankNull(qualSupplier);//#21692
 					}
-					getManagedBean().setMaxRank(
-							String.valueOf(resultBean.getTotalRecord()));
 				}
 			}
 		} finally {
