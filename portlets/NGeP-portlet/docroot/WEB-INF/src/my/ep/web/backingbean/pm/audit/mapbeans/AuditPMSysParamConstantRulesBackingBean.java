@@ -380,7 +380,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	private void processing(PmConfigRuleValue ruleValueType, PmConfigRuleValue newCreatedItem,
 			PmConfigRuleValue deletedItem) {
 		// Rule Description
-				if (ruleValueType.getRuleDescription() != null && !pmConfigRuleDesc.getRuleType().getRuleType().equalsIgnoreCase(RuleTypeConst.PTJCO)) {
+				if (ruleValueType.getRuleDescription() != null) {
 					handleFieldAuditSPRulesValueType(ruleValueType,
 							AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_DESCRIPTION_FIELDLABELID,
 							ruleDescNewCreated(newCreatedItem), ruleDescDeleted(deletedItem));
