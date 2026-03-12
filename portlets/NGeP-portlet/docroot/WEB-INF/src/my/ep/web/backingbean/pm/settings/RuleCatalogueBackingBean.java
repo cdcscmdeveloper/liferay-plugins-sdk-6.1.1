@@ -7029,7 +7029,6 @@ public class RuleCatalogueBackingBean extends
 
 		if (supplierTypeIds != null && !supplierTypeIds.isEmpty() && merged.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			for (int i = 0; i < supplierTypeIds.size(); i++) {
-
 				PmConfigRuleValue value = buildRuleValue(merged, supplierTypeIds, configValueIds, i, first, parameterSO, reqDTO);
 
 				if (value.isShowFlag() && first) {
@@ -7040,9 +7039,7 @@ public class RuleCatalogueBackingBean extends
 			}
 
 		} else {
-
 			for (int i = 0; i < configValueIds.size(); i++) {
-
 				Long configValueId = getConfigValueId(configValueIds, i);
 
 				PmConfigRuleValue value = ruleSO.getRuleValueByRuleValueId(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD, configValueId);
