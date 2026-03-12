@@ -140,6 +140,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.logging.LogKey;//#31849 #32682
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.ReasonCategory; //#8411
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -4027,6 +4028,70 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//Enhancement 29418 - end
 	
+	//#8411 - START
+	/**
+	 * Get parameter id select items by reason category, parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param reasonCategory
+	 *            the reason category
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getCategoryTypeDropdownValuesBySearchBean(Integer reasonCategory, String parameterType, 
+																  ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		List<PmParameterDesc> parameterDescs = ParameterHelper
+				.getInstance().getParameterDescListBySearchBean(
+						parameterType, searchBean);
+		List<PmParameterDesc> newParameterDescs = new ArrayList<PmParameterDesc>();
+		try {
+			if(reasonCategory == null){
+				items = new SelectItem[1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+			} else {
+				if(reasonCategory.equals(ParameterConst.JUSTIFICATION)){// filter for Justification category
+					for (PmParameterDesc parameterDesc: parameterDescs) {
+						if (!parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
+				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())) {
+							newParameterDescs.add(parameterDesc);
+				        }
+				    }
+				} else if(reasonCategory.equals(ParameterConst.REJECTION_REASON)){// filter for Rejection Reason category
+					for (PmParameterDesc parameterDesc: parameterDescs) {
+						if (parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
+				        		|| parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())) {
+							newParameterDescs.add(parameterDesc);
+				        }
+					}
+			    }
+				int i = 1;
+				items = new SelectItem[newParameterDescs.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+				for (PmParameterDesc parameterDesc : newParameterDescs) {
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterId(), parameterDesc.getCodeName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+	}
+	//#8411 - END
+
 	//#29466 - START
 	public boolean checkManufacturerCategoryCodes(ScQt scQt){
 		boolean manufacturer=false;	
