@@ -55,7 +55,7 @@
 				<h:outputText value="#{detail.requestOrg}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.patch.eaduan.no']}" style="white-space:pre-wrap!important;word-break: break-word;width: 7%;"
-				rendered="#{not empty detail.eAduanNo}">
+				rendered="#{auditPatchBackingBean.managedBean.hideAduan}">
 				<h:outputText value="#{detail.eAduanNo}" />
 			</p:column>
 		</p:dataTable>

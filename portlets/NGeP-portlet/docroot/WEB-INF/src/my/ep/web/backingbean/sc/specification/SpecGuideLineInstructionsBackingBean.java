@@ -20,6 +20,7 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -43,6 +44,9 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
  * The Class SpecGuideLineInstructionsBackingBean.
  * 
@@ -57,7 +61,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SpecGuideLineInstructionsBackingBean.class);
-	private StreamedContent specGuideLineStreamContent;
+	
 	/**
 	 * Action method to specGuideLinePopUpwindow.
 	 * 
@@ -68,33 +72,40 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		RequestContext.getCurrentInstance().execute(
 				"specGuideLineDlgWidget.show();");	
 	}
+	
+	public enum GuidelineType {
+	    SPEC_ITEM(SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE),
+	    SPEC_FINANCIAL(SourcingConstants.DOCNAME_QT_SPEC_FINANCIAL_ITEM_GUIDELINE),
+	    SPEC_ITEM_PREPARATION(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 
+	    private final String docName;
+
+	    GuidelineType(String docName) {
+	        this.docName = docName;
+	    }
+
+	    public String getDocName() {
+	        return docName;
+	    }
+	}
 	
 	/**
 	 * this method used to get the SpecGuideLineContent.
 	 * @return the sampleLabelStreamContent
 	 */
 	public StreamedContent getSpecGuideLineStreamContent() throws Exception {
-		if (specGuideLineStreamContent == null) {
-			ScSpecGuideLineAttachment specGuideLineAttachment = new ScSpecGuideLineAttachment();
-			generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
-					SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE);
-			specGuideLineStreamContent = getAttachmentStreamContent(specGuideLineAttachment,
-					CommonConstants.FILE_CONTENT_TYPE_PDF);
-		}
-		return specGuideLineStreamContent;
+		return getGuidelineStreamContent(GuidelineType.SPEC_ITEM);
 	}
 
 	public StreamedContent getSpecPreparationGuideLineStreamContent() throws Exception {
-		if (specGuideLineStreamContent == null) {
-			ScSpecGuideLineAttachment specGuideLineAttachment = new ScSpecGuideLineAttachment();
-			generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
-					SourcingConstants.DOCNAME_QT_SPEC_FINANCIAL_ITEM_GUIDELINE);
-			specGuideLineStreamContent = getAttachmentStreamContent(specGuideLineAttachment,
-					CommonConstants.FILE_CONTENT_TYPE_PDF);
-		}
-		return specGuideLineStreamContent;
+		return getGuidelineStreamContent(GuidelineType.SPEC_FINANCIAL);
 	}
+	
+	//	#30432 - Start
+	public StreamedContent getSpecItemPreparationGuideLineStreamContent() throws Exception {
+		return getGuidelineStreamContent(GuidelineType.SPEC_ITEM_PREPARATION);
+	}
+	//	#30432 - End
 
 	private void generateSpecGuideLinePdfFromSharedrepository(ScAttachment attachment, String prefixFileName,
 			String constFileName) throws Exception {
@@ -120,7 +131,9 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 
 		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		// #30432 - Start
+		filePath.append(ModuleCodeConst.COMMON.toLowerCase());
+		// #30432 - End
 		attachment.setFilePath(filePath.toString());
 
 		File theDir = new File(getActualFilePath(attachment));
@@ -152,5 +165,16 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 
 			return new AttachmentDefaultFormat();
 		}
+	}
+	
+	private final Map<GuidelineType, StreamedContent> guidelineStreamCache = new EnumMap<>(GuidelineType.class);
+
+	private StreamedContent getGuidelineStreamContent(GuidelineType type) throws Exception {
+	    if (!guidelineStreamCache.containsKey(type)) {
+	        ScSpecGuideLineAttachment attachment = new ScSpecGuideLineAttachment();
+	        generateSpecGuideLinePdfFromSharedrepository(attachment, null, type.getDocName());
+	        guidelineStreamCache.put(type, getAttachmentStreamContent(attachment, CommonConstants.FILE_CONTENT_TYPE_PDF));
+	    }
+	    return guidelineStreamCache.get(type);
 	}
 }
