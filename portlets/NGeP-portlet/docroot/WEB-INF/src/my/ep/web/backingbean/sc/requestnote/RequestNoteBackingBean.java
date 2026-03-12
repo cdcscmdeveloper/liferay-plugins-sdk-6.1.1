@@ -71,6 +71,7 @@ import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.ContinuityDPConst; //#25790
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.sc.HtmlTemplateConstants; //#26059
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -112,9 +113,11 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst; //#27868,#26059
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc; //#26059
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract; //#25790
 import my.ep.persistence.entity.ct.VCtContract; //#25790
@@ -140,6 +143,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteAttachment; //#26059
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
@@ -177,6 +181,7 @@ import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.DPConstants;
+import my.ep.web.constant.SSTConstant; //#26059
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -185,6 +190,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil; //#26059
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
@@ -200,6 +206,7 @@ import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent; //#26059
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -228,6 +235,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/** The request note page. */
 	private String REQUEST_NOTE_PAGE = "requestNoteMain";
 	
+	// start - #26059
+	/** The bpk approver request note page. */
+	private String requestNoteBpkApproverMainPage = "/xhtml/sc/directpurchase/requestnote/requestNoteBpkApproverMain.xhtml";
+	// end - #26059
+
 	// start - #25790
 	/** The request note continuity page. */
 	private String requestNoteContinuityPage = "/xhtml/sc/directpurchase/requestnote/requestNoteContinuity.xhtml";
@@ -1014,7 +1026,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			// validate RN
 			log.info("Bug 32362: validateRequestNote Start");
-			validateRequestNote(scRequestNote);	
+			validateRequestNote(scRequestNote, outcome);//#26059 - add outcome
 			log.info("Bug 32362: validateRequestNote End");
 			//#32362 - End
 			
@@ -1052,11 +1064,37 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
 					outcome.equals(BpmOutcomeConst.BPM_REJECT)){
 				approverAction(outcome);
-			} else{
+			}
+			// #26059 - start
+			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || getManagedBean().isExceededAmountAlerted()) {
+				proceedSubmit(outcome);
+			}
+			// #26059 - end
+			else{
 				requestNoteSubmit(outcome);
 			}
 		}
 	}
+	
+	// #26059 - start
+	/**
+	 * Submits request note unless exceeded amount alerted and counter is 1 or
+	 * less.
+	 * 
+	 * @param outcome
+	 *            Submission outcome.
+	 */
+	private void proceedSubmit(String outcome) {
+		if (getManagedBean().isExceededAmountAlerted()) {
+			if (getManagedBean().getCounter() > 1) {
+				requestNoteSubmit(outcome);
+			}
+		} else {
+			requestNoteSubmit(outcome);
+		}
+	}
+
+	// #26059 - end
 	
 	// #27545 - start
 	public void validateAssignedUser(List<ScRequestNoteDtl>	requestNoteDtls) {
@@ -1217,249 +1255,170 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	/**
 	 * Validate request note.
-	 *
-	 * @param requestNote the request note
-	 * @param nonDeletedDtls the non deleted dtls
+	 * 
+	 * @param requestNote
+	 *            the request note
+	 * @param outcome The outcome string (e.g., BPM_APPROVE, BPM_SUBMIT) influencing validation behavior and messages.
 	 */
-	private void validateRequestNote(ScRequestNote requestNote){
+	private void validateRequestNote(ScRequestNote requestNote, String outcome) {//#26059 - add outcome
 		debugLogger("validateRequestNote");
-		// Temp(#34274 - Start)
-		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
-		// Temp(#34274 - End)
-		// show message for first submission, skip the message for second time submission
-		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
+		// show message for first submission, skip the message for second time
+		// submission
+		ThresholdData thresholdData = new ThresholdData(); // #26059 , #27868
+		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
-				//#32362 - Start
-				log.info("Bug 32362: requestNoteDtlId (" + requestNoteDtl.getRequestNoteDtlId() + ")");
-				log.info("Bug 32362: isDeleted (" + requestNoteDtl.isDeleted() + ")");
-				if(!requestNoteDtl.isDeleted()) {
-					String pType = requestNoteDtl.getProcurementType()
-							.getParameterCode();
-					log.info("Bug 32362: pType (" + pType + ")");
-					//#32362 - End
-					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && 
-							!pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && 
-							!pType.equals(ParameterConst.PROC_TYPE_PK7)) {
-						// start - #31689
-						// title validation
-						if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
-							throw new EpException(
-									MessageConst.ERROR_760315,
-									new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						}
-
-						// pid validity
-						log.info("pID validity begin");
-						if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
-							pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
-						}
-						log.info("pID validity end");
-
-						// validate price type
-						if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
-							throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
-						}
-
-						// validate recommended supplier
-						//#32362 - Start
-						if(requestNoteDtl.getScRequestSupplierItem() != null){
-							log.info("Bug 32362: RequestSupplierItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ")");
-							if(requestNoteDtl.getScRequestSupplierItem().getSmSupplier() != null){
-								log.info("Bug 32362: SmSupplierId (" + requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() + ")");
-							}
-						}										
-						if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
-								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
-							log.info("Bug 32362: ERROR_760356");
-							throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
-						}
-						//#32362 - End
-
-						// quantity
-						if( null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity() ){
-							throw new EpException(
-									MessageConst.ERROR_760315,
-									new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						}
-						
-						if (requestNoteDtl.getAssignedUser() == null || (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId()==null)) {
-							throw new EpException(MessageConst.ERROR_100022, new String[]{
-								ResourceBundleUtils.getMessage(
-										"lbl.sc.request.note.loa.prepare.by", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale())});
-						}
-						// end - #31689						
-						// Check total procurement amount per ptj per item per year
-						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
-						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
-							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
-									+ requestNoteDtl.getRequestNoteDtlId());
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : Extension Code : "
-									+ extensionCode);
-							
-							Calendar cal = Calendar.getInstance();
-							if(requestNoteDtl.getCreatedDate()!=null){
-								cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
-							}
-							else{
-								cal.setTimeInMillis(System.currentTimeMillis());
-							}
-							
-							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
-							flReqDTO.setExtensionCode(extensionCode);
-							flReqDTO.setYear(cal.get(Calendar.YEAR));
-							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance()
-									.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-							// BigDecimal totalAmt = itemSummarySO
-							// .retrieveAccumulatedAmount(flReqDTO);
-							// changes to calculate per ptj per item per year
-							// using 8 digit
-							BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
-							
-							totalAmt=requestNoteDtl.getTotalPricePerItem().add(totalAmt);
-							
-							
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : totalAmt = " + totalAmt);
-							IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-							RuleReqDTO ruleReqDTO = new RuleReqDTO();
-							ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
-							List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-
-							if (ruleValueList != null && ruleValueList.size() > 0) {
-								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-								// Temp(#34274 - Start)
-								// Rule : ITEM_THRESHOLD For 20k
-								if (totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
-									if (!isShowMessage) {
-										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-
-										FacesContext.getCurrentInstance().addMessage(
-												null,
-												new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-														.getMessage(MessageConst.ERROR_760036, new String[] {
-																requestNoteDtl.getRequestItem().getItemName(),
-																requestNoteDtl.getRequestItem().getCmItem()
-																		.getExtensionCode() },
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes().getUserLocale())));
-
-										// throw new
-										// EpException(MessageConst.ERROR_760036,
-										// new String[]
-										// {requestNoteDtl.getRequestItem().getItemName(),
-										// requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
-									}
-								}
-								// Temp(#34274 - End)
-								
-								// 26059 - start
-								// ScQuote quote = null;
-								// String sourceMethod =
-								// requestNote.getSourceMethod();
-								// if(sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))
-								// {
-								// quote = requestNote.getQuote();
-								// }
-								// //Rule : ITEM_THRESHOLD For 20k
-								// if(totalAmt.compareTo(new
-								// BigDecimal(configRuleValue.getRuleValue())) >
-								// 0 && ((quote != null && !quote.isPanel())
-								// ||
-								// !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ)))
-								// {
-								// String language = new
-								// FacesScopes().getUserLocale().getLanguage();
-								// String itemTitle;
-								// if(CommonConstants.DEFAULT_USER_LANGUAGE_CODE.equalsIgnoreCase(language))
-								// {
-								// itemTitle =
-								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitleEng();
-								// } else {
-								// itemTitle =
-								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
-								// }
-								// throw new
-								// EpException(MessageConst.ERROR_760518,
-								// new String[] {itemTitle,
-								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});
-								// }
-								// 26059 - end
-							} else {
-								throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-							}
-						}
-					}
-
-					//  #31689 (start - comment out all)
-					// title validation
-					/*if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
-						throw new EpException(
-								MessageConst.ERROR_760315,
-								new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
-
-					// pid validity
-					log.info("pID validity begin");
-					if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
-						pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
-					}
-					log.info("pID validity end");
-
-					// validate price type
-					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
-						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
-					}
-
-					// validate recommended supplier
-					if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
-							|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
-						throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
-					}
-
-					// quantity
-					if( null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity() ){
-						throw new EpException(
-								MessageConst.ERROR_760315,
-								new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
-
-					//26221 - Start
-					if (requestNoteDtl.getAssignedUser() == null || (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId()==null)) {
-						throw new EpException(MessageConst.ERROR_100022, new String[]{
-							ResourceBundleUtils.getMessage(
-									"lbl.sc.request.note.loa.prepare.by", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale())});
-					//26221 - end
-					}*/
-					// #31689 (end - comment out all)
+				if (!requestNoteDtl.isDeleted()) {
+					validateDpThresholdPerItemPtjYear(requestNote, thresholdData, requestNoteDtl);
 				}
 			}
+			// #26059 - start
+			Long profileId = requestNote.getPmOrgProfile().getOrgProfileId();
+			Date createdDate = requestNote.getPmOrgProfile().getCreatedDate();
+			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+
+			if (thresholdData.count > 0) {
+				// #27868, #26059  - start
+				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
+				triggerAlert(outcome, thresholdData, ptjName);
+				// #27868, #26059  - end
+			} else if (getManagedBean().getRequestNote() != null
+					&& getManagedBean().getRequestNote().getRequestNoteId() != null) { // #27868
+				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
+				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+
+				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+					scRequestNoteDtl.setExceedThreshold(null);
+					scRequestNoteDtl.setBpkThresholdDecision(null);
+				}
+
+				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
+			}
+			// #26059 - end
 		}
-		
+
 		// approver group name validation
-		if(null == requestNote.getPmUserGroup()){
-			throw new EpException(
-					MessageConst.ERROR_760315,
-					new String[] {ResourceBundleUtils.getMessage("lbl.sc.ptj.approver.group",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		if (null == requestNote.getPmUserGroup()) {
+			throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.ptj.approver.group", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
 		}
 		// approver name validation
-		if(null == requestNote.getApprover()){
-			throw new EpException(
-					MessageConst.ERROR_760315,
-					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approverName",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		if (null == requestNote.getApprover()) {
+			throw new EpException(MessageConst.ERROR_760315,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.approverName",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 		}
 	}
-	
+
+	// #26059 - start
+	/**
+	 * Reset BPK decision if outcome is not approval.
+	 */
+	private void resetBpkDecision(String outcome, ScRequestNoteDtl scRequestNoteDtl) {
+		if (!outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+			scRequestNoteDtl.setBpkThresholdDecision(null);
+		}
+	}
+
+	/**
+	 * Triggers an info message alert on first submission if threshold exceeded.
+	 * 
+	 * @param thresholdItems
+	 *            Exceeded items.
+	 * @param thresholdValue
+	 *            Exceeded threshold.
+	 * @param ptjName
+	 *            Related PTJ.
+	 */
+	private void triggerAlertSubmission(StringBuilder thresholdItems, BigDecimal thresholdValue, String ptjName) {
+		if (getManagedBean().getCounter() == 1) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.ERROR_760561, new String[] { ptjName, thresholdValue.toString(),
+									thresholdItems.toString() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		}
+	}
+
+	/**
+	 * Throws exception if BPK approval is incomplete for request note details.
+	 * 
+	 * @param thresholdItems
+	 *            Exceeded items.
+	 * @param thresholdValue
+	 *            Exceeded threshold.
+	 * @param ptjName
+	 *            Related PTJ.
+	 * @param requestNoteResDTO
+	 *            Request note details.
+	 * @throws EpException
+	 *             if BPK approval incomplete.
+	 */
+	private void triggerAlertApproval(StringBuilder thresholdItems, BigDecimal thresholdValue, String ptjName,
+			RequestNoteResDTO requestNoteResDTO) {
+		getManagedBean().setContainRejectDecision(false);
+
+		if (!isBpkAprovalCompleted(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls())) {
+			if (getManagedBean().isContainRejectDecision()) {
+				throw new EpException(MessageConst.ERROR_760563, new String[] { ptjName, thresholdValue.toString(),
+						thresholdItems.toString(), });
+			} else {
+				throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName, thresholdValue.toString(),
+						thresholdItems.toString(), });
+			}
+		}
+	}
+
+	/**
+	 * Updates ScRequestNoteDtl list via service, logs errors with SLAUtils.
+	 * 
+	 * @param scRequestNoteDtlList
+	 *            Details to update.
+	 */
+	private void updateScRequestNoteDtl(List<ScRequestNoteDtl> scRequestNoteDtlList) {
+		List<ScRequestNoteDtl> updateScRequestNoteDtlList = new ArrayList<>();
+		IRequestNoteSO requestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+		for (ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList) {
+			updateScRequestNoteDtlList.add(scRequestNoteDtl);
+
+		}
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNoteDtls(updateScRequestNoteDtlList);
+		try {
+			requestNoteSO.updateRequestNoteDetail(requestNoteReqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean",
+					getManagedBean().getRequestNote().getRequestNoteNo(), "updateScRequestNoteDtl",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	/**
+	 * Checks if any detail in the list has a BPK threshold decision.
+	 * 
+	 * @param scRequestNoteDtlList
+	 *            List of request note details.
+	 * @return True if any decision exists, false otherwise.
+	 */
+	private boolean isBpkAprovalCompleted(List<ScRequestNoteDtl> scRequestNoteDtlList) {
+		for (ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList) {
+			if (scRequestNoteDtl.getBpkThresholdDecision() != null) {
+				if (scRequestNoteDtl.getBpkThresholdDecision().equalsIgnoreCase(HtmlTemplateConstants.ZERO_VAL)) {
+					getManagedBean().setContainRejectDecision(true);
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// #26059 - end	
 	//#31689 - start
 	private void validateReqNoteIgnoreProcurement(ScRequestNote requestNote) {
 		debugLogger("validateReqNoteIgnoreProcurement");
@@ -1688,6 +1647,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setShowPurchaseInDefault(false);
 		getManagedBean().setScRequestNoteDtl(null);
 		// 25790 - end
+		// #26059 - start
+		getManagedBean().setBpkApproverMode(false);
+		getManagedBean().setRnExceedThreshold(false);
+		getManagedBean().setShowAttachments(true);
+		// #26059 - end
 		List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -1824,6 +1788,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							sb.append(SearchOperator.OPERATOR_NOT_IN.value());
 						}
 					}
+					
+					// #26059 - start
+					if (scRequestNoteDtl.isExceedThreshold()) {
+						getManagedBean().setRnExceedThreshold(Boolean.TRUE);
+						
+						if (requestNote.getScRequestNoteAttachments().isEmpty()) {
+							getManagedBean().setShowAttachments(Boolean.FALSE);
+						}
+					}
+					// #26059 - end
 
 					scRequestNoteDtl.setConditionField(sb.toString());
 //				}
@@ -4574,7 +4548,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			return result;
 		}
 	}
-	
+
 	/**
 	 * Sort market summary list.
 	 *
@@ -6497,4 +6471,974 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return formattedItemName;
 	}
 	// 36950 - end @zaim
+	
+	// start - #26059
+	/**
+	 * Displays the BPK approver's view of a request note.
+	 * 
+	 * @param requestNoteId
+	 *            The ID of the request note to view.
+	 */
+	public void viewBpkApproverRequestNote(long requestNoteId) {
+		debugLogger("viewBpkApproverRequestNote");
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNoteId(requestNoteId);
+		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+		if (requestNoteResDTO.getRequestNoteDetail() != null) {
+			ScRequestNote requestNote = requestNoteResDTO.getRequestNoteDetail();
+			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);
+			if (requestNote.getCurrentStatus() != null) {
+				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());
+			}
+
+			getDocStatus(requestNote);
+		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		getManagedBean().setViewOnly(Boolean.TRUE);
+		getManagedBean().setBpkApproverMode(Boolean.TRUE);
+		groupRequestNoteDtlsByUnspscId(getManagedBean().getRequestNoteDtls());
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, requestNoteBpkApproverMainPage);
+	}
+
+	/**
+	 * Groups request note details by UNSPSC ID, calculates totals, and sorts
+	 * the resulting commodity groups.
+	 * 
+	 * @param dtlsToGroup
+	 *            The list of {@link ScRequestNoteDtl} objects to be grouped.
+	 */
+	public void groupRequestNoteDtlsByUnspscId(List<ScRequestNoteDtl> dtlsToGroup) {
+		Map<Long, List<ScRequestNoteDtl>> groupedByUnspscId = new HashMap<>();
+		getManagedBean().getCommodityGroups().clear();
+
+		for (ScRequestNoteDtl dtl : dtlsToGroup) {
+			populateListForUnspsc(groupedByUnspscId, dtl);
+		}
+
+		for (Map.Entry<Long, List<ScRequestNoteDtl>> entry : groupedByUnspscId.entrySet()) {
+			List<ScRequestNoteDtl> dtlsInGroup = entry.getValue();
+
+			if (dtlsInGroup.isEmpty()) {
+				continue;
+			}
+
+			CommodityGroup group = new CommodityGroup();
+			group.setItems(dtlsInGroup);
+
+			BigDecimal sumTotalPrice = BigDecimal.ZERO;
+			StringBuilder itemCodeNameBuilder = new StringBuilder();
+
+			ScRequestNoteDtl firstDtlInGroup = dtlsInGroup.get(0);
+			Calendar cal = Calendar.getInstance();
+			if (firstDtlInGroup.getCreatedDate() != null) {
+				cal.setTimeInMillis(firstDtlInGroup.getCreatedDate().getTime());
+			} else {
+				cal.setTimeInMillis(System.currentTimeMillis());
+			}
+
+			String unspscCode = SSTConstant.EMPTY_STRING;
+			unspscCode = populateAccumulativeAmountPerItemGroup(group, firstDtlInGroup, cal, unspscCode);
+
+			String cmItemName = firstDtlInGroup.getRequestItem().getItemName();
+
+			if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null) {
+				cmItemName = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
+			}
+
+			if (!unspscCode.isEmpty()) {
+				itemCodeNameBuilder.append(unspscCode).append(" - ").append(cmItemName);
+			} else {
+				itemCodeNameBuilder.append(firstDtlInGroup.getRequestItem().getItemName());
+			}
+
+			group.setItemCode(unspscCode);
+			group.setItemName(cmItemName);
+			group.setItemCodeName(itemCodeNameBuilder.toString().trim());
+
+			for (ScRequestNoteDtl dtl : dtlsInGroup) {
+				if (dtl.getTotalPricePerItemRounded() != null) {
+					sumTotalPrice = sumTotalPrice.add(dtl.getTotalPricePerItemRounded());
+				}
+			}
+			group.setCurrentItemTotalAmount(sumTotalPrice);
+			group.setDecision(SSTConstant.EMPTY_STRING);
+			getManagedBean().getCommodityGroups().add(group);
+		}
+
+		sortCommodityGroup();
+	}
+
+	/**
+	 * Groups request note detail into map by UNSPSC ID.
+	 */
+	private void populateListForUnspsc(Map<Long, List<ScRequestNoteDtl>> groupedByUnspscId, ScRequestNoteDtl dtl) {
+		Long unspscId = dtl.getRequestItem().getRequestNoteItemId();
+		CmUnspsc unspsc = dtl.getRequestItem() != null && dtl.getRequestItem().getCmItem() != null ? dtl
+				.getRequestItem().getCmItem().getCmUnspsc() : null;
+
+		if (unspsc != null && unspsc.getUnspscId() != null) {
+			unspscId = unspsc.getUnspscId();
+		}
+
+		List<ScRequestNoteDtl> listForUnspsc = groupedByUnspscId.get(unspscId);
+		if (listForUnspsc == null) {
+			listForUnspsc = new ArrayList<>();
+			groupedByUnspscId.put(unspscId, listForUnspsc);
+		}
+		listForUnspsc.add(dtl);
+	}
+
+	/**
+	 * Sorts commodity groups by item code name in ascending order.
+	 */
+	private void sortCommodityGroup() {
+		Collections.sort(getManagedBean().getCommodityGroups(), new Comparator<CommodityGroup>() {
+			@Override
+			public int compare(CommodityGroup group1, CommodityGroup group2) {
+				String name1 = group1.getItemCodeName();
+				String name2 = group2.getItemCodeName();
+
+				if (name1 == null && name2 == null) {
+					return 0;
+				}
+				if (name1 == null) {
+					return -1;
+				}
+				if (name2 == null) {
+					return 1;
+				}
+				return name1.compareTo(name2);
+			}
+		});
+	}
+
+	/**
+	 * Calculates and sets total accumulated amount for grouped item using
+	 * extension code.
+	 */
+	private String populateAccumulativeAmountPerItemGroup(CommodityGroup group, ScRequestNoteDtl firstDtlInGroup,
+			Calendar cal, String unspscCode) {
+		String unspsCode = unspscCode;
+		if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null
+				&& firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc() != null) {
+			unspsCode = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode();
+
+			if (firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode() != null) {
+				FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+				flReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+				flReqDTO.setExtensionCode(firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode());
+				flReqDTO.setYear(cal.get(Calendar.YEAR));
+				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+
+				group.setAccumulativeAmountPerItemGroup(totalAmt);
+			}
+		}
+		return unspsCode;
+	}
+
+	/**
+	 * Handles the submission of BPK approver decisions for a request note. This
+	 * method iterates through commodity groups, validates decisions, applies
+	 * them to request note details, and triggers BPK approval notifications. It
+	 * also validates remarks if any decision is a rejection. Updates the
+	 * request note in the database and logs any errors during the process.
+	 */
+	public void bpkApproverSubmit() {
+		StringBuilder updatedItems = new StringBuilder();
+		int count = 0;
+		Boolean isRemarkRequired = false;
+		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		String approve = ResourceBundleUtils.getMessage("lbl.sc.decision.approve",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		String reject = ResourceBundleUtils.getMessage("lbl.sc.decision.reject",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		List<CommodityGroup> commodityGroup = getManagedBean().getCommodityGroups();
+		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<>();
+
+		for (CommodityGroup group : commodityGroup) {
+
+			if (StringUtils.isBlank(group.getDecision())) {
+				throw new EpException(MessageConst.ERROR_760523);
+			}
+
+			for (ScRequestNoteDtl scRequestNoteDtl : group.getItems()) {
+				if ((HtmlTemplateConstants.ZERO_VAL).equalsIgnoreCase(group.getDecision())) {
+					isRemarkRequired = true;
+				}
+				scRequestNoteDtl.setBpkThresholdDecision(group.getDecision());
+				scRequestNoteDtl.setApprovedDate(new Date());
+				requestNoteDtls.add(scRequestNoteDtl);
+			}
+			count++;
+			updatedItems.append(count + ". " + group.getItemName() + " <b>"
+					+ ((HtmlTemplateConstants.ONE_VAL).equalsIgnoreCase(group.getDecision()) ? approve : reject)
+					+ "</b></br>");
+
+		}
+		if (isRemarkRequired) {
+			validateRemark(requestNote);
+		}
+
+		try {
+			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+			requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+			requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			requestNoteReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
+			finalizeRemarks(requestNote.getRemarks());
+			requestNoteReqDTO.setRequestNote(requestNote);
+
+			getRequestNoteSO().updateScRequestNote(requestNoteReqDTO);
+
+			ScRequestNote updatedRequestNote = getRequestNoteSO().getRequestNote(requestNoteReqDTO)
+					.getRequestNoteDetail();
+			bpkApprovalNotification(commodityGroup, updatedRequestNote);
+		} catch (Exception e) {
+			requestNote.setRemarks(initializeRemarks(requestNote, null, requestNote.getRemarks(),
+					ScRequestNoteRemark.class));
+			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean",
+					getManagedBean().getRequestNote().getRequestNoteNo(), "bpkApproverSubmit",
+					getUserIdSessionFromLoginId(), e);
+		}
+
+		if (count > 0) {
+			successMessage(MessageConst.INFO_723006, new String[] {
+					getManagedBean().getRequestNote().getRequestNoteNo(), updatedItems.toString() }, Boolean.TRUE);
+		}
+	}
+
+	/**
+	 * Handles the file upload event, associating the uploaded file as an
+	 * attachment to the current request note.
+	 * 
+	 * @param event
+	 *            The {@link FileUploadEvent} containing the uploaded file.
+	 * @throws FileNotFoundException
+	 *             If the file specified by the path name does not exist.
+	 * @throws IOException
+	 *             If an I/O error occurs during the file upload process.
+	 */
+	public void handleFileUpload(FileUploadEvent event) throws IOException {
+		List<ScRequestNoteAttachment> attachments = new ArrayList<>();
+		if (event.getFile() != null) {
+			ScRequestNoteAttachment attachment = new ScRequestNoteAttachment();
+			ScRequestNote scRequestNote = this.getManagedBean().getRequestNote();
+
+			List<ScRequestNoteAttachment> scRequestNoteAttachments = scRequestNote.getScRequestNoteAttachments();
+			if (null == scRequestNoteAttachments) {
+				scRequestNoteAttachments = new ArrayList<>();
+			}
+			attachment.setScRequestNote(scRequestNote);
+			attachment.setDocNo(scRequestNote.getRequestNoteNo());
+			scRequestNoteAttachments.add(attachment);
+			scRequestNote.setScRequestNoteAttachments(scRequestNoteAttachments);
+			ScAttachment scAttachment = attachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			getManagedBean().setRequestNote(scRequestNote);
+			attachments.add(attachment);
+		}
+	}
+
+	/**
+	 * Validates if any new remark in the request note is empty or null. Throws
+	 * an exception if an empty or null new remark is found.
+	 * 
+	 * @param requestNote
+	 *            The {@link ScRequestNote} containing the remarks to validate.
+	 */
+	private void validateRemark(ScRequestNote requestNote) {
+		boolean newRemark = false;
+		FacesScopes facesScopes = new FacesScopes();
+
+		for (ScRequestNoteRemark remark : requestNote.getRemarks()) {
+			// no new remark being insert
+			if (remark.getRemark() == null || ("").equalsIgnoreCase(remark.getRemark()) || remark.getRemark().isEmpty()) {
+				newRemark = true;
+			}
+		}
+		if (newRemark) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+		}
+	}
+
+	/**
+	 * Sends BPK approval notifications to the relevant approver. This method
+	 * constructs an HTML table row summary of commodity groups and then
+	 * dispatches email and dashboard notifications. It retrieves necessary
+	 * information such as PTJ name, ministry name, and BPK approver name to
+	 * populate the notification content. If the approver is not found, a log
+	 * entry is created.
+	 * 
+	 * @param commodityGroup
+	 *            A list of {@link CommodityGroup} objects containing item
+	 *            details and decisions.
+	 * @param updatedRequestNote
+	 *            The {@link ScRequestNote} object with the latest updates to be
+	 *            used in the notification.
+	 */
+	public void bpkApprovalNotification(List<CommodityGroup> commodityGroup, ScRequestNote updatedRequestNote) {
+		String approve = ResourceBundleUtils.getMessage("lbl.sc.decision.approve",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		String reject = ResourceBundleUtils.getMessage("lbl.sc.decision.reject",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		FacesScopes facesScopes = new FacesScopes();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		StringBuilder sb = new StringBuilder();
+
+		for (CommodityGroup group : commodityGroup) {
+			String rowHtml = generateSingleTableRowHtml(
+					SSTConstant.EMPTY_STRING.equalsIgnoreCase(group.getItemCode()) ? group.getItemName() : group
+							.getItemCode().concat(HtmlTemplateConstants.SPACING).concat(group.getItemName()), group
+							.getCurrentItemTotalAmount().toString(), group.getAccumulativeAmountPerItemGroup()
+							.toPlainString(),
+					(HtmlTemplateConstants.ONE_VAL).equalsIgnoreCase(group.getDecision()) ? approve : reject);
+			sb.append(rowHtml);
+		}
+
+		String htmlDataRow = sb.toString();
+
+		if (getManagedBean().getRequestNote() != null && getManagedBean().getRequestNote().getApprover() != null) {
+
+			long assignUser = getManagedBean().getRequestNote().getApprover().getUserId();
+			String userEmail = getManagedBean().getRequestNote().getApprover().getEmail();
+
+			ScRequestNote scRequestNote = requestNoteReqDTO.getRequestNote();
+			Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
+			Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
+			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+			String bpkApproverName = SmCommonUtil.getUserByUserId(
+					scRequestNote.getRequestNoteDtls().get(0).getChangedBy()).getUserName();
+
+			String[] notificationInfoDashboard = { userEmail, ptjName, ministryName, CommonConstants.DASHBOARD,
+					htmlDataRow, bpkApproverName };
+			String[] notificationInfoEmail = { userEmail, ptjName, ministryName, CommonConstants.EMAIL, htmlDataRow,
+					bpkApproverName };
+
+			getRequestNoteSO().sendBpkApproverNotification(requestNoteReqDTO, assignUser, notificationInfoDashboard,
+					updatedRequestNote);
+			getRequestNoteSO().sendBpkApproverNotification(requestNoteReqDTO, assignUser, notificationInfoEmail,
+					updatedRequestNote);
+		} else {
+			SLAUtils.getInstance()
+					.logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_REQUEST_NOTE.toUpperCase(),
+							"RequestNoteBackingBean.bpkApprovalNotification : No notification send",
+							System.currentTimeMillis());
+		}
+
+	}
+
+	/**
+	 * Generates an HTML table row using template constants and provided values.
+	 * 
+	 * @param var1Value
+	 *            Value for variable 1.
+	 * @param var2Value
+	 *            Value for variable 2.
+	 * @param var3Value
+	 *            Value for variable 3.
+	 * @param var4Value
+	 *            Value for variable 4.
+	 * @return Populated HTML table row string.
+	 */
+	public String generateSingleTableRowHtml(String var1Value, String var2Value, String var3Value, String var4Value) {
+
+		String resultHtml = HtmlTemplateConstants.ROW_TEMPLATE;
+		resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_1, escapeHtml(var1Value));
+		resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_2, escapeHtml(var2Value));
+		resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_3, escapeHtml(var3Value));
+		resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_4, escapeHtml(var4Value));
+
+		return resultHtml;
+	}
+
+	/**
+	 * Helper method to escape HTML sensitive characters for values inserted
+	 * into HTML. This prevents XSS and ensures correct display of characters
+	 * like <, >, &.
+	 * 
+	 * @param text
+	 *            The text to escape.
+	 * @return The escaped text.
+	 */
+	private String escapeHtml(String text) {
+		if (text == null) {
+			return ""; // Return empty string for null input
+		}
+		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
+				.replace("'", "&#x27;"); // For single quotes
+	}
+
+	// end - #26059
+
+	// start - #27868, #26059
+	/**
+	 * Holds threshold calculation data: item names, item count, and total
+	 * threshold value.
+	 */
+	public class ThresholdData {
+
+		private StringBuilder thresholdItems = new StringBuilder();
+		private int count = 0;
+		private BigDecimal thresholdValue = BigDecimal.ZERO;
+	}
+
+	/**
+	 * Validates threshold per item per PTJ by year for PK7 or other procurement
+	 * types.
+	 * 
+	 * @param requestNote
+	 *            The main request note object.
+	 * @param thresholdData
+	 *            Data object holding threshold details.
+	 * @param requestNoteDtl
+	 *            The detail line of the request note.
+	 */
+	private void validateDpThresholdPerItemPtjYear(ScRequestNote requestNote, ThresholdData thresholdData,
+			ScRequestNoteDtl requestNoteDtl) {
+		String pType = requestNoteDtl.getProcurementType().getParameterCode();
+
+		getDpThresholdPerItemPtjYearRPT(requestNote, thresholdData, requestNoteDtl, pType); // pk7,
+																							// special
+																							// item
+		getDpThresholdPerItemPtjYearPRT(requestNote, thresholdData, requestNoteDtl, pType); // ad
+																							// hoc,
+																							// normal
+
+	}
+
+	/**
+	 * Validates request item and accumulates amount by item per year per PTJ.
+	 * 
+	 * @param requestNote
+	 *            Request note header details.
+	 * @param thresholdData
+	 *            Holds threshold validation result and data.
+	 * @param requestNoteDtl
+	 *            Item-level details to validate and process.
+	 * @param pType
+	 *            Procurement type (e.g., N,G).
+	 */
+	private void getDpThresholdPerItemPtjYearPRT(ScRequestNote requestNote, ThresholdData thresholdData,
+			ScRequestNoteDtl requestNoteDtl, String pType) {
+		if (!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)
+				&& !pType.equals(ParameterConst.PROC_TYPE_PK7) && !pType.equals(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			validateBasicDtl(requestNote, requestNoteDtl);
+			// Check total procurement amount per ptj per item per
+			// year
+			FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+			if (requestNoteDtl.getRequestItem().getCmItem() != null) {
+				String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
+
+				Calendar cal = Calendar.getInstance();
+				if (requestNoteDtl.getCreatedDate() != null) {
+					cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
+				} else {
+					cal.setTimeInMillis(System.currentTimeMillis());
+				}
+
+				flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+				flReqDTO.setExtensionCode(extensionCode);
+				flReqDTO.setYear(cal.get(Calendar.YEAR));
+				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+
+				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
+
+				retrieveDpThresholdForPRT(thresholdData, requestNoteDtl, totalAmt, requestNote);
+			}
+		}
+	}
+
+	/**
+	 * Retrieves and applies DP threshold rules for a PRT request note.
+	 */
+	private void retrieveDpThresholdForPRT(ThresholdData thresholdData, ScRequestNoteDtl requestNoteDtl,
+			BigDecimal totalAmt, ScRequestNote requestNote) {
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		if (requestNote.getQuote() != null && requestNote.getQuote().isPanel()) {
+			ruleReqDTO.setRuleType(RuleTypeConst.PANEL_THRESHOLD);
+		} else {
+			ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+		}
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+
+		if (ruleValueList != null && !ruleValueList.isEmpty()) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			thresholdData.thresholdValue = new BigDecimal(configRuleValue.getRuleValue());
+			// Rule : ITEM_THRESHOLD For 20k / PANEL_THRESHOLD For 50k
+			if (totalAmt.compareTo(thresholdData.thresholdValue) > 0) {
+				thresholdData.count++;
+				thresholdData.thresholdItems.append(thresholdData.count + ". "
+						+ requestNoteDtl.getRequestItem().getItemName() + "</br>");
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
+		}
+	}
+
+	/**
+	 * Validates basic fields of a request detail such as title, PID, price,
+	 * supplier, quantity, and user.
+	 * 
+	 * @param requestNote
+	 *            The parent request note object.
+	 * @param requestNoteDtl
+	 *            The detail line to validate.
+	 */
+	private void validateBasicDtl(ScRequestNote requestNote, ScRequestNoteDtl requestNoteDtl) {
+		// title validation
+		validateProcurementTitle(requestNoteDtl);
+
+		// pid validity
+		validatePid(requestNote, requestNoteDtl);
+
+		// validate price type
+		validatePriceType(requestNoteDtl);
+
+		// validate recommended supplier
+		validateSupplier(requestNoteDtl);
+
+		// quantity
+		validateQuantity(requestNoteDtl);
+
+		// assignedUser
+		validateAssignedUser(requestNoteDtl);
+	}
+
+	/**
+	 * Validates that an assigned user exists and has a valid user ID.
+	 * 
+	 * @param requestNoteDtl
+	 *            The detail to validate.
+	 */
+	private void validateAssignedUser(ScRequestNoteDtl requestNoteDtl) {
+		if (requestNoteDtl.getAssignedUser() == null
+				|| (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId() == null)) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.request.note.loa.prepare.by", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	/**
+	 * Validates that quantity for the item is provided.
+	 * 
+	 * @param requestNoteDtl
+	 *            The detail to validate.
+	 */
+	private void validateQuantity(ScRequestNoteDtl requestNoteDtl) {
+		if (null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity()) {
+			throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.quantity", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	/**
+	 * Validates that a supplier is assigned to the request detail.
+	 * 
+	 * @param requestNoteDtl
+	 *            The detail to validate.
+	 */
+	private void validateSupplier(ScRequestNoteDtl requestNoteDtl) {
+		if (null == requestNoteDtl.getScRequestSupplierItem()
+				|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
+				|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId()) {
+			throw new EpException(MessageConst.ERROR_760356, new String[] { requestNoteDtl.getRequestItem()
+					.getItemName() });
+		}
+	}
+
+	/**
+	 * Validates that the price type is set correctly.
+	 * 
+	 * @param requestNoteDtl
+	 *            The detail to validate.
+	 */
+	private void validatePriceType(ScRequestNoteDtl requestNoteDtl) {
+		if (null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()) {
+			throw new EpException(MessageConst.ERROR_760343, new String[] { requestNoteDtl.getRequestItem()
+					.getItemName() });
+		}
+	}
+
+	/**
+	 * Validates PID using purchaseInDefault and request note.
+	 * 
+	 * @param requestNote
+	 *            The main request note.
+	 * @param requestNoteDtl
+	 *            The detail to validate.
+	 */
+	private void validatePid(ScRequestNote requestNote, ScRequestNoteDtl requestNoteDtl) {
+		log.info("pID validity begin");
+		if (requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
+			pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+		}
+		log.info("pID validity end");
+	}
+
+	/**
+	 * Validates that the procurement title is not blank.
+	 * 
+	 * @param requestNoteDtl
+	 *            The detail to validate.
+	 */
+	private void validateProcurementTitle(ScRequestNoteDtl requestNoteDtl) {
+		if (StringUtils.isBlank(requestNoteDtl.getProcurementTitle())) {
+			throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.direct.purchase.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	/**
+	 * Calculates DP threshold per item, PTJ, and year for RPT process type.
+	 * 
+	 * @param requestNote
+	 *            the request note containing procurement details
+	 * @param thresholdData
+	 *            the threshold tracking data
+	 * @param requestNoteDtl
+	 *            the specific request note detail item
+	 * @param pType
+	 *            the procurement type
+	 */
+	public void getDpThresholdPerItemPtjYearRPT(ScRequestNote requestNote, ThresholdData thresholdData,
+			ScRequestNoteDtl requestNoteDtl, String pType) {
+		if (pType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+				|| pType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			validateBasicDtl(requestNote, requestNoteDtl);
+			FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+			if (requestNoteDtl.getRequestItem().getCmItem() != null) {
+				String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
+				debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
+						+ requestNoteDtl.getRequestNoteDtlId());
+				debugLogger("RequestNoteBackingBean >> validateRequestNote : Extension Code : " + extensionCode);
+
+				Calendar cal = Calendar.getInstance();
+				if (requestNoteDtl.getCreatedDate() != null) {
+					cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
+				} else {
+					cal.setTimeInMillis(System.currentTimeMillis());
+				}
+
+				flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+				flReqDTO.setExtensionCode(extensionCode);
+				flReqDTO.setYear(cal.get(Calendar.YEAR));
+				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+				// changes to calculate per ptj per item per year
+				// using 8 digit
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+
+				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
+				retrieveDpThresholdForRPT(thresholdData, requestNoteDtl, totalAmt);
+			}
+		}
+	}
+
+	/**
+	 * Retrieves and validates DP threshold for RPT items based on justification
+	 * type.
+	 * 
+	 * @param thresholdData
+	 *            the threshold tracking data
+	 * @param requestNoteDtl
+	 *            the specific request note detail item
+	 * @param totalAmt
+	 *            the total accumulated amount for the item
+	 */
+	private void retrieveDpThresholdForRPT(ThresholdData thresholdData, ScRequestNoteDtl requestNoteDtl,
+			BigDecimal totalAmt) {
+		if (requestNoteDtl.getJustificationType() != null
+				&& requestNoteDtl.getJustificationType().getDpThreshold() != null
+				&& totalAmt.compareTo(requestNoteDtl.getJustificationType().getDpThreshold()) > 0) {
+
+			thresholdData.thresholdValue = requestNoteDtl.getJustificationType().getDpThreshold();
+			if (totalAmt.compareTo(thresholdData.thresholdValue) > 0) {
+				thresholdData.count++;
+				thresholdData.thresholdItems.append(thresholdData.count + ". "
+						+ requestNoteDtl.getRequestItem().getItemName() + "</br>");
+			}
+		}
+	}
+	
+	/**
+	 * Triggers an alert when a request note exceeds defined threshold limits.
+	 * <p>
+	 * Marks request note details as exceeding the threshold, updates decisions, and triggers either
+	 * approval or submission alerts based on the outcome.
+	 * </p>
+	 *
+	 * @param outcome the BPM outcome (e.g., approval or submission)
+	 * @param thresholdData the threshold details including items and values
+	 * @param ptjName the name of the organizational unit (PTJ) related to the request
+	 */
+	protected void triggerAlert(String outcome, ThresholdData thresholdData, String ptjName) {
+		if (getManagedBean().getRequestNote() != null && getManagedBean().getRequestNote().getRequestNoteId() != null) {
+			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+			requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+
+			for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+				scRequestNoteDtl.setExceedThreshold(true);
+				resetBpkDecision(outcome, scRequestNoteDtl);
+			}
+
+			if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
+				triggerAlertApproval(thresholdData.thresholdItems, thresholdData.thresholdValue, ptjName,
+						requestNoteResDTO);
+			} else {
+				getManagedBean().setCounter(getManagedBean().getCounter() + 1);
+				triggerAlertSubmission(thresholdData.thresholdItems, thresholdData.thresholdValue, ptjName);
+			}
+		} else {
+			getManagedBean().setCounter(getManagedBean().getCounter() + 1);
+			triggerAlertSubmission(thresholdData.thresholdItems, thresholdData.thresholdValue, ptjName);
+		}
+	}
+	// end - #27868, #26059
+	
+	// #26059 - Start
+	/**
+	 * Validates the extension code of a request note detail.
+	 * 
+	 * @param requestNoteDtl
+	 *            The request detail object to be validated.
+	 * @return true if the item is assigned or has a valid extension code
+	 *         length; false otherwise.
+	 */
+	public boolean checkExtensionCode(ScRequestNoteDtl requestNoteDtl) {
+		if (isInvalidRequestDetail(requestNoteDtl)) {
+			return false;
+		}
+
+		if (getManagedBean().isExistInAssignItemDetail()) {
+			return true;
+		}
+
+		ScRequestItem item = requestNoteDtl.getRequestItem();
+		CmItem cmItem = item.getCmItem();
+		return isValidExtensionLength(cmItem.getExtensionCode());
+	}
+
+	/**
+	 * Checks if the request detail or its nested item objects are null. * @param
+	 * requestNoteDtl The object to check.
+	 * 
+	 * @return true if any required component is missing.
+	 */
+	private boolean isInvalidRequestDetail(ScRequestNoteDtl requestNoteDtl) {
+		return requestNoteDtl == null || requestNoteDtl.getRequestItem() == null
+				|| requestNoteDtl.getRequestItem().getCmItem() == null;
+	}
+
+	/**
+	 * Validates that the extension code is not blank and meets length
+	 * requirements (between 8 and 18 characters). * @param extensionCode The
+	 * code string to check.
+	 * 
+	 * @return true if the code length is within the valid range (8-18); false
+	 *         otherwise.
+	 */
+	private boolean isValidExtensionLength(String extensionCode) {
+		if (StringUtils.isBlank(extensionCode)) {
+			return false;
+		}
+
+		// Remove whitespace to get actual character count
+		int codeLength = extensionCode.replaceAll("\\s+", "").length();
+
+		// Logic: Return false if length is NOT between 8 and 18
+		if (codeLength <= DPConstants.NUMBER_EIGHT) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Compares the item name of the request item with its associated CmItem
+	 * name. If the names differ, the extension code of the CmItem is trimmed to
+	 * 8 characters.
+	 * 
+	 * @param requestItem
+	 *            the request item containing the CmItem to compare and update
+	 */
+	public void compareItemName(ScRequestItem requestItem) {
+		if (requestItem == null || requestItem.getCmItem() == null) {
+			return;
+		}
+
+		if (getManagedBean().isExistInAssignItemDetail()) {
+			return;
+		}
+
+		String cmItemName = getCleanedItemName(requestItem.getCmItem().getItemName());
+		String itemName = getCleanedItemName(requestItem.getItemName());
+
+		boolean namesDiffer = !cmItemName.equalsIgnoreCase(itemName);
+		boolean tempUnspscBlank = StringUtils.isBlank(requestItem.getTempUnspscCode());
+
+		if (namesDiffer && tempUnspscBlank) {
+			trimExtensionCode(requestItem.getCmItem());
+		}
+	}
+
+	/**
+	 * Helper to clean item names by removing 'N/A' and trimming whitespace. * @param
+	 * rawName The raw name string from the item.
+	 * 
+	 * @return The cleaned name or an empty string.
+	 */
+	private String getCleanedItemName(String rawName) {
+		if (StringUtils.isBlank(rawName)) {
+			return StringUtils.EMPTY;
+		}
+		CommonUtils commonUtils = new CommonUtils();
+		return commonUtils.removeItemNameNA(rawName).trim();
+	}
+
+	/**
+	 * Trims the extension code to 8 characters if it exceeds that length. * @param
+	 * cmItem The CmItem to update.
+	 */
+	private void trimExtensionCode(CmItem cmItem) {
+		String extensionCode = cmItem.getExtensionCode();
+
+		if (StringUtils.isNotBlank(extensionCode) && extensionCode.length() > DPConstants.NUMBER_EIGHT) {
+			cmItem.setExtensionCode(extensionCode.substring(DPConstants.NUMBER_ZERO, DPConstants.NUMBER_EIGHT));
+		}
+	}
+
+	/**
+	 * Processes a list of Request Note Details and compiles a list of item
+	 * names that do not meet the criteria for having a valid extension code.
+	 * 
+	 * An item's name is added to the result list if its associated
+	 * {@code CmItem} is null, or if the item fails the extension code
+	 * validation check performed by the helper method
+	 * {@code checkExtensionCode(ScRequestNoteDtl)}.
+	 * 
+	 * @param listNoteDtl
+	 *            The {@code List<ScRequestNoteDtl>} containing the request item
+	 *            details to be evaluated.
+	 * @return A {@code List<String>} containing the names ({@code itemName}) of
+	 *         all items that are identified as lacking a proper extension code
+	 *         or associated {@code CmItem}.
+	 */
+	private List<String> putAllTheNonExtensionCodeItemInList(List<ScRequestNoteDtl> listNoteDtl) {
+
+		List<String> listNonExtensionCode = new ArrayList<>();
+		for (ScRequestNoteDtl scRequestNoteDtl : listNoteDtl) {
+			ScRequestItem scRequestItem = scRequestNoteDtl.getRequestItem();
+			CmItem cmItem = scRequestItem.getCmItem();
+
+			if (cmItem == null || !checkExtensionCode(scRequestNoteDtl)) {
+				listNonExtensionCode.add(scRequestItem.getItemName());
+			}
+		}
+		return listNonExtensionCode;
+	}
+
+	/**
+	 * Constructs a numbered list from a list of item names and throws a custom
+	 * exception containing the formatted message.
+	 * 
+	 * This method iterates through the provided list of item names, creates a
+	 * numbered list string, and then throws an {@link EpException} using the
+	 * constant {@code MessageConst.ERROR_760702} and the generated list as a
+	 * parameter. * @param listItemName The {@code List<String>} containing the
+	 * names of the items that failed codification or triggered the error
+	 * condition.
+	 * 
+	 * @throws EpException
+	 *             If the method is called, it always throws this exception
+	 *             containing the formatted list of item names.
+	 */
+	private void validateAndThrowCodificationError(List<String> listItemName) {
+
+		StringBuilder numberedList = new StringBuilder();
+		int count = DPConstants.NUMBER_ONE;
+
+		for (String itemName : listItemName) {
+			numberedList.append("\n").append(count).append(". ").append(itemName).append(".");
+			count++;
+		}
+		String formattedMessageParam = numberedList.toString();
+
+		throw new EpException(MessageConst.ERROR_760702, new String[] { formattedMessageParam });
+
+	}
+
+	/**
+	 * Determines whether the "Assign" button should be enabled or visible.
+	 * 
+	 * The button is active (returns {@code true}) if either of the following
+	 * conditions is met: The current context is read-only (
+	 * {@code readOnly == true}). The context is NOT read-only, AND the
+	 * following three conditions are simultaneously true: The item's
+	 * procurement type is **SERVICE** (matching
+	 * {@code DbValueConst.PROCUMENT_TYPE_SERVICE}). The item's temporary UNSPSC
+	 * code is empty or null (validated via {@code StringUtils.isEmpty()}). The
+	 * item has an associated {@code CmItem} (i.e.,
+	 * {@code requestNoteDtl.getRequestItem().getCmItem()} is not null).
+	 * 
+	 * @param readOnly
+	 *            {@code true} if the form or context is in read-only mode,
+	 *            bypassing further checks.
+	 * @param requestNoteDtl
+	 *            The {@link ScRequestNoteDtl} instance being evaluated. This
+	 *            object is used to check its procurement category and the
+	 *            details of its associated {@code RequestItem} (specifically
+	 *            the {@code TempUnspscCode} and {@code CmItem}).
+	 * @return {@code true} if the "Assign" button should be active (enabled or
+	 *         shown); {@code false} otherwise.
+	 */
+	public boolean validateAssignButton(boolean readOnly, ScRequestNoteDtl requestNoteDtl) {
+		if (readOnly) {
+			return true;
+		}
+
+		if (requestNoteDtl == null || requestNoteDtl.getRequestItem() == null) {
+			return false;
+		}
+
+		if (getManagedBean().isExistInAssignItemDetail()) {
+			return false;
+		}
+
+		ScRequestItem requestItem = requestNoteDtl.getRequestItem();
+		String tempUnspscCode = requestItem.getTempUnspscCode();
+		CmItem cmItem = requestItem.getCmItem();
+		ScQuote quote = getManagedBean().getScQuote();
+
+		if (quote != null && quote.isPanel()) {
+			return cmItem != null;
+		}
+
+		if (requestItem.getItemType() != null
+				&& DbValueConst.ITEM_TYPE_PRODUCT.equals(requestItem.getItemType().getParameterId())) {
+			return false;
+		}
+
+		if (StringUtils.isEmpty(tempUnspscCode) && cmItem != null && StringUtils.isNotEmpty(cmItem.getExtensionCode())
+				&& cmItem.getExtensionCode().length() != 8) {
+			return true;
+		}
+
+		return false;
+	}	
 }
