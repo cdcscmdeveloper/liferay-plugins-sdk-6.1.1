@@ -6,16 +6,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMSysParamTransFeeExemptBackingBean #28895-35509 - GATE3
@@ -158,16 +161,19 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		for (PmFeeExemption updateVal : update) {
 			PmFeeExemption matchingIdUpdated = findMatchingSPFee(pmfeeMain, updateVal);
 			if (matchingIdUpdated != null) {
+				docId = BigInteger.valueOf(updateVal.getFeeExemptionId());
 				processSPFeeByOrgTypeUpdate(matchingIdUpdated, updateVal);
 			}
 		}
 		if (CollectionUtils.isNotEmpty(deletedItem)) { // orgId/smSupplier/supplierName
 			for (PmFeeExemption deleted : deletedItem) {
+				docId = BigInteger.valueOf(deleted.getFeeExemptionId());
 				processSPTFeeCreateDeleted(null, deleted);
 			}
 		}
 		if (CollectionUtils.isNotEmpty(newCreatedItem)) {
 			for (PmFeeExemption newCreate : newCreatedItem) {
+				docId = BigInteger.valueOf(newCreate.getFeeExemptionId());
 				processSPTFeeCreateDeleted(newCreate, null);
 			}
 		}
@@ -194,14 +200,23 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	 */
 	public void processSPFeeByOrgTypeUpdate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
 		getDocNoAndDocType(updateVal);
-		
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		if (feeExemptionOrgType != null
 				&& updateVal.getOrgTypeId() != null
-				&& !pmfeeMain.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc()
-						.equals(updateVal.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc())) {
-			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYOT_ORGTYPE_FIELDLABELID, pmfeeMain
-					.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), updateVal.getOrgTypeId()
-					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+				&& !ParameterHelper
+						.getInstance()
+						.getParameterDesc(pmfeeMain.getOrgTypeId().getParameterType(),
+								pmfeeMain.getOrgTypeId().getParameterCode(), locale)
+						.equals(ParameterHelper.getInstance().getParameterDesc(
+								updateVal.getOrgTypeId().getParameterType(),
+								updateVal.getOrgTypeId().getParameterCode(), locale))) {
+			spFeeAddUpdateDeleteAuditDetail(
+					pmfeeMain,
+					AuditConst.PM_AUD_SYSPARAM_SPFEE_BYOT_ORGTYPE_FIELDLABELID,
+					ParameterHelper.getInstance().getParameterDesc(pmfeeMain.getOrgTypeId().getParameterType(),
+							pmfeeMain.getOrgTypeId().getParameterCode(), locale),
+					ParameterHelper.getInstance().getParameterDesc(updateVal.getOrgTypeId().getParameterType(),
+							updateVal.getOrgTypeId().getParameterCode(), locale), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 		processSPTFeeEffExpDate(pmfeeMain, updateVal);
 	}
@@ -271,7 +286,7 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	public void processSPTFeeCreateDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		PmFeeExemption pmFeeExemption = newCreatedItem != null ? newCreatedItem : deletedItem;
 		
-		getDocNoAndDocType(newCreatedItem);
+		getDocNoAndDocType(pmFeeExemption);
 
 		if (feeExemptionOrgType != null) {
 			// orgName
@@ -331,10 +346,13 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	private String byOTNewCreated(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		// getOrgTypeCodeDesc
 		if (feeExemptionOrgType != null) {
-			if (newCreatedItem != null && newCreatedItem.getOrgTypeId() != null) {
-				return newCreatedItem.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
+			Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);			
+					if (newCreatedItem != null && newCreatedItem.getOrgTypeId() != null) {
+				return ParameterHelper.getInstance().getParameterDesc(newCreatedItem.getOrgTypeId().getParameterType(),
+						newCreatedItem.getOrgTypeId().getParameterCode(), locale);
 			} else if (deletedItem != null && deletedItem.getOrgTypeId() != null) {
-				return deletedItem.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
+				return ParameterHelper.getInstance().getParameterDesc(deletedItem.getOrgTypeId().getParameterType(),
+						deletedItem.getOrgTypeId().getParameterCode(), locale);
 			}
 		}
 		return null;
@@ -438,9 +456,11 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	
 	private void getDocNoAndDocType(PmFeeExemption updateVal){
 		if (isOrgType) {
+			Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 			docNo = updateVal.getOrgTypeId().getParameterCode();
-			docType = updateVal.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeName();
-		}
+			docType = ParameterHelper.getInstance().getParameterDesc(updateVal.getOrgTypeId().getParameterType(),
+					updateVal.getOrgTypeId().getParameterCode(), locale);
+			}
 
 		if (isSupplierItem) {
 			docNo = updateVal.getOrgProfileId().getSmSupplier().getEpNo();
