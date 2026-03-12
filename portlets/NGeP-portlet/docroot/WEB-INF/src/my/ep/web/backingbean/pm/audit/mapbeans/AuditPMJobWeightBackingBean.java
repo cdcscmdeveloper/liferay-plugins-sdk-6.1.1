@@ -3,18 +3,19 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
-import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPoJobWeight;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.pojobweight.PoJobWeightManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMJobWeightBackingBean
@@ -86,14 +87,10 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 
 	private String checkDocType(String parameterCode) {
 
-		PmParameter pmParameter = getParameterByTypeAndCode("DT", parameterCode);
 		String description = null;
-
-		for (PmParameterDesc desc : pmParameter.getPmParameterDescsSpecCallOnly()) {
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
-				description = desc.getCodeName();
-			}
-		}
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		description = ParameterHelper.getInstance().getParameterDesc("DT", parameterCode, locale);
+		
 		return description;
 
 	}
