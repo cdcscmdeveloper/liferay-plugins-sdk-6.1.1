@@ -33,6 +33,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;//#28188
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -102,6 +103,7 @@ import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtAmend;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -2513,12 +2515,65 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 
 				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(approvalType)) {
+					//#28188 - Start
 					// Proposal Start Date
-					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
-					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
-						scQt.setProposalStartDate((Date)valueBean.getOldValue());
-						updatePublishClosingDate(scQt);
-					}
+					//Disabled  old code as getAmendMentBean() could be NPE(Null Pointer Exception) and change with NPE handler
+					//With added Closing date amend data
+//					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+//					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
+//						scQt.setProposalStartDate((Date)valueBean.getOldValue());
+//						updatePublishClosingDate(scQt);
+//					}
+					
+					if (this.getManagedBean() != null && this.getManagedBean().getAmendMentBean() != null) {
+						// Proposal Start Date
+						QtAmendMentValueBean valueBean = this.getManagedBean().getAmendMentBean()
+					                    				.getValueMap()
+					                    				.get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+
+					    if (valueBean != null) {
+					        Object oldValue = valueBean.getOldValue();
+
+					        if (oldValue instanceof Date) {
+					            scQt.setProposalStartDate((Date) oldValue);
+					            updatePublishClosingDate(scQt);
+					        }
+					    }
+					}else{
+						QtAmendMentBean amendMentBean = null;
+						IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						
+						ScQtAmend scQtAmend = detailSO.retrieveQtAmend(scQt.getQtId());
+						
+						if (null != scQtAmend) {
+							amendMentBean = detailSO.getQtAmendMentBean(scQtAmend);
+
+							if (amendMentBean != null) {
+								QtAmendMentValueBean valueBean = amendMentBean.getValueMap()
+										.get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+								// Proposal Start Date
+							    if (valueBean != null) {
+							        Object oldValue = valueBean.getOldValue();
+
+							        if (oldValue instanceof Date) {
+							            scQt.setProposalStartDate((Date) oldValue);
+							            updatePublishClosingDate(scQt);
+							        }
+							    }
+								
+								// Closing Date
+							    if (valueBean != null) {
+							        Object oldValue = valueBean.getOldValue();
+
+							        if (oldValue instanceof Date) {
+							        	scQt.setClosingDate((Date) oldValue);
+							            updatePublishClosingDate(scQt);
+							        }
+							    }
+							}
+						}
+					}//#28188 - End
 				}
 			}
 		}

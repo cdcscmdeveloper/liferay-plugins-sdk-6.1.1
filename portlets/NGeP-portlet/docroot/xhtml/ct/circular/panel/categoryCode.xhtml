@@ -74,7 +74,13 @@
 					update=":form:deleteButtonId" />
 				<p:ajax event="rowUnselectCheckbox"
 					listener="#{panelBackingBean.onCategorySelectionChange}"
-					update=":form:deleteButtonId" /> 
+					update=":form:deleteButtonId" />
+				<p:ajax event="rowSelect"
+    				listener="#{panelBackingBean.onCategorySelectionChange}"
+    				update=":form:deleteButtonId" />
+				<p:ajax event="rowUnselect"
+    				listener="#{panelBackingBean.onCategorySelectionChange}"
+    				update=":form:deleteButtonId" /> 
 				
 				<!-- Category Code -->
 				<p:column>
