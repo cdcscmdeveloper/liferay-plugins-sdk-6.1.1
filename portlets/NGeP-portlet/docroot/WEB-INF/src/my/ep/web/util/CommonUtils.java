@@ -174,4 +174,19 @@ public class CommonUtils {
 		return formattedDate;
 	}
 	
+	// #31503 -start-
+	/**
+	 * #31503 Remove "N/A" or “NA” or “N A”.
+	 * 
+	 * @param itemName
+	 * @return
+	 */
+	public String removeItemNameNA(String itemName) {
+		if (itemName != null && !itemName.isEmpty()) {
+			return itemName.replaceAll("\\bN\\s*A\\b|\\bN/A\\b|\\bNA\\b", "");
+		}
+
+		return itemName;
+	}
+	// #31503 -end-
 }

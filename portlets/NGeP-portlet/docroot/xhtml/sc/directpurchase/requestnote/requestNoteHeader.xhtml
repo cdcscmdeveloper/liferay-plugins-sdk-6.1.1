@@ -87,6 +87,7 @@
 						#{requestNoteBackingBean.managedBean.docStatus}									
 					</td>
 				</tr>
+				<c:if test="#{!requestNoteBackingBean.managedBean.bpkApproverMode}"><ui:remove>#26059 - start - add condition</ui:remove>
 				<!-- 25790 - start -->
 				<tr>
 					<td style="width: 9%"><c:choose>
@@ -135,6 +136,7 @@
 						</c:choose></td>
 				</tr>
 				<!-- 25790 - end  -->
+				</c:if><ui:remove>#26059 - end - add condition</ui:remove>
 			</table>
 		</div>
 	</p:outputPanel>
