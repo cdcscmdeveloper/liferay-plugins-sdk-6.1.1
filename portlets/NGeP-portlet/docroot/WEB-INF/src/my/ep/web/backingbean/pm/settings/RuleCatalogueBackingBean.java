@@ -4834,10 +4834,10 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 					.remove(deletedSpecialApproval);
 			}
 		}
-		// #36738 #40071 Start
-		if(resetMinistryDropdown){
+		//#36738 #40071 Start
+		if (resetMinistryDropdown){
 			resetQtValues();
-		}// #36738 #40071 End
+		}//#36738 #40071 End
 	}
 	
 	public void selectPtjAction(List<PmOrgProfile> orgProfileList){
