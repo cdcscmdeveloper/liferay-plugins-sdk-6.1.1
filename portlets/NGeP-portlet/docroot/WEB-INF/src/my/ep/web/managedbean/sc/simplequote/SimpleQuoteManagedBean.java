@@ -450,6 +450,10 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private boolean qtyNonEditable = Boolean.FALSE;
 	// #28865 - start
 	
+	//27868 & 35321 - start
+	private Date createdDate;
+	//27868 & 35321 - end
+	
 	private Boolean deleteBusinessNature = false;
 	/**
 	 * Gets the spki backing bean.
@@ -2834,5 +2838,21 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setDeleteBusinessNature(Boolean deleteBusinessNature) {
 		this.deleteBusinessNature = deleteBusinessNature;
 	}
+	
+	//27868 & 35321 - start
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	//27868 & 35321 - end
 	
 }
