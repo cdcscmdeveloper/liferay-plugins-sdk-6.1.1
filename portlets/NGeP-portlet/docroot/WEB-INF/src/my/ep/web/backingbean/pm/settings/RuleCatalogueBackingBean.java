@@ -3031,6 +3031,11 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			ThresholdResDTO resDTO = thresholdSO
 					.updateOperationalThresholdList(reqDTO);
 			if (resDTO.isSuccessful()) {
+				//#34445, Fix as-is bug:#40055 Start
+				if (resDTO.getPmConfigGeneral() != null) {
+			        getManagedBean().setSelectedConfigGeneral(resDTO.getPmConfigGeneral());
+			    }
+				//#34445, Fix as-is bug:#40055 End
 				initOperationThreshold();
 				getManagedBean().setTabActiveIndex(3);
 				if (type == 1) {
