@@ -17,7 +17,9 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.financial.check.list.instruction']}"
 			escape="false" />
-		<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
+			<ui:remove>#30432 - Start</ui:remove>
+			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml" />
+			<ui:remove>#30432 - End</ui:remove>		
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.financial.check.list.instruction1']}"
 			escape="false" />
