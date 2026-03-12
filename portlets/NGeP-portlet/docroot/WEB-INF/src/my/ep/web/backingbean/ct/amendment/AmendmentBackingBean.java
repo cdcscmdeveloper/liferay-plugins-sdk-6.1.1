@@ -6682,51 +6682,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		else if (ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT.equalsIgnoreCase(docDefinitionKey)) {
 			context = new VelocityContext();	
 			vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
-			context.put("supplierName", "");
-			context.put("supplierIcNo", "");
-			context.put("supplierAckDate", "");
-			if (getManagedBean().getTaskName() != null) {
-				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
-						&&  !getManagedBean().isReadOnly()) {
-					//#30453 start
-					if(getFacesScopes().getUserSessionBean().getSalutationCode() != null)
-						context.put("supplierName", getFacesScopes().getUserSessionBean().getSalutationCode().getSalutationName().concat(" ").concat(getFacesScopes().getUserSessionBean().getUserName()));
-					else
-						context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
-					//#30453 end
-					context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-					context.put("supplierAckDate", dateSDF.format(new Date()));					
-					
-				} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
-					//#30453 start
-					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode() != null)
-						context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode().getSalutationName().concat(" ").concat(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName()));
-					else
-						context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
-					//#30453 end
-					context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
-					context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
-				}
-			}
-			context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			String supplierAddress = "";
-
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-				supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-			}
-			context.put("supplierAddress", supplierAddress);
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
-				context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
-			} else {
-				context.put("govSignDate", "_______________");
-			}
-			if (!StringUtils.isEmpty(sclRefNo)) { //Fix - #36708
-				context.put("agencyRefNo", sclRefNo);
-			} else {
-				context.put("agencyRefNo", "_______________");
-			}			
+			generateDocumentLoaReceiptContent(context, dateSDF, sclRefNo); //#30453
 		}
 
 		if (vmFile != null && context != null) {
@@ -9759,4 +9715,170 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return false;
 	}
 	//#40005 end
+	
+	// #30453 start
+	/**
+	 * Generates the HTML content for the Acknowledgement of LOA Receipt
+	 * document.
+	 * 
+	 * <p>
+	 * This method prepares a VelocityContext with supplier acknowledgement
+	 * information, supplier address, company name, government sign date and
+	 * agency reference number. The values are populated depending on the
+	 * current workflow task and contract status.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the task is ACK_FA_HT_NAME and the screen is not read-only, the
+	 * supplier acknowledgement information will be populated using the current
+	 * logged-in user session.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the task is VERIFY_FA_HT_NAME or the contract status is
+	 * FA_LOA_COMPLETED, the acknowledgement information will be retrieved from
+	 * the stored Amendment LOA acknowledgement data.
+	 * </p>
+	 * 
+	 * <p>
+	 * The generated context will then be merged with the Velocity template
+	 * defined by {@link ContractConst#DOCPATH_CT_LOA_RECEIPT} to produce the
+	 * final HTML document.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param sclRefNo the agency reference number
+	 */
+	private void generateDocumentLoaReceiptContent(VelocityContext context, SimpleDateFormat dateSDF, String sclRefNo) {
+		String supplierIcNo = "supplierIcNo";
+		String supplierAckDate = "supplierAckDate";
+
+		context.put("supplierName", "");
+		context.put(supplierIcNo, "");
+		context.put(supplierAckDate, "");
+		if ((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(
+				CTProcessNameConst.ACK_FA_HT_NAME))
+				&& !getManagedBean().isReadOnly()) {
+			loaReceiptPopulateSupplierFromSession(context, dateSDF, supplierIcNo, supplierAckDate);
+		} else if ((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(
+				CTProcessNameConst.VERIFY_FA_HT_NAME))
+				|| ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+						.equals(ContractStatusConst.FA_LOA_COMPLETED)) {
+			loaReceiptPopulateSupplierFromAmendment(context, dateSDF, supplierIcNo, supplierAckDate);
+		}
+		loaReceiptPopulateSupplierOtherInfo(context, dateSDF, sclRefNo);
+	}
+
+	/**
+	 * Populates supplier acknowledgement information in the
+	 * {@link VelocityContext} using the current logged-in user session.
+	 * 
+	 * <p>
+	 * The supplier name is constructed using the user's salutation (if
+	 * available) followed by the user's name. The supplier identification
+	 * number and the current system date are also added as the acknowledgement
+	 * details.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param supplierIcNo the string param for the velocity context
+	 * @param supplierAckDate the string param for the velocity context
+	 */
+	private void loaReceiptPopulateSupplierFromSession(VelocityContext context, SimpleDateFormat dateSDF,
+			String supplierIcNo, String supplierAckDate) {
+		if (getFacesScopes().getUserSessionBean().getSalutationCode() != null) {
+			context.put("supplierName", getFacesScopes().getUserSessionBean().getSalutationCode().getSalutationName()
+					.concat(" ").concat(getFacesScopes().getUserSessionBean().getUserName()));
+		} else {
+			context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
+		}
+		context.put(supplierIcNo, getFacesScopes().getUserSessionBean().getIdentificationNo());
+		context.put(supplierAckDate, dateSDF.format(new Date()));
+	}
+
+	/**
+	 * Populates supplier acknowledgement information in the
+	 * {@link VelocityContext} using the acknowledgement details stored in the
+	 * contract amendment LOA.
+	 * 
+	 * <p>
+	 * The supplier name is constructed using the stored user's salutation (if
+	 * available) followed by the user's name. The supplier identification
+	 * number and acknowledgement date are retrieved from the Amendment LOA
+	 * record.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param supplierIcNo the string param for the velocity context
+	 * @param supplierAckDate the string param for the velocity context
+	 */
+	private void loaReceiptPopulateSupplierFromAmendment(VelocityContext context, SimpleDateFormat dateSDF,
+			String supplierIcNo, String supplierAckDate) {
+		PmUser ackBy = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy();
+
+		if (ackBy.getSalutationCode() != null) {
+			context.put("supplierName",
+					ackBy.getSalutationCode().getSalutationName().concat(" ").concat(ackBy.getUserName()));
+		} else {
+			context.put("supplierName", ackBy.getUserName());
+		}
+		context.put(supplierIcNo, ackBy.getIdentificationNo());
+		context.put(
+				supplierAckDate,
+				dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
+						.getAckDate()));
+
+	}
+
+	/**
+	 * Populates company, supplier address, government sign date information
+	 * into the {@link VelocityContext}.
+	 * 
+	 * <p>
+	 * The supplier company name is retrieved from the contract value. If a
+	 * supplier address exists, it will be formatted into a full address string
+	 * and converted into HTML-friendly format by replacing line breaks with
+	 * {@code <br />} tags and escaping ampersand characters.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the government sign date exists in the Amendment LOA record, it will
+	 * be formatted and inserted into the context. Otherwise, a placeholder line
+	 * will be inserted to indicate that the date has not been provided.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param sclRefNo the agency reference number
+	 */
+	private void loaReceiptPopulateSupplierOtherInfo(VelocityContext context, SimpleDateFormat dateSDF, String sclRefNo) {
+		context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+				.getSupplierName());
+		String supplierAddress = "";
+
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+			supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+					.getSupplierAddress());
+			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+		}
+		context.put("supplierAddress", supplierAddress);
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
+			context.put(
+					"govSignDate",
+					dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
+							.getGovtSignDate()));
+		} else {
+			context.put("govSignDate", "_______________");
+		}
+		if (!StringUtils.isEmpty(sclRefNo)) { // Fix - #36708
+			context.put("agencyRefNo", sclRefNo);
+		} else {
+			context.put("agencyRefNo", "_______________");
+		}
+	}
+	//#30453 end
 }
