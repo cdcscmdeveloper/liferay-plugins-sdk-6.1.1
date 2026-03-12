@@ -39,18 +39,23 @@ public class SmApplicationNotificationUtil {
 			SmSupplierBasicInfoVO basicInfo, boolean isPoUser,
 			SmSupplier supplier, String supplierRemarks,
 			String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
-		reqDTO.setBusinessRegNo(supplier.getRegNo());
-		reqDTO.setCompanyName(supplier.getCompanyName());
-		if (smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-				|| smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
-			reqDTO.setPaymentMethods("FPX dan kad kredit");
-			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(
-					smAppl, isPoUser));
-		} else if ((smAppl.getApplType().equalsIgnoreCase(
+		reqDTO.setBusinessRegNo(supplier.getRegNo()); 
+		reqDTO.setCompanyName(supplier.getCompanyName()); 
+		//#29782 - START
+		if (smAppl.getApplType().equalsIgnoreCase( 
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| smAppl.getApplType().equalsIgnoreCase( 
+						ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+						|| smAppl.getApplType().equalsIgnoreCase( 
+								ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+								|| smAppl.getApplType().equalsIgnoreCase( 
+										ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+										|| smAppl.getApplType().equalsIgnoreCase( 
+												ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			reqDTO.setCategoryDescription(retriveAddNewCategoryMessageForNotification( 
+					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks, reqDTO)); 
+		//#29782 - END
+		}else if ((smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_CANCEL))) {
 			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
 					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks, reqDTO));
@@ -444,5 +449,73 @@ public class SmApplicationNotificationUtil {
 			return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
 		}
 	}
+	
+	//	#29782 - START
+	/**
+	 * Set the tabular message for Add New Category message for
+	 * notification.This will be passed as a parameter for approval notification
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean
+	 * @return String - notification message or table content
+	 */
+	//29782 - Add New Category
+	public static String retriveAddNewCategoryMessageForNotification(
+			SmAppl smAppl, SmSupplier supplier,
+			SmSupplierBasicInfoVO basicInfo, 
+			String supplierRemarks, String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
+		String preferredLang =CommonConstants.LANGUAGE_CODE_MALAY;
+		
+		if(reqDTO.getLangCode()!=null && !"".equalsIgnoreCase(reqDTO.getLangCode())){
+			preferredLang = reqDTO.getLangCode();
+		}
+		Locale usrLocale = getLocaleByLang(preferredLang);
+		
+		String companyName = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol3"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String regNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol4"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String epNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol5"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String approveDate = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol6"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		StringBuilder sb = new StringBuilder();
+		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
+		// <VAR1>
+		//Company Name 
+		sb.append("<tr>"); 
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(companyName).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplier.getCompanyName()).append("</td>");
+		sb.append("</tr>");
+		//Business Registration No. 
+		sb.append("<tr>"); 
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(regNo).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplier.getRegNo()).append("</td>");
+		sb.append("</tr>");
+		//eP No.
+		sb.append("<tr>"); 
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(epNo).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplier.getEpNo()).append("</td>");
+		sb.append("</tr>");
+		//Approved Date
+		sb.append("<tr>"); 
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(approveDate).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(sdf.format(new Date())).append("</td>");
+		sb.append("</tr>");
+		sb.append("</tr>");
+		sb.append("</table>");
+		return sb.toString();
+	}
+	//29782 - END
 	
 }
