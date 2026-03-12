@@ -6128,6 +6128,19 @@ return	remarksNotFound;
 		}
 	}
 
+	// 34491 - start - remove
+//	/**
+//	 * Populate meeting status values in a drop down under Preparation tab
+//	 * 
+//	 * @return an array of meeting status values
+//	 */
+//	public SelectItem[] getMeetingStatusDropDown() {
+//		SelectItem[] items = getStatusDropdownValues("SC",
+//				QTConstants.DOCTYPE_MEETING);
+//		return items;
+//	}
+	// 34491 - end - remove
+	
 	/**
 	 * Populate decision type(s) in Decision drop down under Supplier
 	 * Finalization tab
