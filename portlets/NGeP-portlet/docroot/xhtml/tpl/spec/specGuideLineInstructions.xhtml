@@ -5,15 +5,27 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
+	<ui:remove>#30432 - Start</ui:remove>
 	<h:outputText styleClass="instruction" escape="false"
-		value="#{lbl['lbl.sc.spec.items.guideline.pdf']}" />
+		value="#{break}#{number} #{lbl['lbl.sc.spec.items.guideline.pdf']}" />
+	<ui:remove>#30432 - End</ui:remove>
 
 	<p:commandLink styleClass="instruction"
 		style="padding-left: 4px;padding-right: 4px;font-size: 13px;"
 		immediate="true" action="#{specGuideLineInstructionBB.specGuideLineWindow()}"
 		value="#{lbl['lbl.sc.spec.items.guideline2.pdf']}." />
-<br/>
+	<br/>
 
-<ui:include src="specGuideLinePopup.xhtml"></ui:include>
+	<ui:remove>#30432 - Start</ui:remove>
+	<ui:remove>
+        includePopup: controls whether specGuideLinePopup.xhtml is rendered.
+        Default: true (omit param for single-use pages).
+        Pass false when this fragment is included multiple times on the same page
+        to avoid duplicate dialog definitions. The parent page is then responsible
+        for including specGuideLinePopup.xhtml once at its own level.
+    </ui:remove>
+	<c:if test="#{empty includePopup or includePopup}">
+	    <ui:include src="specGuideLinePopup.xhtml" />
+	</c:if>
+	<ui:remove>#30432 - End</ui:remove>
 </ui:composition>
