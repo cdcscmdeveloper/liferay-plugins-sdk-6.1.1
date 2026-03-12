@@ -129,9 +129,11 @@
 										process="@this" /><!-- update="@([id$=justId])" -->
 								</p:selectOneRadio></td>
 
+							<ui:remove> 27868 - start</ui:remove>
 							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
 									id="procTypeMsg" for="procurementType" display="icon" /> <ac:iconTooltip
-									value="#{simpleQuoteBackingBean.procurementTypeToolTip}" /></td>
+									value="#{simpleQuoteBackingBean.getProcurementTypeToolTip(simpleQuoteBackingBean.managedBean.createdDate)}" /></td>
+							<ui:remove> 27868 - end</ui:remove>		
 						</tr>
 					</table>
 				</td>
