@@ -63,13 +63,13 @@
 				</p:column>
 
 				<ui:remove>26247 - start</ui:remove>				
-				<p:column style="text-align: center;">
+				<p:column style="text-align:center;white-space:normal;width:18%;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 						<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 					</f:facet>
 					<ac:disciplinaryActionYesNo
-						supplier="#{loiLoa.smSupplier}" index="#{rowIndex}"/>
+						supplier="#{loiLoa.smSupplier}" maxRow="0" index="#{rowIndex}"/>
 				</p:column>
 				<ui:remove>26247 - end</ui:remove>
 						

@@ -41,6 +41,8 @@ import com.liferay.portal.util.PortalUtil;
  */
 public abstract class AuditCTBaseBackingBean<T extends AuditContractManagedBean> extends BaseBackingBean<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final String FILE_NAME = "AuditCTBaseBackingBean";
+	private static final String METHOD_NAME = "exportExcelReportAudit";
 
 	/**
 	 * Export/Download Document in Excel Format
@@ -68,8 +70,8 @@ public abstract class AuditCTBaseBackingBean<T extends AuditContractManagedBean>
 			outStream.close();
 			wb.close();// Close Workbook
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "AU", "",
-					"AuditContractBackingBean.generateRptExcelForAuditTrailDetails", getUserId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, FILE_NAME, "",
+					METHOD_NAME, getUserId(), e);
 		}
 	}
 
@@ -82,19 +84,19 @@ public abstract class AuditCTBaseBackingBean<T extends AuditContractManagedBean>
 	public void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
 
 		// Default width for specific column ranges
-		int defaultWidth = 19 * 256;
+		int defaultWidth = 50 * 256;
 
 		// Define a map for specific column widths
 		Map<Integer, Integer> columnWidths = new HashMap<>();
 		columnWidths.put(0, 23 * 256); // Col: Tarikh Tindakan
 		columnWidths.put(1, 15 * 256); // Col: Jenis Tindakan
 		columnWidths.put(2, 25 * 256); // Col: Tindakan Oleh
-		columnWidths.put(3, 31 * 256); // Col: Organisasi
-		columnWidths.put(4, defaultWidth); // Col: Peranan
-		columnWidths.put(5, defaultWidth); // Col: Jenis Dokumen
+		columnWidths.put(3, 30 * 256); // Col: Organisasi
+		columnWidths.put(4, 19 * 256); // Col: Peranan
+		columnWidths.put(5, 19 * 256); // Col: Jenis Dokumen
 		columnWidths.put(6, 22 * 256); // Col: No. Dokumen
-		columnWidths.put(7, 60 * 256); // Col: Sub No. Dokumen
-		columnWidths.put(8, defaultWidth); // Col: Nama Medan
+		columnWidths.put(7, 35 * 256); // Col: Status Dokumen
+		columnWidths.put(8, 20 * 256); // Col: Nama Medan
 		columnWidths.put(9, defaultWidth); // Col: Data Asal
 		columnWidths.put(10, defaultWidth); // Col: Data Baru
 
@@ -112,11 +114,20 @@ public abstract class AuditCTBaseBackingBean<T extends AuditContractManagedBean>
 	 * @param noRecordsStyle
 	 */
 	public void createNotFoundRecord(Sheet sheet, int rowIndex, int totalCell, CellStyle noRecordsStyle) {
-		Row noRecordRow = sheet.createRow(rowIndex);
-		Cell cellNoRecord = noRecordRow.createCell(1);
-		cellNoRecord.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
-		cellNoRecord.setCellStyle(noRecordsStyle);
-		sheet.addMergedRegion(new CellRangeAddress(sheet.getLastRowNum(), sheet.getLastRowNum(), 1, totalCell));
+		   Row row = sheet.createRow(rowIndex);
+		    int startCol = 1;
+		    int endCol = totalCell;
+
+		    // Buat & set style ke SEMUA sel dari kolom 1 sampai totalCell
+		    for (int i = startCol; i <= endCol; i++) {
+		        Cell cell = row.createCell(i);
+		        if (i == startCol) {
+		            cell.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
+		        }
+		        cell.setCellStyle(noRecordsStyle); //noRecordsStyle dari buildDataCellStyleString()
+		    }
+
+		    sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, startCol, endCol));
 	}
 
 	/**

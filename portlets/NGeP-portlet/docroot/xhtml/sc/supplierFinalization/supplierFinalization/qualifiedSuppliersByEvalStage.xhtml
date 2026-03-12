@@ -48,8 +48,8 @@
 					<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 				</p:commandLink>
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;">
+			<ui:remove><!-- #38151 label--></ui:remove>
+			<p:column headerText="#{suppFinalizationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}" style="width:5%; text-align:right;">
 				<h:outputText value="#{qualifiedSupp.totalScore}">
 				</h:outputText>
 			</p:column>
@@ -101,5 +101,95 @@
 		</p:dataTable>
 
 	</p:dialog>
+	
+	<ui:remove> #28777#29729 - Start </ui:remove>
+	<p:dialog id="disqualSuppDetailsPopupId" widgetVar="disqualSuppDetailsPopup"
+		position="center" header="#{lbl[suppFinalizationBackingBean.managedBean.evaluationHeader]}" 
+		modal="true" dynamic="true" styleClass="pop_up_top" width="950" resizable="false"
+		onHide="qualifiedSupplierDtls.getPaginator().setPage(0);">
+
+		<ui:param name="isTechnicalEvalStage" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 1}" />
+		<ui:param name="isFinancialEvalStageByPkg" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 2 and 
+																!suppFinalizationBackingBean.managedBean.itemize}" />
+		<ui:param name="isFinancialEvalStageByItem" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 2 and 
+																suppFinalizationBackingBean.managedBean.itemize}" />																
+																		
+		<p:dataTable id="evaluationDisqualifiedSuppliers" style="width:100%; height:75%;" 
+					 var="disqualifiedSupp" widgetVar="qualifiedSupplierDtls" 
+					 rowKey="#{disqualifiedSupp.evaluationResultDtlId}" 
+					 rowIndexVar="index" rows="10" lazy="true" 
+					 emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					 value="#{suppFinalizationBackingBean.managedBean.disqualifiedSuppliersByEvalStage}">
+
+			<ac:paginator for="evaluationDisqualifiedSuppliers" />
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:center;">
+				<h:outputText value="#{disqualifiedSupp.evalRank}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;">
+				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+					process="@this" update="@([id$=suppDetailsPopupId])">
+					<f:setPropertyActionListener
+						value="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+						target="#{supplierDetailBackingBean.smSupplier}" />
+					<h:outputText value="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;">
+				<h:outputText value="#{disqualifiedSupp.totalScore}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+					  style="width:5%; white-space:normal;" rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+										fn:toUpperCase(disqualifiedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
+					  style="width:10%; text-align:right;" rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="#{disqualifiedSupp.proposalAmount.proposalAmt}"
+							  rendered="#{disqualifiedSupp.proposalAmount ne null}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="width:5%; white-space:normal; text-align:right;" 
+					  rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="#{disqualifiedSupp.priceDifference}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}" style="width:15%; text-align:right;" 
+					  rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="#{disqualifiedSupp.percentageDifference}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl[manufacturercategoryCode ?'lbl.sc.pref.margin.manufacturer' :'lbl.sc.pref.margin']}" 
+					  style="width:5%; text-align:right; white-space:normal;" 
+					  rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText
+					rendered="#{disqualifiedSupp.preferenceMargin gt 0}"
+					value="#{disqualifiedSupp.preferenceMargin}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+
+		</p:dataTable>
+
+	</p:dialog>
+	<ui:remove> #28777#29729 - End </ui:remove>
 	
 </ui:composition>

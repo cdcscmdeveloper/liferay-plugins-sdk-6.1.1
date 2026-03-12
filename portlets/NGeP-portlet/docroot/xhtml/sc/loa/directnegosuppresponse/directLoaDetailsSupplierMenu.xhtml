@@ -34,11 +34,14 @@
 							value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.epNo}"
 							disabled="true" /></td>
 				<ui:remove>26247 - start</ui:remove>		
-				<td width="18%"><p:outputLabel
-						value="#{lbl['lbl.sc.discipline.action']}" /></td>
-				<td><ac:disciplinaryActionYesNo
-						supplier="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
-						showTooltip="true" /></td>
+				<ui:param name="loaDocType" value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.docType}"/>
+				<ui:fragment rendered="#{loaDocType eq ParameterConst.getDoctypeQuotation() or loaDocType eq ParameterConst.getDoctypeDirectNego()}">
+					<td width="18%"><p:outputLabel
+							value="#{lbl['lbl.sc.discipline.action']}" /></td>
+					<td><ac:disciplinaryActionYesNo
+							supplier="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
+							showTooltip="true" /></td>
+				</ui:fragment>
 				<ui:remove>26247 - end</ui:remove>
 			</tr>
 			

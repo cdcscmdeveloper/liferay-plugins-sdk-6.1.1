@@ -339,7 +339,12 @@ public class ViewApplHistoryBackingBean extends
 				}
 				//END 27951
 			}
-		} else {			
+		} else {
+			
+			// 39392 - START
+			SmApplicationUtil.checkOwnersDisciplinaryAction(getManagedBean().getSmAppl());
+			// 39392 - END
+			
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {
@@ -1314,6 +1319,9 @@ public class ViewApplHistoryBackingBean extends
 					voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21]
 							+ ""
 							: applStatus);
+					//#29659 - START 
+					voSubTmp.setTitle(arr[23] + "");
+					//#29659 - END
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
 				}
@@ -1910,11 +1918,6 @@ public class ViewApplHistoryBackingBean extends
 					button = false;
 				}//#32002 - end
 			}
-			//#26238
-			if(getManagedBean().isCancelCategoryCode() && 
-					!EntityHelper.isCollectionEmpty(getManagedBean().getCategoryCodeList())){
-				button = false;
-			}
 		}
 		// #32628 - start
 		Date today = new Date();
@@ -2001,6 +2004,23 @@ public class ViewApplHistoryBackingBean extends
 		return true;
 	}//#32002 - end
 	
+	/**
+	 * Reminder before to resubmit page
+	 */
+	//#31270 - START
+	public void reminderToResubmit() {
+		String businessType = this.getManagedBean().getSmSupplier().getBusinessType();
+		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+																|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+																		|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+																						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+			RequestContext.getCurrentInstance().execute("reminderConfirmDialog.show()");
+		} else {
+			redirectToResubmit();
+		}
+	}
+	//#31270 - END
+	
 	// #32628 - start
 		public void validateResubmitApplication() {
 			List<SmMofAccount> accounts = getManagedBean().getSmSupplier().getSmMofAccounts();
@@ -2038,26 +2058,42 @@ public class ViewApplHistoryBackingBean extends
 	}
 	// #35336 - END
 	
-	//#34209 - START
-	public void rePopulateApplFacilitiesList()
-	{
+	//#34209 - START, #28775-39859
+	/**
+	 * Init facilities
+	 */
+	public void rePopulateApplFacilitiesList() {
 		getManagedBean().setDockYardFacilitiesVOList(new ArrayList<PmCategoryL3>());
 		getManagedBean().setFactoryFacilitiesVOList(new ArrayList<PmCategoryL3>());
 		getManagedBean().setStoreFacilitiesVOList(new ArrayList<PmCategoryL3>());
 		getManagedBean().setWorkshopFacilitiesVOList(new ArrayList<PmCategoryL3>());
 		
-		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierCategories())) {
-			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
-				if(cat.getPmCategoryL3() != null && !StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType())) {
-					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD))
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierCategories())){
+			return;
+		}
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()){
+			if (cat.getPmCategoryL3() == null || StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType())){
+				continue;
+			}
+			if(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+					|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED 
+					|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+				continue;
+			}
+			switch(cat.getPmCategoryL3().getFacilityType()){
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD:
 						getManagedBean().getDockYardFacilitiesVOList().add(cat.getPmCategoryL3());
-					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY))
+				break;
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY:
 						getManagedBean().getFactoryFacilitiesVOList().add(cat.getPmCategoryL3());
-					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE))
-						getManagedBean().getStoreFacilitiesVOList().add(cat.getPmCategoryL3());
-					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP))
+				break;
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP:
 						getManagedBean().getWorkshopFacilitiesVOList().add(cat.getPmCategoryL3());
-				}
+				break;
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE:
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE:
+				getManagedBean().getStoreFacilitiesVOList().add(cat.getPmCategoryL3());
+				break;
 			}
 		}
 	}

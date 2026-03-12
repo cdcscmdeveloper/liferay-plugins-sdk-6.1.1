@@ -5,7 +5,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+	<!-- #26186 start -->
+	<script>
+		function sendParamToSupplierDA() {
+	        Liferay.fire('amendmentAckSupplierFA', {
+				ackSupplierFA: true
+	        });
+	    }
+	</script>
+	<!-- #26186 end -->
 	<ac:gpkiPopup
 			textBeforeSign="#{amendmentBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(gpkiBackingBean.pmDigiSign)}"

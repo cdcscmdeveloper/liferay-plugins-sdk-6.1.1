@@ -60,9 +60,16 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean showRobExpiredDateMesej = false;
 	//26238
 	private String disciplinaryActionMsg; 
+	//26247 - start
+	private String qtDisciplinaryActionMsg; 
+	private Long qtId; 
+	//26247 - end
 	
 	// #28895_35501 - AUDIT TRAIL SM
 	private PmUser oldSelectedUser;
+	
+	private String ctSupplierMsgNonDA; //#26186
+	
 	public ProfilePersonalizationManagedBean(){}
 	
 	/**
@@ -399,4 +406,37 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	}
 	// #28895_35501 End
 
+	//26247 - start
+	public String getQtDisciplinaryActionMsg() {
+		return qtDisciplinaryActionMsg;
+	}
+
+	public void setQtDisciplinaryActionMsg(String qtDisciplinaryActionMsg) {
+		this.qtDisciplinaryActionMsg = qtDisciplinaryActionMsg;
+	}
+
+	public Long getQtId() {
+		return qtId;
+	}
+
+	public void setQtId(Long qtId) {
+		this.qtId = qtId;
+	}
+	//26247 - end
+
+	//#26186 start
+	/**
+	 * @return the ctSupplierMsgNonDA
+	 */
+	public String getCtSupplierMsgNonDA() {
+		return ctSupplierMsgNonDA;
+	}
+
+	/**
+	 * @param ctSupplierMsgNonDA the ctSupplierMsgNonDA to set
+	 */
+	public void setCtSupplierMsgNonDA(String ctSupplierMsgNonDA) {
+		this.ctSupplierMsgNonDA = ctSupplierMsgNonDA;
+	}
+	//#26186 end
 }

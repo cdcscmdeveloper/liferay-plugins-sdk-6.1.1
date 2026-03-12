@@ -26,10 +26,10 @@
 				<ul>
 					<li><h:outputText class="ui-messages-info-detail" />
 						#{danBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink
-							id="sharedcommand" onstart="blockWidget.show()"
+							id="sharedcommand" onstart="blockWidget.show()" style="text-decoration: underline; color: inherit;"
 							oncomplete="blockWidget.hide()"
 							action="#{danBackingBean.viewDisciplinaryAction(danBackingBean.managedBean.smDisciplinaryAction)}"
-							process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
+							process="@this" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
 						#{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li>
 				</ul>
 			</h:panelGroup>

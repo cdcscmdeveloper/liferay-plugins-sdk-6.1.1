@@ -26,7 +26,7 @@
 				<ul>
 					<li><h:outputText class="ui-messages-info-detail" />
 						#{contractRequestBackingBean.managedBean.disciplinaryActionMessage}
-						<p:commandLink id="sharedcommand" onstart="blockWidget.show()"
+						<p:commandLink id="sharedcommand" onstart="blockWidget.show()" style="text-decoration: underline; color: inherit;"
 							oncomplete="blockWidget.hide()"
 							action="#{contractRequestBackingBean.viewDisciplinaryAction(contractRequestBackingBean.managedBean.smDisciplinaryAction)}"
 							process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>

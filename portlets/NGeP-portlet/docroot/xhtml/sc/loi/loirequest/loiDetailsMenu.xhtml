@@ -19,7 +19,7 @@
 			</td>
 			<ui:remove>26247 - start</ui:remove>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
 			</td>
 			<td>
 				<ac:disciplinaryActionYesNo
@@ -258,9 +258,8 @@
 						disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
 							style="width: 276px;margin-bottom: 5px;"
-							required="#{!lOIDetailBackingBean.managedBean.readOnly
-							and !lOIDetailBackingBean.isSupplierStatusRejectEPVAndBPMValid(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier.supplierId)}"
-							label="#{lbl['lbl.sc.loiloa.loi.signer']}"><ui:remove>21692</ui:remove>
+							required="#{!lOIDetailBackingBean.managedBean.readOnly}"
+							label="#{lbl['lbl.sc.loiloa.loi.signer']}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{lOIDetailBackingBean.managedBean.contractSigners}"
 								var="contractUser" itemLabel="#{contractUser.userName}"
@@ -283,9 +282,7 @@
 				</td>
 				<td><p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSignerDesig}"
-						size="34" maxlength="100" required="#{!lOIDetailBackingBean.managedBean.readOnly
-						and !lOIDetailBackingBean.isSupplierStatusRejectEPVAndBPMValid(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier.supplierId)}"
-						label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}"><ui:remove>21692</ui:remove>
+						size="34" maxlength="100" required="#{!lOIDetailBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
 					</p:inputText><p:message id="loiSignerDesigIdMsg" for="loiSignerDesigId"
 										display="icon" /></td>
 			</tr>

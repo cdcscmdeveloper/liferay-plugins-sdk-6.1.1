@@ -11,6 +11,8 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols; //24333
+import my.ep.util.shared.PerformanceBondUtil; //24333
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale; //24333
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -88,6 +91,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper; //#24333
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -223,7 +227,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * Variable for declaring maximum deferment bond days, sharing with
 	 * ContractDetailBackingBean
 	 */
-	public final int MAX_DEFERMENT_BOND_DAYS = 60;
+	public static final int MAX_DEFERMENT_BOND_DAYS = 60;
 	//#13847 end
 
 	/**
@@ -419,7 +423,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		//#13847 start
 		//Latest 
-		else if(event.getComponent().getId().equalsIgnoreCase("delLatestWaiver")){
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.DEL_LATEST_WAIVER)){
 			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()!= null
 					&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!= null){
 				attachment = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment();
@@ -430,7 +434,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 		//History
-		else if(event.getComponent().getId().equalsIgnoreCase("delHistoryWaiver")){
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.DEL_HISTORY_WAIVER)){
 			attachment = getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getAttachFileIndex()).getCtAttachment();
 			if(attachment.getAttachmentId() != null){
 				getManagedBean().getDeleteAttachmentList().add(attachment);
@@ -1224,32 +1228,91 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to validate deduction type.
-	 * User can not selected same type of deduction again.
+	 * Validates the selected deduction type to prevent unsupported duplicates.
+	 * 
+	 * @param selectedDeduction the deduction row currently being edited
+	 * @param action optional context (e.g., from bulk operations); unused in current implementation
 	 */	
-	public void validateDeductionType(CtDeduction deduction)  {
+	public void validateDeductionType(CtDeduction selectedDeduction, String action)  { //#39632
 
-		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+		if(!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 			int count = 0;
-			String parameterCode;
 			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
 				PmParameter deductionTypeById = deId.getDeductionType();
-				PmParameter deductionType = deduction.getDeductionType();
+				PmParameter deductionType = selectedDeduction.getDeductionType();
 				if (deductionTypeById == null || deductionType == null)
 					break;
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					parameterCode =  getParameterCode(deductionTypeById);
-					if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
-						throw new EpException(MessageConst.ERROR_100046,
-								new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId()))});
+					resetAndValidateDeduction(selectedDeduction, deductionTypeById, count, action); //#35506,//#39632
 				}
 			}
 		}
 	}
+	
+	// #35506,#39632 (Resetting and validation) - Start
+	/**
+	 * Overloaded method used for Ajax listener calls.
+	 * Delegates to the main method with action = null.
+	 *
+	 * @param deduction the deduction row being validated during user selection
+	 */
+	public void validateDeductionType(CtDeduction deduction) {
+	    validateDeductionType(deduction, null);
+	}
+	
+	/**
+	 * Processes validation and reset rules for deduction types.
+	 */
+	private void resetAndValidateDeduction(CtDeduction selectedDeduction, PmParameter deductionTypeById, int count, String action) { //#39632
+
+	    String parameterCode = getParameterCode(deductionTypeById);
+	    if (parameterCode == null) {
+	        return;
+	    }
+
+	    resetDeductionIfNew(selectedDeduction, action);
+	    validateDuplicateDeductionType(selectedDeduction, parameterCode, count);
+	}
+
+	/**
+	 * Resets amount and description for a new deduction row when no action context is provided.
+	 */
+	private void resetDeductionIfNew(CtDeduction selectedDeduction, String action) {
+	    if (action == null) {
+	        final double zeroAmount = BigDecimal.ZERO.doubleValue();
+	        selectedDeduction.setAmount(zeroAmount);
+	        selectedDeduction.setDeductionDesc(null);
+	        
+	     // Safely clear deduction clauses if the list is not null
+	        List<CtDeductionClause> clauses = selectedDeduction.getCtDeductionClauses();
+	        if (clauses != null) {
+	            clauses.clear();
+	        }
+	    }
+	}
+
+	/**
+	 * Validates that duplicate deduction types are not used (except for allowed types).
+	 */
+	private void validateDuplicateDeductionType(CtDeduction selectedDeduction, String parameterCode, int count) {
+	    boolean isAllowedDuplicate = parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+	                               || parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+	                               || parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED);
+
+	    if (!isAllowedDuplicate && count == 2) {
+	    	//Capture the description BEFORE clearing the selection
+	    	String deductionTypeName = getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+	                selectedDeduction.getDeductionType().getParameterId()));
+	    	
+	    	selectedDeduction.setDeductionType(new PmParameter());
+	    	
+	    	//Now safely throw the error with the saved name
+	    	throw new EpException(MessageConst.ERROR_100046, new String[] { deductionTypeName });
+	    }
+	}
+	// #35506,#39632 (Resetting and validation) - End
 
 	/**
 	 * The method used to add new deduction.
@@ -2266,33 +2329,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		//#13847 end
 
 		if(event.getComponent().getId().equalsIgnoreCase("agencyUploadId")){
-			//#13847 start
-//			CtAttachment attachment = new CtAttachment();
-//			attachment.setFileName(item.getFileName());
-//			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-//			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
-//			attachment.setCreatedUser(facesScopes.getUserSessionBean());
-//			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			//#13847 end
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
 			//#25703 start
 			getManagedBean().getContractVer().getAgencyContractSharingAttachements().add(attachment);
 			//RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
 			//#25703 end
 		}
-		//#13847 start
-		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.UPLOAD_WAIVER)){
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
 			attachment.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 			getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtAttachment(attachment);
-			RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
+			RequestContext.getCurrentInstance().execute(ContractConst.UPLOAD_WAIVER_DIALOG_HIDE);
 		}
-		else if(event.getComponent().getId().equalsIgnoreCase("uploadHistoryWaiver")){
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.UPLOAD_HISTORY_WAIVER)){
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
@@ -2301,7 +2354,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 			getManagedBean().getContractVer().getBondWaiverDefermentHistory()
 					.get(getManagedBean().getAttachFileIndex()).setCtAttachment(attachment);
-			RequestContext.getCurrentInstance().execute("uploadHistoryWaiverDlg.hide()");
+			RequestContext.getCurrentInstance().execute(ContractConst.UPLOAD_HISTORY_WAIVER_DIALOG_HIDE);
 		}
 		//#13847 - end
 	}
@@ -2336,7 +2389,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 			validateTotalDays(noOfDays);
 		}
-		RequestContext.getCurrentInstance().execute("addPBConfirmDlg.show()");
+		RequestContext.getCurrentInstance().execute(ContractConst.ADD_PB_CONFIRM_DLG_SHOW);
 	}
 	
 	/**
@@ -2445,6 +2498,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(defermentLatest);
 			bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 			bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			bondWaiver.setPrevId(null); //#35506
+			bondWaiver.setCreatedDate(new Timestamp(new Date().getTime())); //#35506
 
 			defermentHistory.add(bondWaiver);
 			Collections.reverse(defermentHistory);
@@ -2472,9 +2527,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "saveBondWaiverToTable",
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "saveBondWaiverToTable",
-					getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(),
+					ContractConst.SLA_SAVE_BOND_WAIVER_TO_TABLE, getUserIdSessionFromLoginId(), e);
 		}
 	}
 		
@@ -2519,8 +2575,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				delBondExemptedDoc();
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "bondExempReset",
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "bondExempReset",
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(), ContractConst.SLA_BOND_EXEMP_RESET,
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
@@ -2672,11 +2728,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 			getManagedBean().setGstTotalAmount(staxAmt.add(gstAmt.add(contractAmt)));
 			
-			
-
 		}
-		// Recalculate the performance bond amount
-		//#24333
+		
+		//#24333 Start - Remove Code
+		// Recalculate the performance bond amount		
 		// Start - Fix - #32663
 //		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
 //
@@ -2705,10 +2760,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		   }
 	    // End Fix - #33491
 		// End - Fix - #32663
+	//#24333 End - Remove Code
 
+	//#24333 - Start - Remove calculation the new performance bond amount.
 	/**
 	 * The method used to calculate the new performance bond amount.
 	 */
+	/**
 	private void calculateNewBondAmount() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -2733,6 +2791,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		//#24333 - End
 	}
+	**/
+	//#24333 - End - Remove calculation the new performance bond amount.
 	
 	//#13847 start
 	/**
@@ -2745,21 +2805,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(false);
 
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
-				removeDefermentLatest();
 				removeInactiveDefermentHistory();
+				
+				if(!getManagedBean().isDisableDeferment()){
+					removeDefermentLatest();	
+				}
 
 				if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null) {
 					getManagedBean().getContractVer().setCtBondWaiverDetails(null);
 				}
-			} else {
+			} else if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
 			}
 			checkDaysDefermentBondHistory();
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaiverAction",
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaiverAction",
-					getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(),
+					ContractConst.SLA_CHK_BOND_WAIVER_ACTION, getUserIdSessionFromLoginId(), e);
 		}
 		
 	}
@@ -2783,14 +2847,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
 		// remove bond waiver that hasn't been approved
 		if (CollectionUtils.isNotEmpty(historyDeferment)) {
+			int noOfDays = 0;
 			Iterator<CtBondWaiverDetail> iter = historyDeferment.iterator();
 			while (iter.hasNext()) {
 				CtBondWaiverDetail bondWaiverHistory = iter.next();
 				if (!bondWaiverHistory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					removeAttachmentIfExist(bondWaiverHistory.getCtAttachment());
 					iter.remove();
+				}else{
+					noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 				}
 			}
+			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 		}
 	}
 	
@@ -4253,7 +4321,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
 		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
-		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+		
+		//#38491,#28854 - Start
+		Long loaId = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpecByLoaIdAndRequestItemId(loaId, requestItemId);
+		//#38491,#28854 - End
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			handleDirectPurchaseMode(itemSpecOfferList);
@@ -4405,13 +4477,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333
-		if((getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
+		if((getManagedBean().getCtContractAmount().isBondReq() && getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()
 								|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
 								equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY))){
-								
+			
 			return  true;
 		}
 		return false;
@@ -4591,32 +4663,45 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return ctAttachments;
 	}
 	
+	//#24333 - Start
 	/**
 	 * The method used to retrieve the bond amount
 	 * in text format.
 	 * Putra 24333
-	 * @return  bond amount in text format.
+	 *
+	 * @return bond amount in text format (in words), or "N/A" if unavailable or zero
 	 */
 	public String getBondAmountInText() {
-		String lang = new FacesScopes().getUserLocale().getLanguage();
-		Double bondAmt = getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue();
+		FacesScopes scopes = new FacesScopes();
+	    Locale locale = scopes.getUserLocale();
+	    String lang = locale.getLanguage();
 
-		if (bondAmt == null || bondAmt == 0.0) {
-			return "";
-		}
+	    // Get N/A message from resource bundle
+	    String na = ResourceBundleUtils.getMessage("lbl.txt.na", 
+	                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
-		DecimalFormat df = new DecimalFormat("#.00");
-		String formattedAmount = df.format(bondAmt);
+	    BigDecimal bondAmt = getManagedBean().getTotalBondAmt();
+	    if (bondAmt == null || bondAmt.compareTo(BigDecimal.ZERO) == 0) {
+	        return na;
+	    }
 
-		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-			return NumberWordUtilEn.convert(formattedAmount);
-		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-			return NumberWordUtil.convert(formattedAmount);
-		}
+	    // Format to 2 decimal places using locale
+	    DecimalFormat df = new DecimalFormat("#.00");
+	    df.setDecimalFormatSymbols(new DecimalFormatSymbols(locale));
+	    String formattedAmount = df.format(bondAmt);
 
-		return "";
+	    // Convert to words based on language
+	    if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtilEn.convert(formattedAmount);
+	    }
+	    if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtil.convert(formattedAmount);
+	    }
+
+	    return na;
 	}
-
+	//#24333 - End
+	
 	//#24333 - Start
 	/**
 	 * The method used to retrieve thecontract period
@@ -4624,12 +4709,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)){	
-			
-			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
-		}else{
-			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
-		}
+		
+		//resets the contract days period to 0 because days are not applicable in the LOA process
+		getManagedBean().setContractDaysPeriod(ContractConst.VALUE_OF_0);
+		return String.valueOf(getManagedBean().getCtContractAmount().getContractPeriodBond());
 	}
 	
 	/**
@@ -4687,6 +4770,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    String docType = contractVer.getDocType();
 	    return docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)
 	            || getManagedBean().isViewContract();
 	}	
 	
@@ -4708,7 +4792,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| statusId == ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
 				|| statusId == ContractStatusConst.FA_PENDING_VERIFICATION.longValue()
 				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION.longValue()
-				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue();
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT.longValue()
+				|| statusId == ContractStatusConst.FA_LOA_COMPLETED.longValue();
 	}
 	//#24333 - End
 	
@@ -4846,30 +4932,32 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	//#30428 - End
-	
-	//#25002 - start
 		
+	//#25002 - start
 	public List<ScAttachment> getApprovalLetter(){
-		List<ScAttachment> listAttachments = new ArrayList<>();
 		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 		Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
-		listAttachments = awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
-		return listAttachments;
+		return awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
 	}
-
+	
+	/**
+	 * Downloads the selected SC attachment file.
+	 * This method is invoked from the UI via a command link in the XHTML page.
+	 *
+	 * @param scAttachment The attachment to download.
+	 */
 	public void downloadScAttachmentFile(ScAttachment scAttachment){
 		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 		try {
 			loaDetailBackingBean.downloadFile(scAttachment);
 		} catch (IOException e) {
-			//start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
+			//Sonarqube #G29 - start
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
-			//stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
+			//Sonarqube #G29 - end
 		}
 	}
-	
 	//#25002 - end
-		
+	
 	//Enhancement 29418 - shaqimi start
 	
 	private FacesScopes getFacesScopes() {
@@ -5026,23 +5114,127 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return BigDecimal total amount
 	 */
 	public BigDecimal calculateOriginalOverallAmount() {
-		BigDecimal gstAmt = BigDecimal.ZERO;
-		BigDecimal staxAmt = BigDecimal.ZERO;
-		BigDecimal contractAmt = BigDecimal.ZERO;
+		CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
+		ScLoa loa = getManagedBean().getContractVer().getCtContract().getLoa();
+	
+	    BigDecimal total = getManagedBean().getCtContractAmount().getOverallCtAmtPbond();
+	    // Early return 0.0 if OverallCtAmtPbond is null
+	    if (total == null) {
+	        return BigDecimal.ZERO;
+	    }
 
-		if (getManagedBean().getContractVer().getCtContract().getLoa() != null) {
-			if (getManagedBean().getContractVer().getCtContract().getLoa().getGstAmt() != null)
-				gstAmt = getManagedBean().getContractVer().getCtContract().getLoa().getGstAmt();
+	    // Skip bond calculation if direct purchase or bond exempted
+	    if ((getManagedBean().isDirectPurchase() && !isPk7FromDp()) || getManagedBean().getCtContractAmount().isBondExempted()) {
+	        return total;
+	    }
 
-			if (getManagedBean().getContractVer().getCtContract().getLoa().getSstAmt() != null)
-				staxAmt = getManagedBean().getContractVer().getCtContract().getLoa().getSstAmt();
+	    // Check if bond is required in LOA or contract amount to set bond percentage
+	    if (loa.isBondReq() || contractAmount.isBondReq()) {
+	        String periodStr = calculateBondPeriod();
+	        BigDecimal contractPeriod = new BigDecimal(periodStr); // Ensure periodStr is valid numeric string
+	        getManagedBean().setBondPercentage(
+	            PerformanceBondUtil.calculatePerformanceBondPercentage(total, contractPeriod)
+	        );
+	    }
 
-			if (getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt() != null)
-				contractAmt = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
+	    return total;
+	}
+	
+	/**
+	 * Returns a list of PerformanceBond objects where the 'newbond' flag is equal to 1.
+	 * 
+	 * This method filters the list of performance bonds from the contract amount object,
+	 * and includes only those entries that are marked as 'new'.
+	 *
+	 * @return a list of PerformanceBond if with newbond == 1 else original bond
+	 */
+	public List<CtPerformanceBond> getBondListForAmend() {
+	    List<CtPerformanceBond> originalList = getManagedBean().getCtContractAmount().getCtPerformanceBonds();
+	    if (originalList == null) {
+	        return new ArrayList<CtPerformanceBond>();
+	    }
+
+	    List<CtPerformanceBond> filteredList = new ArrayList<CtPerformanceBond>();
+	    for (CtPerformanceBond bond : originalList) {
+	        if (bond.isBondNew()) {
+	            filteredList.add(bond);
+	        }
+	    }
+
+	    return filteredList.isEmpty() ? originalList : filteredList;
+	}
+	
+	/**
+	 * Method to check if PK7 is from DP.
+	 * 
+	 * @return true if PK7 is from DP, false otherwise
+	 */
+	public boolean isPk7FromDp() {
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+		    String procType = EntityHelper.getNestedProperty(
+			        getManagedBean().getContractVer(),
+			        "ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType"
+			    );
+			    boolean hasValidProcType = ParameterTypeConst.PROCUREMENT_TYPE.equals(procType); // case-sensitive
+			    boolean hasJustification = newJustification() != null;
+			    return hasValidProcType && hasJustification;
+		}
+		return false;
+	}
+	
+	/**
+	 * Determines if the bond panel should be rendered based on contract
+	 * conditions.
+	 * 
+	 * @return true if the panel should be rendered, false otherwise
+	 */
+	public boolean isBondPanelRendered() {
+		if (getManagedBean().getContractVer() == null || getManagedBean().getContractVer().getStatus() == null) {
+			return false;
 		}
 
-		BigDecimal total = contractAmt.add(gstAmt).add(staxAmt);
-		return total;
+		if (!isAlreadyAmendment() || !isContractExtendOrIsBond()) {
+			return false;
+		}
+
+		return isRenderConditionSatisfied();
+	}
+
+	/**
+	 * Checks if any condition that triggers bond panel rendering is satisfied.
+	 */
+	private boolean isRenderConditionSatisfied() {
+
+		if (getManagedBean().isViewContract()) {
+			return true;
+		}
+
+		// View contract with FA_LOA_COMPLETED status
+		boolean isFaLoaCompleted = getManagedBean().getContractVer().getStatus() != null
+				&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_LOA_COMPLETED;
+		if (getManagedBean().isViewContract() && isFaLoaCompleted) {
+			return true;
+		}
+
+		// Check Specific by docType
+		return isContractUpdateOrView(getManagedBean().getContractVer());
 	}
 	// 24333 - End
+	
+	//#35506 - Start
+	/**
+	 * Determines if the user has a specific role for audit CT Trail access.
+	 * Only users with designated roles (Auditor General, Auditor Internal, BPK Auditor, or System Admin) are allowed.
+	 *
+	 * @return true if the user has one of the specified roles, false otherwise
+	 */
+	public boolean isAuditRoleCheck() {
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+	//#35506 - End
+
 }

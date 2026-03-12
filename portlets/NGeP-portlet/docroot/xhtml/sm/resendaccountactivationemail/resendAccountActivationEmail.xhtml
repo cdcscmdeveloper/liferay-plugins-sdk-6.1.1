@@ -97,7 +97,20 @@
 							size="40" >
 							<f:validateRegex
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<ui:remove>#28720 Start</ui:remove>
+							<p:ajax event="change" process="@this"
+								listener="#{resendAccountActivationEmailBackingBean.onChangeEmail()}"
+								update="suppAdminEmail" />
+							<ui:remove>#28720 End</ui:remove>
 							</p:inputText>
+							<ui:remove>#28720 Start</ui:remove>
+							<p:graphicImage id="toolTipIcon"
+										value="/css/images/design/tooltips.png" />
+							<p:tooltip id="sourceTooltip" for="toolTipIcon">
+								<h:outputText id="sourceLabel" escape="false"
+									value="#{lbl['lbl.sm.email.change.tooltip']}" />
+							</p:tooltip>
+							<ui:remove>#28720 End</ui:remove>
 					</td>
 				</tr>
 			</p:outputPanel>
@@ -153,7 +166,20 @@
 							size="40" >
 							<f:validateRegex
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<ui:remove>#28720 Start</ui:remove>
+							<p:ajax event="change" process="@this"
+										listener="#{resendAccountActivationEmailBackingBean.onChangeEmail()}"
+										update="g2gAdminEmail" />							
+							<ui:remove>#28720 End</ui:remove>
 							</p:inputText>
+							<ui:remove>#28720 Start</ui:remove>
+							<p:graphicImage id="govtToolTipIcon"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip id="govtSourceTooltip" for="govtToolTipIcon">
+								<h:outputText id="govtSourceLabel" escape="false"
+									value="#{lbl['lbl.sm.email.change.tooltip']}" />
+							</p:tooltip>
+							<ui:remove>#28720 End</ui:remove>
 					</td>
 				</tr>
 			</p:outputPanel>
@@ -168,9 +194,16 @@
 		
 		<!-- #34400 - start -->
 		<p:confirmDialog id="confirmDialog" closable="true" header="#{lbl['lbl.btn.dialog.cofirm.header']}" 
-			severity="alert" widgetVar="confirmDialog">
-			<f:facet name="message">
+			 widgetVar="confirmDialog">
+				<script type="text/javascript">
+    				var collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+    				for (var i = 0; i &lt; collection.length; i++) {
+       					 collection[i].parentNode.removeChild(collection[i]);
+    				}
+				</script>
+				<f:facet name="message">
 				<h:outputText value="#{lbl['lbl.sm.confirm.reactivate.email.note']}" />
+				<br/>
 				<br/>
 				<h:outputText value="#{lbl['lbl.sm.confirm.reactivate.email']} #{resendAccountActivationEmailBackingBean.suppAdminEmail}?" />
 			</f:facet>
@@ -183,7 +216,11 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
-	
+	<ui:remove>#28720 Start</ui:remove>
+	<ac:smEmailAlertPopup bBean="#{backingBean}"
+		title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	<ui:remove>#28720 End</ui:remove>
 	</p:panel>
 	
 	</ui:define>
