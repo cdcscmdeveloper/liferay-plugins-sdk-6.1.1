@@ -15,7 +15,9 @@
 		<p:blockUI block=":form" trigger="tplSpecMasterTbl">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
-		<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
+		<ui:remove>#30432 - Start</ui:remove>
+		<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml" /> 
+		<ui:remove>#30432 - End</ui:remove>
 		<p:panel id="panel1" header="#{lbl['lbl.tpl.spec.search']}" toggleable="true">
 			<table style="width:100%">
 				<tr>
