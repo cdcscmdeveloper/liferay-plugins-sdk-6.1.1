@@ -170,6 +170,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -4337,12 +4338,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 * qt.setClosingDate(getManagedBean().getQt().getClosingDate());
 				 */
 			}
-			//#29661 Start
+			//#29661 & 40089 Start
 			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
-					.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))){
+					.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION)) || checkPanelCategoryCodesReviseCommittee()){
 				convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),true);
 			}
-			//#29661 End
+			//#29661 & 40089 End
 			
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
@@ -14873,24 +14874,133 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * Get category code list 
 	 */
 	public void getPanelCategory() {
-		List<ScQtCategory> listScQtCategories = getQtSpecSO().retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
+
+		// 29661 & 40089 -start-
+		boolean isFromTaskList = StringUtils.isNotBlank(this.getManagedBean()
+				.getTaskName())
+				&& StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
+				&& SCProcessNameConst.REVISE_COMMITTEE.equals(this
+						.getManagedBean().getTaskName());
+		// 29661 & 40089 -end-
+		
+		List<ScQtCategory> listScQtCategories = getQtSpecSO()
+				.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
-		if (CollectionUtils.isNotEmpty(listScQtCategories)){
+		if (CollectionUtils.isNotEmpty(listScQtCategories)) {
 			this.getManagedBean().setQtCategoryList(listScQtCategories);
 			this.getManagedBean().setCtPanelCategory(false);
-		}else if (status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
-			Long circularVerId = this.getManagedBean().getQt().getCircularVer().getCircularVerId();
+		}
 
-			ICtPanelCategorySO ctPanelCategorySO = (ICtPanelCategorySO) EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICtPanelCategorySO.class);
+		// 29661 & 40089 -start-
+		else if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(status)
+				|| (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL
+						.equals(status) && isFromTaskList)) {
+			CtCircularVer ctCircularVer = this.getManagedBean().getQt()
+					.getCircularVer();
+			Long circularVerId;
+			boolean isCurrentCircular = null != ctCircularVer.getCtCircular()
+					.getCurrentCircularVerId()
+					&& null != ctCircularVer.getCtCircular()
+							.getCurrentCircularVerId().getCircularVerId()
+					&& !ctCircularVer.getCircularVerId().equals(
+							ctCircularVer.getCtCircular()
+									.getCurrentCircularVerId()
+									.getCircularVerId());
+			if (isCurrentCircular) {
 
-			List<CtPanelCategory> ctPanelCategorycode = new ArrayList<>();
-			ctPanelCategorycode = ctPanelCategorySO.retrievePanelCategoryCodeByCircularVerId(circularVerId);
+				circularVerId = ctCircularVer.getCtCircular()
+						.getCurrentCircularVerId().getCircularVerId();
+
+			} else {
+
+				circularVerId = ctCircularVer.getCircularVerId();
+			}
+
+			ICtPanelCategorySO ctPanelCategorySO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT,
+							ICtPanelCategorySO.class);
+			List<CtPanelCategory> ctPanelCategorycode = ctPanelCategorySO
+					.retrievePanelCategoryCodeByCircularVerId(circularVerId);
+			// 29661 & 40089 -end-
+
 			this.getManagedBean().setCtPanelCategoryCode(ctPanelCategorycode);
 			this.getManagedBean().setCtPanelCategory(true);
 		}
 	}
+	
+	// 29661 & 40089 -start-
+	/**
+	 * check panel category codes exist during committee revise.
+	 * 
+	 * @return true/false.
+	 */
+	private boolean checkPanelCategoryCodesReviseCommittee() {
 
+		boolean isFromTaskList = StringUtils.isNotBlank(this.getManagedBean()
+				.getTaskName())
+				&& StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
+				&& SCProcessNameConst.REVISE_COMMITTEE.equals(this
+						.getManagedBean().getTaskName());
+
+		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
+		boolean isPanel = this.getManagedBean().getQt().isPanel();
+		if (isPanel
+				&& QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL
+						.equals(status) && isFromTaskList) {
+			List<CtPanelCategory> ctPanelCategorycode = this.getManagedBean()
+					.getCtPanelCategoryCode();
+			Long qtId = getManagedBean().getQt().getQtId();
+			List<ScQtCategory> listScQtCategories = getQtSpecSO()
+					.retrieveScQtCategorytByQtID(qtId);
+			if (CollectionUtils.isNotEmpty(listScQtCategories)) {
+
+				return Boolean.FALSE;
+			}
+			if (CollectionUtils.isEmpty(ctPanelCategorycode)) {
+				CtCircularVer ctCircularVer = this.getManagedBean().getQt()
+						.getCircularVer();
+				Long circularVerId;
+				boolean isCurrentCircular = null != ctCircularVer
+						.getCtCircular().getCurrentCircularVerId()
+						&& null != ctCircularVer.getCtCircular()
+								.getCurrentCircularVerId().getCircularVerId()
+						&& !ctCircularVer.getCircularVerId().equals(
+								ctCircularVer.getCtCircular()
+										.getCurrentCircularVerId()
+										.getCircularVerId());
+				if (isCurrentCircular) {
+
+					circularVerId = ctCircularVer.getCtCircular()
+							.getCurrentCircularVerId().getCircularVerId();
+
+				} else {
+
+					circularVerId = ctCircularVer.getCircularVerId();
+				}
+
+				ICtPanelCategorySO ctPanelCategorySO = EpEjbBusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.CONTRACT_MANAGEMENT,
+								ICtPanelCategorySO.class);
+				List<CtPanelCategory> ctPanelCategoryList = ctPanelCategorySO
+						.retrievePanelCategoryCodeByCircularVerId(circularVerId);
+
+				this.getManagedBean().setCtPanelCategoryCode(
+						ctPanelCategoryList);
+
+				return Boolean.TRUE;
+			} else if (CollectionUtils.isNotEmpty(ctPanelCategorycode)) {
+
+				return Boolean.TRUE;
+			}
+		}
+
+		return Boolean.FALSE;
+	}
+
+	// 29661 & 40089 -end-
+	
 	/**
 	 * #29661 start
 	 * get parameter description by sc_qt_category's category type
