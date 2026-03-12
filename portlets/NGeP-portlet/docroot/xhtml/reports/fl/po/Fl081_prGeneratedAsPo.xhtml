@@ -42,7 +42,7 @@
 					postUpdateListener="poPrGenAsPoRptBB.resetPtjProfile()"
 					update=":form"
 					saveObject="poPrGenAsPoRptBB.managedBean.ptjGroup"
-					conditionField="#{poPrGenAsPoRptBB.constuctConditionForPTJGroupAdhocReport()}">
+					conditionField="#{poPrGenAsPoRptBB.constructConditionForPTJGroupByRole()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -58,7 +58,7 @@
 					value="#{poPrGenAsPoRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="poPrGenAsPoRptBB.managedBean.ptj"
-					conditionField="#{poPrGenAsPoRptBB.constuctConditionForPTJAdhocReport()}">
+					conditionField="#{poPrGenAsPoRptBB.constructConditionForPTJByRole()}">
 				</ac:lov>
 			</td>
 		</tr>
