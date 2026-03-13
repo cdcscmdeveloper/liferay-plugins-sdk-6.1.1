@@ -3523,6 +3523,93 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	}
 	
+	//#31269 - start
+	/**
+	 * View SSM information
+	 * @param smAppl
+	 */
+	public void redirectToViewSSMInfo(SmAppl smAppl){
+		getManagedBean().setSmAppl(smAppl);
+		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
+		getManagedBean().setBusinessTypeParamCode(
+			smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) 
+			? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE	: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
+		clearPersonnelList();
+		for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
+			if(!personnel.isSsmData()) {
+				continue;
+			}
+			
+			validateSsmPersonnel(personnel);
+			if(personnel.isEquityOwnerSsm()){
+				getManagedBean().getPersonnelsOwnerSsm().add(personnel);
+			}
+			if(personnel.isDirectorSsm()){
+				getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
+			}
+			getManagedBean().getPersonnelsSsm().add(personnel);
+		}
+		
+		getManagedBean().getSmSupplierBranchSsm().clear();
+		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
+			if(!branch.isSsmData()) {
+				continue;
+			}
+			getManagedBean().getSmSupplierBranchSsm().add(branch);
+		}
+		
+		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());		
+		SupplierBusinessNatureResDTO resDTO = BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class)
+				.retrieveAllBusinessNatureBySupplierId(reqDTO);
+		for(SmSupplierBusiness business : resDTO.getBusinessNatureLs()){
+			if(!business.isSsmData()) {
+				continue;
+			}
+			getManagedBean().getSmSupplierBusinessSsm().add(business);
+		}
+		
+		getManagedBean().getSmEquityCompaniesSsm().clear();
+		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
+			if(!company.isSsmData()) {
+				continue;
+			}
+			getManagedBean().getSmEquityCompaniesSsm().add(company);
+		}
+		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
+	}
+	
+	/**
+	 * Check to render button view SSM info
+	 * @return
+	 */
+	public boolean renderViewSSMInfo(){
+		return getManagedBean().getSmAppl().isApplValidWithSsm()
+			&& businessTypeTovalidateWithSSM(null, 
+				getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
+	}
+	
+	/**
+	 * Validate SSM personnel address
+	 * @param personnel
+	 * @return
+	 */
+	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
+		if(personnel == null || !personnel.isSsmData() 
+			|| personnel.getSmPersonnelAddresses() == null) return personnel;
+		for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
+			if(personnel.getSmPersonnelAddresses().get(i) != null
+					&& personnel.getSmPersonnelAddresses().get(i).getSmAddress() != null
+					&& personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
+				Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
+				break;
+			}
+		}
+		return personnel;
+	}
+	//#31269 - end
+	
 	public void clearPersonnelList() {
 		this.getManagedBean().getPersonnelsOwnerSsm().clear();
 		this.getManagedBean().getSmPersonnelDirectorSsm().clear();
