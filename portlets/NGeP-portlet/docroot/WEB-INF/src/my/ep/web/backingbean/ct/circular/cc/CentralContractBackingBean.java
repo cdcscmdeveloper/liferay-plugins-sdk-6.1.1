@@ -653,6 +653,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						auCtData.setDocType(resDTO.getCircularVer().getDocType());
 						auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
 						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
 
 						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
 								|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes()

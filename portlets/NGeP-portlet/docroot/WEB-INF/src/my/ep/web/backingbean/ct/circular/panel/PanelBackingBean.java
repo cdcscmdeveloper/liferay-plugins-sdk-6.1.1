@@ -630,6 +630,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						auCtData.setDocType(resDTO.getCircularVer().getDocType());
 						auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
 						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
 
 						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 							auCtData.setCtIsFinal(AuditContractConst.CT_YES);

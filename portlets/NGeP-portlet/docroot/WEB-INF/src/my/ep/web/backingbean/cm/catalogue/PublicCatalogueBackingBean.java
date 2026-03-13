@@ -299,7 +299,8 @@ public class PublicCatalogueBackingBean extends
 		// #10747 - Soo - End
 		this.getManagedBean().setBrandId(0L);
 		// #10747- Start
-        this.getManagedBean().setConverterVisible(true);		
+        this.getManagedBean().setConverterVisible(true);
+        this.getManagedBean().setBrandCriteria(null);
 		RequestContext.getCurrentInstance().reset("form:catalogueTabId:resultpl");
 		
 		this.getManagedBean().getSearchDataModel().reloadData();
@@ -353,6 +354,43 @@ public class PublicCatalogueBackingBean extends
 		itemPerPage(this.getManagedBean().getItemPerPage());
 	}
 	// #10747 - Soo - End
+	
+	/**
+	 * Back to list.
+	 */
+	public void backToList() {
+
+		ICodificationSO codificationSO = BusinessDelegate.getInstance()
+				.getServiceObject("cm", ICodificationSO.class);
+
+		this.getManagedBean().setSelectedUnspscObj(null);
+		this.getManagedBean().setBrandId(null);
+		this.getManagedBean().setPriceTo(null);
+		this.getManagedBean().setPriceForm(null);
+		// #10747- Start
+		this.getManagedBean().setKeyWord(true);
+		// #10747- End
+
+		if (!this.getManagedBean().getCloneItemNames().isEmpty()) {
+			this.getManagedBean().setFamilyList(null);
+			this.getManagedBean().setBrandId(null);
+			this.getManagedBean().getBrandCriteria().clear();
+		}
+		for (String code : this.getManagedBean().getCloneItemNames()) {
+
+			log.info("*******code***********" + code);
+
+			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+			codeReqDTO.setUnspscCode(code);
+			CodificationResDTO codeResDTO = codificationSO
+					.searchUnspscObj(codeReqDTO);
+
+			this.getManagedBean().getFamilyList()
+					.add(codeResDTO.getUnspscObj());
+		}
+
+		this.getManagedBean().getSearchDataModel().reloadData();
+	}
 
 	/**
 	 * Search catalogue by commodity code.

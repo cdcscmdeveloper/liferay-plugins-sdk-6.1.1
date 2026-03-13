@@ -2224,10 +2224,10 @@ public class SupportDocumentBackingBean extends
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IZoneSO.class);
 				ZoneReqDTO zoneReqDto = new ZoneReqDTO();
-				zoneReqDto.setZoneId(resDTO.getDocument().getPmZone().getZoneId());
-				
-				this.getManagedBean().setAuditPmZone(zoneSo.retriveZoneByID(zoneReqDto).getPmZone());
-				
+				if (null != resDTO.getDocument().getPmZone()) {
+					zoneReqDto.setZoneId(resDTO.getDocument().getPmZone().getZoneId());
+					this.getManagedBean().setAuditPmZone(zoneSo.retriveZoneByID(zoneReqDto).getPmZone());
+				}
 				getManagedBean().setUpdatedPmDocumentRestrList(resDTO.getUpdatedPmDocumentRestrList());
 				//END: #35509
 				if (createAction) {
