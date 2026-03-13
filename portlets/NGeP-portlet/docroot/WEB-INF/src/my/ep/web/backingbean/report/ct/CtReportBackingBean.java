@@ -152,7 +152,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	/**
 	 * retrieve and set the current active org
 	 */
-	private void setCurrentActiveOrg() {
+	//Fix - #40102 *change from private to public for other bean accessibility*
+	public void setCurrentActiveOrg() {
 		log.debug("setCurrentActiveOrg");
 		
 		
@@ -481,8 +482,12 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		getManagedBean().setFormattedSelectedItems(null);
 		getManagedBean().setLovSelectedItemList(null);
 		getManagedBean().setSelectedSupplier(null);
-		
 		// End fix- #29416
+		// Start Fix - #40102
+		if (getManagedBean().getReportCode() != null) {
+			setCurrentActiveOrg();
+		}
+		// End Fix - #40102
 	}
 
 	/**
