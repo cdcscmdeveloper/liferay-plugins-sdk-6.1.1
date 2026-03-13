@@ -381,6 +381,9 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	private Boolean readOnlyLOADownload = true;
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	// #29766 Start Vinod
+	private String alertForInactivePK7;
+	// #29766 End Vinod
 	
 
 	// #29661 start
@@ -2207,6 +2210,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 	// Bug #35078@Syazani -- 22/09/2023 -- End
 
+	// #29766 Start Vinod
+	public String getAlertForInactivePK7() {
+		return alertForInactivePK7;
+	}
+
+	public void setAlertForInactivePK7(String alertForInactivePK7) {
+		this.alertForInactivePK7 = alertForInactivePK7;
+	}
+	// #29766 End Vinod
 	
 
 	//#29661 Start
