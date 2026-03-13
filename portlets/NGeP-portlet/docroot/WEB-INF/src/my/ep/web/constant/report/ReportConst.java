@@ -522,6 +522,10 @@ public class ReportConst implements Serializable{
 	public static final String SM_SUPPLIER_UNREGIS_REPORT = "SM_APPL_DETAILS_UNREGIS.jsp";
 	public static final String SM_SUPPLIER_PAYMENT_ACK_REPORT  = "SM_PAYMENT_ACK.jsp";
 	public static final String SM_SUPPLIER_PAYMENT_DETAILS_REPORT  = "SM_PAYMENT_DETAILS.jsp";
+	// 32304 - start
+	public static final String SM_BUMI_APPL_CANCELLED_SVC = "SM_LIST_OF_APPL_BPCANCELLED_SVC.jsp";
+	public static final String SM_BUMI_APPL_CANCELLED = "SM_LIST_OF_APPL_BPCANCELLED_TSKLIST.jsp";
+	// 32304 - end
 	
 	//SM - Rejection Acknlowledgement Letter
 	public static final String SM_REJECTION_ACK_LETTER = "SM_ACK_REJECT.jsp";

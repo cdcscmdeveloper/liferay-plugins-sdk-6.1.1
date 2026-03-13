@@ -530,6 +530,10 @@ public class SupplierManagementConst {
 	// 26238 - Disciplonary action - 28801 - START
 	public static final long PM_STATUS_PENDING_REVIEW_APPLICATION = 20104;
 	// 28801 - END
+	// #32304 - start
+	public static final long PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE;
+	public static final long PM_STATUS_BUMI_CANCELLED_FROM_OTHER_APPL = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_OTHER_APPL;
+	// #32304 - end
 	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
 	public static final long PM_STATUS_REGISTRATION_STATUS_REGISTERED = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
 	public static final long PM_STATUS_REGISTRATION_STATUS_FOREIGN = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN;

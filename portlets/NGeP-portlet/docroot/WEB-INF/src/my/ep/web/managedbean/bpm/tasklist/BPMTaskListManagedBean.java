@@ -67,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -146,6 +147,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private Date groupTaskCreatedDateFrom;
 	private Date  groupTaskCreatedDateTo;
 	private String roleType;
+	
+	// #32304 - start
+	private List<SmAppl> cancelledBumiApplLs;
+	private PagingDataModel<SmAppl> bumiListDataModel = new BumiPagingDataModel();
+	private Boolean showCancelledBumiApplList;
+	// #32304 - end
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -2066,5 +2073,57 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskIdPair;
 	}
 	#31422-basri 190821*/
+	
+	// #32304 - start
+	public List<SmAppl> getCancelledBumiApplLs() {
+		return cancelledBumiApplLs;
+	}
+
+	public void setCancelledBumiApplLs(List<SmAppl> cancelledBumiApplLs) {
+		this.cancelledBumiApplLs = cancelledBumiApplLs;
+	}
+
+	public PagingDataModel<SmAppl> getBumiListDataModel() {
+		return bumiListDataModel;
+	}
+
+	public void setBumiListDataModel(PagingDataModel<SmAppl> bumiListDataModel) {
+		this.bumiListDataModel = bumiListDataModel;
+	}
+
+	public Boolean getShowCancelledBumiApplList() {
+		return showCancelledBumiApplList;
+	}
+
+	public void setShowCancelledBumiApplList(Boolean showCancelledBumiApplList) {
+		this.showCancelledBumiApplList = showCancelledBumiApplList;
+	}
+
+	private class BumiPagingDataModel extends PagingDataModel<SmAppl> {
+		private static final long serialVersionUID = 1L;
+
+		public BumiPagingDataModel() {
+			super("bumiPagingDataModelId");
+		}
+
+		@Override
+		protected ISearchResultBean<SmAppl> pageChangeListener(
+				ISearchBean<SmAppl> searchBean) {
+			SearchResultBean<SmAppl> resultBean = new SearchResultBean<>();
+			resultBean.setResultList(null);
+			resultBean.setTotalRecord(0);
+			List<SmAppl> bumi = BPMTaskListManagedBean.this
+					.getCancelledBumiApplLs();
+			if (bumi != null) {
+				resultBean.setResultList(new ArrayList<SmAppl>());
+				for (int i = calculateFinalOffSet(getPageNo()); i < bumi.size(); i++) {
+					resultBean.getResultList().add(bumi.get(i));
+				}
+				resultBean.setTotalRecord(resultBean.getResultList().size());
+			}
+			return resultBean;
+		}
+	}
+	// #32304 - end
 	
 }

@@ -6393,6 +6393,82 @@ public class SmCommonUtil {
 		}
 		//END 34136
 		
+	// #32304 - start
+	/**
+	 * Retrieve a list of Bumi applications cancelled by system (status: 20210)
+	 * for SVC, SVO, PO & approver
+	 * 
+	 * @param isSVC
+	 * @return
+	 */
+	public static List<SmAppl> getCancelledBumiApplList(boolean isSVC) {
+		List<SmAppl> list;
+		FacesScopes fc = new FacesScopes();
+		Long userId = fc.getUserSessionBean().getUserId();
+		if (isSVC) {
+			list = SmServiceLookup.getMofRegistrationSO()
+					.retrieveAutoCancelledBumiAppl(userId, false, false)
+					.getApplList();
+		} else {
+			boolean isPOorApprover = fc.hasRoleUser(RoleCode.UPS_PO.value())
+					|| fc.hasRoleUser(RoleCode.UPS_APPROVER.value());
+			list = SmServiceLookup
+					.getMofRegistrationSO()
+					.retrieveAutoCancelledBumiAppl(userId,
+							fc.hasRoleUser(RoleCode.UPS_SVO.value()),
+							isPOorApprover).getApplList();
+		}
+		if (list.isEmpty()) {
+			return list;
+		}
+
+		StatusReqDTO statReqDTO = new StatusReqDTO();
+		statReqDTO
+				.setStatusId(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE);
+		statReqDTO.setLanguageCode(fc.getUserLocale().getLanguage());
+		PmStatusDesc statDesc = SmServiceLookup.getStatusSO()
+				.retrieveStatusDescById(statReqDTO).getPmStatusDesc();
+		if (statDesc == null) {
+			return list;
+		}
+
+		SmWorkFlowStatusReqDTO wfDTO = new SmWorkFlowStatusReqDTO();
+		for (SmAppl smAppl : list) {
+			smAppl.setWorkflowStatusDesc(statDesc.getStatusName());
+			wfDTO.setApplId(smAppl.getApplId());
+			SmWorkflowStatus wf = SmServiceLookup.getSmWorkFlowStatusSO()
+					.retrieveCurrentWorkFlowStatusByDocId(wfDTO)
+					.getWorkflowStatus();
+			if (wf != null) { // set cancelled date
+				smAppl.setChangedDate(wf.getCreatedDate());
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Cancel Bumiputera application if Bumiputera status was revoked in other
+	 * recently approved application.
+	 * 
+	 * @param smAppl
+	 *            bumi Appl
+	 * @return true if bumi Appl is cancelled
+	 */
+	public static boolean checkCancelBumiApplFromBumiStatus(SmAppl smAppl) {
+		if (smAppl == null
+				|| smAppl.isActiveAppl()
+				|| smAppl.getSmSupplier() == null
+				|| smAppl.getSmSupplier().isBumi()
+				|| !smAppl.getApplType().equals(
+						SupplierManagementConst.APPL_TYPE_BUMI)) {
+			return false;
+		}
+		return SmServiceLookup.getReviewApplicationSO()
+				.cancelBumiApplicationFromBumiStatus(smAppl);
+	}
+
+	// #32304 - end
+		
 		//#29582- start
 	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
 		if (resDTO.getSmPersonnelAll() != null) {

@@ -5328,6 +5328,18 @@ public class SmApplicationUtil {
 				result = true;
 				throw new EpException(MessageConst.ERROR_722566);
 			}
+			// #32304 - start
+			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				if (smSupplier.isBumi()) {
+					throw new EpException(MessageConst.ERROR_722504);
+				}
+				if (SmServiceLookup.getMofRegistrationSO()
+						.retrievePendingBumiAppl(smSupplier.getSupplierId())
+						.getSmAppl() != null) {
+					throw new EpException(MessageConst.ERROR_722697);
+				}
+			}
+			// #32304 - end
 			List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
 			int inactiveMofAcc = 0;
 			for (SmMofAccount account : accounts) {

@@ -4356,6 +4356,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//END #29956
 	
+	// #32304
+	/**
+	 * Download report of a list of Bumi applications cancelled by system
+	 * (status: 20210)
+	 * 
+	 * @param isSVC
+	 * @throws IOException
+	 */
+	public void downloadCancelledBumiAppl(boolean isSVC) throws IOException {
+		Map<String, String> paramMap = new HashMap<>();
+		paramMap.put(ReportConst.PARAM_REPORT_ID, isSVC ? "SM_100" : "SM_099");
+		paramMap.put(ReportConst.PARAM_USER_ID, new FacesScopes()
+				.getUserSessionBean().getUserId().toString());
+		paramMap.put("PLANGUANGE", "ms");
+		String report = isSVC ? ReportConst.SM_BUMI_APPL_CANCELLED_SVC
+				: ReportConst.SM_BUMI_APPL_CANCELLED;
+
+		generateReport(report, paramMap);
+	}
+	
 	// #28854 - Start
 	/**
 	 * Processes the given string by replacing newline characters with HTML line

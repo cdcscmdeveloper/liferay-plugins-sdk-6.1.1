@@ -221,6 +221,14 @@ public class SvcSiteAssignBackingBean extends
 			  break;
 			}
 		}
+		// #32304 - start
+		if (SmCommonUtil.checkCancelBumiApplFromBumiStatus(getManagedBean()
+				.getSmAppl())) {
+			RequestContext.getCurrentInstance().execute(
+					"smBumiCancelAlert.show()");
+			return;
+		}
+		// #32304 - end
 		
 		if(!invalid){
 			throw new EpException(MessageConst.ERROR_721201);

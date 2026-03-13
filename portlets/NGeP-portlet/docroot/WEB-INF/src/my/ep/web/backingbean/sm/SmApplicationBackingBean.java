@@ -624,6 +624,14 @@ public class SmApplicationBackingBean extends
 	 * Change business type & display comfirmation dialog
 	 */
 	public void onChangeBussType() {
+		// #32304 - start
+		getManagedBean().setPendingBumiAppl(
+				SmServiceLookup
+						.getMofRegistrationSO()
+						.retrievePendingBumiAppl(
+								getManagedBean().getSmSupplier()
+										.getSupplierId()).getSmAppl());
+		// #32304 - end
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 		RequestContext.getCurrentInstance().execute(
 				"changeBussTypeConfirmDialog.show();");
@@ -12155,6 +12163,9 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl().setBumi(false);
 								getManagedBean().getSmAppl().setPmRegStatus(null);
 								getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
+								//#32304
+								SmServiceLookup.getReviewApplicationSO().sendNotificationCancelledBumiAppl(
+										getManagedBean().getSmAppl(), false);
 							}else{
 								SmAppl lastApplAppr = SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean(), res);
 								reqDTO.setLastApprovedAppl(lastApplAppr);
@@ -18284,6 +18295,31 @@ public class SmApplicationBackingBean extends
 			throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.change.factype.home.office", null)+msg.toString());
 		}
 		//check category code end
+		// #32304 - start
+		SmAppl latestAppl = getManagedBean().getLatestAppl();
+		String bussType = getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getBusinessType();
+		if (latestAppl != null
+				&& latestAppl.getSmCompanyBasic() != null
+				&& bussType != null
+				&& !bussType.equals(latestAppl.getSmCompanyBasic()
+						.getBusinessType())) {
+			SmAppl bumiAppl = getManagedBean().getPendingBumiAppl();
+			if (bumiAppl == null) {
+				bumiAppl = SmServiceLookup
+						.getMofRegistrationSO()
+						.retrievePendingBumiAppl(
+								getManagedBean().getSmSupplier()
+										.getSupplierId()).getSmAppl();
+				getManagedBean().setPendingBumiAppl(bumiAppl);
+			}
+			if (bumiAppl != null && bumiAppl.getApplNo() != null) {
+				RequestContext.getCurrentInstance().execute(
+						"chgBussTypeAlert.show();");
+				return;
+			}
+		}
+		// #32304 - end
 		
 		RequestContext.getCurrentInstance().execute("printConfirm.show();");
 	}
@@ -18475,6 +18511,97 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//#33240 - end
+	
+	// #32304 - start
+	/**
+	 * Validate application before showing approve/reject dialog
+	 * 
+	 * @param process
+	 */
+	public void validateBeforeSubmitDialog(String process) {
+		if (!getManagedBean().isSupplierUser()
+				&& SmCommonUtil
+						.checkCancelBumiApplFromBumiStatus(getManagedBean()
+								.getSmAppl())) {
+			RequestContext.getCurrentInstance().execute(
+					"smBumiCancelAlert.show()");
+			return;
+		}
+		validateCompanyBranch(getManagedBean(), process);
+	}
+
+	/**
+	 * Delete pending bumi application, remove Bumiputera status & submit appl
+	 * to BPM
+	 * 
+	 * @return redirect page
+	 */
+	public String changeBussTypeAlertYes() {
+		SmServiceLookup.getReviewApplicationSO()
+				.cancelBumiApplicationFromBussTypeChange(
+						getManagedBean().getPendingBumiAppl());
+		getManagedBean().setPendingBumiAppl(null);
+		getManagedBean().getSmAppl().setBumi(false);
+		PmRegStatus pmRegStatus = new PmRegStatus();
+		PmStatus pmStatus = new PmStatus();
+		pmStatus.setStatusId(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED);
+		pmRegStatus.setPmStatus(pmStatus);
+		getManagedBean().getSmAppl().setPmRegStatus(pmRegStatus);
+		getManagedBean().getSmSupplier().setBumi(false);
+		return submitSmApplToBpm(getManagedBean().getSmAppl().getApplType());
+	}
+
+	/**
+	 * Delete draft application
+	 * 
+	 * @return acknowledge page
+	 */
+	public String changeBussTypeAlertNo() {
+		getManagedBean().getSmAppl().setSupportingDocMode(
+				SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(
+				getManagedBean().getSmAppl(), "CANCEL",
+				SupplierManagementConst.SUPP_SUBMIT_DELDRFT_APPL);
+		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setUserList(Arrays.asList(new FacesScopes().getUserSessionBean()
+				.getLoginId()));
+		try {
+			MofRegistrationResDTO resDTO = SmServiceLookup
+					.getMofRegistrationSO().initiateSmApplDeleteDraftTask(
+							reqDTO);
+			if (resDTO == null) {
+				throw new EpException(MessageConst.ERROR_722519);
+			}
+			if (!resDTO.isBpmSuccess()) {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+		} catch (Exception e) {
+			log.error("***Error in Delete Draft  ****", e);
+			retriveLatestApplAfterUpdate(getManagedBean().getCurrentPageType(),
+					"");
+			throw new EpException(e.getMessage());
+		}
+
+		String msg = MessageUtils.getMessage(MessageConst.INFO_721206,
+				new String[] { getManagedBean().getSmAppl().getApplNo() },
+				MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale());
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, msg));
+		renewSesionObject();
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
+	}
+
+	/**
+	 * Redirect to task list
+	 */
+	public void redirectToTaskList() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "taskListView");
+	}
+
+	// #32304 - end
 	
 	// #34166 - Start
 	public void validateText() {

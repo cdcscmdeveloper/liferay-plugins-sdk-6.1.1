@@ -39,7 +39,7 @@
 						oncomplete="blockWidget.hide()"
 						update=":form:tt:approverAppDialog @([id$=changeRegStatusChk])"
 						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-						action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approverAppDialog')}" /> <!-- 29727, 37925 -->
+						action="#{backingBean.validateBeforeSubmitDialog('approverAppDialog')}" /> <!-- 29727, 32304, #37925 -->
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:approverRejDialog" partialSubmit="true"
 						process="@this" onstart="blockWidget.show()"
@@ -248,6 +248,20 @@
 	<!-- 13362 START -->
 	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
 	<!-- 13362 END -->
+	<!-- 32304 - start -->
+	<p:confirmDialog widgetVar="smBumiCancelAlert" id="smBumiCancelAlert"
+		closable="false"
+		header="#{lbl['lbl.sm.bumi.cancel.other.appl.alert.header']}"
+		message="#{lbl['lbl.sm.bumi.cancel.other.appl.alert']}"
+		severity="alert">
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+				action="#{backingBean.redirectToTaskList()}"
+				onclick="smBumiCancelAlert.hide();blockWidget.show();"
+				oncomplete="blockWidget.hide()" />
+		</div>
+	</p:confirmDialog>
+	<!-- 32304 - end -->
 	<!-- #34400 - start -->
 	<ac:confirmationPopupSM id="confirmApproveDlg" widget="confirmApproveDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}"
