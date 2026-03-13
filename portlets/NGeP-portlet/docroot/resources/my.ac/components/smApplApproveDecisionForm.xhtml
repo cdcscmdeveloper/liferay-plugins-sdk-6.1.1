@@ -124,7 +124,7 @@
 						</p:inputTextarea> <p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<c:if test="#{cc.attrs.overLappedCategoryExists and cc.attrs.smAppl.applType ne 'C'}"> <!-- 39614 -->
 				<!-- 13362 START -->
 				<tr><td><br></br></td></tr>
 					<tr>
