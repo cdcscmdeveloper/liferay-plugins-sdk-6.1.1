@@ -3,14 +3,17 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.AuditPMSupplierMgtConfigConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMSupportingDocumentBackingBean
@@ -23,6 +26,7 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	String roleCode;
 	String docNo;
 	BigInteger docId;
+	private String docType;
 	BigInteger docGroupId;
 
 	/**
@@ -33,9 +37,11 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteAppType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		Integer rowIndex = managedBeans.getDeleteRowIndex();
 		log.info("rowIndex ::: >>> ::: " + rowIndex);
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteAppTypeRestrictionsAuditList()) {
 			if (null != pmDocumentRestr.getAppTypeCode() && null != pmDocumentRestr.getAppTypeCode().getParameterId()
 					&& pmDocumentRestr.getDocumentRestrId() != null) {
@@ -44,10 +50,10 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				/*
 				 * Restriction Document - AppTypeList - Application Type #14
 				 */
-				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_APPTYPE_FIELDLABELID, pmDocumentRestr
-						.getAppTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null,
+				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_APPTYPE_FIELDLABELID, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr
+						.getAppTypeCode().getParameterType(), pmDocumentRestr
+						.getAppTypeCode().getParameterCode(), locale), null,
 						AuditConst.PM_AUD_ACTION_TYPE_DEL));
-
 				/*
 				 * Restriction Document - AppTypeList - Section : TextList -
 				 * isCompanyInfoChanged #15
@@ -112,14 +118,18 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteComType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteComTypeRestrictionsAudit()) {
 			if (null != pmDocumentRestr.getCompanyTypeCode() && null != pmDocumentRestr.getCompanyTypeCode().getParameterId()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-				objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPTYPE_FIELDLABELID, pmDocumentRestr
-						.getCompanyTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null,
-						AuditConst.PM_AUD_ACTION_TYPE_DEL));
+				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());			
+				
+						objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPTYPE_FIELDLABELID, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr
+								.getCompanyTypeCode().getParameterType(), pmDocumentRestr
+								.getCompanyTypeCode().getParameterCode(), locale), null,
+								AuditConst.PM_AUD_ACTION_TYPE_DEL));	
 			}
 		}
 		return objList;
@@ -133,17 +143,23 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteSuppType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		// deletesuppresrictOld << untick checkbox suppTypeRestrictionOld
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		if (managedBeans.getDeleteSuppTypeRestrictionsAudit() != null) { // managedBeans.getSuppTypeRestrictionsOld()managedBeans.getComTypeRestrictionsOld()
 			for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteSuppTypeRestrictionsAudit()) {
 				if (null != pmDocumentRestr.getSupplierTypeCode()
 						&& null != pmDocumentRestr.getSupplierTypeCode().getParameterId()) {
 					this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 					this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-					objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPTYPE_FIELDLABELID, pmDocumentRestr
-							.getSupplierTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null,
-							AuditConst.PM_AUD_ACTION_TYPE_DEL));
+					
+					
+							
+							objList.add(detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPTYPE_FIELDLABELID, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr
+									.getSupplierTypeCode().getParameterType(), pmDocumentRestr
+									.getSupplierTypeCode().getParameterCode(), locale), null,
+									AuditConst.PM_AUD_ACTION_TYPE_DEL));
 				}
 			}
 		}
@@ -158,7 +174,8 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteCategoryType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteCategoryRestrictionsAudit()) {
 			if (null != pmDocumentRestr.getPmCategoryL3().getCategoryL3Id()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
@@ -193,7 +210,8 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteCertBodyType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		if (managedBeans.getDeleteCertBodyRestrictionsAudit() != null) {
 			for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteCertBodyRestrictionsAudit()) {
 				if (null != pmDocumentRestr.getPmCertBody() && null != pmDocumentRestr.getPmCertBody().getCertBodyId()) {
@@ -210,7 +228,7 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	private AuditPMSPDTO detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+		dtlObj.setDocType(docType);
 		dtlObj.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
