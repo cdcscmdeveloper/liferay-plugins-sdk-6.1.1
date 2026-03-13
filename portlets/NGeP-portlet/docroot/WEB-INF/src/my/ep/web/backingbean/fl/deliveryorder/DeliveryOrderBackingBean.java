@@ -204,6 +204,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			//38009-Start
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				validateExpectedDeliveryDate();
+				
+				// 39692-Start
+				if (hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentRequest().getFulfilmentReqId())) {
+					throw new EpException(MessageConst.ERROR_760823);
+				}
+				// 39692-End
 			}
 			//38009-End
 			
@@ -1807,4 +1813,19 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 
 	}
 	// #35508 fl audit trail
+	
+	/**
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
+	 * @param fulfilmentReqId
+	 * @return true if invalid FRN data is detected
+	 */
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
+	}
 }
