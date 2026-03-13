@@ -6751,7 +6751,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.FINALISE_FC_SELECTION,
-				SCProcessNameConst.COORDINATE_FC_MEETING));
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.RECOMMEND_MA_SUPPLIER));// 34491
 		return taskNames.contains(taskName);
 	}
 	
@@ -8499,4 +8499,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	//#35320 - END
+	
+	// 34491 - start
+	/**
+	 * Populate meeting status values in a drop down under Preparation tab
+	 * 
+	 * @return an array of meeting status values
+	 */
+	public SelectItem[] getMeetingStatusDropDown() {
+		SelectItem[] items = getStatusDropdownValues(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(),
+				QTConstants.DOCTYPE_MEETING);
+		return items;
+	}
+	// 34491 - end	
 }

@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel id="loiNegotiationMeetingPreparationPnlId"
+		header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+		<ui:param name="scQtMeetings"
+			value="#{finalizationQtCommittee.scQtMeetings}" />
+		<p:dataTable id="meetingDtlTbl" var="meetingDtl"
+			value="#{scQtMeetings}" rows="10" rowKey="#{meetingDtl}"
+			rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			editable="true">
+
+			<ac:paginator for="meetingDtlTbl" />
+			<p:column styleClass="td-check-box-spacing">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk"
+						value="#{lOIDetailBackingBean.managedBean.selectAllMeetings}"
+						disabled="#{!isFinalizationStage || lOIDetailBackingBean.managedBean.readOnly}">
+
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=loiNegotiationMeetingPreparationPnlId])"
+							listener="#{lOIDetailBackingBean.selectAll(scQtMeetings, lOIDetailBackingBean.managedBean.selectAllMeetings)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox id="selectMeeting"
+					value="#{meetingDtl.selected}" disabled="#{meetingDtl.disableRow}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=loiNegotiationMeetingPreparationPnlId])" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
+			<p:column style="width:50%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
+				</f:facet>
+				<ac:dateTime id="meetingDate" required="true"
+					label="#{lbl['lbl.sc.meeting.date']}"
+					disabled="#{meetingDtl.disableRow}"
+					value="#{meetingDtl.meetingDate}" update="@([id$=meetingDate])"
+					rowIndex="#{rowIndex}">
+				</ac:dateTime>
+			</p:column>
+
+			<p:column style="width:20%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
+				</f:facet>
+				<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}"
+					required="true" rows="2" cols="30" maxlength="255"
+					onkeyup="limitTextArea(this,255);"
+					onkeydown="limitTextArea(this,255);"
+					onmouseout="limitTextArea(this,255);"
+					value="#{meetingDtl.meetingLocation}" id="meetingLocation"
+					disabled="#{meetingDtl.disableRow}">
+					<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc" />
+				</p:inputTextarea>
+				<p:message id="mtgLoc" for="meetingLocation" display="icon"
+					showDetail="false"></p:message>
+			</p:column>
+
+			<p:column style="width:20%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.status']}" />
+				</f:facet>
+				<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false"
+					value="#{meetingDtl.meetingStatusStr}"
+					disabled="#{meetingDtl.disableRow}">
+					<f:selectItems
+						value="#{lOIDetailBackingBean.getMeetingStatusDropDown()}" />
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{suppFinalBiddingBackingBean.changeMeetingStatus(meetingDtl)}" />
+				</p:selectOneMenu>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:5%">
+				<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30"
+					maxlength="100" onkeyup="limitTextArea(this,100);"
+					onkeydown="limitTextArea(this,100);"
+					onmouseout="limitTextArea(this,100);"
+					disabled="#{meetingDtl.disableRow}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:inputTextarea>
+			</p:column>
+			<ui:remove>
+				Enhancement #21694
+			</ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.meeting.previousCommittee']}"
+				style="width:30%">
+				<h:panelGroup layout="block" rendered="#{meetingDtl.disableRow}">
+					<p:commandLink style="align: center" process="@this"
+						partialSubmit="true"
+						action="#{suppFinalMeetingBackingBean.viewMeetingDetailsViewFinalization(meetingDtl)}">
+						<p:graphicImage id="viewCommitteeId"
+							value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
+						<p:spacer width="5"></p:spacer>
+					</p:commandLink>
+				</h:panelGroup>
+			</p:column>
+		</p:dataTable>
+
+		<div align="right" class="BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this,meetingDtlTbl" partialSubmit="true"
+				action="#{lOIDetailBackingBean.addMeetingDtls}"
+				update="meetingDtlTbl" rendered="#{isFinalizationStage}"
+				disabled="#{lOIDetailBackingBean.managedBean.readOnly}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this,meetingDtlTbl" partialSubmit="true"
+				disabled="#{lOIDetailBackingBean.deleteselectedList(scQtMeetings) or lOIDetailBackingBean.managedBean.readOnly}"
+				oncomplete="dlgPerformDel.show();"
+				update="@([id$=#{loiNegotiationPreparationMeetingDeleteId}])"
+				rendered="#{isFinalizationStage}" />
+
+		</div>
+
+		<ui:param name="loiNegotiationPreparationMeetingDeleteId"
+			value="loiNegotiationPreparationMeetingDeleteId"></ui:param>
+
+		<ac:confirmationPopup id="#{loiNegotiationPreparationMeetingDeleteId}"
+			widget="dlgPerformDel" width="450" height="100"
+			okAction="lOIDetailBackingBean.deleteMeetingDetails"
+			title="#{lbl['lbl.sc.meeting.details']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=loiNegotiationMeetingPreparationPnlId])" />
+
+
+	</p:panel>
+
+</ui:composition>
