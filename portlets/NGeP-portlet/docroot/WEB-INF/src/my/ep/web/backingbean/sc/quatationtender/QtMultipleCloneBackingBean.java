@@ -55,6 +55,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.util.SLAUtils;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -92,6 +93,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 	private static final String APPROVAL = "lbl.sc.approval";
 	private ScQt selectedScqt;
 	
+	//25635-start
+	/**
+	 * Instantiates a new multiple clone backing bean.
+	 */
 	public QtMultipleCloneBackingBean(){
 		this.root = new DefaultTreeNode("Root Node", null);
 		this.selectedScqt=new ScQt();
@@ -99,8 +104,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		child.setParent(this.root);
 		child.setExpanded(true);
 		TreeNode descendent1 = new DefaultTreeNode(new QTSelectionNode(getLabel(QT_DETAILS),1L), child);
-		descendent1.setSelected(true);
-		descendent1.setSelectable(false);
+		//25635-start
+		descendent1.setSelected(Boolean.TRUE);
+		descendent1.setSelectable(Boolean.TRUE);
+		//25635-end
 		descendent1.setParent(child);
 		TreeNode descendent2 = new DefaultTreeNode(new QTSelectionNode(getLabel(SUPPLIER_QUALIFICATION_CRITERIA),2L), child);
 		descendent2.setParent(child);
@@ -300,8 +307,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 					try {
 						uploadAttachment(att,attachment);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//Sonarqub QT Vulnerability Minor Danial [3/8/2023] START			 
+						SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_MULTIPLE_CLONE_BACKINGBEAN, scQt.getQtNo(),
+								SLALogConstant.QT_POPULATE_APPROVALS, getUserIdSessionFromLoginId(), e);
+						//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 					}
 					approverAttachments.add(att);
 				}
@@ -412,7 +421,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 										.cloneBean(source);
 							} catch (IllegalAccessException | InstantiationException
 									| InvocationTargetException | NoSuchMethodException e) {
-								e.printStackTrace();
+								//Sonarqub QT Vulnerability Minor Danial [3/8/2023] START			 
+								SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_MULTIPLE_CLONE_BACKINGBEAN, scQt.getQtNo(),
+										SLALogConstant.QT_POPULATE_COMMITTEE, getUserIdSessionFromLoginId(), e);
+								//Sonarqube QT Vulnerability Minor Danial [3/8/2023]
 							}
 							if(null!=cloned){
 								cloned.setBrandNew(true);

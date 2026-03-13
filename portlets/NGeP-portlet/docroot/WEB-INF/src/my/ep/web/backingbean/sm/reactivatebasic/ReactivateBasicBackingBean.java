@@ -258,4 +258,13 @@ public class ReactivateBasicBackingBean extends
 	public void setBasicSupplierAdmin(SmPersonnel basicSupplierAdmin) {
 		this.basicSupplierAdmin = basicSupplierAdmin;
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = reactivateBasic.getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			reactivateBasic.setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 }

@@ -333,15 +333,15 @@
 	
 
 	<!-- 7465, 29822 start -->	
-	<!-- 20231012 #7465 Start -->
+	<!-- 20231012 20231120 #7465 Start -->
 	<ac:confirmationPopupMultiple id="taskDeleteId"
 			widget="taskDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignTask()"
 			width="400" height="100"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" 
-			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
-	<!-- 20231012 #7465 End -->
+			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks],[id$=deleteOthersTasks])" />
+	<!-- 20231012 20231120 #7465 End -->
 	
 	<ac:confirmationPopupMultiple id="multipleOthersTasksDeleteId"
 			widget="multipleOthersTasksDeletePopUp"

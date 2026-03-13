@@ -269,6 +269,7 @@ public class SupplierApplicationUtil {
 					.getOverLappedCategoryRemarks());
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
+			managedBean.setOverLappedCategoryExists(true); //#31018
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmSupplierCategories(),
 				overlapCategoryVO);

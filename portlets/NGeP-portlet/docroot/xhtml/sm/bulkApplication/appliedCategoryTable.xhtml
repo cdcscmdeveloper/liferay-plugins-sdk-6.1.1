@@ -7,6 +7,37 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel  header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true" >		
+		<!-- 36504 - START -->
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputPanel
+						align="left">
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.click']}"
+							escape="false" />
+						<p:commandLink
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{backingBean.otherDescriptionHistory}"
+							process="@this"
+							partialSubmit="true"
+							update=":form:tt:catCodeInfPan">
+							<u><h:outputText
+									value="#{lbl['lbl.sm.other.desc.history.here']}"
+									style="color:blue;"
+									escape="false" /></u>
+						</p:commandLink>
+						<p:spacer width="2" />
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+							escape="false" />
+						<br />
+						<p:spacer height="2" />
+					</p:outputPanel>
+				</td>
+			</tr>
+		</table>
+		<!-- 36504 - END -->
 		<p:dataTable var="applCat" value="#{tasks.appliedPaginatorApprovedByPO.model}" rowIndexVar="indexAppl"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" sortBy="#{applCat.poDecFlg}">
 			

@@ -116,7 +116,8 @@
 						readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}">
 					</p:calendar></td>
 			</tr>
-
+			<!-- #36718 - START - add panel for refresh -->
+			<p:panel id="individualAddrPanel" style="border: none;">
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.ic.address']}" />
@@ -142,9 +143,10 @@
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.permenantStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
-						<p:ajax event="change" process="@this"
-							listener="#{registrationBackingBean.populateDistrictByAddType('permenant', false)}"
-							update="divisionIndiLabelPanelId,divisionIndiDropdownPanelId,cmbPermDistrict,cmbPermCity" />
+						<!-- #36718 - START - process panel when change dropdown value, reset value, change parameter value to true, update postcode -->
+						<p:ajax event="change" process="@this @([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.populateDistrictByAddType('permenant', true)}"
+							update="divisionIndiLabelPanelId,divisionIndiDropdownPanelId,cmbPermDistrict,cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 			</tr>
 			
@@ -172,9 +174,10 @@
 							value="#{registrationBackingBean.managedBean.permenantDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateDivisionByAddType('permenant',false)}"
-							update="cmbPermDistrict,cmbPermCity" />
+						<!-- #36718 - START - process panel when change dropdown value, reset value, change parameer value to true, update postcode -->
+						<p:ajax event="change" process="@([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.populateDivisionByAddType('permenant',true)}"
+							update="cmbPermDistrict,cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu>
 					</ui:fragment>
 				</p:outputPanel>
@@ -202,9 +205,10 @@
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
-						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateCityByAddType('permenant',false)}"
-							update="cmbPermCity" />
+						<!-- #36718 - START - process panel when change dropdown value, reset value, change parameer value to true, updte postcode -->
+						<p:ajax event="change" process="@([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.populateCityByAddType('permenant',true)}"
+							update="cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermDistrictMsg" for="cmbPermDistrict"
 						display="icon" /></td>
 			</tr>
@@ -227,9 +231,14 @@
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.permenantCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
+						<!-- #36718 - START - add ajax -->
+						<p:ajax event="change" process="@([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.onSelectCity('permenant')}"
+							update="txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" /></td>
 			</tr>
-
+			</p:panel>
+			<!-- #36718 - END -->
 			<tr>
 				<td></td>
 				<td class="tdContent"></td>
@@ -304,10 +313,19 @@
 						value="#{registrationBackingBean.managedBean.smPersonnel.email}" validatorMessage="#{lbl['lbl.sm.invalidEmail']}">
 						<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						<ui:remove>#28720 Start</ui:remove>
+						<p:ajax event="change" process="@this"
+							listener="#{registrationBackingBean.onChangeEmail()}"
+								update="usrEmail" />
+						<ui:remove>#28720 End</ui:remove>
 					</p:inputText> &#160;
-					<p:graphicImage id="emailti" value="/css/images/design/tooltips.png" />
-					<p:tooltip id="emailtt" for="emailti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.email']}"  />
+					<ui:remove>#28720 Start</ui:remove>
+					<p:graphicImage id="toolTipIcon"
+						value="/css/images/design/tooltips.png" />
+					<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false"
+							value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					<ui:remove>#28720 End</ui:remove>
 					</p:tooltip>
 					<p:message id="usrEmailMsg" for="usrEmail" display="icon" />
 				</td>
@@ -319,13 +337,26 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent">
-				<p:inputText size="40" id="conEmail" value="#{registrationBackingBean.managedBean.confirmEmail}" 
-				required="#{!empty param['disableValidation']}"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80"/>
+				<ui:remove>#28720 Start</ui:remove>
+				<p:inputText size="40" id="conEmail"
+					value="#{registrationBackingBean.managedBean.confirmEmail}"
+					required="#{!empty param['disableValidation']}"
+					label="#{lbl['lbl.sm.confirmemail']}" maxlength="80">
+					<p:ajax event="change" process="@this"
+						listener="#{registrationBackingBean.onChangeConfirmEmail()}"
+						update="conEmail" />
+				</p:inputText>
+				<ui:remove>#28720 End</ui:remove>
 				<p:message id="conEmailMsg" for="conEmail" display="icon" /></td>
 			</tr>
 	</table>
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
 	</c:if>
+	<ui:remove>#28720 Start</ui:remove>
+	<ac:smEmailAlertPopup bBean="#{backingBean}"
+		title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	<ui:remove>#28720 End</ui:remove>
 	</p:panel>
 </ui:composition>

@@ -107,6 +107,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public static final String NAV_TO_ASSIGN_PRODUCT_CODE = "assignProductCode";
 	public static final String NO_69 = "69";
 	public static final String NAV_SEARCH_UNSPC_TO_ASSIGN = "searchUnspscToAssign";
+	public static final String NAV_TO_SERVICE_SEARCH = "auditServiceSearch"; //35503
 
 	private static Logger log = Logger.getLogger(CodificationBackingBean.class);
 
@@ -630,7 +631,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			return 1;
 		}
 		return last;
-	}; 
+	} 
 	
 	public String codificationSearch() {
 
@@ -640,18 +641,18 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	/**
 	 * Navigate to extension Search screen.
 	 * 
+	 * @param unspscObj
 	 * @return extensionSearch.xhtml
 	 */
-
+	//#26282 and SonarLint Fixing - Start
 	public String goToExtensionSearch(CmUnspsc unspscObj) {
-		log.debug("**********goToExtensionSearch************");
 		log.info("[#26282] goToExtensionSearch");
 		this.getManagedBean().setMeasurementCriteria(null);
 		this.getManagedBean().setColorCriteria(null);
 		this.getManagedBean().setBrandCriteria(null);
 		this.getManagedBean().setTypeCriteria(null);
 
-		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+		ICodificationSO unspscSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
@@ -662,8 +663,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		if (resDTO.isSuccessful()) {
 			CmUnspsc commodity = resDTO.getCommodityObj();
 
-			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscCode(commodity.getUnspscCode());
-			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscTitle(commodity.getUnspscTitle());
 			this.getManagedBean().setSelectedUNSPSCObj(commodity);
 
 			this.getManagedBean().setClassCode(
@@ -763,9 +762,42 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 		log.info("[#26282] check for Disciplinary Action - End");		
 		
-		System.out.println("NAV_TO_EXTENSION_SEARCH");
+		log.info("NAV_TO_EXTENSION_SEARCH");
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
+	} 
+	//#26282 and SonarLint Fixing - End
+	
+	//35503 Start
+	public String goToServiceSearch(CmUnspsc unspscObj) {
+
+		ICodificationSO unspscSO = BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
+		CodificationResDTO resDTO = unspscSO.retrieveUNSPSCByCommodityCode(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			CmUnspsc commodity = resDTO.getCommodityObj();
+
+			this.getManagedBean().setSelectedUNSPSCObj(commodity);
+
+			this.getManagedBean().setClassCode(commodity.getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setClassTitle(commodity.getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setClassTitleEng(commodity.getCmUnspsc().getUnspscTitleEng());
+
+			this.getManagedBean().setFamilyCode(commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setFamilyTitle(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setFamilyTitleEng(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+
+			this.getManagedBean().setSegmentCode(commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setSegmentTitle(commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setSegmentTitleEng(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+		}
+
+		return NAV_TO_SERVICE_SEARCH + "?faces-redirect=true";
 	}
+	//35503 End
 
 	public String goToExtensionSearchPortal(CmUnspsc unspscObj) {
 		log.debug("**********goToExtensionSearch************");
@@ -1709,7 +1741,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		this.getManagedBean().setRefreshPageNoFlag(true);
 
-		return "codificationView";
+		// 35503 Start
+		if (isAuditTrailView()) {
+			return "auditCodificationView";
+		} else {
+			return "codificationView";
+		}
+		// 35503 End
 	}
 
 	public String backToPrevPortal() {
@@ -3187,9 +3225,36 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		// this.renewSesionObject();
 		resetAction();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, "codificationView");
+		//35503 Start
+		if (isAuditTrailView()) {
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "auditCodificationView");
+		} else {
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "codificationView");
+		}
+		//35503 End
 	}
+	
+	//35503 Start
+	/**
+	 * Only this role is accessible for Audit Trail page
+	 */
+	public boolean isAuditTrailView() {
+		return hasAnyRole(RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_INTERNAL.value(),
+				RoleCode.AUDITOR_GENERAL.value(), RoleCode.EP_ADMIN.value());
+	}
+
+	/**
+	 * Check if only this role is audit accessible
+	 */
+	private boolean hasAnyRole(String... roles) {
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	//35503 End
 
 	public String getItemTypeParameter() {
 		return itemTypeParameter;
@@ -3652,37 +3717,40 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return itemType;
 	}
 	
-	//[#26282]
+	//[#26282] check for Disciplinary Action - Start
+	/**
+	 * To check what DA the supplier involve
+	 */
 	public void checkForDisciplinaryAction() {
-		//check for disciplinary action (DA)	
-		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(null);
-		
-		if(disciplinaryActList != null && disciplinaryActList.size() > 0) {
+		//check for disciplinary action (DA)
+		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil
+				.checkForDisciplinaryAction(null);
+
+		if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
 			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
-			
+
 			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
 			log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
 			log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
 			log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
-			
-			//disciplinary action - Warning
-			if(disciplinaryAct.isWarning()) {
+
+			// disciplinary action - Warning
+			if (disciplinaryAct.isWarning()) {
 				this.getManagedBean().setDaWarning(disciplinaryAct.isWarning());
 			}
-			//disciplinary action - Suspend Registration
-			if(disciplinaryAct.isSuspendRegistration()) {
+			// disciplinary action - Suspend Registration
+			if (disciplinaryAct.isSuspendRegistration()) {
 				this.getManagedBean().setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
 			}
-			//disciplinary action - Cancel Registration
-			if(disciplinaryAct.isCancelRegistration()) {
+			// disciplinary action - Cancel Registration
+			if (disciplinaryAct.isCancelRegistration()) {
 				this.getManagedBean().setDaCancelReg(disciplinaryAct.isCancelRegistration());
 			}
-			//disciplinary action - Blacklist  Owner/Director of Company
-			if(disciplinaryAct.isBlacklistOwner()) {
+			// disciplinary action - Blacklist Owner/Director of Company
+			if (disciplinaryAct.isBlacklistOwner()) {
 				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 			}
-		} else {
-			log.info("[#26282] - Disciplinary action does not imposed on supplier");
-		}		 
+		}
 	}
+	//[#26282] check for Disciplinary Action - End
 }

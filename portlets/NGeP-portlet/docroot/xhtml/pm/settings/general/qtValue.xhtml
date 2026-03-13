@@ -14,29 +14,61 @@
 						value="#{lbl['lbl.pm.settings.qt.tooltip']}" /></td>
 				<td>
 					<div align="right" style="width: 100%">
-						<p:commandButton value="#{lbl['lbl.btn.save']}"
-							id="qtValueSaveBtnId" partialSubmit="true"
-							process=":form:settingTabId:qtValuePnlId"
-							update=":form:settingTabId:qtValuePnlId"
-							action="#{ruleCatalogueBackingBean.saveQtValues}"></p:commandButton>
+						<!-- 34445 start -->
+						<p:commandButton value="#{lbl['lbl.btn.save']}" id="qtValueSaveBtnId"
+							partialSubmit="true" oncomplete="saveQtValueInfoDlg.show();"
+							process="@this" immediate="true"/><!-- #36738, #39352 -->
+						<!-- 34445 end -->
 					</div>
 				</td>
 			</tr>
-			<tr>
-				<td><p:selectOneMenu id="somMinistryForQtVal"
-						styleClass="ptjPopupSomWidth"
-						label="#{lbl['lbl.pm.org.ptj.search.ministry']}"
-						disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
-						value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
-						<f:selectItems
-							value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update=":form:settingTabId:qtValueTableId"
-							listener="#{ruleCatalogueBackingBean.selectQtValues()}" />
-					</p:selectOneMenu></td>
-				<td></td>
-			</tr>
 		</table>
+		
+		<!-- #36738 Start -->
+		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true" id="qtValueSearch"
+			collapsed="#{ruleCatalogueBackingBean.managedBean.qtValueCollapsePanel}">
+			<h:panelGrid id="qtValueSearchPanelGrid" columns="2" cellpadding="5">
+				<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
+				<p:selectOneMenu id="somMinistryForQtVal"
+					style="width:250px;" panelStyle="width:250px"
+					value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
+					<f:selectItems value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
+				</p:selectOneMenu>
+				<p:outputLabel value="#{lbl['lbl.pm.org.ptjCode']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchPtjCode}"
+					maxlength="20" style="width:250px;"
+					onkeypress="return /[0-9]/.test(String.fromCharCode(event.charCode));"/>
+				<p:outputLabel value=" #{lbl['lbl.pm.org.ptjName']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchPtjName}"
+					maxlength="255" style="width:250px;" />
+				<p:outputLabel value=" #{lbl['lbl.pm.settings.qt.limit']}" />
+				<p:inputText id="qtLimit"
+					value="#{ruleCatalogueBackingBean.managedBean.searchQtValueLimit}"
+					maxlength="18" style="width:250px;">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="label" value="#{lbl['lbl.pm.settings.qt.limit']}" />	
+					<f:attribute name="min" value="0" />
+					<f:attribute name="max" value="9999999.99" />
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+				</p:inputText>
+				<p:message id="qtLimitMsg" for="qtLimit" display="tooltip" />
+			</h:panelGrid>
+
+			<div class="ppRightBtn">
+				<!-- #36738, Fix as-is bug: #39352 Start -->
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{ruleCatalogueBackingBean.searchQtValues}" process="@this, qtValueSearchPanelGrid"
+					update=":form:settingTabId:qtValueTableId" />
+				<!-- #36738, Fix as-is bug: #39352 End -->
+				&#160;
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{ruleCatalogueBackingBean.resetQtValues}" process="@this"
+					update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValueSearchPanelGrid" />
+			</div>
+		</p:panel>
+		<!-- #36738 End -->
 
 		<p:dataTable id="qtValueTableId" widgetVar="qtValueTableWidget"
 			var="ptjSpecialApproval" rows="10"
@@ -68,6 +100,7 @@
 					value="#{ptjSpecialApproval.procureAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="label" value="#{lbl['lbl.pm.settings.qt.limit']}" />	<!-- #36738 -->
 					<f:attribute name="min" value="0" />
 					<f:attribute name="max" value="9999999.99" />
 					<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -136,10 +169,18 @@
 			okAction="ruleCatalogueBackingBean.deleteQtValue()" width="400"
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}"
-			update=":form:settingTabId:qtValueTableId" />
-
-
-
-
+			update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValuePnlId"
+			okProcess=":form:settingTabId:qtValuePnlId"/><!-- #36738, #40071 -->
+			
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="saveQtValueInfoDlg" widget="saveQtValueInfoDlg"
+			okAction="ruleCatalogueBackingBean.saveQtValues"
+			okProcess=":form:settingTabId:qtValuePnlId"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			update=":form:settingTabId:qtValuePnlId"
+			loadingWidget="blockWidget" />
+		<!-- 34445 end -->
 	</p:panel>
 </ui:composition>

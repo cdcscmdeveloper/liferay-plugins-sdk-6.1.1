@@ -9,8 +9,12 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.lang3.StringUtils;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.VBasicAccountWithMof;
+import my.ep.persistence.entity.sm.VMofAccount;
+import my.ep.persistence.entity.sm.VSupplierPerformance;
+											   
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.vo.CategoryRptVO;
 
@@ -78,7 +82,9 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	
 	private VBasicAccountWithMof selectedBasicAccount;
 	// #29712 - end
-
+	
+	//#36125
+	private VSupplierPerformance selectedSupplierPerformance;
 
 	public VBasicAccountWithMof getSelectedBasicAccount() {
 		return selectedBasicAccount;
@@ -88,6 +94,22 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		this.selectedBasicAccount = selectedBasicAccount;
 	}
 
+	// #30824 - START
+	private VMofAccount selectedMofAccount;
+
+	public VMofAccount getSelectedMofAccount() {
+		return selectedMofAccount;
+	}
+
+	public void setSelectedMofAccount(VMofAccount selectedMofAccount) {
+		this.selectedMofAccount = selectedMofAccount;
+	}
+	// #30824 - END
+
+	//#32521 - START
+	private PmUser selectedUser;
+	private String disciplinaryActionStatus;
+	//#32521 - END
 	public String getDocumentType() {
 		return documentType;
 	}
@@ -497,4 +519,31 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		this.selectedSupplier = selectedSupplier;
 	}
 	// #29712 - end
+	//#32521 - START
+	public PmUser getSelectedUser() {
+		return selectedUser;
+	}
+
+	public void setSelectedUser(PmUser selectedUser) {
+		this.selectedUser = selectedUser;
+	}
+
+	public String getDisciplinaryActionStatus() {
+		return disciplinaryActionStatus;
+	}
+
+	public void setDisciplinaryActionStatus(String disciplinaryActionStatus) {
+		this.disciplinaryActionStatus = disciplinaryActionStatus;
+	}
+	//#32521 - END
+	public VSupplierPerformance getSelectedSupplierPerformance() {
+		return selectedSupplierPerformance;
+	}
+
+	public void setSelectedSupplierPerformance(
+			VSupplierPerformance selectedSupplierPerformance) {
+		this.selectedSupplierPerformance = selectedSupplierPerformance;
+	}
+	
+	
 }

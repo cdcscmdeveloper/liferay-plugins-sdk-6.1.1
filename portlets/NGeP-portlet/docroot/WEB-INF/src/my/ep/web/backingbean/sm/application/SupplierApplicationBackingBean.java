@@ -4515,6 +4515,7 @@ public class SupplierApplicationBackingBean extends
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 			SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
 					.isOverLappedCategoryExists(), getManagedBean());
+			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false, getManagedBean().getCurrentPageType()); //#31018
 			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
 		}
@@ -11716,7 +11717,7 @@ public class SupplierApplicationBackingBean extends
 		}
 		RequestContext.getCurrentInstance().execute("catCodePopup.show()");
 	}
-
+	//Start 99999
 	private MofRegistrationResDTO getCurrentRegStatus() {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
@@ -11845,6 +11846,7 @@ public class SupplierApplicationBackingBean extends
 	/**
 	 * Sets the SM application recommend rejection reasons selected.
 	 */
+	//Start 99999
 	private void setSmApplRecommendRejectionReasons() {
 		StringBuilder sb = new StringBuilder();
 		// int count = 0;
@@ -11892,6 +11894,7 @@ public class SupplierApplicationBackingBean extends
 		getManagedBean().getSmAppl().getSmApplRejectReasons().addAll(resList);
 		getManagedBean().setReasonDesc(sb.toString());
 	}	
+	//end 99999
 	// #15629 -- end
 	
 }

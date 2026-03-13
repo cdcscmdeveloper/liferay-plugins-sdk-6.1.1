@@ -333,15 +333,21 @@
 							disabled="#{backingBean.managedBean.disableIcEmail}" validator="#{backingBean.validateEmail}"
 							value="#{backingBean.managedBean.selectedShareHolder.email}" size="35">
 							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+							<ui:remove>#28720 Start</ui:remove>
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeEmail()}" update="equiEmail" />
+							<ui:remove>#28720 End</ui:remove>
 							<f:param name="disableValidate" value="true" />
 						</p:inputText> 
 					</p:outputPanel>
-					&#160; <p:graphicImage id="tooltip2"
-						value="/css/images/design/tooltips.png" /> <p:tooltip
-						id="toolinfo2" for="tooltip2">
-						<p:outputLabel escape="false"
-							value="#{lbl['tt.sm.registration.equity.owner.email']}" />
-					</p:tooltip>&#160; 
+					<ui:remove>#28720 Start</ui:remove>
+					&#160;&#160;
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" />
+					<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false"
+							value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip>
+					<ui:remove>#28720 End</ui:remove>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 							and not empty backingBean.managedBean.latestPersonnel}"
@@ -665,9 +671,14 @@
 			<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderAddressInfoPopUpForm.xhtml" />
 		</p:outputPanel>
 	</p:panel>
-
+<!-- #31130 230425- START -->
 	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true"
 		id="equiShrHldrJbFnc">
+		<f:facet name="header">
+			<h:outputText value="*" styleClass="mandatory" 
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
+				<h:outputText value="#{lbl['lbl.sm.job.function']}" />
+		</f:facet> 
 		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffExperiences}"
 			var="jf" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -677,27 +688,18 @@
 			<p:column selectionMode="multiple" style="width:1%" rendered="#{not empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.companyname']}" />
 				</f:facet>
 				<h:outputText value="#{jf.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.designation']}" />
 				</f:facet>
 				<h:outputText value="#{jf.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
 				<h:outputText value="#{jf.fromYear}" maxlength="4"
@@ -705,9 +707,6 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
 				<h:outputText value="#{jf.toYear}" maxlength="4"
@@ -715,11 +714,9 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.label.action']}" />
 				</f:facet>
+<!-- #31130 230425- END --> 
 				<p:commandLink update=":#{p:component('equiJobFunctionInfo')}"
 					action="#{backingBean.assignSelShrHldrJobFunc(jf)}"
 					partialSubmit="true" process="@this" style="text-align: center  !important;">
@@ -742,6 +739,11 @@
 				process="equiShrHldrJbFnc" />
 		</div>
 	</p:panel>
+	<ui:remove>#28720 Start</ui:remove>
+	<ac:smEmailAlertPopup bBean="#{backingBean}"
+		title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	<ui:remove>#28720 End</ui:remove>
 	
 	<ac:confirmationPopup id="equiJobFunctionDeletePopUpId"
 		widget="equiJobFunctionDeletePopUp"

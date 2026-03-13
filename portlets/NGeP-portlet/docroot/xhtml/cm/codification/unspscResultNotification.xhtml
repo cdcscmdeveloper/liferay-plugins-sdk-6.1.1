@@ -17,7 +17,7 @@
 			<div style="text-align: right;">
 				<p:commandButton id="btnAdd" value="#{lbl['lbl.cm.add.to.catalogue']}" action="#{catalogueBackingBean.addToMaintenanceFile('OK')}"
 					rendered="#{unspscCodeBackingBean.allSupplier}" 
-					disabled="#{unspscCodeBackingBean.managedBean.daCancelReg or unspscCodeBackingBean.managedBean.daBlacklistOwner}" >		<!-- [#26282] -->
+					disabled="#{unspscCodeBackingBean.managedBean.daCancelReg or unspscCodeBackingBean.managedBean.daBlacklistOwner}" >	<!-- [#26282] -->
 					<p:tooltip id="toolTipFade" for="btnAdd" value="#{lbl['lbl.cm.tooltip.btn.addtocatalog']}" position="top"/>
 				</p:commandButton>
 				<ui:repeat var="action"

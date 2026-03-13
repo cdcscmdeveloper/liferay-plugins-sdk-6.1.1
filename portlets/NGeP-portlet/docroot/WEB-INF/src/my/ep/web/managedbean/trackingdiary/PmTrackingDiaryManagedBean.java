@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map; //#25790
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -120,7 +121,17 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private boolean viewAsPTJ;
 	private boolean viewAsSupplier;
 	private String supplierRole;
-	//end - #25396	
+	//end - #25396
+	
+	// #25790 - start
+	private transient List<Map<String, String>> purchaseRequestMapList;
+	// #25790 - end
+
+	// 25791 -start-
+	private boolean isBiddingUrl = Boolean.FALSE;
+	// 25791 -end-
+	
+	private String selectedDocNo;//Fix - #36608
 
 	public String getBackURL() {
 		return backURL;
@@ -1037,6 +1048,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			SearchFilterBean searchFilterBean4 = new SearchFilterBean(
 					"groupId", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
+			
+			//Start Fix - #36608
+			SearchFilterBean searchFilterBean5 = new SearchFilterBean("docNo", 
+					SearchOperator.OPERATOR_EQUALS.value(), getSelectedDocNo(), SearchCondition.CONDITION_AND.value());
 		
 			BaseSearchFilterBean searchFilterBeanAnd1 = new SearchMultiFilterBean(
 					searchFilterBean1, searchFilterBean2);
@@ -1045,6 +1060,13 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
+			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
+			if(getSelectedDocNo() != null){
+				searchBean.getDataFilterBeans().add(searchFilterBean5);
+			}
+			//End Fix - #36608
+
+			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
 
 			if (isSearchBeanEmpty) {  
 				if (isFilterBySupplier() ) { 
@@ -1064,53 +1086,34 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						//END - Bug #29861
 					}
 				}
+				reqDTO.setSearchBean(searchBean);
 
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
 					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
 							.getServiceObject("cc", ITrackingDiarySO.class);
 
-					// #25790 - Start and #25791
-					if (isReqOrApprover() && ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSelectedDocType())
-							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equals(getSelectedDocType())
-							|| isReqOrApprover() && ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSelectedDocType())
-							|| isReqOrApprover() && ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(getSelectedDocType())
-							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())
-							|| isReqOrApprover() && ParameterConst.DOCTYPE_QUOTATION.equals(getSelectedDocType())) {
-						String docType = getSelectedDocType();
-						Long docId = getSelectedDocId();
-						resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
-								searchBean, searchFilterBeanAnd1);
+					resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 
-						// #25396 - Start
-						ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
-						HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
-						if (isUseViewAsOption()) {
-							if (isViewAsSupplier()) {
-								List<String> listOfSupplierRole = getAllSupplierRole();
-								for (PmTrackingDiary getResultList : resDTO.getResultBean().getResultList()) {
-									if (listOfSupplierRole.contains(getResultList.getRoleCode())) {
-										tempPmTrackingDiary.put(getResultList.getTrackingDiaryId(), getResultList);
-									}
+					// #25396 - Start
+					ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
+					HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
+					if (isUseViewAsOption()) {
+						if (isViewAsSupplier()) {
+							List<String> listOfSupplierRole = getAllSupplierRole();
+							for (PmTrackingDiary getResultList : resDTO.getResultBean().getResultList()) {
+								if (listOfSupplierRole.contains(getResultList.getRoleCode())) {
+									tempPmTrackingDiary.put(getResultList.getTrackingDiaryId(), getResultList);
 								}
-								tempResultBean.getResultList().clear();
-								tempResultBean.getResultList().addAll(
-										new ArrayList<PmTrackingDiary>(tempPmTrackingDiary.values()));
-
-								resDTO.setResultBean(tempResultBean);
 							}
+							tempResultBean.getResultList().clear();
+							tempResultBean.getResultList().addAll(
+									new ArrayList<PmTrackingDiary>(tempPmTrackingDiary.values()));
+
+							resDTO.setResultBean(tempResultBean);
 						}
-						// #25396 - end
-
-					} else {
-						searchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
-						reqDTO.setSearchBean(searchBean);
-
-						setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
-						resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 					}
-					// #25790 - End
+					// #25396 - end
 
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -1185,14 +1188,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
 	
-	// CR 25790 - Start
-	public boolean isReqOrApprover() {
-		FacesScopes fc = new FacesScopes();
-		return (fc.hasRoleUser(RoleCode.REQUISITIONER.value()) || fc.hasRoleUser(RoleCode.RN_APPROVER.value()) || fc
-				.hasRoleUser(RoleCode.BPK_AUDITOR.value())|| fc.hasRoleUser(RoleCode.DESK_OFFICER.value()));
-	}
-	// CR 25790 - End
-	
 	//START- Bug #29861
 	private List<String> getAllSupplierRoleForSM(){
 		List<String> supplierRoles = new ArrayList<String>();
@@ -1243,4 +1238,52 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 	
 	//end - #25396
+	// #25790 - start
+	/**
+	 * @return the purchaseRequestMapList
+	 */
+	public List<Map<String, String>> getPurchaseRequestMapList() {
+		if (purchaseRequestMapList == null) {
+			purchaseRequestMapList = new ArrayList<>();
+		}
+		return purchaseRequestMapList;
+	}
+
+	/**
+	 * Sets the purchase Request Map List.
+	 * 
+	 * @param purchaseRequestMapList
+	 *            the purchase Request Map List
+	 */
+	public void setPurchaseRequestMapList(List<Map<String, String>> purchaseRequestMapList) {
+		this.purchaseRequestMapList = purchaseRequestMapList;
+	}
+	// #25790 - end
+
+	// 25791 -start-
+	/**
+	 * 
+	 * @return the isBiddingUrl
+	 */
+	public boolean isBiddingUrl() {
+		return isBiddingUrl;
+	}
+
+	/**
+	 * @param isBiddingUrl
+	 *            the isBiddingUrl to set
+	 */
+	public void setBiddingUrl(boolean isBiddingUrl) {
+		this.isBiddingUrl = isBiddingUrl;
+	}
+	// 25791-end
+	//Start Fix - #36608
+	public String getSelectedDocNo() {
+		return selectedDocNo;
+	}
+
+	public void setSelectedDocNo(String selectedDocNo) {
+		this.selectedDocNo = selectedDocNo;
+	}
+	//End Fix - #36608
 }

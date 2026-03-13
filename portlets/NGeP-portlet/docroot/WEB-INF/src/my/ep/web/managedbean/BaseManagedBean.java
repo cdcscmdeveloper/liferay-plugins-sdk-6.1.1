@@ -6,6 +6,7 @@ package my.ep.web.managedbean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -53,6 +54,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private Boolean groupTask;
 	private boolean isReadOnly;
 	private String currentTaskDocType;// #25037
+	private Calendar currentTaskCreatedDate;// #25037
 	/*
 	 * commonly used as a flag to user's permission to download documents/attachment
 	 */
@@ -175,10 +177,18 @@ public abstract class BaseManagedBean implements Serializable {
 	private Integer wipStatusMax;//34865,34866,34867 - 29021 WIP
 	
 	//#28784 - Demo WIP - To display QT BPM version
-	private String bpmVersionNo;
+	private String bpmVersionNo; // #29007 wip
 	private boolean newVersion;
-
-
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean forceReplace;
+	
+//	37925 START
+	private String strLabelCountryOrigin;
+	private boolean displayCheckboxChangeCurrentStatus;
+	private boolean displayLabelRegistrationStatus;
+	private boolean displayDropdownRegStatus;
+//	37925 END
+	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1080,7 +1090,17 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setWipStatusMax(Integer wipStatusMax) {
 		this.wipStatusMax = wipStatusMax;
 	}
-	
+
+	// #29007 wip -start-
+	public String getBpmVersionNo() {
+		return bpmVersionNo;
+	}
+
+	public void setBpmVersionNo(String bpmVersionNo) {
+		this.bpmVersionNo = bpmVersionNo;
+	}
+	// #29007 wip -end-
+
 	public boolean isNewVersion() {
 		return newVersion;
 	}
@@ -1088,7 +1108,56 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setNewVersion(boolean newVersion) {
 		this.newVersion = newVersion;
 	}
-}
+	//25037 - start
+	public Calendar getCurrentTaskCreatedDate() {
+		return currentTaskCreatedDate;
+	}
 
-// ***25201
-// ***25692
+	public void setCurrentTaskCreatedDate(Calendar currentTaskCreatedDate) {
+		this.currentTaskCreatedDate = currentTaskCreatedDate;
+	}
+	//25037 - end	
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isForceReplace() {
+		return forceReplace;
+	}
+
+	public void setForceReplace(boolean forceReplace) {
+		this.forceReplace = forceReplace;
+	}
+	// #28895_35501 End
+
+//	37925 START
+	public String getStrLabelCountryOrigin() {
+		return strLabelCountryOrigin;
+	}
+
+	public void setStrLabelCountryOrigin(String strLabelCountryOrigin) {
+		this.strLabelCountryOrigin = strLabelCountryOrigin;
+	}
+
+	public boolean isDisplayCheckboxChangeCurrentStatus() {
+		return displayCheckboxChangeCurrentStatus;
+	}
+
+	public void setDisplayCheckboxChangeCurrentStatus(boolean displayCheckboxChangeCurrentStatus) {
+		this.displayCheckboxChangeCurrentStatus = displayCheckboxChangeCurrentStatus;
+	}
+
+	public boolean isDisplayLabelRegistrationStatus() {
+		return displayLabelRegistrationStatus;
+	}
+
+	public void setDisplayLabelRegistrationStatus(boolean displayLabelRegistrationStatus) {
+		this.displayLabelRegistrationStatus = displayLabelRegistrationStatus;
+	}
+
+	public boolean isDisplayDropdownRegStatus() {
+		return displayDropdownRegStatus;
+	}
+
+	public void setDisplayDropdownRegStatus(boolean displayDropdownRegStatus) {
+		this.displayDropdownRegStatus = displayDropdownRegStatus;
+	}
+//	37925 END
+}

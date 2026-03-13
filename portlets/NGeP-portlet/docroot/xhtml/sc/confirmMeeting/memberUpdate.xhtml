@@ -147,12 +147,14 @@
 							value="#{committeeMember.memberRoleId}"
 							style="width: 110px;margin-bottom: 5px;"
 							disabled="#{!isCommitteeUpdatable}">
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{meetingBB.onChangeRole(index,meetingBB.managedBean.committeeMemberActivity)}" /><!-- #35500 issue fix 4-9 -->
 							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
 								itemLabel="#{role.codeName}"
 								itemValue="#{role.pmParameter.parameterId}" 
 								value="#{meetingBB.getRoleTypeDropdownValuesBasedOnPTJ(committeeMember.PNP,meetingBB.managedBean.qt,committeeMember.pmUser, filteredRoles)}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{meetingBB.chnageMemberRole(index,meetingBB.managedBean.committeeMemberActivity)}"></p:ajax>
+							<!-- <p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{meetingBB.chnageMemberRole(index,meetingBB.managedBean.committeeMemberActivity)}"></p:ajax>  -->
 						</p:selectOneMenu>
 						<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
 					</ui:fragment>

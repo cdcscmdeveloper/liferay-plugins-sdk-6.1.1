@@ -163,6 +163,12 @@ u {
 	font-size:15px;
 	border: 1px solid black;
 }
+
+.tableSST{
+	-fs-table-paginate: paginate;
+	border-spacing:-2px;
+	border:1px solid black
+}	
 ##26130-end
 </style>
 </head>
@@ -178,7 +184,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 #include("/templates/sc/loa/sstFooter.vm")
 ##26130 - end
 ##26130 - start
-#include("/templates/sc/loa/footerContentStart.vm")
 ##26130 - end
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
@@ -205,7 +210,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 #set ($whitespace = "&nbsp;")	
 #if ($specCombineProduct.listOfZonalProduct.size() > 0 || $specCombineProduct.listOfNonZonalProduct.size() > 0)
 <br/>
-<table width="100%" border="1" cellspacing="0">
+<table width="100%" cellspacing="0" cellpadding="0" class="tableSST">
 <tbody>		
 #if ($isZonal)
 	#foreach ($listSpecDLOA in $specCombineProduct.listOfZonalProduct)
@@ -237,10 +242,10 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 				#set ($rowspanItemName = $specDLOA.rowSpan )
 					
 					
-						<tr>
+						<tr style="page-break-inside: avoid">
 							#if ($specDLOA.clItem == "&nbsp;" || $specDLOA.clItem == " ")
 							#else
-								<td valign="top" class="tableData" rowspan="$rowspanItemName">$specDLOA.clItem</td>
+								<td valign="top" class="tableData" style="border-bottom:none;" rowspan="$listSpecDLOA.size()">$specDLOA.clItem</td>
 							#end
 							#if ($specDLOA.uomName == "&nbsp;" || $specDLOA.uomName == " ")	
 							#else
@@ -271,14 +276,27 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 							#if ($indi == 0)
 								#set($indi = 1)	
 								#set($rowCount = 1)	
-									<td class="tableData" rowspan="$rowspanItemName">$whitespace</td>
+									<td class="tableData" rowspan="$listSpecDLOA.size()" style="border-bottom:none;">$whitespace</td>
 							#end
 						</tr>
+						#set($specCount = 1)
 						#foreach($specVal in $specDLOA.specVal)
+							#set($specVal = $specVal.replace("<", "&#60;"))
+							#set($specVal = $specVal.replace(">", "&#62;"))
 							<tr>
-								
-								<td valign="top" colspan="5" class="tableData" style="text-align:justify">$specVal</td>
+								#if($specDLOA.specVal.size() > $specCount)
+									<td valign="top" class="tableData" style="border-top:none;border-bottom:none;"></td>
+								#else
+									<td valign="top" class="tableData" style="border-top:none;"></td>
+								#end
+									<td valign="top" colspan="5" class="tableData" style="text-align:justify; border-top:none;">$specVal</td>
+								#if($specDLOA.specVal.size() > $specCount)
+									<td valign="top" class="tableData" style="border-top:none;border-bottom:none;"></td>
+								#else
+									<td valign="top" class="tableData" style="border-top:none;"></td>
+								#end
 							</tr>
+						#set($specCount = $specCount + 1)	
 						#end
 					
 						#set($rowCount = $rowCount + 1)	
@@ -317,10 +335,10 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			
 			#set ($rowspanItemName = $listSpecDLOA.rowSpan )
 			
-			<tr>
+			<tr style="page-break-inside: avoid">
 				#if ($listSpecDLOA.clItem == "&nbsp;" || $listSpecDLOA.clItem == " ")
 				#else
-					<td valign="top" class="tableData" rowspan="$rowspanItemName">$listSpecDLOA.clItem</td>
+					<td valign="top" class="tableData" style="border-bottom:none;">$listSpecDLOA.clItem</td>
 				#end
 				
 				#if ($listSpecDLOA.uomName == "&nbsp;" || $listSpecDLOA.uomName == " ")
@@ -346,15 +364,28 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 				#if ($indi == 0)
 					#set($indi = 1)	
 					#set($rowCount = 1)	
-					<td class="tableData" rowspan="$rowspanItemName">$whitespace</td>
+					<td class="tableData" style="border-bottom:none;">$whitespace</td>
 				#end
 			</tr>
 											
-										
+			#set($specCount = 1)							
 			#foreach ($spec in $listSpecDLOA.specVal)
-				<tr>		
-					<td valign="top" colspan="4" class="tableData">$spec</td>
+				#set($spec = $spec.replace("<", "&#60;"))
+				#set($spec = $spec.replace(">", "&#62;"))
+				<tr>
+					#if($listSpecDLOA.specVal.size() > $specCount)
+						<td valign="top" class="tableData" style="border-top:none;border-bottom:none;"></td>
+					#else
+						<td valign="top" class="tableData" style="border-top:none;"></td>
+					#end		
+						<td valign="top" colspan="4" class="tableData" style="text-align:justify; border-top:none;">$spec</td>
+					#if($listSpecDLOA.specVal.size() > $specCount)
+						<td valign="top" class="tableData" style="border-top:none;border-bottom:none;"></td>
+					#else
+						<td valign="top" class="tableData" style="border-top:none;"></td>
+					#end
 				</tr>
+			#set($specCount = $specCount + 1)	
 			#end
 		#end	
 #end
@@ -366,8 +397,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 </table>
 #end
 	##26130 -end
-		<br/>
-		<br/>
 	  #else 
 		
 		  	#foreach( $tplspecMaster in $masters )
@@ -406,7 +435,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 								<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;"><nobr>Kuantiti Berperingkat</nobr></th>
 								
-					            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Maklumbalas</th>
+					            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Maklum Balas</th>##36736
 					         	<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Catatan</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
 							</tr>
@@ -729,8 +758,9 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 #else
 	<div class="break-after"><br/></div>
 #end
-
-<table width="100%" border="1" cellspacing="0">
+<br/>
+<br/>
+<table width="100%" cellspacing="0" cellpadding="0" class="tableSST">
 <tbody>	
 #if ($isZonal)
 #foreach ($listSpecDLOA in $specCombineService.listOfZonalService)
@@ -746,16 +776,16 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 				<tr>
 					<th valign="top" bgcolor="#6d839b" rowspan="2" class="tableData">Item</th>
 					<th valign="top" bgcolor="#6d839b" class="tableData">UOM</th>
-					<th valign="top" bgcolor="#6d839b" class="tableData">Kekerapan / <br/>Unit Ukuran</th>
+					<th valign="top" bgcolor="#6d839b" class="tableData">Kekerapan / Unit<br/> Ukuran</th>
 					<th valign="top" bgcolor="#6d839b" class="tableData">Bil. Unit <br/>Ukuran Sehari</th>
 					<th valign="top" bgcolor="#6d839b" class="tableData">Bil. Unit <br/>Ukuran Sebulan</th>
 							
 					#if ($isZonal)
-						<th valign="top" bgcolor="#6d839b" rowspan="2" class="tableData">Zon</th>
+						<th valign="top" bgcolor="#6d839b" class="tableData">Zon</th>
 					#end
 							
-					<th valign="top" bgcolor="#6d839b" rowspan="2" class="tableData">Kuantiti</th>
-					<th valign="top" bgcolor="#6d839b" rowspan="2" class="tableData">Skop Perkhidmatan / SLA</th>
+					<th valign="top" bgcolor="#6d839b" class="tableData">Kuantiti</th>
+					<th valign="top" bgcolor="#6d839b" rowspan="2" class="tableData" style="padding-right:0px;">Skop Perkhidmatan / SLA</th>
 				</tr>
 				<tr>
 					#if ($isZonal)
@@ -769,10 +799,10 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			
 			
 				#set ($rowspanItemName = $zonalDLOA.rowSpan )
-					<tr>
+					<tr style="page-break-inside: avoid">
 						#if ($zonalDLOA.clItem == " " || $zonalDLOA.clItem == $whitespace)
 						#else
-							<td valign="top" class="tableData" rowspan="$rowspanItemName">$zonalDLOA.clItem</td>	
+							<td valign="top" class="tableData" rowspan="$listSpecDLOA.size()" style="border-bottom:none;">$zonalDLOA.clItem</td>	
 						#end
 						
 						#if($zonalDLOA.uomName == " " || $zonalDLOA.uomName == $whitespace)
@@ -818,16 +848,29 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 							#if ($indi == 0)
 							#set($indi = 1)	
 							#set($rowCount = 1)	
-							<td class="tableData" rowspan="$rowspanItemName" >$whitespace</td>
+							<td class="tableData" rowspan="$listSpecDLOA.size()" style="border-bottom:none;">$whitespace</td>
 							
 							#end
 								
 					</tr>
+					#set($specCount = 1)
 					#foreach($specVal in $zonalDLOA.specVal)
+						#set($specVal = $specVal.replace("<", "&#60;"))
+						#set($specVal = $specVal.replace(">", "&#62;"))
 						<tr>
-							
-							<td valign="top" colspan="6" class="tableData" style="text-align: justify;">$specVal</td>
+							#if($zonalDLOA.specVal.size() > $specCount)
+								<td valign="top" class="tableData" style="border-top:none;border-bottom:none;"></td>
+							#else
+								<td valign="top" class="tableData" style="border-top:none;"></td>
+							#end
+								<td valign="top" colspan="6" class="tableData" style="text-align: justify; border-top:none;">$specVal</td>
+							#if($zonalDLOA.specVal.size() > $specCount)
+								<td valign="top" class="tableData" style="border-top:none;border-bottom:none;"></td>
+							#else
+								<td valign="top" class="tableData" style="border-top:none;"></td>
+							#end
 						</tr>
+					#set($specCount = $specCount + 1)	
 					#end
 					
 						#set($rowCount = $rowCount + 1)	
@@ -853,7 +896,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 					<th valign="top" bgcolor="#6d839b" class="tableData">Kekerapan / <br/>Unit Ukuran</th>
 					<th valign="top" bgcolor="#6d839b" class="tableData">Bil. Unit <br/>Ukuran Sehari</th>
 					<th valign="top" bgcolor="#6d839b" class="tableData">Bil. Unit <br/>Ukuran Sebulan</th>
-					<th valign="top" bgcolor="#6d839b" rowspan="2" class="tableData" >Kuantiti</th>
+					<th valign="top" bgcolor="#6d839b" class="tableData" >Kuantiti</th>
 					<th valign="top" bgcolor="#6d839b" rowspan="2" class="tableData" >Skop Perkhidmatan / SLA</th>
 				</tr>
 				<tr>
@@ -861,12 +904,10 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 				</tr>
 			
 			#end
-			
-			#set ($rowspanItemName = $listSpecDLOA.rowSpan )
-			
+				<tr>
 						#if ($listSpecDLOA.clItem == " " || $listSpecDLOA.clItem == $whitespace)
 						#else
-							<td valign="top" class="tableData" rowspan="$rowspanItemName">$listSpecDLOA.clItem</td>	
+							<td valign="top" class="tableData" style="border-bottom:none;">$listSpecDLOA.clItem</td>
 						#end
 						
 						#if($listSpecDLOA.uomName == " " || $listSpecDLOA.uomName == $whitespace)
@@ -901,15 +942,27 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 						#if ($indi == 0)
 							#set($indi = 1)	
 							#set($rowCount = 1)	
-							<td class="tableData" rowspan="$rowspanItemName" >$whitespace</td>
-							
+							<td class="tableData" style="border-bottom:none;" >$whitespace</td>
+					</tr>	
 						#end
-						
+						#set($specCount = 1)
 						#foreach($specVal in $listSpecDLOA.specVal)
+							#set($specVal = $specVal.replace("<", "&#60;"))
+							#set($specVal = $specVal.replace(">", "&#62;"))
 							<tr>
-								
-								<td valign="top" colspan="5" class="tableData"   style="text-align: justify;">$specVal</td>
+								#if($listSpecDLOA.specVal.size() > $specCount)
+									<td valign="top" class="tableData" style="border-top:none;border-bottom:none;"></td>
+								#else
+									<td valign="top" class="tableData" style="border-top:none;"></td>
+								#end
+									<td valign="top" colspan="5" class="tableData"   style="text-align: justify; border-top:none;">$specVal</td>
+								#if($listSpecDLOA.specVal.size() > $specCount)
+									<td valign="top" class="tableData" style="border-top:none;border-bottom:none;"></td>
+								#else
+									<td valign="top" class="tableData" style="border-top:none;"></td>
+								#end
 							</tr>
+						#set($specCount = $specCount + 1)	
 						#end
 					
 						#set($rowCount = $rowCount + 1)	
@@ -923,8 +976,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 </table>
 #end		
 ##26130 - end	
-		<br/>
-		<br/>
 	  #else 
 		
 		  	#foreach( $tplspecMaster in $masters )
@@ -964,7 +1015,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 								#end
 									
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
-								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Maklumbalas</th>
+								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Maklum Balas</th>##36736
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Catatan</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
 							</tr>
@@ -1273,7 +1324,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 		</tr>
 	</table>
 	##26130 - start
-	#include("/templates/sc/loa/footerContentEnd.vm")
 	##26130 - end
 	#if ($serviceItemPageNo)
 		

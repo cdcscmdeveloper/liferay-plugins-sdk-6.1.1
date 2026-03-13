@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.purchaseinquiry;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -209,6 +210,10 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
  	
  	/** The disabled remark. */
 	 private boolean disabledRemark;
+	 
+	// 27868 & 35321 - start
+	private Date createdDate;
+	// 27868 & 35321 - end
     
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -877,7 +882,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemTierStandardPrices() {
 		if (supplierItemTierStandardPrices == null)
-			supplierItemTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemTierStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemTierStandardPrices;
 	}
@@ -899,7 +904,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemTierPromotionPrices() {
 		if (supplierItemTierPromotionPrices == null)
-			supplierItemTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemTierPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemTierPromotionPrices;
 	}
@@ -921,7 +926,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalStandardPrices() {
 		if (supplierItemZonalStandardPrices == null)
-			supplierItemZonalStandardPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemZonalStandardPrices;
 	}
@@ -943,7 +948,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalPromotionPrices() {
 		if (supplierItemZonalPromotionPrices == null)
-			supplierItemZonalPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemZonalPromotionPrices;
 	}
@@ -965,7 +970,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalTierStandardPrices() {
 		if (supplierItemZonalTierStandardPrices == null)
-			supplierItemZonalTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalTierStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemZonalTierStandardPrices;
 	}
@@ -987,7 +992,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalTierPromotionPrices() {
 		if (supplierItemZonalTierPromotionPrices == null)
-			supplierItemZonalTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalTierPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemZonalTierPromotionPrices;
 	}
@@ -1394,4 +1399,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 		this.supplierItemPromoPrices = supplierItemPromoPrices;
 	}
 	// 29557 - end
+	// 27868 & 35321 - start
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	// 27868 & 35321 - end
 }

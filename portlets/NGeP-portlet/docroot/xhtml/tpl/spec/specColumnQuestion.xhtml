@@ -5,6 +5,39 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- #25726/25725 - Check and display Italic value - Start -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
+
+	
+<h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{templateSpecBackingBean.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+</h:outputScript>
+<!-- #25726/25725 - Check and display Italic value - End  -->
+
 	<ui:param name="isFulfilmentTypeOneOff"
 		value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
 	<ui:param name="isFulfilmentTypeAsAndWhen"
@@ -29,16 +62,21 @@
 			</p:inputTextarea>
 			<p:message id="itemNameMsg" for="itemName" display="icon" />
 			<ui:fragment rendered="#{specificationrequired }">
+			<ui:remove>#36681 - start</ui:remove>
 			<p:inputTextarea id="specification" style="width:calc(100% - 30px);"
 				value="#{question.clSpecDetail}"
 				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
 				required="#{isValidationReq}" rows="5" maxlength="1000"
-				onkeyup="limitTextArea(this,1000);"
-				onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
+				validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+				onkeyup="limitTextAreaWithBreakline(this,1000);"
+				onkeydown="limitTextAreaWithBreakline(this,1000);"
+				onmouseout="limitTextAreaWithBreakline(this,1000);"
 				label="#{lbl['lbl.tpl.spec.content.specification']}"
 				autoResize="false">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
+				<f:validateLength for="specification" maximum="1000" />
 			</p:inputTextarea>
+			<ui:remove>#36681 - end</ui:remove>
 			<p:message id="specificationMsg" for="specification" display="icon" />
 			<br />
 			#{question.cmItem.extensionCode}
@@ -92,19 +130,23 @@
 	
 	<p:column style="width:98px;"
 		rendered="#{isItemTypeService and isFulfilmentTypeReq}">
-
-		<h:selectOneMenu id="fulfilType"
+		<!-- #25726/25725 - Check and display Italic value - Start-->
+		<p:selectOneMenu id="fulfilType"
 			value="#{question.clFulfilmentTypeCode.parameterId}"
 			required="#{isValidationReq}" style="width:98px;"
 			rendered="#{isQuestionTypeItem}"
-			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}">
+			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}"
+			styleClass="#{templateSpecBackingBean.checkItalicCodeNameForMy(question.clFulfilmentTypeCode.parameterId) ? 'italic-item' : ''}"
+            panelStyleClass="fulfil-panel">
 			<f:selectItems
 				value="#{templateSpecBackingBean.getFulfilmentTypeDropdownList(templateSpecBean.specMaster)}" />
 			<p:ajax event="change"
 				listener="#{templateSpecBackingBean.fulfilmentTypeChange(question)}"
 				partialSubmit="true" process="@this"
-				update="fulfilTypeMsg, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" />
-		</h:selectOneMenu>
+				oncomplete="styleFulfilmentDropdown();"
+				update="@this, fulfilTypeMsg, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" />
+		</p:selectOneMenu>
+		<!-- #25726/25725 - Check and display Italic value - End -->
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
 	<p:column style="width:120px;">
@@ -146,9 +188,9 @@
 					style="min-width:0px !important;width:50px; text-align:right;"
 					value="#{question.clUomFrequency}"
 					rendered="#{isQuestionTypeItem and isShowService}"
-					required="#{isValidationReq}" maxlength="5"
+					required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"
-					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
+					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 --> <!-- #39230 -->
 					<ac:validateNumber maxIntegerDigits="7"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					<p:ajax partialSubmit="true" process="@this"

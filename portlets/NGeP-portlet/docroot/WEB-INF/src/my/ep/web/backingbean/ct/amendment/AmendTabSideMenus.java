@@ -34,6 +34,7 @@ public class AmendTabSideMenus {
 	List<String> menuWithAgency = null;
 	List<String> menuDeduction= null;
 	List<String> menuSchedule = null;
+	List<String> menuApprover = null; //#35132
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -114,6 +115,11 @@ public class AmendTabSideMenus {
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.content", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.view.loa", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		}
+		//#35132
+		if (menuApprover == null) {
+			menuApprover =  new ArrayList<String>(Arrays.asList(
+					ResourceBundleUtils.getMessage("lbl.ct.menu.approver.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 	}
 }

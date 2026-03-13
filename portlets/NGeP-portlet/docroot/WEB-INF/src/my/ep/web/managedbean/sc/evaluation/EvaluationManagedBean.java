@@ -12,7 +12,9 @@ package my.ep.web.managedbean.sc.evaluation;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -67,6 +69,13 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
+
+//29661 -start-
+import my.ep.biz.bean.sc.CompanyExpBean;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.persistence.entity.ct.CtContractVer;
+
+//29661 -end-
 
 /**
  * The Class EvaluationManagedBean.
@@ -611,7 +620,25 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip;//#28784 WIP @idham
+	private int retainPageNumber;//#28784 WIP @Idham
+	private String otherchecklistScore;
+	private BigDecimal maxPackageTsScore;
+	private BigDecimal maxPackageOtherElementsScore;
+	private BigDecimal maxItemAllOtherElementsScore;
+	private BigDecimal maxItemOtherElementsScore;
+	private String maxDemoScore;//Needed String for (-) if not select item yet or no demo for selected item
+	private BigDecimal demoWeightage;
+	private BigDecimal maxItemTsPercentage;
+	private BigDecimal maxItemAllOtherElementsPercentage;
+	private BigDecimal itemTsPercentage;
+	private BigDecimal itemAllOtherElementsPercentage;
+	private BigDecimal maxItemTsScore;
+	private String totalScoreLabel;
+	private String maxItemAllOtherElementsScoreLabel;
+	private String tooltipDemo;
 	//#28784 - end
+	private boolean fecIndexPreRender;//#10542
+	private boolean allSupplierRejectEpv;//#21692
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -669,11 +696,38 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//Bug #33178
 	/*#29187 Start Vinod*/
 	private TplSpecZoneDtl tplSpecZoneDtl;
+	private boolean isComplianceCnfrm;
+	private boolean isComplianceOldNull;
+	private boolean isComplianceOldNo;
 	/*#29187 End Vinod*/
 	
 	//34528-uat 4serangkai 
 	private Paginator financialPackagePaginator;
-		
+	
+	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
+	
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
+	// 29661 -start-
+	private int companyExpProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
+	private int companyExpNonProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
+	private BigDecimal companyExpProcRelatedValue;
+	private BigDecimal companyExpNonProcRelatedValue;
+	private List<ScQtPRPExperience> companyExpProcRelatedList;
+	private List<ScQtPRPExperience> companyExpNonProcRelatedList;
+	private List<CompanyExpBean> contractStatusvalueProcRelated;
+	private List<CompanyExpBean> contractStatusvalueNonProcRelated;
+	private int companyExpProcRelatedContracts;
+	private int companyExpNonProcRelatedContracts;
+	private CtContractVer ctContractVer;
+	private IPagingDataModel<ScQtPRPExperience> companyExpProcRelatedPagingModel;
+	private IPagingDataModel<ScQtPRPExperience> companyExpNonProcRelatedPagingModel;
+
+	// 29661 -end-
+	
+
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4349,14 +4403,40 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
 	}
 	//#28784 add remarks - end
-	/*#29187 Start Vinod*/
+	/* #29187 Start Vinod */
 	public TplSpecZoneDtl getTplSpecZoneDtl() {
 		return tplSpecZoneDtl;
 	}
+
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
-	/*#29187 End Vinod*/
+
+	public boolean isComplianceCnfrm() {
+		return isComplianceCnfrm;
+	}
+
+	public void setComplianceCnfrm(boolean isComplianceCnfrm) {
+		this.isComplianceCnfrm = isComplianceCnfrm;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+
+	public boolean isComplianceOldNo() {
+		return isComplianceOldNo;
+	}
+
+	public void setComplianceOldNo(boolean isComplianceOldNo) {
+		this.isComplianceOldNo = isComplianceOldNo;
+	}
+	
+	/* #29187 End Vinod */
 	
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {
@@ -4375,4 +4455,395 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setDemoWip(boolean demoWip) {
 		this.demoWip = demoWip;
 	}
+	//#10542
+	public boolean getFecIndexPreRender() {
+		return fecIndexPreRender;
+	}
+
+	public void setFecIndexPreRender(boolean fecIndexPreRender) {
+		this.fecIndexPreRender = fecIndexPreRender;
+	}
+
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+
+	public Map<String, Object> getEvaluationContext() {
+		return evaluationContext;
+	}
+
+	public void setEvaluationContext(Map<String, Object> evaluationContext) {
+		this.evaluationContext = evaluationContext;
+	}
+
+	//#28784 Demo Summary GAP - Start
+	public String getOtherchecklistScore() {
+		return otherchecklistScore;
+	}
+
+	public void setOtherchecklistScore(String otherchecklistScore) {
+		this.otherchecklistScore = otherchecklistScore;
+	}
+	
+	public BigDecimal getMaxPackageTsScore() {
+		return maxPackageTsScore;
+	}
+
+	public void setMaxPackageTsScore(BigDecimal maxPackageTsScore) {
+		this.maxPackageTsScore = maxPackageTsScore;
+	}
+
+	public BigDecimal getMaxPackageOtherElementsScore() {
+		return maxPackageOtherElementsScore;
+	}
+
+	public void setMaxPackageOtherElementsScore(BigDecimal maxPackageOtherElementsScore) {
+		this.maxPackageOtherElementsScore = maxPackageOtherElementsScore;
+	}
+
+	public BigDecimal getMaxItemAllOtherElementsScore() {
+		return maxItemAllOtherElementsScore;
+	}
+
+	public void setMaxItemAllOtherElementsScore(BigDecimal maxItemAllOtherElementsScore) {
+		this.maxItemAllOtherElementsScore = maxItemAllOtherElementsScore;
+	}
+
+	public BigDecimal getMaxItemOtherElementsScore() {
+		return maxItemOtherElementsScore;
+	}
+
+	public void setMaxItemOtherElementsScore(BigDecimal maxItemOtherElementsScore) {
+		this.maxItemOtherElementsScore = maxItemOtherElementsScore;
+	}
+
+	public String getMaxDemoScore() {
+		return maxDemoScore;
+	}
+
+	public void setMaxDemoScore(String maxDemoScore) {
+		this.maxDemoScore = maxDemoScore;
+	}
+
+	public BigDecimal getDemoWeightage() {
+		return demoWeightage;
+	}
+
+	public void setDemoWeightage(BigDecimal demoWeightage) {
+		this.demoWeightage = demoWeightage;
+	}
+
+	public BigDecimal getMaxItemTsPercentage() {
+		return maxItemTsPercentage;
+	}
+
+	public void setMaxItemTsPercentage(BigDecimal maxItemTsPercentage) {
+		this.maxItemTsPercentage = maxItemTsPercentage;
+	}
+
+	public BigDecimal getMaxItemAllOtherElementsPercentage() {
+		return maxItemAllOtherElementsPercentage;
+	}
+
+	public void setMaxItemAllOtherElementsPercentage(BigDecimal maxItemAllOtherElementsPercentage) {
+		this.maxItemAllOtherElementsPercentage = maxItemAllOtherElementsPercentage;
+	}
+
+	public BigDecimal getItemTsPercentage() {
+		return itemTsPercentage;
+	}
+
+	public void setItemTsPercentage(BigDecimal itemTsPercentage) {
+		this.itemTsPercentage = itemTsPercentage;
+	}
+
+	public BigDecimal getItemAllOtherElementsPercentage() {
+		return itemAllOtherElementsPercentage;
+	}
+
+	public void setItemAllOtherElementsPercentage(BigDecimal itemAllOtherElementsPercentage) {
+		this.itemAllOtherElementsPercentage = itemAllOtherElementsPercentage;
+	}
+
+	public BigDecimal getMaxItemTsScore() {
+		return maxItemTsScore;
+	}
+
+	public void setMaxItemTsScore(BigDecimal maxItemTsScore) {
+		this.maxItemTsScore = maxItemTsScore;
+	}
+	//#28784 Demo Summary GAP - End
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
+	
+	//#38151 - start
+	/**
+	 * @return the flag from nextbutton
+	 */
+	public boolean isComingFromNextButton() {
+		return comingFromNextButton;
+	}
+
+	/**
+	 * @param set flag from nextbutton
+	 */
+	public void setComingFromNextButton(boolean comingFromNextButton) {
+		this.comingFromNextButton = comingFromNextButton;
+	}
+	
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - end
+	
+	// 29661 -start-
+
+	/**
+	 * @return the companyExpProcRelated
+	 */
+	public int getCompanyExpProcRelated() {
+		return companyExpProcRelated;
+	}
+
+	/**
+	 * @param companyExpProcRelated
+	 *            the companyExpProcRelated to set
+	 */
+	public void setCompanyExpProcRelated(int companyExpProcRelated) {
+		this.companyExpProcRelated = companyExpProcRelated;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelated
+	 */
+	public int getCompanyExpNonProcRelated() {
+		return companyExpNonProcRelated;
+	}
+
+	/**
+	 * @param companyExpNonProcRelated
+	 *            the companyExpNonProcRelated to set
+	 */
+	public void setCompanyExpNonProcRelated(int companyExpNonProcRelated) {
+		this.companyExpNonProcRelated = companyExpNonProcRelated;
+	}
+
+	/**
+	 * @return the companyExpProcRelatedValue
+	 */
+	public BigDecimal getCompanyExpProcRelatedValue() {
+		return companyExpProcRelatedValue;
+	}
+
+	/**
+	 * @param companyExpProcRelatedValue
+	 *            the companyExpProcRelatedValue to set
+	 */
+	public void setCompanyExpProcRelatedValue(
+			BigDecimal companyExpProcRelatedValue) {
+		this.companyExpProcRelatedValue = companyExpProcRelatedValue;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelatedValue
+	 */
+	public BigDecimal getCompanyExpNonProcRelatedValue() {
+		return companyExpNonProcRelatedValue;
+	}
+
+	/**
+	 * @param companyExpNonProcRelatedValue
+	 *            the companyExpNonProcRelatedValue to set
+	 */
+	public void setCompanyExpNonProcRelatedValue(
+			BigDecimal companyExpNonProcRelatedValue) {
+		this.companyExpNonProcRelatedValue = companyExpNonProcRelatedValue;
+	}
+
+	/**
+	 * @return the companyExpProcRelatedList
+	 */
+	public List<ScQtPRPExperience> getCompanyExpProcRelatedList() {
+		return companyExpProcRelatedList;
+	}
+
+	/**
+	 * @param companyExpProcRelatedList
+	 *            the companyExpProcRelatedList to set
+	 */
+	public void setCompanyExpProcRelatedList(
+			List<ScQtPRPExperience> companyExpProcRelatedList) {
+		this.companyExpProcRelatedList = companyExpProcRelatedList;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelatedList
+	 */
+	public List<ScQtPRPExperience> getCompanyExpNonProcRelatedList() {
+		return companyExpNonProcRelatedList;
+	}
+
+	/**
+	 * @param companyExpNonProcRelatedList
+	 *            the companyExpNonProcRelatedList to set
+	 */
+	public void setCompanyExpNonProcRelatedList(
+			List<ScQtPRPExperience> companyExpNonProcRelatedList) {
+		this.companyExpNonProcRelatedList = companyExpNonProcRelatedList;
+	}
+
+	/**
+	 * @return the contractStatusvalueProcRelated
+	 */
+	public List<CompanyExpBean> getContractStatusvalueProcRelated() {
+		return contractStatusvalueProcRelated;
+	}
+
+	/**
+	 * @param contractStatusvalueProcRelated
+	 *            the contractStatusvalueProcRelated to set
+	 */
+	public void setContractStatusvalueProcRelated(
+			List<CompanyExpBean> contractStatusvalueProcRelated) {
+		this.contractStatusvalueProcRelated = contractStatusvalueProcRelated;
+	}
+
+	/**
+	 * @return the contractStatusvalueNonProcRelated
+	 */
+	public List<CompanyExpBean> getContractStatusvalueNonProcRelated() {
+		return contractStatusvalueNonProcRelated;
+	}
+
+	/**
+	 * @param contractStatusvalueNonProcRelated
+	 *            the contractStatusvalueNonProcRelated to set
+	 */
+	public void setContractStatusvalueNonProcRelated(
+			List<CompanyExpBean> contractStatusvalueNonProcRelated) {
+		this.contractStatusvalueNonProcRelated = contractStatusvalueNonProcRelated;
+	}
+
+	/**
+	 * @return the companyExpProcRelatedContracts
+	 */
+	public int getCompanyExpProcRelatedContracts() {
+		return companyExpProcRelatedContracts;
+	}
+
+	/**
+	 * @param companyExpProcRelatedContracts
+	 *            the companyExpProcRelatedContracts to set
+	 */
+	public void setCompanyExpProcRelatedContracts(
+			int companyExpProcRelatedContracts) {
+		this.companyExpProcRelatedContracts = companyExpProcRelatedContracts;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelatedContracts
+	 */
+	public int getCompanyExpNonProcRelatedContracts() {
+		return companyExpNonProcRelatedContracts;
+	}
+
+	/**
+	 * @param companyExpNonProcRelatedContracts
+	 *            the companyExpNonProcRelatedContracts to set
+	 */
+	public void setCompanyExpNonProcRelatedContracts(
+			int companyExpNonProcRelatedContracts) {
+		this.companyExpNonProcRelatedContracts = companyExpNonProcRelatedContracts;
+	}
+
+	/**
+	 * @return the ctContractVer
+	 */
+	public CtContractVer getCtContractVer() {
+		return ctContractVer;
+	}
+
+	/**
+	 * @param ctContractVer
+	 *            the ctContractVer to set
+	 */
+	public void setCtContractVer(CtContractVer ctContractVer) {
+		this.ctContractVer = ctContractVer;
+	}
+
+	/**
+	 * @return the companyExpProcRelatedPagingModel
+	 */
+	public IPagingDataModel<ScQtPRPExperience> getCompanyExpProcRelatedPagingModel() {
+		return companyExpProcRelatedPagingModel;
+	}
+
+	/**
+	 * @param companyExpProcRelatedPagingModel
+	 *            the companyExpProcRelatedPagingModel to set
+	 */
+	public void setCompanyExpProcRelatedPagingModel(
+			IPagingDataModel<ScQtPRPExperience> companyExpProcRelatedPagingModel) {
+		this.companyExpProcRelatedPagingModel = companyExpProcRelatedPagingModel;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelatedPagingModel
+	 */
+	public IPagingDataModel<ScQtPRPExperience> getCompanyExpNonProcRelatedPagingModel() {
+		return companyExpNonProcRelatedPagingModel;
+	}
+
+	/**
+	 * @param companyExpNonProcRelatedPagingModel
+	 *            the companyExpNonProcRelatedPagingModel to set
+	 */
+	public void setCompanyExpNonProcRelatedPagingModel(
+			IPagingDataModel<ScQtPRPExperience> companyExpNonProcRelatedPagingModel) {
+		this.companyExpNonProcRelatedPagingModel = companyExpNonProcRelatedPagingModel;
+	}
+
+	public String getTotalScoreLabel() {
+		return totalScoreLabel;
+	}
+
+	public void setTotalScoreLabel(String totalScoreLabel) {
+		this.totalScoreLabel = totalScoreLabel;
+	}
+
+	public String getMaxItemAllOtherElementsScoreLabel() {
+		return maxItemAllOtherElementsScoreLabel;
+	}
+
+	public void setMaxItemAllOtherElementsScoreLabel(String maxItemAllOtherElementsScoreLabel) {
+		this.maxItemAllOtherElementsScoreLabel = maxItemAllOtherElementsScoreLabel;
+	}
+
+	public String getTooltipDemo() {
+		return tooltipDemo;
+	}
+
+	public void setTooltipDemo(String tooltipDemo) {
+		this.tooltipDemo = tooltipDemo;
+	}
+
+	// 29661 -end-
+	
+
 }

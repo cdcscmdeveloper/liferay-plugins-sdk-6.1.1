@@ -13,17 +13,22 @@ package my.ep.web.backingbean.tpl.spec;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Timestamp;
+import java.sql.Timestamp;//#38151
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date; //#38151
 import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -35,6 +40,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO; //#38151
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -51,6 +57,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO; //#38151
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.constant.sc.SourcingConstants;
@@ -61,9 +68,11 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.quationtender.ScQt; //#38151
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
@@ -172,54 +181,14 @@ public class TemplateSpecBackingBean extends
 		TplSpecZoneDtl speczoneDtl = templateSpecBean.getTplSpecZoneDtl();
 
 		try {
-			templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
-					.getServiceObject("cc", ITemplateSpecSO.class);
+			templateSpecSO = BusinessDelegate.getInstance()
+					.getServiceObject(QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class);
 
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setSpecMaster(specMaster);
 			reqDTO.setContentType(contentType);
 			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)) {
 				SmSupplier smSupplier = templateSpecBean.getSupplier();
-
-				// if (smSupplier == null) {
-				// IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				// .getServiceObject(
-				// ModuleCodeConst.PROFILE_MANAGEMENT,
-				// IOrgProfileSO.class);
-				// OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-				// profileReqDTO.setUserId(/*new FacesScopes()
-				// .getUserSessionBean().getUserId()*/81569L);
-				// profileReqDTO.setOrgType(OrganizationType.SUPPLIER.value());
-				// OrgProfileResDTO profileResDTO = orgProfileSO
-				// .retrieveOrgProfileListByOrgType(profileReqDTO);
-				//
-				// if (profileResDTO.getOrgProfileList().size() > 0) {
-				// IRegistrationSO registrationSO = BusinessDelegate
-				// .getInstance().getServiceObject(
-				// ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				// IRegistrationSO.class);
-				// RegistrationReqDTO registrationReqDTO = new
-				// RegistrationReqDTO();
-				// registrationReqDTO.setSupplierId(profileResDTO
-				// .getOrgProfileList().get(0).getOrgProfileId());
-				// RegistrationResDTO registrationResDTO = registrationSO
-				// .retrieveSuppOnlineAcc(registrationReqDTO);
-				// smSupplier = registrationResDTO.getSmSupp();
-				// } else {
-				// IRegistrationSO registrationSO = BusinessDelegate
-				// .getInstance().getServiceObject(
-				// ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				// IRegistrationSO.class);
-				// RegistrationReqDTO registrationReqDTO = new
-				// RegistrationReqDTO();
-				// registrationReqDTO.setSupplierId(27L);
-				// RegistrationResDTO registrationResDTO = registrationSO
-				// .retrieveSuppOnlineAcc(registrationReqDTO);
-				// smSupplier = registrationResDTO.getSmSupp();
-				// }
-				//
-				// templateSpecBean.setSupplier(smSupplier);
-				// }
 
 				reqDTO.setSupplier(smSupplier);
 			}
@@ -238,42 +207,37 @@ public class TemplateSpecBackingBean extends
 				}
 
 				templateSpecBean.setSpecMaster(specMaster);
-				if(QTConstants.FINANCIAL_ITEM_SPEC_ANSWER.equalsIgnoreCase(templateSpecBean.getAnswerRemove())){//32453-start
-					
-					if(CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())){
-						//for(TplSpecAnswer specAnswer: resDTO.getSpecAnswerList()){
-						
-							IQTEvaluationSO	evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-							EvaluationReqDTO evalReqDTO=new EvaluationReqDTO();
-							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
-							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
-							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
-							//#25138(wip 4serangkai) bug -Start 8/6/2023
-							this.getManagedBean().setWipStatusMax(wipstatus);
-							//#25138 for demo
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
-							evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-							evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
-						EvaluationResDTO evalResDTO=evaluationSO.technicalItemSupplierQualified(evalReqDTO);
+				if (QTConstants.FINANCIAL_ITEM_SPEC_ANSWER.equalsIgnoreCase(templateSpecBean.getAnswerRemove())
+						&& CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {// 32453-start
+
+					IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+					EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
+					evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
+					evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
+					int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+					// #25138(wip 4serangkai) bug -Start 8/6/2023
+					this.getManagedBean().setWipStatusMax(wipstatus);
+					// #25138 for demo
+					if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+							&& CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
+						evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
+						EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
 						templateSpecBean.setSpecAnswerList(evalResDTO.getSpecAnswers());
 						templateSpecBean.setHideanswerList(evalResDTO.getHideanswerList());
+					} else {
+						templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 					}
-							}//#25138 add start
-							else{
-								templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-							}
-							//#25138 add end
-					}
-					//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());	
-				}else{//32453-End
-					
-				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+					//#25138 add end
+				} else {// 32453-End
+					templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				}//32453-End
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
+				checkWeightage35384WIP(); //#38151
 				// #21695 - Farid
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())
@@ -712,11 +676,7 @@ public class TemplateSpecBackingBean extends
 		if(!(getManagedBean().isPidSQ() || getManagedBean().isG2G())){			
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-			//#25725 start
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
 		}
-		//#25725 end
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);		
 
 		searchBean.getDataFilterBeans().add(
@@ -1343,7 +1303,9 @@ public class TemplateSpecBackingBean extends
 								.getRoleCode());
 					}
 					
-					RoleCode[] r = {RoleCode.SC_SECRETARY};
+					RoleCode[] r = { RoleCode.SC_SECRETARY, 
+									RoleCode.SC_CHAIRPERSON, 
+									RoleCode.SC_MEMBER };
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
 					};
@@ -1721,6 +1683,12 @@ public class TemplateSpecBackingBean extends
 		} else{
 			// update new zone qts when TplSpecAnswers exists
 			if(CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){
+				// #39210 Start Vinod 3/10/2025
+				List<TplSpecAnswer> specAnswersNew = checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(templateSpecBean);
+				if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+					specQuestion.setTplSpecAnswers(specAnswersNew);
+				}
+				// #39210 End Vinod 3/10/2025
 				for (int i = 0; i < specQuestion.getTplSpecZoneQties().size(); i++) {
 					for (TplSpecZoneQty tplSpecZoneQty : specQuestion.getTplSpecZoneQties()) {
 
@@ -2253,14 +2221,14 @@ public class TemplateSpecBackingBean extends
 
 					if (tplSpecAnswer.getAnswerNumeric() != null) {
 						totalAmount = totalAmount.add(tplSpecAnswer
-								.getAnswerNumeric()).setScale(2, BigDecimal.ROUND_UP);
+								.getAnswerNumeric()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						
 					}
 				}
 
 				if (tplSpecAnswer.getAmountPerYear() != null) {
 					totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
-							.getAmountPerYear()).setScale(2, BigDecimal.ROUND_UP);
+							.getAmountPerYear()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 					
 				}
 			}
@@ -2954,9 +2922,12 @@ public class TemplateSpecBackingBean extends
 	}
 	
 	public String replaceWithBR(String specDetails) {
-		
-		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		// 35521 @zaim - start
+		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); //36103 @zaim
+		spec = spec.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //36103 @zaim
+		return spec;
+		// 35521 @zaim - end
 	}
 	
 	/**
@@ -3146,7 +3117,7 @@ public class TemplateSpecBackingBean extends
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						totalEstAmount = totalEstAmount.add(specEstimation
-										.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+										.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					}
 				}
 				else {
@@ -3167,7 +3138,7 @@ public class TemplateSpecBackingBean extends
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
 						totalEstAmount = totalEstAmount.add(specEstimation
-								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+								.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
 		};
@@ -3191,12 +3162,12 @@ public class TemplateSpecBackingBean extends
 			Boolean isItemTypeService, 
 			Boolean isFulfilmentTypeScheduled, 
 			long specZoneId,
-			BigDecimal questionId,
-			Boolean isFulfilmentTypeNonPeriodicScheduled) {
+			BigDecimal questionId) {
 
 			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
 			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
-			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, BigDecimal.ROUND_UP);//Bug #29808
+			//Bug #35600 - These code not in DEV
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 22/11/2024	//Bug #29808
 			
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
@@ -3220,25 +3191,25 @@ public class TemplateSpecBackingBean extends
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+						.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 			} 
 			else {
-				if (isItemTypeService && !(isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
+				if (isItemTypeService && !(isFulfilmentTypeScheduled ))
 				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+						.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 				} 
 				else {
-					if (isItemTypeService && (isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
+					if (isItemTypeService && (isFulfilmentTypeScheduled ))
 					{
 						totalIndicativePrice = totalIndicativePrice.add(clQuantity
 								.multiply(contractDuration)
 								.multiply(clUomFrequency)
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
-								.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+								.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 					}
 				}
 			}
@@ -3273,7 +3244,7 @@ public class TemplateSpecBackingBean extends
 				// #34656 add checking not null
 				if(tplSpecEstimation.getEstimatedCost() != null && 
 						tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
-					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
+					tplSpecEstimation.setIndicativeUnitPrice(BigDecimal.valueOf(0.00));
 				}
 				// #21695 fix #32130 - end
 				if (tplSpecEstimation.getTplSpecZoneDtl() == null) {
@@ -3665,23 +3636,22 @@ public class TemplateSpecBackingBean extends
 							specAns.setAnswerCompliance(null);
 						// Bug #32015 Farid start 5/11/2021
 							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null &&
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((User))){
 								specAns.setUserScore(new BigDecimal(0));
 							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((Auto))){
 								specAns.setAutoScore(new BigDecimal(0));
 							}
 							
 						}
 						else{
-							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
-								specAns.setUserScore(null);
-							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+							if (specAns.getTplSpecQuestion().getScoreTypeCode() != null
+									&& (specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId()
+											.equals((User))
+											|| specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId()
+											.equals((Auto)))) {
 								specAns.setUserScore(null);
 							}
-							
 						}
 						// Bug #32015 Farid end 5/11/2021
 					}
@@ -3712,31 +3682,11 @@ public class TemplateSpecBackingBean extends
 	}
 //#21695 Farid end 2/4/2021
 	
-	//#28784 - Start
-	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
-		ITemplateSpecSO templateSpecSO = null;
-		try {
-			TplSpecQuestion selectedSpecQuestion = templateSpecBean
-					.getSelectedSpecQuestion();
-			List<TplSpecScoring> specScorings = selectedSpecQuestion
-					.getTplSpecScorings();
-			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-			BigDecimal demoScore = templateSpecSO.validateScoring(
-					selectedSpecQuestion, specScorings, new FacesScopes().getUserLocale());
-			if(demoScore != null && demoScore.equals(new BigDecimal(0))){
-				throw new EpException(MessageConst.ERROR_760476);
-			}
-			if (demoScore != null) {
-				selectedSpecQuestion.setDemoScore(demoScore);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-		templateSpecBean.setSelectedSpecQuestion(null);
-		getManagedBean().setTemplateSpecBean(templateSpecBean);
-	}
-
+	
+	/**
+	 * #28784 - Demo scoring cancle
+	 * @param templateSpecBean
+	 */
 	public void scoringCancelActionDemo(TemplateSpecBean templateSpecBean) {
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean
@@ -3911,6 +3861,7 @@ public class TemplateSpecBackingBean extends
 			RequestContext.getCurrentInstance().execute("zoneQtyPopup.show()");
 
 		}
+
 	// #29187 Start Vinod
 	/**
 	 * Gets the score Mandatory Spec Dropdown Values.display in dropdown.
@@ -3950,17 +3901,20 @@ public class TemplateSpecBackingBean extends
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
 		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt().getQtNo();
 			SLAUtils.getInstance()
 					.logSLAError(
 							SLALogConstant.QT_MODULE,
 							SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
-							this.getManagedBean().getQt().getQtNo(),
+							qtNo,
 							SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
 							getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * checking for displaying mandatory specification column.
 	 * 
@@ -3969,17 +3923,29 @@ public class TemplateSpecBackingBean extends
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if (null != this.getManagedBean().getScQt()
+		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
-						.getStatusId()
-				&& this.getManagedBean().getScQt().getQtStatus().getStatusId()
-						.longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
-			for (TplSpecAnswer tplSpecAnswer : templateSpecBean
-					.getSpecAnswerList()) {
-				if (tplSpecAnswer.getTplSpecQuestion().getQuestionType()
+						.getStatusId() ? this.getManagedBean().getScQt()
+				.getQtStatus().getStatusId() : Long.MIN_VALUE;
+				
+		List<Long> orderedStatuses = Arrays
+				.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		orderedStatuses = orderedStatuses.subList(
+				orderedStatuses.indexOf(QTStatusConst.QT_PROPOSAL_PREPARATION),
+				orderedStatuses.indexOf(QTStatusConst.QT_AWARDED) + 1);
+
+		if (orderedStatuses.contains(statusId)) {
+			List<TplSpecAnswer> answerList = templateSpecBean
+					.getSpecAnswerList();
+			for (TplSpecAnswer tplSpecAnswer : answerList) {
+				String questionType = tplSpecAnswer.getTplSpecQuestion()
+						.getQuestionType();
+				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion()
+						.isMandatorySpec();
+				if (questionType
 						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+						&& isMandatorySpec) {
 					manSpec = true;
 					break;
 				}
@@ -3988,6 +3954,8 @@ public class TemplateSpecBackingBean extends
 		return manSpec;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * to show popup for UOM and quantity details.
 	 * 
@@ -3999,6 +3967,8 @@ public class TemplateSpecBackingBean extends
 				QTConstants.VIEW_UOM_QUANTITY_DETAILS);
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * to show popup for zone quantity details.
 	 * 
@@ -4010,6 +3980,8 @@ public class TemplateSpecBackingBean extends
 				QTConstants.VIEW_ZONE_QUANTITY_POPUP);
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * update user score based on compliance.
 	 * 
@@ -4017,22 +3989,222 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void onchangeCompliance(TplSpecAnswer ans) {
-		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean()
-				.getSpecAnswerList()) {
-			if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() != null) {
-				if (ans.getCompliance() == Boolean.FALSE) {
-					answer.setUserScore(BigDecimal.ZERO);
-				} else if (ans.getCompliance() == Boolean.TRUE
-						&& ans.getUserScore() != null
-						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
-					answer.setUserScore(null);
-				}
-			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() == null) {
+		List<TplSpecAnswer> answerList = this.getManagedBean()
+				.getTemplateSpecBean().getSpecAnswerList();
+		for (TplSpecAnswer answer : answerList) {
+			if (ans.getSpecAnswerId().compareTo(answer.getSpecAnswerId()) == 0
+					&& ans.getCompliance() != null
+					&& ans.getCompliance() == Boolean.FALSE) {
+				answer.setUserScore(BigDecimal.ZERO);
+			} else if (ans.getSpecAnswerId()
+					.compareTo(answer.getSpecAnswerId()) == 0
+					&& (!getManagedBean().isComplianceOldNull() && (ans
+							.getCompliance() != null && ans.getCompliance() == Boolean.TRUE))) {
+				// As per note #631 issue 1 & 4 system will reset score if user
+				// select yes but won't update if the old value is null.
 				answer.setUserScore(null);
 			}
 		}
 	}
+
 	// #29187 End Vinod
+	// #29187 Start Vinod
+	/**
+	 * This method is to check the old value from compliance dropdown and update
+	 * flag for not to update the score if the old value is null.
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public void itemComplianceChangeControl(ValueChangeEvent event) {
+		log.info("New: " + event.getNewValue() + ", Old: " + event.getOldValue());
+		if (event.getOldValue() == null) {
+			getManagedBean().setComplianceOldNull(true);
+		} else {
+			getManagedBean().setComplianceOldNull(false);
+		}
+	}
+
+	// #29187 End Vinod
+
+	//#36248_haziq - start
+	/**
+	 * #36248
+	 * To validate Wieghtage input value
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateWeightage(FacesContext context, UIComponent component, Object value) {
+		BigDecimal weightage = (BigDecimal) value;
+
+		if (weightage.compareTo(BigDecimal.valueOf(100)) > 0) {
+			String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+		}
+	}
+	//#36248_haziq - End
+	
+	//#35293 - Start
+	/**
+	 * To validate Score input value
+	 * 
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateInputScore(FacesContext context, UIComponent component, Object value) {
+		if (value == null) {
+			return;
+		}
+
+		BigDecimal inputValue = new BigDecimal(value.toString());
+		TplSpecAnswer tplSpecAnswer = (TplSpecAnswer) component.getAttributes().get("tplSpecAnswer");
+
+		boolean hasWeightage = false;
+
+		if (tplSpecAnswer != null && tplSpecAnswer.getTplSpecQuestion() != null
+				&& Boolean.TRUE.equals(tplSpecAnswer.getTplSpecQuestion().isWeightageReq())) {
+			hasWeightage = true;
+		}
+		String label = (String) component.getAttributes().get("label");
+		if (label == null) {
+			label = component.getId();
+		}
+
+		if (hasWeightage) {
+
+			// check decimal places (max 2)
+			if (inputValue.stripTrailingZeros().scale() > 2) {
+
+				Object minAttr = component.getAttributes().get("min");
+				Object maxAttr = component.getAttributes().get("max");
+
+				String min = minAttr != null ? minAttr.toString() : "0";
+				String max = maxAttr != null ? maxAttr.toString() : "";
+
+				String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.decimal.validaton", new String[] {
+						label, inputValue.toString(), min, max }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+			}
+		}
+	}
+
+	/**
+	 * Get Max Score
+	 * @param answer
+	 * @param hasWeightage
+	 * @return
+	 */
+	public String getMaxScoreDisplay(TplSpecAnswer answer, boolean hasWeightage) {
+
+		BigDecimal maxScore = answer.getTplSpecQuestion().getMaxScore();
+
+		if (hasWeightage) {
+			if (this.getManagedBean().isWeightage35384WIP()) {
+				BigDecimal weightage = answer.getTplSpecQuestion().getWeightage();
+				maxScore = maxScore.multiply(weightage);
+			}
+			BigDecimal result = maxScore.setScale(2, RoundingMode.HALF_UP);
+			return result.toPlainString(); // returns 20.00
+		}
+		return maxScore.stripTrailingZeros().toPlainString(); // returns 20
+	}
+	//#35293 - End
+	
+	// #39210 Start Vinod 3/10/2025
+	/**
+	 * This method will check if the zone details are null and create new
+	 * answers if null.
+	 * 
+	 * @param templateSpecBean
+	 * @return List<TplSpecAnswer>
+	 */
+	private List<TplSpecAnswer> checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(
+			TemplateSpecBean templateSpecBean) {
+		TplSpecQuestion specQuestion = templateSpecBean
+				.getSelectedSpecQuestion();
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE
+				.equals(specQuestion.getTplSpecMaster().getItemTypeCode()
+						.getParameterCode());
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		List<TplSpecAnswer> specAnswersNew = new ArrayList<>();
+		String priceType = specQuestion.getClPriceTypeCode()
+				.getParameterCode();
+		boolean isPriceTypeZonalStandard = specHelper
+				.isPriceTypeZonalStandard(priceType);
+
+		for (TplSpecAnswer tplSpecAnswer : specQuestion.getTplSpecAnswers()) {
+			if (null == tplSpecAnswer.getTplSpecSuppAnswer()
+					.getTplSpecZoneDtl() && isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion
+						.getTplSpecMaster().getTplSpecZone()
+						.getTplSpecZoneDtls()) {
+					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
+							templateSpecBean, specQuestion, specZoneDtl, null);
+
+					calcTotalAmount(templateSpecBean, specAnswer,
+							isItemTypeService);
+					specAnswersNew.add(specAnswer);
+
+				}
+			} else if (null == tplSpecAnswer.getTplSpecSuppAnswer()
+					.getTplSpecZoneDtl() && !isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion
+						.getTplSpecMaster().getTplSpecZone()
+						.getTplSpecZoneDtls()) {
+					populateTierSpecAnswers(templateSpecBean, specQuestion,
+							specZoneDtl, specAnswersNew);
+				}
+			}
+			
+			if(CollectionUtils.isNotEmpty(specAnswersNew)){
+				break;
+			}
+		}
+
+		return specAnswersNew;
+	}
+	// #39210 End Vinod 3/10/2025
+	
+	// #38151 Start
+	private void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+
+		if (null == publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+
+			if (createdDate.before(effTimestamp)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		} else {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}
+	}
+	// #38151 End
+
 }

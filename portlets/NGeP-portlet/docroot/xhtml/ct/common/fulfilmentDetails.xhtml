@@ -22,14 +22,9 @@
 		    padding-left: 3px;
 		    padding-bottom: 5px;
 		}	
-		
+
 		a.blue_font_wrap {
-			font-family: Tahoma, Arial;
-			font-size: 11px;
-			font-weight: bold;
-			color: #3c8bc2;
-			text-decoration: none;
-			overflow-wrap: anywhere;
+			overflow-wrap: anywhere !important;
 		}
 		
 		label.approval {
@@ -44,7 +39,7 @@
 		}
 	</style>
 	<!-- #25002 end -->
-
+	
 	<p:panel id="fd" toggleable="true" collapsed="false" toggleSpeed="500">
 	<f:facet name="header">
 		<h:outputText value="#{lbl['lbl.ct.panel.contract']}"/>
@@ -90,7 +85,7 @@
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableContractAmount}">
-				   			<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+				   			<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
@@ -118,7 +113,7 @@
 						     		or ctBackingBean.managedBean.disableGstAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.gstAmount}" label="#{lbl['lbl.ct.gst.amt']}" >
-			   				<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+			   				<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:130px;"
@@ -149,7 +144,7 @@
 						     or ctBackingBean.managedBean.disableStaxAmount}"	
 						     rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"		   				 
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.staxAmount}" label="#{lbl['lbl.ct.stax.amt']}" >
-			   				<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+			   				<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:130px;"
@@ -235,12 +230,14 @@
 		 </h:panelGrid>		 	
 		   <h:panelGrid columns="3" 
 		     rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq}">
+		     <!-- #13847 start-->
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
 				 disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}" style="text-align:top;">
-				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true"></p:ajax>
+				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true" listener="#{ctBackingBean.bondExempDocReset()}"></p:ajax>
 			  </p:selectBooleanCheckbox>
+			  <!-- #13847 end-->
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
 				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
@@ -265,25 +262,24 @@
 			 </h:panelGrid>
 	       </h:panelGrid>	
 	       <!-- #25002 start -->
-		    <h:panelGrid columns="3">
+		   <h:panelGrid columns="3">
 		    <h:panelGrid>
 		    </h:panelGrid>
 		     <h:outputLabel value="#{lbl['lbl.ct.approval.letter.of.pegawai']}" styleClass="approval" escape ='false'/>
 		     <h:panelGrid columns="2">	
-		      <!-- ctBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds -->
-		      <p:dataGrid id="ApprovalLetterPegawaiPengawal" value="#{ctBackingBean.getApprovalLetter()}"
+		      	<!-- ctBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds -->
+		      	<p:dataGrid id="ApprovalLetterPegawaiPengawal" value="#{ctBackingBean.getApprovalLetter()}"
 					var="attachFile" rowIndexVar="attachFileIndex" columns="1" styleClass="ui-datagrid-content-empty"
 					emptyMessage ="#{lbl['lbl.txt.na']}">
-					
 						<h:commandLink value="#{attachFile.fileName}"
-									styleClass="blue_font_wrap"  action="#{ctBackingBean.downloadScAttachmentFile(attachFile)}" />
-				
+								styleClass="blue_font blue_font_wrap"  
+								action="#{ctBackingBean.downloadScAttachmentFile(attachFile)}" />
 				</p:dataGrid>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approval.letter.of.pegawai']}" style="padding-top:2px;" />
 				</h:panelGrid> 	
 		    
 	       </h:panelGrid>	
-		    <!-- #25002 end -->		
+		   <!-- #25002 end -->	
 	       <h:panelGrid columns="3" 
 	           rendered="#{false and !ctBackingBean.managedBean.directPurchase}">
 			  <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContract.mto}"
@@ -294,6 +290,8 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>		
+		   
+
 	    </h:panelGrid>
 	</h:panelGrid>
 	<p:outputPanel>
@@ -320,7 +318,7 @@
 						or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}">
 			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			      </p:commandLink>
-			      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fl.waiver']}" />
+			      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.pb.waiver']}" /> <!-- #13847 -->
 		</h:panelGroup>
     </h:panelGrid> 
   </p:outputPanel>

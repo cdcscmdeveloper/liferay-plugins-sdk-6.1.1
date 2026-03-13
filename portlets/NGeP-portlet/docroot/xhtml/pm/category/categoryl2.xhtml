@@ -35,11 +35,11 @@
 					<p:commandButton value="#{lbl['lbl.btn.update']}"
 						oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
 						style="float:right;width: auto;" /></td>
-				<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}"> 
-					<p:commandButton partialSubmit="true" 
-						value="#{lbl['lbl.btn.save']}"
-						action="#{categoryBackingBean.saveSubCategory}"
-						update="@([id$=Msg])" style="float:right;width: auto;" /></td> 
+				<!-- 34445 Start -->
+				<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
+					<p:commandButton value="#{lbl['lbl.btn.save']}" partialSubmit="true" oncomplete="saveInfoDlg.show();" style="float:right;width: auto;" />
+				</td>
+				<!-- 34445 End -->
 				<!-- #29665 - End -->
 				<!-- End #29665 remove save button, replace by update and save, change update button behaviour -->
 								
@@ -96,17 +96,16 @@
 						</c:if>
 						
 						<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
-							<p:inputTextarea 
-							style="text-transform:uppercase;"
-							required="#{!categoryBackingBean.descriptionEditDisable}"
-							disabled="#{categoryBackingBean.descriptionEditDisable}"
-							cols="40" maxlength="255"  
-							value="#{categoryBackingBean.managedBean.updatedCategoryDesc}"							
-							/>
+							<p:inputTextarea style="text-transform:uppercase;"
+								required="#{!categoryBackingBean.descriptionEditDisable}"
+								disabled="#{categoryBackingBean.descriptionEditDisable}"
+								cols="40" maxlength="255"
+								value="#{categoryBackingBean.managedBean.updatedCategoryDesc}" />
 							&#160; 
-							<p:commandLink action="#{categoryBackingBean.enableDiscription}" style="vertical-align: top;"
-								update="catLevel" disabled="#{!categoryBackingBean.descriptionEditDisable}">
-								<p:graphicImage library="ep/images/design" 
+							<p:commandLink action="#{categoryBackingBean.enableDiscription}"
+								style="vertical-align: top;" update="catLevel"
+								disabled="#{!categoryBackingBean.descriptionEditDisable}">
+								<p:graphicImage library="ep/images/design"
 									title="#{lbl['lbl.pm.edit.description']}"
 									value="/css/images/design/edit.png" />
 							</p:commandLink>
@@ -139,7 +138,7 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL2.recordStatusFlg}">
 							<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form" listener="#{categoryBackingBean.onchangeDiscription}"/> <!-- #29665 add listener -->
+								update="@form" listener="#{categoryBackingBean.onChangeDescription}"/> <!-- #29665 add listener -->
 						</p:selectOneMenu>
 					</td>
 				</tr>
@@ -208,7 +207,7 @@
 				</f:facet>
 						<h:outputText value="#{pmCategoryL3.categoryL3Code}" />
 					</p:column>
-					<p:column>
+					<p:column style="max-width:400px;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"> <!-- #35590 - wrap text -->
 				<!-- start #29665 rename column header -->
 						<f:facet name="header">
 					#{lbl['lbl.pm.ctrl.description']}
@@ -253,6 +252,16 @@
 
 			</p:panel>
 		</c:if>
+		
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+			okParam="#{categoryBackingBean.saveSubCategory()}"
+			hasParam="true"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}"
+			update=":form"/>
+		<!-- 34445 end -->
 		
 		<!-- Start #29665 Add confirmation dialog -->
 		<ac:confirmationPopup id="updateCategDialog" widget="updateCategDialog"
