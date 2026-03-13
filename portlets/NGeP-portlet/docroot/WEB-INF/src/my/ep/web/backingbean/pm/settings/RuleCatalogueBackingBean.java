@@ -7376,10 +7376,6 @@ public class RuleCatalogueBackingBean extends
 	    if (oldDate == null && newDate != null) {
 	        return true;
 	    }
-	    
-	    if (oldDate == null && newDate != null) {
-	        return true;
-	    }
 
 	    return oldDate.compareTo(newDate) != 0;
 	}
