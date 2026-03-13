@@ -466,11 +466,7 @@ public class RuleCatalogueBackingBean extends
 			// this.getManagedBean().setSelectedRuleType(list.get(0));
 			//#36738 Start
 			getManagedBean().setOriginalConfigRuleDescList(list);
-			//#35323 - Start
-			List<PmConfigRuleValue> configRuleValueList = getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
-	        sortConfigRuleValueList(configRuleValueList);
-			getManagedBean().setOriginalConfigRuleValueList(configRuleValueList);
-			//#35323 - End
+			getManagedBean().setOriginalConfigRuleValueList(getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
 			//#36738 End
 			} finally {
 			cgeneralSO = null;
