@@ -71,7 +71,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
-import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
