@@ -76,6 +76,17 @@
 		<p:tabMenu
 			activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}">
 
+			<ui:remove> 34491 - start </ui:remove>
+			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
+				process="@form" update="@form">
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+					value="5" />
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.meetingPreparationActiveIndex}"
+					value="0" />
+			</p:menuitem>
+			<ui:remove> 34491 - end </ui:remove>
 			<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
 				process="@form" update="@form">
 				<f:setPropertyActionListener
@@ -112,6 +123,13 @@
 		</p:tabMenu>
 
 		<p:panel id="contentPanel">
+			<ui:remove> 34491 - start </ui:remove>
+			<c:if
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '5'}">
+				<ui:include
+					src="/xhtml/sc/loi/mutipleLoi/preparation/meetingPreparation.xhtml" />
+			</c:if>
+			<ui:remove> 34491 - end </ui:remove>
 			<c:if
 				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
 				<ui:include

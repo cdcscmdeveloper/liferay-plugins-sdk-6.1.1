@@ -2369,32 +2369,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	/**
-	 * construct condition PTJ Group for adhoc report
-	 * @return
-	 */
-	public String constuctConditionForPTJGroupAdhocReport() {
-		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			return getPTJGroupInternalAuditorCondition();
-		} else {
-			return constuctConditionFieldsForPTJGroup();
-		}
-	}
-
-	/**
-	 * construct condition PTJ for adhoc report
-	 * @return
-	 */
-	public String constuctConditionForPTJAdhocReport() {
-		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			return getPTJInternalAuditorCondition();
-		} else {
-			return getPTJCondition();
-		}
-	}
-	
-	/**
 	  * The method used to disable ptj group lov by report code.
 	*/	
 	public boolean disablePtjGroupLovAdhocPO() {
