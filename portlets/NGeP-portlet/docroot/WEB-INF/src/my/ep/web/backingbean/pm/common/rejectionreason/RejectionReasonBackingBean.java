@@ -1972,21 +1972,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	//#39618 - End
 
-	//#8411 - START
-	/**
-	 * @return the justification
-	 */
-	public int getJustification() {
-		return JUSTIFICATION;
-	}
-
-	/**
-	 * @return the rejection reason
-	 */
-	public int getRejectionReason() {
-		return REJECTION_REASON;
-	}
-	
 	/**
 	 * remove suppReason component when changing reason category
 	 */

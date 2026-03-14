@@ -143,6 +143,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.logging.LogKey;//#31849 #32682
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.ReasonCategory; //#8411
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
