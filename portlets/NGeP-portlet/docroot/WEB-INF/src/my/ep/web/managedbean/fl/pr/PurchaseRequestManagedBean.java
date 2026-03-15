@@ -317,6 +317,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	// 29555 start
 	private String preparedBy;
 	// 29555 end
+	
+	// 31344 - start
+    private boolean isExceedBpkThreshold;
+    private boolean isExceedItemPanelThreshold;
+    private List<ScRequestItem> itemExceedBpkThreshold;
+    private List<ScRequestItem> itemExceedItemPanelThreshold;
 
 /**
  * Gets the charge line item root.
@@ -3445,5 +3451,62 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setPreparedBy(String preparedBy) {
 		this.preparedBy = preparedBy;
 	}
+
+	/**
+	 * @return the isExceedBpkThreshold
+	 */
+	public boolean isExceedBpkThreshold() {
+		return isExceedBpkThreshold;
+	}
+
+	/**
+	 * @param isExceedBpkThreshold the isExceedBpkThreshold to set
+	 */
+	public void setExceedBpkThreshold(boolean isExceedBpkThreshold) {
+		this.isExceedBpkThreshold = isExceedBpkThreshold;
+	}
+
+	/**
+	 * @return the isExceedItemPanelThreshold
+	 */
+	public boolean isExceedItemPanelThreshold() {
+		return isExceedItemPanelThreshold;
+	}
+
+	/**
+	 * @param isExceedItemPanelThreshold the isExceedItemPanelThreshold to set
+	 */
+	public void setExceedItemPanelThreshold(boolean isExceedItemPanelThreshold) {
+		this.isExceedItemPanelThreshold = isExceedItemPanelThreshold;
+	}
+
+	/**
+	 * @return the itemExceedBpkThreshold
+	 */
+	public List<ScRequestItem> getItemExceedBpkThreshold() {
+		return itemExceedBpkThreshold;
+	}
+
+	/**
+	 * @param itemExceedBpkThreshold the itemExceedBpkThreshold to set
+	 */
+	public void setItemExceedBpkThreshold(List<ScRequestItem> itemExceedBpkThreshold) {
+		this.itemExceedBpkThreshold = itemExceedBpkThreshold;
+	}
+
+	/**
+	 * @return the itemExceedItemPanelThreshold
+	 */
+	public List<ScRequestItem> getItemExceedItemPanelThreshold() {
+		return itemExceedItemPanelThreshold;
+	}
+
+	/**
+	 * @param itemExceedItemPanelThreshold the itemExceedItemPanelThreshold to set
+	 */
+	public void setItemExceedItemPanelThreshold(List<ScRequestItem> itemExceedItemPanelThreshold) {
+		this.itemExceedItemPanelThreshold = itemExceedItemPanelThreshold;
+	}
+	
 	
 }
