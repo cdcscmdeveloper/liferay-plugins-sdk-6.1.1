@@ -14,9 +14,6 @@
 		</c:if>
 		<c:if test="#{!lOIDetailBackingBean.managedBean.scQt.zonal}">
 			.tdWidth { width: 100%; }
-<<<<<<< HEAD
-		</c:if>		
-=======
 		</c:if>
 		/* 26247 - start */
 		.pl-0{
@@ -26,7 +23,6 @@
 			padding-right: 0 !important;
 		}
 		/* 26247 - end */			
->>>>>>> refs/remotes/origin/release-sit
 	</style>	
 	
 	<!-- Supplier Details PopUp -->
@@ -166,13 +162,6 @@
 																				CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 								</h:outputText>
 							</p:column>
-<<<<<<< HEAD
-
-							<p:column headerText="#{lbl['lbl.sc.mof.status']}">
-								<h:outputText value="#{lbl['lbl.pm.status.active']}"
-									rendered="#{!empty supplierDtl.smMofAccount and 
-														supplierDtl.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
-=======
 							<ui:remove>26247 - start</ui:remove>
 							<ui:param name="supplier"
 								value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
@@ -183,35 +172,15 @@
 									<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
 								</f:facet>
 								<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
->>>>>>> refs/remotes/origin/release-sit
 							</p:column>
-<<<<<<< HEAD
-							<ui:remove>
-								#31061 - SHAFFUL (START)
-							</ui:remove>
-							<p:column>
-=======
 							<ui:remove>26247 - start</ui:remove>
 							<p:column style="white-space:normal;width:18%;">
->>>>>>> refs/remotes/origin/release-sit
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
-								<p:commandLink onstart="blockWidget.show()"
-									oncomplete="blockWidget.hide()"
-									style="color:red; font-weight:bold;"
-									rendered="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-									action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"
-									process="@this" partialSubmit="true" update=":form">
-									<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-										styleClass="warning" />
-								</p:commandLink>
-								<p:spacer width="2" />
-
-								<h:outputText
-									rendered="#{!supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-									value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+								<ac:disciplinaryActionYesNo
+									supplier="#{supplier}" index="#{rowIndex}"/>
 							</p:column>
 							<ui:remove>26247 - end</ui:remove>							
 							
@@ -220,18 +189,10 @@
 								disabledSelection="#{!isPendingNegotiationStatus 
 												  or !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded) 
 												  or lOIDetailBackingBean.managedBean.readOnly 
-<<<<<<< HEAD
-												  or (supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions 
-												  and !supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
-							<ui:remove>
-								#31061 - SHAFFUL (END)
-							</ui:remove>
-=======
 												  or lOIDetailBackingBean.disabledQTProcess(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
 												  or supplierDtl.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq
 												  				SourcingConstants.extendProposalValidityPeriodRejected}" /><ui:remove>21692</ui:remove>
 							<ui:remove>26247 - end</ui:remove>
->>>>>>> refs/remotes/origin/release-sit
 						</p:dataTable> <p:dataTable id="recommendTbl" var="item"
 							value="#{lOIDetailBackingBean.managedBean.recommendList}"
 							rows="10"
@@ -271,15 +232,10 @@
 											value="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatus}"
 											disabled="#{!isPendingNegotiationStatus or 
 															!(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded) or lOIDetailBackingBean.managedBean.readOnly
-<<<<<<< HEAD
-															or recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-											style="margin-right:1px !important;">
-=======
 														or lOIDetailBackingBean.disabledQTProcess(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
 														or recommendedSuppl.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq
 												  				SourcingConstants.extendProposalValidityPeriodRejected}"
 															style="margin-right:1px !important;"><ui:remove>26247 - disabledQTProcess, 21692</ui:remove>
->>>>>>> refs/remotes/origin/release-sit
 											<p:ajax event="change" partialSubmit="true" process="@this"
 													update="@this, @([id$=recommendTbl])"
 													listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(
@@ -357,12 +313,6 @@
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</ui:repeat>
 							</p:column>
-<<<<<<< HEAD
-							<ui:remove>
-								#31061 - SHAFFUL (START)
-							</ui:remove>
-							<p:column>
-=======
 							<ui:remove>26247 - start</ui:remove>
 							<p:column styleClass="pl-0 pr-0">
 								<f:facet name="header">
@@ -379,33 +329,28 @@
 								</p:dataList>
 							</p:column>
 							<p:column style="white-space:normal;width:18%;">
->>>>>>> refs/remotes/origin/release-sit
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<p:dataList var="recommendedSuppl"
 									value="#{item.awardSupplierList}" type="none"
-									rendered="#{isPendingNegotiationStatus}">
-									<p:commandLink onstart="blockWidget.show()"
-										oncomplete="blockWidget.hide()"
-										style="color:red; font-weight:bold;"
-										rendered="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-										action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"
-										process="@this" partialSubmit="true" update=":form">
-										<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-											styleClass="warning" />
-									</p:commandLink>
-									<h:outputText
-										rendered="#{!recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-										value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-									<h:outputText escape="false" value="&#60;br &#47;&#62;"
-										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+									rendered="#{isPendingNegotiationStatus}" rowIndexVar="index">
+									<ac:disciplinaryActionYesNo
+										supplier="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{rowIndex}" childIndex="#{index}"/>
+								</p:dataList>
+								<p:dataList var="recommendedSuppl"
+									value="#{item.awardSupplierList}" type="none"
+									rendered="#{!isPendingNegotiationStatus}" rowIndexVar="index">
+									<p:column
+										rendered="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
+										<ac:disciplinaryActionYesNo
+											supplier="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+											index="#{rowIndex}" childIndex="#{index}"/>
+									</p:column>
 								</p:dataList>
 							</p:column>
-							<ui:remove>
-								#31061 - SHAFFUL (END)
-							</ui:remove>
+							<ui:remove>26247 - end</ui:remove>
 							<p:column headerText="#{lbl['lbl.sc.price.type']}">
 								<h:outputText
 									value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
@@ -982,17 +927,6 @@
 		remarkList="#{lOIDetailBackingBean.managedBean.scQtCommittee.qtCommitteRemarks}"
 		showAttachment="false"
 		readonly="#{lOIDetailBackingBean.managedBean.readOnly}" />
-<<<<<<< HEAD
-	<ui:remove>
-		#31061 #32560 - SHAFFUL 
-	</ui:remove>
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<ui:remove>
-		#31061  #32560- END
-=======
 
 	<ui:remove>
 		<!-- #38151 datatable value popup-->
@@ -1068,6 +1002,5 @@
 	<ui:remove>
 		<!-- #38151 datatable value popup-->
 		<!-- end -->
->>>>>>> refs/remotes/origin/release-sit
 	</ui:remove>
 </ui:composition>
