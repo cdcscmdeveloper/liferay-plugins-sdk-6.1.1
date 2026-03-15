@@ -392,6 +392,11 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
 
 				ContractManagementReportBackingBean ctManagementReportBB = new ContractManagementReportBackingBean();
+				//Start Fix - #40102
+				ctManagementReportBB.getManagedBean().setSelectedMinistry(null);
+				ctManagementReportBB.getManagedBean().setSelectedKumpulanPTJ(null);
+				ctManagementReportBB.getManagedBean().setSelectedPTJ(null);
+				//End Fix - #40102
 
 				if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
