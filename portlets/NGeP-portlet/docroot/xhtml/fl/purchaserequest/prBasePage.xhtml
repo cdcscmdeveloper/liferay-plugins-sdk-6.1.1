@@ -45,7 +45,8 @@
 		<c:if test="#{purchaseRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or purchaseRequestBackingBean.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{purchaseRequestBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypePurchaseRequest)}" />
 		</c:if>			
-		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{purchaseRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" escape="false"/>
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{purchaseRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" escape="false" globalOnly="true"/><!--#29728 - add globalOnly="true" to not allow the branch deletion message to use this sharing messages component -->
+		<p:messages id="delBranchMsg" showSummary="false" showDetail="true" autoUpdate="#{purchaseRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" escape="false" for="delBranchMsg"/><!--#29728 - message to notify branch deletion  -->
 		<!-- #28718 - Start -->
 		<h:panelGroup layout="block" class="ui-messages ui-widget"
 		rendered="#{(purchaseRequestBackingBean.managedBean.triggerPRErrorMsg)}">

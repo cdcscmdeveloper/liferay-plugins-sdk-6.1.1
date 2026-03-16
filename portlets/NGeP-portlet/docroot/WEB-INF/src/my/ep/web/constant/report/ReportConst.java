@@ -1174,6 +1174,12 @@ public class ReportConst implements Serializable{
 	public static final String AUDITOR_GENERAL = "AUDITOR_GENERAL";
 	// Bug #34996@Syazani 16/08/2023 -- End
 	
+	// #38977 - Start
+	public static final String PARAM_PAYMENT_PREPRINT = "P_REPRINT";
+	public static final String PARAM_PAYMENT_PREPRINT_SALINAN = "Y";
+	public static final String PARAM_PAYMENT_PREPRINT_ASAL = "N";
+	// #38977 - End
+	
 	public ReportConst(){}
 	
 	/**
