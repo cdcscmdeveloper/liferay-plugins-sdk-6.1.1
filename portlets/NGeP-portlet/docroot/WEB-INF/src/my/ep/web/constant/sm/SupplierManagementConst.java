@@ -780,8 +780,6 @@ public class SupplierManagementConst {
 	public static final int BUMI_PERCENTAGE = 50;
 	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
 	//26238 - END
-<<<<<<< HEAD
-=======
 
 //	#37925 START
 	public static final String APPL_TYPE_UPDATE = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE;
@@ -792,7 +790,6 @@ public class SupplierManagementConst {
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
 //	#37925 END
 
->>>>>>> branch 'release-prd-uat' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -1542,8 +1539,7 @@ public class SupplierManagementConst {
 		return SUPPLIER_APPL_SEARCH_URL;
 	}
 	// #28895_35501 End
-<<<<<<< HEAD
-=======
+
 	
 //	#37925 START
 	public String getApplTypeBumi() {
@@ -1577,6 +1573,4 @@ public class SupplierManagementConst {
 	public String getSsmCompanyCountryMalaysia() {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
-//	#37925 END
->>>>>>> branch 'release-prd-uat' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 }
