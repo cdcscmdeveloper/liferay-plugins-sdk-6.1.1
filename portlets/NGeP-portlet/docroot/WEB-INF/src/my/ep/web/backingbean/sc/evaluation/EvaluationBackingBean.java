@@ -11052,6 +11052,15 @@ private void retriveCommitteeRemarksList(){
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		//#28784 - Start
+		List<String> demoProceses = new ArrayList<>();
+		demoProceses.add(SCProcessNameConst.FINALISE_TEC_EVALUATION);
+		demoProceses.add(SCProcessNameConst.UPDATE_TEC_EVALUATION);
+		demoProceses.add(SCProcessNameConst.VIEW_TEC_EVALUATION);
+		demoProceses.add(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION);
+		demoProceses.add(SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION);
+		demoProceses.add(SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION);
+		//#28784 - End
 		if (null != member) {
 			if (member.getMemberRole().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
@@ -11206,12 +11215,7 @@ private void retriveCommitteeRemarksList(){
 							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 		// #28784 -start-
-		else if (SCProcessNameConst.FINALISE_TEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.UPDATE_TEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.VIEW_TEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName))
+		else if (demoProceses.contains(taskName))
 		// #28784 -end-
 		{
 			afterDemoInv(true); // #28784
@@ -19389,6 +19393,10 @@ private void retriveCommitteeRemarksList(){
 		BigDecimal maxTsScore = BigDecimal.ZERO;
 		BigDecimal maxOtherElementsScore = BigDecimal.ZERO;
 		BigDecimal maxItemOtherElementsScore = BigDecimal.ZERO;
+		BigDecimal weightageScore = BigDecimal.ZERO;
+		String totalPackageName = null;
+		String maxItemAllOtherElementsScoreLabel = null;
+		String tooltipDemo = null;
 		for (ScQtCheckList cl : checklists) {
 			if (cl.getQtScoreWeightage() != null) {
 				if (SourcingConstants.DOC_DEF_KEY_TEMPLATE_SPECIFICATION
@@ -19400,6 +19408,7 @@ private void retriveCommitteeRemarksList(){
 						.equalsIgnoreCase(cl
 								.getDefinationType()
 								.getParameterCode())) {
+					weightageScore = cl.getQtScoreWeightage().getWeightage();
 					maxOtherElementsScore = maxOtherElementsScore.add(cl.getQtScoreWeightage().getScore());
 					this.getManagedBean().setDemoWeightage(cl.getQtScoreWeightage().getWeightage());
 				} else {
@@ -19408,7 +19417,37 @@ private void retriveCommitteeRemarksList(){
 				}
 			}
 		}
+		
+		if (!weightageScore.equals(BigDecimal.valueOf(0))) {
+			// #28784 - Display demo label with to weightage
+			totalPackageName = ResourceBundleUtils.getMessage(
+					"lbl.sc.eva.technical.presentation.demo.score.technical.package.weightage",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			maxItemAllOtherElementsScoreLabel = ResourceBundleUtils.getMessage(
+					"lbl.sc.eva.technical.presentation.demo.score.other.elements.package.weightage",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			tooltipDemo = ResourceBundleUtils.getMessage(
+					"lbl.demo.overall.score.tooltips.weightage",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			// #28784 - Display demo label without weightage
+			totalPackageName = ResourceBundleUtils.getMessage(
+					"lbl.sc.eva.technical.presentation.demo.score.technical.package",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			totalPackageName = totalPackageName + "(" + maxTsScore.toString() + ")";
+			maxItemAllOtherElementsScoreLabel = ResourceBundleUtils.getMessage(
+					"lbl.sc.eva.technical.presentation.demo.score.other.elements.package",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			maxItemAllOtherElementsScoreLabel = maxItemAllOtherElementsScoreLabel + "("
+					+ maxOtherElementsScore.toString() + ")";
+			tooltipDemo = ResourceBundleUtils.getMessage(
+					"lbl.demo.overall.score.tooltips",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		}
+		this.getManagedBean().setTotalScoreLabel(totalPackageName);
+		this.getManagedBean().setTooltipDemo(tooltipDemo);
 		this.getManagedBean().setMaxPackageTsScore(maxTsScore);
+		this.getManagedBean().setMaxItemAllOtherElementsScoreLabel(maxItemAllOtherElementsScoreLabel);
 		this.getManagedBean().setMaxPackageOtherElementsScore(maxOtherElementsScore);
 		this.getManagedBean().setMaxItemOtherElementsScore(maxItemOtherElementsScore);
 		this.getManagedBean().setMaxDemoScore(SourcingConstants.NO_TS_DEMO_DATA_EXIST);

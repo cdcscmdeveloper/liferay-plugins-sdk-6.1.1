@@ -1699,7 +1699,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		ScQtDemoSchedule schedule = supplier.getScQtDemoSchedule();
 		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoStartDate().before(new Date())) {
 			action = null;
-			throw new EpException(MessageConst.ERROR_760554, new String[] { supplier.getDemoNo() });
+			throw new EpException(MessageConst.ERROR_760561, new String[] { supplier.getDemoNo() });
 		}
 	}
 	
@@ -1727,7 +1727,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		ScQtDemoSchedule schedule = score.getScQtDemoSchedule();
 		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoStartDate().before(new Date())) {
 			action = null;
-			throw new EpException(MessageConst.ERROR_760554, new String[] { score.getScQtDemoSupplier().getDemoNo() });
+			throw new EpException(MessageConst.ERROR_760561, new String[] { score.getScQtDemoSupplier().getDemoNo() });
 		}
 	}
 	
