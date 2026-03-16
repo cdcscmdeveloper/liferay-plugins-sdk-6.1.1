@@ -125,7 +125,7 @@
 						<p:commandLink
 							action="#{codificationBackingBean.assignCodeConfirmation(unspscObj)}"
 							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}"
-							update="@([id$=asignCodeDialogConfirm])">
+							update="@([id$=assignCodeDialogConfirm])">
 							<!-- #31503 End -->
 							#{unspscObj.unspscCode}
 						
@@ -133,8 +133,8 @@
 
 						<!-- #31503 Start -->
 						<ui:remove>#26059 - Start</ui:remove>
-						<p:confirmDialog id="asignCodeDialogConfirm"
-							widgetVar="asignCodeDialogConfirm"
+						<p:confirmDialog id="assignCodeDialogConfirm"
+							widgetVar="assignCodeDialogConfirm"
 							message="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}"
 							header="#{lbl['lbl.sc.item.details']}" resizable="true"
 							closable="true">
@@ -145,12 +145,12 @@
 
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.btn.ok']}"
-									onclick="asignCodeDialogConfirm.hide();"
+									onclick="assignCodeDialogConfirm.hide();"
 									action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									update="@form" />
 								<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-									onclick="asignCodeDialogConfirm.hide();" update="@form" />
+									onclick="assignCodeDialogConfirm.hide();" update="@form" />
 							</div>
 						</p:confirmDialog>
 						<ui:remove>#26059 - End</ui:remove>

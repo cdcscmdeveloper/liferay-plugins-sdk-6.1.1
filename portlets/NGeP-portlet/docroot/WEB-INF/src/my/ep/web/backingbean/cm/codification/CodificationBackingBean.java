@@ -3773,7 +3773,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 			this.getManagedBean().setItemCodeDesc(codeDesc);
 			this.getManagedBean().setSelectedUNSPSCObj(unspscObj);
-			RequestContext.getCurrentInstance().execute("asignCodeDialogConfirm.show()");
+			RequestContext.getCurrentInstance().execute("assignCodeDialogConfirm.show()");
 		}
 		// #31503 -end-
 
