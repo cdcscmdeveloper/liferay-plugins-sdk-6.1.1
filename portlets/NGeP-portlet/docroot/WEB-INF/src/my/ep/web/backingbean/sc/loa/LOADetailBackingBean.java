@@ -13506,16 +13506,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	            return true;
 	        }
 
-	        if (loaItem != null && loaItem.getScRequestItem() != null) {
-	            ScRequestItem requestItem = loaItem.getScRequestItem();
-
-	            boolean isServiceType = DbValueConst.ITEM_TYPE_PRODUCT.equals(requestItem.getItemType().getParameterId());
-	            boolean isEmptyUnspsc = StringUtils.isEmpty(requestItem.getTempUnspscCode());
-	            boolean hasAssociatedCmItem = requestItem.getCmItem() != null;
-
-	            return isServiceType && isEmptyUnspsc && hasAssociatedCmItem;
+	        if (loaItem == null || loaItem.getScRequestItem() == null) {
+	        	return true;	
+	        }
+	        
+	        if(loaItem.getScRequestItem().getTempUnspscCode() !=null){
+	        	return false;
 	        }
 
+	        if(loaItem.getScRequestItem().getCmItem() != null){
+	        	return true;
+	        }
+	        
 	        return false;
 	    }
 		// #26059 - End
