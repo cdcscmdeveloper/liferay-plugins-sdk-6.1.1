@@ -19545,7 +19545,7 @@ private void retriveCommitteeRemarksList(){
 	//#28784 - Start
 	private boolean checkDemoStatuses() {
 		return this.getManagedBean().getScQt().isDemoRequired()
-				&& (Arrays.asList(QTStatusConst.TEC_STATUSES).contains(this.getManagedBean().getCurrentStatusId()))
+				&& (Arrays.asList(QTStatusConst.TEC_DEMO_STATUSES).contains(this.getManagedBean().getCurrentStatusId()))
 				&& !this.getManagedBean().isDemoWip();
 	}
 	//#28784 - End
