@@ -16633,13 +16633,15 @@ public class SmApplicationBackingBean extends
 						}
 					}
 					//#30944 END
-					
-					if(personnel.isEquityOwner()){
+					//#31269 - start
+					validateSsmPersonnel(personnel);
+					if(personnel.isEquityOwnerSsm()){
 						this.getManagedBean().getPersonnelsOwner().add(personnel);
 					}
-					if(personnel.isDirector()){
+					if(personnel.isDirectorSsm()){
 						this.getManagedBean().getPersonnelsDirector().add(personnel);
 					}
+					//#31269 - end
 					this.getManagedBean().getPersonnelsSsm().add(personnel);									
 				}
 				showOld = false;
@@ -16648,12 +16650,15 @@ public class SmApplicationBackingBean extends
 		if(showOld){
 			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
 				if(personnel.isSsmData()){
-					if(personnel.isEquityOwner()){
+					//#31269 - start
+					validateSsmPersonnel(personnel);
+					if(personnel.isEquityOwnerSsm()){
 						this.getManagedBean().getPersonnelsOwner().add(personnel);
 					}
-					if(personnel.isDirector()){
+					if(personnel.isDirectorSsm()){
 						this.getManagedBean().getPersonnelsDirector().add(personnel);
 					}
+					//#31269 - end
 					this.getManagedBean().getPersonnelsSsm().add(personnel);
 				}				
 			}			

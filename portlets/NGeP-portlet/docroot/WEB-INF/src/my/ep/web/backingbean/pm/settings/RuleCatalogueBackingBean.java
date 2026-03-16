@@ -1459,6 +1459,7 @@ public class RuleCatalogueBackingBean extends
 		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
 				.getConfigRuleDescList()) {
 
+			sortConfigRuleValueList(ruleTypeDesc.getRuleType().getConfigRuleValues()); //#35323
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
 					.getParameterCode().equals("C")) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc
@@ -1769,6 +1770,7 @@ public class RuleCatalogueBackingBean extends
 			
 			//#35323 - Start
 			this.getManagedBean().setNewPRList(false);
+			sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
 				loadPRValues();
 			}
@@ -6522,6 +6524,7 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType()
 				.setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
+		sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 	}
 
 	/**
@@ -7375,6 +7378,18 @@ public class RuleCatalogueBackingBean extends
 	    }
 
 	    return oldDate.compareTo(newDate) != 0;
+	}
+
+	private void sortConfigRuleValueList(List<PmConfigRuleValue> configRuleValueList) {
+		Collections.sort(configRuleValueList, new Comparator<PmConfigRuleValue>() {
+			@Override
+			public int compare(PmConfigRuleValue o1, PmConfigRuleValue o2) {
+				return new CompareToBuilder()
+				.append(o1.getEffDate(), o2.getEffDate())
+				.append(o1.getFromValue(), o2.getFromValue())
+				.toComparison();
+			}
+		});
 	}
 	//#35323 - End
 }
