@@ -1459,6 +1459,7 @@ public class RuleCatalogueBackingBean extends
 		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
 				.getConfigRuleDescList()) {
 
+			sortConfigRuleValueList(ruleTypeDesc.getRuleType().getConfigRuleValues()); //#35323
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
 					.getParameterCode().equals("C")) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc
@@ -1499,6 +1500,9 @@ public class RuleCatalogueBackingBean extends
 					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
 				//#35323 and sonarLint fixing - Start
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
+					if (ruleTypeValue.getRecordStatusFlg() == 0) {// if is inActive one go to next record
+						continue;
+					}
 					validateRuleValue(ruleTypeDesc, ruleTypeValue);
 				}
 				//#35323 and sonarLint fixing - End
@@ -1766,6 +1770,7 @@ public class RuleCatalogueBackingBean extends
 			
 			//#35323 - Start
 			this.getManagedBean().setNewPRList(false);
+			sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
 				loadPRValues();
 			}
@@ -3472,10 +3477,12 @@ public class RuleCatalogueBackingBean extends
 			Date expDate = ruleValue.getExpDate();
 
 			for (PmConfigRuleValue value : configRuleType.getConfigRuleValues()) {
-				if (value.getGroupValueId().equals(ruleValue.getGroupValueId())) {
+				//#35323 - Start
+				if (value.getGroupValueId() != null && value.getGroupValueId().equals(ruleValue.getGroupValueId())) {
 					value.setEffDate(effDate);
 					value.setExpDate(expDate);
 				}
+				//#35323 - End
 			}
 			
 		}
@@ -3540,16 +3547,23 @@ public class RuleCatalogueBackingBean extends
 	}
 	//SonarLint Fixing and #35323 - End
 
+	//#35323 and sonarLint fixing - Start
+	/**
+	 * @param pmConfigValues
+	 * @param groupId
+	 * @return addIndex
+	 */
 	public int getLastIndexToClone(List<PmConfigRuleValue> pmConfigValues,
-			Integer GroupId) {
+			Integer groupId) {
 		int addIndex = 0;
 		for (PmConfigRuleValue ruleValue : pmConfigValues) {
-			if (ruleValue.getGroupValueId().equals(GroupId)) {
-				addIndex = pmConfigValues.indexOf(ruleValue);
-			}
+		    if (ruleValue.getGroupValueId() != null && ruleValue.getGroupValueId().equals(groupId)) {
+		        addIndex = pmConfigValues.indexOf(ruleValue);
+		    }
 		}
 		return addIndex;
 	}
+	//#35323 and sonarLint fixing - End
 
 	public void addTaxableItem() {
 		log.info(".................addTaxableItem...................");
@@ -5130,6 +5144,7 @@ public class RuleCatalogueBackingBean extends
 	public void deleteQtValue() {
 		log.info(".................deleteQtValue...................");
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		Boolean resetMinistryDropdown = false;//#36738 #40071
 		if (rowIndex != null) {
 			PmPtjSpecialApproval deletedSpecialApproval = this.getManagedBean()
 					.getPtjSpecialApprovalList().get(rowIndex.intValue());
@@ -5137,6 +5152,10 @@ public class RuleCatalogueBackingBean extends
 				deletedSpecialApproval.setDeleted(true);
 				this.getManagedBean().getDeletedPtjSpecialApprovalList()
 						.add(deletedSpecialApproval);// should added to original list before save
+				//#35678 #40071 Start
+				resetMinistryDropdown = getDeletedMinistryList(deletedSpecialApproval);
+				this.getManagedBean().getOriginalPtjSpecialApprovalList().remove(deletedSpecialApproval);
+				//#36738 #40071 End
 				
 				/*** START: AUDIT 28895_35509 ***/
 				CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedPtjSpecialApprovalList());
@@ -5156,6 +5175,10 @@ public class RuleCatalogueBackingBean extends
 				/*** END: AUDIT 28895_35509 ***/
 			}
 		}
+		//#36738 #40071 Start
+		if (resetMinistryDropdown){
+			resetQtValues();
+		}//#36738 #40071 End
 	}
 	
 	/*** START: AUDIT 28895_35509 ***/
@@ -5196,10 +5219,19 @@ public class RuleCatalogueBackingBean extends
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
+			//#36738 #40071 Start
+			List<String> deletedMinistryNameList = this.getManagedBean().getDeletedMinistryNameList() !=  null
+					? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
 			for (PmOrgProfile orgProfile : list) {
+				if (deletedMinistryNameList.contains(orgProfile.getPmOrgValidity().getOrgName())){
+					continue;
+				}
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
 						orgProfile.getOrgName());
 			}
+			items = Arrays.copyOf(items, i);
+			//#36738 #40071 end
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -6492,6 +6524,7 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType()
 				.setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
+		sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 	}
 
 	/**
@@ -6643,10 +6676,39 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setRuleTypeCollapsePanel(true);
 		this.getManagedBean().setRuleValueCollapsePanel(true);
 		this.getManagedBean().setQtValueCollapsePanel(true);
+		this.getManagedBean().setDeletedMinistryNameList(null);//#36738 #40071
 	}
 	
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
 	    this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
+	}
+	
+	/**
+	 * #36738 #40071
+	 * Get ministry list based on the deleted ptj
+	 * @param deletedSpecialApproval
+	 * @return
+	 */
+	public Boolean getDeletedMinistryList(PmPtjSpecialApproval deletedSpecialApproval) {
+		List<PmPtjSpecialApproval> ptjSpecialApprovalList = this.getManagedBean().getPtjSpecialApprovalList();
+		String deletedMinistryName = deletedSpecialApproval.getPmOrgProfile().getMinistryName();
+		Map<String, Integer> countMinistryMap = new HashMap<String, Integer>();
+		List<String> deleteMinistryString = this.getManagedBean().getDeletedMinistryNameList() != null
+				? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
+		Boolean	resetMinistryDropdown = false;		
+		
+		for (PmPtjSpecialApproval ptjSpecialApproval : ptjSpecialApprovalList) {
+			String ministryName = ptjSpecialApproval.getPmOrgProfile().getMinistryName();
+			countMinistryMap.put(ministryName,
+					countMinistryMap.containsKey(ministryName) ? countMinistryMap.get(ministryName) + 1 : 1);
+		}	
+
+		if (countMinistryMap.containsKey(deletedMinistryName) && countMinistryMap.get(deletedMinistryName) == 1) {
+			deleteMinistryString.add(deletedSpecialApproval.getPmOrgProfile().getMinistryName());
+			resetMinistryDropdown = true;
+		}
+		this.getManagedBean().setDeletedMinistryNameList(deleteMinistryString);
+		return resetMinistryDropdown;
 	}
 	// #36738 End
 	
@@ -6839,10 +6901,14 @@ public class RuleCatalogueBackingBean extends
 
 			if (row[2] != null){
 				v.setFromValue((BigDecimal) row[2]);
+			} else {
+				v.setFromValue(null);
 			}
 
 			if (row[3] != null){
 				v.setToValue((BigDecimal) row[3]);
+			} else {
+				v.setToValue(null);
 			}
 
 			if (row[4] != null) {
@@ -6868,10 +6934,14 @@ public class RuleCatalogueBackingBean extends
 			boolean isSameSupplAccType = suppAccType != null && suppAccType.intValue() == 1;
 			v.setSameSupplAcctType(isSameSupplAccType);
 
-			List<Long> supplAcctTypeList = parseLongList(row[9]);
+			if (row[9] != null) {
+			    v.setRecordStatusFlg(((Number) row[9]).intValue());
+			}
+
+			List<Long> supplAcctTypeList = parseLongList(row[10]);
 
 			v.setSupplAcctTypeIds(supplAcctTypeList);
-			v.setMergedConfigRuleValueIds(String.valueOf(row[10]));
+			v.setMergedConfigRuleValueIds(String.valueOf(row[11]));
 
 			list.add(v);
 		}
@@ -6952,21 +7022,33 @@ public class RuleCatalogueBackingBean extends
 	 * @param parameterSO
 	 * @param reqDTO
 	 */
-	private void processMergedRow(PmConfigRule ruleType, PmConfigRuleValue merged, IParameterSO parameterSO,
-			ParameterReqDTO reqDTO) {
+	private void processMergedRow(PmConfigRule ruleType, PmConfigRuleValue merged, IParameterSO parameterSO, ParameterReqDTO reqDTO) {
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
 		List<Long> supplierTypeIds = merged.getSupplAcctTypeIds();
 		List<Long> configValueIds = splitIds(merged.getMergedConfigRuleValueIds());
 
 		boolean first = true;
 
-		for (int i = 0; i < supplierTypeIds.size(); i++) {
-			PmConfigRuleValue value = buildRuleValue(merged, supplierTypeIds, configValueIds, i, first, parameterSO, reqDTO);
+		if (supplierTypeIds != null && !supplierTypeIds.isEmpty() && merged.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			for (int i = 0; i < supplierTypeIds.size(); i++) {
+				PmConfigRuleValue value = buildRuleValue(merged, supplierTypeIds, configValueIds, i, first, parameterSO, reqDTO);
 
-			if (value.isShowFlag() && first) {
-				first = false;
+				if (value.isShowFlag() && first) {
+					first = false;
+				}
+
+				ruleType.getConfigRuleValues().add(value);
 			}
 
-			ruleType.getConfigRuleValues().add(value);
+		} else {
+			for (int i = 0; i < configValueIds.size(); i++) {
+				Long configValueId = getConfigValueId(configValueIds, i);
+
+				PmConfigRuleValue value = ruleSO.getRuleValueByRuleValueId(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD, configValueId);
+
+				ruleType.getConfigRuleValues().add(value);
+			}
 		}
 	}
 
@@ -7287,11 +7369,27 @@ public class RuleCatalogueBackingBean extends
 	        return false;
 	    }
 
-	    if (oldDate == null || newDate == null) {
+	    if (oldDate != null && newDate == null) {
 	        return false;
+	    }
+	    
+	    if (oldDate == null && newDate != null) {
+	        return true;
 	    }
 
 	    return oldDate.compareTo(newDate) != 0;
+	}
+
+	private void sortConfigRuleValueList(List<PmConfigRuleValue> configRuleValueList) {
+		Collections.sort(configRuleValueList, new Comparator<PmConfigRuleValue>() {
+			@Override
+			public int compare(PmConfigRuleValue o1, PmConfigRuleValue o2) {
+				return new CompareToBuilder()
+				.append(o1.getEffDate(), o2.getEffDate())
+				.append(o1.getFromValue(), o2.getFromValue())
+				.toComparison();
+			}
+		});
 	}
 	//#35323 - End
 }
