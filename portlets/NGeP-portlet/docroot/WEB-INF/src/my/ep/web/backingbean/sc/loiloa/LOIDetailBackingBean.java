@@ -4582,6 +4582,7 @@ public class LOIDetailBackingBean extends
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
 		String committeeType = getManagedBean().getCommitteeType();
+		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();// 34491
 		String backToPreviousPage = getManagedBean().getBackToPreviousPage();
 		List<String> recommendDtlIds = getManagedBean().getRecommendDtlIds();
 		List<ScLoiTerm> negoTerms = getManagedBean().getNegoTermsList();
@@ -4624,7 +4625,10 @@ public class LOIDetailBackingBean extends
 		if(null!=scQtFinalization){
 		this.getManagedBean().setScQt(scQtFinalization.getScQt());
 		}
-		this.populateMeetingPreparationTab(); // 34491
+		// 34491 - start
+		getManagedBean().setScQtCommittee(scQtCommittee);
+		this.populateMeetingPreparationTab(); 
+		// 34491 - end
 	}
 
 	/**
@@ -8326,14 +8330,7 @@ public class LOIDetailBackingBean extends
 	 */
 	private void populateMeetingPreparationTab() {
 		ScQt scQt = this.getManagedBean().getScQtFinalization().getScQt();
-		for (ScQtCommittee qtCommittee : scQt.getScQtCommittees()) {
-			ScCommittee committee = qtCommittee.getScCommittee();
-			if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(
-					committee.getCommitteeType().getParameterCode())) {
-				prepareFinalizationQtCommittee(qtCommittee);
-				break;
-			}
-		}
+		prepareFinalizationQtCommittee(this.getManagedBean().getScQtCommittee());
 		prepareMemberUpdate();
 		this.getManagedBean().setUserSearchBean(new UserCommitteeSearchBean());
 		this.getManagedBean().setDeletedCommitteeActivities(new ArrayList<ScQtCommitteeActivity>());
