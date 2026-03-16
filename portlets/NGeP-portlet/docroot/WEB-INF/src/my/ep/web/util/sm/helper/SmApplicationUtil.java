@@ -11531,9 +11531,12 @@ public class SmApplicationUtil {
 				StatusReqDTO reqDTO = new StatusReqDTO();
 				reqDTO.setStatusId(appl.getSmSupplier().getSmAppl()
 						.getPmRegStatus().getPmStatus().getStatusId());
+				log.info("TB 37925: -Status ID"+appl.getSmSupplier().getSmAppl()
+				.getPmRegStatus().getPmStatus().getStatusId());
 				reqDTO.setLanguageCode(language);
 				retVal = SmServiceLookup.getStatusSO()
 						.retrieveStatusDescById(reqDTO).getPmStatusDesc();
+				log.info("TB 37925: -retVal"+retVal);
 			}
 		} catch (Exception ex) {
 
