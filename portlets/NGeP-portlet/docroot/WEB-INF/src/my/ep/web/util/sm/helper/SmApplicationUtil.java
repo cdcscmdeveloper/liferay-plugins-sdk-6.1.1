@@ -14248,22 +14248,24 @@ public class SmApplicationUtil {
 			Long approveStatusId) {
 		// approve SME Status
 		SmApplicationUtil.setSmeStatus(smAppl);
-
+        log.info("TB 37925 - approveStatusId:"+approveStatusId);
 		PmRegStatus regStatus = null;
 		if (approveStatusId != null) {
 			PmStatus status = SmCommonUtil.getInstance().retrievePmStatusById(
 					approveStatusId);
 			regStatus = status.getPmRegStatus();
+			log.info("TB 37925 - approveStatusId - regStatus:"+regStatus);
 		} else {
 			SmApplSectionReview poRev = (SmApplSectionReview) EntityHelper
 					.getEntityBySinglePropertyFromList(
 							SupplierManagementConst.SECTION_REV_ROLE_PO,
 							smAppl.getSmApplSectionReviews(), "roleType");
+			log.info("TB 37925 - poRev.getPmRegStatus():"+poRev.getPmRegStatus());
 			if (poRev != null && poRev.getPmRegStatus() != null) {
 				regStatus = poRev.getPmRegStatus();
 			}
 		}
-
+        log.info("TB 37925 - regStatus:"+regStatus);
 		if (regStatus != null) {
 			smAppl.setPmStatus(regStatus.getPmStatus());
 			smAppl.setPmRegStatus(regStatus);
@@ -14280,6 +14282,7 @@ public class SmApplicationUtil {
 				smAppl.setBumi(smAppl.getSmSupplier().isBumi());
 			}
 		}
+		log.info("TB 37925 - regStatus Last:"+regStatus);
 		return regStatus;
 	}
 
