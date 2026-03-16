@@ -50,9 +50,9 @@
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<p:commandButton onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
+								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 								value="#{lbl['lbl.sm.button.recommend.to.approve']}"
-								partialSubmit="true" process="@this"
+								partialSubmit="true" process="@this @([id$=changeRegStatusChk])"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #29727, #37925 -->
 							<!-- Disable for UPS 32008 - START -->
@@ -93,10 +93,10 @@
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:approveDialog" partialSubmit="true"
-								process="@this"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" />  <!-- #29727 -->
+								update=":form:tt:approveDialog @([id$=changeRegStatusChk])" partialSubmit="true"
+								process="@this @([id$=changeRegStatusChk])"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}" 
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" />  <!-- #29727 37925 -->
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialogId" partialSubmit="true"
@@ -117,7 +117,7 @@
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									partialSubmit="true" process="@this @([id$=changeRegStatusChk])" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #27297 -->
 							</c:if>
@@ -144,11 +144,10 @@
 						</c:when>
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:approveDialog" partialSubmit="true"
-								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" /> <!-- #27297 -->
+								update=":form:tt:approveDialog @([id$=changeRegStatusChk])" partialSubmit="true"
+								process="@this @([id$=changeRegStatusChk])" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}" 
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" /> <!-- #27297,#37925 -->
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialogId" partialSubmit="true" process="@this"
@@ -157,7 +156,7 @@
 								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
 									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									partialSubmit="true" process="@this @([id$=changeRegStatusChk])" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- 29727, #37925 -->
 							</c:if>
@@ -385,7 +384,7 @@
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
 		update=":form:tt:approveDialog"/>
 	<!-- #29727 END -->
-	
+		
 	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}"
 		closable="false" id="approveDialog" widgetVar="approveDialog"
 		height="350px" resizable="false" showEffect="fade" hideEffect="fade"
@@ -402,7 +401,7 @@
 					partialSubmit="true" process="poApprovedBlockPanel" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelFinalApproveOrReject('approveDialog')}"
-					partialSubmit="true" process="@this" />
+					partialSubmit="true" process="@this @([id$=approveSelBoxMsg])" /><!-- #37925 -->
 			</div>
 			<p:blockUI block="poApprovedBlockPanel" widgetVar="poApprovedBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -443,7 +442,7 @@
 		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.approve']}" 
 		update="@([id$=Msg])"
-		loadingWidget="blockWidget" />
+		loadingWidget="poApprovedBlockWidget" /><!-- #37925 -->
 		
 	<ac:confirmationPopupSM id="confirmRejectDlg" widget="confirmRejectDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}"
