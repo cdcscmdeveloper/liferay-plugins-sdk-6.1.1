@@ -10973,7 +10973,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
 		getManagedBean().setChangeCurrRegStatus(false); //#37925
-		assignValReqdToFalse();
 		resetSearchRejectedReason();
 		getManagedBean().setReasonId(null);
 		// #3460 - start
@@ -11523,6 +11522,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
+				//#37925 START
+				if(getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)){
+					pmStatId = getManagedBean().getPoRecommendStatusId();
+				}
+				//#37925 END
 			} else if (getManagedBean().isApproverUser()) {
 				actionDesc = SupplierManagementConst.APPROVER_APPROVE_APPL;
 			}
