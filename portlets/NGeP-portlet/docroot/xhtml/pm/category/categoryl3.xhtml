@@ -443,24 +443,24 @@
 							<p:column style="width:7%;text-align:center;"
 								headerText="#{lbl['lbl.pm.action']}">
 								<!-- #29665 add update remark-->
-									<p:commandLink
-										disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
-										action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
-										update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable 
-												?'groupdetailsId,:form:remarkFieldId' 
-												:'groupdetailsId'}">
-										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-									</p:commandLink>
-								</p:column>
-							</p:dataTable>
-
-							<div class="ppRightBtn">
-								<p:commandButton value="#{lbl['lbl.btn.add']}"
+								<p:commandLink
 									disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
-									action="#{categoryBackingBean.addBasicCategory()}"
-									oncomplete="lovPopupCategory.show();" process="@this"
-									partialSubmit="true" update="lovPopupCategory" />
-							</div>
+									action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
+									update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable 
+										?'groupdetailsId,:form:remarkFieldId' 
+										:'groupdetailsId'}">
+										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
+								action="#{categoryBackingBean.addBasicCategory()}"
+								oncomplete="lovPopupCategory.show();" process="@this"
+								partialSubmit="true" update="lovPopupCategory" />
+						</div>
 						</p:outputPanel> <!-- #29665 -->
 
 						<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory"

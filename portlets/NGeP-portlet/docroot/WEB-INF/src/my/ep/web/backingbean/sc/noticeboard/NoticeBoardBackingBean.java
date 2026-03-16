@@ -3,7 +3,9 @@ package my.ep.web.backingbean.sc.noticeboard;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;//#29732
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;//#29732
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -151,8 +153,6 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
-import java.sql.Timestamp;//#29732
-import java.text.SimpleDateFormat;//#29732
 
 /**
  * Notice Board Backing Bean class displays the status of 
@@ -2776,10 +2776,10 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
-				//#29732
+
+				// #29732 -start-
 				String selectedTab = getManagedBean().getSelectedTab();
-				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
-						.equals(selectedTab)) {
+				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
 					String catCodeL1 = "";
 					String catCodeL2 = "";
 					String catCodeL3 = "";
@@ -2791,8 +2791,9 @@ public class NoticeBoardBackingBean extends
 					Date pmChangeDateL1 = null;
 					Date pmChangeDateL2 = null;
 					Date pmChangeDateL3 = null;
+
 					getManagedBean().setDisplayAfterPublish(false);//reset if user change task
-					
+
 					for (ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()) {
 
 						qtCatCreatedDate = checkCategoryUpdated.getCreatedDate();
@@ -2806,7 +2807,8 @@ public class NoticeBoardBackingBean extends
 						boolean resultL2vsPublish = pmChangeDateL2.after(publishTimestamp);
 						boolean resultL3vsPublish = pmChangeDateL3.after(publishTimestamp);
 
-						if ((resultL1vsPublish ||resultL2vsPublish ||resultL3vsPublish) && (resultL1 || resultL2 || resultL3)) {
+						if ((resultL1vsPublish || resultL2vsPublish || resultL3vsPublish)
+								&& (resultL1 || resultL2 || resultL3)) {
 							getManagedBean().setPmCatL1flag(resultL1vsPublish);
 							getManagedBean().setPmCatL2flag(resultL2vsPublish);
 							getManagedBean().setPmCatL3flag(resultL3vsPublish);
@@ -2828,7 +2830,8 @@ public class NoticeBoardBackingBean extends
 						checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
 					}
 				}
-				//#29732
+				// #29732 -end-
+
 				return resDTO.getCategoryResultBean();
 			} finally{
 				qtNoticeBoardSO = null;
@@ -3405,10 +3408,10 @@ public class NoticeBoardBackingBean extends
 		}
 		return isRenderRigisterBtn;
 	}
-	
+
 	// #29732 Start
-	public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3,String catCodeLevel,
-			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
+	public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3, String catCodeLevel,
+			Long catCodeId, Long qtCateId, String categoryName, String catCode) {
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -3426,17 +3429,17 @@ public class NoticeBoardBackingBean extends
 		}
 		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 		getManagedBean().setHisCatCode(catCode);
-		
+
 		boolean flagCategoryUpdate = false;
 		Date createdDateQt = null;
-		for(ScQtCategory checkQtCatUpdate : this.getCategoryCodesDataModel().getList()){
-			if(null != checkQtCatUpdate){
+		for (ScQtCategory checkQtCatUpdate : this.getCategoryCodesDataModel().getList()) {
+			if (null != checkQtCatUpdate) {
 				flagCategoryUpdate = checkQtCatUpdate.getUpdateCatDesc();
 				createdDateQt = checkQtCatUpdate.getCreatedDate();
 				break;
 			}
 		}
-		
+
 		List<PmRemarkCategory> listCategoryDB = new ArrayList();
 		if (null != getManagedBean().getHistoryList()) {
 			for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
@@ -3449,7 +3452,9 @@ public class NoticeBoardBackingBean extends
 
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
+	// #29732 -end-
 
+	// #29732 -start-
 	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
 		if (null != remarkList) {
 			for (PmRemarkCategory rc : remarkList) {
@@ -3459,7 +3464,9 @@ public class NoticeBoardBackingBean extends
 		}
 		return remarkList;
 	}
+	// #29732 -end-
 
+	// #29732 -start-
 	/**
 	 * Gets the spec so.
 	 * 
@@ -3468,7 +3475,9 @@ public class NoticeBoardBackingBean extends
 	private IQTSpecSO getSpecSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 	}
+	// #29732 -end-
 
+	// #29732 -start-
 	public List<ScQtCategory> retrieveScQtCategoryByQtCatID(Long qtCateId) {
 		List<ScQtCategory> listCategoryDB = new ArrayList();
 		IQTSpecSO specSO = getSpecSO();
@@ -3476,14 +3485,18 @@ public class NoticeBoardBackingBean extends
 
 		return listCategoryDB;
 	}
+	// #29732 -end-
 
+	// #29732 -start-
 	public String toDate(Timestamp changedDate) {
 		String pattern = CommonConstants.DEFAULT_12HR_DATETIME_FORMAT;
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String newChangedDate = simpleDateFormat.format(changedDate.getTime());
 		return newChangedDate;
 	}
-	
+	// #29732 -end-
+
+	// #29732 -start-
 	public void flagHistoryPmCatCode(String catCodeL1, String catCodeL2, String catCodeL3, String catCodeLevel,
 			String catCode, NoticeBoardResDTO resDto) {
 
@@ -3500,7 +3513,9 @@ public class NoticeBoardBackingBean extends
 			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL1Nb(catCodeL1, catCodeLevel);
 			if (null != resDTO1.getCatCodeRemark()) {
 				catCodeL1OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if (null != resDTO1.getCatCodeRemark() && null == catCodeL1OldDesc // this is to cater inserted null in DB, found some data were inserted null
+				// this is to cater inserted null in DB, found some data were
+				// inserted null
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL1OldDesc
 						|| null != resDTO1.getCatCodeRemark() && null != catCodeL1OldDesc) {
 					oldDescEmpty = true;
 				}
@@ -3510,7 +3525,9 @@ public class NoticeBoardBackingBean extends
 			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL2Nb(catCodeL2, catCodeLevel);
 			if (null != resDTO1.getCatCodeRemark()) {
 				catCodeL2OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if (null != resDTO1.getCatCodeRemark() && null == catCodeL2OldDesc// this is to cater inserted null in DB, found some data were inserted null
+				// this is to cater inserted null in DB, found some data were
+				// inserted null
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL2OldDesc
 						|| null != resDTO1.getCatCodeRemark() && null != catCodeL2OldDesc) {
 					oldDescEmpty = true;
 				}
@@ -3520,7 +3537,9 @@ public class NoticeBoardBackingBean extends
 			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL3Nb(catCodeL3, catCodeLevel);
 			if (null != resDTO1.getCatCodeRemark()) {
 				catCodeL3OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if (null != resDTO1.getCatCodeRemark() && null == catCodeL3OldDesc // this is to cater inserted null in DB,found some data were inserted null
+				// this is to cater inserted null in DB, found some data were
+				// inserted null
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL3OldDesc
 						|| null != resDTO1.getCatCodeRemark() && null != catCodeL3OldDesc) {
 					oldDescEmpty = true;
 				}

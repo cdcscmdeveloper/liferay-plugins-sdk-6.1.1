@@ -94,7 +94,9 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	
 	private boolean isSetNull ; //Bug #31364
+
 	private boolean isDemoReq; // #28784
+
 	private boolean allSupplierDisagreeEPV;//#21692
 	
 	@SuppressWarnings("serial")

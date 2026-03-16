@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
 <liferay-portlet-app>
 	<portlet>
 		<portlet-name>auSearch</portlet-name>
@@ -3469,17 +3470,6 @@
 		</css-class-wrapper>
 	</portlet>
 	<!-- Enhancement 25627-end- -->
-	
-	<portlet>	<!-- #36451 -->
-		<portlet-name>testSpki</portlet-name>
-		<icon>/icon.png</icon>
-		<requires-namespaced-parameters>false</requires-namespaced-parameters>
-		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>icon-portlet</css-class-wrapper>
-	</portlet>
 		
 	<!-- 25037 - start -->
 	<portlet>

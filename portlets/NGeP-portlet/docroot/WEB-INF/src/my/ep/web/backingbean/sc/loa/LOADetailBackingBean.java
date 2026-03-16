@@ -11877,7 +11877,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.TRUE);
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("LOA", "cancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
+			SLAUtils.getInstance().logSLAError("LOI", "cancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
 					"cancelLOAWithoutBPM", getUserIdSessionFromLoginId(), e);
 		}
 	}

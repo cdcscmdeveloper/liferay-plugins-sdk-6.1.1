@@ -3911,7 +3911,6 @@ public class SmApplicationUtil {
 	}
 	
 	// #39679 - Start
-
 	private static boolean checkDuplicateCatCode(Set<String> catCodeList, String catCode) {
 		if (!catCodeList.isEmpty()) {
 			for (String item : catCodeList) {
