@@ -143,7 +143,7 @@
 					<!-- #36718 - process panel when change address dropdown -->
 					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchState,divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId,branchDist,branchCity" />
+						update="branchState,divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId,branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
 			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
@@ -186,7 +186,7 @@
 					<!-- #36718 - process panel when change address dropdown -->
 					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 					listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchDist,branchCity" />
+						update="branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu>
 				<!-- #34159 - END -->
 				<!-- #35086 -->
@@ -223,7 +223,7 @@
 					<!-- #36718 - process panel when change address dropdown -->
 					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchDist,branchCity" />
+						update="branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
 			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
@@ -253,7 +253,7 @@
 					<!-- #36718 - process panel when change address dropdown -->
 					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchCity" />
+						update="branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges

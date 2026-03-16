@@ -282,7 +282,7 @@
 							<ui:fragment
 								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
 								<p:inputText id="smFacFactoryRent"
-									disabled="#{!backingBean.managedBean.valueReqd}"
+									disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
 									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
 									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"

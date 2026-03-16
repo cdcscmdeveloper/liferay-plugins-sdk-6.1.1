@@ -524,7 +524,8 @@
 					</td>
 					<td colspan="3"  >
 					<!-- #36483 START - put coordinate input into panelGroup to update using ajax -->
-					<h:panelGroup id="coordinatePanelId">
+					<!-- #36718 - change to outputPanel -->
+					<p:outputPanel id="coordinatePanelId">
 						<script>
 						
 					      function getAddress2() {
@@ -553,7 +554,7 @@
 							longitude="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" />	
 							<!-- Disable for UPS 32008 - END -->		
-					</h:panelGroup>
+					</p:outputPanel>
 					<!-- #36483 END - put coordinate input into panelGroup to update using ajax -->		
 					</td>
 				</tr>

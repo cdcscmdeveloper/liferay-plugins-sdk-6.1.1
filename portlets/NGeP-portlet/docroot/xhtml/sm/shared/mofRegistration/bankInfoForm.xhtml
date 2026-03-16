@@ -425,7 +425,7 @@
 							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
 							<p:ajax event="change" process="@this @([id$=bankDetailsPanel])"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
-								update="smBankState,divisionBankFormDropdownPanelId,divisionBankFormLabelPanelId,divisionBankFormDropdownPanelId,smBankDist,smBankCity" />
+								update="smBankState,divisionBankFormDropdownPanelId,divisionBankFormLabelPanelId,divisionBankFormDropdownPanelId,smBankDist,smBankCity,postCodeBankPanelId" />
 						</p:selectOneMenu> 
 					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
@@ -465,7 +465,7 @@
 							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
 							<p:ajax event="change" process="@this @([id$=bankDetailsPanel])"
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
-								update="smBankDist,smBankCity" />
+								update="smBankDist,smBankCity,postCodeBankPanelId" />
 						</p:selectOneMenu> 
 					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
@@ -499,7 +499,7 @@
 							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
 							<p:ajax event="change" process="@this @([id$=bankDetailsPanel])"
 								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
-								update="smBankDist,smBankCity" />
+								update="smBankDist,smBankCity,postCodeBankPanelId" />
 						</p:selectOneMenu> 
 					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
@@ -528,7 +528,7 @@
 							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
 							<p:ajax event="change" process="@this @([id$=bankDetailsPanel])"
 								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
-								update="smBankCity" />
+								update="smBankCity,postCodeBankPanelId" />
 						</p:selectOneMenu>
 					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
