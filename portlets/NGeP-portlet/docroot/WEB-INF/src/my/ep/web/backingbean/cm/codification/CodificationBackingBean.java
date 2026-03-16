@@ -294,8 +294,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 */
 	public void extensionCodeSearchForAssign() {
 		
-		this.getManagedBean().setRenderButtonAssignCode(true); // #31503
+		// #31503 - Start
+		this.getManagedBean().setRenderButtonAssignCode(true);
 		this.getManagedBean().setObjSelected(null);
+		// #31503 - End
 
 		extensionSearchItemDataModel.reloadData();
 
