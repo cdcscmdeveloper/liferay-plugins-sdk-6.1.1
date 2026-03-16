@@ -10705,8 +10705,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 	
-<<<<<<< HEAD
-=======
 	// #37925 START
 	/**
 	 * Handles the logic for updating the current status when an approver change occurs.
@@ -10846,7 +10844,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	// #37925 END
 
->>>>>>> branch 'release-prd-uat' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 	/**
 	 * Approver select to Approve or reject mof cancellation.
 	 * 
