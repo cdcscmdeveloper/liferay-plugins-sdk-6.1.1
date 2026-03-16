@@ -199,7 +199,7 @@ public class RuleCatalogueBackingBean extends
 	
 	private static final Map<Long, Integer> SUPPLIER_PRIORITY;
 	static {
-	    Map<Long, Integer> map = new HashMap<Long, Integer>();
+	    Map<Long, Integer> map = new HashMap<>();
 	    map.put(RuleTypeConst.BASIC, 1);
 	    map.put(RuleTypeConst.MOF, 2);
 	    map.put(RuleTypeConst.G2G, 3);
@@ -1166,6 +1166,7 @@ public class RuleCatalogueBackingBean extends
 		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
 				.getConfigRuleDescList()) {
 
+			sortConfigRuleValueList(ruleTypeDesc.getRuleType().getConfigRuleValues()); //#35323
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
 					.getParameterCode().equals("C")) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc
@@ -1485,6 +1486,7 @@ public class RuleCatalogueBackingBean extends
 			}
 			//#35323 - Start
 			this.getManagedBean().setNewPRList(false);
+			sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
 				loadPRValues();
 			}
@@ -5994,6 +5996,7 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeExpiryDate(null);
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
+		sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 	}
 	
 	/**
@@ -6377,10 +6380,14 @@ public class RuleCatalogueBackingBean extends
 
 			if (row[2] != null){
 				v.setFromValue((BigDecimal) row[2]);
+			} else {
+				v.setFromValue(null);
 			}
 
 			if (row[3] != null){
 				v.setToValue((BigDecimal) row[3]);
+			} else {
+				v.setToValue(null);
 			}
 
 			if (row[4] != null) {
@@ -6406,10 +6413,14 @@ public class RuleCatalogueBackingBean extends
 			boolean isSameSupplAccType = suppAccType != null && suppAccType.intValue() == 1;
 			v.setSameSupplAcctType(isSameSupplAccType);
 
-			List<Long> supplAcctTypeList = parseLongList(row[9]);
+			if (row[9] != null) {
+			    v.setRecordStatusFlg(((Number) row[9]).intValue());
+			}
+
+			List<Long> supplAcctTypeList = parseLongList(row[10]);
 
 			v.setSupplAcctTypeIds(supplAcctTypeList);
-			v.setMergedConfigRuleValueIds(String.valueOf(row[10]));
+			v.setMergedConfigRuleValueIds(String.valueOf(row[11]));
 
 			list.add(v);
 		}
@@ -6490,21 +6501,33 @@ public class RuleCatalogueBackingBean extends
 	 * @param parameterSO
 	 * @param reqDTO
 	 */
-	private void processMergedRow(PmConfigRule ruleType, PmConfigRuleValue merged, IParameterSO parameterSO,
-			ParameterReqDTO reqDTO) {
+	private void processMergedRow(PmConfigRule ruleType, PmConfigRuleValue merged, IParameterSO parameterSO, ParameterReqDTO reqDTO) {
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
 		List<Long> supplierTypeIds = merged.getSupplAcctTypeIds();
 		List<Long> configValueIds = splitIds(merged.getMergedConfigRuleValueIds());
 
 		boolean first = true;
 
-		for (int i = 0; i < supplierTypeIds.size(); i++) {
-			PmConfigRuleValue value = buildRuleValue(merged, supplierTypeIds, configValueIds, i, first, parameterSO, reqDTO);
+		if (supplierTypeIds != null && !supplierTypeIds.isEmpty() && merged.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			for (int i = 0; i < supplierTypeIds.size(); i++) {
+				PmConfigRuleValue value = buildRuleValue(merged, supplierTypeIds, configValueIds, i, first, parameterSO, reqDTO);
 
-			if (value.isShowFlag() && first) {
-				first = false;
+				if (value.isShowFlag() && first) {
+					first = false;
+				}
+
+				ruleType.getConfigRuleValues().add(value);
 			}
 
-			ruleType.getConfigRuleValues().add(value);
+		} else {
+			for (int i = 0; i < configValueIds.size(); i++) {
+				Long configValueId = getConfigValueId(configValueIds, i);
+
+				PmConfigRuleValue value = ruleSO.getRuleValueByRuleValueId(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD, configValueId);
+
+				ruleType.getConfigRuleValues().add(value);
+			}
 		}
 	}
 
@@ -6824,12 +6847,28 @@ public class RuleCatalogueBackingBean extends
 	    if (oldDate == null && newDate == null) {
 	        return false;
 	    }
-	    
-	    if (oldDate == null || newDate == null) {
+
+	    if (oldDate != null && newDate == null) {
 	        return false;
 	    }
 
+	    if (oldDate == null && newDate != null) {
+	        return true;
+	    }
+
 	    return oldDate.compareTo(newDate) != 0;
+	}
+
+	private void sortConfigRuleValueList(List<PmConfigRuleValue> configRuleValueList) {
+		Collections.sort(configRuleValueList, new Comparator<PmConfigRuleValue>() {
+			@Override
+			public int compare(PmConfigRuleValue o1, PmConfigRuleValue o2) {
+				return new CompareToBuilder()
+				.append(o1.getEffDate(), o2.getEffDate())
+				.append(o1.getFromValue(), o2.getFromValue())
+				.toComparison();
+			}
+		});
 	}
 	//#35323 - End
 }
