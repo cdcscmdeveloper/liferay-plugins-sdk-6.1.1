@@ -11052,15 +11052,6 @@ private void retriveCommitteeRemarksList(){
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
-		//#28784 - Start
-		List<String> demoProceses = new ArrayList<>();
-		demoProceses.add(SCProcessNameConst.FINALISE_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.UPDATE_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.VIEW_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION);
-		//#28784 - End
 		if (null != member) {
 			if (member.getMemberRole().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
@@ -11215,7 +11206,7 @@ private void retriveCommitteeRemarksList(){
 							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 		// #28784 -start-
-		else if (demoProceses.contains(taskName))
+		else if (Arrays.asList(SCProcessNameConst.DEMO_PROCESSES).contains(taskName))
 		// #28784 -end-
 		{
 			afterDemoInv(true); // #28784
@@ -19553,18 +19544,9 @@ private void retriveCommitteeRemarksList(){
 	
 	//#28784 - Start
 	private boolean checkDemoStatuses() {
-		List<Long> demoStatuses = new ArrayList<>();
-		demoStatuses.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_ENDORSEMENT);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_SIGN_OFF);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_ENDORSEMENT_DEMO);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_SIGN_OFF_DEMO);
-		
 		return this.getManagedBean().getScQt().isDemoRequired()
-				&& (demoStatuses.contains(this.getManagedBean().getCurrentStatusId())) && !this.getManagedBean().isDemoWip();
+				&& (Arrays.asList(QTStatusConst.TEC_STATUSES).contains(this.getManagedBean().getCurrentStatusId()))
+				&& !this.getManagedBean().isDemoWip();
 	}
 	//#28784 - End
 	
