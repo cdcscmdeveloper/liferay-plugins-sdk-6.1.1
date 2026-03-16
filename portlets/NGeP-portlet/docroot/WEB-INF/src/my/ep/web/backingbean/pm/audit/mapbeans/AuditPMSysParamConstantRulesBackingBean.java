@@ -268,7 +268,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			if (!repByRange.containsKey(key))
 				repByRange.put(key, v);
 
-			final List<PmParameterDesc> descs = v.getSupplAcctTypeId().getPmParameterDescsSpecCallOnly();
+			final List<PmParameterDesc> descs = v.getSupplAcctTypeId().getPmParameterDescs();
 			final PmParameterDesc d = descs.get(1);
 			if (v.isSameSupplAcctType()) {
 				getParameterDesc(descs, codeNamesByRange, key, d);
@@ -380,7 +380,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	private void processing(PmConfigRuleValue ruleValueType, PmConfigRuleValue newCreatedItem,
 			PmConfigRuleValue deletedItem) {
 		// Rule Description
-				if (ruleValueType.getRuleDescription() != null && !pmConfigRuleDesc.getRuleType().getRuleType().equalsIgnoreCase(RuleTypeConst.PTJCO)) {
+				if (ruleValueType.getRuleDescription() != null) {
 					handleFieldAuditSPRulesValueType(ruleValueType,
 							AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_DESCRIPTION_FIELDLABELID,
 							ruleDescNewCreated(newCreatedItem), ruleDescDeleted(deletedItem));
@@ -423,7 +423,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			} else if(newCreatedItem.getRuleType().getParameterType() != null) {
 				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
 						newCreatedItem.getRuleValue().toUpperCase());
-				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
+				ruleValue = pmParameter.getPmParameterDescs().get(1).getCodeName();
 			}else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("PC")){
 				ruleValue = rawRuleValue;
 			} else {

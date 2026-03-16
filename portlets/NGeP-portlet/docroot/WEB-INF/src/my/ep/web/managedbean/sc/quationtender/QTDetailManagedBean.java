@@ -1967,6 +1967,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Date briefingSiteVisitPostponeDate;
 	//#28188 - End
 	
+	private List<TplSpecZoneDtl> deleteZonesTreeNodes;	//37851
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12505,8 +12507,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.weightage35384WIP = weightage35384WIP;
 	}
 	//#38151
-
-
+	
 	//#28188 - Start
 	/**
 	 * @return the briefingSiteVisitPostponeDate
@@ -12523,4 +12524,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#28188 - End
 
+	//37851 -- Start
+	public List<TplSpecZoneDtl> getDeleteZonesTreeNodes() {
+		return deleteZonesTreeNodes;
+	}
+
+	public void setDeleteZonesTreeNodes(List<TplSpecZoneDtl> deleteZonesTreeNodes) {
+		this.deleteZonesTreeNodes = deleteZonesTreeNodes;
+	}
+	//37851 --  End
 }
