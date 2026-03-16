@@ -25,32 +25,16 @@
 	        <p:ajax event="toggleSelect" update="@parent" 
 	        	listener="#{svoSiteVisitBackingBean.setSelectedWorkers(workshop)}"/>
 			<p:column>
-<<<<<<< HEAD
-					<f:facet name="header">
-						#{lbl['lbl.sm.worker.specialization']}
-					</f:facet>
-					<p:inputText value="#{svWorker.expertise}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.specialization']}" 
-						maxlength="2000" required="#{isRequired}" />
-=======
 				<f:facet name="header">
 					#{lbl['lbl.sm.worker.specialization']}
 				</f:facet>
 				<h:outputText value="#{svWorker.expertise}" style="float: left;white-space: normal;" />
->>>>>>> refs/remotes/origin/release-sit
 			</p:column>
 			<p:column>
-<<<<<<< HEAD
-					<f:facet name="header">
-						#{lbl['lbl.sm.worker.name']}
-					</f:facet>
-				<p:inputText value="#{svWorker.name}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.name']}" maxlength="50" 
-					required="#{isRequired}"/>
-=======
 				<f:facet name="header">
 					#{lbl['lbl.sm.worker.name']}
 				</f:facet>
 				<h:outputText value="#{svWorker.name}" style="float: left;white-space: normal;" />
->>>>>>> refs/remotes/origin/release-sit
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -63,32 +47,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.sm.worker.icno']}
 				</f:facet>
-<<<<<<< HEAD
-				<p:outputPanel id="pnlIdentType">
-                	<p:inputText id="empIcId" value="#{svWorker.identificationNo}"
-						label="#{lbl['lbl.sm.worker.icno']}"
-						rendered="#{svWorker.identificationTypeId eq '115'}"
-						required="#{isRequired}" disabled="#{viewFlag}"
-						maxlength="12" size="30" style="width: 80% !important;"
-						validatorMessage="#{lbl['lbl.sm.worker.icno']} - #{lbl['lbl.sm.invalidNo']}">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-						<p:ajax process="@this" partialSubmit="true" update="@this,empIcIdMsg" />
-					</p:inputText>
-					<p:message id="empIcIdMsg" for="empIcId"
-									showSummary="true" showDetail="false" display="icon" />	
-									
-					<p:inputText id="empPassId" value="#{svWorker.identificationNo}"
-						label="#{lbl['lbl.sm.worker.icno']}"
-						rendered="#{svWorker.identificationTypeId ne '115'}"
-						required="#{isRequired}" disabled="#{viewFlag}"
-						maxlength="15" size="30" style="width: 80% !important;">
-					</p:inputText>
-					<p:message id="empPassIdMsg" for="empPassId"
-									showSummary="true" showDetail="false" display="icon" />
-				</p:outputPanel>
-=======
 				<h:outputText value="#{svWorker.identificationNo}" style="float: left;white-space: normal;" />
->>>>>>> refs/remotes/origin/release-sit
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -96,9 +55,6 @@
 				</f:facet>
 				<h:outputText value="#{svWorker.workExpYear}" style="float: left;white-space: normal;" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-<<<<<<< HEAD
-				</p:inputText>
-=======
 				</h:outputText>
 			</p:column>
 			<p:column rendered="#{!viewFlag}">
@@ -112,7 +68,6 @@
 					partialSubmit="true">
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
 				</p:commandLink>
->>>>>>> refs/remotes/origin/release-sit
 			</p:column>
 		</p:dataTable>		
 		
