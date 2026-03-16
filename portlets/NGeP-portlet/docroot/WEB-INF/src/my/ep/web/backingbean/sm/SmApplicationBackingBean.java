@@ -11523,8 +11523,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
 				//#37925 START
+				log.info("TB 37925 - getManagedBean().getCurrentStatus():"+getManagedBean().getCurrentStatus());
 				if(getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)){
 					pmStatId = getManagedBean().getPoRecommendStatusId();
+					log.info("TB 37925 - pmStatId:"+pmStatId);
 				}
 				//#37925 END
 			} else if (getManagedBean().isApproverUser()) {
@@ -11534,6 +11536,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 			} else {
 				regStatus = SmApplicationUtil.setApplicationApproveStatus(getManagedBean().getSmAppl(), pmStatId);
+				log.info("TB 37925 - regStatus:"+regStatus);
 				reqDTO.setPaymentReqd(SmApplicationUtil.getPaymentMode(getManagedBean().getSmAppl()));
 			}
 
