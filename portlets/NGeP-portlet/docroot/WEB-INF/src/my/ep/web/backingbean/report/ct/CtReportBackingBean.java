@@ -132,7 +132,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	/**
 	 * retrieve and set the current active org
 	 */
-	private void setCurrentActiveOrg() {
+	//Fix - #40102 *change from private to public for other bean accessibility*
+	public void setCurrentActiveOrg() {
 		log.debug("setCurrentActiveOrg");
 		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
@@ -359,6 +360,11 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
 
 				ContractManagementReportBackingBean ctManagementReportBB = new ContractManagementReportBackingBean();
+				//Start Fix - #40102
+				ctManagementReportBB.getManagedBean().setSelectedMinistry(null);
+				ctManagementReportBB.getManagedBean().setSelectedKumpulanPTJ(null);
+				ctManagementReportBB.getManagedBean().setSelectedPTJ(null);
+				//End Fix - #40102
 
 				if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
@@ -449,8 +455,12 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		getManagedBean().setFormattedSelectedItems(null);
 		getManagedBean().setLovSelectedItemList(null);
 		getManagedBean().setSelectedSupplier(null);
-
 		// End fix- #29416
+		// Start Fix - #40102
+		if (getManagedBean().getReportCode() != null) {
+			setCurrentActiveOrg();
+		}
+		// End Fix - #40102
 	}
 
 	/**
