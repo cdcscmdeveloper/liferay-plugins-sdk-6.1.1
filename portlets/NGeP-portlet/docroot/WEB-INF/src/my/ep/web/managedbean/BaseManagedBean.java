@@ -180,7 +180,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean newVersion;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
-	
+
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}

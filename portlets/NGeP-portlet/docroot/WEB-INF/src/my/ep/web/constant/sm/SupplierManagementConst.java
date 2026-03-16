@@ -780,16 +780,7 @@ public class SupplierManagementConst {
 	public static final int BUMI_PERCENTAGE = 50;
 	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
 	//26238 - END
-
-//	#37925 START
-	public static final String APPL_TYPE_UPDATE = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE;
-	public static final String APPL_TYPE_MOF = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF;
-	public static final String APPL_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BASIC;
-	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
-	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
-	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
-//	#37925 END
-
+		
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -1539,38 +1530,4 @@ public class SupplierManagementConst {
 		return SUPPLIER_APPL_SEARCH_URL;
 	}
 	// #28895_35501 End
-
-	
-//	#37925 START
-	public String getApplTypeBumi() {
-		return APPL_TYPE_BUMI;
-	}
-
-	public String getApplTypeCategory() {
-		return APPL_TYPE_CATEGORY;
-	}
-
-	public String getApplTypeUpdate() {
-		return APPL_TYPE_UPDATE;
-	}
-
-	public String getApplTypeMof() {
-		return APPL_TYPE_MOF;
-	}
-
-	public String getApplTypeBasic() {
-		return APPL_TYPE_BASIC;
-	}
-
-	public String getApplTypeRenewal() {
-		return APPL_TYPE_RENEWAL;
-	}
-
-	public String getSsmCompanyCountryDefault() {
-		return SSM_COMPANY_COUNTRY_DEFAULT;
-	}
-
-	public String getSsmCompanyCountryMalaysia() {
-		return SSM_COMPANY_COUNTRY_MALAYSIA;
-	}
 }
