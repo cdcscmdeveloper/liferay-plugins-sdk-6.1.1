@@ -2013,7 +2013,7 @@
 		<portlet>
 			<portlet-name>SoftCertReg</portlet-name>
 			<icon>/icon.png</icon>
-			<instanceable>true</instanceable>
+			<instanceable>false</instanceable>
 			<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
