@@ -1044,7 +1044,7 @@
 	
 	<portlet>
 		<portlet-name>scCommittee</portlet-name>
-		<display-name>Committee Maintenance</display-name>
+		<display-name>Quotation/Tender Finalization Committee</display-name> <!-- #35320 -->
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
