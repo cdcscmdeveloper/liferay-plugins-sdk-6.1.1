@@ -386,7 +386,6 @@ public class RuleCatalogueBackingBean extends
 		setCurrentActiveOrg();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
-			//initConfigRule();//#36738
 			initFeeSettings();
 			initOperationThreshold();
 			initGst();
@@ -1213,6 +1212,9 @@ public class RuleCatalogueBackingBean extends
 
 				//#35323 and sonarLint fixing - Start
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
+					if (ruleTypeValue.getRecordStatusFlg() == 0) {// if is inActive one go to next record
+						continue;
+					}
 					validateRuleValue(ruleTypeDesc, ruleTypeValue);
 				}
 				//#35323 and sonarLint fixing - End
@@ -1548,7 +1550,6 @@ public class RuleCatalogueBackingBean extends
 								getRuleTypeDesc(ruleTypeDesc.getRuleType().getRuleType(),
 										CommonConstants.LANGUAGE_CODE_MALAY) };
 					}
-					//#35323 - End
 				} else {
 					if (ruleTypeValue.isModified()
 							&& ruleTypeValue.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
@@ -1574,7 +1575,8 @@ public class RuleCatalogueBackingBean extends
 
 						}
 					}else if(ruleTypeValue.isModified()){
-						//#35323 - Start
+						messageId = MessageConst.TD_80221;
+
 						String ruleValueOrSupplAccType;
 						if (isPurchaseRequest(ruleTypeDesc)) {
 						    ruleValueOrSupplAccType = retrieveSupplierAccountType(ruleTypeValue);
@@ -1582,7 +1584,6 @@ public class RuleCatalogueBackingBean extends
 						    ruleValueOrSupplAccType = ruleTypeValue.getRuleValue();
 						}
 
-						messageId = MessageConst.TD_80221;
 						msgParam = new String[] {
 								getRuleTypeDesc(ruleTypeDesc.getRuleType()
 										.getRuleType(),
@@ -1593,8 +1594,8 @@ public class RuleCatalogueBackingBean extends
 										ruleTypeValue.getExpDate() != null ? 
 												DateUtils.dateToString("dd/MM/yyyy",ruleTypeValue.getExpDate()) : ""
 								};
-						//#35323 - End
 					}
+					//#35323 - End
 				}
 
 				if (messageId != null & msgParam != null) {
@@ -3049,10 +3050,12 @@ public class RuleCatalogueBackingBean extends
 			Date expDate = ruleValue.getExpDate();
 
 			for (PmConfigRuleValue value : configRuleType.getConfigRuleValues()) {
-				if (value.getGroupValueId().equals(ruleValue.getGroupValueId())) {
+				//#35323 - Start
+				if (value.getGroupValueId() != null && value.getGroupValueId().equals(ruleValue.getGroupValueId())) {
 					value.setEffDate(effDate);
 					value.setExpDate(expDate);
 				}
+				//#35323 - End
 			}
 			
 		}
@@ -3117,16 +3120,23 @@ public class RuleCatalogueBackingBean extends
 	}
 	//SonarLint Fixing and #35323 - End
 
+	//#35323 and sonarLint fixing - Start
+	/**
+	 * @param pmConfigValues
+	 * @param groupId
+	 * @return addIndex
+	 */
 	public int getLastIndexToClone(List<PmConfigRuleValue> pmConfigValues,
-			Integer GroupId) {
+			Integer groupId) {
 		int addIndex = 0;
 		for (PmConfigRuleValue ruleValue : pmConfigValues) {
-			if (ruleValue.getGroupValueId().equals(GroupId)) {
-				addIndex = pmConfigValues.indexOf(ruleValue);
-			}
+		    if (ruleValue.getGroupValueId() != null && ruleValue.getGroupValueId().equals(groupId)) {
+		        addIndex = pmConfigValues.indexOf(ruleValue);
+		    }
 		}
 		return addIndex;
 	}
+	//#35323 and sonarLint fixing - End
 
 	public void addTaxableItem() {
 		try {
@@ -4504,9 +4514,8 @@ public class RuleCatalogueBackingBean extends
 
 			return ruleSO.getRuleDescByType(reqDTO);
 
-		} catch (Exception e) {
-			log.error(e);
-			return null;
+		} finally {
+			ruleSO = null;
 		}
 	}
 
@@ -6217,8 +6226,8 @@ public class RuleCatalogueBackingBean extends
 	    if (selectedValue == null) {
            return;
        }
-       // save selected ids into the row
-       if (this.getManagedBean().getSelectedSuppAccountType() == null) {
+	    // save selected ids into the row
+	    if (this.getManagedBean().getSelectedSuppAccountType() == null || this.getManagedBean().getSelectedSuppAccountType().isEmpty()) {
        		selectedValue.setSupplAcctTypeIds(null);
        		selectedValue.setSameSupplAcctType(false);
        } else if (this.getManagedBean().getSelectedSuppAccountType().size() == 1){
