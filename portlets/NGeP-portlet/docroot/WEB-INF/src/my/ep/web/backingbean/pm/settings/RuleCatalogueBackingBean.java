@@ -1598,7 +1598,7 @@ public class RuleCatalogueBackingBean extends
 					//#35323 - End
 				}
 
-				if (messageId != null & msgParam != null) {
+				if (messageId != null && msgParam != null) {
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyForRuleConfig(
