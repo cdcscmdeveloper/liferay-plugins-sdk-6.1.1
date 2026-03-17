@@ -293,7 +293,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setCodeName(String codeName) {
 		this.codeName = codeName;
 	}
-
 	// #29644 - End
 
 	public IPagingDataModel<PmEduField> getEduDataModel() {
@@ -312,7 +311,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setSpecialServiceDataModel(IPagingDataModel<PmParameterDesc> specialServiceDataModel) {
 		this.specialServiceDataModel = specialServiceDataModel;
 	}
-
 	// #29644 - End
 
 	public String getSelectedDocType() {
@@ -506,7 +504,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void resetSpecialServiceResultBean() {
 		this.setSpecialServiceDataModel(new SpecialServicePagingDataModel());
 	}
-
 	// #29644 - End
 
 	/**
@@ -971,7 +968,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			}
 		}
 	}
-
 	// #29644 - End
 
 	// pagination for Professional/Certified Body search list
