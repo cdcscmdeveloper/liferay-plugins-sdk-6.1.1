@@ -1722,6 +1722,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.panelSuppliers = panelSuppliers;
 	}
 
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	private IPagingDataModel<ScLoi> searchLoiDataModel;
@@ -1957,6 +1960,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #35320 - Start
 	private boolean afterSF;
 	// #35320 - End
+	
+	//#28188 - Start
+	/** The Briefing/Site Visit postpone date. */
+	private Date briefingSiteVisitPostponeDate;
+	//#28188 - End
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12426,6 +12434,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.afterSF = afterSF;
 	}// #35320 - End
 	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 	
 	//#29661 start
 	public List<CtPanelCategory> getCtPanelCategoryCode() {
@@ -12444,5 +12461,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.ctPanelCategory = ctPanelCategory;
 	}
 	//#29661 end
+	
+	//#28188 - Start
+	/**
+	 * @return the briefingSiteVisitPostponeDate
+	 */
+	public Date getBriefingSiteVisitPostponeDate() {
+		return briefingSiteVisitPostponeDate;
+	}
+
+	/**
+	 * @param briefingSiteVisitPostponeDate the briefingSiteVisitPostponeDate to set
+	 */
+	public void setBriefingSiteVisitPostponeDate(Date briefingSiteVisitPostponeDate) {
+		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
+	}
+	//#28188 - End
 	
 }

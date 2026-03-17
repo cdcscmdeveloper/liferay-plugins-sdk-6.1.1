@@ -458,14 +458,14 @@ public class SimpleQuoteBackingBean extends
 			CtPanelItem existPanelItem = getTopPanelItem();
 			if(existPanelItem != null) {
 				if(panelItem.getItemCategoryId()
-									.getParameterCode()
-									.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
+						.getParameterCode()
+						.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {//#26059 - Fix simpleQuotePanel
 					addable = false;
 				} else {
 					CtPanelItemGroup existGroup = existPanelItem.getCtPanelItemGroup();
 					CtPanelItemGroup newGroup = panelItem.getCtPanelItemGroup();
-					if(existGroup != null && newGroup != null && 
-							existGroup.getPanelItemGroupId() == newGroup.getPanelItemGroupId()) {
+					if (existGroup != null && newGroup != null
+							&& (existGroup.getPanelItemGroupId().equals(newGroup.getPanelItemGroupId()))) {//#26059 - Fix simpleQuotePanel
 						//check both item zonal
 						PmParameter existCoverage = existPanelItem.getPanelCoverageId();
 						PmParameter newCoverage = panelItem.getPanelCoverageId();
@@ -533,8 +533,7 @@ public class SimpleQuoteBackingBean extends
 						isPanelItemAdded = false;
 					}
 					else if(panelItem != null && panelItem.getItemCategoryId()
-							.getParameterCode()
-							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
+							.getParameterCode().equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_GENERAL)) { //#26059 - Fix simpleQuotePanel
 						// add only one general panel item(can't add multiple)
 						//ERR-760160 = Simple quote must have only one Panel Item.
 						// #29800 - start
@@ -547,7 +546,7 @@ public class SimpleQuoteBackingBean extends
 					} 
 					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
-							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
+							.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) { //#26059 - Fix simpleQuotePanel
 						// add multiple panel specific items
 						isPanelItemAdded = Boolean.FALSE;
 						isZoneEventRequired = false;
@@ -600,7 +599,7 @@ public class SimpleQuoteBackingBean extends
 					
 					if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
-							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
+							.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_GENERAL)) { //#26059 - Fix simpleQuotePanel
 						// panel item general
 						isGeneralOrSpecific = Boolean.FALSE;
 						
@@ -609,7 +608,7 @@ public class SimpleQuoteBackingBean extends
 						
 					} else if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
-							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
+							.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) { //#26059 - Fix simpleQuotePanel
 						// panel item specific
 						isGeneralOrSpecific = Boolean.TRUE;
 						//#3761 - start
@@ -635,7 +634,7 @@ public class SimpleQuoteBackingBean extends
 							} 
 							
 							if (selectedPanelItem.getItemCategoryId().getParameterCode()
-									.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
+									.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {//#26059 - Fix simpleQuotePanel
 								itemName = selectedPanelItem.getItemName();
 							}
 						}
@@ -663,7 +662,7 @@ public class SimpleQuoteBackingBean extends
 							
 						} else if (selectedPanelItem.getItemCategoryId()
 								.getParameterCode()
-								.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
+								.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {//#26059 - Fix simpleQuotePanel
 							// panel item specific
 							getManagedBean().setPanelItemFlag(Boolean.FALSE);
 							getManagedBean().setNewableFlag(Boolean.FALSE);
@@ -1170,10 +1169,15 @@ public class SimpleQuoteBackingBean extends
 				if (scRequestItem.getCmItem() != null) {
 					extensionCode = cmItem.getExtensionCode();
 					ItemName = cmItem.getItemName();
-				} else {
-					// panel item - product by default when the cmItem is null
+				
+				//#26059 - Start
+				}else if(DbValueConst.ITEM_TYPE_SERVICE.equals(ctPanelItem.getItemType().getParameterId())){
+					isProduct = false;
+				} else if(DbValueConst.ITEM_TYPE_PRODUCT.equals(ctPanelItem.getItemType().getParameterId())){
 					isProduct = true;
 				}
+				//#26059 - End
+				
 				if (ctPanelItem.getItemCategoryId().getParameterCode()
 						.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 					ItemName = ctPanelItem.getItemName();
@@ -1669,8 +1673,14 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			//29194 - Start
 			reqDTO.setRoleCode(getUserRoleCodeSQ());
@@ -2449,8 +2459,14 @@ public class SimpleQuoteBackingBean extends
 
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -4917,6 +4933,7 @@ public class SimpleQuoteBackingBean extends
 		// #26284 - Start
 		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_SUSPENDED).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
 
 		criteria.append("recordStatus")

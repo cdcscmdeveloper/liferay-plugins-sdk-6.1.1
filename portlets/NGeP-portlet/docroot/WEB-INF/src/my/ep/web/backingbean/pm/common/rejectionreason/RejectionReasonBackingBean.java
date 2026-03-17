@@ -157,6 +157,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 		// 35509
 		
+		this.getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
+		
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
 					.remove(rowIndex);
 	}
@@ -173,10 +175,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		temp.remove(pidReason);
 		for(PmPIDReason pReason : temp){
 			if(pReason.getDocType()!= null && pReason.getDocType().equals(pidReason.getDocType())){
+				getManagedBean().setReasonApplicabilityDuplicate(true); // 39618
 				throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
 						"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())});
+			} else {
+				getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
 			}
+			
 		}
 	}
 	
@@ -227,6 +233,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setSuppAppCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppComCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppTypeCheck(Boolean.FALSE);
+			this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618 
+			
 	
 			if(id!=null && id>0){
 				loadRejectReason(id);
@@ -1931,7 +1939,25 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setAuditDeleteAppRestrictions(null);
 			this.getManagedBean().setAuditDeleteComRestrictions(null);
 			this.getManagedBean().setAuditDeleteSuppRestrictions(null);
+			
+			this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618
 		}
 		//35509 - END
+	
+	//#39618 - Start
+	/**
+	 * validate if reason applicability duplicate during submission
+	 */
+	public void validationForUpdate(){
+		log.info(" rejectionreasonbackingbean  in validationForUpdate()  :::::::::::::::::::::::::::::::: "+getManagedBean().isReasonApplicabilityDuplicate());
+		if(getManagedBean().isReasonApplicabilityDuplicate()){
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		}
+		
+	}
+	//#39618 - End
 	
 }

@@ -50,7 +50,7 @@
 			<p:column selectionMode="multiple" style="width:2%"/> 
 							
 	       <p:column>
-	        <h:outputText value="#{lbl['lbl.sm.soft.cert.payment.for']} #{personnel.name}"/>  
+	        <h:outputText value="#{lbl['lbl.sm.soft.cert.payment.for']} #{personnel.pmUser.salutationCode.salutationName} #{personnel.name}"/>  <!-- #29659 -->
 	       </p:column>
 	       
 	       <p:column style="text-align:right;">

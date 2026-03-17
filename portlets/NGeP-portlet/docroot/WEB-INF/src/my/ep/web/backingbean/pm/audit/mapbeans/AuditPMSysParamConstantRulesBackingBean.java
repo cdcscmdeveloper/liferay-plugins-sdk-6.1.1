@@ -1,16 +1,24 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Set;
 
 import my.ep.constant.pm.AuditConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
 
@@ -34,14 +42,21 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	String lvlCode3;
 	BigInteger paramlvlId;
 	BigInteger docId;
+	String docNo = null;
+	String ruleValue;
 	String feeExemptionOrgType;
 	String feeExemptionSuppItem;
 	String feeExemptionComodity;
 	String feeExemptionContract;
 	BigInteger itemName;
 	String pattern = "dd/MM/yyyy";
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);	
+	/*35323 - Audit Start*/	
 	String amtFormatter = "#,##0.00";
+	String groupingBasePattern = "#,##0";
+	PmConfigRuleDesc pmConfigRuleDesc = new PmConfigRuleDesc();
+	String suppAccTypeNewValue;
+	/*35323 - Audit End*/
 
 	/**
 	 * @param managedBeans
@@ -51,7 +66,9 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	public AuditPMReqDTO spRulesValueTypeProcess(RuleCatalogueManageBean managedBeans, String roleCode) {
 		this.roleCode = roleCode;
 		this.lvlCode2 = AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE;
-
+		/*35323 - Audit Start*/
+		pmConfigRuleDesc = managedBeans.getSelectedRuleDescType();
+		/*35323 - Audit End*/
 		getAuditAddedData(managedBeans.getAuditResDTOSelectedRuleValueList(), managedBeans.getAuditAddedSelectedRuleValueList(),
 				managedBeans);
 
@@ -99,27 +116,83 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	 */
 	public void spRuleValueType(List<PmConfigRuleValue> ruleValueOld, List<PmConfigRuleValue> update,
 			List<PmConfigRuleValue> deletedItem, List<PmConfigRuleValue> newCreatedItem) {
-
+		boolean hasDocNo = false;
+		boolean hasDocNoCategory = false;
 		if (CollectionUtils.isNotEmpty(newCreatedItem)) {
-			for (PmConfigRuleValue newCreate : newCreatedItem) {
-				docId = BigInteger.valueOf(newCreate.getRuleValueId());
-				processSPRulesValueTypeCreateDeleted(newCreate, null);
+			/* 35323 - Audit Start */
+			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(pmConfigRuleDesc.getRuleType().getRuleType())) {
+				processSupplierAccTypeCreated(newCreatedItem);
+			} else {/* 35323 - Audit End */
+				for (PmConfigRuleValue newCreate : newCreatedItem) {
+
+					docId = BigInteger.valueOf(newCreate.getRuleValueId());
+
+					if ("PC".equalsIgnoreCase(newCreate.getRuleDataTypeCode())) {
+						hasDocNo = true;
+						setDocNo(hasDocNo,hasDocNoCategory,newCreate);
+					}
+
+					if (newCreate.getCategoryL3Id() != null && "C".equalsIgnoreCase(newCreate.getRuleDataTypeCode())) {
+						hasDocNoCategory = true;
+						setDocNo(hasDocNo, hasDocNoCategory, newCreate);
+					}
+
+					processSPRulesValueTypeCreateDeleted(newCreate, null);
+				}
 			}
 		}
+		/* Temporary close this deleted section
 		if (CollectionUtils.isNotEmpty(deletedItem)) {
 			for (PmConfigRuleValue deleted : deletedItem) {
 				processSPRulesValueTypeCreateDeleted(null, deleted);
 
 			}
 		}
+		*/
+		
 		for (PmConfigRuleValue updateVal : update) {
 			PmConfigRuleValue matchingIdUpdatedOldVal = findMatchingSPRulesTypeValue(ruleValueOld, updateVal);
 			if (matchingIdUpdatedOldVal != null) {
+				if("PC".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
+					hasDocNo = true;
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
+				}
+					
+				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
+					hasDocNoCategory = true;
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
+				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
-				processSPRuleTypeValEffExpDate(matchingIdUpdatedOldVal, updateVal);
+				/* 35323 - Audit Start */
+				if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(pmConfigRuleDesc.getRuleType()
+						.getRuleType())) {
+					updateRuleType(updateVal, matchingIdUpdatedOldVal);
+				} else {/* 35323 - Audit End */
+					processSPRuleTypeValEffExpDate(matchingIdUpdatedOldVal, updateVal);
+				}
 			}
 		}
 	}
+	
+	private void setDocNo(boolean hasDocNo, boolean hasDocNoCategory, PmConfigRuleValue pmConfigRuleValue) {
+		if (hasDocNo) {
+			docNo = pmConfigRuleValue.getRuleValue();
+		} else if (hasDocNoCategory) {
+			docNo = pmConfigRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+					+ pmConfigRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
+					+ pmConfigRuleValue.getCategoryL3Id().getCategoryL3Code();
+		}
+		hasDocNo = false;
+		hasDocNoCategory = false;
+	}
+	
+	/*35323 - Audit Start*/
+	private void updateRuleType(PmConfigRuleValue updateVal,PmConfigRuleValue matchingIdUpdatedOldVal){
+		if (updateVal.getSupplAcctTypeId() != null && updateVal.isShowFlag()
+				&& updateVal.getGroupValueId() == matchingIdUpdatedOldVal.getGroupValueId()) {
+			processSPRuleTypeValEffExpDate(matchingIdUpdatedOldVal, updateVal);
+		}
+	}/*35323 - Audit End*/
 
 	/**
 	 * @param ruleValueOld
@@ -177,6 +250,89 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	private PmConfigRuleValue ruleTypeNewOrDeleted(PmConfigRuleValue newCreatedItem, PmConfigRuleValue deletedItem) {
 		return newCreatedItem != null ? newCreatedItem : deletedItem;
 	}
+	
+	/*35323 - Audit Start*/
+	/**
+	 * @param newCreatedItem
+	 */
+	public void processSupplierAccTypeCreated(List<PmConfigRuleValue> newCreatedItem) {
+		final Map<String, LinkedHashSet<String>> codeNamesByRange = new LinkedHashMap<>();
+		final Map<String, PmConfigRuleValue> repByRange = new LinkedHashMap<>();
+		boolean isSameSuppAccType = false;
+		for (PmConfigRuleValue v : newCreatedItem) {
+			String fromStr = (v.getFromValue() == null) ? "NULL" : v.getFromValue().toPlainString();
+			String toStr = (v.getToValue() == null) ? "NULL" : v.getToValue().toPlainString();
+			String ruleId = (String.valueOf(v.getRuleValueId()) == null) ? "NULL" : String.valueOf(v.getRuleValueId());
+			String key = fromStr + "|" + toStr + "|" + ruleId;
+
+			if (!repByRange.containsKey(key))
+				repByRange.put(key, v);
+
+			final List<PmParameterDesc> descs = v.getSupplAcctTypeId().getPmParameterDescs();
+			final PmParameterDesc d = descs.get(1);
+			if (v.isSameSupplAcctType()) {
+				getParameterDesc(descs, codeNamesByRange, key, d);
+				isSameSuppAccType = true;
+			} else {
+				suppAccTypeNewValue = (d != null && d.getCodeName() != null) ? d.getCodeName().trim() : null;
+				processSPRulesValueTypeCreateDeleted(v, null);
+			}
+		}
+
+		if (isSameSuppAccType) {
+			mergeRowByKey(codeNamesByRange, repByRange);
+		}
+	}
+
+	private void getParameterDesc(final List<PmParameterDesc> descs,
+			final Map<String, LinkedHashSet<String>> codeNamesByRange, String key, PmParameterDesc d) {
+		if (descs != null && descs.size() > 1) {
+			final String codeName = (d != null && d.getCodeName() != null) ? d.getCodeName().trim() : null;
+			if (codeName != null && !codeName.isEmpty()) {
+				LinkedHashSet<String> names = codeNamesByRange.get(key);
+				if (names == null) {
+					names = new LinkedHashSet<>();
+					codeNamesByRange.put(key, names);
+				}
+				names.add(codeName);
+			}
+		}
+	}
+
+	private void mergeRowByKey(final Map<String, LinkedHashSet<String>> codeNamesByRange,
+			final Map<String, PmConfigRuleValue> repByRange) {
+		for (Map.Entry<String, LinkedHashSet<String>> e : codeNamesByRange.entrySet()) {
+			String key = e.getKey();
+			LinkedHashSet<String> names = e.getValue();
+			if (names == null || names.isEmpty())
+				continue;
+
+			suppAccTypeNewValue = joinWithSlash(names); // build "MOF / G2G"
+			PmConfigRuleValue rep = repByRange.get(key);
+
+			processSPRulesValueTypeCreateDeleted(rep, null);
+		}
+	}
+
+	private static String joinWithSlash(Set<String> parts) {
+		if (parts == null || parts.isEmpty())
+			return null;
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (String p : parts) {
+			if (p == null)
+				continue;
+			p = p.trim();
+			if (p.isEmpty())
+				continue;
+			if (!first)
+				sb.append('/');
+			sb.append(p);
+			first = false;
+		}
+		return (sb.length() == 0) ? null : sb.toString();
+	}
+	/*35323 - Audit End*/
 
 	/**
 	 * @param newCreatedItem
@@ -209,15 +365,31 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_TOVALUE_FIELDLABELID,
 					toValueNewCreated(newCreatedItem), toValueDeleted(deletedItem));
 		}
+		/*35323 - Audit Start*/
+		// SupplierAccType
+		if (ruleValueType.getSupplAcctTypeId() != null) {
+			handleFieldAuditSPRulesValueType(ruleValueType,
+					AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_SUPPLIER_ACC_TYPE_FIELDLABELID,
+					suppAccTypeNewCreated(newCreatedItem), suppAccTypeDeleted(deletedItem));
+		}		
+		processing(ruleValueType, newCreatedItem, deletedItem);
+		/*35323 - Audit End*/		
+	}
+	
+	/*35323 - Audit Start*/
+	private void processing(PmConfigRuleValue ruleValueType, PmConfigRuleValue newCreatedItem,
+			PmConfigRuleValue deletedItem) {
 		// Rule Description
-		if (ruleValueType.getRuleDescription() != null) {
-			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_DESCRIPTION_FIELDLABELID,
-					ruleDescNewCreated(newCreatedItem), ruleDescDeleted(deletedItem));
-		}
+				if (ruleValueType.getRuleDescription() != null) {
+					handleFieldAuditSPRulesValueType(ruleValueType,
+							AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_DESCRIPTION_FIELDLABELID,
+							ruleDescNewCreated(newCreatedItem), ruleDescDeleted(deletedItem));
+				}
 		// Zone
 		if (ruleValueType.getZoneId() != null) {
-			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_ZONE_FIELDLABELID,
-					zoneNewCreated(newCreatedItem), zoneDeleted(deletedItem));
+			handleFieldAuditSPRulesValueType(ruleValueType,
+					AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_ZONE_FIELDLABELID, zoneNewCreated(newCreatedItem),
+					zoneDeleted(deletedItem));
 		}
 		// EffectiveDate
 		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EFFDATE_FIELDLABELID,
@@ -225,8 +397,8 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		// ExpiryDate
 		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EXPDATE_FIELDLABELID,
 				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
-
 	}
+	/*35323 - Audit End*/
 
 	private void handleFieldAuditSPRulesValueType(PmConfigRuleValue ruleValue, BigInteger fieldLabelId, String newValue,
 			String oldValue) {
@@ -241,34 +413,53 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		if (newCreatedItem != null
 				&& (newCreatedItem.getRuleNumberValue() != null || newCreatedItem.getRuleValue() != null)
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null)) {
-			String ruleValue;
+			DecimalFormat formatter = new DecimalFormat(amtFormatter);
+			
 			String rawRuleValue = newCreatedItem.getRuleValue();
-			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+			if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("A")) {
 				String number = rawRuleValue;
 				double amount = Double.parseDouble(number);
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
 				ruleValue = formatter.format(amount);
-			}
-			else if(newCreatedItem.getRuleType().getParameterType() != null){
-				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(), newCreatedItem.getRuleValue().toUpperCase());
-				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
-			}else{
+			} else if(newCreatedItem.getRuleType().getParameterType() != null) {
+				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
+						newCreatedItem.getRuleValue().toUpperCase());
+				ruleValue = pmParameter.getPmParameterDescs().get(1).getCodeName();
+			}else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("PC")){
 				ruleValue = rawRuleValue;
+			} else {
+				rawRuleValueNextProcess(rawRuleValue);
 			}
-			if (rawRuleValue == null) {
-				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
-						.toString() : null;
-			}
+			rawRuleValue(rawRuleValue,newCreatedItem);
+			
 			return ruleValue;
 		}
 		return null;
 	}
 	
+	private void rawRuleValueNextProcess(String rawRuleValue){
+		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
+		DecimalFormat formatter = new DecimalFormat(amtFormatter);
+			if (rawRuleValue.contains(".")) {
+				String number = rawRuleValue;
+				double amount = Double.parseDouble(number);
+				ruleValue = formatter.format(amount);
+			} else {
+				BigDecimal bd = new BigDecimal(rawRuleValue);
+				ruleValue = basePatternformatter.format(bd);
+			}
+	}
+
+	private void rawRuleValue(String rawRuleValue, PmConfigRuleValue newCreatedItem){
+		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
+		if (rawRuleValue == null && newCreatedItem.getRuleNumberValue() != null) {
+			BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
+			ruleValue = basePatternformatter.format(bd);
+		}
+	}
+	
 	private String ruleNumberValueDeleted(PmConfigRuleValue deletedItem) {
 		if (deletedItem != null && (deletedItem.getRuleValue() != null || deletedItem.getRuleNumberValue() != null)
 				&& (Long.valueOf(deletedItem.getRuleValueId()) != null)) {
-			String ruleValue;
 			String rawRuleValue = deletedItem.getRuleValue();
 			if ("TRUE".equalsIgnoreCase(rawRuleValue)) {
 				ruleValue = AuditConst.PM_AUD_YES;
@@ -289,8 +480,8 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 
 	private String categoryL3IdNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
-				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
-				&& newCreatedItem.getCategoryL3Id() != null) {
+				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
+						.getRuleValueId()) > 0) && newCreatedItem.getCategoryL3Id() != null) {
 			return newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ newCreatedItem.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ newCreatedItem.getCategoryL3Id().getCategoryL3Code();
@@ -308,29 +499,42 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		}
 		return null;
 	}
+	
+	/*35323 - Audit Start*/
+	private String suppAccTypeNewCreated(PmConfigRuleValue newCreatedItem) {
+		if (newCreatedItem != null && newCreatedItem.getSupplAcctTypeId() != null) {
+			return suppAccTypeNewValue;
+		}
+
+		return null;
+	}
+
+	private String suppAccTypeDeleted(PmConfigRuleValue deletedItem) {
+		if (deletedItem != null
+				&& (Long.valueOf(deletedItem.getRuleValueId()) != null || Long.valueOf(deletedItem.getRuleValueId()) > 0)
+				&& deletedItem.getSupplAcctTypeId() != null) {
+			return suppAccTypeNewValue;
+		}
+		return null;
+	}
+	/*35323 - Audit End*/
 
 	private String fromValueNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
 						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {
-			String ruleValue;
+			DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
 			String rawValue = newCreatedItem.getFromValue().toString();
 			if (rawValue != null) {
-				String number = rawValue;
-				double amount = Double.parseDouble(number);
-
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
-				ruleValue = formatter.format(amount);
+				rawValueNotNullProcess(rawValue,newCreatedItem);
 			} else {
-				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
-						.toString() : null;
+				BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
+				ruleValue = basePatternformatter.format(bd);
 			}
-			return ruleValue;
 		}
-		return null;
+		return ruleValue;
 	}
-
+	
 	private String fromValueDeleted(PmConfigRuleValue deletedItem) {
 		if (deletedItem != null
 				&& (Long.valueOf(deletedItem.getRuleValueId()) != null || Long.valueOf(deletedItem.getRuleValueId()) > 0)
@@ -340,28 +544,40 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		return null;
 	}
 	
-
 	private String toValueNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
 						.getRuleValueId()) > 0) && newCreatedItem.getToValue() != null) {
-			String ruleValue;
+			DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
 			String rawValue = newCreatedItem.getToValue().toString();
 			if (rawValue != null) {
+				rawValueNotNullProcess(rawValue,newCreatedItem);
+			} else {
+				BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
+				ruleValue = basePatternformatter.format(bd);
+			}
+		}
+		return ruleValue;
+	}
+	
+	private void rawValueNotNullProcess(String rawValue,PmConfigRuleValue newCreatedItem){
+		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
+		DecimalFormat formatter = new DecimalFormat(amtFormatter);
+		if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+			String number = rawValue;
+			double amount = Double.parseDouble(number);
+			ruleValue = formatter.format(amount);
+		} else {
+			if (rawValue.contains(".")) {
 				String number = rawValue;
 				double amount = Double.parseDouble(number);
-
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
 				ruleValue = formatter.format(amount);
 			} else {
-				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
-						.toString() : null;
+				BigDecimal bd = new BigDecimal(rawValue);
+				ruleValue = basePatternformatter.format(bd);
 			}
-			return ruleValue;
 		}
-		return null;
-	}
+	}	
 
 	private String toValueDeleted(PmConfigRuleValue deletedItem) {
 		if (deletedItem != null
@@ -478,6 +694,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		detailObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObj.setLvlCode2(lvlCode2);
 		detailObj.setDocId(docId);
+		detailObj.setDocNo(docNo);
 		detailObj.setActionType(actionType);
 		detailObj.setLvlCode3(lvlCode3);
 		detailObj.setFieldLabelCode(fieldLabelCode);
