@@ -2212,18 +2212,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			 * getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
 			 * codes and refactor old code.
 			 */
-			List<String> flTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
-					ParameterConst.FULFILMENT_TYPE_SCHEDULED,
-					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			boolean isQTtypePK7 = null != scLoa.getQtType()
 					&& null != scLoa.getQtType().getParameterId()
 					&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(
 							scLoa.getQtType().getParameterCode());
-			boolean isFulfilmentType = null != scLoa.getScQt() && null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& flTypeCodes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
 
-			if (isQTtypePK7 && isFulfilmentType) {
+			if (isQTtypePK7 ) {
 				// #29766 End Vinod
 				setBondReq = false;
 			}
@@ -6757,7 +6751,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.FINALISE_FC_SELECTION,
-				SCProcessNameConst.COORDINATE_FC_MEETING));
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.RECOMMEND_MA_SUPPLIER));// 34491
 		return taskNames.contains(taskName);
 	}
 	
@@ -8505,4 +8499,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	//#35320 - END
+	
+	// 34491 - start
+	/**
+	 * Populate meeting status values in a drop down under Preparation tab
+	 * 
+	 * @return an array of meeting status values
+	 */
+	public SelectItem[] getMeetingStatusDropDown() {
+		SelectItem[] items = getStatusDropdownValues(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(),
+				QTConstants.DOCTYPE_MEETING);
+		return items;
+	}
+	// 34491 - end	
 }

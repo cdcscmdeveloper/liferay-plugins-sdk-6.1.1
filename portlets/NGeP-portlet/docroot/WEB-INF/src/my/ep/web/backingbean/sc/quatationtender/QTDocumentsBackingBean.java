@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -158,6 +159,9 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Node;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -3095,6 +3099,8 @@ public class QTDocumentsBackingBean extends
 		// clone TplDocMaster Details
 				TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster
 						.cloneEntity();
+				//38714
+				boolean isNeedToModify = isNeedToModify(tplDocMaster);
 				tplDocMaster.setDocMasterId(null);
 				tplDocMaster.setOrgProfile(null);
 				tplDocMaster.setTplDocSections(null);
@@ -3136,6 +3142,11 @@ public class QTDocumentsBackingBean extends
 					//section.setParent(null); // Temporarily am setting null, need to
 												// confirm once
 					section.setTplDocMaster(tplDocMaster);
+					// 38714
+					// Check Content to update
+					if (isNeedToModify) {
+						updateContent(section);
+					}
 
 					setUserDetails(section);
 					tplDocMaster.getTplDocSectionCollection().add(section);
@@ -3210,6 +3221,101 @@ public class QTDocumentsBackingBean extends
 				
 				return tplDocMaster;
 	}
+	
+	// #38714 - Start
+
+	/**
+	 * @param obj
+	 */
+	private static void updateContent(TplDocSection obj) {
+
+		if (obj.getSectionContent() != null && !obj.getSectionContent().isEmpty()) {
+
+			obj.setSectionContent(normalizeContentWithJustify(obj.getSectionContent()));
+		}
+	}
+
+	/**
+	 * @param tplDocMaster
+	 * @return
+	 */
+	private static boolean isNeedToModify(TplDocMaster tplDocMaster) {
+
+		String processType = tplDocMaster.getProcessType().getParameterCode();
+		String procurementCategory = tplDocMaster.getProcurementCategory().getParameterCode();
+
+		if (!tplDocMaster.isRecordStatus() || processType == null || procurementCategory == null) {
+			return false;
+		}
+
+		// Define allowed pairs (processType - list of procurement categories)
+		Map<String, List<String>> allowedPairs = new HashMap<>();
+		allowedPairs.put(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD,
+				Arrays.asList(ParameterConst.PROCUREMENT_CATEGORY_OTHERS));
+
+		List<String> allowedCategories = allowedPairs.get(processType);
+		if (allowedCategories == null) {
+			return false;
+		}
+
+		String doctitle = TemplateDocConst.PARAM_DOCTITLE_QT + TemplateDocConst.PARAM_SPACE
+				+ TemplateDocConst.PARAM_HIGH_FUN + TemplateDocConst.PARAM_SPACE
+				+ TemplateDocConst.PARAM_DOCTITLE_QT_QUOTATION;
+
+		if (doctitle.equalsIgnoreCase(tplDocMaster.getDocName())) {
+
+			// Case-insensitive check
+			for (String allowedCategory : allowedCategories) {
+				if (allowedCategory.equalsIgnoreCase(procurementCategory)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param content
+	 * @return
+	 */
+	private static String normalizeContentWithJustify(String content) {
+		if (content == null || content.trim().isEmpty()) {
+			return "";
+		}
+
+		Document doc = Jsoup.parseBodyFragment(content);
+		StringBuilder finalHtml = new StringBuilder();
+
+		// Temporary buffer to accumulate consecutive non-<br> nodes
+		StringBuilder textBuffer = new StringBuilder();
+
+		for (Node node : doc.body().childNodes()) {
+			if (node.nodeName().equals("br")) {
+				// Flush accumulated text before adding <br>
+				if (textBuffer.length() > 0) {
+					finalHtml.append("<div style=\"text-align: justify;\">").append(textBuffer.toString().trim())
+							.append("</div>");
+					textBuffer.setLength(0); // reset buffer
+				}
+				// Convert <br> to <div><br /></div>
+				finalHtml.append("<div><br /></div>");
+			} else {
+				// Accumulate text or inline HTML
+				textBuffer.append(node.outerHtml());
+			}
+		}
+
+		// Flush remaining text
+		if (textBuffer.length() > 0) {
+			finalHtml.append("<div style=\"text-align: justify;\">").append(textBuffer.toString().trim())
+					.append("</div>");
+		}
+
+		return finalHtml.toString();
+	}
+
+	// #38714 - End
 	
 	// Bug #36702@Syazani 28/11/2024 -- Start
 	private void splitBriefingZoneBeanText(BriefingZoneBean zoneBean) {

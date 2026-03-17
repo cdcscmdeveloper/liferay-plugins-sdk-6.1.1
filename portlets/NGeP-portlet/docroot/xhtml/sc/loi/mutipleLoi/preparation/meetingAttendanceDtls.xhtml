@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel id="attendeesPanel" header="#{lbl['lbl.sc.join.in']}"
+		toggleable="true">
+		<ui:param name="meetingAttendances"
+			value="#{finalizationQtCommittee.meetingAttendances}" />
+
+		<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
+			value="#{meetingAttendances}" rows="10" rowKey="#{meetingAttDtl}"
+			rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			selectionMode="single">
+
+			<ac:paginator for="meetingAttDtlTbl" />
+
+			<p:column styleClass="td-check-box-spacing">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllMeetingAttd"
+						value="#{lOIDetailBackingBean.managedBean.selectAllMeetingAttendees}"
+						disabled="#{!isFinalizationStage or lOIDetailBackingBean.managedBean.readOnly}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=attendeesPanel])"
+							listener="#{lOIDetailBackingBean.selectAll(meetingAttendances, lOIDetailBackingBean.managedBean.selectAllMeetingAttendees)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox id="selectMeetingAttd"
+					value="#{meetingAttDtl.selected}"
+					disabled="#{meetingAttDtl.disableRow}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=attendeesPanel])" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
+			<ui:remove>#35360 - Start </ui:remove>
+			<c:choose>
+				<c:when test="#{isFinalizationStage}">
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+						<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
+							size="50" style="color:black"
+							required="#{!meetingAttDtl.selected}"
+							label="#{lbl['lbl.sc.name']}"
+							disabled="#{meetingAttDtl.disableRow}">
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+
+						</h:inputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+						<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
+							style="color:black" size="15"
+							required="#{!meetingAttDtl.selected}"
+							label="#{lbl['lbl.sc.identification.no']}"
+							disabled="#{meetingAttDtl.disableRow}">
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+						</h:inputText>
+					</p:column>
+				</c:when>
+				<c:otherwise>
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+						<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
+							size="50" required="#{!meetingAttDtl.selected}"
+							label="#{lbl['lbl.sc.name']}"
+							disabled="#{meetingAttDtl.disableRow}">
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+
+						</h:inputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+						<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
+							size="15" required="#{!meetingAttDtl.selected}"
+							label="#{lbl['lbl.sc.identification.no']}"
+							disabled="#{meetingAttDtl.disableRow}">
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+						</h:inputText>
+					</p:column>
+				</c:otherwise>
+			</c:choose>
+			<ui:remove>#35360 - End</ui:remove>
+		</p:dataTable>
+
+		<div align="right" class="BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this,meetingAttDtlTbl" partialSubmit="true"
+				action="#{lOIDetailBackingBean.addFinalizationMeetingAttendance}"
+				update="@([id$=attendeesPanel])"
+				rendered="#{isFinalizationStage or !lOIDetailBackingBean.managedBean.readOnly}"
+				disabled="#{lOIDetailBackingBean.managedBean.readOnly}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" id="attdDelBtn"
+				process="@this, meetingAttDtlTbl" partialSubmit="true"
+				update="@([id$=#{supplierFinalizationPreparationMeetingAttendanceDeleteId}])"
+				oncomplete="dlgPerformAttendanceDel.show();"
+				rendered="#{isFinalizationStage or !lOIDetailBackingBean.managedBean.readOnly}"
+				disabled="#{lOIDetailBackingBean.deleteselectedList(meetingAttendances) or !isFinalizationStage or lOIDetailBackingBean.managedBean.readOnly}" />
+		</div>
+
+
+		<ui:param
+			name="supplierFinalizationPreparationMeetingAttendanceDeleteId"
+			value="supplierFinalizationPreparationMeetingAttendanceDeleteId"></ui:param>
+
+		<ac:confirmationPopup
+			id="#{supplierFinalizationPreparationMeetingAttendanceDeleteId}"
+			widget="dlgPerformAttendanceDel" width="450" height="100"
+			okAction="lOIDetailBackingBean.deleteMeetingAttendanceDetails"
+			title="#{lbl['lbl.sc.join.in']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=attendeesPanel])" />
+
+
+	</p:panel>
+
+</ui:composition>
