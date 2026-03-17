@@ -3,7 +3,6 @@ package my.ep.web.backingbean.pm.settings;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode; //#35323
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;//#35323
@@ -3407,22 +3406,7 @@ public class RuleCatalogueBackingBean extends
 	 *            (int index(mandatory))
 	 */
 	public void updateToValue(int index) {
-		PmConfigRule configRuleType = this.getManagedBean()
-				.getSelectedRuleDescType().getRuleType();
-		log.info("......updateToValue........");
-		log.info("................index=" + index);
-		log.info("................this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size()="
-				+ configRuleType.getConfigRuleValues().size());
-		// validation
-		// PmConfigRuleValue crulevalue =
-		// this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index);
-		// if(crulevalue.getFromValue().compareTo(crulevalue.getToValue()) ==
-		// 1){ //if fromValue > toValue
-		// // throw error msg
-		// throw new EpException(MessageConst.ERROR_770198,
-		// new String[] {});
-		//
-		// }
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 
 		if (configRuleType.getRangeType() == 1
 				&& index < configRuleType.getConfigRuleValues().size() - 1) {
@@ -3466,8 +3450,6 @@ public class RuleCatalogueBackingBean extends
 	 *            (int index(mandatory))
 	 */
 	public void updateGroupChildDate(int index) {
-		log.info("....updateGroupChildDate.....");
-		log.info("................index=" + index);
 		PmConfigRule configRuleType = this.getManagedBean()
 				.getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue ruleValue = configRuleType.getConfigRuleValues().get(
@@ -4979,12 +4961,7 @@ public class RuleCatalogueBackingBean extends
 	/**
 	 * reset Error Dialog.
 	 */
-	public void resetErrorDialog() {
-		// this.getManagedBean().setError1(false);
-		// this.getManagedBean().setError2(false);
-		// this.getManagedBean().setError3(false);
-		// this.getManagedBean().setError4(false);
-	}
+	public void resetErrorDialog() {}
 
 	/**
 	 * update Error Dialog.
