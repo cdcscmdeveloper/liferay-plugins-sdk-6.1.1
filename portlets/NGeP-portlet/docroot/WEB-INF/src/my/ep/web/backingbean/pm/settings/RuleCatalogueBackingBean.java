@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.settings;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays; //#36738 #40071
@@ -32,6 +33,7 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
@@ -43,6 +45,7 @@ import my.ep.biz.service.pm.general.settings.threshold.IOperationalThresholdSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -111,6 +114,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMSysParamBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
@@ -161,6 +166,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	private String inactiveFeeContPopUpMsg = "";
 
 	private String dupplicateOrgTypeName;
+	private boolean update = false; //#35509
 
 	private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
@@ -1234,6 +1240,16 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		
 		PmConfigRuleValue selectedValueToDel = configRuleType
 				.getConfigRuleValues().get(rowIndex.intValue());
+		
+		/* START #35509 AUDIT PM */
+		selectedValueToDel.setRuleTypeCode(configRuleType.getRuleType());
+		selectedValueToDel.setRuleDescMS(configRuleType.getConfigRuleDesc().get(1).getRuleDesc());
+		selectedValueToDel.setRuleDataTypeCode(configRuleType.getRuleDataTypeId().getParameterCode());
+		selectedValueToDel.setRuleRangeType(BigInteger.valueOf(configRuleType.getRangeType()));
+		if (selectedValueToDel.getZoneId() != null) {
+			selectedValueToDel.setZoneName(getZoneName(selectedValueToDel.getZoneId()));
+		}
+		/* END 35509 AUDIT PM */
 
 		if (configRuleType.getRangeType() == 1
 				&& selectedValueToDel.isShowFlag()) {// if its range and parent
@@ -5699,6 +5715,56 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		}
 	}
 	// 29650 - end
+	
+	//#34397, #34398 , #35509 - start
+	/**
+	 * @param zoneId
+	 * @return zone name
+	 */
+	public String getZoneName(Long zoneId){
+		PmZone zone = (PmZone) my.ep.helper.EntityHelper.getEntityBySinglePropertyFromList(
+				zoneId, getManagedBean().getZoneList(), "zoneId");
+		return zone != null ? zone.getZoneName() : "";
+	}
+	//#34397, #34398, #35509 - end
+	
+	//START: #35509
+	void clearAllAuditBeanVal(RuleCatalogueManageBean managedBeans) {
+		managedBeans.getResDTO().setFeeExemptions(null);
+		managedBeans.getResDTOOld().setFeeExemptions(null);
+		managedBeans.setAuditMainPtjSpecialApprovalList(null);
+		managedBeans.setAuditUpdateMainPtjSpecialApprovalList(null);
+		managedBeans.setAuditDeletedMainPtjSpecialApprovalList(null);
+		managedBeans.setAuditMainPtjSpecialApprovalListNewVal(null);
+
+		managedBeans.setAuditDeletedFeeExemptionsForOrgType(null);
+		managedBeans.setAuditAddedFeeExemptionsForOrgType(null);
+		managedBeans.setAuditUpdatedFeeExemptionsForOrgType(null);
+		managedBeans.setAuditFeeExemptionsForOrgTypeOld(null);
+
+		managedBeans.setAuditFeeExemptionsForOrgItemOld(null);
+		managedBeans.setAuditUpdatedFeeExemptionsForOrgItem(null);
+		managedBeans.setAuditDeletedFeeExemptionsForOrgItem(null);
+		managedBeans.setAuditAddedFeeExemptionsForOrgItem(null);
+
+		managedBeans.setAuditFeeExemptionsForOrgContractOld(null);
+		managedBeans.setAuditUpdatedFeeExemptionsForContract(null);
+		managedBeans.setAuditDeletedFeeExemptionsForContract(null);
+		managedBeans.setAuditAddedFeeExemptionsForContract(null);
+
+		managedBeans.setAuditFeeExemptionsForOrgComodityOld(null);
+		managedBeans.setAuditUpdatedFeeExemptionsForComodity(null);
+		managedBeans.setAuditDeletedFeeExemptionsForComodity(null);
+		managedBeans.setAuditAddedFeeExemptionsForComodity(null);
+		
+		this.getManagedBean().setAuditDeletedSelectedRuleValueList(null);
+		this.getManagedBean().setAuditSelectedRuleValueListOld(null);
+		this.getManagedBean().setAuditUpdatedSelectedRuleValueList(null);
+		this.getManagedBean().setAuditResDTOSelectedRuleValueList(null);
+		this.getManagedBean().setAuditAddedSelectedRuleValueList(null);
+	}
+	//END: #35509
+	
 	// #36738 Start
 	/**
 	 * #36738 Search rule type
