@@ -19,7 +19,7 @@
 					<!-- 34445 start -->
 					<c:choose>
 						<c:when test="#{SpecialServiceBackingBean.managedBean.pmSpecialService.brandNew}">
-							<p:commandButton id="saveBtnId" value="#{lbl['lbl.btn.save']}" oncomplete="saveInfoDlg.show()" style="float:right;"/>
+							<p:commandButton id="saveBtnId" value="#{lbl['lbl.btn.save']}" oncomplete="if (!args.validationFailed) saveInfoDlg.show()" style="float:right;"/>
 						</c:when>
 						<c:otherwise>
 							<p:commandButton id="updateBtnId" value="#{lbl['lbl.btn.update']}" oncomplete="updateInfoDlg.show()" style="float:right;"/>
@@ -33,7 +33,8 @@
 	
 	<!-- 34445 start -->
 	<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
-		okAction="SpecialServiceBackingBean.saveSpecialServiceDtls"
+		okParam="#{SpecialServiceBackingBean.saveSpecialServiceDtls()}"
+		hasParam="true"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.pm.btn.save.msg']}"/>

@@ -13,7 +13,7 @@
 		header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650"
 		height="650">
 		<p:ajax event="close" oncomplete="blockWidget.hide()"
-			update="@([id$=stageTwotechProposal])"
+			update="@all"
 			actionListener="#{specificationBackingBean.closeTechChecklistPreview()}" />
 
 		<p:panel id="technicalChecklistPreviewPanel1Id"
@@ -56,8 +56,8 @@
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{techChecklist.selected}">
-						<p:ajax partialSubmit="true" process="@this" update="@this"
-							listener="#{specificationBackingBean.updateSelectedTechnicalChecklistPreviewIndx(techChecklist,index)}" />
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=technicalChecklistTitleListId])"
+							listener="#{specificationBackingBean.updateSelectedTechnicalChecklistPreviewIndex(techChecklist)}" />
 					</p:selectBooleanCheckbox>
 
 				</p:column>

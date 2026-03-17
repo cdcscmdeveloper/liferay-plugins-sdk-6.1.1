@@ -344,15 +344,22 @@ public class SalutationBackingBean extends
 				/************ AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SALUTATION);
+					getManagedBean().setOldPmSalutation(null);
 				}
 				/************ END AUDIT #28895_35509 *************/
 				}
-		 }catch(Exception e){
-			 throw e;
-		 }finally{
-			 salutationSO = null;
-		 }
-		 return returnUrl;
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		}
+		//#34445 End
+		catch (Exception e) {
+			throw e;
+		} finally {
+			salutationSO = null;
+		}
+		return returnUrl;
 	 }
 	 public boolean isExistSalutationCode(PmSalutation salutation) {
 		 ISalutationSO reqSO = null;

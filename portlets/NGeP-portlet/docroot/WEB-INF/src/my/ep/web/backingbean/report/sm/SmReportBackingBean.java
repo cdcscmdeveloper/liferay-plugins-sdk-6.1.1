@@ -371,6 +371,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			catStatRpt.resetSearch();
 		}
 		//#38227 - END
+		//34031#note-71 : Issue 4 - Start
+		else if(SmReportConst.SM_REVISIT_RPT_VAL.equals(getManagedBean().getReportCode())){
+			SmRevisitRptBackingBean revisitRpt = new SmRevisitRptBackingBean();
+			revisitRpt.resetSearch();
+			revisitRpt.getConditionFieldsSVO();
+		}
+		//34031#note-71 : Issue 4 - Start
 	}
 
 	public void addCompanyNameParam(LinkedHashMap<String, String> params) {
@@ -527,7 +534,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 			List<Object[]> applStatusList = reportSO
-					.retrieveApplicationStatusList(new FacesScopes()
+					.retrieveStatusListOfApplication(new FacesScopes()
 							.getUserLocale().getLanguage());
 
 			if (CollectionUtils.isNotEmpty(applStatusList)) {
@@ -3461,15 +3468,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		
 		String suppType = getManagedBean().getSupplierType();
-		if (StringUtils.isBlank(suppType)){
-			return sb.toString();
-		}
 		String searchZone = "|pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
 		String zone = getManagedBean().getZone();
-		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
-			sb.append(searchZone + "1");
-			
-		} else if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !StringUtils.isBlank(zone)){
+		
+		if(StringUtils.isBlank(suppType) && StringUtils.isBlank(zone)){
+			return sb.toString();
+		}
+		
+		if ((StringUtils.isBlank(suppType) || suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)) && !StringUtils.isBlank(zone)){
 			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
 				sb.append(searchZone + "1");
 			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
@@ -3477,6 +3483,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
 				sb.append(searchZone + "3");
 			}
+		}else if(suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+			sb.append(searchZone + "1");
 		}
 		return sb.toString();
 	}

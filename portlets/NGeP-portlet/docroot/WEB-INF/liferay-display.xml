@@ -4,6 +4,9 @@
 	<category name="NGeP">
 		<category name="category.ep.au">
 			<portlet id="auSearch" />
+ 			<!-- 35740 - shaqimi start -->
+			<portlet id="auPatchSearch" />
+			<!-- 35740 - shaqimi end -->
 		</category>
 		
 		<category name="category.ep.ct">
@@ -193,6 +196,8 @@
 			<portlet id="maintenanceRequestRevision"/>
 			<portlet id="demoInvitation"/><!-- #28784 -->
 			<portlet id="disciplinaryActionDp"/><!-- #26284 -->
+			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->
+			<portlet id="QTBSVChange"/><!-- #28188 -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -395,6 +400,11 @@
 		<!-- LOG :12491 Finish Button -->
 		<portlet id="FirstTimeMessage"></portlet>
 		<portlet id="spkiTest"></portlet>
+		<portlet id="testSmAI"></portlet><!-- #38890 -->
+		<!-- #9299 start -->
+		<portlet id="smCompExp"></portlet>
+		<portlet id="smCompExpAlert"></portlet>
+		<!-- #9299 end -->
 	</category>
 
 	<category name="category.ep.wp">

@@ -347,7 +347,12 @@ public class ViewApplHistoryBackingBean extends
 				}
 				//END 27951
 			}
-		} else {			
+		} else {
+			
+			// 39392 - START
+			SmApplicationUtil.checkOwnersDisciplinaryAction(getManagedBean().getSmAppl());
+			// 39392 - END
+			
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {
@@ -1441,17 +1446,26 @@ public class ViewApplHistoryBackingBean extends
 				: new BigDecimal(0);
 		String applType = appl[1] != null ? (String) appl[1] : "";
 		String suppType = appl[2] != null ? (String) appl[2] : "";
+		// 40110, 26238 - START
+		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
+		String latestAppl = appl[16] != null ? String.valueOf(appl[16]) : "";
+		String applId = appl[10] != null ? String.valueOf(appl[10]) : "";
 
 		Locale locale = new FacesScopes().getUserLocale();
-		if (suppStatDec.toString().equals("5") && applType.equals("O")
+		 String notAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+
+		if (recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED)) && latestAppl.equals(applId)){
+			return notAvailable;
+		} else if (suppStatDec.toString().equals("5") && applType.equals("O")
 				&& suppType.equals("B")) {
 			return ResourceBundleUtils.getMessage("lbl.sm.in.progress",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else if (StringUtils.isNotBlank((String) appl[6])) {
 			return (String) appl[6];
 		}
-		return ResourceBundleUtils.getMessage("lbl.sm.no.available",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		return notAvailable;
+		// 40110, 26238 - END
 	}
 
 	// 25792 - start
@@ -1909,11 +1923,6 @@ public class ViewApplHistoryBackingBean extends
 					button = false;
 				}//#32002 - end
 			}
-			//#26238
-			if(getManagedBean().isCancelCategoryCode() && 
-					!EntityHelper.isCollectionEmpty(getManagedBean().getCategoryCodeList())){
-				button = false;
-			}
 		}
 		// #32628 - start
 		Date today = new Date();
@@ -2053,26 +2062,42 @@ public class ViewApplHistoryBackingBean extends
 	}
 	// #35336 - END
 	
-	//#34209 - START
-	public void rePopulateApplFacilitiesList()
-	{
+	//#34209 - START, #28775-39859
+	/**
+	 * Init facilities
+	 */
+	public void rePopulateApplFacilitiesList() {
 		getManagedBean().setDockYardFacilitiesVOList(new ArrayList<PmCategoryL3>());
 		getManagedBean().setFactoryFacilitiesVOList(new ArrayList<PmCategoryL3>());
 		getManagedBean().setStoreFacilitiesVOList(new ArrayList<PmCategoryL3>());
 		getManagedBean().setWorkshopFacilitiesVOList(new ArrayList<PmCategoryL3>());
 		
-		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierCategories())) {
-			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
-				if(cat.getPmCategoryL3() != null && !StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType())) {
-					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD))
-						getManagedBean().getDockYardFacilitiesVOList().add(cat.getPmCategoryL3());
-					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY))
-						getManagedBean().getFactoryFacilitiesVOList().add(cat.getPmCategoryL3());
-					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE))
-						getManagedBean().getStoreFacilitiesVOList().add(cat.getPmCategoryL3());
-					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP))
-						getManagedBean().getWorkshopFacilitiesVOList().add(cat.getPmCategoryL3());
-				}
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierCategories())){
+			return;
+		}
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()){
+			if (cat.getPmCategoryL3() == null || StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType())){
+				continue;
+			}
+			if(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+					|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED 
+					|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+				continue;
+			}
+			switch(cat.getPmCategoryL3().getFacilityType()){
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD:
+				getManagedBean().getDockYardFacilitiesVOList().add(cat.getPmCategoryL3());
+				break;
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY:
+				getManagedBean().getFactoryFacilitiesVOList().add(cat.getPmCategoryL3());
+				break;
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP:
+				getManagedBean().getWorkshopFacilitiesVOList().add(cat.getPmCategoryL3());
+				break;
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE:
+			case my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE:
+				getManagedBean().getStoreFacilitiesVOList().add(cat.getPmCategoryL3());
+				break;
 			}
 		}
 	}

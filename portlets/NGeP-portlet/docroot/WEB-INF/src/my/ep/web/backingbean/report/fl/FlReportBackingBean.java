@@ -21,15 +21,22 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
+import my.ep.constant.fl.SLALogFulfilmentConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -39,16 +46,20 @@ import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -59,6 +70,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -475,14 +487,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 *
 	 */
 	public void defaultPtjAndMinistryValues() {
-		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())
-			//Enhancement 29550 - start
-			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
-			|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-			|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
-			//Enhancement 29550 - end 
-			) {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())
+				|| (hasSupplierRole() && !hasGovernmentUserRole())
+				// Enhancement 29550 - start
+				|| hasFactoringUserRole() 
+				|| hasRoleWithoutFlApprover(RoleCode.BPK_CCA.value())
+				|| hasRoleWithoutFlApprover(RoleCode.BPK_CC_APPROVER.value())
+				|| hasRoleWithoutFlApprover(RoleCode.MIN_CONTRACT_ADMIN.value())
+				|| hasRoleWithoutFlApprover(RoleCode.CT_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
+				// Enhancement 29550 - end
+		) {
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -762,17 +779,22 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	public void retrieveParameterCodeType() {
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			String parameterCodeType = getParameterCodeTypeString();
+			log.info("ROLE CODE: " + parameterCodeType);
 			if (StringUtils.isNotEmpty(parameterCodeType)
 					&& (parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ)
 							|| parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))) {
 				getManagedBean().setSupplier(false);
 			} else if (StringUtils.isNotEmpty(parameterCodeType)
-					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATUTORY_BODY)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_GOVT) 
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY))) {
 				getManagedBean().setSupplier(true);
 				retrieveSupplierCompName();
-				//Enhancement 29550 -start
-				retrieveSuppDataByUserId();
-				//Enhancement 29550 - end
+				// Enhancement 29550 -start
+				populateSupplierData(Long.valueOf(getManagedBean().getSupplierId()));
+				// Enhancement 29550 - end
 			} 
 		}
 	}
@@ -815,12 +837,14 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	
 	//#29554 start 	
 	/**
-	 * generate report in excel
+	 * main method to generate excel report
+	 * 
+	 * @param reportCode report code
+	 * @param params rpt param
 	 */
 	public void generateFLExcelReport(String reportCode, LinkedHashMap<String, String> params){
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
-		log.info("29554: start generateFLExcelReport");
 		params.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean()
 				.getReportName());
 		params.put(FlReportConst.FL_RPT_REPORT_ID, getManagedBean()
@@ -836,28 +860,31 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				
 		RPTRequestResDTO resDTO = new RPTRequestResDTO();
 		try{
-			log.info("29554: start generateFLExcelReport SO");
 			resDTO = rptRequestSO.generateReportInExcel(reqDTO);
 		}catch(Exception e){
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e);
 		}
 		
-		switch(reportCode){
-		case "FL_071" : //Service fee based on Accounting report
+		switch (reportCode) {
+		case FlReportConst.FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE:
 			try {
-				log.info("29554: start getServiceFeeBasedOnAccountingReport");
-				getServiceFeeBasedOnAccountingReport(params,resDTO.getRequestId());
-			}catch (Exception e1) {
-				e1.printStackTrace();
+				getServiceFeeBasedOnAccountingReport(params, resDTO.getRequestId());
+			} catch (Exception e1) {
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+						SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e1);
 			}
 			break;
-	
-		case "FL_072" : //Accumulated service fee
-			try{
-				log.info("29554: start getAccumulatedServiceFee");
+
+		case FlReportConst.FL_072_ACCUMULATED_SERVICE_FEE_REPORT:
+			try {
 				getAccumulatedServiceFee(params, resDTO.getRequestId());
-			}catch(Exception e){
-				e.printStackTrace();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+						SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e);
 			}
 			break;
 		}
@@ -865,20 +892,26 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 		RequestContext.getCurrentInstance().execute("confirmationId.show()");
 	}
+	
+	/**
+	 * generate excel report for service fee based on accounting 
+	 * @param params
+	 * @param requestId
+	 * @throws Exception
+	 */
 	public void getServiceFeeBasedOnAccountingReport(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
-		log.info("29554: start getServiceFeeBasedOnAccountingReport");
 		
-		List<Object[]> reportList = new ArrayList<Object[]>();
-		List<Object[]> summaryReportList = new ArrayList<Object[]>();
-		Map<Integer, Object[]> fiList = new TreeMap<Integer, Object[]>();
-		Map<Integer, Object[]> summaryFiList = new TreeMap<Integer, Object[]>();
+		List<Object[]> reportList;
+		List<Object[]> summaryReportList;
+		Map<Integer, Object[]> fiList = new TreeMap<>();
+		Map<Integer, Object[]> summaryFiList = new TreeMap<>();
 		String[] sheetName = {"Laporan","Ringkasan"};
 		String[] rowHeaderItems = {"Pejabat Perakaunan","Kadar Fi Perkhidmatan (%)"};
 		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh", "No. Dokumen",
 				"Kategori Jenis Perolehan", "Kod Kumpulan PTJ", "PTJ Pembayar", "Kadar Fi Perkhidmatan (%)", "Perihal",
-				"Nilai Transaksi Termasuk CBP (RM)", "Nilai Potongan (RM)", "CBP (RM)", "Perkhidmatan Fi (RM)",
+				"Nilai Transaksi Termasuk CBP (RM)", "Nilai Potongan (RM)", "CBP (RM)", "Fi Perkhidmatan (RM)",
 				"Bayaran Kepada Pembekal (RM)", "Status"));
-		ArrayList<String> columnsSummaryList = new ArrayList<String>(Arrays.asList("Bil", "Pejabat Perakaunan",
+		ArrayList<String> columnsSummaryList = new ArrayList<>(Arrays.asList("Bil", "Pejabat Perakaunan",
 				"Kadar Fi Perkhidmatan (%)", "Bil. Pesanan Kerajaan", "Nilai Transaksi Termasuk CBP (RM)",
 				"Nilai Potongan (RM)", "CBP (RM)", "Fi Perkhidmatan (RM)", "Bayaran Kepada Pembekal (RM)"));
 		
@@ -888,14 +921,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				+ " SEPERTI PADA "+ DateUtils.dateToString("dd/MM/yyyy",new Date())
 				+ " BAGI TAHUN KEWANGAN "+ DateUtils.dateToString("yyyy",new Date());
 		
-		log.info("29554: start get data");
 		reportList = generateServiceFeeBasedOnAccountingReport(params, "R");
 		summaryReportList = generateServiceFeeBasedOnAccountingReport(params, "S");
 		//sort data
 		int fiCount = 0;
 		if(!reportList.isEmpty()){
 			for(int m=0; m<reportList.size(); m++){
-				Object[] row = (Object[]) reportList.get(m);
+				Object[] row = reportList.get(m);
 				BigDecimal amtTransIncCBP = row[16] != null ? (BigDecimal)row[16] : BigDecimal.ZERO;
 				BigDecimal amtDeduction = row[19] != null ? (BigDecimal)row[19] : BigDecimal.ZERO;
 				BigDecimal amtCBP = row[20] != null ? (BigDecimal)row[20] : BigDecimal.ZERO;
@@ -904,20 +936,20 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				
 				fiList.put(fiCount, new Object[] {
 						//need to recheck query
-						row[6].toString(), //POCO DATE
-						row[3].toString(), // POCO NO
-						row[8].toString(), //PROCUMENT CATEGORY
-						row[10].toString(), //PTJ CODE
-						row[9].toString(), //PTJ NAME
-						row[15].toString(), //SERVICE FEE
-						row[11].toString(), //POCO TITLE
+						String.valueOf(row[6]), //POCO DATE
+						String.valueOf(row[3]), // POCO NO
+						String.valueOf(row[8]), //PROCUMENT CATEGORY
+						String.valueOf(row[10]), //PTJ CODE
+						String.valueOf(row[9]), //PTJ NAME
+						String.valueOf(row[15]), //SERVICE FEE
+						String.valueOf(row[11]), //POCO TITLE
 						amtTransIncCBP, //TOTAL AMOUNT
 						amtDeduction, //DEDUCTION AMOUNT
 						amtCBP, //GST AMOUNT
 						amtServiceFee, //SERVICE FEE AMOUNT
 						amtSupplier, //AMT PAYABLE SUPPLIER
-						row[21].toString(), //POCO STATUS
-						row[4].toString(), //AG Office Code
+						String.valueOf(row[21]), //POCO STATUS
+						String.valueOf(row[4]), //AG Office Code
 					});
 				fiCount++;
 			}
@@ -951,8 +983,8 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				//end summary calculation
 				
 				summaryFiList.put(summaryfiCount, new Object[] {
-						row[8].toString() + " - " + row[0].toString(), //PEJABAT PERAKAUNAN
-						row[1].toString(), //SERVICE FEE
+						String.valueOf(row[8]) + " - " + String.valueOf(row[0]), //PEJABAT PERAKAUNAN
+						String.valueOf(row[1]), //SERVICE FEE
 						sumpoco, //TOTAL POCO
 						sumTotalAmtWithGST, //NILAI TRANSAKSI CBP
 						sumTotalDeduc, //NILAI POTONGAN
@@ -1073,47 +1105,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			
 			createFooterForSummaryForEachAGOffice(sheetReportList, wb, createHelper, summaryTotalAmtAG,
 					summaryDeductionAmtAG, summaryGSTAmtAG, summaryServiceFeeAmtAG, summaryAmtPayableSupplierAG);
-			//calculate summary
-			
-			//end calculate summary
-			// summary report sheet
-			/*
-			int rowSummary = sheetReportList.getLastRowNum() + 1;
-			Row row = sheetReportList.createRow(rowSummary);
-			
-			Cell cellSummary = row.createCell(1);
-			cellSummary.setCellValue("Jumlah Keseluruhan (RM)");
-			cellSummary.setCellStyle(titleHeaderStyle(wb,true,true,false,false,true,true));
-			CellRangeAddress cellZone = new CellRangeAddress(rowSummary,rowSummary,1,8);
-		    sheetReportList.addMergedRegion(cellZone);
-		    
-		    boxedRegion(cellSummary,cellZone,sheetReportList);
-	        
-			// summary report sheet cell - total amount with gst
-	        Cell cellSummaryTotalAmt = row.createCell(9);
-	        cellSummaryTotalAmt.setCellValue((summaryTotalAmt).doubleValue());
-	        cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
-			// summary report sheet cell - deduction amount
-	        Cell cellSummaryDeductionAmt = row.createCell(10);
-	        cellSummaryDeductionAmt.setCellValue((summaryDeductionAmt).doubleValue());
-	        cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
-			// summary report sheet cell - gst amount
-	        Cell cellSummaryGSTAmt = row.createCell(11);
-	        cellSummaryGSTAmt.setCellValue((summaryGSTAmt).doubleValue());
-	        cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
-			// summary report sheet cell - service fee amount 
-	        Cell cellSummaryServiceFeeAmt = row.createCell(12);
-	        cellSummaryServiceFeeAmt.setCellValue((summaryServiceFeeAmt).doubleValue());
-	        cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
-			// summary report sheet cell - accumulate amount payable supplier
-	        Cell cellSummaryAmtPayableSupplier = row.createCell(13);
-	        cellSummaryAmtPayableSupplier.setCellValue((summaryAmtPayableSupplier).doubleValue());
-	        cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, true, false, false));
-	        
-	        CellRangeAddress cellZoneSummaryAmt = new CellRangeAddress(rowSummary,rowSummary,13,14);
-		    sheetReportList.addMergedRegion(cellZoneSummaryAmt);
-		    
-		    boxedRegion(cellSummaryAmtPayableSupplier,cellZoneSummaryAmt,sheetReportList);*/
 		}
 		 if(reportList.isEmpty()){
 	        	Row noRecordRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
@@ -1270,15 +1261,15 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
-	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
 	        wb.close();
 	        
 	    }catch(Exception e){
-	    	e.printStackTrace();
+	    	SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_SVC_FEE_BASED_ACCOUNTING_OFFICE, getUserIdSessionFromLoginId(), e);
 	    }
 	    
 	}
@@ -1406,7 +1397,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		Row headerRowList = sheetReportList.createRow(sheetReportList.getLastRowNum() + 2);
 		for (int i = 0; i < columnHeaderList.size(); i++) {
 			Cell cell = headerRowList.createCell(i + 1);
-			cell.setCellValue(columnHeaderList.get(i).toString());
+			cell.setCellValue(columnHeaderList.get(i));
 			cell.setCellStyle(columnStyle(wb, createHelper, true, true, true, false, false, true, true));
 		}
 		// Resize all columns
@@ -1447,14 +1438,20 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 	}
 	
-	
+	/**
+	 * generate excel report for accumulated service fee
+	 * 
+	 * @param params
+	 * @param requestId
+	 * @throws Exception
+	 */
 	public void getAccumulatedServiceFee(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
 		log.info("29554: start getAccumulatedServiceFee");
 		
-		List<Object[]> reportList = new ArrayList<Object[]>();
-		Map<Integer, Object[]> fiList = new TreeMap<Integer, Object[]>();
+		List<Object[]> reportList;
+		Map<Integer, Object[]> fiList = new TreeMap<>();
 		String sheetName = "Laporan";
-		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil","Pejabat Perakaunan","Jan(RM)","Feb(RM)","Mac(RM)","April(RM)","Mei(RM)",
+		ArrayList<String> columnHeaderList = new ArrayList<>(Arrays.asList("Bil","Pejabat Perakaunan","Jan(RM)","Feb(RM)","Mac(RM)","April(RM)","Mei(RM)",
 				"Jun(RM)","Julai(RM)","Ogos(RM)","Sept(RM)","Okt(RM)","Nov(RM)","Dis(RM)","Jumlah(RM)"));
 		
 		String reportTitle = "LAPORAN FI PERKHIDMATAN TERKUMPUL BAGI TEMPOH " 
@@ -1484,7 +1481,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		if(!reportList.isEmpty()){
 			
 			for(int m=0; m<reportList.size(); m++){
-				Object[] row = (Object[]) reportList.get(m);
+				Object[] row = reportList.get(m);
 				
 				BigDecimal jan = row[3] != null ? (BigDecimal)row[3] : BigDecimal.ZERO;
 				BigDecimal feb = row[4] != null ? (BigDecimal)row[4] : BigDecimal.ZERO;
@@ -1516,7 +1513,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				//end calculate
 				
 				fiList.put(fiCount, new Object[] {
-						row[1].toString() +" - " + row[2].toString(),
+						String.valueOf(row[1]) +" - " + String.valueOf(row[2]),
 						(BigDecimal)row[3] != null ? (BigDecimal)row[3] : "-", //jan
 						(BigDecimal)row[4] != null ? (BigDecimal)row[4] : "-", //feb
 						(BigDecimal)row[5] != null ? (BigDecimal)row[5] : "-", //mar
@@ -1725,32 +1722,67 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
-	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
 	        wb.close();
 	        
 	    }catch(Exception e){
-	    	e.printStackTrace();
+	    	SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_ACCUMULATED_SVC_FEE, getUserIdSessionFromLoginId(), e);
 	    }
 	}
 	
+	/**
+	 * get list data for service fee based on accounting report
+	 * 
+	 * @param params
+	 * @param type
+	 * @return
+	 */
 	public List<Object[]> generateServiceFeeBasedOnAccountingReport(LinkedHashMap<String, String> params, String type){
 		IRPTRequestSO irptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
 		return irptRequestSO.generateServiceFeeBasedOnAccountingReport(params, type);
 	}
+	
+	/**
+	 * get list data for accumulated service fee report
+	 * 
+	 * @param params
+	 * @return
+	 */
 	public List<Object[]> generateAccumulatedServiceFee(LinkedHashMap<String, String> params){
 		IRPTRequestSO irptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
 		return irptRequestSO.generateAccumulatedServiceFee(params);
 	}
+	
+	/**
+	 * boxed region for excel styling
+	 * 
+	 * @param cell
+	 * @param cellZone
+	 * @param sheet
+	 */
 	public void boxedRegion(Cell cell, CellRangeAddress cellZone, Sheet sheet){
 		RegionUtil.setBorderBottom(cell.getCellStyle().getBorderBottomEnum().getCode(), cellZone, sheet);
         RegionUtil.setBorderTop(cell.getCellStyle().getBorderTopEnum().getCode(), cellZone, sheet);
         RegionUtil.setBorderLeft(cell.getCellStyle().getBorderLeftEnum().getCode(), cellZone, sheet);
         RegionUtil.setBorderRight(cell.getCellStyle().getBorderRightEnum().getCode(), cellZone, sheet);
 	}
+	
+	/**
+	 * title header for excel styling
+	 * 
+	 * @param wb
+	 * @param isBold
+	 * @param isAlignCenter
+	 * @param isWrapTxt
+	 * @param isVAlignTop
+	 * @param isBoxed
+	 * @param isShade
+	 * @return
+	 */
 	public CellStyle titleHeaderStyle(Workbook wb, Boolean isBold, Boolean isAlignCenter, Boolean isWrapTxt, Boolean isVAlignTop, Boolean isBoxed, Boolean isShade){
 		Font titleReportFont = wb.createFont();
 		if(isBold)titleReportFont.setBold(true);
@@ -1779,6 +1811,20 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return titleReportCellStyle;
 	}
 	
+	/**
+	 * column style for excel styling
+	 * 
+	 * @param wb
+	 * @param createHelper
+	 * @param isCellListHeader
+	 * @param isBold
+	 * @param isHAlignCenter
+	 * @param isFormatDate
+	 * @param isFormatDecimalNumber
+	 * @param isWrapTxt
+	 * @param isVAlignCenter
+	 * @return
+	 */
 	public CellStyle columnStyle(Workbook wb, 
 			CreationHelper createHelper,
 			Boolean isCellListHeader,
@@ -1864,29 +1910,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * reports based on role auditor internal and fl approver.
 	 */
 	@SuppressWarnings("null")
-	public void defaultPtjGrpAndPtjValues(){
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+	public void defaultPtjGrpAndPtjValues() {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 		PmOrgProfile orgProfile = null;
-		
-		if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+
+		if (userResDTO.getUserOrgList() != null && !userResDTO.getUserOrgList().isEmpty()) {
 			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 		}
-		
-		if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
-			
-			if(ministryOrgProfile != null){
-				this.getManagedBean().setMinistry(ministryOrgProfile);
-				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
-				this.getManagedBean().setPtj(orgProfile);
-			}else{
-				this.getManagedBean().setMinistry(orgProfile);
-			}
-			
-		}else{
+
+		if (orgProfile.getOrgProfileId() != null) {
 			this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 			this.getManagedBean().setPtjGroup(null);
 			this.getManagedBean().setPtj(null);
@@ -2002,6 +2038,375 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return items;
 	}
 	
+	public void autopopSuppData() {
+		if (this.getManagedBean().getSelectedOrgProfile().getSmSupplier() == null) {
+			return;
+		}
+		populateSupplierData(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId());
+	}
+	
+	public void populateSupplierData(Long suppplierId){
+		ISupplierSearchSO supplierSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		SmSupplier smSupplier = supplierSO.retrieveSupplierAndMofAccountBySupplierId(suppplierId);
+		if (smSupplier != null) {
+			getManagedBean().setSupplierCompName(smSupplier.getCompanyName());
+			getManagedBean().setBusinessRegNo(smSupplier.getRegNo());
+			getManagedBean().setEpNo(smSupplier.getEpNo());
+			if (smSupplier.getMofNo() != null && !smSupplier.getMofNo().isEmpty()) {
+				getManagedBean().setMofNo(smSupplier.getMofNo());
+			} else {
+				getManagedBean().setMofNo("");
+			}
+		}
+	}
+	//Enhancement 29550 - end
+	
+	// #31344 start
+	/**
+	 * Construct condition field for PTJ and Approve Other PTJ
+	 * 
+	 * @return
+	 */
+	public String getPTJWithApproveOtherPTJCondition() {
+		String condition = "";
+		if (getManagedBean().getPtjGroup() != null) {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()) + "^"
+					+ this.getManagedBean().getPtjGroup().getOrgProfileId();
+		}
+
+		PmOrgProfile orgProfile = retrieveUserOrgProfile();
+		if (orgProfile == null) {
+			return condition;
+		}
+
+		String ptjList = buildPtjIdList(orgProfile);
+
+		return condition + "|orgProfileId^" + ptjList + "^9";
+	}
+
+	/**
+	 * Construct condition field for PTJ Group and Approve Other PTJ
+	 * 
+	 * @return
+	 */
+	public String getPTJGroupWithApproveOtherPTJCondition() {
+		String condition = "";
+		if (getManagedBean().getMinistry() != null) {
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),
+					OrganizationType.MINISTRY.value()) + "^" + this.getManagedBean().getMinistry().getOrgProfileId();
+		}
+
+		PmOrgProfile orgProfile = retrieveUserOrgProfile();
+		if (orgProfile == null) {
+			return condition;
+		}
+
+		String kumpulanPtjList = buildPtjGroupList(orgProfile);
+
+		return condition + "|orgProfileId^" + kumpulanPtjList + "^9";
+	}
+
+	/**
+	 * retrieve User Org Profile
+	 * @return
+	 */
+	private PmOrgProfile retrieveUserOrgProfile() {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+
+		if (userResDTO == null || userResDTO.getUserOrgList() == null || userResDTO.getUserOrgList().isEmpty()) {
+			return null;
+		}
+
+		return userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+	}
+
+	/**
+	 * Build a list of PTJ Id
+	 * @param orgProfile
+	 * @return
+	 */
+	private String buildPtjIdList(PmOrgProfile orgProfile) {
+		StringBuilder ptjListBuilder = new StringBuilder();
+		ptjListBuilder.append(orgProfile.getOrgProfileId());
+
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+
+		IPtjReorgSO ptjReorgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IPtjReorgSO.class);
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+
+		if (ptjResDTO != null && ptjResDTO.getPtjReorgList() != null) {
+			for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				ptjListBuilder.append(",").append(pmPtjReorg.getOldPtjId());
+			}
+		}
+
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
+
+		if (resDTO != null && resDTO.getOrgProfileIdList() != null) {
+			for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
+				if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
+					ptjListBuilder.append(",").append(pmProfileGroup);
+				}
+			}
+		}
+
+		return ptjListBuilder.toString();
+	}
+
+	/**
+	 * Build a list of PTJ Group Id
+	 * @param orgProfile
+	 * @return
+	 */
+	private String buildPtjGroupList(PmOrgProfile orgProfile) {
+		StringBuilder ptjGroupListBuilder = new StringBuilder();
+		ptjGroupListBuilder.append(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId());
+
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+
+		IPtjReorgSO ptjReorgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IPtjReorgSO.class);
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+
+		if (ptjResDTO != null && ptjResDTO.getPtjReorgList() != null) {
+			for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				PmOrgProfile kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
+				if (kumpulanPtj != null) {
+					ptjGroupListBuilder.append(",").append(kumpulanPtj.getOrgProfileId());
+				}
+			}
+		}
+
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
+
+		if (resDTO != null && resDTO.getOrgProfileIdList() != null) {
+			for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
+				if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
+					ptjGroupListBuilder.append(",").append(retrieveJabatanOrgProfile(pmProfileGroup).getOrgProfileId());
+				}
+			}
+		}
+
+		return ptjGroupListBuilder.toString();
+	}
+
+	/**
+	 * Get condition field for PTJ - Internal Auditor
+	 * 
+	 * @return
+	 */
+	public String getPTJInternalAuditorCondition() {
+		String condition = "";
+		if (getManagedBean().getPtjGroup() != null) {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()) + "^"
+					+ this.getManagedBean().getPtjGroup().getOrgProfileId();
+		}
+
+		return condition;
+	}
+
+	/**
+	 * Get condition field for PTJ Group - Internal Auditor
+	 * 
+	 * @return
+	 */
+	public String getPTJGroupInternalAuditorCondition() {
+		String condition = "";
+		if (getManagedBean().getMinistry() != null) {
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),
+					OrganizationType.MINISTRY.value()) + "^" + this.getManagedBean().getMinistry().getOrgProfileId();
+		}
+
+		return condition;
+	}
+
+	/**
+	 * Construct condition field for PTJ by user role code
+	 * 
+	 * @return
+	 */
+	public String constructConditionForPTJByRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return getPTJWithApproveOtherPTJCondition();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return getPTJInternalAuditorCondition();
+		} else {
+			return getPTJCondition();
+		}
+	}
+
+	/**
+	 * Construct condition field for PTJ Group by user role code
+	 * 
+	 * @return
+	 */
+	public String constructConditionForPTJGroupByRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return getPTJGroupWithApproveOtherPTJCondition();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return getPTJGroupInternalAuditorCondition();
+		} else {
+			return constuctConditionFieldsForPTJGroup();
+		}
+	}
+
+	/**
+	 * Disable PTJ Group lov by user role code
+	 * 
+	 * @return
+	 */
+	public boolean disablePtjGroupLovThresholdReport() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return false;
+		} else {
+			return disablePtjGroupLov();
+		}
+	}
+
+	/**
+	 * Disable PTJ lov by user role code
+	 * 
+	 * @return
+	 */
+	public boolean disablePtjLovThresholdReport() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return false;
+		}
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return getManagedBean().getPtjGroup() == null;
+		}
+		return disablePtjLov();
+	}
+
+	/**
+	 * Get select item for document status by doctype
+	 * 
+	 * @param docType
+	 * @return
+	 */
+	public SelectItem[] getStatusDropdownValuesForItemThreshold(String docType) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
+					ModuleCodeConst.ORDER_FULFILLMENT, docType, null);
+			List<PmStatusDesc> statusDescsItemThreshold = new ArrayList<>();
+
+			for (PmStatusDesc statusDesc : statusDescs) {
+				if (statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT)
+						|| statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CLOSED)
+						|| statusDesc.getPmStatus().getStatusId()
+								.equals(FulfilmentStatusConst.PO_CLOSED_MANUAL_PAYMENT_1GFMAS)) {
+					statusDescsItemThreshold.add(statusDesc);
+				}
+			}
+
+			items = new SelectItem[statusDescsItemThreshold.size() + 1];
+			items[0] = new SelectItem(0L, ResourceBundleUtils.getMessage("lbl.txt.all",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDescYep : statusDescsItemThreshold) {
+				items[i++] = new SelectItem(statusDescYep.getPmStatus().getStatusId(), statusDescYep.getStatusName());
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("FL", "statusDropdownItemThreshold", "statusDropdownItemThreshold",
+					null, getUserIdSessionFromLoginId(), e);
+		}
+
+		return items;
+	}
+
+	/**
+	 * Construct financial year list
+	 * 
+	 * @return List of select item for financial year
+	 */
+	public static List<SelectItem> getFinancialYearOpt() {
+		List<SelectItem> financialYearOpt = new ArrayList<>();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+
+		int currentYear = cal.get(Calendar.YEAR);
+		int startYear = 2018;
+
+		for (int year = currentYear; year >= startYear; year--) {
+			financialYearOpt.add(new SelectItem(year, Integer.toString(year)));
+		}
+
+		return financialYearOpt;
+	}
+	//#31344 end
+	
+	//Enhancement 29550 - start
+	/**
+	 * Check role contain fl approver rola
+	 * @param userRole
+	 * @return
+	 */
+	private boolean hasRoleWithoutFlApprover(String userRole) {
+		return getFacesScopes().hasRoleUser(userRole) && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
+	/**
+	  * The method used to disable ptj group lov by report code.
+	*/	
+	public boolean disablePtjGroupLovAdhocPO() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
+					|| getManagedBean().getMinistry() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	  * The method used to disable ptj lov by report code.
+	*/	
+	public boolean disablePtjLovAdhocPO() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+					|| getManagedBean().getPtjGroup() == null){
+				return true;
+			}
+		}
+		return false;
+	}
 	//Enhancement 29550 - end
 
 }

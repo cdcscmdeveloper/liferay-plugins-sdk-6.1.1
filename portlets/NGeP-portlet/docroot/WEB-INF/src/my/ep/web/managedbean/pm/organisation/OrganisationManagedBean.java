@@ -152,6 +152,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	
 	/************ AUDIT START #28895-35509 *************/
 	private PmOrgProfile auditOldPMOrgProfile;
+	private PmOrgProfile newPmOrgProfile;
 	private PmAddress auditBillingAddress;
 	private PmContact auditContactPerson;
 	private List<PmAddressType> oldReceivingAddressList = new ArrayList<>();
@@ -166,6 +167,8 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private Long newProfileId;
 	private Long pmAddressTypeId;
 	/************ AUDIT END #28895-35509 *************/
+	
+	private List<PmAddressType> addressTypesCheckingList = new ArrayList<PmAddressType>(); //#34445, Fix as-is bug: #39639
 
 	public OrganisationManagedBean() {
 
@@ -1426,6 +1429,29 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setNewAuditProfileGroup(List<PmProfileGroup> newAuditProfileGroup) {
 		this.newAuditProfileGroup = newAuditProfileGroup;
 	}
+
+	/**
+	 * @return the newPmOrgProfile
+	 */
+	public PmOrgProfile getNewPmOrgProfile() {
+		return newPmOrgProfile;
+	}
+
+	/**
+	 * @param newPmOrgProfile the newPmOrgProfile to set
+	 */
+	public void setNewPmOrgProfile(PmOrgProfile newPmOrgProfile) {
+		this.newPmOrgProfile = newPmOrgProfile;
+	}
 	/************ AUDIT END #28895-35509 *************/
 
+	//#34445, Fix as-is bug: #39639 - Start
+	public List<PmAddressType> getAddressTypesCheckingList() {
+		return addressTypesCheckingList;
+	}
+
+	public void setAddressTypesCheckingList(List<PmAddressType> addressTypesCheckingList) {
+		this.addressTypesCheckingList = addressTypesCheckingList;
+	}
+	//#34445, Fix as-is bug: #39639 - End
 }

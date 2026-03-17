@@ -37,12 +37,12 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{poSuppTransRptBB.disablePtjGroupLovByReportCode()}"
+					disabled="#{poSuppTransRptBB.disablePtjGroupLovAdhocPO()}"
 					value="#{poSuppTransRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="poSuppTransRptBB.resetPtjProfile()"
 					update=":form"
 					saveObject="poSuppTransRptBB.managedBean.ptjGroup"
-					conditionField="#{poSuppTransRptBB.constuctConditionFieldsForPTJGroup()}">
+					conditionField="#{poSuppTransRptBB.constructConditionForPTJGroupByRole()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -54,11 +54,11 @@
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{poSuppTransRptBB.disablePtjLovByReportCode()}"
+					disabled="#{poSuppTransRptBB.disablePtjLovAdhocPO()}"
 					value="#{poSuppTransRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="poSuppTransRptBB.managedBean.ptj"
-					conditionField="#{poSuppTransRptBB.getPTJCondition()}">
+					conditionField="#{poSuppTransRptBB.constructConditionForPTJByRole()}">
 				</ac:lov>
 			</td>
 		</tr>

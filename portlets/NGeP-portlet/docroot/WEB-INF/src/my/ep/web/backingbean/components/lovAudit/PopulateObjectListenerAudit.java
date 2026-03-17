@@ -13,6 +13,11 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.web.bean.LovBean;
 
+/**
+ * #35509
+ * @author normuliana
+ * 
+ */
 public class PopulateObjectListenerAudit implements ValueChangeListener {
 
 	private static Logger log = Logger.getLogger(PopulateObjectListenerAudit.class);

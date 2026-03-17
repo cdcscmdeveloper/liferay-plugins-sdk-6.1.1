@@ -109,6 +109,16 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	 */
 	public String lodgeComplaint() {
 		//String complNo = String.valueOf((new Date()).getTime());
+		
+		// START 38520
+		if (getManagedBean().getSmComplaint() == null 
+				|| getManagedBean().getSmComplaint().getSmSupplier() == null 
+				|| getManagedBean().getSmComplaint().getSmSupplier().getSupplierId() == null) {
+			String supplier = SmCommonUtil.getMessage("lbl.sm.complaint.against.supplier", new String[]{});
+			throw new EpException(MessageConst.ERROR_723103, new String[] { supplier });
+		}
+		// END 38520
+		
 		Date date = new Date();
 		Timestamp currDate = new Timestamp(date.getTime());
 		
@@ -1130,7 +1140,11 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 					|| currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK_REJECT.longValue()){
 				SmComplaintReview complReview = getFirstReview();
 				getManagedBean().setSmComplReview(complReview);
-				populateAttachedDocsByReviewIdAndStatus(getManagedBean().getSmComplReview().getComplaintReviewId(), currentStatus);
+				// 38637 - START
+				if (getManagedBean().getSmComplReview() != null) {
+					populateAttachedDocsByReviewIdAndStatus(getManagedBean().getSmComplReview().getComplaintReviewId(), currentStatus);
+				}
+				// 38637 - END
 				//37855 - END
 			}else{
 				getManagedBean().setSmComplReview(new SmComplaintReview());

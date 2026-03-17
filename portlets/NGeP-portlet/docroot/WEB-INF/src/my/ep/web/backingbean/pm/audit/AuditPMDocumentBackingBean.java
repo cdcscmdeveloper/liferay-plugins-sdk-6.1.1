@@ -74,6 +74,10 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 			paramMap.put(AuditReportConst.PARAM_USER_ID, String.valueOf(getUserIdSessionFromLoginId()));
 			paramMap.put(AuditPMDaoConst.P_ROLECODE, reqDTO.getpRoleCode());
 			
+			if(reqDTO.getCategoryConfigParamLevel2().trim().equals(AuditConst.PM_AUD_SYSPARAM_SPCR_VIEW)){
+				paramMap.put(AuditPMDaoConst.P_LVL3_CODE, reqDTO.getpLvl3Code());
+			}
+			
 			SimpleDateFormat sdf = new SimpleDateFormat(ReportConst.URL_RPT_DATE_ANOTHER_FORMAT);
 			if (reqDTO.getPdateFrom() != null) {
 				paramMap.put(AuditPMDaoConst.P_DATEFROM, sdf.format(reqDTO.getPdateFrom()));
@@ -83,6 +87,9 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 			}
 			if(reqDTO.getpDocGroupId() != null){
 				paramMap.put(AuditPMDaoConst.P_DOCGROUPID, reqDTO.getpDocGroupId().toString());
+			}
+			if(reqDTO.getpUserOrgProfileId() != null){
+				paramMap.put(AuditPMDaoConst.P_USERORGPROFILEID, reqDTO.getpUserOrgProfileId().toString());
 			}
 			paramMap.values().removeAll(Collections.singleton(null));
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PM, paramMap);
@@ -196,8 +203,25 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 	}
 	
 	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
+		
+		// Default width for specific column ranges
+				int defaultWidth = 19 * 256;
+
+		// Define a map for specific column widths
+		Map<Integer, Integer> columnWidths = new HashMap<>();
+		columnWidths.put(0, 23 * 256); // Col: Tarikh Tindakan
+		columnWidths.put(1, 15 * 256); // Col: Jenis Tindakan
+		columnWidths.put(2, 25 * 256); // Col: Tindakan Oleh
+		columnWidths.put(3, 31 * 256); // Col: Organisasi
+		columnWidths.put(4, defaultWidth); // Col: Peranan
+		columnWidths.put(5, defaultWidth); // Col: Jenis Dokumen
+		columnWidths.put(6, 22 * 256); // Col: No. Dokumen
+		columnWidths.put(7, defaultWidth); // Col: Nama Medan
+		columnWidths.put(8, defaultWidth); // Col: Data Asal
+		columnWidths.put(9, defaultWidth); // Col: Data Baru
+		
 		for (int i = 0; i < totalNoOfCell; i++) {
-			sheetName.autoSizeColumn(i + 1);
+			sheetName.setColumnWidth(i + 1, columnWidths.get(i));
 		}
 	}
 

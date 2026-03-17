@@ -64,14 +64,13 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		/* update UserGroupUsers List */
 		HashMap<Long, Integer> hMap = managedBeans.getHmGroupUserFlagStatDb();
 		if (managedBeans.getUserGroupUpdate() != null && managedBeans.getUserGroupUpdate().getPmUserGroupUsers() != null) {
+			/* update UserGroup */
+			updateUserGroupListStatus(managedBeans.getUserGroupUpdate(), managedBeans.getUserGroupOld());
 			for (PmUserGroupUser groupUser : managedBeans.getUserGroupUpdate().getPmUserGroupUsers()) {
 				if (hMap != null && !(hMap.isEmpty())) {
 					updateUserGroupList(hMap, groupUser);
 				}
 			}
-
-			/* update UserGroup */
-			updateUserGroupListStatus(managedBeans.getUserGroupUpdate(), managedBeans.getUserGroupOld());
 		}
 
 		/* new created UserGroup */

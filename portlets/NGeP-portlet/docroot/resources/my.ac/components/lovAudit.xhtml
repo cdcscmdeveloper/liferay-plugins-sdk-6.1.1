@@ -62,7 +62,7 @@
 		<p:commandLink
 			id="#{cc.attrs.id}lovLink"
 			action="#{lovAuditBackingBean.initLov}"
-			oncomplete="updateSearchDialog(); "
+			oncomplete="updateSearchDialogUser(); "
 			disabled="#{cc.attrs.disabled}"
 			readonly="#{cc.attrs.readonly}"
 			partialSubmit="true" process="@this">
@@ -92,7 +92,7 @@
 			id="#{cc.attrs.id}lovSingleBtn"
 			icon="#{cc.attrs.buttonIcon}"
 			action="#{lovAuditBackingBean.initLov}"
-			oncomplete="updateSearchDialog(); "
+			oncomplete="updateSearchDialogUser(); "
 			disabled="#{cc.attrs.disabled}"
 			readonly="#{cc.attrs.readonly}">
 			
@@ -123,7 +123,7 @@
 		<p:commandButton
 			id="#{cc.attrs.id}lovBtn"
 			action="#{lovAuditBackingBean.initLov}"
-			oncomplete="updateSearchDialog(); "
+			oncomplete="updateSearchDialogUser(); "
 			disabled="#{cc.attrs.disabled}"
 			readonly="#{cc.attrs.readonly}">
 			
