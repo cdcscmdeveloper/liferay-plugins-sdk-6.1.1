@@ -740,6 +740,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
+			getManagedBean().setOwnerChange(resDTO.isOwnerChange()); // 40078, 26238
 				// #28895_35501 Start - AUDIT TRAIL SM
 			if (resDTO.isSuccessful()) {
 				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
@@ -1197,23 +1198,25 @@ public class SupplierDataMaintenanceBackingBean extends
 		//27460 : Disciplinary Action, //32827
 		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
 		validateCancelManufacturer();	//38742
-		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
+		// 40029, 26238 - START
+		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null || 
+				getManagedBean().isBlacklistOwnerOrDirector() ){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
-					}
-					
-			//#28147 - start - #28494
+			}
+			
+			// 28147, 28494 - START
 			if (getManagedBean().isBlacklistOwnerOrDirector() 
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.owner", null));
-						}
-			//#28147 - end
-					}
+			}
+			// 28147, 40029, 26238 - END
+		}
 		getManagedBean().setShowParentMsg(false);
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
-					}
+	}
 	
 	/**
 	 * Validate DA Cancel Manufacturer if it is not combined with other DA

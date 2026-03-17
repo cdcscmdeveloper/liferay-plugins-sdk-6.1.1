@@ -30,10 +30,12 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private List<SelectItem> nationalities;
 	private List<SelectItem> permCountries;
 	private List<SelectItem> permStates;
+	private List<SelectItem> permDivisions; //#34159 & #36718 & #36716
 	private List<SelectItem> permDistricts;
 	private List<SelectItem> permCities;
 	private List<SelectItem> mailCountries;
 	private List<SelectItem> mailStates;
+	private List<SelectItem> mailDivisions; //#34159 & #36718 & #36716
 	private List<SelectItem> mailDistricts;
 	private List<SelectItem> mailCities;
 	private List<SelectItem> salutationItems;
@@ -388,6 +390,24 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	}
 	//#28765 - End
 	
+	//#34159 & #36718 & #36716 - START
+	public List<SelectItem> getPermDivisions() {
+		return permDivisions;
+	}
+
+	public void setPermDivisions(List<SelectItem> permDivisions) {
+		this.permDivisions = permDivisions;
+	}
+	
+	public List<SelectItem> getMailDivisions() {
+		return mailDivisions;
+	}
+
+	public void setMailDivisions(List<SelectItem> mailDivisions) {
+		this.mailDivisions = mailDivisions;
+	}
+	//#34159 & #36718 & #36716 - END
+		
 	// START -> #33563
 	public boolean isDisplayRoleEquity() {
 		return displayRoleEquity;

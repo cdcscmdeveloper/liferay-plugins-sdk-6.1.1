@@ -1518,25 +1518,29 @@ public class SmApplicationUtil {
 		boolean retVal = false;
 		if (paramBranch != null && paramBranch.getSupplierBranchId() != null
 				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBanks())) {
-			for (SmSupplierBank bnk : appl.getSmSupplierBanks()) {
-				if (!SmCommonUtil.isCollectionEmpty(bnk
-						.getSmSupplierBranchBanks())) {
-					for (SmSupplierBranchBank brBank : bnk
-							.getSmSupplierBranchBanks()) {
-						if (brBank.getSmSupplierBranch() != null
-								&& brBank.getSmSupplierBranch()
-										.getSupplierBranchId() != null
-								&& brBank
-										.getSmSupplierBranch()
-										.getSupplierBranchId()
-										.compareTo(
-												paramBranch
-														.getSupplierBranchId()) == 0) {
-							retVal = true;
-							break;
+			if(paramBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_STATUS_DELETED){ //#29727
+				for (SmSupplierBank bnk : appl.getSmSupplierBanks()) {
+					if (!SmCommonUtil.isCollectionEmpty(bnk
+							.getSmSupplierBranchBanks())) {
+						for (SmSupplierBranchBank brBank : bnk
+								.getSmSupplierBranchBanks()) {
+							if (brBank.getSmSupplierBranch() != null
+									&& brBank.getSmSupplierBranch()
+											.getSupplierBranchId() != null
+									&& brBank
+											.getSmSupplierBranch()
+											.getSupplierBranchId()
+											.compareTo(
+													paramBranch
+															.getSupplierBranchId()) == 0) {
+								retVal = true;
+								break;
+							}
 						}
 					}
 				}
+			} else {
+				retVal = true;
 			}
 		}
 		return retVal;
@@ -11515,7 +11519,7 @@ public class SmApplicationUtil {
 	public static PmStatusDesc getCurrRegStatusDesc(SmAppl appl) {
 		PmStatusDesc retVal = null;
 		String language = new FacesScopes().getUserLocale().getLanguage();
-
+		log.info("TB 37925: TB_appl:" + appl.getApplNo());
 		try {
 			if (appl != null
 					&& appl.getSmSupplier() != null
@@ -11527,9 +11531,14 @@ public class SmApplicationUtil {
 				StatusReqDTO reqDTO = new StatusReqDTO();
 				reqDTO.setStatusId(appl.getSmSupplier().getSmAppl()
 						.getPmRegStatus().getPmStatus().getStatusId());
+				log.info("TB 37925: -Status ID"+reqDTO.getStatusId() + " TB_appl:" + appl.getApplNo());
 				reqDTO.setLanguageCode(language);
 				retVal = SmServiceLookup.getStatusSO()
 						.retrieveStatusDescById(reqDTO).getPmStatusDesc();
+				log.info("TB 37925: -retVal"+retVal);
+			}
+			else{
+				log.info("TB 37925 got skipped: TB_appl:" + appl.getApplNo());
 			}
 		} catch (Exception ex) {
 
@@ -14244,22 +14253,24 @@ public class SmApplicationUtil {
 			Long approveStatusId) {
 		// approve SME Status
 		SmApplicationUtil.setSmeStatus(smAppl);
-
+        log.info("TB 37925 - approveStatusId:"+approveStatusId + " TB_appl:" + smAppl.getApplNo());
 		PmRegStatus regStatus = null;
 		if (approveStatusId != null) {
 			PmStatus status = SmCommonUtil.getInstance().retrievePmStatusById(
 					approveStatusId);
 			regStatus = status.getPmRegStatus();
+			log.info("TB 37925 - approveStatusId - regStatus:"+regStatus);
 		} else {
 			SmApplSectionReview poRev = (SmApplSectionReview) EntityHelper
 					.getEntityBySinglePropertyFromList(
 							SupplierManagementConst.SECTION_REV_ROLE_PO,
 							smAppl.getSmApplSectionReviews(), "roleType");
+			log.info("TB 37925 - poRev.getPmRegStatus():"+poRev.getPmRegStatus());
 			if (poRev != null && poRev.getPmRegStatus() != null) {
 				regStatus = poRev.getPmRegStatus();
 			}
 		}
-
+        log.info("TB 37925 - regStatus:"+regStatus);
 		if (regStatus != null) {
 			smAppl.setPmStatus(regStatus.getPmStatus());
 			smAppl.setPmRegStatus(regStatus);
@@ -14276,6 +14287,7 @@ public class SmApplicationUtil {
 				smAppl.setBumi(smAppl.getSmSupplier().isBumi());
 			}
 		}
+		log.info("TB 37925 - regStatus Last:"+regStatus);
 		return regStatus;
 	}
 

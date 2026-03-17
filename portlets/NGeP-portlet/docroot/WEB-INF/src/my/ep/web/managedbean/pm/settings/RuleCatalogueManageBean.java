@@ -166,6 +166,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Boolean ruleTypeCollapsePanel;
 	private Boolean ruleValueCollapsePanel;
 	private Boolean qtValueCollapsePanel;
+	private List<String> deletedMinistryNameList;//#36738 #40071
 	// #36738 End
 	
 	public RuleCatalogueManageBean() {
@@ -1648,6 +1649,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	
 	public void setOriginalConfigRuleValueMap(HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap) {
 		this.originalConfigRuleValueMap = originalConfigRuleValueMap;
+	}
+	
+	public List<String> getDeletedMinistryNameList() {
+		return deletedMinistryNameList;
+	}
+	
+	public void setDeletedMinistryNameList(List<String> deletedMinistryNameList) {
+		this.deletedMinistryNameList = deletedMinistryNameList;
 	}
 	// #36738 End
 }
