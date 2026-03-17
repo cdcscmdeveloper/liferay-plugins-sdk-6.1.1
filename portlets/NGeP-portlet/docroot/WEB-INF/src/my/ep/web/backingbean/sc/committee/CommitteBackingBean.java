@@ -2645,7 +2645,7 @@ public class CommitteBackingBean extends
 				}
 			}
 
-			reqDto.setTplCommitteeId(null != displayCommittee ? displayCommittee.getTplCommitteeId() : null);
+			reqDto.setTplCommitteeId(null != displayCommittee ? displayCommittee.getCommitteeId() : null);
 			reqDto.setOmitCurrent(false);
 			reqDto.setUserId(loggedInUserId);
 
@@ -3002,10 +3002,10 @@ public class CommitteBackingBean extends
 			CustomUtils.sortQtCommitteeMemberRole(list);
 			list = sortMemberByAlphabetOrder(list);
 			this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
-			reqDTO.setTplCommitteeId(history.getTplCommittee().getTplCommitteeId());
+			reqDTO.setTplCommitteeId(history.getTplCommittee().getCommitteeId());
 		} else {
 			if (null != this.getManagedBean().getTplCommittee()) {
-				reqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getTplCommitteeId());
+				reqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getCommitteeId());
 			}
 		}
 
@@ -3264,7 +3264,7 @@ public class CommitteBackingBean extends
 
 		TplCommittee tplCommittee = getManagedBean().getTplCommittee();
 		committeReqDTO.setTplCommittee(tplCommittee);
-		committeReqDTO.setTplCommitteeId(tplCommittee.getTplCommitteeId());
+		committeReqDTO.setTplCommitteeId(tplCommittee.getCommitteeId());
 		committeReqDTO.setOutcome(outCome);
 		committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		committeReqDTO.setRoleCode(getTplCommitteeRoleCode());
@@ -3370,7 +3370,7 @@ public class CommitteBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						ICommitteSO.class);
 		CommitteReqDTO committeeReqDTO = new CommitteReqDTO();
-		committeeReqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getTplCommitteeId());
+		committeeReqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getCommitteeId());
 		committeeReqDTO.setPmUser(curLogedInUser);
 		committeeReqDTO.setCommitteeType(committeeType);
 		return committeSO.retrieveTplCommitteMemberByUserId(committeeReqDTO);
@@ -3394,7 +3394,7 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
 		
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setTplCommitteeId(history.getTplCommittee().getTplCommitteeId());
+		reqDTO.setTplCommitteeId(history.getTplCommittee().getCommitteeId());
 		CommitteResDTO resDTO = this.getCommitteeSO().retrieveCommitteDtlByCommitteeId(reqDTO);
 		history.setTplCommittee(resDTO.getTplCommittee());
 	}
