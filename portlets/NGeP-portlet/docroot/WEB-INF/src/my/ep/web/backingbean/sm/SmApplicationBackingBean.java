@@ -11364,6 +11364,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			//setPOorApprDec(catList);
 			//#30766 & #34209 - END
 		} else if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			log.info("TB 37925 TB_appl:" + getManagedBean().getSmAppl().getApplNo());
 			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
@@ -11377,7 +11378,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				log.info("TB 37925 - regStatus:"+regStatus);
 				reqDTO.setPaymentReqd(SmApplicationUtil.getPaymentMode(getManagedBean().getSmAppl()));
 			}
-
+			log.info("TB 37925: " + regStatus + " TB_appl:" + getManagedBean().getSmAppl().getApplNo());
 			if (regStatus == null && !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				throw new EpException(MessageConst.ERROR_722662);
 			}
