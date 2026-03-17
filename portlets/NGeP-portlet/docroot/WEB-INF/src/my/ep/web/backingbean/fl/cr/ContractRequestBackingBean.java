@@ -7411,7 +7411,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					ContractResDTO contractResp = contractSO.validateBondComplete(contractReqDTO);
 					if (!contractResp.isBondComplete()) {
 						if (contractBondWaiver.getCtBondWaiverDetailList() == null
-								|| contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+								|| contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {//WIP data 
 							FacesContext.getCurrentInstance().addMessage(
 									null,
 									new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -7558,13 +7558,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param action 
 	 * @param contractReqDTO 
 	 */
-	private void validateBondWithoutWaiver (String action, ContractReqDTO contractReqDTO){
-		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-		ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);//25296 - asyraf - move to new line
-		if(!contractResp.isBondComplete()){
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+	private void validateBondWithoutWaiver(String action, ContractReqDTO contractReqDTO) {
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
+		ContractResDTO contractResp = contractSO.validateBondComplete(contractReqDTO);
+		if (!contractResp.isBondComplete()) {
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				throw new EpException(MessageConst.ERROR_740051);
-			}else{
+			} else {
 				throw new EpException(MessageConst.ERROR_740052);
 			}
 		}
@@ -7577,12 +7578,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param action
 	 * @param contractReqDTO
 	 */
-	private void validateBondWithWaiver(String action, ContractReqDTO contractReqDTO){
-		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-		ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//25296 - asyraf - move to new line
-		if(!contractBondWaiver.isBondWaiverPeriod()){
-			ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
-			if(!contractResp.isBondComplete()){
+	private void validateBondWithWaiver(String action, ContractReqDTO contractReqDTO) {
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
+		ContractResDTO contractBondWaiver = contractSO.validateBondWaiverPeriod(contractReqDTO);
+		if (!contractBondWaiver.isBondWaiverPeriod()) {
+			ContractResDTO contractResp = contractSO.validateBondComplete(contractReqDTO);
+			if (!contractResp.isBondComplete()) {
 				displayBondWaiverValidationError(action, contractBondWaiver);
 			}
 		}
@@ -7596,19 +7598,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param contractBondWaiver
 	 */
 	private void displayBondWaiverValidationError(String action, ContractResDTO contractBondWaiver) {
-		//25296 - asyraf - to handle WIP transaction
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if (contractBondWaiver.getCtBondWaiverDetailList() == null
+					|| contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {//WIP data
 				throw new EpException(MessageConst.ERROR_740066);
 			} else {
 				throw new EpException(MessageConst.ERROR_740051);
-			}									
-		}else{
-			if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+			}
+		} else {
+			if (contractBondWaiver.getCtBondWaiverDetailList() == null
+					|| contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {//WIP data
 				throw new EpException(MessageConst.ERROR_740067);
 			} else {
 				throw new EpException(MessageConst.ERROR_740052);
-			}//25296 - end - asyraf									
+			}
 		}
 	}
 	
