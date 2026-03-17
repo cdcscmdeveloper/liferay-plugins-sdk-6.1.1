@@ -1840,17 +1840,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		// set registration status list exclude current registration status only
 		// if registration list size more than one
-//		37925 START
 		getManagedBean().setRegStatusDescList(
-				SmApplicationUtil.getInstance().retrieveRegistrationStatusListBySupplierTypeApplType(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
 		getManagedBean().setRecommendRegStatusDescList(
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
-		showRegistrationDecisionUI();
-//		37925 END
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
 				subStartTime); //20211005@fadhli - #31754
@@ -2982,11 +2979,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
-
-		//#36483 - START,#37925 checking null
+		
+		//#36483 - START
 		if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
-				&& getManagedBean().getBasicCompanyFacility() != null 
-				&& getManagedBean().getBasicCompanyFacility().getOwnershipType() != null 
 				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
 				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
@@ -10564,7 +10559,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
-		setRegistrationStatusRequiredUI(); // #37925
+		assignValReqdToTrue();
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
@@ -10603,15 +10598,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
-		getManagedBean().setChangeCurrRegStatus(false); //#37925 - start
-		if (StringUtils.isBlank(getManagedBean().getCurrRegStatus())) {
-			PmStatusDesc statusDesc = SmApplicationUtil
-					.getCurrRegStatusDesc(getManagedBean().getSmAppl());
-			if (statusDesc != null){
-				getManagedBean().setCurrRegStatus(statusDesc.getStatusName());
-			}
-		}
-		//#37925 - end
 		//#3460 - Start
 		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 		//#3460 - End
@@ -10667,11 +10653,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
 		String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-//		#37925 START
-		if (getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
+		if (!getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
+			assignValReqdToTrue();
+		} else {
 			assignValReqdToFalse();
 		}
-//		#37925 END
 		// 27877 - end
 		getManagedBean().getSmAppl().setBumi(
 				getManagedBean().getSmAppl().getSmSupplier().isBumi());
@@ -10700,149 +10686,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		setReasonIdList();
 		//30974 && 37896 - end
 		
-		handleApproverChangeCurrentStatus(); //#37925
-		
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
-	
-	// #37925 START
-	/**
-	 * Handles the logic for updating the current status when an approver change occurs.
-	 * Evaluates registration status IDs to determine if the current status should be updated.
-	 */
-	public void handleApproverChangeCurrentStatus() {
-	    if (!getManagedBean().isDisplayCheckboxChangeCurrentStatus() || !isEligibleApprover()) {
-	        return;
-	    }
-
-	    assignValReqdToTrue();
-
-	    SmApplSectionReview latestPOChange = findLatestPOSectionReview();
-	    if (!isValidApplSectionReview(latestPOChange)) {
-	        return;
-	    }
-
-	    updateRegistrationStatus(latestPOChange);
-	}
-
-	/**
-	 * Evaluates the status IDs and updates the Managed Bean properties.
-	 * 
-	 * @param latestPOChange the current section review being processed.
-	 */
-	private void updateRegistrationStatus(SmApplSectionReview latestPOChange) {
-	    Long currentRegStatusId = getCurrRegStatusId();
-	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
-	    
-	    // S1125: Simplified boolean expressions
-	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);
-	    boolean isNotChangeRegistrationStatus = latestPOChange.getPmRegStatus().getRegStatusId().equals(prevRegStatusId);
-
-	    // Default assignment
-	    getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
-	    
-	    // S1066: Merged conditions and simplified logic flow
-	    if (isNotChangeRegistrationStatus) {
-	        getManagedBean().setChangeCurrRegStatus(false);
-	        applySdmStatusIfRequired(sdmAfterPOSubmit);
-	    } else {
-	        getManagedBean().setChangeCurrRegStatus(true);
-	    }
-	}
-
-	private void applySdmStatusIfRequired(boolean sdmAfterPOSubmit) {
-	    if (sdmAfterPOSubmit) {
-	        Long sdmStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId();
-	        getManagedBean().setApprovedStatusId(sdmStatusId);
-	    }
-	}
-	
-	public Long getCurrRegStatusId() {
-		if (getManagedBean().getSmSupplier() == null || getManagedBean().getSmSupplier().getSmAppl() == null
-				|| getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus() == null
-				|| getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId() == null) {
-			return null;
-		}
-		return getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId();
-	}
-	
-	/**
-	 * Returns the registration status ID that was in effect before the current
-	 * status change for the given application section review.
-	 *
-	 * @param smApplSectionReview
-	 *        the application section review containing the previous registration status
-	 * @return the previous registration status ID
-	 */
-	public Long getPreviousRegStatusId(SmApplSectionReview smApplSectionReview) {
-		if (smApplSectionReview == null || smApplSectionReview.getPreviousRegStatusId() == null
-				|| smApplSectionReview.getPreviousRegStatusId().getRegStatusId() == null) {
-			return null;
-		}
-	    return smApplSectionReview.getPreviousRegStatusId().getRegStatusId();
-	}
-
-	/**
-	 * Validates section review and its registration status.
-	 * 
-	 * @param smApplSectionReview
-	 *            section review
-	 * @return true if valid; false otherwise
-	 */
-	private boolean isValidApplSectionReview(SmApplSectionReview smApplSectionReview) {
-		return smApplSectionReview != null && smApplSectionReview.getPmRegStatus() != null
-				&& smApplSectionReview.getPmRegStatus().getPmStatus() != null;
-	}
-
-	/**
-	 * Determines whether the current user is eligible to approve a change in
-	 * registration status.
-	 * 
-	 * @return true if the user is an approver and has a PO recommendation
-	 */
-	private boolean isEligibleApprover() {
-		return getManagedBean().isApproverUser() && getManagedBean().getPoRecommendStatusId() != null;
-	}
-
-	/**
-	 * Finds the most recent section review with role type "P".
-	 * 
-	 * @return the latest PO section review, or null if none found
-	 */
-	private SmApplSectionReview findLatestPOSectionReview() {
-		SmApplSectionReview latest = null;
-
-		if (getManagedBean().getSmAppl() == null || getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
-			return null;
-		}
-
-		for (SmApplSectionReview review : getManagedBean().getSmAppl().getSmApplSectionReviews()) {
-
-			if (!isValidPOReview(review)) {
-				continue;
-			}
-
-			if (latest == null || review.getCreatedDate().after(latest.getCreatedDate())) {
-				latest = review;
-			}
-		}
-
-		return latest;
-	}
-
-	/**
-	 * Validates whether a section review is a PO review with required fields
-	 * populated.
-	 * 
-	 * @param review
-	 *            the section review to validate
-	 * @return true if valid
-	 */
-	private boolean isValidPOReview(SmApplSectionReview review) {
-		return review != null && SupplierManagementConst.SECTION_REV_ROLE_PO.equals(review.getRoleType()) && review.getCreatedDate() != null;
-	}
-
-	// #37925 END
 
 	/**
 	 * Approver select to Approve or reject mof cancellation.
@@ -10972,7 +10817,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the dialog id to be close
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
-		getManagedBean().setChangeCurrRegStatus(false); //#37925
+		assignValReqdToFalse();
 		resetSearchRejectedReason();
 		getManagedBean().setReasonId(null);
 		// #3460 - start
@@ -11519,14 +11364,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			//setPOorApprDec(catList);
 			//#30766 & #34209 - END
 		} else if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			log.info("TB 37925 TB_appl:" + getManagedBean().getSmAppl().getApplNo());
 			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
-				//#37925 START
-				if(getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)){
-					pmStatId = getManagedBean().getPoRecommendStatusId();
-				}
-				//#37925 END
 			} else if (getManagedBean().isApproverUser()) {
 				actionDesc = SupplierManagementConst.APPROVER_APPROVE_APPL;
 			}
@@ -11534,9 +11375,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 			} else {
 				regStatus = SmApplicationUtil.setApplicationApproveStatus(getManagedBean().getSmAppl(), pmStatId);
+				log.info("TB 37925 - regStatus:"+regStatus);
 				reqDTO.setPaymentReqd(SmApplicationUtil.getPaymentMode(getManagedBean().getSmAppl()));
 			}
-
+			log.info("TB 37925: " + regStatus + " TB_appl:" + getManagedBean().getSmAppl().getApplNo());
 			if (regStatus == null && !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				throw new EpException(MessageConst.ERROR_722662);
 			}
@@ -11721,13 +11563,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								MessageConst.INFO_700029,
 								new String[] { applNo });
 					}
-				} else if (res	
+				} else if (res
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.ESCALATE)) {
-					//#37925 START
-					PmRegStatus currentRegStatus = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus();
-					getManagedBean().getPoSecReview().setPreviousRegStatusId(currentRegStatus);
-					//#37925 END
-					
 					String statusDesc = "";
 					if (getManagedBean().getPoSecReview() != null
 							&& getManagedBean().getPoSecReview()
@@ -17626,542 +17463,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return false;
 	}
 	//#38195 END
-//	#37925 START
-	private void showRegistrationDecisionUI() {
-	    clearRegistrationStatusDisplay();
-	    
-	    SmAppl smAppl = getManagedBean().getSmAppl();
-	    if(smAppl == null) {
-	    	// Nothing to process if application data is unavailable
-	    	return;
-	    }
-	    
-	    String ssmCompanyCountry = getCompanyCountry(smAppl);
-	    String applType = smAppl.getApplType();
-
-	    SmSupplier smSupplier = getManagedBean().getSmSupplier();
-	    if(smSupplier == null){
-	    	// Cannot proceed without supplier data
-	    	return;
-	    }
-	    
-	    String businessType = smSupplier.getBusinessType();
-	    
-	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(ssmCompanyCountry);
-	    
-	    setCountryOriginUI(applType, businessType, ssmCompanyCountry);
-	    setRegistrationStatusUI(businessType, smAppl, isForeignCompany);
-	}
-
-	private String getCompanyCountry(SmAppl smAppl) {
-	    String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
-	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
-	}
-
-	/**
-	 * Determines and sets the supplier's country of origin for UI display.
-	 *
-	 * @param applType     the application type
-	 * @param businessType        the supplier's business type
-	 * @param ssmCompanyCountry   the SSM registered country
-	 */
-	private void setCountryOriginUI(String applType, String businessType, String ssmCompanyCountry) {
-		if(applType == null || businessType == null){
-			return;
-		}
-		
-		if(applType.equals(SupplierManagementConst.APPL_TYPE_BUMI)){
-			setCountryOriginLabel(SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA);
-			return;
-		}
-		
-		// ROC business uses actual company country, others default to Malaysia
-	    if (isRocBusinessType(businessType)) {
-	        setCountryOriginLabel(ssmCompanyCountry);
-	        return;
-	    }
-	    
-	    setCountryOriginLabel(SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA);
-	}
 	
-	/**
-	 * Sets the UI label for the supplier's country of origin.
-	 *
-	 * @param ssmCountryCode the SSM country code to resolve
-	 */
-	public void setCountryOriginLabel(String ssmCountryCode) {
-	    String countryName = null;
-
-	    if (ssmCountryCode != null) {
-	        PmCountry pmCountry = SmCommonUtil.retrievePmCountryByCountryCodeSSM(ssmCountryCode);
-	        if (pmCountry != null && pmCountry.getCountryName() != null 
-	                && !pmCountry.getCountryName().isEmpty()) {
-	            countryName = pmCountry.getCountryName();
-	        }
-	    }
-
-	    if (countryName == null) {
-	        PmCountry pmCountry = SmCommonUtil.retrieveCountryByCountryCode(
-	                SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
-
-	        if (pmCountry != null) {
-	            countryName = pmCountry.getCountryName();
-	        }
-	    }
-
-	    getManagedBean().setStrLabelCountryOrigin(countryName);
-	}
-
-	private boolean isRocBusinessType(String businessType) {
-	    return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(businessType)
-	            || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType);
-	}
-
-	/**
-	 * Updates the registration UI based on business type, supplier application data,
-	 * and whether the company is foreign.
-	 *
-	 * @param businessType      the business type (nullable)
-	 * @param application       the supplier application (nullable)
-	 * @param isForeignCompany  indicates whether the company is foreign
-	 */
-	private void setRegistrationStatusUI(String businessType, SmAppl smAppl, boolean isForeignCompany) {
-
-	    if (smAppl == null || smAppl.getSupplierType() == null) {
-	        return;
-	    }
-
-	    String supplierType = smAppl.getSupplierType();
-	    String applType = getManagedBean().getSmAppl().getApplType();
-	    if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
-	    	assignValReqdToTrue();
-            getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
-            getManagedBean().setDisplayDropdownRegStatus(true);
-	    } else if (isForeignCompany && isRocBusinessType(businessType)) {
-	        foreignRegistrationUI(true);
-
-	    } else if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
-	        localContractorRegistrationUI(smAppl.getApplType(), false);
-
-	    } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
-	        localConsultantRegistrationUI(false);
-	    }
-
-	    // No other cases to process
-	}
-
-	/**
-	 * Clears the display status for various registration-related UI elements.
-	 * Sets the visibility of the country origin, registration status, and related UI elements to false.
-	 */
-	public void clearRegistrationStatusDisplay() {
-	    getManagedBean().setStrLabelCountryOrigin("");
-	    getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
-	    getManagedBean().setDisplayLabelRegistrationStatus(false);
-	    getManagedBean().setDisplayDropdownRegStatus(false);
-	}
-
-	/**
-	 * Configures the UI elements for local constructor registration based on the application type
-	* and whether the company is foreign.
-	*
-	* @param applType          the type of application (e.g., MOF, BUMI, UPDATE, CATEGORY, RENEWAL)
-	* @param isForeignCompany  true if the company is foreign; false otherwise
-	*/
-	public void localContractorRegistrationUI(String applType, boolean isForeignCompany) {
-	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
-	    
-	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType)) {
-	        assignValReqdToFalse();
-	        getManagedBean().setDisplayLabelRegistrationStatus(true);
-	        setRegistrationStatusValue(isForeignCompany);
-	    } else if (SupplierManagementConst.APPL_TYPE_UPDATE.equals(applType) || 
-	               SupplierManagementConst.APPL_TYPE_CATEGORY.equals(applType) || 
-	               SupplierManagementConst.APPL_TYPE_RENEWAL.equals(applType)) {
-	        if (isRegisteredStatus(currentStatusDesc)) {
-	            assignValReqdToFalse();
-	            getManagedBean().setDisplayLabelRegistrationStatus(true);
-	        } else {
-	            assignValReqdToTrue();
-	            getManagedBean().setDisplayCheckboxChangeCurrentStatus(true);
-	            getManagedBean().setDisplayDropdownRegStatus(true);
-	            updateRegistrationStatusList(currentStatusDesc);
-	        }
-	    } else if(SupplierManagementConst.APPL_TYPE_BUMI.equals(applType)) {
-	    	assignValReqdToTrue();
-            getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
-            getManagedBean().setDisplayDropdownRegStatus(true);
-	    }
-	    // Default case - no action needed
-	}
-
-	private boolean isRegisteredStatus(PmStatusDesc statusDesc) {
-	    return statusDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
-	}
-
-	/**
-	 * Updates the registration status list based on the current status description.
-	 * 
-	 * @param currentStatusDesc The current status description to compare with.
-	 */
-	private void updateRegistrationStatusList(PmStatusDesc currentStatusDesc) {
-	    List<PmStatusDesc> regStatusList = getManagedBean().getRegStatusDescList();
-	    
-	    // Check if the list is not empty
-	    if (EntityHelper.isCollectionEmpty(regStatusList)) {
-	        return;
-	    }
-	    
-	    List<PmStatusDesc> newList = new ArrayList<>();  // Use diamond operator
-	    
-	    long currentStatusId = currentStatusDesc.getPmStatus().getStatusId();
-	    
-	    // Iterate over the registration status list
-	    for (PmStatusDesc pmStatusDesc : regStatusList) {
-	        long pmStatusId = pmStatusDesc.getPmStatus().getStatusId();
-	        
-	        // Add conditions based on the current status id
-	        if (isValidRegistrationStatus(currentStatusId, pmStatusId)) {
-	            newList.add(pmStatusDesc);
-	        }
-	    }
-	    // Manually sort according to predefined order
-        List<PmStatusDesc> sortedList = manualSortByDefinedOrder(newList);
-        
-	    getManagedBean().setRegStatusDescList(sortedList);
-	}
-	
-	/**
-     * Manually sorts a list of {@link PmStatusDesc} based on a fixed predefined order.
-     * <pre>
-     * Order: PM_STATUS_REGISTRATION_STATUS_REGISTERED, PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA, PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME, PM_STATUS_REGISTRATION_STATUS_FOREIGN
-     * </pre>
-     *
-     * @param unsortedList The list to sort.
-     * @return A new list sorted according to the defined order.
-     */
-    private List<PmStatusDesc> manualSortByDefinedOrder(List<PmStatusDesc> unsortedList) {
-        List<PmStatusDesc> sortedList = new ArrayList<>();
-
-        if (EntityHelper.isCollectionEmpty(unsortedList)) {
-            return sortedList;
-        }
-
-        int[] sortOrder = {
-        		(int) SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED, 
-        		(int) SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA, 
-        		(int) SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME, 
-        		(int) SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN
-        };
-
-        // Add elements in defined order
-        for (int i = 0; i < sortOrder.length; i++) {
-            long targetId = sortOrder[i];
-
-            for (PmStatusDesc desc : unsortedList) {
-                if (desc != null && desc.getPmStatus() != null
-                        && desc.getPmStatus().getStatusId() == targetId) {
-                    sortedList.add(desc);
-                }
-            }
-        }
-
-        // Add remaining statuses (if any not in order list)
-        for (PmStatusDesc desc : unsortedList) {
-            if (desc == null || desc.getPmStatus() == null) {
-                continue;
-            }
-
-            long id = desc.getPmStatus().getStatusId();
-            if (!isInOrderArray(sortOrder, id)) {
-                sortedList.add(desc);
-            }
-        }
-
-        return sortedList;
-    }
-
-    /**
-     * Checks if a given status ID is present in the predefined order array.
-     */
-    private boolean isInOrderArray(int[] order, long statusId) {
-        for (int i = 0; i < order.length; i++) {
-            if (order[i] == statusId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-	/**
-	 * Determines if the registration status is valid based on current and pmStatus IDs.
-	 * 
-	 * @param currentStatusId The current status ID to compare.
-	 * @param pmStatusId The status ID from the list.
-	 * @return true if the status combination is valid, otherwise false.
-	 */
-	private boolean isValidRegistrationStatus(long currentStatusId, long pmStatusId) {
-	    if (currentStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA) {
-	        return pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
-	                || pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
-	    } else if (currentStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME) {
-	        return pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
-	                || pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA;
-	    } else {
-	        return pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
-	    }
-	}
-	
-	/**
-	 * Configures the registration UI for a local consultant based on the company type.
-	 * 
-	 * @param isForeignCompany Indicates if the company is foreign. Affects the registration status.
-	 */
-	public void localConsultantRegistrationUI(boolean isForeignCompany) {
-	    assignValReqdToFalse();
-	    setRegistrationStatusValue(isForeignCompany);
-	    getManagedBean().setDisplayLabelRegistrationStatus(true);
-	}
-
-	/**
-	 * Configures the registration UI for a foreign company.
-	 * 
-	 * @param isForeignCompany Indicates if the company is foreign, affecting registration status.
-	 */
-	public void foreignRegistrationUI(boolean isForeignCompany) {
-	    assignValReqdToFalse();
-	    getManagedBean().setDisplayLabelRegistrationStatus(isForeignCompany);
-	    setRegistrationStatusValue(isForeignCompany);
-	}
-
-	public void setRegistrationStatusValue(boolean isForeignCompany) {
-	    String language = new FacesScopes().getUserLocale().getLanguage();
-	    long targetStatusId = isForeignCompany ? 
-	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN : 
-	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
-	    
-	    for (PmStatusDesc pmStatusDesc : getManagedBean().getRegStatusDescList()) {
-	        if (language.equalsIgnoreCase(pmStatusDesc.getLanguageCode()) 
-	                && pmStatusDesc.getPmStatus().getStatusId() == targetStatusId) {
-	            updateRegistrationStatus(pmStatusDesc);
-	            break; // Exit loop once match is found
-	        }
-	    }
-	}
-
-	private void updateRegistrationStatus(PmStatusDesc pmStatusDesc) {
-	    getManagedBean().setCurrRegStatus(pmStatusDesc.getStatusName());
-	    
-	    if (getManagedBean().isPoUser()) {
-	        getManagedBean().setPoRecommendStatusId(pmStatusDesc.getPmStatus().getStatusId());
-	    } else if (getManagedBean().isApproverUser()) {
-	        getManagedBean().setApprovedStatusId(pmStatusDesc.getPmStatus().getStatusId());
-	    }
-	}
-	
-	/**
-	 * Controls whether Registration Status is required in the UI
-	 * based on supplier type, application type, country, and status.
-	 */
-	public void setRegistrationStatusRequiredUI() {
-
-	    SmAppl smAppl = getApplicationSafely();
-	    SmSupplier smSupplier = getSupplierSafely();
-
-	    if (smAppl == null || smSupplier == null) {
-	        return;
-	    }
-	    
-	    if(SupplierManagementConst.APPL_TYPE_BUMI.equals(smAppl.getApplType())){
-	    	assignValReqdToTrue();
-	    	return;
-	    }
-
-	    if (shouldRegistrationStatusBeOptional(smAppl, smSupplier)) {
-	        assignValReqdToFalse();
-	        return;
-	    }
-
-	    assignValReqdToTrue();
-	}
-
-	/**
-	 * Determines whether registration status is NOT required.
-	 *
-	 * @param smAppl the supplier application
-	 * @param smSupplier    the supplier entity
-	 * @return true if registration status is optional
-	 */
-	private boolean shouldRegistrationStatusBeOptional(SmAppl smAppl, SmSupplier smSupplier) {
-
-	    if (isForeignRocCompany(smAppl, smSupplier)) {
-	        return true;
-	    }
-
-	    String supplierType = smAppl.getSupplierType();
-
-	    if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
-	        return true;
-	    }
-
-	    if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
-	        return isContractorRegistrationOptional(smAppl);
-	    }
-
-	    return false;
-	}
-
-	/**
-	 * Contractor-specific rules for registration status.
-	 */
-	private boolean isContractorRegistrationOptional(SmAppl smAppl) {
-
-	    String applType = smAppl.getApplType();
-
-	    if (isMofOrBumiApplication(applType)) {
-	        return true;
-	    }
-
-	    if (isUpdateCategoryOrRenewal(applType)) {
-	        return isCurrentlyRegistered(smAppl);
-	    }
-
-	    return false;
-	}
-
-	/**
-	 * Checks whether the application belongs to a foreign ROC company.
-	 */
-	private boolean isForeignRocCompany(SmAppl smAppl, SmSupplier smSupplier) {
-
-	    String companyCountry = getCompanyCountry(smAppl);
-	    String businessType = smSupplier.getBusinessType();
-
-	    boolean isMalaysia =
-	            SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(companyCountry);
-
-	    return !isMalaysia && isRocBusinessType(businessType);
-	}
-
-	/**
-	 * Checks if application type is MOF or BUMI.
-	 */
-	private boolean isMofOrBumiApplication(String applType) {
-
-	    return SupplierManagementConst.APPL_TYPE_MOF.equals(applType)
-	            || SupplierManagementConst.APPL_TYPE_BUMI.equals(applType);
-	}
-
-	/**
-	 * Checks if application type is UPDATE, CATEGORY, or RENEWAL.
-	 */
-	private boolean isUpdateCategoryOrRenewal(String applType) {
-
-	    return SupplierManagementConst.APPL_TYPE_UPDATE.equals(applType)
-	            || SupplierManagementConst.APPL_TYPE_CATEGORY.equals(applType)
-	            || SupplierManagementConst.APPL_TYPE_RENEWAL.equals(applType);
-	}
-
-	/**
-	 * Checks if the supplier is already registered.
-	 */
-	private boolean isCurrentlyRegistered(SmAppl application) {
-
-	    PmStatusDesc statusDesc =
-	            SmApplicationUtil.getCurrRegStatusDesc(application);
-
-	    return isRegisteredStatus(statusDesc);
-	}
-
-	/**
-	 * Safe accessor for application.
-	 */
-	private SmAppl getApplicationSafely() {
-
-	    return getManagedBean() != null
-	            ? getManagedBean().getSmAppl()
-	            : null;
-	}
-
-	/**
-	 * Safe accessor for supplier.
-	 */
-	private SmSupplier getSupplierSafely() {
-
-	    return getManagedBean() != null
-	            ? getManagedBean().getSmSupplier()
-	            : null;
-	}
-	
-	/**
-	 * Updates the approved registration status ID based on the current context.
-	 * <p>
-	 * If the current status is null, the method exits. If the registration
-	 * status has changed and the user is an approver, the latest PO section
-	 * review status (if valid) overrides the current status.
-	 * </p>
-	 */
-	public void updateApproverRegistrationStatusValue() {
-		if(!getManagedBean().isApproverUser()){
-			return;
-		}
-		
-		SmApplSectionReview latestPOChange = findLatestPOSectionReview();
-		if(latestPOChange == null
-				|| latestPOChange.getPmRegStatus() == null
-				|| latestPOChange.getPmRegStatus().getPmStatus() == null
-				|| latestPOChange.getPmRegStatus().getPmStatus().getStatusId() == null){
-			return;
-		}
-		
-		Long currentRegStatusId = getCurrRegStatusId();
-	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
-	    
-	 	// is SDM changes after PO submit
-	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);
-	    
-	    // Default approved registration status value
-	    getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
-	    
-	    if (!getManagedBean().isChangeCurrRegStatus()) {
-	        applySdmStatusIfRequired(sdmAfterPOSubmit);
-	    }
-	}
-
-	/**
-	 * Checks whether the latest section review contains a valid status ID.
-	 * 
-	 * @param latestPOSectionReview
-	 *            the section review to validate
-	 * @return true if statusId is present, false otherwise
-	 */
-	public boolean validStatusId(SmApplSectionReview latestPOSectionReview) {
-		if (latestPOSectionReview == null) {
-			return false;
-		}
-
-		PmRegStatus pmRegStatus = latestPOSectionReview.getPmRegStatus();
-		if (pmRegStatus == null) {
-			return false;
-		}
-
-		PmStatus pmStatus = pmRegStatus.getPmStatus();
-		if (pmStatus == null) {
-			return false;
-		}
-		
-		PmRegStatus previousRegStatusId = latestPOSectionReview.getPreviousRegStatusId();
-		if(previousRegStatusId == null){
-			return false;
-			
-		}
-		if (previousRegStatusId.getRegStatusId() != getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId()) {
-			return false;
-		}
-
-		return pmStatus.getStatusId() != null;
-	}
-//	#37925 END
 	//#38927 START
 	/**
 	 * Validates the supplier categories for the current application.
