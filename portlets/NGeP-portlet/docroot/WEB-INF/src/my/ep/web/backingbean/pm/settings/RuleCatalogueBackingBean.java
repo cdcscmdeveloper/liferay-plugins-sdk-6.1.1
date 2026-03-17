@@ -649,92 +649,6 @@ public class RuleCatalogueBackingBean extends
 		return configRulesDesc;
 	}
 
-	// private void sortConfigRuleValueList(
-	// List<PmConfigRuleValue> configRuleValueList) {
-	// Comparator<PmConfigRuleValue> comparator = new
-	// Comparator<PmConfigRuleValue>() {
-	// @Override
-	// public int compare(PmConfigRuleValue o1,
-	// PmConfigRuleValue o2) {
-	// return new CompareToBuilder().append(o1.getEffDate(),
-	// o2.getEffDate()).append(o1.getFromValue(),
-	// o2.getFromValue()).toComparison();
-	// }
-	// };
-	// Collections.sort(configRuleValueList, comparator);
-	// }
-
-	// public void categoryCodesUpdate(BaseEntity entity) {
-	//
-	// PmCategoryL3 categoryL3 = (PmCategoryL3) entity;
-	// log.info("in categoryCodesUpdate: " + categoryL3.getCategoryL3Code());
-	//
-	// ICategoryCodeSO categoryCodeSo;
-	//
-	// categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(
-	// ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
-	// CategoryCodeReqDTO codeReqDTO = new CategoryCodeReqDTO();
-	// codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
-	// CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
-	// .retrieveCategoryL3DtlById(codeReqDTO);
-
-	// if (CategoryCodeResDTO != null
-	// && CategoryCodeResDTO.getCategoryL3() != null) {
-	// String categoryL3Code =
-	// CategoryCodeResDTO.getCategoryL3().getCategoryL3Code();
-	// String categoryL2Code =
-	// CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getCategoryL2Code();
-	// String categoryL1Code =
-	// CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code();
-	// // //
-	// log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
-	// // // + CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
-	// // // log.info(".............categoryL3Code=" + categoryL3Code);
-	// // // log.info(".............categoryL2Code=" + categoryL2Code);
-	// // // log.info(".............categoryL1Code=" + categoryL1Code);
-	// ruleValue.setCategoryDisplayValue(categoryL1Code + categoryL2Code
-	// + categoryL3Code);
-	// /
-	// }
-	// }
-
-	// public void categoryCodesUpdate(int index,
-	// List<PmConfigRuleValue> ruleTypeValueList, PmCategoryL3 categoryL3) {
-	// log.info("................categoryCodesUpdate...............");
-	// ICategoryCodeSO categoryCodeSo;
-	//
-	// categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(
-	// ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
-	// CategoryCodeReqDTO codeReqDTO = new CategoryCodeReqDTO();
-	// codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
-	// CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
-	// .retrieveCategoryL3DtlById(codeReqDTO);
-	// if (CategoryCodeResDTO != null
-	// && CategoryCodeResDTO.getCategoryL3() != null) {
-	// PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
-	// ruleValue.setCategoryL3Id(CategoryCodeResDTO.getCategoryL3());
-	// String categoryL3Code = CategoryCodeResDTO.getCategoryL3()
-	// .getCategoryL3Code();
-	// String categoryL2Code = CategoryCodeResDTO.getCategoryL3()
-	// .getPmCategoryL2().getCategoryL2Code();
-	// String categoryL1Code = CategoryCodeResDTO.getCategoryL3()
-	// .getPmCategoryL2().getPmCategoryL1().getCategoryL1Code();
-	// //
-	// log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
-	// // + CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
-	// // log.info(".............categoryL3Code=" + categoryL3Code);
-	// // log.info(".............categoryL2Code=" + categoryL2Code);
-	// // log.info(".............categoryL1Code=" + categoryL1Code);
-	// ruleValue.setCategoryDisplayValue(categoryL1Code + categoryL2Code
-	// + categoryL3Code);
-	// this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-	// .remove(index);
-	// this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-	// .add(index, ruleValue);
-	// }
-	//
-	// }
-	//
 	public void ruleValueUpdate(int index,
 			List<PmConfigRuleValue> ruleTypeValueList, String value) {
 		log.info("................ruleValueUpdate...............");
@@ -924,45 +838,6 @@ public class RuleCatalogueBackingBean extends
 			unspscSO = null;
 		}
 	}
-
-	// public void updateUnspscForFee(int index) {
-	// log.info("................updateUnspscForFee...............");
-	// ICodificationSO unspscSO;
-	// try {
-	//
-	// PmFeeExemption exemption = this.getManagedBean()
-	// .getFeeExemptionsForComodity().get(index);
-	// unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
-	// .getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
-	// ICodificationSO.class);
-	// CodificationReqDTO reqDTO = new CodificationReqDTO();
-	// reqDTO.setUnspscCode(this.getManagedBean().getSelectedComodity()
-	// .getUnspscCode());
-	// CodificationResDTO resDTO = unspscSO
-	// .retrieveUNSPSCByCommodityCode(reqDTO);
-	//
-	// if (resDTO.isSuccessful()) {
-	// CmUnspsc commodity = resDTO.getCommodityObj();
-	// exemption.setTypes(new ArrayList<CmType>());
-	// for (CmType type : commodity.getCmType()) {
-	// if (!StringUtils.isBlank(type.getTypeName())) {
-	// exemption.getTypes().add(type);
-	// }
-	// }
-	//
-	// }
-	//
-	// exemption.setUnspscId(resDTO.getCommodityObj());
-	// this.getManagedBean().getFeeExemptionsForComodity().remove(index);
-	// this.getManagedBean().getFeeExemptionsForComodity()
-	// .add(index, exemption);
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// } finally {
-	// unspscSO = null;
-	// }
-	// }
 
 	public void scRequestItemCodeUpdate(BaseEntity entity, int index) {
 		log.info("................scRequestItemCodeUpdate...............");
