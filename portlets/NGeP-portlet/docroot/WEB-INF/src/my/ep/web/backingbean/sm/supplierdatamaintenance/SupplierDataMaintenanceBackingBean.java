@@ -3269,19 +3269,19 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	private void validateRevisit() {
 		if (null == this.getManagedBean().getSmRevisit().getRevisitOfficer()) {
-			throw new EpException(MessageConst.ERROR_723102);
+			throw new EpException(MessageConst.ERROR_723112);
 		}
 		for (SmRvSuppDoc suppDoc : this.getManagedBean().getSmRevisit().getSmRvSuppDocs()) {
 			validateRvSuppDoc(suppDoc);
 		}
 		if (null == this.getManagedBean().getSmRevisit().getRevisitRemark() || this.getManagedBean().getSmRevisit().getRevisitRemark().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_723104);
+			throw new EpException(MessageConst.ERROR_723114);
 		}
 	}
 
 	private void validateRvSuppDoc(SmRvSuppDoc suppDoc) {
 		if (null == suppDoc.getSmRvDocFiles() || suppDoc.getSmRvDocFiles().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_723103, new String[] { suppDoc.getPmDocument().getDocName() });
+			throw new EpException(MessageConst.ERROR_723113, new String[] { suppDoc.getPmDocument().getDocName() });
 		}
 	}
 	// #34031#note-162 Start
