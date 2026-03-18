@@ -765,6 +765,8 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
 	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
 	// #28895_35501 End
+	// #34031
+	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
 	
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 	//26238 - START
