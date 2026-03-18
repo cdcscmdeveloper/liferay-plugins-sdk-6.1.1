@@ -1487,7 +1487,11 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSelectedTabIndex(2);
 		} else if (selectedTabIndex.equals(3)) {
 			getManagedBean().setSelectedTabIndex(3);
+		// 34491 - start
+		} else if (selectedTabIndex.equals(4)) {
+			getManagedBean().setSelectedTabIndex(4);
 		}
+		// 34491 - end
 	}
 
 	/**
@@ -3706,7 +3710,7 @@ public class LOIDetailBackingBean extends
 				}
 			}
 
-			if(!multiLoiAttended){
+			if(!multiLoiAttended && isSubmit){// 34491
 				throw new EpException(MessageConst.ERROR_760462);
 			}
 		}
@@ -3779,7 +3783,7 @@ public class LOIDetailBackingBean extends
 			if (rejectedSupplierCount != 
 					recommendedItem.getRecommendDtls().size() && 
 					recommendedSupplierCount == 0) {
-				this.getManagedBean().setSelectedTabIndex(3);//26247 - fix validation sent to wrong tab
+				this.getManagedBean().setSelectedTabIndex(4);// 34491 //26247 - fix validation sent to wrong tab
 				if (specZone != null) {
 					this.getManagedBean().setSelectedZone(specZone);
 					this.getManagedBean().setZoneActiveIndex(
@@ -3821,7 +3825,7 @@ public class LOIDetailBackingBean extends
 				if (rejectedSupplierCount != 
 						scQtRecommend.getRecommendDtls().size() &&
 							recommendedSupplierCount == 0) {
-					this.getManagedBean().setSelectedTabIndex(3);//26247 - fix validation sent to wrong tab
+					this.getManagedBean().setSelectedTabIndex(4);// 34491 //26247 - fix validation sent to wrong tab
 					if (specZone != null) {
 						this.getManagedBean().setSelectedZone(specZone);
 						this.getManagedBean().setZoneActiveIndex(
@@ -3852,14 +3856,14 @@ public class LOIDetailBackingBean extends
 				BigDecimal quantityAwarded = recommendDtl.getAwardQty();
 				if (quantityAwarded == null
 						|| quantityAwarded.compareTo(totalQuantity) >= 0) {
-					this.getManagedBean().setSelectedTabIndex(2);
+					this.getManagedBean().setSelectedTabIndex(3);// 34491
 					throw new EpException(MessageConst.ERROR_760214);
 				}
 				tempQuantity = tempQuantity.add(quantityAwarded);
 			}
 		}
 		if (totalQuantity.compareTo(tempQuantity) != 0) {
-			this.getManagedBean().setSelectedTabIndex(2);
+			this.getManagedBean().setSelectedTabIndex(3);// 34491
 			throw new EpException(MessageConst.ERROR_760214);
 		}		
 	}
@@ -4556,7 +4560,7 @@ public class LOIDetailBackingBean extends
 				&& CollectionUtils.isNotEmpty(scLoi.getScNegoTerms())){
 			for(ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()){
 				if(StringUtils.isEmpty(scLoiTerm.getNegoResult())){
-					getManagedBean().setSelectedTabIndex(3);
+					getManagedBean().setSelectedTabIndex(4);// 34491
 					throw new EpException(MessageConst.ERROR_100022, new String[] {getMessageCommon("lbl.sc.loiloa.nego.results")});
 				}
 			}
@@ -4578,6 +4582,7 @@ public class LOIDetailBackingBean extends
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
 		String committeeType = getManagedBean().getCommitteeType();
+		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();// 34491
 		String backToPreviousPage = getManagedBean().getBackToPreviousPage();
 		List<String> recommendDtlIds = getManagedBean().getRecommendDtlIds();
 		List<ScLoiTerm> negoTerms = getManagedBean().getNegoTermsList();
@@ -4620,7 +4625,10 @@ public class LOIDetailBackingBean extends
 		if(null!=scQtFinalization){
 		this.getManagedBean().setScQt(scQtFinalization.getScQt());
 		}
-		this.populateMeetingPreparationTab(); // 34491
+		// 34491 - start
+		getManagedBean().setScQtCommittee(scQtCommittee);
+		this.populateMeetingPreparationTab(); 
+		// 34491 - end
 	}
 
 	/**
@@ -8322,14 +8330,7 @@ public class LOIDetailBackingBean extends
 	 */
 	private void populateMeetingPreparationTab() {
 		ScQt scQt = this.getManagedBean().getScQtFinalization().getScQt();
-		for (ScQtCommittee qtCommittee : scQt.getScQtCommittees()) {
-			ScCommittee committee = qtCommittee.getScCommittee();
-			if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(
-					committee.getCommitteeType().getParameterCode())) {
-				prepareFinalizationQtCommittee(qtCommittee);
-				break;
-			}
-		}
+		prepareFinalizationQtCommittee(this.getManagedBean().getScQtCommittee());
 		prepareMemberUpdate();
 		this.getManagedBean().setUserSearchBean(new UserCommitteeSearchBean());
 		this.getManagedBean().setDeletedCommitteeActivities(new ArrayList<ScQtCommitteeActivity>());
@@ -8436,6 +8437,24 @@ public class LOIDetailBackingBean extends
 			setUserDetails(activity);
 			qtCommittee.getCommitteeActivities().add(activity);
 		}
+		final List<String> sortOrder = Arrays.asList(SourcingConstants.COMMITTEE_ROLE_SORT_ORDER);
+		CustomUtils.sort(committee.getScCommitteeMembers(), new Comparator<ScCommitteeMember>() {
+			@Override
+			public int compare(ScCommitteeMember o1, ScCommitteeMember o2) {
+				return Integer.valueOf(sortOrder.indexOf(o1.getMemberRole().getParameterCode())).compareTo(
+						Integer.valueOf(sortOrder.indexOf(o2.getMemberRole().getParameterCode())));
+			}
+		});
+
+		CustomUtils.sort(qtCommittee.getCommitteeActivities(), new Comparator<ScQtCommitteeActivity>() {
+			@Override
+			public int compare(ScQtCommitteeActivity o1, ScQtCommitteeActivity o2) {
+				return Integer.valueOf(sortOrder.indexOf(o1.getScCommitteeMember().getMemberRole().getParameterCode()))
+						.compareTo(
+								Integer.valueOf(sortOrder.indexOf(o2.getScCommitteeMember().getMemberRole()
+										.getParameterCode())));
+			}
+		});
 
 		committee.getScCommitteeMembers().removeAll(activityLookup.keySet());
 	}
