@@ -1497,8 +1497,7 @@ public class RuleCatalogueBackingBean extends
 					if(isRenewTypes(ruleTypeDesc.getRuleType().getRuleType())){
 						validateRenewMOFDate(baseValueToCompare, value, ruleTypeDesc.getRuleDesc());
 					
-					} else if (!ruleValueValidation(baseValueToCompare, value,
-							ruleTypeDesc.getRuleType())) {
+					} else if (!ruleValueValidation(baseValueToCompare, value, ruleTypeDesc.getRuleType())) {
 						//#34397, #34398 - end
 
 						// hit error and return
@@ -5935,7 +5934,7 @@ public class RuleCatalogueBackingBean extends
 	 * Retrieve zones
 	 */
 	public void retrievePmZoneList() {
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
 		//#34397, #34398 - start

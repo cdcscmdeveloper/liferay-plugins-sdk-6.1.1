@@ -339,7 +339,7 @@
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 3}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
-				                 	#{lbl['lbl.pm.rule.from.value']}
+				    #{lbl['lbl.pm.rule.from.value']}
 				</f:facet>
 				<!-- #35323 - Start -->
 				<p:inputText id="numberFromValueId" value="#{typeValueObj.fromValue}"
@@ -504,7 +504,7 @@
 					style="width: 250px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 					<f:selectItems var="zoneLs"
-						value="#{ruleCatalogueBackingBean.managedBean.zoneList}"
+						value="#{ruleCatalogueBackingBean.getZones()}"
 						itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}"/>
 					<p:ajax partialSubmit="true" process="@this" update="@this, zoneCodeMsg"/>
 				</p:selectOneMenu>
