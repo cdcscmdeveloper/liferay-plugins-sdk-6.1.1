@@ -451,6 +451,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private boolean qtyNonEditable = Boolean.FALSE;
 	// #28865 - start
 	
+	//#35509 Audit - Start
+	private Boolean deleteBusinessNature = false;
+	//#35509 Audit - End
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2821,4 +2824,19 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	}
 	// #28865 - end
 	
+	//#35509 Audit - Start
+	/**
+	 * @return the deleteBusinessNature
+	 */
+	public Boolean getDeleteBusinessNature() {
+		return deleteBusinessNature;
+	}
+
+	/**
+	 * @param deleteBusinessNature the deleteBusinessNature to set
+	 */
+	public void setDeleteBusinessNature(Boolean deleteBusinessNature) {
+		this.deleteBusinessNature = deleteBusinessNature;
+	}
+	//#35509 Audit - End
 }
