@@ -395,6 +395,10 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List<ScQtCategory> qtCategoryList;
 	// #29661 end
 	
+	//start - 27868
+	private List<Long> ptjIds = new ArrayList<>();
+	//end - 27868
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2231,8 +2235,16 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 			this.loaItemIds = loaItemIds;
 		}
 
-	
-		
+	// start - #27868
+	public List<Long> getPtjIds() {
+		return ptjIds;
+	}
+
+	public void setPtjIds(List<Long> ptjIds) {
+		this.ptjIds = ptjIds;
+	}
+
+	// end - #27868
 	// #29661 start
 	public List<SmSupplierCategory> getSupplierCategoryList() {
 		return supplierCategoryList;

@@ -30,6 +30,7 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;//#27868
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -411,8 +412,23 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
     //#36119 - end
 	// 27868 & 35321 - start
-	private Date createdDate;
+    private Date createdDate;
+    private PmParameter selectedOrgType;
+    private PmUserOrg selectedUserPtj;
+    private String supplierAccountTypeErrorMessage;
+	private PmOrgProfile selectedPtj;
+	private PmOrgProfile ministryOrgProfile;
+	private Integer saveIndex;
 	// 27868 & 35321 - end
+	
+	//#26059 - Start
+	private boolean bpkApproverMode = Boolean.FALSE;
+	private boolean rnExceedThreshold = Boolean.FALSE;
+	private boolean showAttachments = Boolean.TRUE; 
+	private boolean containRejectDecision = Boolean.FALSE;
+    private	Integer	counter = 0;
+    private boolean existInAssignItemDetail = Boolean.FALSE;
+  //#26059 - End
     
     /**
      * Instantiates a new request note managed bean.
@@ -2469,5 +2485,178 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+	
+	public PmParameter getSelectedOrgType() {
+		if (this.selectedOrgType == null) {
+			this.selectedOrgType = new PmParameter();
+		}
+		return selectedOrgType;
+	}
+
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
+	}
+	
+	public PmUserOrg getSelectedUserPtj() {
+		return selectedUserPtj;
+	}
+
+	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
+		this.selectedUserPtj = selectedUserPtj;
+	}
+	
+
+	public PmOrgProfile getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	public void setSelectedPtj(PmOrgProfile selectedPtj) {
+		this.selectedPtj = selectedPtj;
+	}
+	
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
+
+	/**
+	 * @return the getSupplierAccountTypeErrorMessage
+	 */
+	public String getSupplierAccountTypeErrorMessage() {
+		return supplierAccountTypeErrorMessage;
+	}
+
+	/**
+	 * @param getSupplierAccountTypeErrorMessage the getSupplierAccountTypeErrorMessage to set
+	 */
+	public void setSupplierAccountTypeErrorMessage(String getSupplierAccountTypeErrorMessage) {
+		this.supplierAccountTypeErrorMessage = getSupplierAccountTypeErrorMessage;
+	}
+
+	public Integer getSaveIndex() {
+		return saveIndex;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setSaveIndex(Integer saveIndex) {
+		this.saveIndex = saveIndex;
+	}
 	// 27868 & 35321 - end
+	// #26059 - start
+	/**
+	 * Checks if the current mode is BPK Approver mode.
+	 * 
+	 * @return {@code true} if in BPK Approver mode, {@code false} otherwise.
+	 */
+	public boolean isBpkApproverMode() {
+		return bpkApproverMode;
+	}
+
+	/**
+	 * Sets the BPK Approver mode.
+	 * 
+	 * @param bpkApproverMode
+	 *            {@code true} to enable BPK Approver mode, {@code false} to
+	 *            disable.
+	 */
+	public void setBpkApproverMode(boolean bpkApproverMode) {
+		this.bpkApproverMode = bpkApproverMode;
+	}
+
+	/**
+	 * Checks if the Request Note (RN) exceeds the threshold.
+	 * 
+	 * @return {@code true} if the RN exceeds the threshold, {@code false}
+	 *         otherwise.
+	 */
+	public boolean isRnExceedThreshold() {
+		return rnExceedThreshold;
+	}
+
+	/**
+	 * Sets whether the Request Note (RN) exceeds the threshold.
+	 * 
+	 * @param rnExceedThreshold
+	 *            {@code true} if the RN exceeds the threshold, {@code false}
+	 *            otherwise.
+	 */
+	public void setRnExceedThreshold(boolean rnExceedThreshold) {
+		this.rnExceedThreshold = rnExceedThreshold;
+	}
+
+	/**
+	 * Checks if attachments should be shown.
+	 * 
+	 * @return {@code true} if attachments should be shown, {@code false}
+	 *         otherwise.
+	 */
+	public boolean isShowAttachments() {
+		return showAttachments;
+	}
+
+	/**
+	 * Sets whether attachments should be shown.
+	 * 
+	 * @param showAttachments
+	 *            {@code true} to show attachments, {@code false} to hide them.
+	 */
+	public void setShowAttachments(boolean showAttachments) {
+		this.showAttachments = showAttachments;
+	}
+
+	/**
+	 * Retrieves the current counter value.
+	 * 
+	 * @return The counter value as an {@link Integer}.
+	 */
+	public Integer getCounter() {
+		return counter;
+	}
+
+	/**
+	 * Sets the counter value.
+	 * 
+	 * @param counter
+	 *            The counter value to set.
+	 */
+	public void setCounter(Integer counter) {
+		this.counter = counter;
+	}
+
+	/**
+	 * Checks if any item has a reject decision.
+	 */
+	public boolean isContainRejectDecision() {
+		return containRejectDecision;
+	}
+
+	/**
+	 * Sets the reject decision status.
+	 */
+	public void setContainRejectDecision(boolean containRejectDecision) {
+		this.containRejectDecision = containRejectDecision;
+	}
+
+	/**
+	 * @return the existInAssignItemDetail
+	 */
+	public boolean isExistInAssignItemDetail() {
+		return existInAssignItemDetail;
+	}
+
+	/**
+	 * @param existInAssignItemDetail
+	 *            the existInAssignItemDetail to set
+	 */
+	public void setExistInAssignItemDetail(boolean existInAssignItemDetail) {
+		this.existInAssignItemDetail = existInAssignItemDetail;
+	}
+
+	// #26059 - end
 }
