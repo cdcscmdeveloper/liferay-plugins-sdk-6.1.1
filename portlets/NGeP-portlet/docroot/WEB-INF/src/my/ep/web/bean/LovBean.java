@@ -33,6 +33,12 @@ public class LovBean implements Serializable {
 	private boolean unSelectAndCancel = false;
 	private boolean resetFlag = false;
 	// End - #29416
+
+	/* #28895_35509 PM AUDIT */
+	private String roleCode;
+	private boolean storeProc;
+
+	/* #28895_35509 PM AUDIT */
 	
 	public String getLovId() {
 		return lovId;
@@ -187,4 +193,21 @@ public class LovBean implements Serializable {
 	// End - #29416
 	
 	
+	/* #28895_35509 PM AUDIT */
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
+
+	public boolean isStoreProc() {
+		return storeProc;
+	}
+
+	public void setStoreProc(boolean storeProc) {
+		this.storeProc = storeProc;
+	}
+	/* #28895_35509 PM AUDIT */
 }
