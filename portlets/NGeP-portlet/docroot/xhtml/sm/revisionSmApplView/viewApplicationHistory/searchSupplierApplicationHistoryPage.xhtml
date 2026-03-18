@@ -101,7 +101,7 @@
 <!-- #28771 START -->				
 				<p:column headerText="#{lbl['lbl.sm.supportingDocumentMode']}">
 					<h:outputText value="#{lbl['lbl.sm.no.available']}"
-					 rendered="#{empty smAppl[15]}"/>	
+					 rendered="#{smAppl[15] ne 'S' and smAppl[15] ne 'H'}"/> <!-- #40137, 26238 -->	
 					  <h:outputText value="#{lbl['lbl.sm.suppDoc.online']}"
 					 rendered="#{smAppl[15] eq 'S'}"/>	
 				    <h:outputText value="#{lbl['lbl.sm.suppDoc.offline']}"

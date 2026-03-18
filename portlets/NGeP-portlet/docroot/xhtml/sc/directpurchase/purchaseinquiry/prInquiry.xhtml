@@ -249,9 +249,11 @@
 														listener="#{purchaseInquiryBackingBean.procurementTypeEvent}"
 														process="@this" />
 												</p:selectOneRadio></td>
+											<ui:remove>27868 - start </ui:remove>
 											<td style="margin-top: -3px"><p:message id="procTypeMsg"
 													for="procType" display="icon" /> <ac:iconTooltip
-													value="#{purchaseInquiryBackingBean.procurementTypeToolTip}" /></td>
+													value="#{purchaseInquiryBackingBean.getProcurementTypeToolTip(purchaseInquiryBackingBean.managedBean.createdDate)}" /></td>
+											<ui:remove>27868 - end </ui:remove>
 										</tr>
 									</table>
 								</td>

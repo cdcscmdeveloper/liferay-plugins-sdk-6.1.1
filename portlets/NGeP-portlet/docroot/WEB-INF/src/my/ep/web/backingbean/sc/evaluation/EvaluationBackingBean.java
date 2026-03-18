@@ -7074,6 +7074,14 @@ public class EvaluationBackingBean extends
 							.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION))
 					&& !this.getManagedBean().isReadOnly()) {
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
+					//#28774 - Start
+					if (!this.getManagedBean().isDemoWip()) {
+						checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());
+						checkCommitteeMembersAttendance(this.getManagedBean()
+								.getCommitteeMemberList());
+					}
+					//#28774 - End
 					saveMeetingDtls(false);
 					if (null == this.getManagedBean().getScQtChecklist()) {
 						retrivePresetationDemoCheckList();
@@ -8997,6 +9005,7 @@ public class EvaluationBackingBean extends
 
 			} else if (outputTab == 0) {
 				afterDemoInv(false);//#28784
+				setDemoReadOnlyFalse();//#28784
 				this.getManagedBean().setCheckReportDownload(false);
 				this.getManagedBean().setDemo(false);
 				retriveMeetingDtls(this.getManagedBean().getScQt().getQtId(),
@@ -9150,7 +9159,7 @@ public class EvaluationBackingBean extends
 
 				}
 			}
-			if (i == 0 && !this.getManagedBean().isAfterDemoInv()) {//#28784
+			if (i == 0) {//#28784 remove code
 				throw new EpException(MessageConst.ERROR_760255);
 			}
 		}
@@ -9914,6 +9923,11 @@ private void retriveCommitteeRemarksList(){
 						&& this.getManagedBean()
 								.getPresentationDemoActiveIndex() == 0) {
 					savePresentationDemoDtls();
+					//#28784 - Start
+					if (!this.getManagedBean().isDemoWip()) {
+						evaluationSO.saveQTDtl(reqDtO);
+					}
+					//#28784 - End
 					renewSesionObject();
 					retriveMeetingDtls(qtId, committeeType, index);
 					retrivePresentationDemo();
@@ -20264,4 +20278,12 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//#38151 End
+	
+	//#28784 - Start
+	private void setDemoReadOnlyFalse() {
+		if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
+			this.getManagedBean().setReadOnly(Boolean.FALSE);
+		}
+	}
+	//#28784 - End
 }
