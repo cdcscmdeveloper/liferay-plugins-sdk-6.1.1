@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
 <liferay-portlet-app>
 	<portlet>
 		<portlet-name>auSearch</portlet-name>
@@ -9,6 +8,16 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>au-portlet</css-class-wrapper>
 	</portlet>
+	<!-- 35740 - shaqimi start -->
+	<portlet>
+		<portlet-name>auPatchSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>au-portlet</css-class-wrapper>
+	</portlet>
+	<!-- 35740 - shaqimi end -->
 	<portlet>
 		<portlet-name>travellingTicketingSystemMaintenance</portlet-name>
 		<icon>/icon.png</icon>
@@ -17,6 +26,42 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>travelling-portlet</css-class-wrapper>
 	</portlet>
+	
+	
+	<!-- 35740 - shaqimi start -->
+	<portlet>
+		<portlet-name>auPatchSearch</portlet-name>
+		<display-name>Audit Search</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/audit/patch/auditPatchPreRender.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Audit Search</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- 35740 - shaqimi end -->
+	
 	<portlet>
 		<portlet-name>tempUserSearch</portlet-name>
 		<icon>/icon.png</icon>
