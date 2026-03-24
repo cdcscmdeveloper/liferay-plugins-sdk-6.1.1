@@ -221,6 +221,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private int contractDaysPeriod;
 	//32418 - End
 	
+	private boolean isDefaultMinistryExist = false; //Fix - #30045
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1711,4 +1713,14 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.contractDaysPeriod = contractDaysPeriod;
 	}
 	//32418 - End
+	
+	// Start - #30045
+	public boolean isDefaultMinistryExist() {
+		return isDefaultMinistryExist;
+	}
+
+	public void setDefaultMinistryExist(boolean isDefaultMinistryExist) {
+		this.isDefaultMinistryExist = isDefaultMinistryExist;
+	}
+	// End - #30045
 }
