@@ -227,7 +227,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean spToCheck = false;
 	//End Fix - #33287
 	//#35238 start
-	private AmendmentCommitteeHelper amendmentCommitteeHelper;
+	private transient AmendmentCommitteeHelper amendmentCommitteeHelper;
 	private AmendmentManagedBean lastManagedBean;
 	private FacesScopes lastFacesScopes;
 	//#35238 end
