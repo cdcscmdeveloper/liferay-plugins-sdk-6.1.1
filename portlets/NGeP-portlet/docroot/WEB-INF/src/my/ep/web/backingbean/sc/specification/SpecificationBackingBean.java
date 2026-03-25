@@ -12772,7 +12772,7 @@ public class SpecificationBackingBean extends
 				throw new EpException(MessageConst.ERROR_760025);
 			}
 			if (null != this.getManagedBean().getCurrentStatusId()
-					&& QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(this.getManagedBean()
+					&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(this.getManagedBean()
 							.getCurrentStatusId())) {
 				SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 				specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
