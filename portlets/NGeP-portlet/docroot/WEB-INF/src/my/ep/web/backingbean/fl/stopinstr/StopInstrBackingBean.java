@@ -148,6 +148,15 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				}
 			}
 			// 36386 - End
+			
+			// 39692-Start
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+					&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
+							.getFulfilmentReqId())) {
+				throw new EpException(MessageConst.ERROR_760823);
+
+			}
+			// 39692-End
 			reqDTO.setStopIns(flStopInstr);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
@@ -522,13 +531,24 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		validatePOCOCurrentStatus(); //29870
+		validatePOCOCurrentStatus(outcome); //29870-38104
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		} else {
+			
+			// 39692-Start
+			if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome
+						.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))
+					&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
+							.getFulfilmentReqId())) {
+				throw new EpException(MessageConst.ERROR_760823);
+			}
+			// 39692-End
+			
 			if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
 				throw new EpException(MessageConst.ERROR_100022, new String[]{
 						ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
@@ -998,7 +1018,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	
 	
 	//29870-start
-	private void validatePOCOCurrentStatus() {
+	private void validatePOCOCurrentStatus(String outcome) {//38104
 		Boolean allowToProceed = true;
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1010,6 +1030,15 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
 		reqDTO.setActionCode(FulfilmentConst.STOP_FULFILMENT);
 		// 36247-End
+		
+		//38104-Start
+		if (getManagedBean().getTaskId()==null && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))
+			reqDTO.setFulfilmentOrderId(getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
+		FulfilmentResDTO resDTOSdi = orderSO.retrieveStopInstructionByOrder(reqDTO);
+		if (resDTOSdi.getFlStopInstr() != null) {
+			throw new EpException(MessageConst.ERROR_740071);
+		}
+		//38104-End
 		resDTO= orderSO.validatePOCOCurrentStatus(reqDTO);
 		
 		allowToProceed = resDTO.isFlag();		
@@ -1018,4 +1047,19 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}	
 	}		
 	//29870-end
+	
+	/**
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
+	 * @param fulfilmentReqId
+	 * @return true if invalid FRN data is detected
+	 */
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
+	}
 }

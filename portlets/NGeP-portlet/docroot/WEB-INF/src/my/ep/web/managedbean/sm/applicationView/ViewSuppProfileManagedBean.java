@@ -171,6 +171,8 @@ public class ViewSuppProfileManagedBean extends
 	// #28895_35501 End
 	// #28895_35501_DA - AUDIT TRAIL SM DA
 	private SmDisciplinaryAction oldSmDisciplinaryAction;	
+	private boolean ownerChange; // 40078, 26238
+
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -1011,4 +1013,14 @@ public class ViewSuppProfileManagedBean extends
 	    this.oldSmDisciplinaryAction = oldSmDisciplinaryAction;
 	}
 	// #28895_35501_DA End
+	
+	// 40078, 26238 - START
+	public boolean isOwnerChange() {
+		return ownerChange;
+	}
+
+	public void setOwnerChange(boolean ownerChange) {
+		this.ownerChange = ownerChange;
+	}
+	// 40078, 26238 - END
 }

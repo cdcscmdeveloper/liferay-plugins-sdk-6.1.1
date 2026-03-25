@@ -45,6 +45,8 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -1382,22 +1384,74 @@ public class ViewApplHistoryBackingBean extends BaseReviewApplicationBackingBean
 		}
 		return page;
 	}
+	
+	// 40121, 26238 - START
+	/**
+	 * Retrieves the MOF (Ministry of Finance) number from an application record.
+	 *
+	 * @param appl
+	 * @return mofNo
+	 *
+	 */
+	public String getMofNo(Object[] appl) {
+		
+		String mofNo = appl[8] != null ? String.valueOf(appl[8]) : "";
+		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
+		Long supplierId = appl[11] != null ? Long.valueOf(appl[11].toString()) : 0L;
+		String latestAppl = null;
+		
+		if (appl.length > 16) {
+			latestAppl = String.valueOf(appl[16]);
+		} else {
+			latestAppl =String.valueOf(appl[15]);
+		}
+		
+		if (mofNo.equals(SupplierManagementConst.NA_STATUS) && recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED))) {
+			MofAccountReqDTO reqMofDTO = new MofAccountReqDTO();
+			reqMofDTO.setSupplierId(supplierId);
+			reqMofDTO.setApplId(Long.parseLong(latestAppl));
+			MofAccountResDTO mofAccount = SmCommonUtil.getMofAccountBySuppIdAndApplId(reqMofDTO);
+			
+			if (mofAccount != null) {
+				mofNo = mofAccount.getMofAccount().getMofNo();
+			}
+		}
+		
+		return mofNo;
+	}
+	// 40121, 26238 - END
+	
 	public String getStatusDescription(Object[] appl) {
 		BigDecimal suppStatDec = appl[12] != null ? (BigDecimal) appl[12]
 				: new BigDecimal(0);
 		String applType = appl[1] != null ? (String) appl[1] : "";
 		String suppType = appl[2] != null ? (String) appl[2] : "";
-
+		// 40110, 26238 - START
+		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
+		String applId = appl[10] != null ? String.valueOf(appl[10]) : "";
+		String latestAppl = null;
+		
+		if (appl.length > 16) {
+			latestAppl = String.valueOf(appl[16]);
+		} else {
+			latestAppl =String.valueOf(appl[15]);
+		}
+		
 		Locale locale = new FacesScopes().getUserLocale();
-		if (suppStatDec.toString().equals("5") && applType.equals("O")
+		 String notAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+
+		if (recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED)) && latestAppl.equals(applId)){
+			return notAvailable;
+		} else if (suppStatDec.toString().equals("5") && applType.equals("O")
 				&& suppType.equals("B")) {
 			return ResourceBundleUtils.getMessage("lbl.sm.in.progress",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else if (StringUtils.isNotBlank((String) appl[6])) {
 			return (String) appl[6];
 		}
-		return ResourceBundleUtils.getMessage("lbl.sm.no.available",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		return notAvailable;
+		// 40110, 26238 - END
 	}
 
 	// 25792 - start
