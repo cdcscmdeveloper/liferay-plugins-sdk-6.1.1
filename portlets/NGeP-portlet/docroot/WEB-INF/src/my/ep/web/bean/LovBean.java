@@ -3,6 +3,10 @@ package my.ep.web.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.bean.ManagedProperty;
+
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
+
 public class LovBean implements Serializable {
 	
 	/**
@@ -33,6 +37,17 @@ public class LovBean implements Serializable {
 	private boolean unSelectAndCancel = false;
 	private boolean resetFlag = false;
 	// End - #29416
+	// #29832 start 
+	//added managedproperty to pass the value from simplequoteBB into LovBB to trigger delete selected list
+	@ManagedProperty(value="#{simpleQuoteBackingBean}")
+	private SimpleQuoteBackingBean simpleQuoteBackingBean;
+	// #29832 end
+
+	/* #28895_35509 PM AUDIT */
+	private String roleCode;
+	private boolean storeProc;
+
+	/* #28895_35509 PM AUDIT */
 	
 	public String getLovId() {
 		return lovId;
@@ -151,7 +166,22 @@ public class LovBean implements Serializable {
 	public void setDisplayResultWhenReset(boolean isDisplayResultWhenReset) {
 		this.isDisplayResultWhenReset = isDisplayResultWhenReset;
 	}
-	
+
+	// #29832 start @zaim
+	/**
+	 * @return the simpleQuoteBackingBean
+	 */
+	public SimpleQuoteBackingBean getSimpleQuoteBackingBean() {
+		return simpleQuoteBackingBean;
+	}
+	/**
+	 * @param simpleQuoteBackingBean the simpleQuoteBackingBean to set
+	 */
+	public void setSimpleQuoteBackingBean(SimpleQuoteBackingBean simpleQuoteBackingBean) {
+		this.simpleQuoteBackingBean = simpleQuoteBackingBean;
+	}
+	// #29832 end
+
 	// Start - #29416
 	public boolean getItemUsageMonitoringReport() {
 		return itemUsageMonitoringReport;
@@ -187,4 +217,21 @@ public class LovBean implements Serializable {
 	// End - #29416
 	
 	
+	/* #28895_35509 PM AUDIT */
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
+
+	public boolean isStoreProc() {
+		return storeProc;
+	}
+
+	public void setStoreProc(boolean storeProc) {
+		this.storeProc = storeProc;
+	}
+	/* #28895_35509 PM AUDIT */
 }
