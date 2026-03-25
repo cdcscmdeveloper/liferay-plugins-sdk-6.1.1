@@ -23,9 +23,6 @@ import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
  */
 public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();

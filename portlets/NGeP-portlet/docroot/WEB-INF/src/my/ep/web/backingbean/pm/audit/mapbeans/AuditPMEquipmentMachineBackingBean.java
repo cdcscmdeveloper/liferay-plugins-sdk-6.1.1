@@ -22,9 +22,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
  */
 public class AuditPMEquipmentMachineBackingBean extends AuditPMBackingBeanTemplate {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO detailName = new AuditPMSPDTO();
