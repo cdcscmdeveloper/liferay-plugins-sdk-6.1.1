@@ -21,7 +21,7 @@
 		<div class="align-center">
 			<p:dataTable var="branchList"
 				value="#{consolidationReportBackingBean.managedBean.supplierBranchList}"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.record']}"
 				rows="10">
 				<ac:paginator for="branchList" />
 				<p:column headerText="#{lbl['lbl.sc.branch.name']}"
@@ -52,7 +52,8 @@
 					style="width:10%; white-space:normal; text-align:center;"
 					styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
 					<h:outputText
-						value="#{lbl[branchList.recordStatusFlg eq DbValueConst.recordStatusActive ? 'lbl.txt.active' : 'lbl.txt.deleted']}" />
+						value="#{lbl[branchList.qtRelatedSupplierBranch eq true ? 'lbl.txt.deleted' : 'lbl.txt.active']}" />
+						
 				</p:column>
 			</p:dataTable>
 		</div>
