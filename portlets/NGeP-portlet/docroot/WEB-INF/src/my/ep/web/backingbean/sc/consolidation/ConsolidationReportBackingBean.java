@@ -2989,7 +2989,6 @@ public class ConsolidationReportBackingBean extends
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSuppFinalizationSO.class);
 		retrieveQualifiedSuppliersInfoByEvalStage("1");
-		log.info("===========================================" + supplierId);
 		this.getManagedBean().getQualifiedSuppliersDataModel().getList();
 		BigDecimal totalScoreTecEval = null;
 		BigDecimal totalScoreFinEval = null;
@@ -3018,6 +3017,11 @@ public class ConsolidationReportBackingBean extends
 			}
 			break;
 		}
+		
+		//#38679 use new calculation if only has quantity 0 for zonal only
+		boolean isQtyNotNull = null != selectedZoneId
+		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
+		
 		if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)) {
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
@@ -3027,21 +3031,34 @@ public class ConsolidationReportBackingBean extends
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_ITM;
 		}
-
-		List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
-		for (Object[] row : findListT) {
-			BigDecimal suppId = (BigDecimal) row[0];
-			//BigDecimal supplierNo = (BigDecimal) row[1];
-			BigDecimal supplierTotalScore = (BigDecimal) row[3];
-			String evalStage = row[4].toString();
-			BigDecimal reqItemId = (BigDecimal) row[6];
-			// Handle each row
-			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
-					&& (requestNoteItemId == null || requestNoteItemId == reqItemId.longValue())) {
+		
+		//#38679 start
+		//use new calculation if only has quantity 0 for zonal only
+		if(isQtyNotNull && currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)){
+			Object[] rows = (Object[]) qtSuppFinalizationSO
+			        .getSupplierSpecTotalScoreZonePopupRecTecPac(qtId, supplierId, selectedZoneId);		
+			if (rows != null) {
+				BigDecimal supplierTotalScore = (BigDecimal) rows[1];
 				totalScoreTecEval = supplierTotalScore;
-				break;
+
+			}
+		}else{
+			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
+			for (Object[] row : findListT) {
+				BigDecimal suppId = (BigDecimal) row[0];
+				//BigDecimal supplierNo = (BigDecimal) row[1];
+				BigDecimal supplierTotalScore = (BigDecimal) row[3];
+				String evalStage = row[4].toString();
+				BigDecimal reqItemId = (BigDecimal) row[6];
+				// Handle each row
+				if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
+						&& (requestNoteItemId == null || requestNoteItemId == reqItemId.longValue())) {
+					totalScoreTecEval = supplierTotalScore;
+					break;
+				}
 			}
 		}
+		//#38679 end
 
 		for (ScQtScoreSetting scoresett : this.getManagedBean().getSuppFinalBean().getManagedBean().getScQt()
 				.getScQtScoreSettings()) {
