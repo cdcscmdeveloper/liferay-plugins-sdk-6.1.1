@@ -13166,8 +13166,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSuppFinalizationSO.class);
-		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.TECHNICAL_DOCTYPE);
-		log.info("===========================================" + supplierId);
+		retrieveQualifiedSuppliersInfoByEvalStage("1");
 		this.getManagedBean().getShortlistedSuppliersByRecommendType().getList();
 		BigDecimal totalScoreTecEval = null;
 		BigDecimal totalScoreFinEval = null;
@@ -13183,7 +13182,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		String evalstageF = null;
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
-
+		//#38679 use new calculation if only has quantity 0 for zonal only
+		boolean isQtyNotNull = null != selectedZoneId
+		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
+		
 		for (ScQtEvaluationResultDtl qualifiedSuppDM : this.getManagedBean().getShortlistedSuppliersByRecommendType()
 				.getList()) {
 			currentEvalStage = qualifiedSuppDM.getQtEvaluationResult().getEvaluationStage();
@@ -13206,22 +13208,36 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_ITM;
 		}
-
-		List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
-		for (Object[] row : findListT) {
-			BigDecimal suppId = (BigDecimal) row[0];
-			// BigDecimal supplierNo = (BigDecimal) row[1];
-			BigDecimal supplierTotalScore = (BigDecimal) row[3];
-			String evalStage = row[4].toString();
-			BigDecimal reqItemId = (BigDecimal) row[6];
-			// Handle each row
-			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
-					&& (requestNoteItemId == null || requestNoteItemId == reqItemId.longValue())) {
+		
+		//#38679 start
+		//use new calculation if only has quantity 0 for zonal only
+		if(isQtyNotNull && currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)){
+			Object[] rows = (Object[]) qtSuppFinalizationSO
+			        .getSupplierSpecTotalScoreZonePopupRecTecPac(qtId, supplierId, selectedZoneId);		
+			if (rows != null) {
+				BigDecimal supplierTotalScore = (BigDecimal) rows[1];
 				totalScoreTecEval = supplierTotalScore;
-				break;
-			}
-		}
 
+			}
+		} else {
+			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId,
+					null);
+			for (Object[] row : findListT) {
+				BigDecimal suppId = (BigDecimal) row[0];
+				// BigDecimal supplierNo = (BigDecimal) row[1];
+				BigDecimal supplierTotalScore = (BigDecimal) row[3];
+				String evalStage = row[4].toString();
+				BigDecimal reqItemId = (BigDecimal) row[6];
+				// Handle each row
+				if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
+						&& (requestNoteItemId == null || requestNoteItemId == reqItemId.longValue())) {
+					totalScoreTecEval = supplierTotalScore;
+					break;
+				}
+			}
+		}	
+		//#38679 end
+		
 		for (ScQtScoreSetting scoresett : this.getManagedBean().getScQt().getScQtScoreSettings()) {
 			if (this.getManagedBean().getEvaluationStageId() == PACKAGE_TYPE_TAB_INDEX
 					&& scoresett.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE) {
@@ -13247,16 +13263,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		this.getManagedBean().setOverallTechnicalRecommendationPercent(scoresettsTec.longValue());
 		this.getManagedBean().setOverallFinancialRecommendationPercent(scoresettsFin.longValue());
-
-		// for(ScQtEvaluationResultDtl testting :
-		// this.getManagedBean().getQualifiedSuppliersDataModel().getList()){
-		// if(testting.getQtEvaluationResult().getEvaluationStage() != null){
-		// totalScoreTecEval = testting.getTotalScore();
-		// break;
-		// }
-		// }
-
-		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.FINANCIAL_DOCTYPE);
+		
+		retrieveQualifiedSuppliersInfoByEvalStage("2");
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
 				selectedZoneId);
 
@@ -13287,10 +13295,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				totalScoreFinEval.doubleValue(), recommendationTechnicalScore.doubleValue(),
 				recommendationFinancialScore.doubleValue(), recommendationTotalScore.doubleValue());
 
-		List<WeightageScoreBean> listList = new ArrayList<>();
-		listList.add(bean);
+		List<WeightageScoreBean> listlist = new ArrayList<>();
+		listlist.add(bean);
 
-		this.getManagedBean().setWeightageScoreBeans(listList);
+		this.getManagedBean().setWeightageScoreBeans(listlist);
 
 		RequestContext.getCurrentInstance().execute("SuppDetailatestPopup.show()");
 
