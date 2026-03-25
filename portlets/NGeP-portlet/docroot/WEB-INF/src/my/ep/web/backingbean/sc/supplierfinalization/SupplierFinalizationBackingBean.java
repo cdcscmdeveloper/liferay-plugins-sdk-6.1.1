@@ -12962,7 +12962,7 @@ public class SupplierFinalizationBackingBean extends
 
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSuppFinalizationSO.class);
-		retrieveQualifiedSuppliersInfoByEvalStage("1");
+		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.TECHNICAL_DOCTYPE);
 		this.getManagedBean().getShortlistedSuppliersByRecommendType().getList();
 		BigDecimal totalScoreTecEval = null;
 		BigDecimal totalScoreFinEval = null;
@@ -13009,7 +13009,7 @@ public class SupplierFinalizationBackingBean extends
 		//use new calculation if only has quantity 0 for zonal only
 		if(isQtyNotNull && currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)){
 			Object[] rows = (Object[]) qtSuppFinalizationSO
-			        .getSupplierSpecTotalScoreZonePopupRecTecPac(qtId, supplierId, selectedZoneId);		
+			        .getSupplierSpecTotalScoreZonePopupTECPkg(qtId, supplierId, selectedZoneId);		
 			if (rows != null) {
 				BigDecimal supplierTotalScore = (BigDecimal) rows[1];
 				totalScoreTecEval = supplierTotalScore;
@@ -13060,7 +13060,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setOverallTechnicalRecommendationPercent(scoresettsTec.longValue());
 		this.getManagedBean().setOverallFinancialRecommendationPercent(scoresettsFin.longValue());
 		
-		retrieveQualifiedSuppliersInfoByEvalStage("2");
+		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.FINANCIAL_DOCTYPE);
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
 				selectedZoneId);
 
