@@ -3106,7 +3106,7 @@ public class ConsolidationReportBackingBean extends
 		//use new calculation if only has quantity 0 for zonal only
 		if(isQtyNotNull && currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)){
 			Object[] rows = (Object[]) qtSuppFinalizationSO
-			        .getSupplierSpecTotalScoreZonePopupRecTecPac(qtId, supplierId, selectedZoneId);		
+			        .getSupplierSpecTotalScoreZonePopupTECPkg(qtId, supplierId, selectedZoneId);		
 			if (rows != null) {
 				BigDecimal supplierTotalScore = (BigDecimal) rows[1];
 				totalScoreTecEval = supplierTotalScore;
