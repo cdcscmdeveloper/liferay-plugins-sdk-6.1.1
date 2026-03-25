@@ -302,6 +302,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = reqMap.get("channel") != null ? reqMap.get("channel") : null;
 		String errorCode = reqMap.get("error_code") != null ? reqMap.get("error_code") : null;
 		String errorDesc = reqMap.get("error_desc") != null ? reqMap.get("error_desc") : null;
+		String paymentRefNo = reqMap.get("paymentRefNo");
+		String bankName = reqMap.get("bankName");
+		String providerTransId = reqMap.get("providerTransId");
+		
+		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
+		String cardMaskedNum = reqMap.get("cardMaskedNum");
 		
 		//#Start 33137
 		String fpxTranId = null;
@@ -406,6 +412,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_desc:" + errorDesc); 
 		log.info("channel:" + channel); 
 		log.info("extraP:" + extraP); 
+		log.info("bankName:" + bankName); 
+		log.info("paymentRefNo:" + paymentRefNo); 
+		log.info("providerTransId:" + providerTransId); 
 		
 		// #26307 end
 		// #32422 START 
@@ -505,7 +514,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				if (cardType != null) { 
 					if (cardType.equalsIgnoreCase("Credit")) {
 						cardType = "CC";
-					} else if (cardType.equalsIgnoreCase("Debit")) {
+					} else if (cardType.equalsIgnoreCase("Debit") || cardType.equalsIgnoreCase("Prepaid")) { //#39654 - add prepaid
 						cardType = "DC";
 					} 
 					ParameterReqDTO reqPmDTO = new ParameterReqDTO();
@@ -599,7 +608,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				//#33137 - start
 				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
 				smPaymentRes.setTransactionId(tranID);
-				smPaymentRes.setMolpayTransactionId(molpayTranId);
+				smPaymentRes.setMolpayTransactionId((cardMaskedNum!=null && cardMaskedNum.length()>0)?cardMaskedNum: molpayTranId);
 				smPaymentRes.setFpxTranId(fpxTranId);
 				log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
 				//#33137 - end
@@ -622,6 +631,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info("#38377########smPaymentRes.setPaymentStatus:"+smPaymentRes.getPaymentStatus());
 				smPaymentRes.setPaidAmt(txAmount);
 				log.info("#38377########smPaymentRes.setPaidAmt:"+smPaymentRes.getPaidAmt());
+				//#38377
+				smPaymentRes.setBankName(bankName);
+				log.info("#38377########smPaymentRes.setBankName:"+smPaymentRes.getBankName());
+				//#38377
+				smPaymentRes.setProviderTransactionId(providerTransId);
+				log.info("#38377########smPaymentRes.setProviderTransactionId:"+smPaymentRes.getProviderTransactionId());
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 				//26307
 				log.info("#38377########Status Code : "+statusCode);
@@ -1134,25 +1149,50 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #33137 - end
 		// #32422 END
 		
+		String paymentRefNo = "";
+		String bankName = "";
+		String providerTransId = "";
+		String cardMaskedNum = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
-				orderId = jsonObject.getString("orderId");
-				tranID = jsonObject.getString("transId");
-				status = jsonObject.getString("status");
-				paydate = jsonObject.getString("trxDate");
-				channel = jsonObject.getString("channel");
-				currency = jsonObject.getString("currency");
-				if (channel
-						.equals(SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE)) {
-					cardType = ParameterConst.CARD_TYPES_CREDIT; 
-				}
-				paydate = DateUtils.reformatDate(paydate,
-						"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
-				date1 = paydate;
+				paymentRefNo = jsonObject.optString("paymentRefNo",null);
+				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
+				providerTransId = jsonObject.optString("providerTransId",null);
+				providerTransId = providerTransId==null?paymentRefNo:providerTransId;
+				log.info("######38377#####json providerTransId: " + providerTransId);
+				bankName = jsonObject.optString("bankName",null);
+				log.info("######38377#####json bankName: " + bankName);
+				orderId = jsonObject.optString("orderId",null);
+				tranID = jsonObject.optString("transId",null);
+				status = jsonObject.optString("status",null);
+				paydate = jsonObject.optString("trxDate",null);
+				channel = jsonObject.optString("channel",null);
+				amount = jsonObject.optString("amount",null);
+				currency = jsonObject.optString("currency",null);
+				errorCode = jsonObject.optString("errCode",null);
+				errorDesc = jsonObject.optString("errDesc",null);
+				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
+			        cardType = ParameterConst.CARD_TYPES_CREDIT;
+			        
+			      //do not include to PROD. Used for generate dummy transaction list excel
+					cardMaskedNum = jsonObject.optString("cardMaskedNum", null);
+					log.info("######38377#####json cardMaskedNum: " + cardMaskedNum);
+			    }
+				if (paydate != null && !paydate.isEmpty()) {
+			        try {
+			            paydate = DateUtils.reformatDate(
+			                paydate,
+			                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+			                "yyyy-MM-dd HH:mm:ss"
+			            );
+			            date1 = paydate;
+			        } catch (Exception e) {
+			            // handle/ log bad date format without breaking the rest
+			            // e.g., keep original paydate or set to null
+			        }
+			    }
 				paymentGateway = "Y";
-				errorCode = jsonObject.getString("errCode");
-				errorDesc = jsonObject.getString("errDesc");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -1177,6 +1217,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("cardType", cardType);
 		reqMap.put("molpayTransId", molpayTransId);
 		reqMap.put("paymentGateway", paymentGateway);
+		reqMap.put("paymentRefNo", paymentRefNo);
+		reqMap.put("providerTransId", providerTransId);
+		reqMap.put("bankName", bankName);
+		reqMap.put("cardMaskedNum", cardMaskedNum);
 
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
 		log.info("######38377#####tranID: " + reqMap.get("tranID"));
@@ -1195,6 +1239,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("######38377#####cardType:" + reqMap.get("cardType"));
 		log.info("######38377#####molpayTransId:" + reqMap.get("molpayTransId"));
 		log.info("######38377#####paymentGateway:" + reqMap.get("paymentGateway"));
+		log.info("######38377#####bankName:" + reqMap.get("bankName"));
+		log.info("######38377#####paymentRefNo:" + reqMap.get("paymentRefNo"));
+		log.info("######38377#####providerTransId:" + reqMap.get("providerTransId"));
 
 		return reqMap;
 	}

@@ -188,13 +188,15 @@
 								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 								<f:validateRegex disabled="#{empty param['disableValidation']}"
 									pattern="^[_'A-Za-z0-9-\+]+(\.[_'A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							</p:inputText> &#160;&#160; <p:graphicImage id="giEmail"
-								value="/css/images/design/tooltips.png" /> <p:tooltip
-								for="giEmail" id="ttEmail"
-								value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}"
-								showEffect="fade" hideEffect="fade" /> &#160;<p:message
-								id="itEmailMsg" for="itEmail" display="icon" />
-								</td>
+								<p:ajax event="change" process="@this"
+									listener="#{profilePersonalizationBackingBean.onChangeEmail()}"
+									update="itEmail" />
+							</p:inputText> &#160;&#160; <p:graphicImage id="toolTipIcon"
+								value="/css/images/design/tooltips.png" /> <p:tooltip 
+								id="sourceTooltip" for="toolTipIcon">
+								<h:outputText id="sourceLabel" escape="false"
+									value="#{lbl['lbl.sm.email.change.tooltip']}" />
+							</p:tooltip></td>
 						<th></th>
 						<td></td>
 					</tr>
@@ -257,6 +259,9 @@
 				</table>
 			</p:outputPanel>
 		</h:panelGrid> 
+		<ac:smEmailAlertPopup bBean="#{backingBean}"
+			title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+			btnOkLabel="#{lbl['lbl.btn.ok']}" />
     </p:panel>	  
     
     <!-- Address & Contact -->

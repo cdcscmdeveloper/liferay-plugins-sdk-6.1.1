@@ -1,14 +1,19 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import my.ep.constant.pm.AuditConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
@@ -17,6 +22,7 @@ import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMSysParamBackingBean #28895-35509 - GATE3
@@ -26,6 +32,8 @@ import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
  */
 public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	private static final long serialVersionUID = 1L;
+	private static final String decimalPoints = ".00";
+	private static final DecimalFormat COMMA_2DP = new DecimalFormat("#,##0.00");
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 	String roleCode = null;
@@ -100,11 +108,13 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 				processQtyValuesUpdate(matchingApprovalUpdated, updateVal);
 			}
 		}
+		/** Temporary cloes this deleted section
 		if (CollectionUtils.isNotEmpty(deletedItem)) {
 			for (PmPtjSpecialApproval deleted : deletedItem) {
 				processQtyValuesCreateDeleted(null, deleted);
 			}
 		}
+		**/
 		if (CollectionUtils.isNotEmpty(newCreatedItem)) {
 			for (PmPtjSpecialApproval newCreate : newCreatedItem) {
 				processQtyValuesCreateDeleted(newCreate, null);
@@ -134,8 +144,18 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	public void processQtyValuesUpdate(PmPtjSpecialApproval approval, PmPtjSpecialApproval updateVal) {
 		/* Update */
 		if (updateVal.getProcureAmt() != null && !approval.getProcureAmt().equals(updateVal.getProcureAmt())) {
-			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_LIMIT_FIELDLABELID, updateVal
-					.getProcureAmt().toString(), approval.getProcureAmt().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			String updateAmount = updateVal.getProcureAmt().toString();
+			String approvalAmount = approval.getProcureAmt().toString();
+			
+			if(updateAmount.indexOf(".") == -1){
+				updateAmount += decimalPoints;
+			}
+			if(approvalAmount.indexOf(".") == -1){
+				approvalAmount += decimalPoints;
+			}
+			
+			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_LIMIT_FIELDLABELID, formatCurrency(updateAmount), 
+					formatCurrency(approvalAmount), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 		if (updateVal.getEffDate() != null && !approval.getEffDate().equals(updateVal.getEffDate())) {
 			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EFFDATE_FIELDLABELID, 
@@ -207,6 +227,12 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 		}
 		return null;
 	}
+	
+	public static String formatCurrency(String value) {
+	    if (value == null || value.isEmpty()) return value;
+	    BigDecimal bd = new BigDecimal(value.replace(",", "").trim());
+	    return COMMA_2DP.format(bd);
+	}
 
 	/**
 	 * @param approval
@@ -214,13 +240,19 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 * @return
 	 */
 	public String retrieverCreateDeleteAmtVal(PmPtjSpecialApproval approval, PmPtjSpecialApproval deletedItem) {
+		String amount = null;
 		if (approval != null && approval.getProcureAmt() != null) {
-			return approval.getProcureAmt().toString();
+			amount  = approval.getProcureAmt().toString();
 		}
 		if (deletedItem != null && deletedItem.getProcureAmt() != null) {
-			return deletedItem.getProcureAmt().toString();
+			amount  = deletedItem.getProcureAmt().toString();
 		}
-		return null;
+		
+		if(amount != null && amount.indexOf(".") == -1){
+			amount += decimalPoints;
+		}
+		
+		return amount != null ? formatCurrency(amount) : null;
 	}
 
 	/**
@@ -400,7 +432,9 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 			String newValue, BigInteger lvlId) {
 		docId = BigInteger.valueOf(exemption.getFeeExemptionId());
 		docNo = "";
-		addAuditDetail(exemption.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeName(), lvlId, lvlCode,
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		
+		addAuditDetail(ParameterHelper.getInstance().getParameterDesc(exemption.getOrgTypeId().getParameterType(), exemption.getOrgTypeId().getParameterCode(), locale), lvlId, lvlCode,
 				fieldLabelCode, oldValue, newValue, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
 
