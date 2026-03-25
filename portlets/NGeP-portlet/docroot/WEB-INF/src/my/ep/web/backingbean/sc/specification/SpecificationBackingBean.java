@@ -12680,7 +12680,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 		}
-
+		// #29732 End - reOpen Fix
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
