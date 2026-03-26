@@ -791,6 +791,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
+			getManagedBean().setOwnerChange(resDTO.isOwnerChange()); // 40078, 26238
 			// #28895_35501 Start - AUDIT TRAIL SM
 			if (resDTO.isSuccessful()) {
 				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);

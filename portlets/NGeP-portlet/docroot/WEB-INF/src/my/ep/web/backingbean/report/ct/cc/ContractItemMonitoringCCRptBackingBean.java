@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
+import my.ep.web.backingbean.report.ct.CtReportBackingBean; //Fix - #40102
 import my.ep.web.backingbean.report.ct.CtReportBaseBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.panel.ContractItemMonitoringCCRptManagedBean;
@@ -62,7 +63,13 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 		getManagedBean().setFormattedSelectedItems(null);
 		getManagedBean().setLovSelectedItemList(null);
 		getManagedBean().setSelectedSupplier(null);
-		// End fix- #29416	
+		// End fix- #29416
+		// Start Fix - #40102
+		CtReportBackingBean ctReportBBean = new CtReportBackingBean();
+		if (ctReportBBean.getManagedBean().getReportCode() != null) {
+			ctReportBBean.setCurrentActiveOrg();
+		}
+		// End Fix - #40102
 	}
 	@Override
 	public LinkedHashMap<String, String> getparams() {
