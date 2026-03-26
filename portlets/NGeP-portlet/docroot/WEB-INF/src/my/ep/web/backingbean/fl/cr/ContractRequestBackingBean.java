@@ -7270,6 +7270,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//29728 - End
 	
 	//35024-Start
+	//25296-format this method
 	/**
 	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not 
 	 * message show while pre render //25296
