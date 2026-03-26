@@ -68,7 +68,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.mofno']}">
-					<h:outputText value="#{smAppl[8]}" rendered="#{not empty smAppl[8]}"/>
+					<h:outputText value="#{viewSuppProfileBackingBean.getMofNo(smAppl)}" rendered="#{not empty smAppl[8]}"/> <!-- #40121, 26238 -->	
 					<h:outputText value="#{viewSuppProfileBackingBean.managedBean.currMof.mofNo}" 
 						rendered="#{empty smAppl[8] and not empty viewSuppProfileBackingBean.managedBean.currMof}"/>
 					<h:outputText value="#{lbl['lbl.sm.no.available']}" 
