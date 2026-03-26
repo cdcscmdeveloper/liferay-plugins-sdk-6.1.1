@@ -52,6 +52,22 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	//#8411 - START
 	private Integer reasonCategory;
 	//#8411 - END
+	
+	/************ AUDIT START #28895-35509 *************/
+	private PmReason oldPmReason;
+	private PmReason newPmReason;
+	private List<PmPIDReason> deletePIDReasonList;
+	private List<PmPIDReason> auditAddPIDReasonList;
+
+	private List <PmSupplierReason> auditAddAppTypeRestrictions;
+	private List <PmSupplierReason> auditAddComTypeRestrictions;
+	private List <PmSupplierReason> auditAddSuppTypeRestrictions;
+	
+	private List <PmSupplierReason> auditDeleteAppRestrictions;
+	private List <PmSupplierReason> auditDeleteComRestrictions;
+	private List <PmSupplierReason> auditDeleteSuppRestrictions;
+	/************ AUDIT END #28895-35509 *************/
+	
 	//#28962 - Start
 	private String suppAccountType;
 	private String ptjCodeName;
@@ -81,21 +97,6 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private List <PmReasonRestr> auditAddAgency;
 	private List <PmReasonRestr> auditDeleteAgency;
 	// #28962 - End
-	
-	/************ AUDIT START #28895-35509 *************/
-	private PmReason oldPmReason;
-	private PmReason newPmReason;
-	private List<PmPIDReason> deletePIDReasonList;
-	private List<PmPIDReason> auditAddPIDReasonList;
-
-	private List <PmSupplierReason> auditAddAppTypeRestrictions;
-	private List <PmSupplierReason> auditAddComTypeRestrictions;
-	private List <PmSupplierReason> auditAddSuppTypeRestrictions;
-	
-	private List <PmSupplierReason> auditDeleteAppRestrictions;
-	private List <PmSupplierReason> auditDeleteComRestrictions;
-	private List <PmSupplierReason> auditDeleteSuppRestrictions;
-	/************ AUDIT END #28895-35509 *************/
 	
 	private boolean isReasonApplicabilityDuplicate = false; //39618
 	
@@ -341,7 +342,24 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	public void setSelectedSourceMethodId(Long selectedSourceMethodId) {
 		this.selectedSourceMethodId = selectedSourceMethodId;
 	}
+	
+	//#8411 - START
+	/**
+	 * @return the reasonCategory
+	 */
+	public Integer getReasonCategory() {
+		return reasonCategory;
+	}
 
+	/**
+	 * @param reasonCategory
+	 *            the reasonCategory to set
+	 */
+	public void setReasonCategory(Integer reasonCategory) {
+		this.reasonCategory = reasonCategory;
+	}
+	//#8411 - END
+	
 	/************ AUDIT START #28895-35509 *************/
 	public PmReason getOldPmReason() {
 		return oldPmReason;
@@ -422,35 +440,7 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	public void setAuditDeleteSuppRestrictions(List<PmSupplierReason> auditDeleteSuppRestrictions) {
 		this.auditDeleteSuppRestrictions = auditDeleteSuppRestrictions;
 	}
-
-
 	/************ AUDIT END #28895-35509 *************/
-	
-	//#39618 - Start
-	public boolean isReasonApplicabilityDuplicate() {
-		return isReasonApplicabilityDuplicate;
-	}
-
-	public void setReasonApplicabilityDuplicate(boolean isReasonApplicabilityDuplicate) {
-		this.isReasonApplicabilityDuplicate = isReasonApplicabilityDuplicate;
-	}
-	//#39618 - End
-	//#8411 - START
-	/**
-	 * @return the reasonCategory
-	 */
-	public Integer getReasonCategory() {
-		return reasonCategory;
-	}
-
-	/**
-	 * @param reasonCategory
-	 *            the reasonCategory to set
-	 */
-	public void setReasonCategory(Integer reasonCategory) {
-		this.reasonCategory = reasonCategory;
-	}
-	//#8411 - END
 
 	//#28962 - Start
 	/**
@@ -787,7 +777,16 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	public void setAuditDeleteAgency(List<PmReasonRestr> auditDeleteAgency) {
 		this.auditDeleteAgency = auditDeleteAgency;
 	}
-
 	//#28962-Audit - End
+	
+	//#39618 - Start
+	public boolean isReasonApplicabilityDuplicate() {
+		return isReasonApplicabilityDuplicate;
+	}
+
+	public void setReasonApplicabilityDuplicate(boolean isReasonApplicabilityDuplicate) {
+		this.isReasonApplicabilityDuplicate = isReasonApplicabilityDuplicate;
+	}
+	//#39618 - End
 
 }

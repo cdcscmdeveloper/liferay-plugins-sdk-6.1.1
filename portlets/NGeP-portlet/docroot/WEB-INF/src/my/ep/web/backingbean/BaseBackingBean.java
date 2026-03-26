@@ -4181,7 +4181,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	//#8411 - END
-
+	
 	//#29466 - START
 	public boolean checkManufacturerCategoryCodes(ScQt scQt){
 		boolean manufacturer=false;	
