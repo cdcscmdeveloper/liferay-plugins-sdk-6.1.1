@@ -248,7 +248,7 @@
 												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
 												update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable" /></td> <!--shift between catalogueListingTable and catalogueGridViewID -->
 									</tr>
-									<!-- #10747 - Shafie, Soo - End -->
+									<!-- #10747 - Shafie, Soo, Azza- End -->
 								</table>
 							</td>
 							<!-- #10747 - Shafie - Start  -->	
@@ -344,24 +344,22 @@
 												<table
 													style="width: 100%; height: 100%; padding-left: 10px; padding-right: 10px; padding-bottom: 10px; padding-top: 10px; vertical-align: top;">
 													<tr>
-														<td align="center"
-															style="text-align: center; padding-top: 14px; padding-bottom: 16px;"><h:panelGroup
-																rendered="#{supplierItem[7] == null }">
+														<!-- #10747 Start -->
+														<td align="center" style="text-align: center; padding-top: 14px; padding-bottom: 16px;">
+															<h:panelGroup rendered="#{supplierItem[7] == null}">
 																<div align="center" style="width: 100%">
-																	<div align="center"
-																		style="height: 100px; width: 100px; left: 0px !important;">
-																		<p:outputPanel
-																			style="width:100px; border: 1px solid #808080; display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
-													#{lbl['lbl.cm.no.image.available']}
-													</p:outputPanel>
+																	<div align="center" style="height: 100px; width: 100px; left: 0px !important;">
+																		<p:outputPanel style="width:100px; border: 1px solid #808080; display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
+																			#{lbl['lbl.cm.no.image.available']}
+																		</p:outputPanel>
 																	</div>
 																</div>
-															</h:panelGroup> <h:panelGroup
-																rendered="#{supplierItem[7] != null }">
-																<img
-																	src="/NGeP-portlet/image?imageName=#{supplierItem[5]}/#{supplierItem[7]}"
-																	style="height: 100px; width: 100px; left: 0px !important;" />
-															</h:panelGroup></td>
+															</h:panelGroup>
+															<h:panelGroup rendered="#{supplierItem[7] != null}">
+																<img src="/NGeP-portlet/image?imageName=#{supplierItem[5]}/#{supplierItem[7]}" style="height: 100px; width: 100px; left: 0px !important;" />
+															</h:panelGroup>
+														</td>
+														<!-- #10747 End -->
 													</tr>
 													<tr>
 													    <!-- Enhancement #31245 - start -->
@@ -392,7 +390,7 @@
 													</tr>
 													<tr>
 														<td style="text-align: center; padding-bottom: 14px;">
-															<h:outputText style="text-decoration: line-through;" value=" RM #{supplierItem[8]}" />
+															<h:outputText style="text-decoration: line-through;" value=" RM #{supplierItem[10]}" /><!-- #10747 -->
 															<h:outputText value="	-#{supplierItem[6]}%" />
 														</td>
 													</tr>
@@ -425,7 +423,7 @@
  										<p:column style="width :10%;white-space:normal">
  										
  											<h:panelGroup
-												rendered="#{supplierItem[7]== null }">
+												rendered="#{supplierItem[7] == null}">
 													<div align="center" style="width: 100%">
 														<div align="center"
 															style="height: 70px; width: 70px; left: 0px !important;">

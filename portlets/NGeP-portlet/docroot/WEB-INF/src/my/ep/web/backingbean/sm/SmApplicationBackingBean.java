@@ -9766,6 +9766,15 @@ public class SmApplicationBackingBean extends
 		} else {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 		}
+		//#39771 START
+		if(bpmAppl.getProcessingOfficerProcess() != null){
+			if(bpmAppl.getProcessingOfficerProcess().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PENDING_REVISE)){
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION);
+			}else if(bpmAppl.getProcessingOfficerProcess().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PENDING_SITE_VISIT_BEFORE_APPROVE)){
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT);
+			}
+		}
+		//#39771 END
 
 		getManagedBean().getSmAppl().setApplSubmitDate(new Date());
 
@@ -11955,6 +11964,11 @@ public class SmApplicationBackingBean extends
 			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
+				//#37925 START
+				if(getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)){
+					pmStatId = getManagedBean().getPoRecommendStatusId();
+				}
+				//#37925 END
 			} else if (getManagedBean().isApproverUser()) {
 				actionDesc = SupplierManagementConst.APPROVER_APPROVE_APPL;
 			}
@@ -16619,13 +16633,15 @@ public class SmApplicationBackingBean extends
 						}
 					}
 					//#30944 END
-					
-					if(personnel.isEquityOwner()){
+					//#31269 - start
+					validateSsmPersonnel(personnel);
+					if(personnel.isEquityOwnerSsm()){
 						this.getManagedBean().getPersonnelsOwner().add(personnel);
 					}
-					if(personnel.isDirector()){
+					if(personnel.isDirectorSsm()){
 						this.getManagedBean().getPersonnelsDirector().add(personnel);
 					}
+					//#31269 - end
 					this.getManagedBean().getPersonnelsSsm().add(personnel);									
 				}
 				showOld = false;
@@ -16634,12 +16650,15 @@ public class SmApplicationBackingBean extends
 		if(showOld){
 			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
 				if(personnel.isSsmData()){
-					if(personnel.isEquityOwner()){
+					//#31269 - start
+					validateSsmPersonnel(personnel);
+					if(personnel.isEquityOwnerSsm()){
 						this.getManagedBean().getPersonnelsOwner().add(personnel);
 					}
-					if(personnel.isDirector()){
+					if(personnel.isDirectorSsm()){
 						this.getManagedBean().getPersonnelsDirector().add(personnel);
 					}
+					//#31269 - end
 					this.getManagedBean().getPersonnelsSsm().add(personnel);
 				}				
 			}			
@@ -19020,8 +19039,12 @@ public class SmApplicationBackingBean extends
 	    }
 
 	    String supplierType = smAppl.getSupplierType();
-
-	    if (isForeignCompany && isRocBusinessType(businessType)) {
+	    String applType = getManagedBean().getSmAppl().getApplType();
+	    if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
+	    	assignValReqdToTrue();
+            getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
+            getManagedBean().setDisplayDropdownRegStatus(true);
+	    } else if (isForeignCompany && isRocBusinessType(businessType)) {
 	        foreignRegistrationUI(true);
 
 	    } else if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {

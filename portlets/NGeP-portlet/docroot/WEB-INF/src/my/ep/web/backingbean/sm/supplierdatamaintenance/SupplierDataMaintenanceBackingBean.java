@@ -67,6 +67,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
@@ -790,6 +791,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
+			getManagedBean().setOwnerChange(resDTO.isOwnerChange()); // 40078, 26238
 			// #28895_35501 Start - AUDIT TRAIL SM
 			if (resDTO.isSuccessful()) {
 				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
@@ -3305,4 +3307,66 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	// #34031#note-162 End
 	// #34031 End
+	
+	// 36504 - START
+	public String getOtherDescVal(SmSuppCatOtherDescHistory otherDescBean, String param) {
+
+	    if (otherDescBean == null || param == null) {
+	        return SmCommonUtil.getMessage("lbl.sm.no.available", null);
+	    }
+
+	    String roleType = otherDescBean.getRoleType();
+	    String noValue = SmCommonUtil.getMessage("lbl.sm.no.available", null);
+
+	    switch (param.toUpperCase()) {
+
+	        case "ONE":
+	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
+	                                SupplierManagementConst.SUPPLIER_APPROVER)) {
+	                return otherDescBean.getOtherDesc();
+	            }
+	            break;
+
+	        case "TWO":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+	                return otherDescBean.getOtherDesc();
+	            }
+	            break;
+
+	        case "THREE":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
+	                                SupplierManagementConst.SUPPLIER_PO)) {
+	                return getUserNameByUserId(otherDescBean.getCreatedBy());
+	            }
+	            break;
+
+	        case "FOUR":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+	                return otherDescBean.getOtherDesc();
+	            }
+	            break;
+
+	        case "FIVE":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
+	                                SupplierManagementConst.SUPPLIER_APPROVER)) {
+	                return getUserNameByUserId(otherDescBean.getCreatedBy());
+	            }
+	            break;
+	    }
+
+	    return noValue;
+	}
+
+	private boolean isRole(String roleType, String... roles) {
+	    if (roleType == null) {
+	        return false;
+	    }
+	    for (String role : roles) {
+	        if (roleType.equalsIgnoreCase(role)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	// 36504 - END
 }

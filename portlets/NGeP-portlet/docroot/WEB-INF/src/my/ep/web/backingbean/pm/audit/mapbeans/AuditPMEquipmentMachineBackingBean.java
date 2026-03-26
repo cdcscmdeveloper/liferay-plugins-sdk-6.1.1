@@ -109,16 +109,16 @@ public class AuditPMEquipmentMachineBackingBean extends AuditPMBackingBeanTempla
 	
 	private String checkPmParameterDesc(PmParameter pmParameter) {
 		String description = null;
-		
-		if(pmParameter.getParameterId() != null) {
+
+		if (pmParameter.getParameterId() != null) {
 			PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(pmParameter.getParameterId());
-			for (PmParameterDesc desc : parameter.getPmParameterDescsSpecCallOnly()) {
+			for (PmParameterDesc desc : parameter.getPmParameterDescs()) {
 				if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 					description = desc.getCodeName();
 				}
 			}
 		}
-		
+
 		return description;
 
 	}
