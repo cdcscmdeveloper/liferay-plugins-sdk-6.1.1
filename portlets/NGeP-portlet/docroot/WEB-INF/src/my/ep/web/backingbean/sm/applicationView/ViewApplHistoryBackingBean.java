@@ -599,6 +599,15 @@ public class ViewApplHistoryBackingBean extends
 			}		
 			//END 14530
 			
+			// #30009 start
+			PmParameterDesc desc = SmCommonUtil
+					.retrieveParameterDescByTypeAndCodeAndLang(
+							SupplierManagementConst.SPECIAL_SERVICE_CODE,
+							supplier.getServiceType(), new FacesScopes()
+									.getUserLocale().getLanguage(), true);
+			getManagedBean().setServiceCodeName(desc.getCodeName());
+			// #30009 end
+			
 			/*
 			 * retrieve status from SM_APPL, not workflow status
 			 String statusDesc = null; 
