@@ -163,6 +163,15 @@ import org.primefaces.model.StreamedContent;
 import com.liferay.compat.portal.util.PortalUtil;
 //#28895_35501 - AUDIT TRAIL SM
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
+//#34031 Start
+import my.ep.biz.service.sm.revisit.ISmRevisitSO;
+import my.ep.dto.sm.revisit.SmRevisitReqDTO;
+import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.util.SLAUtils;
+import my.ep.web.constant.report.SmReportConst;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.persistence.entity.sm.SmRvCatCode;
+//#34031 End
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -3052,6 +3061,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//#26238
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
+		// #34031
+		initSmRvHistory();
 		SmCommonUtil.redirectToPage(basePage, "", null);
 	}
 
@@ -5018,4 +5029,219 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		auSmView.initAuditTab(suppAppl);
 	}
 	// #28895_35501 End
+	// #34031 Start
+	/**
+	 * Initialize revisit history list
+	 */
+	public void initSmRvHistory() {
+		try {
+			SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
+
+			if (this.getManagedBean().isSupplierUser()) {
+				reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier().getSupplierId());
+			} else if (null != getSupplierIdParam()) {
+				reqDTO.setSupplierId(Long.parseLong(getSupplierIdParam()));
+			} else {
+				reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
+			}
+
+			ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
+			List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
+
+			if (revisitList.isEmpty()) {
+				this.getManagedBean().setSmRevisitList(new ArrayList<SmRevisit>());
+			} else {
+				setCurrentRevisit(revisitList);
+				this.getManagedBean().setSmRevisitList(updateSmRvCreatedUserName(revisitList));
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	private void setCurrentRevisit(List<SmRevisit> revisitList) {
+		for (SmRevisit revisit : revisitList) {
+			if (revisit.isCurrent()) {
+				this.getManagedBean().setCurrentSmRevisit(revisit);
+				break;
+			}
+		}
+	}
+
+	private List<SmRevisit> updateSmRvCreatedUserName(List<SmRevisit> revisitList) {
+		for (SmRevisit revisit : revisitList) {
+			PmUser user = PmCommonUtil.retrieveUserById(revisit.getCreatedBy(), true);
+			revisit.setActionedBy(user.getUserName());
+		}
+		return revisitList;
+	}
+
+	/**
+	 * Displays the revisit history dialog
+	 */
+	public void onClickRevisitHistoryList() {
+		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
+	}
+
+	/**
+	 * Downloads the revisit history report.
+	 */
+	public void downloadRevisitHistory() {
+		try {
+			Map<String, String> paramMap = new HashMap<>();
+			paramMap.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSmSupplier().getSupplierId()));
+			paramMap.put(SmReportConst.PARAM_USER_ID, String.valueOf(getUserIdSessionFromLoginId()));
+			generateReport(ReportConst.SM_REVIST_REPORT, paramMap);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	// #34031#note-122 - Start
+	/**
+	 * Build remark for SM Revisit
+	 * 
+	 * @param revisit
+	 * @return String
+	 */
+	public String getRemarks(SmRevisit revisit) {
+		StringBuilder remark = new StringBuilder();
+		remark.append(revisit.getRevisitRemark());
+		// #34031#note-152 Issue 27
+		remark.append("<br />");
+		double index = 1.1;
+
+		if (null != revisit.getOldPmRegStatus() && null != revisit.getNewPmRegStatus()) {
+			// #34031#note-152 Issue 27
+			remark.append("<br />");
+			getRegStatus(revisit, remark, index);
+			index++;
+			remark.append("<br />");
+		}
+		if (null != revisit.getDeletedRvCatCodes() && !revisit.getDeletedRvCatCodes().isEmpty()) {
+			remark.append("<br />");
+			getDeletedRvCatCodes(revisit, remark, index);
+			index++;
+		}
+		if (null != revisit.getAddedRvCatCodes() && !revisit.getAddedRvCatCodes().isEmpty()) {
+			remark.append("<br />");
+			getAddedRvCatCodes(revisit, remark, index);
+			index++;
+		}
+		if (null != revisit.getUpdatedRvCatCodes() && !revisit.getUpdatedRvCatCodes().isEmpty()) {
+			// 34031#note-128 Issue 23 - Start
+			int i = 0;
+			for (SmRvCatCode updatedRvCatCode : revisit.getUpdatedRvCatCodes()) {
+				updatedRvCatCodes(updatedRvCatCode, remark, index);
+				if (i++ != revisit.getUpdatedRvCatCodes().size() - 1) {
+					remark.append("<br />");
+				}
+				index++;
+			}
+			// #34031#note-128 - End
+		}
+		return remark.toString();
+	}
+
+	private void getRegStatus(SmRevisit revisit, StringBuilder remark, double index) {
+		remark.append(index)
+				.append(" ")
+				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.regStatus",
+						new Object[] { SmCommonUtil.getStatusDescByStatusId(revisit.getOldPmRegStatus().getPmStatus().getStatusId()).getStatusName(),
+								SmCommonUtil.getStatusDescByStatusId(revisit.getNewPmRegStatus().getPmStatus().getStatusId()).getStatusName() },
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+	}
+
+	private void getDeletedRvCatCodes(SmRevisit revisit, StringBuilder remark, double index) {
+		remark.append(index)
+				.append(" ")
+				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.deleted.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())).append("<br />");
+		int deletedIndex = 1;
+		for (SmRvCatCode deletedRvCatCode : revisit.getDeletedRvCatCodes()) {
+			remark.append("<br />");
+			remark.append("<p style=\"margin: 0 0 0 15px;\">").append(index).append(".").append(deletedIndex).append(" ")
+					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
+					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
+					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" (")
+					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code()).append("-")
+					.append(deletedRvCatCode.getSmSupplierCategory().getCategoryL1Name()).append("/ ")
+					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code()).append("-")
+					.append(deletedRvCatCode.getSmSupplierCategory().getCategoryL2Name()).append("/ ")
+					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append("-")
+					.append(deletedRvCatCode.getSmSupplierCategory().getCategoryL3Name()).append(")").append("</p>");
+			if (null != deletedRvCatCode.getOtherDesc() && !deletedRvCatCode.getOtherDesc().isEmpty()) {
+				remark.append("<p style=\"margin: 0 0 0 45px;\">").append(deletedRvCatCode.getOtherDesc()).append("</p>");
+			}
+			deletedIndex++;
+		}
+	}
+
+	private void getAddedRvCatCodes(SmRevisit revisit, StringBuilder remark, double index) {
+		remark.append(index)
+				.append(" ")
+				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.added.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())).append("<br />");
+		int addedIndex = 1;
+		sortRvCatCode(revisit.getAddedRvCatCodes());
+		for (SmRvCatCode addedRvCatCode : revisit.getAddedRvCatCodes()) {
+			remark.append("<br />");
+			remark.append("<p style=\"margin: 0 0 0 15px;\">").append(index).append(".").append(addedIndex).append(" ")
+					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
+					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
+					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" (")
+					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code()).append("-")
+					.append(addedRvCatCode.getSmSupplierCategory().getCategoryL1Name()).append("/ ")
+					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code()).append("-")
+					.append(addedRvCatCode.getSmSupplierCategory().getCategoryL2Name()).append("/ ")
+					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append("-")
+					.append(addedRvCatCode.getSmSupplierCategory().getCategoryL3Name()).append(")").append("</p>");
+			if (null != addedRvCatCode.getOtherDesc() && !addedRvCatCode.getOtherDesc().isEmpty()) {
+				remark.append("<p style=\"margin: 0 0 0 45px;\">").append(addedRvCatCode.getOtherDesc()).append("</p>");
+			}
+			addedIndex++;
+		}
+	}
+
+	private void updatedRvCatCodes(SmRvCatCode updatedRvCatCode, StringBuilder remark, double index) {
+		StringBuilder updatedCatCode = new StringBuilder();
+		updatedCatCode.append(updatedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
+				.append(updatedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
+				.append(updatedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" (")
+				.append(updatedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code()).append("-")
+				.append(updatedRvCatCode.getSmSupplierCategory().getCategoryL1Name()).append("/ ")
+				.append(updatedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code()).append("-")
+				.append(updatedRvCatCode.getSmSupplierCategory().getCategoryL2Name()).append("/ ")
+				.append(updatedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append("-")
+				.append(updatedRvCatCode.getSmSupplierCategory().getCategoryL3Name()).append(")");
+
+		remark.append("<br />")
+				.append(index)
+				.append(" ")
+				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.categories.desc", new Object[] { updatedCatCode.toString(),
+						updatedRvCatCode.getOldOtherDesc(), updatedRvCatCode.getOtherDesc() }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+	}
+
+	// #34031#note-122 - End
+	// #34031 End
+	// #34031#note-111 : Issue 20 - Start
+	public static void sortRvCatCode(List<SmRvCatCode> rvCatCodes) {
+		Collections.sort(rvCatCodes, new Comparator<SmRvCatCode>() {
+			@Override
+			public int compare(final SmRvCatCode r1, final SmRvCatCode r2) {
+				String r1Code = r1.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code()
+						+ r1.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code()
+						+ r1.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code();
+				String r2Code = r2.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code()
+						+ r2.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code()
+						+ r2.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code();
+				return (r1Code.compareTo(r2Code));
+			}
+		});
+	}
+	// #34031#note-111 : Issue 20 - End
 }
