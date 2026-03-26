@@ -21,10 +21,13 @@
 		<div class="align-center">
 			<p:dataTable var="branchList"
 				value="#{lOIDetailBackingBean.managedBean.supplierBranchList}"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.record']}"
 				rows="10">
+				
+				<f:facet name="emptyMessage">
+                  <h:outputText value="#{lbl['lbl.datatable.msg.no.record']}" />
+                </f:facet>
+                
 				<ac:paginator for="branchList" />
-
 				<p:column headerText="#{lbl['lbl.sc.branch.name']}"
 					style="width:30%; white-space:normal;"
 					styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
