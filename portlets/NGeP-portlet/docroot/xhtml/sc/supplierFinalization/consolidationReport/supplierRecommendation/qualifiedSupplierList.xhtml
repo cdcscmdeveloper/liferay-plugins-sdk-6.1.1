@@ -186,8 +186,9 @@
 				<p:column style="text-align:right;">
 					<ui:remove>
 						<!-- #38151 add action popup-->
+						<!-- #40142 -->
 					</ui:remove>
-					<p:commandLink action="#{qualifiedSupplierListPopupScore}"
+					<p:commandLink action="#{consolidationReportBackingBean.qualifiedSupplierListPopupScore(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
 						rendered="#{!consolidationReportBackingBean.managedBean.itemized and qualifiedSupp.proposalAmount ne null}"
 						process="@this"
 						update="@([id$=preferenceMarginSuppDetailsPopupId])">
