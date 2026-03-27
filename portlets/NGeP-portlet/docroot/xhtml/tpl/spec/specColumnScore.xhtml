@@ -13,9 +13,7 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 		</h:outputText>
 	</p:column>
-	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
-	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
-	<ui:remove>#29187 End Vinod</ui:remove>
+	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 		<h:panelGroup rendered="#{isScoring and !isRepeated}">
 			<h:outputText value="#{tplSpecAnswer.autoScore}">
 				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
@@ -35,13 +33,16 @@
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 		
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
-			<ui:remove>#29187 Start Vinod Added Compliance checking in disable and removed required</ui:remove>
+			<ui:remove><!-- 28784 - Start --></ui:remove>
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
-				disabled="#{(tplSpecAnswer.compliance ne null and !tplSpecAnswer.compliance)}"
-				label="#{lbl['lbl.tpl.spec.content.user.score']}">
-				<ui:remove>#29187 End Vinod</ui:remove>
+				label="#{lbl['lbl.tpl.spec.content.user.score']}"
+				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null}"
+				disabled="#{evaluationBackingBean.isStatusAfterDemo()
+					or (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+			<ui:remove><!-- 28784 - End -->21692</ui:remove>
 				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
 				<ac:validateNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}"
@@ -51,8 +52,12 @@
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
 			</p:inputText>
-			 / 
-			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}">
+			<ui:remove><!-- 28784 - Start --></ui:remove>
+			<h:outputText value="/"
+				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null}"></h:outputText>
+			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null}">
+			<ui:remove><!-- 28784 - End --></ui:remove>
 				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
@@ -61,41 +66,21 @@
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
 		</h:panelGroup>
 	</p:column>
-	<ui:remove>#29187 Start Vinod</ui:remove>
-	<p:column style="width:10%;" rendered="#{isManSpecAndCompliance}">
-		<ui:fragment
-			rendered="#{isSpecTypeTechnical 
-			and (tplSpecAnswer.notApplicable and tplSpecAnswer.notOfferAll or tplSpecAnswer.notOfferAll)}">
-			<h:outputText value="#{lbl['lbl.txt.na']}"
-				rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification 
-				and tplSpecAnswer.tplSpecQuestion.mandatorySpec}" />
-		</ui:fragment>
-		<ui:fragment
-			rendered="#{isSpecTypeTechnical 
-			and !tplSpecAnswer.notOfferAll }">
-			<h:selectOneMenu id="specCompliance"
-				label="#{lbl['lbl.sc.tec.compliance']}"
-				value="#{tplSpecAnswer.compliance}"
-				valueChangeListener="#{templateSpecBackingBean.itemComplianceChangeControl}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly}"
-				rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification 
-				and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
-				<f:selectItems
-					value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(true)}" />
-				<p:ajax event="change" process="@this" partialSubmit="true"
-					update="@([id$=questionTbl])"
-					listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
-			</h:selectOneMenu>
-			<h:outputText value=""
-				rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification  
-				and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}" />
-			<p:message id="specComplianceMsg" for="specCompliance" display="icon" />
-		</ui:fragment>
-	</p:column>
-	<ui:remove>#29187 End Vinod</ui:remove>
-	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
-	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '130px'};">	
-	<ui:remove>#29187 End Vinod</ui:remove>
-		<p:inputTextarea style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+	<p:column style="width:130px;">
+		<ui:remove>21692 - Start</ui:remove>
+		<p:inputTextarea style="width:calc(100% - 15px);"
+			value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+			rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq null
+					or (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected
+					and evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified)}"
+			onmouseout="limitTextArea(this,500);"/>
+		<p:inputTextarea style="width:calc(100% - 15px);"
+			value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+			rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne null
+					and (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"
+			disabled="true"
+			onmouseout="limitTextArea(this,500);"/>
+		<ui:remove>21692 - End</ui:remove>
 	</p:column>
 </ui:composition>

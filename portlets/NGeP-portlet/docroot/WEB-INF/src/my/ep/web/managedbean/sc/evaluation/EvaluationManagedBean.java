@@ -525,12 +525,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean noProposalSubmitted;
 	private boolean supplierRejected;
 	// 6906 - end
-	/*#29187 Start Vinod*/
-	private TplSpecZoneDtl tplSpecZoneDtl;
-	private boolean isComplianceCnfrm;
-	private boolean isComplianceOldNull;
-	private boolean isComplianceOldNo;
-	/*#29187 End Vinod*/
 
 	// #28784 - Start
 	private boolean evalStatusComp;
@@ -560,7 +554,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal itemTsPercentage;
 	private BigDecimal itemAllOtherElementsPercentage;
 	private BigDecimal maxItemTsScore;
+	private String totalScoreLabel;
+	private String maxItemAllOtherElementsScoreLabel;
+	private String tooltipDemo;
 	// #28784 - End
+	private boolean allSupplierRejectEpv;//#21692
 
 	// #28784 - Start
 	public boolean isEvalStatusComp() {
@@ -3912,39 +3910,49 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.supplierRejected = supplierRejected;
 	}
 	// 6906 - end
-	/* #29187 Start Vinod */
-	public TplSpecZoneDtl getTplSpecZoneDtl() {
-		return tplSpecZoneDtl;
-	}
 
-	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
-		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
 	}
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 
-	public boolean isComplianceCnfrm() {
-		return isComplianceCnfrm;
+	//#28784 - Start
+	public String getTotalScoreLabel() {
+		return totalScoreLabel;
 	}
+	//#28784 - End
 
-	public void setComplianceCnfrm(boolean isComplianceCnfrm) {
-		this.isComplianceCnfrm = isComplianceCnfrm;
+	//#28784 - Start
+	public void setTotalScoreLabel(String totalScoreLabel) {
+		this.totalScoreLabel = totalScoreLabel;
 	}
+	//#28784 - End
 
-	public boolean isComplianceOldNull() {
-		return isComplianceOldNull;
+	//#28784 - Start
+	public String getMaxItemAllOtherElementsScoreLabel() {
+		return maxItemAllOtherElementsScoreLabel;
 	}
+	//#28784 - End
 
-	public void setComplianceOldNull(boolean isComplianceOldNull) {
-		this.isComplianceOldNull = isComplianceOldNull;
+	//#28784 - Start
+	public void setMaxItemAllOtherElementsScoreLabel(String maxItemAllOtherElementsScoreLabel) {
+		this.maxItemAllOtherElementsScoreLabel = maxItemAllOtherElementsScoreLabel;
 	}
+	//#28784 - End
 
-	public boolean isComplianceOldNo() {
-		return isComplianceOldNo;
+	//#28784 - Start
+	public String getTooltipDemo() {
+		return tooltipDemo;
 	}
+	//#28784 - End
 
-	public void setComplianceOldNo(boolean isComplianceOldNo) {
-		this.isComplianceOldNo = isComplianceOldNo;
+	//#28784 - Start
+	public void setTooltipDemo(String tooltipDemo) {
+		this.tooltipDemo = tooltipDemo;
 	}
-	
-	/* #29187 End Vinod */
-	
+	//#28784 - End
 }
