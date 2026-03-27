@@ -56,10 +56,14 @@
 		        		</p:commandLink>
 		        	</ui:remove>
 		        	<h:panelGroup rendered="#{not empty suppDoc.smApplDocFiles}">
-		        		<!-- #11641 -START reopen log #125-->
-		        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}</a>
-		        		<!-- #11641 - END reopen log #125-->
-		        	</h:panelGroup>
+						<!-- #39316 - Start -->
+						<h:commandLink id="file" value="#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}"
+							rendered="#{not empty applDocs and !suppDoc.pmDocument.hardCopyReq}">
+							<p:fileDownload
+								value="#{sdoReviewBackingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
+						</h:commandLink>
+						<!-- #39316 - End -->
+					</h:panelGroup>
 					<br />
 				</ui:repeat>
 				<!-- #28807 - End -->		        

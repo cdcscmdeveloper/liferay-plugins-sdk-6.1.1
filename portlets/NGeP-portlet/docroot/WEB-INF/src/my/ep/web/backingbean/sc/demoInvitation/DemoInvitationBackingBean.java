@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -1095,6 +1096,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		scQtDemo.setScQtDemoItemList(getManagedBean().getByItemList());
 		scQtDemo.setScQtDemoSupplierList(getManagedBean().getAllItemList());
 		scQtDemo.setScQtDemoContactList(getManagedBean().getScQtDemoContactList());
+		resetDemoSchedule(scQtDemo);
 
 		reqDto.setScQtDemo(scQtDemo);
 		reqDto.setScQt(this.getManagedBean().getQt());
@@ -1219,6 +1221,9 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							|| sup.getScQtDemoSchedule().getDemoEndDate() == null) {
 						action = null;// Reset action
 						throw new EpException(MessageConst.ERROR_760531);
+					} else {
+						validateStartDemoDateAllItem(sup);
+						validateEndDemoDateAllItem(sup);
 					}
 				}
 
@@ -1230,6 +1235,9 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 								|| score.getScQtDemoSchedule().getDemoEndDate() == null) {
 							action = null;// Reset action
 							throw new EpException(MessageConst.ERROR_760541);
+						} else {
+							validateStartDemoDateByItem(score);
+							validateEndDemoDateByItem(score);
 						}
 					}
 				}
@@ -1656,5 +1664,84 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		 * If got duplicate, delete it and only retaining qtDemo.
 		 */
 		qtDemoSO.validateDemoListByQtId(reqDTO, qtDemo);
+	}
+	
+	private ScQtDemo resetDemoSchedule(ScQtDemo scQtDemo) {
+		if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM) && scQtDemo.getScQtDemoItemList() != null) {
+			for (ScQtDemoItem item : scQtDemo.getScQtDemoItemList()) {
+				for (ScQtDemoByItemScore score : item.getScQtDemoByItemScoreList()) {
+					score.setScQtDemoSchedule(null);
+				}
+			}
+		} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM) && scQtDemo.getScQtDemoSupplierList() != null) {
+			for (ScQtDemoSupplier supplier : scQtDemo.getScQtDemoSupplierList()) {
+				supplier.setScQtDemoSchedule(null);
+			}
+		}
+		return scQtDemo;
+	}
+	
+	/**
+	 * set to be before today
+	 * 
+	 * @return
+	 */
+	public Date handleMinDateForDemo() {		
+		return new Date();
+	}
+	
+	/**
+	 * validate START Demo date
+	 * 
+	 * @param selectedDate
+	 */
+	private void validateStartDemoDateAllItem(ScQtDemoSupplier supplier) {
+		ScQtDemoSchedule schedule = supplier.getScQtDemoSchedule();
+		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoStartDate().before(new Date())) {
+			action = null;
+			throw new EpException(MessageConst.ERROR_760556, new String[] { supplier.getDemoNo() });
+		}
+	}
+	
+	/**
+	 * validate END Demo date
+	 * 
+	 * @param selectedDate
+	 */
+	private void validateEndDemoDateAllItem(ScQtDemoSupplier supplier) {
+		ScQtDemoSchedule schedule = supplier.getScQtDemoSchedule();
+		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoEndDate() != null
+				&& (schedule.getDemoEndDate().before(schedule.getDemoStartDate())) || schedule.getDemoEndDate().equals(schedule.getDemoStartDate())) {
+			action = null;
+			throw new EpException(MessageConst.ERROR_760554,
+					new String[] { schedule.getScQtDemoSupplier().getDemoNo() });
+		}
+	}
+	
+	/**
+	 * validate START Demo date
+	 * 
+	 * @param selectedDate
+	 */
+	private void validateStartDemoDateByItem(ScQtDemoByItemScore score) {
+		ScQtDemoSchedule schedule = score.getScQtDemoSchedule();
+		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoStartDate().before(new Date())) {
+			action = null;
+			throw new EpException(MessageConst.ERROR_760556, new String[] { score.getScQtDemoSupplier().getDemoNo() });
+		}
+	}
+	
+	/**
+	 * validate END Demo date
+	 * 
+	 * @param selectedDate
+	 */
+	private void validateEndDemoDateByItem(ScQtDemoByItemScore score) {
+		ScQtDemoSchedule schedule = score.getScQtDemoSchedule();
+		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoEndDate() != null
+				&& (schedule.getDemoEndDate().before(schedule.getDemoStartDate())) || schedule.getDemoEndDate().equals(schedule.getDemoStartDate())) {
+			action = null;
+			throw new EpException(MessageConst.ERROR_760554, new String[] { score.getScQtDemoSupplier().getDemoNo() });
+		}
 	}
 }

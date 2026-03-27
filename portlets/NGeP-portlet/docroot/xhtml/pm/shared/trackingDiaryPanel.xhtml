@@ -11,13 +11,13 @@
 
 			<ac:paginator for="trackingDiaryTableID"></ac:paginator>
 
-			<p:column width="15%">
+			<p:column width="10%"><ui:remove>28784</ui:remove>
 				<f:facet name="header">
 				#{lbl['lbl.td.view.action.date']}
 				</f:facet>
 				<ac:labelDateTime value="#{trackingDiaryObj.actionedDate}" /> 
 			</p:column>
-			<p:column width="15%">
+			<p:column style="white-space: normal!important;" width="15%"><ui:remove>28784</ui:remove>
 				<f:facet name="header">
 				#{lbl['lbl.td.view.action.by']}
 				</f:facet>
@@ -31,13 +31,13 @@
 			</f:facet> 
 		   #{pmTrackingDiaryBackingBean.getRoleDescByRoleCode(trackingDiaryObj.roleCode)}
             	</p:column>
-			<p:column style="white-space: normal!important;" width="25%">
+			<p:column style="white-space: normal!important;" width="30%">
 				<f:facet name="header">
 			#{lbl['lbl.td.view.action.desc']}
 				</f:facet>
 			<h:outputText value="#{trackingDiaryObj.actionDesc}" escape="false"/>
 			</p:column>
-			<p:column width="15%">
+			<p:column style="white-space: normal!important;" width="15%"><ui:remove>28784</ui:remove>
 				<f:facet name="header">
 				#{lbl['lbl.td.view.status']}
 				</f:facet>

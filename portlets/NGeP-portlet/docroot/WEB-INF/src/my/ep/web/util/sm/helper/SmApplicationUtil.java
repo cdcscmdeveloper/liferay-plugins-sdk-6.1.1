@@ -14,10 +14,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -154,6 +156,7 @@ import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -3680,7 +3683,11 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
 		//13362
-		managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
+		// #39422 - Start - Add checking
+		if (managedBean.getApplnOverLapRemarks() == null || managedBean.getApplnOverLapRemarks().isEmpty()) {
+			managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
+		}
+		// #39422 - End
 
 		if (overlapCategoryVO != null) {
 			managedBean.setOverLappedCategoryExists(overlapCategoryVO
@@ -3692,7 +3699,11 @@ public class SmApplicationUtil {
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
 			//13362
-			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
+			// #39422 - Start - Add checking
+			if (managedBean.getApplnOverLapRemarks().isEmpty()) {
+				managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
+			}
+			// #39422 - End
 			managedBean.setOverLappedCategoryExists(true); //#31018
 		} else{
 			managedBean.setOverlapDocs(null);//#31018
@@ -3840,15 +3851,29 @@ public class SmApplicationUtil {
 			String mofNo = "";
 			String catCode = "";
 			String catCodeCombine = "";
+			//#39679 - Start
+			Set<String> catCodeList = new HashSet<>();
+			boolean duplicateCatCode = false;
+			//#39679 - End
 			int index = 0;
 			
 			if(resultList != null){
 				for (Object[] arrI : resultList){ 
 					catCode = arrI[0].toString() + arrI[1] + arrI[2];
+					//#39679 - Start
+					if(arrI[4].toString().equalsIgnoreCase(companyName)){
+						duplicateCatCode = checkDuplicateCatCode(catCodeList, catCode);
+					}else{
+						catCodeList = new HashSet<>();
+					}
+					catCodeList.add(catCode);
+					//#39679 - End
 					if("".equalsIgnoreCase(companyName)){
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
-						mofNo = arrI[5] != null ? arrI[5].toString() : "null";
+						// #39422 - Start - Change null to N/A
+						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
+						// #39422 - End -
 						catCodeCombine += companyName + ", " +  mofNo + ", " + " (";
 						index ++;
 					}
@@ -3856,11 +3881,17 @@ public class SmApplicationUtil {
 						catCodeCombine = catCodeCombine + catCode;
 					}
 					if(arrI[4].toString().equalsIgnoreCase(companyName) && index != 1){
-						catCodeCombine = catCodeCombine + ", " + catCode;
+						//#39679 - Start
+						if(!duplicateCatCode){
+							catCodeCombine = catCodeCombine + ", " + catCode;	
+						}
+						//#39679 - End
 					}else{
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
-						mofNo = arrI[5] != null ? arrI[5].toString() : "null";
+						// #39422 - Start - Change null to N/A
+						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
+						// #39422 - End -
 						
 						if (index == 1){
 							catCodeCombine = catCodeCombine + "";
@@ -3878,6 +3909,19 @@ public class SmApplicationUtil {
 		}
 		return retVal;
 	}
+	
+	// #39679 - Start
+	private static boolean checkDuplicateCatCode(Set<String> catCodeList, String catCode) {
+		if (!catCodeList.isEmpty()) {
+			for (String item : catCodeList) {
+				if (item.contains(catCode)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	// #39679 - End
 
 	private static void resetAddedCategoryOverlapStatus(SmAppl appl,
 			SmOverlapCategoryVO vo) {
@@ -13070,6 +13114,18 @@ public class SmApplicationUtil {
 					   bean.getSelectedShareHolder().setDisableEquityOwner(false);
 					   bean.getSelectedShareHolder().setDisableStaff(false);
 				   }
+				// #38610-start
+				if (bean.getSelectedShareHolder().isClerical()) {
+					bean.getSelectedShareHolder().setProf(false);
+					bean.getSelectedShareHolder().setManagement(false);
+					bean.getSelectedShareHolder().setEquityOwner(false);
+					bean.getSelectedShareHolder().setSemiProf(false);
+					bean.getSelectedShareHolder().setHigherManagement(false);
+					bean.getSelectedShareHolder().setDisableProf(true);
+					bean.getSelectedShareHolder().setDisableManagement(true);
+					bean.getSelectedShareHolder().setDisableEquityOwner(true);
+					bean.getSelectedShareHolder().setDisableSemiProf(true);
+				}// #38610-end
 				 if(bean.getSelectedShareHolder().isEquityOwner()
 							|| bean.getSelectedShareHolder().isManagement()
 							|| bean.getSelectedShareHolder().isDirector()
@@ -15177,4 +15233,45 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37784- END
+	//#38991 -START
+	/**
+	* Validate sm company experience info before saving the application.
+	* 
+	* @param validSave
+	*            - boolean
+	* @param managedBean
+	*            - SmApplicationManagedBean object
+	* @param currentTab
+	*            - int current tab
+	* @return true, if successful
+	*/			
+	public static boolean validateComExpProjectBeforeSave(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab){
+		boolean validCompExperience = true;
+		StringBuilder sbCompExperience = new StringBuilder();
+		sbCompExperience.append("<br/>");
+		int x = 0;
+		SmAppl appl = managedBean.getSmAppl();
+			
+		for (SmCompanyExperience compExperience : appl.getSmCompanyExperiences()){
+			if (compExperience.getClientType() == null) {
+				validCompExperience = false;
+				sbCompExperience.append(++x + ". ");
+				sbCompExperience.append(compExperience.getTitle());
+				sbCompExperience.append("<br/>");
+				}
+			}
+		if (!validCompExperience){
+			if(managedBean.isSupplierUser()){
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.project.done.for.not.completed",
+						new String[] { sbCompExperience.toString() }));
+				}		
+			}
+		appl = null;
+		return validSave;
+		}
+	//#38991 -END	
 }

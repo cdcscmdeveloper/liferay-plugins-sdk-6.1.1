@@ -14,20 +14,18 @@
 					</td>
 					<ui:remove> #25201 - start </ui:remove>
 					<td class="header-info-text" width="15%">
-						<ui:remove>#25791 start </ui:remove>
-							<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
-							action="#{qTDetailBB.editQuationTenderDetails(qtLOABackingBean.managedBean.qt, false, true, view.viewId)}">
-						<ui:remove>#25791 end </ui:remove>
-					<ui:remove> #25201 - end </ui:remove>
+						<!-- 25201, 25791 -start- -->
+						<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
+						action="#{qTDetailBB.editQuationTenderDetails(qtLOABackingBean.managedBean.qt, false, true, view.viewId)}">
+						<!-- 25201, 25791 -end- -->
 				<h:outputText value="#{qtLOABackingBean.managedBean.qt.qtNo}" escape="false" />
 					</p:commandLink>
 					</td>
 					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td class="header-info-text" width="35%">
-						#{qtLOABackingBean.retrievePTJByOrgProfileId
-(qtLOABackingBean.managedBean.qt.pmOrgProfile.orgProfileId,
-qtLOABackingBean.isQTStatusPublished(qtLOABackingBean.managedBean.currentStatusId)?qtLOABackingBean.managedBean.qt.publishDate : qtLOABackingBean.managedBean.qt.createdDate)}
+						#{qtLOABackingBean.retrievePTJByOrgProfileId(qtLOABackingBean.managedBean.qt.pmOrgProfile.orgProfileId,
+						qtLOABackingBean.isQTStatusPublished(qtLOABackingBean.managedBean.currentStatusId)?qtLOABackingBean.managedBean.qt.publishDate : qtLOABackingBean.managedBean.qt.createdDate)}
 					</td>
 					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.status']}" />

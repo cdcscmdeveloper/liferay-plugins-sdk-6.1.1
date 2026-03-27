@@ -35,17 +35,16 @@
 			value="#{svcSiteAssignBackingBean.getsupplierApplTypeDesc(svcSiteAssignBackingBean.managedBean.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.sitevisit.want.proceed.qmark']}	
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}">
-						<f:param name="disableValidation" value="true" />
-					</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="submissionConfirmDlg.hide();"></p:commandButton>
-			</div>
-		</p:dialog>
+		<!-- #34400 -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
+			okParam="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.sitevisit.want.proceed.qmark']}" 
+			update="@all"
+			loadingWidget="blockWidget" />
 
 		<p:messages id="svoMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
@@ -112,7 +111,16 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.category.description']}" style="white-space: normal; width: 88%;vertical-align: top;">
-					#{catApp.pmCategoryL3.categoryName}
+					<!-- #28175 - start -->
+					<c:choose>
+						<c:when test="#{not svcSiteAssignBackingBean.managedBean.smAppl.activeAppl}">
+							#{catApp.categoryL3Name}
+						</c:when>
+						<c:otherwise>
+							#{catApp.pmCategoryL3.categoryName}
+						</c:otherwise>
+					</c:choose>
+					<!-- #28175 - end -->
 					<h:outputText value="(#{catApp.otherDesc})" rendered="#{catApp.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
 				</p:column>
 			</p:dataTable>

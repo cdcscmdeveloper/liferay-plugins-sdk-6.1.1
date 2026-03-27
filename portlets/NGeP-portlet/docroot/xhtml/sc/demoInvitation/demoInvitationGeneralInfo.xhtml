@@ -185,6 +185,7 @@
 						</tr>
 					</table>
 				</td>
+				<!-- 4ser
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
 				<td>
 					<table>
@@ -209,6 +210,7 @@
 					</table>
 				</td>
 			</tr>
+				4ser -->
 			</tr>
 
 			<tr>
@@ -353,7 +355,7 @@
 					</table>
 				</td>
 			</tr>
-
+			<!-- 21692
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -394,6 +396,7 @@
 						style="float:left; color: #0054a6; font-size: 12px; font-family: Arial, helvetica, sans-serif; font-weight: normal; font-style: italic; margin-left: 10px;" />
 				</td>
 			</tr>
+			21692 -->
 
 			<tr>
 				<td style="width: 100%;"><p:outputLabel
@@ -443,7 +446,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneRadio value="#{scQt.sampleReq}"
-								disabled="#{scQt.partial or isReadOnly}">
+								disabled="true">
 								<f:selectItems
 									value="#{demoInvBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change" partialSubmit="true"

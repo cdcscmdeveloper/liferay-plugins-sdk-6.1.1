@@ -80,6 +80,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -4081,9 +4082,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
+						boolean isDemoRequired = report.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);//#28784
 
 						// #28784 -start-
-						if (null != report.getPmDocument() || report.getTitle().equalsIgnoreCase(SourcingConstants.DEMO_EVALUATION_REPORT))
+						if (null != report.getPmDocument() || isDemoRequired)
 						// #28784 -end-
 						{
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
@@ -5026,76 +5030,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		// No need to explicitly close the stream; it's done automatically
 	}
-	// Bug #35485@Syazani 08/02/2024 -- End	
-
-	// 25791-start
-	/**
-	 * The method used to retrieve the contract status of the contract.
-	 * 
-	 * @param contractStatus
-	 * @return Effective, Terminated, Expired, Inactive
-	 */
-	public String getContractStatusDesc(int contractStatus) {
-		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
-			return ResourceBundleUtils.getMessage(
-					QTConstants.CONTRACT_STATUS_EFFECTIVE,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
-			return ResourceBundleUtils.getMessage(
-					QTConstants.CONTRACT_STATUS_INACTIVE,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
-			return ResourceBundleUtils.getMessage(
-					QTConstants.CONTRACT_STATUS_EXPIRED,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
-			return ResourceBundleUtils.getMessage(
-					QTConstants.CONTRACT_STATUS_TERMINATED,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else {
-			return "";
-		}
-	}
-
-	// 25791 -end-
-
-	// 25791 -start-
-	/**
-	 * The method used to retrieve the status completion of the contract.
-	 * 
-	 * @param contractNo
-	 * @param status
-	 * @return complete or incomplete
-	 */
-	public String chkContractStatusType(String contractNo, int status) {
-		if (StringUtils.isNotEmpty(contractNo)
-				&& StringUtils.isNotBlank(contractNo)) {
-			if (status == ContractConst.STATUS_COMPLETE) {
-				return ResourceBundleUtils.getMessage(
-						QTConstants.CONTRACT_STATUS_COMPLETE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			} else if (status == ContractConst.STATUS_INCOMPLETE) {
-				return ResourceBundleUtils.getMessage(
-						QTConstants.CONTRACT_STATUS_INCOMPLETE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
-				return ResourceBundleUtils.getMessage(
-						QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			}
-		}
-
-		return "";
-	}
-
-	// 25791-End
+	// Bug #35485@Syazani 08/02/2024 -- End
 
 	// #26226 - Start
 	/**
@@ -6045,13 +5980,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				
+				//Bug #39043 #39512 start
 				if (null != suppAns.getSupplierId()
-						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()   
-						&& null != tplSpecAnswer.getAnswerRemark()){					
-					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
+					String remark = tplSpecAnswer.getAnswerRemark();
+					answerRemarkList.add(remark != null ? remark : getDefaultValue());
 					break;
 				}
+				//Bug #39043 #39512 end
 			}
 		}
 	}
@@ -6206,7 +6142,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if (tempRemark == null) {
 							tempRemark = getDefaultValue();
-						} else {
+						} //else { Bug #39043 #39512
 							if (tempSpecZoneQty > 0) {
 								if (tempRemarkIndex >= tempSpecZoneQty) {
 									if (indexRemarkStore == 0) {
@@ -6231,7 +6167,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 								tempRemarkIndex++;
 							}
-						}
+						//} Bug #39043 #39512
 
 					}
 
@@ -7185,7 +7121,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportList;
 	}
 	// 37622 - end
-	
+
 	// #29007 Start vinod
 	/**
 	 * This method will check the BPM version and status to insert item spec
@@ -7199,9 +7135,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Long workFlowStatus = scLoa.getPmStatus().getStatusId();
 		String docType = scLoa.getScLoiLoa().getDocType();
 
-		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICompositeValiditySO.class);
+		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
 
 		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
 
@@ -7211,31 +7146,285 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_QT);
 		}
 
-		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO)
-				.getPmCompositeValidity().getMinCompositeVersion();
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
 		String version = this.getManagedBean().getBpmVersionNo();
 
-		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion,
-				version);
+		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion, version);
 	}
-
 	// #29007 End vinod
+
 	// #29007 Start vinod
-	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus,
-			String minVersion, String version) {
-		boolean isOldVersion = StringUtils.isNotBlank(minVersion)
-				&& StringUtils.isNotBlank(version)
+	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus, String minVersion, String version) {
+		boolean isOldVersion = StringUtils.isNotBlank(minVersion) && StringUtils.isNotBlank(version)
 				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
-		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-				.equals(workFlowStatus);
-		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION
-				.equals(workFlowStatus);
+		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(workFlowStatus);
+		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION.equals(workFlowStatus);
 
 		if ((isPendingAcknowledgement || isPendingVerify) && isOldVersion) {
 			return true;
 		}
 		return false;
 	}
-
 	// #29007 End vinod
+
+	// 25791-start
+	/**
+	 * The method used to retrieve the contract status of the contract.
+	 * 
+	 * @param contractStatus
+	 * @return Effective, Terminated, Expired, Inactive
+	 */
+	public String getContractStatusDesc(int contractStatus) {
+		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EFFECTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INACTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EXPIRED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_TERMINATED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return "";
+		}
+	}
+	// 25791 -end-
+
+	// 25791 -start-
+	/**
+	 * The method used to retrieve the status completion of the contract.
+	 * 
+	 * @param contractNo
+	 * @param status
+	 * @return complete or incomplete
+	 */
+	public String chkContractStatusType(String contractNo, int status) {
+		if (StringUtils.isNotEmpty(contractNo) && StringUtils.isNotBlank(contractNo)) {
+			if (status == ContractConst.STATUS_COMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_COMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_INCOMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INCOMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			}
+		}
+
+		return "";
+	}
+	// 25791-End
+	
+	//#28784 - Start
+	/**
+	 * Checking Demo WIP for QT that Republished. If QT was Republished without
+	 * Specification changes, it will go directly to status 60034L. If status is
+	 * 60034L then make sure to check Parent QT for WIP, if Parent QT is WIP
+	 * then Republished will also be WIP.
+	 * 
+	 * @param scQt
+	 * @return
+	 */
+	public boolean checkParentRepublishQT(ScQt scQt) {
+		try {
+			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			reqDTO.setDocId(scQt.getQtId());
+			List<Long> includedStatus = new ArrayList<>();
+			includedStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+			reqDTO.setStatusIds(includedStatus);
+			reqDTO.setCurrent(null);
+
+			List<ScWorkFlowStatus> currentWorkFlowStatus = workFlowStatusSO.retrieveWorkFlowStatus(reqDTO)
+					.getWorkFlowStatusList();
+			// Checking for current QT, if status is 60034L, then it is without Specification changes
+			if (CollectionUtils.isNotEmpty(currentWorkFlowStatus)) {
+				// checking for Parent QT, if WIP then Republished QT will also be WIP
+				return validateSupportedTask(getQTDetailSO().retrieveQtNoByparentQtId(scQt.getParentQtId()),
+						CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "checkParentRepublishQT", scQt.getQtNo(),
+					"checkParentRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+
+		return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	/**
+	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * @param
+	 * @return void
+	 */
+	public void checkDemoVersion(ScQt scQt) {
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	private boolean checkDemoWIP(ScQt scQt) {
+		try {
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			return evaluationSO.checkDemoWip(reqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoWIP",
+					scQt.getQtNo(), "checkDemoWIP", getUserIdSessionFromLoginId(), e);
+		}
+		return true;
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * Only used by demo to ensure that demo pdf/file able to be open even within zip file
+	 * 
+	 * @param zos
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFilesAsZipFile(ZipOutputStream zos,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		String demoKey = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);
+
+	    for (ScAttachment scAttachment : scAttachments) {
+
+	    	try {
+		        if (scAttachment == null || StringUtils.isBlank(scAttachment.getFilePath())) {
+		            continue;
+		        }
+
+		        File file = new File(getActualFilePath(scAttachment));
+		        String pdfEntryName = resolvePdfEntryName(scAttachment, demoKey);
+
+		        if (isDemoReport(scAttachment, demoKey)) {
+		            writeInnerZip(zos, file, pdfEntryName);
+		        } else {
+		            writePdfToOuterZip(zos, file, pdfEntryName);
+		        }
+			} catch (FileNotFoundException fnfe) {
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						"downloadSFAndRecommendationFilesAsZipFile", "",
+						"downloadSFAndRecommendationFilesAsZipFile", getUserIdSessionFromLoginId(), fnfe);
+				continue;
+	        }
+	    }
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private String resolvePdfEntryName(ScAttachment attachment, String demoKey) {
+
+	    String extension = FilenameUtils.getExtension(attachment.getFileName());
+
+	    if (StringUtils.isBlank(attachment.getTempFileName())) {
+	        return attachment.getFileName();
+	    }
+
+	    if (attachment.getTempFileName().contains(demoKey)) {
+	        return SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + "." + extension;
+	    }
+
+	    return attachment.getTempFileName() + "." + extension;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private boolean isDemoReport(ScAttachment attachment, String demoKey) {
+	    return StringUtils.isNotBlank(attachment.getTempFileName())
+	            && attachment.getTempFileName().contains(demoKey);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writeInnerZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    ByteArrayOutputStream innerBaos = new ByteArrayOutputStream();
+
+	    try (ZipOutputStream innerZos = new ZipOutputStream(innerBaos)) {
+	        innerZos.putNextEntry(new ZipEntry(pdfEntryName));
+	        copyFile(file, innerZos);
+	        innerZos.closeEntry();
+	    }
+
+	    zos.putNextEntry(
+	        new ZipEntry(SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + ".zip")
+	    );
+	    zos.write(innerBaos.toByteArray());
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writePdfToOuterZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    zos.putNextEntry(new ZipEntry(pdfEntryName));
+	    copyFile(file, zos);
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void copyFile(File file, OutputStream out) throws IOException {
+
+	    try (BufferedInputStream bis =
+	                 new BufferedInputStream(new FileInputStream(file))) {
+
+	        byte[] buffer = new byte[8192];
+	        int len;
+	        while ((len = bis.read(buffer)) > 0) {
+	            out.write(buffer, 0, len);
+	        }
+	    }
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * To download multiple files.
+	 * 
+	 * @param zipFileName
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		HttpServletResponse response = null;
+		ZipOutputStream zos = null;
+		try {
+			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response = PortalUtil.getHttpServletResponse(portalresponse);
+			String finalFileName = zipFileName + ".zip";
+			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+
+			zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+
+			downloadSFAndRecommendationFilesAsZipFile(zos, scAttachments);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			zos.close();
+			response.flushBuffer();
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	// 25791-End	
 }

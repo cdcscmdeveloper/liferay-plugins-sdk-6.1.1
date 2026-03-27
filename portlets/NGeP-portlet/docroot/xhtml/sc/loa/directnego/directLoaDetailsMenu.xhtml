@@ -354,10 +354,12 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
+				     <ui:remove>39995 Start</ui:remove>
 				     <p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
-						label="#{lbl['lbl.sc.qt.fileno']}" size="28" >
+						label="#{lbl['lbl.sc.qt.fileno']}" size="28" maxlength="50" >
+					 <ui:remove>39995 End</ui:remove>
 						<p:ajax event="blur" process="fileNoId" update="fileNoId"/>
 						</p:inputText>
 						 <p:spacer width="1px" />

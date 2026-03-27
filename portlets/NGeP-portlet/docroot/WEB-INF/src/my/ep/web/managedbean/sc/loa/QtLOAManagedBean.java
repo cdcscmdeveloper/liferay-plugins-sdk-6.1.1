@@ -73,6 +73,12 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	
 	/** The back to previous page. */
 	private String backToPreviousPage; // 19366#40
+	//#21692 - Start
+	private boolean ableToCancelLOA;
+	private boolean ableToCancelLOAWithoutBPM;
+	private boolean ableToSubmitLOA;
+	private boolean ableToCancelWIP;
+	//#21692 - End
 
 
 	/**
@@ -339,5 +345,43 @@ public class QtLOAManagedBean extends BaseManagedBean {
 		this.backToPreviousPage = backToPreviousPage;
 	}
 	// 19366#40 -end-
-	
+
+	//#21692 - Start
+	public boolean isAbleToCancelLOA() {
+		return ableToCancelLOA;
+	}
+	public void setAbleToCancelLOA(boolean ableToCancelLOA) {
+		this.ableToCancelLOA = ableToCancelLOA;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelLOAWithoutBPM() {
+		return ableToCancelLOAWithoutBPM;
+	}
+	public void setAbleToCancelLOAWithoutBPM(boolean ableToCancelLOAWithoutBPM) {
+		this.ableToCancelLOAWithoutBPM = ableToCancelLOAWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToSubmitLOA() {
+		return ableToSubmitLOA;
+	}
+	public void setAbleToSubmitLOA(boolean ableToSubmitLOA) {
+		this.ableToSubmitLOA = ableToSubmitLOA;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelWIP() {
+		return ableToCancelWIP;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelWIP(boolean ableToCancelWIP) {
+		this.ableToCancelWIP = ableToCancelWIP;
+	}
+	//#21692 - End
 }

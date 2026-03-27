@@ -26,6 +26,7 @@ import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtContract;
@@ -50,10 +51,12 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -88,6 +91,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -110,7 +115,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
-import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
+import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -125,14 +130,9 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
-
-//25791 -start-
-import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
-
-//25791 -end-
-
 
 /**
  * The Class QTDetailManagedBean.
@@ -145,6 +145,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+
+	/** The Constant log. */
+	private static final Logger log = EpLogger
+			.getLogger(QTDetailManagedBean.class);
 	
 	/** The qt. */
 	private ScQt qt;
@@ -1702,7 +1706,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #25426 - Start
 	private boolean firstViewPageCAUsers = false;
 	// #25426 - End
-
+	
 	// #28784 -start-
 	private boolean demoType;
 	private boolean demoAction;
@@ -1726,8 +1730,34 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> viewLOAContractDataModel;
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
-
 	// 25791-End
+	
+	//#21692 - Start
+	private boolean proposalValidityChangeValue;
+	private String epvAttachmentValue;
+	private ScQtEpvSupplierResponse suppResp;
+	private boolean chmnFinalizationRejectEPV;
+	private boolean proposalValidityRevised;
+	private boolean nullEPVRemark;
+	private List<String> toBeRemoveEPVAttachments;
+	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
+	private boolean noSupplierExistForEPV;
+	private boolean userAbleToChangePBSecretary;
+	//#21692 - End
+
+	// #29732 Start
+	private String hisCatCode;
+	private List<PmRemarkCategory> historyList;
+	private String catCodeList;
+	private boolean currentInSpecMaint; // first time spec maint
+	private boolean categoryDescriptionChange; // flag to check category has change
+	private boolean updateCatDesc;
+	private boolean updateCatInPm;
+	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
+	private boolean resetHistoryCatCode;
+	// #29732 End
+
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10800,7 +10830,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.firstViewPageCAUsers = firstViewPageCAUsers;
 	}
 	// #25426 - End
-	
+
 	// 25791-start
 	/**
 	 * @return the qtTrackingDiaryView
@@ -10858,8 +10888,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param loaContractTrackingDtls
 	 *            the loaContractTrackingDtls to set
 	 */
-	public void setLoaContractTrackingDtls(
-			List<ScLoaForQt> loaContractTrackingDtls) {
+	public void setLoaContractTrackingDtls(List<ScLoaForQt> loaContractTrackingDtls) {
 		this.loaContractTrackingDtls = loaContractTrackingDtls;
 	}
 
@@ -10889,8 +10918,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param loaContractListTracking
 	 *            the loaContractListTracking to set
 	 */
-	public void setLoaContractListTracking(
-			List<VCtContract> loaContractListTracking) {
+	public void setLoaContractListTracking(List<VCtContract> loaContractListTracking) {
 		this.loaContractListTracking = loaContractListTracking;
 	}
 
@@ -10905,8 +10933,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param viewQTDLLOAContractTrackingDtls
 	 *            the viewQTDLLOAContractTrackingDtls to set
 	 */
-	public void setViewQTDLLOAContractTrackingDtls(
-			IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls) {
+	public void setViewQTDLLOAContractTrackingDtls(IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls) {
 		this.viewQTDLLOAContractTrackingDtls = viewQTDLLOAContractTrackingDtls;
 	}
 
@@ -10921,8 +10948,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param viewLOAContractDataModel
 	 *            the viewLOAContractDataModel to set
 	 */
-	public void setViewLOAContractDataModel(
-			IPagingDataModel<VCtContract> viewLOAContractDataModel) {
+	public void setViewLOAContractDataModel(IPagingDataModel<VCtContract> viewLOAContractDataModel) {
 		this.viewLOAContractDataModel = viewLOAContractDataModel;
 	}
 
@@ -10952,13 +10978,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param searchBidScheduleDataModel
 	 *            the searchBidScheduleDataModel to set
 	 */
-	public void setSearchBidScheduleDataModel(
-			IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
+	public void setSearchBidScheduleDataModel(IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
 		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
 	}
-
 	// 25791-End
-	
+
 	// 37813,35384 -start
 	/**
 	 * @return the techPoints
@@ -11083,4 +11107,198 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
 	}
 	//#28784 - End
+
+	//#21692 - Start
+	public boolean isChmnFinalizationRejectEPV() {
+		return chmnFinalizationRejectEPV;
+	}
+	public void setChmnFinalizationRejectEPV(boolean chmnFinalizationRejectEPV) {
+		this.chmnFinalizationRejectEPV = chmnFinalizationRejectEPV;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isProposalValidityRevised() {
+		return proposalValidityRevised;
+	}
+	public void setProposalValidityRevised(boolean proposalValidityRevised) {
+		this.proposalValidityRevised = proposalValidityRevised;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public ScQtEpvSupplierResponse getSuppResp() {
+		return suppResp;
+	}
+	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
+		this.suppResp = suppResp;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * @return the proposalValidityChangeValue
+	 */
+	public boolean isProposalValidityChangeValue() {
+		return proposalValidityChangeValue;
+	}
+	/**
+	 * @param proposalValidityChangeValue
+	 *            the proposalValidityChangeValue to set
+	 */
+	public void setProposalValidityChangeValue(
+			boolean proposalValidityChangeValue) {
+		this.proposalValidityChangeValue = proposalValidityChangeValue;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isNullEPVRemark() {
+		return nullEPVRemark;
+	}
+	public void setNullEPVRemark(boolean nullEPVRemark) {
+		this.nullEPVRemark = nullEPVRemark;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isNoSupplierExistForEPV() {
+		return noSupplierExistForEPV;
+	}
+	public void setNoSupplierExistForEPV(boolean noSupplierExistForEPV) {
+		this.noSupplierExistForEPV = noSupplierExistForEPV;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public List<String> getToBeRemoveEPVAttachments() {
+		return toBeRemoveEPVAttachments;
+	}
+	public void setToBeRemoveEPVAttachments(List<String> toBeRemoveEPVAttachments) {
+		this.toBeRemoveEPVAttachments = toBeRemoveEPVAttachments;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public List<ScQtEpvApprovalReqAttachment> getAllEPVAttachments() {
+		return allEPVAttachments;
+	}
+	public void setAllEPVAttachments(List<ScQtEpvApprovalReqAttachment> allEPVAttachments) {
+		this.allEPVAttachments = allEPVAttachments;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isUserAbleToChangePBSecretary() {
+		return userAbleToChangePBSecretary;
+	}
+	public void setUserAbleToChangePBSecretary(boolean userAbleToChangePBSecretary) {
+		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	public String getEpvAttachmentValue() {
+		return epvAttachmentValue;
+	}
+	public void setEpvAttachmentValue(String epvAttachmentValue) {
+		this.epvAttachmentValue = epvAttachmentValue;
+	}
+	//#21692 - End
+
+	// #29732 Start
+	public String getHisCatCode() {
+		return hisCatCode;
+	}
+
+	public void setHisCatCode(String hisCatCode) {
+		this.hisCatCode = hisCatCode;
+	}
+
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	}
+
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	}
+
+	public String getCatCodeList() {
+		return catCodeList;
+	}
+
+	public void setCatCodeList(String catCodeList) {
+		this.catCodeList = catCodeList;
+	}
+
+	public boolean isCurrentInSpecMaint() {
+		return currentInSpecMaint;
+	}
+
+	public void setCurrentInSpecMaint(boolean currentInSpecMaint) {
+		this.currentInSpecMaint = currentInSpecMaint;
+	}
+
+	public boolean isCategoryDescriptionChange() {
+		return categoryDescriptionChange;
+	}
+
+	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
+		this.categoryDescriptionChange = categoryDescriptionChange;
+	}
+
+	/**
+	 * @return the isFromSubmitCatChange
+	 */
+	public boolean isFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isFromSubmitCatChange
+	 *            the isFromSubmitCatChange to set
+	 */
+	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
+
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
+
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
+	}
+	// #29732 -end-
 }

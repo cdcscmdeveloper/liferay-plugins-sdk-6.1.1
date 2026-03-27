@@ -330,7 +330,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<ScRequestItemSpecOffer> specificationList;
 	private List<ScRequestItemSpecOffer> itemSpecList;
 	// 28855 - End
-	
+	// 29555 start
+	private String preparedBy;
+	// 29555 end
+    
 	//11076 - start
     private int totalExistingItem;
     private int totalNewItemsAdded;
@@ -3318,4 +3321,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.schInfo = schInfo;
 	}
 	// 38255-End
+	
+	// 29555 start
+	/**
+	 * @return the preparedBy
+	 */
+	public String getPreparedBy() {
+		return preparedBy;
+	}
+
+	/**
+	 * @param preparedBy the preparedBy to set
+	 */
+	public void setPreparedBy(String preparedBy) {
+		this.preparedBy = preparedBy;
+	}
+	// 29555 end
 }
