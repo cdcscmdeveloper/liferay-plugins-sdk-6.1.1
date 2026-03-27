@@ -12308,7 +12308,6 @@ private void retriveCommitteeRemarksList(){
 	* the item type
 	* @return the Status values
 	*/
-	@SuppressWarnings("unused")
 	public SelectItem[] statusDropdownCodeValues(String itemType, ScQtProposalChecklistAttachment scQtProposalChecklistAttachment) {
 		List<Integer> types = new ArrayList<Integer>();
 
