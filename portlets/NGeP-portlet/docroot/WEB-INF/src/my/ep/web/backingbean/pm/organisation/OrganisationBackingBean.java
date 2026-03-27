@@ -986,6 +986,9 @@ public class OrganisationBackingBean extends
 							&& !pmAddressType.getPmContacts().isEmpty()) {
 						this.getManagedBean().setOfficeContactPerson(
 								pmAddressType.getPmContacts().get(0));
+						/**AUDIT 35509 - start **/
+						this.getManagedBean().setPmAddressTypeId(pmAddressType.getAddressTypeId());
+						/**AUDIT 35509 - end **/
 						log.info("Contact Exist");
 						contactExist = true;
 					}
@@ -1997,7 +2000,8 @@ public class OrganisationBackingBean extends
 				getManagedBean().getAddressTypesList().add(deliveryAddr);
 				deliveryAddr.setPmAddress(manualAddr);
 				/**********************************AUDIT 35509******************************************/
-				getManagedBean().getEditedReceivingAddressList().set(i, setManualPmAddressType(deliveryAddr, true));
+				this.getManagedBean().getNewReceivingAddressList().add(setManualPmAddressType(deliveryAddr, true));
+				this.getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr, false));
 				/**********************************AUDIT 35509******************************************/
 			} else {
 				for (int i = 0; i < getManagedBean().getAddressTypesList().size(); i++) {
