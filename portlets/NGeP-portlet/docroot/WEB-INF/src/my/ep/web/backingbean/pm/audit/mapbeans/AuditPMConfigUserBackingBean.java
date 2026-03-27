@@ -21,16 +21,13 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 /**
- * AuditPMEducationBackingBean
+ * Audit Process for Config User
  * 
  * @author shaqimi 28895_35509
  * 
  */
 public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO dtlObj = new AuditPMSPDTO();
@@ -96,6 +93,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	/**
 	 * @param status
 	 * @return
+	 * returns pnp value for user pnp status
 	 */
 	private String pnpCheck(Boolean status){
 		return status.equals(Boolean.TRUE) ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO;
@@ -104,14 +102,15 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	/**
 	 * @param status
 	 * @return
+	 * returns status value for user status
 	 */
 	private String statusCheck(Integer status){
 		return status.equals(AuditConst.PM_AUD_ACTIVE1) ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate#insert(my.ep.web.managedbean.BaseManagedBean, java.lang.String)
+	/**
+	 * inserts data from Config User to audit Database
+	 * Overrides AuditPMBackingBeanTemplate.insert method
 	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
@@ -171,7 +170,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	}
 
 	/**
-	 * set old and new value for federal type user (eP, Ministry, Kumpulan PTJ, Bahagian Perolehan Kerajaan), and sets actionType
+	 * set old and new value for federal type user (eP, Ministry, Kumpulan PTJ, Bahagian Perolehan Kerajaan)
+	 * and sets actionType
 	 */
 	private void detailFederalObj() {
 		for(BigInteger obj : federalDtlObjList){
@@ -241,7 +241,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 
 
 	/**
-	 * set old and new value for federal ptj type user (Pusat Tanggungjawab PTJ), and sets actionType
+	 * set old and new value for federal ptj type user (Pusat Tanggungjawab PTJ) 
+	 * and sets actionType
 	 */
 	private void detailFederalPTJObj() {
 		for(BigInteger obj : federalPTJDtlObjList){
@@ -310,7 +311,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	}
 
 	/**
-	 * set old and new value for Other organisation Category, and sets actionType
+	 * set old and new value for Other organisation Category
+	 * and sets actionType
 	 */
 	private void detailOtherObj() {
 		for(BigInteger obj : otherDtlObjList){
@@ -374,7 +376,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	}
 
 	/**
-	 * set old and new value for Other(Supplier) organisation Category, and sets actionType
+	 * set old and new value for Other(Supplier) organisation Category
+	 * and sets actionType
 	 */
 	private void detailOtherSupplierObj() {
 		for(BigInteger obj : otherSupplierDtlObjList){
@@ -419,7 +422,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	}
 	
 	/**
-	 * set old and/or new value for every organization type except for Supplier. Pusat Tanggungjawab PTJ will have extra steps here.
+	 * set old and/or new value for every organization type except for Supplier
+	 * Pusat Tanggungjawab PTJ will have extra steps here.
 	 */
 	private void detailRoles() {
 		if(managedBeans.getNewAuditPmUserRoles() != null){
@@ -506,6 +510,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	 * @param oldValue
 	 * @param newValue
 	 * @param actionType
+	 * set the parameter values for audit db insert
 	 */
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		dtlObj = new AuditPMSPDTO();
@@ -533,7 +538,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	}
 	
 	/**
-	 * @return
+	 * maps Organisation User Type based on Organisation Type Code
 	 */
 	private static Map<Integer, String> createLvl3CodeMap(){
 		Map<Integer, String> map = new HashMap<>();
@@ -555,11 +560,11 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		
 		return map;
 	}
+
 	
 	/**
-	 * @return
+	 * maps Parameter Type based on Organisation Type Code
 	 */
-	
 	private static Map<Integer, BigInteger> createPmParameterLevelIdMap(){
 		Map<Integer, BigInteger> map = new HashMap<>();
 		map.put(1, AuditConst.PM_AUD_OUSR_EP_PMPARAMETERLVLID); 

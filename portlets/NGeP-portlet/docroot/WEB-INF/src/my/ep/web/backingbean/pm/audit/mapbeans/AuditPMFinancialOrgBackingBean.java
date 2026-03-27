@@ -22,16 +22,12 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.financialorg.FinancialOrgManagedBean;
 
 /**
- * AuditPMFinancialOrgBackingBean
- * processing officer role task
+ * Audit Process for Financial Organisation
  * 
  * @author 28895_35509
  */
 public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final String EMPTY_STRING = "";
 	private static final String COMMA_STRING = ", ";
@@ -59,9 +55,8 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	}
 
 	/**
-	 * @param managedBeans
-	 * @param roleCode
-	 * @return
+	 * inserts data from Config User to audit Database
+	 * Overrides AuditPMBackingBeanTemplate.insert method
 	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
@@ -114,7 +109,11 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		managedBean.setOldContactPerson(null);
 		return auditPMReqDTO;
 	}
-	
+
+	/**
+	 * sets up data to be inserted into audit database
+	 * data sets up are based on business registration, financial organisation, status check, of if org is for EP
+	 */
 	private void setFinancialOrgDetail(PmFinancialOrg financialOrg, PmFinancialOrg oldFinancialOrg){
 		if(financialOrg.getBizRegNumber() != null && !financialOrg.getBizRegNumber().equals(oldFinancialOrg.getBizRegNumber())){
 			detailObj(AuditConst.PM_AUD_OFO_BUSINESS_REG_FIELDLABELID, oldFinancialOrg.getBizRegNumber(), financialOrg.getBizRegNumber());
@@ -181,8 +180,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			setContact(managedBean.getContactPerson(), managedBean.getOldContactPerson());
 		}
 	}
-	
-	//sonarlint. to get full address from current and/or edited address
+
+	/**
+	 * gets full address from current and/or edited address
+	 */
 	private String getAddress(PmAddress pmAddress){
 		String address = EMPTY_STRING;
 		if(pmAddress.getAddress1() != null && !pmAddress.getAddress1().isEmpty()){
@@ -199,7 +200,11 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		
 		return address;
 	}
-	
+
+
+	/**
+	 * sets as new data for main address if Financial Organisation is in Create session
+	 */
 	private void setNewMainAddress(PmAddress editedAddress, String address){
 
 		detailObj(AuditConst.PM_AUD_OFO_COUNTRY_FIELDLABELID, null, editedAddress.getPmCountry().getCountryName());
@@ -306,8 +311,11 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		}
 		
 	}
-	
 
+	/**
+	 * checks if a String value is null. This method will always return String value
+	 * as the Audit Database cannot process null values
+	 */
 	private String checkEmptyString(String value) {
 	    return value == null ? "" : value;
 	}
@@ -385,8 +393,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 					managedBean.getFinancialOrg().getPmFinancialAccs());
 		}
 	}
-	
-	//sonarlint. sets comparison value for edited factoring details
+
+	/**
+	 * sets comparison value for edited factoring details
+	 */
 	private void editedFactoringDetail(List<PmFinancialAcc> oldFinancialList, List<PmFinancialAcc> currentFinancialList){
 		for(PmFinancialAcc oldFinancialAcc : oldFinancialList){
 			for(PmFinancialAcc currentFinancialAcc : currentFinancialList){
@@ -402,8 +412,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			}			
 		}
 	}
-	
-	//sonarlint. gets String value of Active/Inactive
+
+	/**
+	 * gets String value of Active/Inactive
+	 */
 	private String getActiveOrInactive(Integer value){
 		return value == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
 	}
@@ -425,21 +437,27 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		}
 		
 	}
-	
-	//sonarlint. get String value of Yes/No
+
+	/**
+	 * get String value of Yes/No
+	 */
 	private String getYesOrNo(boolean value){
 		return value ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO;
 	}
-	
-	//sonarlint. sets new values for newly added bank payment details
+
+	/**
+	 * sets new values for newly added bank payment details
+	 */
 	private void newFinancialService(List<PmParameterDesc> bankServicesList){
 		for(PmParameterDesc edited : bankServicesList){
 			detailObj(serviceTypeMap.get(edited.getPmParameter().getParameterId()), null, 
 					getYesOrNo(edited.isSelected()));
 		}
 	}
-	
-	//sonarlint. sets edited comparison values for bank payment details
+
+	/**
+	 * sets edited comparison values for bank payment details
+	 */
 	private void editedFinancialService(List<PmParameterDesc> bankServicesList, List<PmParameterDesc> oldBankServicesList){
 		for(PmParameterDesc current : oldBankServicesList){
 			for(PmParameterDesc edited : bankServicesList){
@@ -472,7 +490,12 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		}
 	}
 	
-
+	/**
+	 * @param fieldLabelId
+	 * @param oldValue
+	 * @param newValue
+	 * set the parameter values for audit db insert
+	 */
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);

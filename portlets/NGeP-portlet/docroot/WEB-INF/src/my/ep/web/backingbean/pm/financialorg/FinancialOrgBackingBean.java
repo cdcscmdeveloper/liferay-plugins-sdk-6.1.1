@@ -1155,12 +1155,6 @@ public class FinancialOrgBackingBean extends
 	
 			if (resDTO.isSuccessful()) {
 				result = resDTO.isSuccessful();
-//				FacesContext.getCurrentInstance().addMessage(
-//						null,
-//						new FacesMessage(FacesMessage.SEVERITY_INFO,
-//								"Financial Org successfully.", "Org Name : "
-//										+ this.getManagedBean().getFinancialOrg()
-//												.getFinOrgName()));
 				
 				String message = "";
 				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
