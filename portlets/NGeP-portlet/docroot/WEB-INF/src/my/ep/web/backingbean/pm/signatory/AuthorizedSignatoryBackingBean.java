@@ -458,7 +458,7 @@ public class AuthorizedSignatoryBackingBean extends
 	
 	/************ AUDIT 35509 Start*************/
 	/**
-	 * refactor method to set existing cert signtory
+	 * refactor method to set existing cert signatory
 	 * 
 	 */
 	private void setExistingCertSignToMap(List<PmCertSignatory> certSign) {
