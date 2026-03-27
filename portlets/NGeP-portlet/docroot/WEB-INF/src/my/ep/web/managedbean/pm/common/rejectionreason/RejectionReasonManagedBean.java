@@ -90,13 +90,13 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private String kumpPtjCodeName;
 	//#28962 - End
 	
-	// #28962 - Start
+	// #28962 - audit Start
 	private List <PmReasonRestr> auditAddSupplAcctType;
 	private List <PmReasonRestr> auditUpdateSupplAcctType;
 	private List <PmReasonRestr> auditDeleteSupplAcctType;
 	private List <PmReasonRestr> auditAddAgency;
 	private List <PmReasonRestr> auditDeleteAgency;
-	// #28962 - End
+	// #28962 - audit End
 	
 	private boolean isReasonApplicabilityDuplicate = false; //39618
 	
