@@ -12,7 +12,7 @@
 			<td width="16%"  class="sidemenutd"  valign="top" >
 				<p:remoteCommand id="zoneRemote" name="zoneTabChange" update="@form" partialSubmit="true" process="@form" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
 				
-				<ui:remove> #28777#29729,35592 </ui:remove> <ac:zoneTabMenu
+				<ui:remove> 28777,29729,35592 </ui:remove> <ac:zoneTabMenu
 					tabList="#{supplierProposalDetailBackingBean.managedBean.zones}"
 					activeIndex="#{supplierProposalDetailBackingBean.managedBean.activeIndex}"
 					remoteCommand="zoneTabChange" update="@this" process="@form" />
@@ -23,7 +23,7 @@
 						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
 						editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.zones.get(supplierProposalDetailBackingBean.managedBean.activeIndex).branchDeactivated}"
 						title="#{lbl['lbl.sc.spec.financial.title']}" />
-					<ui:remove> #28777#29729,35592 </ui:remove>
+					<ui:remove> 28777,29729,35592 </ui:remove>
 					<ui:remove>#25201 - end </ui:remove>
 				</p:outputPanel></td>
 		</tr>
