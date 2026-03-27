@@ -15,6 +15,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -96,6 +97,13 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	 * @return the stop instr
 	 */
 	public FlStopInstr getStopInstr() {
+		// 39692-Start
+		// Prevent ERR-000001 by by ensuring pmReason is always initialized
+		// Required to prevent JSF UpdateModelException when binding nested properties during postback.
+		if (stopInstr.getPmReason() == null) {
+			stopInstr.setPmReason(new PmReason());
+		}
+		// 39692-End
 		return stopInstr;
 	}
 
@@ -400,7 +408,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	public void setBackToNtf(String backToNtf) {
 		this.backToNtf = backToNtf;
 	}
-	
+
 	// 36386-start
 	/**
 	 * @return the searchFunctionType
