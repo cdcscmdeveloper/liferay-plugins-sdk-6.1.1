@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
+import my.ep.web.backingbean.report.ct.CtReportBackingBean; //Fix - #40102
 import my.ep.web.backingbean.report.ct.CtReportBaseBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.cc.ContractManagementReportManagedBean;
@@ -53,6 +54,12 @@ public class ContractManagementReportBackingBean extends CtReportBaseBackingBean
 		getManagedBean().setCircularEffToDate(null);
 		getManagedBean().setFulfilmentType(null);
 		getManagedBean().setSelectedSupplier(null); //#30918
+		// Start Fix - #40102
+		CtReportBackingBean ctReportBBean = new CtReportBackingBean();
+		if (ctReportBBean.getManagedBean().getReportCode() != null) {
+			ctReportBBean.setCurrentActiveOrg();
+		}
+		// End Fix - #40102
 		
 	}
 	@Override
