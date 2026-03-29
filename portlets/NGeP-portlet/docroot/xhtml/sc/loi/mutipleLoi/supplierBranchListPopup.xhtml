@@ -44,13 +44,15 @@
 					    <h:outputText value="#{branchList.smAddress.pmCity.cityName}" /><p:spacer width="10"/>
 					    <h:outputText value="#{branchList.smAddress.pmState.stateName}" /><p:spacer width="10"/>
 				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sc.branch.status']}" 
-				    style="width:10%; white-space:normal; text-align:center;" styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
-					<h:outputText value="#{lbl[branchList.recordStatusFlg eq DbValueConst.recordStatusActive ? 'lbl.txt.active' : 'lbl.txt.deleted']}" />						  	 
-				  
+
+				<p:column headerText="#{lbl['lbl.sc.branch.status']}"
+					style="width:10%; white-space:normal; text-align:center;"
+					styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
+					<h:outputText
+						value="#{lbl[branchList.qtRelatedSupplierBranch eq true ? 'lbl.txt.deleted' : 'lbl.txt.active']}" />
+
 				</p:column>
-				
+
 			</p:dataTable>
 		</div>
 		<div class="ppRightBtn BtnSpacing">
