@@ -93,15 +93,4 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 		log.info("Terminated " + appls.size() +" applications");
 		return "DONE";
 	}
-	
-	//12470 - temp debug
-	@GET
-	@Path("/weee")
-	public void testEmail(@QueryParam("id") Long id){
-		log.info("Email for appl: " + id);
-		ISMOsbSO osb = (ISMOsbSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT,ISMOsbSO.class);
-		osb.testEmail(id);
-		log.info("end");
-	}
 }
