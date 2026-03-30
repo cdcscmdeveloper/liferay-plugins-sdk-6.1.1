@@ -30,6 +30,7 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;//#27868
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -413,7 +414,13 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
     //#36119 - end
 	// 27868 & 35321 - start
-	private Date createdDate;
+    private Date createdDate;
+    private PmParameter selectedOrgType;
+    private PmUserOrg selectedUserPtj;
+    private String supplierAccountTypeErrorMessage;
+	private PmOrgProfile selectedPtj;
+	private PmOrgProfile ministryOrgProfile;
+	private Integer saveIndex;
 	// 27868 & 35321 - end
     
 	// #26059 - Start
@@ -2481,6 +2488,68 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	
+	public PmParameter getSelectedOrgType() {
+		if (this.selectedOrgType == null) {
+			this.selectedOrgType = new PmParameter();
+		}
+		return selectedOrgType;
+	}
+
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
+	}
+	
+	public PmUserOrg getSelectedUserPtj() {
+		return selectedUserPtj;
+	}
+
+	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
+		this.selectedUserPtj = selectedUserPtj;
+	}
+	
+
+	public PmOrgProfile getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	public void setSelectedPtj(PmOrgProfile selectedPtj) {
+		this.selectedPtj = selectedPtj;
+	}
+	
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
+
+	/**
+	 * @return the getSupplierAccountTypeErrorMessage
+	 */
+	public String getSupplierAccountTypeErrorMessage() {
+		return supplierAccountTypeErrorMessage;
+	}
+
+	/**
+	 * @param getSupplierAccountTypeErrorMessage the getSupplierAccountTypeErrorMessage to set
+	 */
+	public void setSupplierAccountTypeErrorMessage(String getSupplierAccountTypeErrorMessage) {
+		this.supplierAccountTypeErrorMessage = getSupplierAccountTypeErrorMessage;
+	}
+
+	public Integer getSaveIndex() {
+		return saveIndex;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setSaveIndex(Integer saveIndex) {
+		this.saveIndex = saveIndex;
 	}
 	// 27868 & 35321 - end
 	// #26059 - start
