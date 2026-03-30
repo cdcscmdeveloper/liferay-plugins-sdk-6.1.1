@@ -8162,8 +8162,8 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-		<portlet>
 	<!-- 35509 - end -->
+		<portlet>
 		<portlet-name>tempUserSearch</portlet-name>
 		<display-name>Temp User Search</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
