@@ -18,7 +18,7 @@
 			</script> 
 		</p:outputPanel> 
 		<p:outputPanel
-			rendered="#{softCertBackingBean.managedBean.targetPage ne '4'}">
+			rendered="#{softCertBackingBean.managedBean.targetPage ne '4' and !softCertBackingBean.isTempSupplierRole()}}">
 			<script>
 				$('#portlet_SoftCertReg_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
