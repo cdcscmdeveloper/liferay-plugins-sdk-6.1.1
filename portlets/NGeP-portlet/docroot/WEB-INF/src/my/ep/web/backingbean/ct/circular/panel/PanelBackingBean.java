@@ -81,6 +81,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory; //#30014 
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -90,6 +91,9 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL1; //#30014
+import my.ep.persistence.entity.pm.common.PmCategoryL2; //#30014
+import my.ep.persistence.entity.pm.common.PmCategoryL3; //#30014
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -1027,6 +1031,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}
 			}
 		}
+		//#30014 - Start
+		if (getManagedBean().getCircularVer().getCtPanelCategoryList().size() == 0
+				|| getManagedBean().getCircularVer().getCtPanelCategoryList().isEmpty()) {
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				getManagedBean().setSelectedTabIndex(2);
+				throw new EpException(MessageConst.ERROR_750088, new String[] { ResourceBundleUtils.getMessage("lbl.ct.menu.category.code",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			}
+		}
+		//#30014 - End
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)  
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
@@ -2288,9 +2303,27 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		this.getManagedBean().setIndex(i);
 		this.getManagedBean().setEditZone(true);
 		this.getManagedBean().setZoneName(zoneLocation.getName());
-		getManagedBean().setButtonHideActiveDel(true);
+		
+		//#39762 - Start
+		getManagedBean().setHasExistingLocations(zoneLocation.getPanelZoneDtls() != null && !zoneLocation.getPanelZoneDtls().isEmpty());
+		refreshOkButtonState();
+		//#39762 - End
 	}
 
+	// #39762 - Start
+	/**
+	 * Updates the OK button's enabled state based on whether required inputs
+	 * are present. The button is disabled if the Zone Name is empty or no
+	 * locations exist.
+	 */
+	public void refreshOkButtonState() {
+
+		boolean zoneNameEmpty = getManagedBean().getZoneName() == null || getManagedBean().getZoneName().trim().isEmpty();
+
+		boolean noLocation = !getManagedBean().isHasExistingLocations();
+		getManagedBean().setButtonHideActiveDel(zoneNameEmpty || noLocation);
+	}
+	// #39762 - End
 
 	/**
 	 *   Method to set zone status active
@@ -2325,36 +2358,88 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 
+	//35506 - Start
 	/**
-	 *   Method to bulk update of item category and zone of 
-	 *    panel circular item details
-	 *    Set boolean value zones false
+	 * Method to bulk update of item category and zone of panel circular item
+	 * details Set boolean value zones false
 	 **/
-	public void bulkUpdateRow(){
+	public void bulkUpdateRow() {
 		try {
-			if(getManagedBean().getCircularVer().getCtPanelItems() != null) {
-				Iterator<CtPanelItem> panelItemIterator = getManagedBean().getCircularVer().getCtPanelItems().iterator();
-				while (panelItemIterator.hasNext()) {
-
-					CtPanelItem  item = panelItemIterator.next();
-					if(item.isSelectedCheckBox()) {
-
-						if(getManagedBean().getPanelCoverageId() != null) {
-							item.setZoneAllParamterId(getManagedBean().getPanelCoverageId());
-						}
-						if(getManagedBean().getItemCategoryId() != null) {
-							item.setCategoryParameterId(getManagedBean().getItemCategoryId());
-						}
-					}
-				}
+			List<CtPanelItem> panelItems = getManagedBean().getCircularVer().getCtPanelItems();
+			if (panelItems == null) {
+				return;
 			}
+
+			for (CtPanelItem item : panelItems) {
+				if (!item.isSelectedCheckBox()) {
+					continue;
+				}
+				updateItemBasicInfo(item);
+				handleCoverage(item);
+			}
+
 			getManagedBean().setSelectedPanelItems(null);
 			getManagedBean().setSelectionOfZone(false);
+
 		} catch (Exception e) {
 			log.error(e);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "PanelBackingBean", null,
+					"PanelBackingBean.bulkUpdateRow()", null, e);
 		}
 	}
+
+	/**
+	 * Update basic information of selected panel item such as coverage and
+	 * category based on managed bean values.
+	 * 
+	 * @param item
+	 *            the selected panel item to be updated
+	 */
+	private void updateItemBasicInfo(CtPanelItem item) {
+
+		getManagedBean().setSelectedPanelItems(item);
+
+		if (getManagedBean().getPanelCoverageId() != null) {
+			item.setZoneAllParamterId(getManagedBean().getPanelCoverageId());
+		}
+
+		if (getManagedBean().getItemCategoryId() != null) {
+			item.setCategoryParameterId(getManagedBean().getItemCategoryId());
+		}
+	}
+
+	/**
+	 * Handle panel coverage logic and adjust related zone, supplier and
+	 * location settings based on coverage type.
+	 * 
+	 * @param item
+	 *            the selected panel item to process
+	 */
+	private void handleCoverage(CtPanelItem item) {
+
+		String panelCoverageICode = getItemGeneralCode(item.getZoneAllParamterId());
+
+		if (ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE.equalsIgnoreCase(panelCoverageICode)) {
+
+			getManagedBean().setSelectedPanelZone(null);
+			item.setCtPanelSuppliers(null);
+			item.setCtPanelZones(null);
+			getManagedBean().setSelectionOfZone(true);
+
+			if (item.getLocationLevelId() == null) {
+				item.setLocationLevelId(new PmParameter());
+			}
+
+			item.getLocationLevelId().setParameterId(retrieveParameterByTypeAndCode());
+
+		} else if (ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL.equalsIgnoreCase(panelCoverageICode)) {
+
+			item.setCtPanelZones(null);
+			item.setCtPanelSuppliers(null);
+			getManagedBean().setSelectionOfZone(false);
+		}
+	}
+	//35506 - End
 
 	/**
 	 * Method used to set new effective  and end date 
@@ -3495,6 +3580,105 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		this.getManagedBean().setAttachFileIndex(attachmentIndex);
 	}
 	//end
+	
+	// #30014 - Start
+	/**
+	 * Adds the new category action.
+	 * 
+	 * @param pmCategoryL3
+	 *            the pm category l3
+	 */
+	public void addNewCategoryCode(PmCategoryL3 pmCategoryL3) {
+
+		if (pmCategoryL3 == null || pmCategoryL3.getPmCategoryL2() == null || pmCategoryL3.getPmCategoryL2().getPmCategoryL1() == null) {
+			throw new IllegalArgumentException(MessageConst.ERROR_750089);
+		}
+
+		CtCircularVer circularVer = getManagedBean().getCircularVer();
+		List<CtPanelCategory> ctCategoryList = circularVer.getCtPanelCategoryList();
+		if (ctCategoryList == null) {
+			ctCategoryList = new ArrayList<>();
+			circularVer.setCtPanelCategoryList(ctCategoryList);
+		}
+
+		Long l1Id = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Id();
+		Long l2Id = pmCategoryL3.getPmCategoryL2().getCategoryL2Id();
+		Long l3Id = pmCategoryL3.getCategoryL3Id();
+		
+		String categoryCode = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+                + pmCategoryL3.getPmCategoryL2().getCategoryL2Code()
+                + pmCategoryL3.getCategoryL3Code();
+
+		String categoryName = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryName();
+
+		// Duplicate Check
+		for (CtPanelCategory existing : ctCategoryList) {
+			if (existing.getPmCategoryL1().getCategoryL1Id().equals(l1Id) &&
+				existing.getPmCategoryL2().getCategoryL2Id().equals(l2Id) &&
+				existing.getPmCategoryL3().getCategoryL3Id().equals(l3Id)) {
+				throw new EpException(MessageConst.ERROR_750090, new String[] {categoryCode, categoryName}); // Duplicate message Error
+			}
+		}
+		
+		ctCategoryList.add(createPanelCategory(pmCategoryL3, circularVer));
+	}
+	
+	/**
+	 * Creates a new CtPanelCategory based on the selected category L3 and circular version.
+	 *
+	 * @param pmCategoryL3 the selected category L3
+	 * @param circularVer the associated circular version
+	 * @return a new fully populated CtPanelCategory
+	 */
+	private CtPanelCategory createPanelCategory(PmCategoryL3 pmCategoryL3, CtCircularVer circularVer) {
+		PmCategoryL2 l2 = pmCategoryL3.getPmCategoryL2();
+		PmCategoryL1 l1 = l2.getPmCategoryL1();
+
+		CtPanelCategory category = new CtPanelCategory();
+		category.setCtCircularVer(circularVer);
+		category.setPmCategoryL1(l1);
+		category.setPmCategoryL2(l2);
+		category.setPmCategoryL3(pmCategoryL3);
+		category.setPmCategoryL1Name(l1.getCategoryName());
+		category.setPmCategoryL2Name(l2.getCategoryName());
+		category.setPmCategoryL3Name(pmCategoryL3.getCategoryName());
+		category.setCategoryType(pmCategoryL3.getCategoryTypeCode());
+
+		return category;
+	}
+
+	/**
+	 * Delete category code.
+	 */
+	public void deleteCategoryCode() {
+
+		List<CtPanelCategory> all = getManagedBean().getCircularVer().getCtPanelCategoryList();
+		if (all == null) {
+			all = new ArrayList<CtPanelCategory>();
+		}
+
+		List<CtPanelCategory> selected = getManagedBean().getSelectedCategoryList();
+		if (selected == null || selected.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
+
+		if (all.size() == selected.size()) {
+			all.clear();
+		} else {
+			all.removeAll(new ArrayList<CtPanelCategory>(selected));
+		}
+
+		getManagedBean().setSelectedCategoryList(new ArrayList<CtPanelCategory>());
+	}
+	
+	/**
+	 * Handles category selection change events from the UI.
+	 * This method is intentionally empty and exists only to trigger JSF Ajax updates.
+	 */
+	public void onCategorySelectionChange() {
+		// No implementation required
+	}
+	// #30014 - End
 	
 	//#35506 - Start
 	/**

@@ -73,7 +73,7 @@
 									partialSubmit="true" process="@this" />
 							</div>
 						</p:panel>
-						<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
+						<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true" style="width:100%;"><!--#39637, #35500 -->
 							<p:dataTable id="existingcommitteesearch" rows="10"
 							    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 								widgetVar="existingCommittee" lazy="true"

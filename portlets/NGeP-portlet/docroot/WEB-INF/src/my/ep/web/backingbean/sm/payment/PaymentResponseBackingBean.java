@@ -306,6 +306,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
 		
+		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
+		String cardMaskedNum = reqMap.get("cardMaskedNum");
+		
 		//#Start 33137
 		String fpxTranId = null;
 		String molpayTranId = null;
@@ -511,7 +514,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				if (cardType != null) { 
 					if (cardType.equalsIgnoreCase("Credit")) {
 						cardType = "CC";
-					} else if (cardType.equalsIgnoreCase("Debit")) {
+					} else if (cardType.equalsIgnoreCase("Debit") || cardType.equalsIgnoreCase("Prepaid")) { //#39654 - add prepaid
 						cardType = "DC";
 					} 
 					ParameterReqDTO reqPmDTO = new ParameterReqDTO();
@@ -605,7 +608,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				//#33137 - start
 				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
 				smPaymentRes.setTransactionId(tranID);
-				smPaymentRes.setMolpayTransactionId(molpayTranId);
+				smPaymentRes.setMolpayTransactionId((cardMaskedNum!=null && cardMaskedNum.length()>0)?cardMaskedNum: molpayTranId);
 				smPaymentRes.setFpxTranId(fpxTranId);
 				log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
 				//#33137 - end
@@ -1149,12 +1152,14 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String paymentRefNo = "";
 		String bankName = "";
 		String providerTransId = "";
+		String cardMaskedNum = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
 				paymentRefNo = jsonObject.optString("paymentRefNo",null);
 				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
 				providerTransId = jsonObject.optString("providerTransId",null);
+				providerTransId = providerTransId==null?paymentRefNo:providerTransId;
 				log.info("######38377#####json providerTransId: " + providerTransId);
 				bankName = jsonObject.optString("bankName",null);
 				log.info("######38377#####json bankName: " + bankName);
@@ -1169,6 +1174,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				errorDesc = jsonObject.optString("errDesc",null);
 				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
 			        cardType = ParameterConst.CARD_TYPES_CREDIT;
+			        
+			      //do not include to PROD. Used for generate dummy transaction list excel
+					cardMaskedNum = jsonObject.optString("cardMaskedNum", null);
+					log.info("######38377#####json cardMaskedNum: " + cardMaskedNum);
 			    }
 				if (paydate != null && !paydate.isEmpty()) {
 			        try {
@@ -1211,6 +1220,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("paymentRefNo", paymentRefNo);
 		reqMap.put("providerTransId", providerTransId);
 		reqMap.put("bankName", bankName);
+		reqMap.put("cardMaskedNum", cardMaskedNum);
 
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
 		log.info("######38377#####tranID: " + reqMap.get("tranID"));

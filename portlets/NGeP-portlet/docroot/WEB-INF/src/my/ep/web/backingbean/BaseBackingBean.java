@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,7 +43,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;									  										  
+import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
@@ -62,6 +61,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;//#31341
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849 #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -70,6 +70,7 @@ import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
+import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -84,6 +85,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;//#31341
+import my.ep.dto.cm.codification.CodificationResDTO;//#31341
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
@@ -97,6 +100,8 @@ import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
+import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
+import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -107,6 +112,12 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.cm.catalog.CmBrand;//#31341
+import my.ep.persistence.entity.cm.catalog.CmColor;//#31341
+import my.ep.persistence.entity.cm.catalog.CmItem;//#31341
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;//#31341
+import my.ep.persistence.entity.cm.catalog.CmType;//#31341
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;//#31341
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -123,6 +134,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRequestItem;//#31341
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -140,6 +152,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.logging.LogKey;//#31849 #32682
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.ReasonCategory; //#8411
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -147,6 +160,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;//#31341
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -3523,6 +3537,93 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	}
 	
+	//#31269 - start
+	/**
+	 * View SSM information
+	 * @param smAppl
+	 */
+	public void redirectToViewSSMInfo(SmAppl smAppl){
+		getManagedBean().setSmAppl(smAppl);
+		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
+		getManagedBean().setBusinessTypeParamCode(
+			smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) 
+			? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE	: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
+		clearPersonnelList();
+		for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
+			if(!personnel.isSsmData()) {
+				continue;
+			}
+			
+			validateSsmPersonnel(personnel);
+			if(personnel.isEquityOwnerSsm()){
+				getManagedBean().getPersonnelsOwnerSsm().add(personnel);
+			}
+			if(personnel.isDirectorSsm()){
+				getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
+			}
+			getManagedBean().getPersonnelsSsm().add(personnel);
+		}
+		
+		getManagedBean().getSmSupplierBranchSsm().clear();
+		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
+			if(!branch.isSsmData()) {
+				continue;
+			}
+			getManagedBean().getSmSupplierBranchSsm().add(branch);
+		}
+		
+		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());		
+		SupplierBusinessNatureResDTO resDTO = BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class)
+				.retrieveAllBusinessNatureBySupplierId(reqDTO);
+		for(SmSupplierBusiness business : resDTO.getBusinessNatureLs()){
+			if(!business.isSsmData()) {
+				continue;
+			}
+			getManagedBean().getSmSupplierBusinessSsm().add(business);
+		}
+		
+		getManagedBean().getSmEquityCompaniesSsm().clear();
+		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
+			if(!company.isSsmData()) {
+				continue;
+			}
+			getManagedBean().getSmEquityCompaniesSsm().add(company);
+		}
+		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
+	}
+	
+	/**
+	 * Check to render button view SSM info
+	 * @return
+	 */
+	public boolean renderViewSSMInfo(){
+		return getManagedBean().getSmAppl().isApplValidWithSsm()
+			&& businessTypeTovalidateWithSSM(null, 
+				getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
+	}
+	
+	/**
+	 * Validate SSM personnel address
+	 * @param personnel
+	 * @return
+	 */
+	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
+		if(personnel == null || !personnel.isSsmData() 
+			|| personnel.getSmPersonnelAddresses() == null) return personnel;
+		for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
+			if(personnel.getSmPersonnelAddresses().get(i) != null
+					&& personnel.getSmPersonnelAddresses().get(i).getSmAddress() != null
+					&& personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
+				Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
+				break;
+			}
+		}
+		return personnel;
+	}
+	//#31269 - end
+	
 	public void clearPersonnelList() {
 		this.getManagedBean().getPersonnelsOwnerSsm().clear();
 		this.getManagedBean().getSmPersonnelDirectorSsm().clear();
@@ -4027,6 +4128,70 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//Enhancement 29418 - end
 	
+	//#8411 - START
+	/**
+	 * Get parameter id select items by reason category, parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param reasonCategory
+	 *            the reason category
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getCategoryTypeDropdownValuesBySearchBean(Integer reasonCategory, String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		List<PmParameterDesc> parameterDescs = ParameterHelper
+				.getInstance().getParameterDescListBySearchBean(
+						parameterType, searchBean);
+		List<PmParameterDesc> newParameterDescs = new ArrayList<PmParameterDesc>();
+		try {
+			if(reasonCategory == null){
+				items = new SelectItem[1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+			} else {
+				if(reasonCategory.equals(ParameterConst.JUSTIFICATION)){// filter for Justification category
+					for (PmParameterDesc parameterDesc: parameterDescs) {
+						if (!parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
+				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())
+				        				&& !parameterDesc.getPmParameter().getParameterCode().equals(ParameterConst.SPECIAL_ITEM_PK_7)) { //#28962
+							newParameterDescs.add(parameterDesc);
+				        }
+				    }
+				} else if(reasonCategory.equals(ParameterConst.REJECTION_REASON)){// filter for Rejection Reason category
+					for (PmParameterDesc parameterDesc: parameterDescs) {
+						if (parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
+				        		|| parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())) {
+							newParameterDescs.add(parameterDesc);
+				        }
+					}
+			    }
+				int i = 1;
+				items = new SelectItem[newParameterDescs.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+				for (PmParameterDesc parameterDesc : newParameterDescs) {
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterId(), parameterDesc.getCodeName());
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+	}
+	//#8411 - END
+	
 	//#29466 - START
 	public boolean checkManufacturerCategoryCodes(ScQt scQt){
 		boolean manufacturer=false;	
@@ -4473,4 +4638,116 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	    return false;
 	}
 	//#35238 end
+	// #28720 Start
+	/**
+	 * Validate allowed email type
+	 * 
+	 * @param String
+	 *            email
+	 * @return boolean
+	 */
+	public boolean isAllowedEmail(String email) {
+		boolean allowed = true;
+		if (email.toLowerCase().contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			allowed = false;
+		}
+		return allowed;
+	}
+	// #28720 End
+	
+	//Start - #31341
+		/**
+		 * Retrieves and displays UNSPSC-related details for the given SC request item.
+		 * <p>
+		 * This method looks up the corresponding {@link CmItem} using the item ID
+		 * from the provided {@link ScRequestItem} via the Codification service.
+		 * If an item is found, its extension details are populated for display.
+		 * </p>
+		 *
+		 * <p>
+		 * Any exception encountered during processing is caught and logged
+		 * using the SLA logging mechanism.
+		 * </p>
+		 *
+		 * @param scRequestItem
+		 *        the SC request item containing the CM item reference whose
+		 *        UNSPSC details need to be viewed
+		 */
+		public void viewItemUnspscDetails(ScRequestItem scRequestItem) {
+			try {
+				CmItem item = null;
+				ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+				CodificationReqDTO cReqDTO = new CodificationReqDTO();
+				if (scRequestItem.getCmItem().getItemId() != null) {
+					cReqDTO.setItemId(scRequestItem.getCmItem().getItemId());
+				}
+				CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
+				if (cResDTO != null) {
+					item = cResDTO.getCmItem();
+					populateItemExtensionDtls(item);
+				}
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("CT", "viewItemUnspscDetails", "viewItemUnspscDetails", null,
+						getUserIdSessionFromLoginId(), e);
+			}
+		}
+		
+		
+		/**
+		 * Populates item extension and codification details based on the given {@link CmItem}.
+		 * <p>
+		 * This method extracts UNSPSC, type, brand, measurement, and color information
+		 * from the provided {@code CmItem} and constructs the corresponding segment,
+		 * commodity, and family details. These details are then set into the
+		 * {@link CodificationBackingBean} for display or further processing.
+		 * </p>
+		 *
+		 * <p>
+		 * If the provided {@code CmItem} is {@code null}, the method logs the condition
+		 * and exits without performing any processing.
+		 * </p>
+		 *
+		 * <p>
+		 * The extension section visibility is controlled based on whether the item name
+		 * is present or empty.
+		 * </p>
+		 *
+		 * @param cmitem
+		 *        the catalog item containing UNSPSC classification and
+		 *        extension-related attributes such as type, brand, measurement,
+		 *        and color
+		 */
+		public void populateItemExtensionDtls(CmItem cmitem) {
+			if (cmitem == null) {
+				log.info("populateItemExtensionDtls called with null CmItem");
+				return;
+			}
+			CommonUtils common = new CommonUtils();
+			CodificationBackingBean codificationBB = new CodificationBackingBean();
+			// Extract objects once
+			CmType type = cmitem.getCmType();
+			CmBrand brand = cmitem.getCmBrand();
+			CmMeasurement measurement = cmitem.getCmMeasurement();
+			CmColor color = cmitem.getCmColor();
+			CmUnspsc unspsc = cmitem.getCmUnspsc();
+			// segment title
+			String itemName = common.removeItemNameNA(type.getTypeName()) + " "
+					+ common.removeItemNameNA(brand.getBrandName()) + " "
+					+ common.removeItemNameNA(measurement.getMeasurementName()) + " "
+					+ common.removeItemNameNA(color.getColorName());
+			// segment code
+			String extCode = type.getTypeCode() + brand.getBrandCode() + measurement.getMeasurementCode()
+					+ color.getColorCode();
+			// Family title combines UNSPSC Title + segment details
+			String completeItemName = unspsc.getUnspscTitle() + " " + itemName;
+			codificationBB.getManagedBean().setFamilyCode(cmitem.getExtensionCode());
+			codificationBB.getManagedBean().setCommodityCode(unspsc.getUnspscCode());
+			codificationBB.getManagedBean().setCommodityTitle(unspsc.getUnspscTitle());
+			codificationBB.getManagedBean().setSegmentTitle(itemName);
+			codificationBB.getManagedBean().setSegmentCode(extCode);
+			codificationBB.getManagedBean().setFamilyTitle(completeItemName);		
+			codificationBB.getManagedBean().setHideExtension(itemName.trim().isEmpty());
+		}
+		//End - #31341
 }

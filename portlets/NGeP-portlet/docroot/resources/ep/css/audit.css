@@ -168,3 +168,14 @@
 .audit-main-panel .col-field-name    { width: 9.0% !important; }
 .audit-main-panel .col-old-value     { width: 9.7% !important; }
 .audit-main-panel .col-new-value     { width: 9.7% !important; }
+
+/* Remove grey hover effect on content area */
+.audit-main-panel .ui-state-hover,
+.audit-main-panel .ui-widget-content:hover,
+.audit-main-panel .ui-panel-content:hover {
+    box-shadow: none !important;
+}
+
+.audit-main-panel .ui-widget-content {
+    background: white !important;
+}

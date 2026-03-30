@@ -38,9 +38,11 @@
 				<h:outputText value="#{businessNature.levelCode}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.bn.name']}" style="width:65%">
+			<!-- #34445, Fix as-is bug: #39699 Start -->
+			<p:column headerText="#{lbl['lbl.pm.bn.name']}" style="width:65%; white-space:normal">
 				<h:outputText value="#{businessNature.levelName}" />
 			</p:column>
+			<!-- #34445, Fix as-is bug: #39699 End -->
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
 				style="width:10%">

@@ -13,8 +13,8 @@
 				<td>
 					<div align="right" style="width: 100%">
 						<!-- 34445 start -->
-						<p:commandButton value="#{lbl['lbl.btn.save']}" id="unplanedThreSaveBtn"
-							partialSubmit="true" oncomplete="if (!args.validationFailed) saveUnplannedThreInfoDlg.show();"/>
+						<p:commandButton value="#{lbl['lbl.btn.save']}" id="unplanedThreSaveBtn" process="@([id$=unplannedThresholdPanel])"
+							partialSubmit="true" oncomplete="if (!args.validationFailed) saveUnplannedThreInfoDlg.show();"/> <!-- #34445, Fix as-is bug:#40055 -->
 						<!-- 34445 end -->
 					</div>
 				</td>
@@ -29,8 +29,8 @@
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pm.btn.save.msg']}" 
-			update=":form"
-			loadingWidget="blockWidget" />
+			update="@([id$=unplannedThresholdPanel])"
+			loadingWidget="blockWidget" /> <!-- #34445, Fix as-is bug:#40055 Change update -->
 		<!-- 34445 end -->
 		
 		<table width="80%">

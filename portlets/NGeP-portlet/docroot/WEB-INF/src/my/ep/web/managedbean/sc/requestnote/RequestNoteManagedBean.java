@@ -410,6 +410,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The new sourcing dp bpm version flag */
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
     //#36119 - end
+	// 27868 & 35321 - start
+	private Date createdDate;
+	// 27868 & 35321 - end
     
     /**
      * Instantiates a new request note managed bean.
@@ -2450,4 +2453,21 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.disciplinaryActionDeletedDue = disciplinaryActionDeletedDue;
 	}
 	// #26284 - End
+	
+	// 27868 & 35321 - start
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	// 27868 & 35321 - end
 }

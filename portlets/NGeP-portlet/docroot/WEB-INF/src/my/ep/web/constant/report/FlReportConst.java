@@ -138,6 +138,10 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PSF_PERIOD = "PSFPERIOD";
 	// 29554 end
 	
+	// #27476 start
+	public static final String FL_RPT_PROCUMENT_TYPE_CODE = "PPROCTYPECODE";
+	// #27476 end
+	
 	
 	public FlReportConst(){}
 

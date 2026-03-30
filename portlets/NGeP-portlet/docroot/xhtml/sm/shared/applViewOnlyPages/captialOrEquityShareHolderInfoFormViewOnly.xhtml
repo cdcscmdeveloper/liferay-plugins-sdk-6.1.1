@@ -16,9 +16,11 @@
 					value="#{viewSmApplBackingBean.managedBean.smapplShareHolders}"
 					rowKey="#{shareBean}" rowIndexVar="index" id="shrPerDt">
 					<ac:paginator for="shrPerDt" />
+					<!-- 29659 START -->
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}">
-						<h:outputText value="#{shareBean.name}" />
+						<h:outputText value="#{shareBean.title.salutationName} #{shareBean.name}" />
 					</p:column>
+					<!-- 29659 END -->
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}">
 						<h:outputText value="#{shareBean.identificationNo}" />
 					</p:column>

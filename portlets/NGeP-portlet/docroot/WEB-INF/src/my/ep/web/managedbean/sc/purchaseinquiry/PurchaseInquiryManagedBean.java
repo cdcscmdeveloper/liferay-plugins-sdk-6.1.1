@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.purchaseinquiry;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -209,6 +210,10 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
  	
  	/** The disabled remark. */
 	 private boolean disabledRemark;
+	 
+	// 27868 & 35321 - start
+	private Date createdDate;
+	// 27868 & 35321 - end
     
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1394,4 +1399,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 		this.supplierItemPromoPrices = supplierItemPromoPrices;
 	}
 	// 29557 - end
+	// 27868 & 35321 - start
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	// 27868 & 35321 - end
 }
