@@ -3,10 +3,6 @@ package my.ep.web.bean;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.bean.ManagedProperty;
-
-import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
-
 public class LovBean implements Serializable {
 	
 	/**
