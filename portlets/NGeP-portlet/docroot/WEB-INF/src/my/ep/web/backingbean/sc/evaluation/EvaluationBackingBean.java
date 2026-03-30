@@ -9118,15 +9118,6 @@ private void retriveCommitteeRemarksList(){
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
-		//#28784 - Start
-		List<String> demoProceses = new ArrayList<>();
-		demoProceses.add(SCProcessNameConst.FINALISE_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.UPDATE_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.VIEW_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION);
-		//#28784 - End
 		if (null != member) {
 			if (member.getMemberRole().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
@@ -9226,7 +9217,7 @@ private void retriveCommitteeRemarksList(){
 							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 		// #28784 - Start
-		else if (demoProceses.contains(taskName))
+		else if (Arrays.asList(SCProcessNameConst.DEMO_PROCESSES).contains(taskName))
 		// #28784 - End
 		{
 			afterDemoInv(true); // #28784
