@@ -401,6 +401,7 @@
 									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
 									rendered="#{isOneTierWithTechnical or isTwoTier}"
 									process="@this">
+									<ui:remove> 28777,29729 </ui:remove>
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.technical']}"
 										styleClass="commandLink" />
@@ -409,6 +410,7 @@
 								<p:commandLink
 									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
 									process="@this">
+									<ui:remove> 28777,29729 </ui:remove>
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.financial']}"
 										styleClass="commandLink" />
