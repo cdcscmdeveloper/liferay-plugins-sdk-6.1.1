@@ -37,11 +37,6 @@ public class LovBean implements Serializable {
 	private boolean unSelectAndCancel = false;
 	private boolean resetFlag = false;
 	// End - #29416
-	// #29832 start 
-	//added managedproperty to pass the value from simplequoteBB into LovBB to trigger delete selected list
-	@ManagedProperty(value="#{simpleQuoteBackingBean}")
-	private SimpleQuoteBackingBean simpleQuoteBackingBean;
-	// #29832 end
 
 	/* #28895_35509 PM AUDIT */
 	private String roleCode;
@@ -166,21 +161,6 @@ public class LovBean implements Serializable {
 	public void setDisplayResultWhenReset(boolean isDisplayResultWhenReset) {
 		this.isDisplayResultWhenReset = isDisplayResultWhenReset;
 	}
-
-	// #29832 start @zaim
-	/**
-	 * @return the simpleQuoteBackingBean
-	 */
-	public SimpleQuoteBackingBean getSimpleQuoteBackingBean() {
-		return simpleQuoteBackingBean;
-	}
-	/**
-	 * @param simpleQuoteBackingBean the simpleQuoteBackingBean to set
-	 */
-	public void setSimpleQuoteBackingBean(SimpleQuoteBackingBean simpleQuoteBackingBean) {
-		this.simpleQuoteBackingBean = simpleQuoteBackingBean;
-	}
-	// #29832 end
 
 	// Start - #29416
 	public boolean getItemUsageMonitoringReport() {

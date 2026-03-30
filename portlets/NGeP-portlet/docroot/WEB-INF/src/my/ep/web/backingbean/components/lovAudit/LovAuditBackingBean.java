@@ -851,37 +851,6 @@ public class LovAuditBackingBean implements Serializable {
 		this.persistedEntities = persistedEntities;
 	}
 
-	/**
-	 * @author zaim #29832 start - to remove auto populate checkbox after delete
-	 *         the list for business nature
-	 * 
-	 * **/
-	public void removeSelectedBusinessNature() {
-		if (getLovBean().getSimpleQuoteBackingBean() != null) {
-			SimpleQuoteManagedBean simpleQuoteMB = getLovBean().getSimpleQuoteBackingBean().deleteSuccess();
-			if (simpleQuoteMB.getDeleteBusinessNature()) {
-				if (simpleQuoteMB.getDeletedBusinessNatureMap() != null) {
-					if (simpleQuoteMB.getDeletedBusinessNatureMap().size() > 0) {
-						for (Long item : simpleQuoteMB.getDeletedBusinessNatureMap().keySet()) {
-							debugLogger("Delete key " + item);
-
-							for (Iterator<Map.Entry<Long, BaseEntity>> it = persistedEntities.entrySet().iterator(); it.hasNext();) {
-								Map.Entry<Long, BaseEntity> entry = it.next();
-								if (entry.getKey().equals(item)) {
-									it.remove();
-								}
-							}
-						}
-						simpleQuoteMB = new SimpleQuoteManagedBean();
-					}
-				}
-			}
-		} else {
-			SimpleQuoteBackingBean bb = new SimpleQuoteBackingBean();
-			getLovBean().setSimpleQuoteBackingBean(bb);
-		}
-	}
-
 	public IPagingDataModel<PmUser> getSearchPmUserDataModel() {
 		return searchPmUserDataModel;
 	}
