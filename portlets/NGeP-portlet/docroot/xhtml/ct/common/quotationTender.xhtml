@@ -93,8 +93,8 @@
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.qt.tender.type']}" />
 							</td>
-							<td><p:inputText style="width:210px;" disabled="true"
-									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.qtType)}" />
+							<td><p:inputTextarea autoResize="false" maxlength="500" rows="2" style="width:210px;" disabled="true"
+									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.qtType)}" /> <!-- #30045 -->
 							</td>
 						</h:panelGroup>					
 						<td><p:outputLabel value="#{lbl['lbl.ct.pub.date']}"
@@ -115,8 +115,8 @@
 							and ctBackingBean.newProcurement()!= null }">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.type']}" />
 							</td>
-							<td><p:inputText style="width:170px;" disabled="true"
-							value="#{ctBackingBean.newProcurement()}" />			
+							<td><p:inputTextarea autoResize="false" maxlength="500" rows="2" style="width:170px;" disabled="true"
+							value="#{ctBackingBean.newProcurement()}" /> <!-- #30045 -->			
 							</td>
 						</h:panelGroup>	
 					</tr>			
@@ -124,7 +124,7 @@
 						<h:panelGroup
 							rendered="#{ctBackingBean.managedBean.newPk7 
 							and ctBackingBean.newJustification()!= null}">
-							<td><p:outputLabel value="#{lbl['lbl.ct.proc.Justification']}" />
+							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
 						<td colspan="3">
 						<p:inputTextarea autoResize="false" maxlength="1000"
@@ -138,7 +138,7 @@
 							rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.newPk7 and (!ctBackingBean.managedBean.commonView or 
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)
 						              or ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType != null }">
-							<td><p:outputLabel value="#{lbl['lbl.ct.proc.Justification']}" />
+							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
 						<td colspan="3">
 						<p:inputTextarea autoResize="false" maxlength="1000"
