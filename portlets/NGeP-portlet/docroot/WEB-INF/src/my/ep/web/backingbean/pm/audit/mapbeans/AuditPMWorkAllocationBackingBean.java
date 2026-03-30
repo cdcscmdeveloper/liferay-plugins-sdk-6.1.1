@@ -50,7 +50,6 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		String doctype = jobRatio.getSupplierType() + COMMA_STRING + jobRatio.getApplType() + COMMA_STRING
 				+ categoryType;  /*** ex: K,N,N     if category  null ex: K,N,X  */
 
-		System.out.println("  -----TEST---- doctype : " + doctype);
 		if (!managedBean.isBrandNew()) {
 			PmPoJobTypeRatio oldPoJobRatio = managedBean.getOriPoJobTypeRatio();
 
