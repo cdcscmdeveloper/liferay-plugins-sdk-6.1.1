@@ -6872,14 +6872,14 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			// #28784 -end-
 			{
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
-					//#28774 - Start
+					//#28784 - Start
 					if (!this.getManagedBean().isDemoWip()) {
 						checkMeetingDetailsAndStatus(this.getManagedBean()
 								.getScQtMeetings());
 						checkCommitteeMembersAttendance(this.getManagedBean()
 								.getCommitteeMemberList());
 					}
-					//#28774 - End
+					//#28784 - End
 					saveMeetingDtls(false);
 					if (null == this.getManagedBean().getScQtChecklist()) {
 						retrivePresetationDemoCheckList();
