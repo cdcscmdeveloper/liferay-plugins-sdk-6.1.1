@@ -1594,6 +1594,15 @@ public class PurchaseInquiryBackingBean extends
 					}
 				}
 				//#29557 - end
+				
+				//#26059 - Start
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				if(requestSupplierItem.getRequestNoteItem().getCmItem() !=null){
+					CmItem cmItem = requestSupplierItem.getRequestNoteItem().getCmItem(); 
+				    catalogueBackingBean.cleanItemNameNA(cmItem);
+					requestSupplierItem.getRequestNoteItem().setCmItem(cmItem);
+				}
+				//#26059 - End
 
 				// RequestNote Details - checking workflow status exits or not
 				// for PI to RN
@@ -1924,6 +1933,11 @@ public class PurchaseInquiryBackingBean extends
 			ScRequestNoteDtl scRequestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		}
+		
+		// #26059 - Start
+		filterItemName(requestSupplierItem.getRequestNoteItem());
+		// #26059 - End
+				
 		getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
 		getManagedBean().setScRequestSupplierItem(requestSupplierItem);
 		getManagedBean().setSupplierItemPrices(requestSupplierItem.getSupplierItemPrices());
@@ -3921,4 +3935,19 @@ public class PurchaseInquiryBackingBean extends
 		return prInquiry;
 	}
 	// #25790 - end
+	
+	// #26059 - Start
+	/**
+	 * Cleans the item name of the given request item, if available.
+	 * 
+	 * @param scRequestItem
+	 *            the request item containing the item to clean
+	 */
+	private void filterItemName(ScRequestItem scRequestItem) {
+		if (scRequestItem != null && scRequestItem.getCmItem() != null) {
+			new CatalogueBackingBean().cleanItemNameNA(scRequestItem
+					.getCmItem());
+		}
+	}
+	// #26059 - End
 }
