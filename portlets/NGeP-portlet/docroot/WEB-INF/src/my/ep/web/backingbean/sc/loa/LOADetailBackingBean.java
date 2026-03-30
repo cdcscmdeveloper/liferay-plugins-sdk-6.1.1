@@ -742,6 +742,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
+			
+			//#26059 - Start
+			CommonUtils commonUtils = new CommonUtils();
+			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+				item.getScRequestItem()
+						.setItemName(commonUtils.removeItemNameNA(item.getScRequestItem().getItemName()));
+			}
+			//#26059 - End
 							
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
@@ -1316,6 +1324,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
 					scLoa.getScLoiLoa().getSmSupplier(), qtId);
 			scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+			
+			//#26059 - Start
+			filterLOAItemName(scLoa.getScLoiLoaItems());
+			//#26059 - End	 
 		}
 		// 26247 - end
 
@@ -13461,5 +13473,78 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	}
 	// #31503 -end-
+	
+	// #26059 - Start
+	/**
+	 * Removes "NA" placeholders from the item names in the list of LOA items.
+	 * This method iterates through each {@code ScLoi} and its associated
+	 * {@code ScLoiLoaItem} list. If the item name contains "NA", it will be
+	 * cleaned using {@code CommonUtils.removeItemNameNA()}.
+	 * 
+	 * @param listOfScLoi
+	 *            the list of LOA objects to process
+	 */
+	private void filterLOAItemName(List<ScLoiLoaItem> listOfScLoiItem) {
+		if (listOfScLoiItem == null || listOfScLoiItem.isEmpty()) {
+			return;
+		}
+		try {
+			CommonUtils commonUtils = new CommonUtils();
+			for (ScLoiLoaItem item : listOfScLoiItem) {
+				if (item == null || item.getScRequestItem() == null) {
+					continue;
+				}
+				String cleanedName = commonUtils.removeItemNameNA(item
+						.getScRequestItem().getItemName());
+				item.getScRequestItem().setItemName(cleanedName);
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("DP", "filterLOAItemName",
+					StringUtils.EMPTY, "filterLOAItemName",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	/**
+	 * Determines whether the "Assign" button should be enabled or visible. The
+	 * button is considered active (returns {@code true}) if either of the
+	 * following conditions is met: The current context is read-only (
+	 * {@code readOnly == true}). The context is NOT read-only, AND the
+	 * following three conditions are simultaneously true: The item's
+	 * procurement type is SERVICE (matching
+	 * {@code DbValueConst.PROCUMENT_TYPE_SERVICE}). The item's temporary UNSPSC
+	 * code is empty or null (validated via {@code StringUtils.isEmpty()}). The
+	 * item has an associated {@code CmItem} (i.e., {@code getCmItem()} is not
+	 * null).
+	 * 
+	 * @param readOnly
+	 *            {@code true} if the form or context is in read-only mode,
+	 *            bypassing further checks.
+	 * @param loaItem
+	 *            The {@link ScLoiLoaItem} instance being evaluated.
+	 * @return {@code true} if the "Assign" button should be active (enabled or
+	 *         shown); {@code false} otherwise.
+	 */
+	public boolean validateAssignButton(boolean readOnly, ScLoiLoaItem loaItem) {
+		if (readOnly) {
+			return true;
+		}
+
+		if (loaItem == null || loaItem.getScRequestItem() == null) {
+			return true;
+		}
+
+		if (loaItem.getScRequestItem().getTempUnspscCode() != null) {
+			return false;
+		}
+
+		if (loaItem.getScRequestItem().getCmItem() != null) {
+			return true;
+		}
+
+		return false;
+	}
+	// #26059 - End
 }
 

@@ -117,9 +117,11 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst; //#27868,#26059
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc; //#26059
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract; //#25790
 import my.ep.persistence.entity.ct.VCtContract; //#25790
@@ -150,6 +152,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteAttachment; //#26059
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
@@ -187,6 +190,7 @@ import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.DPConstants;
+import my.ep.web.constant.SSTConstant; //#26059
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -196,6 +200,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.ReasonHelper; //#27868
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil; //#26059
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
@@ -211,6 +216,7 @@ import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent; //#26059
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -239,6 +245,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/** The request note page. */
 	private String REQUEST_NOTE_PAGE = "requestNoteMain";
 	
+	// start - #26059
+	/** The bpk approver request note page. */
+	private String requestNoteBpkApproverMainPage = "/xhtml/sc/directpurchase/requestnote/requestNoteBpkApproverMain.xhtml";
+	// end - #26059
+
 	// start - #25790
 	/** The request note continuity page. */
 	private String requestNoteContinuityPage = "/xhtml/sc/directpurchase/requestnote/requestNoteContinuity.xhtml";
@@ -745,7 +756,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("reloadRequestNoteForCodification");
 		ScRequestNote	requestNote = null;
 		List<ScRequestNoteDtl> requestNoteDtlList= null;
-				
+		
+		//#26059 - Start
+		ScQuote scQuote = null;
+		//#26059 - End
+		
 		if(requestNoteResDTO.getRequestNoteDtlList() != null){
 			requestNoteDtlList = requestNoteResDTO.getRequestNoteDtlList();
 		}
@@ -756,6 +771,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(CollectionUtils.isNotEmpty(requestNoteDtlList)) {
 			getManagedBean().setSmSupplier(requestNoteDtlList.get(0).getScRequestSupplierItem().getSmSupplier());
 		}
+		
+		// #26059 - Start
+		if (requestNoteResDTO.getAssignItemDtl() != null) {
+			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
+		}
+
+		if (requestNoteResDTO.getQuote() != null) {
+			scQuote = requestNoteResDTO.getQuote();
+		}
+		// #26059 - End
 		
 		// created by 
 		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
@@ -792,7 +817,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							requestItem.setPurchaseInDefault(null);
 						}
 					}
-					
+					//#26059 - Start
+					CommonUtils commonUtils = new CommonUtils();
+					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
+					compareItemName(requestItem,scQuote);
+					//#26059 - End	
 				}
 			}
 			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
@@ -1033,6 +1062,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// validate RN
 			log.info("Bug 32362: validateRequestNote Start");
 			validateRequestNote(scRequestNote, outcome);//#26059, #27868 - add outcome
+
 			log.info("Bug 32362: validateRequestNote End");
 			//#32362 - End
 			
@@ -1070,11 +1100,37 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
 					outcome.equals(BpmOutcomeConst.BPM_REJECT)){
 				approverAction(outcome);
-			} else{
+			}
+			// #26059 - start
+			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || getManagedBean().isExceededAmountAlerted()) {
+				proceedSubmit(outcome);
+			}
+			// #26059 - end
+			else{
 				requestNoteSubmit(outcome);
 			}
 		}
 	}
+	
+	// #26059 - start
+	/**
+	 * Submits request note unless exceeded amount alerted and counter is 1 or
+	 * less.
+	 * 
+	 * @param outcome
+	 *            Submission outcome.
+	 */
+	private void proceedSubmit(String outcome) {
+		if (getManagedBean().isExceededAmountAlerted()) {
+			if (getManagedBean().getCounter() > 1) {
+				requestNoteSubmit(outcome);
+			}
+		} else {
+			requestNoteSubmit(outcome);
+		}
+	}
+
+	// #26059 - end
 	
 	// #27545 - start
 	public void validateAssignedUser(List<ScRequestNoteDtl>	requestNoteDtls) {
@@ -1142,18 +1198,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setAction(outcome);
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		
-		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
-			// check is all items codified
-			for(ScRequestNoteDtl rnDtl : requestNoteDtls) {
-				ScRequestItem requestItem = rnDtl.getRequestItem();
-				if(requestItem.getCmItem() == null) {
-					throw new EpException(
-							MessageConst.ERROR_760448,
-							new String[] {requestItem.getItemName()});
-				}
-			}
-		}
-		requestNoteCodificationSubmit(outcome);
+		 // #26059 - Start
+	    List<String> nonExtensionCodeCode = putAllTheNonExtensionCodeItemInList(requestNoteDtls);
+
+	    if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && !nonExtensionCodeCode.isEmpty()) {
+	    	validateAndThrowCodificationError(nonExtensionCodeCode);
+	    }
+	    
+	    requestNoteCodificationSubmit(outcome);
+	    // #26059 - End
 	}
 
 	/**
@@ -1235,7 +1288,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	/**
 	 * Validate request note.
-	 *
 	 * @param requestNote
 	 *            the request note
 	 * @param outcome The outcome string (e.g., BPM_APPROVE, BPM_SUBMIT) influencing validation behavior and messages.
@@ -1257,10 +1309,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
 
 			if (thresholdData.count > 0) {
-				// #27868 - start
+				// #27868, #26059  - start
 				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
 				triggerAlert(outcome, thresholdData, ptjName);
-				// #27868 - end
+				// #27868, #26059  - end
 			} else if (getManagedBean().getRequestNote() != null
 					&& getManagedBean().getRequestNote().getRequestNoteId() != null) { // #27868
 				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
@@ -1398,8 +1450,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		return true;
 	}
-	//#26059,#27868 - end
-
+	//#26059,#27868 - end	
 	//#31689 - start
 	private void validateReqNoteIgnoreProcurement(ScRequestNote requestNote) {
 		debugLogger("validateReqNoteIgnoreProcurement");
@@ -1546,6 +1597,66 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setMinistryOrgProfile(orgProfile);
 		// 27868 - end
 		
+		// #31679 - Start
+		if (requestNote != null) {
+
+			log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")"
+					+ "- Method: preRenderView Start ---");
+
+			if (getManagedBean().getSmSupplier() != null) {
+				log.info("Supplier ID ("
+						+ getManagedBean().getSmSupplier().getSupplierId()
+						+ ") " + "Company Name ("
+						+ getManagedBean().getSmSupplier().getCompanyName()
+						+ ") " + "RN No.(" + requestNote.getRequestNoteNo()
+						+ ")");
+			}
+
+			if (getManagedBean().getCurrentStatusId() != null) {
+				log.info("StatusId (" + getManagedBean().getCurrentStatusId()
+						+ ") " + "RN No.(" + requestNote.getRequestNoteNo()
+						+ ")");
+			}
+
+			if (requestNote.getQuote() != null) {
+				log.info("RN No.(" + requestNote.getRequestNoteNo() + ") "
+						+ "SQ No.(" + requestNote.getQuote().getQuoteNo()
+						+ ") " + "Zonal(" + requestNote.getQuote().isZonal()
+						+ ")");
+			}
+
+			if (requestNote.getRequestNoteDtls() != null
+					&& requestNote.getRequestNoteDtls().size() > 0) {
+				for (ScRequestNoteDtl rnDtl : requestNote.getRequestNoteDtls()) {
+					if (rnDtl.getRequestItem() != null
+							&& rnDtl.getScRequestSupplierItem() != null) {
+						log.info("RnDtlId ("
+								+ rnDtl.getRequestNoteDtlId()
+								+ ") "
+								+ "ReqItemId ("
+								+ rnDtl.getRequestItem().getRequestNoteItemId()
+								+ ") "
+								+ "ReqSupItemId ("
+								+ rnDtl.getScRequestSupplierItem()
+										.getRequestSupplierItemId() + ") "
+								+ "RnNo (" + requestNote.getRequestNoteNo()
+								+ ")");
+						getManagedBean().setRequestSupplierItem(
+								rnDtl.getScRequestSupplierItem()); // 27868
+						// #26059 - Start
+						CommonUtils utils = new CommonUtils();
+						rnDtl.getRequestItem().setItemName(
+								utils.removeItemNameNA(rnDtl.getRequestItem()
+										.getItemName()));
+						// #26059 - End
+					}
+				}
+			}
+			log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")"
+					+ "- Method: preRenderView End ---");
+		}
+		// #31679 - End
+		
 		//Redmine Enhancement #12177
 		log.info("Temp5: start performance - addButton");
 		addButton();
@@ -1587,6 +1698,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setSupplierId(supplierId);
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().
 				getRequestNoteDtlForCodificationBySupplier(requestNoteReqDTO);
+		getManagedBean().setScQuote(requestNoteResDTO.getQuote()!=null ? requestNoteResDTO.getQuote() : null); //#26059 - Start
 		reloadRequestNoteForCodification(requestNoteResDTO);
 		
 		if(!pidExpiredFlag){
@@ -1617,6 +1729,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setShowPurchaseInDefault(false);
 		getManagedBean().setScRequestNoteDtl(null);
 		// 25790 - end
+		// #26059 - start
+		getManagedBean().setBpkApproverMode(false);
+		getManagedBean().setRnExceedThreshold(false);
+		getManagedBean().setShowAttachments(true);
+		// #26059 - end
 		List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -1753,6 +1870,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							sb.append(SearchOperator.OPERATOR_NOT_IN.value());
 						}
 					}
+					
+					// #26059 - start
+					if (scRequestNoteDtl.isExceedThreshold()) {
+						getManagedBean().setRnExceedThreshold(Boolean.TRUE);
+						
+						if (requestNote.getScRequestNoteAttachments().isEmpty()) {
+							getManagedBean().setShowAttachments(Boolean.FALSE);
+						}
+					}
+					// #26059 - end
 
 					scRequestNoteDtl.setConditionField(sb.toString());
 //				}
@@ -2181,6 +2308,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				onChangePriceType();
 				// #28789 - end
 			}
+			
+			//#26059 - Start
+			if(cmSupplierItem.getCmItem() !=null){
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				CmItem cmItem = cmSupplierItem.getCmItem();
+				catalogueBackingBean.cleanItemNameNA(cmItem);
+				cmSupplierItem.setCmItem(cmItem);
+			}
+			//#26059 - End
+			
 		} else {
 			// remove after catalogue team had add the filtering in view.
 			throw new EpException(MessageConst.ERROR_760159);
@@ -2598,6 +2735,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    VCmSupplierItem  vCmSupplierItem = new VCmSupplierItem();
 		    vCmSupplierItem.setCompanyName(selectedSupplierItem.getSmSupplier().getCompanyName());
 		    scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
+		    
+			// #26059 - Start
+			if (scRequestItem != null && scRequestItem.getCmItem() != null) {
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				CmItem cmItem = scRequestItem.getCmItem();
+				catalogueBackingBean.cleanItemNameNA(cmItem);
+				scRequestItem.setCmItem(cmItem);
+			}
+			// #26059 - End
 		    
 		    scRequestItem.setRequestNote(requestNote);
 		}
@@ -4542,7 +4688,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			return result;
 		}
 	}
-	
+
 	/**
 	 * Sort market summary list.
 	 *
@@ -6465,7 +6611,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return formattedItemName;
 	}
 	// 36950 - end @zaim
-	
 	// start - #27868, #26059
 	/**
 	 * Holds threshold calculation data: item names, item count, and total
@@ -7468,5 +7613,4 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// 27868 - end
-	
 }

@@ -35,6 +35,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote; //#26059
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -45,6 +46,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.sc.requestnote.CommodityGroup;//#26059
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -420,16 +422,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private PmOrgProfile ministryOrgProfile;
 	private Integer saveIndex;
 	// 27868 & 35321 - end
-	
-	//#26059 - Start
+    
+	// #26059 - Start
 	private boolean bpkApproverMode = Boolean.FALSE;
 	private boolean rnExceedThreshold = Boolean.FALSE;
-	private boolean showAttachments = Boolean.TRUE; 
+	private boolean showAttachments = Boolean.TRUE;
 	private boolean containRejectDecision = Boolean.FALSE;
-    private	Integer	counter = 0;
-    private boolean existInAssignItemDetail = Boolean.FALSE;
-  //#26059 - End
-    
+	private List<CommodityGroup> commodityGroups = new ArrayList<>();
+	private Integer counter = 0;
+	private boolean existInAssignItemDetail = Boolean.FALSE;
+	private ScQuote scQuote;
+	// #26059 - End
+
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2570,6 +2574,25 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Retrieves the list of commodity groups.
+	 * 
+	 * @return A list of {@link CommodityGroup} objects.
+	 */
+	public List<CommodityGroup> getCommodityGroups() {
+		return commodityGroups;
+	}
+
+	/**
+	 * Sets the list of commodity groups.
+	 * 
+	 * @param commodityGroups
+	 *            The list of {@link CommodityGroup} objects to set.
+	 */
+	public void setCommodityGroups(List<CommodityGroup> commodityGroups) {
+		this.commodityGroups = commodityGroups;
+	}
+
+	/**
 	 * Checks if the Request Note (RN) exceeds the threshold.
 	 * 
 	 * @return {@code true} if the RN exceeds the threshold, {@code false}
@@ -2656,6 +2679,21 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setExistInAssignItemDetail(boolean existInAssignItemDetail) {
 		this.existInAssignItemDetail = existInAssignItemDetail;
+	}
+
+	/**
+	 * @return the scQuote
+	 */
+	public ScQuote getScQuote() {
+		return scQuote;
+	}
+
+	/**
+	 * @param scQuote
+	 *            the scQuote to set
+	 */
+	public void setScQuote(ScQuote scQuote) {
+		this.scQuote = scQuote;
 	}
 
 	// #26059 - end
