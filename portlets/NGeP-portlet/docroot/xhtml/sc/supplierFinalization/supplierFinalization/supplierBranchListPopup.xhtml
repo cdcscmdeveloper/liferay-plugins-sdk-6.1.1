@@ -23,12 +23,8 @@
 				value="#{suppFinalizationBackingBean.managedBean.supplierBranchList}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rows="10">
-				
-				<f:facet name="emptyMessage">
-                  <h:outputText value="#{lbl['lbl.datatable.msg.no.record']}" />
-                </f:facet>
-                
 				<ac:paginator for="branchList" />
+
 				<p:column headerText="#{lbl['lbl.sc.branch.name']}"
 					style="width:30%; white-space:normal;"
 					styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
@@ -57,7 +53,7 @@
 					style="width:10%; white-space:normal; text-align:center;"
 					styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
 					<h:outputText
-						value="#{lbl[branchList.qtRelatedSupplierBranch eq true ? 'lbl.txt.deleted' : 'lbl.txt.active']}" />
+						value="#{lbl[branchList.recordStatusFlg eq DbValueConst.recordStatusActive ? 'lbl.txt.active' : 'lbl.txt.deleted']}" />
 
 				</p:column>
 
