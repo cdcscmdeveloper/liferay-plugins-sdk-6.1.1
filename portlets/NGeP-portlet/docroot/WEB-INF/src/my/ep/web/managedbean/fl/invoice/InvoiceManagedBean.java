@@ -152,6 +152,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
+	
+	//24956 start
+    private boolean ctTypeMinistry;
+    //24956 end
+    
 
 	//#35508 start
   	private String originalSupplierInvRef;
@@ -1265,6 +1270,15 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+	
+	// 24956 start
+	public boolean isCtTypeMinistry() {
+		return ctTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		this.ctTypeMinistry = ctTypeMinistry;
+	}
 
 	/**
 	 * @return the originalSupplierInvRef
