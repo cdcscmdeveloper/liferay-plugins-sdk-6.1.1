@@ -20,6 +20,10 @@ public class PoPurchaseOrderRptManagedBean extends FlReportManagedBean{
 	private static final long serialVersionUID = 1L;
 	private String reportUrl;
 	
+	// #27476 start
+	private String procumentType;
+	// #27476 end
+	
 	public PoPurchaseOrderRptManagedBean(){}
 	
 	public String getReportUrl() {
@@ -28,6 +32,20 @@ public class PoPurchaseOrderRptManagedBean extends FlReportManagedBean{
 
 	public void setReportUrl(String reportUrl) {
 		this.reportUrl = reportUrl;
+	}
+
+	/**
+	 * @return the procumentType
+	 */
+	public String getProcumentType() {
+		return procumentType;
+	}
+
+	/**
+	 * @param procumentType the procumentType to set
+	 */
+	public void setProcumentType(String procumentType) {
+		this.procumentType = procumentType;
 	}
 	
 }

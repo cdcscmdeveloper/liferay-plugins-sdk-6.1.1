@@ -2130,16 +2130,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			//20231122@asyrafhaziq_25726 - Issue 16
 			//new #25726 - Start
 			
-			List<String> flTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
-					ParameterConst.FULFILMENT_TYPE_SCHEDULED,
-					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-			boolean isQTtypePK7 = null != scLoa.getQtType() && null != scLoa.getQtType().getParameterId()
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode());
-			boolean isFulfilmentType = null != scLoa.getScQt() && null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& flTypeCodes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
+			/*
+			 * #29766 Start Vinod updated
+			 * getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
+			 * codes and refactor old code.
+			 */
+			boolean isQTtypePK7 = null != scLoa.getQtType()
+					&& null != scLoa.getQtType().getParameterId()
+					&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(
+							scLoa.getQtType().getParameterCode());
 
-			if (isQTtypePK7 && isFulfilmentType) {
+			if (isQTtypePK7 ) {
+				// #29766 End Vinod
 		
 			//new #25726 - End
 				setBondReq = false;
@@ -3089,19 +3091,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	/**
 	 * Gets the procurement type tool tip.
-	 *
+	 * 
+	 * @param date
 	 * @return the procurement type tool tip
 	 */
-	public String getProcurementTypeToolTip(){
+	public String getProcurementTypeToolTip(Date date) {
 		// MaxProcurementAmt
-		BigDecimal maxProcurementAmt = getPRThresholdAmount();
-		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-		String message = ResourceBundleUtils.getMessage(
-				"lbl.sc.procurementtype.tooltip", new String[] {amountDF.format(maxProcurementAmt)}, 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
+		// 27868 & 35321 - start
+		String message;
+		message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip.rpt", null,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		// 27868 & 35321 - end
 		return message;
 	}
 	

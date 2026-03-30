@@ -92,10 +92,12 @@
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form"  
 							action="#{createDOBackingBean.createDeliveryOrder(BpmOutcomeConstant.bpmSave)}" /> 
+							<ui:remove>#30753 start</ui:remove>
 						<p:commandButton update="spkiPopUp, @form" disabled="#{createDOBackingBean.managedBean.orderDisabledForSdCheck eq true}"
 							styleClass="ui-button"  value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmSubmit)}" />
+							action="#{createDOBackingBean.checkLimitBeforeSubmit(BpmOutcomeConstant.bpmSubmit)}" />
+							<ui:remove>#30753 end</ui:remove>
 					</td>
 				</h:panelGroup>
 				<h:panelGroup
@@ -200,6 +202,22 @@
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
 			</div>
 		</p:dialog>
+		<ui:remove>#30753 start</ui:remove>
+		<p:confirmDialog
+			message="#{createDOBackingBean.managedBean.limitExceededMessage}"
+			severity="alert" widgetVar="limitConfirmDlg" closable="true"
+			header="#{lbl['lbl.do.amount.exceeded.threshold']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmSubmit)}"
+					onstart="limitConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="limitConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<ui:remove>#30753 start</ui:remove>
 		<!--#26279 Start-->
 		<ac:disciplinaryActionHistory voList="#{createDOBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />

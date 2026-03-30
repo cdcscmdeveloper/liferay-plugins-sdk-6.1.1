@@ -154,13 +154,13 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
 				break;
 			case 7:
-				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
 				break;
 			case 8:
-				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
 				break;
 			case 9:
-				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
 				break;
 			case 10:
 				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
