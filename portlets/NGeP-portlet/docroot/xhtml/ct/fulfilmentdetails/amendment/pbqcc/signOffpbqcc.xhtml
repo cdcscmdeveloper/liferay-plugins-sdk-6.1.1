@@ -173,17 +173,18 @@
 						<h:outputText value="#{data.pnp ? 'Yes' : 'No'}" />
 					</div>
 				</p:column>
+				<!-- #35238 start -->
 				<p:column style="width:6%;" headerText="#{lbl['lbl.ct.role']}"
 					styleClass="column-align-center">
 					<div align="left">
-						<h:outputText value="#{amendmentBackingBean.getParameterDescCommitteeByMember(data, index)}" />
+						<h:outputText value="#{amendmentBackingBean.getParameterDesc(data.memberRole)}" />
 					</div>
 				</p:column>
 				<p:column style="width:15%;white-space:normal;"
 					headerText="#{lbl['lbl.ct.represent.type']}"
 					styleClass="column-align-center"
-					rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
-				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
+					rendered="#{!amendmentBackingBean.isQuotationCommitteeType()}">
+				 <!-- #35238 end -->
 					<div align="left">
 						<h:outputText
 							value="#{amendmentBackingBean.getParameterDesc(data.representativeType)}" />
