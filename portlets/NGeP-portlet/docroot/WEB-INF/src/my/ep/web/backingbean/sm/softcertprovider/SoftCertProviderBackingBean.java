@@ -106,24 +106,32 @@ public class SoftCertProviderBackingBean extends BaseBackingBean<SoftCertProvide
 			
 			/************ AUDIT START #28895-35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMSoftCertBackingBean();
-			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IAuditPMSO.class);
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IAuditPMSO.class);
 
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SOFT_CERT)
-					&& !ObjectUtils.isEmpty(getManagedBean().getConfigRule().getConfigRuleValues().toArray())) {
-				List<PmConfigRuleValue> oldRuleValue = SmServiceLookup.getRuleSO().getExistingRuleValue(
-						RuleTypeConst.SOFT_CERT_PROVIDER);
+					&& !ObjectUtils.isEmpty(getManagedBean().getConfigRule()
+							.getConfigRuleValues().toArray())) {
+				List<PmConfigRuleValue> oldRuleValue = SmServiceLookup
+						.getRuleSO().getExistingRuleValue(
+								RuleTypeConst.SOFT_CERT_PROVIDER);
 
-				getManagedBean().setExistingConfigValueMap(new HashMap<Long, PmConfigRuleValue>());
+				getManagedBean().setExistingConfigValueMap(
+						new HashMap<Long, PmConfigRuleValue>());
 				setOldRuleHashMap(oldRuleValue);
 			}
-			
-			RuleResDTO resDto = SmServiceLookup.getRuleSO().updateRuleValueList(reqDTO);
-			
-			if(resDto.isSuccessful()){
-				this.getManagedBean().setNewRuleValue(resDto.getNewRuleTypeList().get(0).getConfigRuleValues());
+
+			RuleResDTO resDto = SmServiceLookup.getRuleSO()
+					.updateRuleValueList(reqDTO);
+
+			if (resDto.isSuccessful()) {
+				this.getManagedBean().setNewRuleValue(
+						resDto.getNewRuleTypeList().get(0)
+								.getConfigRuleValues());
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SOFT_CERT)) {
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SOFT_CERT);
+					auTemplate.auditSaveData(getManagedBean(),
+							AuditConst.PM_AUD_SOFT_CERT);
 				}
 			}
 			/************ AUDIT END #28895-35509 *************/
@@ -144,12 +152,13 @@ public class SoftCertProviderBackingBean extends BaseBackingBean<SoftCertProvide
 	 * @param List<PmConfigRuleValue>
 	 * 
 	 */
-	private void setOldRuleHashMap(List<PmConfigRuleValue> oldRuleValue){
+	private void setOldRuleHashMap(List<PmConfigRuleValue> oldRuleValue) {
 		if (!ObjectUtils.isEmpty(oldRuleValue.toArray())) {
 			for (PmConfigRuleValue ruleValue : oldRuleValue) {
-				PmConfigRuleValue currentRuleValue = (PmConfigRuleValue) ruleValue.cloneEntity();
-				getManagedBean().getExistingConfigValueMap().put(currentRuleValue.getRuleValueId(),
-						currentRuleValue);
+				PmConfigRuleValue currentRuleValue = (PmConfigRuleValue) ruleValue
+						.cloneEntity();
+				getManagedBean().getExistingConfigValueMap().put(
+						currentRuleValue.getRuleValueId(), currentRuleValue);
 			}
 		}
 	}
