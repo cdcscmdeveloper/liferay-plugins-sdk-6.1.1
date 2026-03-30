@@ -7749,11 +7749,11 @@ public class LOIDetailBackingBean extends
 		String evalstageF = null;
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
+		if(null != this.getManagedBean().getSelectedZone()){
+			selectedZoneId = this.getManagedBean().getSelectedZone().getSpecZoneId();
+		}
 		retrievescoresettings(this.getManagedBean().getScQt());
-		//#38679 use new calculation if only has quantity 0 for zonal only
-		boolean isQtyNotNull = null != selectedZoneId
-		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
-		
+		//#38679 use new calculation if only has quantity 0 for zonal only	
 		requestNoteItemId = (CollectionUtils.isNotEmpty(this.getManagedBean().getRecommendList()))
 			    ? this.getManagedBean().getRecommendList().get(0).getRequestItem().getRequestNoteItemId()
 			    : requestNoteItemId;
@@ -7761,7 +7761,10 @@ public class LOIDetailBackingBean extends
 		selectedZoneId = (this.getManagedBean().getSelectedZone() != null)
 			    ? this.getManagedBean().getSelectedZone().getSpecZoneId()
 			    : selectedZoneId;
-
+		
+		boolean isQtyNotNull = null != selectedZoneId
+				        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
+		
 		if (null != this.getManagedBean().getRecommendedSupplierList()) {
 				if (null == this.getManagedBean().getSelectItemList()) {
 					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG;
