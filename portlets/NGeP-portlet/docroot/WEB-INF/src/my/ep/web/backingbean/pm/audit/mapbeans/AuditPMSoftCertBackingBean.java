@@ -52,7 +52,8 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
 		SoftCertProviderManagedBean managedBean = (SoftCertProviderManagedBean) manageBean;
-		List<PmConfigRuleValue> configRuleValues = managedBean.getConfigRule().getConfigRuleValues();
+		List<PmConfigRuleValue> configRuleValues = managedBean.getConfigRule()
+				.getConfigRuleValues();
 		List<PmConfigRuleValue> listNew = managedBean.getNewRuleValue();
 		this.roleCode = roleCode;
 		for (PmConfigRuleValue ruleValue : configRuleValues) {
@@ -61,15 +62,19 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 					softCertUpdatelist(newRuleValue, ruleValue);
 				}
 			} else {
-				PmConfigRuleValue oldValue = managedBean.getExistingConfigValueMap().get(ruleValue.getRuleValueId());
-				String newDate = ruleValue.getExpDate() == null ? "" : simpleDateFormat.format(ruleValue.getExpDate());
-				String oldDate = oldValue.getExpDate() == null ? "" : simpleDateFormat.format(oldValue.getExpDate());
+				PmConfigRuleValue oldValue = managedBean
+						.getExistingConfigValueMap().get(
+								ruleValue.getRuleValueId());
+				String newDate = ruleValue.getExpDate() == null ? ""
+						: simpleDateFormat.format(ruleValue.getExpDate());
+				String oldDate = oldValue.getExpDate() == null ? ""
+						: simpleDateFormat.format(oldValue.getExpDate());
 
 				if (!(oldDate.equals(newDate))) {
 					this.docType = checkSoftCert(ruleValue.getRuleValue());
 					this.docId = BigInteger.valueOf(ruleValue.getRuleValueId());
-					detailObj(AuditConst.PM_AUD_SCP_EXP_DATE_FIELDLABELCODE, oldDate, newDate,
-							AuditConst.PM_AUD_ACTION_TYPE_UPD);
+					detailObj(AuditConst.PM_AUD_SCP_EXP_DATE_FIELDLABELCODE,
+							oldDate, newDate, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				}
 			}
 		}
@@ -79,34 +84,40 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private void softCertUpdatelist(PmConfigRuleValue newRuleValue, PmConfigRuleValue ruleValue) {
+	private void softCertUpdatelist(PmConfigRuleValue newRuleValue,
+			PmConfigRuleValue ruleValue) {
 		if (newRuleValue.getEffDate().equals(ruleValue.getEffDate())) {
 			this.docType = checkSoftCert(ruleValue.getRuleValue());
 			this.docId = BigInteger.valueOf(newRuleValue.getRuleValueId());
 
-			detailObj(AuditConst.PM_AUD_SCP_PROVIDER_FIELDLABELCODE, null, checkSoftCert(ruleValue.getRuleValue()),
+			detailObj(AuditConst.PM_AUD_SCP_PROVIDER_FIELDLABELCODE, null,
+					checkSoftCert(ruleValue.getRuleValue()),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_SCP_EFF_DATE_FIELDLABELCODE, null,
-					simpleDateFormat.format(ruleValue.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_INS);
+					simpleDateFormat.format(ruleValue.getEffDate()),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			if(ruleValue.getExpDate() != null){
+			if (ruleValue.getExpDate() != null) {
 				detailObj(AuditConst.PM_AUD_SCP_EXP_DATE_FIELDLABELCODE, null,
-					simpleDateFormat.format(ruleValue.getExpDate()), AuditConst.PM_AUD_ACTION_TYPE_INS);
+						simpleDateFormat.format(ruleValue.getExpDate()),
+						AuditConst.PM_AUD_ACTION_TYPE_INS);
 			}
-			
+
 		}
 	}
 	
-	private String checkSoftCert(String parameterCode){
-		 
+	private String checkSoftCert(String parameterCode) {
+
 		String description = null;
-		
-		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
-		description = ParameterHelper.getInstance().getParameterDesc("DT", parameterCode, locale);
-		
+
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+				CommonConstants.DEFAULT_COUNTRY_CODE);
+		description = ParameterHelper.getInstance().getParameterDesc("DT",
+				parameterCode, locale);
+
 		return description;
-		
+
 	}
 
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue,
