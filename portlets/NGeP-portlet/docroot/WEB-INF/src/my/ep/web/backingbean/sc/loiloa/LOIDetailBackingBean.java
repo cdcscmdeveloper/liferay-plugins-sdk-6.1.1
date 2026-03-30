@@ -7749,9 +7749,7 @@ public class LOIDetailBackingBean extends
 		String evalstageF = null;
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
-		if(null != this.getManagedBean().getSelectedZone()){
-			selectedZoneId = this.getManagedBean().getSelectedZone().getSpecZoneId();
-		}
+
 		retrievescoresettings(this.getManagedBean().getScQt());
 		//#38679 use new calculation if only has quantity 0 for zonal only	
 		requestNoteItemId = (CollectionUtils.isNotEmpty(this.getManagedBean().getRecommendList()))
