@@ -2988,24 +2988,24 @@ public class SmApplicationUtil {
 	private static boolean validateFacility(boolean valid, int currentTab,
 			SmApplicationManagedBean bean, String facType, String facTypeLabel,
 			List<PmCategoryL3> categoryList) {
-		if (!bean.getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-
-			if (!EntityHelper.isCollectionEmpty(categoryList)) {
-				for (PmCategoryL3 l3 : categoryList) {
-					if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
-						valid = false;
-						if (currentTab != -1) {
-							setNavigationBackToCurrentPage(currentTab, bean);
-						}
-						throw new EpException(MessageConst.ERROR_722621,
-								new String[] {
-										SmCommonUtil.getMessage(facTypeLabel,
-												null),
-										l3.getFullCatcode() + " ("
-												+ l3.getCategoryName() + ")" });
-					}
+		//40144 - start
+		String applType = bean.getSmAppl().getApplType();
+		if (EntityHelper.isCollectionEmpty(categoryList)
+				|| (!applType.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF))){
+			return valid;
+		}
+		for (PmCategoryL3 l3 : categoryList) {
+			if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
+				valid = false;
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, bean);
 				}
+				throw new EpException(MessageConst.ERROR_722621,
+						new String[] {
+								SmCommonUtil.getMessage(facTypeLabel, null),
+								l3.getFullCatcode() + " (" + l3.getCategoryName() + ")" });
+				//40144 - end
 			}
 		}
 		return valid;
