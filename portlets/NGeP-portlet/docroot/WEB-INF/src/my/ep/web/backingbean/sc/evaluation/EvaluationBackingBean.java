@@ -5644,6 +5644,14 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			// #28784 - End
 			{
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
+					//#28784 - Start
+					if (!this.getManagedBean().isDemoWip()) {
+						checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());
+						checkCommitteeMembersAttendance(this.getManagedBean()
+								.getCommitteeMemberList());
+					}
+					//#28784 - End
 					saveMeetingDtls(false);
 					if (null == this.getManagedBean().getScQtChecklist()) {
 						retrivePresetationDemoCheckList();
@@ -7018,6 +7026,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 			} else if (outputTab == 0) {
 				afterDemoInv(false); // #28784
+				setDemoReadOnlyFalse();//#28784
 				this.getManagedBean().setCheckReportDownload(false);
 				this.getManagedBean().setDemo(false);
 				retriveMeetingDtls(this.getManagedBean().getScQt().getQtId(),
@@ -7147,7 +7156,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 				}
 			}
-			if (i == 0 && !this.getManagedBean().isAfterDemoInv()) { //#28784
+			if (i == 0) {//#28784 remove code
 				throw new EpException(MessageConst.ERROR_760255);
 			}
 		}
@@ -7909,6 +7918,11 @@ private void retriveCommitteeRemarksList(){
 						&& this.getManagedBean()
 								.getPresentationDemoActiveIndex() == 0) {
 					savePresentationDemoDtls();
+					//#28784 - Start
+					if (!this.getManagedBean().isDemoWip()) {
+						evaluationSO.saveQTDtl(reqDtO);
+					}
+					//#28784 - End
 					renewSesionObject();
 					retriveMeetingDtls(qtId, committeeType, index);
 					retrivePresentationDemo();
@@ -9104,15 +9118,6 @@ private void retriveCommitteeRemarksList(){
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
-		//#28784 - Start
-		List<String> demoProceses = new ArrayList<>();
-		demoProceses.add(SCProcessNameConst.FINALISE_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.UPDATE_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.VIEW_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION);
-		//#28784 - End
 		if (null != member) {
 			if (member.getMemberRole().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
@@ -9212,7 +9217,7 @@ private void retriveCommitteeRemarksList(){
 							"/xhtml/sc/evaluation/evaluationMain.xhtml");
 		}
 		// #28784 - Start
-		else if (demoProceses.contains(taskName))
+		else if (Arrays.asList(SCProcessNameConst.DEMO_PROCESSES).contains(taskName))
 		// #28784 - End
 		{
 			afterDemoInv(true); // #28784
@@ -12308,7 +12313,6 @@ private void retriveCommitteeRemarksList(){
 	* the item type
 	* @return the Status values
 	*/
-	@SuppressWarnings("unused")
 	public SelectItem[] statusDropdownCodeValues(String itemType, ScQtProposalChecklistAttachment scQtProposalChecklistAttachment) {
 		List<Integer> types = new ArrayList<Integer>();
 
@@ -13862,4 +13866,12 @@ private void retriveCommitteeRemarksList(){
 		return lessThanValidityEndDate;
 	}
 	//#21692 - end
+	
+	//#28784 - Start
+	private void setDemoReadOnlyFalse() {
+		if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
+			this.getManagedBean().setReadOnly(Boolean.FALSE);
+		}
+	}
+	//#28784 - End
 }

@@ -2281,6 +2281,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	// 6906 note 202 - end
+	
 	//#28784 - Start
 	public boolean isDemoReq() {
 		return isDemoReq;

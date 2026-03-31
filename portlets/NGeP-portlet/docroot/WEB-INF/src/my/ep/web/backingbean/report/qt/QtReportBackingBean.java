@@ -765,7 +765,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		if (deskOfficerRoles && (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)
 				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode))) {
 			if (scQt != null && scQt.getQtId() != null) {
-				Date date = retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
+				Date date = retrieveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
+
 				ptjCode = scQt.getOrgProfileId().toString();
 				ptjName = retrievePTJByOrgProfileId(scQt.getOrgProfileId(), date);
 			}
@@ -809,7 +810,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	//#21692 - End
 
 	//#21692 - Start
-	private Date retriveDatesforOrgProfile(Date publishDate, Date createdDate) {
+	private Date retrieveDatesforOrgProfile(Date publishDate, Date createdDate) {
 		if (publishDate == null) {
 			return createdDate;
 		}

@@ -94,9 +94,12 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	
 	private boolean isSetNull ; //Bug #31364
+
 	private boolean isDemoReq; // #28784
+
 	private boolean allSupplierDisagreeEPV;//#21692
 	
+	@SuppressWarnings("serial")
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
