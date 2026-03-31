@@ -7001,6 +7001,8 @@ public class LOIDetailBackingBean extends
 
 		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 
 		SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
 		suppSearchDeletedReqDTO.setSupplierId(supplierId);
@@ -7017,12 +7019,25 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
-		if (CollectionUtils.isEmpty(supplierBranchListDeleted)) {
-			getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
-		} else {
-			supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
-			getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		ScQt scQt = this.getManagedBean().getScQt();
+		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(
+				supplierId, scQt);
+		for (SmSupplierBranch wipSupplierBranch : wipSupplierBranchListDeleted) {
+			int statusFlag = wipSupplierBranch.getRecordStatusFlg();
+			if (statusFlag == DbValueConst.RECORD_STATUS_ACTIVE) {
+				wipSupplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_YES);
+			} else {
+				wipSupplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_NO);
+			}
 		}
+
+		if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
+			supplierBranchListDeleted.addAll(wipSupplierBranchListDeleted);
+		}
+
+		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
+		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		
 	}
 
 	// #28777 & #29729 - End
@@ -7734,11 +7749,9 @@ public class LOIDetailBackingBean extends
 		String evalstageF = null;
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
+
 		retrievescoresettings(this.getManagedBean().getScQt());
-		//#38679 use new calculation if only has quantity 0 for zonal only
-		boolean isQtyNotNull = null != selectedZoneId
-		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
-		
+		//#38679 use new calculation if only has quantity 0 for zonal only	
 		requestNoteItemId = (CollectionUtils.isNotEmpty(this.getManagedBean().getRecommendList()))
 			    ? this.getManagedBean().getRecommendList().get(0).getRequestItem().getRequestNoteItemId()
 			    : requestNoteItemId;
@@ -7746,7 +7759,10 @@ public class LOIDetailBackingBean extends
 		selectedZoneId = (this.getManagedBean().getSelectedZone() != null)
 			    ? this.getManagedBean().getSelectedZone().getSpecZoneId()
 			    : selectedZoneId;
-
+		
+		boolean isQtyNotNull = null != selectedZoneId
+				        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
+		
 		if (null != this.getManagedBean().getRecommendedSupplierList()) {
 				if (null == this.getManagedBean().getSelectItemList()) {
 					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG;

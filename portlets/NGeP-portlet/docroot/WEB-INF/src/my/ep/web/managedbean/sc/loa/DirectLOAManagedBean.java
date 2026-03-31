@@ -394,6 +394,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private List<SmSupplierCategory> deletedCategoryList;
 	private boolean categorySelected;
 	private List<ScQtCategory> qtCategoryList;
+	private boolean showCategoryCode = false; //#29661 #40095
+	private List<SmSupplierCategory> originalSupplierCategoryList;//#29661 #40093
 	// #29661 end
 	
 	private SmSupplier tempSmSupplier;	// Bug #40022@Syazani -- 16/02/2026
@@ -2277,6 +2279,22 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setAddedCategoryList(List<SmSupplierCategory> addedCategoryList) {
 		this.addedCategoryList = addedCategoryList;
 	}
+	
+	public boolean isShowCategoryCode() {
+		return showCategoryCode;
+	}
+
+	public void setShowCategoryCode(boolean showCategoryCode) {
+		this.showCategoryCode = showCategoryCode;
+	}
+	
+	public List<SmSupplierCategory> getOriginalSupplierCategoryList() {
+		return originalSupplierCategoryList;
+	}
+
+	public void setOriginalSupplierCategoryList(List<SmSupplierCategory> originalSupplierCategoryList) {
+		this.originalSupplierCategoryList = originalSupplierCategoryList;
+	}
 	//#29661 End
 	// Bug #40022@Syazani -- 16/02/2026 -- Start
 	public SmSupplier getTempSmSupplier() {
@@ -2287,4 +2305,5 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.tempSmSupplier = tempSmSupplier;
 	}
 	// Bug #40022@Syazani -- 16/02/2026 -- End
+
 }

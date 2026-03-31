@@ -326,7 +326,7 @@ a:hover.blue_font {
 				</td>
 				<td>
 					<c:choose>
-						ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
 						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="qtType" required="true"

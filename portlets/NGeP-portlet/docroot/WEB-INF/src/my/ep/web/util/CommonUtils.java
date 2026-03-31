@@ -174,7 +174,7 @@ public class CommonUtils {
 		return formattedDate;
 	}
 	
-	// #31503 -start-
+	// #31503, #26059, #27868 -start-
 	/**
 	 * #31503 Remove "N/A" or “NA” or “N A”.
 	 * 
@@ -188,6 +188,23 @@ public class CommonUtils {
 
 		return itemName;
 	}
-	// #31503 -end-
-	
+	// #31503, #26059, #27868 -end-
+
+	// #31344 start
+	/**
+	 * Filter item name to remove "N/A" or “N A”.
+	 * 
+	 * @param itemName
+	 * @return itemName
+	 */
+	public String filterItemNameNA(String itemName) {
+		if (itemName != null && !itemName.isEmpty()) {
+            // Only remove N/A and N A
+            String cleaned = itemName.replaceAll("\\bN\\s*/\\s*A\\b|\\bN\\s+A\\b", "");
+            cleaned = cleaned.replaceAll(" +", " ").trim();
+            return cleaned;
+        }
+        return itemName;
+	}
+	// #31344 end
 }
