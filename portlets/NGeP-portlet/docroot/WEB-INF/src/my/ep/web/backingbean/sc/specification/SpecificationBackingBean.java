@@ -11378,7 +11378,7 @@ public class SpecificationBackingBean extends
 			}
 		}
 		// #10141 End Vinod
-
+		this.getManagedBean().getQtCategoryList();//#29661 #40094
 	}
 
 	// #25638 - Start.
