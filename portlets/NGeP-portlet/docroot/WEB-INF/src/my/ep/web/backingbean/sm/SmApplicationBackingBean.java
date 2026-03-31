@@ -18002,7 +18002,7 @@ public class SmApplicationBackingBean extends
 							.getSupplierId(), supplierBranch);
 
 					if (deleteBranchName.length() > 0) {
-						throw new EpException(MessageConst.ERROR_721120, new String[] { deleteBranchName.toString() });
+						throw new EpException(MessageConst.ERROR_721121, new String[] { deleteBranchName.toString() }); // #28777
 					} else if (pendingQT) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
 					} else {
