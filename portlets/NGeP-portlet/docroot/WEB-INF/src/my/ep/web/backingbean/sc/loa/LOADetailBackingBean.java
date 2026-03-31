@@ -13234,9 +13234,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 
 	    SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryCodeByApplId(reqDTO);
-	    smSupplierCategoryList = resDTO.getSmSupplierCategoryList();	    
+	    smSupplierCategoryList = resDTO.getSmSupplierCategoryList();	
+	    List<SmSupplierCategory> filteredSmSupplierCategoryList = new ArrayList<>();//#29661 #40093
 	
 	    for (SmSupplierCategory smCategory : smSupplierCategoryList) {
+	    	if (smCategory.getRecordStatusFlg() != 1){//#29661 #40093
+	    		continue;
+	    	}
 	    	smCategory.getPmCategoryL1();
 	    	smCategory.getPmCategoryL2();
 
@@ -13244,6 +13248,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			CategoryCodeResDTO categoryResDTO = categoryCodeSO
 					.retrieveCategoryL3DtlById(categoryReqDTO);
 			smCategory.setPmCategoryL3(categoryResDTO.getCategoryL3());
+			
+			filteredSmSupplierCategoryList.add(smCategory);//#29661 #40093
 		}
 	    
 	    if (null != getManagedBean().getScQt()){
@@ -13252,7 +13258,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	    convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList,categoryCodeSO);
 	    }
 	    
-		this.getManagedBean().setSupplierCategoryList(smSupplierCategoryList);
+		this.getManagedBean().setSupplierCategoryList(filteredSmSupplierCategoryList);//#29661 #40093
 	}
 
 	/**
