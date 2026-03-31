@@ -11526,7 +11526,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
 				//#37925 START
 				//temporary use desc to fix stopper uat, will change next.
-				if(getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL) || getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)){
+				if(getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL) 
+						|| getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)){
 					pmStatId = getManagedBean().getPoRecommendStatusId();
 					log.info("TB 37925-pmStatId:"+pmStatId);
 				}
