@@ -3725,3 +3725,11 @@ table.rptTbl {
     background-image: none;
 }
 /*25095 - end -*/
+
+/* 26247 - start */
+.red-background {
+	background-color:red; 
+	color:white; 
+	font-weight:bold;
+}
+/* 26247 - end */

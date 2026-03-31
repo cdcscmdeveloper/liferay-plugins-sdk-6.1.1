@@ -40,6 +40,16 @@
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					#{scLoiLoa.supplierName}
 				</p:column>
+				<ui:remove>26247 - start</ui:remove>				
+				<p:column style="text-align: center; white-space:normal;width:18%;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+					</f:facet>
+					<ac:disciplinaryActionYesNo
+						supplier="#{scLoiLoa.smSupplier}" index="#{rowIndex}"/>
+				</p:column>
+				<ui:remove>26247 - end</ui:remove>	
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
 						rendered="#{!scLoiLoa.loaCreated}"
