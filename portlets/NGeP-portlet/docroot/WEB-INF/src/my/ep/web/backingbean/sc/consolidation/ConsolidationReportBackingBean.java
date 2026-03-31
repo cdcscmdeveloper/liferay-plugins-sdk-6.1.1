@@ -2550,9 +2550,7 @@ public class ConsolidationReportBackingBean extends
 			}
 		}
 
-		ScQt scQt = this.getManagedBean().getScQt();
-		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(
-				supplierId, scQt);
+		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(supplierId);
 		for (SmSupplierBranch wipSupplierBranch : wipSupplierBranchListDeleted) {
 			int statusFlag = wipSupplierBranch.getRecordStatusFlg();
 			if (statusFlag == DbValueConst.RECORD_STATUS_ACTIVE) {
