@@ -13663,9 +13663,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			CategoryCodeResDTO categoryResDTO = categoryCodeSO
 					.retrieveCategoryL3DtlById(categoryReqDTO);
 			smCategory.setPmCategoryL3(categoryResDTO.getCategoryL3());
-			
-			String categoryCode = smCategory.getPmCategoryL1().getCategoryL1Code()
-					+smCategory.getPmCategoryL2().getCategoryL2Code()+smCategory.getPmCategoryL3().getCategoryL3Code();
 			filteredSmSupplierCategoryList.add(smCategory);//#29661 #40093
 	    }
 	    
