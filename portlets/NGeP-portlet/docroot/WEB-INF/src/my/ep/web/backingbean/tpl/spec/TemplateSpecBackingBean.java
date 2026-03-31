@@ -4046,6 +4046,75 @@ public class TemplateSpecBackingBean extends
 	}
 	//#36248_haziq - End
 	
+	//#35293 - Start
+	/**
+	 * To validate Score input value
+	 * 
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateInputScore(FacesContext context, UIComponent component, Object value) {
+		if (value == null) {
+			return;
+		}
+
+		BigDecimal inputValue = new BigDecimal(value.toString());
+		TplSpecAnswer tplSpecAnswer = (TplSpecAnswer) component.getAttributes().get("tplSpecAnswer");
+
+		boolean hasWeightage = false;
+
+		if (tplSpecAnswer != null && tplSpecAnswer.getTplSpecQuestion() != null
+				&& Boolean.TRUE.equals(tplSpecAnswer.getTplSpecQuestion().isWeightageReq())) {
+			hasWeightage = true;
+		}
+		String label = (String) component.getAttributes().get("label");
+		if (label == null) {
+			label = component.getId();
+		}
+
+		if (hasWeightage) {
+
+			// check decimal places (max 2)
+			if (inputValue.stripTrailingZeros().scale() > 2) {
+
+				Object minAttr = component.getAttributes().get("min");
+				Object maxAttr = component.getAttributes().get("max");
+
+				String min = minAttr != null ? minAttr.toString() : "0";
+				String max = maxAttr != null ? maxAttr.toString() : "";
+
+				String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.decimal.validaton", new String[] {
+						label, inputValue.toString(), min, max }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+			}
+		}
+	}
+
+	/**
+	 * Get Max Score
+	 * @param answer
+	 * @param hasWeightage
+	 * @return
+	 */
+	public String getMaxScoreDisplay(TplSpecAnswer answer, boolean hasWeightage) {
+
+		BigDecimal maxScore = answer.getTplSpecQuestion().getMaxScore();
+
+		if (hasWeightage) {
+			if (this.getManagedBean().isWeightage35384WIP()) {
+				BigDecimal weightage = answer.getTplSpecQuestion().getWeightage();
+				maxScore = maxScore.multiply(weightage);
+			}
+			BigDecimal result = maxScore.setScale(2, RoundingMode.HALF_UP);
+			return result.toPlainString(); // returns 20.00
+		}
+		return maxScore.stripTrailingZeros().toPlainString(); // returns 20
+	}
+	//#35293 - End
+	
 	// #39210 Start Vinod 3/10/2025
 	/**
 	 * This method will check if the zone details are null and create new
