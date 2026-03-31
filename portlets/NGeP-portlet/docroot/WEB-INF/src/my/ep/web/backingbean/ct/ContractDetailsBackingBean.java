@@ -364,12 +364,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 			// Start Fix - #30856
 			if(ctBB.getManagedBean().getCtContractAmount().isBondExempted()){
-				
-				if(!ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty()){
-					
-					removePerformanceDatatableRow();
- 
-				}
+				//Remove Code for removePerformanceDatatableRow - #40072 
 				
 				// Start - Fix #29368
 				if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
@@ -1244,8 +1239,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 			// #24333 - Start
 			if (ctBB.getManagedBean().getCtContractAmount().isBondReq()
-					&& (!ctBB.getManagedBean().isDirectPurchase() ||  ctBB.isPk7FromDp())
-					&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+					&& (!ctBB.getManagedBean().isDirectPurchase() ||  ctBB.isPk7FromDp())) {
+				
+				// #40072 - Start
+				if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+					removePerformanceDatatableRow();
+				}
+				// #40072 - End
 				
 				Date currentDate = new Date();
 		        CtContractAmount uiBondData = ctBB.getManagedBean().getCtContractAmount();
