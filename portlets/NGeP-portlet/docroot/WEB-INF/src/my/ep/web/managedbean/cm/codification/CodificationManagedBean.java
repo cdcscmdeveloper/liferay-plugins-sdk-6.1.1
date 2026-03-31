@@ -200,6 +200,13 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private boolean assignCodeFlg = false;
 	
+	// #31503 - Start
+	private String itemCodeDesc;
+	private Object[] objSelected;
+	private boolean renderButtonAssignCode;
+	private boolean isHideExtension;
+	// #31503 - End
+	
 	//35503 Start
 	private String segmentTitleEng;
 	private String familyTitleEng;
@@ -217,6 +224,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
 
+	// #26059 - Start
+	private String cmItemCode;
+	// #26059 - End
 	
 	public void initRefreshPageNoFlag(){
 		
@@ -1601,4 +1611,62 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.commodityTitleEng = commodityTitleEng;
 	}
 	//35503 End
+	
+	// #31503 -start-
+	public String getItemCodeDesc() {
+		return itemCodeDesc;
+	}
+
+	public void setItemCodeDesc(String itemCodeDesc) {
+		this.itemCodeDesc = itemCodeDesc;
+	}
+
+	public Object[] getObjSelected() {
+		return objSelected;
+	}
+
+	public void setObjSelected(Object[] objSelected) {
+		this.objSelected = objSelected;
+	}
+
+	public boolean isRenderButtonAssignCode() {
+		return renderButtonAssignCode;
+	}
+
+	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
+		this.renderButtonAssignCode = renderButtonAssignCode;
+	}
+
+	/**
+	 * @return the isHideExtension
+	 */
+	public boolean isHideExtension() {
+		return isHideExtension;
+	}
+
+	/**
+	 * @param isHideExtension
+	 *            the isHideExtension to set
+	 */
+	public void setHideExtension(boolean isHideExtension) {
+		this.isHideExtension = isHideExtension;
+	}
+	// #31503 -end-
+	
+	//#26059 - Start
+	/**
+	 * @return the cmItemCode
+	 */
+	public String getCmItemCode() {
+		return cmItemCode;
+	}
+
+	/**
+	 * @param cmItemCode the cmItemCode to set
+	 */
+	public void setCmItemCode(String cmItemCode) {
+		this.cmItemCode = cmItemCode;
+	}
+	//#26059 - End
+	
 }
