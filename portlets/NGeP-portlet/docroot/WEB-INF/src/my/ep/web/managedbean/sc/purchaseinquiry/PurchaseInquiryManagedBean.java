@@ -219,6 +219,15 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
     
+    //27868 - start
+    private String parameterTypeRPT;
+    private String supplierAccountTypeErrorMessage;
+    private boolean dropDownRPTvalue = Boolean.FALSE;
+    private boolean reasonCodeInActive= Boolean.FALSE;
+    private String inActiveReasonDesc = "";
+    private boolean newPK7Code = Boolean.FALSE;
+    //27868 - end
+    
     /**
      * Gets the spki backing bean.
      *
@@ -1401,6 +1410,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	// 29557 - end
 	// 27868 & 35321 - start
 	/**
+	 * @return the parameterTypeRPT
+	 */
+	public String getParameterTypeRPT() {
+		return parameterTypeRPT;
+	}
+
+	/**
+	 * @param parameterTypeRPT the parameterTypeRPT to set
+	 */
+	public void setParameterTypeRPT(String parameterTypeRPT) {
+		this.parameterTypeRPT = parameterTypeRPT;
+	}
+
+	/**
 	 * @return the createdDate
 	 */
 	public Date getCreatedDate() {
@@ -1413,6 +1436,52 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public boolean isDropDownRPTvalue() {
+		return dropDownRPTvalue;
+	}
+
+	public void setDropDownRPTvalue(boolean dropDownRPTvalue) {
+		this.dropDownRPTvalue = dropDownRPTvalue;
+	}
+	
+	public boolean isReasonCodeInActive() {
+		return reasonCodeInActive;
+	}
+
+	public void setReasonCodeInActive(boolean reasonCodeInActive) {
+		this.reasonCodeInActive = reasonCodeInActive;
+	}
+	
+	public String getInActiveReasonDesc() {
+		return inActiveReasonDesc;
+	}
+
+	public void setInActiveReasonDesc(String inActiveReasonDesc) {
+		this.inActiveReasonDesc = inActiveReasonDesc;
+	}
+	
+	public boolean isNewPK7Code() {
+		return newPK7Code;
+	}
+
+	public void setNewPK7Code(boolean newPK7Code) {
+		this.newPK7Code = newPK7Code;
+	}
+	
+	/**
+	 * @return the supplierAccountTypeErrorMessage
+	 */
+	public String getSupplierAccountTypeErrorMessage() {
+		return supplierAccountTypeErrorMessage;
+	}
+
+	/**
+	 * @param supplierAccountTypeErrorMessage the supplierAccountTypeErrorMessage to set
+	 */
+	public void setSupplierAccountTypeErrorMessage(String supplierAccountTypeErrorMessage) {
+		this.supplierAccountTypeErrorMessage = supplierAccountTypeErrorMessage;
 	}
 	// 27868 & 35321 - end
 }
