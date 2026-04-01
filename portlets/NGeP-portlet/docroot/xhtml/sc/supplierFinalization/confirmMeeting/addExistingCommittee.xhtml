@@ -211,7 +211,7 @@
 								style="width: 110px;margin-bottom: 5px;">
 								<!-- 38067 start -->
 								<f:selectItems var="role" itemDisabled="#{!role.selectable}"
-									value="#{meetingBB.getSFRoleDesc(existingMember)}"
+									value="#{suppFinalMeetingBackingBean.getSFRoleDesc(existingMember)}"
 									itemLabel="#{role.codeName}"
 									itemValue="#{role.pmParameter.parameterId}" />
 								<!-- 38067 end -->
