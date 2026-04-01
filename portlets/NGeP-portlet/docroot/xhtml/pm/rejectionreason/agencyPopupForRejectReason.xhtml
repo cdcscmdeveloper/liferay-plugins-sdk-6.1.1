@@ -115,7 +115,7 @@
 							<p:commandButton
 								id="crOkbtn" value="#{lbl['lbl.btn.ok']}"
 								onstart="blockWidget.show();agencyPopup.hide()"
-							    oncomplete="blockWidget.hide()"
+							    oncomplete="dtSuppAccTypeWidget.paginator.endLink.click();blockWidget.hide();"
 								disabled="#{fn:length(rejectionReasonBackingBean.managedBean.selectedOrgsProfile) == 0}"
 								action="#{rejectionReasonBackingBean.addAgency(false)}"
 								update="@([id$=dtAgencyResult])"
@@ -124,7 +124,7 @@
 							<p:commandButton id="crAllSelectBtn"
 								value="#{lbl['lbl.pm.reason.agency.popup.selectall']}"
 								onstart="blockWidget.show();agencyPopup.hide()"
-							    oncomplete="blockWidget.hide()"
+							    oncomplete="dtSuppAccTypeWidget.paginator.endLink.click();blockWidget.hide();"
 								disabled="#{fn:length(rejectionReasonBackingBean.managedBean.ptjList) == 0}"
 								action="#{rejectionReasonBackingBean.addAgency(true)}"
 								update="@([id$=dtAgencyResult])"
