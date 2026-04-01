@@ -1272,7 +1272,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					!status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && 
 					!status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && this.getManagedBean().isMaintanceFlow() && 
 					!status.equals(QTStatusConst.CMT_PENDING_APPROVAL) && !status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) &&
-					!status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)) {
+					!status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
+					&& this.getManagedBean().isNewVersion()) {
 				this.getManagedBean().setDemoDisabled(false);
 				this.getManagedBean().setDemoType(true);
 				this.getManagedBean().setDemoAction(true);
@@ -6323,6 +6324,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					// this.getManagedBean().setContractType(scQt.getContractType());
 					
 					//#28784
+					checkDemoVersion(scQt);
 					if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 						this.getManagedBean().setDemoAction(true);
 						this.getManagedBean().setDemoType(true);						
@@ -14889,6 +14891,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 		if (CollectionUtils.isNotEmpty(listScQtCategories)) {
 			this.getManagedBean().setQtCategoryList(listScQtCategories);
 			this.getManagedBean().setCtPanelCategory(false);
+			this.getManagedBean().setShowCategoryCodePanel(true);//#29661 #40094
 		}
 
 		// 29661 & 40089 -start-
@@ -14926,7 +14929,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 			this.getManagedBean().setCtPanelCategoryCode(ctPanelCategorycode);
 			this.getManagedBean().setCtPanelCategory(true);
+			//#29661 #40094 Start
+			this.getManagedBean().setShowCategoryCodePanel(true);
+		}else{
+			this.getManagedBean().setShowCategoryCodePanel(false);
 		}
+		//#29661 #40094 End
 	}
 	
 	// 29661 & 40089 -start-
