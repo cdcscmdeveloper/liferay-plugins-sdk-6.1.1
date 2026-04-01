@@ -7336,6 +7336,20 @@ public class SimpleQuoteBackingBean extends
 						specMaster
 						.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 					}
+					
+					//#26059 - Start
+					for(TplSpecQuestion prodQuestion : specMaster.getTplSpecQuestions()){
+						
+						if(prodQuestion.getCmItem() != null){
+							getCltemNameFromQuestion(prodQuestion);
+							prodQuestion.setDisabledColumnItem(true);
+						}else {
+							prodQuestion.setCmTitleValue(prodQuestion.getClItem());
+							prodQuestion.setDisabledColumnItem(false);
+						}
+					}
+					//#26059 - End
+					
 					productTplSpecBean.setSpecMaster(specMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
