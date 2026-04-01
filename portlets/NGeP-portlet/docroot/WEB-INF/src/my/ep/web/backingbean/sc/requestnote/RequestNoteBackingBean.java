@@ -1591,6 +1591,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								utils.removeItemNameNA(rnDtl.getRequestItem()
 										.getItemName()));
 						// #26059 - End
+						// 27868 - start
+						String procType = getManagedBean().getProcurementType();
+						
+						if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+							finalizeWIPCodePK7(rnDtl);
+						}
+						// 27868 - end
 					}
 				}
 			}
@@ -1598,6 +1605,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					+ "- Method: preRenderView End ---");
 		}
 		// #31679 - End
+		// 27868 - start
+		viewContractDetails(requestNote);
+		PmOrgProfile orgProfile = retrieveMinistryOrgProfile(getManagedBean().getRequestNote().getPmOrgProfile()
+				.getOrgProfileId());
+		getManagedBean().setMinistryOrgProfile(orgProfile);
+		// 27868 - end
 		
 		//Redmine Enhancement #12177
 		log.info("Temp5: start performance - addButton");
