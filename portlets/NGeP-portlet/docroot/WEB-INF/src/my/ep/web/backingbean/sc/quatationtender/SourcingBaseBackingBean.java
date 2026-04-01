@@ -85,6 +85,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -2212,18 +2213,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			 * getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
 			 * codes and refactor old code.
 			 */
-			List<String> flTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
-					ParameterConst.FULFILMENT_TYPE_SCHEDULED,
-					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			boolean isQTtypePK7 = null != scLoa.getQtType()
 					&& null != scLoa.getQtType().getParameterId()
 					&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(
 							scLoa.getQtType().getParameterCode());
-			boolean isFulfilmentType = null != scLoa.getScQt() && null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& flTypeCodes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
 
-			if (isQTtypePK7 && isFulfilmentType) {
+			if (isQTtypePK7 ) {
 				// #29766 End Vinod
 				setBondReq = false;
 			}
@@ -6757,7 +6752,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.FINALISE_FC_SELECTION,
-				SCProcessNameConst.COORDINATE_FC_MEETING));
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.RECOMMEND_MA_SUPPLIER));// 34491
 		return taskNames.contains(taskName);
 	}
 	
@@ -8505,4 +8500,59 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	//#35320 - END
+	
+	// 34491 - start
+	/**
+	 * Populate meeting status values in a drop down under Preparation tab
+	 * 
+	 * @return an array of meeting status values
+	 */
+	public SelectItem[] getMeetingStatusDropDown() {
+		SelectItem[] items = getStatusDropdownValues(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(),
+				QTConstants.DOCTYPE_MEETING);
+		return items;
+	}
+	// 34491 - end	
+	//#28784 - Start
+	public boolean checkParentRepublishQT(ScQt scQt) {
+		try {
+			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			reqDTO.setDocId(scQt.getQtId());
+			List<Long> includedStatus = new ArrayList<>();
+			includedStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+			reqDTO.setStatusIds(includedStatus);
+			reqDTO.setCurrent(null);
+
+			List<ScWorkFlowStatus> currentWorkFlowStatus = workFlowStatusSO.retrieveWorkFlowStatus(reqDTO)
+					.getWorkFlowStatusList();
+			// Checking for current QT, if status is 60034L, then it is without Specification changes
+			if (CollectionUtils.isNotEmpty(currentWorkFlowStatus)) {
+				// checking for Parent QT, if WIP then Republished QT will also be WIP
+				return validateSupportedTask(getQTDetailSO().retrieveQtNoByparentQtId(scQt.getParentQtId()),
+						CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "checkParentRepublishQT", scQt.getQtNo(),
+					"checkParentRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+
+		return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	/**
+	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * @param
+	 * @return void
+	 */
+	public void checkDemoVersion(ScQt scQt) {
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+	}
+	//#28784 - End
 }

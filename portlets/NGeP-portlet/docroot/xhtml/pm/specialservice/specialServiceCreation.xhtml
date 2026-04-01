@@ -15,9 +15,11 @@
 					<p:outputLabel value="*" styleClass="mandatory"/>
 				</th>
 				<td>
-					<p:inputText label="#{lbl['lbl.pm.ss.name']}" size="30" maxlength="100"
+					<!-- 34445 Start -->
+					<p:inputText label="#{lbl['lbl.pm.ss.name']}" size="30" maxlength="100" required="true"
 						value="#{SpecialServiceBackingBean.managedBean.pmSpecialService.codeName}"
 						disabled="#{!SpecialServiceBackingBean.managedBean.pmSpecialService.brandNew}"/>
+					<!-- 34445 End -->
 				</td>
 				<th></th>
 				<td></td>

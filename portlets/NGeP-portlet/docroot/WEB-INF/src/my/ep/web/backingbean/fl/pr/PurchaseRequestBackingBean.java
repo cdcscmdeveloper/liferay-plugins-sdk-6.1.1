@@ -121,6 +121,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -151,6 +152,7 @@ import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonRestr;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
@@ -3423,10 +3425,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//#28718 - End
 
 		// #27476 start
-		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+		if (isThresholdPK7Required()) {
 			validatePK7forPRAction(outcome);
 		} else {
 			// 31344
@@ -4041,14 +4040,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		double thresoldAmt = 0;
+		
 		// #31344
+		ScRequestNote requestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
+		double thresholdAmt = retrieveThresholdAmountPanelNonPanelItem(requestNote).doubleValue();
 		boolean isBpkExceed = false;
 		boolean isItemExceed = false;
 		List<ScRequestItem> exceedBpkItemList = new ArrayList<>();
 		List<ScRequestItem> exceedItemList = new ArrayList<>();
 		// #31344
-		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
+		for (Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet()) {
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
 			summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
@@ -4057,41 +4058,42 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
 			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
 			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
-			
+
 			sumAmt = map.getValue().add(sumAmt);
-			if(sumAmt != null){
-				//#26047 -- start
-				ScRequestNote requestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
-				// #31344
-				thresoldAmt = retrieveThresholdAmountPanelNonPanelItem(requestNote).doubleValue();
-				
-				log.info("SumAmt: " + sumAmt);
-				log.info("ThresholdAmt: " + thresoldAmt);
-				if(sumAmt.doubleValue() > thresoldAmt){
-					// #31344 
-					ScRequestNoteDtl scRequestNoteDtl = getScRequestNoteDtl(requestItemMap.get(map.getKey())
-							.getRequestNoteItemId());
-					if (isBpkApproved(scRequestNoteDtl)) {
-						if (itemQuantityMap.get(map.getKey()).compareTo(requestItemMap.get(map.getKey()).getQuantity()) > 0) {
-							isBpkExceed = true;
-							exceedBpkItemList.add(requestItemMap.get(map.getKey()));
-						}
-					} else {
-						isItemExceed = true;
-						exceedItemList.add(requestItemMap.get(map.getKey()));
-					}
+
+			// #31344
+			boolean exceedThreshold = sumAmt.doubleValue() > thresholdAmt;
+
+			if (exceedThreshold) {
+				ScRequestNoteDtl scRequestNoteDtl = getScRequestNoteDtl(requestItemMap.get(map.getKey())
+						.getRequestNoteItemId());
+
+				boolean isBpk = isBpkApproved(scRequestNoteDtl);
+				BigDecimal qty = itemQuantityMap.get(map.getKey());
+				BigDecimal requestedQty = requestItemMap.get(map.getKey()).getQuantity();
+
+				if (isBpk && qty.compareTo(requestedQty) > 0) {
+					isBpkExceed = true;
+					exceedBpkItemList.add(requestItemMap.get(map.getKey()));
+				} else if (!isBpk) {
+					isItemExceed = true;
+					exceedItemList.add(requestItemMap.get(map.getKey()));
 				}
 			}
 		}
-		// 31344
 		getManagedBean().setExceedItemPanelThreshold(isItemExceed);
 		getManagedBean().setExceedBpkThreshold(isBpkExceed);
-		
-		if(isItemExceed || isBpkExceed){
+
+		if (isItemExceed) {
 			getManagedBean().setItemExceedItemPanelThreshold(exceedItemList);
-			getManagedBean().setItemExceedBpkThreshold(exceedBpkItemList);
 			buildErrorMessageForExceedThresholdPanelItem(false);
 		}
+
+		if (isBpkExceed) {
+			getManagedBean().setItemExceedBpkThreshold(exceedBpkItemList);
+			buildErrorMessageForExceedBpkThreshold(false);
+		}
+		// #31344
 	}
 	
 	/**
@@ -5381,15 +5383,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	private BigDecimal getThresholdForPK7() {
 		BigDecimal thresholdAmount = null;
-
-		if (!getManagedBean().getRequestNoteWithDtlsList().isEmpty()) {
-			for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
-				if (purchaseItem.getJustificationType().getDpThreshold() != null) {
-					thresholdAmount = purchaseItem.getJustificationType().getDpThreshold();
-				}
-			}
-		}
-
+		
+		thresholdAmount = getPMReasonForThreshold().getDpThreshold();
+				
 		return thresholdAmount;
 	}
 
@@ -5473,14 +5469,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
 			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
-			summReq.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+			summReq.setReasonId(getPMReasonForThreshold().getReasonId());
 
-			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearPerExtensionCodeWithReason(summReq);
 
 			sumAmt = map.getValue().add(sumAmt);
-			if (sumAmt != null) {
-				thresoldAmt = getThresholdForPK7().doubleValue();
+			
+			// #31344
+			thresoldAmt = getThresholdForPK7().doubleValue();
+			boolean exceedThreshold = sumAmt.doubleValue() > thresoldAmt;
 
+			if (exceedThreshold) {
 				ICodificationSO unspscSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 				CodificationReqDTO reqDTO = new CodificationReqDTO();
@@ -5491,23 +5490,23 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
-				if (sumAmt.doubleValue() > thresoldAmt) {
-					// #31344
-					ScRequestNoteDtl scRequestNoteDtl = getScRequestNoteDtl(requestItemMap.get(map.getKey())
-							.getRequestNoteItemId());
-					if (isBpkApproved(scRequestNoteDtl)) {
-						if (itemQuantityMap.get(map.getKey()).compareTo(requestItemMap.get(map.getKey()).getQuantity()) > 0) {
-							isBpkExceed = true;
-							exceedBpkItemList.add(requestItemMap.get(map.getKey()));
-						}
-					} else {
-						isExceedThreshold = true;
+				ScRequestNoteDtl scRequestNoteDtl = getScRequestNoteDtl(requestItemMap.get(map.getKey())
+						.getRequestNoteItemId());
+				boolean isBpk = isBpkApproved(scRequestNoteDtl);
+				BigDecimal qty = itemQuantityMap.get(map.getKey());
+				BigDecimal requestedQty = requestItemMap.get(map.getKey()).getQuantity();
 
-						itemNameList.add(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc
-								.getUnspscTitleEng() : cmUnspsc.getUnspscTitle());
-					}
+				if (isBpk && qty.compareTo(requestedQty) > 0) {
+					isBpkExceed = true;
+					exceedBpkItemList.add(requestItemMap.get(map.getKey()));
+				} else if (!isBpk) {
+					isExceedThreshold = true;
+
+					itemNameList.add(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc
+							.getUnspscTitleEng() : cmUnspsc.getUnspscTitle());
 				}
 			}
+			// #31344
 		}
 
 		getManagedBean().setPRExceedThreshold(isExceedThreshold);
@@ -5529,9 +5528,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							new FacesScopes().getUserLocale())));
 		} else {
 			getManagedBean().setItemNameExceedThresholdList(itemNameList);
+			buildErrorMessageForExceedThreshold(false);
 			// #31344
 			getManagedBean().setItemExceedBpkThreshold(exceedBpkItemList);
-			buildErrorMessageForExceedThreshold(false);
+			buildErrorMessageForExceedBpkThreshold(false);
+			// #31344
 		}
 	}
 
@@ -5570,18 +5571,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								new FacesScopes().getUserLocale())));
 			}
 		}
-		
-		// #31344
-		if (!getManagedBean().getItemExceedBpkThreshold().isEmpty()) {
-			if (isShowErrorMsgForPRThreshold) {
-				messageExceedBpkApprovedAction(formatItemList(getManagedBean().getItemExceedBpkThreshold()));
-			} else {
-				for (ScRequestItem itemExceed : getManagedBean().getItemExceedBpkThreshold()) {
-					messageExceedBpkApproved(itemExceed.getQuantity().toString(),
-							getTotalOrderedAmountByScRequestItem(itemExceed.getRequestNoteItemId()).toString());
-				}
-			}
-		}
 	}
 
 	/**
@@ -5598,8 +5587,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			outcomeCheckReason.add(BpmOutcomeConst.BPM_REVISE);
 
 			if (outcomeCheckReason.contains(action)
-					&& getManagedBean().getRequestNoteWithDtlsList() != null
-					&& getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					&& getPMReasonForThreshold().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				String msgId = isFlFulfilmentRequisitioner() ? MessageConst.ERROR_740074 : MessageConst.ERROR_740075;
 
 				throw new EpException(msgId, new String[] { getManagedBean().getReason(),
@@ -5609,17 +5597,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 
 		// check for exceed threshold
-		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
-				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) && getManagedBean().isPRExceedThreshold()) {
-			buildErrorMessageForExceedThreshold(true);
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
+				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if(getManagedBean().isPRExceedThreshold()){
+				buildErrorMessageForExceedThreshold(true);
+			} else if(getManagedBean().isExceedBpkThreshold()) {
+				buildErrorMessageForExceedBpkThreshold(true);
+			}
+			// #31344
 		}
-		
-		// #31344
-		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
-				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) && getManagedBean().isExceedBpkThreshold()) {
-			buildErrorMessageForExceedThreshold(true);
-		}
-		// #31344
 
 		// supplier acc type validation
 		validatePRSupplierAccType();
@@ -5634,7 +5620,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				IReasonSO.class);
 
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+		reqDTO.setReasonId(getPMReasonForThreshold().getReasonId());
 
 		SmMofAccount mofAcc = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
 				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
@@ -5781,7 +5767,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				IReasonSO.class);
 
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+		reqDTO.setReasonId(getPMReasonForThreshold().getReasonId());
 
 		ReasonResDTO resDTO = reasonSO.retrieveSuppAccTypeByReasonId(reqDTO);
 
@@ -5827,6 +5813,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().getReason(), pronounAllowableSuppAccType, allowableSuppAccTypeMsgBuilder.toString() });
 
 	}
+	
+	/**
+	 * get pmReason object either from fl or dp
+	 * 
+	 * @return pmReason
+	 */
+	private PmReason getPMReasonForThreshold() {
+		PmReason pmReason = null;
+
+		if (getManagedBean().getFulfilmentRequest().getJustificationType() != null) {
+			pmReason = getManagedBean().getFulfilmentRequest().getJustificationType();
+		} else {
+			pmReason = getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType();
+		}
+
+		return pmReason;
+	}
+
 	// #27476 end
 	
 	// #31344 start
@@ -5964,34 +5968,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		DecimalFormat amountDF = new DecimalFormat(
 				new CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
 		double thresholdAmount = retrieveThresholdAmountPanelNonPanelItem(requestNote).doubleValue();
-		if (!getManagedBean().getItemExceedItemPanelThreshold().isEmpty()) {
-			if (isShowErrorMsgForPRThreshold) {
-				throw new EpException(MessageConst.ERROR_740088, new String[] {
-						formatItemList(getManagedBean().getItemExceedItemPanelThreshold()),
-						getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
-						getManagedBean().getFulfilmentRequest().getFinancialYear().toString(),
-						amountDF.format(thresholdAmount) });
-			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.ERROR_740086, new String[] {
-										formatItemList(getManagedBean().getItemExceedItemPanelThreshold()),
-						    				getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
-										amountDF.format(thresholdAmount) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-			}
+		if (getManagedBean().getItemExceedItemPanelThreshold().isEmpty()) {
+			return;
 		}
-
-		if (!getManagedBean().getItemExceedBpkThreshold().isEmpty()) {
-			if (isShowErrorMsgForPRThreshold) {
-				messageExceedBpkApprovedAction(formatItemList(getManagedBean().getItemExceedBpkThreshold()));
-			} else {
-				for (ScRequestItem itemExceed : getManagedBean().getItemExceedBpkThreshold()) {
-					messageExceedBpkApproved(itemExceed.getQuantity().toString(),
-							getTotalOrderedAmountByScRequestItem(itemExceed.getRequestNoteItemId()).toString());
-				}
-			}
+		if (isShowErrorMsgForPRThreshold) {
+			throw new EpException(MessageConst.ERROR_740088, new String[] {
+					formatItemList(getManagedBean().getItemExceedItemPanelThreshold()),
+					getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+					getManagedBean().getFulfilmentRequest().getFinancialYear().toString(),
+					amountDF.format(thresholdAmount) });
+		} else {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.ERROR_740086, new String[] {
+									formatItemList(getManagedBean().getItemExceedItemPanelThreshold()),
+									getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+									amountDF.format(thresholdAmount) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 		}
 	}
 	
@@ -6000,14 +5994,33 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param isShowErrorMsgForPRThreshold
 	 */
 	private void validatePanelItemThresholdAction(String action) {
-		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
-				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) && getManagedBean().isExceedItemPanelThreshold()) {
-			buildErrorMessageForExceedThresholdPanelItem(true);
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if (getManagedBean().isExceedItemPanelThreshold()) {
+				buildErrorMessageForExceedThresholdPanelItem(true);
+			}
+
+			if (getManagedBean().isExceedBpkThreshold()) {
+				buildErrorMessageForExceedBpkThreshold(true);
+			}
+		}
+	}
+	
+	/**
+	 * build item exceed bpk threshold
+	 * @param isShowErrorMsgForBpkThreshold
+	 */
+	private void buildErrorMessageForExceedBpkThreshold(boolean isShowErrorMsgForBpkThreshold) {
+		if (getManagedBean().getItemExceedBpkThreshold().isEmpty()) {
+			return;
 		}
 
-		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
-				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) && getManagedBean().isExceedBpkThreshold()) {
-			buildErrorMessageForExceedThresholdPanelItem(true);
+		if (isShowErrorMsgForBpkThreshold) {
+			messageExceedBpkApprovedAction(formatItemList(getManagedBean().getItemExceedBpkThreshold()));
+		} else {
+			for (ScRequestItem itemExceed : getManagedBean().getItemExceedBpkThreshold()) {
+				messageExceedBpkApproved(itemExceed.getQuantity().toString(),
+						getTotalOrderedAmountByScRequestItem(itemExceed.getRequestNoteItemId()).toString());
+			}
 		}
 	}
 	

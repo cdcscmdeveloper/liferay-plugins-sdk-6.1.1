@@ -28,11 +28,13 @@ import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.fl.SLALogFulfilmentConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
@@ -44,6 +46,8 @@ import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -483,14 +487,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 *
 	 */
 	public void defaultPtjAndMinistryValues() {
-		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())
-			//Enhancement 29550 - start
-			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
-			|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-			|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
-			//Enhancement 29550 - end 
-			) {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())
+				|| (hasSupplierRole() && !hasGovernmentUserRole())
+				// Enhancement 29550 - start
+				|| hasFactoringUserRole() 
+				|| hasRoleWithoutFlApprover(RoleCode.BPK_CCA.value())
+				|| hasRoleWithoutFlApprover(RoleCode.BPK_CC_APPROVER.value())
+				|| hasRoleWithoutFlApprover(RoleCode.MIN_CONTRACT_ADMIN.value())
+				|| hasRoleWithoutFlApprover(RoleCode.CT_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
+				// Enhancement 29550 - end
+		) {
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -770,17 +779,22 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	public void retrieveParameterCodeType() {
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			String parameterCodeType = getParameterCodeTypeString();
+			log.info("ROLE CODE: " + parameterCodeType);
 			if (StringUtils.isNotEmpty(parameterCodeType)
 					&& (parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ)
 							|| parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))) {
 				getManagedBean().setSupplier(false);
 			} else if (StringUtils.isNotEmpty(parameterCodeType)
-					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATUTORY_BODY)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_GOVT) 
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY))) {
 				getManagedBean().setSupplier(true);
 				retrieveSupplierCompName();
-				//Enhancement 29550 -start
-				retrieveSuppDataByUserId();
-				//Enhancement 29550 - end
+				// Enhancement 29550 -start
+				populateSupplierData(Long.valueOf(getManagedBean().getSupplierId()));
+				// Enhancement 29550 - end
 			} 
 		}
 	}
@@ -1896,29 +1910,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * reports based on role auditor internal and fl approver.
 	 */
 	@SuppressWarnings("null")
-	public void defaultPtjGrpAndPtjValues(){
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+	public void defaultPtjGrpAndPtjValues() {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 		PmOrgProfile orgProfile = null;
-		
-		if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+
+		if (userResDTO.getUserOrgList() != null && !userResDTO.getUserOrgList().isEmpty()) {
 			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 		}
-		
-		if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
-			
-			if(ministryOrgProfile != null){
-				this.getManagedBean().setMinistry(ministryOrgProfile);
-				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
-				this.getManagedBean().setPtj(orgProfile);
-			}else{
-				this.getManagedBean().setMinistry(orgProfile);
-			}
-			
-		}else{
+
+		if (orgProfile.getOrgProfileId() != null) {
 			this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 			this.getManagedBean().setPtjGroup(null);
 			this.getManagedBean().setPtj(null);
@@ -2034,9 +2038,31 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return items;
 	}
 	
+	public void autopopSuppData() {
+		if (this.getManagedBean().getSelectedOrgProfile().getSmSupplier() == null) {
+			return;
+		}
+		populateSupplierData(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId());
+	}
+	
+	public void populateSupplierData(Long suppplierId){
+		ISupplierSearchSO supplierSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		SmSupplier smSupplier = supplierSO.retrieveSupplierAndMofAccountBySupplierId(suppplierId);
+		if (smSupplier != null) {
+			getManagedBean().setSupplierCompName(smSupplier.getCompanyName());
+			getManagedBean().setBusinessRegNo(smSupplier.getRegNo());
+			getManagedBean().setEpNo(smSupplier.getEpNo());
+			if (smSupplier.getMofNo() != null && !smSupplier.getMofNo().isEmpty()) {
+				getManagedBean().setMofNo(smSupplier.getMofNo());
+			} else {
+				getManagedBean().setMofNo("");
+			}
+		}
+	}
 	//Enhancement 29550 - end
 	
-	//#31344 start
+	// #31344 start
 	/**
 	 * Construct condition field for PTJ and Approve Other PTJ
 	 * 
@@ -2049,40 +2075,14 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					+ this.getManagedBean().getPtjGroup().getOrgProfileId();
 		}
 
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IPtjReorgSO.class);
-
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-		PmOrgProfile orgProfile = null;
-		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
-			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		PmOrgProfile orgProfile = retrieveUserOrgProfile();
+		if (orgProfile == null) {
+			return condition;
 		}
-		String ptjList = orgProfile.getOrgProfileId() + "";
-		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
-		ptjReqDTO.setDeepLevel(true);
-		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
 
-		for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
-			ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
-		}
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
-		for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
-			if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
-				ptjList = ptjList + "," + pmProfileGroup;
-			}
-		}
-		condition = condition + "|orgProfileId^" + ptjList + "^9";
+		String ptjList = buildPtjIdList(orgProfile);
 
-		return condition;
+		return condition + "|orgProfileId^" + ptjList + "^9";
 	}
 
 	/**
@@ -2097,43 +2097,116 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					OrganizationType.MINISTRY.value()) + "^" + this.getManagedBean().getMinistry().getOrgProfileId();
 		}
 
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IPtjReorgSO.class);
+		PmOrgProfile orgProfile = retrieveUserOrgProfile();
+		if (orgProfile == null) {
+			return condition;
+		}
 
+		String kumpulanPtjList = buildPtjGroupList(orgProfile);
+
+		return condition + "|orgProfileId^" + kumpulanPtjList + "^9";
+	}
+
+	/**
+	 * retrieve User Org Profile
+	 * @return
+	 */
+	private PmOrgProfile retrieveUserOrgProfile() {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-		PmOrgProfile orgProfile = null;
-		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
-			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+
+		if (userResDTO == null || userResDTO.getUserOrgList() == null || userResDTO.getUserOrgList().isEmpty()) {
+			return null;
 		}
-		String kumpulanPtjList = retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId() + "";
+
+		return userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+	}
+
+	/**
+	 * Build a list of PTJ Id
+	 * @param orgProfile
+	 * @return
+	 */
+	private String buildPtjIdList(PmOrgProfile orgProfile) {
+		StringBuilder ptjListBuilder = new StringBuilder();
+		ptjListBuilder.append(orgProfile.getOrgProfileId());
+
 		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
 		ptjReqDTO.setDeepLevel(true);
 		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+
+		IPtjReorgSO ptjReorgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IPtjReorgSO.class);
 		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
-		PmOrgProfile kumpulanPtj = null;
-		for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
-			kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
-			if (kumpulanPtj != null) {
-				kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
+
+		if (ptjResDTO != null && ptjResDTO.getPtjReorgList() != null) {
+			for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				ptjListBuilder.append(",").append(pmPtjReorg.getOldPtjId());
 			}
 		}
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
-		for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
-			if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
-				kumpulanPtjList = kumpulanPtjList + "," + retrieveJabatanOrgProfile(pmProfileGroup).getOrgProfileId();
+
+		if (resDTO != null && resDTO.getOrgProfileIdList() != null) {
+			for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
+				if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
+					ptjListBuilder.append(",").append(pmProfileGroup);
+				}
 			}
 		}
-		condition = condition + "|orgProfileId^" + kumpulanPtjList + "^9";
 
-		return condition;
+		return ptjListBuilder.toString();
+	}
+
+	/**
+	 * Build a list of PTJ Group Id
+	 * @param orgProfile
+	 * @return
+	 */
+	private String buildPtjGroupList(PmOrgProfile orgProfile) {
+		StringBuilder ptjGroupListBuilder = new StringBuilder();
+		ptjGroupListBuilder.append(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId());
+
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+
+		IPtjReorgSO ptjReorgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IPtjReorgSO.class);
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+
+		if (ptjResDTO != null && ptjResDTO.getPtjReorgList() != null) {
+			for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				PmOrgProfile kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
+				if (kumpulanPtj != null) {
+					ptjGroupListBuilder.append(",").append(kumpulanPtj.getOrgProfileId());
+				}
+			}
+		}
+
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
+
+		if (resDTO != null && resDTO.getOrgProfileIdList() != null) {
+			for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
+				if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
+					ptjGroupListBuilder.append(",").append(retrieveJabatanOrgProfile(pmProfileGroup).getOrgProfileId());
+				}
+			}
+		}
+
+		return ptjGroupListBuilder.toString();
 	}
 
 	/**
@@ -2165,22 +2238,20 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 
 		return condition;
 	}
-	
+
 	/**
 	 * Construct condition field for PTJ by user role code
 	 * 
 	 * @return
 	 */
 	public String constructConditionForPTJByRole() {
-		String condition = "";
 		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-			condition = getPTJWithApproveOtherPTJCondition();
+			return getPTJWithApproveOtherPTJCondition();
 		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			condition = getPTJInternalAuditorCondition();
+			return getPTJInternalAuditorCondition();
 		} else {
-			condition = getPTJCondition();
+			return getPTJCondition();
 		}
-		return condition;
 	}
 
 	/**
@@ -2189,15 +2260,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * @return
 	 */
 	public String constructConditionForPTJGroupByRole() {
-		String condition = "";
 		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-			condition = getPTJGroupWithApproveOtherPTJCondition();
+			return getPTJGroupWithApproveOtherPTJCondition();
 		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			condition = getPTJGroupInternalAuditorCondition();
+			return getPTJGroupInternalAuditorCondition();
 		} else {
-			condition = constuctConditionFieldsForPTJGroup();
+			return constuctConditionFieldsForPTJGroup();
 		}
-		return condition;
 	}
 
 	/**
@@ -2222,17 +2291,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	public boolean disablePtjLovThresholdReport() {
 		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
 			return false;
-		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			if (getManagedBean().getPtjGroup() == null) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return disablePtjLov();
 		}
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return getManagedBean().getPtjGroup() == null;
+		}
+		return disablePtjLov();
 	}
-	
+
 	/**
 	 * Get select item for document status by doctype
 	 * 
@@ -2246,7 +2311,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		try {
 			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
 					ModuleCodeConst.ORDER_FULFILLMENT, docType, null);
-			List<PmStatusDesc> statusDescsItemThreshold = new ArrayList<PmStatusDesc>();
+			List<PmStatusDesc> statusDescsItemThreshold = new ArrayList<>();
 
 			for (PmStatusDesc statusDesc : statusDescs) {
 				if (statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT)
@@ -2265,14 +2330,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				items[i++] = new SelectItem(statusDescYep.getPmStatus().getStatusId(), statusDescYep.getStatusName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			SLAUtils.getInstance().logSLAError("FL", "statusDropdownItemThreshold", "statusDropdownItemThreshold",
+					null, getUserIdSessionFromLoginId(), e);
 		}
 
 		return items;
 	}
-	
+
 	/**
 	 * Construct financial year list
 	 * 
@@ -2293,5 +2357,56 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return financialYearOpt;
 	}
 	//#31344 end
+	
+	//Enhancement 29550 - start
+	/**
+	 * Check role contain fl approver rola
+	 * @param userRole
+	 * @return
+	 */
+	private boolean hasRoleWithoutFlApprover(String userRole) {
+		return getFacesScopes().hasRoleUser(userRole) && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
+	/**
+	  * The method used to disable ptj group lov by report code.
+	*/	
+	public boolean disablePtjGroupLovAdhocPO() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
+					|| getManagedBean().getMinistry() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	  * The method used to disable ptj lov by report code.
+	*/	
+	public boolean disablePtjLovAdhocPO() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+					|| getManagedBean().getPtjGroup() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	//Enhancement 29550 - end
 
 }

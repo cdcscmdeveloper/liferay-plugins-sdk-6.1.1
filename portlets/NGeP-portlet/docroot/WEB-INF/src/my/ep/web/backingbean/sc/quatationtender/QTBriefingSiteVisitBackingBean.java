@@ -17,10 +17,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.faces.application.FacesMessage;//#28188
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;//#28188
+import javax.faces.context.FacesContext;//#28188
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;//#28188
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
@@ -1122,6 +1126,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				QTStatusConst.QT_BRIEFING_SITE_VISIT)){
 			
 			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
+			Date bsvDatePospone = null;//#28188
 			
 			ScAddress tempPmAddress = new ScAddress();
 			PmStatus currentBsvStatus = bsvDtl.getBsvStatus();
@@ -1160,6 +1165,13 @@ public class QTBriefingSiteVisitBackingBean extends
 					tempScQtBsvDtl.setBsvStatus(new PmStatus());
 					tempScQtBsvDtl.getBsvStatus().setStatusId(currentBsvStatus.getStatusId());	
 				}
+				
+				//#28188 - Start
+				bsvDatePospone = retrieveOldBsvDate(bsvType, bsvDtl);
+				if(bsvDatePospone != null){
+					this.getManagedBean().setBriefingSiteVisitPostponeDate(bsvDatePospone);
+				}
+				//#28188 - End
 			} catch (IllegalAccessException e) {
 				log.error("Exception occured while copying properties"
 						+ e.getMessage());
@@ -1235,16 +1247,20 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		
 		// bsvDesc
-		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DESC, 
-				oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc(),
-				true);
+		if(!newBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)){
+			putIntoAmendMentBeanIfChanged(amendMentBean, 
+					fieldPrefix + QTFieldConst.FIELD_QT_BSV_DESC, 
+					oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc(),
+					true);
+		}
 		
 		// bsvDate
-		putIntoAmendMentBeanIfChanged(amendMentBean, 
-				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DATE, 
-				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate(),
-				true);
+		if(!newBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)){
+			putIntoAmendMentBeanIfChanged(amendMentBean, 
+					fieldPrefix + QTFieldConst.FIELD_QT_BSV_DATE, 
+					oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate(),
+					true);
+		}
 		
 		// Proposal Start Date
 		ScQt scQt = getManagedBean().getQt();
@@ -1263,7 +1279,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				oldBsvDtl.getLocation(), newBsvDtl.getLocation(),
 				true);
 		}
-		//#28188 - Start
+		//#28188 - End
 
 		// address
 		ScAddress oldAddress = oldBsvDtl.getAddress();
@@ -1310,6 +1326,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					oldAddress.getPmCity().getCityId(), newAddress.getPmCity().getCityId(),
 					true);
 		}
+		//#28188 - End
 
 		// coordinatingOfficer
 		//#28188 - Start
@@ -1319,6 +1336,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				oldBsvDtl.getCoordinatingOfficer(), newBsvDtl.getCoordinatingOfficer(),
 				true);
 		}
+		//#28188 - End
 
 		// maxNoOfAttendance
 		//#28188 - Start
@@ -1328,7 +1346,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance(),
 				true);
 		}
-		
+		//#28188 - End
 
 		// bsvStatus
 		Long oldBsvStatusId = oldBsvDtl.getBsvStatus() != null ? oldBsvDtl.getBsvStatus().getStatusId() : null;
@@ -1337,9 +1355,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		if(newBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)){	
 			oldBsvStatusId = retrieveOldBsvStatus(bsvType, newBsvDtl);
 
+			// bsvRecordStatus
 			putIntoAmendMentBeanIfChanged(amendMentBean, 
 					fieldPrefix + QTFieldConst.FIELD_QT_BSV_RECORD_STATUS, 
-					DbValueConst.RECORD_STATUS_IN_PROGRESS, DbValueConst.RECORD_STATUS_ACTIVE,
+					//DbValueConst.RECORD_STATUS_IN_PROGRESS, DbValueConst.RECORD_STATUS_ACTIVE,
+					DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_ACTIVE,
 					true);
 			
 		}
@@ -1348,7 +1368,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_STATUS, 
 				oldBsvStatusId, newBsvStatusId,
 				true);
-
+		
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 		this.getManagedBean().setTempScQtBsvDtl(null);
 
@@ -1467,13 +1487,17 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * @return minDate
 	 */
 	public Date handleBSVMinDate() {
-		
 		Date minDate = DateUtils.addDays(handlePublishDate(),1);
 		ScQt scQt = this.getManagedBean().getQt();
 		Long statusId = scQt.getQtStatus().getStatusId();
 		if (isQTStatusPublished(statusId)) {
 			minDate = DateUtils.addDays(scQt.getPublishDate(),1);
 		}
+		//#28188 - Start
+		if(this.getManagedBean().getBriefingSiteVisitPostponeDate() != null){
+			minDate = this.getManagedBean().getBriefingSiteVisitPostponeDate();
+		}
+		//#28188 - End
 		return minDate;
 
 	}
@@ -1597,7 +1621,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 
-			 scQtBsvList = briefingSO.retrieveCurrentBsv(qtId);
+			 scQtBsvList = briefingSO.retrieveCurrentBSV(qtId);
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -1615,7 +1639,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 
-			 scQtBsvDtlList = briefingSO.retrieveCurrentBsvDetail(qtBsvId, bsvType);
+			 scQtBsvDtlList = briefingSO.retrieveCurrentBSVDetailByBsvType(qtBsvId, bsvType);
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -1667,7 +1691,6 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 	
 	private ScQtBsvDtl retrieveBSVAddressDetail(Long qtBsvDtlId, String bsvType) {
-		log.info("harun cek retrieveBSVAddressDetail new=============");
 	 	IQTBriefingSO briefingSO = null;
 	 	ScQtBsvDtl scQtBsvDtl = null;
 		try{
@@ -1712,6 +1735,38 @@ public class QTBriefingSiteVisitBackingBean extends
 	    	}
 		}
 		return oldBsvStatusId;
+	}
+	
+	private Date retrieveOldBsvDate(String bsvType, ScQtBsvDtl newBsvDtl) {
+		Date oldBsvDate =  null;
+	
+		List<ScQtBsv> scQtBsvList = retrieveCurrentBsv(newBsvDtl.getScQtBsv().getScQt().getQtId()); 
+       	if (CollectionUtils.isNotEmpty(scQtBsvList)){
+			for (ScQtBsv currentBsv : scQtBsvList) {
+				List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBsvDetail(currentBsv.getQtBsvId(), bsvType);
+				if (CollectionUtils.isNotEmpty(originalBsvDtlList)) {
+					for (ScQtBsvDtl originalBsvDtl : originalBsvDtlList) {
+						oldBsvDate = originalBsvDtl.getBsvDate();
+					}
+				}	
+			}
+    	}
+		return oldBsvDate;
+	}
+	
+	public void validateBsvDate(FacesContext context, UIComponent component, Object value) {
+
+	    Date selectedDate = (Date) value;
+	    Date minDate = handleBSVMinDate();
+
+	    if (selectedDate != null && selectedDate.before(minDate)) {
+
+	        throw new ValidatorException(
+	            new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Date/Time cannot be before " + minDate,
+	                null)
+	        );
+	    }
 	}
 	//#28188 - End
 		

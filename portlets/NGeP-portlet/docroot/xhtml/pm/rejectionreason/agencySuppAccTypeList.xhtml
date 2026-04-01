@@ -19,7 +19,7 @@
 
 						<p:dataTable id="dtAgencyResult"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							var="agency"
+							var="agency" widgetVar="dtSuppAccTypeWidget"
 							value="#{rejectionReasonBackingBean.managedBean.agencyList}"
 							rowIndexVar="rowIndex" rowKey="#{agency}" rows="10"
 							paginator="true" paginatorPosition="bottom"

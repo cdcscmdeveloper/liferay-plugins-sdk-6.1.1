@@ -5,6 +5,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<!-- Start Fix - #31341-->
+	<p:blockUI block=":form" widgetVar="itemLoadBlock">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+	<!-- End Fix - #31341-->
 	<!-- Start Fix - #35597 -->
 	<script>
 		document.addEventListener('DOMContentLoaded',
@@ -71,10 +76,6 @@
             	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="197" />      	
               </p:selectOneMenu> 
 	       </h:panelGrid>	
-           		
-        
-           		
-           		
            		<div columns="4" style="width:70%" class="ppRightBtn" >
            		<p:commandButton onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{suspensionBackingBean.searchItemAction}"
@@ -98,7 +99,7 @@
 	          <p:column style="width:13%;" headerText="#{lbl['lbl.ct.item.type']}"  styleClass="column-align-center" >
 				    <h:outputText style="float:left;" value="#{suspensionBackingBean.getParameterDesc(itemData.itemType)}" />
 			   </p:column>
-	         
+	         <!-- Start Fix - #31341-->
 	         <!-- #31558 start -->
 	         <p:column headerText="#{lbl['lbl.ct.item.desc']}" style="width:32%; white-space:normal;">	                       
 	         	#{itemData.scRequestItem.itemName}
@@ -107,9 +108,17 @@
        		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
 			 	</p:commandLink>
 				<br/>				
-			  	<h:outputText id="extensionCodeID" value="#{itemData.scRequestItem.cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>       		 				                        
+			  	<p:commandLink id="extensionCodeID"
+			    		value="#{itemData.scRequestItem.cmItem.extensionCode}" styleClass="blue_font"
+						style="color:#009ae5 !important; float:left;text-align:left;"
+						action="#{suspensionBackingBean.viewItemUnspscDetails(itemData.scRequestItem)}"
+						update=":form:itemDescDialogId"
+						onstart="itemLoadBlock.show()"
+						oncomplete="itemLoadBlock.hide(); itemDescDialogId.show();">
+				</p:commandLink>       	      		 				                        
 	      	</p:column>	       
 	         <!-- #31558 end -->
+	         <!-- End Fix - #31341-->
 
 			
 			  <p:column headerText="#{lbl['lbl.ct.skuno']}" styleClass="column-align-center" style="width:12%; white-space:normal;">
@@ -320,4 +329,5 @@
 			</div>
 		</f:facet>
 	</p:dialog>
+	<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" /> <!-- #31341 -->
 </ui:composition>
