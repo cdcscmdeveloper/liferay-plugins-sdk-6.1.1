@@ -71,6 +71,7 @@ public class DPConstants {
 	public static final int NUMBER_ONE = 1;
 
 	// 26059 - end
+
 	// 27868 - start
 	/**
 	 * Indicate redmine no in PM_APP_VERSION
