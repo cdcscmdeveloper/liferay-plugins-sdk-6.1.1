@@ -711,11 +711,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					String procType = EntityHelper
 							.getStringNestedProperty(ctBB.getManagedBean(),
 									"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType");
-					if (ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem()
-							.getRequestNote() != null
-							&& ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem()
-									.getRequestNote().getRequestNoteDtls().get(0).getProcurementType()
-									.getParameterType().equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE) // End Fix - #30045
+					if ((procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)
+							|| procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) // End Fix - #30045
 							&& ctBB.newJustification() != null) {
 						ctBB.getManagedBean().setNewPk7(true);
 					} else {
