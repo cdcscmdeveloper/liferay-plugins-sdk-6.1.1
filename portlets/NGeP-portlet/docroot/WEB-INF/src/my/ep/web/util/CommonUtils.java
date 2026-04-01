@@ -174,7 +174,7 @@ public class CommonUtils {
 		return formattedDate;
 	}
 	
-	// #31503 -start-
+	// #31503, #26059, #27868 -start-
 	/**
 	 * #31503 Remove "N/A" or “NA” or “N A”.
 	 * 
@@ -188,7 +188,7 @@ public class CommonUtils {
 
 		return itemName;
 	}
-	// #31503 -end-
+	// #31503, #26059, #27868 -end-
 
 	// #31344 start
 	/**

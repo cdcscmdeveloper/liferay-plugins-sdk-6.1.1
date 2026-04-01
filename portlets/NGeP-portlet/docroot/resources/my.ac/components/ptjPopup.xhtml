@@ -14,6 +14,7 @@
 	<cc:attribute name="orgTypeParamCode" required="true" />
 	<cc:attribute name="id" required="true" />
 	<cc:attribute name="includePegawaiPengawal" required="false" default="false" />
+	<cc:attribute name="isProcurementTypeSpecialItem" required="false" /><ui:remove>27868</ui:remove>
 </cc:interface>
 
 <cc:implementation>
@@ -104,13 +105,25 @@
                      <p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/></p:inputText>
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
-       		         <p:commandButton id="searcbBtnId" 
-       		         	widgetVar="ptjSearchBtnWV" value="#{lbl['lbl.btn.search']}" 
-       		         	update=":form:#{cc.attrs.id}:dtOrgProfile"  
-       		            action="#{organisationSearchBackingBean.searchOrgProfiles(cc.attrs.orgTypeParamCode)}" 
-       		            process="orgProfilePnlId" />
-       		            
-       		      <p:commandButton
+						<ui:remove>27868 - start</ui:remove>
+						<c:choose>
+							<c:when test="#{cc.attrs.isProcurementTypeSpecialItem}">
+								<p:commandButton id="searcbBtnId" widgetVar="ptjSearchBtnWV"
+									value="#{lbl['lbl.btn.search']}"
+									update=":form:#{cc.attrs.id}:dtOrgProfile"
+									action="#{organisationSearchBackingBean.searchOrgProfilesSpecialItem(cc.attrs.orgTypeParamCode)}"
+									process="orgProfilePnlId" />
+							</c:when>
+							<c:otherwise>
+								<p:commandButton id="searcbBtnId" widgetVar="ptjSearchBtnWV"
+									value="#{lbl['lbl.btn.search']}"
+									update=":form:#{cc.attrs.id}:dtOrgProfile"
+									action="#{organisationSearchBackingBean.searchOrgProfiles(cc.attrs.orgTypeParamCode)}"
+									process="orgProfilePnlId" />
+							</c:otherwise>
+						</c:choose>
+						<ui:remove>27868 - end</ui:remove>
+						<p:commandButton
 							value="#{lbl['lbl.btn.reset']}"
 							action="#{organisationSearchBackingBean.resetOrgProfiles()}"
 							partialSubmit="true"
