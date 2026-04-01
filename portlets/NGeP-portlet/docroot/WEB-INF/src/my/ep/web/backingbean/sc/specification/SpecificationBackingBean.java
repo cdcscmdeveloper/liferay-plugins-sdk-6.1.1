@@ -15026,7 +15026,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().getQt().setSampleReq(issample);//11104ReendorseStart728
 			saveSpecMaintenanceWorkFlowStatus();
 			addDemoTechnicalCheckList();//#28784 - Start
-			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType) && this.getManagedBean().isNewVersion()) {
 				resetDemoSpecStatus();// #28784
 
 				boolean isModified = false;
@@ -21543,6 +21543,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	public void addDemoTechnicalCheckList() {
 		try {
+			if (!this.getManagedBean().isNewVersion()) {
+				return;
+			}
 			//this.getManagedBean().setReadOnly(false);
 			isAllTSDemoChecklistCompleted();//#28784
 			this.getManagedBean().setDemoAction(false);
@@ -24590,16 +24593,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return true;
 
-	}
-	
-	/**
-	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
-	 * @param
-	 * @return void
-	 */
-	private void checkDemoVersion(ScQt scQt) {
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-		this.getManagedBean().setNewVersion(isQtNewVersion);
 	}
 	
 	//11104 -start-
