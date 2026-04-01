@@ -11319,7 +11319,7 @@ private void retriveCommitteeRemarksList(){
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sc/evaluation/evaluationMain.xhtml");
-		} else if (Arrays.asList(SCProcessNameConst.DEMO_PROCESSES).contains(taskName)) {
+		} else if (Arrays.asList(SCProcessNameConst.DEMO_PROCESSES).contains(taskName)) {//#28784
 			afterDemoInv(true);
 			fc.getApplication()
 					.getNavigationHandler()
