@@ -2645,7 +2645,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
+			OrgProfileResDTO resDTO = new OrgProfileResDTO(); //Fix - #30045
 			//Start - #30045
 			if (isSpecialItemAgencies()) {
 				IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2660,6 +2660,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				
 			}
 			//End - #30045
+			resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO); //Fix - #30045
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {

@@ -501,11 +501,17 @@ public class ViewApplHistoryBackingBean extends
 			smAppl.setWorkflowStatus(sts.getPmStatus());
 			/*smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) ? getApplicationStatus(sts
 					.getPmStatus(), smAppl) : status);*/
-			//25792  - start
-			smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) || "N/A".equalsIgnoreCase(status) ? getApplicationStatus(sts
-					.getPmStatus(), smAppl) : status);
-			//25792 - end
-
+			// 40121 - START
+			if(smAppl.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
+				smAppl.setWorkflowStatusDesc(SupplierManagementConst.NA_STATUS);
+			} else {
+				//25792  - start
+				smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) || "N/A".equalsIgnoreCase(status) ? getApplicationStatus(sts
+						.getPmStatus(), smAppl) : status);
+				//25792 - end
+			}
+			// 40121 - END
+			
 			if (rejectedStatus.contains(sts.getPmStatus().getStatusId()
 					.toString())) {
 				getManagedBean().setResubmitUrl(
@@ -514,7 +520,6 @@ public class ViewApplHistoryBackingBean extends
 								+ smAppl.getApplId());
 			}
 		}
-		
 	}
 
 	/**
@@ -1480,7 +1485,7 @@ public class ViewApplHistoryBackingBean extends
 			reqMofDTO.setApplId(Long.parseLong(latestAppl));
 			MofAccountResDTO mofAccount = SmCommonUtil.getMofAccountBySuppIdAndApplId(reqMofDTO);
 			
-			if (mofAccount != null) {
+			if (mofAccount.getMofAccount() != null) {
 				mofNo = mofAccount.getMofAccount().getMofNo();
 			}
 		}
