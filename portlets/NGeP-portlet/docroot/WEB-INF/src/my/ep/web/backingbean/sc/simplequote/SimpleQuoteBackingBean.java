@@ -1356,7 +1356,6 @@ public class SimpleQuoteBackingBean extends
 						specQuestion.setClItem(commonUtils.removeItemNameNA(ItemName));
 						specQuestion.setDisabledColumnItem(true);
 						//#26059 - End
-						specQuestion.setClItem(ItemName);
 						setUserDetails(specQuestion);
 						addSpecficationQuestions(ctPanelItem, serviceTpl, tplSpecQuestions);
 					}
@@ -1405,7 +1404,6 @@ public class SimpleQuoteBackingBean extends
 						fetchItemNameAndExtension(prodQuestion, cmItem);
 						prodQuestion.setDisabledColumnItem(true);
 						//#26059 - End
-						prodQuestion.setClItem(ItemName);
 						setUserDetails(prodQuestion);
 						addSpecficationQuestions(ctPanelItem, prodTpl, productQuestions);
 					}
