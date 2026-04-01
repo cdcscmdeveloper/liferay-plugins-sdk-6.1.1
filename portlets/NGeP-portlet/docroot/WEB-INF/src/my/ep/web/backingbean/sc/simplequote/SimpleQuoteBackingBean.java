@@ -188,7 +188,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sc.DPConstants;//#27868
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -7336,6 +7336,20 @@ public class SimpleQuoteBackingBean extends
 						specMaster
 						.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 					}
+					
+					//#26059 - Start
+					for(TplSpecQuestion prodQuestion : specMaster.getTplSpecQuestions()){
+						
+						if(prodQuestion.getCmItem() != null){
+							getCltemNameFromQuestion(prodQuestion);
+							prodQuestion.setDisabledColumnItem(true);
+						}else {
+							prodQuestion.setCmTitleValue(prodQuestion.getClItem());
+							prodQuestion.setDisabledColumnItem(false);
+						}
+					}
+					//#26059 - End
+					
 					productTplSpecBean.setSpecMaster(specMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
