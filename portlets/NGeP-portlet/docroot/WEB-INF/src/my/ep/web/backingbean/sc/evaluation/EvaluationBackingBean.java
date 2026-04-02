@@ -55,7 +55,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDemoSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;//#25138
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -387,9 +387,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				this.getManagedBean().setTechnicalSummaryView(""); // #21695,#25138
 				this.getManagedBean().setSummaryViewBy("");
 				EvaluationReqDTO summaryReqDTO = setSummaryPrepareData(view);
-				this.getManagedBean().setWipStatusMax(evaluationSO.checkWipScoreSettingMax(summaryReqDTO)); // #21695
-																											// (#34588
-																											// related)
+				this.getManagedBean().setWipStatusMax(evaluationSO.checkWipScoreSettingMax(summaryReqDTO)); // #21695 (#34588 related)
 				evalResDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
 				this.getManagedBean().setEvaluationStageZonesSummary(new ArrayList<TplSpecZoneDtl>());
 				if (null != evalResDTO.getZones() && !evalResDTO.getZones().isEmpty()) {
@@ -2475,10 +2473,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			//#21692 - End
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
-			this.getManagedBean().setSingleItemCheckList(resDTO.getCheckListResultBean().getResultList());// #25138
-																											// one
-																											// item
-																											// only
+			this.getManagedBean().setSingleItemCheckList(resDTO.getCheckListResultBean().getResultList());// #25138 one item only
 
 			// #25138,#21695 -start(#33178,#34017 related)
 			if (this.getManagedBean().getScQt().isPartial()) {
@@ -12703,11 +12698,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 		// #25138,#21695 -start(#32426 related)
 		public ComplianceSupplierPagingDataModel(String componentId, Long checkListId, Boolean compliance, Long qtId,
-				String evalStaage, Boolean scoringReq) {
+				String evalStage, Boolean scoringReq) {
 			this(componentId, checkListId, compliance, qtId, evalStage);
 		}
-
-		// #25138,#21695 -end(#32426 related)
 
 		/*
 		 * (non-Javadoc)
@@ -12745,9 +12738,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(
 						reqDTO).getComplianceResultBean();
 
-				if (CollectionUtils.isNotEmpty(resultBean.getResultList())) {// #21695,#25138
-																				// (#34523
-																				// related)
+				if (CollectionUtils.isNotEmpty(resultBean.getResultList())) {// #21695,#25138 (#34523 related)
 					List<Long> proposalChecklistIds = new ArrayList<>();
 
 					if (getManagedBean().getTabItemPackageIndex() == 2
@@ -12872,9 +12863,59 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				reqDTO.setQtId(qtId);
 				reqDTO.setEvalStage(evalStage);
 				reqDTO.setProposalChecklistSearchBean(searchBean);
-				return evaluationSO.retrievProposalCheckListByCheckListNZone(
-						reqDTO).getComplianceResultBean();
 
+				// #25138 wip status - Start
+				int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+			
+				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+					//#34588 start
+					if(reqDTO.getEvalStage().equalsIgnoreCase(QTConstants.PRESENTATION_DEMO_EVALUATION)){
+						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+
+					}else{
+					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					}
+					//#34588 end
+				} else {
+					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+				}
+				// #25138 wip status - End
+
+				// #25138, #21695 -start-
+				EvaluationResDTO resDTO = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO);
+				// Calculate totalitemscore
+				List<ScQtProposalChecklist> removesupplier = new ArrayList<ScQtProposalChecklist>();
+
+				for (int i = 0; i < resDTO.getComplianceResultBean().getResultList().size(); i++) {
+					getManagedBean().setSupplierItemExist(Boolean.FALSE);
+
+					calculateItemScores(resDTO.getComplianceResultBean().getResultList().get(i));
+
+					if (!getManagedBean().isSupplierItemExist()) {
+						removesupplier.add(resDTO.getComplianceResultBean().getResultList().get(i));
+					}
+				}
+
+				// #25138 wip status -start (if wip no need to remove)
+				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+					if (removesupplier.size() > 0) {
+						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
+						// #28784, #34091 - related - Start
+						if (getManagedBean().getScQt().isDemoRequired()) {
+							if (resDTO.getComplianceResultBean().getResultList().size() == 0) {
+								resDTO.getComplianceResultBean().setTotalRecord(
+										resDTO.getComplianceResultBean().getResultList().size());
+							}
+						}
+						// #28784, #34091 - related - End
+					} else {
+						return resDTO.getComplianceResultBean();
+					}
+				}
+				// #25138 wip status end
+
+				return resDTO.getComplianceResultBean();
+				// #25138, #21695 -end-
 			} finally {
 				evaluationSO = null;
 			}
@@ -12925,11 +12966,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				log.debug("pageChangeListener");
 			}
 
-			IQTEvaluationSO evaluationSO = null;
-			try {
-				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTEvaluationSO.class);
+			EvaluationResDTO resDTO = new EvaluationResDTO();
+			try { 
+				IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 				reqDTO.setCheckListId(checkListId);
@@ -12937,12 +12977,44 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				reqDTO.setEvalStage(evalStage);
 				reqDTO.setSpeZoneId(speZoneId);
 				reqDTO.setProposalChecklistSearchBean(searchBean);
-				return evaluationSO.retrievProposalCheckListByCheckListNZone(
-						reqDTO).getComplianceResultBean();
 
-			} finally {
-				evaluationSO = null;
-			}
+				// #25138 wip status - Start
+				int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+				// #25138 wip status end
+				if (wipstatus > SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM) {
+					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				} 
+				// #25138, #21695 -start-
+				resDTO = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO);
+				if (null == speZoneId)
+					return resDTO.getComplianceResultBean();
+				List<ScQtProposalChecklist> removesupplier = new ArrayList<>();// 32453
+				for (int i = 0; i < resDTO.getComplianceResultBean().getResultList().size(); i++) {
+					getManagedBean().setSupplierItemExist(Boolean.FALSE);// 32453
+					calculateItemScores(resDTO.getComplianceResultBean().getResultList().get(i));
+					if (!getManagedBean().isSupplierItemExist()) {// 32453
+						removesupplier.add(resDTO.getComplianceResultBean().getResultList().get(i));
+					}// 32453
+				} 
+				// wip status start
+				// #25138 farid -start (if wip no need to remove)
+				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+					resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
+				} 
+				// wip status end
+				// #25138 farid -end (if wip no need to remove)
+				// #28784, - related - Start
+				if (resDTO.getComplianceResultBean().getResultList().isEmpty()) {
+					resDTO.getComplianceResultBean().setTotalRecord(0);
+				} 
+				// #28784, - related - end
+			} catch (Exception e) {
+				ScQt scQt = getManagedBean().getScQt();
+				String qtNo = null == scQt ? "" : scQt.getQtNo();
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, SLALogConstant.QT_MODULE, qtNo,
+						SLALogConstant.QT_EVALUATION_BACKINGBEAN + ".FinancialSpecSupplierWithZonePagingDataModel.pageChangeListener", getUserIdSessionFromLoginId(), e);
+			} 
+			return resDTO.getComplianceResultBean();
 		}
 	}
 
@@ -13000,11 +13072,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					}
 				}
 	}
-	// #25138, #21695 -start-
-	EvaluationResDTO resDTO = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO);
-	// Calculate totalitemscore
-	List<ScQtProposalChecklist> removesupplier = new ArrayList<ScQtProposalChecklist>();
-
 
 	/**
 	 * Compliance Sample Label Supplier Paging Data Model
@@ -13651,6 +13718,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 	/**
 	 * this method is used to get the financial summary dropdown values.
+	 * 
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> finanialSummaryDropDownValues() {
@@ -13687,7 +13755,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt()
 				.getEvaluateBy())) {
 			if (maxSet == ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
-				if (!this.getManagedBean().getNoSupplierPackageExist()) { // do not merge to previous if.. remeain below maxset flag, if supplier exist need to enter
+				if (!this.getManagedBean().getNoSupplierPackageExist()) { // do not merge to previous if.. remain below maxset flag, if supplier exist need to enter
 					selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
 							.getMessage("lbl.sc.evaluation.view.by.tech.package.score",// #25138-Ahmaa
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
@@ -13696,12 +13764,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 				selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
 						.getMessage("lbl.sc.evaluation.view.by.package.preference.margin",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())));
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			}
 		}
-		selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_ITEM, ResourceBundleUtils
-				.getMessage("lbl.sc.evaluation.view.by.item.preference.margin",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_ITEM, ResourceBundleUtils.getMessage(
+				"lbl.sc.evaluation.view.by.item.preference.margin", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale())));
 		// #25138(wip 4serangkai) bug -End 8/6/2023
 		return selectItems;
