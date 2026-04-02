@@ -238,8 +238,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 		// Get the bean instance
 		if (getManagedBean().getLovSelectedItemList() != null) {
 			StringBuilder sb = new StringBuilder();
-			for (CtContractItem item : getManagedBean()
-					.getLovSelectedItemList()) {
+			for (CtContractItem item : getManagedBean().getLovSelectedItemList()) {
 				if (sb.length() > 0) {
 					sb.append(", "); // Add comma before appending next item
 				}
@@ -259,6 +258,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			searchbeanz.setDocNo(contractNo);
 		}
 	}
+	// End - #29416
 	
 	// Start - #29416 || #34889
 	/**
@@ -285,27 +285,27 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 		if (contractNumber == null || contractNumber.isEmpty()) {
 			isError = true;
 			FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
-									MessageUtils.getMessage(
-											MessageConst.ERROR_750083,
-											new String[] {
-													ResourceBundleUtils.getMessage("lbl.rpt.itmName",
-															ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-															new FacesScopes().getUserLocale()),
-													ResourceBundleUtils.getMessage("lbl.ct.contract.no",
-															ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-															new FacesScopes().getUserLocale()) },
-											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(
+									MessageConst.ERROR_750083,
+									new String[] {
+											ResourceBundleUtils.getMessage("lbl.rpt.itmName",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()),
+											ResourceBundleUtils.getMessage("lbl.ct.contract.no",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()) },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
-		} else if (contractNumber.length() != ContractConst.CONTRACT_LENGTH) {
+		} else if (contractNumber.length() < ContractConst.CONTRACT_LENGTH) {
 			isError = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(
-							MessageConst.ERROR_750084,new String[] { ResourceBundleUtils.getMessage(
-									"lbl.ct.contract.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) },MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_750084, new String[] { ResourceBundleUtils.getMessage(
+									"lbl.ct.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 		}
 		return isError;

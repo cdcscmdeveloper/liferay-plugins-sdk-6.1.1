@@ -115,7 +115,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		debugLogger("createProfCert");
 		PmCertBody certBody = new PmCertBody();
 		this.getManagedBean().setCertBody(certBody);
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
+		return NAV_TO_MAINTAIN; //#34445 SQ fixing
 
 	}
 
@@ -386,7 +386,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		debugLogger("saveCertBodyDtls");
 		String redirectUrl = null;
 		ICertBodySO certBodySO = null;
-		IStatusSO statusSO = null;
+		//#34445 SQ fixing - Remove statusSO
 
 		PmCertBody certBody = this.getManagedBean().getCertBody();
 
@@ -399,14 +399,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				setUserDetails(certBody);
 				generateCertBodyCode();
 			}
-			statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
+			//#34445 SQ fixing - Remove statusSO
+			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 
 			String messageId = null;
 			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
-			
 
 			String[] msgParam = new String[] { certBody.getBodyName() };
 
@@ -479,7 +476,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			e.printStackTrace();
 		} finally {
 			certBodySO = null;
-			statusSO = null;
+			//#34445 SQ fixing - Remove statusSO
 		}
 
 		return redirectUrl;
@@ -501,7 +498,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			e.printStackTrace();
 		}
 		
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
+		return NAV_TO_MAINTAIN; //#34445 SQ fixing
 	}
 		
 	/**

@@ -14193,7 +14193,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				//#11104 -end-
 				saveSpecMaintenanceWorkFlowStatus();
 				addDemoTechnicalCheckList();//#28784 - Start
-				if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+				if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType) && this.getManagedBean().isNewVersion()) {
 					resetDemoSpecStatus();// #28784
 
 					boolean isModified = false;
@@ -19435,6 +19435,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	public void addDemoTechnicalCheckList() {
 		try {
+			if (!this.getManagedBean().isNewVersion()) {
+				return;
+			}
 			//this.getManagedBean().setReadOnly(false);
 			isAllTSDemoChecklistCompleted();//#28784
 			this.getManagedBean().setDemoAction(false);

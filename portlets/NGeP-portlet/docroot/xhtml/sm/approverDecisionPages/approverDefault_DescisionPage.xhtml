@@ -35,11 +35,11 @@
 				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
-						partialSubmit="true" process="@this" onstart="blockWidget.show()"
+						partialSubmit="true" process="@this @([id$=changeRegStatusChk])" onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
-						update=":form:tt:approverAppDialog"
+						update=":form:tt:approverAppDialog @([id$=changeRegStatusChk])"
 						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-						action="#{backingBean.assignFinalApproveOrReject('approverAppDialog')}" />
+						action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approverAppDialog')}" /> <!-- 29727, 37925 -->
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:approverRejDialog" partialSubmit="true"
 						process="@this" onstart="blockWidget.show()"
@@ -235,6 +235,15 @@
 		</p:outputPanel>
 	</p:dialog>
 	<!-- #12483 - END -->
+		<!--  #29727 -->
+	<ac:confirmationPopup id="pendingQTPopUpApproverId"
+		widget="pendingQTPopUpApprover"
+		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
+		update=":form:tt:approverAppDialog"/>
+	<!-- END #29727 -->
 	<!-- 13362 START -->
 	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
 	<!-- 13362 END -->

@@ -886,22 +886,22 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				BigDecimal amtSupplier = row[17] != null ? (BigDecimal) row[17] : BigDecimal.ZERO;
 
 				fiList.put(fiCount, new Object[] {
-						// need to recheck query
-						row[6].toString(), // POCO DATE
-						row[3].toString(), // POCO NO
-						row[8].toString(), // PROCUMENT CATEGORY
-						row[10].toString(), // PTJ CODE
-						row[9].toString(), // PTJ NAME
-						row[15].toString(), // SERVICE FEE
-						row[11].toString(), // POCO TITLE
-						amtTransIncCBP, // TOTAL AMOUNT
-						amtDeduction, // DEDUCTION AMOUNT
-						amtCBP, // GST AMOUNT
-						amtServiceFee, // SERVICE FEE AMOUNT
-						amtSupplier, // AMT PAYABLE SUPPLIER
-						row[21].toString(), // POCO STATUS
-						row[4].toString(), // AG Office Code
-				});
+						//need to recheck query
+						String.valueOf(row[6]), //POCO DATE
+						String.valueOf(row[3]), // POCO NO
+						String.valueOf(row[8]), //PROCUMENT CATEGORY
+						String.valueOf(row[10]), //PTJ CODE
+						String.valueOf(row[9]), //PTJ NAME
+						String.valueOf(row[15]), //SERVICE FEE
+						String.valueOf(row[11]), //POCO TITLE
+						amtTransIncCBP, //TOTAL AMOUNT
+						amtDeduction, //DEDUCTION AMOUNT
+						amtCBP, //GST AMOUNT
+						amtServiceFee, //SERVICE FEE AMOUNT
+						amtSupplier, //AMT PAYABLE SUPPLIER
+						String.valueOf(row[21]), //POCO STATUS
+						String.valueOf(row[4]), //AG Office Code
+					});
 				fiCount++;
 			}
 		}
@@ -933,16 +933,16 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				accsumpoco += sumpoco;
 				// end summary calculation
 
-				summaryFiList.put(summaryfiCount, new Object[] { row[8].toString() + " - " + row[0].toString(), // PEJABAT
-																												// PERAKAUNAN
-						row[1].toString(), // SERVICE FEE
-						sumpoco, // TOTAL POCO
-						sumTotalAmtWithGST, // NILAI TRANSAKSI CBP
-						sumTotalDeduc, // NILAI POTONGAN
-						sumGST, // CBP
-						sumServiceFee, // FI PERKHIDMATAN
-						sumPayableToSupplier // BAYARAN KEPADA PEMBEKAL
-						});
+				summaryFiList.put(summaryfiCount, new Object[] {
+						String.valueOf(row[8]) + " - " + row[0].toString(), //PEJABAT PERAKAUNAN
+						String.valueOf(row[1]), //SERVICE FEE
+						sumpoco, //TOTAL POCO
+						sumTotalAmtWithGST, //NILAI TRANSAKSI CBP
+						sumTotalDeduc, //NILAI POTONGAN
+						sumGST, //CBP
+						sumServiceFee, //FI PERKHIDMATAN
+						sumPayableToSupplier //BAYARAN KEPADA PEMBEKAL
+				});
 				summaryfiCount++;
 			}
 
@@ -1492,22 +1492,23 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				totalAll = (totalAll).add(totalRow);
 				// end calculate
 
-				fiList.put(fiCount, new Object[] { row[1].toString() + " - " + row[2].toString(),
-						(BigDecimal) row[3] != null ? (BigDecimal) row[3] : "-", // jan
-						(BigDecimal) row[4] != null ? (BigDecimal) row[4] : "-", // feb
-						(BigDecimal) row[5] != null ? (BigDecimal) row[5] : "-", // mar
-						(BigDecimal) row[6] != null ? (BigDecimal) row[6] : "-", // apr
-						(BigDecimal) row[7] != null ? (BigDecimal) row[7] : "-", // may
-						(BigDecimal) row[8] != null ? (BigDecimal) row[8] : "-", // jun
-						(BigDecimal) row[9] != null ? (BigDecimal) row[9] : "-", // jul
-						(BigDecimal) row[10] != null ? (BigDecimal) row[10] : "-", // aug
-						(BigDecimal) row[11] != null ? (BigDecimal) row[11] : "-", // sept
-						(BigDecimal) row[12] != null ? (BigDecimal) row[12] : "-", // oct
-						(BigDecimal) row[13] != null ? (BigDecimal) row[13] : "-", // nov
-						(BigDecimal) row[14] != null ? (BigDecimal) row[14] : "-", // dec
+				fiList.put(fiCount, new Object[] {
+						String.valueOf(row[1]) +" - " + String.valueOf(row[2]),
+						(BigDecimal)row[3] != null ? (BigDecimal)row[3] : "-", //jan
+						(BigDecimal)row[4] != null ? (BigDecimal)row[4] : "-", //feb
+						(BigDecimal)row[5] != null ? (BigDecimal)row[5] : "-", //mar
+						(BigDecimal)row[6] != null ? (BigDecimal)row[6] : "-", //apr
+						(BigDecimal)row[7] != null ? (BigDecimal)row[7] : "-", //may
+						(BigDecimal)row[8] != null ? (BigDecimal)row[8] : "-", //jun
+						(BigDecimal)row[9] != null ? (BigDecimal)row[9] : "-", //jul
+						(BigDecimal)row[10] != null ? (BigDecimal)row[10] : "-", //aug
+						(BigDecimal)row[11] != null ? (BigDecimal)row[11] : "-", //sept
+						(BigDecimal)row[12] != null ? (BigDecimal)row[12] : "-", //oct
+						(BigDecimal)row[13] != null ? (BigDecimal)row[13] : "-", //nov
+						(BigDecimal)row[14] != null ? (BigDecimal)row[14] : "-", //dec
 						totalRow.doubleValue() != 0.00 ? totalRow : "-"
-
-				});
+						
+					});
 				fiCount++;
 			}
 		}

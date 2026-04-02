@@ -88,6 +88,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -723,25 +724,17 @@ public class SPDetailBackingBean extends
 			scQtProposalChecklists.addAll(reqDTO.getTechnicalChecklist());
 			scQtProposalChecklists.addAll(reqDTO.getFinancialChecklist());
 			ScQtProposal scQtProposal = reqDTO.getScQtProposal();
-			scQtProposal
-					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
-							scQtProposalChecklists));
-			if(null!=this.getManagedBean().getScQtSampleLable()){//35117-start
-				scQtProposal
-				.setScQtSampleLable(this.getManagedBean().getScQtSampleLable());
+			scQtProposal.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(scQtProposalChecklists));
+			if (null != this.getManagedBean().getScQtSampleLable()) {//35117-start
+				scQtProposal.setScQtSampleLable(this.getManagedBean().getScQtSampleLable());
 			}//35117-End
-		this.getManagedBean().setScQtPRPExperiences(null);
-			String originalText = prepareOriginalText(getManagedBean()
-					.getSmSupplier());
-			byte[] signedData = getManagedBean().getSpkiBackingBean()
-					.spkiSignTransaction(originalText);
+			this.getManagedBean().setScQtPRPExperiences(null);
+			String originalText = prepareOriginalText(getManagedBean().getSmSupplier());
+			byte[] signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
 			digiSign.setSpkiSignedData(signedData);
 
 			if (null != digiSign) {
-				updateSpkiDigiSignData(digiSign,
-						ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL,
-						scQtProposal.getQtProposalId(),
-						scQtProposal.getProposalNo(), originalText);
+				updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, scQtProposal.getQtProposalId(), scQtProposal.getProposalNo(), originalText);
 			}
 			
 			// #27233 : CR add new tracking diary entry for update - START
@@ -900,6 +893,12 @@ public class SPDetailBackingBean extends
 				.getScQtPRPExperiences();
 		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_PRIVATE_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1265,6 +1264,16 @@ public class SPDetailBackingBean extends
 							getManagedBean().getTemplateSpecBean());
 				}
 				
+				// #28777 & #29729, 35592 - Start
+				List<Long> deactivatedZones = new ArrayList<>();
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+					for (TplSpecZoneDtl zoneDtl : this.getManagedBean().getZones()) {
+						if (zoneDtl.isBranchDeactivated())
+							deactivatedZones.add(zoneDtl.getSpecZoneId());
+					}
+				}
+				// #28777 & #29729, 35592 - End
+				
 				// #21695 - #33391 - #33949 - Start.
 				if (null != getManagedBean().getQt().getQtStatus()
 						&& null != getManagedBean().getQt().getQtStatus().getStatusId()
@@ -1292,10 +1301,16 @@ public class SPDetailBackingBean extends
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
-				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
+				// #28777 & #29729, 35592(35838) - Start
+				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {
+					// #28777 & #29729, 35592(35838) - End
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
-						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
+						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785	
+						// #28777 & #29729, 35592 - Start
+						if (deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+							continue;
+						// #28777 & #29729, 35592 - End
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -1360,7 +1375,7 @@ public class SPDetailBackingBean extends
 							toDeleteZoneAnswers = null;
 						}
 					}
-				}
+				}// #28777 & #29729, 35592(35838)
 				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
 				proposalReqDTO.setToBeRemovedSpecSuppAnswers(tobeDeletedSuppAnswers);
 			} else {
@@ -1628,6 +1643,12 @@ public class SPDetailBackingBean extends
 		List<ScQtPRPCreditFacility> creditFacilitiesList = this
 				.getManagedBean().getScQtPRPCreditFacilities();
 		List<List<EncryptDataBean>> encryptCrditFacilitesList = new ArrayList<List<EncryptDataBean>>();
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1853,6 +1874,12 @@ public class SPDetailBackingBean extends
 				.getScQtPRPCashOnHand();
 		List<EncryptDataBean> cashOnHandList = new ArrayList<EncryptDataBean>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_CASH_ON_HAND_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1930,6 +1957,12 @@ public class SPDetailBackingBean extends
 				.getScQtPRPBankStmts();
 		List<EncryptDataBean> encryptBankStmtList = new ArrayList<EncryptDataBean>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_BANK_STMT_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -2003,6 +2036,12 @@ public class SPDetailBackingBean extends
 		ScQtPRPEmployee prpEmployee = getManagedBean().getScQtPRPEmployee();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getTechnicalQtProposalChecklist();
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, false,
+				QTConstants.TECHNICAL_NUMBER_EMPLOYEES);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -2073,6 +2112,12 @@ public class SPDetailBackingBean extends
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getTechnicalQtProposalChecklist();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.TECHNICAL_PRIVATE_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -2198,6 +2243,12 @@ public class SPDetailBackingBean extends
 		ScQtPRPAssetLiability scQtPRPAssetLiability = this.getManagedBean()
 				.getScQtPRPAssetLiability();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -4633,6 +4684,17 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
+			// #28777 & #29729 - Start
+			boolean branchDeleted = checkValidationSupplierBranchDeleted();
+			if (branchDeleted) {
+				this.getManagedBean().setReadOnly(branchDeleted);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+			// #28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -5499,9 +5561,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		title = title.replaceAll("<", "&#60;");
 		title = title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
-
 		context.put("QTTitle", title);
-		context.put("bean", this); //11104
+		context.put("bean", this); // 11104
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,
@@ -5622,6 +5683,26 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		this.getManagedBean().setAutoUpdate(false);
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to return true, if branch in supplier has been deleted
+	 * 
+	 * @param supplier
+	 *            id
+	 * @return true or false
+	 **/
+	public boolean checkValidationSupplierBranchDeleted() {
+		boolean isSupplierBranchDeleted = false;
+		ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+			isSupplierBranchDeleted = true;
+			this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
+		}
+		return isSupplierBranchDeleted;
+	}
+	
+	// #28777 & #29729 - End
 	
 	//Bug #30073 Start
 	public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
@@ -5918,12 +5999,15 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			//Bug #38267 start
 			if (null != scQtProposalChecklist.getProposalScore() && !scQtProposalChecklist.getProposalScore().isEmpty()){
 				ScQtProposalScore propScore = scQtProposalChecklist.getProposalScore().get(0);
-				if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
-					//Query without F filter
-					reqDTO.setComExpClientType(null);
-					sdto = proposalSO.getCompanyExperience(reqDTO);
-					suppExpList = sdto.getCompExperienceList();
-				}
+				//Bug #40109  start
+				if (suppExpList != null && !suppExpList.isEmpty()){
+					if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
+						//Query without F filter
+						reqDTO.setComExpClientType(null);
+						sdto = proposalSO.getCompanyExperience(reqDTO);
+						suppExpList = sdto.getCompExperienceList();
+					}
+				}//Bug #40109  end
 			}
 			//Bug #38267 end
 			this.getManagedBean().setSupplierExperienceList(suppExpList);
@@ -6212,7 +6296,49 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		  }
 	    return specZoneDetail;
 	}
-	//#28785-End	
+	//#28785-End
+	
+	// Bug #39517@Syazani 07/01/2026 -- Start
+	private ScQtProposalChecklist validateManagedBeanPropososalChecklist(ScQtProposalChecklist scQtProposalChecklist,
+			boolean isFinancialChc, String checklistDefinictionKey) {
+		ScQtProposalChecklist newScQtProposalChecklist = scQtProposalChecklist;
+		boolean isDocumentId = null != newScQtProposalChecklist.getScQtCheckList()
+				&& null != newScQtProposalChecklist.getScQtCheckList().getPmDocument()
+				&& null != newScQtProposalChecklist.getScQtCheckList().getPmDocument().getDocDefinitionKey();
+		String checkListDefinitionKey = isDocumentId ? newScQtProposalChecklist.getScQtCheckList().getPmDocument()
+				.getDocDefinitionKey() : "";
+		if (!checklistDefinictionKey.equalsIgnoreCase(checkListDefinitionKey)) {
+			return processValidateManagedBeanProposalChecklist(isFinancialChc, checklistDefinictionKey,
+					newScQtProposalChecklist);
+		}
+		return newScQtProposalChecklist;
+	}
+
+	private ScQtProposalChecklist processValidateManagedBeanProposalChecklist(boolean isFinancialChc,
+			String checklistDefinictionKey, ScQtProposalChecklist scQtProposalChecklist) {
+		ScQtProposalChecklist newScQtProposalChecklist = scQtProposalChecklist;
+		List<ScQtProposalChecklist> scQtProposalChecklistLst;
+		if (isFinancialChc) {
+			scQtProposalChecklistLst = this.getManagedBean().getFinanceCheckDetailsList();
+		} else {
+			scQtProposalChecklistLst = this.getManagedBean().getTecCheckDetailsList();
+		}
+
+		if (!CollectionUtils.isEmpty(scQtProposalChecklistLst)) {
+			for (ScQtProposalChecklist temp : scQtProposalChecklistLst) {
+				boolean isDocumentIdTemp = null != temp.getScQtCheckList().getPmDocument()
+						&& null != temp.getScQtCheckList().getPmDocument().getDocDefinitionKey();
+				String checkListDefinitionKeyTemp = isDocumentIdTemp ? temp.getScQtCheckList().getPmDocument()
+						.getDocDefinitionKey() : "";
+				if (checklistDefinictionKey.equalsIgnoreCase(checkListDefinitionKeyTemp)) {
+					newScQtProposalChecklist = temp;
+					break;
+				}
+			}
+		}
+		return newScQtProposalChecklist;
+	}
+	// Bug #39517@Syazani 07/01/2026 -- End
 		
 	// #21695 farid start display tree node
 	private void populateZoneDetailIntoTreeNode(TemplateSpecBean templateSpecBean) {

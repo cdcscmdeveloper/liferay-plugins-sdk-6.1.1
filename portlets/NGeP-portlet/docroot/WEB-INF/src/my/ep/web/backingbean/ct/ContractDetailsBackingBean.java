@@ -17,9 +17,11 @@ import java.util.Collections; //#13847
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap; //#13847
+import java.util.HashSet; //#30014 //#35238
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map; //#13847
+import java.util.Set; //#35238
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -100,6 +102,7 @@ import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.ct.ContractHashSetConst; //#35238
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -361,12 +364,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 			// Start Fix - #30856
 			if(ctBB.getManagedBean().getCtContractAmount().isBondExempted()){
-				
-				if(!ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty()){
-					
-					removePerformanceDatatableRow();
- 
-				}
+				//Remove Code for removePerformanceDatatableRow - #40072 
 				
 				// Start - Fix #29368
 				if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
@@ -1080,7 +1078,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		Long tempAttachId = tempAttachmentId;
 		if (CollectionUtils.isNotEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory())) {
 			for (CtBondWaiverDetail waiver : ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()) {
-				if (approvalStatus.containsValue(status) && outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+				if (checkStatusApprovalForBondWaiver(outcome, status)) { //#40114
 					waiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					waiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				}
@@ -1239,8 +1237,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 			// #24333 - Start
 			if (ctBB.getManagedBean().getCtContractAmount().isBondReq()
-					&& (!ctBB.getManagedBean().isDirectPurchase() ||  ctBB.isPk7FromDp())
-					&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+					&& (!ctBB.getManagedBean().isDirectPurchase() ||  ctBB.isPk7FromDp())) {
+				
+				// #40072 - Start
+				if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+					removePerformanceDatatableRow();
+				}
+				// #40072 - End
 				
 				Date currentDate = new Date();
 		        CtContractAmount uiBondData = ctBB.getManagedBean().getCtContractAmount();
@@ -1285,8 +1288,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			//#13847 start
 			if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
 					|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null) {
-				ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action, ctBB.getManagedBean()
-						.getContractVer().getStatus().getStatusId()));
+				//#40114 start
+				Long statusId = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
+				if (checkStatusApprovalForBondWaiver(action, statusId)
+						&& ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+					ctBB.removeInactiveDefermentHistory();
+					ctBB.removeDefermentLatest();
+				}
+				ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action, statusId));
+				//#40114 end
 			}
 			//#13847 end
 
@@ -3674,60 +3684,47 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						&& !getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())));
 	}
 
+	//#35238 start
 	/**
 	 * The method used to set the ministry 
 	 * profile id and PTJ profile id
 	 */
 	private void defaultMinistryPtjSearchValue() {
-		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
+		if (hasAnyRoleUser(ContractHashSetConst.ROLE_USER_TO_RESET_SEARCH)) {
 			this.getManagedBean().setSearchMinistryProfile(null);
 			this.getManagedBean().setSearchPtjGroupProfile(null);
 			this.getManagedBean().setSearchPtjProfile(null);
-
-		} else {
-			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			return;
+		}
+		try {
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			PmOrgProfile orgProfile = null;
-			
-			//Enhancement 29418 - shaqimi start 21/10/2022
-			Boolean hasPBQCRole = 
-					(getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
-							|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
-							|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
-							|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
-							|| getFacesScopes().hasRoleUser(RoleCode.PPB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value()));
-			//Enhancement 29418 - shaqimi end 21/10/2022
-			
-			if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
+
+			if (userResDTO.getUserOrgList() != null && !userResDTO.getUserOrgList().isEmpty()) {
 				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 			}
-
-			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {			
-				this.getManagedBean().setSearchMinistryProfile(orgProfile);
+			if (orgProfile == null || orgProfile.getOrgProfileId() == null) {
+				this.getManagedBean().setSearchMinistryProfile(null);
 				this.getManagedBean().setSearchPtjGroupProfile(null);
 				this.getManagedBean().setSearchPtjProfile(null);
-			} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
-					|| hasPBQCRole) {//Enhancement 29418 - shaqimi 21/10/2022
-				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
-				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
-				if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
-					this.getManagedBean().setSearchPtjGroupProfile(null);
-				}
-				this.getManagedBean().setSearchPtjProfile(orgProfile);
+				return;
 			}
+
+			setSearchProfile(orgProfile);
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_CONTRACTDETAILSBACKINGBEAN,
+					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					"defaultMinistryPtjSearchValue", getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
+	//#35238 end
 
 	/**
 	 * Get PTJ Group condition for construct the LOV listing
@@ -3885,7 +3882,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				});
 	}
 	
-	// Start Fix - #30856
+	// Start Fix - #30856, #40072
 	/**
 	 * The method used to delete Datatable row
 	 * for ctPerformanceBond Datatable,
@@ -3893,13 +3890,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void removePerformanceDatatableRow() {
 		try {
-			if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
-				Iterator<CtPerformanceBond> performanceBond = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
-				while (performanceBond.hasNext()) {
-					CtPerformanceBond  bond = performanceBond.next();
-				      if (bond != null){
-						performanceBond.remove();
-				    }
+			CtContractAmount uiBondData = ctBB.getManagedBean().getCtContractAmount();
+			if (ctBB.isContractExtendOrIsBond()) {
+				if (!uiBondData.getCtPerformanceBondsNew().isEmpty()){
+					uiBondData.getCtPerformanceBondsNew().clear();
+				}
+				
+			} else {
+				if (!uiBondData.getCtPerformanceBondsOriginal().isEmpty()){
+					uiBondData.getCtPerformanceBondsOriginal().clear();
 				}
 			}
 	
@@ -3911,6 +3910,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		}
 	}
+	// End Fix - #30856, #40072
+	
 	//Start - Fix #29368
 	/**
 	 * The method used to check the bond exempted condition,
@@ -4117,23 +4118,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return true if user has either one of the describe roles
 	 */
 	public boolean isAuditContinuityRoleCheck() {
-		return (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.SYS_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()));
+		//#35238 start
+		Set<String> auditContinuityRoleCheck = new HashSet<>();
+		
+		auditContinuityRoleCheck.add(RoleCode.QCA_SECRETARY.value());
+		auditContinuityRoleCheck.add(RoleCode.QCB_SECRETARY.value());
+		auditContinuityRoleCheck.add(RoleCode.QQC_SECRETARY.value());
+		auditContinuityRoleCheck.add(RoleCode.PBA_SECRETARY.value());
+		auditContinuityRoleCheck.add(RoleCode.PBB_SECRETARY.value());
+		auditContinuityRoleCheck.add(RoleCode.PPB_SECRETARY.value());
+		auditContinuityRoleCheck.add(RoleCode.MIN_CONTRACT_ADMIN.value());
+		auditContinuityRoleCheck.add(RoleCode.BPK_CCA.value());
+		auditContinuityRoleCheck.add(RoleCode.CT_APPROVER.value());
+		auditContinuityRoleCheck.add(RoleCode.BPK_CC_APPROVER.value());
+		auditContinuityRoleCheck.add(RoleCode.BPK_AUDITOR.value());
+		auditContinuityRoleCheck.add(RoleCode.SYS_ADMIN.value());
+		auditContinuityRoleCheck.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		auditContinuityRoleCheck.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		auditContinuityRoleCheck.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		auditContinuityRoleCheck.add(RoleCode.MOF_SUPPLIER_USER.value());
+		auditContinuityRoleCheck.add(RoleCode.G2G_SUPPLIER_ADMIN.value()); 
+		auditContinuityRoleCheck.add(RoleCode.G2G_SUPPLIER_USER.value());
+		
+		return hasAnyRoleUser(auditContinuityRoleCheck);
+		//#35238 end
 	}
 
 	/**
@@ -4142,16 +4150,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return true if user has either one of described roles
 	 */
 	public boolean isAuditRoleForChairpersonAndMember() {
-		return (getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(
-				RoleCode.PPB_CHAIRPERSON.value()));
+		//#35238 start
+		Set<String> roleForChairpersonAndMember = new HashSet<>();
+		roleForChairpersonAndMember.add(RoleCode.QCA_MEMBER.value());
+		roleForChairpersonAndMember.add(RoleCode.QCB_MEMBER.value());
+		roleForChairpersonAndMember.add(RoleCode.QQC_MEMBER.value());
+		roleForChairpersonAndMember.add(RoleCode.PBA_MEMBER.value());
+		roleForChairpersonAndMember.add(RoleCode.PBB_MEMBER.value());
+		roleForChairpersonAndMember.add(RoleCode.PPB_MEMBER.value());
+		roleForChairpersonAndMember.add(RoleCode.QCA_CHAIRPERSON.value());
+		roleForChairpersonAndMember.add(RoleCode.QCB_CHAIRPERSON.value());
+		roleForChairpersonAndMember.add(RoleCode.QQC_CHAIRPERSON.value());
+		roleForChairpersonAndMember.add(RoleCode.PBA_CHAIRPERSON.value());
+		roleForChairpersonAndMember.add(RoleCode.PBB_CHAIRPERSON.value());
+		roleForChairpersonAndMember.add(RoleCode.PPB_CHAIRPERSON.value());
+
+		return hasAnyRoleUser(roleForChairpersonAndMember);
+		//#35238 end
 	}
 
 	/**
@@ -4525,4 +4540,40 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    return cal.getTime();
 	}
 	// #24333 - End
+
+	//#35238 start
+	/**
+	 * Set search for ministry, ptj group and ptj profile.
+	 * 
+	 * @param orgProfile
+	 */
+	private void setSearchProfile(PmOrgProfile orgProfile){
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			this.getManagedBean().setSearchMinistryProfile(orgProfile);
+			this.getManagedBean().setSearchPtjGroupProfile(null);
+			this.getManagedBean().setSearchPtjProfile(null);
+		} else if (hasAnyRoleUser(ContractHashSetConst.ROLE_USER_TO_SEARCH) 
+				|| hasAnyRoleUser(ContractHashSetConst.PBQC_ROLES)) {//Enhancement 29418 - shaqimi 21/10/2022
+			this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+			this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
+			if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
+				this.getManagedBean().setSearchPtjGroupProfile(null);
+			}
+			this.getManagedBean().setSearchPtjProfile(orgProfile);
+		}
+	}
+	//#35238 end
+	
+	//#40114 start
+	/**
+	 * Method to check process go to approval status and user has clicked approved button.
+	 * 
+	 * @param outcome The outcome of the operation (e.g., approve).
+	 * @param status The status of the bond waiver.
+	 * @return true if condition met
+	 */
+	private boolean checkStatusApprovalForBondWaiver(String outcome, Long status){
+		return approvalStatus.containsValue(status) && outcome.equals(BpmOutcomeConst.BPM_APPROVE);
+	}
+	//#40114 end
 }
