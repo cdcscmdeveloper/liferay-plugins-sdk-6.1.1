@@ -509,8 +509,13 @@ public class ViewApplHistoryBackingBean extends
 			/*smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) ? getApplicationStatus(sts
 					.getPmStatus(), smAppl) : status);*/
 			// 40121 - START
-			if(smAppl.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED && status.equalsIgnoreCase(SupplierManagementConst.REGISTERED_STATUS)) {
-				smAppl.setWorkflowStatusDesc(SupplierManagementConst.NA_STATUS);
+			String RegisterStatus = ResourceBundleUtils.getMessage("lbl.sm.mof.status.registered",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			String noAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			if(smAppl.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED && 
+					status.equalsIgnoreCase(RegisterStatus)) {
+				smAppl.setWorkflowStatusDesc(noAvailable);
 			} else {
 				//25792  - start
 				smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) || "N/A".equalsIgnoreCase(status) ? getApplicationStatus(sts
