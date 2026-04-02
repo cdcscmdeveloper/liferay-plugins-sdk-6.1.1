@@ -17970,23 +17970,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    long targetStatusId = isForeignCompany ? 
 	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN : 
 	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
-	    
-	    for (PmStatusDesc pmStatusDesc : getManagedBean().getRegStatusDescList()) {
-	    	try{
-	    		log.info(targetStatusId+": TB 37925:APPL NO="+getManagedBean().getSmAppl().getApplNo());
-		    	log.info("TB 37925:language="+language+" vs "+pmStatusDesc.getLanguageCode());
-		    	log.info("TB 37925:pmStatusDesc.getPmStatus().getStatusId()="+pmStatusDesc.getPmStatus().getStatusId());
-	    	}catch(Exception e){
-	    		
-	    	}
-	        if (language.equalsIgnoreCase(pmStatusDesc.getLanguageCode()) 
-	                && pmStatusDesc.getPmStatus().getStatusId() == targetStatusId) {
-	        	log.info("TB 37925:Enter if");
-	            updateRegistrationStatus(pmStatusDesc);
-	            log.info("TB 37925:End if");
-	            break; // Exit loop once match is found
-	        }
-	    }
+	    StatusReqDTO reqDTO = new StatusReqDTO();
+	    reqDTO.setStatusId(targetStatusId);
+	    reqDTO.setLanguageCode(language);
+	    StatusResDTO resDTO = SmServiceLookup.getStatusSO().retrieveStatusDescById(reqDTO);
+	    updateRegistrationStatus(resDTO.getPmStatusDesc());
+//	    for (PmStatusDesc pmStatusDesc : resDTO.getStatusDescList()) {
+//	    	try{
+//	    		log.info(targetStatusId+": TB 37925:APPL NO="+getManagedBean().getSmAppl().getApplNo());
+//		    	log.info("TB 37925:language="+language+" vs "+pmStatusDesc.getLanguageCode());
+//		    	log.info("TB 37925:pmStatusDesc.getPmStatus().getStatusId()="+pmStatusDesc.getPmStatus().getStatusId());
+//	    	}catch(Exception e){
+//	    		
+//	    	}
+//	        if (language.equalsIgnoreCase(pmStatusDesc.getLanguageCode()) 
+//	                && pmStatusDesc.getPmStatus().getStatusId() == targetStatusId) {
+//	        	log.info("TB 37925:Enter if");
+//	            updateRegistrationStatus(pmStatusDesc);
+//	            log.info("TB 37925:End if");
+//	            break; // Exit loop once match is found
+//	        }
+//	    }
 	}
 
 	private void updateRegistrationStatus(PmStatusDesc pmStatusDesc) {
