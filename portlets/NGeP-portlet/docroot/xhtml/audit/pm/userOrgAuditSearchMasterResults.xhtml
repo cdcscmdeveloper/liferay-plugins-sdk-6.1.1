@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:blockUI widgetVar="blkPanelSearchTable" block=":form"
+		trigger="panelSearchId">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	<p:panel header="#{lbl['lbl.pm.audit.result']}" toggleable="true">
+		<p:dataTable id="searchMasters" var="master" rows="10"
+			value="#{searchPMUserOrgAuditBackingBean.searchMaster}"
+			rowIndexVar="index" lazy="true">
+			<ac:paginator for="searchMasters"></ac:paginator>
+			<p:column headerText="#{lbl['lbl.pm.audit.profileOrg.orgAdmin']}" style="white-space: normal!important;" width="10%">
+				<h:outputText value="#{master.masterLabel1}" />
+			</p:column>
+
+			<c:if test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
+				<p:column headerText="#{lbl['lbl.pm.audit.profileOrg.orgCategory']}" style="white-space: normal!important;" width="18%">
+					<h:outputText value="#{master.masterLabel2}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.profileOrg.orgCode']}" style="white-space: normal!important;" width="18%">
+					<h:outputText value="#{master.masterLabel3}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.profileOrg.orgName']}" style="white-space: normal!important;" width="30%">
+					<h:outputText value="#{master.masterLabel4}" />
+				</p:column>
+			</c:if>
+
+			<c:if test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OFO'}">
+				<p:column headerText="#{lbl['lbl.pm.audit.businessRegNo']}" style="white-space: normal!important;" width="20%">
+					<h:outputText value="#{master.masterLabel3}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.financialOrgName']}" style="white-space: normal!important;" width="40%">
+					<h:outputText value="#{master.masterLabel4}" />
+				</p:column>
+			</c:if>
+
+			<c:if test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR'}">
+				<p:column headerText="#{lbl['lbl.pm.organisation.orgType']}" style="white-space: normal!important;" width="13%">
+					<h:outputText value="#{master.masterLabel2}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.orgName']}" style="white-space: normal!important;" width="20%">
+					<h:outputText value="#{master.masterLabel3}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.identificationNo']}" style="white-space: normal!important;" width="13%">
+					<h:outputText value="#{master.masterLabel4}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.userName']}" style="white-space: normal!important;" width="20%">
+					<h:outputText value="#{master.masterLabel5}" />
+				</p:column>
+			</c:if>
+
+			<c:if test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSRG'}">
+				<p:column headerText="#{lbl['lbl.pm.audit.grpCode']}" style="white-space: normal!important;" width="9%">
+					<h:outputText value="#{master.masterLabel2}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.grpName']}" style="white-space:pre-wrap!important;word-break: break-word;width: 15%;">
+					<h:outputText value="#{master.masterLabel3}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.ptjCode']}" style="white-space: normal!important;" width="10%">
+					<h:outputText value="#{master.masterLabel5}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.audit.ptjName']}" style="white-space: normal!important;" width="18%">
+					<h:outputText value="#{master.masterLabel6}" />
+				</p:column>
+			</c:if>
+
+			<p:column headerText="#{lbl['lbl.pm.audit.actionBy']}" style="white-space: normal!important;" width="15%">
+				<h:outputText value="#{master.actionBy}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.Role']}" style="white-space: normal!important;" width="10%">
+				<h:outputText value="#{master.roleName}" />
+			</p:column>
+			<p:column width="5%" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.action']}" />
+					</f:facet>
+				<p:menuButton value="#{lbl['lbl.btn.option']}">
+						<p:menuitem id="panelSearchId" value="#{lbl['lbl.pm.view']}"
+							icon="ui-icon-view"
+							action="#{searchPMUserOrgAuditBackingBean.redirectToDetails(master.masterLabel3,master.pmParameterLvlId,master.createBy,master.roleCode,master.docGroupId,master.masterLabel6,master)}" />
+					</p:menuButton>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
+
+
