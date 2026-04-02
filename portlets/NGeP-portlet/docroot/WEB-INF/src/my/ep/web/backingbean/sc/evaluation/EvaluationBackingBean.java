@@ -7088,14 +7088,6 @@ public void saveComplianceSample() {
 							.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION))
 					&& !this.getManagedBean().isReadOnly()) {
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
-					//#28774 - Start
-					if (!this.getManagedBean().isDemoWip()) {
-						checkMeetingDetailsAndStatus(this.getManagedBean()
-								.getScQtMeetings());
-						checkCommitteeMembersAttendance(this.getManagedBean()
-								.getCommitteeMemberList());
-					}
-					//#28774 - End
 					saveMeetingDtls(false);
 					if (null == this.getManagedBean().getScQtChecklist()) {
 						retrivePresetationDemoCheckList();
