@@ -11547,9 +11547,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		}
 
-		ScQt scQt = this.getManagedBean().getScQt();
-		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(
-				supplierId, scQt);
+		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(supplierId);
 		for (SmSupplierBranch wipSupplierBranch : wipSupplierBranchListDeleted) {
 			int statusFlag = wipSupplierBranch.getRecordStatusFlg();
 			if (statusFlag == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -13198,9 +13196,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
 		//#38679 use new calculation if only has quantity 0 for zonal only
-		boolean isQtyNotNull = null != selectedZoneId
-		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
-		
 		for (ScQtEvaluationResultDtl qualifiedSuppDM : this.getManagedBean().getShortlistedSuppliersByRecommendType()
 				.getList()) {
 			currentEvalStage = qualifiedSuppDM.getQtEvaluationResult().getEvaluationStage();
@@ -13213,6 +13208,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 			break;
 		}
+		
+		boolean isQtyNotNull = null != selectedZoneId
+		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
+		
 		if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)) {
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
@@ -13252,6 +13251,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		}	
 		//#38679 end
+		 //#38151 - cover after save if managebean reset.
+		retrievescoresettings(this.getManagedBean().getScQt());
 		
 		for (ScQtScoreSetting scoresett : this.getManagedBean().getScQt().getScQtScoreSettings()) {
 			if (this.getManagedBean().getEvaluationStageId() == PACKAGE_TYPE_TAB_INDEX
