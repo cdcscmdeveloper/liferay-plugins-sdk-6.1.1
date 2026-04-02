@@ -8,16 +8,20 @@
 
 	<table style="border: 0px; width: 100%">
 		<tr>
-			<td width="100%"><p:blockUI block=":form"
-					widgetVar="blockWidget">
+			<td width="100%">
+				<p:blockUI block=":form" widgetVar="blockWidget">
 					<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
-				</p:blockUI> <p:messages id="speccreatemessages" showDetail="true"
-					showSummary="false"
+				</p:blockUI>
+				<!-- 39753 start --> 
+				<p:messages id="speccreatemessages" showDetail="true"
+					showSummary="false" escape="false"
 					autoUpdate="#{specificationBackingBean.managedBean.autoUpdate}"
-					closable="true" severity="error, info" /> <ui:include
-					src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeButtons.xhtml" />
-				<ui:include src="/xhtml/sc/specification/common/commonHeader.xhtml" /> <ui:include
-					src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMenu.xhtml" /></td>
+					closable="true" severity="error, info" />
+				<!-- 39753 end -->
+				<ui:include src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeButtons.xhtml" />
+				<ui:include src="/xhtml/sc/specification/common/commonHeader.xhtml" /> 
+				<ui:include src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMenu.xhtml" />
+			</td>
 		</tr>
 	</table>
 <!-- #29732 Start - reOpen Fix -->
