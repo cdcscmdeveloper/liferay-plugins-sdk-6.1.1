@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder; //#25138
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections; //#25138
+import java.util.Comparator; //#25138
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +68,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO; //#25138
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -89,7 +92,7 @@ import my.ep.dto.pm.common.language.LanguageReqDTO;
 import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO; //#25138
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -161,6 +164,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.ArrayUtils; //#25138
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1096,6 +1100,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
 	}
 
+	// #21695 start
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getRadioButtonCodeValuesForPartial(String parameterType, String disabled) {
+		return getRadioButtonCodeValuesBySearchBeanForPartial(parameterType, null, disabled);
+	}
+	// #21695 end
+	
 	/**
 	 * Gets the radio button code values by search bean.
 	 *
@@ -1138,6 +1155,45 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+	
+	/**
+	 * Gets the radio button code values by search bean for Partial Offer.
+	 *
+	 * @param parameterType the parameter type
+	 * @param searchBean the search bean
+	 * @return the radio button code values by search bean
+	 */
+	//#21695 -start
+	public SelectItem[] getRadioButtonCodeValuesBySearchBeanForPartial(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean, String disable) {
+		SelectItem[] items = null;
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size()];
+			int i = 0;
+
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				if ("TRUE,".contains(parameterDesc.getPmParameter().getParameterCode())) {
+					items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(),
+							parameterDesc.getCodeName(), "", true);
+				} else {
+					items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(),
+							parameterDesc.getCodeName(), "", false);
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	//#21695 -end
 
 	/**
 	 * Gets the radio button values.
@@ -1648,7 +1704,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return filename;
 	}
-	
+
 	//#29418 start
 	/**
 	 * Gets the medium file name.
@@ -3659,7 +3715,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	// 33410 - END
-
+	
 	// #29466 - START
 	public boolean checkManufacturerCategoryCodes(ScQt scQt) {
 		boolean manufacturer = false;
@@ -3687,12 +3743,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return manufacturer;
 	}
 	// #29466 -end-
-
+	
 	// #29466 -start-
 	private IQTDetailSO getQtDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	// #29466 - END
+	
+	//29021 - start 34865,34866,34867 - 29021 WIP
+	/**
+	 * Evaluate if QT is a wip document. ScoreSetting less than 7 indicate wip document.
+	 *
+	 * @param scQt
+	 * @return wip flag 
+	 */
+	public boolean evaluateWIP(ScQt scQt) {
+		Integer maxScoreSetting = this.getManagedBean().getWipStatusMax();
+		if (maxScoreSetting == null) {
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			maxScoreSetting = evaluationSO.checkWipScoreSettingMax(reqDTO);
+			this.getManagedBean().setWipStatusMax(maxScoreSetting);
+		}
+		return maxScoreSetting < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
+	}
+	//29012 - end 34865,34866,34867 - 29021 WIP
 	
 	//#21387 - Start
 	/**
@@ -3953,6 +4029,45 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return isPersonnelOwnerDirectorNull;
 	}
 	//END #29956
+	
+	//#21695 
+	/** 
+	 * Get parameter id select items by parameter type and search bean
+	 * for dropdown disable/hide sample when partial offer true.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownValuesBySearchBeanForPartial(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
+						parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	//#21695 end
 	
 	// #28854 - Start
 	/**
