@@ -21,6 +21,14 @@
 		onShow="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);"
 		onHide="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]); resetAllData();" 
 		resizable="false">
+		
+		<!-- #40001 - START -->
+		<ui:remove>
+		<p:blockUI block="lovPopup" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		</ui:remove>
+		<!-- #40001 - END -->
 	
 		<f:facet name="header">
 			<h:panelGroup id="lovTitle">#{lbl['lbl.lov.listing']} - #{lovBackingBean.lovBean.title} </h:panelGroup>
@@ -35,14 +43,18 @@
 		<ui:include src="lovSearchPanel.xhtml" />
 
 		<table style="width:100%;"><tr><TD style="text-align:right;">
+			<!-- #40001 - START -->
 			<p:commandButton id="lovSearchBtn"
 				value="#{lbl['lbl.btn.search']}"
 				action="#{lovBackingBean.searchAction}"
 				partialSubmit="true"
+				onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
 				process="searchPanel"
 				update="resultPanel"
 				widgetVar="lovSearch">
-			</p:commandButton>		
+			</p:commandButton>
+			<!-- #40001 - END -->	
 			<p:commandButton
 				value="#{lbl['lbl.btn.reset']}"
 				action="#{lovBackingBean.resetAction}"
