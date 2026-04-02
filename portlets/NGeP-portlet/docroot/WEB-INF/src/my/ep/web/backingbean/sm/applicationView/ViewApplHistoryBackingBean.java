@@ -307,7 +307,12 @@ public class ViewApplHistoryBackingBean extends
 		//#27250 - START SSM CHANGES FOR RESUBMIT
 		resubmitSSM();
 		//#27250 - END SSM CHANGES FOR RESUBMIT
-		
+		//#34397, #34398 - start*SM ONLY*
+		getManagedBean().setDisplayResubmitButton(false);
+		SmApplicationUtil.checkMOFExpiryDate(getManagedBean().getSmAppl().getSmSupplier(), 
+				getManagedBean().getSmAppl().getApplType(), true);
+		getManagedBean().setDisplayResubmitButton(true);
+		//#34397, #34398 - end		
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
