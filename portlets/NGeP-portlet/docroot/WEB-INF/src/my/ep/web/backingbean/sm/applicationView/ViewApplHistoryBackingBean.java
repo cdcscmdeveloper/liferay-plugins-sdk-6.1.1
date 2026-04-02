@@ -508,7 +508,7 @@ public class ViewApplHistoryBackingBean extends
 			smAppl.setWorkflowStatus(sts.getPmStatus());
 			/*smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) ? getApplicationStatus(sts
 					.getPmStatus(), smAppl) : status);*/
-			// 40121 - START
+			// 40121 - START 
 			String RegisterStatus = ResourceBundleUtils.getMessage("lbl.sm.mof.status.registered",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			String noAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
@@ -1467,6 +1467,8 @@ public class ViewApplHistoryBackingBean extends
 		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
 		Long supplierId = appl[11] != null ? Long.valueOf(appl[11].toString()) : 0L;
 		String latestAppl = null;
+		String noAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		
 		if (appl.length > 16) {
 			latestAppl = String.valueOf(appl[16]);
@@ -1474,7 +1476,7 @@ public class ViewApplHistoryBackingBean extends
 			latestAppl =String.valueOf(appl[15]);
 		}
 		
-		if (mofNo.equals(SupplierManagementConst.NA_STATUS) && recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED))) {
+		if (mofNo.equalsIgnoreCase(noAvailable) && recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED))) {
 			MofAccountReqDTO reqMofDTO = new MofAccountReqDTO();
 			reqMofDTO.setSupplierId(supplierId);
 			reqMofDTO.setApplId(Long.parseLong(latestAppl));
