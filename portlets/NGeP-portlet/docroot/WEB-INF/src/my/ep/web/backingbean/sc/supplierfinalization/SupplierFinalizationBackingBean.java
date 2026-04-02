@@ -12992,9 +12992,6 @@ public class SupplierFinalizationBackingBean extends
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
 		//#38679 use new calculation if only has quantity 0 for zonal only
-		boolean isQtyNotNull = null != selectedZoneId
-		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
-		
 		for (ScQtEvaluationResultDtl qualifiedSuppDM : this.getManagedBean().getShortlistedSuppliersByRecommendType()
 				.getList()) {
 			currentEvalStage = qualifiedSuppDM.getQtEvaluationResult().getEvaluationStage();
@@ -13007,6 +13004,10 @@ public class SupplierFinalizationBackingBean extends
 			}
 			break;
 		}
+		
+		boolean isQtyNotNull = null != selectedZoneId
+		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
+		
 		if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)) {
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
@@ -13046,6 +13047,9 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}	
 		//#38679 end
+		
+		 //#38151 - cover after save if managebean reset.
+		retrievescoresettings(this.getManagedBean().getScQt());
 		
 		for (ScQtScoreSetting scoresett : this.getManagedBean().getScQt().getScQtScoreSettings()) {
 			if (this.getManagedBean().getEvaluationStageId() == PACKAGE_TYPE_TAB_INDEX

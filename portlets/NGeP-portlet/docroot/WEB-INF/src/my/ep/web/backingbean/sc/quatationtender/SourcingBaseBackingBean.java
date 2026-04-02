@@ -50,6 +50,7 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.bean.application.NgepApplicationBean; //#27868
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -206,6 +207,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory; //#27868
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.CustomUtils;
@@ -222,6 +224,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.DPConstants; //#27868
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -4370,6 +4373,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											});
 									Map<String, String> map = null;
 									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
+										
+										//#26059 - Start
+										CommonUtils commonUtils = new CommonUtils();
+										q.setClItem(commonUtils.removeItemNameNA(q.getClItem()));
+										//#26059 - End
+										
 										List<Map<String, String>> listPRQuestion = new ArrayList<>();
 										if (q.getSpecQuestionId().equals(
 												sstItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId())
@@ -4478,6 +4487,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
 										List<Map<String, String>> listPRQuestion = new ArrayList<>();
 										map = new HashMap<>();
+										
+										//#26059 - Start
+										CommonUtils commonUtils = new CommonUtils();
+										q.setClItem(commonUtils.removeItemNameNA(q.getClItem()));
+										//#26059 - End
+										
 										if (q.getQuestionType().equalsIgnoreCase(
 												ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)) {
 											if (q.getSpecQuestionId()
@@ -7263,6 +7278,149 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// 26247 - end
 	
+	// 27868 - start
+
+	/**
+	 * Determines whether a procurement type is RPT or standard based on
+	 * creation date.
+	 * 
+	 * @param dataCreatedDate
+	 *            the creation date of the record
+	 * @return RPT type if after effective date; otherwise, standard procurement
+	 *         type
+	 */
+	public static String validateProcurementTypeisRPT(Date dataCreatedDate) {
+		// call from pm app version check current date
+		Date datefromPmAppVersion = NgepApplicationBean.getRPTEffectiveDateForDP();
+		if (dataCreatedDate.after(datefromPmAppVersion)) {
+			return ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+		} else {
+			return ParameterTypeConst.PROCUREMENT_TYPE;
+		}
+	}
+
+	/**
+	 * Get purchase request threshold amount for tool tips
+	 * 
+	 * @return the purchase request threshold amount for tool tips
+	 */
+	protected BigDecimal getToolTipsPRThresholdAmount() {
+		BigDecimal maxProcurementAmt = BigDecimal.ZERO;
+
+		IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IRuleSO.class);
+
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
+		RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+
+		if (ruleResDTO.isSuccessful()) {
+			if (ruleResDTO.getRuleValueList() != null && !ruleResDTO.getRuleValueList().isEmpty()) {
+				maxProcurementAmt = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+			} else {
+				maxProcurementAmt = BigDecimal.valueOf(-1);
+			}
+		}
+
+		return maxProcurementAmt;
+	}
+
+	/**
+	 * Displays info message for PK7 or Special Item procurement types.
+	 * 
+	 * @param param
+	 *            the procurement parameter to evaluate and display related
+	 *            messages
+	 */
+	public void getSpecialItemAndPK7InfoMessage(PmParameter param) {
+		String parameterCode = StringUtils.EMPTY;
+		String parameterType = StringUtils.EMPTY;
+
+		if (param.getParameterCode() != null) {
+			parameterCode = param.getParameterCode();
+		}
+
+		if (param.getParameterType() != null) {
+			parameterType = param.getParameterType();
+		}
+
+		if (param.getParameterType() != null
+				&& param.getParameterType().equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) {
+			if (param.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_760441,
+								new String[] { getParameterDesc(parameterType, parameterCode) },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+			}
+			if (parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_760442, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+		} else if ((param.getParameterType() != null && param.getParameterType().equalsIgnoreCase(
+				ParameterTypeConst.PROCUREMENT_TYPE))
+				&& parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_760441, new String[] { getParameterDesc(parameterType, parameterCode) },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+	}
+
+	/**
+	 * Returns the PK7 justification code based on procurement type.
+	 * 
+	 * @param dataCreatedDate
+	 *            the date used to determine procurement type
+	 * @return justification code for PK7 or PK7W based on type
+	 */
+	public String getParameterCodeForPK7(Date dataCreatedDate) {
+		String parameterType = validateProcurementTypeisRPT(dataCreatedDate);
+		if (parameterType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) {
+			return ReasonCategory.JUSTIFICATION_PK7W.value();
+		} else {
+			return ReasonCategory.JUSTIFICATION_PK7.value();
+		}
+	}
+
+	/**
+	 * Identifies supplier account type parameter code based on supplier account
+	 * category.
+	 * 
+	 * @param suppAccType
+	 *            supplier account type string (e.g., consultant, contractor,
+	 *            basic, G2G)
+	 * @return corresponding parameter code; empty string if type is blank or
+	 *         unknown
+	 */
+	public String identifySupplierAccTypeFromSmAppl(String suppAccType) {
+		if (StringUtils.isBlank(suppAccType)) {
+			return StringUtils.EMPTY;
+		}
+
+		// Normalize input to ignore case
+		if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_CONSULTANT)
+				|| suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_CONTRACTOR)) {
+			return DPConstants.PARAMETER_CODE_MOF_ACCOUNT;
+		} else if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_BASIC)) {
+			return DPConstants.PARAMETER_CODE_BASIC_ACCOUNT;
+		} else if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_G2G)
+				|| suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_GOVT_SELLER)) {
+			return DPConstants.PARAMETER_CODE_G2G_ACCOUNT;
+		}
+
+		return StringUtils.EMPTY;
+	}
+
+	// 27868 - end
 	//#28784 - Start
 	public boolean checkParentRepublishQT(ScQt scQt) {
 		try {
@@ -7270,22 +7428,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			reqDTO.setDocId(scQt.getParentQtId());
+			reqDTO.setDocId(scQt.getQtId());
+			List<Long> includedStatus = new ArrayList<>();
+			includedStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+			reqDTO.setStatusIds(includedStatus);
+			reqDTO.setCurrent(null);
 
-			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO)
-					.getWorkFlowStatus();
-			if (currentWorkFlowStatus != null
-					&& currentWorkFlowStatus.getPmStatus() != null
-					&& currentWorkFlowStatus.getPmStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH)) {
-				return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			List<ScWorkFlowStatus> currentWorkFlowStatus = workFlowStatusSO.retrieveWorkFlowStatus(reqDTO)
+					.getWorkFlowStatusList();
+			// Checking for current QT, if status is 60034L, then it is without Specification changes
+			if (CollectionUtils.isNotEmpty(currentWorkFlowStatus)) {
+				// checking for Parent QT, if WIP then Republished QT will also be WIP
+				return validateSupportedTask(getQTDetailSO().retrieveQtNoByparentQtId(scQt.getParentQtId()),
+						CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "checkParentRepublishQT", scQt.getQtNo(),
 					"checkParentRepublishQT", getUserIdSessionFromLoginId(), e);
 		}
 
-		return Boolean.TRUE;
+		return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 	}
 	//#28784 - End
 
