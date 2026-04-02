@@ -2730,8 +2730,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					ReasonCategory.JUSTIFICATION_AD_HOC.value(), getManagedBean().getJustificationType()));
 		} else if (scRequestNoteDtl.getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(
-					ReasonCategory.JUSTIFICATION_PK7.value(), getManagedBean().getJustificationType()));
+			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(getParameterCodeForPK7(getRequestNoteCreatedDate()),
+					getManagedBean().getJustificationType()));// 27868
 		} // 27868 - start
 		else if (scRequestNoteDtl.getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
