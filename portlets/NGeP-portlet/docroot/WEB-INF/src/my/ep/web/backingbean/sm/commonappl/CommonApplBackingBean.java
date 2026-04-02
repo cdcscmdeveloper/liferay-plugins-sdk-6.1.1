@@ -226,6 +226,7 @@ public class CommonApplBackingBean extends
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
+				appl.setProcessingOfficerProcess(smObj.getProcessingOfficerProcess()); //#39771
 
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set

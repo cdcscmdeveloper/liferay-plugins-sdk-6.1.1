@@ -425,10 +425,7 @@ public class EvaluationMeetingBackingBean extends
 				ParameterHelper.getInstance().getParameterDesc(
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
 						this.getManagedBean().getCommitteeType()));
-
-		List<ScCommitteeMember> newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
-				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 Issue fix 10
-				
+		
 		// #12471 Start
 		IPagingDataModel<PmUser> userSearchCommitteeDataModel = getManagedBean().getUserSearchCommitteeDataModel();
 		UserCommitteeSearchBean userCommitteeSearchBean = getManagedBean().getUserCommitteeSearchBean();
@@ -450,11 +447,7 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setNameRequired(false);
 		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getSelectionTypes();
-		
-		//#35500 Issue fix 10 start
-		newCommitteeAuditTrailList.add(committeeMember);
-		this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeAuditTrailList);
-		//#35500 Issue fix 10 end
+	
 	}
 
 	/**
@@ -522,6 +515,8 @@ public class EvaluationMeetingBackingBean extends
 
 		List<ScCommitteeMember> committeeActivity = getManagedBean()
 				.getCommitteeMemberActivity();
+		List<ScCommitteeMember>	newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
+				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//adli issue 3
 		if (null == committeeActivity) {
 			committeeActivity = new ArrayList<ScCommitteeMember>();
 		}
@@ -745,6 +740,7 @@ public class EvaluationMeetingBackingBean extends
 							}
 						}
 					}
+					newCommitteeAuditTrailList.add(committeeMember);
 				}
 			}
 		}
@@ -753,7 +749,7 @@ public class EvaluationMeetingBackingBean extends
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
-		this.getManagedBean().setNewCommitteeAuditTrailList(localList); //#28895-35500
+		this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeAuditTrailList); //#28895-35500//adli issue 3
 		// 25037 - start
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(),
 				QTSearchBeanConst.SEARCH_GETICPASSPORT);
@@ -1546,8 +1542,16 @@ public class EvaluationMeetingBackingBean extends
 	 */
 	public void onChangeRole(int index,
 			List<ScCommitteeMember> committeeActivity){
+		//#35500 Fix Reopen 6th Jan Start
+		List<ScCommitteeMember>	newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
+				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
 		ScCommitteeMember member = committeeActivity.get(index);
-		if (member.getMemberRoleId() == null){
+		
+		if (member.getMemberRoleId() == null || newCommitteeAuditTrailList.contains(member)){
+			this.chnageMemberRole(index,committeeActivity);
 			this.roleChangedListener(member);
 			return;
 		}
@@ -1559,10 +1563,6 @@ public class EvaluationMeetingBackingBean extends
 		String previousRole = ParameterHelper.getInstance().getParameterDesc(
 				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
 				SourcingConstants.MY_LOCALE);
-		
-		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
-				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
-		List<String> userRoles = new ArrayList<>();
 				
 		if (!mapModifiedRole.isEmpty()) {
 			if (mapModifiedRole.containsKey(member.getPmUser())) {
@@ -1933,7 +1933,9 @@ public class EvaluationMeetingBackingBean extends
 			if (committeeMember.isSelected()) {
 				if (newCommitteeAuditTrailList.contains(committeeMember)){
 					newCommitteeAuditTrailList.remove(committeeMember);
-				}else{
+				}else if (CollectionUtils.isNotEmpty(deletedCommitteeMember) && !deletedCommitteeMember.contains(committeeMember)){//#35500 Fix Reopen 27th Nov
+					deletedCommitteeMember.add(committeeMember);
+				}else if (CollectionUtils.isEmpty(deletedCommitteeMember)){
 					deletedCommitteeMember.add(committeeMember);
 				}
 			}
@@ -2430,6 +2432,7 @@ public class EvaluationMeetingBackingBean extends
 			if (!modified) {
 				return;
 			}
+			evalBB.getManagedBean().setScQtCommittee(this.getManagedBean().getScQtCommittee());//#39637
 			evalBB.submitCommitteeUpdate();
 		} else {
 			submitMettingDetails(outcome);
@@ -2527,8 +2530,7 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
-			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
 			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
@@ -2564,26 +2566,31 @@ public class EvaluationMeetingBackingBean extends
 		for (ScCommitteeMember committeeMember : committeeMembers) {
 			auditResDTO.setActionType(type);
 			if (this.getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
+				auditResDTO.setRoleCode(RoleCode.SC_SECRETARY.value());//#35500 Fix Reopen 27th Nov
 				auditReqList.addAll(populateCommitteeAuditTrail(auditResDTO, committeeMember,
 						QTAuditConstant.AU_SECTION_SC, QTAuditConstant.AU_FIELD_SC_NAME,
 						QTAuditConstant.AU_FIELD_SC_IDENTIFICATION, QTAuditConstant.AU_FIELD_SC_ROLE,qtAuditTrailSO));
 
 			} else if (this.getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
+				auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());//#35500 Fix Reopen 27th Nov
 				auditReqList.addAll( populateCommitteeAuditTrail(auditResDTO, committeeMember,
 						QTAuditConstant.AU_SECTION_EC, QTAuditConstant.AU_FIELD_EC_NAME,
 						QTAuditConstant.AU_FIELD_EC_IDENTIFICATION, QTAuditConstant.AU_FIELD_EC_ROLE,qtAuditTrailSO));
 
 			} else if (this.getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+				auditResDTO.setRoleCode(RoleCode.TEC_SECRETARY.value());//#35500 Fix Reopen 27th Nov
 				auditReqList.addAll(populateCommitteeAuditTrail(auditResDTO, committeeMember,
 						QTAuditConstant.AU_SECTION_TEC, QTAuditConstant.AU_FIELD_TEC_NAME,
 						QTAuditConstant.AU_FIELD_TEC_IDENTIFICATION, QTAuditConstant.AU_FIELD_TEC_ROLE,qtAuditTrailSO));
 
 			} else if (this.getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+				auditResDTO.setRoleCode(RoleCode.FEC_SECRETARY.value());//#35500 Fix Reopen 27th Nov
 				auditReqList.addAll(populateCommitteeAuditTrail(auditResDTO, committeeMember,
 						QTAuditConstant.AU_SECTION_FEC, QTAuditConstant.AU_FIELD_FEC_NAME,
 						QTAuditConstant.AU_FIELD_FEC_IDENTIFICATION, QTAuditConstant.AU_FIELD_FEC_ROLE,qtAuditTrailSO));
 
 			} else if (this.getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
+				auditResDTO.setRoleCode(RoleCode.OC_SECRETARY.value());//#35500 Fix Reopen 27th Nov
 				auditReqList.addAll(populateCommitteeAuditTrail(auditResDTO, committeeMember,
 						QTAuditConstant.AU_SECTION_OC, QTAuditConstant.AU_FIELD_OC_NAME,
 						QTAuditConstant.AU_FIELD_OC_IDENTIFICATION, QTAuditConstant.AU_FIELD_OC_ROLE,qtAuditTrailSO));
@@ -2656,8 +2663,7 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setDocId(this.getManagedBean().getQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
-			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
+			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);			
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
 			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT); //#35500 Flag changes
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);
@@ -2667,18 +2673,23 @@ public class EvaluationMeetingBackingBean extends
 				auditResDTO.setOldValue(entry.getValue().get(1));
 
 				if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
+					auditResDTO.setRoleCode(RoleCode.SC_SECRETARY.value());//#35500 Fix Reopen 27th Nov
 					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_SC);
 					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SC_ROLE);
 				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
-					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_EC);
+					auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_EC);//#35500 Fix Reopen 27th Nov
 					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_EC_ROLE);
 				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
-					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
+					auditResDTO.setRoleCode(RoleCode.TEC_SECRETARY.value());
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_TEC);//#35500 Fix Reopen 27th Nov
 					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_TEC_ROLE);
 				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
-					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
+					auditResDTO.setRoleCode(RoleCode.FEC_SECRETARY.value());
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_FEC);//#35500 Fix Reopen 27th Nov
 					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_FEC_ROLE);
 				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
+					auditResDTO.setRoleCode(RoleCode.OC_SECRETARY.value());//#35500 Fix Reopen 27th Nov
 					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_OC);
 					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_OC_ROLE);
 				}

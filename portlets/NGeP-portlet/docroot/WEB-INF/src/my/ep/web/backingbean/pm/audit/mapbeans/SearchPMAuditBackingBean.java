@@ -390,6 +390,10 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		this.getManagedBean().getSearchBean().setPmUser(null);
 	}
 
+	public void resetActionType() {
+		this.getManagedBean().getSearchBean().setPmUser(null);
+	}
+
 	/**
 	 * resetGetActionBy(
 	 */

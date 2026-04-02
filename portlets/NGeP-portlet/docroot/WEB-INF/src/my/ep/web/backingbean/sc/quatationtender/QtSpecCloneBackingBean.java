@@ -1050,7 +1050,6 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().getQt().setEstimateAmt(null);
 		this.getManagedBean().getQt().setEstimatedAmount(null);
 		//25635&34176-End
-		this.getManagedBean().getQt().setJustificationProcValue(null);//#38396 - reset this value
 		this.getManagedBean().getQt().setCloned(Boolean.TRUE);//34320&25635
 		specificationBackingBean.saveSpecificationCommitteeDtls();
 
@@ -1740,13 +1739,23 @@ public class QtSpecCloneBackingBean extends
 							calculateTotalPackage(this.getManagedBean().getRecommendationPackageScore(), false);
 						}
 						
+						//#40044 -start-
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
 							ScQtScoreSetting itemScoreSetting = copyScoreSettings(recommnendationSetting);
-							this.getManagedBean().setRecommendationScore(itemScoreSetting);
+							//#40044 && 38151 -start-
+							SpecificationBackingBean specifiBB=new SpecificationBackingBean();
+							specifiBB.checkWeightage35384WIP();
+							if(this.getManagedBean().isWeightage35384WIP()){
 							calculateRecommendtechnicalScore(this
 									.getManagedBean().getRecommendationScore());
 							calculateRecommendFinancialScore(this
 									.getManagedBean().getRecommendationScore());
+							}else{
+								itemScoreSetting.setOverallOtherTechnical(BigDecimal.ZERO);	
+								itemScoreSetting.setOverallOtherFin(BigDecimal.ZERO);	
+							}
+							this.getManagedBean().setRecommendationScore(itemScoreSetting);
+							//#40044 && 38151 -start-
 						}
 						
 					}

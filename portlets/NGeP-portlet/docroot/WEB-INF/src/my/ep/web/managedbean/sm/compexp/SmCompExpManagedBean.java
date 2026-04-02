@@ -60,11 +60,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private List<SmCompExpMasterDoc> smCompExpDocList;
 	private String smCompExpFilePath;
 	private List<SmCompExpCatDraft> smCompExpCatDraftList;
-	private boolean smCompExpCatDraftListEmpty;
 	private boolean smCompExpCatDraftNotComplete;
 	private List<PmCategoryL1> supplierMainCatList;
-	private List<PmCategoryL2> supplierSubCatList;
-	private List<PmCategoryL3> supplierSubDivCatList;
 	private boolean selectedAll;
 	private boolean selected;
 	private List<SmCompExpCatDraft> selectedSmCompExpCatDraft;
@@ -218,14 +215,6 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.smCompExpCatDraftList = smCompExpCatDraftList;
 	}
 
-	public boolean isSmCompExpCatDraftListEmpty() {
-		return smCompExpCatDraftListEmpty;
-	}
-
-	public void setSmCompExpCatDraftListEmpty(boolean smCompExpCatDraftListEmpty) {
-		this.smCompExpCatDraftListEmpty = smCompExpCatDraftListEmpty;
-	}
-
 	public boolean isSmCompExpCatDraftNotComplete() {
 		return smCompExpCatDraftNotComplete;
 	}
@@ -240,22 +229,6 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setSupplierMainCatList(List<PmCategoryL1> supplierMainCatList) {
 		this.supplierMainCatList = supplierMainCatList;
-	}
-
-	public List<PmCategoryL2> getSupplierSubCatList() {
-		return supplierSubCatList;
-	}
-
-	public void setSupplierSubCatList(List<PmCategoryL2> supplierSubCatList) {
-		this.supplierSubCatList = supplierSubCatList;
-	}
-
-	public List<PmCategoryL3> getSupplierSubDivCatList() {
-		return supplierSubDivCatList;
-	}
-
-	public void setSupplierSubDivCatList(List<PmCategoryL3> supplierSubDivCatList) {
-		this.supplierSubDivCatList = supplierSubDivCatList;
 	}
 
 	public boolean isSelectedAll() {

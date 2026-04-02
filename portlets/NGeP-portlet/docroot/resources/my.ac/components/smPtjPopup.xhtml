@@ -27,9 +27,9 @@
 								<td><p:spacer height="1" /></td>
 								<td><p:selectOneMenu id="somMinistry"
 										value="#{smPtjPopupMB.ministryProfileId}" style="width:400px">
-										<f:selectItems value="#{smPtjPopupBB.getMinistryDropdown()}" />
+										<f:selectItems value="#{smPtjPopupMB.ministryDD}" />
 										<p:ajax event="change" process="@this" partialSubmit="true"
-											update="somPtjGroup" />
+											update="somPtjGroup" listener="#{smPtjPopupBB.populateJabatanDD}"/>
 									</p:selectOneMenu></td>
 							</tr>
 							<tr>
@@ -39,7 +39,7 @@
 								<td><p:selectOneMenu id="somPtjGroup"
 										disabled="#{smPtjPopupMB.disabledPtjGroup}"
 										value="#{smPtjPopupMB.jabatanProfileId}" style="width:400px">
-										<f:selectItems value="#{smPtjPopupBB.getPtjGroupDropdown()}" />
+										<f:selectItems value="#{smPtjPopupMB.jabatanDD}" />
 										<p:ajax event="change" process="@this" partialSubmit="true" />
 									</p:selectOneMenu></td>
 							</tr>
@@ -47,7 +47,7 @@
 								<td><p:selectOneMenu style="width:100px"
 										id="somPtjCodeName" value="#{smPtjPopupMB.ptjCodeNameKey}">
 										<f:selectItems
-											value="#{smPtjPopupBB.getPtjCodeNameDropDown()}" />
+											value="#{smPtjPopupMB.ptjCodeNameDD}" />
 										<p:ajax event="change" process="@this" partialSubmit="true" />
 									</p:selectOneMenu></td>
 								<td><p:spacer height="1" /></td>

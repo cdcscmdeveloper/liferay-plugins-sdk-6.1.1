@@ -1863,7 +1863,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					review ? filterPSorMOEquipmentBySectionId(svTask.getSmSvTemplate().getSmSvEquipments(),equipmentMO.getParameterId()) : machineSectionMO);
 			context.put("equipmentBeating", 
 					review ? filterPSorMOEquipmentBySectionId(svTask.getSmSvTemplate().getSmSvEquipments(),equipmentPS.getParameterId()) : machineSectionPS);
-			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
+			//40047 - start
+			List<SmMachineDtl> machines = new ArrayList<>();
+			for (SmSvMachine svmach : svTask.getSmSvTemplate().getSmSvMachines()){
+				machines.add(svmach.getSmMachineDtl());
+			}
+			context.put("machineLs", machines);
+			//40047 - end
 			
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
 			
@@ -1874,7 +1880,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				context.put("financialDocLs", financialDocLs);
 				context.put("additionalDocLs", "");
 			}
-			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
+			//40047 - start
+			List<SmMachineDtl> machines = new ArrayList<>();
+			for (SmSvMachine svmach : svTask.getSmSvTemplate().getSmSvMachines()){
+				machines.add(svmach.getSmMachineDtl());
+			}
+			context.put("machineLs", machines);
+			//40047 - end
 			context.put("manufacturingLs", svTask.getSmAppl().getSmManufacturingDtls());
 			
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){

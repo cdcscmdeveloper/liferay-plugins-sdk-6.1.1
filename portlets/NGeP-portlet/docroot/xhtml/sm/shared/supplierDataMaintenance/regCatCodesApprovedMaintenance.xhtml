@@ -145,7 +145,12 @@
 	</div>
 	
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory categoryCodeList="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}" applNo="#{backingBean.managedBean.smAppl.applNo}" />
+	<ac:otherDescriptionHistory
+		categoryCodeList="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}"
+		applNo="#{backingBean.managedBean.smAppl.applNo}"
+		otherDescChangePO="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeSupplier}"  />
 	<ac:otherDescriptionEdit />
   	<!-- 36504 - END -->
     
