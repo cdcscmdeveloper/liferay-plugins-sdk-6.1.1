@@ -8,7 +8,7 @@
 	
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.item']} " escape="false" />
-		<ui:remove> #28777#29729#30432 - Start </ui:remove>
+		<ui:remove> 28777,29729,30432 - Start </ui:remove>
 		<c:choose>
 			<c:when test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
 				<h:outputText styleClass="instruction" escape="false"
@@ -27,7 +27,7 @@
 				</ui:include>
 			</c:otherwise>
 		</c:choose>
-		<ui:remove> #28777#29729#30432 - End </ui:remove>
+		<ui:remove> 28777,29729,30432 - End </ui:remove>
 		<ui:remove>#21692 - start</ui:remove>
 		<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
 			<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />

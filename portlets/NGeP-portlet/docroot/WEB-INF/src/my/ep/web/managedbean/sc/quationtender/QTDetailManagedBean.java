@@ -229,6 +229,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The boolean determine ct panel category */
 	private boolean ctPanelCategory;
+	
+	/** The boolean determining to show the category code panel **/
+	private boolean showCategoryCodePanel;//#29661 #40094
 	//#29661 end
 	
 	// Drop down Listing for Approver
@@ -12439,6 +12442,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCtPanelCategory(boolean ctPanelCategory) {
 		this.ctPanelCategory = ctPanelCategory;
+	}
+	
+	public boolean isShowCategoryCodePanel() {
+		return showCategoryCodePanel;
+	}
+
+	public void setShowCategoryCodePanel(boolean showCategoryCodePanel) {
+		this.showCategoryCodePanel = showCategoryCodePanel;
 	}
 	//#29661 end
 	//#21692 - End
