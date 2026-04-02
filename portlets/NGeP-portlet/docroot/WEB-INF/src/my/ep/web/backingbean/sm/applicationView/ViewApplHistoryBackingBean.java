@@ -509,7 +509,7 @@ public class ViewApplHistoryBackingBean extends
 			/*smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) ? getApplicationStatus(sts
 					.getPmStatus(), smAppl) : status);*/
 			// 40121 - START
-			if(smAppl.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
+			if(smAppl.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED && status.equalsIgnoreCase(SupplierManagementConst.REGISTERED_STATUS)) {
 				smAppl.setWorkflowStatusDesc(SupplierManagementConst.NA_STATUS);
 			} else {
 				//25792  - start
