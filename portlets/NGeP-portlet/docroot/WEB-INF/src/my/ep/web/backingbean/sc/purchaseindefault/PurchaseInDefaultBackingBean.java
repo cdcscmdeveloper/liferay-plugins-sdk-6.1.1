@@ -209,6 +209,15 @@ public class PurchaseInDefaultBackingBean extends
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									message));
 				}
+				
+				//#26059 - Start
+				if (contractItem.getScRequestItem() != null && contractItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(contractItem.getScRequestItem().getCmItem().getItemName());
+					contractItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
+				//#26059 - End
+				
 				scPurchaseInDefault.setContractedItem(contractItem);
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
