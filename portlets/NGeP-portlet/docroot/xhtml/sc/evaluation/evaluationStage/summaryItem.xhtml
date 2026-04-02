@@ -107,7 +107,8 @@
 					</table>
 				</p:column>
 				<ui:remove><!-- 6906 - end --></ui:remove>
-				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				<ui:remove><!-- 38151 start (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 					style="text-align:right">
 					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
 				</p:column>
@@ -189,7 +190,8 @@
 				</p:column> 
 				<ui:remove><!-- 6906 - end  note 233--></ui:remove>
 
-				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				<ui:remove><!-- 38151 start (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 					style="text-align:right">
 					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 				</p:column>

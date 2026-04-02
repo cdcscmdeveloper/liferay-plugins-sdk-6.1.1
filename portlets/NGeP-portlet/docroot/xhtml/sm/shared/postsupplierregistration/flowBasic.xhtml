@@ -21,9 +21,11 @@
 		</div>
 		</c:if>
 		
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowInactive">
-			<div class="bg"><div class="no">#{step2}</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p>
+			<div class="bg"><div class="no">#{step2}</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;</p>
 		</div>
+		<!-- #10729 end -->
 	</c:if>
 	
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2}">
@@ -33,21 +35,22 @@
 		</div>
 		</c:if>
 		
-		
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowActive">
-			<div class="bg"><div class="no">#{step2}</div></div><p>
+			<div class="bg"><div class="no">#{step2}</div></div><p style="top: 1px">
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
 				(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
-				#{lbl['lbl.sm.basic.softcert.request']}
+				#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;
 			</c:if></p>
 			
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertProsseingStatus()) and 
 						(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus())}">
-				<p><p:commandLink styleClass="current-link" value="#{lbl['lbl.sm.basic.softcert.request']}" 
+				<p style="top: 1px"><p:commandLink styleClass="current-link" value="#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;" 
 				action="#{postSupplierRegBB.pageNavigate}" /></p>
 			</c:if>
 
 		</div>
+		<!-- #10729 end -->
 	</c:if>
 	</div>
 	</div>

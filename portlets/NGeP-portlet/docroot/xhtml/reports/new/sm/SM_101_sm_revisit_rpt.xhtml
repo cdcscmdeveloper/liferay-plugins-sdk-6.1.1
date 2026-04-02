@@ -12,10 +12,11 @@
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.rpt.cmpName']}" /></td>
 			<td class="tdContent"><ac:lov id="lovSupOrg"
-					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REVISIT" readonly="true"
-					headerText="#{lbl['lbl.rpt.cmpName']}"
-					value="#{smRevisitRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					saveObject="smRevisitRptBB.managedBean.selectedOrgProfile"
+					lovId="SUPPLIER_REVISIT" readonly="true"
+					headerText="#{lbl['lbl.rpt.cmpName']}" 
+					value="#{smRevisitRptBB.managedBean.selectedSupplier.companyName}"
+					saveObject="smRevisitRptBB.managedBean.selectedSupplier"
+					conditionField="#{smRevisitRptBB.getConditionFieldsCompName()}"
 					displayResultWhenFirstLoad="true" displayResultWhenReset="true" /></td>
 		</tr>
 		<tr>

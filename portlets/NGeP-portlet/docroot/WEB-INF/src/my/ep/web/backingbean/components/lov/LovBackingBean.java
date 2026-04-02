@@ -686,9 +686,16 @@ public class LovBackingBean implements Serializable {
 		this.setSearchOptions(new ArrayList<SelectItem>());
 		if(lovBean.getColumns() != null && lovBean.getColumns().size() > 0) {
 			for(LovColumnBean column : lovBean.getColumns()) {
-				if(column.isSearchable()){
-					SelectItem item = new SelectItem(column.getColumnName(), column.getColumnTitle());
+				//Start Fix - #29416
+				SelectItem item = new SelectItem();
+				if (column.isSearchable()) {
+					if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+						item = new SelectItem(column.getSearchColumn(), column.getColumnTitle());
+					} else {
+						item = new SelectItem(column.getColumnName(), column.getColumnTitle());
+					}
 					this.getSearchOptions().add(item);
+				// End Fix - #29416
 				}
 			}
 		}
@@ -788,6 +795,7 @@ public class LovBackingBean implements Serializable {
 	
 			}
 		} else	if(this.getLovBean().getSelectionMode().equalsIgnoreCase("multiple")) {
+			lovBean.setUnSelectAndCancel(false); //Fix - #29416
 			//20200909@akmal - Enhancement28951 - Start
 			if(!persistedEntities.isEmpty()) selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
 			//20200909@akmal - Enhancement28951 - End
@@ -797,6 +805,7 @@ public class LovBackingBean implements Serializable {
 			if (this.getSelectedEntities().isEmpty() && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 				ctReportBB.resetSearch();
 				ccContractItemMonitoringRptBB.resetSearch();
+				ccContractItemUsageMonitoringDtlsReportBB.resetSearch(); //#34889
 			}
 			// End - #29416			
 			if(selectedEntities != null && !selectedEntities.isEmpty()) {
@@ -895,6 +904,7 @@ public class LovBackingBean implements Serializable {
 	//20200909@akmal - Enhancement28951 - Start
 	//Start - #29416
 	public void onUnselectRow(UnselectEvent event){
+		lovBean.setUnSelectAndCancel(true);
 		Object value = event.getObject();
 		if(value instanceof PmBusinessNature){
 			Long key = ((PmBusinessNature) value).getBusinessNatureId();

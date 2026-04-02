@@ -96,6 +96,8 @@ import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 //#28895_35501 End
+//#28720
+import org.primefaces.context.RequestContext;
 
 
 /**
@@ -1789,6 +1791,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		return checkFactUser;
 	}
 	//28838 - end
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getSelectedUser().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getSelectedUser().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	// #28895_35501 Start - AUDIT TRAIL SM
 	private boolean isSmAuditUser() {
 		String[] roles = { RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(), RoleCode.G2G_SUPPLIER_USER.value(),

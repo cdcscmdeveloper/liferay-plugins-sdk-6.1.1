@@ -101,6 +101,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
 	private Map<Long, PmUser> userMap;
 	private List<CtCircularPidReason> ctCircularPidReasons;
+	private List<CtCircularPidReason> selectedPidReason; //#39594
 	private int attachFileIndex;//#28713
 
 
@@ -758,6 +759,9 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	 * @return the ctCircularPidReasons
 	 */
 	public List<CtCircularPidReason> getCtCircularPidReasons() {
+		if (ctCircularPidReasons == null) {
+			ctCircularPidReasons = new ArrayList<>(); //#39594
+		}
 		return ctCircularPidReasons;
 	}
 
@@ -862,5 +866,15 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.outComesFromTaskList = outComesFromTaskList;
 	}
 	//#33533 end
+	
+	// #39594 - Start
+	public List<CtCircularPidReason> getSelectedPidReason() {
+		return selectedPidReason;
+	}
+
+	public void setSelectedPidReason(List<CtCircularPidReason> selectedPidReason) {
+		this.selectedPidReason = selectedPidReason;
+	}
+	// #39594 - End
 
 }

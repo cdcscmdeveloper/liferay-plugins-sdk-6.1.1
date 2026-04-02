@@ -58,6 +58,11 @@
 					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}" update="@form">
 						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
+					<!-- #30014 Start -->
+					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.category.code']}" update="@form">
+						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="2" />
+					</p:menuitem>
+					<!-- #30014 End -->
 				</p:tabMenu>
 			</td>
 			<td width="80%">
@@ -67,6 +72,11 @@
 				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 1}">
 					<ui:include src="/xhtml/ct/circular/panel/item.xhtml" />
 				</p:outputPanel>
+				<!-- #30014 Start -->
+				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 2}">
+					<ui:include src="/xhtml/ct/circular/panel/categoryCode.xhtml" />
+				</p:outputPanel>
+				<!-- #30014 End -->
 			</td>
 		</tr>
 		</table>

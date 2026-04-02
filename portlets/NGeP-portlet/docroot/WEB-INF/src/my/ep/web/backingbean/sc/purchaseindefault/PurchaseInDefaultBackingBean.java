@@ -93,6 +93,7 @@ import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.purchaseindefault.PurchaseInDefaultManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -208,6 +209,15 @@ public class PurchaseInDefaultBackingBean extends
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									message));
 				}
+				
+				//#26059 - Start
+				if (contractItem.getScRequestItem() != null && contractItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(contractItem.getScRequestItem().getCmItem().getItemName());
+					contractItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
+				//#26059 - End
+				
 				scPurchaseInDefault.setContractedItem(contractItem);
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
@@ -258,6 +268,14 @@ public class PurchaseInDefaultBackingBean extends
 				} else {
 					scPurchaseInDefault.setPanelItem(ctPanelItem);
 				}
+				
+				//#26059 - Start
+				if (ctPanelItem.getScRequestItem() != null && ctPanelItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(ctPanelItem.getScRequestItem().getCmItem().getItemName());
+					ctPanelItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
+				//#26059 - End
 
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
 				purchaseInDefaultReqDTO.setPanelItem(ctPanelItem);
@@ -1631,6 +1649,13 @@ public class PurchaseInDefaultBackingBean extends
 		}	
 		//#9133 - end
 		
+		// #26059 - Start
+		CommonUtils commonUtils = new CommonUtils();
+		purchaseInDefault.getPanelItem().setItemName(
+				commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem()
+						.getItemName()));
+		// #26059 - End
+		
 		finaliseEditableRemark(purchaseInDefault);//#31603
 
 		initializeApproverGroup();
@@ -2667,6 +2692,22 @@ public class PurchaseInDefaultBackingBean extends
 				} else{ //panel item
 					getManagedBean().setCheckContractItem(Boolean.FALSE);
 				}
+				
+				//#26059 - Start
+				CatalogueBackingBean backingBean = new CatalogueBackingBean();
+
+				// Handle Panel Item
+				if (purchaseInDefault.getPanelItem() != null
+						&& purchaseInDefault.getPanelItem().getScRequestItem() != null) {
+					backingBean.cleanItemNameNA(purchaseInDefault.getPanelItem().getScRequestItem().getCmItem());
+				}
+
+				// Handle Contracted Item
+				if (purchaseInDefault.getContractedItem() != null
+						&& purchaseInDefault.getContractedItem().getScRequestItem() != null) {
+					backingBean.cleanItemNameNA(purchaseInDefault.getContractedItem().getScRequestItem().getCmItem());
+				}
+				//#26059 - End
 
 				getManagedBean().setPurchaseInDefault(purchaseInDefault);
 				initializeApproverGroup();

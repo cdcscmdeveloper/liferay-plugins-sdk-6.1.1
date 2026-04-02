@@ -7,6 +7,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- #25726/25725 - Check and display Italic value -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
 	
 
 	<ui:define name="contentSection">
@@ -37,9 +43,10 @@
 					style="white-space: normal;">
 					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].priceType)}
 				</p:column>
-				
+				<!-- #25726/25725 - Check and display Italic value -->
 				<p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"
-					style="width:10%">
+					style="width:10%"
+					styleClass="#{dpLOABackingBean.checkItalicCodeNameForMy(scPurchaseRequest.requestNoteDtls[0].fulfilmentType.parameterId) ? 'italic-item' : ''}">
 					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].fulfilmentType)}
 				</p:column>
 				
