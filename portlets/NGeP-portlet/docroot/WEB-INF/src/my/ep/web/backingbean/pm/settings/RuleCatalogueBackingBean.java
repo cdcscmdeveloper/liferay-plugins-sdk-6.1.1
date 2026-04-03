@@ -6061,7 +6061,7 @@ public class RuleCatalogueBackingBean extends
 	// 29650 - end
 	// #30672, #29669 - 29/01/2023 - Remove this code
 	
-	//#34397, #34398 , #35509 - start
+	//#34397, #34398 , #35509, #27827 - start
 	/**
 	 * @param type
 	 * @return true for MOF renew period rule types
@@ -6076,6 +6076,7 @@ public class RuleCatalogueBackingBean extends
 		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
 				getManagedBean().getMainZones() : getManagedBean().getZoneList();
 	}
+	// #27827 - end
 	
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
