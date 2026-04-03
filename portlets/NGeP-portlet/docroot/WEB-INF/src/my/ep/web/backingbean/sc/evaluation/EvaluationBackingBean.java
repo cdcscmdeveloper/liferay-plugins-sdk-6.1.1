@@ -5644,14 +5644,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			// #28784 - End
 			{
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
-					//#28784 - Start
-					if (!this.getManagedBean().isDemoWip()) {
-						checkMeetingDetailsAndStatus(this.getManagedBean()
-								.getScQtMeetings());
-						checkCommitteeMembersAttendance(this.getManagedBean()
-								.getCommitteeMemberList());
-					}
-					//#28784 - End
 					saveMeetingDtls(false);
 					if (null == this.getManagedBean().getScQtChecklist()) {
 						retrivePresetationDemoCheckList();
@@ -6965,12 +6957,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							}
 						}
 					}
-					//#28784 - Start
-					if (checkDemoWIP()) {
-						checkMeetingDetailsAndStatus(this.getManagedBean()
-								.getScQtMeetings());
-					}
-					//#28784 - End
+					checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());//#28784 remove wip checking
 					// Bug #36747@Syazani 20/01/2025 -- Start
 				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
 						.getManagedBean().getCommitteeType())
