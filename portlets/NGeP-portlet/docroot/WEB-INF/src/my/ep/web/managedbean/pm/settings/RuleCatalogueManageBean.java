@@ -144,10 +144,11 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Date minDate = null; //[#22119]
 	private String ruleType;  //#22113
 	private boolean LOPOSelected;
-	/* 27827 - START */
+	// #27827 - START
 	private List<PmZone> zoneList;
 	private Long selectedZoneId;
-	/* 27827 - END */
+	private List<PmZone> mainZones;
+	// #27827 - END
 
 	// #36738 Start
 	private List<PmConfigRuleDesc> originalConfigRuleDescList;
@@ -1506,6 +1507,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.LOPOSelected = LOPOSelected;
 	}
 	
+	// #27827 - START
 	public List<PmZone> getZoneList() {
 		return zoneList;
 	}
@@ -1521,6 +1523,15 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSelectedZoneId(Long selectedZoneId) {
 		this.selectedZoneId = selectedZoneId;
 	}
+	
+	public List<PmZone> getMainZones() {
+		return mainZones;
+	}
+	
+	public void setMainZones(List<PmZone> mainZones) {
+		this.mainZones = mainZones;
+	}
+	// #27827 - END
 
 	// #36738 Start
 	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {

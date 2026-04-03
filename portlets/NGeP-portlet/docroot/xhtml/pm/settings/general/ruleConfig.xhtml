@@ -391,7 +391,7 @@
 					style="width: 250px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 					<f:selectItems var="zoneLs"
-						value="#{ruleCatalogueBackingBean.managedBean.zoneList}"
+						value="#{ruleCatalogueBackingBean.getZones()}"
 						itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}"/>
 					<p:ajax partialSubmit="true" process="@this" update="@this, zoneCodeMsg"/>
 				</p:selectOneMenu>
