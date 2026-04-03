@@ -55,6 +55,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 
 	private static final String ORG_TYPE_CODE_PARAM = "orgTypeCode.parameterCode^";
 	private static final String RECORD_STATUS_PARAM = "|recordStatus^1";
+	private boolean isValidationError = false;
 
 	// Use Set for faster lookup
 	private static final Set<RoleCode> ENABLE_FIELD_ROLE = EnumSet.of(RoleCode.SYS_ADMIN, RoleCode.AUDITOR_INTERNAL,
@@ -86,7 +87,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * @param params
 	 */
 	public void generateReport(LinkedHashMap<String, String> params) { // NOSONAR - follow exact same return type the parent declares
-		if (!reportValidationFields()) {
+		if (!isValidationError){
 			generateDpReport(params);
 		}
 	}
@@ -131,44 +132,60 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		validateCriteria();
 
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_MINISTRY, getManagedBean().getSelectedMinistry().getOrgProfileId().toString());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_KUMPULAN_PTJ, getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId().toString());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_PTJ, getManagedBean().getSelectedPTJ().getOrgProfileId().toString());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract()? DpReportConst.YES_FLAG:DpReportConst.NO_FLAG);
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_CIRCULAR_NO, getManagedBean().getCircularNo());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_STATUS, getManagedBean().getDpStatus());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_CODE, getManagedBean().getItemCode());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_PROCUREMENT_TYPE, getManagedBean().getProcurementType());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_NAME, getManagedBean().getItemName());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_REASON, getManagedBean().getReason());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_RN_NO, getManagedBean().getRnNo());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_GROUP, getManagedBean().getGroupBy());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_FINANCIAL_YEAR, getManagedBean().getFinancialYear());
-
-		if (MapUtils.isNotEmpty(map)) {
-			// mandatory map values
-			if (getManagedBean().getCentralPanelContract() != null) {
-				if (getManagedBean().getCentralPanelContract()) {
-					// panel
-					this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_PANEL);
-					this.getManagedBean().setReportCode(DpReportConst.DP_ITEM_EXCEED_THRESHOLD_PANEL);
-				} else {
-					// non panel
-					this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL);
-					this.getManagedBean().setReportCode(DpReportConst.DP_ITEM_EXCEED_THRESHOLD_NON_PANEL);
-				}
+		if (!isValidationError) {
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_MINISTRY, getManagedBean().getSelectedMinistry()
+					.getOrgProfileId().toString());
+			if (getManagedBean().getSelectedKumpulanPTJ() != null) {
+				addIfNotEmpty(map, DpReportConst.PARAM_KEY_KUMPULAN_PTJ, getManagedBean().getSelectedKumpulanPTJ()
+						.getOrgProfileId().toString());
 			}
 
-			map.put(DpReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
-			map.put(DpReportConst.PARAM_KEY_REPORT_ID, getManagedBean().getReportCode());
-			map.put(DpReportConst.PARAM_KEY_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
-		} else {
-			throw new EpException(MessageConst.ERROR_REPORT_780003);
-		}
+			if (getManagedBean().getSelectedPTJ() != null) {
+				addIfNotEmpty(map, DpReportConst.PARAM_KEY_PTJ, getManagedBean().getSelectedPTJ().getOrgProfileId()
+						.toString());
+			}
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean()
+					.getCentralPanelContract() ? DpReportConst.YES_FLAG : DpReportConst.NO_FLAG);
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_CIRCULAR_NO, getManagedBean().getCircularNo());
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_STATUS, getManagedBean().getDpStatus());
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_CODE, getManagedBean().getItemCode());
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_PROCUREMENT_TYPE, getManagedBean().getProcurementType());
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_NAME, getManagedBean().getItemName());
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_REASON, getManagedBean().getReason());
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_RN_NO, getManagedBean().getRnNo());
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_GROUP, getManagedBean().getGroupBy());
+			addIfNotEmpty(map, DpReportConst.PARAM_KEY_FINANCIAL_YEAR, getManagedBean().getFinancialYear());
 
+			if (MapUtils.isNotEmpty(map)) {
+				constructReportCodeAndName(map);
+			} else {
+				throw new EpException(MessageConst.ERROR_REPORT_780003);
+			}
+		}
 		return map;
 	}
 
+	/**
+	 * @param map
+	 */
+	private void constructReportCodeAndName(LinkedHashMap<String, String> map) {
+		// mandatory map values
+		if (getManagedBean().getCentralPanelContract() != null) {
+			if (getManagedBean().getCentralPanelContract()) {
+				// panel
+				this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_PANEL);
+				this.getManagedBean().setReportCode(DpReportConst.DP_ITEM_EXCEED_THRESHOLD_PANEL);
+			} else {
+				// non panel
+				this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL);
+				this.getManagedBean().setReportCode(DpReportConst.DP_ITEM_EXCEED_THRESHOLD_NON_PANEL);
+			}
+		}
+
+		map.put(DpReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
+		map.put(DpReportConst.PARAM_KEY_REPORT_ID, getManagedBean().getReportCode());
+		map.put(DpReportConst.PARAM_KEY_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
+	}	
 	/**
 	 * Adds non-empty string to map.
 	 * 
@@ -184,22 +201,6 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		}
 	}
 
-	/**
-	 * Adds non-null object to map as key-value pair.
-	 * 
-	 * Safely converts object to String via toString() and adds to map.
-	 * No-op if object is null.
-	 * 
-	 * @param map target map to populate
-	 * @param key map key
-	 * @param obj value to add (converted to String if non-null)
-	 */
-	private void addIfNotNull(Map<String, String> map, String key, Object obj) {
-		if (obj != null) {
-			map.put(key, obj.toString());
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -208,7 +209,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 */
 	@Override
 	public void validateCriteria() {
-		// Intentionally leave blank
+		isValidationError = reportValidationFields();
 	}
 
 	/**
