@@ -144,7 +144,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmZone> zoneList;
 	private Long selectedZoneId;
 	/* 27827 - END */
-	//#34397, #34398
+	//#34397, #34398, #27827
 	private List<PmZone> mainZones;
 
 	/************ AUDIT #28895_35509 *************/
@@ -1553,6 +1553,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.selectedZoneId = selectedZoneId;
 	}
 	
+	// #27827 - START
 	public List<PmZone> getMainZones() {
 		return mainZones;
 	}
@@ -1560,6 +1561,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setMainZones(List<PmZone> mainZones) {
 		this.mainZones = mainZones;
 	}
+	// #27827 - END
 
 	/************ AUDIT #28895_35509 *************/
 	public FeeExemptionResDTO getResDTO() {
