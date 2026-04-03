@@ -63,8 +63,6 @@ public class MergeDocx {
 		TplDocMaster tplDocMaster = templateSO.getTemplateMaster(reqDTOS).getTplDocMaster();
 
 		String processType = tplDocMaster.getProcessType().getParameterCode();
-		// String procurementCategory =
-		// tplDocMaster.getProcurementCategory().getParameterCode();
 		String templateType = tplDocMaster.getTemplateType().getParameterCode();
 
 		if (!tplDocMaster.isRecordStatus() || processType == null || templateType == null) {
@@ -88,7 +86,9 @@ public class MergeDocx {
 		}
 		return false;
 	}
+	// #38714 -end-
 
+	// #38714 -start-
 	/**
 	 * @param text
 	 * @param indexKey
@@ -107,7 +107,6 @@ public class MergeDocx {
 		if (templateLevel > 3) {
 			width = width + 1;
 		}
-
 		if (templateLevel == 1) {
 			newText = "<table width=\"100%\"><tr>" + "<td width=\"5%\" valign=\"top\">" + indexKey + "</td>"
 					+ "<td width=\"95%\">" + text + "</td>" + "</tr></table>";
@@ -119,9 +118,8 @@ public class MergeDocx {
 
 		return newText;
 	}
-
 	// #38714 - End
-	
+
 	public static void getDocSectionList(int level,TreeNode node,List<TplDocSection> inputStreamList){
 		if(node != null && node.getData() != null){
 			for(TreeNode parent : node.getChildren()){
@@ -150,8 +148,7 @@ public class MergeDocx {
 		String combinedContentHtml="";
 		Document doc = null;
 		Elements elements = null;
-		// #38714
-		boolean isNeedToModify = isNeedToModify(inputStreamList.get(0).getTplDocMaster().getDocMasterId());
+		boolean isNeedToModify = isNeedToModify(inputStreamList.get(0).getTplDocMaster().getDocMasterId()); // #38714
 
 		for (TplDocSection obj : inputStreamList) {
 			String text = "";
@@ -175,7 +172,7 @@ public class MergeDocx {
 				
 				text += obj.getSectionContent();
 			}
-						
+
 			// #38714 - Start
 			if (isNeedToModify) {
 				text = qtInsertNumberingAndIndentHtml(text, obj.getSectionNumber() != null ? obj.getSectionNumber()
@@ -183,7 +180,6 @@ public class MergeDocx {
 			} else {
 				text = insertNumberingAndIndentHtml(text,
 						obj.getSectionNumber() != null ? obj.getSectionNumber() : " ", obj.getSectionLevel());
-
 			}
 			// #38714 - End
 
