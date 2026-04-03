@@ -224,7 +224,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	// Start Fix - #30045
 	private boolean isDefaultMinistryExist = false;
 	private boolean amendProcess = false;
-	// Start Fix - #30045
+	// End Fix - #30045
 	/**
 	 * @return the fileDirectory
 	 */
