@@ -760,6 +760,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void showConfirmDialog() {
 		validateRequestSoftcert();
+		getManagedBean().setAgreeDeclare(false);	//#34400
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
 
