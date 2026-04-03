@@ -18790,7 +18790,11 @@ public class SmApplicationBackingBean extends
 	 * @return String
 	 */
 	public String setRenewalTnc(String applicationType){
-		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		// #34398 Start*SM ONLY*
+		this.getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
+		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForSupplier(ParameterConst.NEW_SM_APPLN_FOR_RENEW,
+				this.getManagedBean().getSmSupplier().getSupplierId());
+		// #34398 End*SM ONLY*
 		
 		String word = NumberWordUtil.changeNumberToWord(renewalPeriod, new FacesScopes().getUserLocale());
 		String label = "";
