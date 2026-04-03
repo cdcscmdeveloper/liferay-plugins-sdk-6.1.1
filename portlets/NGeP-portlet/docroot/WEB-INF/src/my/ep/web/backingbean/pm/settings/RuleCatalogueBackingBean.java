@@ -5593,7 +5593,7 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	// 29650 - end
-	//#34397, #34398 - start
+	//#34397, #34398, #27827 - start
 	/**
 	 * @param type
 	 * @return true for MOF renew period rule types
@@ -5601,8 +5601,9 @@ public class RuleCatalogueBackingBean extends
 	public boolean isRenewTypes(String type) {
 		return RuleTypeConst.RENEW_PERIOD_UPDATE.equals(type) || RuleTypeConst.RENEW_PERIOD_ADD_CAT.equals(type)
 			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
-			|| RuleTypeConst.RENEW_PERIOD.equals(type);
+			|| RuleTypeConst.RENEW_PERIOD.equals(type) || RuleTypeConst.PTJ_CODE.equals(type);
 	}
+	// #27827 - end
 	
 	public List<PmZone> getZones() {
 		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
