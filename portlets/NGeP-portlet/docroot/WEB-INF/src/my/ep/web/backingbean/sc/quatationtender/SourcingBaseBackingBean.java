@@ -824,6 +824,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
+	//38343 - start
+	protected IDocumentSO getDocumentSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+	}
+	//38343 - end
+
 	/**
 	 * To initialize remarks.
 	 * 
@@ -2726,7 +2732,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected void updatePublishClosingDate(ScQt scQt) {
 		Date clsDate = null;
-		if (null != scQt.getProposalStartDate()) {
+
+		if (null != scQt.getProposalStartDate()
+		// 25635&33724 -start-
+				&& null != scQt.getPublishPeriod()
+		// 25635&33724 -end-
+		) {
 			clsDate = DateUtils.addDays(scQt.getProposalStartDate(),
 					scQt.getPublishPeriod());
 		} 
@@ -2758,8 +2769,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			clsDate = DateUtils.setDefaultDateTime(clsDate);
 			// 25635&33724-proposal validity days null -start-  Bug #36221
 			if (null != scQt.getQtValidityPeriod()) {
-				proposalValidityEndDate = DateUtils.addDays(clsDate,
-						scQt.getQtValidityPeriod());
+				proposalValidityEndDate = DateUtils.addDays(clsDate, scQt.getQtValidityPeriod());
 			} // 25635&33724-proposal validity days null Bug #36221
 		}
 		scQt.setProposalValidityEndDate(proposalValidityEndDate);
@@ -6489,6 +6499,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return CheckStatus.contains(currentStatusId);
 	}
 	// 11104-End
+	
+	// 25635-start
+	public boolean isQTCloneStatus(Long currentStatusId) {
+		List<Long> CheckStatus = new ArrayList<Long>();
+		CheckStatus.add(QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER);
+		CheckStatus.add(QTStatusConst.QT_CANCELED_DUETO_PROPOSALVALIDITY_EXPIRED);
+		CheckStatus.add(QTStatusConst.QT_CLOSE_PERMANENTLY);
+		CheckStatus.add(QTStatusConst.QT_CANCELED_DUETO_MINISTRY_RESTRUCTING);
+		CheckStatus.add(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT);
+
+		return CheckStatus.contains(currentStatusId);
+	}
+	// 25635-End
 
 	// 11104_newEndorseStart
 	/***
