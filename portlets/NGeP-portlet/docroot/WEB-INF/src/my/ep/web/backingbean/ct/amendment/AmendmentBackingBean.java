@@ -131,6 +131,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote; //Fix - #30045
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -1258,6 +1259,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			ctBackingBean.getManagedBean().setDirectPurchase(isDirectPurchase());//#40005
+			// Start Fix - #30045
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getQtType() != null) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getQtType()
+						.getParameterCode().equalsIgnoreCase(ParameterTypeConst.QUOTATION_TENDER_TYPE)
+						&& ctBackingBean.newProcurement() != null) {
+					ctBackingBean.getManagedBean().setNewPk7(true);
+				} else {
+					ctBackingBean.getManagedBean().setNewPk7(false);
+				}
+			} else {
+				// Start Fix - #30045 || #27551 - add null checking
+				ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(
+						ctBackingBean.getManagedBean(), "contractVer.ctContractItems[0].scRequestItem.requestNote");
+				if (scRequestNote != null) {
+					String procType = EntityHelper
+							.getStringNestedProperty(ctBackingBean.getManagedBean(),
+									"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType");
+					if ((procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE) || procType
+							.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) // End Fix - #30045
+							&& ctBackingBean.newJustification() != null) {
+						ctBackingBean.getManagedBean().setNewPk7(true);
+					} else {
+						ctBackingBean.getManagedBean().setNewPk7(false);
+					}
+				}
+			}
+			// End Fix - #30045
 
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
