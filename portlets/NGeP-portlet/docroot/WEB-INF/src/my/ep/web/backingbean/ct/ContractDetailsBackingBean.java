@@ -2876,6 +2876,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		ctBB.getManagedBean().setAmendFromViewPage(true); // #15851
 		ctBB.getManagedBean().setViewSCL(false);//34142, 15851 to reset viewSCL before anything
+		ctBB.getManagedBean().setAmendProcess(true);//Fix - #30045
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("amendManagedBean", null);//#15851
 		AmendmentBackingBean amendBB = new AmendmentBackingBean();
 		amendBB.getManagedBean().setSelectedTabIndex(0);
@@ -2988,6 +2989,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
 			ctBB.getManagedBean().setCtAddress(null);
+			ctBB.getManagedBean().setAmendProcess(false);//Fix - #30045
 			setValidateContractField(reqDTO);
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBB.chkServiceTaxAlert();
