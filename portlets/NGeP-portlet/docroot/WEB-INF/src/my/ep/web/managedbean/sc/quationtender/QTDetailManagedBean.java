@@ -1835,6 +1835,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean updateCatInPm; //#29732
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
+	private boolean resetHistoryCatCode;
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
@@ -11736,6 +11737,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setUpdateCatInPm(boolean updateCatInPm) {
 		this.updateCatInPm = updateCatInPm;
+	}
+	
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
 	}
 	//#29732
 }

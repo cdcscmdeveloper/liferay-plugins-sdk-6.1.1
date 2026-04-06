@@ -338,12 +338,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	private	Object[] selectedPrDtls;
 	
-	//26284 - Start
+	// 26284 - Start
 	private List<DisciplinaryActionVO> disciplineVOs;
-	private String disciplinaryActionstartDate;
+	private List<DisciplinaryActionVO> disciplineVOListDp;
+	private String disciplinaryActionStartDate;
 	private String disciplinaryActionEndDate;
 	private boolean disciplinaryActionWarning = false;
-	//26284 - End
+	private boolean disciplinaryActionCancelRegistration = false;
+	private boolean disciplinaryActionBlacklist = false;
+	private boolean disciplinaryActionPendingTransaction = false;
+	private boolean disciplinaryActionDeletedDue = false;
+	private String popupMessage;
+	// 26284 - End
 	
 	//12183 - Start
 	private boolean pidValidityExpired = false;
@@ -2023,40 +2029,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.selectedPrDtls = selectedPrDtls;
 	}
 	
-	//26284 - Start
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
-	}
-
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
-	}
-
-	public String getDisciplinaryActionStartDate() {
-		return disciplinaryActionstartDate;
-	}
-
-	public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
-		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
-	}
-
-	public String getDisciplinaryActionEndDate() {
-		return disciplinaryActionEndDate;
-	}
-
-	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
-		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
-	}
-		
-	public boolean isDisciplinaryActionWarning() {
-		return disciplinaryActionWarning;
-	}
-
-	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
-		this.disciplinaryActionWarning = disciplinaryActionWarning;
-	}
-	//26284 - End
-	
 	//12183 - Start
 	public boolean isPidValidityExpired() {
 		return pidValidityExpired;
@@ -2292,4 +2264,156 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.scRequestNoteDtl = scRequestNoteDtl;
 	}
 	// #25790 - end
+	
+	// #26284 - Start
+	/**
+	 * @return the disciplinaryActionCancelRegistration
+	 */
+	public boolean isDisciplinaryActionCancelRegistration() {
+		return disciplinaryActionCancelRegistration;
+	}
+
+	/**
+	 * @param disciplinaryActionCancelRegistration
+	 *            the disciplinaryActionCancelRegistration to set
+	 */
+	public void setDisciplinaryActionCancelRegistration(boolean disciplinaryActionCancelRegistration) {
+		this.disciplinaryActionCancelRegistration = disciplinaryActionCancelRegistration;
+	}
+
+	/**
+	 * @return the disciplinaryActionBlacklist
+	 */
+	public boolean isDisciplinaryActionBlacklist() {
+		return disciplinaryActionBlacklist;
+	}
+
+	/**
+	 * @param disciplinaryActionBlacklist
+	 *            the disciplinaryActionBlacklist to set
+	 */
+	public void setDisciplinaryActionBlacklist(boolean disciplinaryActionBlacklist) {
+		this.disciplinaryActionBlacklist = disciplinaryActionBlacklist;
+	}
+
+	/**
+	 * @return the disciplineVOListDp
+	 */
+	public List<DisciplinaryActionVO> getDisciplineVOListDp() {
+		return disciplineVOListDp;
+	}
+
+	/**
+	 * @param disciplineVOListDp
+	 *            the disciplineVOListDp to set
+	 */
+	public void setDisciplineVOListDp(List<DisciplinaryActionVO> disciplineVOListDp) {
+		this.disciplineVOListDp = disciplineVOListDp;
+	}
+
+	/**
+	 * @return the popupMessage
+	 */
+	public String getPopupMessage() {
+		return popupMessage;
+	}
+
+	/**
+	 * @param popupMessage
+	 *            the popupMessage to set
+	 */
+	public void setPopupMessage(String popupMessage) {
+		this.popupMessage = popupMessage;
+	}
+
+	/**
+	 * @return the disciplineVOs
+	 */
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	/**
+	 * @param disciplineVOs
+	 *            the disciplineVOs to set
+	 */
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	/**
+	 * @return the disciplinaryActionStartDate
+	 */
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionStartDate;
+	}
+
+	/**
+	 * @param disciplinaryActionStartDate
+	 *            the disciplinaryActionStartDate to set
+	 */
+	public void setDisciplinaryActionStartDate(String disciplinaryActionStartDate) {
+		this.disciplinaryActionStartDate = disciplinaryActionStartDate;
+	}
+
+	/**
+	 * @return the disciplinaryActionEndDate
+	 */
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	/**
+	 * @param disciplinaryActionEndDate
+	 *            the disciplinaryActionEndDate to set
+	 */
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+
+	/**
+	 * @return the disciplinaryActionWarning
+	 */
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+
+	/**
+	 * @param disciplinaryActionWarning
+	 *            the disciplinaryActionWarning to set
+	 */
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+
+	/**
+	 * @return the disciplinaryActionPendingTransaction
+	 */
+	public boolean isDisciplinaryActionPendingTransaction() {
+		return disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @return the disciplinaryActionDeletedDue
+	 */
+	public boolean isDisciplinaryActionDeletedDue() {
+		return disciplinaryActionDeletedDue;
+	}
+
+	/**
+	 * @param disciplinaryActionPendingTransaction
+	 *            the disciplinaryActionPendingTransaction to set
+	 */
+	public void setDisciplinaryActionPendingTransaction(boolean disciplinaryActionPendingTransaction) {
+		this.disciplinaryActionPendingTransaction = disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @param disciplinaryActionDeletedDue
+	 *            the disciplinaryActionDeletedDue to set
+	 */
+	public void setDisciplinaryActionDeletedDue(boolean disciplinaryActionDeletedDue) {
+		this.disciplinaryActionDeletedDue = disciplinaryActionDeletedDue;
+	}
+	// #26284 - End
 }

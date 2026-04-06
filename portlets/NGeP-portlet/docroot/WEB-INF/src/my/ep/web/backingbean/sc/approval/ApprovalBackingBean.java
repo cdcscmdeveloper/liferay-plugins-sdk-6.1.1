@@ -3996,6 +3996,7 @@ return scQt;
 		if (date.after(this.getManagedBean().getScQtApprovalRequestList().get(0).getProposalValidityEndDateNew())
 				&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecisionType().getParameterId() || QTStatusConst.PCB_RQ3_APPROVED
 						.longValue() == request.getDecisionType().getParameterId())) {
+			request.setApproverAction(null);
 			throw new EpException(MessageConst.ERROR_770405);
 		}
 	}
@@ -4041,10 +4042,12 @@ return scQt;
 				epvObj.put(CommonConstants.OBJ_MINISTRY_NAME, pmOrgProfile.getPmOrgValidity().getOrgName());
 			}
 
-			String userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
+			String userRemark = null;
 			if (this.getManagedBean().isNullEPVRemark()) {
 				userRemark = ResourceBundleUtils.getMessage(SourcingConstants.NOT_AVAILABLE,
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else {
+				userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
 			}
 			epvObj.put(CommonConstants.REMARK, userRemark);
 

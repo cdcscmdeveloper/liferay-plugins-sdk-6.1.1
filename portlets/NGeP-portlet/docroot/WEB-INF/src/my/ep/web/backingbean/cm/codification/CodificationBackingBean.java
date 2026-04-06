@@ -631,7 +631,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			return 1;
 		}
 		return last;
-	}; 
+	} 
 	
 	public String codificationSearch() {
 
@@ -641,18 +641,18 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	/**
 	 * Navigate to extension Search screen.
 	 * 
+	 * @param unspscObj
 	 * @return extensionSearch.xhtml
 	 */
-
+	//#26282 and SonarLint Fixing - Start
 	public String goToExtensionSearch(CmUnspsc unspscObj) {
-		log.debug("**********goToExtensionSearch************");
 		log.info("[#26282] goToExtensionSearch");
 		this.getManagedBean().setMeasurementCriteria(null);
 		this.getManagedBean().setColorCriteria(null);
 		this.getManagedBean().setBrandCriteria(null);
 		this.getManagedBean().setTypeCriteria(null);
 
-		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+		ICodificationSO unspscSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
@@ -663,8 +663,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		if (resDTO.isSuccessful()) {
 			CmUnspsc commodity = resDTO.getCommodityObj();
 
-			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscCode(commodity.getUnspscCode());
-			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscTitle(commodity.getUnspscTitle());
 			this.getManagedBean().setSelectedUNSPSCObj(commodity);
 
 			this.getManagedBean().setClassCode(
@@ -764,9 +762,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 		log.info("[#26282] check for Disciplinary Action - End");		
 		
-		System.out.println("NAV_TO_EXTENSION_SEARCH");
+		log.info("NAV_TO_EXTENSION_SEARCH");
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
+	//#26282 and SonarLint Fixing - End
 	
 	// 35503 Start
 	public String goToServiceSearch(CmUnspsc unspscObj) {
@@ -2537,7 +2536,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 		//#28576 - end
 		
-		
 
 		return "searchExtensionToAssignItem.xhtml";
 	}
@@ -3719,37 +3717,40 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return itemType;
 	}
 	
-	//[#26282]
+	//[#26282] check for Disciplinary Action - Start
+	/**
+	 * To check what DA the supplier involve
+	 */
 	public void checkForDisciplinaryAction() {
-		//check for disciplinary action (DA)	
-		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(null);
-		
-		if(disciplinaryActList != null && disciplinaryActList.size() > 0) {
+		//check for disciplinary action (DA)
+		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil
+				.checkForDisciplinaryAction(null);
+
+		if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
 			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
-			
+
 			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
 			log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
 			log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
 			log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
-			
-			//disciplinary action - Warning
-			if(disciplinaryAct.isWarning()) {
+
+			// disciplinary action - Warning
+			if (disciplinaryAct.isWarning()) {
 				this.getManagedBean().setDaWarning(disciplinaryAct.isWarning());
 			}
-			//disciplinary action - Suspend Registration
-			if(disciplinaryAct.isSuspendRegistration()) {
+			// disciplinary action - Suspend Registration
+			if (disciplinaryAct.isSuspendRegistration()) {
 				this.getManagedBean().setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
 			}
-			//disciplinary action - Cancel Registration
-			if(disciplinaryAct.isCancelRegistration()) {
+			// disciplinary action - Cancel Registration
+			if (disciplinaryAct.isCancelRegistration()) {
 				this.getManagedBean().setDaCancelReg(disciplinaryAct.isCancelRegistration());
 			}
-			//disciplinary action - Blacklist  Owner/Director of Company
-			if(disciplinaryAct.isBlacklistOwner()) {
+			// disciplinary action - Blacklist Owner/Director of Company
+			if (disciplinaryAct.isBlacklistOwner()) {
 				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 			}
-		} else {
-			log.info("[#26282] - Disciplinary action does not imposed on supplier");
-		}		 
+		}
 	}
+	//[#26282] check for Disciplinary Action - End
 }

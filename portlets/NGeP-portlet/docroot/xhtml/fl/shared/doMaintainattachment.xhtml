@@ -72,9 +72,10 @@
    		</f:facet>			
 	</p:dialog>
 
+	<ui:remove>#26279 remove appendToBody</ui:remove>
 	<p:confirmDialog message="#{lbl['lbl.msg.confirm.delete']}"
 		severity="alert" widgetVar="delFileDlg" closable="true"
-		appendToBody="true" header="Delete Confirmation">
+		header="Delete Confirmation">
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 				partialSubmit="true" immediate="true"

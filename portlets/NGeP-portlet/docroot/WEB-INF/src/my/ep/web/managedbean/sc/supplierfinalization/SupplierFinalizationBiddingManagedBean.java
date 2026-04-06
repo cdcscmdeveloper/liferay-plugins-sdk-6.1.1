@@ -34,6 +34,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean; //#25037
 import my.ep.web.managedbean.BaseManagedBean;
@@ -156,6 +157,20 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	//#25037 start
 	private SupplierFinalizationMeetingBackingBean meetingBB;
 	//#25037 end
+	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private List<BidItemBean> bidItemSuppliersDisqualified;
+	private List<BidPackageBean> biddingPackagePriceListDisqualified;
+	private List<ScQtEvaluationResultDtl> notShortlistedSuppliers;
+	private Map<Long, List<ScQtEvaluationResultDtl>> pkgNotShortlistedSuppliersByZone;
+	private Map<Long, List<ScQtEvaluationResultDtl>> itemNotShortlistedSuppliers;
+	private Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone;
+	private Map<Long, List<ScBidSchedule>> bidDisSchedulesByZone;
+	private Map<Long, List<BidPackageBean>> bidDisPackageBeansByZone;
+	private boolean flagBranchDeleted = false;
+
+	// #28777 & #29729 - End
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1279,5 +1294,89 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
 		this.meetingBB = meetingBB;
 	}
-	// #25037 - end								  
+	// #25037 - end		
+	
+	// #28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+
+	public List<BidItemBean> getBidItemSuppliersDisqualified() {
+		return bidItemSuppliersDisqualified;
+	}
+
+	public void setBidItemSuppliersDisqualified(List<BidItemBean> bidItemSuppliersDisqualified) {
+		this.bidItemSuppliersDisqualified = bidItemSuppliersDisqualified;
+	}
+
+	public List<BidPackageBean> getBiddingPackagePriceListDisqualified() {
+		return biddingPackagePriceListDisqualified;
+	}
+
+	public void setBiddingPackagePriceListDisqualified(List<BidPackageBean> biddingPackagePriceListDisqualified) {
+		this.biddingPackagePriceListDisqualified = biddingPackagePriceListDisqualified;
+	}
+
+	public List<ScQtEvaluationResultDtl> getNotShortlistedSuppliers() {
+		return notShortlistedSuppliers;
+	}
+
+	public void setNotShortlistedSuppliers(List<ScQtEvaluationResultDtl> notShortlistedSuppliers) {
+		this.notShortlistedSuppliers = notShortlistedSuppliers;
+	}
+
+	public Map<Long, List<ScQtEvaluationResultDtl>> getPkgNotShortlistedSuppliersByZone() {
+		return pkgNotShortlistedSuppliersByZone;
+	}
+
+	public void setPkgNotShortlistedSuppliersByZone(
+			Map<Long, List<ScQtEvaluationResultDtl>> pkgNotShortlistedSuppliersByZone) {
+		this.pkgNotShortlistedSuppliersByZone = pkgNotShortlistedSuppliersByZone;
+	}
+
+	public Map<Long, List<ScQtEvaluationResultDtl>> getItemNotShortlistedSuppliers() {
+		return itemNotShortlistedSuppliers;
+	}
+
+	public void setItemNotShortlistedSuppliers(Map<Long, List<ScQtEvaluationResultDtl>> itemNotShortlistedSuppliers) {
+		this.itemNotShortlistedSuppliers = itemNotShortlistedSuppliers;
+	}
+
+	public Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> getItemNotShortlistedSuppliersByZone() {
+		return itemNotShortlistedSuppliersByZone;
+	}
+
+	public void setItemNotShortlistedSuppliersByZone(
+			Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone) {
+		this.itemNotShortlistedSuppliersByZone = itemNotShortlistedSuppliersByZone;
+	}
+
+	public Map<Long, List<ScBidSchedule>> getBidDisSchedulesByZone() {
+		return bidDisSchedulesByZone;
+	}
+
+	public void setBidDisSchedulesByZone(Map<Long, List<ScBidSchedule>> bidDisSchedulesByZone) {
+		this.bidDisSchedulesByZone = bidDisSchedulesByZone;
+	}
+
+	public Map<Long, List<BidPackageBean>> getBidDisPackageBeansByZone() {
+		return bidDisPackageBeansByZone;
+	}
+
+	public void setBidDisPackageBeansByZone(Map<Long, List<BidPackageBean>> bidDisPackageBeansByZone) {
+		this.bidDisPackageBeansByZone = bidDisPackageBeansByZone;
+	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
+	// #28777 & #29729 - End
 }

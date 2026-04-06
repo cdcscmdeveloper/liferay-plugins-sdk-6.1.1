@@ -576,8 +576,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList<SmSupplierBusiness>();
 	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList<SmEquityCompany>();
 	
-	//26238
-	private Long disabledCategoryL3Id;
 	
 	//#29315
 	private boolean flagMandatoryEpfNo;
@@ -620,6 +618,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #28778 -28775 - Start
 	private boolean specialCategoryRechecked;
 	// #28778 - End
+	
+	//29727
+	private String deleteBranchMsg;
 	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
@@ -4237,16 +4238,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelsSsm = personnelsSsm;
 	}
 	
-	//26238 - start 
-	public Long getDisabledCategoryL3Id() {
-		return disabledCategoryL3Id;
-	}
-
-	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
-		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} 
-	//26238 - end
-
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;
 	}
@@ -4628,10 +4619,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.displayBranches = displayBranches;
 	}
 	//#34135 END
+
+	// 29727 - START
+	public String getDeleteBranchMsg() {
+		return deleteBranchMsg;
+	}
+
+	public void setDeleteBranchMsg(String deleteBranchMsg) {
+		this.deleteBranchMsg = deleteBranchMsg;
+	}
+	// 29727 - END
+	
 	public boolean isSpecialCategoryRechecked() {
 		return specialCategoryRechecked;
 	}
-
+	
 	public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
 		this.specialCategoryRechecked = specialCategoryRechecked;
 	}

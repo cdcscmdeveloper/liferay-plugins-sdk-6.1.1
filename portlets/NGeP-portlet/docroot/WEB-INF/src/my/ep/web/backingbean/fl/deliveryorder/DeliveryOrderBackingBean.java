@@ -8,14 +8,17 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -101,6 +104,7 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.audit.AuditFulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -210,6 +214,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			//38009-Start
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				validateExpectedDeliveryDate();
+				
+				// 39692-Start
+				if (hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentRequest().getFulfilmentReqId())) {
+					throw new EpException(MessageConst.ERROR_760823);
+				}
+				// 39692-End
 			}
 			//38009-End
 			
@@ -522,11 +532,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		
 		if(flOrder.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
-			
 		} else {
 			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getCtContract().getContractNo());
 		}
-		
 	}
 	
 	/**
@@ -796,36 +804,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setHideRemarks(false);
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-				//26279 - start
-				if(getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT 
-						|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL 
-						|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL) {
-					SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-					SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-					if(smDisciplinaryAction != null) {
-						getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-						boolean isWarningOnly = false;
-						String warningOrDisciplinaryActionMsg = null;
-						String language =  new FacesScopes().getUserLocale().getLanguage();
-						if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
-								&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
-								&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
-								&& !smDisciplinaryAction.isManufacturerCancel()) {
-							isWarningOnly = true;
-							warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-							getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-						} else if(smDisciplinaryAction.isCancelCategory() 
-								|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
-								|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
-								|| smDisciplinaryAction.isManufacturerCancel()){
-							warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-							getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-						}
-					} else {
-						getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-					}
-				}
-				//26279 - end
+				checkDisciplinaryAction();//26279
 		}else{
 			getManagedBean().setOrderDisabledForSdCheck(false);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -861,6 +840,41 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 		// 28855 - End
 	}
+	
+	// 26279 - start
+	/**
+	 * Checks Disciplinary Action
+	 * 
+	 * if true will display Disciplinary Action
+	 * 
+	 */
+	private void checkDisciplinaryAction() {
+		if (isDisciplinaryActionDOPendingStatus()) {
+			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+	}
+
+	/**
+	 * Checks if the current DO's status is one of the pending statuses
+	 * 
+	 * @return true if the DO's status is one of the pending statuses,
+	 *         false for otherwise statuses
+	 */
+	private boolean isDisciplinaryActionDOPendingStatus() {
+		Long statusId = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
+		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT,
+				FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL,
+				FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL));
+		return pendingStatusIds.contains(statusId);
+	}
+	// 26279 - End
 
 	/**
 	 * Retrieve rejection data.
@@ -1662,43 +1676,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		getManagedBean().setSubmittedDoList(submittedDoList);
 	}
 	
-	// 36247-Start
-	/**
-	 * 
-	 * Validation for Supplier Do Reference length Maximum length is 30
-	 * 
-	 * @param supplierDoRef
-	 */
-	private void validateSupplierDoRefLength(String supplierDoRef) {
-		if (supplierDoRef.length() > SUPPLIER_DO_REF_LENGTH ) {
-			String label = ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-			throw new EpException(MessageConst.ERROR_721114,
-					new String[] { label, String.valueOf(SUPPLIER_DO_REF_LENGTH ) });
-		}
-	}
-	// 36247-End
-	
-	//38009-Start
-	/**
-	 * Validates the expected delivery date for each delivery address in the fulfilment request.
-	 * If the date is before January 1, 1900, an exception is thrown and the tab index is set to 1.
-	 *
-	 * @throws EpException if the expected delivery date is invalid.
-	 */
-	public void validateExpectedDeliveryDate() {
-		for (FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
-			Date estDelDate = selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate();
-			if (estDelDate != null && estDelDate.before(new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime())) {
-				getManagedBean().setSelectedTabIndex(1);
-				throw new EpException(MessageConst.ERROR_100067, new String[] { ResourceBundleUtils.getMessage(
-						"lbl.fl.exp.del.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()) });
-			}
-		}
-	}
-	// 38009-End
-	
 	// 36361-Start
 	/**
 	 * Validate that the delivered quantity does not exceed the remaining
@@ -1741,14 +1718,26 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	}
 	// 36361-End
 	
-	//26279 - start
+	// 26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
-		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
-		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionHistoryDlg.show();");
+		SmSupplier supplier;
+
+		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		}
 	}
-	//26279 - end
+
+	// 26279 - end
 	
 	// 28855 - start
 	/**
@@ -1821,6 +1810,43 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 	}
 	// 28855 - end
+	
+	// 36247-Start
+	/**
+	 * 
+	 * Validation for Supplier Do Reference length Maximum length is 30
+	 * 
+	 * @param supplierDoRef
+	 */
+	private void validateSupplierDoRefLength(String supplierDoRef) {
+		if (supplierDoRef.length() > SUPPLIER_DO_REF_LENGTH ) {
+			String label = ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new EpException(MessageConst.ERROR_721114,
+					new String[] { label, String.valueOf(SUPPLIER_DO_REF_LENGTH ) });
+		}
+	}
+	// 36247-End
+	
+	//38009-Start
+	/**
+	 * Validates the expected delivery date for each delivery address in the fulfilment request.
+	 * If the date is before January 1, 1900, an exception is thrown and the tab index is set to 1.
+	 *
+	 * @throws EpException if the expected delivery date is invalid.
+	 */
+	public void validateExpectedDeliveryDate() {
+		for (FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			Date estDelDate = selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate();
+			if (estDelDate != null && estDelDate.before(new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime())) {
+				getManagedBean().setSelectedTabIndex(1);
+				throw new EpException(MessageConst.ERROR_100067, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.fl.exp.del.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+		}
+	}
+	// 38009-End
 	
 	// #35508 fl audit trail
 	/**
@@ -1904,4 +1930,19 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 
 	}
 	// #35508 fl audit trail
+	
+	/**
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
+	 * @param fulfilmentReqId
+	 * @return true if invalid FRN data is detected
+	 */
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
+	}
 }

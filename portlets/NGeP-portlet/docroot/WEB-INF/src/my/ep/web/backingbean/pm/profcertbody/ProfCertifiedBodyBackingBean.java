@@ -25,10 +25,12 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
@@ -43,6 +45,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMProfCertBodyBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ProfCertifiedBodySearchBean;
@@ -115,7 +119,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		debugLogger("createProfCert");
 		PmCertBody certBody = new PmCertBody();
 		this.getManagedBean().setCertBody(certBody);
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
+		return NAV_TO_MAINTAIN; //#34445 SQ fixing
 
 	}
 
@@ -386,7 +390,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		debugLogger("saveCertBodyDtls");
 		String redirectUrl = null;
 		ICertBodySO certBodySO = null;
-		IStatusSO statusSO = null;
+		//#34445 SQ fixing - Remove statusSO
 
 		PmCertBody certBody = this.getManagedBean().getCertBody();
 
@@ -399,14 +403,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				setUserDetails(certBody);
 				generateCertBodyCode();
 			}
-			statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
+			//#34445 SQ fixing - Remove statusSO
+			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 
 			String messageId = null;
 			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
-			
 
 			String[] msgParam = new String[] { certBody.getBodyName() };
 
@@ -426,6 +427,19 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 			certBodyReqDTO.setCertBody(certBody);
 
+			/************ AUDIT START #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMProfCertBodyBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CERT_BODY) && certBody.getCertBodyId() != null) {
+				certBodyReqDTO.setCertBodyId(certBody.getCertBodyId());
+				CertBodyResDTO oldFiled = certBodySO.retrievePmCertBodyDtlById(certBodyReqDTO);
+				getManagedBean().setOldAuditPmCertBody(oldFiled.getCertBody());
+			}
+			/************ AUDIT END #28895-35509 *************/
+
+			
 			CertBodyResDTO resDTO = certBodySO
 					.saveOrUpdateCertBodyDtls(certBodyReqDTO);
 			reloadProfCertData(resDTO.getCertBody());
@@ -435,6 +449,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 			this.getManagedBean().setCertBody(resDTO.getCertBody());
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT START #28895-35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CERT_BODY)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CERT_BODY);
+				}
+				/************ AUDIT END #28895-35509 *************/
 				if (certBody.isBrandNew()) {
 					FacesContext
 							.getCurrentInstance()
@@ -479,7 +498,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			e.printStackTrace();
 		} finally {
 			certBodySO = null;
-			statusSO = null;
+			//#34445 SQ fixing - Remove statusSO
 		}
 
 		return redirectUrl;
@@ -501,7 +520,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			e.printStackTrace();
 		}
 		
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
+		return NAV_TO_MAINTAIN; //#34445 SQ fixing
 	}
 		
 	/**

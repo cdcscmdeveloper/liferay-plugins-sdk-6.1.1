@@ -254,9 +254,6 @@
 			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.content']}">
 					<ui:include src="supplier/instructionHeader.xhtml" />
 					<ui:include src="letterOfAcceptance.xhtml" />
-					<p:outputPanel rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg or amendmentBackingBean.managedBean.disciplinaryAction}">
-				    	<ui:include src="supplier/supplierDisciplinary.xhtml" />
-				    </p:outputPanel>
 			    </p:outputPanel>
 			    
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.view.loa']
@@ -366,10 +363,10 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
-		
+		<!-- #26186 start -->
 		<p:confirmDialog message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
 			severity="alert" widgetVar="supplierrejectConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
@@ -384,5 +381,6 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
+		<!-- #26186 end -->
 	</ui:define>  
 </ui:composition>

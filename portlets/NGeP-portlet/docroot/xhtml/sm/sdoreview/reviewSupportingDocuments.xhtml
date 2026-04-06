@@ -45,6 +45,13 @@
 			</p:commandButton>
 		</div>
 		
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
+   			 #{lbl['lbl.sm.confirm.proceed']}
+   			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="blockWidget.show();submissionConfirmDlg.hide();" oncomplete="blockWidget.hide()" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
+			</div>
+		</p:dialog>
 
 		<p:outputPanel id="resOutPanelId">
 		<!-- #11641 - START -->
@@ -114,8 +121,14 @@
 						        			</p:commandLink>
 						        		</ui:remove>
 						        		<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-						        			<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}</a>
-						        		</h:panelGroup>
+												<!-- #39316 - Start -->
+												<h:commandLink id="mandfile" value="#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}"
+													rendered="#{not empty applDocsFile and !inquirytbl.pmDocument.hardCopyReq}">
+													<p:fileDownload
+														value="#{sdoReviewBackingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+												</h:commandLink>
+												<!-- #39316 - End -->
+											</h:panelGroup>
 										<br />
 									</ui:repeat>
 								</p:column>
@@ -176,8 +189,14 @@
 							        		</p:commandLink>
 							        	</ui:remove>
 							        	<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}</a>
-							        	</h:panelGroup>
+												<!-- #39316 - Start -->
+												<h:commandLink id="nonMandfile" value="#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}"
+													rendered="#{not empty applDocsFile and !inquirytbl.pmDocument.hardCopyReq}">
+													<p:fileDownload
+														value="#{sdoReviewBackingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+												</h:commandLink>
+												<!-- #39316 - End -->
+											</h:panelGroup>
 										<br />
 									</ui:repeat>
 								</p:column>
@@ -241,7 +260,6 @@
 		<!-- #34392 - START -->
 		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto" style="max-height:80%; overflow-y: auto; top: 10%">
 		<!-- #34392 - End -->
-			
 			<p:scrollPanel mode="native" style="max-height:auto;auto;border:none">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			
@@ -395,7 +413,8 @@
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
-							disabled="true" size="40" /></td>
+							disabled="true" size="40" />
+					</td>
 				</tr>
 
 				<tr>
@@ -406,7 +425,8 @@
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.businessregno']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.regNo}"
-							disabled="true" size="40" /></td>
+							disabled="true" size="40" />
+					</td>
 				</tr>
 
 				<ui:param name="gstSupplier" value="#{sdoReviewBackingBean.managedBean.smGstSupplier}" />
@@ -510,19 +530,21 @@
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.companyAdd.pmCity.cityName}"
-							disabled="true" size="40" /></td>
+							disabled="true" size="40" />
+					</td>
 
-							<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
-							disabled="true" size="40" /></td>	
-
+							disabled="true" size="40" />
+					</td>
 				</tr>
 				
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.companyAdd.postcode}" disabled="true"
-							size="40" /></td>
+							size="40" />
+					</td>
 				</tr>		
 				<!-- 13320 - re-order address field - end -->
 				

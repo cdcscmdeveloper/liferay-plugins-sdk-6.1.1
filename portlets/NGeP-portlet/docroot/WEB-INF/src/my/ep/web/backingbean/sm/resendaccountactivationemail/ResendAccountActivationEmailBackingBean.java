@@ -23,6 +23,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -65,34 +66,36 @@ public class ResendAccountActivationEmailBackingBean extends BaseBackingBean<Bas
 		//26238 - start 27848
 		//check disciplinary action on supplier
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) {
+		if (pmUser == null || pmUser.getUserId() == null || !hasValidDisciplinaryAction()){
 			renewSesionObject();
-			SmCommonUtil
-					.redirectToPage(
-							"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
-							"", null, null);
-		}else{
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			
-			SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-			supReqDTO.setSupplier(currSupp);
-			SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-			if(activeDisc != null){
-				String labelNameVal = "";
-				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+		}
+		SmCommonUtil
+		.redirectToPage(
+				"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
+				"", null, null);
+		// 26238 - END 27848
+	}
+	
+	//#26238
+	private boolean hasValidDisciplinaryAction(){
+		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+		supReqDTO.setSupplier(SmApplicationUtil.getCurrentSupplier());
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+		
+		if(EntityHelper.isCollectionEmpty(resDTO.getSmDisciplinaryActions())){
+			return false;
+		}
+		for (SmDisciplinaryAction da : resDTO.getSmDisciplinaryActions()){
+			if(da.isCancelRegistration() || da.isSuspendRegistration() || da.isBlacklistOwner()){
+				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", 
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-								new String[] { labelNameVal })));
-				SmCommonUtil.redirectToPage(
-						"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml", "", null, null);
-			} else {		
-				renewSesionObject();
-				SmCommonUtil
-						.redirectToPage(
-								"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
-								"", null, null);
+								new String[] { "" })));
+				return true;
 			}
 		}
-		// 26238 - END 27848
+		return false;
 	}
 
 	public void onClickResend() {

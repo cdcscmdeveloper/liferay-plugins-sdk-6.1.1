@@ -47,8 +47,8 @@
 					src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 				<div align="center">
 					<!-- #34400 -->
-					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
-						oncomplete="approveAppCanDialog.hide(); confirmApproveDlg.show();"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"
+						oncomplete="confirmApproveDlg.show();"
 						partialSubmit="true" process="approvedCancelMofBlockPanel" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						onclick="approveAppCanDialog.hide();" />
@@ -70,7 +70,7 @@
 					<!-- #34400 -->
 					<p:commandButton value="#{lbl['lbl.btn.submit']}"
 						partialSubmit="true" process="rejectAppCanDialog"
-						oncomplete="if (!args.validationFailed){rejectAppCanDialog.hide(); confirmRejectDlg.show();}" />
+						oncomplete="if (!args.validationFailed) confirmRejectDlg.show();" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						onclick="rejectCancelMofBlockWidget.show();" oncomplete="rejectCancelMofBlockWidget.hide();"
 						action="#{backingBean.resetMofCancellationFinalApproveOrReject('rejectAppCanDialog')}"

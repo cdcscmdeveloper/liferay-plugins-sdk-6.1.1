@@ -37,6 +37,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean; // #25037
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -287,6 +288,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean haveSupplierRejection;
 	// #11134 - End
 	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage;	
+	private boolean flagBranchDeleted = false;
+	// #28777 & #29729 - End
+	
 	//28834 starts
 	private boolean disableBfButton;
 	private boolean ktReportGenerated;
@@ -295,6 +303,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private ScQt checkCategoryCodeQt; // #29466
 	private boolean allSupplierDisagreeEPV;//#21692
+	// 26247 - start
+	private List<String> disabledSupplierIds;
+
+	// 26247 - end
 
 	// 39077 -start-
 	private boolean isReviseBriefMsg = Boolean.FALSE;
@@ -2381,6 +2393,43 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//28834 end
 	
+	// #28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByRecommendType() {
+		return disqualifiedSuppliersByRecommendType;
+	}
+
+	public void setDisqualifiedSuppliersByRecommendType(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType) {
+		this.disqualifiedSuppliersByRecommendType = disqualifiedSuppliersByRecommendType;
+	}
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByEvalStage() {
+		return disqualifiedSuppliersByEvalStage;
+	}
+
+	public void setDisqualifiedSuppliersByEvalStage(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage) {
+		this.disqualifiedSuppliersByEvalStage = disqualifiedSuppliersByEvalStage;
+	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
+	
+	// #28777 & #29729 - End
+	
 	// //#33174 #21695 Farid
 	/**
 	 * @return
@@ -2483,6 +2532,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
+	// 26247 - start
+	public List<String> getDisabledSupplierIds() {
+		return disabledSupplierIds;
+	}
+
+	public void setDisabledSupplierIds(List<String> disabledSupplierIds) {
+		this.disabledSupplierIds = disabledSupplierIds;
+	}
+	// 26247 - end
+
 	// 39077 -start-
 	/**
 	 * @return the isReviseBriefMsg

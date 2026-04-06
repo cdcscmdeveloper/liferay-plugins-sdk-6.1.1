@@ -3110,13 +3110,20 @@ public class SmCommonUtil {
 	 */
 	public static SmAppl getActiveApplBySupplier(SmSupplier supplier) {
 		SmAppl activeAppl = null;
-		if (supplier != null) {
+		//38517 - START
 			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+
+		if (supplier.getSmAppl() != null){
+			mofRegistrationReqDTO.setSmAppl(supplier.getSmAppl());
+		}
+		
+		if (supplier != null) {
 			mofRegistrationReqDTO.setSupplierId(supplier.getSupplierId());
 			activeAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveActiveSmApplBySupp(mofRegistrationReqDTO)
 					.getSmAppl();
 		}
+		//38517 - END
 		return activeAppl;
 	}
 
