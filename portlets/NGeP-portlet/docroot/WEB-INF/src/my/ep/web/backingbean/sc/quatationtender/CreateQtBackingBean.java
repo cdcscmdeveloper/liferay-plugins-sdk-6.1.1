@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;	// Bug #40087@Syazani 06/04/2026
 import java.util.List;
 import java.util.Locale;
 
@@ -4146,16 +4147,8 @@ public class CreateQtBackingBean extends
 				spBB.retriveTechnicalCheckList();
 				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
 			}//11104-End
-			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
-				for(ScQtCheckList checklist:st2technicalproposalList){
-					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
-							.getDefinationType().getParameterCode())) {
-						deltechnicalproposalList.add(checklist);
-						getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
-						st2technicalproposalList.remove(checklist);
-						break;
-					}
-				}
+			if (CollectionUtils.isNotEmpty(st2technicalproposalList)) {
+				removeSampleChecklist(st2technicalproposalList, deltechnicalproposalList);	// Bug #40087@Syazani 06/04/2026
 			}
 		}
 	}
@@ -4362,6 +4355,23 @@ public class CreateQtBackingBean extends
 		}
 	}
 	//37851 - End
+	
+	// Bug #40087@Syazani 06/04/2026 -- Start
+	private void removeSampleChecklist(List<ScQtCheckList> st2technicalproposalList,
+			List<ScQtCheckList> deltechnicalproposalList) {
+		Iterator<ScQtCheckList> itScQtChecklist = st2technicalproposalList.iterator();
+		while (itScQtChecklist.hasNext()) {
+			ScQtCheckList checklist = itScQtChecklist.next();
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
+					.getParameterCode())) {
+				deltechnicalproposalList.add(checklist);
+				getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
+				itScQtChecklist.remove();
+				break;
+			}
+		}
+	}
+	// Bug #40087@Syazani 06/04/2026 -- End
 }
 
 
