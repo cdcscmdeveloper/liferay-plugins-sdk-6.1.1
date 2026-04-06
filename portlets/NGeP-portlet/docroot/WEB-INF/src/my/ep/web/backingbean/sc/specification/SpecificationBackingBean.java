@@ -5774,7 +5774,7 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList
 					.getDefinationType().getParameterCode())) {//#11104-start
-				checkDuplicateTitle(checkList);	// 40087
+				checkDuplicateTitle(checkList);	// Bug #40087@Syazani 06/04/2026
 				List<ScQtCheckList> technicalChecklist=this.getManagedBean().getScQtCheckSt2techProposal();//#25635-start
 				this.getManagedBean().setSampleSpecCheckList(new ArrayList<ScQtCheckList>());
 				 this.getManagedBean().getQt().setSampleReq(Boolean.TRUE);//11104ReendorseStart728
@@ -25097,7 +25097,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 	// #38151 End
 	
-	// 40087 -- Start
+	// Bug #40087@Syazani 06/04/2026 -- Start
 	private void checkDuplicateTitle(ScQtCheckList scQtCheckList) {
 		List<ScQtCheckList> technicalCheckList = this.getManagedBean().getScQtCheckSt2techProposal();
 		String scQtTitleSpec = scQtCheckList.getTitle() + "_"
@@ -25113,5 +25113,5 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 		}
 	}
-	// 40087 -- End
+	// Bug #40087@Syazani 06/04/2026 -- End
 }

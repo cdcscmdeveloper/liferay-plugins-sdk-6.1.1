@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;	// 40087
+import java.util.Iterator;	// Bug #40087@Syazani 06/04/2026
 import java.util.List;
 import java.util.Locale;
 
@@ -4148,7 +4148,7 @@ public class CreateQtBackingBean extends
 				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
 			}//11104-End
 			if (CollectionUtils.isNotEmpty(st2technicalproposalList)) {
-				removeSampleChecklist(st2technicalproposalList, deltechnicalproposalList);	// 40087
+				removeSampleChecklist(st2technicalproposalList, deltechnicalproposalList);	// Bug #40087@Syazani 06/04/2026
 			}
 		}
 	}
@@ -4356,7 +4356,7 @@ public class CreateQtBackingBean extends
 	}
 	//37851 - End
 	
-	// 40087 -- Start
+	// Bug #40087@Syazani 06/04/2026 -- Start
 	private void removeSampleChecklist(List<ScQtCheckList> st2technicalproposalList,
 			List<ScQtCheckList> deltechnicalproposalList) {
 		Iterator<ScQtCheckList> itScQtChecklist = st2technicalproposalList.iterator();
@@ -4371,7 +4371,7 @@ public class CreateQtBackingBean extends
 			}
 		}
 	}
-	// 40087 -- End
+	// Bug #40087@Syazani 06/04/2026 -- End
 }
 
 
