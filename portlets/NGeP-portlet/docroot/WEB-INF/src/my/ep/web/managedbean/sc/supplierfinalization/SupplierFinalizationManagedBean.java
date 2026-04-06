@@ -174,6 +174,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> onlineBiddingEndorsementList;
 	private List<ScQtCommitteeActivity> onlineBiddingReminderList;
 
+	// #33174, #21695 Farid start
+	private boolean pacDisable;
+	// #33174, #21695 End
+	
 	// 6906 note 117 - start
 	private SelectItem[] decisionDropdown;
 	private boolean supplierFinalizationReadOnly = true;
@@ -2213,6 +2217,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	// 25037 - end
 
+	// //#33174 #21695 Farid
+	/**
+	 * @return
+	 */
+	public boolean isPacDisable() {
+		return pacDisable;
+	}
+
+	/**
+	 * @param for disable if there is no supplier is qualified by package
+	 */
+	public void setOfferAll(boolean pacDisable) {
+		this.pacDisable = pacDisable;
+	}
+	// //#33174 #21695 End
+	
 	// #29466 - START
 	/**
 	 * @return the checkCategoryCodeQt
