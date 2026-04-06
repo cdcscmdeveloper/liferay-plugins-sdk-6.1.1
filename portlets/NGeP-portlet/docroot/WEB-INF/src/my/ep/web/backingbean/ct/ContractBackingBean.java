@@ -4572,18 +4572,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    getManagedBean().setExtendContract(false);
 	    getManagedBean().setDisableOriginalBond(false);
 
-	    // Retrieve currentPeriod and extendPeriod
-	    String currentPeriod = (loa.getContractDuration() != null) 
-	            ? BigDecimal.valueOf(loa.getContractDuration().longValue()).toString() 
-	            : null;
-
-	    String extendPeriod = (contractVer.getCtContractValue().getContractPeriod() > 0) 
-	            ? Integer.toString(contractVer.getCtContractValue().getContractPeriod()) 
-	            : null;
+	    //#32418 - Start
+	    // Retrieve currentExpDate and newExpDate
+	    Date currentExpDate = loa.getContractExpDate();
+	    Date newExpDate = contractVer.getCtContractValue().getExpDate();
+	    
+	    // Check if contract is extended
+	    boolean isExtended = currentExpDate != null
+	            && newExpDate != null
+	            && newExpDate.after(currentExpDate);
+	    //#32418 - End
 
 	    // Check if the contract needs an extension or requires a bond
 	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
-	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
+	            && isExtended) { //#32418
 
 	        isContractExtendOrIsBond = true;
 	        getManagedBean().setExtendContract(true);
