@@ -132,6 +132,7 @@ import my.ep.web.type.sc.quationtender.CloneAll;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.MenuModel;//#21695
 import org.primefaces.model.TreeNode;
 
 /**
@@ -184,6 +185,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean isCheckAllList = Boolean.FALSE;
 	
+	private boolean isCloned = Boolean.FALSE; // #25635
+
 	/** The zone general trees. */
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
@@ -893,6 +896,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The mark deleted tech checklist. */
 	private List<ScQtCheckList> markDeletedTechChecklist;
 
+	//#25635 danial -start-
+	/** The mark deleted tech checklist. */
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingTechnical;
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingFinancial;	
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingOverall;
+	//#25635 danial -end-
+	
 	/** The sc qt check st2finance proposal list. */
 	private List<ScQtCheckList> scQtCheckSt2financeProposalList;
 
@@ -956,6 +966,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The check list score. */
 	private List<ScQtCheckListScore> checkListScore;
 
+	/** The score offer price. *///ahmaa-#25138
+	private List<ScQtScoreOfferPrice> scoreOfferPrice;
+	
 	/** The scoring for years. */
 	private List<ScQtCheckListScore> scoringForYears;
 
@@ -1153,6 +1166,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The checklist score type. */
 	private String checklistScoreType;
+	
+	/** The offer price score type. */
+	private String offerScoreType;//ahmaa-#25138
 
 	/** The company score type. */
 	private String companyScoreType;
@@ -1160,6 +1176,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The sc qt check list score. */
 	private ScQtCheckListScore scQtCheckListScore;
 
+	/** The sc qt score offer price. *///ahmaa-#25138
+	private ScQtScoreOfferPrice scQtScoreOfferPrice;
+	
 	/** The sc qt contract score. */
 	private ScQtCheckListScore scQtContractScore;
 
@@ -1267,6 +1286,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The panel item category. */
 	private String panelItemCategory;
 
+	/** #21695 FARID */
+	/** The Tech spec list. */
+	private List<ScQtCheckList> techSpecList;
+	
 	/** The fin spec list. */
 	private List<ScQtCheckList> finSpecList;
 
@@ -1372,7 +1395,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The to be remove list. */
 	private List<ScQtCheckListScore> toBeRemoveList;
-
+	
+	/** The offer price to be remove list. *///ahmaa-#25138
+	private List<ScQtScoreOfferPrice> offertoBeRemoveList;
+	
 	/** The other score selected. */
 	private List<ScQtCheckListScore> otherScoreSelected;
 
@@ -1502,8 +1528,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The financial Item score setting. */
 	private ScQtScoreSetting finacialItemScoreSetting;
 
+	/** The technical Item score setting. */
+	private ScQtScoreSetting technicalItemScoreSetting; // #21695
+	
 	private BigDecimal financialItemScore;
 
+	private BigDecimal technicalItemScore; // #21695
+	
 	private BigDecimal totalScore = new BigDecimal(0);
 
 	private String locationLevel;
@@ -1598,6 +1629,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
 	// #19336, #25201, #17376, #19287 -end-
 	
+	/** The clone search qt data model. */
+	private IPagingDataModel<ScQt> mainCloneSearchQTDataModel; //34053, #25635
+	
 	// ***25692 -start-
 	/*
 	 * approval. some part is readOnly, some part is updatable 
@@ -1610,6 +1644,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isGenInfo;
 	private boolean specUpdateInProgress;
 	// #15391 - end
+	
+	private boolean secretaryValidate; // #21695
 	
 	// #30451, #17376-Start.
 	private boolean isBdSfFlow;
@@ -1707,6 +1743,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean firstViewPageCAUsers = false;
 	// #25426 - End
 	
+	//#25138-start
+	private List<TplSpecQuestion> specQuestionList;
+	// MenuModel
+	private MenuModel specificationSpecZonalMenuModel;
+	/** Total max score by zones. */
+	private List<TplSpecZoneDtl> totalMaxScoreZones;
+	private Paginator detachedPaginator;
+	private boolean isZonal;
+	private BigDecimal scoreType;
+	/** The fin points for zonal. */
+	private List<Integer> finMaxScorePoints;
+	/** The offer price package list. */
+	private List<ScQtScoreOfferPrice> offerPricePackageList;
+	private int specZoneTabIndex;
+	private boolean isSingleItem;
+	// #25138-end
+	
 	// #28784 -start-
 	private boolean demoType;
 	private boolean demoAction;
@@ -1719,6 +1772,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long demoSampleChecklistStatusId;
 	// #28784 -end-
 
+	//====#31913 bug related to #25138==== start
+	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
+	//====#31913 bug related to #25138==== end
+	
 	// 25791-start
 	private List<ScQt> qtTrackingDiaryView;
 	private String qtAuditMaintenanceView;
@@ -7817,6 +7874,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCheckListScore(List<ScQtCheckListScore> checkListScore) {
 		this.checkListScore = checkListScore;
 	}
+	
+	
+	//	ahmaa-#25138 - start
+	/**
+	 * @return the scoreOfferPrice
+	 */
+	public List<ScQtScoreOfferPrice> getScoreOfferPrice() {
+		return scoreOfferPrice;
+	}
+
+	/**
+	 * @param scoreOfferPrice the scoreOfferPrice to set
+	 */
+	public void setScoreOfferPrice(List<ScQtScoreOfferPrice> scoreOfferPrice) {
+		this.scoreOfferPrice = scoreOfferPrice;
+	}
+	//	ahmaa-#25138 - end
 
 	/**
 	 * @return the scoringForYears
@@ -9278,6 +9352,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setToBeRemoveList(List<ScQtCheckListScore> toBeRemoveList) {
 		this.toBeRemoveList = toBeRemoveList;
 	}
+	
+	// ahmaa-#25138 -start
+	/**
+	 * @return the offertoBeRemoveList
+	 */
+	public List<ScQtScoreOfferPrice> getOfferToBeRemoveList() {
+		return offertoBeRemoveList;
+	}
+
+	/**
+	 * @param toBeRemoveList
+	 *            the toBeRemoveList to set
+	 */
+	public void setOfferToBeRemoveList(List<ScQtScoreOfferPrice> offertoBeRemoveList) {
+		this.offertoBeRemoveList = offertoBeRemoveList;
+	}
+	// ahmaa-#25138 -end
 
 	/**
 	 * @return the otherScoreSelected
@@ -9647,6 +9738,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.finacialItemScoreSetting = finacialItemScoreSetting;
 	}
 
+	/** #21695 FARID START */
+	/**
+	 * @return the finacialItemScoreSetting
+	 */
+	public ScQtScoreSetting getTechnicalItemScoreSetting() {
+		return technicalItemScoreSetting;
+	}
+
+	/**
+	 * @param finacialItemScoreSetting
+	 *            the finacialItemScoreSetting to set
+	 */
+	public void setTechnicalItemScoreSetting(ScQtScoreSetting technicalItemScoreSetting) {
+		this.technicalItemScoreSetting = technicalItemScoreSetting;
+	}
+	/** #21695 FARID END */	
+	
 	/**
 	 * @return the financialItemScore
 	 */
@@ -11096,6 +11204,111 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#28784 - End
 
+	//#25138 - Reendorsed - start
+	public int getSpecZoneTabIndex() {
+		return specZoneTabIndex;
+	}
+
+	public void setSpecZoneTabIndex(int specZoneTabIndex) {
+		this.specZoneTabIndex = specZoneTabIndex;
+	}
+	public List<TplSpecQuestion> getSpecQuestionList() {
+		return specQuestionList;
+	}
+	public void setSpecQuestionList(List<TplSpecQuestion> specQuestionList) {
+		this.specQuestionList = specQuestionList;
+	}
+
+	public MenuModel getSpecificationSpecZonalMenuModel() {
+		return specificationSpecZonalMenuModel;
+	}
+
+	public void setSpecificationSpecZonalMenuModel(MenuModel specificationSpecZonalMenuModel) {
+		this.specificationSpecZonalMenuModel = specificationSpecZonalMenuModel;
+	}
+
+	public List<TplSpecZoneDtl> getTotalMaxScoreZones() {
+		return totalMaxScoreZones;
+	}
+
+	public void setTotalMaxScoreZones(List<TplSpecZoneDtl> totalMaxScoreZones) {
+		this.totalMaxScoreZones = totalMaxScoreZones;
+	}
+
+	public List<Integer> getFinMaxScorePoints() {
+		return finMaxScorePoints;
+	}
+	public void setFinMaxScorePoints(List<Integer> finMaxScorePoints) {
+		this.finMaxScorePoints = finMaxScorePoints;
+	}
+
+	public List<ScQtScoreOfferPrice> getOfferPricePackageList() {
+		return offerPricePackageList;
+	}
+
+	public void setOfferPricePackageList(List<ScQtScoreOfferPrice> offerPricePackageList) {
+		this.offerPricePackageList = offerPricePackageList;
+	}
+
+	public Paginator getDetachedPaginator() {
+		return detachedPaginator;
+	}
+
+	public void setDetachedPaginator(Paginator detachedPaginator) {
+		this.detachedPaginator = detachedPaginator;
+	}
+
+	public boolean isZonal() {
+		return isZonal;
+	}
+	
+	public void setZonal(boolean isZonal) {
+		this.isZonal = isZonal;
+	}
+	
+	public BigDecimal getScoreType() {
+		return scoreType;
+	}
+	
+	public void setScoreType(BigDecimal scoreType) {
+		this.scoreType = scoreType;
+	}
+
+	public boolean isSingleItem() {
+		return isSingleItem;
+	}
+
+	public void setSingleItem(boolean isSingleItem) {
+		this.isSingleItem = isSingleItem;
+	}
+	//#25138 - Reendorsed - end
+
+	//====#31913 bug related to #25138==== start
+	public BigDecimal getTotalmaxscore() {
+		return totalmaxscore;
+	}
+
+	public void setTotalmaxscore(BigDecimal totalmaxscore) {
+		this.totalmaxscore = totalmaxscore;
+	}
+	//====#31913 bug related to #25138==== end
+	
+	// 34053, #25635 -Start
+	/**
+	 * @return the mainCloneSearchQTDataModel
+	 */
+	public IPagingDataModel<ScQt> getMainCloneSearchQTDataModel() {
+		return mainCloneSearchQTDataModel;
+	}
+
+	/**
+	 * @param mainCloneSearchQTDataModel the mainCloneSearchQTDataModel to set
+	 */
+	public void setMainCloneSearchQTDataModel(IPagingDataModel<ScQt> mainCloneSearchQTDataModel) {
+		this.mainCloneSearchQTDataModel = mainCloneSearchQTDataModel;
+	}
+	// 34053, #25635 -End
+	
 	//#28784 - Start
 	public Long getDemoSampleChecklistStatusId() {
 		return demoSampleChecklistStatusId;
