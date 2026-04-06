@@ -111,7 +111,7 @@
 					<!-- PUTRA #24916 -->
 					<tr >
 						<h:panelGroup
-							rendered="#{(ctBackingBean.managedBean.newPk7 and !ctBackingBean.managedBean.amendProcess)
+							rendered="#{ctBackingBean.managedBean.newPk7 
 							and ctBackingBean.newProcurement()!= null }">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.type']}" />
 							</td>
@@ -122,7 +122,7 @@
 					</tr>			
 					<tr>
 						<h:panelGroup
-							rendered="#{(ctBackingBean.managedBean.newPk7 and !ctBackingBean.managedBean.amendProcess) 
+							rendered="#{ctBackingBean.managedBean.newPk7 
 							and ctBackingBean.newJustification()!= null}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
@@ -135,7 +135,7 @@
 					</tr> 
 					<tr>
 						<h:panelGroup
-							rendered="#{!ctBackingBean.managedBean.directPurchase and (ctBackingBean.managedBean.newPk7 and !ctBackingBean.managedBean.amendProcess) and (!ctBackingBean.managedBean.commonView or 
+							rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.newPk7 and (!ctBackingBean.managedBean.commonView or 
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)
 						              or ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType != null }">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->

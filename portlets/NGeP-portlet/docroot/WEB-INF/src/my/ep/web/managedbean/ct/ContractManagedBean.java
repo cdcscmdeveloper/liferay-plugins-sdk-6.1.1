@@ -221,10 +221,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private int contractDaysPeriod;
 	//32418 - End
 	
-	// Start Fix - #30045
-	private boolean isDefaultMinistryExist = false;
-	private boolean amendProcess = false;
-	// End Fix - #30045
+	private boolean isDefaultMinistryExist = false; //Fix - #30045
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1723,14 +1721,6 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setDefaultMinistryExist(boolean isDefaultMinistryExist) {
 		this.isDefaultMinistryExist = isDefaultMinistryExist;
-	}
-
-	public boolean isAmendProcess() {
-		return amendProcess;
-	}
-
-	public void setAmendProcess(boolean amendProcess) {
-		this.amendProcess = amendProcess;
 	}
 	// End - #30045
 }
