@@ -1673,12 +1673,6 @@ public class PurchaseInDefaultBackingBean extends
 		}	
 		//#9133 - end
 		
-		// #26059 - Start
-		purchaseInDefault.getPanelItem().setItemName(
-				commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem()
-						.getItemName()));
-		// #26059 - End
-		
 		finaliseEditableRemark(purchaseInDefault);//#31603
 
 		initializeApproverGroup();
