@@ -389,19 +389,18 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		//#34445 SQ fixing - Remove statusSO
 
 		PmCertBody certBody = this.getManagedBean().getCertBody();
-		
+
 		//#34445 Start
 		try {
-
+			
 			validationMessage(certBody);
 
 			if (certBody.isBrandNew()) {
 				setUserDetails(certBody);
 				generateCertBodyCode();
 			}
-			// #34445 SQ fixing - Remove statusSO
-			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					ICertBodySO.class);
+			//#34445 SQ fixing - Remove statusSO
+			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 
 			String messageId = null;
 			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();

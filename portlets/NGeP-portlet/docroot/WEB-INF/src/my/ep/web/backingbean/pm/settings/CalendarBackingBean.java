@@ -155,7 +155,7 @@ public class CalendarBackingBean extends
 		setEndDateTemp(endDate);
 		
 	}
-
+	
 	/* #34445 start : remove ActionEvent parameter*/
 	public void addOrUpdateEvent() {
 	/* #34445 end */

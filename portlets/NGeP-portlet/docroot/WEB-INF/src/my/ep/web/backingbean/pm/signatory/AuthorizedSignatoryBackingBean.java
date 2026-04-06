@@ -284,7 +284,7 @@ public class AuthorizedSignatoryBackingBean extends
 		if(activeNumber>1){
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770144);
-		}else if(activeNumber==0){
+		} else if (activeNumber == 0) {
 			// #34445, Fix as-is bug: #39354 START
 			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
 			// #34445, Fix as-is bug: #39354 END

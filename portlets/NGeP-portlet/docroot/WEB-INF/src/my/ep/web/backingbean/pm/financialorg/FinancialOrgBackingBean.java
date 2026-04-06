@@ -1510,7 +1510,7 @@ public class FinancialOrgBackingBean extends
 			if (pmFinancialAccList == null) {
 				pmFinancialAccList = new ArrayList<PmFinancialAcc>();
 			}
-
+			
 			//#34445, Fix as-is bug: #39508 START
 			int listSize = 0;
 			if (!pmFinancialAccList.isEmpty()) {
@@ -1529,7 +1529,7 @@ public class FinancialOrgBackingBean extends
 				}
 			}
 			//#34445, Fix as-is bug: #39508 END
-
+			
 			PmFinancialAcc finAcc = new PmFinancialAcc();
 			finAcc.setEffDate(new Date());
 			finAcc.setPmPaymentBankOrg(new PmFinancialOrg());
@@ -1984,7 +1984,7 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	//20201210@Jacky - Enhancement#28836 - End
-
+	
 	//#34445, Fix as-is bug: #39508 START
 	public void setAccountNo(AjaxBehaviorEvent event) {
 		String bankCode = (String) event.getComponent().getAttributes().get("bankCode");

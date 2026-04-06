@@ -245,10 +245,10 @@ public class CriteriaBackingBean extends
 	public String saveSupplierCriteriaDtls() {
 		log.info("saveSupplierCriteriaDtls - Start");
 		String returnPage = null;
-		
+
 		//#34445 Start
 		try {
-
+			
 			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
 				generateCriteriaCode();
 

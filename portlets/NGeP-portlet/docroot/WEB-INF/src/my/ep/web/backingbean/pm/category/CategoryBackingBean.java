@@ -145,13 +145,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	private boolean descriptionEditDisable = true;
 	private Integer tabIndexActive; // tab 0,1,2
 	//End #29665
-
+	
 	//#34445 Start
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/category/categoryl1.xhtml";
 	public static final String NAV_TO_MAINTAIN_L2 = "/xhtml/pm/category/categoryl2.xhtml";
 	public static final String NAV_TO_MAINTAIN_L3 = "/xhtml/pm/category/categoryl3.xhtml";
 	//#34445 End
-
+	
 	/**
 	 * Instantiates a new category backing bean.
 	 */
@@ -1651,9 +1651,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		String returnUrl = null;
 		
 		try { //#34445
-		// validation for fields
-		validatePmCategoryL3(); //#34445 Validate first
-		validateNewAndDuplicateCategory();
+			// validation for fields
+			validatePmCategoryL3(); //#34445 Validate first
+			validateNewAndDuplicateCategory();
 
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);

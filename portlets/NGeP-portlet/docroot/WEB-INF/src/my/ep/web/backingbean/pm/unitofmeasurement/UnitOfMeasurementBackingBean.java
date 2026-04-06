@@ -374,12 +374,12 @@ public class UnitOfMeasurementBackingBean extends
 		log.info("saveMeasurementDtls");
 
 		String messageId = null;
-		
+
 		//#34445 - Start
 		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
 		PmUom pmUom = this.getManagedBean().getPmUom();
-		
+
 		try {
 			validationMessage(pmUom);
 
@@ -387,11 +387,12 @@ public class UnitOfMeasurementBackingBean extends
 			reqDTO.setPmUom(pmUom);
 
 			String[] msgParam = new String[] { pmUom.getUomCode() };
-
+			
 			if (pmUom.isBrandNew()) {
 				messageId = MessageConst.TD_80600;
 			} else {
 				messageId = MessageConst.TD_80601;
+
 			}
 			reqDTO.setTrackingStatus(true);
 

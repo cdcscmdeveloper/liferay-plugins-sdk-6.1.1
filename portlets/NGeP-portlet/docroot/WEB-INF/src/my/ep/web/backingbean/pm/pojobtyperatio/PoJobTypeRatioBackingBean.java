@@ -238,7 +238,7 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 		//#34445 Start
 		try {
 			poJobRatioTypeValidation();
-
+			
 			jobRatioSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IPoJobTypeRatioSO.class);
 			boolean isBrandNew = getManagedBean().getPoJobTypeRatio().isBrandNew();
