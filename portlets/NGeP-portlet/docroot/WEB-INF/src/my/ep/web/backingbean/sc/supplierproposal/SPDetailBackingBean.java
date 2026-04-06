@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -37,8 +38,10 @@ import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -54,9 +57,12 @@ import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -107,7 +113,10 @@ import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -123,9 +132,11 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
@@ -144,6 +155,7 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -711,21 +723,17 @@ public class SPDetailBackingBean extends
 			scQtProposalChecklists.addAll(reqDTO.getTechnicalChecklist());
 			scQtProposalChecklists.addAll(reqDTO.getFinancialChecklist());
 			ScQtProposal scQtProposal = reqDTO.getScQtProposal();
-			scQtProposal
-					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
-							scQtProposalChecklists));
+			scQtProposal.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(scQtProposalChecklists));
+			if (null != this.getManagedBean().getScQtSampleLable()) {//35117-start
+				scQtProposal.setScQtSampleLable(this.getManagedBean().getScQtSampleLable());
+			}//35117-End
 			this.getManagedBean().setScQtPRPExperiences(null);
-			String originalText = prepareOriginalText(getManagedBean()
-					.getSmSupplier());
-			byte[] signedData = getManagedBean().getSpkiBackingBean()
-					.spkiSignTransaction(originalText);
+			String originalText = prepareOriginalText(getManagedBean().getSmSupplier());
+			byte[] signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
 			digiSign.setSpkiSignedData(signedData);
 
 			if (null != digiSign) {
-				updateSpkiDigiSignData(digiSign,
-						ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL,
-						scQtProposal.getQtProposalId(),
-						scQtProposal.getProposalNo(), originalText);
+				updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, scQtProposal.getQtProposalId(), scQtProposal.getProposalNo(), originalText);
 			}
 			
 			// #27233 : CR add new tracking diary entry for update - START
@@ -1104,6 +1112,19 @@ public class SPDetailBackingBean extends
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
+		// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
+			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
+				if (finProposalChecklist.getScQtCheckList().getTitle()
+						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
+					finProposalChecklist.setSubmitted(false);
+					break;
+				}
+			}
+		}
 
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
@@ -1163,8 +1184,16 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
+	// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
 	public String saveFinancialSpecificationAction(boolean isCompleted) {
-		debugLogger("saveFinancialSpecificationAction supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+		return saveFinancialSpecificationAction(isCompleted, false);
+	}
+	// #21695 -end-
+
+	// #21695 -start-
+	public String saveFinancialSpecificationAction(boolean isCompleted, boolean ignoreNav) {
+		// #21695 - End - fix completed financial proposal still ticked after technical proposal updated
+
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getFinancialQtProposalChecklist();
@@ -1196,8 +1225,12 @@ public class SPDetailBackingBean extends
 			//Bug #31725 Start 
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
 			//Bug #31725 End 
-			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
-					proposalResDTO.getProposalChecklist(), isCompleted);
+			
+			// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+			return navigatePrepareFinProposalCheckList(scQtProposalChecklist, proposalResDTO.getProposalChecklist(),
+					isCompleted, ignoreNav);
+			// #21695 - End - fix completed financial proposal still ticked after technical proposal updated
+
 		}
 
 		return null;
@@ -1229,21 +1262,59 @@ public class SPDetailBackingBean extends
 							getManagedBean().getSelectedZone().getSpecZoneId(),
 							getManagedBean().getTemplateSpecBean());
 				}
+				
+				// #28777 & #29729, 35592 - Start
+				List<Long> deactivatedZones = new ArrayList<>();
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+					for (TplSpecZoneDtl zoneDtl : this.getManagedBean().getZones()) {
+						if (zoneDtl.isBranchDeactivated())
+							deactivatedZones.add(zoneDtl.getSpecZoneId());
+					}
+				}
+				// #28777 & #29729, 35592 - End
+				
+				// #21695 - #33391 - #33949 - Start.
+				if (null != getManagedBean().getQt().getQtStatus()
+						&& null != getManagedBean().getQt().getQtStatus().getStatusId()
+						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION
+								|| QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
+										.getDisplayPortletId()) || QTConstants.PORTLET_NAME_QT_SEARCH
+									.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()))) {
+					if (null != getManagedBean().getZoneTplSpecBeanMap()
+							&& getManagedBean().getZoneTplSpecBeanMap().size() > 0
+							&& null != getManagedBean().getZoneTplSpecAnsMap()
+							&& getManagedBean().getZoneTplSpecAnsMap().size() > 0) {
+						for (Entry<Long, List<TplSpecAnswer>> entry : getManagedBean().getZoneTplSpecAnsMap()
+								.entrySet()) {
+							getManagedBean().getZoneTplSpecBeanMap().get(entry.getKey()).getSpecAnswerList()
+									.addAll(entry.getValue());
+						}
+						
+						getManagedBean().getZoneTplSpecAnsMap().clear();
+					}
+				}
+				// #21695 - #33391 - #33949 - End.
+				
 				List<TemplateSpecBean> templateSpecBeans = new ArrayList<TemplateSpecBean>();
 				List<TplSpecAnswer> tobeDeletedAnswers = new ArrayList<TplSpecAnswer>();
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
-				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
+				// #28777 & #29729, 35592(35838) - Start
+				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {
+					// #28777 & #29729, 35592(35838) - End
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
-						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
+						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785	
+						// #28777 & #29729, 35592 - Start
+						if (deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+							continue;
+						// #28777 & #29729, 35592 - End
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
-							for (TplSpecAnswer specAnswer : templateSpecBean
-									.getSpecAnswerList()) {
-								//#21695 farid IN MONITORING START	
+							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
+								//#21695 
 								
 								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
@@ -1259,13 +1330,11 @@ public class SPDetailBackingBean extends
 									answers.add(specAnswer);
 								
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
-												.getProcurementMode().getParameterCode())) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
-												.getProcurementMode().getParameterCode())) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
@@ -1275,7 +1344,7 @@ public class SPDetailBackingBean extends
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
-								//#21695 farid IN MONITORING END	
+								//#21695 	
 								}
 								//Bug_34259 - End
 								else{
@@ -1286,9 +1355,12 @@ public class SPDetailBackingBean extends
 									 }
 								}
 							}
-							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
-									.getSpecAnswerList().size())){
-								throw new EpException(MessageConst.ERROR_760464);
+							if (!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean.getSpecAnswerList().size())){
+								// #21695 -start-
+								for (TplSpecAnswer answerNullPrice : toDeleteZoneAnswers) {
+									throw new EpException(MessageConst.ERROR_760464);
+								}
+								// #21695 -end-
 							} else if (!toDeleteZoneAnswers.isEmpty()) {
 								Set<TplSpecSuppAnswer> zoneSpecSuppAnswersSet = new HashSet<TplSpecSuppAnswer>();
 								for(TplSpecAnswer specAnswer :toDeleteZoneAnswers){
@@ -1302,22 +1374,37 @@ public class SPDetailBackingBean extends
 							toDeleteZoneAnswers = null;
 						}
 					}
-				}
+				}// #28777 & #29729, 35592(35838)
 				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
 				proposalReqDTO.setToBeRemovedSpecSuppAnswers(tobeDeletedSuppAnswers);
 			} else {
-				answers = getManagedBean().getTemplateSpecBean()
-						.getSpecAnswerList();
+				answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
 			}
             if(answers == null || answers.size() == 0){
-            	throw new EpException(MessageConst.ERROR_760463);	
-			} else {
+				// #21695 -start-
             	for(TplSpecAnswer answer:answers){
+					// #21695 to allow item has 0 qty and 0 price
+					if (answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() != null
+							|| answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() == null) {
+						throw new EpException(MessageConst.ERROR_760463);
+					}
+				}
+				// #21695 -end-
+			} else {
+				for (TplSpecAnswer answer : answers) {
 					if (isCompleted) {
-						if (answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)) {
+						// start #21695 to allow item has 0 qty and 0 price
+						// bug #31733 add condition -start-
+						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
+								&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+								|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null)
+						// bug #31733 -end-
+						// #21695 -end-
+						{
 							throw new EpException(MessageConst.ERROR_760464);
 						}
 					}
+
             		//added because of Bug #17772, please do not remove or change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
             			boolean isItemTypeService = false; 
@@ -1341,49 +1428,53 @@ public class SPDetailBackingBean extends
             		super.setUserDetails(answer);
             	}
             }
-			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
-			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
-					.getTplSpecQuestion().getClPriceTypeCode()
-					.getParameterCode());
+            //#21695 check null
+            if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){ //#21695
+            	TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
+    			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
+    					.getTplSpecQuestion().getClPriceTypeCode()
+    					.getParameterCode());
 
-			BigDecimal compareTotalAmount = new BigDecimal(99999999999.99);
+    			BigDecimal compareTotalAmount = new BigDecimal(99999999999.99);
 
-			if (isPriceTypeTier) {
-				BigDecimal quantity;
-				if (answers.get(0).getTplSpecZoneQty() != null) {
-					quantity = answers.get(0).getTplSpecZoneQty().getQty();
-				} else {
-					quantity = answers.get(0).getTplSpecQuestion()
-							.getClQuantity();
-				}
+    			if (isPriceTypeTier) {
+    				BigDecimal quantity;
+    				if (answers.get(0).getTplSpecZoneQty() != null) {
+    					quantity = answers.get(0).getTplSpecZoneQty().getQty();
+    				} else {
+    					quantity = answers.get(0).getTplSpecQuestion()
+    							.getClQuantity();
+    				}
 
-				for (TplSpecAnswer answer : answers) {
-					//20200701@asyrafhaziq - Bug #28464 - Start
-					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
-							answer.getTplSpecQuestion(),
-							answer.getRatePerUom(), quantity);	
-					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) == 1) {
-						throw new EpException(MessageConst.ERROR_760437);
-					}
-					//20200701@asyrafhaziq - Bug #28464 - End
-				}
+    				for (TplSpecAnswer answer : answers) {
+    					//20200701@asyrafhaziq - Bug #28464 - Start
+    					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
+    							answer.getTplSpecQuestion(),
+    							answer.getRatePerUom(), quantity);	
+    					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) == 1) {
+    						throw new EpException(MessageConst.ERROR_760437);
+    					}
+    					//20200701@asyrafhaziq - Bug #28464 - End
+    				}
 
-			} else {
-				for (TplSpecAnswer answer : answers) {
-					if (answer.getAnswerNumeric() != null
-							&& answer.getAnswerNumeric().compareTo(
-									compareTotalAmount) == 1) {
-						throw new EpException(MessageConst.ERROR_760437);
-					} else if (answer.getTplSpecQuestion().getTplSpecMaster()
-							.getTotalAmount() != null
-							&& answer.getTplSpecQuestion().getTplSpecMaster()
-									.getTotalAmount()
-									.compareTo(compareTotalAmount) == 1) {
-						throw new EpException(MessageConst.ERROR_760437);
-					}
-				}
-			}
-			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+    			} else {
+    				for (TplSpecAnswer answer : answers) {
+    					if (answer.getAnswerNumeric() != null
+    							&& answer.getAnswerNumeric().compareTo(
+    									compareTotalAmount) == 1) {
+    						throw new EpException(MessageConst.ERROR_760437);
+    					} else if (answer.getTplSpecQuestion().getTplSpecMaster()
+    							.getTotalAmount() != null
+    							&& answer.getTplSpecQuestion().getTplSpecMaster()
+    									.getTotalAmount()
+    									.compareTo(compareTotalAmount) == 1) {
+    						throw new EpException(MessageConst.ERROR_760437);
+    					}
+    				}
+    			}
+    			
+            }
+            proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(getManagedBean().getQt());
 			proposalReqDTO.setCompletedProposalChecklist(completedFinSpec);
@@ -1400,6 +1491,9 @@ public class SPDetailBackingBean extends
 		}
 		finally {
 			proposalSO = null;
+			// #21695 - #33391 - #33949 - Start.
+			hideZeroQtySpecAns(getManagedBean().getZoneTplSpecBeanMap());
+			// #21695 - #33391 - #33949 - End.
 		}
 		return proposalResDTO;
 	}
@@ -1416,7 +1510,8 @@ public class SPDetailBackingBean extends
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 		ProposalResDTO proposalResDTO = new ProposalResDTO();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getTechnicalQtProposalChecklist();
-
+		ScQt scQt = getManagedBean().getQt(); // #21695
+		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTProposalSO.class);
@@ -1426,7 +1521,13 @@ public class SPDetailBackingBean extends
 			if (isCompleted) {
 				processResponseException(answers);
 			}
-
+			
+			/** #21695 Farid -start- */
+			if (scQt != null && scQt.isZonal()) {
+				proposalReqDTO.setTplSpecZoneQties(answers.get(0).getTplSpecQuestion().getTplSpecZoneQties());
+			}
+			// #21695 -end-
+			
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(this.getManagedBean().getQt());
@@ -1453,13 +1554,75 @@ public class SPDetailBackingBean extends
 				TplSpecQuestion tplSpecQuestion = answer.getTplSpecQuestion();
 				PmParameter answerType = tplSpecQuestion.getAnswerTypeCode();
 				String answerTypeCode = answerType != null ? answerType.getParameterCode() : null;
+				
 				//start Bug #31750
-				if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()))
-					|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null)
-					|| ((ParameterConst.ANSWER_TYPE_NUMERIC.equalsIgnoreCase(answerTypeCode) && answer.getAnswerNumeric() == null))) {
+				// #21695 -start-
+				if (!getManagedBean().getQt().isPartial()) {
+					if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer
+							.getAnswerText()))
+							|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer
+									.getAnswerCompliance() == null)
+							|| ((ParameterConst.ANSWER_TYPE_NUMERIC.equalsIgnoreCase(answerTypeCode) && answer
+									.getAnswerNumeric() == null))) {
 						throw new EpException(MessageConst.ERROR_760480);
+					}
+					// end Bug #31750
+				} else if (getManagedBean().getQt().isPartial() && !getManagedBean().getQt().isZonal()) {
+
+					if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode)
+							&& StringUtils.isEmpty(answer.getAnswerText()) && answer.getOffer() != null
+							&& answer.getOffer() == true || ParameterConst.ANSWER_TYPE_TEXT
+							.equalsIgnoreCase(answerTypeCode)
+							&& StringUtils.isEmpty(answer.getAnswerText())
+							&& answer.getOffer() == null)
+							|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode)
+									&& answer.getAnswerCompliance() == null && answer.getOffer() != null
+									&& answer.getOffer() == true || (ParameterConst.ANSWER_TYPE_DROPDOWN
+									.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null && answer
+									.getOffer() == null))
+							|| ((ParameterConst.ANSWER_TYPE_NUMERIC.equalsIgnoreCase(answerTypeCode)
+									&& answer.getAnswerNumeric() == null && answer.getOffer() != null && answer
+									.getOffer() == true) || (ParameterConst.ANSWER_TYPE_NUMERIC
+									.equalsIgnoreCase(answerTypeCode) && answer.getAnswerNumeric() == null && answer
+									.getOffer() == null))) {
+						throw new EpException(MessageConst.ERROR_760480);
+					}
+				} else if (getManagedBean().getQt().isPartial() && getManagedBean().getQt().isZonal()) {
+					List<Long> ItemListTemp = new ArrayList<Long>();
+					for (TplSpecAnswer currentAnswers : getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+
+						for (TplSpecZoneQty findqty : currentAnswers.getTplSpecQuestion().getTplSpecZoneQties()) {
+							if (findqty.getTplSpecZoneOffer() != null
+									&& findqty.getQty().compareTo(BigDecimal.ZERO) > 0
+									&& answer
+											.getTplSpecQuestion()
+											.getSpecQuestionId()
+											.equals(findqty.getTplSpecZoneOffer().getTplSpecQuestion()
+													.getSpecQuestionId()) && !findqty.getTplSpecZoneOffer().isOffer()) {
+
+								ItemListTemp
+										.add(findqty.getTplSpecZoneOffer().getTplSpecQuestion().getSpecQuestionId());
+							}
+						}
+						if (currentAnswers.getTplSpecQuestion().getParentSpecQuestion() != null
+								&& currentAnswers.getTplSpecQuestion().getAnswerTypeCode() != null
+								&& ItemListTemp.contains(currentAnswers.getTplSpecQuestion().getParentSpecQuestion()
+										.getSpecQuestionId())) {
+							if (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(currentAnswers
+									.getTplSpecQuestion().getAnswerTypeCode().getParameterCode())
+									&& currentAnswers.getAnswerCompliance() == null
+									|| ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(currentAnswers
+											.getTplSpecQuestion().getAnswerTypeCode().getParameterCode())
+									&& StringUtils.isEmpty(currentAnswers.getAnswerText())
+									|| ParameterConst.ANSWER_TYPE_NUMERIC.equalsIgnoreCase(currentAnswers
+											.getTplSpecQuestion().getAnswerTypeCode().getParameterCode())
+									&& currentAnswers.getAnswerNumeric() == null) {
+								throw new EpException(MessageConst.ERROR_760480);
+							}
+						}
+					}
 				}
-				//end Bug #31750
+				// #32202, #32164 related to #21695 -end-
 			}
 		}
 	}
@@ -2068,8 +2231,7 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
-	//Enhancement #26339 -start-
-	@SuppressWarnings("unused")
+	
 	//Enhancement #26339 -end-
 	public String saveAssetLiabilityAction(boolean isCompleted) {
 		debugLogger("saveAssetLiabilityAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
@@ -2677,7 +2839,8 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setTechnicalQtProposalChecklist(scQtProposalChecklist);
 		this.getManagedBean().setTechnicalQtChecklist(scQtProposalChecklist.getScQtCheckList());
-		
+		this.getManagedBean().getTemplateSpecBean().getSpecAnswerList(); // #21695 
+
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(definationType)) {
 
 			pageUrl = retrieveTemplateSpecDtls(scQtProposalChecklist);
@@ -2746,14 +2909,54 @@ public class SPDetailBackingBean extends
 		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
 		SmSupplier smSupplier = new SmSupplier();
+		//#21695 Farid Start
+		ScQt scQT = this.getManagedBean().getQt();
+		//#21695 Farid End
+		
 		smSupplier.setSupplierId(getManagedBean().getSupplierId());
 		templateSpecBean.setSupplier(smSupplier);
-		templateSpecBackingBean.getManagedBean().setScQt(
-				this.getManagedBean().getQt());
+		//#21695 Farid Start
+		templateSpecBackingBean.getManagedBean().setScQt(scQT);
+		//#21695 Farid End
 		templateSpecBackingBean.getManagedBean().setDocType(
 				ParameterConst.DOCTYPE_QUOTATION);
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
+		
+		// #21695 Farid Start 2/4/2021
+		if (scQT.isZonal()) {
+			populateZoneDetailIntoTreeNode(templateSpecBean);
 
+			IQTProposalSO proposalSO = null;
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTProposalSO.class);
+			ScQt scQt = getManagedBean().getQt();
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setScQt(scQt);
+			reqDTO.setQtSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setQtId(scQt.getQtId());
+			// To retrieve financial specification details
+			ProposalResDTO resDTO = proposalSO.retrieveTechnicalSpecZoneDtlsSupplier(reqDTO);
+
+			List<TplSpecZoneDtl> zones = resDTO.getZones();
+			
+			if (CollectionUtils.isNotEmpty(zones)) {
+				this.getManagedBean().setZones(zones);
+				// wip doesnt need to execute this code below
+				IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				SpecificationReqDTO specReqDto = new SpecificationReqDTO();
+				specReqDto.setScQt(this.getManagedBean().getQt());
+				if (specSo.checkWipScoreSettingMax(specReqDto) > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					if (this.getManagedBean().getQt().isPartial()) {
+						disableDefaultSelected();
+					} else {
+						// for proposal technical item & spec
+						removeItemBaseOnSuppZoneQtyZero(templateSpecBean);
+					}
+				}
+			}
+		}
+		// #21695 Farid end 2/4/2021
+		
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE;
 	}
 
@@ -2894,12 +3097,12 @@ public class SPDetailBackingBean extends
 							sampleSubmissionDtls.get(0));
 				}
 			}
-
-			// 33509 &33191&11104 - start
+			
+			// 33509 &33191, #11104 - start
 			if (null != resDTO.getScQtProposal()) {
 				getManagedBean().setQtProposal(resDTO.getScQtProposal());
 			}
-			// 33509 &33191&11104 - End
+			// 33509 &33191, #11104 - End
 
 			getManagedBean().setScQtSampleLable(resDTO.getScQtSampleLable());
 			return NAV_TO_SAMPLING_ADDRESS_PAGE;
@@ -3025,6 +3228,16 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		String pageUrl = null;
 		String definationType = scQtProposalChecklist.getScQtCheckList()
 				.getDefinationType().getParameterCode();
+		
+		for (ScQtProposalChecklist tecChecklistDetail : this.getManagedBean().getTecCheckDetailsList()) {
+			if (tecChecklistDetail.getScQtCheckList().getTitle()
+					.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+					&& !tecChecklistDetail.isSubmitted() && !tecChecklistDetail.isFromTechnicalProposal()) {
+				throw new EpException(MessageConst.WARN_7602692);
+			}
+
+		}
+		
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
 		this.getManagedBean().setFinancialQtChecklist(
@@ -3129,6 +3342,11 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 						this.getManagedBean().setSelectedZone(specZone);
 						retrieveTemplateSpecBean();
 					}
+					
+					// #21695 - #33391 - Start.
+					hideZeroQtySpecAns(getManagedBean().getZoneTplSpecBeanMap());
+					// #21695 - #33391 - End.
+					
 					this.getManagedBean().setSelectedZone(zones.get(0));
 					getManagedBean().setTemplateSpecBean(
 							getManagedBean().getZoneTplSpecBeanMap().remove(
@@ -3227,6 +3445,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			templateSpecBean.setSelectedSpecQuestion(null);
 			templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 			
+			// #21695 Farid start(calculation rate per uom reset to 0 if partial offer
+			this.getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(templateSpecBean);
+			// #21695 Farid end				
 			this.getManagedBean().getTemplateSpecBackingBean()
 				.calcGrandTotalAmount(templateSpecBean);
 			
@@ -4015,7 +4236,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		BigDecimal totalAccountReceivable = assetLiability
 				.getTotalAccountReceivable();
 
-		if (liabilities == null || liabilities.intValue() <= 0) {
+		if (liabilities == null || liabilities.compareTo(BigDecimal.ZERO) <= 0) { //#28473
 			// #26339 - Start
 			assetLiability.setAcidRatio(new BigDecimal(0));
 			assetLiability.setCurrentRatio(new BigDecimal(0));
@@ -4346,6 +4567,59 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		} //#28785-End
 	}
 
+	// #21695 - #33391 - #33949 - Start.
+	/**
+	 * @param templateSpecbean
+	 * @return
+	 */
+	private void hideZeroQtySpecAns(Map<Long, TemplateSpecBean> zoneTplSpecBeanMap) {
+		// #33567 - Start.
+		if (getManagedBean().getZoneTplSpecAnsMap() != null) {
+			getManagedBean().getZoneTplSpecAnsMap().clear();
+		}
+		// #33567 - End.
+
+		ScQt scQt = getManagedBean().getQt();
+		
+		if (null != scQt.getQtStatus() && null != scQt.getQtStatus().getStatusId()
+				// #33831 - Start.
+				&& (QTConstants.PORTLET_NAME_SUPPLIER_PROPOSAL.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| QTConstants.PORTLET_NAME_QT_MAINTENANCE
+								.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) || QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						&& null != getManagedBean().getZoneTplSpecBeanMap()
+						&& getManagedBean().getZoneTplSpecBeanMap().size() > 0)
+		// #33831 - End.
+		) {
+			for (Map.Entry<Long, TemplateSpecBean> entry : zoneTplSpecBeanMap.entrySet()) {
+
+				List<TplSpecAnswer> specAnswerList = entry.getValue().getSpecAnswerList();
+
+				Iterator<TplSpecAnswer> iterator = specAnswerList.iterator();
+				List<TplSpecAnswer> hiddenAnsList = null;
+				while (iterator.hasNext()) {
+					TplSpecAnswer answer = iterator.next();
+					if (null != answer.getTplSpecZoneQty() && null != answer.getTplSpecZoneQty().getQty()
+							&& answer.getTplSpecZoneQty().getQty().intValue() == 0) {
+						if (hiddenAnsList == null) {
+							hiddenAnsList = new ArrayList<TplSpecAnswer>();
+						}
+						hiddenAnsList.add(answer);
+						iterator.remove();
+					}
+				}
+
+				if (CollectionUtils.isNotEmpty(hiddenAnsList)) {
+					if (getManagedBean().getZoneTplSpecAnsMap() == null) {
+						getManagedBean().setZoneTplSpecAnsMap(new TreeMap<Long, List<TplSpecAnswer>>());
+					}
+					getManagedBean().getZoneTplSpecAnsMap().put(entry.getKey(), hiddenAnsList);
+				}
+			}
+		}
+	}
+	// #21695 - #33391 - #33949 - End.
+
 	/**
 	 * Method to calculate maximum proposals allowed
 	 */
@@ -4408,6 +4682,18 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			if(this.getManagedBean().isFinancialAttchment()){//#28792-start
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
+			evaluateWIP(this.getManagedBean().getQt()); //#21695
+			// #28777 & #29729 - Start
+			boolean branchDeleted = checkValidationSupplierBranchDeleted();
+			if (branchDeleted) {
+				this.getManagedBean().setReadOnly(branchDeleted);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+			// #28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -4572,7 +4858,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 */
 	//Bug #33726
 	private String generateDeclarationFromVelocity(ScQt scQt, ScQtProposal proposal) throws Exception {
-		debugLogger("generateDeclarationFromVelocity");
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmSupplier().getCompanyName() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
@@ -4590,10 +4875,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		VelocityContext context = new VelocityContext();
 		Date date = retriveDatesforOrgProfile(scQt.getPublishDate(),
 				scQt.getCreatedDate());
-		debugLogger("date" + date);
+
 		String ptjName = retrievePTJByOrgProfileId(
 				pmOrgProfile.getOrgProfileId(), date);
-		debugLogger("ptjName" + ptjName);
+
 		if (scQt != null) {
 			String title = scQt.getQtTitle();
 			if (title == null) {
@@ -4606,15 +4891,15 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			context.put("title", title);
 			context.put("qtNo", scQt.getQtNo());
 		}
-		
-		// #32648 - start
+
+		//#32648 - start
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Date currentDate = new Date();
-
+		
 		if (null != currentDate) {
 			context.put("currentDate", formatter.format(currentDate));
 		}
-		// #32648 - start
+		//#32648 - start
 
 		if (pmUser != null) {
 			context.put("userName", pmUser.getUserName());
@@ -4793,10 +5078,18 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 *            the is completed
 	 * @return the string
 	 */
-	private String navigatePrepareFinProposalCheckList(
-			ScQtProposalChecklist currProposalChecklist,
+	// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+	private String navigatePrepareFinProposalCheckList(ScQtProposalChecklist currProposalChecklist,
 			ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
-		
+		return navigatePrepareFinProposalCheckList(currProposalChecklist, newProposalChecklist, isCompleted, false);
+	}
+	// #21695 -end-
+
+	// #21695 -start-
+	private String navigatePrepareFinProposalCheckList(ScQtProposalChecklist currProposalChecklist,
+			ScQtProposalChecklist newProposalChecklist, boolean isCompleted, boolean ignoreNav) {
+		// #21695 - End - fix completed financial proposal still ticked after technical proposal updated
+
 		updateQtFinNdTechProposalCheckList(
 				currProposalChecklist,
 				newProposalChecklist,
@@ -4806,7 +5099,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 		if (isCompleted) {
 			return NAV_TO_PROPOSAL_MAIN_PAGE + "?faces-redirect=true";
-		} else {
+		} else if (!ignoreNav) { // #21695
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -4816,6 +5109,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 			return null;
 		}
+		
+		return null; // #21695
 	}
 
 	/**
@@ -5376,6 +5671,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO
 					.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
 			validateFinacialProposalAttachments(true);//#28792
+			// #21695 Farid start 1/4/2021
+			validateTechSuppNotOfferAll();
+			// #21695 Farid end 1/4/2021
+
 			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		} finally {
 			proposalSO = null;
@@ -5383,6 +5682,26 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		this.getManagedBean().setAutoUpdate(false);
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to return true, if branch in supplier has been deleted
+	 * 
+	 * @param supplier
+	 *            id
+	 * @return true or false
+	 **/
+	public boolean checkValidationSupplierBranchDeleted() {
+		boolean isSupplierBranchDeleted = false;
+		ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+			isSupplierBranchDeleted = true;
+			this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
+		}
+		return isSupplierBranchDeleted;
+	}
+	
+	// #28777 & #29729 - End
 	
 	//Bug #30073 Start
 	public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
@@ -5749,8 +6068,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 	}
 
-	//#25089@hatta - start
-	public void onTabChange(TabChangeEvent event){
+	// #25089@hatta - start
+	public void onTabChange(TabChangeEvent event) {
 		// #38852 Start 12/08/2025 Vinod
 		// Added Status checking to show the popup only for supplier.
 		ScQt scQt = this.getManagedBean().getQt();
@@ -5761,7 +6080,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 		// #38852 End 12/08/2025 Vinod
 
-		if(event.getTab().getId().equals("tab1")){
+		if (event.getTab().getId().equals("tab1")) {
 			try {
 				Thread.sleep(500);
 				RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
@@ -5770,8 +6089,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}
 		}
 	}
-		
-	public void dafaultPopUpSupplierInfo(){
+
+	public void dafaultPopUpSupplierInfo() {
 		// #38852 Start 12/08/2025 Vinod
 		// Added Status checking to show the popup only for supplier.
 		ScQt scQt = this.getManagedBean().getQt();
@@ -5782,10 +6101,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 		// #38852 End 12/08/2025 Vinod
 
-	   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+		RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
 	}
-	//#25089@hatta - end
-		
+	// #25089@hatta - end
+
 	//#28792-start			
 	private void validateFinacialProposalAttachments(boolean validationSuspend){
 		
@@ -6019,4 +6338,233 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		return newScQtProposalChecklist;
 	}
 	// Bug #39517@Syazani 07/01/2026 -- End
+		
+	// #21695 farid start display tree node
+	private void populateZoneDetailIntoTreeNode(TemplateSpecBean templateSpecBean) {
+
+		TplSpecZone specZone = templateSpecBean.getSpecMaster().getTplSpecZone();
+		List<TplSpecZoneDtl> specZoneDtls = null;
+		List<TreeNode> zoneGeneralTrees = getManagedBean().getZoneGeneralTrees();
+
+		if (specZone != null) {
+			ISpecZoneLocSO specZoneLocSO;
+			try {
+				specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ISpecZoneLocSO.class);
+
+				SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+				reqDTO.setDocType(specZone.getDocType());
+				reqDTO.setDocId(specZone.getDocId());
+
+				// Get zone details list from db.
+				SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlAndLocByDocIdNType(reqDTO);
+
+				specZoneDtls = resDTO.getZonesList();
+			} finally {
+				specZoneLocSO = null;
+			}
+		}
+
+		if (zoneGeneralTrees == null) {
+			zoneGeneralTrees = new ArrayList<TreeNode>();
+			getManagedBean().setZoneGeneralTrees(zoneGeneralTrees);
+		} else {
+			zoneGeneralTrees.clear();
+		}
+
+		if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+			for (TplSpecZoneDtl zone : specZoneDtls) {
+
+				if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
+					List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
+
+					for (TplSpecZoneLoc specLoc : zone.getTplSpecZoneLocs()) {
+						if (specLoc.isZonalLocation()) {
+							specZoneLocs.add(specLoc);
+						}
+					}
+					zoneGeneralTrees.add(LocationSingleton.getInstance().constuctTreeNode(zone, specZoneLocs));
+				}
+			}
+		}
+	}
+	// #21695 farid end
+
+	// #21695 Farid start 27/8/2021
+	public void validateTechSuppNotOfferAll() {
+
+		ScQt scQt = this.getManagedBean().getQt();
+		final Long qtId = scQt.getQtId();
+
+		if (scQt.isPartial() && scQt.isZonal()) {
+			List<TplSpecAnswer> answerList = this.getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+			ITemplateSpecSO templateSpecSO = null;
+			templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+					ITemplateSpecSO.class);
+
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+
+			SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setSupplier(smSupplier);
+			reqDTO.setQtId(qtId);
+			reqDTO.setAnswerList(answerList);
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+
+			//TemplateSpecResDTO resDTO = templateSpecSO.checkTecNotOfferAllSupProposal(reqDTO);
+			templateSpecSO.checkTecNotOfferAllSupProposal(reqDTO);
+		} else if (scQt.isPartial() && !scQt.isZonal()) {
+			List<TplSpecAnswer> answerList = this.getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+			ITemplateSpecSO templateSpecSO = null;
+			templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+
+			SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setSupplier(smSupplier);
+			reqDTO.setQtId(qtId);
+			reqDTO.setAnswerList(answerList);
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+
+			//TemplateSpecResDTO resDTO = templateSpecSO.validateSpecAnwerNotOfferNonZonal(reqDTO);
+			templateSpecSO.validateSpecAnwerNotOfferNonZonal(reqDTO);
+		}
+	}
+	// #21695 Farid end 27/8/2021
+		
+	// Bug #33947, #21695 && #35090 start
+	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
+		if (specQties != null &&
+				CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+			
+				if(this.getManagedBean().getZones().size() == 1){
+					
+					for (TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+						if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion() != null
+								&& specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+								.equals(specQties.getTplSpecQuestion().getSpecQuestionId())
+								&& !specAns.isDisableRow() && specAns.getOffer() != null && specAns.getOffer().equals(false)) {
+							specQties.getTplSpecZoneOffer().setOffer(true);
+							specAns.setAnswerText("");
+							specAns.setAnswerNumeric(null);
+							specAns.setAnswerRemark(null);
+							specAns.setAnswerCompliance(null);
+						}
+					}
+				}
+				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+					if (specQties.getTplSpecZoneDtl() != null && 
+							specZones.getSpecZoneId().equals(specQties.getTplSpecZoneDtl().getSpecZoneId())) {
+							return true;
+					}
+					
+				}
+				specQties.getTplSpecZoneOffer().setOffer(true);
+				specQties.getTplSpecZoneOffer().setNotApplicable(true);
+		}
+		return false;
+	}
+	// Bug #33947, #21695 end
+	
+	// Bug #33947, #32952, #21695 -start-
+	public void disableDefaultSelected() {
+		for (TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+			if(ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion().getQuestionType())){
+				continue;
+			}//#35090
+			if (retrieveAns != null && this.getManagedBean().getZones().size() > 0) {
+	
+				retrieveAns.setDisableRow(true);
+				
+				for (TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()) {
+					if (specZonedtl != null) {
+						for (TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()) {
+							if (this.getManagedBean().getZones().size() != retrieveAns.getTplSpecQuestion()
+									.getTplSpecZoneQties().size()) {
+
+								if (specZoneQty != null
+										&& specZoneQty.getQty().compareTo(BigDecimal.ZERO) > 0
+										&& specZonedtl.getSpecZoneId().equals(
+												specZoneQty.getTplSpecZoneDtl().getSpecZoneId())) {
+							
+									if (retrieveAns.isDisableRow())
+										retrieveAns.setDisableRow(false);
+								}
+							} else {
+								retrieveAns.setDisableRow(false);
+							}
+
+						}
+					}
+				}
+			}
+			
+			if (retrieveAns.isDisableRow()) {
+				retrieveAns.setOffer(false);
+			}
+		}
+	}
+	// Bug #33947, #21695 Farid End
+	// 20220127@syazani - Enhancement #3657 - specific error message - Start
+	/*
+	private boolean duplicateErrorZoneCheck(String str, List<String> errorLst) {
+		if (errorLst.size() > 0) {
+			for (String err : errorLst) {
+				if (err.equalsIgnoreCase(str)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	*/
+	// 20220127@syazani - Enhancement #3657 - specific error message - End
+	
+	//#21695 - Start
+	/**
+	 * 
+	 * @param templateSpecBean
+	 * Below method is to get supplier zone & remove the item if the supplier only has 1 zone and the zone is 0 quantity
+	 */
+	public void removeItemBaseOnSuppZoneQtyZero(TemplateSpecBean templateSpecBean) {
+		List<TplSpecAnswer> asnwerList = new ArrayList<>();
+		long specquestionidItem = 0;
+		for (TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+			// Technical Spec Item 
+			if (ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion()
+					.getQuestionType())
+					&& retrieveAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+							.equals(specquestionidItem)) {
+				asnwerList.add(retrieveAns);
+			}
+			// Technical Item
+			if (retrieveAns != null && this.getManagedBean().getZones().size() >= 1) {//#36226 more than 1 zones also included
+				for (TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()) {
+					if (specZonedtl != null) {
+						for (TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()) {
+							boolean hasDifferentSizes = this.getManagedBean().getZones().size() != retrieveAns.getTplSpecQuestion().getTplSpecZoneQties().size() ;
+							boolean hasPositiveQty = specZoneQty != null && specZoneQty.getQty().compareTo(BigDecimal.ZERO) > 0;
+							boolean hasMatchingSpecZoneId = specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId());
+
+							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId
+									&& !retrieveAns.getTplSpecQuestion().getSpecQuestionId()
+									.equals(specquestionidItem)) {//#36226 oncce per item per zone
+								specquestionidItem = retrieveAns.getTplSpecQuestion().getSpecQuestionId();
+								asnwerList.add(retrieveAns);
+							}
+						}
+					}
+				}
+			}
+		}
+		if(CollectionUtils.isEmpty(asnwerList)){
+			templateSpecBean.setSpecAnswerList(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList());
+		}else{
+			templateSpecBean.setSpecAnswerList(asnwerList);
+		}
+	}
+	//#21695 - End
 }
