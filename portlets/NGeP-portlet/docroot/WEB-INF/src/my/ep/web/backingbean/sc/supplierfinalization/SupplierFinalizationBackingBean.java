@@ -44,6 +44,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -78,10 +79,11 @@ import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.actor.ScActorResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
-import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO; //#21695
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -446,6 +448,7 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
+			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP
 			getManagedBean().setOriginalFinalizationSecretaryUserId(
 						scQt.getFinalizationSecratery().getUserId());
 
@@ -1288,6 +1291,13 @@ public class SupplierFinalizationBackingBean extends
 		String evalStageId = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap().get("evaluationStageId");
 		int evaluationStageId = 0;
+		//35087 start
+		IQTEvaluationSO evaluationSO=null;
+		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTEvaluationSO.class);
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		//35087 end
 		if (evalStageId != null) {
 			evaluationStageId = Integer.parseInt(evalStageId);
 		}
@@ -1298,7 +1308,7 @@ public class SupplierFinalizationBackingBean extends
 		Long selectedItemId = null;
 		String evaluationStage = null;
 		String evaluationHeader = null;
-		
+		req4SerDTO.setQtId(qtId); //35087
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
 						//#28784 - Start
@@ -1332,9 +1342,33 @@ public class SupplierFinalizationBackingBean extends
 						evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_DEMO_EVAL_STAGE;
 						//#28784 - End
 					 } else {
-						evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-						evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
-					 }
+							// #21695 tec by itemize result pop up farid - start
+							if (getManagedBean().isItemize()) {
+								//35087
+								int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+
+								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
+									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+								} else {
+									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
+										selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
+									} else {
+										getManagedBean().setQualifiedSuppliersByEvalStage(null);
+										getManagedBean().setDisqualifiedSuppliersByEvalStage(null);// #28777&#29729
+										log.debug("None of the item(s) has been row selected");
+										return;
+									}
+								}
+								//35087
+							} else {
+								evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
+								evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+							}
+							//#21695 tec by itemize result pop up farid - end
+						 }
 					 break;
 					 
 			case 2 : if (getManagedBean().isItemize()) {
@@ -1356,6 +1390,11 @@ public class SupplierFinalizationBackingBean extends
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
+		//#21695 tec by itemize result pop up farid - start
+		if (getManagedBean().getCurrentZone() != null) { //#26440
+		//#21695 tec by itemize result pop up farid - end
+			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
+		 }
 		if (getManagedBean().getCurrentZone() != null && evaluationStageId==2) { //#26440
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
@@ -6157,6 +6196,10 @@ public class SupplierFinalizationBackingBean extends
 				.getParameterCode();
 		String finalizationMethod = getManagedBean().getFinalizationMethod();
 
+		//#33174 disable package if there is no supplier qualified by package #21695 - Start
+		disablePacSF(this.getManagedBean().getScQt().getQtId());
+		//#33174 disable package if there is no supplier qualified by package #21695 - End
+		
 		// Disable award by package when procurement category is medicine
 		//getManagedBean().isProcCategoryMedicine()
 		if (SourcingConstants.EVALUATE_BY__ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())) {
@@ -7251,7 +7294,12 @@ public class SupplierFinalizationBackingBean extends
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
 			} else {
-				throw new EpException(MessageConst.ERROR_760206);
+								
+				// #21695 allow no records validation start
+				if (CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls())) {
+					throw new EpException(MessageConst.ERROR_760206);
+				}
+				// #21695 allow no records validation end			
 			}
 		}		
 	}
@@ -7586,11 +7634,20 @@ public class SupplierFinalizationBackingBean extends
 				
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setQtId(qtId);
-				if (null != selectedZoneId && (SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage) || SourcingConstants.EVAL_STAGE_FINANCIAL_PKG.equalsIgnoreCase(evaluationStage))) {
+				
+				//#21695 tec by itemize result pop up farid - start
+				if (null != selectedZoneId && (SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage) || SourcingConstants.EVAL_STAGE_FINANCIAL_PKG.equalsIgnoreCase(evaluationStage)
+						|| SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM.equalsIgnoreCase(evaluationStage))) {
+				//#21695 tec by itemize result pop up farid - end
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
 				reqDTO.setRequestItemId(selectedItemId);
 				reqDTO.setEvaluationStage(evaluationStage);
+				
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				reqDTO.setSearchBean(searchBean);
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
@@ -7778,6 +7835,13 @@ public class SupplierFinalizationBackingBean extends
 					reqDTO.setRequestItemId(selectedItemId);
 				} 
 				reqDTO.setSearchBean(searchBean);
+				// BUG 34212, #21695, #25138 -start-
+				reqDTO.setEvaluationStage(evaluationStage);
+				// BUG 34212, #21695, #25138 -end-
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
@@ -10846,4 +10910,65 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	//#21692 - End
+	
+	//#33174 disable package if there is no supplier qualified by package #21695 - Start
+	private void disablePacSF(Long qtId) {
+
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setQtId(qtId);
+			boolean isPacDisable = false;
+
+			if (this.getManagedBean().getScQt().getEvaluateBy()
+					.equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)) {
+				isPacDisable = true;
+			} else if (this
+					.getManagedBean()
+					.getScQt()
+					.getEvaluateBy()
+					.equalsIgnoreCase(
+							SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)) {
+
+				int check = qtSuppFinalizationSO
+						.retrieveSuppliersNotQualified(qtId);
+				if (check == 0) {
+					isPacDisable = true;
+					this.getManagedBean().getScQt()
+							.setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
+				}
+			}
+			this.getManagedBean().setOfferAll(isPacDisable);
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+	//#33174 disable package if there is no supplier qualified by package #21695 - End
+
+	// #35129 Start
+	private void loadRecommededSuppliersItemize() {
+
+		boolean itemized = false;
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		String recommendType = scQtFinalization.getRecommendedTypeId().getParameterCode();
+		String finalizationMethod = getManagedBean().getFinalizationMethod();
+
+		for (ScQtRecommend checkrecmddtls : scQtFinalization.getScQtRecommends()) {
+			if (CollectionUtils.isEmpty(checkrecmddtls.getRecommendDtls())) {
+				itemized = ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType) ? true : false;
+				this.getManagedBean().setItemize(itemized);
+
+				setSelectionMode(finalizationMethod);
+				loadRecommededSuppliersIntoCachedData(itemized);
+				break;
+			}
+			break;
+		}
+	}
+	// #35129 End
 }
