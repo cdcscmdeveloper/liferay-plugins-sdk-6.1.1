@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import my.ep.constant.pm.AuditConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -113,7 +114,7 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 
 		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
 				CommonConstants.DEFAULT_COUNTRY_CODE);
-		description = ParameterHelper.getInstance().getParameterDesc("DT",
+		description = ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SOFTCERT_PROVIDER,
 				parameterCode, locale);
 
 		return description;
