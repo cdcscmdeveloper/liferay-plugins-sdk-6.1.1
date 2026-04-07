@@ -113,7 +113,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String supplierBranch;
 	
 	/** The selected tab index. */
-	private int selectedTabIndex = 5;// 34491 - set default to 5
+	private int selectedTabIndex;
 	
 	/** The supplier hq personnel. */
 	private SmPersonnel supplierHQPersonnel;
