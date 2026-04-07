@@ -1880,6 +1880,7 @@ public class PurchaseInDefaultBackingBean extends
 			 * purchaseInDefault.setContractedItem(contractItem);
 			 */
 			
+			// #26059 - Start
 			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
 					&& purchaseInDefault.getContractedItem().getScRequestItem()
 							.getCmItem() != null) {
@@ -1892,7 +1893,7 @@ public class PurchaseInDefaultBackingBean extends
 										.getContractedItem().getScRequestItem()
 										.getCmItem().getItemName()));
 			}
-			
+			// #26059 - End
 			
 			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
 			getManagedBean().setCheckContractItem(Boolean.TRUE);
