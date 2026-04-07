@@ -42,7 +42,7 @@
 					postUpdateListener="poSumTotalNumValofPoRptBB.resetPtjProfile()"
 					update=":form"
 					saveObject="poSumTotalNumValofPoRptBB.managedBean.ptjGroup"
-					conditionField="#{poSumTotalNumValofPoRptBB.constuctConditionForPTJGroupAdhocReport()}">
+					conditionField="#{poSumTotalNumValofPoRptBB.constructConditionForPTJGroupByRole()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -58,7 +58,7 @@
 					value="#{poSumTotalNumValofPoRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="poSumTotalNumValofPoRptBB.managedBean.ptj"
-					conditionField="#{poSumTotalNumValofPoRptBB.constuctConditionForPTJAdhocReport()}">
+					conditionField="#{poSumTotalNumValofPoRptBB.constructConditionForPTJByRole()}">
 				</ac:lov>
 			</td>
 		</tr>

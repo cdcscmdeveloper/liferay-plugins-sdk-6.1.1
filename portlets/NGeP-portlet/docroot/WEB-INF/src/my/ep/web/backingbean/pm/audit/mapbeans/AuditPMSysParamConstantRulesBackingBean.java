@@ -271,7 +271,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			if (!repByRange.containsKey(key))
 				repByRange.put(key, v);
 
-			final List<PmParameterDesc> descs = v.getSupplAcctTypeId().getPmParameterDescsSpecCallOnly();
+			final List<PmParameterDesc> descs = v.getSupplAcctTypeId().getPmParameterDescs();
 			final PmParameterDesc d = descs.get(1);
 			if (v.isSameSupplAcctType()) {
 				getParameterDesc(descs, codeNamesByRange, key, d);

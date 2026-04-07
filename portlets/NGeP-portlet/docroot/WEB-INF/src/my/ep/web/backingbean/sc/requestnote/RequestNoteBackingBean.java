@@ -1166,10 +1166,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
 		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-				validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
-						getManagedBean().getRequestSupplierItem());
+				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());				
 		    }
+		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+					getManagedBean().getRequestSupplierItem());
 			// 27868 - end
 		}
 		// 26284 - End
@@ -1713,7 +1713,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						rnDtl.getRequestItem().setItemName(utils.removeItemNameNA(rnDtl.getRequestItem().getItemName()));
 						//#26059 - End
 						// 27868 - start
-						if (getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+						String procType = getManagedBean().getProcurementType();
+						
+						if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+								&& getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(
+										ReasonCategory.JUSTIFICATION_PK7.value())) {
 							finalizeWIPCodePK7(rnDtl);
 						}
 						// 27868 - end
