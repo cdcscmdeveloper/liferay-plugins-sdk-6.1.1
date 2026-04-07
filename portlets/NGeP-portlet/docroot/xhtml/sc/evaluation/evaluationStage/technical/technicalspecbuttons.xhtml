@@ -19,11 +19,12 @@
 							immediate="true"
 							action="#{evaluationBackingBean.technicalSpecBackaction}" /> <p:commandButton
 							value="#{lbl['lbl.btn.save']}"
-							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+							or evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}"
 							style="float:right;" update="@all" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.saveTempleateSpecDtls}" /></td>
-				</tr>
+				</tr> <ui:remove><!-- #25138 --></ui:remove>
 			</table>
 
 

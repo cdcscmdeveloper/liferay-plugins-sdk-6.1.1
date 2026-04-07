@@ -25,17 +25,19 @@
 								<c:otherwise>
 									<c:choose>
 										<c:when test="#{!zoneCoverageReadonly and !isReadOnly}">
-											<p:selectOneMenu id="locationLevels" required="true"
-												label="#{lbl['lbl.sc.zone.location.level']}"
-												value="#{scQt.zoneLocationLevel.parameterId}"
-												style="width: 205px;">
-			
-												<f:selectItems
-													value="#{createQtBB.getDropdownLocationValues(ParameterTypeConst.locationLevel,scQt)}" />
-												<p:ajax event="change" update="generalLocationList"
-													listener="#{createQtBB.selectZoneLocationLevel}"></p:ajax>
-											</p:selectOneMenu>
-											<p:message id="withzone" for="locationLevels" display="icon"></p:message>
+												<!-- #25635 -start- -->
+												<p:selectOneMenu id="locationLevels"
+													required="#{empty param['skipvalidation']}"
+													label="#{lbl['lbl.sc.zone.location.level']}"
+													value="#{scQt.zoneLocationLevel.parameterId}"
+													style="width: 205px;">
+													<!-- #25635 -end- -->
+													<f:selectItems
+														value="#{createQtBB.getDropdownLocationValues(ParameterTypeConst.locationLevel,scQt)}" />
+													<p:ajax event="change" update="generalLocationList"
+														listener="#{createQtBB.selectZoneLocationLevel}"></p:ajax>
+												</p:selectOneMenu>
+												<p:message id="withzone" for="locationLevels" display="icon"></p:message>
 										</c:when>
 										<c:otherwise>
 											<p:inputText id="locLvlTxt" value="#{createQtBB.getParameterDesc(scQt.zoneLocationLevel)}" style="width:195px" disabled="true" />

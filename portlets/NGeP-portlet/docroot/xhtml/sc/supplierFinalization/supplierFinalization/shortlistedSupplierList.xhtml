@@ -120,6 +120,14 @@
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;" />
+						<ui:remove>#29021 - start </ui:remove>
+		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
+		               		<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.rating']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+							</f:facet>
+		               	</p:column>
+						<ui:remove>#29021 - end </ui:remove>
 						<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
 							<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /> <br />
@@ -251,7 +259,11 @@
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 				</p:column>
-
+               	<!-- 29021 -start- -->	
+				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
+					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
+				</p:column>
+               	<!-- 29021 -end- -->
 				<p:column style="text-align:center;">
 					<c:choose>
 						<c:when test="#{isRefinalizedAndBiddingAward}">
@@ -384,6 +396,14 @@
 							style="width:10%; text-align:right;" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}"
 							style="width:5%; text-align:right;" />
+									               	<!-- 29021 -start- -->
+		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
+		               		<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.rating']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+							</f:facet>
+		               	</p:column>
+		               	<!-- 29021 -end- -->
 						<p:column rowspan="2"
 							style="width:5%; text-align:center; white-space:normal;">
 							<f:facet name="header">
@@ -520,7 +540,11 @@
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 				</p:column>
-
+				<ui:remove>#29021 - start </ui:remove>
+				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
+					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
+				</p:column>
+				<ui:remove>#29021 - end </ui:remove>	
 				<p:column style="text-align:center;">
 					<c:choose>
 						<c:when test="#{isRefinalizedAndBiddingAward}">
