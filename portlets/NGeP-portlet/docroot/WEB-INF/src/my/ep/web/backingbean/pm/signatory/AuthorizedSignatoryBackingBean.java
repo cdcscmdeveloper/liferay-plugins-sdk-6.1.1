@@ -281,7 +281,8 @@ public class AuthorizedSignatoryBackingBean extends
 				}
 			}
 		}
-		if(activeNumber>1){
+
+		if (activeNumber > 1) {
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770144);
 		} else if (activeNumber == 0) {
