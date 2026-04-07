@@ -67,7 +67,6 @@ import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-
 import org.apache.log4j.Logger;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.IAuditTrailSO;
@@ -1966,4 +1965,10 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 	//13320-End
+	
+	//#34400
+	public void onCallFirstUserTncDialog(){
+		getManagedBean().setAggreeDeclareAdmin(false);
+	}
 }
+

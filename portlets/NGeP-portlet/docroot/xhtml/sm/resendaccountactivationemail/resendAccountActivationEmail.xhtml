@@ -166,10 +166,23 @@
 				update=":form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 		</div>
 		
-		<p:confirmDialog id="confirmDialog" closable="true"
-			message="#{lbl['lbl.sm.req.reactivation.confirmation.msg']}"
-			header="#{lbl['lbl.sm.userprofile.confirmation']}" severity="alert"
-			widgetVar="confirmDialog">
+		<!-- #34400 - start -->
+		<p:confirmDialog id="confirmDialog" closable="true" header="#{lbl['lbl.btn.dialog.cofirm.header']}" 
+			 widgetVar="confirmDialog">
+				<script type="text/javascript">
+    				var collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+    				for (var i = 0; i &lt; collection.length; i++) {
+       					 collection[i].parentNode.removeChild(collection[i]);
+    				}
+				</script>
+				<f:facet name="message">
+				<h:outputText value="#{lbl['lbl.sm.confirm.reactivate.email.note']}" />
+				<br/>
+				<br/>
+				<h:outputText value="#{lbl['lbl.sm.confirm.reactivate.email']} #{resendAccountActivationEmailBackingBean.suppAdminEmail}?" />
+			</f:facet>
+			<!-- #34400 - end -->
+			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" update="@form"
 					action="#{resendAccountActivationEmailBackingBean.resendAccountActivationEmail}"
