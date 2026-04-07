@@ -1272,12 +1272,14 @@ public class CommonApplBackingBean extends
 				
 				Date currDate = new Date();
 				getManagedBean().setExpDate(expiredAcc.getExpDate());
-				Date expDate = getManagedBean().getExpDate(); 
+				Date expDate = getManagedBean().getExpDate();
 				
-				if (currDate.after(expiredAcc.getExpDate()) && expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-					Calendar dateAfterOneYear = Calendar.getInstance();
-					dateAfterOneYear.setTime(expDate);
-					dateAfterOneYear.add(Calendar.MONTH, 12);
+				Calendar dateAfterOneYear = Calendar.getInstance();
+				dateAfterOneYear.setTime(expDate);
+				dateAfterOneYear.add(Calendar.MONTH, 12);
+				
+				if (currDate.after(expiredAcc.getExpDate()) && currDate.before(dateAfterOneYear.getTime())
+						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
 					
 					int secsInADay = 24 * 60 * 60;
 					long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate
