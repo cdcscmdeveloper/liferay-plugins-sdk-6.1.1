@@ -1266,7 +1266,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			ctBackingBean.getManagedBean().setDirectPurchase(isDirectPurchase());//#40005
-			updateProcModeFlag()//Fix - #30045
+			updateProcModeFlag();//Fix - #30045
 
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
