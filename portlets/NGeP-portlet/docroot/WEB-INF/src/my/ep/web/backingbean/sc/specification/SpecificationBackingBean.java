@@ -5774,7 +5774,6 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList
 					.getDefinationType().getParameterCode())) {//#11104-start
-				checkDuplicateTitle(checkList);	// Bug #40087@Syazani 06/04/2026
 				List<ScQtCheckList> technicalChecklist=this.getManagedBean().getScQtCheckSt2techProposal();//#25635-start
 				this.getManagedBean().setSampleSpecCheckList(new ArrayList<ScQtCheckList>());
 				 this.getManagedBean().getQt().setSampleReq(Boolean.TRUE);//11104ReendorseStart728
@@ -20896,44 +20895,43 @@ specReqDTO.getScQtCheckList().setSampleStatus(
 }// 11104-Reendose794
 	SpecificationResDTO specresDTO = specSO
 			.saveSampleTemplateSpecs(specReqDTO);
-	if (specresDTO.isSuccessful()) {
-		specCommitteeResetData();
-		retriveSampleSpecmaster(specresDTO.getScQtCheckList(), this
-				.getManagedBean().getSampleItemName());
-		for (ScQtCheckList checklist : technicalChecklist) {
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-					.equalsIgnoreCase(checklist.getDefinationType()
-							.getParameterCode())) {
-				specReqDTO.setSampleCheckList(specresDTO
-						.getSampleChecklist());
-				int index = technicalChecklist.indexOf(checklist);
-				specReqDTO.getSampleCheckList().setSampleWip(Boolean.TRUE);//11104WIP
-				technicalChecklist.set(index,
-						specresDTO.getSampleChecklist());
-			} else if (specresDTO.getScQtCheckList().getQtChecklistId()
-					.equals(checklist.getQtChecklistId())) {
-				int index = technicalChecklist.indexOf(checklist);
-				technicalChecklist
-						.set(index, specresDTO.getScQtCheckList());
+		if (specresDTO.isSuccessful()) {
+			specCommitteeResetData();
+			retriveSampleSpecmaster(specresDTO.getScQtCheckList(), this.getManagedBean().getSampleItemName());
+
+			// Bug #40087@Syazani 06/04/2026 -- Start
+			ListIterator<ScQtCheckList> itScQtCheckListTechnical = technicalChecklist.listIterator();
+			while (itScQtCheckListTechnical.hasNext()) {
+				ScQtCheckList checklist = itScQtCheckListTechnical.next();
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
+						.getParameterCode())) {
+					specReqDTO.setSampleCheckList(specresDTO.getSampleChecklist());
+					specReqDTO.getSampleCheckList().setSampleWip(Boolean.TRUE);// 11104WIP
+					itScQtCheckListTechnical.set(specresDTO.getSampleChecklist());
+				} else if (specresDTO.getScQtCheckList().getQtChecklistId().equals(checklist.getQtChecklistId())) {
+					itScQtCheckListTechnical.set(specresDTO.getScQtCheckList());
+				}
 			}
-		}
-		for (ScQtCheckList checklist : sampleChecklist) {// #25635-start
-			if (specresDTO.getScQtCheckList().getQtChecklistId()
-					.equals(checklist.getQtChecklistId())) {
-				int index = sampleChecklist.indexOf(checklist);
-				sampleChecklist.set(index, specresDTO.getScQtCheckList());
+
+			ListIterator<ScQtCheckList> itScQtCheckListSample = sampleChecklist.listIterator();
+			// #25635-start
+			while (itScQtCheckListSample.hasNext()) {
+				ScQtCheckList checklist = itScQtCheckListSample.next();
+				if (specresDTO.getScQtCheckList().getQtChecklistId().equals(checklist.getQtChecklistId())) {
+					itScQtCheckListSample.set(specresDTO.getScQtCheckList());
+				}
 				break;
 			}
-		}// #25635-End
-		specReqDTO.setTobeRemoveList(null);// 11104-start
-		getManagedBean().setMarkDeletedTechChecklist(null);
-		getManagedBean().setMarkDeletedFinChecklist(null);// 11104-End
-		saveSpecMaintenanceWorkFlowStatus();
-			successMessage(
-					MessageConst.INFO_700004,
-					getMessageCommon("lbl.sc.qt.sampel.technical.panel.item.search.header"),
-					"", Boolean.FALSE);
-	}
+			// #25635-End
+			// Bug #40087@Syazani 06/04/2026 -- End
+
+			specReqDTO.setTobeRemoveList(null);// 11104-start
+			getManagedBean().setMarkDeletedTechChecklist(null);
+			getManagedBean().setMarkDeletedFinChecklist(null);// 11104-End
+			saveSpecMaintenanceWorkFlowStatus();
+			successMessage(MessageConst.INFO_700004,
+					getMessageCommon("lbl.sc.qt.sampel.technical.panel.item.search.header"), "", Boolean.FALSE);
+		}
 	return null;
 }
 /***11104-start
@@ -25096,22 +25094,4 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	// #38151 End
-	
-	// Bug #40087@Syazani 06/04/2026 -- Start
-	private void checkDuplicateTitle(ScQtCheckList scQtCheckList) {
-		List<ScQtCheckList> technicalCheckList = this.getManagedBean().getScQtCheckSt2techProposal();
-		String scQtTitleSpec = scQtCheckList.getTitle() + "_"
-				+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
-		if (null == scQtCheckList.getQtChecklistId() && null != technicalCheckList && !technicalCheckList.isEmpty()) {
-			for (ScQtCheckList techlist : technicalCheckList) {
-				String techTitleList = techlist.getTitle() + "_"
-						+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
-				if (techTitleList.trim().replaceAll("\\s", "")
-						.equalsIgnoreCase(scQtTitleSpec.trim().replaceAll("\\s", ""))) {
-					throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
-				}
-			}
-		}
-	}
-	// Bug #40087@Syazani 06/04/2026 -- End
 }
