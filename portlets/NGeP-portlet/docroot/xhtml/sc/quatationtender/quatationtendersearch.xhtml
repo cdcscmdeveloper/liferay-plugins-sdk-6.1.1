@@ -134,8 +134,11 @@
 					</p:column>
 
 					<!-- Bug #27412,30451,17376 START -->
-					<p:column headerText="#{lbl['lbl.sc.status']}"
-						style="width:200px;white-space: normal;" rendered="#{!qTDetailBB.isMofSupplier()}">
+						<!-- #25635 -start- -->
+						<p:column headerText="#{lbl['lbl.sc.status']}"
+							style="width:200px;white-space: normal;"
+							rendered="#{!qTDetailBB.isMofSupplier()}">
+							<!-- #25635 -end- -->
 						<h:outputText
 							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"
 							rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType and !qTDetailBB.managedBean.bdSfFlow}" />
@@ -228,12 +231,26 @@
 									partialSubmit="true" process="@this" />
 								<ui:remove>#25791 end</ui:remove>									
 							<!-- Bug #27412 END -->
-
+								<!-- #25635 -start- -->
+								<p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}"
+									styleClass="commandLink_link"
+									rendered="#{!qTDetailBB.isAuditor() and qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isDeskOfficer() and (qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_ARCHIVED) or qTDetailBB.isQTCloneStatus(scQt.qtStatus.statusId))}"
+									icon="ui-icon-edit" update=":form:displayk"
+									title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}"
+									action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}"
+									oncomplete="disableSpecificNodes()" partialSubmit="true"
+									process="@this" />
+								<ui:remove>#25791 end</ui:remove>
+								<!-- #25635 -end- -->
 						</p:menuButton>
 					</p:column>
 					<!-- ***17376#55 - end -->
 				<!-- 19336,25201,17376,19287 -start- -->
 				</p:dataTable>
+					<!-- #25635 -start- -->
+					<ui:include
+						src="/xhtml/sc/quatationtender/createquotationtender/clone/clone-multiple.xhtml" />
+					<!-- #25635 -end- -->
 				</div>
 	
 				<!-- Loa/Loi Data Table -->

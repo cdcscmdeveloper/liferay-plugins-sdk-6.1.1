@@ -15,6 +15,7 @@
 	<ui:param name="disQualifiedSupplierListTooltip"
 		value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage.tooltip']}" />
 
+<!-- #33178 start -->
 	<table>
 		<tr>
 			<td><h:outputLabel value="#{lbl['lbl.sc.view.by']}" /></td>
@@ -25,11 +26,10 @@
 						listener="#{evaluationBackingBean.financialsummaryChange}"
 						update="@([id$=financialviewSummary])"></p:ajax>
 				</p:selectOneMenu></td>
-		</tr>
+		</tr> 
 
 	</table>
-
-
+<!-- #33178 end -->
 
 	<h:panelGroup id="financialviewSummary">
 		<c:if

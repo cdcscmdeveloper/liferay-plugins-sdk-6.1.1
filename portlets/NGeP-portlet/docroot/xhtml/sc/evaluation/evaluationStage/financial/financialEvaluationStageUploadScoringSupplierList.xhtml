@@ -78,9 +78,10 @@
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
 					value="#{evaFinSupplier.totalUserScore}" required="true"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-						or isRejected
-						or (evaFinSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
-						or evaFinSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"><ui:remove>21692</ui:remove>
+					or evaluationBackingBean.managedBean.tabItemPackageIndex eq '2'
+					or isRejected
+					or (evaFinSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or evaFinSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"><ui:remove>21692</ui:remove>
 					<ui:remove>6906 -end-</ui:remove>
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
