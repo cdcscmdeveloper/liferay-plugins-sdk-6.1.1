@@ -477,7 +477,7 @@ public class SmApplicationBackingBean extends
 		titleStyle.setFont(contentFont);
 		
 		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false);
-		//CellStyle colStyleDate = columnStyle(wb,createHelper,false,false,true,true,false);
+		CellStyle colStyleDate = columnStyle(wb,createHelper,false,false,true,true,false);
 		CellStyle colStyleString = columnStyle(wb,createHelper,false,false,false,false,true);
 		CellStyle colStyleBil = columnStyle(wb,createHelper,false,false,true,false,true);
 		//END CELL STYLE
@@ -4154,7 +4154,6 @@ public class SmApplicationBackingBean extends
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
-			
 			// init GST information
 			initGst();
 		}
@@ -10754,10 +10753,9 @@ public class SmApplicationBackingBean extends
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
 		assignValReqdToFalse();
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
-		RequestContext.getCurrentInstance().update(updateIds);
-		return submitPOorApproverReviewToBPM(decision);
-
+		//#34400
+		//#34400
+		return "";
 	}
 
 	/**
@@ -10887,6 +10885,10 @@ public class SmApplicationBackingBean extends
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 		renewSesionObject();
+		//#34400 - start
+		RequestContext.getCurrentInstance().execute(
+				"$('.ui-dialog:visible').hide();$('.ui-widget-overlay').remove();");
+		//#34400 - end
 		return "cancelPendingAcknowledgePage";
 	}
 
@@ -11543,16 +11545,10 @@ public class SmApplicationBackingBean extends
 		} else {
 			retMsg = null;
 		}
-		//START 12483
-		if(res != null && res.equalsIgnoreCase("REVISE")) {
-			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		} else if (res != null && res.equalsIgnoreCase("INQUIRY")) {
-			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
-		} else {
-			// #26136
-			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
-		}
-		//END 12483
+		//#34400 - start
+		RequestContext.getCurrentInstance().execute(
+				"$('.ui-dialog:visible').hide();$('.ui-widget-overlay').remove();");
+		//#34400 - end
 		return retMsg;
 	}
 	
@@ -17349,7 +17345,7 @@ public class SmApplicationBackingBean extends
 		return false;
 	}
 	//#38195 END
-	
+
 	//#38927 START
 	/**
 	 * Validates the supplier categories for the current application.
@@ -17522,7 +17518,7 @@ public class SmApplicationBackingBean extends
 	    }
 	}
 	//#38927 END
-	
+
 	//#39282
 	/**
 	 * To generate unique file name yyyyMMdd_HHmmss

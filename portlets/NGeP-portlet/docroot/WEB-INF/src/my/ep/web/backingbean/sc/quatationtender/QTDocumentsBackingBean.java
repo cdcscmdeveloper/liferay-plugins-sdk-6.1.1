@@ -2540,7 +2540,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					isSubLocLevel = true;
 					locationLevel = "District";
 				}
-
+				
 				// Bug #38731@Syazani 20/08/2025 -- Start 
 				else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(criteria.getLocationLevel().getParameterCode())) {
 					isSubLocLevel = true;

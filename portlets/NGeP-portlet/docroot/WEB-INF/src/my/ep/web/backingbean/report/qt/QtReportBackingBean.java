@@ -26,6 +26,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.dto.rpt.ReportTempInfoReqDTO;
+import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
@@ -51,6 +53,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;

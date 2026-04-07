@@ -26,8 +26,11 @@
 						immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-					<p:commandButton value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.save}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #34400 - START -->
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" >
+					</p:commandButton>
+				<!-- #34159 - END -->
 				</td>
 			</tr>
 		</table>
@@ -742,6 +745,12 @@
 					oncomplete="confirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
+		<!-- #34400 -->
+		<ac:confirmationPopupSM id="confirmSaveDlg" widget="confirmSaveDlg"
+			okAction="smPersonnelBackingBean.save"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
 		
 	</ui:define>
 </ui:composition>

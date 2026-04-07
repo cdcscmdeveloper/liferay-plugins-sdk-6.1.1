@@ -3790,7 +3790,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-			
+
 			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_EPV_CANCEL)) {//#21692 if cancel for epv no need checking
 				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
 			}
