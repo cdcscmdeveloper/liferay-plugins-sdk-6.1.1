@@ -801,8 +801,8 @@ public class PurchaseInquiryBackingBean extends
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateReasonStatus(requestNoteDtls);
 					validateUserProfileAgencyForSpecialItem(requestNoteDtls);
-					validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
 				}
+				validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
 				// 27868 - end
 				// Add selected supplier item.
 				scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
@@ -855,9 +855,9 @@ public class PurchaseInquiryBackingBean extends
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateReasonStatus(requestNote.getRequestNoteDtls());
 					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());
-					validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
-							scRequestSupplierItem);
 				}
+				validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
+						scRequestSupplierItem);
 				// 27868 - end
 				
 				reqDTO.setPmUser(facesScopes.getUserSessionBean());
