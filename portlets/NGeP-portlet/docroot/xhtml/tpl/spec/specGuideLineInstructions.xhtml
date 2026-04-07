@@ -12,9 +12,10 @@
 
 	<p:commandLink styleClass="instruction"
 		style="padding-left: 4px;padding-right: 4px;font-size: 13px;"
-		immediate="true" action="#{specGuideLineInstructionBB.specGuideLineWindow()}"
+		immediate="true"
+		action="#{specGuideLineInstructionBB.specGuideLineWindow()}"
 		value="#{lbl['lbl.sc.spec.items.guideline2.pdf']}." />
-	<br/>
+	<br />
 
 	<ui:remove>#30432 - Start</ui:remove>
 	<ui:remove>
@@ -25,7 +26,7 @@
         for including specGuideLinePopup.xhtml once at its own level.
     </ui:remove>
 	<c:if test="#{empty includePopup or includePopup}">
-	    <ui:include src="specGuideLinePopup.xhtml" />
+		<ui:include src="specGuideLinePopup.xhtml" />
 	</c:if>
 	<ui:remove>#30432 - End</ui:remove>
 </ui:composition>

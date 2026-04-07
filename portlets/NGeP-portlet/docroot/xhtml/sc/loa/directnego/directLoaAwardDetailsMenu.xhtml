@@ -8,7 +8,6 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
-	
 	<ui:remove>#30432 - Start</ui:remove>
 	<c:choose>
 		<c:when test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
@@ -19,7 +18,6 @@
 		</c:otherwise>
 	</c:choose>
 	<ui:remove>#30432 - End</ui:remove>
-	
 	<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include> <br/>
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.uom.instruction.view.progressive.payment.option']}" escape="false" />
 	<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>

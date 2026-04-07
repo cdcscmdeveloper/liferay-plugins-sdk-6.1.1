@@ -19,18 +19,19 @@
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
 			<ui:remove> 28777,29729,30432 - Start </ui:remove>
 			<c:choose>
-				<c:when test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+				<c:when
+					test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
 					<h:outputText styleClass="instruction" escape="false"
 						value="#{lbl['lbl.sc.branch.related.deleted.instruction.four']}" />
-					<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
-						<ui:param name="number" value="5." /> 
+					<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml">
+						<ui:param name="number" value="5." />
 						<ui:param name="includePopup" value="#{includePopup}" />
 						<ui:param name="break" value="&lt;br/&gt;" />
 					</ui:include>
 				</c:when>
 				<c:otherwise>
-					<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
-						<ui:param name="number" value="4." /> 
+					<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml">
+						<ui:param name="number" value="4." />
 						<ui:param name="includePopup" value="#{includePopup}" />
 						<ui:param name="break" value="&lt;br/&gt;" />
 					</ui:include>

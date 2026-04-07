@@ -61,8 +61,9 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SpecGuideLineInstructionsBackingBean.class);
-	//	private StreamedContent specGuideLineStreamContent;	#30432 to remove
-	
+	private final Map<GuidelineType, StreamedContent> guidelineStreamCache = new EnumMap<>(GuidelineType.class); // #30432
+	// private StreamedContent specGuideLineStreamContent; // #30432 to remove
+
 	/**
 	 * Action method to specGuideLinePopUpwindow.
 	 * 
@@ -73,40 +74,42 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		RequestContext.getCurrentInstance().execute(
 				"specGuideLineDlgWidget.show();");	
 	}
-	
-	//	#30432 - Start
+
+	// #30432 - Start
 	public enum GuidelineType {
-	    SPEC_ITEM(SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE),
-	    SPEC_FINANCIAL(SourcingConstants.DOCNAME_QT_SPEC_FINANCIAL_ITEM_GUIDELINE),
-	    SPEC_ITEM_PREPARATION(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
+		SPEC_ITEM(SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE), SPEC_FINANCIAL(
+				SourcingConstants.DOCNAME_QT_SPEC_FINANCIAL_ITEM_GUIDELINE), SPEC_ITEM_PREPARATION(
+				ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 
-	    private final String docName;
+		private final String docName;
 
-	    GuidelineType(String docName) {
-	        this.docName = docName;
-	    }
+		GuidelineType(String docName) {
+			this.docName = docName;
+		}
 
-	    public String getDocName() {
-	        return docName;
-	    }
+		public String getDocName() {
+			return docName;
+		}
 	}
-	//	#30432 - End
-	
+	// #30432 - End
+
 	/**
 	 * this method used to get the SpecGuideLineContent.
 	 * @return the sampleLabelStreamContent
 	 */
 	public StreamedContent getSpecGuideLineStreamContent() throws Exception {
-		return getGuidelineStreamContent(GuidelineType.SPEC_ITEM);	//	#30432
+		return getGuidelineStreamContent(GuidelineType.SPEC_ITEM); // #30432
 	}
 
 	public StreamedContent getSpecPreparationGuideLineStreamContent() throws Exception {
-		return getGuidelineStreamContent(GuidelineType.SPEC_FINANCIAL);	//	#30432
+		return getGuidelineStreamContent(GuidelineType.SPEC_FINANCIAL); // #30432	
 	}
-	
+
+	// #30432 -start-
 	public StreamedContent getSpecItemPreparationGuideLineStreamContent() throws Exception {
-		return getGuidelineStreamContent(GuidelineType.SPEC_ITEM_PREPARATION);	//	#30432
+		return getGuidelineStreamContent(GuidelineType.SPEC_ITEM_PREPARATION);
 	}
+	// #30432 -end-
 
 	private void generateSpecGuideLinePdfFromSharedrepository(ScAttachment attachment, String prefixFileName,
 			String constFileName) throws Exception {
@@ -132,7 +135,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 
 		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ModuleCodeConst.COMMON.toLowerCase());	//	#30432
+		filePath.append(ModuleCodeConst.COMMON.toLowerCase()); // #30432
 		attachment.setFilePath(filePath.toString());
 
 		File theDir = new File(getActualFilePath(attachment));
@@ -166,16 +169,15 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		}
 	}
 	
-	private final Map<GuidelineType, StreamedContent> guidelineStreamCache = new EnumMap<>(GuidelineType.class);	//	#30432
-
-	//	#30432 - Start
+	// #30432 - Start
 	private StreamedContent getGuidelineStreamContent(GuidelineType type) throws Exception {
-	    if (!guidelineStreamCache.containsKey(type)) {
-	        ScSpecGuideLineAttachment attachment = new ScSpecGuideLineAttachment();
-	        generateSpecGuideLinePdfFromSharedrepository(attachment, null, type.getDocName());
-	        guidelineStreamCache.put(type, getAttachmentStreamContent(attachment, CommonConstants.FILE_CONTENT_TYPE_PDF));
-	    }
-	    return guidelineStreamCache.get(type);
+		if (!guidelineStreamCache.containsKey(type)) {
+			ScSpecGuideLineAttachment attachment = new ScSpecGuideLineAttachment();
+			generateSpecGuideLinePdfFromSharedrepository(attachment, null, type.getDocName());
+			guidelineStreamCache.put(type,
+					getAttachmentStreamContent(attachment, CommonConstants.FILE_CONTENT_TYPE_PDF));
+		}
+		return guidelineStreamCache.get(type);
 	}
-	//	#30432 - End
+	// #30432 - End
 }

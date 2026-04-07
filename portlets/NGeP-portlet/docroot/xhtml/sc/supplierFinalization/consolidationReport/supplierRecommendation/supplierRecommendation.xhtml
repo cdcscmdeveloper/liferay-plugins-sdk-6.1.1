@@ -52,18 +52,22 @@
 				</c:if>
 				
 				<td class="tdWidth" valign="top">
-					<ui:remove>#30432 - Start</ui:remove>
 					<h:panelGroup rendered="#{consolidationReportBackingBean.managedBean.itemized}">
-						<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/itemList.xhtml">
+						<ui:remove>#30432 - Start</ui:remove>
+						<ui:include
+							src="#{consolidationReportFolderPath}/supplierRecommendation/itemList.xhtml">
 							<ui:param name="includePopup" value="#{false}" />
 						</ui:include>
+						<ui:remove>#30432 - End</ui:remove>
 					</h:panelGroup>
 					<h:panelGroup id="supplierPanel">
-						<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/qualifiedSupplierList.xhtml">
+						<ui:remove>#30432 - Start</ui:remove>
+						<ui:include
+							src="#{consolidationReportFolderPath}/supplierRecommendation/qualifiedSupplierList.xhtml">
 							<ui:param name="includePopup" value="#{false}" />
 						</ui:include>
+						<ui:remove>#30432 - End</ui:remove>
 					</h:panelGroup>
-					<ui:remove>#30432 - End</ui:remove>
 				</td>
 			</tr>
 		</table>	
