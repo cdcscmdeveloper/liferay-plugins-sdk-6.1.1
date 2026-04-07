@@ -82,13 +82,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public static final String NAV_TO_MAINTAIN = "rejectionReasonMaintain";
 	public static final String NAV_TO_SEARCH = "rejectionReason";
 	//Mapper for DDL
-	private Map<Long, Object> reasonCategoryMapper;
+	private static Map<Long, Object> reasonCategoryMapper;
 	//Mapper for DDL
-	private Map<Long, Object> souringMethodParameterIdMapper;
+	private static Map<Long, Object> souringMethodParameterIdMapper;
 	//Mapper for DDL
-	private Map<Long, Object> conditionFieldMapper;
+	private static Map<Long, Object> conditionFieldMapper;
 	//Mapper for DDL
-	private Map<String, Object> souringMethodMapper;
+	private static Map<String, Object> souringMethodMapper;
 	//List for Paging
 	private IPagingDataModel<PmReasonDesc> pmReasonDescDataModel = new PmReasonPagingDataModel();
 	
@@ -673,53 +673,51 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public String saveRejectReason(){
 		log.info("saveRejectReason - Start");
 		String returnPage = null;
-		//unique reason code
 
-		if(this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterCode().equals(ParameterConst.PURCHASE_IN_DEFAULT) && (this.getManagedBean().getSelectedReason().getPmPIDReasonList() == null || this.getManagedBean().getSelectedReason().getPmPIDReasonList().size() == 0)){
-			throw new EpException(MessageConst.ERROR_770300, new String[]{});
+		//#34445 Start
+		try {
+			if (this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterCode()
+					.equals(ParameterConst.PURCHASE_IN_DEFAULT)
+					&& (this.getManagedBean().getSelectedReason().getPmPIDReasonList() == null || this.getManagedBean()
+							.getSelectedReason().getPmPIDReasonList().size() == 0)) {
+				throw new EpException(MessageConst.ERROR_770300, new String[] {});
+			}
+			// remove pmParameter empty objs
+			if (this.getManagedBean().getSelectedReason().getConditionField() != null
+					&& this.getManagedBean().getSelectedReason().getConditionField().getParameterId() == null) {
+				this.getManagedBean().getSelectedReason().setConditionField(null);
+			}
+			if (this.getManagedBean().getSelectedReason().getSourceMethod() != null
+					&& this.getManagedBean().getSelectedReason().getSourceMethod().getParameterId() == null) {
+				this.getManagedBean().getSelectedReason().setSourceMethod(null);
+			}
+			if (this.getManagedBean().getSelectedReason().isBrandNew()) {
+				generateReasonCode();
+			}
+
+			if (this.getManagedBean().isSuppReason()) {
+				validateRestrictions(this.getManagedBean().getSelectedReason());
+				getAllRestrictions();
+			}
+
+			if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean().getSelectedReason().getRecordStatusFlg()
+					.intValue()) {
+				validateRejectionDesc();
+			}
+
+			if (this.getManagedBean().getSelectedReason().isBrandNew()) {
+				returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
+			} else {
+				returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
+			}
+			log.info("saveRejectReason - End");
+
+		} catch (EpException e) {
+			handleException(e);
+			returnPage = NAV_TO_MAINTAIN;
 		}
-		//remove pmParameter empty objs
-		if(this.getManagedBean().getSelectedReason().getConditionField() != null && this.getManagedBean().getSelectedReason().getConditionField().getParameterId() == null){
-			this.getManagedBean().getSelectedReason().setConditionField(null);
-		}
-		if(this.getManagedBean().getSelectedReason().getSourceMethod() != null && this.getManagedBean().getSelectedReason().getSourceMethod().getParameterId() == null){
-			this.getManagedBean().getSelectedReason().setSourceMethod(null);
-		}
-		if(this.getManagedBean().getSelectedReason().isBrandNew()){
-			generateReasonCode();
-		}
-		
-//		if(!isUniqueReasonCode(this.getManagedBean().getSelectedReason().getReasonCode()
-//				, this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId()
-//				, this.getManagedBean().getSelectedReason().isBrandNew()?null:this.getManagedBean().getSelectedReason().getReasonId())){
-//			throw new EpException(MessageConst.ERROR_770003, new String[]{this.getManagedBean().getSelectedReason().getReasonCode()});
-//
-//		}
-	
-		if(this.getManagedBean().isSuppReason()){
-			validateRestrictions(this.getManagedBean().getSelectedReason());
-			getAllRestrictions();
-		}
-		
-		if(DbValueConst.RECORD_STATUS_ACTIVE == 
-				getManagedBean().getSelectedReason().getRecordStatusFlg().intValue()){
-			validateRejectionDesc();
-		}
-		
-		if(this.getManagedBean().getSelectedReason().isBrandNew()){
-			returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
-		}else{
-			returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
-		}
-		log.info("saveRejectReason - End");
+		// #34445 End
 		return returnPage;
-//		if(isSuccess){
-//			return this.redirectToSearchReason();
-//		}else{
-//			return null;
-//		}
-		
-	
 	}
 	
 	/**
