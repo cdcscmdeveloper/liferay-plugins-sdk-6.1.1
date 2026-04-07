@@ -4643,28 +4643,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return resDTO.getCtContractVer().getSignedDate();
 	}
 	
-	public String newProcurement(){
-		String procur = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			procur = getParameterDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getProcurementType());
-			return procur;
-		}
-		return null;
+	public String newProcurement() {
+		String procur = getParameterDesc(getManagedBean().getContractVer().getCtContract().getProcurementMode());
+		return ContractConst.PROCRUMENT_DIRECT_PURCHASE.equalsIgnoreCase(procur) ? procur : null;
 	}
 	
-	public String newJustification(){
-		String justifi = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			justifi = getReasonDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getJustificationType());
-
-			return justifi;
-		}
-		return null;
+	public String newJustification() {
+	    return newProcurement() != null ? getReasonDesc(
+	        getManagedBean().getContractVer().getCtContract().getReason()) : null;
 	}
-
-
 
 	public String getLanguage() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -5332,40 +5319,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         {@code reasonId} is resolved; {@code false} otherwise.
 	 */
 	public boolean isSpecialItemAgencies() {
-		PmReason reason = getReasonForSpecialItem();
+		PmReason reason = getManagedBean().getContractVer().getCtContract().getReason();
 		if (reason == null) {// avoid NullPointerException
 			return false;
 		} else {
 			reasonId = reason.getReasonId();
 		}
 		return true;
-	}
-
-	/**
-	 * <p>
-	 * If a {@link PmReason} is found in either check, the contract is
-	 * considered to be PK7-related. If both checks return {@code null}, the
-	 * contract is treated as a normal (non-PK7) contract.
-	 * </p>
-	 * 
-	 * @return the {@link PmReason} indicating the PK7 justification type, or
-	 *         {@code null} if the contract is not PK7-related.
-	 */
-	public PmReason getReasonForSpecialItem() {
-		PmReason reason = null;
-		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-			List<CtContractItem> items = getManagedBean().getContractVer().getCtContractItems();
-			if (items != null && items.get(0).getScRequestItem().getRequestNote() != null) {
-				reason = (PmReason) EntityHelper
-						.getNestedProperty(getManagedBean(),
-								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
-			}
-		} else {
-			reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
-					"contractVer.ctContract.loa.justificationType");
-		}
-		return reason;
 	}
 	// End - #30045
 }  
