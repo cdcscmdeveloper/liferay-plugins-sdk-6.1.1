@@ -149,7 +149,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private String selectedAddrDistrictName;
 	private Long selectedAddrCityId;
 	private String selectedAddrCityName;
-
+	
 	private List<PmAddressType> addressTypesCheckingList = new ArrayList<PmAddressType>(); //#34445, Fix as-is bug: #39639
 
 	public OrganisationManagedBean() {

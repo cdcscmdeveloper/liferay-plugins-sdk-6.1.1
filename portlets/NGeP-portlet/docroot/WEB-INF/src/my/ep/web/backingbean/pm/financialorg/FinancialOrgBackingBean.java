@@ -1573,18 +1573,18 @@ public class FinancialOrgBackingBean extends
 			return true;
 		}
 	}
-	public void getBankCode(Long financialOrgId){
-		
-		log.info("Org ProfileID-------->"+financialOrgId);
+	
+	public void getBankCode(Long financialOrgId) {
+		log.info("Org ProfileID-------->" + financialOrgId);
 		IFinancialOrgSO financialOrgSO = null;
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setFinancialOrgId(financialOrgId);
-		financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IFinancialOrgSO.class);
-		FinancialOrgResDTO resDTO  = financialOrgSO.retrieveFinancialSvcByFinancialOrgId(reqDTO);
+		financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+		FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialSvcByFinancialOrgId(reqDTO);
 
 		PmFinancialSvc pmFinancialSvc = resDTO.getPmFinancialSvc();
-		if(resDTO.isSuccessful()){
+		if (resDTO.isSuccessful()) {
 			if (null != pmFinancialSvc) {
 				log.info("BANK CODE" + pmFinancialSvc.getBankCode() + "|" + pmFinancialSvc.getFinancialSvcId());
 				for (PmFinancialAcc financialAcc : getManagedBean().getFinancialOrg().getPmFinancialAccs()) {
@@ -1985,7 +1985,7 @@ public class FinancialOrgBackingBean extends
 	}
 	//20201210@Jacky - Enhancement#28836 - End
 	
-	//#34445, Fix as-is bug: #39508 START
+	// #34445, Fix as-is bug: #39508 START
 	public void setAccountNo(AjaxBehaviorEvent event) {
 		String bankCode = (String) event.getComponent().getAttributes().get("bankCode");
 		String accNo = (String) event.getComponent().getAttributes().get("value");
@@ -1998,9 +1998,9 @@ public class FinancialOrgBackingBean extends
 			}
 		}
 	}
-	//#34445, Fix as-is bug: #39508 END
+	// #34445, Fix as-is bug: #39508 END
 	
-	//#34445, Fix as-is bug: #39508 START
+	// #34445, Fix as-is bug: #39508 START
 	private Boolean isSequenceExist(List<PmFinancialAcc> pmFinancialAccList) {
 		Boolean sequenceExist = Boolean.FALSE;
 		for (PmFinancialAcc acc : pmFinancialAccList) {
@@ -2010,11 +2010,10 @@ public class FinancialOrgBackingBean extends
 		}
 		return sequenceExist;
 	}
-
 	// #34445, Fix as-is bug: #39508 END
-
-	// 34445, Fix as-is bug: #39508 START
-	private Integer setFinancialAccountSequence(List<PmFinancialAcc> pmFinancialAccList, Integer listSize) {
+	
+	// #34445, Fix as-is bug: #39508 START
+	private Integer setFinancialAccountSequence(List<PmFinancialAcc> pmFinancialAccList, Integer listSize){
 		Integer newSize = listSize;
 		for (PmFinancialAcc acc : pmFinancialAccList) {
 			newSize = newSize + 1;
@@ -2022,6 +2021,6 @@ public class FinancialOrgBackingBean extends
 		}
 		return newSize;
 	}
-	//#34445, Fix as-is bug: #39508 END
+	// #34445, Fix as-is bug: #39508 END
 
 }
