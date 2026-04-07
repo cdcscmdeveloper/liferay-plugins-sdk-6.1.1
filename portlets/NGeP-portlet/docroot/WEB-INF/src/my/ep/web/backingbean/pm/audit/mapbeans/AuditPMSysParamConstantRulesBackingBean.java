@@ -422,8 +422,11 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 				ruleValue = formatter.format(amount);
 			} else if(newCreatedItem.getRuleType().getParameterType() != null) {
 				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
-						newCreatedItem.getRuleValue().toUpperCase());
-				ruleValue = pmParameter.getPmParameterDescs().get(1).getCodeName();
+						newCreatedItem.getRuleValue().toUpperCase());				
+				Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+						CommonConstants.DEFAULT_COUNTRY_CODE);
+				ruleValue = ParameterHelper.getInstance().getParameterDesc(pmParameter.getParameterType(),
+						pmParameter.getParameterCode(), locale);
 			}else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("PC")){
 				ruleValue = rawRuleValue;
 			} else {
