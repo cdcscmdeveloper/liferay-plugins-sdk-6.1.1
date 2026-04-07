@@ -2415,9 +2415,7 @@ public class SimpleQuoteBackingBean extends
 				quote.setJustificationType(getReasonByCategoryAndCode(
 						ReasonCategory.JUSTIFICATION_PK7W.value(), quote.getJustificationType().getReasonCode()));
 
-				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateSupplierAccountType(quote);
-				}
+				validateSupplierAccountType(quote);
 				
 			}
 			else if (quote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
@@ -2434,9 +2432,9 @@ public class SimpleQuoteBackingBean extends
 						.getJustificationType().getReasonCode()));
 
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateUserProfileAgency(quote);
-					validateSupplierAccountType(quote);
+					validateUserProfileAgency(quote);					
 				}
+				validateSupplierAccountType(quote);
 				
 			}// 27868 - end
 			else {
