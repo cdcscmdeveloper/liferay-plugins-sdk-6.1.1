@@ -67,8 +67,9 @@
 							</p:menuitem>
 							<!-- #29661 start -->
 							<p:menuitem value="#{lbl['lbl.sc.sr.cat.code']}"
+								update="@form"
 								actionListener="#{directLOABackingBean.getSmSupplierCategory(directLOABackingBean.managedBean.scLoa)}"
-								update="@form">
+								rendered="#{directLOABackingBean.managedBean.showCategoryCode}"><!-- #29661 #40096 adli  -->
 								<f:setPropertyActionListener
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="1" />
