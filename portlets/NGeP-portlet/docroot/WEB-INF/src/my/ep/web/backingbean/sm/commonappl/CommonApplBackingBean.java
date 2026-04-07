@@ -1323,9 +1323,13 @@ public class CommonApplBackingBean extends
 							.getTime()) / 1000;
 					getManagedBean().setDays(((togo + secsInADay) / secsInADay) + "");
 					
+					dateAfterOneYear.setTime(expDate);
+					dateAfterOneYear.add(Calendar.DATE, 1);
+					Date dayAfterExp = dateAfterOneYear.getTime();
+					
 					getManagedBean().setMofAfterExpiryMsg(
 							SmCommonUtil.getMessage(
-									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", expDate), getManagedBean().getDays()}));
+									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", dayAfterExp), getManagedBean().getDays()}));
 				}
 			}
 		}else{
