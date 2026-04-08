@@ -1589,9 +1589,6 @@ public class ConsolidationReportBackingBean extends
 					totalQualifiedSuppliers = resDTO
 							.getTotalQualifiedSuppliers();
 				}
-				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
-						specZoneDtl, item.getRequestItem(),
-						itemQualifiedSuppliers);
 				
 				// #28777 & #29729 - Start
 				if (scQt.isZonal() && specZoneDtl != null
