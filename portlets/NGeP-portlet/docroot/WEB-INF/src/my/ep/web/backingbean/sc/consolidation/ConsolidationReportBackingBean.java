@@ -1589,9 +1589,6 @@ public class ConsolidationReportBackingBean extends
 					totalQualifiedSuppliers = resDTO
 							.getTotalQualifiedSuppliers();
 				}
-				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
-						specZoneDtl, item.getRequestItem(),
-						itemQualifiedSuppliers);
 				
 				// #28777 & #29729 - Start
 				if (scQt.isZonal() && specZoneDtl != null
@@ -1610,7 +1607,7 @@ public class ConsolidationReportBackingBean extends
 				int countItemDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
 				totalQualifiedSuppliers = totalQualifiedSuppliers - countItemDisabled;
 				// 26247 - end
-
+				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(specZoneDtl, item.getRequestItem(), itemQualifiedSuppliers);
 				// #31443, #21695 Start -exclude validate if quantity 0
 				if (scQt != null && !scQt.isPartial() && item.getOrderQty() != null
 						&& item.getOrderQty().compareTo(BigDecimal.ZERO) > 0) {
