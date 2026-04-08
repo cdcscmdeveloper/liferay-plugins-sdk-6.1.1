@@ -1762,8 +1762,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
 					"CategoryBackingBean.saveSubDivision", null, e);
-		} finally {
-			categoryCodeSO = null;
 		}
 		return returnUrl;
 	}
