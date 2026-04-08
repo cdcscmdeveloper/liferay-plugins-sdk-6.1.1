@@ -1286,7 +1286,7 @@ public class CommonApplBackingBean extends
 				
 				Calendar currDateAfterThreeMonths = Calendar.getInstance();
 				currDateAfterThreeMonths.setTime(currDate);
-				currDateAfterThreeMonths.add(Calendar.MONTH, 3);
+				currDateAfterThreeMonths.add(Calendar.DATE, 90);
 				
 				
 				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
