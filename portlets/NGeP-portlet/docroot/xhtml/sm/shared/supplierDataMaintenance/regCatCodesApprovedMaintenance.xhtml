@@ -102,8 +102,8 @@
 				oncomplete="blockWidget.hide()"
 				update=":form" process="@this"
 				action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
-				rendered="#{aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-				aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+				rendered="#{supplierDataMaintenanceBackingBean.managedBean.approverUser and (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+				aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}">
 				<p:graphicImage
 					value="/css/images/design/edit.png"
 					title="#{lbl['lbl.sm.edit']}"
