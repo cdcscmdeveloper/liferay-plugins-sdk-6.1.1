@@ -144,21 +144,12 @@
 							<br />
 
 							<div align="right">
-<<<<<<< HEAD
 								<p:commandButton value="#{lbl['lbl.btn.yes']}"
 									onclick="assignCodeDialogConfirm.hide();"
 									action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									update="@form" />
 								<p:commandButton value="#{lbl['lbl.btn.no']}"
-=======
-								<p:commandButton value="#{lbl['lbl.btn.ok']}"
-									onclick="assignCodeDialogConfirm.hide();"
-									action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									update="@form" />
-								<p:commandButton value="#{lbl['lbl.btn.cancel']}"
->>>>>>> branch 'sit_feat_31503' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 									onclick="assignCodeDialogConfirm.hide();" update="@form" />
 							</div>
 						</p:confirmDialog>
