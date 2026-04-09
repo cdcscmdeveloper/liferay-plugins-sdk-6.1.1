@@ -9921,6 +9921,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().setNewPk7(false);
 			}
 		} else {
+			// The scRequestNote variable is only used to determine the procurement type.
+			// However, the values for reason and procurement type are always retrieved from the CT table.
 			ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(
 					ctBackingBean.getManagedBean(), "contractVer.ctContractItems[0].scRequestItem.requestNote");
 			if (scRequestNote != null) {
