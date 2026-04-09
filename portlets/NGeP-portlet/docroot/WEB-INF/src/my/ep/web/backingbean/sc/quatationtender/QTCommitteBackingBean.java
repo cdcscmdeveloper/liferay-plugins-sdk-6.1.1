@@ -832,7 +832,9 @@ public class QTCommitteBackingBean extends
 			checkCloneNeedRNot(scQt.getEvaluationType(), scQt.getQtStatus(),
 					needToCloneCommittes);
 		}
-		processCommitteeClone(clonedCommittes, needToCloneCommittes);// 39593
+
+		processCommitteeClone(clonedCommittes, needToCloneCommittes); // #39593,#40061
+
 		setQtMaintencesChanges();
 		FacesContext.getCurrentInstance().addMessage(
 				null,
@@ -845,7 +847,7 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setAutoUpdate(true);
 	}
 
-	// 39593 - start
+	// #39593,#40061 - start
 	private void processCommitteeClone(Map<String, List<ScCommitteeMember>> committees, Set<String> committeeTypes) {
 		List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
 		Map<TabBean, List<ScCommitteeMember>> syncCommitteeMap = new HashMap<>();
@@ -900,10 +902,9 @@ public class QTCommitteBackingBean extends
 			Collections.sort(tabBeanCommitteeMembers, new MemberRoleComparator());
 		}
 	}
+	// #39593,#40061 - end
 
-	// 39593 - end
-
-	// 39593 - start
+	// #39593,#40061 - start
 	private ScCommitteeMember cloneMember(ScCommitteeMember member) {
 		try {
 			return (ScCommitteeMember) BeanUtils.cloneBean(member);
@@ -913,10 +914,9 @@ public class QTCommitteBackingBean extends
 		}
 		return null;
 	}
+	// #39593,#40061 - end
 
-	// 39593 - end
-
-	// 39593 - start
+	// #39593,#40061 - start
 	private void rollbackMembersUpdate(Map<TabBean, List<ScCommitteeMember>> syncCommitteeMap) {
 		for (Map.Entry<TabBean, List<ScCommitteeMember>> entry : syncCommitteeMap.entrySet()) {
 			List<ScCommitteeMember> listToSync = entry.getValue();
@@ -930,8 +930,8 @@ public class QTCommitteBackingBean extends
 			listToSync.clear();
 		}
 	}
+	// #39593,#40061 - end
 
-	// 39593 - end
 	/**
 	 * Removes the unselected childs.
 	 * 
@@ -2756,13 +2756,14 @@ public class QTCommitteBackingBean extends
 						&& (QTStatusConst.CMT_COMPLETED.equals(committeeStatusId) || QTStatusConst.CMT_PENDING_SUBMISSION
 								.equals(committeeStatusId));
 			}
-			// 39593 - start
+
+			// #39593,#40061 - start
 			String[] taskNames = new String[] { SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE,
 					SCProcessNameConst.ASSIGN_TEC_COMMITTEE, SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
 					SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE };
 			String taskName = this.getManagedBean().getTaskName();
 			return Arrays.asList(taskNames).contains(taskName);
-			// 39593 - end
+			// #39593,#40061 - end
 			// 31954 - end
 		}
 		return true;
