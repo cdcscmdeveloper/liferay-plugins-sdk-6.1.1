@@ -3992,6 +3992,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					+ common.removeItemNameNA(color.getColorName());
 		}
 		// #31503 -end-
+<<<<<<< HEAD
 
 	// #26059 - Start
 
@@ -4109,4 +4110,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 	// #26059 - End
+=======
+>>>>>>> branch 'sit_feat_31503' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 }

@@ -174,6 +174,7 @@ public class CommonUtils {
 		return formattedDate;
 	}
 	
+<<<<<<< HEAD
 	// #31503, #26059, #27868 -start-
 	/**
 	 * #31503 Remove "N/A" or “NA” or “N A”.
@@ -207,4 +208,22 @@ public class CommonUtils {
         return itemName;
 	}
 	// #31344 end
+=======
+	// #31503 -start-
+	/**
+	 * #31503 Remove "N/A" or “NA” or “N A”.
+	 * 
+	 * @param itemName
+	 * @return
+	 */
+	public String removeItemNameNA(String itemName) {
+		if (itemName != null && !itemName.isEmpty()) {
+			return itemName.replaceAll("\\bN\\s*A\\b|\\bN/A\\b|\\bNA\\b", "");
+		}
+
+		return itemName;
+	}
+	// #31503 -end-
+	
+>>>>>>> branch 'sit_feat_31503' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 }
