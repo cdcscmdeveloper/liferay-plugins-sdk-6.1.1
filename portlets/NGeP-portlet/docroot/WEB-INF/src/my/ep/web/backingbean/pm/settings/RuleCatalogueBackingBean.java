@@ -5461,7 +5461,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
-	//#34397, #34398
+	//#34397, #34398, #27827
 	/**
 	 * Retrieve zones
 	 */
@@ -5593,6 +5593,7 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	// 29650 - end
+	
 	//#34397, #34398, #27827 - start
 	/**
 	 * @param type
@@ -5608,7 +5609,7 @@ public class RuleCatalogueBackingBean extends
 		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
 				getManagedBean().getMainZones() : getManagedBean().getZoneList();
 	}
-	// #27827 - end
+	//#27827 - end
 	
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {

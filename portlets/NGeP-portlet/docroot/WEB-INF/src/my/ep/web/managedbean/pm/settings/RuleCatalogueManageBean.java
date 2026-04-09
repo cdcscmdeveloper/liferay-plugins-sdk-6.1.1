@@ -143,9 +143,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	/* 27827 - START */
 	private List<PmZone> zoneList;
 	private Long selectedZoneId;
-	/* 27827 - END */
 	//#34397, #34398, #27827
 	private List<PmZone> mainZones;
+	/* 27827 - END */
 
 	/************ AUDIT #28895_35509 *************/
 	private FeeExemptionResDTO resDTO;
@@ -1537,6 +1537,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.LOPOSelected = LOPOSelected;
 	}
 	
+	//#27827 - START
 	public List<PmZone> getZoneList() {
 		return zoneList;
 	}
@@ -1562,6 +1563,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.mainZones = mainZones;
 	}
 	//#34397, #34398, #27827 - END
+	//#27827 - END
 
 	/************ AUDIT #28895_35509 *************/
 	public FeeExemptionResDTO getResDTO() {
