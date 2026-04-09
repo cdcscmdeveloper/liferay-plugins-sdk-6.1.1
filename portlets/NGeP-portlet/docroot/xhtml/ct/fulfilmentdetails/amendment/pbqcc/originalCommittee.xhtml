@@ -90,9 +90,10 @@
 					</p:selectOneMenu>
 				</ui:fragment>
 			</p:column>
+			<!-- #35238 start -->
 			<p:column style="width: 15%" styleClass="column-align-center"
-			rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
-				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
+			rendered="#{!amendmentBackingBean.isQuotationCommitteeType()}">
+			<!-- #35238 end -->
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />

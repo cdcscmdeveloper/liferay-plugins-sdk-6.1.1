@@ -192,7 +192,17 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean updateCatInPm;
 	private boolean flagUpdateCatInPmDisplay;
 	private boolean catCodeQtUpdateDesc;
+	private boolean displayAfterPublish;
+	private boolean pmCatL1flag;
+	private boolean pmCatL2flag;
+	private boolean pmCatL3flag;
 	// #29732 End
+	
+	// #28777 & #29729 - Start
+	private boolean hideBSVRegisterBtn;
+	private boolean hideZoneBSVRegisterBtn;
+
+	// #28777 & #29729 - End
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1343,7 +1353,57 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.catCodeQtUpdateDesc = catCodeQtUpdateDesc;
 	}
 	
+	public boolean getDisplayAfterPublish() {
+		return displayAfterPublish;
+	}
+
+	public void setDisplayAfterPublish(boolean displayAfterPublish) {
+		this.displayAfterPublish = displayAfterPublish;
+	}
+	
+	public boolean getPmCatL1flag() {
+		return pmCatL1flag;
+	}
+
+	public void setPmCatL1flag(boolean pmCatL1flag) {
+		this.pmCatL1flag = pmCatL1flag;
+	}
+	
+	public boolean getPmCatL2flag() {
+		return pmCatL2flag;
+	}
+
+	public void setPmCatL2flag(boolean pmCatL2flag) {
+		this.pmCatL2flag = pmCatL2flag;
+	}
+	
+	public boolean getPmCatL3flag() {
+		return pmCatL3flag;
+	}
+
+	public void setPmCatL3flag(boolean pmCatL3flag) {
+		this.pmCatL3flag = pmCatL3flag;
+	}
+	
 	// #29732 End
+	
+	// #28777 & #29729 - Start
+	public boolean isHideBSVRegisterBtn() {
+		return hideBSVRegisterBtn;
+	}
+
+	public void setHideBSVRegisterBtn(boolean hideBSVRegisterBtn) {
+		this.hideBSVRegisterBtn = hideBSVRegisterBtn;
+	}
+
+	public boolean isHideZoneBSVRegisterBtn() {
+		return hideZoneBSVRegisterBtn;
+	}
+
+	public void setHideZoneBSVRegisterBtn(boolean hideZoneBSVRegisterBtn) {
+		this.hideZoneBSVRegisterBtn = hideZoneBSVRegisterBtn;
+	}
+	// #28777 & #29729 - End
 
 
 }

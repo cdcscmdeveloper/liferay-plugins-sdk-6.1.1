@@ -1210,7 +1210,8 @@ public class QTDetailBackingBean extends
 					&& !status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 					&& this.getManagedBean().isMaintanceFlow() && !status.equals(QTStatusConst.CMT_PENDING_APPROVAL)
 					&& !status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
-					&& !status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)) {
+					&& !status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
+					&& this.getManagedBean().isNewVersion()) {
 				this.getManagedBean().setDemoDisabled(false);
 				this.getManagedBean().setDemoType(true);
 				this.getManagedBean().setDemoAction(true);
@@ -5557,6 +5558,7 @@ public class QTDetailBackingBean extends
 					// this.getManagedBean().setContractType(scQt.getContractType());
 
 					// #28784 -start-
+					checkDemoVersion(scQt);
 					if (this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()) {
 						this.getManagedBean().setDemoAction(true);
 						this.getManagedBean().setDemoType(true);
@@ -7570,17 +7572,7 @@ public class QTDetailBackingBean extends
 						.getUserSessionBean());
 				quationTenderReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 				
-				ackMsg = MessageUtils
-						.getMessage(
-								MessageConst.INFO_700052,
-								new String[] {
-										getParameterDesc(
-												ParameterTypeConst.DOCUMENT_TYPES,
-												ParameterConst.DOCTYPE_QUOTATION),
-										qt.getQtNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes()
-										.getUserLocale());
+				ackMsg = MessageConst.INFO_700052;
 			} else {
 				quationTenderReqDTO.setQtId(this.getManagedBean().getQt()
 						.getQtId());
@@ -7607,18 +7599,7 @@ public class QTDetailBackingBean extends
 				quationTenderReqDTO.setPmUser(new FacesScopes()
 						.getUserSessionBean());
 				
-				ackMsg = MessageUtils
-						.getMessage(
-								MessageConst.INFO_700031,
-								new String[] {
-										getParameterDesc(
-												ParameterTypeConst.DOCUMENT_TYPES,
-												ParameterConst.DOCTYPE_QUOTATION),
-										qt.getQtNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes()
-										.getUserLocale());
-
+				ackMsg = MessageConst.INFO_700031;
 			}
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.cancleQT(quationTenderReqDTO);

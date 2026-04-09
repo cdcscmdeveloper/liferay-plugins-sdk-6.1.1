@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<table class="ppTwoTable">
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.audit.orgName']}" /></th>
+			<td><p:outputPanel id="opFfcOrgCode"
+					rendered="#{ParameterConst.orgTypeFactoring eq searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}">
+					<ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="36"
+						readonly="true"
+						disabled="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId==null or searchPMUserOrgAuditBackingBean.managedBean.disabledOrgFields}"
+						headerText="#{searchPMUserOrgAuditBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode)}"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
+						postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
+						update="@form"
+						saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
+						conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
+						displayResultWhenFirstLoad="false" displayResultWhenReset="false" />
+					<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
+				</p:outputPanel> <p:outputPanel id="opSupOrgCode"
+					rendered="#{ParameterConst.orgTypeSupplier eq searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}">
+					<ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER"
+						size="36" readonly="true"
+						disabled="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId==null or searchPMUserOrgAuditBackingBean.managedBean.disabledOrgFields}"
+						headerText="#{searchPMUserOrgAuditBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode)}"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
+						postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
+						update="@form"
+						saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
+						conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
+						displayResultWhenFirstLoad="false" displayResultWhenReset="false" />
+					<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
+				</p:outputPanel> <p:outputPanel id="opPtjOrgCode"
+					rendered="#{ParameterConst.orgTypePtj eq searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode or 
+					ParameterConst.orgTypePtjGroup eq searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}">
+					<p:inputText size="36" id="itSelectedPtj"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmOrgValidity.orgName}"
+						readonly="true" />
+					&#160;	
+					<p:commandLink id="ptjSearchCL" partialSubmit="true"
+						disabled="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId==null or searchPMUserOrgAuditBackingBean.managedBean.disabledOrgFields}"
+						process="@this" update=":form:orgProfileCcId:ptjPopup"
+						action="#{organisationSearchBackingBean.initPtjPopup}"
+						oncomplete="ptjPopup.show();">
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+					</p:commandLink>
+				</p:outputPanel> <p:outputPanel id="opOrgCode"
+					rendered="#{ParameterConst.orgTypeFactoring ne searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode 
+							and ParameterConst.orgTypeSupplier ne searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode
+							and ParameterConst.orgTypePtj ne searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode
+							and ParameterConst.orgTypePtjGroup ne searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}">
+					<ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="36"
+						disabled="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId==null or searchPMUserOrgAuditBackingBean.managedBean.disabledOrgFields}"
+						readonly="true"
+						headerText="#{searchPMUserOrgAuditBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode)}"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
+						saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
+						postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
+						update="@form"
+						conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
+						displayResultWhenFirstLoad="false" displayResultWhenReset="false" />
+					<p:message id="lovMinistryMsg" for="lovMinistry1" display="icon" />
+				</p:outputPanel></td>
+			<th></th>
+			<td>&#160;</td>
+		</tr>
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.audit.identificationNo']}" /></th>
+			<td><p:inputText id="identificationNoId"
+					styleClass="ppDisplayTextM" size="36"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
+					maxlength="255" /> <ac:iconTooltip
+					value="#{lbl['lbl.pm.audit.tooltip.identificationNo']}" /></td>
+			<td>&#160;</td>
+			<td>&#160;</td>
+		</tr>
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.audit.userName']}" /></th>
+			<td><p:inputText id="userNameId" styleClass="ppDisplayTextM"
+					size="36"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel6}"
+					maxlength="255" /> <ac:iconTooltip
+					value="#{lbl['lbl.pm.audit.tooltip.userName']}" /></td>
+			<td>&#160;</td>
+			<td>&#160;</td>
+		</tr>
+	</table>
+	<h:panelGroup id="orgNamePopupPanelId"
+		rendered="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType ne null or 
+		            	searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId ne null or
+		            	searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode ne null}">
+		<ac:lovPopup update=":form:userOrgAuditPMSearchPanel" />
+	</h:panelGroup>
+
+	<h:panelGroup
+		rendered="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
+		  		or searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
+		<ac:ptjPopup id="orgProfileCcId"
+			orgTypeParamCode="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}"
+			okAction="searchPMUserOrgAuditBackingBean.selectPtjAction"
+			update=":form:userOrgAuditPMSearchPanel" />
+	</h:panelGroup>
+</ui:composition>

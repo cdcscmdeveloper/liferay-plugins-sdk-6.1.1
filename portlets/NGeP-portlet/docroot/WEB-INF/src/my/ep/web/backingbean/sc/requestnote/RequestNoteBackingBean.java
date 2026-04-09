@@ -380,15 +380,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
 		Boolean isAssignedState = getManagedBean().isAssignedState();
     try {
-    	
-    	//26284 - Start
-    	if(outcome != null && BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
-    		if(requestNote != null){
-        		checkSupplierDisciplinaryAction(requestNote);
-        	}
-    	}
-    	//26284 - End
-    	
+  	
     	parseRequestNote(requestNote, outcome);
     	
 	    setUserDetails(requestNote);
