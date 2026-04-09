@@ -6047,8 +6047,12 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		log.info("end addPTJCRValues");
 	}
 	
+	//#27827
+	/**
+	 * Retrieve zones
+	 */
 	public void retrievePmZoneList() {
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
 		
@@ -6688,7 +6692,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	}
 	// #36738 End
 	
-	// 27827 - START
+	//#27827 - START
 	/**
 	 * @param type
 	 * @return true for MOF renew period rule types
@@ -6701,5 +6705,5 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
 				getManagedBean().getMainZones() : getManagedBean().getZoneList();
 	}
-	// 27827 - END
+	//#27827 - END
 }

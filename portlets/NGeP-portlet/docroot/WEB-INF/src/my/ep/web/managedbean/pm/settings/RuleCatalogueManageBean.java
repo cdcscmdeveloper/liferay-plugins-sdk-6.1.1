@@ -146,11 +146,12 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Date minDate = null; //[#22119]
 	private String ruleType;  //#22113
 	private boolean LOPOSelected;
-	// #27827 - START
+	/* 27827 - START */
 	private List<PmZone> zoneList;
 	private Long selectedZoneId;
+	//#27827
 	private List<PmZone> mainZones;
-	// #27827 - END
+	/* 27827 - END */
 
 	/************ START: AUDIT #28895_35509 *************/
 	private FeeExemptionResDTO resDTO;
@@ -1545,7 +1546,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.LOPOSelected = LOPOSelected;
 	}
 	
-	// #27827 - START
+	//#27827 - START
 	public List<PmZone> getZoneList() {
 		return zoneList;
 	}
@@ -1562,6 +1563,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.selectedZoneId = selectedZoneId;
 	}
 	
+	//#27827 - START
 	public List<PmZone> getMainZones() {
 		return mainZones;
 	}
@@ -1569,7 +1571,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setMainZones(List<PmZone> mainZones) {
 		this.mainZones = mainZones;
 	}
-	// #27827 - END
+	//#27827 - END
+	//#27827 - END
 
 	/************ START: AUDIT #28895_35509 *************/
 	public FeeExemptionResDTO getResDTO() {
