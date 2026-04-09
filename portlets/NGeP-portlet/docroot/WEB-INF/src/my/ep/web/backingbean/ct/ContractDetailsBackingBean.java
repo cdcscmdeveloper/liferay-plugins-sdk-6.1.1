@@ -705,6 +705,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			} else {
 				//Start Fix - #30045 || #27551 - add null checking
+				// The scRequestNote variable is only used to determine the procurement type.
+				// However, the values for reason and procurement type are always retrieved from the CT table.
 				ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(ctBB.getManagedBean(),
 						"contractVer.ctContractItems[0].scRequestItem.requestNote");
 				if (scRequestNote != null) {
