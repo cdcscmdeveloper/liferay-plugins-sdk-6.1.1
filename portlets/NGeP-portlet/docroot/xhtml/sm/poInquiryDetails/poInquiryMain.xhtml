@@ -24,7 +24,9 @@
 					<ui:include src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if>
 			</td>
-			<td>
+			<!-- #39771 START -->
+			<td style="vertical-align: top;">
+			<!-- #39771 END -->
 				<!-- #12483 - START -->
 				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false" />
 				<!-- #12483 - END -->
