@@ -11557,12 +11557,20 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		}
 
-		if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
-			supplierBranchListDeleted.addAll(wipSupplierBranchListDeleted);
+		List<SmSupplierBranch> supplierBranchListActive = listSupplierBranchList(supplierId);
+		if (CollectionUtils.isNotEmpty(supplierBranchListDeleted)) {
+			supplierBranchListDeleted.addAll(supplierBranchListActive);
+			getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		} else {
+			if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
+				wipSupplierBranchListDeleted.addAll(supplierBranchListActive);
+				getManagedBean().setSupplierBranchList(wipSupplierBranchListDeleted);
+			} else {
+				if (CollectionUtils.isNotEmpty(supplierBranchListActive)) {
+					getManagedBean().setSupplierBranchList(supplierBranchListActive);
+				}
+			}
 		}
-
-		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
-		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
 		
 	}
 
