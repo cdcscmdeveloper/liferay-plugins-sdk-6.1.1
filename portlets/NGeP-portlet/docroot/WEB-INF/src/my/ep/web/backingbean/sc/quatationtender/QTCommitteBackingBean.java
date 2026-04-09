@@ -2637,7 +2637,6 @@ public class QTCommitteBackingBean extends
 			return Arrays.asList(taskNames).contains(taskName);
 			// #39593,#40061 - end
 			// 31954 - end
-			return false;
 		}
 		return true;
 	}
