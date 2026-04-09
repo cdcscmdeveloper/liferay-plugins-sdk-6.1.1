@@ -63,7 +63,21 @@
 		</ui:fragment>
 		<!-- #29007 End Vinod -->
 			<br /><br />
-		<h:outputText value="#{question.cmItem.extensionCode}" rendered="#{!isRepeated}" />
+			
+		<!-- #31503 Start -->
+		<p:commandLink oncomplete="itemDescDialogId.show();"
+			value="#{question.cmItem.extensionCode}"
+			style="color: #009ae5; font-size:12px;font-style:italic"
+			action="#{codificationBackingBean.showItemDescPopup(question)}"
+			process="@this"
+			update="@([id$=itemDescDialogId], [id$=itemDetailPanel])"
+			rendered="#{!isRepeated}" />
+		<!-- #31503 End -->
+		
+		<ui:remove>#26059 - Start</ui:remove>
+		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+		<ui:remove>#26059 - End</ui:remove>
+		
 		<ui:fragment rendered="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<c:if test="#{isContentTypeUpdateSpec}">
 			<p:inputTextarea id="specification" style="width:calc(100% - 20px);"
