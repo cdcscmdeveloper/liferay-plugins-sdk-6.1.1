@@ -5515,7 +5515,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setExceedBpkThreshold(isBpkExceed);
 		// 31344
 
-		if (!isExceedThreshold) {
+		if (!isExceedThreshold  && !isBpkExceed) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
