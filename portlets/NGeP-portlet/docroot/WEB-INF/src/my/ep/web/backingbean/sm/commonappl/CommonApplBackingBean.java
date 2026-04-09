@@ -1247,7 +1247,7 @@ public class CommonApplBackingBean extends
 				
 				Calendar currDateAfterThreeMonths = Calendar.getInstance();
 				currDateAfterThreeMonths.setTime(currDate);
-				currDateAfterThreeMonths.add(Calendar.MONTH, 3);
+				currDateAfterThreeMonths.add(Calendar.DATE, 90);
 				
 				
 				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -1272,21 +1272,27 @@ public class CommonApplBackingBean extends
 				
 				Date currDate = new Date();
 				getManagedBean().setExpDate(expiredAcc.getExpDate());
-				Date expDate = getManagedBean().getExpDate(); 
+				Date expDate = getManagedBean().getExpDate();
 				
-				if (currDate.after(expiredAcc.getExpDate()) && expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-					Calendar dateAfterOneYear = Calendar.getInstance();
-					dateAfterOneYear.setTime(expDate);
-					dateAfterOneYear.add(Calendar.MONTH, 12);
+				Calendar dateAfterOneYear = Calendar.getInstance();
+				dateAfterOneYear.setTime(expDate);
+				dateAfterOneYear.add(Calendar.MONTH, 12);
+				
+				if (currDate.after(expiredAcc.getExpDate()) && currDate.before(dateAfterOneYear.getTime())
+						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
 					
 					int secsInADay = 24 * 60 * 60;
 					long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate
 							.getTime()) / 1000;
 					getManagedBean().setDays(((togo + secsInADay) / secsInADay) + "");
 					
+					dateAfterOneYear.setTime(expDate);
+					dateAfterOneYear.add(Calendar.DATE, 1);
+					Date dayAfterExp = dateAfterOneYear.getTime();
+					
 					getManagedBean().setMofAfterExpiryMsg(
 							SmCommonUtil.getMessage(
-									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", expDate), getManagedBean().getDays()}));
+									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", dayAfterExp), getManagedBean().getDays()}));
 				}
 			}
 		}else{

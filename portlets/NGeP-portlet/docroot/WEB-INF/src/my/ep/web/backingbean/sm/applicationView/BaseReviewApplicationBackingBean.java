@@ -5572,4 +5572,32 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		});
 	}
 	// #34031#note-111 : Issue 20 - End
+	
+	/**
+	 * Initialize Login user role
+	 */
+	// 36504 - START
+	public void initPmUserRole() {
+		Long userId = getUserIdSessionFromLoginId();
+
+		try {
+			List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(userId);
+			getManagedBean().setApproverUser(false);
+			
+			if (!EntityHelper.isCollectionEmpty(userRoles)) { 
+				for (PmUserRole userRole : userRoles) {
+					if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_APPROVER.value())) {
+						getManagedBean().setApproverUser(true);
+						break;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "OtherDescHistory",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "PmUserRole", userId, e);
+		}
+	}
+	// 36504 - END
+
 }

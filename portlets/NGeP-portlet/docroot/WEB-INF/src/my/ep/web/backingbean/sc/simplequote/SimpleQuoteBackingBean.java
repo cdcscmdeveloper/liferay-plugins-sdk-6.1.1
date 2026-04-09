@@ -1241,10 +1241,15 @@ public class SimpleQuoteBackingBean extends
 				if (scRequestItem.getCmItem() != null) {
 					extensionCode = cmItem.getExtensionCode();
 					ItemName = cmItem.getItemName();
-				} else {
-					// panel item - product by default when the cmItem is null
+					
+				//#26059 - Start
+				}else if(DbValueConst.ITEM_TYPE_SERVICE.equals(ctPanelItem.getItemType().getParameterId())){
+					isProduct = false;
+				} else if(DbValueConst.ITEM_TYPE_PRODUCT.equals(ctPanelItem.getItemType().getParameterId())){
 					isProduct = true;
 				}
+				//#26059 - End
+				
 				if (ctPanelItem.getItemCategoryId().getParameterCode()
 						.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 					ItemName = ctPanelItem.getItemName();
@@ -2410,9 +2415,7 @@ public class SimpleQuoteBackingBean extends
 				quote.setJustificationType(getReasonByCategoryAndCode(
 						ReasonCategory.JUSTIFICATION_PK7W.value(), quote.getJustificationType().getReasonCode()));
 
-				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateSupplierAccountType(quote);
-				}
+				validateSupplierAccountType(quote);
 				
 			}
 			else if (quote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
@@ -2429,9 +2432,9 @@ public class SimpleQuoteBackingBean extends
 						.getJustificationType().getReasonCode()));
 
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateUserProfileAgency(quote);
-					validateSupplierAccountType(quote);
+					validateUserProfileAgency(quote);					
 				}
+				validateSupplierAccountType(quote);
 				
 			}// 27868 - end
 			else {

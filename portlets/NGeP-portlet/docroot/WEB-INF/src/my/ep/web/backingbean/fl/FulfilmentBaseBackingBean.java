@@ -1018,7 +1018,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 
 		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase());
+		filePath.append(ModuleCodeConst.COMMON);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 

@@ -1914,7 +1914,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 							getManagedBean().getSmAppl().getSupplierType(),
 							applicationType));
-			showRegistrationDecisionUI();
 //			37925 END
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
@@ -3370,6 +3369,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			log.info("******* Current page AFTER in managed bean ********"
 					+ getManagedBean().getCurrentPageType());
 		}
+		// 37925 START
+		if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
+				|| outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)){
+			showRegistrationDecisionUI();
+		}
+		// 37925 END
 	}
 
 	/**
@@ -10815,6 +10820,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
+		showRegistrationDecisionUI(); // #37925
 		setRegistrationStatusRequiredUI(); // #37925
 //		assignValReqdToTrue(); #37925
 		// validate equity owner
@@ -10896,6 +10902,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
+		showRegistrationDecisionUI(); // #37925
 		//#29727 - START
 		if ("approverAppDialog".equalsIgnoreCase(dialog)) {
 			Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
@@ -11855,6 +11862,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
+				//#37925 START
+				if(getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)
+						|| getManagedBean().getCurrentStatus().equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)){
+					pmStatId = getManagedBean().getPoRecommendStatusId();
+				}
+				//#37925 END
 			} else if (getManagedBean().isApproverUser()) {
 				actionDesc = SupplierManagementConst.APPROVER_APPROVE_APPL;
 			}
@@ -17883,7 +17896,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.getSupplierId(), supplierBranch);
 
 					if (deleteBranchName.length() > 0) {
-						throw new EpException(MessageConst.ERROR_721120, new String[] { deleteBranchName.toString() });
+						throw new EpException(MessageConst.ERROR_721121, new String[] { deleteBranchName.toString() });
 					} else if (pendingQT) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
 					} else {
@@ -18901,6 +18914,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 //	#37925 START
 	private void showRegistrationDecisionUI() {
 	    clearRegistrationStatusDisplay();
+	    log.info("DEBUG 37925: Before showRegistrationDecisionUI:: applNo -> " + getManagedBean().getSmAppl().getApplNo());
+	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
+	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	    
 	    SmAppl smAppl = getManagedBean().getSmAppl();
 	    if(smAppl == null) {
@@ -18923,6 +18939,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    
 	    setCountryOriginUI(applType, businessType, ssmCompanyCountry);
 	    setRegistrationStatusUI(businessType, smAppl, isForeignCompany);
+	    log.info("DEBUG 37925: After showRegistrationDecisionUI :: applNo -> " + getManagedBean().getSmAppl().getApplNo());
+	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
+	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	}
 
 	private String getCompanyCountry(SmAppl smAppl) {
@@ -18998,14 +19017,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @param isForeignCompany  indicates whether the company is foreign
 	 */
 	private void setRegistrationStatusUI(String businessType, SmAppl smAppl, boolean isForeignCompany) {
+		log.info("DEBUG 37925: Before setRegistrationStatusUI:: applNo -> " + getManagedBean().getSmAppl().getApplNo());
+	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
+	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 
 	    if (smAppl == null || smAppl.getSupplierType() == null) {
 	        return;
 	    }
+	    log.info("DEBUG 37925: Processing Registration Status for Supplier Type: " + smAppl.getSupplierType());
 
 	    String supplierType = smAppl.getSupplierType();
-
-	    if (isForeignCompany && isRocBusinessType(businessType)) {
+	    String applType = getManagedBean().getSmAppl().getApplType();
+	    if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
+	    	assignValReqdToTrue();
+            getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
+            getManagedBean().setDisplayDropdownRegStatus(true);
+	    } else if (isForeignCompany && isRocBusinessType(businessType)) {
 	        foreignRegistrationUI(true);
 
 	    } else if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
@@ -19014,7 +19041,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
 	        localConsultantRegistrationUI(false);
 	    }
-
+	    log.info("DEBUG 37925: After setRegistrationStatusUI :: applNo -> " + getManagedBean().getSmAppl().getApplNo());
+	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
+	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	    // No other cases to process
 	}
 
@@ -19037,6 +19066,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	* @param isForeignCompany  true if the company is foreign; false otherwise
 	*/
 	public void localContractorRegistrationUI(String applType, boolean isForeignCompany) {
+		log.info("DEBUG 37925: Before localContractorRegistrationUI :: applNo -> " + getManagedBean().getSmAppl().getApplNo());
+	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
+	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
 	    
 	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType)) {
@@ -19060,6 +19092,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
             getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
             getManagedBean().setDisplayDropdownRegStatus(true);
 	    }
+	    log.info("DEBUG 37925: After localContractorRegistrationUI :: applNo -> " + getManagedBean().getSmAppl().getApplNo());
+	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
+	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	    // Default case - no action needed
 	}
 
@@ -19207,14 +19242,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    long targetStatusId = isForeignCompany ? 
 	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN : 
 	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
-	    
-	    for (PmStatusDesc pmStatusDesc : getManagedBean().getRegStatusDescList()) {
-	        if (language.equalsIgnoreCase(pmStatusDesc.getLanguageCode()) 
-	                && pmStatusDesc.getPmStatus().getStatusId() == targetStatusId) {
-	            updateRegistrationStatus(pmStatusDesc);
-	            break; // Exit loop once match is found
-	        }
-	    }
+	    StatusReqDTO reqDTO = new StatusReqDTO();
+	    reqDTO.setStatusId(targetStatusId);
+	    reqDTO.setLanguageCode(language);
+	    StatusResDTO resDTO = SmServiceLookup.getStatusSO().retrieveStatusDescById(reqDTO);
+	    updateRegistrationStatus(resDTO.getPmStatusDesc());
+//	    for (PmStatusDesc pmStatusDesc : resDTO.getStatusDescList()) {
+//	    	try{
+//	    		log.info(targetStatusId+": TB 37925:APPL NO="+getManagedBean().getSmAppl().getApplNo());
+//		    	log.info("TB 37925:language="+language+" vs "+pmStatusDesc.getLanguageCode());
+//		    	log.info("TB 37925:pmStatusDesc.getPmStatus().getStatusId()="+pmStatusDesc.getPmStatus().getStatusId());
+//	    	}catch(Exception e){
+//	    		
+//	    	}
+//	        if (language.equalsIgnoreCase(pmStatusDesc.getLanguageCode()) 
+//	                && pmStatusDesc.getPmStatus().getStatusId() == targetStatusId) {
+//	        	log.info("TB 37925:Enter if");
+//	            updateRegistrationStatus(pmStatusDesc);
+//	            log.info("TB 37925:End if");
+//	            break; // Exit loop once match is found
+//	        }
+//	    }
 	}
 
 	private void updateRegistrationStatus(PmStatusDesc pmStatusDesc) {

@@ -94,7 +94,7 @@
 							<td><p:outputLabel value="#{lbl['lbl.ct.qt.tender.type']}" />
 							</td>
 							<td><p:inputTextarea autoResize="false" maxlength="500" rows="2" style="width:210px;" disabled="true"
-									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.qtType)}" /> <!-- #30045 -->
+									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.procQtType)}" /> <!-- #30045 -->
 							</td>
 						</h:panelGroup>					
 						<td><p:outputLabel value="#{lbl['lbl.ct.pub.date']}"
@@ -111,25 +111,23 @@
 					<!-- PUTRA #24916 -->
 					<tr >
 						<h:panelGroup
-							rendered="#{ctBackingBean.managedBean.newPk7 
-							and ctBackingBean.newProcurement()!= null }">
+							rendered="#{ctBackingBean.managedBean.newPk7 and ctBackingBean.newProcurement()!= null}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.type']}" />
 							</td>
 							<td><p:inputTextarea autoResize="false" maxlength="500" rows="2" style="width:170px;" disabled="true"
-							value="#{ctBackingBean.newProcurement()}" /> <!-- #30045 -->			
+							value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.procQtType)}" /> <!-- #30045 -->			
 							</td>
 						</h:panelGroup>	
 					</tr>			
 					<tr>
 						<h:panelGroup
-							rendered="#{ctBackingBean.managedBean.newPk7 
-							and ctBackingBean.newJustification()!= null}">
+							rendered="#{ctBackingBean.managedBean.newPk7 and ctBackingBean.newJustification() != null}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
 						<td colspan="3">
 						<p:inputTextarea autoResize="false" maxlength="1000"
 							disabled="true" rows="2" style="width:420px; margin-bottom:5px;"  
-							value="#{ctBackingBean.newJustification()}" />
+							value="#{ctBackingBean.getReasonDesc(ctBackingBean.managedBean.contractVer.ctContract.reason)}" />
 						</td>		
 						</h:panelGroup>					
 					</tr> 
@@ -137,13 +135,13 @@
 						<h:panelGroup
 							rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.newPk7 and (!ctBackingBean.managedBean.commonView or 
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)
-						              or ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType != null }">
+						              or ctBackingBean.newJustification() != null }">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
 						<td colspan="3">
 						<p:inputTextarea autoResize="false" maxlength="1000"
 							disabled="true" rows="2" style="width:420px; margin-bottom:5px;"  
-							value="#{ctBackingBean.getReasonDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType)}" />
+							value="#{ctBackingBean.getReasonDesc(ctBackingBean.managedBean.contractVer.ctContract.reason)}" />
 						</td>	
 						</h:panelGroup>					
 					</tr> 

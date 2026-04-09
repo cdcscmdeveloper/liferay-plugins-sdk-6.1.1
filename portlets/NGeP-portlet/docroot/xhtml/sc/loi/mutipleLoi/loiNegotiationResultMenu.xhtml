@@ -76,72 +76,90 @@
 		<p:tabMenu
 			activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}">
 
-			<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
+			<ui:remove> 34491 - start </ui:remove>
+			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
 				process="@form" update="@form">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="0" />
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.meetingPreparationActiveIndex}"
+					value="0" />
+			</p:menuitem>
+			<ui:remove> 34491 - end </ui:remove>
+			<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
+				process="@form" update="@form">
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+					value="1" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 
 			<p:menuitem value="#{lbl['lbl.sc.negotation.committee']}" process="@form"
 				update="@form">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-					value="1" />
+					value="2" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation.previous']}" process="@form"
 				update="@form">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-					value="2" />
+					value="3" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.recommendation']}" process="@form"
 				update="@form">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-					value="3" />
+					value="4" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 
 			<p:menuitem value="#{lbl['lbl.sc.report.summary']}" process="@form"
 				update="@form">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-					value="4" />
+					value="5" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 
 		</p:tabMenu>
 
 		<p:panel id="contentPanel">
+			<ui:remove> 34491 - start </ui:remove>
 			<c:if
-				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}"><ui:remove> 34491 - shift index by 1 </ui:remove>
+				<ui:include
+					src="/xhtml/sc/loi/mutipleLoi/preparation/meetingPreparation.xhtml" />
+			</c:if>
+			<ui:remove> 34491 - end </ui:remove>
+			<c:if
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '1'}"><ui:remove> 34491 - shift index by 1 </ui:remove>
 				<ui:include
 					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationResult.xhtml" />
 			</c:if>
 			<c:if
-				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '1'}">
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}"><ui:remove> 34491 - shift index by 1 </ui:remove>
 				<ui:include
 					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationCommittee.xhtml" />
 			</c:if>
 			<c:if
-				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}"><ui:remove> 34491 - shift index by 1 </ui:remove>
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/briefingPaperReport.xhtml" />
 			</c:if>
 			<c:if
-				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '4'}"><ui:remove> 34491 - shift index by 1 </ui:remove>
 				<ui:include
 					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml" />
 			</c:if>
 			<c:if
-				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '4'}">
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '5'}"><ui:remove> 34491 - shift index by 1 </ui:remove>
 				<ui:include
 					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml" />
 			</c:if>
 		</p:panel>
 		
-		<ui:remove> #28777#29729 - Start </ui:remove>
+		<ui:remove> 28777,29729 - Start </ui:remove>
 		<ui:include src="/xhtml/sc/loi/mutipleLoi/supplierBranchListPopup.xhtml" />
-		<ui:remove> #28777#29729 - End </ui:remove>
+		<ui:remove> 28777,29729 - End </ui:remove>
 
 		<ac:scSingleFileUploadPopup widgetVar="loiReportAttWidget"
 			fileUploadListener="lOIDetailBackingBean.handleFileUpload"
