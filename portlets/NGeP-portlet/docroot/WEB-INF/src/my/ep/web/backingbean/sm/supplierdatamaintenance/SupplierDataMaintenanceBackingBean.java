@@ -401,6 +401,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setSmRvFilePath(filePath);
 		
 		initSmRvHistory();
+		initPmUserRole(); // #36504
 		// #34031 End
 		getManagedBean().setViewMode(true); //#39231
 	}
