@@ -1293,8 +1293,7 @@ public class CommonApplBackingBean extends
 					int msInADay = 24 * 60 * 60 * 1000;
 					long expiringDays = (getManagedBean().getExpDate().getTime() - currDate.getTime()) / msInADay;
 					//add 1 day to ignore the time from currDate
-					//add 1 more day because if end date is today, the countdown must be 1 day
-					expiringDays += 2;
+					expiringDays++;
 					getManagedBean().setDays(expiringDays + "");
 					if(expiringDays <= 90){
 					getManagedBean().setMofBeforeExpiryMsg(
