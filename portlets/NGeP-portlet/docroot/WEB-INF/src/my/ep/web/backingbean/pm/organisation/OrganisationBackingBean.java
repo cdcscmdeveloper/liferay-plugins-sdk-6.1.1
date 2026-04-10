@@ -1591,6 +1591,7 @@ public class OrganisationBackingBean extends
 		 */
 		getManagedBean().setDeliveryAddress(addressType);
 		getManagedBean().getAddressTypesCheckingList().clear(); //#34445, Fix as-is bug: #39639
+
 	}
 
 	/**
