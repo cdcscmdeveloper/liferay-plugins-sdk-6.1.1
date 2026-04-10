@@ -186,6 +186,7 @@ import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.logging.LogKey;
@@ -1436,7 +1437,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			amendReq.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			ContractAmendmentResDTO amendRes = ctAmendmentSO.checkAgencyAddressExist(amendReq);
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
-			checkMofAccountExpDate(getManagedBean().getFlRequest());
+			
+			//40185-Start
+			List<SmMofAccount> mofList = getMofAccountListBySupplierId(getManagedBean().getFlRequest());
+
+			if (!mofList.isEmpty()) {
+			    checkMofAccountExpDate(getManagedBean().getFlRequest());
+			}
+			//40185-End
+						
 			if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
 				if(getManagedBean().getFlRequest().getFlTempItems().isEmpty()){
 					ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
@@ -1679,7 +1688,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractAmendmentResDTO amendRes = ctAmendmentSO.checkAgencyAddressExist(amendReq);
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
 			
-			checkMofAccountExpDate(getManagedBean().getFlRequest());
+			//40185-Start
+			List<SmMofAccount> mofList = getMofAccountListBySupplierId(getManagedBean().getFlRequest());
+
+			if (!mofList.isEmpty()) {
+				checkMofAccountExpDate(getManagedBean().getFlRequest());
+			}
+			//40185-End
 			
 			getManagedBean().setButtonVal(FulfilmentConst.CONTRACT_REQUEST);
 			
@@ -7621,4 +7636,26 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	
 	//25296 - End
+	
+	//40185-Start
+	/**
+ 	 * Retrieve list of MOF accounts for a given supplier.
+ 	 * 
+ 	 * @param flRequest
+ 	 * @return list of SmMofAccount; empty list if none found
+ 	 */
+	private List<SmMofAccount> getMofAccountListBySupplierId(FlFulfilmentRequest flRequest) {
+		if (flRequest == null || flRequest.getSmSupplier() == null) {
+			return new ArrayList<>();
+		}
+
+		IMofAccountSO mofAccountSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+		MofAccountReqDTO reqDTOMof = new MofAccountReqDTO();
+		Long supplierId = flRequest.getSmSupplier().getSupplierId();
+		reqDTOMof.setSupplierId(supplierId);
+
+		return mofAccountSO.getMofAccountListBySupplierId(reqDTOMof);
+	}
+	//40185-End
 }
