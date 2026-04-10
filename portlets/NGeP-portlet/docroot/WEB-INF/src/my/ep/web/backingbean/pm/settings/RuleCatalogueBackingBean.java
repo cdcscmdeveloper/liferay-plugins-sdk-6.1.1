@@ -6068,7 +6068,7 @@ public class RuleCatalogueBackingBean extends
 	public boolean isRenewTypes(String type) {
 		return RuleTypeConst.RENEW_PERIOD_UPDATE.equals(type) || RuleTypeConst.RENEW_PERIOD_ADD_CAT.equals(type)
 			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
-			|| RuleTypeConst.RENEW_PERIOD.equals(type);
+			|| RuleTypeConst.RENEW_PERIOD.equals(type) || RuleTypeConst.PTJ_CODE.equals(type);
 	}
 	
 	public List<PmZone> getZones() {
