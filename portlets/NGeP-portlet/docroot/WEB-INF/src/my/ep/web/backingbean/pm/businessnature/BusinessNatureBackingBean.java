@@ -59,6 +59,8 @@ public class BusinessNatureBackingBean extends
 			.getLogger(BusinessNatureManagedBean.class);
 
 	private IPagingDataModel<PmBusinessNature> businessNatureDataModel = new BusinessNaturePagingDataModel();
+	
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml"; //#34445
 
 	public BusinessNatureBackingBean() {
 		log.info("inside constructor");
@@ -1016,30 +1018,6 @@ public class BusinessNatureBackingBean extends
 			if (resDTO.isSuccessful()) {
 				if (this.getManagedBean().isBrandNew()) {
 					returnUrl = "/xhtml/pm/businessnature/businessNatureMain.xhtml";
-					// if (Integer.valueOf(this.getManagedBean()
-					// .getPmBusinessNature().getBusinessLevel()) > 10) {
-					// BusinessNatureReqDTO businessNatureReqDTO = new
-					// BusinessNatureReqDTO();
-					// businessNatureReqDTO.setBusinessLevel(this
-					// .getManagedBean().getPmBusinessNature()
-					// .getParentBusinessNature().getBusinessLevel());
-					// businessNatureReqDTO.setBusinessNatureId(this
-					// .getManagedBean().getPmBusinessNature()
-					// .getParentBusinessNature()
-					// .getBusinessNatureId());
-					// BusinessNatureResDTO businessNatureResDTO =
-					// businessNatureSO
-					// .retrieveBusinessNatureFetchAll(businessNatureReqDTO);
-					//
-					// businessNatureResDTO
-					// .getBusinessNature()
-					// .getChildBusinessNatures()
-					// .add(this.getManagedBean()
-					// .getPmBusinessNature());
-					// reqDTO.setBusinessNature(businessNatureResDTO
-					// .getBusinessNature());
-					// businessNatureSO.saveBusinessNatureDtls(reqDTO);
-					// }
 
 					FacesContext
 							.getCurrentInstance()
@@ -1083,7 +1061,11 @@ public class BusinessNatureBackingBean extends
 																	.getUserLocale())));
 				}
 			}
-
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			throw (e);
 		} finally {

@@ -70,6 +70,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	private IPagingDataModel<PmCertBody> profCertBodyModel = new CertBodyPagingDataModel();
 	
 	private String NAV_TO_MAIN =  "professionalCertifiedBodyMain";
+	public static final String NAV_TO_MAINTAIN =  "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml"; //#34445
 
 	public ProfCertifiedBodyBackingBean() {
 		log.info("inside constructor");
@@ -114,7 +115,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		debugLogger("createProfCert");
 		PmCertBody certBody = new PmCertBody();
 		this.getManagedBean().setCertBody(certBody);
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
+		return NAV_TO_MAINTAIN; //#34445 SQ fixing
 
 	}
 
@@ -385,30 +386,24 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		debugLogger("saveCertBodyDtls");
 		String redirectUrl = null;
 		ICertBodySO certBodySO = null;
-		IStatusSO statusSO = null;
+		//#34445 SQ fixing - Remove statusSO
 
 		PmCertBody certBody = this.getManagedBean().getCertBody();
 
-		validationMessage(certBody);
-		
+		//#34445 Start
 		try {
 			
-			// PmCertBody olPmCertBody=this.getManagedBean().getOldPmCertBody();
-			// PmCertBody pmCertBody = this.getManagedBean().getCertBody();
+			validationMessage(certBody);
 
 			if (certBody.isBrandNew()) {
 				setUserDetails(certBody);
 				generateCertBodyCode();
 			}
-			statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
+			//#34445 SQ fixing - Remove statusSO
+			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 
 			String messageId = null;
-			// String recordStatusMessageId=null;
 			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
-			
 
 			String[] msgParam = new String[] { certBody.getBodyName() };
 
@@ -416,84 +411,48 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				messageId = MessageConst.TD_81100;
 			} else {
 				messageId = MessageConst.TD_81101;
-				/*
-				 * if(olPmCertBody!=null && pmCertBody!=null &&
-				 * !olPmCertBody.getRecordStatusFlg
-				 * ().equals(pmCertBody.getRecordStatusFlg())){
-				 * 
-				 * if(certBody.getRecordStatusFlg().equals(DbValueConst.
-				 * RECORD_STATUS_ACTIVE)){
-				 * 
-				 * recordStatusMessageId = MessageConst.TD_81102; } else{
-				 * recordStatusMessageId = MessageConst.TD_81103; }
-				 * certBodyReqDTO.getTrackDairyVOs().add(PmCommonUtil.
-				 * assignTrackingDairyForProfessional(certBody.getCertBodyId(),
-				 * certBody
-				 * .getBodyCode(),getPmActionDesc(recordStatusMessageId,msgParam
-				 * ))); }
-				 */
 			}
 			certBodyReqDTO.setTrackingStatus(true);
 
 			certBodyReqDTO.getTrackDairyVOs().add(
-					PmCommonUtil.assignTrackingDairyForProfessional(
-							certBody.getCertBodyId(),
-							certBody.getBodyCode(),
-							certBody.getRecordStatusFlg().longValue(),
-							getPmActionDesc(messageId, msgParam)));
+					PmCommonUtil.assignTrackingDairyForProfessional(certBody.getCertBodyId(), certBody.getBodyCode(),
+							certBody.getRecordStatusFlg().longValue(), getPmActionDesc(messageId, msgParam)));
 
 			certBodyReqDTO.setCertBody(certBody);
 
-			CertBodyResDTO resDTO = certBodySO
-					.saveOrUpdateCertBodyDtls(certBodyReqDTO);
+			CertBodyResDTO resDTO = certBodySO.saveOrUpdateCertBodyDtls(certBodyReqDTO);
 			reloadProfCertData(resDTO.getCertBody());
-			PmCertBody oldPmCertBody = (PmCertBody) BeanUtils.cloneBean(resDTO
-					.getCertBody());
+			PmCertBody oldPmCertBody = (PmCertBody) BeanUtils.cloneBean(resDTO.getCertBody());
 			this.getManagedBean().setOldPmCertBody(oldPmCertBody);
 
 			this.getManagedBean().setCertBody(resDTO.getCertBody());
 			if (resDTO.isSuccessful()) {
 				if (certBody.isBrandNew()) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_770091,
-															new String[] { resDTO
-																	.getCertBody()
-																	.getBodyName() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_770091, new String[] { resDTO.getCertBody().getBodyName() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					redirectUrl = NAV_TO_MAIN;
 				} else {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_770092,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_770092, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 					redirectUrl = null;
 				}
 
 			}
+		} catch (EpException e) {
+			handleException(e);
+			redirectUrl = NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			certBodySO = null;
-			statusSO = null;
+			//#34445 SQ fixing - Remove statusSO
 		}
 
 		return redirectUrl;
@@ -515,7 +474,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			e.printStackTrace();
 		}
 		
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
+		return NAV_TO_MAINTAIN; //#34445 SQ fixing
 	}
 		
 	/**
