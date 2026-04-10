@@ -302,7 +302,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 													new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
-		} else if (contractNumber.length() != ContractConst.CONTRACT_LENGTH) {
+		} else if (contractNumber.length() < ContractConst.CONTRACT_LENGTH) {
 			isError = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,

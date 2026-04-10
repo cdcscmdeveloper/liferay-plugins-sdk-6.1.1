@@ -1096,6 +1096,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmCompanyExperiences(
 					activeCompanyExperiences);
 		}
+		// #9299 - Start
+		if (!getAppVersionDetailsWithRedmineNo()) {
+			this.getManagedBean().getMasterAllDataModel().reloadData();
+		}
+		// #9299 - End
 
 	}
 
@@ -5024,6 +5029,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21]
 									+ ""
 									: applStatus);
+							//#29659 - START 
+							voSubTmp.setTitle(arr[23] + "");
+							//#29659 - END
 							voTmp.getOverlapInfoList().add(voSubTmp);
 							isSubAdd = false;
 						}
@@ -5383,10 +5391,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public String getRemarks(SmRevisit revisit) {
 		StringBuilder remark = new StringBuilder();
 		remark.append(revisit.getRevisitRemark());
+		// #34031#note-152 Issue 27
+		remark.append("<br />");
 		double index = 1.1; 
  
 		if (null != revisit.getOldPmRegStatus() && null != revisit.getNewPmRegStatus()) { 
-			remark.append("<br /><br />");
+			// #34031#note-152 Issue 27
+			remark.append("<br />");
 			getRegStatus(revisit, remark, index);
 			index++; 
 			remark.append("<br />");
@@ -5527,5 +5538,38 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		
 		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
 	}  
+	// 36504 - END
+	// #9299 - Start
+	public boolean getAppVersionDetailsWithRedmineNo() {
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(), SupplierManagementConst.APP_VERSION_REDMINE_NO_9299,
+				SupplierManagementConst.PHASE_1);
+	}
+	// #9299 - End
+	
+	/**
+	 * Initialize Login user role
+	 */
+	// 36504 - START
+	public void initPmUserRole() {
+		Long userId = getUserIdSessionFromLoginId();
+
+		try {
+			List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(userId);
+			getManagedBean().setApproverUser(false);
+			
+			if (!EntityHelper.isCollectionEmpty(userRoles)) { 
+				for (PmUserRole userRole : userRoles) {
+					if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_APPROVER.value())) {
+						getManagedBean().setApproverUser(true);
+						break;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "OtherDescHistory",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "PmUserRole", userId, e);
+		}
+	}
 	// 36504 - END
 }
