@@ -101,7 +101,7 @@
 				onstart="blockWidget.show()"
 				oncomplete="blockWidget.hide()"
 				update=":form" process="@this"
-				action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
+				action="#{backingBean.otherDescriptionEditApprover(aprvdCatBean)}"
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.approverUser and (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 				aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}">
 				<p:graphicImage

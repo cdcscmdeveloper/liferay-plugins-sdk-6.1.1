@@ -135,7 +135,7 @@
 						<h:panelGroup
 							rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.newPk7 and (!ctBackingBean.managedBean.commonView or 
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)
-						              or ctBackingBean.newProcurement() == null }">
+						              or ctBackingBean.newJustification() != null }">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
 						<td colspan="3">
