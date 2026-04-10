@@ -10633,12 +10633,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
+		// #37925 START
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		String applType = smAppl.getApplType();
 		showRegistrationDecisionUI();
 		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
 			getManagedBean().setDisplayDropdownRegStatus(true);
-		} // #37925
+		} // #37925 END
 		//#29727 - START
 		if ("approverAppDialog".equalsIgnoreCase(dialog)) {
 			Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
@@ -10985,12 +10986,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the dialog id to be close
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
+		//#37925 START
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		String applType = smAppl.getApplType();
 		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
 			getManagedBean().setDisplayDropdownRegStatus(false);
 		}
-		getManagedBean().setChangeCurrRegStatus(false); //#37925
+		getManagedBean().setChangeCurrRegStatus(false); //#37925 END
 		resetSearchRejectedReason();
 		getManagedBean().setReasonId(null);
 		// #3460 - start
