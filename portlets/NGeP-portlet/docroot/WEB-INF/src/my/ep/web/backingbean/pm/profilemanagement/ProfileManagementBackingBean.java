@@ -3655,49 +3655,37 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							// assign new pmUserOrg object to the current user
 						}
 					}
+				
 					} else {// do validate by isSupplier
 
 						IPersonnelSO personnelSO;
-						personnelSO = BusinessDelegate.getInstance()
-								.getServiceObject(
-										ModuleCodeConst.SUPPLIER_MANAGEMENT,
-										IPersonnelSO.class);
+						personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								IPersonnelSO.class);
 
 						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-						reqDTO.setIdentificationNo(getManagedBean()
-								.getSelectedUser().getIdentificationNo());
-						PersonnelResDTO resDTO1 = personnelSO
-								.isSupplierPersonnel(reqDTO);
+						reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
+						PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
 						if (resDTO1.isSupplierPersonnel()) {
 							throw new EpException(MessageConst.ERROR_770214,
-									new String[] { getManagedBean()
-											.getSelectedUser()
-											.getIdentificationNo() });
+									new String[] { getManagedBean().getSelectedUser().getIdentificationNo() });
 						}
 
 						// new user org / user record
 						getManagedBean().setPmUserExist(false);
 						if (ParameterConst.IDENTIFICATION_TYPES_IC
-								.equals(getManagedBean().getSelectedUser()
-										.getIdentificationCode()
-										.getParameterCode())) {
-							getManagedBean().getSelectedUser().setLoginId(
-									getManagedBean().getSelectedUser()
-											.getIdentificationNo());
+								.equals(getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode())) {
+							getManagedBean().getSelectedUser()
+									.setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
 						} else {
-							PmCountry country = PmCommonUtil
-									.retrievePmCountryById(getManagedBean()
-											.getSelectedUser().getPmCountry()
-											.getCountryId());
+							PmCountry country = PmCommonUtil.retrievePmCountryById(
+									getManagedBean().getSelectedUser().getPmCountry().getCountryId());
 							StringBuilder sb = new StringBuilder();
-							sb.append(getManagedBean().getSelectedUser()
-									.getIdentificationNo().trim());
+							sb.append(getManagedBean().getSelectedUser().getIdentificationNo().trim());
 							sb.append(country.getCountryCode());
-							getManagedBean().getSelectedUser().setLoginId(
-									sb.toString());
+							getManagedBean().getSelectedUser().setLoginId(sb.toString());
 						}
 					}
-					// #35562 - End
+					//#35562 - End
 				} else {// do validate by isSupplier
 
 					IPersonnelSO personnelSO;
