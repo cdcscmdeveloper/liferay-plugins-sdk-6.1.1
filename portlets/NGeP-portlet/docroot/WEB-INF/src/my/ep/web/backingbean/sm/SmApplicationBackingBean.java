@@ -10633,7 +10633,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
-		showRegistrationDecisionUI(); // #37925
+		SmAppl smAppl = getManagedBean().getSmAppl();
+		String applType = smAppl.getApplType();
+		showRegistrationDecisionUI();
+		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
+			getManagedBean().setDisplayDropdownRegStatus(true);
+		} // #37925
 		//#29727 - START
 		if ("approverAppDialog".equalsIgnoreCase(dialog)) {
 			Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
@@ -10980,6 +10985,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the dialog id to be close
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
+		SmAppl smAppl = getManagedBean().getSmAppl();
+		String applType = smAppl.getApplType();
+		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
+			getManagedBean().setDisplayDropdownRegStatus(false);
+		}
 		getManagedBean().setChangeCurrRegStatus(false); //#37925
 		resetSearchRejectedReason();
 		getManagedBean().setReasonId(null);
@@ -17759,7 +17769,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
 	    	assignValReqdToTrue();
             getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
-            getManagedBean().setDisplayDropdownRegStatus(true);
+//            getManagedBean().setDisplayDropdownRegStatus(true);
 	    } else if (isForeignCompany && isRocBusinessType(businessType)) {
 	        foreignRegistrationUI(true);
 
