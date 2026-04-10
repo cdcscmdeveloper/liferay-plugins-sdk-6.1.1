@@ -1438,13 +1438,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractAmendmentResDTO amendRes = ctAmendmentSO.checkAgencyAddressExist(amendReq);
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
 			
-			//40185-Start
-			List<SmMofAccount> mofList = getMofAccountListBySupplierId(getManagedBean().getFlRequest());
-
-			if (!mofList.isEmpty()) {
-			    checkMofAccountExpDate(getManagedBean().getFlRequest());
-			}
-			//40185-End
+			validateMofAccount(getManagedBean().getFlRequest());//40185
 						
 			if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
 				if(getManagedBean().getFlRequest().getFlTempItems().isEmpty()){
@@ -1688,14 +1682,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractAmendmentResDTO amendRes = ctAmendmentSO.checkAgencyAddressExist(amendReq);
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
 			
-			//40185-Start
-			List<SmMofAccount> mofList = getMofAccountListBySupplierId(getManagedBean().getFlRequest());
+			validateMofAccount(getManagedBean().getFlRequest());//40185
 
-			if (!mofList.isEmpty()) {
-				checkMofAccountExpDate(getManagedBean().getFlRequest());
-			}
-			//40185-End
-			
 			getManagedBean().setButtonVal(FulfilmentConst.CONTRACT_REQUEST);
 			
 			//start - #17087
@@ -7639,14 +7627,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	//40185-Start
 	/**
- 	 * Retrieve list of MOF accounts for a given supplier.
- 	 * 
- 	 * @param flRequest
- 	 * @return list of SmMofAccount; empty list if none found
- 	 */
-	private List<SmMofAccount> getMofAccountListBySupplierId(FlFulfilmentRequest flRequest) {
+	 * Validate MOF account for the given request.
+	 * Only performs expiry check if MOF record exists.
+	 *
+	 * @param flRequest the fulfilment request
+	 */
+	private void validateMofAccount(FlFulfilmentRequest flRequest) {
 		if (flRequest == null || flRequest.getSmSupplier() == null) {
-			return new ArrayList<>();
+			return;
 		}
 
 		IMofAccountSO mofAccountSO = BusinessDelegate.getInstance().getServiceObject(
@@ -7655,7 +7643,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		Long supplierId = flRequest.getSmSupplier().getSupplierId();
 		reqDTOMof.setSupplierId(supplierId);
 
-		return mofAccountSO.getMofAccountListBySupplierId(reqDTOMof);
+		List<SmMofAccount> mofList = mofAccountSO.getMofAccountListBySupplierId(reqDTOMof);
+
+		if (!mofList.isEmpty()) {
+			checkMofAccountExpDate(flRequest);
+		}
 	}
 	//40185-End
 }
