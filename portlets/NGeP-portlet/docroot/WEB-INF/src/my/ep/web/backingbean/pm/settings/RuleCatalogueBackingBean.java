@@ -6047,10 +6047,30 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		log.info("end addPTJCRValues");
 	}
 	
+	//#27827
+	/**
+	 * Retrieve zones
+	 */
 	public void retrievePmZoneList() {
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
+		
+		List<PmZone> zones = new ArrayList<>();
+		//semenanjung, sabah, sarawak
+		List<String> mainCodes = Arrays.asList("1", "2", "3");
+		for (PmZone zone : getManagedBean().getZoneList()) {
+			if (mainCodes.contains(zone.getZoneCode())) {
+				zones.add(zone);
+			}
+		}
+		Collections.sort(zones, new Comparator<PmZone>(){
+			@Override
+			public int compare(final PmZone s1, final PmZone s2) {
+				return s1.getZoneCode().compareTo(s2.getZoneCode());
+			}
+		});
+		getManagedBean().setMainZones(zones);
 	}
 	/* 27827 - END */
 	
@@ -6671,4 +6691,19 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		return resetMinistryDropdown;
 	}
 	// #36738 End
+	
+	//#27827 - START
+	/**
+	 * @param type
+	 * @return true for MOF renew period rule types
+	 */
+	public boolean isRenewTypes(String type) {
+		return RuleTypeConst.PTJ_CODE.equals(type);
+	}
+	
+	public List<PmZone> getZones() {
+		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
+				getManagedBean().getMainZones() : getManagedBean().getZoneList();
+	}
+	//#27827 - END
 }
