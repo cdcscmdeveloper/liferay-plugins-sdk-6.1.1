@@ -48,20 +48,20 @@
 							<ui:repeat var="action" value="#{accessApplBackingBean.managedBean.outComes}" 
 								rendered ="#{not isBrandNew}">
 								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
-									<!-- 34445 start -->
-									<p:commandButton value="#{lbl[buttonLabel]}"
-										rendered="#{action=='APPROVE'}"
-										oncomplete="if(!args.validationFailed) approveApplDlg.show();">
-										<f:param name="disableValidation" value="true" />
-									</p:commandButton>
+								<!-- 34445 start -->
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									rendered="#{action=='APPROVE'}"
+									oncomplete="if(!args.validationFailed) approveApplDlg.show();">
+									<f:param name="disableValidation" value="true" />
+								</p:commandButton>
 
-									<p:commandButton value="#{lbl[buttonLabel]}"
-										rendered="#{action=='REJECT'}"
-										oncomplete="if(!args.validationFailed) rejectApplDlg.show();">
-										<f:param name="disableValidation" value="true" />
-									</p:commandButton>
-									<!-- 34445 end -->
-								</ui:repeat>
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									rendered="#{action=='REJECT'}"
+									oncomplete="if(!args.validationFailed) rejectApplDlg.show();">
+									<f:param name="disableValidation" value="true" />
+								</p:commandButton>
+								<!-- 34445 end -->
+							</ui:repeat>
 						</ui:define>
 					</ui:decorate>
 					</td>

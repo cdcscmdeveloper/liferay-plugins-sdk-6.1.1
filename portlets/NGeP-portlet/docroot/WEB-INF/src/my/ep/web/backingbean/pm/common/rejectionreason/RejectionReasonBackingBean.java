@@ -670,7 +670,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * save to Rejection Reason
 	 * @return xhtml
 	 */
-	public String saveRejectReason(){
+	public String saveRejectReason() {
 		log.info("saveRejectReason - Start");
 		String returnPage = null;
 
@@ -711,7 +711,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
 			}
 			log.info("saveRejectReason - End");
-
+			
 		} catch (EpException e) {
 			handleException(e);
 			returnPage = NAV_TO_MAINTAIN;

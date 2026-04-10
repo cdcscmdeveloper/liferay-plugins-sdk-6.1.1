@@ -259,21 +259,21 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 
-			if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())) {
+			if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())){
 				StateReqDTO reqDTO = new StateReqDTO();
 				PmState state = this.getManagedBean().getState();
 				state.setStateCode(state.getStateCode().toUpperCase());
 				state.setStateName(state.getStateName().trim());
-
-				// #32753 - START
+	
+				//#32753 - START
 				if (!state.isBrandNew()) {
 					state.setChangedBy(loginSessionUserId);
 				} else {
 					state.setChangedBy(loginSessionUserId);
 					state.setCreatedBy(loginSessionUserId);
 				}
-				// #32753 - END
-
+				//#32753 - END
+				
 				reqDTO.setPmState(state);
 				locationMsgId = getManagedBean().getState().getStateId(); // #34445
 				StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
@@ -296,14 +296,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				division.setDivisionCode(division.getDivisionCode().toUpperCase());
 				division.setDivisionName(division.getDivisionName().trim());
 
-				// #32753 - START
+				//#32753 - START
 				if (!division.isBrandNew()) {
 					division.setChangedBy(loginSessionUserId);
 				} else {
 					division.setChangedBy(loginSessionUserId);
 					division.setCreatedBy(loginSessionUserId);
 				}
-				// #32753 - END
+				//#32753 - END
 
 				reqDTO.setPmDivision(division);
 				reqDTO.setStateId(division.getPmState().getStateId());
@@ -335,14 +335,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				} else {
 					district.setPmDivision(null);
 				}
-				// #32753 - START
+				//#32753 - START
 				if (!district.isBrandNew()) {
 					district.setChangedBy(loginSessionUserId);
 				} else {
 					district.setChangedBy(loginSessionUserId);
 					district.setCreatedBy(loginSessionUserId);
 				}
-				// #32753 - END
+				//#32753 - END
 
 				reqDTO.setPmDistrict(district);
 				reqDTO.setStateId(district.getPmState().getStateId());
@@ -367,14 +367,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				city.setCityCode(city.getCityCode().toUpperCase());
 				city.setCityName(city.getCityName().trim());
 
-				// #32753 - START
+				//#32753 - START
 				if (!city.isBrandNew()) {
 					city.setChangedBy(loginSessionUserId);
 				} else {
 					city.setChangedBy(loginSessionUserId);
 					city.setCreatedBy(loginSessionUserId);
 				}
-				// #32753 - END
+				//#32753 - END
 
 				reqDTO.setPmCity(city);
 				reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());

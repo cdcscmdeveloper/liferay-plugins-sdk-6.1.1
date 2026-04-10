@@ -343,7 +343,7 @@
 							display="icon" />
 						<!-- 34445 Start -->
 						<p:selectOneMenu id="supplierTypeCreateId"
-							required="true" label="#{lbl['lbl.pm.supplier.type']}"
+							label="#{lbl['lbl.pm.supplier.type']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
@@ -420,60 +420,60 @@
 				<p:tabView id="tabCatId" activeIndex="#{categoryBackingBean.tabIndexActive}"> <!-- #29665-->
 					<p:tab title="#{lbl['lbl.pm.category.grouping']}"
 						disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}">
-					  <p:outputPanel id="tabpanel1"> <!-- #29665-->
-						<p:dataTable id="groupdetailsId"
-							rowKey="#{pmBasicCategory.createdDate}"
-							value="#{categoryBackingBean.managedBean.basicCategoryList}"
-							width="100%" var="pmBasicCategory">
-
-							<ac:paginator for="groupdetailsId"></ac:paginator>
-
-							<p:column>
-								<f:facet name="header">
-					#{lbl['lbl.pm.category.code']}
-			 	</f:facet>
-								<h:outputText value="#{pmBasicCategory.codeConcatenate}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-					#{lbl['lbl.pm.main.category.desc']}
-				</f:facet>
-								<h:outputText value="#{pmBasicCategory.basicCategoryL1desc}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-					#{lbl['lbl.pm.sub.category.desc']}
-				</f:facet>
-								<h:outputText value="#{pmBasicCategory.basicCategoryL2desc}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-					#{lbl['lbl.pm.sub.div.desc']}
-				</f:facet>
-								<h:outputText value="#{pmBasicCategory.basicCategoryL3desc}" />
-							</p:column>
-
-							<p:column style="width:7%;text-align:center;"
-								headerText="#{lbl['lbl.pm.action']}">
-								<!-- #29665 add update remark-->
-								<p:commandLink
-									disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
-									action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
-									update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable 
-										?'groupdetailsId,:form:remarkFieldId' 
-										:'groupdetailsId'}">
+						<p:outputPanel id="tabpanel1"> <!-- #29665-->
+							<p:dataTable id="groupdetailsId"
+								rowKey="#{pmBasicCategory.createdDate}"
+								value="#{categoryBackingBean.managedBean.basicCategoryList}"
+								width="100%" var="pmBasicCategory">
+	
+								<ac:paginator for="groupdetailsId"></ac:paginator>
+	
+								<p:column>
+									<f:facet name="header">
+						#{lbl['lbl.pm.category.code']}
+				 	</f:facet>
+									<h:outputText value="#{pmBasicCategory.codeConcatenate}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+						#{lbl['lbl.pm.main.category.desc']}
+					</f:facet>
+									<h:outputText value="#{pmBasicCategory.basicCategoryL1desc}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+						#{lbl['lbl.pm.sub.category.desc']}
+					</f:facet>
+									<h:outputText value="#{pmBasicCategory.basicCategoryL2desc}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+						#{lbl['lbl.pm.sub.div.desc']}
+					</f:facet>
+									<h:outputText value="#{pmBasicCategory.basicCategoryL3desc}" />
+								</p:column>
+		
+								<p:column style="width:7%;text-align:center;"
+									headerText="#{lbl['lbl.pm.action']}">
+									<!-- #29665 add update remark-->
+									<p:commandLink
+										disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
+										action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
+										update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable 
+												?'groupdetailsId,:form:remarkFieldId' 
+												:'groupdetailsId'}">
 										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-								</p:commandLink>
-							</p:column>
-						</p:dataTable>
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
 
-						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.add']}"
-								disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
-								action="#{categoryBackingBean.addBasicCategory()}"
-								oncomplete="lovPopupCategory.show();" process="@this"
-								partialSubmit="true" update="lovPopupCategory" />
-						</div>
+							<div class="ppRightBtn">
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
+									disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue and !categoryBackingBean.managedBean.displayCategoryGrouping}"
+									action="#{categoryBackingBean.addBasicCategory()}"
+									oncomplete="lovPopupCategory.show();" process="@this"
+									partialSubmit="true" update="lovPopupCategory" />
+							</div>
 						</p:outputPanel> <!-- #29665 -->
 
 						<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory"
@@ -496,9 +496,7 @@
 											<f:selectItems
 												value="#{categoryBackingBean.managedBean.searchField}" />
 										</p:selectOneMenu>
-										<p:inputText
-											value="#{categoryBackingBean.managedBean.searchValue[0]}"
-											style="margin-top:2.5%;" />
+										<p:inputText value="#{categoryBackingBean.managedBean.searchValue[0]}" style="margin-top:2.5%;" />
 									</h:panelGrid>
 
 									<table style="width: 100%;">
@@ -570,105 +568,105 @@
 					</p:tab>
 					<p:tab title="#{lbl['lbl.pm.company.type.tab']}"
 					disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
-					  <p:outputPanel id="tabpanel2"> <!-- #29665 -->
-						<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex"
-							rowKey="#{pmCategoryRestr}"
-							value="#{categoryBackingBean.managedBean.categoryRestrList}"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							width="100%" var="pmCategoryRestr">
+						<p:outputPanel id="tabpanel2"> <!-- #29665 -->
+							<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex"
+								rowKey="#{pmCategoryRestr}"
+								value="#{categoryBackingBean.managedBean.categoryRestrList}"
+								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+								width="100%" var="pmCategoryRestr">
 
-							<ac:paginator for="dtlCategoryRestrId"></ac:paginator>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="#{lbl['lbl.pm.company.type']}" />
-								</f:facet>
+								<ac:paginator for="dtlCategoryRestrId"></ac:paginator>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.pm.company.type']}" />
+									</f:facet>
+	
+									<!-- start #29665 return valid name -->
+									<ui:fragment rendered="#{!pmCategoryRestr.brandNew}">
+										<ui:param name="paramCode" value="#{pmCategoryRestr.companyTypeId.parameterCode}"></ui:param>
+										<h:outputText value="#{categoryBackingBean.getParamCategRestr(paramCode)}"/>
+									</ui:fragment>
+									<!-- end #29665 return valid name -->
+	
+									<ui:fragment rendered="#{pmCategoryRestr.brandNew}">
+										<!-- 34445 Remove required selectOneMenu -->
+										<p:selectOneMenu
+											value="#{pmCategoryRestr.companyTypeId.parameterId}"
+											label="#{lbl['lbl.pm.company.type']}">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
+											<f:selectItems
+												value="#{categoryBackingBean.getPopulateCompanyTypeList()}"
+												var="compType"
+												itemValue="#{compType.pmParameter.parameterId}"
+												itemLabel="#{compType.codeName}" />
+											<p:ajax partialSubmit="true" update="@this" process="@this" />
+										</p:selectOneMenu>
+	
+									</ui:fragment>
+	
+								</p:column>
+	
+								<p:column style="width:7%;text-align:center;"
+									headerText="#{lbl['lbl.pm.action']}">
+									
+									<!--start #29665 add update remark field -->
+									<p:commandLink partialSubmit="true" process="@this"
+										disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}"
+										action="#{categoryBackingBean.deleteCategoryRestr(pmCategoryRestr)}"
+										update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable 
+											?'dtlCategoryRestrId,:form:remarkFieldId' 
+											:'dtlCategoryRestrId'}">
+										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+									</p:commandLink>
+									<!--end #29665 add update remark field -->
+								</p:column>
+							</p:dataTable>
 
-								<!-- start #29665 return valid name -->
-								<ui:fragment rendered="#{!pmCategoryRestr.brandNew}">
-									<ui:param name="paramCode" value="#{pmCategoryRestr.companyTypeId.parameterCode}"></ui:param>
-									<h:outputText value="#{categoryBackingBean.getParamCategRestr(paramCode)}"/>
-								</ui:fragment>
-								<!-- end #29665 return valid name -->
-
-								<ui:fragment rendered="#{pmCategoryRestr.brandNew}">
-									<!-- 34445 Remove required selectOneMenu -->
-									<p:selectOneMenu
-										value="#{pmCategoryRestr.companyTypeId.parameterId}"
-										label="#{lbl['lbl.pm.company.type']}">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-											itemValue="" />
-										<f:selectItems
-											value="#{categoryBackingBean.getPopulateCompanyTypeList()}"
-											var="compType"
-											itemValue="#{compType.pmParameter.parameterId}"
-											itemLabel="#{compType.codeName}" />
-										<p:ajax partialSubmit="true" update="@this" process="@this" />
-									</p:selectOneMenu>
-
-								</ui:fragment>
-
-							</p:column>
-
-							<p:column style="width:7%;text-align:center;"
-								headerText="#{lbl['lbl.pm.action']}">
-								
-								<!--start #29665 add update remark field -->
-								<p:commandLink partialSubmit="true" process="@this"
+							<div class="ppRightBtn">
+								<!-- start #29665 add update remark -->
+								<p:commandButton value="#{lbl['lbl.btn.add']}" id="btn1"
 									disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}"
-									action="#{categoryBackingBean.deleteCategoryRestr(pmCategoryRestr)}"
-									update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable 
-										?'dtlCategoryRestrId,:form:remarkFieldId' 
-										:'dtlCategoryRestrId'}">
-									<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-								</p:commandLink>
-								<!--end #29665 add update remark field -->
-							</p:column>
-						</p:dataTable>
-
-						<div class="ppRightBtn">
-							<!-- start #29665 add update remark -->
-							<p:commandButton value="#{lbl['lbl.btn.add']}" id="btn1"
-								disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}"
-								action="#{categoryBackingBean.addCategoryRestr()}"
-								process="@this,dtlCategoryRestrId" 
-								update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable
-										? 'dtlCategoryRestrId,btn1,:form:remarkFieldId' 
-										: 'dtlCategoryRestrId,btn1'}"/>
-							<!-- end #29665 add update remark -->
-						</div>
-					  </p:outputPanel> <!-- #29665 -->
+									action="#{categoryBackingBean.addCategoryRestr()}"
+									process="@this,dtlCategoryRestrId" 
+									update="#{!categoryBackingBean.managedBean.newCategory and categoryBackingBean.remarkDisable
+											? 'dtlCategoryRestrId,btn1,:form:remarkFieldId' 
+											: 'dtlCategoryRestrId,btn1'}"/>
+								<!-- end #29665 add update remark -->
+							</div>
+					  	</p:outputPanel> <!-- #29665 -->
 					</p:tab>
 					<p:tab title="#{lbl['lbl.pm.special.equipment']}">
 
-					  <p:outputPanel id="tabpanel3"> <!-- #29665 -->
-						<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
-							rowKey="#{pmMachineCategory.createdDate}"
-							value="#{categoryBackingBean.managedBean.pmMachineCategoryList}"
-							width="100%" var="pmMachineCategory">
-
-							<ac:paginator for="machineDetailsId"></ac:paginator>
-
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="*" styleClass="mandatory" />
-					#{lbl['lbl.pm.machine.code']}
-				</f:facet>
-								<h:outputText value="#{pmMachineCategory.pmMachine.machineCode}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="*" styleClass="mandatory" />
-					#{lbl['lbl.pm.machine.desc']}
-				</f:facet>
-								<h:outputText value="#{pmMachineCategory.pmMachine.machineDesc}" />
-							</p:column>
-							
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="*" styleClass="mandatory" />
-					#{lbl['lbl.pm.machine.sitevisitsection']}
-					<ac:iconTooltip value="#{lbl['lbl.pm.machine.sitevisitsection.tooltip']}"/>	
-				</f:facet>
+						<p:outputPanel id="tabpanel3"> <!-- #29665 -->
+							<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
+								rowKey="#{pmMachineCategory.createdDate}"
+								value="#{categoryBackingBean.managedBean.pmMachineCategoryList}"
+								width="100%" var="pmMachineCategory">
+	
+								<ac:paginator for="machineDetailsId"></ac:paginator>
+	
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.pm.machine.code']}
+					</f:facet>
+									<h:outputText value="#{pmMachineCategory.pmMachine.machineCode}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.pm.machine.desc']}
+					</f:facet>
+									<h:outputText value="#{pmMachineCategory.pmMachine.machineDesc}" />
+								</p:column>
+								
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.pm.machine.sitevisitsection']}
+						<ac:iconTooltip value="#{lbl['lbl.pm.machine.sitevisitsection.tooltip']}"/>	
+					</f:facet>
 									<!-- start #29665 new checkbox change styleClass -->
 									<p:selectManyCheckbox layout="pageDirection" styleClass="float-left"
 										value="#{pmMachineCategory.pmMachineCategorySectionList}">
@@ -695,13 +693,13 @@
 										</c:if>
 									</p:selectManyCheckbox>
 									<!-- end #29665 new checkbox -->
-							</p:column>
-
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="*" styleClass="mandatory" />
-					#{lbl['lbl.pm.machine.display.sequence']} 
-				</f:facet>
+								</p:column>
+	
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.pm.machine.display.sequence']} 
+					</f:facet>
 									<!-- start #29665 add listener and update remark -->
 									<p:inputText label="#{lbl['lbl.pm.machine.display.sequence']}" id="seqDisp"
 										maxlength="3" value="#{pmMachineCategory.displaySeq}"
@@ -716,9 +714,9 @@
 										</c:if>
 									</p:inputText>
 									<!-- end #29665 add listener and update remark -->
-							</p:column>
-
-							<p:column style="width:7%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
+								</p:column>
+	
+								<p:column style="width:7%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 									<!-- start #29665 add update remark field in commandlink delete and remove disable -->
 									<p:commandLink partialSubmit="true" process="@this"																															
 										action="#{categoryBackingBean.deletePmMachine(pmMachineCategory)}"
@@ -728,15 +726,15 @@
 										<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 									</p:commandLink>
 									<!-- end #29665 add update remark field in commandlink delete and remove disable -->
-							</p:column>
-						</p:dataTable>
+								</p:column>
+							</p:dataTable>
 
-						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.add']}"
-								action="#{categoryBackingBean.addPmMachine()}" process="@this"
-								partialSubmit="true" oncomplete="lovPopupPmMachine.show();"
-								update="lovPopupPmMachine" />
-						</div>
+							<div class="ppRightBtn">
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
+									action="#{categoryBackingBean.addPmMachine()}" process="@this"
+									partialSubmit="true" oncomplete="lovPopupPmMachine.show();"
+									update="lovPopupPmMachine" />
+							</div>
 						</p:outputPanel> <!-- #29665 -->
 					
 						<p:dialog id="lovPopupPmMachine" widgetVar="lovPopupPmMachine"
