@@ -10804,8 +10804,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return true if valid; false otherwise
 	 */
 	private boolean isValidApplSectionReview(SmApplSectionReview smApplSectionReview) {
-		return smApplSectionReview != null && smApplSectionReview.getPmRegStatus() != null
-				&& smApplSectionReview.getPmRegStatus().getPmStatus() != null;
+		return smApplSectionReview != null 
+				&& smApplSectionReview.getPmRegStatus() != null 
+				&& smApplSectionReview.getPmRegStatus().getPmStatus() != null 
+				&& smApplSectionReview.getPmRegStatus().getPmStatus().getStatusId() != null;
 	}
 
 	/**
@@ -18164,10 +18166,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		
 		SmApplSectionReview latestPOChange = findLatestPOSectionReview();
-		if(latestPOChange == null
-				|| latestPOChange.getPmRegStatus() == null
-				|| latestPOChange.getPmRegStatus().getPmStatus() == null
-				|| latestPOChange.getPmRegStatus().getPmStatus().getStatusId() == null){
+		if(!isValidApplSectionReview(latestPOChange)){
 			return;
 		}
 		
@@ -18176,11 +18175,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    
 	 	// is SDM changes after PO submit
 	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);
+	    boolean isNotChangeRegistrationStatus = latestPOChange.getPmRegStatus().getRegStatusId().equals(prevRegStatusId);
 	    
 	    // Default approved registration status value
 	    getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
 	    
-	    if (!getManagedBean().isChangeCurrRegStatus()) {
+	    if (isNotChangeRegistrationStatus) {
 	        applySdmStatusIfRequired(sdmAfterPOSubmit);
 	    }
 	}

@@ -79,10 +79,11 @@
 									disabled="#{empty cc.attrs.currRegStatus}">
 									<p:ajax event="change" partialSubmit="true" process="@this" listener="#{cc.attrs.backingBean.updateApproverRegistrationStatusValue()}"
 										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
-										<f:param name="disableValidation" value="#{cc.attrs.changeCurrRegStatus}" />
-								</p:selectBooleanCheckbox>							</td>
+								</p:selectBooleanCheckbox>
+							</td>
 							<td valign="top" style="border-style: none !important;">
-								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.curr.regstatus.change.msg']}" /></td>
+								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.curr.regstatus.change.msg']}" />
+							</td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType eq 'N' or cc.attrs.smAppl.applType eq 'B'
@@ -96,7 +97,7 @@
 								<h:outputText value="#{cc.attrs.bean.currRegStatus}" rendered="#{cc.attrs.bean.displayLabelRegistrationStatus}" /><!-- #37925 -->
 								<p:outputPanel rendered="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="approveSelBox" required="#{!cc.attrs.poRecommend and (empty param['disableValidation'] or param['disableValidation'] == 'true') or param['disableValidation']}"
+										id="approveSelBox" required="#{!cc.attrs.poRecommend and (cc.attrs.smAppl.applType eq 'B' or cc.attrs.changeCurrRegStatus)}"
 										value="#{cc.attrs.bean.approvedStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
@@ -109,7 +110,7 @@
 								</p:outputPanel>
 								<p:outputPanel rendered="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="poRecommendSelBox" required="#{cc.attrs.poRecommend and (empty param['disableValidation'] or param['disableValidation'] == 'true') or param['disableValidation']}"
+										id="poRecommendSelBox" required="#{cc.attrs.poRecommend and (cc.attrs.smAppl.applType eq 'B' or cc.attrs.changeCurrRegStatus)}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
@@ -126,7 +127,8 @@
 				</c:if>
 				<tr>
 					<td style="vertical-align: top"><p:outputLabel
-							value="#{lbl['lbl.sm.remarks.approval']}" /></td>
+							value="#{lbl['lbl.sm.remarks.approval']}" />
+								</td>
 					<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 							style="width : auto;" rows="10"
 							value="#{cc.attrs.approvalRemarks}"
