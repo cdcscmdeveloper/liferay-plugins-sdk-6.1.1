@@ -801,9 +801,9 @@ public class PurchaseInquiryBackingBean extends
 				// 27868 - start
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateReasonStatus(requestNoteDtls);
-					validateUserProfileAgencyForSpecialItem(requestNoteDtls);
-					validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
+					validateUserProfileAgencyForSpecialItem(requestNoteDtls);					
 				}
+				validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
 				// 27868 - end
 				// Add selected supplier item.f
 				scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
@@ -856,10 +856,10 @@ public class PurchaseInquiryBackingBean extends
 				// 27868 - start
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateReasonStatus(requestNote.getRequestNoteDtls());
-					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());
-					validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
-							scRequestSupplierItem);
+					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());					
 				}
+				validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
+						scRequestSupplierItem);
 				// 27868 - end
 				
 				reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -4387,22 +4387,24 @@ public class PurchaseInquiryBackingBean extends
 	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
 			List<PmReasonRestr> distinctReasonRestrList) {
 		for (PmReasonRestr rr : listReasonRestr) {
-			PmParameter param = rr.getSupplAcctTypeId();
-			boolean exists = false;
-
-			for (PmReasonRestr dr : distinctReasonRestrList) {
-				PmParameter existingParam = dr.getSupplAcctTypeId();
-
-				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
-						existingParam != null ? existingParam.getParameterCode() : "")) {
-					exists = true;
-					break;
+			if(rr.getSupplAcctTypeId() != null){
+				PmParameter param = rr.getSupplAcctTypeId();
+				boolean exists = false;
+	
+				for (PmReasonRestr dr : distinctReasonRestrList) {
+					PmParameter existingParam = dr.getSupplAcctTypeId();
+	
+					if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+							existingParam != null ? existingParam.getParameterCode() : "")) {
+						exists = true;
+						break;
+					}
 				}
+	
+				if (!exists) {
+		            distinctReasonRestrList.add(rr);
+		        }
 			}
-
-			if (!exists) {
-	            distinctReasonRestrList.add(rr);
-	        }
 	    }
 	}
 	
