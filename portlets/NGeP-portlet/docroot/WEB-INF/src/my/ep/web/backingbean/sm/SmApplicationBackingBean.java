@@ -10729,8 +10729,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	        return;
 	    }
 
-	    assignValReqdToTrue();
-
 	    SmApplSectionReview latestPOChange = findLatestPOSectionReview();
 	    if (!isValidApplSectionReview(latestPOChange)) {
 	        return;
