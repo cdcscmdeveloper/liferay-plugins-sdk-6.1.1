@@ -11015,6 +11015,7 @@ public class SmApplicationBackingBean extends
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		String applType = smAppl.getApplType();
 		showRegistrationDecisionUI();
+		setRegistrationStatusRequiredUI();
 		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
 			getManagedBean().setDisplayDropdownRegStatus(true);
 		} // #37925 END

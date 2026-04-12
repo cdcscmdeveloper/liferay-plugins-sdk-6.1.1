@@ -106,7 +106,7 @@
 								<h:outputText value="#{cc.attrs.bean.currRegStatus}" rendered="#{cc.attrs.bean.displayLabelRegistrationStatus}" /><!-- #37925 -->
 								<p:outputPanel rendered="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="approveSelBox" required="#{!cc.attrs.poRecommend and (cc.attrs.smAppl.applType eq 'B' or cc.attrs.changeCurrRegStatus)}"
+										id="approveSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.approvedStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
@@ -119,7 +119,7 @@
 								</p:outputPanel>
 								<p:outputPanel rendered="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="poRecommendSelBox" required="#{cc.attrs.poRecommend and (cc.attrs.smAppl.applType eq 'B' or cc.attrs.changeCurrRegStatus)}"
+										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
