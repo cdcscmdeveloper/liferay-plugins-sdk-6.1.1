@@ -79,7 +79,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 	public enum GuidelineType {
 		SPEC_ITEM(SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE), SPEC_FINANCIAL(
 				SourcingConstants.DOCNAME_QT_SPEC_FINANCIAL_ITEM_GUIDELINE), SPEC_ITEM_PREPARATION(
-				ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
+				CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
 
 		private final String docName;
 
