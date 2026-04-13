@@ -4154,6 +4154,7 @@ public class SmApplicationBackingBean extends
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
+
 			// init GST information
 			initGst();
 		}
@@ -4376,7 +4377,6 @@ public class SmApplicationBackingBean extends
 				}
 			break;				
 		//#38991 -END
-
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
 			if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
@@ -17066,7 +17066,7 @@ public class SmApplicationBackingBean extends
 		return sb.toString();
 	}
 	//#32008 - END
-	
+
 	//#28175 - start
 	/**
 	 * @param cat
@@ -17356,7 +17356,7 @@ public class SmApplicationBackingBean extends
 		return false;
 	}
 	//#38195 END
-
+	
 	//#38927 START
 	/**
 	 * Validates the supplier categories for the current application.
@@ -17529,7 +17529,7 @@ public class SmApplicationBackingBean extends
 	    }
 	}
 	//#38927 END
-
+	
 	//#39282
 	/**
 	 * To generate unique file name yyyyMMdd_HHmmss
