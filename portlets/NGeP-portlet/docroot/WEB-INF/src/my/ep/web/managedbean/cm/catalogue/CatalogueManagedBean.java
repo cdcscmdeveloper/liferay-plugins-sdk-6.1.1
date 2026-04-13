@@ -580,6 +580,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<ScheduleInfo> schInfo;
 	//38255-End
 
+	private String mofNo; //#38972
+
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
 
@@ -4553,4 +4555,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 	}
 	//#26282 and SonarQube fixing - End
+
+	//#38972 - Start
+	public String getMofNo() {
+		return mofNo;
+	}
+
+	public void setMofNo(String mofNo) {
+		this.mofNo = mofNo;
+	}
+	//#38972 - End
 }

@@ -42,8 +42,10 @@
 					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 
 			</p:column>
-			<ui:remove><!-- #38151 Start (header text)--></ui:remove>
-			<p:column headerText="#{supplierDetailBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
+			<ui:remove><!-- #38151 Start (header text)-->
+			           <!-- #40142-->
+			</ui:remove>
+			<p:column headerText="#{suppFinalizationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 				style="width:5%; text-align:right;">
 				<h:outputText value="#{qualifiedSupp.totalScore}">
 					<f:convertNumber
@@ -98,7 +100,7 @@
 
 		</p:dataTable>
 		
-		<ui:remove> #28777#29729 - Start </ui:remove>
+		<ui:remove> 28777,29729 - Start </ui:remove>
 		<p:dataTable id="preferenceMarginSFSuppliersDis"
 			style="width:100%; height:75%;" var="disqualifiedSupp"
 			widgetVar="qualifiedSupplierDtls"
@@ -179,7 +181,7 @@
 		
 
 		</p:dataTable>
-		<ui:remove> #28777#29729 - End </ui:remove>
+		<ui:remove> 28777,29729 - End </ui:remove>
 
 	</p:dialog>
 
