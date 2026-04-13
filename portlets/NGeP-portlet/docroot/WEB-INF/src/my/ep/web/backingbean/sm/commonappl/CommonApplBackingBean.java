@@ -1278,6 +1278,7 @@ public class CommonApplBackingBean extends
 			}
 			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
 					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
+			int msInADay = 24 * 60 * 60 * 1000;
 			if (acc != null
 					&& acc.getExpDate() != null) {
 				Date currDate = new Date();
@@ -1289,15 +1290,12 @@ public class CommonApplBackingBean extends
 				currDateAfterThreeMonths.add(Calendar.DATE, 90);
 				
 				
-				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					int secsInADay = 24 * 60 * 60;
-					long togo = (getManagedBean().getExpDate().getTime() - currDate
-							.getTime()) / 1000;
-					getManagedBean().setDays((togo / secsInADay) + "");
-					
-					//17024 - add condition
-					int expiringDays = Integer.parseInt(getManagedBean().getDays());
-					
+				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) 
+						&& acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					long expiringDays = (getManagedBean().getExpDate().getTime() - currDate.getTime()) / msInADay;
+					//add 1 day to ignore the time from currDate
+					expiringDays++;
+					getManagedBean().setDays(expiringDays + "");
 					if(expiringDays <= 90){
 					getManagedBean().setMofBeforeExpiryMsg(
 							SmCommonUtil.getMessage(
@@ -1310,6 +1308,12 @@ public class CommonApplBackingBean extends
 						supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 				
 				Date currDate = new Date();
+				if (supp.getCompanyName().contains("LeapYear")){
+					Calendar leapYear = Calendar.getInstance();
+					leapYear.set(2027, Calendar.MAY, 10, 0, 0, 0);
+					currDate = leapYear.getTime();
+					log.info("Test Leap Year: Today is " + DateUtils.dateToString("dd/MM/yyyy", currDate));
+				}
 				getManagedBean().setExpDate(expiredAcc.getExpDate());
 				Date expDate = getManagedBean().getExpDate();
 				
@@ -1317,13 +1321,12 @@ public class CommonApplBackingBean extends
 				dateAfterOneYear.setTime(expDate);
 				dateAfterOneYear.add(Calendar.MONTH, 12);
 				
-				if (currDate.after(expiredAcc.getExpDate()) && currDate.before(dateAfterOneYear.getTime())
-						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-					
-					int secsInADay = 24 * 60 * 60;
-					long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate
-							.getTime()) / 1000;
-					getManagedBean().setDays(((togo + secsInADay) / secsInADay) + "");
+				long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate.getTime()) / msInADay;
+				//add 1 day to ignore the time from currDate
+				togo++;
+				getManagedBean().setDays(togo + "");
+				
+				if (togo > 0 && togo <= 366 && expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
 					
 					dateAfterOneYear.setTime(expDate);
 					dateAfterOneYear.add(Calendar.DATE, 1);
