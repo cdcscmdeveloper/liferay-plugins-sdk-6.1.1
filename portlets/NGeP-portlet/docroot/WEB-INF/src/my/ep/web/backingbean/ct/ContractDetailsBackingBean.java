@@ -4678,13 +4678,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		if ((BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))
-				&& ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null) {
+				&& ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() != null) { //#40194
 
 			DecimalFormat df = new DecimalFormat("#.00");
 
 			bondAmount = Double.valueOf(df.format(bondAmount));
-			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()
-					.doubleValue()));
+			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt()
+					.doubleValue())); //#40194
 
 			if (Double.compare(bondAmount, originalBondAmt) < 0) {
 				setTabValue("PB");
