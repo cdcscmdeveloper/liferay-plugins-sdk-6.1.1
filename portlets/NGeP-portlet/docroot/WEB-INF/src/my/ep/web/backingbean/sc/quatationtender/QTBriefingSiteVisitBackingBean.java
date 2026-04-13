@@ -12,8 +12,12 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -340,7 +344,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	/**
 	 * Add details to briefing list.
 	 */
-	public void addToBriefingList() {
+	public void addToBriefingList(Long editQtBsvDtlId) {
 		debugLogger("addToBriefingList");
 		this.getManagedBean().setRequired(false);
 		String bsvType = this.getManagedBean().getBsvType();
@@ -433,34 +437,37 @@ public class QTBriefingSiteVisitBackingBean extends
 			    	final boolean isSingleOrEmpty = listSize <= 1;
 			    	final boolean isMulti = listSize > 1;
 			
-			        boolean pendingFlag = checkPendingStatus(currentList);
-			
-			        if(!pendingFlag){
+			    	
+			        boolean postponeFlag = checkPostponeStatus(currentList);
+			   
+			        if(postponeFlag){
 			        	for (ScQtBsvDtl currentBsvDtl : currentList) {
 			    	        // Safely resolve status and statusId
-			    	        PmStatus status = currentBsvDtl.getBsvStatus();
+			    	        
+			        		PmStatus status = currentBsvDtl.getBsvStatus();
 			    	        Long statusId = (status != null ? status.getStatusId() : null);
 			    	        //Long qtBsvDtlId = (currentBsvDtl.getQtBsvDtlId() != null ? currentBsvDtl.getQtBsvDtlId() : null);
-			                
-			    	        if (isSingleOrEmpty) {
-			    	            resultList.add(currentBsvDtl);
-			    	            
-			    	            // Clone only if POSTPONE
-			    	            if (equalsLong(statusId, QTStatusConst.BSV_POSTPONE)) {
+			    	    	if(equalsLong(statusId, QTStatusConst.BSV_POSTPONE)){
+	    	        		 	if (isSingleOrEmpty) {
+				    	            resultList.add(currentBsvDtl);
+				    	            // Clone only if POSTPONE
 			    	                ScQtBsvDtl clone = makeCloneWithStatus(currentBsvDtl, statusId);
 			    	                resultList.add(clone);
 			    	                cloneFlag = true;
-			    	            }
-			    	        } else {
-			    	            if (isMulti && equalsLong(statusId, QTStatusConst.BSV_POSTPONE) && !cloneFlag) {
-			    	                ScQtBsvDtl clone = makeCloneWithStatus(currentBsvDtl, statusId);
-			    	                resultList.add(clone);
-			    	                resultList.add(currentBsvDtl);
-			    	                cloneFlag = true;
-			    	            } else {
-			    	                resultList.add(currentBsvDtl);
-			    	            }
-			    	        }
+				    	        } else {
+				    	            if (isMulti && !cloneFlag) {
+				    	                ScQtBsvDtl clone = makeCloneWithStatus(currentBsvDtl, statusId);
+				    	                resultList.add(clone);
+				    	                resultList.add(currentBsvDtl);
+				    	                cloneFlag = true;
+				    	            } else {
+				    	                resultList.add(currentBsvDtl);
+				    	            }
+				    	        }
+		    	        	}else{
+		    	        		resultList.add(currentBsvDtl);
+		    	        	}
+			    	       
 			    	    }
 			        }else{
 			        	briefingBean.setBriefingList(currentList);
@@ -479,8 +486,8 @@ public class QTBriefingSiteVisitBackingBean extends
 			  		          	    }
 			  		            }else{
 			  		            	addedBsvDtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
-			  		            	addedBsvDtl.setRecordStatus(DbValueConst.FLAG_NO);
-			  		            	addedBsvDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			  		            	//addedBsvDtl.setRecordStatus(DbValueConst.FLAG_NO);
+			  		            	//addedBsvDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 			  		        		addedBsvDtl.getAddress().setPmCity(retrievePmCityById(addedBsvDtl.getAddress().getPmCity().getCityId()));
 				            		addedBsvDtl.getAddress().setPmDistrict(retrievePmDistById(addedBsvDtl.getAddress().getPmDistrict().getDistrictId()));
 				            		allBriefingList.add(addedBsvDtl);
@@ -501,7 +508,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			        
 			       	if (CollectionUtils.isNotEmpty(scQtBsvList)){
 						for (ScQtBsv currentBsv : scQtBsvList) {
-							List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBsvDetail(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_SITEVISIT);
+							List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBSVDetailByBsvType(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_SITEVISIT);
 							if (CollectionUtils.isNotEmpty(originalBsvDtlList)) {
 								for (ScQtBsvDtl originalBsvDtl : originalBsvDtlList) {
 								    ScQtBsvDtl editBsvDtl = retrieveBSVAddressDetail(originalBsvDtl.getQtBsvDtlId(), SourcingConstants.BSV_TYPE_SITEVISIT);
@@ -528,6 +535,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			    if (CollectionUtils.isEmpty(briefingBean.getSitevisitList())) {
 			        // First-time assignment
 			        briefingBean.setSitevisitList(siteVisitDetails);
+//			    	List<ScQtBsvDtl> finalList = groupAndSortSiteVisitList(siteVisitDetails);
+//			    	briefingBean.setSitevisitList(finalList);
+			    	
 			    } else {
 			        // Always have a usable list
 			        List<ScQtBsvDtl> currentList = briefingBean.getSitevisitList();
@@ -546,76 +556,64 @@ public class QTBriefingSiteVisitBackingBean extends
 			        List<ScQtBsvDtl> allBriefingList = new ArrayList<ScQtBsvDtl>();
 			        
 			    	final int listSize = currentList != null ? currentList.size() : 0;
-			    	final boolean isSingleOrEmpty = listSize <= 1;
-			    	final boolean isMulti = listSize > 1;
 			
-			        boolean pendingFlag = checkPendingStatus(currentList);
+			    	boolean existFlag = checkBSVDetailExistAndPostpone(editQtBsvDtlId, currentList);
 			
-			        if(!pendingFlag){
+			        if(existFlag){
 			        	for (ScQtBsvDtl currentBsvDtl : currentList) {
 			    	        PmStatus status = currentBsvDtl.getBsvStatus();
 			    	        Long statusId = (status != null ? status.getStatusId() : null);
-			    	        //Long qtBsvDtlId = (currentBsvDtl.getQtBsvDtlId() != null ? currentBsvDtl.getQtBsvDtlId() : null);
-			                
-			    	        if (isSingleOrEmpty) {
-			    	            resultList.add(currentBsvDtl);
-			    	            // Clone only if POSTPONE
-			    	            if (equalsLong(statusId, QTStatusConst.BSV_POSTPONE)) {
-			    	                ScQtBsvDtl clone = makeCloneWithStatus(currentBsvDtl, statusId);
-			    	                resultList.add(clone);
-			    	                cloneFlag = true;
-			    	            }
-			    	        } else {
-			    	            if (isMulti && equalsLong(statusId, QTStatusConst.BSV_POSTPONE) && !cloneFlag) {
-			    	                ScQtBsvDtl clone = makeCloneWithStatus(currentBsvDtl, statusId);
-			    	                resultList.add(clone);
-			    	                resultList.add(currentBsvDtl);
-			    	                cloneFlag = true;
-			    	            } else {
-			    	                resultList.add(currentBsvDtl);
-			    	            }
-			    	        }
+			    	        
+			    	        ScQtBsvDtl editBsvDtl = retrieveBSVDetail(editQtBsvDtlId);
+			    	        if(editBsvDtl != null && editBsvDtl.getQtBsvDtlId().equals(currentBsvDtl.getQtBsvDtlId())){
+		    	                ScQtBsvDtl clone = makeCloneWithStatus(currentBsvDtl, statusId);
+		    	                currentBsvDtl.setRecordStatus(DbValueConst.FLAG_NO);
+		    	                currentBsvDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+		    	                resultList.add(clone);
+		    	                resultList.add(currentBsvDtl);
+		    	                cloneFlag = true;
+					        }else{
+					        	resultList.add(currentBsvDtl);
+					        }
+		    	        	
 			    	    }
-			        }else{
-			        	briefingBean.setSitevisitList(currentList);
 			        }
 			        
-			        if(CollectionUtils.isNotEmpty(resultList) && cloneFlag){
-			        	  for (ScQtBsvDtl addedBsvDtl : resultList){
-			        		    if(addedBsvDtl.getBsvDate() != null){
-			  		          	    ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
-			  		          	    if(tempScQtBsvDtl != null){
-					            		tempScQtBsvDtl.getAddress().setPmCity(retrievePmCityById(tempScQtBsvDtl.getAddress().getPmCity().getCityId()));
-					            		tempScQtBsvDtl.getAddress().setPmDistrict(retrievePmDistById(tempScQtBsvDtl.getAddress().getPmDistrict().getDistrictId()));
-					            		tempScQtBsvDtl.getAddress().setPmState(retrievePmStateById(tempScQtBsvDtl.getAddress().getPmState().getStateId()));
-					          	        tempScQtBsvDtl.getBsvStatus().setStatusId(QTStatusConst.BSV_POSTPONE);
-					          	        allSVList.add(tempScQtBsvDtl);
-			  		          	    }
-			  		            }else{
-			  		            	addedBsvDtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
-			  		            	addedBsvDtl.setRecordStatus(DbValueConst.FLAG_NO);
-			  		            	addedBsvDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
-			  		        		addedBsvDtl.getAddress().setPmCity(retrievePmCityById(addedBsvDtl.getAddress().getPmCity().getCityId()));
-				            		addedBsvDtl.getAddress().setPmDistrict(retrievePmDistById(addedBsvDtl.getAddress().getPmDistrict().getDistrictId()));
-				            		allSVList.add(addedBsvDtl);
-			  		            }
-			  	        	}
-			    	    briefingBean.setSitevisitList(allSVList);  
-			        }else{
-			        	 for (ScQtBsvDtl updatedBsvDtl : currentList){
-	  	                	updatedBsvDtl.getAddress().setPmState(retrievePmStateById(updatedBsvDtl.getAddress().getPmState().getStateId()));
-	  	                	updatedBsvDtl.getAddress().setPmCity(retrievePmCityById(updatedBsvDtl.getAddress().getPmCity().getCityId()));
-	  	                	updatedBsvDtl.getAddress().setPmDistrict(retrievePmDistById(updatedBsvDtl.getAddress().getPmDistrict().getDistrictId()));
-	  	                	updatedCurrentList.add(updatedBsvDtl);
-	  		             }
-			        	 briefingBean.setSitevisitList(updatedCurrentList);
+			        if (CollectionUtils.isNotEmpty(resultList)) {
+			            for (ScQtBsvDtl dtl : resultList) {
+			                if (dtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+			                	if(dtl.getQtBsvDtlId() != null && dtl.getQtBsvDtlId().equals(editQtBsvDtlId)){
+			                        ScQtBsvDtl temp = getSafeTempDtl(dtl);
+			                        populateAddress(temp);
+			                        temp.getBsvStatus().setStatusId(QTStatusConst.BSV_POSTPONE);
+			                        allSVList.add(temp);
+			                	}else if(dtl.getBsvDate() == null){
+			                        dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
+			                        populateAddress(dtl);
+			                        allSVList.add(dtl);
+			                	}else{
+			                		allSVList.add(dtl);
+			                	}
+			                } else {
+			                    allSVList.add(dtl);
+			                }
+			            }
+			        } else if (CollectionUtils.isNotEmpty(currentList)) {
+		                for (ScQtBsvDtl dtl : currentList) {
+		                    populateAddress(dtl);
+		                    allSVList.add(dtl);
+		                }
+			        	
 			        }
+			        
+			        List<ScQtBsvDtl> finalList = groupAndSortSiteVisitList(allSVList);
+			        briefingBean.setSitevisitList(finalList);
 			        
 			        List<ScQtBsv> scQtBsvList = retrieveCurrentBsv(bsvDetail.getScQtBsv().getScQt().getQtId()); 
 			        
 			       	if (CollectionUtils.isNotEmpty(scQtBsvList)){
 						for (ScQtBsv currentBsv : scQtBsvList) {
-							List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBsvDetail(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_BRIEFING);
+							List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBSVDetailByBsvType(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_BRIEFING);
 							if (CollectionUtils.isNotEmpty(originalBsvDtlList)) {
 								for (ScQtBsvDtl originalBsvDtl : originalBsvDtlList) {
 								    ScQtBsvDtl editBsvDtl = retrieveBSVAddressDetail(originalBsvDtl.getQtBsvDtlId(), SourcingConstants.BSV_TYPE_BRIEFING);
@@ -1630,7 +1628,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 	
 	/** Clone helper that ensures new ID, clears bsvDate, and sets a safe PmStatus with the same statusId. */
-	private List<ScQtBsvDtl> retrieveCurrentBsvDetail(Long qtBsvId, String bsvType) {
+	private List<ScQtBsvDtl> retrieveCurrentBSVDetailByBsvType(Long qtBsvId, String bsvType) {
 	 	IQTBriefingSO briefingSO = null;
 	 	//BriefingResDTO resDto = new BriefingResDTO();
 	 	List<ScQtBsvDtl> scQtBsvDtlList = new ArrayList<ScQtBsvDtl>();
@@ -1658,6 +1656,8 @@ public class QTBriefingSiteVisitBackingBean extends
 	    // Ensure “new” identity and date reset per your requirement
 	    clone.setQtBsvDtlId(null); //-- disabled temp
 	    clone.setBsvDate(null);
+	    clone.setRecordStatus(DbValueConst.FLAG_NO);
+	    clone.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 	    //src = revertCurrentFromOriginal(src, qtBsvDtlId);
 
 	    // Ensure the clone has its *own* PmStatus instance carrying the same ID
@@ -1668,10 +1668,20 @@ public class QTBriefingSiteVisitBackingBean extends
 	    return clone;
 	}
 	
-	private boolean checkPendingStatus(List<ScQtBsvDtl> currentList) {
+	private boolean checkBSVDetailExistAndPostpone(Long editQtBsvDtlId, List<ScQtBsvDtl> currentList) {
+		boolean checkFlag = false;
+		ScQtBsvDtl scQtBsvDtl = retrieveBSVDetail(editQtBsvDtlId);
+		boolean checkPostpone = checkPostponeStatus(currentList);
+		if (scQtBsvDtl != null && checkPostpone) {
+			checkFlag = true;
+		}
+		return checkFlag;
+	}
+	
+	private boolean checkPostponeStatus(List<ScQtBsvDtl> currentList) {
 		boolean checkFlag = false;
 		for (ScQtBsvDtl currentBsvDtl : currentList) {
-			if(currentBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)){
+			if(currentBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)){
 				checkFlag = true;
 				break;
 			}
@@ -1713,7 +1723,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			List<ScQtBsv> scQtBsvList = retrieveCurrentBsv(newBsvDtl.getScQtBsv().getScQt().getQtId()); 
 	       	if (CollectionUtils.isNotEmpty(scQtBsvList)){
 				for (ScQtBsv currentBsv : scQtBsvList) {
-					List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBsvDetail(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_BRIEFING);
+					List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBSVDetailByBsvType(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_BRIEFING);
 					if (CollectionUtils.isNotEmpty(originalBsvDtlList)) {
 						for (ScQtBsvDtl originalBsvDtl : originalBsvDtlList) {
 							oldBsvStatusId = originalBsvDtl.getBsvStatus().getStatusId();
@@ -1725,7 +1735,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			List<ScQtBsv> scQtBsvList = retrieveCurrentBsv(newBsvDtl.getScQtBsv().getScQt().getQtId()); 
 	       	if (CollectionUtils.isNotEmpty(scQtBsvList)){
 				for (ScQtBsv currentBsv : scQtBsvList) {
-					List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBsvDetail(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_SITEVISIT);
+					List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBSVDetailByBsvType(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_SITEVISIT);
 					if (CollectionUtils.isNotEmpty(originalBsvDtlList)) {
 						for (ScQtBsvDtl originalBsvDtl : originalBsvDtlList) {
 							oldBsvStatusId = originalBsvDtl.getBsvStatus().getStatusId();
@@ -1743,7 +1753,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		List<ScQtBsv> scQtBsvList = retrieveCurrentBsv(newBsvDtl.getScQtBsv().getScQt().getQtId()); 
        	if (CollectionUtils.isNotEmpty(scQtBsvList)){
 			for (ScQtBsv currentBsv : scQtBsvList) {
-				List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBsvDetail(currentBsv.getQtBsvId(), bsvType);
+				List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBSVDetailByBsvType(currentBsv.getQtBsvId(), bsvType);
 				if (CollectionUtils.isNotEmpty(originalBsvDtlList)) {
 					for (ScQtBsvDtl originalBsvDtl : originalBsvDtlList) {
 						oldBsvDate = originalBsvDtl.getBsvDate();
@@ -1767,6 +1777,120 @@ public class QTBriefingSiteVisitBackingBean extends
 	                null)
 	        );
 	    }
+	}
+	
+	private ScQtBsvDtl retrieveBSVDetail(Long qtBsvDtlId) {
+	 	IQTBriefingSO briefingSO = null;
+	 	ScQtBsvDtl scQtBsvDtl = null;
+		try{
+			 briefingSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			
+			 scQtBsvDtl = briefingSO.retrieveBSVDetail(qtBsvDtlId);
+		}finally{
+			briefingSO=null;	
+		}
+
+	    return scQtBsvDtl;
+	}
+	
+	private ScQtBsvDtl getSafeTempDtl(ScQtBsvDtl fallback) {
+	    ScQtBsvDtl temp = this.getManagedBean().getTempScQtBsvDtl();
+	    return temp != null ? temp : fallback;
+	}
+	
+	private void populateAddress(ScQtBsvDtl dtl) {
+	    if (dtl != null && dtl.getAddress() != null) {
+	        if (dtl.getAddress().getPmCity() != null) {
+	            dtl.getAddress().setPmCity(
+	                retrievePmCityById(dtl.getAddress().getPmCity().getCityId()));
+	        }
+	        if (dtl.getAddress().getPmDistrict() != null) {
+	            dtl.getAddress().setPmDistrict(
+	                retrievePmDistById(dtl.getAddress().getPmDistrict().getDistrictId()));
+	        }
+	        if (dtl.getAddress().getPmState() != null) {
+	            dtl.getAddress().setPmState(
+	                retrievePmStateById(dtl.getAddress().getPmState().getStateId()));
+	        }
+	    }
+	}
+	
+	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
+	    if (CollectionUtils.isEmpty(inputList)) {
+	        return new ArrayList<ScQtBsvDtl>();
+	    }
+
+	    // ==========================
+	    // STEP 1: GROUPING by bsvDesc
+	    // ==========================
+	    Map<String, List<ScQtBsvDtl>> grouped = new HashMap<String, List<ScQtBsvDtl>>();
+
+	    for (ScQtBsvDtl dtl : inputList) {
+
+	        String key = dtl.getBsvDesc();
+
+	        if (!grouped.containsKey(key)) {
+	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
+	        }
+
+	        grouped.get(key).add(dtl);
+	    }
+
+	    // ==========================
+	    // STEP 2: SORT EACH GROUP
+	    // ==========================
+	    for (List<ScQtBsvDtl> list : grouped.values()) {
+
+	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
+	            @Override
+	            public int compare(ScQtBsvDtl bsvDtl1, ScQtBsvDtl bsvDtl2) {
+
+	                Date bsvDate1 = bsvDtl1.getBsvDate();
+	                Date bsvDate2 = bsvDtl2.getBsvDate();
+
+	                if (bsvDate1 == null && bsvDate2 == null) return 0;
+	                if (bsvDate1 == null) return 1;
+	                if (bsvDate2 == null) return -1;
+
+	                return bsvDate2.compareTo(bsvDate1);
+	            }
+	        });
+	    }
+
+	    // ==========================
+	    // STEP 3: SORT GROUP ORDER
+	    // ==========================
+	    List<Map.Entry<String, List<ScQtBsvDtl>>> entries =
+	            new ArrayList<Map.Entry<String, List<ScQtBsvDtl>>>(grouped.entrySet());
+
+	    Collections.sort(entries, new Comparator<Map.Entry<String, List<ScQtBsvDtl>>>() {
+	        @Override
+	        public int compare(Map.Entry<String, List<ScQtBsvDtl>> bsvDtls1,
+	                           Map.Entry<String, List<ScQtBsvDtl>> bsvDtls2) {
+
+	            Date bsvDate1 = bsvDtls1.getValue().get(0).getBsvDate();
+	            Date bsvDate2 = bsvDtls2.getValue().get(0).getBsvDate();
+
+	            if (bsvDate1 == null && bsvDate2 == null) return 0;
+	            if (bsvDate1 == null) return 1;
+	            if (bsvDate2 == null) return -1;
+
+	            return bsvDate2.compareTo(bsvDate1);
+	        }
+	    });
+
+	    // ==========================
+	    // STEP 4: MERGE BACK
+	    // ==========================
+	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
+
+	    for (Map.Entry<String, List<ScQtBsvDtl>> entry : entries) {
+	        finalList.addAll(entry.getValue());
+	    }
+
+	    return finalList;
 	}
 	//#28188 - End
 		
