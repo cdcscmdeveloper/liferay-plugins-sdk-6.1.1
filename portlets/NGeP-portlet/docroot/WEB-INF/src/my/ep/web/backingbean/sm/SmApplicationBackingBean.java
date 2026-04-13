@@ -11015,7 +11015,6 @@ public class SmApplicationBackingBean extends
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		String applType = smAppl.getApplType();
 		showRegistrationDecisionUI();
-		setRegistrationStatusRequiredUI();
 		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
 			getManagedBean().setDisplayDropdownRegStatus(true);
 		} // #37925 END
@@ -11368,11 +11367,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
 		//#37925 START
-		SmAppl smAppl = getManagedBean().getSmAppl();
-		String applType = smAppl.getApplType();
-		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
-			getManagedBean().setDisplayDropdownRegStatus(false);
-		}
+		getManagedBean().setDisplayDropdownRegStatus(false);
 		getManagedBean().setChangeCurrRegStatus(false); //#37925 END
 		//		#15629 -- start - 27/1/2020
 		// 		#30974 - start
