@@ -202,7 +202,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						process="@this, bsvdetailsdlg" update="@(.briefingList,.amendButton)" 
-						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList}" />
+						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList(qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.qtBsvDtlId)}" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.cancelBriefingList}"
 						partialSubmit="true" />
