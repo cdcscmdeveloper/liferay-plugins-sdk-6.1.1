@@ -139,7 +139,14 @@
 										value="#{supportDocBackingBean.managedBean.selectedDocument.gst}" />
 										<h:outputText value="#{lbl['lbl.pm.gst']}" />
 							 	</td>
-							 	
+							 	<!-- 33744-start -->
+							 	<th></th>
+							 	<td>
+							 		<p:selectBooleanCheckbox id="chkCLBG" value="#{supportDocBackingBean.managedBean.selectedDocument.clbg}" />
+									<h:outputText value="#{lbl['lbl.pm.clbg']}" />
+									<ac:iconTooltip value="#{lbl['lbl.pm.clbg.tooltip']}" />
+							 	</td>
+							 	<!-- 33744-end -->
 							</tr>
 						</table>
 					</td>				
