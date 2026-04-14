@@ -5929,7 +5929,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
-	//#34397, #34398
+	//#34397, #34398, #27827
 	/**
 	 * Retrieve zones
 	 */
@@ -5937,7 +5937,7 @@ public class RuleCatalogueBackingBean extends
 		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
-		//#34397, #34398 - start
+		
 		List<PmZone> zones = new ArrayList<>();
 		//semenanjung, sabah, sarawak
 		List<String> mainCodes = Arrays.asList("1", "2", "3");
@@ -5953,7 +5953,6 @@ public class RuleCatalogueBackingBean extends
 			}
 		});
 		getManagedBean().setMainZones(zones);
-		//#34397, #34398 - end
 	}
 	/* 27827 - END */
 	
@@ -6061,7 +6060,7 @@ public class RuleCatalogueBackingBean extends
 	// 29650 - end
 	// #30672, #29669 - 29/01/2023 - Remove this code
 	
-	//#34397, #34398 , #35509 - start
+	//#34397, #34398 , #35509, #27827 - start
 	/**
 	 * @param type
 	 * @return true for MOF renew period rule types
@@ -6069,13 +6068,14 @@ public class RuleCatalogueBackingBean extends
 	public boolean isRenewTypes(String type) {
 		return RuleTypeConst.RENEW_PERIOD_UPDATE.equals(type) || RuleTypeConst.RENEW_PERIOD_ADD_CAT.equals(type)
 			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
-			|| RuleTypeConst.RENEW_PERIOD.equals(type);
+			|| RuleTypeConst.RENEW_PERIOD.equals(type) || RuleTypeConst.PTJ_CODE.equals(type);
 	}
 	
 	public List<PmZone> getZones() {
 		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
 				getManagedBean().getMainZones() : getManagedBean().getZoneList();
 	}
+	// #27827 - end
 	
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {

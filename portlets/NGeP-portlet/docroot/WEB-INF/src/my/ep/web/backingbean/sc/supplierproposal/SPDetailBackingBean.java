@@ -1294,46 +1294,33 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
-								//#21695 farid IN MONITORING START	
-								
-								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
+								// #21695 farid IN MONITORING START
+								if (null == specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+										|| null == specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+												.getSpecZoneId()) { // #28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
-								}	//#28785-End
-								
-								if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
-									answers.add(specAnswer);
-								}
-								//Bug_34259 - Start
-								else if (specAnswer.getRatePerUom() != null
-											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-									answers.add(specAnswer);
-								
-								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-									answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
-									answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
-									answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-									answers.add(specAnswer);
-								//#21695 farid IN MONITORING END	
-								}
-								//Bug_34259 - End
-								else{
-									//#21695 as is error for tender , 2times deleted if user null the value of the rate per uom.
-									 if (!ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())) {
+								} // #28785-End
+								if (ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean()
+										.getQt().getProcurementMode().getParameterCode()) && !getManagedBean().getQt().isPartial()) {
+									if (specAnswer.getRatePerUom() != null
+											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
+										answers.add(specAnswer);
+									} else {
 										specAnswer.setDeleted(true);
 										toDeleteZoneAnswers.add(specAnswer);
-									 }
+									}
 								}
+								// Bug_34259 - Start
+								else {
+									//Partial offer mandatory insert rate per uom wether it is tender or not, bcoz of the selection OFFER
+									if (specAnswer.getRatePerUom() != null) {
+										answers.add(specAnswer);
+									} else {
+										specAnswer.setDeleted(true);
+										toDeleteZoneAnswers.add(specAnswer);
+									}
+								}
+								// #21695 farid IN MONITORING END
 							}
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
 									.getSpecAnswerList().size())){
@@ -1356,12 +1343,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						activeTemplateSpecBeans.add(templateSpecBean);//#34363 - note 50 - Added - Vinod
 					}
 				}// #28777 & #29729, 35592(35838)
-				//#34363 - note 50 - Start - Vinod
-				if (!activeTemplateSpecBeans.isEmpty() && isCompleted
-						&& null != getManagedBean().getQt()
-						&& getManagedBean().getQt().isPartial()) {
-					checkAllUnitPriceForPartialOffer(activeTemplateSpecBeans);
-				}
+				//#34363 - note 50 - Start - Vinod //#21695 remove this
+//				if (!activeTemplateSpecBeans.isEmpty() && isCompleted
+//						&& null != getManagedBean().getQt()
+//						&& getManagedBean().getQt().isPartial()) {
+//					checkAllUnitPriceForPartialOffer(activeTemplateSpecBeans);
+//				}
 				//#34363 - note 50 - End - Vinod
 				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
 				proposalReqDTO.setToBeRemovedSpecSuppAnswers(tobeDeletedSuppAnswers);
