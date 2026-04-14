@@ -34,6 +34,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO; //Fix - #34367
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -47,6 +48,7 @@ import my.ep.constant.ct.audit.AuditContractConst; //35506
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.pm.RuleTypeConst; //Fix - #34367
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
@@ -91,6 +93,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg; //Fix - #34367
 import my.ep.persistence.entity.pm.common.PmCategoryL1; //#30014
 import my.ep.persistence.entity.pm.common.PmCategoryL2; //#30014
 import my.ep.persistence.entity.pm.common.PmCategoryL3; //#30014
@@ -215,6 +218,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		renewSesionObject();
 		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		setDocumentTypeBasedOnUserRules();//Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 
@@ -232,6 +236,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		CircularReqDTO circularReqDTO = new CircularReqDTO();
 		circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 		setPanelCircularVar(circularReqDTO);
+		
 	}
 
 	/**
@@ -3696,5 +3701,52 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
 	}
 	//#35506 - End
+	
+	//Start Fix - #34367
+	public void setDocumentTypeBasedOnUserRules() {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		Long orgProfileId = null;
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		if (userResDTO != null && userResDTO.isSuccessful() && userResDTO.getUserOrgList() != null) {
+			for (PmUserOrg orgProfile : userResDTO.getUserOrgList()) {
+				if (orgProfile != null && orgProfile.getPmOrgProfile() != null) {
+					orgProfileId = orgProfile.getPmOrgProfile().getOrgProfileId();
+					break;
+				}
+			}
+		}
+		log.info(" userOrgProfileCheck orgProfileId :::  " + orgProfileId != null ? orgProfileId: null);
+		CtCircularVer circularVer = getManagedBean().getCircularVer();
+		if (orgProfileId == null || circularVer == null) {
+			return;
+		}
+		if (circularVer.getDocType() == null) {
+			List<Object[]> isPTJBpkIdentified = ruleSO.getBpkByOrgProfileIdAndRuleType(orgProfileId,
+					RuleTypeConst.PTJCO);
+			List<Object[]> isPTJAuthorizedToMCPCC = ruleSO.getBpkByOrgProfileIdAndRuleType(orgProfileId,
+					RuleTypeConst.PTJCO);
+
+			log.info("isPTJBpkIdentified: " + (isPTJBpkIdentified != null ? isPTJBpkIdentified : "null"));
+			log.info("isPTJAuthorizedToMCPCC: " + (isPTJAuthorizedToMCPCC != null ? isPTJAuthorizedToMCPCC : "null"));
+
+			boolean hasBpk = isPTJBpkIdentified != null && !isPTJBpkIdentified.isEmpty();
+			boolean isNewAuthorizedMCPCC = isPTJAuthorizedToMCPCC != null && !isPTJAuthorizedToMCPCC.isEmpty();
+
+			if (hasBpk) {
+				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+			} else if (isNewAuthorizedMCPCC) {
+				circularVer.setDocType(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR);
+			} else {
+				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			}
+		}
+
+	}
+	//End Fix - #34367
 
 }
