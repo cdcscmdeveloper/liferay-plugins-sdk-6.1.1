@@ -4643,9 +4643,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return resDTO.getCtContractVer().getSignedDate();
 	}
 	
-	public String newProcurement() {
-		String procur = getParameterDesc(getManagedBean().getContractVer().getCtContract().getProcurementMode());
-		return ContractConst.PROCRUMENT_DIRECT_PURCHASE.equalsIgnoreCase(procur) ? procur : null;
+	public String newProcurement(){
+		String procur = getParameterCode(getManagedBean().getContractVer().getCtContract().getProcurementMode());
+		return ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(procur) ? procur : null;
 	}
 	
 	public String newJustification() {
