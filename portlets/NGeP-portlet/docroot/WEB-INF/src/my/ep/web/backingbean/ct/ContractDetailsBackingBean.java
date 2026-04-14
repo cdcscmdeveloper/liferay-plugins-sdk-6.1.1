@@ -376,15 +376,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 
 				// Start Fix - #30856
-				if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+				//#40170 start
+				if (ctBB.getManagedBean().getCtContractAmount().isBondExempted() && 
+						ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)) {
 					//Remove Code for removePerformanceDatatableRow - #40072 
-				
 					// Start - Fix #29368
-					if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)) {
-						checkandResetBondExempted();
-					}
+					checkandResetBondExempted();
 					// End - Fix #29368
 				}
+				//#40170 end
 				// End Fix - #30856
 
 				// Bug 34142, 15851 - shaqimi start 04/12/2022
@@ -493,6 +493,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else {
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
 			}
+			
+			//Start - Fix 29368
+			//from tasklist
+			checkandResetBondExempted(); //#40170
+			//End - Fix 29368
 		} catch(Exception e) {
 			log.error(e.getMessage(), e);
 		}		
@@ -699,6 +704,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			} else {
 				// Start Fix - #30045 || #27551 - add null checking
+				// The scRequestNote variable is only used to determine the procurement type.
+				// However, the values for reason and procurement type are always retrieved from the CT table.
 				ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(ctBB.getManagedBean(),
 						"contractVer.ctContractItems[0].scRequestItem.requestNote");
 				if (scRequestNote != null) {
@@ -4332,6 +4339,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		}
 	}
+	
+	//#40170 start
 	//Start - Fix #29368
 	/**
 	 * The method used to check the bond exempted condition,
@@ -4339,16 +4348,38 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * otherwise true
 	 */
 	public void checkandResetBondExempted(){
-				
-		if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
-			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
-				ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
-			  }
-		   }
+		// Check Contract Version
+	    if (ctBB.getManagedBean().getContractVer() != null
+	            && ctBB.getManagedBean().getContractVer().getCtContractAmount() != null) {
+	        resetBondExemptionIfInvalid(ctBB.getManagedBean().getContractVer().getCtContractAmount());
+	    }
+
+	    // Check Managed Bean Contract Amount
+	    if (ctBB.getManagedBean().getCtContractAmount() != null) {
+	        resetBondExemptionIfInvalid(ctBB.getManagedBean().getCtContractAmount());
+	    }
 	//End - Fix #29368
 
 	}
 	// End Fix - #30856
+	
+	/**
+	 * Resets bond exemption flag if bond is required, marked as exempted,
+	 * and no supporting document is provided.
+	 *
+	 * @param contractAmount the contract amount object to validate
+	 */
+	private void resetBondExemptionIfInvalid(CtContractAmount contractAmount) {
+		if (contractAmount.isBondReq() && contractAmount.isBondExempted()) {
+			boolean isFileNameMissing = contractAmount.getBondExemptedFileName() == null;
+	        boolean isFilePathMissing = contractAmount.getBondExemptedFilePath() == null;
+
+	        if (isFileNameMissing && isFilePathMissing) {
+				contractAmount.setBondExempted(false);
+			}
+		}
+	}
+	//#40170 end
 	
 	// Start - #30866
 	/**
@@ -4647,13 +4678,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		if ((BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))
-				&& ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null) {
+				&& ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() != null) { //#40194
 
 			DecimalFormat df = new DecimalFormat("#.00");
 
 			bondAmount = Double.valueOf(df.format(bondAmount));
-			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()
-					.doubleValue()));
+			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt()
+					.doubleValue())); //#40194
 
 			if (Double.compare(bondAmount, originalBondAmt) < 0) {
 				setTabValue("PB");
