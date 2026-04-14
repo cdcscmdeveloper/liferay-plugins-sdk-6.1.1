@@ -312,6 +312,7 @@ public class SyncProcBoardFromPMRest {
 				reqDTO.setLoginId(loginId);
 				reqDTO.setUserId(userId);
 				reqDTO.setSupplierUser(false);
+				reqDTO.setDefaultPassword(true);
 				resDTO = SmServiceLookup.getUserSO().createnSyncLiferayAndOimRoleFromPm(reqDTO);
 				log.info("End Sync user by login Id: " + resDTO.isSuccessful());
 			}

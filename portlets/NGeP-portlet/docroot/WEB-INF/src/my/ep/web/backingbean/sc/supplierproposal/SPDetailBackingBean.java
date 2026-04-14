@@ -696,8 +696,10 @@ public class SPDetailBackingBean extends
 	 *            the digi sign
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
-		debugLogger("submitSupplierProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
-		
+		//Bug #39501 start
+		Long qtId = this.getManagedBean().getQt().getQtId();
+		Long suppId = this.getManagedBean().getSupplierId();
+		//Bug #39501 end		
 		long startTime = System.currentTimeMillis();
 		
 		validateProposalCloseTime(this.getManagedBean().getQt());
