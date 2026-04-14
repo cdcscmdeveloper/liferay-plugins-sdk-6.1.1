@@ -869,7 +869,7 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		return false;
 	}
 	//#28784 - End
-	
+
 	// #29732 start
 	public boolean isSpecEndorsmentScreen() {
 		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
