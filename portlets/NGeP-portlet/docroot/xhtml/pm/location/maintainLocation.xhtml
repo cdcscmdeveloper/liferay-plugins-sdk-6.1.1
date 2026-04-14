@@ -33,6 +33,7 @@
 					<td><p:outputLabel
 							value=" #{lbl['lbl.pm.country']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
+							<ui:remove>Start - #35509 </ui:remove>
 					<td><p:selectOneMenu
 							value="#{locationBackingBean.managedBean.state.pmCountry.countryId}"
 							id="country" label="#{lbl['lbl.pm.country']}" required="true"
@@ -44,8 +45,10 @@
 								value="#{locationBackingBean.managedBean.countries}"
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
-
+							<p:ajax event="change"
+								listener="#{locationBackingBean.retrieveStateList}" />
 						</p:selectOneMenu></td>
+						<ui:remove>End - #35509 </ui:remove>
 				</tr>
 				<tr>
 					<td><p:outputLabel

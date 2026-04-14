@@ -410,6 +410,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String loiSupplierProposalspec;
 	private boolean renderInstruction = true;
 	//#29007 End Vinod
+	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private List<ScQtEvaluationResultDtl> disqualifiedSupplierList;
+	private List<ScQtRecommend> disqualifiedRecommendList;
+	private boolean flagBranchDeleted = false;
+	// #28777 & #29729 - End
+
 	//#21692 - Start
 	private boolean ableToCancelLOI;
 	private boolean ableToCancelLOIWithoutBPM;
@@ -2358,6 +2366,40 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.renderInstruction = renderInstruction;
 	}
 	//#29007 End Vinod
+	
+	//#28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+
+	public List<ScQtEvaluationResultDtl> getDisqualifiedSupplierList() {
+		return disqualifiedSupplierList;
+	}
+
+	public void setDisqualifiedSupplierList(List<ScQtEvaluationResultDtl> disqualifiedSupplierList) {
+		this.disqualifiedSupplierList = disqualifiedSupplierList;
+	}
+	
+	public List<ScQtRecommend> getDisqualifiedRecommendList() {
+		return disqualifiedRecommendList;
+	}
+
+	public void setDisqualifiedRecommendList(List<ScQtRecommend> disqualifiedRecommendList) {
+		this.disqualifiedRecommendList = disqualifiedRecommendList;
+	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
+	//#28777 & #29729 - End
 
 	//#21692 - Start
 	public boolean isAbleToCancelLOI() {
