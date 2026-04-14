@@ -4174,10 +4174,12 @@ public class TemplateSpecBackingBean extends
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
-		//#38151 - Fix return null during Template Specification Maintenance.
+		//#38151 - Start
+		//Fix return null during Template Specification Maintenance.
 		if (this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc() == null){
 			return;
 		}
+		//#38151 - End
 		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();
 		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
