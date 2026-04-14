@@ -10782,9 +10782,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		// 11104-End
 
 		// #29732 @idham 25/07/2023 - Start
+		// #40140 -start-
 		if (null != this.getManagedBean().getCurrentStatusId()
 				&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(this.getManagedBean()
 						.getCurrentStatusId())) {
+		// #40140 -end-
 			if (isRoleValidationfromTaskList()) {
 				this.getManagedBean().setCategoryDescriptionChange(true);
 			}
@@ -10827,7 +10829,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									new FacesScopes().getUserLocale())));
 				}
 			}
-		}
+		} // #40140
 		// #29732 @idham 25/07/2023 - End
 
 		committeSO = null;
