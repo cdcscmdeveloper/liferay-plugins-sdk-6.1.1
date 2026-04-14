@@ -548,6 +548,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						flItemAddr.setGstAmount(BigDecimal.ZERO);
 						flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 					}
+					
 				}
 			}
 			if(getManagedBean().getSelectedDelAddr()!=null) {
@@ -699,6 +700,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			setManualAddressList();
 		}
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		
 	}
 	
 	/**
@@ -3137,7 +3139,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						accumulatedQty = accumulatedQty.add(itemAddr.getOrderedQty());
 					}
 				}
-			}
+			}	
 			if(accumulatedQty.doubleValue()==0) {
 				if(!ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode())){
 					getManagedBean().setSelectedTabIndex(1);
@@ -4998,6 +5000,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 				
+				//Bond Waiver Checking upon Contract Request Submission and/or Approval
 				validateBondRequirement(flRequest, action);//25296
 				validateSuspensionItems(action);
 				validateChargelineLimit(action);
@@ -7090,36 +7093,40 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//29401-end
 
 	//35024-Start
+	//25296-format this method
 	/**
 	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not 
 	 * message show while pre render //25296
 	 * @param flRequest
 	 */
-	private void validateBondComplete(FlFulfilmentRequest flRequest){
+	private void validateBondComplete(FlFulfilmentRequest flRequest) {
 		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO contractReqDTO = new ContractReqDTO();
 		contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
 		contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 		contractReqDTO.setAsAtDate(new Date());
-		contractReqDTO.setScLoa(flRequest.getCtContract().getLoa());//25296
+		contractReqDTO.setScLoa(flRequest.getCtContract().getLoa());// #25296
 		CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
-		
-		if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-				&& ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
-				if(!ctContractAmount.isBondWaived()){//25296-Start
-					ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
-					if(!contractResp.isBondComplete()){
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(MessageConst.ERROR_740051, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-						getManagedBean().setBondIncomplete(true);
-					}
-			} else {
+
+		if (getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+				&& ctContractAmount != null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()) {
+			if (!ctContractAmount.isBondWaived()) {
+				ContractResDTO contractResp = contractSO.validateBondComplete(contractReqDTO);
+				if (!contractResp.isBondComplete()) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+									MessageConst.ERROR_740051, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									getFacesScopes().getUserLocale())));
+					getManagedBean().setBondIncomplete(true);
+				}
+			} else {// 25296-Start
 				ContractResDTO contractBondWaiver = contractSO.validateBondWaiverPeriod(contractReqDTO);
 				if (!contractBondWaiver.isBondWaiverPeriod()) {
 					ContractResDTO contractResp = contractSO.validateBondComplete(contractReqDTO);
 					if (!contractResp.isBondComplete()) {
 						if (contractBondWaiver.getCtBondWaiverDetailList() == null
-								|| contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+								|| contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {// WIP data
 							FacesContext.getCurrentInstance().addMessage(
 									null,
 									new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -7136,7 +7143,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}// 25296-End
-		}			
+		}
 	}
 	//35024-End
 	
@@ -7173,13 +7180,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param action 
 	 * @param contractReqDTO 
 	 */
-	private void validateBondWithoutWaiver (String action, ContractReqDTO contractReqDTO){
-		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-		ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);//25296 - asyraf - move to new line
-		if(!contractResp.isBondComplete()){
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+	private void validateBondWithoutWaiver(String action, ContractReqDTO contractReqDTO) {
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
+		ContractResDTO contractResp = contractSO.validateBondComplete(contractReqDTO);
+		if (!contractResp.isBondComplete()) {
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				throw new EpException(MessageConst.ERROR_740051);
-			}else{
+			} else {
 				throw new EpException(MessageConst.ERROR_740052);
 			}
 		}
@@ -7192,12 +7200,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param action
 	 * @param contractReqDTO
 	 */
-	private void validateBondWithWaiver(String action, ContractReqDTO contractReqDTO){
-		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-		ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//25296 - asyraf - move to new line
-		if(!contractBondWaiver.isBondWaiverPeriod()){
-			ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
-			if(!contractResp.isBondComplete()){
+	private void validateBondWithWaiver(String action, ContractReqDTO contractReqDTO) {
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
+		ContractResDTO contractBondWaiver = contractSO.validateBondWaiverPeriod(contractReqDTO);
+		if (!contractBondWaiver.isBondWaiverPeriod()) {
+			ContractResDTO contractResp = contractSO.validateBondComplete(contractReqDTO);
+			if (!contractResp.isBondComplete()) {
 				displayBondWaiverValidationError(action, contractBondWaiver);
 			}
 		}
@@ -7211,19 +7220,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param contractBondWaiver
 	 */
 	private void displayBondWaiverValidationError(String action, ContractResDTO contractBondWaiver) {
-		//25296 - asyraf - to handle WIP transaction
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if (contractBondWaiver.getCtBondWaiverDetailList() == null
+					|| contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {//WIP data
 				throw new EpException(MessageConst.ERROR_740066);
 			} else {
 				throw new EpException(MessageConst.ERROR_740051);
-			}									
-		}else{
-			if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+			}
+		} else {
+			if (contractBondWaiver.getCtBondWaiverDetailList() == null
+					|| contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {//WIP data
 				throw new EpException(MessageConst.ERROR_740067);
 			} else {
 				throw new EpException(MessageConst.ERROR_740052);
-			}//25296 - end - asyraf									
+			}
 		}
 	}
 	

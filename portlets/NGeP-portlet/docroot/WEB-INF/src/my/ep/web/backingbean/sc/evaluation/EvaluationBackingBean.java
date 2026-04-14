@@ -13839,6 +13839,14 @@ private void retriveCommitteeRemarksList(){
 		return demoProcesses.contains(this.getManagedBean().getTaskName());
 	}
 	//#28784 - End
+	
+	//#28784 - Start
+	private void setDemoReadOnlyFalse() {
+		if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
+			this.getManagedBean().setReadOnly(Boolean.FALSE);
+		}
+	}
+	//#28784 - End
 
 	//#21692 - start
 	/**
@@ -13866,12 +13874,4 @@ private void retriveCommitteeRemarksList(){
 		return lessThanValidityEndDate;
 	}
 	//#21692 - end
-	
-	//#28784 - Start
-	private void setDemoReadOnlyFalse() {
-		if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
-			this.getManagedBean().setReadOnly(Boolean.FALSE);
-		}
-	}
-	//#28784 - End
 }

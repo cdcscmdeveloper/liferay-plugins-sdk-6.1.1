@@ -10999,7 +10999,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	// 37813,35384 -end	
-
+	
 	//#28784 - Start
 	public boolean isDemoType() {
 		return demoType;
