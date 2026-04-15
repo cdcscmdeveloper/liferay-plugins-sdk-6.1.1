@@ -878,12 +878,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// 26247 - end
 	
-	// 38523 - start
+	// 38523, #35320 - start
 	protected IReasonSO getReasonSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 	}
 
-	// 38523 - end
+	// 38523, #35320  - end
 
 
 	/**
