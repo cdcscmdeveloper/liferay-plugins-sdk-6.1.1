@@ -1308,7 +1308,7 @@ public class CommonApplBackingBean extends
 						supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 				
 				Date currDate = new Date();
-				if (supp.getCompanyName().contains("LeapYear")){
+				if (supp.getCompanyName().contains("Leap Year Company")){
 					Calendar leapYear = Calendar.getInstance();
 					leapYear.set(2027, Calendar.MAY, 10, 0, 0, 0);
 					currDate = leapYear.getTime();
