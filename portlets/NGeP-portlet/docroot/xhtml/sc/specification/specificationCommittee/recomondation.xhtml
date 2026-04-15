@@ -30,7 +30,7 @@
 						<td><p:inputText style="text-align:right" maxlength="3"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
-
+ 								<f:convertNumber integerOnly="true" />
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
