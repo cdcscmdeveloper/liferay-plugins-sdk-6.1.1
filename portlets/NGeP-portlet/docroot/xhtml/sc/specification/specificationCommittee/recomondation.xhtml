@@ -88,9 +88,11 @@
 				</table>
 			</p:panel>
 
-		<ui:remove>
-			//#38151 start
-			//To apply the same scoring settings/calculation for both packages and items.Show only for WIP</ui:remove>
+		<ui:remove><!--  
+		//#38151 start
+		//To apply the same scoring settings/calculation 
+		for both packages and items.Show only for WIP -->
+		</ui:remove>
 		<c:if test="#{specificationBackingBean.managedBean.weightage35384WIP}">
 			<ui:remove><!-- 38151 end --></ui:remove>
 			<p:panel id="item" toggleable="true">
