@@ -1327,6 +1327,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 									} else {
 										specAnswer.setDeleted(true);
 										toDeleteZoneAnswers.add(specAnswer);
+										if(specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
+											toDeleteZoneAnswers.remove(specAnswer);
+										}
 									}
 								}
 								// Bug_34259 - Start
