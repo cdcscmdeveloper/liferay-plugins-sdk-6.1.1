@@ -111,7 +111,9 @@
 					<!-- PUTRA #24916 -->
 					<tr >
 						<h:panelGroup
-							rendered="#{ctBackingBean.managedBean.newPk7 and ctBackingBean.newProcurement()!= null}">
+							rendered="#{ctBackingBean.managedBean.newPk7 
+							and ctBackingBean.newProcurement() != null 
+							and ctBackingBean.managedBean.contractVer.ctContract.procQtType != null}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.type']}" />
 							</td>
 							<td><p:inputTextarea autoResize="false" maxlength="500" rows="2" style="width:170px;" disabled="true"
@@ -121,7 +123,8 @@
 					</tr>			
 					<tr>
 						<h:panelGroup
-							rendered="#{ctBackingBean.managedBean.newPk7 and ctBackingBean.newJustification() != null}">
+							rendered="#{ctBackingBean.managedBean.newPk7 
+							and ctBackingBean.newJustification() != null}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
 						<td colspan="3">
@@ -135,7 +138,7 @@
 						<h:panelGroup
 							rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.newPk7 and (!ctBackingBean.managedBean.commonView or 
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)
-						              or ctBackingBean.newJustification() != null }">
+						              or ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType != null }">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
 						<td colspan="3">
