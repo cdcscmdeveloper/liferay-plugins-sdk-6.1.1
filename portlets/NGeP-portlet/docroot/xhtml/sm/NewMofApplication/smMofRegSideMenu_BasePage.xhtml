@@ -162,54 +162,50 @@
 										<ui:include
 											src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
 							</c:if>
-							<!-- 14530 START-->
-							<c:choose>
-								<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
-								<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
-								<ui:include
-									src="/xhtml/sm/poInquiryDetails/poInquiryDetailsViewOnly.xhtml" />
-								</c:if>
-								<c:choose>
-								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
-										<ui:include
-											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
-									</c:if>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 11}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:otherwise>
-								</c:choose>
-								</c:when>
-							<c:otherwise>
+							<!-- #39680 START -For KN appl with special category and can request site visit -with additional panel -->
 							<c:choose>
 								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
-										<ui:include
-											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
-									</c:if>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:otherwise>
-								</c:choose>
-							</c:otherwise>
-							</c:choose>
-							<!-- 14530 END -->
+											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+												<ui:include
+													src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
+											</c:if>
+											
+											<c:choose>
+												<c:when test="#{empty backingBean.managedBean.poSupplierInquiryHistory}">
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
+														<ui:include src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+													</c:if>
+												</c:when>
+												<c:otherwise>
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
+														<ui:include src="/xhtml/sm/poInquiryDetails/poInquiryDetailsViewOnly.xhtml" />
+													</c:if>
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 11}">
+														<ui:include src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+													</c:if>
+												</c:otherwise>
+											</c:choose>
+											
+										</c:when>
+										<c:otherwise>
+											<c:choose>
+												<c:when test="#{empty backingBean.managedBean.poSupplierInquiryHistory}">
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+														<ui:include src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+													</c:if>
+												</c:when>
+												<c:otherwise>
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+														<ui:include src="/xhtml/sm/poInquiryDetails/poInquiryDetailsViewOnly.xhtml" />
+													</c:if>
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
+														<ui:include src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+													</c:if>
+												</c:otherwise>
+											</c:choose>
+										</c:otherwise>
+									</c:choose>
+							<!-- #39680 END -->
 						</c:when>
 								<c:otherwise>
 								</c:otherwise>
@@ -280,54 +276,50 @@
 										<ui:include
 											src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
 							</c:if>
-							<!-- 14530 START-->
-							<c:choose>
-								<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
-								<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-								<ui:include
-									src="/xhtml/sm/poInquiryDetails/poInquiryDetailsViewOnly.xhtml" />
-								</c:if>
-								<c:choose>
-								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
-										<ui:include
-											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
-									</c:if>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:otherwise>
-								</c:choose>
-								</c:when>
-							<c:otherwise>
+							<!-- #39680 START -For KN appl with special category and can request site visit -no additional panel -->
 							<c:choose>
 								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-										<ui:include
-											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
-									</c:if>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:otherwise>
-								</c:choose>
-							</c:otherwise>
-							</c:choose>
-							<!-- 14530 END -->
+											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+												<ui:include
+													src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
+											</c:if>
+											
+											<c:choose>
+												<c:when test="#{empty backingBean.managedBean.poSupplierInquiryHistory}">
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+														<ui:include src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+													</c:if>
+												</c:when>
+												<c:otherwise>
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+														<ui:include src="/xhtml/sm/poInquiryDetails/poInquiryDetailsViewOnly.xhtml" />
+													</c:if>
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
+														<ui:include src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+													</c:if>
+												</c:otherwise>
+											</c:choose>
+											
+										</c:when>
+										<c:otherwise>
+											<c:choose>
+												<c:when test="#{empty backingBean.managedBean.poSupplierInquiryHistory}">
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+														<ui:include src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+													</c:if>
+												</c:when>
+												<c:otherwise>
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+														<ui:include src="/xhtml/sm/poInquiryDetails/poInquiryDetailsViewOnly.xhtml" />
+													</c:if>
+													<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+														<ui:include src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+													</c:if>
+												</c:otherwise>
+											</c:choose>
+										</c:otherwise>
+									</c:choose>
+							<!-- #39680 END -->
 						</c:when>
 								<c:otherwise>
 								</c:otherwise>
