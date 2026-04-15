@@ -2439,11 +2439,9 @@ public class SimpleQuoteBackingBean extends
 
 				quote.setJustificationType(getReasonByCategoryAndCode(
 						ReasonCategory.JUSTIFICATION_PK7W.value(), quote.getJustificationType().getReasonCode()));
-
-				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateSupplierAccountType(quote);
-				}
 				
+				validateSupplierAccountType(quote);
+
 			}
 			else if (quote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 				if (quote.getJustificationType().getReasonCode() == null) {
@@ -2460,8 +2458,8 @@ public class SimpleQuoteBackingBean extends
 
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateUserProfileAgency(quote);
-					validateSupplierAccountType(quote);
 				}
+				validateSupplierAccountType(quote);
 				
 			}// 27868 - end
 			else {
@@ -9266,21 +9264,23 @@ public class SimpleQuoteBackingBean extends
 	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
 			List<PmReasonRestr> distinctReasonRestrList) {
 		for (PmReasonRestr rr : listReasonRestr) {
-			PmParameter param = rr.getSupplAcctTypeId();
-			boolean exists = false;
-
-			for (PmReasonRestr dr : distinctReasonRestrList) {
-				PmParameter existingParam = dr.getSupplAcctTypeId();
-
-				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
-						existingParam != null ? existingParam.getParameterCode() : "")) {
-					exists = true;
-					break;
+			if(rr.getSupplAcctTypeId() != null){
+				PmParameter param = rr.getSupplAcctTypeId();
+				boolean exists = false;
+	
+				for (PmReasonRestr dr : distinctReasonRestrList) {
+					PmParameter existingParam = dr.getSupplAcctTypeId();
+	
+					if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+							existingParam != null ? existingParam.getParameterCode() : "")) {
+						exists = true;
+						break;
+					}
 				}
-			}
-
-			if (!exists) {
-				distinctReasonRestrList.add(rr);
+	
+				if (!exists) {
+					distinctReasonRestrList.add(rr);
+				}
 			}
 		}
 	}
