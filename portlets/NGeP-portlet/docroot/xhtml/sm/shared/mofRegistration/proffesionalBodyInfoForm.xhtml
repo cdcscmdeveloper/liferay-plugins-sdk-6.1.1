@@ -169,10 +169,10 @@
 						value="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId}"
 						disabled="#{backingBean.managedBean.upsCannotEdit}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<!-- #39502 - START -->
 						<f:selectItems var="profBody"
 							value="#{backingBean.managedBean.profBodyLs}"
 							itemValue="#{profBody.certBodyId}"
-							<!-- #39502 - START -->
 							itemLabel="#{profBody.bodyName}"
 							itemDescription="#{profBody.bodyDsc}" />
 							<!-- #39502 - END -->
