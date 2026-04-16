@@ -8227,6 +8227,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			if (pmPK7Mapping != null){
 				defaultToPK7W(pmPK7Mapping, rnDtl);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem(rnDtl);
+				}
 			}
 			else {
 				defaultToSpecialtem(rnDtl);				
