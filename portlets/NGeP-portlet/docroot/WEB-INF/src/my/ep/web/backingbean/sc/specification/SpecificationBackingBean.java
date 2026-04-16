@@ -15787,7 +15787,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
-
 						String userRemark = remarks.get(i).getRemark();
 						
 						if (null == userRemark || "".equals(userRemark)) {
