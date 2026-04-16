@@ -6077,11 +6077,10 @@ public class RuleCatalogueBackingBean extends
 		if(RuleTypeConst.PTJ_CODE.equals(type)){
 			return getManagedBean().getMainZones();
 		} else {
-			return isRenewTypes(type) ? 
-					getManagedBean().getMainZones() : getManagedBean().getZoneList();
+			return isRenewTypes(type) ? getManagedBean().getMainZones() : getManagedBean().getZoneList();
 		}
 	}
-	// #27827 - end
+	//#27827 - end
 	
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
