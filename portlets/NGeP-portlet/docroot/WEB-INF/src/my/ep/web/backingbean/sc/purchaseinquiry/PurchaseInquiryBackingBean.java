@@ -4509,8 +4509,6 @@ public class PurchaseInquiryBackingBean extends
 			if (restr.getAgencyId() != null
 					&& restr.getAgencyId().getOrgProfileId().equals(userAgency.getOrgProfileId())) {
 				return true;
-			} else if (restr.getAgencyId() == null) {
-				return true;
 			}
 		}
 		return false;
@@ -4580,13 +4578,9 @@ public class PurchaseInquiryBackingBean extends
 			appendedCount = suppAccTypeSb.split(",").length;
 		}
 
-		if (rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-				.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())
-				|| rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-						.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+		if (validateProcurementTypeisRPT(rnDtl.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
 			throwJustificationTypeError(rnDtl, suppAccTypeSb, appendedCount);
-		} else if (rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-				.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+		} else {
 			throwSupplierAccountTypeError(rnDtl, suppAccTypeSb, appendedCount);
 		}
 	}
