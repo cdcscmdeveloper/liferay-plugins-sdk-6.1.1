@@ -5604,18 +5604,17 @@ public class RuleCatalogueBackingBean extends
 			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
 			|| RuleTypeConst.RENEW_PERIOD.equals(type);
 	}
-
+    
 	//#27827 - start
 	public List<PmZone> getZones() {
 		String type = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
 		if(RuleTypeConst.PTJ_CODE.equals(type)){
 			return getManagedBean().getMainZones();
 		} else {
-			return isRenewTypes(type) ? 
-					getManagedBean().getMainZones() : getManagedBean().getZoneList();
+			return isRenewTypes(type) ? getManagedBean().getMainZones() : getManagedBean().getZoneList();
 		}
 	}
-	// #27827 - end
+	//#27827 - end
 
 	
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
