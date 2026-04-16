@@ -120,9 +120,11 @@
 										value="#{lbl['lbl.pm.reason.purchase.form']}" /></th>
 								<td width="5%"><p:selectBooleanCheckbox id="chkPrchaseContract"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}">
+										<!-- #39618, Fix as-is bug Start -->
 										<p:ajax event="change" process="@this"
-											update="circularCategory, sourcingMethod,circularCriteriaLabel"
+											update="circularCategory, sourcingMethod, circularCriteriaLabel, dtReasonApplicaility"
 											listener="#{rejectionReasonBackingBean.purchaseFromContractChange()}" />
+										<!-- #39618, Fix as-is bug END -->
 									</p:selectBooleanCheckbox></td>
 								<th width="20%"><p:outputLabel
 										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> 
