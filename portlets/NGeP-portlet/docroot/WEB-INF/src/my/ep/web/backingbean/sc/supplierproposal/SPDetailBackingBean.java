@@ -649,8 +649,7 @@ public class SPDetailBackingBean extends
 					.getFinanceCheckDetailsList();
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
 			setUserDetails(scQtProposal);
-			scQtProposal.setProposalSubmitBy(facesScopes.getUserSessionBean()
-					.getUserId());
+			scQtProposal.setProposalSubmitBy(getUserIdSessionFromLoginId()); //Bug #39501
 			reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtSupplierId(getManagedBean().getQtProposal()
@@ -683,8 +682,10 @@ public class SPDetailBackingBean extends
 	 *            the digi sign
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
-		debugLogger("submitSupplierProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
-		
+		//Bug #39501 start
+		Long qtId = this.getManagedBean().getQt().getQtId();
+		Long suppId = this.getManagedBean().getSupplierId();
+		//Bug #39501 end		
 		long startTime = System.currentTimeMillis();
 		
 		validateProposalCloseTime(this.getManagedBean().getQt());
@@ -747,6 +748,10 @@ public class SPDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				String variable1 = getMessageCommon("lbl.sc.proposal.no");
 				String variable2 = scQtProposal.getProposalNo();
+				
+				//Bug #39501
+				log.info("submitSupplierProposal|qtId:"+qtId+"|supplierId:"+suppId+"|proposalId:"+scQtProposal.getQtProposalId()
+						+"|userId:"+scQtProposal.getProposalSubmitBy() +"|submit");
 				
 				commonMessageAcknowledgementPage(MessageConst.INFO_700026, variable1, variable2);
 								
@@ -5600,7 +5605,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * Method to update scQTProposal to allow resubmit.
 	 */
 	public void updateProposal() {
-		debugLogger("updateProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+		//Bug #39501 start
+		Long qtId = this.getManagedBean().getQt().getQtId();
+		Long suppId = this.getManagedBean().getSupplierId();
+		//Bug #39501 end		
 		//Bug #28326 start
 		validateProposalCloseTimeForUpdateButton(this.getManagedBean().getQt());
 		//Bug #28326 end
@@ -5631,6 +5639,11 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		
 		ProposalResDTO resDTO = proposalSO.updateQTProposalForReSubmit(reqDTO);			
 		this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
+		
+		//Bug #39501
+		log.info("updateProposal|qtId:"+qtId+"|supplierId:"+suppId+"|proposalId:"+proposal.getQtProposalId()
+				+"|userId:"+getUserIdSessionFromLoginId()+"|update");
+		
 //		} finally {
 //			proposalSO = null;
 //		}
@@ -5679,12 +5692,15 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			//Bug #38267 start
 			if (null != scQtProposalChecklist.getProposalScore() && !scQtProposalChecklist.getProposalScore().isEmpty()){
 				ScQtProposalScore propScore = scQtProposalChecklist.getProposalScore().get(0);
-				if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
-					//Query without F filter
-					reqDTO.setComExpClientType(null);
-					sdto = proposalSO.getCompanyExperience(reqDTO);
-					suppExpList = sdto.getCompExperienceList();
-				}
+				//Bug #40109  start
+				if (suppExpList != null && !suppExpList.isEmpty()){
+					if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
+						//Query without F filter
+						reqDTO.setComExpClientType(null);
+						sdto = proposalSO.getCompanyExperience(reqDTO);
+						suppExpList = sdto.getCompExperienceList();
+					}
+				}//Bug #40109  end
 			}
 			//Bug #38267 end
 			this.getManagedBean().setSupplierExperienceList(suppExpList);

@@ -95,6 +95,7 @@
                 <p:tab title="#{lbl['lbl.pm.settings.operational.threshold']}">
                 	<p:tabView id="thresholdId"
                 		activeIndex="#{ruleCatalogueBackingBean.managedBean.thresholdIndex}">
+                		<p:ajax event="tabChange" process="@this" /> <!-- #34445, Fix as-is bug:#40055 -->
                 		<p:tab title="#{lbl['lbl.pm.settings.unplanned.qt.threshold']}">
 							<ui:include src="unplannedQtThreshold.xhtml"></ui:include>
 						</p:tab>

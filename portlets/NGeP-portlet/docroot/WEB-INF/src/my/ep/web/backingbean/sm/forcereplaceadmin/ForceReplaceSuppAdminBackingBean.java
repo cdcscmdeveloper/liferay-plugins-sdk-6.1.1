@@ -105,11 +105,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		renewSesionObject();
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
 		getManagedBean().setPermStates(new ArrayList<SelectItem>());
-		getManagedBean().setPermDivisions(new ArrayList<SelectItem>()); //#34159 & #36718
+		getManagedBean().setPermDivisions(new ArrayList<SelectItem>()); //#34159 & #36718 & #36716
 		getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
 		getManagedBean().setPermCities(new ArrayList<SelectItem>());
 		getManagedBean().setMailStates(new ArrayList<SelectItem>());
-		getManagedBean().setMailDivisions(new ArrayList<SelectItem>()); //#34159 & #36718
+		getManagedBean().setMailDivisions(new ArrayList<SelectItem>()); //#34159 & #36718 & #36716
 		getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
 		getManagedBean().setMailCities(new ArrayList<SelectItem>());
 		getManagedBean().setHasSupplierUser(false);
@@ -970,15 +970,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param String
 	 *            districtId
 	 */
-	public void updateMailAddLists(String countryId, String stateId, String divisionId, String districtId) { //#34159 & #36718
+	public void updateMailAddLists(String countryId, String stateId, String divisionId, String districtId) { //#34159 & #36718 & #36716
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setMailStates(
 					SmCommonUtil.getStateList(Long.valueOf(countryId)));
-			getManagedBean().setMailDivisions(null); //#34159 & #36718
+			getManagedBean().setMailDivisions(null); //#34159 & #36718 & #36716
 			getManagedBean().setMailDistricts(null);
 			getManagedBean().setMailCities(null);
 		}
-		//#34159 & #36718 - START
+		//#34159 & #36718 & #36716 - START
 		if (!stateId.isEmpty() || ("null").equalsIgnoreCase(stateId)) {
 			if(("14").equals(stateId)){
 				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(Long.valueOf(stateId)));
@@ -998,7 +998,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			getManagedBean().setMailDistricts(SmCommonUtil.getDistrictListByID(Long.valueOf(divisionId)));
 			getManagedBean().setMailCities(null);
 		}
-		//#34159 & #36718 - END
+		//#34159 & #36718 & #36716 - END
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
 			getManagedBean().setMailCities(
 					SmCommonUtil.getCityList(Long.valueOf(districtId)));
@@ -1015,15 +1015,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param String
 	 *            districtId
 	 */
-	public void updatePermAddLists(String countryId, String stateId, String divisionId, String districtId) { //#34159 & #36718
+	public void updatePermAddLists(String countryId, String stateId, String divisionId, String districtId) { //#34159 & #36718 & #36716
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setPermStates(
 					SmCommonUtil.getStateList(Long.valueOf(countryId)));
-			getManagedBean().setPermDivisions(null); //#34159 & #36718
+			getManagedBean().setPermDivisions(null); //#34159 & #36718 & #36716
 			getManagedBean().setPermDistricts(null);
 			getManagedBean().setPermCities(null);
 		}
-		//#34159 & #36718 - START
+		//#34159 & #36718 & #36716 - START
 		if (!stateId.isEmpty() || ("null").equalsIgnoreCase(stateId)) {
 			if(("14").equals(stateId)){
 				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(Long.valueOf(stateId)));
@@ -1043,7 +1043,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			getManagedBean().setPermDistricts(SmCommonUtil.getDistrictListByID(Long.valueOf(divisionId)));
 			getManagedBean().setPermCities(null);
 		}
-		//#34159 & #36718 - END
+		//#34159 & #36718 & #36716 - END
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
 			getManagedBean().setPermCities(
 					SmCommonUtil.getCityList(Long.valueOf(districtId)));
@@ -1083,7 +1083,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		addr.setPmCity(new PmCity());
 		addr.setPostcode("");
 	}
-		
+			
 	public void onChangeState(SmAddress addr, String addrType){
 		Long stateId = addr.getPmState().getStateId();
 		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
@@ -1125,7 +1125,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		addr.setPmCity(new PmCity());
 		addr.setPostcode("");
 	}
-		
+			
 	public void onChangeDivision(SmAddress addr, String addrType){
 		Long divisionId = addr.getPmDivision().getDivisionId();
 		
@@ -1152,7 +1152,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		addr.setPmCity(new PmCity());
 		addr.setPostcode("");
 	}
-		
+			
 	public void onChangeDistrict(SmAddress addr, String addrType){
 		Long districtId = addr.getPmDistrict().getDistrictId();
 		
@@ -1175,12 +1175,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 		addr.setPmCity(new PmCity());
 		addr.setPostcode("");
 	}
-	
+		
 	public void onChangeCity(SmAddress addr, String addrType){
 		addr.setPostcode("");
 	}
 	//#34159 & #36718 - END
-
+	
 	/**
 	 * Set default permanent and mail address to Malaysia
 	 */
@@ -1204,11 +1204,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 			perm = new SmPersonnelAddress();
 			perm.setAddressType(SupplierManagementConst.PERM_ADD);
 			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
-			perm.getSmAddress().setPmDivision(new PmDivision()); //#34159 & #36718
+			perm.getSmAddress().setPmDivision(new PmDivision()); //#34159 & #36718 & #36716
 			perm.setSmPersonnel(getManagedBean().getNewAdmin());
 			perm.setSameAsPerm(false);
 		} else {
-			//#34159 & #36718 - START
+			//#34159 & #36718 & #36716 - START
 			if(perm.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
 				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(perm.getSmAddress().getPmState().getStateId()));
 			} else {
@@ -1217,7 +1217,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			if(perm.getSmAddress().getPmDivision() == null){
 				perm.getSmAddress().setPmDivision(new PmDivision());
 			}
-			//#34159 & #36718 - END
+			//#34159 & #36718 & #36716 - END
 			getManagedBean().setPermDistricts(
 					SmCommonUtil.getDistrictList(perm.getSmAddress()
 							.getPmState().getStateId()));
@@ -1240,11 +1240,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 			mail = new SmPersonnelAddress();
 			mail.setAddressType(SupplierManagementConst.MAIL_ADD);
 			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
-			mail.getSmAddress().setPmDivision(new PmDivision()); //#34159 & #36718
+			mail.getSmAddress().setPmDivision(new PmDivision()); //#34159 & #36718 & #36716
 			mail.setSmPersonnel(getManagedBean().getNewAdmin());
 			mail.setSameAsPerm(false);
 		} else {
-			//#34159 & #36718 - START
+			//#34159 & #36718 & #36716 - START
 			if(mail.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
 				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(mail.getSmAddress().getPmState().getStateId()));
 			} else {
@@ -1253,7 +1253,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			if(mail.getSmAddress().getPmDivision() == null){
 				mail.getSmAddress().setPmDivision(new PmDivision());
 			}
-			//#34159 & #36718 - END
+			//#34159 & #36718 & #36716 - END
 			getManagedBean().setMailDistricts(
 					SmCommonUtil.getDistrictList(mail.getSmAddress()
 							.getPmState().getStateId()));
@@ -1382,8 +1382,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 			}
 			// #28895_35501 Start - AUDIT TRAIL SM
-			log.info("START TB 35501: Audit Force Replace Admin");
-			System.out.println("START TB 35501: Audit Force Replace Admin");
 			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				getManagedBean().setForceReplace(true);
@@ -1392,8 +1390,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
 				auditSmBackingBean.saveAuditData(getManagedBean(), null);
 			}
-			System.out.println("END TB 35501: Audit Force Replace Admin");
-			log.info("END TB 35501: Audit Force Replace Admin");
 			// #28895_35501 End
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
@@ -1449,7 +1445,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
 	}
 	
-	// #34159 & #36718 - START
+	// #34159 & #36718 & #36716 - START
 	/**
 	 * Rechecks the validity of the specified source address.
 	 * 
@@ -1508,11 +1504,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		throw new EpException(MessageConst.ERROR_722656,
 				new String[] { addrType });
 	}
-	// #34159 & #36718 - END
-		
+	// #34159 & #36718 & #36716 - END
+	
 	public void copyPermanentAddress(SmAddress refAddress){
 		if(this.getManagedBean().getMailAddr().isSameAsPerm()){
-			recheckVal(refAddress); // #34159 & #36718
+			recheckVal(refAddress); // #34159 & #36718 & #36716
 			if(this.getManagedBean().getMailAddr().getSmAddress() != null){
 				if(this.getManagedBean().getMailAddr().getSmAddress() == null){
 					this.getManagedBean().getMailAddr().setSmAddress(new SmAddress());
@@ -1529,11 +1525,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 				PmCountry country = new PmCountry();
 				PmState state = new PmState();
-				PmDivision division = new PmDivision(); //#34159 & #36718
+				PmDivision division = new PmDivision(); //#34159 & #36718 & #36716
 				PmDistrict district = new PmDistrict();
 				PmCity city = new PmCity();
 
-				//#34159 & #36718 - START
+				//#34159 & #36718 & #36716 - START
 				if (refAddress.getPmCountry().getCountryId() != null) {
 					country = SmCommonUtil.getInstance().getCountryById(
 							refAddress.getPmCountry().getCountryId());
@@ -1569,7 +1565,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				address.setPmCity(city);
 				if (refAddress.getPostcode() != null)
 					address.setPostcode(new String(refAddress.getPostcode().toString()));
-				//#34159 & #36718 - END
+				//#34159 & #36718 & #36716 - END
 			}
 		}
 	}
