@@ -172,7 +172,10 @@
 						<f:selectItems var="profBody"
 							value="#{backingBean.managedBean.profBodyLs}"
 							itemValue="#{profBody.certBodyId}"
-							itemLabel="#{profBody.bodyName}" />
+							<!-- #39502 - START -->
+							itemLabel="#{profBody.bodyName}"
+							itemDescription="#{profBody.bodyDsc}" />
+							<!-- #39502 - END -->
 
 						<p:ajax event="change" process="@this"
 							update="profBodyOthersAssoc, profBodyOthersAssocMand" />
