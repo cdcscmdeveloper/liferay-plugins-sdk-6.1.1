@@ -9294,8 +9294,6 @@ public class SimpleQuoteBackingBean extends
 			if (restr.getAgencyId() != null
 					&& userAgency.getOrgProfileId().equals(restr.getAgencyId().getOrgProfileId())) {
 				return true;
-			} else if (restr.getAgencyId() == null) {
-				return true;
 			}
 		}
 		return false;
