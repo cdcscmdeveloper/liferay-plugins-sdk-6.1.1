@@ -188,7 +188,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sc.DPConstants;//#27868
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -1356,7 +1356,6 @@ public class SimpleQuoteBackingBean extends
 						specQuestion.setClItem(commonUtils.removeItemNameNA(ItemName));
 						specQuestion.setDisabledColumnItem(true);
 						//#26059 - End
-						specQuestion.setClItem(ItemName);
 						setUserDetails(specQuestion);
 						addSpecficationQuestions(ctPanelItem, serviceTpl, tplSpecQuestions);
 					}
@@ -1405,7 +1404,6 @@ public class SimpleQuoteBackingBean extends
 						fetchItemNameAndExtension(prodQuestion, cmItem);
 						prodQuestion.setDisabledColumnItem(true);
 						//#26059 - End
-						prodQuestion.setClItem(ItemName);
 						setUserDetails(prodQuestion);
 						addSpecficationQuestions(ctPanelItem, prodTpl, productQuestions);
 					}
@@ -2441,11 +2439,9 @@ public class SimpleQuoteBackingBean extends
 
 				quote.setJustificationType(getReasonByCategoryAndCode(
 						ReasonCategory.JUSTIFICATION_PK7W.value(), quote.getJustificationType().getReasonCode()));
-
-				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateSupplierAccountType(quote);
-				}
 				
+				validateSupplierAccountType(quote);
+
 			}
 			else if (quote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 				if (quote.getJustificationType().getReasonCode() == null) {
@@ -2462,8 +2458,8 @@ public class SimpleQuoteBackingBean extends
 
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateUserProfileAgency(quote);
-					validateSupplierAccountType(quote);
 				}
+				validateSupplierAccountType(quote);
 				
 			}// 27868 - end
 			else {
@@ -7336,6 +7332,20 @@ public class SimpleQuoteBackingBean extends
 						specMaster
 						.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 					}
+					
+					//#26059 - Start
+					for(TplSpecQuestion prodQuestion : specMaster.getTplSpecQuestions()){
+						
+						if(prodQuestion.getCmItem() != null){
+							getCltemNameFromQuestion(prodQuestion);
+							prodQuestion.setDisabledColumnItem(true);
+						}else {
+							prodQuestion.setCmTitleValue(prodQuestion.getClItem());
+							prodQuestion.setDisabledColumnItem(false);
+						}
+					}
+					//#26059 - End
+					
 					productTplSpecBean.setSpecMaster(specMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
@@ -8814,6 +8824,11 @@ public class SimpleQuoteBackingBean extends
 
 			if (pmPK7Mapping != null) {
 				defaultToPK7W(pmPK7Mapping);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem();
+				}
 			} else {
 				defaultToSpecialtem();
 			}
@@ -9179,8 +9194,6 @@ public class SimpleQuoteBackingBean extends
 			if (restr.getAgencyId() != null
 					&& userAgency.getOrgProfileId().equals(restr.getAgencyId().getOrgProfileId())) {
 				return true;
-			} else if (restr.getAgencyId() == null) {
-				return true;
 			}
 		}
 		return false;
@@ -9254,21 +9267,23 @@ public class SimpleQuoteBackingBean extends
 	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
 			List<PmReasonRestr> distinctReasonRestrList) {
 		for (PmReasonRestr rr : listReasonRestr) {
-			PmParameter param = rr.getSupplAcctTypeId();
-			boolean exists = false;
-
-			for (PmReasonRestr dr : distinctReasonRestrList) {
-				PmParameter existingParam = dr.getSupplAcctTypeId();
-
-				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
-						existingParam != null ? existingParam.getParameterCode() : "")) {
-					exists = true;
-					break;
+			if(rr.getSupplAcctTypeId() != null){
+				PmParameter param = rr.getSupplAcctTypeId();
+				boolean exists = false;
+	
+				for (PmReasonRestr dr : distinctReasonRestrList) {
+					PmParameter existingParam = dr.getSupplAcctTypeId();
+	
+					if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+							existingParam != null ? existingParam.getParameterCode() : "")) {
+						exists = true;
+						break;
+					}
 				}
-			}
-
-			if (!exists) {
-				distinctReasonRestrList.add(rr);
+	
+				if (!exists) {
+					distinctReasonRestrList.add(rr);
+				}
 			}
 		}
 	}

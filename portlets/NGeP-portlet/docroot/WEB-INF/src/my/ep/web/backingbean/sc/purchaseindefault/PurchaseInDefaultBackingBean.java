@@ -209,6 +209,15 @@ public class PurchaseInDefaultBackingBean extends
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									message));
 				}
+				
+				//#26059 - Start
+				if (contractItem.getScRequestItem() != null && contractItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(contractItem.getScRequestItem().getCmItem().getItemName());
+					contractItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
+				//#26059 - End
+				
 				scPurchaseInDefault.setContractedItem(contractItem);
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
@@ -1581,6 +1590,8 @@ public class PurchaseInDefaultBackingBean extends
 		// approved by
 		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
 		
+		CommonUtils commonUtils = new CommonUtils(); //#26059 - Start													   
+  
 		// contract item
 		if (purchaseInDefault.getContractedItem() != null) {
 			/*
@@ -1606,6 +1617,21 @@ public class PurchaseInDefaultBackingBean extends
 				 getManagedBean().setContractTypeAsMinistry(Boolean.TRUE);
 			}
 			//#9133 - end
+   
+			//#26059 - Start
+			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
+					&& purchaseInDefault.getContractedItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getContractedItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getContractedItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			//#26059 - End
 		}
 		
 		if(purchaseInDefault.getCircularItem() != null) {
@@ -1614,6 +1640,22 @@ public class PurchaseInDefaultBackingBean extends
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {
 			getManagedBean().setCheckContractItem(Boolean.FALSE);
+   
+			// #26059 - Start
+			if (purchaseInDefault.getPanelItem().getScRequestItem() != null
+					&& purchaseInDefault.getPanelItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getPanelItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getPanelItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
+   
 		}
 
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
@@ -1639,13 +1681,6 @@ public class PurchaseInDefaultBackingBean extends
 			//#31603 - end
 		}	
 		//#9133 - end
-		
-		// #26059 - Start
-		CommonUtils commonUtils = new CommonUtils();
-		purchaseInDefault.getPanelItem().setItemName(
-				commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem()
-						.getItemName()));
-		// #26059 - End
 		
 		finaliseEditableRemark(purchaseInDefault);//#31603
 
@@ -1811,6 +1846,8 @@ public class PurchaseInDefaultBackingBean extends
 		
 		// approved by
 		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
+		
+		CommonUtils commonUtils = new CommonUtils(); //#26059 - Start
 
 		if (purchaseInDefault.getSuppQuantity() == null) {
 			getManagedBean().setQtyBySupplier(purchaseInDefault.getReqQuantity());  //set default to req qty
@@ -1842,6 +1879,22 @@ public class PurchaseInDefaultBackingBean extends
 			 * contractItem = ConIresDTO.getCtContractItem();
 			 * purchaseInDefault.setContractedItem(contractItem);
 			 */
+			
+			// #26059 - Start
+			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
+					&& purchaseInDefault.getContractedItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getContractedItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getContractedItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
+			
 			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
 			getManagedBean().setCheckContractItem(Boolean.TRUE);
 		}
@@ -1852,6 +1905,21 @@ public class PurchaseInDefaultBackingBean extends
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {
 			getManagedBean().setCheckContractItem(Boolean.FALSE);
+			
+			// #26059 - Start
+			if (purchaseInDefault.getPanelItem().getScRequestItem() != null
+					&& purchaseInDefault.getPanelItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getPanelItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getPanelItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
 		}
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
 
