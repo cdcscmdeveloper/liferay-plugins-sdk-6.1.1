@@ -8946,6 +8946,11 @@ public class SimpleQuoteBackingBean extends
 
 			if (pmPK7Mapping != null){
 				defaultToPK7W(pmPK7Mapping);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem();
+				}
 			}
 			else {
 				defaultToSpecialtem();				
