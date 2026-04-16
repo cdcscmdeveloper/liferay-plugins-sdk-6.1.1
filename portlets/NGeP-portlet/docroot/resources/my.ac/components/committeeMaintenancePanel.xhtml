@@ -68,7 +68,7 @@
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						selectionMode="single" selection="#{selectedHistory}">
 						<p:ajax event="rowSelect"
-							listener="#{backingBean[onSelectHistory]}"
+							listener="#{committeBackingBean.onSelectTplHistory}"
 							update="@([id$=updateId])" />
 						<p:column>
 							<f:facet name="header">

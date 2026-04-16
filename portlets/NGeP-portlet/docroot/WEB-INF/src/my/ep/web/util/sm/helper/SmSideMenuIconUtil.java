@@ -345,7 +345,7 @@ public class SmSideMenuIconUtil {
 				}
 				
 				// 36504 - START
-				if (bean.isOtherDescChange()) {
+				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
 				// 36504 - END
@@ -366,9 +366,12 @@ public class SmSideMenuIconUtil {
 				}
 				
 				// 36504 - START
-				if (bean.isOtherDescChange()) {
-					bean.getEditVO().setPoEditCategory(true);
+				if (bean.isOtherDescChangeApprover() || bean.isOtherDescChangeSupApprover()) {
 					bean.getEditVO().setAppEditCategory(true);
+				}
+				
+				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
+					bean.getEditVO().setPoEditCategory(true);
 				}
 				// 36504 - END
 				

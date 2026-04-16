@@ -49,20 +49,20 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 212 --></ui:remove>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical.package']} (#{evaluationBackingBean.managedBean.maxPackageTsScore})"
-				style="text-align:center">
+			<p:column headerText="#{evaluationBackingBean.managedBean.totalScoreLabel}"
+				style="white-space: normal;text-align:center">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.other.elements.package']} (#{evaluationBackingBean.managedBean.maxPackageOtherElementsScore})"
-				style="text-align:center">
+			<p:column headerText="#{evaluationBackingBean.managedBean.maxItemAllOtherElementsScoreLabel}"
+				style="white-space: normal;text-align:center">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:25%;text-align:right">
 				<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
-						<ac:iconTooltip value="#{lbl['lbl.demo.overall.score.tooltips']}" />
+						<ac:iconTooltip value="#{evaluationBackingBean.managedBean.tooltipDemo}" />
 					</f:facet>
 				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
@@ -140,20 +140,20 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 233--></ui:remove>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical.package']} (#{evaluationBackingBean.managedBean.maxPackageTsScore})"
-				style="text-align:center">
+			<p:column headerText="#{evaluationBackingBean.managedBean.totalScoreLabel}"
+				style="white-space: normal;text-align:center">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.other.elements.package']} (#{evaluationBackingBean.managedBean.maxPackageOtherElementsScore})"
-				style="text-align:center">
+			<p:column headerText="#{evaluationBackingBean.managedBean.maxItemAllOtherElementsScoreLabel}"
+				style="white-space: normal;text-align:center">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:25%;text-align:right">
 				<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
-						<ac:iconTooltip value="#{lbl['lbl.demo.overall.score.tooltips']}" />
+						<ac:iconTooltip value="#{evaluationBackingBean.managedBean.tooltipDemo}" />
 					</f:facet>
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>

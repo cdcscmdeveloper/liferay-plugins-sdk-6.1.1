@@ -17,7 +17,7 @@
 		</p:blockUI>
 
 		<ui:param name="isCommitteeRecordStatusActive"
-			value="#{committeBackingBean.isLatestCommitteeRecordStatusActive(committeBackingBean.managedBean.scCommittee)}" />
+			value="#{committeBackingBean.isLatestCommitteeRecordStatusActive(committeBackingBean.managedBean.tplCommittee)}" />
 
 		<p:panel header="#{lbl['lbl.sc.committee.member.name']}"
 			toggleable="true" id="qtfinalcommitteeid">
@@ -39,9 +39,9 @@
 
 			<ac:committeeMaintenancePanel
 				historyPaginator="#{committeBackingBean.managedBean.historyPaginator}"
-				selectedHistory="#{committeBackingBean.managedBean.selectedCommitteeHistory}"
+				selectedHistory="#{committeBackingBean.managedBean.selectedTplCommHistory}"
 				memberHistoryPaginator="#{committeBackingBean.managedBean.memberHistoryPaginator}"
-				onSelectHistory="onSelectHistory"
+				onSelectHistory="onSelectTplHistory"
 				committeeName="#{committeBackingBean.managedBean.currentCommitteeType}"
 				backingBean="#{committeBackingBean}" isSFCommittee="true"
 				isLegacy="true" />
@@ -70,7 +70,7 @@
 									update="@([id$=finalCommitteeMaintenancePanel])"
 									listener="#{committeBackingBean.selectAll(
 										committeBackingBean.managedBean.selectAllMembers,
-										committeBackingBean.managedBean.scCommittee.scCommitteeMembers)}" />
+										committeBackingBean.managedBean.tplCommittee.tplCommMembers)}" />
 							</p:selectBooleanCheckbox>
 						</f:facet>
 						<p:selectBooleanCheckbox id="selectMember"
@@ -153,7 +153,7 @@
 											value="#{committeBackingBean
 												.getRepresentativeTypeDropdownValues(committeBackingBean.managedBean.committeeType)}" />
 										<p:ajax event="change"
-											listener="#{committeBackingBean.representiveTypeChangedListener(committeemember)}"
+											listener="#{committeBackingBean.tplRepresentiveTypeChangedListener(committeemember)}"
 											partialSubmit="true" process="@this" />
 									</p:selectOneMenu>
 									<p:message id="representiveMsg" for="representativeType"
@@ -170,13 +170,13 @@
 				<div class="ppRightBtn">
 					<p:commandButton id="committeeAddButton" styleClass="BtnSpacing"
 						value="#{lbl['lbl.btn.add']}" process="@this"
-						action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
+						action="#{committeBackingBean.addTplCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 						oncomplete="committeeScreen3.show();" update="@(.addQCMember)"
 						rendered="#{isCommitteeRecordStatusActive}" />
 
 					<p:commandButton id="committeeDeleteButton"
 						value="#{lbl['lbl.btn.delete']}"
-						disabled="#{committeBackingBean.deleteselectedList(committeBackingBean.managedBean.scCommittee.scCommitteeMembers)}"
+						disabled="#{committeBackingBean.deleteselectedList(committeBackingBean.managedBean.tplCommittee.tplCommMembers)}"
 						styleClass="BtnSpacing" process="@this, fcMembersId"
 						partialSubmit="true" oncomplete="fcCommitteeDeletePopUp.show();"
 						update="@([id$=#{fcCommitteeDeleteId}])"
@@ -184,7 +184,7 @@
 
 					<p:commandButton id="committeeUpdateButton"
 						value="#{lbl['lbl.btn.update']}" process="@all"
-						action="#{committeBackingBean.updateCommitteDetails(BpmOutcomeConstant.bpmSubmit)}"
+						action="#{committeBackingBean.updateTplCommitteDetails(BpmOutcomeConstant.bpmSubmit)}"
 						styleClass="BtnSpacing" update="form:qtfinalcommitteeid"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						rendered="#{isCommitteeRecordStatusActive}" />
@@ -199,7 +199,7 @@
 
 				<ac:confirmationPopup id="#{fcCommitteeDeleteId}"
 					widget="fcCommitteeDeletePopUp"
-					okAction="committeBackingBean.deleteCommitteeAction" width="45%"
+					okAction="committeBackingBean.deleteTplCommitteeAction" width="45%"
 					height="100" title="#{committeBackingBean.managedBean.headerTitle}"
 					content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
 					update="@([id$=finalCommitteeMaintenancePanel])" />

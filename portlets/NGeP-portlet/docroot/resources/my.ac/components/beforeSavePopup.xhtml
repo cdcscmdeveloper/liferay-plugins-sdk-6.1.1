@@ -103,7 +103,7 @@
 						</tr>
 						<tr style="border: 2px solid white; border-collapse: collapse;">
 							<td><p:outputLabel id="searchIcLbL"
-									value="#{lbl['lbl.pm.ic.no']}" /></td>
+									value="#{lbl['lbl.sm.soft.cert.idno']}" /></td>
 							<td><p:inputText id="searchIc" style="width:35%"
 									value="#{userOrganisationSearchBackingBean.managedBean.searchIcNo}">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
@@ -147,9 +147,10 @@
 							<p:column headerText="#{lbl['lbl.sc.name']}" style="width :35%">
 								<h:outputText value="#{userOrg.pmUser.userName}" />
 							</p:column>
+							<!-- 
 							<p:column headerText="#{lbl['lbl.pm.ic.no']}" style="width :30%">
 								<h:outputText value="#{userOrg.pmUser.identificationNo}" />
-							</p:column>
+							</p:column> -->
 							<p:column headerText="#{lbl['lbl.sc.requisitioner.email']}"
 								style="width :35%">
 								<h:outputText value="#{userOrg.pmUser.email}" />

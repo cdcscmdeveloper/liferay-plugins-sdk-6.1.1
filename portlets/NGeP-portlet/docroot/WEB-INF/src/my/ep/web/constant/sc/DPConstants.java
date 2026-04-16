@@ -152,6 +152,16 @@ public class DPConstants {
 	        Collections.unmodifiableSet(new HashSet<>(
 	                Arrays.asList(62603L, 60708L, 60703L, 60706L, 60710L, 60715L, 60711L)
 	        ));
+	
+	public static final Long PRODUCT_TYPE = 815L;
+	
+	public static final int NUMBER_EIGHT = 8;
+	
+	public static final int NUMBER_EIGHTEEN = 18;
+	
+	public static final int NUMBER_ZERO = 0;
+	
+	public static final int NUMBER_ONE = 1;
 	// 26059 - end
 	private DPConstants() {
 		// This constructor is intentionally left empty

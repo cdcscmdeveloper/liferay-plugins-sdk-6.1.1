@@ -774,7 +774,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase());
+		filePath.append(ModuleCodeConst.COMMON); //#29587
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 
@@ -1256,64 +1256,91 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to validate deduction type.
-	 * User can not selected same type of deduction again.
+	 * Validates the selected deduction type to prevent unsupported duplicates.
+	 * 
+	 * @param selectedDeduction the deduction row currently being edited
+	 * @param action optional context (e.g., from bulk operations); unused in current implementation
 	 */	
-	public void validateDeductionType(CtDeduction deduction, String action)  {
+	public void validateDeductionType(CtDeduction selectedDeduction, String action)  { //#39632
 
-		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+		if(!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 			int count = 0;
 			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
 				PmParameter deductionTypeById = deId.getDeductionType();
-				PmParameter deductionType = deduction.getDeductionType();
+				PmParameter deductionType = selectedDeduction.getDeductionType();
 				if (deductionTypeById == null || deductionType == null)
 					break;
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					resetAndValidateDeduction(deId, deduction, deductionTypeById, count, action); //#35506
+					resetAndValidateDeduction(selectedDeduction, deductionTypeById, count, action); //#35506,//#39632
 				}
 			}
 		}
 	}
 	
-	// #35506 (Resetting and validation) - Start
+	// #35506,#39632 (Resetting and validation) - Start
 	/**
 	 * Overloaded method used for Ajax listener calls.
 	 * Delegates to the main method with action = null.
+	 *
+	 * @param deduction the deduction row being validated during user selection
 	 */
 	public void validateDeductionType(CtDeduction deduction) {
 	    validateDeductionType(deduction, null);
 	}
 	
 	/**
-	 * Processes validation and reset rules for deduction types. Combines
-	 * comparison, resetting, and duplicate validation logic.
+	 * Processes validation and reset rules for deduction types.
 	 */
-	private void resetAndValidateDeduction(CtDeduction deId, CtDeduction deduction, PmParameter deductionTypeById, int count, String action) {
+	private void resetAndValidateDeduction(CtDeduction selectedDeduction, PmParameter deductionTypeById, int count, String action) { //#39632
 
-		String parameterCode = getParameterCode(deductionTypeById);
-		if (parameterCode == null) {
-			return;
-		}
+	    String parameterCode = getParameterCode(deductionTypeById);
+	    if (parameterCode == null) {
+	        return;
+	    }
 
-		// --- Reset section ---
-		if (action == null) {
-			final double zeroAmount = BigDecimal.ZERO.doubleValue();
-			deId.setAmount(zeroAmount);
-			deId.setDeductionDesc(null);
-		}
-		
-		// --- Duplicate validation section ---
-		if (!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
-				&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
-				&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2) {
-
-			throw new EpException(MessageConst.ERROR_100046, new String[] { getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
-					deduction.getDeductionType().getParameterId())) });
-		}
+	    resetDeductionIfNew(selectedDeduction, action);
+	    validateDuplicateDeductionType(selectedDeduction, parameterCode, count);
 	}
-	// #35506 (Resetting and validation) - End
+
+	/**
+	 * Resets amount and description for a new deduction row when no action context is provided.
+	 */
+	private void resetDeductionIfNew(CtDeduction selectedDeduction, String action) {
+	    if (action == null) {
+	        final double zeroAmount = BigDecimal.ZERO.doubleValue();
+	        selectedDeduction.setAmount(zeroAmount);
+	        selectedDeduction.setDeductionDesc(null);
+	        
+	        // Safely clear deduction clauses if the list is not null
+	        List<CtDeductionClause> clauses = selectedDeduction.getCtDeductionClauses();
+	        if (clauses != null) {
+	            clauses.clear();
+	        }
+	    }
+	}
+
+	/**
+	 * Validates that duplicate deduction types are not used (except for allowed types).
+	 */
+	private void validateDuplicateDeductionType(CtDeduction selectedDeduction, String parameterCode, int count) {
+	    boolean isAllowedDuplicate = parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+	                               || parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+	                               || parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED);
+
+	    if (!isAllowedDuplicate && count == 2) {
+	    	//Capture the description BEFORE clearing the selection
+	    	String deductionTypeName = getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+	                selectedDeduction.getDeductionType().getParameterId()));
+	    	
+	    	selectedDeduction.setDeductionType(new PmParameter());
+	    	
+	    	//Now safely throw the error with the saved name
+	    	throw new EpException(MessageConst.ERROR_100046, new String[] { deductionTypeName });
+	    }
+	}
+	// #35506,#39632 (Resetting and validation) - End
 
 	/**
 	 * The method used to add new deduction.
@@ -1700,6 +1727,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
+		getManagedBean().setDefaultMinistryExist(false); //Fix - #30045
 		agencyDataModel.resetData();
 	}
 
@@ -1788,7 +1816,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				//Start - #30045
 				if(isSpecialItemAgencies()){
 					reqDTO.setSpecialItemReason(true);
-					if(!reasonCode.isEmpty()){
+					if(reasonCode != null && !reasonCode.isEmpty()){
 						reqDTO.setReasonCode(reasonCode);
 					}
 					
@@ -2650,7 +2678,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IReasonSO.class);
 				reasonCode = reasonSO.getReasonCodeAppliedForCt(reasonId);
-				if(!reasonCode.isEmpty()){
+				if(reasonCode != null && !reasonCode.isEmpty()){
 					reqDTO.setReasonCode(reasonCode);
 					List<Long> listAffected = orgProfileSO.retrieveAgencyByReasonCode(reqDTO);
 					reqDTO.setSpecialItemReason(true);
@@ -2663,8 +2691,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {
+				//Start - #30045
+				//Checking if default/user ministry is exist in the list
+				if(orgProfile.getOrgProfileId().equals(getManagedBean().getMinistryProfileId())){
+				   getManagedBean().setDefaultMinistryExist(true);
+				}
+				//End - #30045
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
+			//Start - #30045
+			// To set the first record from the list as a default ministry for getJabatanDropdown()
+			if(!getManagedBean().isDefaultMinistryExist()){
+				getManagedBean().setMinistryProfileId(list.get(0).getOrgProfileId());
+			}
+			//End - #30045
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN, null,
 					"ContractBackingBean.getMinistryDropdown()", null, e);
@@ -2856,7 +2896,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment latest
 	 */
-	private void removeDefermentLatest(){
+	public void removeDefermentLatest(){ //#40114
 		CtBondWaiverDetail latestDeferment = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
 		if (latestDeferment != null && latestDeferment.getCtAttachment() != null
 				&& latestDeferment.getCtAttachment().getAttachmentId() != null) {
@@ -2868,7 +2908,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment history
 	 */
-	private void removeInactiveDefermentHistory(){
+	public void removeInactiveDefermentHistory(){ //#40114
 		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
 		// remove bond waiver that hasn't been approved
 		if (CollectionUtils.isNotEmpty(historyDeferment)) {
@@ -4604,27 +4644,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	public String newProcurement(){
-		String procur = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			procur = getParameterDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getProcurementType());
-			return procur;
-		}
-		return null;
+		String procur = getParameterCode(getManagedBean().getContractVer().getCtContract().getProcurementMode());
+		return ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(procur) ? procur : null;
 	}
 	
-	public String newJustification(){
-		String justifi = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			justifi = getReasonDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getJustificationType());
-
-			return justifi;
-		}
-		return null;
+	public String newJustification() {
+	    return newProcurement() != null ? getReasonDesc(
+	        getManagedBean().getContractVer().getCtContract().getReason()) : null;
 	}
-
-
 
 	public String getLanguage() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -4715,19 +4742,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	    getManagedBean().setExtendContract(false);
 	    getManagedBean().setDisableOriginalBond(false);
-
-	    // Retrieve currentPeriod and extendPeriod
-	    String currentPeriod = (loa.getContractDuration() != null) 
-	            ? BigDecimal.valueOf(loa.getContractDuration().longValue()).toString() 
-	            : null;
-
-	    String extendPeriod = (contractVer.getCtContractValue().getContractPeriod() > 0) 
-	            ? Integer.toString(contractVer.getCtContractValue().getContractPeriod()) 
-	            : null;
-
+	    
+	    //#32418 - Start
+	    // Retrieve currentExpDate and newExpDate
+	    Date currentExpDate = loa.getContractExpDate();
+	    Date newExpDate = contractVer.getCtContractValue().getExpDate();
+	    
+	    // Check if contract is extended
+	    boolean isExtended = currentExpDate != null
+	            && newExpDate != null
+	            && newExpDate.after(currentExpDate);
+	    //#32418 - End
+	    
 	    // Check if the contract needs an extension or requires a bond
 	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
-	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
+	            && isExtended) { //#32418
 
 	        isContractExtendOrIsBond = true;
 	        getManagedBean().setExtendContract(true);
@@ -5290,40 +5319,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         {@code reasonId} is resolved; {@code false} otherwise.
 	 */
 	public boolean isSpecialItemAgencies() {
-		PmReason reason = getReasonForSpecialItem();
+		PmReason reason = getManagedBean().getContractVer().getCtContract().getReason();
 		if (reason == null) {// avoid NullPointerException
 			return false;
 		} else {
 			reasonId = reason.getReasonId();
 		}
 		return true;
-	}
-
-	/**
-	 * <p>
-	 * If a {@link PmReason} is found in either check, the contract is
-	 * considered to be PK7-related. If both checks return {@code null}, the
-	 * contract is treated as a normal (non-PK7) contract.
-	 * </p>
-	 * 
-	 * @return the {@link PmReason} indicating the PK7 justification type, or
-	 *         {@code null} if the contract is not PK7-related.
-	 */
-	public PmReason getReasonForSpecialItem() {
-		PmReason reason = null;
-		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-			List<CtContractItem> items = getManagedBean().getContractVer().getCtContractItems();
-			if (items != null && items.get(0).getScRequestItem().getRequestNote() != null) {
-				reason = (PmReason) EntityHelper
-						.getNestedProperty(getManagedBean(),
-								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
-			}
-		} else {
-			reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
-					"contractVer.ctContract.loa.justificationType");
-		}
-		return reason;
 	}
 	// End - #30045
 }  
