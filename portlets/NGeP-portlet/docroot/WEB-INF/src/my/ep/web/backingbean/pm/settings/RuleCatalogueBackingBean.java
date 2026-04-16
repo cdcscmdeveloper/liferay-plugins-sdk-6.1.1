@@ -5616,7 +5616,6 @@ public class RuleCatalogueBackingBean extends
 	}
 	//#27827 - end
 
-	
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
 			if (val.getZoneId() == null && val.isBrandNew()) {
