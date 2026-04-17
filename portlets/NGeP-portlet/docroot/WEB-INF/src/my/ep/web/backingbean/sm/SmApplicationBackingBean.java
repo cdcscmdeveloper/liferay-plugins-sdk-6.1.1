@@ -1264,6 +1264,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().setCountryLs(SmApplicationUtil.retrievePmCountryList());
 				getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 				getManagedBean().setProfBodyLs(SmApplicationUtil.retrievePmProfBodyList());
+				 // #39502 - START
+				for(PmCertBody profBody : getManagedBean().getProfBodyLs()){
+					if(profBody.getBodyName().length() > 71 ){
+						profBody.setBodyDsc(profBody.getBodyName()); 
+						String truncName = profBody.getBodyName().substring(0,70) + "...";
+						profBody.setBodyName(truncName);
+					}
+				}
+				// #39502 - END
 				getManagedBean().setProfBodyItems(SmApplicationUtil.getProfBodyItems());
 
 				getManagedBean().setEduFieldList(SmApplicationUtil.retrieveEduFieldList());
@@ -10820,9 +10829,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
-		showRegistrationDecisionUI(); // #37925
-		setRegistrationStatusRequiredUI(); // #37925
-//		assignValReqdToTrue(); #37925
+		// #37925 - START
+		showRegistrationDecisionUI();
+		SmAppl smAppl = getManagedBean().getSmAppl();
+		String applType = smAppl.getApplType();
+		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
+			getManagedBean().setDisplayDropdownRegStatus(true);
+		}
+		// #37925 - END
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
@@ -10872,6 +10886,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
 		getManagedBean().setChangeCurrRegStatus(false); //#37925 - start
+		getManagedBean().setDisplayDropdownRegStatus(false); //#37925 end
 		if (StringUtils.isBlank(getManagedBean().getCurrRegStatus())) {
 			PmStatusDesc statusDesc = SmApplicationUtil
 					.getCurrRegStatusDesc(getManagedBean().getSmAppl());
@@ -11258,11 +11273,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
 		//#37925 START
-		SmAppl smAppl = getManagedBean().getSmAppl();
-		String applType = smAppl.getApplType();
-		if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
-			getManagedBean().setDisplayDropdownRegStatus(false);
-		}
+		getManagedBean().setDisplayDropdownRegStatus(false);
 		getManagedBean().setChangeCurrRegStatus(false); //#37925 END
 
 		//		#15629 -- start - 27/1/2020
