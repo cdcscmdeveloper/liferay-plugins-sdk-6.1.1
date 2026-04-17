@@ -5706,6 +5706,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 			actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 			reqDTO.setScLoa(this.getManagedBean().getScLoa());
+			// #29766 Start Vinod.
+			boolean autoRevise = this.getManagedBean().isAutoRevise();
+			// #29766 End Vinod.
 			//#26474 - start
 			if(getManagedBean().getContractSignerUser() != null){
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
@@ -5781,6 +5784,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							case ParameterConst.PROCUREMENT_MODE_TENDER :	successMessage(MessageConst.INFO_700078,param);
 																				break;
 							case ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO :	
+																				// #29766 Start Vinod.
+																				if (StringUtils.equalsIgnoreCase(outcome,
+																						BpmOutcomeConst.BPM_REVISE) && autoRevise) {
+																					successMessage(MessageConst.INFO_700009,
+																							ParameterTypeConst.DOCUMENT_TYPES,
+																							ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+																							reqDTO.getScLoa().getLoaNo(), Boolean.TRUE);
+																					break;
+																				}
+																				// #29766 End Vinod.
 																				if(null!=loaProcurementMode && loaProcurementMode.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
 																					successMessage(MessageConst.INFO_700077,param);
 																				}else if(loaProcurementMode != null && loaProcurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)){
@@ -14110,6 +14123,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public void reviseForQTTypeItemInPK7() {
+		this.getManagedBean().setAutoRevise(true);
 		this.updateReviseBPMTaskAction(BpmOutcomeConst.BPM_REVISE);
 	}
 
