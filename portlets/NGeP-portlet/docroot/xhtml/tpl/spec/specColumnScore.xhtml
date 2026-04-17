@@ -36,7 +36,10 @@
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
-				label="#{lbl['lbl.tpl.spec.content.user.score']}">
+				label="#{lbl['lbl.tpl.spec.content.user.score']}"
+				disabled="#{(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+				<ui:remove>21692 add disabled</ui:remove>
 				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
 				<ac:validateNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}"
@@ -57,6 +60,20 @@
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:130px;">
-		<p:inputTextarea style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+		<ui:remove>21692 - Start</ui:remove>
+		<p:inputTextarea style="width:calc(100% - 15px);"
+			value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+			rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq null
+					or (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected
+					and evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified)}"
+			onmouseout="limitTextArea(this,500);"/>
+		<p:inputTextarea style="width:calc(100% - 15px);"
+			value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+			rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod ne null
+					and (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"
+			disabled="true"
+			onmouseout="limitTextArea(this,500);"/>
+		<ui:remove>21692 - End</ui:remove>
 	</p:column>
 </ui:composition>

@@ -29,6 +29,11 @@
 		<cc:attribute name="dialogCSS" default="" />
 		<cc:attribute name="loadingWidget" default="" />
 		<!-- 25037 -end- -->
+		<!-- #34445 - start -->
+		<cc:attribute name="bean" type="java.lang.Object" />
+		<cc:attribute name="hasParam" default="false" />
+		<cc:attribute name="okParam" method-signature="java.lang.String action(java.lang.String)" />
+		<!-- #34445 - end -->
 	</cc:interface>
 
 	<cc:implementation>
@@ -58,7 +63,7 @@
 		
 		</style>
 		<!-- 25037 -end- -->
-		
+
 		<ui:param name="confirmationheader" value="#{cc.attrs.title}" />
 		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />
 
@@ -74,7 +79,7 @@
 				widgetVar="confirmPopupBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
-			<h:panelGroup id="#{cc.attrs.id}Popup" layout="block">
+			<p:outputPanel id="#{cc.attrs.id}Popup" layout="block"> <!-- #29665 change component type -->
 				<table>
 					<tr>
 						<!-- #28765 START -->
@@ -89,6 +94,14 @@
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
 					<c:choose>
+						<!-- #34445 start -->
+				    	<c:when test="#{cc.attrs.hasParam}">
+							<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+								partialSubmit="true" onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+								action="#{cc.attrs.okParam}"
+								oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+						</c:when>
+				    	<!-- #34445 end -->
 						<!-- 25037 -start- -->
 						<c:when test="#{not empty cc.attrs.loadingWidget}">
 							<ui:remove>
@@ -146,7 +159,7 @@
 					</c:choose>
 
 				</div>
-			</h:panelGroup>
+			</p:outputPanel> <!-- #29665 change component type -->
 		</p:dialog>
 	</cc:implementation>
 </ui:composition>

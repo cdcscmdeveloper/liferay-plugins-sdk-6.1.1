@@ -313,21 +313,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				if(catLs.size() > 0){
 					getManagedBean().setSupplierCategory(catLs.get(0));
 				}
-				else{
-					if(suppCatLs.size() > 0){
-						for(SmSupplierCategory sCat : suppCatLs){
-							//28774
-							if(sCat.getPmCategoryL3().getCategoryL3Id().equals(getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id())){
-								getManagedBean().setSupplierCategory(sCat);
-								break;
-							}
-						}
-					}
-				}
-				
-				setMachineList();
-			}
-			
+				//#35426 - start
+ 				setMachineList();
+			} else {
+				getManagedBean().setSupplierCategory(null);
+ 			}
+			//#35426 - end
 			if(smSvTask.getSmSvDocLicenses() == null || smSvTask.getSmSvDocLicenses().size() < 1){
 				if(getManagedBean().getSmSvTask().getPmCategoryL3() != null){
 				retrieveAndSetSmSvDocLicense(); //retrieve and set SmSvDocLicense (Additional License)
@@ -2404,57 +2395,23 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return getServerUrl();
 		//return SmCommonUtil.getBasePortalUrl();
 	}
-	
-	/**
-	 * set the selectedMachine to SmSvMachine
-	 */
-	/*private void setSelectedMachineToSmSvMachineLs(SmSvTemplate svTemplate){
-		if(svTemplate.getSmSvMachines().size() > 0){
-			log.info("====Start Size=====" + svTemplate.getSmSvMachines().size());
-			// put existing smSvMachine to Map
-			Map<Long, SmSvMachine> svMachineMap = new HashMap<Long, SmSvMachine>();
-			Map<Long, SmMachineDtl> selectedMachineMap = new HashMap<Long, SmMachineDtl>();
-			List<SmSvMachine> machineRemoveLs = new ArrayList<SmSvMachine>();
-
-			for(SmSvMachine machine : svTemplate.getSmSvMachines()){
-				svMachineMap.put(machine.getSmMachineDtl().getMachineDtlId(), machine);
-			}
-
-			for(SmMachineDtl selectedMachine : svTemplate.getSelectedSmMachine()){
-				if(!svMachineMap.containsKey(selectedMachine.getMachineDtlId())){
-					SmSvMachine svMachine = new SmSvMachine();
-					svMachine.setSmSvTemplate(svTemplate);
-					svMachine.setSmMachineDtl(selectedMachine);
-					svTemplate.getSmSvMachines().add(svMachine);
-				}
-
-				selectedMachineMap.put(selectedMachine.getMachineDtlId(), selectedMachine);
-			}
-
-			//remove the unselected Machine from List
-			for(SmSvMachine svMachine : svTemplate.getSmSvMachines()){
-				if(!selectedMachineMap.containsKey(svMachine.getSmMachineDtl().getMachineDtlId())){
-					machineRemoveLs.add(svMachine);
-					log.info("remove machine - template ID ====" + svTemplate.getSvTemplateId());
-					log.info("remove machine - SmMachineDt ID ====" + svMachine.getSmMachineDtl().getMachineDtlId());
-					log.info("remove machine - SmSvMachine ID ====" + svMachine.getSvMachineId());
-				}
-			}
-
-			svTemplate.getSmSvMachines().removeAll(machineRemoveLs);
-			log.info("====end Size=====" + svTemplate.getSmSvMachines().size());
-		}else{
-			if(svTemplate.getSelectedSmMachine() != null && svTemplate.getSelectedSmMachine().length > 0){
-				log.info("selected Machine is not null>>>>>");
-				for(SmMachineDtl smMachineDtl : svTemplate.getSelectedSmMachine()){
-					SmSvMachine svMachine = new SmSvMachine();
-					svMachine.setSmSvTemplate(svTemplate);
-					svMachine.setSmMachineDtl(smMachineDtl);
-					svTemplate.getSmSvMachines().add(svMachine);
-				}
+	// #28175 start
+	public String getSmCategoryL3(Long categoryL3Id, Long applId) { 
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setApplId(applId);
+		reqDTO.setCategoryId(categoryL3Id);
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryByApplIdAndCategoryId(
+				reqDTO);
+		List<SmSupplierCategory> catLs = resDTO.getSmSupplierCategoryList();
+		String categoryL3Name = "";
+		for (SmSupplierCategory cat : catLs) {
+			if (cat.getPmCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+				categoryL3Name = cat.getCategoryL3Name();
 			}
 		}
-	}*/
+		return categoryL3Name;
+	}
+	// #28175 end
 	
 	/**
 	 * Validate duplicate Worker
@@ -2819,8 +2776,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(getManagedBean().getSmSvTask().getSmAppl().getApplId());
 		reqDTO.setCategoryId(getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id());
-		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
-		
+		//#35426
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryByApplIdAndCategoryId(reqDTO);
 		return resDTO.getSmSupplierCategoryList();
 	}
 	

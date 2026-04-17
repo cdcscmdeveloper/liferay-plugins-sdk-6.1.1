@@ -100,7 +100,20 @@
 			<td class="tdContent">
 				<ac:smReportDateFromTo bBean="#{listOfApplicationRptBB}" />
 			</td>
-			<td colspan="2"></td>
+			<!-- 32521 - START -->
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" /></td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{listOfApplicationRptBB.managedBean.applType}" style="width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.all']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.newAccRegMOF']}" itemValue="N" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.renewAccMOF']}" itemValue="R" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.updateAccMOF']}" itemValue="U" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.addCatCode']}" itemValue="A" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.bumiStatus']}" itemValue="B" />
+				</p:selectOneMenu>
+			</td>
+			<!-- 32521 - END -->
 		</tr>
 	</table>
 	

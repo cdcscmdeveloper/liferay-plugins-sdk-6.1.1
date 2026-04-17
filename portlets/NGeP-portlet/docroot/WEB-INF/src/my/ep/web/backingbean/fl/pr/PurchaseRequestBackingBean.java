@@ -5106,6 +5106,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		String uomCode = "";
 		deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
 		uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
+		
 		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
 		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){

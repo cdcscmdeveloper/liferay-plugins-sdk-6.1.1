@@ -39,6 +39,10 @@ public class QtReportConst implements Serializable {
 	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
 	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_049";
 	public static final String SC_LETTER_OF_ACCPT_CONTENT_RPT_VAL = "SC_075";
+	//#21692 - Start
+	public static final String SC_PROP_VALID_PERIOD_EXT_RPT_VAL = "SC_076";
+	public static final String SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL = "SC_080";
+	//#21692 - End
 	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
 	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
 	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
@@ -59,6 +63,12 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_DESK_OFFCR_EQ = "DOUSERID";
 	public static final String PARAM_PROCURE_PTJ_EQ = "ORGPROFILEID";
 	public static final String PARAM_LOGIN = "LOGIN";
+	//#21692 - Start
+	public static final String QUOTATION_TENDER_TITLE ="PQTTITLE";
+	public static final String PARAM_SUBMIT_FR_DT = "SUBMITFRDT";
+	public static final String PARAM_SUBMIT_TO_DT = "SUBMITTODT";
+	public static final String PARAM_DECISION_TYPE = "PSTATUSID";
+	//#21692 - End
 	
 	public static final String VELOCITY_CTX_KEY_MOFNO  = "mofNo";// 29819
 	
@@ -158,6 +168,15 @@ public class QtReportConst implements Serializable {
 	public  String getSC_LETTER_OF_ACCPT_CONTENT_RPT_VAL() {
 		return SC_LETTER_OF_ACCPT_CONTENT_RPT_VAL;
 	}
+	//#21692 - Start
+	public String getSC_PROP_VALID_PERIOD_EXT_RPT_VAL() {
+		return SC_PROP_VALID_PERIOD_EXT_RPT_VAL;
+	}
+	//#21692 - End
 
-
+	//#21692 - Start
+	public String getSC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL() {
+		return SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL;
+	}
+	//#21692 - End
 }

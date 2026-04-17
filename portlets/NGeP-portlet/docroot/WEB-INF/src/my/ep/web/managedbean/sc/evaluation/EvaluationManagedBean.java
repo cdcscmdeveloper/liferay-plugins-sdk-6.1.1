@@ -522,6 +522,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean supplierRejected;
 
 	// 6906 - end
+	private boolean allSupplierRejectEpv;//#21692
 
 	/**
 	 * Gets the today.
@@ -3549,4 +3550,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.supplierRejected = supplierRejected;
 	}
 	// 6906 - end
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 }

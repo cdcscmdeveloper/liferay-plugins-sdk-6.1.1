@@ -149,6 +149,8 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private String selectedAddrDistrictName;
 	private Long selectedAddrCityId;
 	private String selectedAddrCityName;
+	
+	private List<PmAddressType> addressTypesCheckingList = new ArrayList<PmAddressType>(); //#34445, Fix as-is bug: #39639
 
 	public OrganisationManagedBean() {
 
@@ -1249,6 +1251,13 @@ public class OrganisationManagedBean extends BaseManagedBean{
 		this.status = status;
 	}
 
-	
-	
+	//#34445, Fix as-is bug: #39639 - Start
+	public List<PmAddressType> getAddressTypesCheckingList() {
+		return addressTypesCheckingList;
+	}
+
+	public void setAddressTypesCheckingList(List<PmAddressType> addressTypesCheckingList) {
+		this.addressTypesCheckingList = addressTypesCheckingList;
+	}
+	//#34445, Fix as-is bug: #39639 - End
 }

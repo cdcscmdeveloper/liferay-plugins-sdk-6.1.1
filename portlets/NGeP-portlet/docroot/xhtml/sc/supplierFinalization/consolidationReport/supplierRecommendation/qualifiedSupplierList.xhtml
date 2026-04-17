@@ -14,13 +14,23 @@
 	</style>
 	<p:spacer height="15px" rendered="#{consolidationReportBackingBean.managedBean.itemized}"/>	
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
-			escape="false" />
-		<h:outputText styleClass="instruction"
-			value="#{consolidationReportBackingBean.managedBean.scQt.closingDate}">
-			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-		</h:outputText>
+		<ui:remove>21692, 18685 - Start</ui:remove>
+		<c:if test="#{!consolidationReportBackingBean.managedBean.itemized}">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
+			<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+				<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
+			</c:forEach>
+		</c:if>
+		<c:if test="#{consolidationReportBackingBean.managedBean.itemized}">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
+				escape="false" />
+			<h:outputText styleClass="instruction"
+				value="#{consolidationReportBackingBean.managedBean.scQt.closingDate}">
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+			</h:outputText>
+		</c:if>
+		<ui:remove>21692, 18685 - End</ui:remove>
 				
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 		<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
@@ -162,7 +172,9 @@
 				<p:column style="text-align:center;">
 					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
 								 size="5" maxlength="3" required="false" autocomplete="false" 
-								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}">
+								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
+								 disabled="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
+								 <ui:remove>21692</ui:remove>
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="4" integerOnly="true"  />
@@ -175,12 +187,19 @@
 				</p:column>
 				
 				<p:column style="text-align:left;">
-					<p:inputText id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
-								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
+					<ui:remove>21692 - Start</ui:remove>
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected}" 
+								 id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
 								 required="false" size="20" autocomplete="false">
 						<p:ajax partialSubmit="true" process="@this" update="@this" 
 								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />
 					</p:inputText>
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" 
+								 id="deskOfficerRemarks2" value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}"  
+								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
+								 size="20" autocomplete="false" disabled="true">
+					</p:inputText>
+					<ui:remove>21692 - End</ui:remove>
 					<p:message id="deskOfficerRemarksErrorMsg" for="deskOfficerRemarks" display="icon"/>					
 				</p:column>
 																

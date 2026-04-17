@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -43,6 +44,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -413,7 +415,9 @@ public void specCommitteeMaintenancereset() {
 		switchToOrigManagedBean();
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, destPage); // 29464
+		// 29464 //29732 -start-
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, destPage + "?faces-redirect=true");
+		// 29464 //29732 -end-	
 		
 		return "";
 	}
@@ -490,7 +494,8 @@ public void specCommitteeMaintenancereset() {
 	
 		QtnTenderSearchBean qtTnderBean = this.getManagedBean().getQtnTenderSearchBean();
 		IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
-	
+		QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean(); // #29732
+
 		/* ***25692#95 - start */
 		if (renewSessionObject) {
 			renewSesionObject();
@@ -633,12 +638,62 @@ public void specCommitteeMaintenancereset() {
 		//#33795 - end
 		// #15391 - end
 
+		// #29732 -start-
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
+				.getStatusId() : null;
+		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());
+
+		if (isSpecRoleMaintenanceValidation()
+				&& this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& !isQtRevisePubNqtPendingScheDoc() && status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
+			if (isSpecRoleMaintenanceValidation()) {
+				this.getManagedBean().setCategoryDescriptionChange(true);
+				if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(this.getManagedBean()
+								.getCurrentStatusId())
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(this.getManagedBean()
+								.getCurrentStatusId())
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean()
+								.getCurrentStatusId())) {
+					this.getManagedBean().setCurrentInSpecMaint(true);
+				}
+			}
+			String changedCatCodeList = specBB.checkCatCodeChange();
+
+			if (!changedCatCodeList.isEmpty() && !this.getManagedBean().isReadOnly()) {
+				redirect = false;
+				this.getManagedBean().setActiveIndex(1);
+				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.1", null,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			}
+		}
+		// #29732 -end-
+
 		// 29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
 
 		if (redirect) {
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
+
+		// #29732 -start-
+		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
+
+		if (isSpecRoleMaintenanceCheckBox()
+				&& this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)) {
+			previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());
+		}
+		// #29732 -end-
 
 		this.getManagedBean().setSampleShowHide(isSampleWip); // 11104Wip
 
@@ -792,5 +847,40 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		editSpecificationMaintenance(scQt, isEditable, true, true, previouPageId, redirect);
 	}
 	// 29464-end
+
+	// #29732 start
+	public boolean isSpecEndorsmentScreen() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
+				.getDisplayPortletId());
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	private boolean isSpecRoleMaintenanceValidation() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	private boolean isQtRevisePubNqtPendingScheDoc() {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (QTStatusConst.QT_REVISION_PUBLICATION.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+						.equals(this.getManagedBean().getCurrentStatusId()))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	private boolean isSpecRoleMaintenanceCheckBox() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+	// 29732 -End
 
 }
