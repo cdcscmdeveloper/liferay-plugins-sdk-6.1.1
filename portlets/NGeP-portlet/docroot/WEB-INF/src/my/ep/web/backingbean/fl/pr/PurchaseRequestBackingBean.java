@@ -4062,8 +4062,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
 			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
-			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
 			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+			
+			sumAmt = map.getValue().add(sumAmt);
 			
 			// #31344
 			boolean exceedThreshold = sumAmt.doubleValue() > thresholdAmt;
@@ -5514,7 +5515,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setExceedBpkThreshold(isBpkExceed);
 		// 31344
 
-		if (!isExceedThreshold) {
+		if (!isExceedThreshold  && !isBpkExceed) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(

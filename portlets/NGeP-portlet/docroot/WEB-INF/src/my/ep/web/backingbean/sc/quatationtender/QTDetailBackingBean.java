@@ -1272,7 +1272,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					!status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && 
 					!status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && this.getManagedBean().isMaintanceFlow() && 
 					!status.equals(QTStatusConst.CMT_PENDING_APPROVAL) && !status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) &&
-					!status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)) {
+					!status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
+					&& this.getManagedBean().isNewVersion()) {
 				this.getManagedBean().setDemoDisabled(false);
 				this.getManagedBean().setDemoType(true);
 				this.getManagedBean().setDemoAction(true);
@@ -3338,10 +3339,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											.getCurrentWorkFlowStatus(),
 									scQtBsv.getBsvRemarks(),
 									ScQtBSVRemark.class));
+//							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+//									specZoneDtl,
+//									briefingResDTO.getBriefingList(),
+//									briefingResDTO.getSiteVisitList(), scQtBsv);
+
+							//#28188 - Start (for sorting) 
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
-									briefingResDTO.getBriefingList(),
-									briefingResDTO.getSiteVisitList(), scQtBsv);
+									groupAndSortSiteVisitList(briefingResDTO.getBriefingList()),
+									groupAndSortSiteVisitList(briefingResDTO.getSiteVisitList()), scQtBsv);
+							//#28188 - End
 							zoneBeans.add(briefingZoneBean);
 						}
 					}
@@ -3364,9 +3372,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.getManagedBean().getQt()
 							.getCurrentWorkFlowStatus(), qtBsv.getBsvRemarks(),
 							ScQtBSVRemark.class));
+//					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+//							null, resDTO.getBriefingList(),
+//							resDTO.getSiteVisitList(), qtBsv);
+
+					//#28188 - Start (for sorting)
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							null, resDTO.getBriefingList(),
-							resDTO.getSiteVisitList(), qtBsv);
+							null, groupAndSortSiteVisitList(resDTO.getBriefingList()),
+							groupAndSortSiteVisitList(resDTO.getSiteVisitList()), qtBsv);
+					//#28188 - End
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
 				}
 				QTBriefingSiteVisitBackingBean backingBean = new QTBriefingSiteVisitBackingBean();
@@ -6323,6 +6337,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					// this.getManagedBean().setContractType(scQt.getContractType());
 					
 					//#28784
+					checkDemoVersion(scQt);
 					if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 						this.getManagedBean().setDemoAction(true);
 						this.getManagedBean().setDemoType(true);						
@@ -15080,6 +15095,84 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setAmendMentBean(amendMentBean);
 			amendMentBean = null;
 		} 
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
+	    if (CollectionUtils.isEmpty(inputList)) {
+	        return new ArrayList<ScQtBsvDtl>();
+	    }
+
+	    // ==========================
+	    // STEP 1: GROUPING by bsvDesc
+	    // ==========================
+	    Map<String, List<ScQtBsvDtl>> grouped = new HashMap<String, List<ScQtBsvDtl>>();
+
+	    for (ScQtBsvDtl dtl : inputList) {
+
+	        String key = dtl.getBsvDesc();
+
+	        if (!grouped.containsKey(key)) {
+	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
+	        }
+
+	        grouped.get(key).add(dtl);
+	    }
+
+	    // ==========================
+	    // STEP 2: SORT EACH GROUP
+	    // ==========================
+	    for (List<ScQtBsvDtl> list : grouped.values()) {
+
+	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
+	            @Override
+	            public int compare(ScQtBsvDtl bsvDtl1, ScQtBsvDtl bsvDtl2) {
+
+	                Date bsvDate1 = bsvDtl1.getBsvDate();
+	                Date bsvDate2 = bsvDtl2.getBsvDate();
+
+	                if (bsvDate1 == null && bsvDate2 == null) return 0;
+	                if (bsvDate1 == null) return 1;
+	                if (bsvDate2 == null) return -1;
+
+	                return bsvDate2.compareTo(bsvDate1);
+	            }
+	        });
+	    }
+
+	    // ==========================
+	    // STEP 3: SORT GROUP ORDER
+	    // ==========================
+	    List<Map.Entry<String, List<ScQtBsvDtl>>> entries =
+	            new ArrayList<Map.Entry<String, List<ScQtBsvDtl>>>(grouped.entrySet());
+
+	    Collections.sort(entries, new Comparator<Map.Entry<String, List<ScQtBsvDtl>>>() {
+	        @Override
+	        public int compare(Map.Entry<String, List<ScQtBsvDtl>> bsvDtls1,
+	                           Map.Entry<String, List<ScQtBsvDtl>> bsvDtls2) {
+
+	            Date bsvDate1 = bsvDtls1.getValue().get(0).getBsvDate();
+	            Date bsvDate2 = bsvDtls2.getValue().get(0).getBsvDate();
+
+	            if (bsvDate1 == null && bsvDate2 == null) return 0;
+	            if (bsvDate1 == null) return 1;
+	            if (bsvDate2 == null) return -1;
+
+	            return bsvDate2.compareTo(bsvDate1);
+	        }
+	    });
+
+	    // ==========================
+	    // STEP 4: MERGE BACK
+	    // ==========================
+	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
+
+	    for (Map.Entry<String, List<ScQtBsvDtl>> entry : entries) {
+	        finalList.addAll(entry.getValue());
+	    }
+
+	    return finalList;
 	}
 	//#28188 - End
 

@@ -253,26 +253,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 			if(scCommittee != null){
 				List<ScCommitteeMember> membersList = 
 							scCommittee.getScCommitteeMembers();
-				// Start #26189:PK2.1 
-				if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
-						committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					for (ScCommitteeMember member : membersList) {
-						if(!ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
-								.equals(member.getMemberRole().getParameterCode())){
-							if(member.getRepresentativeType() == null && !ParameterConst.COMMITTEE_ROLE_SECRETARY
-									.equals(member.getMemberRole().getParameterCode())){
-								ParameterReqDTO roleReqDTO = new ParameterReqDTO();
-								roleReqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-								roleReqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-								ParameterResDTO roleResDTO = parameterSO.retrieveParameterByTypeAndCode(roleReqDTO);
-								member.setMemberRole(roleResDTO.getPmParameter());
-								long memberRoleId = 378;
-								member.setMemberRoleId(memberRoleId);
-							}
-						}
-					}
-				}
-				// End #26189:PK2.1
+				
+				//Bug #38067 remove code #26189:PK2.1
+				
 				if (CollectionUtils.isNotEmpty(membersList)) {
 					//#31870 - START
 					Boolean checkIsExistFCSecretary = Boolean.FALSE;
@@ -2549,4 +2532,104 @@ if (CollectionUtils.isNotEmpty(
 		}
 		return role;
 	}
+	
+	//#38067 start
+	/**
+	 * Gets the role type dropdown values.
+	 * @param pmUser
+	 * @return list
+	 */
+	public List<PmParameterDesc> getSFRoleDesc(PmUser pmUser) {
+		String userRole = null;
+		String committeeType = getManagedBean().getCommitteeType();
+		List<ScCommitteeMember> scCommMember = getManagedBean().getCommitteeMembersList();
+
+		ICommitteSO committeeSO = null;
+		IOrgProfileSO orgProfileSO = null;
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
+		List<String> recommendList = new ArrayList<>();
+		List<PmParameterDesc> list = new ArrayList<>();
+
+		try {
+			committeeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					ICommitteSO.class);
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IOrgProfileSO.class);
+
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			List<PmUserOrg> userOrgs = userOrgDetails(pmUser);
+			pmUser.setPmUserOrgs(userOrgs);
+
+			reqDTO.setPmUser(pmUser);
+			reqDTO.setCommitteeType(committeeType);
+
+			PmOrgProfile pmOrgProfile = getManagedBean().getScQt().getPmOrgProfile();
+
+			// Bug #25021 Task Reassignment Sabah & Sarawak - Finalization Comm
+			log.info(":::getRoleDesc() committeeType" + committeeType + ".");
+
+			if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+					|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { // FSB/FSW
+				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
+				mofReqDTO.setOrgCode("103"); // KEMENTERIAN KEWANGAN MALAYSIA
+
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				pmOrgProfile = mofResDTO.getPmOrgProfile();
+
+				log.info(":::getRoleDesc() orgProfileId: " + pmOrgProfile.getOrgProfileId());
+			}
+			// end Bug #25021
+
+			reqDTO.setPmOrgProfile(pmOrgProfile);
+
+			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
+
+			if (resDTO.isSuccessful() && resDTO.isHasRequiredCommitteeRole()) {
+				if (hasChairperson(pmUser, scCommMember)) {
+					PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
+					pmUser.setMemberRoleId(memberRole.getParameterId());
+					userRole = ParameterConst.COMMITTEE_ROLE_MEMBER;
+				} else {
+					PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+					pmUser.setMemberRoleId(chairPersonRole.getParameterId());
+					userRole = ParameterConst.COMMITTEE_ROLE_CHAIRPERSON;
+				}
+			}
+
+			if (null != userRole && userRole.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+								recommendList));
+			} else {
+				recommendList.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+								recommendList));
+			}
+
+			list = retrieveParametersBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+
+		} catch (Exception ex) {
+			log.error("Error getting role for FC User", ex);
+		}
+		
+		return list;
+	}
+
+	private boolean hasChairperson(PmUser pmUser, List<ScCommitteeMember> scCommMember) {
+		for (ScCommitteeMember commMember : scCommMember) {
+			PmUser usr = commMember.getPmUser();
+			if (commMember.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)
+					&& !usr.getUserId().equals(pmUser.getUserId())) {
+
+				return true; 
+			}
+		}
+		return false;
+	}
+	//#38067 end
 }

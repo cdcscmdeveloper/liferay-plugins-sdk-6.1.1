@@ -138,7 +138,8 @@
 
 
 				<td class="TableFieldLeft">
-				<h:outputText value="* " styleClass="mandatory" /><p:outputLabel
+				<h:outputText value="* " styleClass="mandatory"
+						rendered="#{!evaluationBackingBean.managedBean.demoWip}" /><p:outputLabel
 						value="#{lbl['lbl.sc.eva.technical.presentation.demo.attached.file']}" /></td>
 				<td class="TableFieldRight"><!-- #28784 - end -->
 				<ac:scSingleFileUploadButton
