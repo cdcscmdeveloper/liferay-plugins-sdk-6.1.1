@@ -341,6 +341,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			getManagedBean().setContinuityCircularAuditSearch(true);
 		}
 		// End - #30866
+		//Start Fix - #34367
+		if(!trackingDiarySearch){
+			PanelBackingBean panelBB = new PanelBackingBean();
+			panelBB.setDocumentTypeBasedOnUserRules();
+		}
+		//End Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
 	}
 	//Start - #30866

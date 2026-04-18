@@ -73,6 +73,7 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //Fix - #34367
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -91,6 +92,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile; //Fix - #34367
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg; //Fix - #34367
@@ -3704,11 +3706,38 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	//Start Fix - #34367
 	public void setDocumentTypeBasedOnUserRules() {
+		Long orgProfileId = getPTJOwner();
+		log.info("userOrgProfileCheck orgProfileId ::: " + orgProfileId);
+
+		CtCircularVer circularVer = getManagedBean().getCircularVer();
+
+		if (orgProfileId == null || circularVer == null) {
+			return;
+		}
+
+		String userRule = getPTJByRuleType(orgProfileId);
+		if (circularVer.getDocType() == null) {
+			if (RuleTypeConst.PTJCO.equalsIgnoreCase(userRule)) {
+				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+
+			} else if (RuleTypeConst.PTJ_AUTH_MCPC.equalsIgnoreCase(userRule)) {
+				circularVer.setDocType(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR);
+
+			} else {
+				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			}
+		}
+	}
+
+	/**
+	 * @param userSO
+	 * @return
+	 */
+	private Long getPTJOwner() {
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IUserSO.class);
-		IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
+		CircularBackingBean circularBB = new CircularBackingBean();
 		Long orgProfileId = null;
 		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
@@ -3716,37 +3745,46 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			for (PmUserOrg orgProfile : userResDTO.getUserOrgList()) {
 				if (orgProfile != null && orgProfile.getPmOrgProfile() != null) {
 					orgProfileId = orgProfile.getPmOrgProfile().getOrgProfileId();
+					circularBB.getManagedBean().setUserPTJProfile(orgProfileId);
 					break;
 				}
 			}
 		}
-		log.info(" userOrgProfileCheck orgProfileId :::  " + orgProfileId != null ? orgProfileId: null);
-		CtCircularVer circularVer = getManagedBean().getCircularVer();
-		if (orgProfileId == null || circularVer == null) {
-			return;
-		}
-		if (circularVer.getDocType() == null) {
-			List<Object[]> isPTJBpkIdentified = ruleSO.getBpkByOrgProfileIdAndRuleType(orgProfileId,
-					RuleTypeConst.PTJCO);
-			List<Object[]> isPTJAuthorizedToMCPCC = ruleSO.getBpkByOrgProfileIdAndRuleType(orgProfileId,
-					RuleTypeConst.PTJCO);
-
-			log.info("isPTJBpkIdentified: " + (isPTJBpkIdentified != null ? isPTJBpkIdentified : "null"));
-			log.info("isPTJAuthorizedToMCPCC: " + (isPTJAuthorizedToMCPCC != null ? isPTJAuthorizedToMCPCC : "null"));
-
-			boolean hasBpk = isPTJBpkIdentified != null && !isPTJBpkIdentified.isEmpty();
-			boolean isNewAuthorizedMCPCC = isPTJAuthorizedToMCPCC != null && !isPTJAuthorizedToMCPCC.isEmpty();
-
-			if (hasBpk) {
-				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-			} else if (isNewAuthorizedMCPCC) {
-				circularVer.setDocType(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR);
-			} else {
-				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-			}
-		}
-
+		return orgProfileId;
 	}
+
+
+	private String getPTJByRuleType(Long orgProfileId) {
+		IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		List<Object[]> getPTJRuleType = ruleSO.getUserRulesConst(orgProfileId);
+		int hasPTJCO = 0;
+		int hasPTJCC = 0;
+		int bothRuleType = 0;
+		String ruleType = null;
+		
+		if (getPTJRuleType != null && !getPTJRuleType.isEmpty()) {
+
+		    Object[] row = getPTJRuleType.get(0);
+		    
+		     hasPTJCO = ((Number) row[0]).intValue();
+	         hasPTJCC = ((Number) row[1]).intValue();
+	         bothRuleType = ((Number) row[2]).intValue();
+	        
+		    if (hasPTJCO != 0){
+		    	 return ruleType = RuleTypeConst.PTJCO;
+		    }
+	        if (hasPTJCC != 0){
+	        	return ruleType = RuleTypeConst.PTJ_AUTH_MCPC;
+	        } 
+	        if (bothRuleType != 0){        	
+	        	return ruleType = CommonConstants.BOTH_RULES_EXISTS;
+	        } 
+		}
+		return ruleType;
+	}
+	
+
 	//End Fix - #34367
 
 }
