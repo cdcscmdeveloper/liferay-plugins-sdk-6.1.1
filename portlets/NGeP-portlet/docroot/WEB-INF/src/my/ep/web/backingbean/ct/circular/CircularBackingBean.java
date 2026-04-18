@@ -35,7 +35,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils; //30866
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.managedbean.ct.circular.CircularManagedBean;
@@ -56,7 +55,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  */
 @ManagedBean
 @ViewScoped
-public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
+public class CircularBackingBean extends CircularBaseBackingBean<CircularManagedBean>{
 	
 	private static final long serialVersionUID = 1L;
 	// Start - #30866
@@ -343,8 +342,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		// End - #30866
 		//Start Fix - #34367
 		if(!trackingDiarySearch){
-			PanelBackingBean panelBB = new PanelBackingBean();
-			panelBB.setDocumentTypeBasedOnUserRules();
+			getPTJOwner();
 		}
 		//End Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");

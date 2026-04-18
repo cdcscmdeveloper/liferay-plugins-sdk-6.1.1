@@ -138,6 +138,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -161,7 +162,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean (name = "panelBackingBean") 
 @ViewScoped
-public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
+public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
@@ -206,12 +207,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 
-	/**
-	 *  Method used to retrieve login user information.
-	 */
-	private FacesScopes getFacesScopes() {
-		return new FacesScopes();
-	}
+//	/**
+//	 *  Method used to retrieve login user information.
+//	 */
+//	public FacesScopes getFacesScopes() {
+//		return new FacesScopes();
+//	}
 
 	/**
 	 * Method used to retrieve the information and render it on screen.
@@ -220,7 +221,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		renewSesionObject();
 		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		setDocumentTypeBasedOnUserRules();//Fix - #34367
+		getPTJOwner();//Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 
@@ -571,18 +572,30 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
 			}
-
+			getPTJOwner();//Fix - #34367
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null){
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
+				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
 			}
 			
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
-			if(circularVer.getDocType()==null){
-				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			//Start Fix - #34367
+			if (circularVer.getDocType() == null) {
+				log.info(" getOwnerOrgProfile().getOrgProfileId() :::::::::::: "+getOwnerOrgProfile().getOrgProfileId());
+				String userRule = getPTJByRuleType(getOwnerOrgProfile().getOrgProfileId());
+				if (RuleTypeConst.PTJCO.equalsIgnoreCase(userRule)) {
+					circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+
+				} else if (RuleTypeConst.PTJ_AUTH_MCPC.equalsIgnoreCase(userRule)) {
+					circularVer.setDocType(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR);
+
+				} else {
+					circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+				}
 			}
-			
+			//End Fix - #34367
 			// #39594 - Start
 			if (!circularVer.getCtCircularPidReason().isEmpty()) {
 				circularVer.getCtCircularPidReason().clear();
@@ -609,6 +622,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			reqDTO.setUpdateAction(getManagedBean().isUpdateAction());
+			reqDTO.setDocType(circularVer.getDocType());//Fix - #34367
 			//gpki
 			if (this.getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
@@ -3703,88 +3717,4 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
 	}
 	//#35506 - End
-	
-	//Start Fix - #34367
-	public void setDocumentTypeBasedOnUserRules() {
-		Long orgProfileId = getPTJOwner();
-		log.info("userOrgProfileCheck orgProfileId ::: " + orgProfileId);
-
-		CtCircularVer circularVer = getManagedBean().getCircularVer();
-
-		if (orgProfileId == null || circularVer == null) {
-			return;
-		}
-
-		String userRule = getPTJByRuleType(orgProfileId);
-		if (circularVer.getDocType() == null) {
-			if (RuleTypeConst.PTJCO.equalsIgnoreCase(userRule)) {
-				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-
-			} else if (RuleTypeConst.PTJ_AUTH_MCPC.equalsIgnoreCase(userRule)) {
-				circularVer.setDocType(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR);
-
-			} else {
-				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-			}
-		}
-	}
-
-	/**
-	 * @param userSO
-	 * @return
-	 */
-	private Long getPTJOwner() {
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		CircularBackingBean circularBB = new CircularBackingBean();
-		Long orgProfileId = null;
-		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-		if (userResDTO != null && userResDTO.isSuccessful() && userResDTO.getUserOrgList() != null) {
-			for (PmUserOrg orgProfile : userResDTO.getUserOrgList()) {
-				if (orgProfile != null && orgProfile.getPmOrgProfile() != null) {
-					orgProfileId = orgProfile.getPmOrgProfile().getOrgProfileId();
-					circularBB.getManagedBean().setUserPTJProfile(orgProfileId);
-					break;
-				}
-			}
-		}
-		return orgProfileId;
-	}
-
-
-	private String getPTJByRuleType(Long orgProfileId) {
-		IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		List<Object[]> getPTJRuleType = ruleSO.getUserRulesConst(orgProfileId);
-		int hasPTJCO = 0;
-		int hasPTJCC = 0;
-		int bothRuleType = 0;
-		String ruleType = null;
-		
-		if (getPTJRuleType != null && !getPTJRuleType.isEmpty()) {
-
-		    Object[] row = getPTJRuleType.get(0);
-		    
-		     hasPTJCO = ((Number) row[0]).intValue();
-	         hasPTJCC = ((Number) row[1]).intValue();
-	         bothRuleType = ((Number) row[2]).intValue();
-	        
-		    if (hasPTJCO != 0){
-		    	 return ruleType = RuleTypeConst.PTJCO;
-		    }
-	        if (hasPTJCC != 0){
-	        	return ruleType = RuleTypeConst.PTJ_AUTH_MCPC;
-	        } 
-	        if (bothRuleType != 0){        	
-	        	return ruleType = CommonConstants.BOTH_RULES_EXISTS;
-	        } 
-		}
-		return ruleType;
-	}
-	
-
-	//End Fix - #34367
-
 }
