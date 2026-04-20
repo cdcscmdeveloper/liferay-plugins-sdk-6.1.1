@@ -1264,6 +1264,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().setCountryLs(SmApplicationUtil.retrievePmCountryList());
 				getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 				getManagedBean().setProfBodyLs(SmApplicationUtil.retrievePmProfBodyList());
+				 // #39502 - START
+				for(PmCertBody profBody : getManagedBean().getProfBodyLs()){
+					if(profBody.getBodyName().length() > 71 ){
+						profBody.setBodyDsc(profBody.getBodyName()); 
+						String truncName = profBody.getBodyName().substring(0,70) + "...";
+						profBody.setBodyName(truncName);
+					}
+				}
+				// #39502 - END
 				getManagedBean().setProfBodyItems(SmApplicationUtil.getProfBodyItems());
 
 				getManagedBean().setEduFieldList(SmApplicationUtil.retrieveEduFieldList());
