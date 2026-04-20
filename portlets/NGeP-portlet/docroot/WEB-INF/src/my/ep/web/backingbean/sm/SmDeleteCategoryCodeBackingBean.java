@@ -554,6 +554,8 @@ public class SmDeleteCategoryCodeBackingBean extends
 		if (cannotProceedAlertMsg) {
 			throw new EpException(MessageConst.ERROR_722542);
 		}
+		//#34397, #34398*SM ONLY*
+		SmApplicationUtil.checkMOFExpiryDate(smSupplier, my.ep.constant.pm.RuleTypeConst.RENEW_PERIOD_CANCEL_CAT, false);
 	}
 	//#34209 - START
 	public void updateDelCodesInAllRejApplNewerThanLatestAppl(){

@@ -5929,7 +5929,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
-	//#34397, #34398
+	//#34397, #34398, #27827
 	/**
 	 * Retrieve zones
 	 */
@@ -5937,7 +5937,7 @@ public class RuleCatalogueBackingBean extends
 		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
-		//#34397, #34398 - start
+		
 		List<PmZone> zones = new ArrayList<>();
 		//semenanjung, sabah, sarawak
 		List<String> mainCodes = Arrays.asList("1", "2", "3");
@@ -5953,7 +5953,6 @@ public class RuleCatalogueBackingBean extends
 			}
 		});
 		getManagedBean().setMainZones(zones);
-		//#34397, #34398 - end
 	}
 	/* 27827 - END */
 	
@@ -6072,10 +6071,16 @@ public class RuleCatalogueBackingBean extends
 			|| RuleTypeConst.RENEW_PERIOD.equals(type);
 	}
 	
+	//#27827 - start
 	public List<PmZone> getZones() {
-		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
-				getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		String type = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
+		if(RuleTypeConst.PTJ_CODE.equals(type)){
+			return getManagedBean().getMainZones();
+		} else {
+			return isRenewTypes(type) ? getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		}
 	}
+	//#27827 - end
 	
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
