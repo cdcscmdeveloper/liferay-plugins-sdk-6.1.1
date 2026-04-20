@@ -88,23 +88,10 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	protected String getPTJByRuleType(Long orgProfileId) {
 		IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		List<Object[]> getPTJRuleType = ruleSO.getUserRulesConst(orgProfileId);
-		int hasPTJCO = 0;
-		int hasPTJCC = 0;
-		int bothRuleType = 0;
+		String getPTJRuleType = ruleSO.getUserRulesConst(orgProfileId);
 		String ruleType = null;
-		if (getPTJRuleType != null && !getPTJRuleType.isEmpty()) {
-			Object[] row = getPTJRuleType.get(0);
-			hasPTJCO = ((Number) row[0]).intValue();
-			hasPTJCC = ((Number) row[1]).intValue();
-			bothRuleType = ((Number) row[2]).intValue();
-
-			if (bothRuleType != 0 || hasPTJCO != 0) {
-				return ruleType = RuleTypeConst.PTJCO;
-			}
-			if (hasPTJCC != 0) {
-				return ruleType = RuleTypeConst.PTJ_AUTH_MCPC;
-			}
+		if (getPTJRuleType != null) {
+			return ruleType = getPTJRuleType;
 		}
 		return ruleType;
 	}

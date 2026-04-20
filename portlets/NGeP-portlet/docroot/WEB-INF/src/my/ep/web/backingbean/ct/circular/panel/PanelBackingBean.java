@@ -584,11 +584,11 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			//Start Fix - #34367
 			if (circularVer.getDocType() == null) {
 				log.info(" getOwnerOrgProfile().getOrgProfileId() :::::::::::: "+getOwnerOrgProfile().getOrgProfileId());
-				String userRule = getPTJByRuleType(getOwnerOrgProfile().getOrgProfileId());
-				if (RuleTypeConst.PTJCO.equalsIgnoreCase(userRule)) {
+				String userDoctype = getPTJByRuleType(getOwnerOrgProfile().getOrgProfileId());
+				if (ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR.equalsIgnoreCase(userDoctype)) {
 					circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 
-				} else if (RuleTypeConst.PTJ_AUTH_MCPC.equalsIgnoreCase(userRule)) {
+				} else if (ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(userDoctype)) {
 					circularVer.setDocType(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR);
 
 				} else {
