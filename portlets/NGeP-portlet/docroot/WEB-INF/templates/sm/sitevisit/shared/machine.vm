@@ -17,11 +17,11 @@
 		#if($machineLs.size() > 0)
 			#foreach($svmachine in $machineLs)
 			<tr>
-				<td>$velocityCount</td>
-				#if($!svmachine.machine.machineDes)
-					<td>$!svmachine.machineType</td>
-				#else
+				<td>$velocityCount</td><!-- 40047 -->
+				#if($!svmachine.machine.machineDesc)
 					<td>$!svmachine.machine.machineDesc</td>
+				#else
+					<td>$!svmachine.machineType</td>
 				#end
 				<td>$!svmachine.brandName</td>
 				<td>$!svmachine.machineFunction</td>

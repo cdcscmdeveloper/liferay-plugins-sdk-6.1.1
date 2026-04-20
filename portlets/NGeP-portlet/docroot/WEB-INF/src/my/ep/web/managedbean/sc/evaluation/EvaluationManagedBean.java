@@ -607,6 +607,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal itemTsPercentage;
 	private BigDecimal itemAllOtherElementsPercentage;
 	private BigDecimal maxItemTsScore;
+	private String totalScoreLabel;
+	private String maxItemAllOtherElementsScoreLabel;
+	private String tooltipDemo;
 	// #28784 - end
 
 	/** The total technical package max score. */
@@ -4555,6 +4558,42 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#28784 - Start
 	public void setMaxItemTsScore(BigDecimal maxItemTsScore) {
 		this.maxItemTsScore = maxItemTsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public String getTotalScoreLabel() {
+		return totalScoreLabel;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setTotalScoreLabel(String totalScoreLabel) {
+		this.totalScoreLabel = totalScoreLabel;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public String getMaxItemAllOtherElementsScoreLabel() {
+		return maxItemAllOtherElementsScoreLabel;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxItemAllOtherElementsScoreLabel(String maxItemAllOtherElementsScoreLabel) {
+		this.maxItemAllOtherElementsScoreLabel = maxItemAllOtherElementsScoreLabel;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public String getTooltipDemo() {
+		return tooltipDemo;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setTooltipDemo(String tooltipDemo) {
+		this.tooltipDemo = tooltipDemo;
 	}
 	//#28784 - End
 }

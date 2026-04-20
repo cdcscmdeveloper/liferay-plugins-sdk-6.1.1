@@ -146,10 +146,11 @@
 					
 					<!--#28273 -START -->
 					    <!-- 33248 - reopen 31/05: Disciplinary Action - 26238 - START  -->
+					    <!-- 39666 - Disciplinary Action - 26238 - START  -->
 					<p:column headerText="#{lbl['lbl.sm.label.action']}" >
 						<p:commandLink onstart="blockWidget.show()"
 							rendered="#{empty smSupplier.typeDisciplinaryAction
-							or (smSupplier.pendingCancel eq true or smSupplier.pendingBlacklist eq true or smSupplier.pendingSuspend eq true)}"
+							or (smSupplier.pendingCancel eq true or smSupplier.pendingBlacklist eq true or smSupplier.pendingSuspend eq true) or smSupplier.futureImposed eq true}"
 							oncomplete="blockWidget.hide()"
 							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl,'C')}"
 							process="@this" partialSubmit="true" update="@form"
@@ -158,7 +159,7 @@
 						</p:commandLink>
 						<p:commandLink onstart="blockWidget.show()"
 							rendered="#{not empty smSupplier.typeDisciplinaryAction
-							and smSupplier.pendingCancel ne true and smSupplier.pendingBlacklist ne true and smSupplier.pendingSuspend ne true}"
+							and smSupplier.pendingCancel ne true and smSupplier.pendingBlacklist ne true and smSupplier.pendingSuspend ne true and smSupplier.futureImposed eq false}"
 							oncomplete="blockWidget.hide()"
 							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, 'D')}"
 							process="@this" partialSubmit="true" update="@form"
@@ -166,6 +167,7 @@
 							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 						</p:commandLink>
 					</p:column>
+						<!-- 39666 - Disciplinary Action - 26238 - End  -->
 					    <!-- 33248 - reopen 31/05: Disciplinary Action - 26238 - END  -->
 					<!--#28273 -START -->
 					

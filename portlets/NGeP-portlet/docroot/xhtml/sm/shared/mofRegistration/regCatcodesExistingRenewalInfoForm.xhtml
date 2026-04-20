@@ -79,7 +79,7 @@
 							style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 							rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
 							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" 
-							autoResize="false" disabled="#{backingBean.managedBean.upsCannotEdit}"><!-- #32008,#37605 -->
+							autoResize="false" ><!-- #36289,#37605 -->
 						</p:inputTextarea>
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc 

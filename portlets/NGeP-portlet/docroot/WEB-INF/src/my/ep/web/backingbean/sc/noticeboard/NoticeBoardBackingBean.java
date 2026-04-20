@@ -106,6 +106,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -113,6 +114,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -179,7 +181,9 @@ public class NoticeBoardBackingBean extends
 	private static final String CHECK_SUPPLIER_QUAL_PAGE = "/xhtml/sc/noticeboard/supplierqualification/nbSupplierQulificationCriteria.xhtml";
 	private static final String PRICE_SCHEDULE_PAGE ="/xhtml/sc/noticeboard/priceshedule/nbPriceSchedule.xhtml";
 	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
-	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml?faces-redirect=true";
+	// #28777 & #29729 - remove '?faces-redirect=true' - Start
+	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml";
+	// #28777 & #29729 - remove '?faces-redirect=true' - End
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
 	private static final String MOBILE_NB_MAIN_PAGE = "/xhtml/sc/noticeboard/mobileview/nbMainPage.xhtml";
 	
@@ -839,6 +843,23 @@ public class NoticeBoardBackingBean extends
 		managedBean.setPreviousPage(MAIN_PAGE);
 		this.getManagedBean().setSelectedZoneTabIndex(0);
 		retriveBsvDetails(qtId);
+		
+		// #28777 & #29729 - Start
+		if (managedBean.getScQt().isZonal()) {
+			BriefingZoneBean defaultBsvBean = this.getManagedBean().getZoneBean().get(0);
+			if (defaultBsvBean.isBranchDeactivated()) {
+				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			} else {
+				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+			}
+		}
+		// #28777 & #29729 - End
+		
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
 		if (smSupplier != null && null != managedBean.getMofNumber()) {
@@ -858,8 +879,46 @@ public class NoticeBoardBackingBean extends
 		//managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
 		
+		// #28777 & #29729 - Start
+		if (!managedBean.getScQt().isZonal() && smSupplier != null
+				&& checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())) {
+			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} else {
+			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_NO);
+		}
+		// #28777 & #29729 - End
+		
 		return BSV_SUPP_REGISTRATION_PAGE;
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to return true, if branch in supplier has been deleted
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @return true or false
+	 **/
+	public Boolean checkValidationSupplierBranchDeleted(Long qtId, Long supplierId) {
+		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+		NoticeBoardReqDTO supplierReqDTO = new NoticeBoardReqDTO();
+		supplierReqDTO.setSupplierId(supplierId);
+		supplierReqDTO.setQtId(qtId);
+		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
+		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
+		if (scQtSupplier != null && scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	// #28777 & #29729 - End
 
 	
 	/**
@@ -878,12 +937,35 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setBriefingDtls(null);
 		BriefingZoneBean selectedBsvBean = this.getManagedBean().getZoneBean()
 				.get(selectedZoneTabIndex);
+		
+		checkValidationForBranchDeactivated(selectedBsvBean); // #28777&#29729
 
 		this.getManagedBean().setNormalBsvBean(selectedBsvBean);
 		this.getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
 		this.getManagedBean().setRenderRegisterBtn(this.getManagedBean().isDisableRegisterBtn());
 		setSlectedHeaderName(null);
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to appear validation, if tab zone has been selected
+	 * 
+	 * @param selectedBsvBean
+	 **/
+	private void checkValidationForBranchDeactivated(BriefingZoneBean selectedBsvBean) {
+		if (selectedBsvBean.isBranchDeactivated()) {
+			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} else {
+			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+		}
+	}
+
+	// #28777 & #29729 - End
 
 	/**
 	 * hide or show date fields based on date types.
@@ -2251,6 +2333,16 @@ public class NoticeBoardBackingBean extends
 							specZoneDtl, briefingResDTO.getBriefingList(),
 							briefingResDTO.getSiteVisitList(),
 							briefingResDTO.getScQtBsv(),null);
+					
+					// #28777 & #29729 - Start
+					briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES);
+					if (briefingZoneBean.isBranchDeactivated()) {
+						this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+					} else {
+						this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+					}
+					// #28777 & #29729 - End
+					
 					bsvZoneBeans.add(briefingZoneBean);
 					isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
 					if(isNotRigistered && !isRenderRigsterbtn){
@@ -3446,9 +3538,11 @@ public class NoticeBoardBackingBean extends
 		}
 		
 		List<PmRemarkCategory> listCategoryDB = new ArrayList();
-		for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
-			if (null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
-				listCategoryDB.add(removeIndex);
+		if (null != getManagedBean().getHistoryList()) {
+			for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+				if (null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
+					listCategoryDB.add(removeIndex);
+				}
 			}
 		}
 		getManagedBean().setHistoryList(listCategoryDB);
@@ -3459,11 +3553,12 @@ public class NoticeBoardBackingBean extends
 
 	// #29732 -start-
 	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
-		for (PmRemarkCategory rc : remarkList) {
-			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
-			rc.setCreatedUsername(user.getUserName());
+		if (null != remarkList) {
+			for (PmRemarkCategory rc : remarkList) {
+				PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
+				rc.setCreatedUsername(user.getUserName());
+			}
 		}
-
 		return remarkList;
 	}
 	// #29732 End
