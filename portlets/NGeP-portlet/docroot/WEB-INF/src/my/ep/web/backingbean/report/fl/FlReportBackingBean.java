@@ -1288,7 +1288,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		// summary report sheet cell - gst amount
 		Cell cellSummaryGSTAmt = row.createCell(11);
 		cellSummaryGSTAmt.setCellValue(summaryGSTAmt.doubleValue());
-		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, true, false, false));
+		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 		// summary report sheet cell - service fee amount
 		Cell cellSummaryServiceFeeAmt = row.createCell(12);
 		cellSummaryServiceFeeAmt.setCellValue(summaryServiceFeeAmt.doubleValue());
