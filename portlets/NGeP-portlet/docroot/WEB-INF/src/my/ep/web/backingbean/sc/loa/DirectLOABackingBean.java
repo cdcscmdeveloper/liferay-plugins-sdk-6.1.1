@@ -12243,6 +12243,44 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.setItemTypeCode(resDTO.getSpecMaster().getItemTypeCode());
 		}
 	}
+	
+	private TemplateSpecBean updateSpecBeanForClone(String itemType) {
+		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+		if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+			templateSpecBean = this.getManagedBean().getSpecTemplateSpecBean();
+		} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+			templateSpecBean = this.getManagedBean().getProdTemplateSpecBean();
+		}
+
+		return templateSpecBean;
+	}
+
+	private TplSpecMaster updateSpecMasterForClone(String itemType) {
+		TplSpecMaster specMaster = new TplSpecMaster();
+		if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+			specMaster = this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
+		} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+			specMaster = this.getManagedBean().getProdTemplateSpecBean().getSpecMaster();
+		}
+		return specMaster;
+	}
+
+	private void updateQuestionListAndSpecMaster(TplSpecMaster specMaster, List<TplSpecQuestion> questionsListNew,
+			TemplateSpecResDTO resDTO) {
+		if (null != specMaster && null != specMaster.getTplSpecQuestions()
+				&& !specMaster.getTplSpecQuestions().isEmpty()) {
+			questionsListNew.addAll(specMaster.getTplSpecQuestions());
+		}
+		if (null != specMaster && null == specMaster.getSpecTypeCode()
+				&& null != resDTO.getSpecMaster().getSpecTypeCode()) {
+			specMaster.setSpecTypeCode(resDTO.getSpecMaster().getSpecTypeCode());
+		}
+		if (null != specMaster && null == specMaster.getItemTypeCode()
+				&& null != resDTO.getSpecMaster().getItemTypeCode()) {
+			specMaster
+					.setItemTypeCode(resDTO.getSpecMaster().getItemTypeCode());
+		}
+	}
 
 	private void checkQuestionsforCreateTemplateSpec(List<TplSpecQuestion> questionsListNew, TplSpecMaster specMaster,
 			List<TplSpecQuestion> questionsListCreate) {
