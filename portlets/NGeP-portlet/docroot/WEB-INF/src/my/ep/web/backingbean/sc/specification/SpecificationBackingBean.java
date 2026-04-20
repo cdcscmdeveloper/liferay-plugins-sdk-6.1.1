@@ -8587,7 +8587,7 @@ public class SpecificationBackingBean extends
 				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 				if (null != passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
 						&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
-					throw new EpException(MessageConst.ERROR_760826, new String[] { String.valueOf(passingScore) });
+					throw new EpException(MessageConst.ERROR_760365, new String[] { String.valueOf(passingScore) });
 				}
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
