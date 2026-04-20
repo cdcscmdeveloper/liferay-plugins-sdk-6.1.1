@@ -2110,6 +2110,16 @@ public class SpecificationBackingBean extends
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
 			}
+			// #40138 Start Vinod
+			else {
+				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
+						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+					ScQt scQt = this.getManagedBean().getQt();
+					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.TECHNICAL_DOCTYPE);
+				}
+			}
+			// #40138 End Vinod
 			if(this.getManagedBean().getQt().isSampleReq()){//#11104-start
 				checksampleChecklist(this.getManagedBean()
 						.getScQtCheckSt2techProposal());
@@ -2162,6 +2172,16 @@ public class SpecificationBackingBean extends
 							.getScQtCheckSt2financeProposalList());
 				}
 			}
+			// #40138 Start Vinod
+			else {
+				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
+						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+					ScQt scQt = this.getManagedBean().getQt();
+					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.FINANCIAL_DOCTYPE);
+				}
+			}
+			// #40138 End Vinod
 		} finally {
 			specSo = null;
 		}
@@ -25101,4 +25121,35 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	// #38151 End
+	
+	// #40138 Start Vinod
+	private void checkAndUpdateNewMandatoryChecklist(ScQt scQt, String specType) {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+
+		String docType = "";
+		List<ScQtCheckList> currentQtChecklist = new ArrayList<>();
+
+		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+			docType = "TC";
+			currentQtChecklist.addAll(this.getManagedBean().getScQtCheckSt2techProposal());
+		} else {
+			docType = "FC";
+			currentQtChecklist.addAll(this.getManagedBean().getScQtCheckSt2financeProposalList());
+		}
+
+		List<ScQtCheckList> newMandatoryCheckLists = specSo.getNewMandatoryQtCheckLists(docType, scQt
+				.getPmProcurementCategory().getParameterCode(), scQt, specType, currentQtChecklist);
+
+		if (CollectionUtils.isNotEmpty(newMandatoryCheckLists)) {
+			currentQtChecklist.addAll(newMandatoryCheckLists);
+			checklistSorting(currentQtChecklist);
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+				this.getManagedBean().setScQtCheckSt2techProposal(currentQtChecklist);
+			} else {
+				this.getManagedBean().setScQtCheckSt2financeProposalList(currentQtChecklist);
+			}
+		}
+	}
+	// #40138 End Vinod
 }
