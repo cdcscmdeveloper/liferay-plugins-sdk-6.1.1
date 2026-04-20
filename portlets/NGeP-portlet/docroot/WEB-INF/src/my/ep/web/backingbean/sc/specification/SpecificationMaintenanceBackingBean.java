@@ -853,7 +853,6 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 	}
 	// 29464-end
 	
-	
 	//#28784 - Start
 	private boolean checkDemoRedirect() {
 		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
@@ -869,14 +868,7 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		return false;
 	}
 	//#28784 - End
-
-	// #29732 start
-	public boolean isSpecEndorsmentScreen() {
-		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
-				.getDisplayPortletId());
-	}
-	// #29732 -end-
-
+	
 	// #29732 -start-
 	private boolean isSpecRoleMaintenanceValidation() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -905,4 +897,10 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 	}
 	// 29732 -End
 
+	// #29732 start
+	public boolean isSpecEndorsmentScreen() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
+				.getDisplayPortletId());
+	}
+	// #29732 -end-
 }

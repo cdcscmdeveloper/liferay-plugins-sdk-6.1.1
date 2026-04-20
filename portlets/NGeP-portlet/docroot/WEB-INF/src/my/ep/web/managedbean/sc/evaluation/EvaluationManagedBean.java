@@ -882,7 +882,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.maxItemTsScore = maxItemTsScore;
 	}
 	// #28784 - End
-
+	
 	private boolean allSupplierRejectEpv;//#21692
 
 	/**

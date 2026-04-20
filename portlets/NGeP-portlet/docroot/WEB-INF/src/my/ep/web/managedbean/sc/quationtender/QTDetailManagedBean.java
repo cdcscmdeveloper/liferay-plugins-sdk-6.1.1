@@ -11005,7 +11005,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return demoType;
 	}
 	//#28784 - End
-
+	
 	//#28784 - Start
 	public void setDemoType(boolean demoType) {
 		this.demoType = demoType;
@@ -11107,7 +11107,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
 	}
 	//#28784 - End
-
+	
 	//#21692 - Start
 	public boolean isChmnFinalizationRejectEPV() {
 		return chmnFinalizationRejectEPV;

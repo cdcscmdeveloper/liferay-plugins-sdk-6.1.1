@@ -1311,7 +1311,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	public void setHisCatCode(String hisCatCode) {
 		this.hisCatCode = hisCatCode;
 	}
-
+	
 	public List<PmRemarkCategory> getHistoryList() {
 		return historyList;
 	}
