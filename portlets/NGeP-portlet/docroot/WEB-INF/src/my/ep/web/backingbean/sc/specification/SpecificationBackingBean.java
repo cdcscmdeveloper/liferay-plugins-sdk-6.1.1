@@ -8626,7 +8626,7 @@ public class SpecificationBackingBean extends
 					&& technical.getOverallTechnical().intValue() < passingScore
 							.intValue() && !this.getManagedBean().isReadOnly()
 					&& isValidationRequired) {
-				throw new EpException(MessageConst.ERROR_760365,
+				throw new EpException(MessageConst.ERROR_760826,
 						new String[] { String.valueOf(passingScore) });
 			}
 			if (null != technical.getOverallTechnical()
