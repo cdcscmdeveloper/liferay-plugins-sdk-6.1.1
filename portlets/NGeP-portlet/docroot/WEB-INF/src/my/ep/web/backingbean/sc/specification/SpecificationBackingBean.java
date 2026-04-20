@@ -8582,13 +8582,13 @@ public class SpecificationBackingBean extends
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
-			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
-			if (null != passingScore
-					&& technical.getOverallTechnical().intValue() < passingScore
-							.intValue() && !this.getManagedBean().isReadOnly()
-					&& isValidationRequired) {
-				throw new EpException(MessageConst.ERROR_760365,
-						new String[] { String.valueOf(passingScore) });
+//			#38151 comment
+			if (!this.getManagedBean().getQt().isPartial()) {
+				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
+				if (null != passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
+						&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
+					throw new EpException(MessageConst.ERROR_760365, new String[] { String.valueOf(passingScore) });
+				}
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
@@ -8626,8 +8626,15 @@ public class SpecificationBackingBean extends
 					&& technical.getOverallTechnical().intValue() < passingScore
 							.intValue() && !this.getManagedBean().isReadOnly()
 					&& isValidationRequired) {
-				throw new EpException(MessageConst.ERROR_760365,
+				throw new EpException(MessageConst.ERROR_760826,
 						new String[] { String.valueOf(passingScore) });
+			}
+			if (null != technical.getOverallTechnical()
+					&& technical.getOverallTechnical().intValue() > 100 
+					|| null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
+						this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() > 100) {
+				throw new EpException(MessageConst.ERROR_760825,
+						new String[] { String.valueOf(100) });
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
@@ -11266,8 +11273,11 @@ public class SpecificationBackingBean extends
 		// 11104-End
 
 		// #29732 @idham 25/07/2023 - Start
+		// #40140 -start-
 		if (null != this.getManagedBean().getCurrentStatusId()
-				&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(this.getManagedBean().getCurrentStatusId())){
+				&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(this.getManagedBean()
+						.getCurrentStatusId())) {
+		// #40140 -end-
 			if (isRoleValidationfromTaskList()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 			}
@@ -11307,7 +11317,7 @@ public class SpecificationBackingBean extends
 									new FacesScopes().getUserLocale())));
 				}
 			}
-		}
+		} // #40140
 		// #29732 @idham 25/07/2023 - End
 
 		checkWeightage35384WIP();// #38151
