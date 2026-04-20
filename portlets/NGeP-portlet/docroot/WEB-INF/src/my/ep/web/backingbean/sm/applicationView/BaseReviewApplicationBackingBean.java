@@ -2448,6 +2448,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setOtherDescChangeSupplier(false);
 		getManagedBean().setOtherDescChangeSupPO(false);
 		getManagedBean().setOtherDescChangeSupApprover(false);
+		
+		initPmUserRole();
 		// 36504 - END
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
@@ -5583,10 +5585,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		try {
 			List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(userId);
 			getManagedBean().setApproverUser(false);
-			
+			getManagedBean().setPoUser(false);
+
 			if (!EntityHelper.isCollectionEmpty(userRoles)) { 
 				for (PmUserRole userRole : userRoles) {
-					if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_APPROVER.value())) {
+					if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value())) {
+						getManagedBean().setPoUser(true);
+					} else if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_APPROVER.value())) {
 						getManagedBean().setApproverUser(true);
 						break;
 					}

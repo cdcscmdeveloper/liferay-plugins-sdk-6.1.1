@@ -8946,6 +8946,11 @@ public class SimpleQuoteBackingBean extends
 
 			if (pmPK7Mapping != null){
 				defaultToPK7W(pmPK7Mapping);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem();
+				}
 			}
 			else {
 				defaultToSpecialtem();				
@@ -9288,8 +9293,6 @@ public class SimpleQuoteBackingBean extends
 		for (PmReasonRestr restr : listReasonRestr) {
 			if (restr.getAgencyId() != null
 					&& userAgency.getOrgProfileId().equals(restr.getAgencyId().getOrgProfileId())) {
-				return true;
-			} else if (restr.getAgencyId() == null) {
 				return true;
 			}
 		}
