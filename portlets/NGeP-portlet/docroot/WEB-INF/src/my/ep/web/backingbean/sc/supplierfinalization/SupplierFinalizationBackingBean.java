@@ -3437,8 +3437,11 @@ return	remarksNotFound;
 							
 							if (!committeeSet.contains(committeeType)) {
 								//Bug #28235 - start
-								if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+								//#35320 - WIP Data - Start
+								if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A) || 
+										committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
 									isCurrentCommitteeAuthorisedToSubmit = true;
+									//#35320 - WIP Data - End
 								}else{
 									for (String committee : committeeSet) {
 										isCurrentCommitteeAuthorisedToSubmit = 
@@ -3481,14 +3484,12 @@ return	remarksNotFound;
 					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
 					// 39077 -end-
 					
-					String committeeName = getParameterDesc(
-							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+					//#35320 - Start
+					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 
-					throw new EpException(MessageConst.ERROR_760394,
-							new String[] {
-									committeeName,
-									String.valueOf(totalIntendedPrice
-											.intValue()) });
+					throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode,
+							String.valueOf(totalIntendedPrice.intValue()) });
+					// #35320 - End
 				}
 			}
 				
@@ -3987,8 +3988,11 @@ return	remarksNotFound;
 						
 						if (!committeeSet.contains(committeeType)) {
 							//Bug #28235 - start
-							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+							//#35320 - WIP Data - Start
+							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A) || 
+									committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
 								isCurrentCommitteeAuthorisedToSubmit = true;
+								//#35320 - WIP Data - End
 							}else{
 								for (String committee : committeeSet) {
 									isCurrentCommitteeAuthorisedToSubmit = 
@@ -4031,14 +4035,12 @@ return	remarksNotFound;
 					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
 					// 39077 -end-
 
-					String committeeName = getParameterDesc(
-							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+					//#35320 - Start
+					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 
-					throw new EpException(MessageConst.ERROR_760394,
-							new String[] {
-									committeeName,
-									String.valueOf(totalIntendedPrice
-											.intValue()) });
+					throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode,
+							String.valueOf(totalIntendedPrice.intValue()) });
+					// #35320 - End
 				}
 			}
 			//#26169 - START
@@ -11557,12 +11559,20 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		}
 
-		if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
-			supplierBranchListDeleted.addAll(wipSupplierBranchListDeleted);
+		List<SmSupplierBranch> supplierBranchListActive = listSupplierBranchList(supplierId);
+		if (CollectionUtils.isNotEmpty(supplierBranchListDeleted)) {
+			supplierBranchListDeleted.addAll(supplierBranchListActive);
+			getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		} else {
+			if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
+				wipSupplierBranchListDeleted.addAll(supplierBranchListActive);
+				getManagedBean().setSupplierBranchList(wipSupplierBranchListDeleted);
+			} else {
+				if (CollectionUtils.isNotEmpty(supplierBranchListActive)) {
+					getManagedBean().setSupplierBranchList(supplierBranchListActive);
+				}
+			}
 		}
-
-		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
-		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
 		
 	}
 

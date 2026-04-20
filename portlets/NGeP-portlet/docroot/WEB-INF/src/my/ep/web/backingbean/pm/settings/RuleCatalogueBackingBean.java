@@ -5461,7 +5461,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
-	//#34397, #34398
+	//#34397, #34398, #27827
 	/**
 	 * Retrieve zones
 	 */
@@ -5593,6 +5593,7 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	// 29650 - end
+	
 	//#34397, #34398 - start
 	/**
 	 * @param type
@@ -5603,12 +5604,18 @@ public class RuleCatalogueBackingBean extends
 			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
 			|| RuleTypeConst.RENEW_PERIOD.equals(type);
 	}
-	
+    
+	//#27827 - start
 	public List<PmZone> getZones() {
-		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
-				getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		String type = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
+		if(RuleTypeConst.PTJ_CODE.equals(type)){
+			return getManagedBean().getMainZones();
+		} else {
+			return isRenewTypes(type) ? getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		}
 	}
-	
+	//#27827 - end
+
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
 			if (val.getZoneId() == null && val.isBrandNew()) {
