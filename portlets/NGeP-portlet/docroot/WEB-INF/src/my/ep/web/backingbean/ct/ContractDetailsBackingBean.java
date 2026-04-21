@@ -1520,6 +1520,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
 
+		//#30737 - Start
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			log.info("xoxoxoxoxooxoxox SUBMITTT!!!!!! ERROR_100068");
+//			getManagedBean().setSelectedTabIndex(0);
+//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+		}
+		
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			log.info("xoxoxoxoxooxoxox REVISE!!!!!! ERROR_100069");
+//			getManagedBean().setSelectedTabIndex(0);
+//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		}
+		//#30737 - End
+		
 		/*Validation for delivery term main page*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
 				!ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()

@@ -3189,6 +3189,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		//#25890 - End
+		
+		//#30737 - Start
+		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			String taskName = getManagedBean().getTaskName();
+			log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT!!!!!!");
+			if(taskName.equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+				log.info("----- ERROR_100071");
+//				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100071, "Role A", "RAMLEEE", "Role B", "SAIZURAF");
+			}if(taskName.equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+				log.info("----- ERROR_100072");
+//				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100072, "MOF/DOC/2001", "ALI", "ABU");
+			}else{
+				log.info("----- ERROR_100068");
+//				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+			}
+			
+		}
+
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			log.info("xoxoxoxoxooxoxox APPROVE AMENDMENT!!!!!! ERROR_100070");
+//			ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100070, "DOCS/MOF/888290", "RAMLEEE");
+		}
+		
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			log.info("xoxoxoxoxooxoxox ACKNOWLEDGE AMENDMENT!!!!!! ERROR_100069");
+//			ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		}
+		
+		//#30737 - End
+		
 	}
 	//24333 - End, Refactor code for Validate Amendment because tab menu changes
 	
@@ -7998,6 +8029,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					new FacesScopes().getUserLocale()) }); //#25956
 		}
 		// #26688 end
+		
+		//#30737 - Start
+		log.info("xoxoxoxoxo action : "+action);
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			log.info("xoxoxoxoxooxoxox REVISE AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
+			//ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		}
+		
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			/// for cancel, not sure display error or not. 
+			log.info("xoxoxoxoxooxoxox CANCEL AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
+			//ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+			// send group task
+			//..
+		}
+		
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			log.info("xoxoxoxoxooxoxox REJECT AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
+			//ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		}
+		//#30737 - End
 
 	}
 

@@ -590,6 +590,24 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
+		
+		//#30737 - Start
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			log.info("xoxoxoxoxooxoxox SUBMITTT TERMINATION!!!!!! ERROR_100068");
+			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+		}
+		
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			log.info("xoxoxoxoxooxoxox REVISE TERMINATION!!!!!! ERROR_100069");
+			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		}
+		
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			log.info("xoxoxoxoxooxoxox APPROVE TERMINATION!!!!!! ERROR_100069");
+			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		}
+		//#30737 - End
+		
 	}
 
 	/**

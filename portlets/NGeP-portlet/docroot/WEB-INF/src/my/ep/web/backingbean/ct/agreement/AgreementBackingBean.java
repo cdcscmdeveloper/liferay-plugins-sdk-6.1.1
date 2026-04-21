@@ -969,6 +969,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				throw new EpException(MessageConst.ERROR_750042);
 			}		
 		}
+		
+		//#30737 - Start
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			log.info("xoxoxoxoxooxoxox SUBMITTT AGGREEMENT!!!!!! ERROR_100068");
+//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+		}
+		//#30737 - End
+		
 	}
 
 	/**

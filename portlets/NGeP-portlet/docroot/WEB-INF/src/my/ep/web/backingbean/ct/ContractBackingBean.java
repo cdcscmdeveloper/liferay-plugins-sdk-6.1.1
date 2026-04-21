@@ -5328,4 +5328,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return true;
 	}
 	// End - #30045
+	
+	//#30737 - Start
+	public void checkInactiveUserOnAction(String errorCode, String... messageKeys) {
+	    FacesScopes facesScopes = new FacesScopes();
+	    String[] resolvedMessages = new String[messageKeys.length];
+
+	    for (int i = 0; i < messageKeys.length; i++) {
+	        resolvedMessages[i] = ResourceBundleUtils.getMessage(
+	                messageKeys[i],
+	                ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+	                facesScopes.getUserLocale()
+	        );
+	    }
+	    
+	    if (messageKeys == null || messageKeys.length == 0) {
+	        throw new EpException(errorCode);
+	    }
+	    throw new EpException(errorCode, resolvedMessages);
+	}
+	//#30737 - End
+	
 }  
