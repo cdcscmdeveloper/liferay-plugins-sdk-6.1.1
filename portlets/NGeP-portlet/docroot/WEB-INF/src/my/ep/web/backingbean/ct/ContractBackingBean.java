@@ -2522,7 +2522,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	//Enhancement 13847 - end
-
+	
 	/**
 	 * The method used to delete the uploaded agency file.
 	 */    
@@ -2666,14 +2666,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				contractAmt = getManagedBean().getCtContractAmount().getContractAmount();
 
 			getManagedBean().setGstTotalAmount(staxAmt.add(gstAmt.add(contractAmt)));
-			
-			//#24333 - Start
-//			if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()
-//					&& (getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() 
-//							|| getManagedBean().getContractVer().getCtContractAmount().isBondReq())) {
-//				getManagedBean().getCtContractAmount().setTotalBondAmt(getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt());
-//			}
-			//#24333 - End
 		}
 	}
 
@@ -4270,7 +4262,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return newCtAgreementList
 	 */
 	public List<CtAgreement> filterAgreementList() {
-		List<CtAgreement> newCtAgreementList = new ArrayList<>();
+		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 		CtAgreement tempCtAgreement = null;
 		int index = 0;

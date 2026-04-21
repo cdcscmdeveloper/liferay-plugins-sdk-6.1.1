@@ -895,8 +895,7 @@ public class QTDetailBackingBean extends
 	 */
 	//Enhancement #25729 -start-
 	public void submitQTDetailsAction() {
-	//Enhancement #25729 -end-	
-		
+	//Enhancement #25729 -end-
 		// #29732 Start
 		if (this.getManagedBean().getQt().getQtStatus().getStatusId().equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
 			String changedCatCodeList = checkCatCodeChange();
@@ -908,7 +907,7 @@ public class QTDetailBackingBean extends
 			}
 		}
 		// #29732 End
-		
+
 		// Start Reopen 9019 #note-289
 		boolean emptyRemarksExist = false;
 
@@ -1297,7 +1296,7 @@ public class QTDetailBackingBean extends
 			}
 			enableChangesToPBSecretary();
 			//#21692 - End
-			
+
 			// #29732 Start
 			// qtmaintenance from audit search ,ADD ISREADONLY
 			if ((this.getManagedBean().getQt().getQtStatus().getStatusId()
@@ -1934,7 +1933,7 @@ public class QTDetailBackingBean extends
 			}
 		}	
 		// 9019 end
-
+		
 		//#21692 - Start
 		if (null == scQt.getResponsePeriod()) {
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
@@ -3268,7 +3267,7 @@ public class QTDetailBackingBean extends
 			if (null == this.getManagedBean().getQt().getContractType()) {
 				this.getManagedBean().getQt().setContractType(new PmParameter());
 			}
-			
+
 			// #29732 Start
 			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
 					.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
@@ -3295,7 +3294,7 @@ public class QTDetailBackingBean extends
 				}
 			}
 			// #29732 End
-			
+
 			// initializing remark for cancel or subsequent save start
 			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
 				ScQt scQt = this.getManagedBean().getQt();
@@ -3387,7 +3386,7 @@ public class QTDetailBackingBean extends
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
-		
+
 		// #29732 Start
 		if (this.getManagedBean().getQt().getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
@@ -3644,15 +3643,16 @@ public class QTDetailBackingBean extends
 				// 29732 fix duplicate issues -start-
 				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
 
-				// 29732 fix duplicate issues while deleting the category and add the same id -start-
-				if(null != removeCategoryCodes){
+				// fix duplicate issues while deleting the category and
+				// add the same id -start-
+				if (null != removeCategoryCodes) {
 					List<ScQtCategory> categoryResults;
 					categoryResults = this.getManagedBean().getQtCategoryList();
 					this.getManagedBean().setQtCategoryList(categoryResults);
 					qt.setScQtCategorys(categoryResults);
 				}
 				// 29732 -end-
-				
+
 				qtResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
 			}
@@ -4400,18 +4400,17 @@ public class QTDetailBackingBean extends
 						}
 					}
 				}
-				
+
 				// 29732 fix duplicate issues -start-
 				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
-				// 29732 fix duplicate issues while deleting the category and
-				// add the same id -start-
+				// fix duplicate issues while deleting the category and
+				// add the same id
 				if (null != removeCategoryCodes) {
-					// #29732-Start fix duplicate & error merge persistance if
+					// fix duplicate & error merge persistance if
 					// user delete and add the same category(ID)
 					List<ScQtCategory> categoryResults;
 					categoryResults = this.getManagedBean().getQtCategoryList();
 					this.getManagedBean().setQtCategoryList(categoryResults);
-					// 29732- End
 				}
 				// 29732 -end-
 			} else {
@@ -10983,8 +10982,9 @@ public class QTDetailBackingBean extends
 		if (null == qtCatCodeList || qtCatCodeList.isEmpty()) {
 			qtCatCodeList = this.getManagedBean().getQtCategoryList();
 		}
+
 		String catCodeList = "";
-		Integer recordstatusInactive = 0;// #29732(#221)
+		Integer recordstatusInactive = 0;
 
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
 			for (ScQtCategory catCode : qtCatCodeList) {
@@ -11017,10 +11017,9 @@ public class QTDetailBackingBean extends
 				if (!catCodeL1.getCategoryName().equals(catCode.getPmCategoryL1Name())
 						|| !catCodeL2.getCategoryName().equals(catCode.getPmCategoryL2Name())
 						|| !catCodeL3.getCategoryName().equals(catCode.getPmCategoryL3Name())
-						|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
-						|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
-						|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
-				) {
+						|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)
+						|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)
+						|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)) {
 					if (catCodeList != "") {
 						catCodeList = catCodeList.concat(", ");
 					}
@@ -11034,7 +11033,6 @@ public class QTDetailBackingBean extends
 
 		return catCodeList;
 	}
-
 	// #29732 End
 
 	// 29732 start
