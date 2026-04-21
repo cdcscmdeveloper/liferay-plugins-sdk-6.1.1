@@ -133,6 +133,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;//Fix - #34367
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -156,7 +157,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean (name = "panelBackingBean") 
 @ViewScoped
-public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
+public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{ //Fix - #34367
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
@@ -202,19 +203,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 
 	/**
-	 *  Method used to retrieve login user information.
-	 */
-	private FacesScopes getFacesScopes() {
-		return new FacesScopes();
-	}
-
-	/**
 	 * Method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderCircular() {
 		renewSesionObject();
 		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		getPTJOwner();//Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 
@@ -564,17 +559,25 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
 			}
-
+			getPTJOwner();//Fix - #34367
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null){
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
+				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
 			}
 			
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
-			if(circularVer.getDocType()==null){
-				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-			}
+			//Start Fix - #34367
+			if (circularVer.getDocType() == null) {
+				String userDoctype = getPTJByRuleType(getOwnerOrgProfile().getOrgProfileId());
+				if (userDoctype != null && ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(userDoctype)) {
+					circularVer.setDocType(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR);
+				} else {
+					circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+				}
+			}		
+			//End Fix - #34367
 			
 			// #39594 - Start
 			if (!circularVer.getCtCircularPidReason().isEmpty()) {

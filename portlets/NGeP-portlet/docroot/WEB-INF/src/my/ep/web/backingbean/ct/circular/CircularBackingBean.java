@@ -56,7 +56,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  */
 @ManagedBean
 @ViewScoped
-public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
+public class CircularBackingBean extends CircularBaseBackingBean<CircularManagedBean>{ //Fix - #34367
 	
 	private static final long serialVersionUID = 1L;
 	// Start - #30866
@@ -341,6 +341,11 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			getManagedBean().setContinuityCircularAuditSearch(true);
 		}
 		// End - #30866
+		// Start Fix - #34367
+		if (!trackingDiarySearch) {
+			getPTJOwner();
+		}
+		// End Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
 	}
 	//Start - #30866
