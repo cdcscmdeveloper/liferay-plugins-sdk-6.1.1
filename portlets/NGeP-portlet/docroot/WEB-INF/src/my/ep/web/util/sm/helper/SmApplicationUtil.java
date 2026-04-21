@@ -10378,7 +10378,7 @@ public class SmApplicationUtil {
 		if (supplier != null && supplier.getSupplierId() != null) {
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setSupplierId(supplier.getSupplierId());
-			reqDTO.setParamMonths(6);
+			reqDTO.setParamMonths(SmRuleHelper.getInstance().getRestrictionsUpdatePersonnel()); // #30284
 			int count = SmServiceLookup
 					.getMofRegistrationSO()
 					.countMofAccEffDatePassedCurrDateByMonthsAndSupplierId(
