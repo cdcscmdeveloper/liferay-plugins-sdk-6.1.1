@@ -8582,13 +8582,13 @@ public class SpecificationBackingBean extends
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
-			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
-			if (null != passingScore
-					&& technical.getOverallTechnical().intValue() < passingScore
-							.intValue() && !this.getManagedBean().isReadOnly()
-					&& isValidationRequired) {
-				throw new EpException(MessageConst.ERROR_760365,
-						new String[] { String.valueOf(passingScore) });
+//			#38151 wip
+			if (this.getManagedBean().getWipStatusMax() < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
+				if (null != passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
+						&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
+					throw new EpException(MessageConst.ERROR_760365, new String[] { String.valueOf(passingScore) });
+				}
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
@@ -8626,8 +8626,15 @@ public class SpecificationBackingBean extends
 					&& technical.getOverallTechnical().intValue() < passingScore
 							.intValue() && !this.getManagedBean().isReadOnly()
 					&& isValidationRequired) {
-				throw new EpException(MessageConst.ERROR_760365,
+				throw new EpException(MessageConst.ERROR_760826,
 						new String[] { String.valueOf(passingScore) });
+			}
+			if (null != technical.getOverallTechnical()
+					&& technical.getOverallTechnical().intValue() > 100 
+					|| null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
+						this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() > 100) {
+				throw new EpException(MessageConst.ERROR_760825,
+						new String[] { String.valueOf(100) });
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
