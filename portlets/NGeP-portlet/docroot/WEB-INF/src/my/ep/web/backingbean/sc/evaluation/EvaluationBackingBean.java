@@ -8972,6 +8972,7 @@ private void retriveCommitteeRemarksList(){
 					&& !this.getManagedBean().isDemoWip()) {
 				for (int i = 0; i < committeActivities.size(); i++) {
 					committeActivities.get(i).setSignedOff(false);
+					committeActivities.get(i).setAttended(false);
 				}
 			}
 			// #28784 - End
@@ -13196,11 +13197,11 @@ private void retriveCommitteeRemarksList(){
 				this.getManagedBean().setAfterDemoInv(true);
 				this.getManagedBean().setReadOnly(true);
 			} else {
-				this.getManagedBean().setTabActiveIndex(3);
-				getManagedBean().setTempTab(3);
-				retrivePresentationDemo();
-				this.getManagedBean().setPresentationDemoActiveIndex(0);
-				retrieveReportTabDtl();
+//				this.getManagedBean().setTabActiveIndex(3);
+//				getManagedBean().setTempTab(3);
+//				retrivePresentationDemo();
+//				this.getManagedBean().setPresentationDemoActiveIndex(0);
+//				retrieveReportTabDtl();
 				this.getManagedBean().setAfterDemoInv(true);
 				if (SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION
 						.equalsIgnoreCase(taskName) || SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION
