@@ -50,7 +50,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  */
 @ManagedBean
 @SessionScoped
-public class PanelManagedBean extends BaseManagedBean {
+public class PanelManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
 
@@ -1100,4 +1100,5 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.hasExistingLocations = hasExistingLocations;
 	}
 	//#39762 - End
+
 }

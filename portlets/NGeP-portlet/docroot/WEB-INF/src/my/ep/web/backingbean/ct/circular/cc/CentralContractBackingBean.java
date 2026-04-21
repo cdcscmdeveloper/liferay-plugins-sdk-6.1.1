@@ -179,12 +179,12 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 		}
 	}
 
-	/**
-	 * This method used to retrieve user login  information
-	 */
-	private FacesScopes getFacesScopes() {
-		return new FacesScopes();
-	}
+//	/**
+//	 * This method used to retrieve user login  information
+//	 */
+//	private FacesScopes getFacesScopes() {
+//		return new FacesScopes();
+//	}
 
 	/**
 	 * This  method used to initialize approver list
