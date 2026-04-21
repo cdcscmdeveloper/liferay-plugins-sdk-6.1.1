@@ -4805,9 +4805,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						 * approverSettingDtls( RoleCode.BUDGET_APPROVER,
 						 * qtApproval))); } else
 						 */
+						//#38107 - Start
+                      	List<String> categoryCodes = new ArrayList<>();
+                      	categoryCodes.add(ParameterConst.APPROVAL_CATEGORY_BPK);
+                      	categoryCodes.add(ParameterConst.APPROVAL_CATEGORY_EGPA);
 						List<PmParameter> settings = null;
-						if (ParameterConst.APPROVAL_CATEGORY_BPK
-								.equals(approvalCategoryCode)) {
+						if (categoryCodes.contains(approvalCategoryCode)) {
+						//#38107 - End
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval, settings));
 						} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
