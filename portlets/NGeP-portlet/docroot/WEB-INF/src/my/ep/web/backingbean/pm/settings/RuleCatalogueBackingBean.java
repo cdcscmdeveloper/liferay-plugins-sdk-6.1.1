@@ -6693,17 +6693,13 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	// #36738 End
 	
 	//#27827 - START
-	/**
-	 * @param type
-	 * @return true for MOF renew period rule types
-	 */
-	public boolean isRenewTypes(String type) {
-		return RuleTypeConst.PTJ_CODE.equals(type);
-	}
-	
 	public List<PmZone> getZones() {
-		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
-				getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		String type = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
+		if(RuleTypeConst.PTJ_CODE.equals(type)){
+			return getManagedBean().getMainZones();
+		} else {
+			return getManagedBean().getZoneList();
+		}
 	}
 	//#27827 - END
 }
