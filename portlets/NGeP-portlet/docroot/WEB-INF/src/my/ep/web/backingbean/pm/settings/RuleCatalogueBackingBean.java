@@ -6109,7 +6109,6 @@ public class RuleCatalogueBackingBean extends
 				}
 				
 				String valueLower = value.toLowerCase();
-				System.out.println("adli, value= "+valueLower);
 				if (valueLower.contains(searchLower) || valueLower.matches(regex)) {
 					result.add(ptjApproval);
 					break;
