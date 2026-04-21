@@ -224,12 +224,11 @@
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
 						style="margin-bottom: 5px; width: 860px;">
 						<p:ajax event="keyup" />
-						</p:inputText> <p:message
-						id="ptitleMsg" for="ptitle" display="icon" /></td>
+					</p:inputText> <p:message id="ptitleMsg" for="ptitle" display="icon" /></td>
 			</tr>
 
 			<tr>
-			<!-- #29888 -->
+				<!-- #29888 -->
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.item.name.contract.central.contract.panel']}" /></td>
 				<td colspan="3"><p:inputText disabled="true"
@@ -238,8 +237,7 @@
 						size="106" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.item.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
 				<td colspan="3"><p:inputText disabled="true"
 						style="width: 860px;"
 						value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.itemName)}"
@@ -319,10 +317,10 @@
 					</p:inputText></td>
 			</tr>
 		</table>
-		<ui:remove>#26059 - Start</ui:remove>
-		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
-		<ui:remove>#26059 - End</ui:remove>
 	</p:panel>
+	<ui:remove>#26059 - Start</ui:remove>
+	<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+	<ui:remove>#26059 - End</ui:remove>
 
 	<p:panel toggleable="true" header="#{lbl['lbl.sc.companyinfo']}"
 		rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
