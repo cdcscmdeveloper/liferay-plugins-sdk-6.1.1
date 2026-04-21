@@ -1,42 +1,29 @@
 package my.ep.web.backingbean.report.fl.po;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.po.ItemThresholdRptManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.ReasonHelper;
-import my.ep.web.util.pm.helper.StatusHelper;
 
 /**
  * Backing Bean for Item Threshold Enhancement - 31344
@@ -67,7 +54,7 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 	 * Generate report
 	 */
 	public void generateReport() {
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> params = new LinkedHashMap<>();
 		log.info("********Report Code*************" + getManagedBean().getReportCode());
 		retrieveReportValueFromDb();
 		if (getManagedBean().getMinistry() != null) {
@@ -89,10 +76,10 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
 		}
 		if (getManagedBean().getProcurementTypeCode() != null) {
-			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeCode().toString());
+			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeCode());
 		}
 		if (getManagedBean().getReasonCode() != null) {
-			params.put(FlReportConst.FL_RPT_REASON, getManagedBean().getReasonCode().toString());
+			params.put(FlReportConst.FL_RPT_REASON, getManagedBean().getReasonCode());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getGroup())) {
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
@@ -138,9 +125,8 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			SLAUtils.getInstance().logSLAError("FL", "reasonDropdown", "reasonDropdown", null,
+					getUserIdSessionFromLoginId(), e);
 		}
 		return items;
 	}
@@ -169,9 +155,8 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 				}
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			SLAUtils.getInstance().logSLAError("FL", "procurementTypeDropdown", "procurementTypeDropdown", null,
+					getUserIdSessionFromLoginId(), e);
 		}
 
 		return items;

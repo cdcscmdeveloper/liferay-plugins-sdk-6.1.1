@@ -17,7 +17,9 @@
                 <tr>
                     <td style="width: 50%; text-align: left;">
                         <p:commandButton value="#{lbl['lbl.btn.back']}"
-                            action="#{auditContractBackingBean.redirectToMainPage}" />
+                            actionListener="#{auditContractBackingBean.redirectToMainPage}"
+                 			ajax="false"
+                 			immediate="true" />
                     </td>
                     <td style="width: 50%; text-align: right;">
                         <p:commandLink value="#{lbl['lbl.txt.print.audit.all']}" styleClass="blue_font" style="color:#009ae5 !important;" ajax="false">

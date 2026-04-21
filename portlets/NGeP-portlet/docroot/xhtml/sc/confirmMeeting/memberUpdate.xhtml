@@ -161,7 +161,7 @@
 								itemValue="#{role.pmParameter.parameterId}" 
 								value="#{meetingBB.getRoleTypeDropdownValuesBasedOnPTJ(committeeMember.PNP,meetingBB.managedBean.qt,committeeMember.pmUser, filteredRoles)}" />
 							<!-- <p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{meetingBB.chnageMemberRole(index,meetingBB.managedBean.committeeMemberActivity)}"></p:ajax>  -->
+								listener="#{meetingBB.chnageMemberRole(index,meetingBB.managedBean.committeeMemberActivity)}"></p:ajax>  --><!-- #35500 -->
 						</p:selectOneMenu>
 						<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
 					</ui:fragment>

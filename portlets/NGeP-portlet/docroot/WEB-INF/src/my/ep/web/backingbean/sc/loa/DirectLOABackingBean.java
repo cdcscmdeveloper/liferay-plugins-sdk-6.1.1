@@ -3926,9 +3926,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void updateBondAndAgreement(boolean isPK7, boolean isOneOff) {
 
 		// #25726 - note 441 - Start
-		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? this
-				.getManagedBean().getScLoa().getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL
+				.equals(this.getManagedBean().getScLoa().getContractType().getParameterCode()) : false;
 
 		if (!isPK7 && isContractTypeCentral) {
 			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
@@ -3993,9 +3992,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 
 		// #25726 - note 441 - Start
-		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? this
-				.getManagedBean().getScLoa().getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+		boolean isContractTypeCentral = this.getManagedBean().getScLoa().getContractType() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL
+				.equals(this.getManagedBean().getScLoa().getContractType().getParameterCode()) : false;
 
 		if (!isPK7 && isContractTypeCentral) {
 			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
@@ -5401,6 +5399,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		checkQTTypePk7WpItem();
 		// #29766 End Vinod
 		
+		// #29661 #40096 Start 
+		if (!scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)) {
+			getSmSupplierCategory(this.getManagedBean().getScLoa());
+		} else {
+			this.getManagedBean().setShowCategoryCode(true);
+		}
+		// #29661 #40096 End
+		
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
 	
@@ -5727,6 +5733,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 			actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 			reqDTO.setScLoa(this.getManagedBean().getScLoa());
+			// #29766 Start Vinod.
+			boolean autoRevise = this.getManagedBean().isAutoRevise();
+			// #29766 End Vinod.
 			//#26474 - start
 			if(getManagedBean().getContractSignerUser() != null){
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
@@ -5815,6 +5824,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						successMessage(MessageConst.INFO_700078, param);
 						break;
 					case ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO:
+						// #29766 Start Vinod.
+						if (StringUtils.equalsIgnoreCase(outcome, BpmOutcomeConst.BPM_REVISE) && autoRevise) {
+							successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
+									ParameterConst.DOCTYPE_LETTER_OF_AWARD, reqDTO.getScLoa().getLoaNo(), Boolean.TRUE);
+							break;
+						}
+						// #29766 End Vinod.
 						if (null != loaProcurementMode
 								&& loaProcurementMode.getParameterCode().equalsIgnoreCase(
 										ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
@@ -8513,9 +8529,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return isAgreementMandatory;
 		}
 		// #25726 - note 441
-		boolean isContractTypeCentral = loa.getContractType() != null
-				&& loa.getContractType().getParameterCode() != null ? loa.getContractType().getParameterCode()
-				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL) : false;
+		boolean isContractTypeCentral = loa.getContractType() != null ? ParameterConst.CONTRACT_TYPE_CENTRAL.equals(loa
+				.getContractType().getParameterCode()) : false;
 
 		if ( loa.getScLoiLoa().getFulfilmentTypeCode() != null && loa.isBrandNew() && !isPk7Periodic()) {
 
@@ -11760,8 +11775,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			// #25726 - note 424 - start
 			if (scLoa.getContractType() != null) {
-				isContractTypeAsMinistry = scLoa.getContractType().getParameterCode()
-						.equals(ParameterConst.CONTRACT_TYPE_MINISTRY);
+				isContractTypeAsMinistry = ParameterConst.CONTRACT_TYPE_MINISTRY.equals(scLoa.getContractType()
+						.getParameterCode());
 			}
 			// #25726 - note 424 - end
 		}
@@ -13497,6 +13512,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public void reviseForQTTypeItemInPK7() {
+		this.getManagedBean().setAutoRevise(true);
 		this.updateReviseBPMTaskAction(BpmOutcomeConst.BPM_REVISE);
 	}
 
@@ -13588,9 +13604,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 
 	    SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryCodeByApplId(reqDTO);
-	    smSupplierCategoryList = resDTO.getSmSupplierCategoryList();	    
+	    smSupplierCategoryList = resDTO.getSmSupplierCategoryList();
+	    List<SmSupplierCategory> filteredSmSupplierCategoryList = new ArrayList<>();//#29661 #40093
 	
 	    for (SmSupplierCategory smCategory : smSupplierCategoryList) {
+	    	if (smCategory.getRecordStatusFlg() != 1){//#29661 #40093
+	    		continue;
+	    	}
 	    	smCategory.getPmCategoryL1();
 	    	smCategory.getPmCategoryL2();
 
@@ -13598,6 +13618,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			CategoryCodeResDTO categoryResDTO = categoryCodeSO
 					.retrieveCategoryL3DtlById(categoryReqDTO);
 			smCategory.setPmCategoryL3(categoryResDTO.getCategoryL3());
+			filteredSmSupplierCategoryList.add(smCategory);//#29661 #40093
 		}
 	    
 	    if (null != getManagedBean().getScQt()) {
@@ -13606,7 +13627,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	    convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList,categoryCodeSO);
 	    }
 	    
-		this.getManagedBean().setSupplierCategoryList(smSupplierCategoryList);
+	    this.getManagedBean().setSupplierCategoryList(filteredSmSupplierCategoryList);//#29661 #40093
 	}
 
 	/**
@@ -13635,6 +13656,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				supplierCategoryList.add(supplierCategoryCode);
 			}
 			this.getManagedBean().setProcurementRelatedCategoryList(supplierCategoryList);
+			this.getManagedBean().setShowCategoryCode(true);//#29661 #40096
 		}
 
 	}
@@ -13686,6 +13708,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<SmSupplierCategory> addedCategoryList = new ArrayList<>();		
 		List<SmSupplierCategory> currentCategoryList = new ArrayList<>();
 		
+		//#29661 #40093
+		if (this.getManagedBean().getOriginalSupplierCategoryList() == null) {
+			this.getManagedBean().setOriginalSupplierCategoryList(supplierCategoryList);
+		}
+		
 		for (SmSupplierCategory supplierCategory : supplierCategoryList) {
 			if (supplierCategory.isSelected()) {
 				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)
@@ -13701,8 +13728,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					addedCategoryList.add(supplierCategory);
 					supplierCategory.setSelected(false);
 				}
-			}			
-			currentCategoryList.add(supplierCategory);
+			}else{//#29661 #40095
+				currentCategoryList.add(supplierCategory);
+			}
 		}
 		this.getManagedBean().setAddedCategoryList(addedCategoryList);
 		this.getManagedBean().setProcurementRelatedCategoryList(procurementRelatedCategoryList);
@@ -13735,6 +13763,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<SmSupplierCategory> procurementRelatedCategoryList = this.getManagedBean().getProcurementRelatedCategoryList();
 		List<SmSupplierCategory> deletedCategoryList =  CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedCategoryList()) ?
 				this.getManagedBean().getDeletedCategoryList() : new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> originalSupplierCategoryList = this.getManagedBean().getOriginalSupplierCategoryList() 
+				!= null ? this.getManagedBean().getOriginalSupplierCategoryList() : new ArrayList<SmSupplierCategory>();//#29661 #40095		
 				
 		SmSupplierCategory deleteCategory;
 		Iterator<SmSupplierCategory> it = procurementRelatedCategoryList.iterator();
@@ -13749,6 +13779,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		this.getManagedBean().setDeletedCategoryList(deletedCategoryList);
 		this.getManagedBean().setProcurementRelatedCategoryList(procurementRelatedCategoryList);
+		this.getManagedBean().setSupplierCategoryList(originalSupplierCategoryList);//#29661 #40095
 		
 	}
 	

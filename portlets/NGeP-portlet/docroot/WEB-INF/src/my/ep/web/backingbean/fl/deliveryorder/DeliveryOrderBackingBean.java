@@ -52,6 +52,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.fl.AuditFLConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -2234,4 +2235,5 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				IFulfilmentSO.class);
 		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
+	
 }
