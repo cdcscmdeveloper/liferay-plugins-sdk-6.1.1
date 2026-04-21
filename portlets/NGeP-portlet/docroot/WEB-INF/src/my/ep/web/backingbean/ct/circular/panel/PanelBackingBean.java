@@ -570,7 +570,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			//Start Fix - #34367
 			if (circularVer.getDocType() == null) {
-				String userDoctype = getPTJByRuleType(getOwnerOrgProfile().getOrgProfileId());
+				String userDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
 				if (userDoctype != null && ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(userDoctype)) {
 					circularVer.setDocType(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR);
 				} else {
@@ -1087,7 +1087,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			}
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());			
 			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-
 			if (resDTO.getUserOrgList().size() > 0) {
 				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 			}

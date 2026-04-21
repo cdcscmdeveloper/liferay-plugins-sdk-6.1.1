@@ -87,7 +87,7 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	 * @return a {@code String} representing the PTJ rule type, or {@code null}
 	 *         if no rule type is found
 	 */
-	protected String getPTJByRuleType(Long orgProfileId) {
+	protected String getPTJRuleTypeByOrgProfile(Long orgProfileId) {
 		IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 		String getPTJRuleType = ruleSO.getUserRulesConst(orgProfileId);
