@@ -23,14 +23,14 @@
 					  styleClass="leftMargin"/>
 		<br/>
 
-		<ui:remove> #28777#29729 - Start </ui:remove>
+		<ui:remove> 28777,29729 - Start </ui:remove>
 		<c:if
 			test="#{suppFinalBiddingBackingBean.checkInstructionSupplierBranchDeleted(suppFinalBiddingBackingBean.managedBean.scQt.qtId)}">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.branch.related.deleted.instruction']} "
 				escape="false" />
 		</c:if>
-		<ui:remove> #28777#29729 - End </ui:remove>
+		<ui:remove> 28777,29729 - End </ui:remove>
 
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
@@ -42,12 +42,12 @@
 		<br/>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']} " escape="false" /> <ui:remove>21692</ui:remove>
 
-		<ui:remove> #28777#29729 - Start </ui:remove>
+		<ui:remove> 28777,29729 - Start </ui:remove>
 		<h:outputText escape="false"
 			value="#{lbl['lbl.sc.list.qualified.supplier']}"
 			style="font-weight:bold; font-size: 15px;"
 			rendered="#{isDisqualified}" />
-		<ui:remove> #28777#29729 - End </ui:remove>
+		<ui:remove> 28777,29729 - End </ui:remove>
 
 		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" 
 					 var="price" rowKey="#{price}" rowIndexVar="rowIndex" 
@@ -70,13 +70,13 @@
 							target="#{supplierDetailBackingBean.scQtProposal}" />
 					<h:outputText value="#{price.scQtProposal.supplierNo}" />
 				</p:commandLink>
-				<ui:remove> #28777#29729 - Start </ui:remove>
+				<ui:remove> 28777,29729 - Start </ui:remove>
 				 <p:spacer width="15" height="15"/>
                      <p:commandLink  process="@this"  action="#{suppFinalBiddingBackingBean.showSupplierBranchList(price.scBidSupplier.smSupplier.supplierId)}" 
 		         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 						<h:graphicImage value="/css/images/exclam-info.png" />
 	         		</p:commandLink> 
-				<ui:remove> #28777#29729 - End </ui:remove>	
+				<ui:remove> 28777,29729 - End </ui:remove>	
 			</p:column>			
 			
 			<!-- #29466 - START Nasim Removed (Notes-150)-->
@@ -178,7 +178,7 @@
 			<ui:remove>26247 - end - added isDisciplinaryAction</ui:remove>	
 		</p:dataTable>
 
-		<ui:remove> #28777#29729 - Start </ui:remove>
+		<ui:remove> 28777,29729 - Start </ui:remove>
 		<h:outputText escape="false"
 			value="#{lbl['lbl.sc.list.disqualified.supplier']}"
 			style="font-weight:bold; font-size: 15px;"
@@ -309,7 +309,7 @@
 					rendered="#{priceDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated or priceDis.supplierDeactivated}" />
 			</p:column>
 		</p:dataTable>
-		<ui:remove> #28777#29729 - End </ui:remove>
+		<ui:remove> 28777,29729 - End </ui:remove>
 
 	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"

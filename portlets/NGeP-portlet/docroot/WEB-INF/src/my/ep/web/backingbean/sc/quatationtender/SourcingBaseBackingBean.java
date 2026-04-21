@@ -85,6 +85,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -954,12 +955,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// 26247 - end
 	
-	// 38523 - start
+	// 38523, #35320 - start
 	protected IReasonSO getReasonSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 	}
 
-	// 38523 - end
+	// 38523, #35320 - end
 	
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
@@ -8512,4 +8513,46 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return items;
 	}
 	// 34491 - end	
+	//#28784 - Start
+	public boolean checkParentRepublishQT(ScQt scQt) {
+		try {
+			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			reqDTO.setDocId(scQt.getQtId());
+			List<Long> includedStatus = new ArrayList<>();
+			includedStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+			reqDTO.setStatusIds(includedStatus);
+			reqDTO.setCurrent(null);
+
+			List<ScWorkFlowStatus> currentWorkFlowStatus = workFlowStatusSO.retrieveWorkFlowStatus(reqDTO)
+					.getWorkFlowStatusList();
+			// Checking for current QT, if status is 60034L, then it is without Specification changes
+			if (CollectionUtils.isNotEmpty(currentWorkFlowStatus)) {
+				// checking for Parent QT, if WIP then Republished QT will also be WIP
+				return validateSupportedTask(getQTDetailSO().retrieveQtNoByparentQtId(scQt.getParentQtId()),
+						CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "checkParentRepublishQT", scQt.getQtNo(),
+					"checkParentRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+
+		return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	/**
+	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * @param
+	 * @return void
+	 */
+	public void checkDemoVersion(ScQt scQt) {
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+	}
+	//#28784 - End
 }
