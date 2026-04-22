@@ -12214,6 +12214,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if (this.getManagedBean().getItemList() != null){
 				//reset selected item list
 				for(int i = 0; i < this.getManagedBean().getItemList().size();){
+					//#29562 - START
 					if (this.getManagedBean().getItemList().get(i).isCancelled()){
 						this.getManagedBean().getItemList().get(i).setCancelled(false);
 					}
@@ -12228,7 +12229,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						}						
 					}	
 					i++;
-				}
+				}//#29562 - END
 			}
 			
 			if (	//#29562 - START.
