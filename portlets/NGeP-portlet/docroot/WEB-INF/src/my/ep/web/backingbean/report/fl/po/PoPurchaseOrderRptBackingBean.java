@@ -18,6 +18,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.po.PoPurchaseOrderRptManagedBean;
@@ -121,6 +122,7 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 	 * reset action
 	 */
 	public void resetAction(){
+		getManagedBean().setProcumentType(null); //#27476
 		resetSearchCriteriaValues();
 	}
 	
@@ -134,5 +136,36 @@ public class PoPurchaseOrderRptBackingBean extends FlReportBackingBean<PoPurchas
 			getContractDuration(this.getManagedBean().getFromDate(), this.getManagedBean().getToDate());
 		}
 	//29550 - end
+		
+	// #27476 start
+	/**
+	 * to check if user has role that has access for procument type filtering
+	 * report
+	 * 
+	 * @return boolean
+	 */
+	public boolean hasRoleForProcumentType() {
+		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) || hasAuditorRole()
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * to check if user has auditor role
+	 * 
+	 * @return boolean
+	 */
+	public boolean hasAuditorRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return true;
+		}
+		return false;
+	}
+	// #27476 end
 	
 }

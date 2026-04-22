@@ -28,11 +28,13 @@ import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.fl.SLALogFulfilmentConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
@@ -44,6 +46,8 @@ import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -483,14 +487,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 *
 	 */
 	public void defaultPtjAndMinistryValues() {
-		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())
-			//Enhancement 29550 - start
-			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
-			|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-			|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
-			//Enhancement 29550 - end 
-			) {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())
+				|| (hasSupplierRole() && !hasGovernmentUserRole())
+				// Enhancement 29550 - start
+				|| hasFactoringUserRole() 
+				|| hasRoleWithoutFlApprover(RoleCode.BPK_CCA.value())
+				|| hasRoleWithoutFlApprover(RoleCode.BPK_CC_APPROVER.value())
+				|| hasRoleWithoutFlApprover(RoleCode.MIN_CONTRACT_ADMIN.value())
+				|| hasRoleWithoutFlApprover(RoleCode.CT_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
+				// Enhancement 29550 - end
+		) {
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -770,17 +779,22 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	public void retrieveParameterCodeType() {
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			String parameterCodeType = getParameterCodeTypeString();
+			log.info("ROLE CODE: " + parameterCodeType);
 			if (StringUtils.isNotEmpty(parameterCodeType)
 					&& (parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ)
 							|| parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))) {
 				getManagedBean().setSupplier(false);
 			} else if (StringUtils.isNotEmpty(parameterCodeType)
-					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATUTORY_BODY)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY)
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_STATE_GOVT) 
+							|| parameterCodeType.equals(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY))) {
 				getManagedBean().setSupplier(true);
 				retrieveSupplierCompName();
-				//Enhancement 29550 -start
-				retrieveSuppDataByUserId();
-				//Enhancement 29550 - end
+				// Enhancement 29550 -start
+				populateSupplierData(Long.valueOf(getManagedBean().getSupplierId()));
+				// Enhancement 29550 - end
 			} 
 		}
 	}
@@ -1205,32 +1219,32 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			// summary report sheet cell - total poco
 	        Cell cellSummaryTotalPOCO = row.createCell(4);
 	        cellSummaryTotalPOCO.setCellValue(((Integer) accsumpoco).intValue());
-	        cellSummaryTotalPOCO.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, false, false, false));
+	        cellSummaryTotalPOCO.setCellStyle(columnStyle(wb, createHelper, false, true, true, false, false, false, false));
 	        
 	        // summary report total amt
 	        Cell cellSummaryTotalAmt = row.createCell(5);
 	        cellSummaryTotalAmt.setCellValue((accsumTotalAmtWithGST).doubleValue());
-	        cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 	        // summary report total deduct
 	        Cell cellSummaryTotalDeduct = row.createCell(6);
 	        cellSummaryTotalDeduct.setCellValue((accsumTotalDeduc).doubleValue());
-	        cellSummaryTotalDeduct.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalDeduct.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 	        // summary report total gst
 	        Cell cellSummaryTotalGST = row.createCell(7);
 	        cellSummaryTotalGST.setCellValue((accsumGST).doubleValue());
-	        cellSummaryTotalGST.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalGST.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 	        // summary report total service fee
 	        Cell cellSummaryTotalServiceFee = row.createCell(8);
 	        cellSummaryTotalServiceFee.setCellValue((accsumServiceFee).doubleValue());
-	        cellSummaryTotalServiceFee.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalServiceFee.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 	        // summary report total pay supplier
 	        Cell cellSummaryTotalPaySupplier = row.createCell(9);
 	        cellSummaryTotalPaySupplier.setCellValue((accsumPayableToSupplier).doubleValue());
-	        cellSummaryTotalPaySupplier.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalPaySupplier.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 
 		}
@@ -1290,25 +1304,25 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		// summary report sheet cell - total amount with gst
 		Cell cellSummaryTotalAmt = row.createCell(9);
 		cellSummaryTotalAmt.setCellValue(summaryTotalAmt.doubleValue());
-		cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+		cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 		// summary report sheet cell - deduction amount
 		Cell cellSummaryDeductionAmt = row.createCell(10);
 		cellSummaryDeductionAmt.setCellValue(summaryDeductionAmt.doubleValue());
-		cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+		cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 				false));
 		// summary report sheet cell - gst amount
 		Cell cellSummaryGSTAmt = row.createCell(11);
 		cellSummaryGSTAmt.setCellValue(summaryGSTAmt.doubleValue());
-		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 		// summary report sheet cell - service fee amount
 		Cell cellSummaryServiceFeeAmt = row.createCell(12);
 		cellSummaryServiceFeeAmt.setCellValue(summaryServiceFeeAmt.doubleValue());
-		cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+		cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 				false));
 		// summary report sheet cell - accumulate amount payable supplier
 		Cell cellSummaryAmtPayableSupplier = row.createCell(13);
 		cellSummaryAmtPayableSupplier.setCellValue(summaryAmtPayableSupplier.doubleValue());
-		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, true,
+		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true,
 				false, false));
 
 		CellRangeAddress cellZoneSummaryAmt = new CellRangeAddress(rowSummary, rowSummary, 13, 14);
@@ -1622,79 +1636,79 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			// summary report sheet cell - jan
 			Cell cellSummaryTotalJan = row.createCell(3);
 			cellSummaryTotalJan.setCellValue((janTotal).doubleValue());
-			cellSummaryTotalJan.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJan.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - feb
 			Cell cellSummaryTotalFeb = row.createCell(4);
 			cellSummaryTotalFeb.setCellValue((febTotal).doubleValue());
-			cellSummaryTotalFeb.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalFeb.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - mar
 			Cell cellSummaryTotalMac = row.createCell(5);
 			cellSummaryTotalMac.setCellValue((macTotal).doubleValue());
-			cellSummaryTotalMac.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalMac.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - april
 			Cell cellSummaryTotalApr = row.createCell(6);
 			cellSummaryTotalApr.setCellValue((aprTotal).doubleValue());
-			cellSummaryTotalApr.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalApr.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - may
 			Cell cellSummaryTotalMay = row.createCell(7);
 			cellSummaryTotalMay.setCellValue((mayTotal).doubleValue());
-			cellSummaryTotalMay.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalMay.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - june
 			Cell cellSummaryTotalJun = row.createCell(8);
 			cellSummaryTotalJun.setCellValue((junTotal).doubleValue());
-			cellSummaryTotalJun.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJun.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - july
 			Cell cellSummaryTotalJuly = row.createCell(9);
 			cellSummaryTotalJuly.setCellValue((julyTotal).doubleValue());
-			cellSummaryTotalJuly.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJuly.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - aug
 			Cell cellSummaryTotalAug = row.createCell(10);
 			cellSummaryTotalAug.setCellValue((augTotal).doubleValue());
-			cellSummaryTotalAug.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalAug.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - sept
 			Cell cellSummaryTotalSep = row.createCell(11);
 			cellSummaryTotalSep.setCellValue((sepTotal).doubleValue());
-			cellSummaryTotalSep.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalSep.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - oct
 			Cell cellSummaryTotalOct = row.createCell(12);
 			cellSummaryTotalOct.setCellValue((octTotal).doubleValue());
-			cellSummaryTotalOct.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalOct.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - nov
 			Cell cellSummaryTotalNov = row.createCell(13);
 			cellSummaryTotalNov.setCellValue((novTotal).doubleValue());
-			cellSummaryTotalNov.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalNov.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - dec
 			Cell cellSummaryTotalDec = row.createCell(14);
 			cellSummaryTotalDec.setCellValue((decTotal).doubleValue());
-			cellSummaryTotalDec.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalDec.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - total
 			Cell cellSummaryTotalAll = row.createCell(15);
 			cellSummaryTotalAll.setCellValue((totalAll).doubleValue());
-			cellSummaryTotalAll.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalAll.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));   
 		}
 		if(reportList.isEmpty()){
@@ -1896,29 +1910,19 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * reports based on role auditor internal and fl approver.
 	 */
 	@SuppressWarnings("null")
-	public void defaultPtjGrpAndPtjValues(){
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+	public void defaultPtjGrpAndPtjValues() {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 		PmOrgProfile orgProfile = null;
-		
-		if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+
+		if (userResDTO.getUserOrgList() != null && !userResDTO.getUserOrgList().isEmpty()) {
 			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 		}
-		
-		if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
-			
-			if(ministryOrgProfile != null){
-				this.getManagedBean().setMinistry(ministryOrgProfile);
-				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
-				this.getManagedBean().setPtj(orgProfile);
-			}else{
-				this.getManagedBean().setMinistry(orgProfile);
-			}
-			
-		}else{
+
+		if (orgProfile.getOrgProfileId() != null) {
 			this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 			this.getManagedBean().setPtjGroup(null);
 			this.getManagedBean().setPtj(null);
@@ -2034,6 +2038,28 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return items;
 	}
 	
+	public void autopopSuppData() {
+		if (this.getManagedBean().getSelectedOrgProfile().getSmSupplier() == null) {
+			return;
+		}
+		populateSupplierData(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId());
+	}
+	
+	public void populateSupplierData(Long suppplierId){
+		ISupplierSearchSO supplierSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		SmSupplier smSupplier = supplierSO.retrieveSupplierAndMofAccountBySupplierId(suppplierId);
+		if (smSupplier != null) {
+			getManagedBean().setSupplierCompName(smSupplier.getCompanyName());
+			getManagedBean().setBusinessRegNo(smSupplier.getRegNo());
+			getManagedBean().setEpNo(smSupplier.getEpNo());
+			if (smSupplier.getMofNo() != null && !smSupplier.getMofNo().isEmpty()) {
+				getManagedBean().setMofNo(smSupplier.getMofNo());
+			} else {
+				getManagedBean().setMofNo("");
+			}
+		}
+	}
 	//Enhancement 29550 - end
 	
 	// #31344 start
@@ -2331,5 +2357,56 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return financialYearOpt;
 	}
 	//#31344 end
+	
+	//Enhancement 29550 - start
+	/**
+	 * Check role contain fl approver rola
+	 * @param userRole
+	 * @return
+	 */
+	private boolean hasRoleWithoutFlApprover(String userRole) {
+		return getFacesScopes().hasRoleUser(userRole) && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
+	/**
+	  * The method used to disable ptj group lov by report code.
+	*/	
+	public boolean disablePtjGroupLovAdhocPO() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
+					|| getManagedBean().getMinistry() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	  * The method used to disable ptj lov by report code.
+	*/	
+	public boolean disablePtjLovAdhocPO() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+					|| getManagedBean().getPtjGroup() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	//Enhancement 29550 - end
 
 }

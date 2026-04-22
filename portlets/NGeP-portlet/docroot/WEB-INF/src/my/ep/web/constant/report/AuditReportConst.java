@@ -1,6 +1,3 @@
-/**
- * 
- */
 package my.ep.web.constant.report;
 
 import java.io.Serializable;

@@ -1,0 +1,241 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog id="memberDialogId" position="top" resizable="false"
+		header="#{lbl['lbl.sc.add']} #{lOIDetailBackingBean.managedBean.tabTitle}"
+		width="950" height="600" widgetVar="memberWidgetVar" modal="true"
+		styleClass="addQCMember">
+		<p:messages id="committeemessagesid" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false"
+			severity="error, info" />
+		<h:panelGroup id="userSearch" style="width:100%;margin-top:10px;">
+			<p:panel id="memberPanel" header="#{lbl['lbl.btn.search']}"
+				toggleable="true" style="width:100%;margin-top:0px;">
+				<ac:instructionText
+					value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
+				<br />
+				<ac:instructionText
+					value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committee.add.member.search.org.cat']}" /></td>
+						<td colspan="3"><p:selectOneRadio id="orgCatRad"
+								value="#{lOIDetailBackingBean.managedBean.userSearchBean.orgCat}">
+								<p:ajax onstart="blockWidget.show()"
+									oncomplete="blockWidget.hide()"
+									update="memberPanel existingMemberTbl"
+									listener="#{lOIDetailBackingBean.resetUserAction}" />
+								<f:selectItem
+									itemLabel="#{lbl['lbl.sc.committee.add.member.search.ptj.full']}"
+									itemValue="#{ParameterConst.orgCategoryPtj}" />
+								<f:selectItem
+									itemLabel="#{lbl['lbl.sc.committee.add.member.search.other']}"
+									itemValue="#{ParameterConst.orgCategoryOthers}" />
+							</p:selectOneRadio></td>
+					</tr>
+					<c:if
+						test="#{lOIDetailBackingBean.managedBean.userSearchBean.orgCat eq ParameterConst.orgCategoryPtj}">
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
+							<td><p:selectOneMenu id="ministryDD"
+									value="#{lOIDetailBackingBean.managedBean.userSearchBean.ministry}">
+									<p:ajax onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()" update="PtjGroupDD PtjDD"
+										listener="#{lOIDetailBackingBean.onChangeDD(ParameterConst.orgTypeMinistry)}" />
+									<f:selectItems
+										value="#{lOIDetailBackingBean.managedBean.ministryDDList}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committee.add.member.search.ptj.group']}" /></td>
+							<td><p:selectOneMenu id="PtjGroupDD"
+									value="#{lOIDetailBackingBean.managedBean.userSearchBean.ptjGroup}">
+									<p:ajax onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()" update="PtjDD"
+										listener="#{lOIDetailBackingBean.onChangeDD(ParameterConst.orgTypePtjGroup)}" />
+									<f:selectItems
+										value="#{lOIDetailBackingBean.managedBean.ptjGroupDDList}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committee.add.member.search.ptj']}" /></td>
+							<td><p:selectOneMenu id="PtjDD"
+									value="#{lOIDetailBackingBean.managedBean.userSearchBean.ptj}">
+									<f:selectItems
+										value="#{lOIDetailBackingBean.managedBean.ptjDDList}" />
+								</p:selectOneMenu></td>
+						</tr>
+					</c:if>
+					<c:if
+						test="#{lOIDetailBackingBean.managedBean.userSearchBean.orgCat eq ParameterConst.orgCategoryOthers}">
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committee.add.member.search.org.type']}" /></td>
+							<td><p:selectOneMenu id="orgTypeDD" required="true"
+									label="#{lbl['lbl.sc.committee.add.member.search.org.type']}"
+									value="#{lOIDetailBackingBean.managedBean.userSearchBean.orgType}">
+									<p:ajax onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()" update="orgNameDD"
+										listener="#{lOIDetailBackingBean.onChangeDD(ParameterTypeConst.organisationTypes)}" />
+									<f:selectItems
+										value="#{lOIDetailBackingBean.managedBean.orgTypeDDList}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committee.add.member.search.org.name']}" /></td>
+							<td><p:selectOneMenu id="orgNameDD"
+									value="#{lOIDetailBackingBean.managedBean.userSearchBean.orgName}">
+									<f:selectItems
+										value="#{lOIDetailBackingBean.managedBean.orgNameDDList}" />
+								</p:selectOneMenu></td>
+						</tr>
+					</c:if>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
+						<td colspan="3"><p:inputText
+								onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
+								value="#{lOIDetailBackingBean.managedBean.userSearchBean.name}"
+								size="64" id="name1" label="#{lbl['lbl.sc.name']}"
+								required="#{lOIDetailBackingBean.managedBean.nameRequired}" />
+							<p:message id="name1Msg" for="name1" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.id.type']}" /></td>
+						<td colspan="3"><p:selectOneMenu
+								value="#{lOIDetailBackingBean.managedBean.userSearchBean.identificationType}"
+								style="width: 178px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{lOIDetailBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" /></td>
+						<td colspan="3"><p:inputText
+								onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
+								value="#{lOIDetailBackingBean.managedBean.userSearchBean.identificationNo}"
+								size="30" /></td>
+					</tr>
+				</table>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						widgetVar="supplierFinalizationConfirmMeetingAddSearch"
+						action="#{lOIDetailBackingBean.searchUserAction}"
+						update="existingMemberTbl" process="@parent, memberPanel" />
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						action="#{lOIDetailBackingBean.resetUserAction}"
+						update="memberPanel" resetValues="true" partialSubmit="true"
+						process="@this" />
+				</div>
+			</p:panel>
+			<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true"
+				style="width:100%;">
+				<p:dataTable id="existingMemberTbl"
+					value="#{lOIDetailBackingBean.managedBean.userSearchDataModel}"
+					selection="#{lOIDetailBackingBean.managedBean.selectedPmUsers}"
+					rowKey="#{existingMember.userId}" var="existingMember" lazy="true"
+					styleClass="existingCommitteeResults" style="width : 100%;"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rows="10" rowIndexVar="index">
+
+					<ac:paginator for="existingMemberTbl" />
+					<p:ajax event="rowSelect"
+						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+					<p:ajax event="rowUnselect"
+						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+					<p:ajax event="rowSelectCheckbox"
+						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+					<p:ajax event="rowUnselectCheckbox"
+						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+					<p:ajax event="toggleSelect"
+						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+					<p:column selectionMode="multiple" style="width:2%" />
+
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+						<h:outputText value="#{existingMember.userName}"
+							style="white-space: normal;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+						<h:outputText value="#{existingMember.identificationNo}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.designation']}">
+						<h:outputText value="#{existingMember.designation}"
+							style="white-space: normal;" />
+					</p:column>
+					<c:if
+						test="#{lOIDetailBackingBean.managedBean.userSearchBean.orgCat eq ParameterConst.orgCategoryPtj}">
+						<p:column
+							headerText="#{lbl['lbl.sc.committee.add.member.search.ministry']}">
+							<h:outputText style="white-space: normal;"
+								value="#{lOIDetailBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.orgTypeMinistry)}" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.committee.add.member.search.ptj.group']}">
+							<h:outputText style="white-space: normal;"
+								value="#{lOIDetailBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.orgTypePtjGroup)}" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.committee.add.member.search.ptj']}">
+							<h:outputText style="white-space: normal;"
+								value="#{lOIDetailBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.orgTypePtj)}" />
+						</p:column>
+					</c:if>
+					<p:column headerText="#{lbl['lbl.sc.email']}">
+						<h:outputText value="#{existingMember.email}"
+							style="white-space: normal;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.grade']}">
+						<h:outputText value="#{existingMember.grade}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+							<ac:iconTooltip id="pnpTT#{index}"
+								value="#{lbl['lbl.sc.pnp.tooltip']}" />
+						</f:facet>
+						<h:outputText
+							value="#{lbl[existingMember.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.role']}">
+						<ui:param name="filteredRoles" value="#{fn:split('S',',')}" />
+						<p:selectOneMenu id="appaction"
+							value="#{existingMember.memberRoleId}"
+							style="width: 110px;margin-bottom: 5px;">
+							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+								value="#{lOIDetailBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existingMember.PMP,lOIDetailBackingBean.managedBean.scQt, existingMember, filteredRoles)}"
+								itemLabel="#{role.codeName}"
+								itemValue="#{role.pmParameter.parameterId}" />
+						</p:selectOneMenu>
+
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
+
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+				id="supplierFinalizationMeetingAddOnBtnId"
+				disabled="#{empty lOIDetailBackingBean.managedBean.selectedPmUsers}"
+				process="@this, userSearch" update=":form:memberListTbl"
+				actionListener="#{lOIDetailBackingBean.committeeOkAction}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+				oncomplete="memberWidgetVar.hide();"
+				action="#{lOIDetailBackingBean.committeeCancelAction}" ajax="true"
+				update="name1" />
+		</div>
+		<p:ajax event="close"
+			listener="#{lOIDetailBackingBean.committeeCancelAction}"
+			update="@([id$=name1])" />
+
+	</p:dialog>
+</ui:composition>

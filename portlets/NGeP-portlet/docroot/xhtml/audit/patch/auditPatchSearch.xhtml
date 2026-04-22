@@ -33,7 +33,7 @@
 							value="#{auditPatchBackingBean.getChangeTypeList()}"
 							var="changeType" itemLabel="#{changeType.changeTypeName}"
 							itemValue="#{changeType.auPatchChangeTypeID}" />
-						<p:ajax event="change" update=":form:auditPatchSearchPanel,:form:searchPatchMaster"
+						<p:ajax event="change" update=":form:auditPatchSearchPanel,:form:searchPatchMaster,:form:docTypeList,:form:eAduanNo"
 							listener="#{auditPatchBackingBean.changeType()}" />
 					</p:selectOneMenu>
 					<ac:iconTooltip value="#{lbl['lbl.audit.patch.change.type.tooltip']}" />
@@ -52,7 +52,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" 
 							itemValue="#{null}" />
 						<f:selectItems
-							value="#{auditPatchBackingBean.getDocumentTypeList()}"
+							value="#{auditPatchBackingBean.documentTypeList}"
 							var="docType" itemLabel="#{docType.docTypeName}"
 							itemValue="#{docType.auPatchDocumentTypeID}" />
 					</p:selectOneMenu></td>
@@ -64,7 +64,7 @@
 						value="#{lbl['lbl.audit.header.docNo']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{auditPatchBackingBean.managedBean.searchBean.docNo}"
-						id="itemCode" styleClass="ppDisplayTextM" size="36" /></td>
+						id="docNo" styleClass="ppDisplayTextM" size="36" /></td>
 						
 			</tr>
 			<tr>
@@ -72,7 +72,7 @@
 						value="#{lbl['lbl.audit.patch.eaduan.no']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{auditPatchBackingBean.managedBean.searchBean.eAduanNo}"
-						id="itemName" styleClass="ppDisplayTextM" size="36" /></td>
+						id="eAduanNo" disabled="#{auditPatchBackingBean.managedBean.searchBean.changeTypeID eq 1}" styleClass="ppDisplayTextM" size="36" /></td>
 			</tr>
 			<tr>
 				<td colspan="4" width="100%">
@@ -82,8 +82,7 @@
 							onstart="blkPanelSearchTable.show();"
 							oncomplete="blkPanelSearchTable.hide();" update="searchPatchMaster"
 							process="auditPatchSearchPanel"
-							action="#{auditPatchBackingBean.searchMaster}" 
-							disabled="#{empty auditPatchBackingBean.managedBean.searchBean.changeTypeID}" />
+							action="#{auditPatchBackingBean.searchMaster}"  />
 							
 						<p:commandButton id="searchButtonId"
 							value="#{lbl['lbl.btn.reset']}" process="@this"

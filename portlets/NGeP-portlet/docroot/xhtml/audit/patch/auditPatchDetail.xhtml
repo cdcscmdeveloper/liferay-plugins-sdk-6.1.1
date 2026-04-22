@@ -49,12 +49,13 @@
 				<h:outputText value="#{detail.changeTypeName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.patch.req.by']}" style="white-space:pre-wrap!important;word-break: break-word;width: 7%;">
-				<h:outputText value="#{detail.ptjUsername}" />
+				<h:outputText value="#{detail.requestBy}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.patch.req.org']}" style="white-space:pre-wrap!important;word-break: break-word;width: 9%;">
-				<h:outputText value="#{detail.ptjUserOrganization}" />
+				<h:outputText value="#{detail.requestOrg}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.audit.patch.eaduan.no']}" style="white-space:pre-wrap!important;word-break: break-word;width: 7%;">
+			<p:column headerText="#{lbl['lbl.audit.patch.eaduan.no']}" style="white-space:pre-wrap!important;word-break: break-word;width: 7%;"
+				rendered="#{auditPatchBackingBean.managedBean.hideAduan}">
 				<h:outputText value="#{detail.eAduanNo}" />
 			</p:column>
 		</p:dataTable>

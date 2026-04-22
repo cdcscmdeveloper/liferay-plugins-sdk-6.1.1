@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;	// Bug #40087@Syazani 06/04/2026
 import java.util.List;
 import java.util.Locale;
 
@@ -44,6 +45,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -69,6 +71,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -1683,7 +1686,7 @@ public class CreateQtBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			countrySo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
-			List<TplSpecZoneLoc> locationDTOs = getZoneLocations(rootZoneLocation);
+			List<TplSpecZoneLoc> locationDTOs = getZoneLocations(rootZoneLocation, false);	//37851
 
 			// TplSpecZoneDtl zone = getZone(rootZoneLocation);
 			Long locationLevel = getManagedBean().getQt()
@@ -1756,16 +1759,21 @@ public class CreateQtBackingBean extends
 	 *            (TreeNode zoneLocation)
 	 * @return List<TplSpecZoneLoc>
 	 */
-	private List<TplSpecZoneLoc> getZoneLocations(TreeNode zoneLocation) {
+	private List<TplSpecZoneLoc> getZoneLocations(TreeNode zoneLocation, boolean isDeleted) {	//37851
 
 		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
 		if (zoneLocation.isLeaf()) {
 			TplSpecZoneLoc locationDTO = (TplSpecZoneLoc) zoneLocation
 					.getData();
+			//37851 -- Start
+			if (null != locationDTO.getSpecLocId() && isDeleted) {
+				locationDTO.setDeleted(true);
+			}
+			//37851 -- End
 			results.add(locationDTO);
 		} else {
 			for (TreeNode childrendLocationNode : zoneLocation.getChildren()) {
-				results.addAll(getZoneLocations(childrendLocationNode));
+				results.addAll(getZoneLocations(childrendLocationNode, isDeleted));	//37851
 			}
 		}
 
@@ -1885,6 +1893,7 @@ public class CreateQtBackingBean extends
 			
 			ScQtZoneCriteria zonCriteria = getManagedBean().getQt()
 					.getScQtSupplierCriteria().getQtZoneCriterias();
+			deleteSpecZoneLocs(zonCriteria);
 			zonCriteria.setTplSpecZoneDtls(
 							convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
 			// setting into zones bean to validate zones while adding 
@@ -1899,6 +1908,7 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setBeans(zonBeansList);
 			}
 		}
+		
 		//20200210@asyrafhaziq_Bug #27381&#26694  - Start
 		//set  ZoneGeneral Trees Panel
 		ScQt scQt = getManagedBean().getQt();
@@ -1957,9 +1967,12 @@ public class CreateQtBackingBean extends
 				TreeNode rootTree = rootTrees.get(row);
 
 				for (TreeNode zoneTree : rootTree.getChildren()) {
+					//37851 - Start
+					tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
+					List<TplSpecZoneLoc> deletedSpecZoneLocsList = initTplSpecZoneLocList(tplSpecZoneDtl);
+					//37851 - End
 					if (zoneTree.isSelected()) {
 						getManagedBean().setSelectedFlag(false);
-						tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
 						if (tplSpecZoneDtl.getPanelZone() != null) {
 							// deletePanelItemSuppliers(tplSpecZoneDtl);
 
@@ -1975,8 +1988,10 @@ public class CreateQtBackingBean extends
 
 						if (removedList != null) {
 							for (TreeNode treeNode : removedList) {
-								List<TplSpecZoneLoc> locationDTOs = getZoneLocations(treeNode);
-
+								//37851 -- Start
+								List<TplSpecZoneLoc> locationDTOs = getZoneLocations(treeNode, true);
+								deletedSpecZoneLocsList.addAll(locationDTOs);
+								//37851 -- End
 								deleteStateOrDivOrDist(tplSpecZoneDtl,
 										locationDTOs);
 							}
@@ -1984,9 +1999,10 @@ public class CreateQtBackingBean extends
 
 						if (zoneTree.getChildren().size() == 0) {
 							rootTrees.remove(row--);
+							tplSpecZoneDtl.setDeleted(null != tplSpecZoneDtl.getSpecZoneId());	//37851
 						}
 					}
-
+					tplSpecZoneDtl.setDeletedSpecZoneLocs(deletedSpecZoneLocsList);	//37851
 				}
 			}
 		}
@@ -2259,23 +2275,19 @@ public class CreateQtBackingBean extends
 					if (treeNode.getType().equals("state")) {
 						if (treeNode.getChildCount() == 0
 								&& treeNode.getChildren().isEmpty()) {
-							List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+							List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode, false);	//37851
 							allNodes.addAll(locationDTO);
 
 						}
 					} else {
-						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode, false);	//37851
 						allNodes.addAll(locationDTO);
 					}
 				} else {
-
-					if (treeNode.getParent().isSelected()) {
-						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-						allNodes.addAll(locationDTO);
-					} else {
-						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-						allNodes.addAll(locationDTO);
-					}
+					// 37851 remove useless if condition, advise by sonarlink -- start
+					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode, false);
+					allNodes.addAll(locationDTO);
+					// 37851 remove useless if condition, advise by sonarlink -- end
 				}
 			}
 		}
@@ -4135,16 +4147,8 @@ public class CreateQtBackingBean extends
 				spBB.retriveTechnicalCheckList();
 				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
 			}//11104-End
-			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
-				for(ScQtCheckList checklist:st2technicalproposalList){
-					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
-							.getDefinationType().getParameterCode())) {
-						deltechnicalproposalList.add(checklist);
-						getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
-						st2technicalproposalList.remove(checklist);
-						break;
-					}
-				}
+			if (CollectionUtils.isNotEmpty(st2technicalproposalList)) {
+				removeSampleChecklist(st2technicalproposalList, deltechnicalproposalList);	// Bug #40087@Syazani 06/04/2026
 			}
 		}
 	}
@@ -4331,6 +4335,43 @@ public class CreateQtBackingBean extends
 		}
 	}
 	// Bug #36730@Syazani 07/01/2025 -- End
+	
+	//37851 - Start
+	private void deleteSpecZoneLocs(ScQtZoneCriteria zonCriteria) {
+		ISpecZoneLocSO specZoneLocSO;
+		specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+				ISpecZoneLocSO.class);
+		SpecZoneLocReqDTO specZoneLocReqDTO = new SpecZoneLocReqDTO();
+		specZoneLocReqDTO.setTplSpecZone(zonCriteria);
+		specZoneLocSO.deleteSpecZoneLocs(specZoneLocReqDTO);
+		specZoneLocSO.deleteSpecZoneDtls(specZoneLocReqDTO);
+	}
+	
+	private List<TplSpecZoneLoc> initTplSpecZoneLocList(TplSpecZoneDtl tplSpecZoneDtl) {
+		if (null == tplSpecZoneDtl.getDeletedSpecZoneLocs()) {
+			return new ArrayList<>();
+		} else {
+			return tplSpecZoneDtl.getDeletedSpecZoneLocs();
+		}
+	}
+	//37851 - End
+	
+	// Bug #40087@Syazani 06/04/2026 -- Start
+	private void removeSampleChecklist(List<ScQtCheckList> st2technicalproposalList,
+			List<ScQtCheckList> deltechnicalproposalList) {
+		Iterator<ScQtCheckList> itScQtChecklist = st2technicalproposalList.iterator();
+		while (itScQtChecklist.hasNext()) {
+			ScQtCheckList checklist = itScQtChecklist.next();
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
+					.getParameterCode())) {
+				deltechnicalproposalList.add(checklist);
+				getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
+				itScQtChecklist.remove();
+				break;
+			}
+		}
+	}
+	// Bug #40087@Syazani 06/04/2026 -- End
 }
 
 

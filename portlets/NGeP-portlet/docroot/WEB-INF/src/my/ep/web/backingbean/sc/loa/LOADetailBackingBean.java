@@ -12896,9 +12896,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 
 	    SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryCodeByApplId(reqDTO);
-	    smSupplierCategoryList = resDTO.getSmSupplierCategoryList();	    
+	    smSupplierCategoryList = resDTO.getSmSupplierCategoryList();	 
+	    List<SmSupplierCategory> filteredSmSupplierCategoryList = new ArrayList<>();//#29661 #40093
 	
 	    for (SmSupplierCategory smCategory : smSupplierCategoryList) {
+	    	if (smCategory.getRecordStatusFlg() != 1){//#29661 #40093
+	    		continue;
+	    	}
 	    	smCategory.getPmCategoryL1();
 	    	smCategory.getPmCategoryL2();
 
@@ -12906,6 +12910,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			CategoryCodeResDTO categoryResDTO = categoryCodeSO
 					.retrieveCategoryL3DtlById(categoryReqDTO);
 			smCategory.setPmCategoryL3(categoryResDTO.getCategoryL3());
+			filteredSmSupplierCategoryList.add(smCategory);//#29661 #40093
 		}
 	    
 	    if (null != getManagedBean().getScQt()){
@@ -12914,7 +12919,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	    convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList,categoryCodeSO);
 	    }
 	    
-		this.getManagedBean().setSupplierCategoryList(smSupplierCategoryList);
+	    this.getManagedBean().setSupplierCategoryList(filteredSmSupplierCategoryList);//#29661 #40093
 	}
 
 	/**
@@ -13109,7 +13114,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			PmReason reason = reqSO.retrieveReasonDtlById(reqDTO).getPmReason();
 			if (reason != null && !reason.isRecordStatus()) {
-				throw new EpException(MessageConst.ERROR_760718, new String[] {
+				throw new EpException(MessageConst.ERROR_760715, new String[] {
 						getParameterDesc(getManagedBean().getScLoa().getProcurementType().getParameterType(),
 								getManagedBean().getScLoa().getProcurementType().getParameterCode()),
 						getReasonDesc(getManagedBean().getScLoa().getScQuote().getJustificationType()) });
@@ -13506,16 +13511,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	            return true;
 	        }
 
-	        if (loaItem != null && loaItem.getScRequestItem() != null) {
-	            ScRequestItem requestItem = loaItem.getScRequestItem();
-
-	            boolean isServiceType = DbValueConst.PROCUMENT_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId());
-	            boolean isEmptyUnspsc = StringUtils.isEmpty(requestItem.getTempUnspscCode());
-	            boolean hasAssociatedCmItem = requestItem.getCmItem() != null;
-
-	            return isServiceType && isEmptyUnspsc && hasAssociatedCmItem;
+	        if (loaItem == null || loaItem.getScRequestItem() == null) {
+	        	return true;	
+	        }
+	        
+	        if(loaItem.getScRequestItem().getTempUnspscCode() !=null){
+	        	return false;
 	        }
 
+	        if(loaItem.getScRequestItem().getCmItem() != null){
+	        	return true;
+	        }
+	        
 	        return false;
 	    }
 		// #26059 - End
