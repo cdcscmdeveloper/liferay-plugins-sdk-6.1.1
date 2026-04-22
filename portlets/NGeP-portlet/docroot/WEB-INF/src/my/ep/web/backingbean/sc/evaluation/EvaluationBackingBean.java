@@ -13894,10 +13894,10 @@ private void retriveCommitteeRemarksList(){
 				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_CURRENT;
 
 		if (wipTEC || nonWIPTEC) {*/
+		if (this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE) {
 			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
 			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
-//		}
-		//this comment also
+		}
 	}
 	//#28784 - End
 }
