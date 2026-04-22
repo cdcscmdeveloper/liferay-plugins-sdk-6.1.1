@@ -12214,6 +12214,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if (this.getManagedBean().getItemList() != null){
 				//reset selected item list
 				for(int i = 0; i < this.getManagedBean().getItemList().size();){
+					if (this.getManagedBean().getItemList().get(i).isCancelled()){
+						this.getManagedBean().getItemList().get(i).setCancelled(false);
+					}
+					
 					if (this.getManagedBean().getItemList().get(i).isSelected()){
 						this.getManagedBean().getItemList().get(i).setSelected(false);
 						//reset selected suppliers
@@ -12221,12 +12225,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 							this.getManagedBean().getItemList().get(i).getSelectedSuppliers().clear();
 							ScQtRecommend itemList = this.getManagedBean().getItemList().get(i);
 							getSupplierCodes(itemList);
-						}
-						i++;
-					}
-					else{
-						break;
-					}
+						}						
+					}	
+					i++;
 				}
 			}
 			
