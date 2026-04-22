@@ -12031,6 +12031,11 @@ public class SupplierFinalizationBackingBean extends
 		if (this.getManagedBean().getItemList() != null){
 			//reset selected item list
 			for(int i = 0; i < this.getManagedBean().getItemList().size();){
+				//#29562 - START
+				if (this.getManagedBean().getItemList().get(i).isCancelled()){
+					this.getManagedBean().getItemList().get(i).setCancelled(false);
+				}				
+				
 				if (this.getManagedBean().getItemList().get(i).isSelected()){
 					this.getManagedBean().getItemList().get(i).setSelected(false);
 					//reset selected suppliers
@@ -12038,12 +12043,10 @@ public class SupplierFinalizationBackingBean extends
 						this.getManagedBean().getItemList().get(i).getSelectedSuppliers().clear();
 						ScQtRecommend itemList = this.getManagedBean().getItemList().get(i);
 						getSupplierCodes(itemList);
-					}
-					i++;
-				} else{
-					break;
-				}
-			}
+					}					
+				} 
+				i++;
+			}//#29562 - END
 		}
 		
 		if (//#29562 - START.
