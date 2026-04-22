@@ -292,7 +292,7 @@ public class RaceBackingBean extends
 					IAuditPMSO.class);
 
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE) && race.getRaceId() != null) {
-				RaceResDTO oldResDTO = raceSO.retriveRaceById(reqDTO);
+				RaceResDTO oldResDTO = raceSO.retrieveRaceById(reqDTO);
 				getManagedBean().setOldPmRace(oldResDTO.getRace());
 			}
 			/************ END AUDIT #28895_35509 *************/
