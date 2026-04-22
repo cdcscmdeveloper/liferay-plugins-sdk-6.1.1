@@ -25131,10 +25131,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		List<ScQtCheckList> currentQtChecklist = new ArrayList<>();
 
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
-			docType = "TC";
+			docType = ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST;
 			currentQtChecklist.addAll(this.getManagedBean().getScQtCheckSt2techProposal());
 		} else {
-			docType = "FC";
+			docType = ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST;
 			currentQtChecklist.addAll(this.getManagedBean().getScQtCheckSt2financeProposalList());
 		}
 
