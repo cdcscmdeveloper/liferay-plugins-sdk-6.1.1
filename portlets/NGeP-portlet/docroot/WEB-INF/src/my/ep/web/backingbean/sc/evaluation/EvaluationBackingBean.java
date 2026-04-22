@@ -13876,7 +13876,7 @@ private void retriveCommitteeRemarksList(){
 	
 	//#28784 - Start
 	private void checkMeetingDoneNormalTEC() {
-		//remove comment for 4serangkai checking meeting details wip n non wip
+		//remove comment for 4serangkai checking meeting details wip n non wip - Start
 		/*IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -13887,6 +13887,7 @@ private void retriveCommitteeRemarksList(){
 				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE;
 		boolean nonWIPTEC = wipStatus >= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT
 				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_CURRENT;*/
+		//remove comment for 4serangkai checking meeting details wip n non wip - End
 
 //		if (wipTEC || nonWIPTEC) {//open for 4ser
 		if (this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE) {//delete this after 4ser
