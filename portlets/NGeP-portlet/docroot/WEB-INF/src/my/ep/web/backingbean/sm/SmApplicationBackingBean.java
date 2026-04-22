@@ -5712,31 +5712,16 @@ public class SmApplicationBackingBean extends
 		SmCompanyExperience exp = getManagedBean().getSelectedCompanyExperience();
 		
 		Map<String, String> fieldsToCheck = new LinkedHashMap<String, String>();
-		fieldsToCheck.put("Project Title", exp.getTitle());
-	    fieldsToCheck.put("Agency Name", exp.getClientName());
+		fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projTitle", null), exp.getTitle());
+	    fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.statBody", null), exp.getClientName());
 	    
 	    if (SupplierManagementConst.STYPE_CONSULTANT.equals(getManagedBean().getSmAppl().getSupplierType())) {
-	        fieldsToCheck.put("Project Ref No.", exp.getRefNo());
-	        fieldsToCheck.put("Project Location", exp.getProjectLocation());
-	        fieldsToCheck.put("Service Provided", exp.getWorkServiceDesc());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.refNo", null), exp.getRefNo());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projLoc", null), exp.getProjectLocation());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.serviceProvide", null), exp.getWorkServiceDesc());
 	    }
 		
 	    SmApplicationUtil.CheckAsciiValidation(fieldsToCheck);
-	    
-//		if(!SmApplicationUtil.convertToAscii(getManagedBean().getSelectedCompanyExperience().getTitle()))
-//			throw new EpException(MessageConst.ERROR_760543, new String[] { "Project Title" });
-//		if(!SmApplicationUtil.convertToAscii(getManagedBean().getSelectedCompanyExperience().getClientName()))
-//			throw new EpException(MessageConst.ERROR_760543, new String[] { "Agency Name" });
-//		
-//		if (getManagedBean().getSmAppl().getSupplierType()
-//				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
-//			if(!SmApplicationUtil.convertToAscii(getManagedBean().getSelectedCompanyExperience().getRefNo()))
-//				throw new EpException(MessageConst.ERROR_760543, new String[] { "Project Ref No." });
-//			if(!SmApplicationUtil.convertToAscii(getManagedBean().getSelectedCompanyExperience().getProjectLocation()))
-//				throw new EpException(MessageConst.ERROR_760543, new String[] { "Project Location" });
-//			if(!SmApplicationUtil.convertToAscii(getManagedBean().getSelectedCompanyExperience().getWorkServiceDesc()))
-//				throw new EpException(MessageConst.ERROR_760543, new String[] { "Service Provided" });
-//		}
 		//#40165 - END
 		if (EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSelectedCompanyExperience().getSmCompanyExperienceCats())
