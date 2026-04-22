@@ -1091,7 +1091,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 			}
 			reqDTO.setRoleCode(roleCode);
-			String userconstantRuleType = getPTJRuleTypeByOrgProfile(reqDTO.getOrgProfileId());
+			String userconstantRuleType = getPTJRuleTypeByOrgProfile(reqDTO.getOrgProfileId());//Fix - #34367
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
 			//Start - #34367
