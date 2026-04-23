@@ -26,6 +26,9 @@ public class RaceManagedBean extends BaseManagedBean {
 	private String raceNames;
 	private Long recordStatus;
 	private boolean isLazy;
+	/************ START: AUDIT #28895_35509 *************/
+	private PmRace oldPmRace;
+	/************ END: AUDIT #28895_35509 *************/
 	
 	public RaceManagedBean(){}
 
@@ -99,5 +102,14 @@ public class RaceManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 
+	/************ START: AUDIT #28895_35509 *************/
+	public PmRace getOldPmRace() {
+		return oldPmRace;
+	}
+
+	public void setOldPmRace(PmRace oldPmRace) {
+		this.oldPmRace = oldPmRace;
+	}
+	/************ END: AUDIT #28895_35509 *************/
 	
 }
