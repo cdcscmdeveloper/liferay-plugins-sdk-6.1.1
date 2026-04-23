@@ -24,9 +24,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
  */
 public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 
@@ -87,11 +84,10 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 
 	private String checkDocType(String parameterCode) {
 
-		String description = null;
-		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
-		description = ParameterHelper.getInstance().getParameterDesc("DT", parameterCode, locale);
-		
-		return description;
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+				CommonConstants.DEFAULT_COUNTRY_CODE);
+		return ParameterHelper.getInstance().getParameterDesc("DT",
+				parameterCode, locale);
 
 	}
 

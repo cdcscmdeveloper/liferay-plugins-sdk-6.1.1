@@ -1957,12 +1957,10 @@ public class QTCommitteBackingBean extends
 						SCProcessNameConst.REVISE_QT_SCHEDULE };
 				String[] committeeApprovalTask = new String[] { SCProcessNameConst.REVISE_COMMITTEE,
 						SCProcessNameConst.APPROVE_COMMITTEE };
-				boolean isSpecCommitteeAndPreparingScheduleAndCommitteeApproval = (Arrays.asList(
-						schedulePreparationTask).contains(taskName) || Arrays.asList(committeeApprovalTask).contains(
-						taskName))
-						&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType);
-
-				if (isSpecCommitteeAndPreparingScheduleAndCommitteeApproval) {
+				// 40193 - start
+				if (Arrays.asList(schedulePreparationTask).contains(taskName)
+						&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)) {
+				// 40193 - end
 					return false;
 				} else if (Arrays.asList(committeeApprovalTask).contains(taskName)
 						&& Arrays.asList(ParameterConst.QT_EVALUATION_COMMITTEES).contains(commType)) {
