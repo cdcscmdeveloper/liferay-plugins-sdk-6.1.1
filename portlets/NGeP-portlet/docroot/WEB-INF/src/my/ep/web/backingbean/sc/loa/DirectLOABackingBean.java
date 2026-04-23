@@ -12213,12 +12213,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		for (TplSpecQuestion newQuestion : questionsListNew) {
 			for (TplSpecQuestion oldQuestion : questionsListOld) {
-				boolean itemNewOld = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newQuestion.getQuestionType())
+				boolean bothQuestionsItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newQuestion.getQuestionType())
 						&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(oldQuestion.getQuestionType());
-				boolean checkItem = newQuestion.getClItem() != null && newQuestion.getClItem() != ""
-						&& oldQuestion.getClItem() != null && oldQuestion.getClItem() != "";
-				if (itemNewOld
-						&& checkItem
+				boolean checkItemNotEmpty = StringUtils.isNotEmpty(newQuestion.getClItem())
+						&& StringUtils.isNotEmpty(oldQuestion.getClItem());
+				if (bothQuestionsItem
+						&& checkItemNotEmpty
 						&& newQuestion.getClItem().trim().replaceAll("\\s", "")
 								.equalsIgnoreCase(oldQuestion.getClItem().trim().replaceAll("\\s", ""))) {
 					updateUnitPriceforNewAnswers(oldQuestion, newQuestion);
@@ -12311,12 +12311,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	private void checkItemNameforCreateTemplateSpec(List<TplSpecQuestion> questionsListNew,
 			TplSpecQuestion oldQuestion, TplSpecQuestion newQuestion, TplSpecMaster specMaster) {
-		boolean itemNewOld = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newQuestion.getQuestionType())
+		boolean bothQuestionsItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newQuestion.getQuestionType())
 				&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(oldQuestion.getQuestionType());
-		boolean checkItem = newQuestion.getClItem() != null && newQuestion.getClItem() != ""
-				&& oldQuestion.getClItem() != null && oldQuestion.getClItem() != "";
-		if (itemNewOld
-				&& checkItem
+		boolean checkItemNotEmpty = StringUtils.isNotEmpty(newQuestion.getClItem())
+				&& StringUtils.isNotEmpty(oldQuestion.getClItem());
+		if (bothQuestionsItem
+				&& checkItemNotEmpty
 				&& newQuestion.getClItem().trim().replaceAll("\\s", "")
 						.equalsIgnoreCase(oldQuestion.getClItem().trim().replaceAll("\\s", ""))) {
 			specMaster.setTplSpecQuestions(questionsListNew);
