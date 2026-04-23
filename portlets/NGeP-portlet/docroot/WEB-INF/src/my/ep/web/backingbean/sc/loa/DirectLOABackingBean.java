@@ -12193,6 +12193,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		checkZonalandUpdateforCreateTemplateSpec(tplSpecMaster, specMaster);
 
 		addNewQuestionsForCreateTemplateSpec(templateSpecBean, questionsListCreate, questionsListNew);
+		
+		updateUnitPriceForCloneItems(resDTO.getSpecMaster(), questionsListNew);
 
 		if (null != specMaster) {
 			specMaster.setTplSpecQuestions(questionsListNew);
@@ -12204,6 +12206,58 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		RequestContext.getCurrentInstance().execute(QTConstants.CLOSE_CLONE_LOA_SPEC_POPUP);
 
 		return;
+	}
+	
+	private void updateUnitPriceForCloneItems(TplSpecMaster oldSpecMaster, List<TplSpecQuestion> questionsListNew){
+		List<TplSpecQuestion> questionsListOld = oldSpecMaster.getTplSpecQuestions();
+		
+		for (TplSpecQuestion newQuestion : questionsListNew) {
+			for (TplSpecQuestion oldQuestion : questionsListOld) {
+				boolean itemNewOld = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newQuestion.getQuestionType())
+						&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(oldQuestion.getQuestionType());
+				boolean checkItem = newQuestion.getClItem() != null && newQuestion.getClItem() != ""
+						&& oldQuestion.getClItem() != null && oldQuestion.getClItem() != "";
+				if (itemNewOld
+						&& checkItem
+						&& newQuestion.getClItem().trim().replaceAll("\\s", "")
+								.equalsIgnoreCase(oldQuestion.getClItem().trim().replaceAll("\\s", ""))) {
+					updateUnitPriceforNewAnswers(oldQuestion, newQuestion);
+				}
+			}
+		}
+	}
+
+	private void updateUnitPriceforNewAnswers(TplSpecQuestion oldQuestion, TplSpecQuestion newQuestion) {
+		ScQt scQt = this.getManagedBean().getScQt();
+		boolean isZonal = scQt.isZonal();
+		List<TplSpecAnswer> tplSpecAnswers = new ArrayList<>();
+
+		for (TplSpecAnswer oldAnswer : oldQuestion.getTplSpecAnswers()) {
+			boolean isPriceTypeTier = oldAnswer.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER);
+			TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
+			tplSpecAnswer.setTplSpecQuestion(newQuestion);
+			if (!isZonal && isPriceTypeTier) {
+				tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
+				tplSpecAnswer.setAnswerNumeric(oldAnswer.getAnswerNumeric());
+				
+				TplSpecTierQty tplSpecTierQtyOld = oldAnswer.getTplSpecTierQty();
+				TplSpecTierQty tplSpecTierQty = new TplSpecTierQty();
+				tplSpecTierQty.setTplSpecQuestion(newQuestion);
+				
+				BigDecimal fromQty = tplSpecTierQtyOld.getFromQty();
+				BigDecimal toQty = tplSpecTierQtyOld.getToQty();
+				
+				tplSpecTierQty.setFromQty(fromQty);
+				tplSpecTierQty.setToQty(toQty);
+
+				tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
+			} else if (!isZonal && !isPriceTypeTier) {
+				tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
+				tplSpecAnswer.setAnswerNumeric(oldAnswer.getAnswerNumeric());
+			}
+			tplSpecAnswers.add(tplSpecAnswer);
+		}
+		newQuestion.setTplSpecAnswers(tplSpecAnswers);
 	}
 	
 	private TemplateSpecBean updateSpecBeanForClone(String itemType) {
@@ -12588,6 +12642,33 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_SCQTSTATUS_CURRENT,
 								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.FLAG_YES));
+			}
+			ScQt scQt = getManagedBean().getScQt();
+			qtSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_ISZONAL,
+							SearchOperator.OPERATOR_EQUALS.value(), scQt.isZonal()));
+			
+			// Filter By - Ministry
+			PmOrgProfile ministryProfile = new PmOrgProfile();
+			Long userId = new FacesScopes().getUserSessionBean().getUserId();
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(userId);
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+			if (resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size() > 0) {
+				for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+					if (pmUserOrg.getPmOrgProfile() != null) {
+						ministryProfile = pmUserOrg.getPmOrgProfile();
+						break;
+					}
+				}
+			}
+			if (ministryProfile != null && ministryProfile.getOrgProfileId() != null) {
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_PMORGPROGILE_ORGPROFILEID,
+								SearchOperator.OPERATOR_EQUALS.value(), ministryProfile.getOrgProfileId()));
 			}
 		}
 	}
