@@ -3955,7 +3955,8 @@ public class SmApplicationBackingBean extends
 							getManagedBean().isDisAllowOwnerEdit());
 					/*#28458 - Start*/
 					if (getManagedBean().isDisAllowOwnerEdit()){
-						throw new EpException(MessageConst.ERROR_722683);
+						throw new EpException(MessageConst.ERROR_722683
+								,new String[] {Integer.toString(SmRuleHelper.getInstance().getRestrictionsUpdatePersonnel())}); //#30284
 					}
 					/*#28458 - End*/
 					SmApplicationUtil.setPersonnelSoftcertRenewalStatus(this
@@ -4031,7 +4032,8 @@ public class SmApplicationBackingBean extends
 								getManagedBean().isDisAllowOwnerEdit());
 						/*#28458 - Start*/
 						if (getManagedBean().isDisAllowOwnerEdit()){
-							throw new EpException(MessageConst.ERROR_722683);
+							throw new EpException(MessageConst.ERROR_722683
+									,new String[] {Integer.toString(SmRuleHelper.getInstance().getRestrictionsUpdatePersonnel())}); //#30284
 						}
 						/*#28458 - End*/
 						SmApplicationUtil.setPersonnelSoftcertRenewalStatus(
