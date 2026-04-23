@@ -200,9 +200,11 @@
 					</tr>
 				</table>
 				<div class="ppRightBtn">
+					<ui:remove>#28188 - Start (Add parameter) </ui:remove>
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						process="@this, bsvdetailsdlg" update="@(.briefingList,.amendButton)" 
-						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList}" />
+						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList(qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.qtBsvDtlId)}" />
+					<ui:remove>#28188 - End </ui:remove>	
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.cancelBriefingList}"
 						partialSubmit="true" />
