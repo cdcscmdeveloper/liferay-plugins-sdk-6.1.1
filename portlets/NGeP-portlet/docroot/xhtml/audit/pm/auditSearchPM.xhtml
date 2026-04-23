@@ -108,7 +108,8 @@
 							value="#{searchPMAuditBackingBean.getDropdownRoleList()}"
 							var="roleItem" itemLabel="#{roleItem.roleName}"
 							itemValue="#{roleItem.roleCode}" />
-						<p:ajax event="change" update="searchActionBylist" process="auditPMSearchPanel"/>
+						<p:ajax event="change" update="searchActionBylist,auditPMSearchPanel" process="auditPMSearchPanel"
+						listener="#{searchPMAuditBackingBean.resetActionType()}" />
 					</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
 				<td>&#160;</td>
 				<td>&#160;</td>

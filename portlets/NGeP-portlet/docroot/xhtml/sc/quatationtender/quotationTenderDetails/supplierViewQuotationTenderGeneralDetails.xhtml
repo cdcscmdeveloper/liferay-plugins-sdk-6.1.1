@@ -6,6 +6,38 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- #25726/25725 - Check and display Italic value - Start -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
+	
+<h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{createQtBB.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+</h:outputScript>
+
+<!-- #25726/25725 - Check and display Italic value - End-->
 
 	<ui:param name="scQt" value="#{createQtBB.managedBean.qt}" />
 	<ui:param name="qtStatusAfterChecklistScoring"
@@ -623,11 +655,14 @@
 				<c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FULFILMENT_TYPE) and !isReadOnly or isGenInfo}">
+							<!-- #25726/25725 - Check and display Italic value -->
 							<p:selectOneMenu required="#{empty param['skipvalidation']}" id="fulfilId"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
@@ -637,16 +672,20 @@
 						</c:when>
 						<c:otherwise>
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
+							<!-- #25726/25725 - Check and display Italic value -->
 							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
-								style="width:195px;" disabled="true" />
+								style="width:195px;" disabled="true" 
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/>
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
 							<p:selectOneMenu required="#{empty param['skipvalidation']}" 
 								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}}"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
@@ -656,8 +695,14 @@
 						</c:otherwise>
 					</c:choose>
 					</td>
+					<c:if test="#{!scQt.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
+						<!-- #25726 start -->
+						<td style="margin-top: -3px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+						</td>
+					</c:if>
 					</tr></table></td>
-					
+					<!-- #25726 end -->
 										
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel

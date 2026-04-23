@@ -93,15 +93,26 @@
 					value="#{lbl['lbl.sc.prepare.proposal.instruction1']}" />
 				<h:outputText
 					rendered="#{(financeList.scQtCheckList.pmDocument.docDefinitionKey eq 'AL') and (financeList.scQtCheckList.action.parameterCode eq 'I' or financeList.scQtCheckList.definationType.parameterCode eq 'WF')}"
-					value="#{lbl['lbl.sc.prepare.proposal.instruction2']}" />	
+					value="#{lbl['lbl.sc.prepare.proposal.instruction2']}" />
+
+				<ui:remove>#29661 -start-</ui:remove>
 				<h:outputText
-					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}"
+					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample or (financeList.scQtCheckList.definationType.parameterCode eq  ParameterConst.documentDefinitionTypeSystemDefined and SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE ne financeList.scQtCheckList.pmDocument.docDefinitionKey and  SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE ne financeList.scQtCheckList.pmDocument.docDefinitionKey)}"
 					value="#{lbl['lbl.sc.view.supplier.info.instruction']}" />
+				<ui:remove>#29661 -end-</ui:remove>
+
 				<h:outputText rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'NA'
 				and !fn:contains(financeList.scQtCheckList.title,'Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank')
 				and !fn:contains(financeList.scQtCheckList.title,'Kunci Kira-Kira Tahunan')
 				and !fn:contains(financeList.scQtCheckList.title,'Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar')}" 
-				value="#{lbl['lbl.sc.attachment.upload.instruction']}" />	
+				value="#{lbl['lbl.sc.attachment.upload.instruction']}" />
+
+				<ui:remove>#29661 -start-</ui:remove>
+				<h:outputText
+					rendered="#{SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE eq financeList.scQtCheckList.pmDocument.docDefinitionKey or SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE eq financeList.scQtCheckList.pmDocument.docDefinitionKey}"
+					value="#{lbl['lbl.sc.view.supplier.proposal.new.comp.exp.gov.non.instruction']}" />
+				<ui:remove>#29661 -end-</ui:remove>
+
 			</p:column>
 
 			<p:column style="white-space: normal; text-align: center;">
@@ -111,12 +122,16 @@
 						action="#{supplierProposalDetailBackingBean.prepareFinancialAction(financeList)}"
 						value="#{supplierProposalDetailBackingBean.managedBean.readOnly ? lbl['lbl.btn.view']:lbl['lbl.btn.prepare']}" style="width:101px;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				</ui:fragment>
+				
+				<ui:remove>#29661 -start-</ui:remove>
 				<ui:fragment
-					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}">
+					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample or financeList.scQtCheckList.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareFinancialAction(financeList)}"
 						value="#{lbl['lbl.txt.view']}" style="width:101px;" />
 				</ui:fragment>
+				<ui:remove>#29661 -end-</ui:remove>
+				
 				<ui:fragment
 					rendered="#{((financeList.scQtCheckList.definationType.parameterCode eq 'UP'  and financeList.scQtCheckList.action.parameterCode eq 'O') or (financeList.scQtCheckList.definationType.parameterCode eq 'NA'))}">
 					<h:commandLink

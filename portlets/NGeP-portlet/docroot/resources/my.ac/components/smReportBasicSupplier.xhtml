@@ -20,7 +20,9 @@
 				value="#{cc.attrs.bBean.managedBean.selectedBasicAccount.companyName}"
 				saveObject="#{cc.attrs.saveObj}" 
 				conditionField="#{cc.attrs.bBean.constructConditionFieldsBasic()}"
-				tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" />
+				tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" 
+				displayResultWhenFirstLoad = "false" 
+				displayResultWhenReset = "false"/> <!-- 39214 -->
 			<ac:lovPopup />
 			<!-- #30824 & #29712, #32564 - end -->
 	</cc:implementation>

@@ -31,17 +31,21 @@ import my.ep.type.pm.RoleCode;
  *  static final members.
  *  </p>
  *  <p>
- *  Example usage:
- *      if (hasAnyRoleUser(ContractHashSetConst.PBQC_ROLES)) {
+ *  Example usage: 
+ *  <pre>{@code if (hasAnyRoleUser(ContractHashSetConst.PBQC_ROLES)) {
  *          // perform PBQC-related logic
  *      }
+ *  }</pre>
  *  </p>
+ *  <p>
  *  Key Design Principles:
- *  - Performance: Avoids redundant Set instantiation at runtime.
- *  - Immutability: All collections are wrapped with Collections.unmodifiableSet().
- *  - Reusability: Exposed as public/protected static final constants for 
- *                 cross-class accessibility.
- *  - Readability: Centralized location for managing role-related sets.
+ *  <ul>
+ *  <li> Performance: Avoids redundant Set instantiation at runtime.</li>
+ *  <li> Immutability: All collections are wrapped with Collections.unmodifiableSet().</li>
+ *  <li> Reusability: Exposed as public/protected static final constants for 
+ *                 cross-class accessibility.</li>
+ *  <li> Readability: Centralized location for managing role-related sets.</li>
+ *  </ul>
  * </p>
  * =============================================================================
  * @author hafizuddin
@@ -125,10 +129,38 @@ public final class ContractHashSetConst {
 	)));
 	
 	public static final Set<String> COMMITTEE_TYPE_QUOTATION = 
-			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
 			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A,
 			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B,
 			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
+    )));
+	
+	public static final Set<String> COMMITTEE_TYPE_QUOTATION_A_C = 
+		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A,
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
+    )));
+	
+	public static final Set<String> COMMITTEE_TYPE_PROCUREMENT = 
+		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+			ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD,
+			ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A,
+			ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B,
+			ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH,
+			ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
+    )));
+	
+	public static final Set<String> COMMITTEE_TYPE_PROCUREMENT_BOARD_AB = 
+		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+			ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD,
+			ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A,
+			ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B
+    )));
+	
+	public static final Set<String> COMMITTEE_TYPE_PROCUREMENT_SBH_SWK = 
+		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+			ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH,
+			ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
     )));
 	
 	public static final Set<String> QUOTATION_MEMBER_ROLES = 
@@ -149,6 +181,12 @@ public final class ContractHashSetConst {
 		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
 	            RoleCode.QCA_CHAIRPERSON.value(),
 	            RoleCode.QCB_CHAIRPERSON.value(),
+	            RoleCode.QQC_CHAIRPERSON.value()
+	)));
+	
+	public static final Set<String> QUOTATION_CHAIRPERSON_ROLES_A_C = 
+		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+	            RoleCode.QCA_CHAIRPERSON.value(),
 	            RoleCode.QQC_CHAIRPERSON.value()
 	)));
 	//#35238 end

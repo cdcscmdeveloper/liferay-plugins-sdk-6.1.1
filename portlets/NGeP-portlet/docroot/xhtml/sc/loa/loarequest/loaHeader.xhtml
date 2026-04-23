@@ -6,7 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<ui:param name="canShowSupplierProposal" value="#{lOADetailBackingBean.canShowSupplierProposal() and lOADetailBackingBean.canShowSupplierProposalByLOAStatus()}" />
-
+	
+	<ui:remove>#29661 -start-</ui:remove>
+	<ui:param name="isProposalRender" value="#{lOADetailBackingBean.isCheckProposalPortlet() or lOADetailBackingBean.isCheckEvaluationPortlet()}" />
+  <ui:remove>#29661 -end-</ui:remove>
+  
 	<div align="left" class="header-info header-spacing"
 		style="width: 100%">
 		
@@ -50,10 +54,15 @@
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
-				<p:commandLink rendered="#{isDocTypeQuotation or isDocTypeDirectNego}" process="@this" partialSubmit="true"
+				<ui:remove>#29661 -start-</ui:remove>
+				<p:commandLink rendered="#{!isProposalRender and (isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
 						action="#{qTDetailBB.editQuationTenderDetails(lOADetailBackingBean.managedBean.scLoa.scQt, false, true, view.viewId)}">
 				       #{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}
 					</p:commandLink>
+					<ui:fragment rendered="#{isProposalRender and (isDocTypeQuotation or isDocTypeDirectNego)}">
+					#{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}
+					</ui:fragment>
+					<ui:remove>#29661 -start-</ui:remove>
 			    <!-- start - 25790 -->
 				<p:commandLink rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !(isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
 						action="#{lOADetailBackingBean.navigateRequestNotePage(lOADetailBackingBean.managedBean.scLoa.scQuote.requestNotes.get(0).requestNoteId)}">
@@ -75,10 +84,15 @@
 				<td class="header-info-text">
 				<c:choose>
 				<c:when test="#{((isDocTypeQuotation or isDocTypeDirectNego) and canShowSupplierProposal) or not empty lOADetailBackingBean.managedBean.scQtProposal}" >
-				<p:commandLink process="@this" partialSubmit="true"
+				<ui:remove>#29661 -start-</ui:remove>
+				<p:commandLink process="@this" partialSubmit="true" rendered="#{!isProposalRender}"
 						action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, lOADetailBackingBean.managedBean.scQtProposal.qtProposalId)}">
 				       #{lOADetailBackingBean.managedBean.scQtProposal.proposalNo}
 					</p:commandLink>
+					<ui:fragment rendered="#{isProposalRender}">
+					 #{lOADetailBackingBean.managedBean.scQtProposal.proposalNo}
+					</ui:fragment>
+					<ui:remove>#29661 -end-</ui:remove>
 				</c:when>
 				<c:when test="#{!(isDocTypeQuotation or isDocTypeDirectNego)}">
 				<h:outputText

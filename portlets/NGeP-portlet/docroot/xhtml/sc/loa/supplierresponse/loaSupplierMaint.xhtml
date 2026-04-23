@@ -48,8 +48,8 @@
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(3)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!(isFulfilmentTypeScheduled)}" actionListener="#{lOADetailBackingBean.tabChangeAction(4)}">	
+					<ui:remove>new #25726</ui:remove>
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!isFulfilmentTypeScheduled}" actionListener="#{lOADetailBackingBean.tabChangeAction(4)}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
 					
