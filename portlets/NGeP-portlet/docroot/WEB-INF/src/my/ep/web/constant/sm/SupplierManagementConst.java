@@ -796,12 +796,6 @@ public class SupplierManagementConst {
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
 //	#37925 END
-	//33783 - start
-	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
-	public String getCOMPANY_TYPE_CLBG() {
-		return COMPANY_TYPE_CLBG;
-	}
-	//33783 - end
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
