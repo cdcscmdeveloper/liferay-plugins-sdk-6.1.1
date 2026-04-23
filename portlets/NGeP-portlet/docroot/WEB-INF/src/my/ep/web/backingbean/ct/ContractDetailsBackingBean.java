@@ -1520,7 +1520,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
 
-		//#30737 - Start
+		//#30737 - Start 
+		//Amendment without supplemental
+		//Notification setting
+		//Fulfilment creation
+		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			log.info("xoxoxoxoxooxoxox SUBMITTT!!!!!! ERROR_100068");
 //			getManagedBean().setSelectedTabIndex(0);

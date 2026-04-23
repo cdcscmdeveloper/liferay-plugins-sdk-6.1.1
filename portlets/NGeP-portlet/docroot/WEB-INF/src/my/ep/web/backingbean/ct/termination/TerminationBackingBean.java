@@ -592,6 +592,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		}
 		
 		//#30737 - Start
+		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			log.info("xoxoxoxoxooxoxox SUBMITTT TERMINATION!!!!!! ERROR_100068");
 			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");

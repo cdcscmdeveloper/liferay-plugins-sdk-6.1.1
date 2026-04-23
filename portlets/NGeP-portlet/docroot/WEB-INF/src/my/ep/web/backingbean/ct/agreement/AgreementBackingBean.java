@@ -971,9 +971,17 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}
 		
 		//#30737 - Start
+		//Agreement
+		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			log.info("xoxoxoxoxooxoxox SUBMITTT AGGREEMENT!!!!!! ERROR_100068");
+//			getManagedBean().setSelectedTabIndex(0);
 //			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+		}
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			log.info("xoxoxoxoxooxoxox REVISE!!!!!! ERROR_100069");
+//			getManagedBean().setSelectedTabIndex(0);
+//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
 		}
 		//#30737 - End
 		

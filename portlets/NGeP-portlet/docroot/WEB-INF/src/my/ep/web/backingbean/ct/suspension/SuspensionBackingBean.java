@@ -715,6 +715,21 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
 			throw new EpException(MessageConst.ERROR_750010); 
 		}
+		
+		//#30737 - Start (suspend)
+		//suspend contract
+		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
+		log.info("xoxoxoxoxoxo outcome: "+outcome);
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			log.info("xoxoxoxoxooxoxox SUBMIT SUSPEND!!!!!! ERROR_100068");
+//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+		}
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			log.info("xoxoxoxoxooxoxox REVISE SUSPEND!!!!!! ERROR_100069");
+			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		}
+		//#30737 - End
+		
 	}
 
 	/**

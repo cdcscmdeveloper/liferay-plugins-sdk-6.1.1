@@ -3203,7 +3203,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100072, "MOF/DOC/2001", "ALI", "ABU");
 			}else{
 				log.info("----- ERROR_100068");
-//				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+//				ctBackingBean.checkInactiveUserOnAction(getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
 			}
 			
 		}
@@ -8031,7 +8031,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// #26688 end
 		
 		//#30737 - Start
-		log.info("xoxoxoxoxo action : "+action);
+		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			log.info("xoxoxoxoxooxoxox REVISE AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
 			//ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
