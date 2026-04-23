@@ -25051,13 +25051,20 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 			
 			if (null != technical.getOverallTechnical()
-					&& technical.getOverallTechnical().intValue() >= 100 
-					|| null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
-						this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() > 100) {
+					&& technical.getOverallTechnical().intValue() >= 100) {
 				throw new EpException(MessageConst.ERROR_760825,
 						new String[] { String.valueOf(100) });
 			}
-			
+			if (null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
+						this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() > 100) {
+				throw new EpException(MessageConst.ERROR_760827,
+						new String[] { String.valueOf(100) });
+			}
+			if (null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
+					this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() < 0) {
+				throw new EpException(MessageConst.ERROR_760828,
+					new String[] { String.valueOf(0) });
+			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
 			technical.setOverallFin(new BigDecimal(financialScore));

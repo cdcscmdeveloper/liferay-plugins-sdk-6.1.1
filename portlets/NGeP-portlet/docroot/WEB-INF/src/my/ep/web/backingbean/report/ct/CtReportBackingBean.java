@@ -228,8 +228,9 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				
 				ContractItemMonitoringCCRptBackingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBackingBean();
 				
-				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
-						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+						&& !getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))//Fix - #40184, #29416
+						|| (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()) && !getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))//Fix - #40184, #29416
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 					
 					if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
@@ -286,8 +287,9 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				
 				ContractItemUsageMonitoringDtlsBackingBean ccContractItemUsageMonitoringDtlsReportBB = new ContractItemUsageMonitoringDtlsBackingBean();
 
-				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
-						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+						&& !getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))//Fix - #40184, #29416
+						|| (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()) && !getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) //Fix - #40184, #29416
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 					
 					defaultValueRoles(pmOrgProfile);
