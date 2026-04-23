@@ -51,6 +51,11 @@
 		value="#{qTDetailBB.managedBean.demoSpecialCase ? qTDetailBB.managedBean.demoSpecialCase : specMaintenanceBB.managedBean.demoSpecialCase}" />			
 	<ac:lovPopup /><!-- END #28784 -->
 	
+	<!-- #40237/25726 - Start -->
+	<ui:param name="isGenInfo"
+		value="#{specificationBackingBean.managedBean.genInfo}" />
+	<!-- #40237/25726 - End -->
+	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
@@ -832,6 +837,7 @@
 							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose></td>
+					
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"
