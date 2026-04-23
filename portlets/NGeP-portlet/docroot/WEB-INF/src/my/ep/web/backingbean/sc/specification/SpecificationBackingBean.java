@@ -18899,6 +18899,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				isDisable = true;
 			}
 		}
+		// #40138 Start Vinod
+		if(checkList.isEnableToDelete()){
+			isDisable = false;
+		}
+		// #40138 End Vinod
 		return isDisable;
 	}
 
@@ -25138,16 +25143,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			currentQtChecklist.addAll(this.getManagedBean().getScQtCheckSt2financeProposalList());
 		}
 
-		List<ScQtCheckList> newMandatoryCheckLists = specSo.getNewMandatoryQtCheckLists(docType, scQt
+		List<ScQtCheckList> newCheckLists = specSo.getNewMandatoryQtCheckLists(docType, scQt
 				.getPmProcurementCategory().getParameterCode(), scQt, specType, currentQtChecklist);
 
-		if (CollectionUtils.isNotEmpty(newMandatoryCheckLists)) {
-			currentQtChecklist.addAll(newMandatoryCheckLists);
-			checklistSorting(currentQtChecklist);
+		if (CollectionUtils.isNotEmpty(newCheckLists)) {
+			checklistSorting(newCheckLists);
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
-				this.getManagedBean().setScQtCheckSt2techProposal(currentQtChecklist);
+				this.getManagedBean().setScQtCheckSt2techProposal(newCheckLists);
 			} else {
-				this.getManagedBean().setScQtCheckSt2financeProposalList(currentQtChecklist);
+				this.getManagedBean().setScQtCheckSt2financeProposalList(newCheckLists);
 			}
 		}
 	}
