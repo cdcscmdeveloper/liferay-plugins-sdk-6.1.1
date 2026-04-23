@@ -111,16 +111,16 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(dtlObjGLP);
 			auditPMReqDTO.setObjList(objList);
 
-			dtlObjCertified.setNewValue(managedBeans.getCertBody().isCertifiedBody() ? AuditConst.PM_AUD_YES
-					: AuditConst.PM_AUD_NO);
-			dtlObjCertified.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-			objList.add(dtlObjCertified);
-			auditPMReqDTO.setObjList(objList);
-
 			dtlObjProfessional.setNewValue(managedBeans.getCertBody().isProfessionalBody() ? AuditConst.PM_AUD_YES
 					: AuditConst.PM_AUD_NO);
 			dtlObjProfessional.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(dtlObjProfessional);
+			auditPMReqDTO.setObjList(objList);
+			
+			dtlObjCertified.setNewValue(managedBeans.getCertBody().isCertifiedBody() ? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO);
+			dtlObjCertified.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+			objList.add(dtlObjCertified);
 			auditPMReqDTO.setObjList(objList);
 
 			dtlStatus.setFieldLabelCode(AuditConst.PM_AUD_CERT_BODY_STATUS_FIELDLABELID);
@@ -166,17 +166,7 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 	}
 
 	private void updateOthers(ProfCertifiedBodyManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO) {
-		if (managedBeans.getCertBody().isCertifiedBody() != managedBeans.getOldAuditPmCertBody().isCertifiedBody()) {
-
-			dtlObjCertified.setOldValue(managedBeans.getOldAuditPmCertBody().isCertifiedBody() ? AuditConst.PM_AUD_YES
-					: AuditConst.PM_AUD_NO);
-			dtlObjCertified.setNewValue(managedBeans.getCertBody().isCertifiedBody() ? AuditConst.PM_AUD_YES
-					: AuditConst.PM_AUD_NO);
-			dtlObjCertified.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			objList.add(dtlObjCertified);
-			auditPMReqDTO.setObjList(objList);
-
-		}
+		
 		if (managedBeans.getCertBody().isProfessionalBody() != managedBeans.getOldAuditPmCertBody()
 				.isProfessionalBody()) {
 
@@ -187,6 +177,18 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 					: AuditConst.PM_AUD_NO);
 			dtlObjProfessional.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(dtlObjProfessional);
+			auditPMReqDTO.setObjList(objList);
+
+		}
+		
+		if (managedBeans.getCertBody().isCertifiedBody() != managedBeans.getOldAuditPmCertBody().isCertifiedBody()) {
+
+			dtlObjCertified.setOldValue(managedBeans.getOldAuditPmCertBody().isCertifiedBody() ? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO);
+			dtlObjCertified.setNewValue(managedBeans.getCertBody().isCertifiedBody() ? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO);
+			dtlObjCertified.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			objList.add(dtlObjCertified);
 			auditPMReqDTO.setObjList(objList);
 
 		}
