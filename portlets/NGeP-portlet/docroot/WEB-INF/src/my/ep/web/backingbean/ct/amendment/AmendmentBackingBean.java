@@ -3403,7 +3403,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Enhancement 15851 - shaqimi end
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);					 
 				if (((ctContractVer.getCtAmendment().getAmendmentLoa().isBondReq()
-						|| ctContractVer.getCtContract().getLoa().isBondReq()) //24333
+						|| ctContractVer.getCtContractAmount().isBondReq()) //24333,//#40194
 						&& !ctContractVer.getCtContractAmount().isBondExempted()
 						&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
@@ -3418,7 +3418,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			}			
 			//24333 - Start
-			if (!getManagedBean().isPrepareLOA() && ctContractVer.getCtContract().getLoa().isBondReq()
+			if (!getManagedBean().isPrepareLOA() && ctContractVer.getCtContractAmount().isBondReq() //#40194
 					&& !ctContractVer.getCtContractAmount().isBondExempted()
 					&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
@@ -3454,7 +3454,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
-			if ((ctContractVer.getCtContract().getLoa().isBondReq() && !ctContractVer.getCtContractAmount().isBondExempted())
+			if ((ctContractVer.getCtContractAmount().isBondReq() && !ctContractVer.getCtContractAmount().isBondExempted())
 					&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
 							|| ctBackingBean.isPk7FromDp())) { //#24333
