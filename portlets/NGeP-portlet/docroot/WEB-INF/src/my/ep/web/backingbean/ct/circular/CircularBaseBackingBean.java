@@ -103,13 +103,8 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	public PmOrgProfile getOwnerOrgProfile() {
 		return ownerOrgProfile;
 	}
-
-
+	
 	public void setOwnerOrgProfile(PmOrgProfile ownerOrgProfile) {
 		this.ownerOrgProfile = ownerOrgProfile;
 	}
-	
-
-	//End Fix - #34367
-
 }
