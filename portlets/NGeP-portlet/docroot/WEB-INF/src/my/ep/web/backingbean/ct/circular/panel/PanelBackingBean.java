@@ -346,6 +346,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		renewSesionObject();
 		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		getPTJOwner();//Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
 	}
 
@@ -524,12 +525,29 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		try {
 			getManagedBean().setSelectedCircularVerList(null);
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-
+			getPTJOwner(); //Fix - #34367
+			List<CtCircularVer> updatedCircularList = new ArrayList<CtCircularVer>();//Fix - #34367
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularType(getManagedBean().getCircularDocType());
 			CircularResDTO resDTO = circularSO.retrieveActiveCircularVerList(reqDTO);
+			String userConstRuletpe = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());//Fix - #34367
 			if(resDTO.isSuccessful()) {
-				getManagedBean().setCircularVerList(resDTO.getCircularVerList());
+				// Start Fix - #34367
+				if (userConstRuletpe != null
+						&& userConstRuletpe.equalsIgnoreCase(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR)) {
+					for (CtCircularVer circularver : resDTO.getCircularVerList()) {
+						if (circularver.getCtCircular().getOwnerOrgProfile() != null
+								&& circularver.getCtCircular().getOwnerOrgProfile().getOrgProfileId()
+										.equals(getOwnerOrgProfile().getOrgProfileId())
+								&& circularver.getDocType().equalsIgnoreCase(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR)) {
+							updatedCircularList.add(circularver);
+						}
+					}
+					getManagedBean().setCircularVerList(updatedCircularList);
+				} else {
+					getManagedBean().setCircularVerList(resDTO.getCircularVerList());
+				}
+				// End Fix - #34367
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
