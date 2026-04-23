@@ -8624,18 +8624,19 @@ public class SpecificationBackingBean extends
 			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 			if (null != passingScore
 					&& technical.getOverallTechnical().intValue() < passingScore
-							.intValue() && !this.getManagedBean().isReadOnly()
-					&& isValidationRequired) {
+							.intValue()&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
 				throw new EpException(MessageConst.ERROR_760826,
-						new String[] { String.valueOf(passingScore) });
+						new String[] { String.valueOf(passingScore.intValue()) });
 			}
+			
 			if (null != technical.getOverallTechnical()
-					&& technical.getOverallTechnical().intValue() > 100 
+					&& technical.getOverallTechnical().intValue() >= 100 
 					|| null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
 						this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() > 100) {
 				throw new EpException(MessageConst.ERROR_760825,
 						new String[] { String.valueOf(100) });
 			}
+			
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
 			technical.setOverallFin(new BigDecimal(financialScore));
@@ -10388,7 +10389,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setTechnicalScoreSetting(
 						technicalScoreSetting);
 				throw new EpException(MessageConst.ERROR_760364,
-						new String[] { String.valueOf(passingScore) });
+						new String[] { String.valueOf(passingScore.intValue()) }); //#38151
 			}
 
 		}
@@ -16207,7 +16208,7 @@ public class SpecificationBackingBean extends
 						&& (technicalScoreSetting.getPassingScore().intValue() < passingScore
 								.intValue())) {
 					throw new EpException(MessageConst.ERROR_760364,
-							new String[] { String.valueOf(passingScore) });
+							new String[] { String.valueOf(passingScore.intValue()) }); //#38151
 				}
 			}
 			// #21695 START FARID
