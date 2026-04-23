@@ -1,13 +1,10 @@
 package my.ep.web.backingbean.ct.circular;
 
-import java.util.List;
 
 import org.apache.log4j.Logger;
-
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
@@ -19,6 +16,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+/**
+ * @author bob
+ * 
+ */
 public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBackingBean<T>{
 
 	private static final long serialVersionUID = 1L;
