@@ -38,8 +38,21 @@
 			</td>
 			 -->
 			<td class="tdContent">
+				<!-- #40001 - START -->
+				<ui:remove>
 				<ac:smReportBasicSupplier bBean="#{profileOfRegCompanyRptBB}" required="true"
 				saveObj="profileOfRegCompanyRptBB.managedBean.selectedBasicAccount" />
+				</ui:remove>
+				<ac:lov id="basicMofSupplier" readonly="true" style="width:289px;"
+					lovId="SM_RPT_BASIC_ACCOUNT" size="40"
+					headerText="#{lbl['lbl.sm.supplov']}" 
+					value="#{profileOfRegCompanyRptBB.managedBean.selectedBasicAccount.companyName}"
+					saveObject="profileOfRegCompanyRptBB.managedBean.selectedBasicAccount" 
+					conditionField="#{profileOfRegCompanyRptBB.constructConditionFieldsBasic()}"
+					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" 
+					displayResultWhenFirstLoad = "false" 
+					displayResultWhenReset = "false"/>
+				<!-- #40001 - END -->
 			</td>
 		</p:outputPanel>
 		<!-- #30824 & #29712, #32564 - end -->
@@ -66,10 +79,14 @@
 				<!-- #30824 & #29712, #32564 - start -->
 				<ac:lov id="g2g" lovId="SM_RPT_G2G_ACCOUNT"
 					headerText="#{lbl['lbl.rpt.organization.list.lov']}"
+					required="true"
+					readonly="true"
 					value="#{profileOfRegCompanyRptBB.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 					saveObject="profileOfRegCompanyRptBB.managedBean.selectedOrgProfile"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
-					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
+					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" 
+					displayResultWhenFirstLoad = "false" 
+					displayResultWhenReset = "false" > <!-- 39214 -->
 				</ac:lov>
 				<!-- #30824 & #29712, #32564 - end -->
 			</td>
@@ -89,11 +106,15 @@
 				<!-- #30824 & #29712, #32564 - start -->
 				<ac:lov id="supplier" lovId="SM_RPT_MOF_ACCOUNT"
 					headerText="#{lbl['lbl.sm.supplov']}"
-					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" 
-					saveObject="profileOfRegCompanyRptBB.managedBean.smMofAccount"
+					required="true" 
+					readonly="true"
+					label="#{lbl['lbl.rpt.mofRegNo']}"
+					value="#{profileOfRegCompanyRptBB.managedBean.selectedMofAccount.mofNo}" 
+					saveObject="profileOfRegCompanyRptBB.managedBean.selectedMofAccount"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
-					postUpdateListener="profileOfRegCompanyRptBB.populateMofNo"
-					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
+					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" 
+					displayResultWhenFirstLoad = "false" 
+					displayResultWhenReset = "false" > <!-- 39214 -->
 				</ac:lov>
 				<!-- #30824 & #29712, #32564 - end -->
 			</td>

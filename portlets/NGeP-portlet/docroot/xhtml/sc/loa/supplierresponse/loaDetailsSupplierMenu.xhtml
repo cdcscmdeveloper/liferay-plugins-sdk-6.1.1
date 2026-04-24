@@ -40,9 +40,19 @@
 			<tr>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
-				<td><p:inputText size="40"
+				<td width="32%"><p:inputText size="40"
 						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 						disabled="true" /></td>
+				<ui:param name="loaDocType" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType}"/>
+				<ui:fragment rendered="#{loaDocType eq ParameterConst.getDoctypeQuotation() or loaDocType eq ParameterConst.getDoctypeDirectNego()}">
+					<td width="18%"><p:outputLabel
+							value="#{lbl['lbl.sc.discipline.action']}" /></td>
+					<td width="32%">
+						<ac:disciplinaryActionYesNo
+							supplier="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
+							showTooltip="true" />
+					</td>
+				</ui:fragment>
 			</tr>
 
 			<tr>
@@ -100,6 +110,47 @@
 						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
 				</td>
 			</tr>
+			<!-- 20230111@Haziq - #12487&29693 - start  -->
+			<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.resp.period']}" />
+			</td>
+			<td><table>
+					<tr>
+						<td>
+							<p:inputText id="ContractAmtId2"
+								value="#{lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod}"
+								style="text-align:right;" partialSubmit="true" size="2"
+								disabled="true" >
+							</p:inputText> 	
+				
+						 </td>
+						 <td>
+				               <p:outputLabel value="#{lbl['lbl.sc.resp.days']}" />
+			             </td>
+						 <td style="margin-top: -5px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.resp.period.tooltip']}" />
+						 </td>
+			              <td>
+			              
+				           <p:outputPanel
+									id="ContractAmtId3">
+								<p:inputText
+									value="#{lOADetailBackingBean.retrieveDueDate()}"
+									style="text-align:right;" disabled="true" partialSubmit="true" >
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+								</p:inputText>
+		  
+				           </p:outputPanel>   
+			             </td>
+			             <td style="margin-top: -5px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.resp.due.date.tooltip']}" />
+						</td>
+			             
+					</tr>
+				</table></td>
+			</tr>
+				<!-- 20230111@Haziq - #12487&29693 - end  -->
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.supplier.sign.date']}" />

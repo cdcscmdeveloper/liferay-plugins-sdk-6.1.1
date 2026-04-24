@@ -10,8 +10,8 @@
 	</cc:interface>
 
 	<cc:implementation>
-	
-		<p:confirmDialog id="saveDraftConfirmDialog" closable="true"
+		<!-- #38890 -->
+		<p:confirmDialog id="saveDraftConfirmDialog_#{cc.attrs.id}" closable="true"
 			message="#{lbl['lbl.sm.savefirsttime.confirm.msg']}"
 			header="#{lbl['lbl.sm.savefirsttime.confirm.header']}" severity="alert"
 			widgetVar="saveDraftConfirmDialog">

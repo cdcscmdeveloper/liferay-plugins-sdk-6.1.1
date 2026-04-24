@@ -29,7 +29,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.constant.pm.PmConstants;
 import my.ep.web.managedbean.pm.notify.NotifyManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -497,60 +496,5 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		return "";
 	}
 	// #14291 - End
-	
-	// #29729 & #28777 - Start
-	/**
-	 * Navigate to page Notifications.
-	 */
-	public void prerenderPmNotify() {
-		try {
-			
-			FacesContext fc = FacesContext.getCurrentInstance();
-		
-			checkNotifyRemoveSupplierBranchDeleted();
-
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PmConstants.PM_NOTIFICATION_PAGE);
-			
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-	
-	/**
-	 * To check whether supplier branch has been deleted during notification
-	 * @param reqDTO (Long getUserId(Manditory))     
-	 * @return resDTO (Boolean isSuccess)
-	 */
-	public void checkNotifyRemoveSupplierBranchDeleted() {
-		INotifySO ntfSO;
-		try {
-			FacesScopes facesScopes = new FacesScopes();
-			PmUser user = facesScopes.getUserSessionBean();
-			
-			if (user == null) {
-				logger.error("User is empty.");
-			} else {
-				
-				ntfSO = (INotifySO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,INotifySO.class);
-			
-				NotifyReqDTO reqDTO = new NotifyReqDTO();
-				reqDTO.setUserId(user.getUserId());
-				NotifyResDTO resDTO = ntfSO.isCheckNotifyCurrentSupplierBranchDeleted(reqDTO);
-				
-				if (resDTO.isSuccessful()) {
-					logger.error("Sucess.");
-				}else{
-					logger.error("Fail.");
-				}
-		
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			ntfSO = null;
-		}
-	}
-	// #29729 & #28777 - End
 	
 }

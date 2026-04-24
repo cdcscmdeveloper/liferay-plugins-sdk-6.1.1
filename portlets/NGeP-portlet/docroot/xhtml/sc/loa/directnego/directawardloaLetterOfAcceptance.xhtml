@@ -36,29 +36,51 @@
 				</td>
 			</tr>
 			
+			<!-- 20230111@Haziq - #12487&29693 - start  -->
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" />
+						value="*" styleClass="mandatory" rendered="#{isEditableStatus}"/>
 				</td>
-				<td>
-				<!-- #30453 start -->
-				          <p:outputPanel id="opUserLov">
-							<ac:lov id="lovUser" lovId="PM_USER_ID" size="80"
-								disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-								update="@form" readonly="true"
-								headerText="#{lbl['lbl.pm.ta.user.lov']}"
-								selectionMode="single"
-								value="#{directLOABackingBean.managedBean.scLoa.contractSigner.salutationCode.salutationName.concat(directLOABackingBean.managedBean.space).concat(directLOABackingBean.managedBean.scLoa.contractSigner.userName)}"
-								saveObject="directLOABackingBean.managedBean.scLoa.contractSigner"
-								conditionField="#{directLOABackingBean.constructUserConditionFields()}"
-								postUpdateListener="directLOABackingBean.signerUserListener(directLOABackingBean.managedBean.scLoa.contractSigner)" />
-							</p:outputPanel>
-				<!-- #30453 end -->
+				<td colspan="3">
+				
+				<p:inputText id="contractSigner" disabled="true" size="106" 
+						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.salutationCode.salutationName.concat(' ').concat(directLOABackingBean.managedBean.scLoa.contractSigner.userName)}"
+						rendered="#{!isEditableStatus}" />
+						
+					<c:if test="#{isEditableStatus}">
+
+						<p:outputPanel id="opPtjOrgCode" >
+							<p:inputText 
+								size="106"
+								id="itSelectedUserPtj" 
+								value="#{directLOABackingBean.managedBean.scLoa.contractSigner.salutationCode.salutationName.concat(' ').concat(directLOABackingBean.managedBean.scLoa.contractSigner.userName)}"
+								readonly="true"
+								/>
+							&#160;
+							<p:commandLink id="ptjSearchCL" partialSubmit="true"
+								disabled="#{directLOABackingBean.managedBean.selectedOrgType.parameterId==null}"
+								process="@this" update=":form:userPtjOrg:userPtjPopup"
+								action="#{userOrganisationSearchBackingBean.initPtjPopupDefaultMinistry(directLOABackingBean.managedBean.scQt.ministryOrgProfile.orgProfileId)}"
+								oncomplete="userPtjPopup.show();" >
+								<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+							</p:commandLink>
+						</p:outputPanel>
+
+						<h:panelGroup rendered="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
+							or directLOABackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
+							<ac:userPtjPopup 
+								id="userPtjOrg"
+								orgTypeParamCode="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode}"
+								okAction="directLOABackingBean.userPtjListener" update=":form:opPtjOrgCode,:form:itSelectedUserPtj,:form:loaSignerDesigId"
+								includeUser="true" 
+								includePegawaiPengawal="false" />
+						</h:panelGroup>
+					</c:if>
 				</td>
 				
 			</tr>
-			
+			<!-- 20230111@Haziq - #12487&29693 - end  -->
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" /> <p:outputLabel

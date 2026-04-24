@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.pm.cc;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,16 +18,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
-import org.apache.log4j.Logger;
-
-import org.primefaces.context.RequestContext;
-
-import com.sun.faces.facelets.el.ContextualCompositeMethodExpression;
-
-import org.apache.axis.encoding.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
@@ -46,6 +36,8 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "myGpkiBackingBean")
 @SessionScoped
@@ -162,6 +154,8 @@ public class MyGpkiBackingBean  implements Serializable {
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Deactivate process failed - "
 								+ output));
 			}
+			
+			httpclient.close();
 
 		} catch (Exception e) {
 			log.info("MyGPKI : Deactiavate process failed - Exception : "+e.toString());
@@ -205,6 +199,7 @@ public class MyGpkiBackingBean  implements Serializable {
 			EntityUtils.consume(entity);
 
 			response.close();
+			httpclient.close();
 
 			log.info("MyGPKI Registered User IC : " + ic);
 			log.info("MyGPKI QR Output : " + output);
@@ -225,10 +220,10 @@ public class MyGpkiBackingBean  implements Serializable {
 
 			FacesContext.getCurrentInstance().addMessage(
 					"mygpkiActivateNotify",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Activate process failed. Error : " + output));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Activate process failed. Error : " + output));			
 
 		} catch (Exception e) {
-			log.info("MyGPKI : Activate process failed - Exception : "+e.toString());
+			log.error("MyGPKI : Activate process failed - Exception : "+e.toString());
 			return null;
 		}
 
@@ -272,6 +267,7 @@ public class MyGpkiBackingBean  implements Serializable {
 			EntityUtils.consume(entity);
 
 			response.close();
+			httpclient.close();
 			
 			log.info("Verify OTP - User IC : " + ic);
 			log.info("Verify OTP - MyGPKI Output : " + output);
@@ -304,7 +300,7 @@ public class MyGpkiBackingBean  implements Serializable {
 			}
 
 		} catch (Exception e) {
-			log.info("MyGPKI : Verify OTP process failed - Exception : "+e.toString());
+			log.error("MyGPKI : Verify OTP process failed - Exception : "+e.toString());
 			FacesContext.getCurrentInstance().addMessage(
 					"mygpkiActivateNotify",
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Verify OTP process failed. Error : "

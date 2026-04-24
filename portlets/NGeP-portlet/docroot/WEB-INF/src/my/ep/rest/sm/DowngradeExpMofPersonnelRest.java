@@ -7,17 +7,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
-
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.log4j.Logger;
 
 @Path("/sm")
 public class DowngradeExpMofPersonnelRest {
@@ -29,9 +27,9 @@ public class DowngradeExpMofPersonnelRest {
 	public Response downgradeExpMofPersonnel() {
 		log.info("Before success calling downgradeExpMofPersonnel rest api....");
 		try {
+			//33628 START
 			downgradeMOFToBasic();
 			changeExpiredMofPersonnelToDeleted();
-			//33628 START
 			updateMOFExpiredMoreThanTwoYears();
 			updateForMOFExpiredMoreThanThreeYears();
 			//33628 END
@@ -40,6 +38,7 @@ public class DowngradeExpMofPersonnelRest {
 			return Response.status(406).entity(ex.getMessage()).build();
 		}
 	}
+	
 	//33628 START
 	private void downgradeMOFToBasic(){
 		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
@@ -47,21 +46,20 @@ public class DowngradeExpMofPersonnelRest {
 		List<SmMofAccount> mofAccountLs = resDTO.getMofAccountLs();
 
 		log.info("**********downgradeMOFToBasic - Start************");
-		if (mofAccountLs.size() > 0) {
+		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
-				if (mofAccount.getSmSupplier().getSmAppl() != null 
-						&&	mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_EXPIRED 
-						&&	mofAccount.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED
-						&&  !mofAccount.getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase("C")) {
+				if (mofAccount.getSmSupplier().getSmAppl() != null) {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_EXPIRED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
 					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
 					schedulerReqDTO.setMofAccount(mofAccount);
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_DOWNGRADE_BASIC);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
+					schedulerReqDTO.getSmSupplier().setSmAppl(mofAccount.getSmSupplier().getSmAppl());
 					schedulerReqDTO.getSmSupplier().setPrevSuppStatus(mofAccount.getSmSupplier().getRecordStatusFlg());
 
 					try {
@@ -81,20 +79,20 @@ public class DowngradeExpMofPersonnelRest {
 		SmSchedulerResDTO resDTO = reqSO.retrieveExpiredMofPendingDeletion();
 		List<SmMofAccount> mofAccountLs = resDTO.getMofAccountLs();
 		log.info("**********changeExpiredMofPersonnelToDeleted - Start************");
-		if (mofAccountLs.size() > 0) {
+		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
-				if(mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED 
-						&&	mofAccount.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED
-						&&  !mofAccount.getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase("C")){
+				if(mofAccount.getSmSupplier().getSmAppl() != null){
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
 					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
 					schedulerReqDTO.setMofAccount(mofAccount);
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_ONEYEAR);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
+					schedulerReqDTO.getSmSupplier().setSmAppl(mofAccount.getSmSupplier().getSmAppl());
 
 					try {
 						reqSO.updateExpiredMOFSupplierPersonnel(schedulerReqDTO);
@@ -104,11 +102,11 @@ public class DowngradeExpMofPersonnelRest {
 					}
 					
 					// #28800 START
-					/*try {
+					try {
 						reqSO.sendEmailExpiredMOFToSupplier(schedulerReqDTO);
 					} catch (Exception ex){
 						log.info("sendEmailExpiredMOFToSupplier ERROR :: " +ex.getMessage());
-					}*/
+					}
 					// #28800 END
 				}
 			}
@@ -121,14 +119,13 @@ public class DowngradeExpMofPersonnelRest {
 		SmSchedulerResDTO resDTO = reqSO.retrieveMOFExpiredMoreThanTwoYears();
 		List<SmMofAccount> mofAccountLs = resDTO.getMofAccountLs();
 		log.info("**********updateSupplierForMOFExpired - Start************");
-		if (mofAccountLs.size() > 0) {
+		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
-				if (mofAccount.getSmSupplier().getSmAppl() != null 
-						&&	mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED 
-						&&	mofAccount.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED) {
+				if (mofAccount.getSmSupplier().getSmAppl() != null) {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
 					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
@@ -153,14 +150,14 @@ public class DowngradeExpMofPersonnelRest {
 		SmSchedulerResDTO resDTO = reqSO.retrieveMOFExpiredMoreThanThreeYears();
 		List<SmMofAccount> mofAccountLs = resDTO.getMofAccountLs();
 		log.info("**********updateForMOFExpiredMoreThanThreeYears - Start************");
-		if (mofAccountLs.size() > 0) {
+		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
-				if (mofAccount.getSmSupplier().getSmAppl() != null 
-						&&	mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED 
-						&&	mofAccount.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				if (mofAccount.getSmSupplier().getSmAppl() != null) {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
+					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
 					schedulerReqDTO.setMofAccount(mofAccount);

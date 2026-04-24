@@ -146,7 +146,16 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.txt.paymentMatchOfficer']}" style="margin-top:5px;width:191px;" />
+			<!-- 29550 - start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
+						<p:outputLabel value="#{lbl['lbl.fl.paymentMatchOfficers']}" style="margin-top:5px;width:190px;"/>
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.txt.paymentMatchOfficer']}" style="margin-top:5px;width:191px;" />
+					</c:otherwise>
+				</c:choose>
+			<!-- 29550 - end -->
 			</td>
 			<td>
 				<p:selectOneMenu value="#{mcPmRptBB.managedBean.payOfficer}">
@@ -171,7 +180,7 @@
 			<!-- 29550 - start -->
 				<c:choose>
 					<c:when test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
-						<p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}" style="margin-top:5px;width:190px;"/>
+						<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.inv.ref']}" style="margin-top:5px;width:190px;"/>
 					</c:when>
 					<c:otherwise>
 						<p:outputLabel value="#{lbl['lbl.rpt.supplierinvoiceNo']}" style="margin-top:5px;width:190px;"/>
@@ -227,8 +236,6 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{mcPmRptBB.hasSupplierRole()}"
 		      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
@@ -237,12 +244,14 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
 					<c:choose>
 						<c:when test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.paymentMatchOfficer']}" 
-								itemValue="#{lbl['lbl.txt.paymentMatchOfficer']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.invoiceNo']}"
-								itemValue="#{lbl['lbl.rpt.invoiceNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.supp.invoice.no']}"
-								itemValue="#{lbl['lbl.fl.supp.invoice.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.paymentMatchOfficers']}" 
+								itemValue="#{lbl['lbl.fl.paymentMatchOfficers']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.invoice.no']}"
+								itemValue="#{lbl['lbl.fl.invoice.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.inv.ref']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.inv.ref']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.paymentAdviceNo']}"
 								itemValue="#{lbl['lbl.rpt.paymentAdviceNo']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
@@ -251,6 +260,8 @@
 								itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+								itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
 								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 						</c:otherwise>

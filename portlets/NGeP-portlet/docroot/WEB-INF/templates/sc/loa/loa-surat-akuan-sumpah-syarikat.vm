@@ -263,13 +263,19 @@
 		</tr>
 	</table>
 </div>
+## #25025 #528 -start
 <div class="standard" style="margin-top: 4em;">
 	Catatan:   
-	<ul type="i" class="standard" style="list-style-type:lower-roman;">
-		<li>*Potong mana yang tidak berkenaan</li>
-		<li>Surat akuan ini hendaklah ditandatangani oleh hanya penama di sijil pendaftaran MOF/CIDB</li>
-	</ul> 		
-</div>	
+	<div style="margin-left: -23px; margin-top: -11px;">
+		<ul type="i" class="standard" style="list-style-type:lower-roman;">
+			## #25025 #505 -start
+			<li>*Potong mana yang tidak berkenaan.</li>
+			<li>Surat akuan ini hendaklah ditandatangani oleh hanya penama di sijil pendaftaran MOF/CIDB.</li>
+			## #25025 #505 -stop
+		</ul> 
+	</div>	
+</div>
+## #25025 #528 -stop
 <section class="footer">
 	<p class="standard">
 	## #25002-start

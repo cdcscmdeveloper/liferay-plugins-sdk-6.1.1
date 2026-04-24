@@ -77,6 +77,15 @@
 						size="40" label="#{lbl['lbl.sc.procurment.type.category']}"
 						disabled="true" /></td>
 			</tr>
+			<ui:remove>#29468 Start Vinod</ui:remove>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurement.category']}" /></td>
+				<td><p:inputText id="procCatTxt"
+						value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory)}"
+						size="40" disabled="true" /></td>
+			</tr>
+			<ui:remove>#29468 End Vinod</ui:remove>
 
 			<tr>
 				<td><p:outputLabel

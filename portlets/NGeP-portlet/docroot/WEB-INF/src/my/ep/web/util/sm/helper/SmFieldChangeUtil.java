@@ -24,7 +24,6 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 
@@ -57,8 +56,9 @@ public class SmFieldChangeUtil {
 					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
 					.getSmAppl();
 			bean.setLatestApproveAppl(srcAppl);
-			if (bean.getSmAppl().isResubmit() && bean.isSupplierUser()
-					&& bean.getSmAppl().getOriginalAppl() != null) {
+			//#35194 
+			//#37771 START -comment these line because unusable - changes in logic
+			/*if (bean.getSmAppl().isResubmit() && bean.getSmAppl().getOriginalAppl() != null) {
 				mofReqDTO.setSmAppl(bean.getSmAppl());
 				SmAppl latestRejectedAppl = SmServiceLookup
 						.getMofRegistrationSO()
@@ -72,7 +72,8 @@ public class SmFieldChangeUtil {
 				} else {
 					srcAppl = applRevDTO.getSmAppl();
 				}
-			}
+			}*/
+			//#37771 - END
 			bean.setLatestAppl(srcAppl);
 			bean.getLatestAppl()
 					.setHqFacility(
@@ -206,7 +207,9 @@ public class SmFieldChangeUtil {
 					setEquityCompanyFieldChangeStatus(latestAppl, currAppl);
 
 				} else if (currentPage
-						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)
+						|| currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) { //#38890
 					// smSupplierBanks
 					setBankFieldChangeStatus(latestAppl, currAppl);
 				}
@@ -216,6 +219,22 @@ public class SmFieldChangeUtil {
 
 			// smManufacturingDtls
 		}
+	}
+	
+	//#38890
+	public static void setBankFieldChangeStatus(SmAppl currAppl){
+		if (currAppl == null){
+			return;
+		}
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(currAppl.getSmSupplier().getSupplierId());
+		SmAppl latestAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveLatestSmApplWithChildBySupplierId(reqDTO)
+				.getSmAppl();
+		if (latestAppl == null){
+			return;
+		}
+		setBankFieldChangeStatus(latestAppl, currAppl);
 	}
 
 	/**
@@ -429,39 +448,30 @@ public class SmFieldChangeUtil {
 				currBody.setChangedFieldStatus("N");
 			}
 		} else {
-			for (SmAssociationBody currBody : currPersonnel
-					.getSmAssociationBodies()) {
-				if (isCurrExistInLatest(currBody,
-						latestPersonnel.getSmAssociationBodies(),
-						new String[] { "regNo" }, null)) {
+			//#35086 - start
+			for (SmAssociationBody currBody : currPersonnel.getSmAssociationBodies()) {
+				SmAssociationBody latestBody = (SmAssociationBody) EntityHelper
+						.getEntityByMultiplePropertiesFromList(currBody,
+								latestAppl.getSmAssociationBodies(),
+								new String[] { "regNo" }, null, null);
+				if (latestBody != null
+						&& latestBody.getAssociationBodyId() != null) {
+					if (SmCommonUtil.isHasDifferences(latestBody, currBody,
+							new String[] { "associationBodyId",
+									"smPersonnel", "pmCertBody" })) {
+						if (StringUtils.isBlank(currPersonnel
+								.getChangedFieldStatus())) {
+							currPersonnel.setChangedFieldStatus("U");
+						}
+						currBody.setChangedFieldStatus("U");
+					}
+				} else {
 					if (StringUtils.isBlank(currPersonnel
 							.getChangedFieldStatus())) {
 						currPersonnel.setChangedFieldStatus("U");
 					}
 					currBody.setChangedFieldStatus("N");
-				} else {
-					SmAssociationBody latestBody = (SmAssociationBody) EntityHelper
-							.getEntityByMultiplePropertiesFromList(currBody,
-									latestAppl.getSmAssociationBodies(),
-									new String[] { "regNo" }, null, null);
-					if (latestBody != null
-							&& latestBody.getAssociationBodyId() != null) {
-						if (SmCommonUtil.isHasDifferences(latestBody, currBody,
-								new String[] { "associationBodyId",
-										"smPersonnel", "pmCertBody" })) {
-							if (StringUtils.isBlank(currPersonnel
-									.getChangedFieldStatus())) {
-								currPersonnel.setChangedFieldStatus("U");
-							}
-							currBody.setChangedFieldStatus("U");
-						}
-					} else {
-						if (StringUtils.isBlank(currPersonnel
-								.getChangedFieldStatus())) {
-							currPersonnel.setChangedFieldStatus("U");
-						}
-						currBody.setChangedFieldStatus("N");
-					}
+					//#35086 - end
 				}
 			}
 		}
@@ -1373,8 +1383,7 @@ public class SmFieldChangeUtil {
 	
 	//#32008 - start
 	/**
-	 * Initialize the previous application to check for supplier edit 
-	 * & use serialized supplier appl if available
+	 * Initialize the previous application to check for supplier edit
 	 * @param bean
 	 */
 	public static void initLatestAppl(BaseReviewApplicationManagedBean bean){
@@ -1386,40 +1395,20 @@ public class SmFieldChangeUtil {
 			return;
 		}
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		SmAppl srcAppl = null;
-		
-		if (appl.isResubmit() && bean.isSupplierUser() && appl.getOriginalAppl() != null){
+		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrievePreviousSmAppl(appl).getSmAppl();
+		//#35194 - start
+		if(appl.isResubmit() && appl.getOriginalAppl() != null){
 			reqDTO.setSmAppl(appl);
 			srcAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveLatestRejectedApplication(reqDTO).getSmAppl();
-			if(srcAppl != null){
-				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
-				SmApplRevisionResDTO revDTO = SmCommonUtil
-						.getSerializedApplicationByFilePathName(file);
-				if (revDTO != null && revDTO.getSmAppl() != null) {
-					srcAppl = revDTO.getSmAppl();
-				}
-			}
 		}
-		
-		if(srcAppl == null){
-			srcAppl = SmServiceLookup.getMofRegistrationSO().retrievePreviousSmAppl(
-					bean.getSmSupplier().getSupplierId(), appl.getApplId()).getSmAppl();
-			if(srcAppl != null){
-				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
-				SmApplRevisionResDTO revDTO = SmCommonUtil
-						.getSerializedApplicationByFilePathName(file);
-				if (revDTO != null && revDTO.getSmAppl() != null) {
-					srcAppl = revDTO.getSmAppl();
-				} else {
-					reqDTO.setApplId(srcAppl.getApplId());
-					srcAppl = SmServiceLookup.getMofRegistrationSO()
-						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
-				}
-			}
-		}
-		
-		if(srcAppl == null){
+		//#35194 - end
+		if(srcAppl != null){
+			reqDTO.setApplId(srcAppl.getApplId());
+			srcAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		} else {
 			bean.setShowFieldChanges(false);
 			bean.setLatestAppl(null);
 			return;

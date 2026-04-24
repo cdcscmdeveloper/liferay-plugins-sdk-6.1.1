@@ -6,16 +6,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}" toggleable="true">
-		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - rename var -->
+		<!-- #28775 -->
 		<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="dtlTemplate"
-		value="#{svoSiteVisitBackingBean.managedBean.smSvTask}" var="task">
+		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate}" var="selectedTemplate">
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
-				#{svoSiteVisitBackingBean.getParameterDesc(task.smSvTemplate.pmParameter)}
+				<ui:param name="lblCategoryDesc"
+				value="lbl.sm.sitevisit.category.categorycode_#{selectedTemplate.pmParameter.parameterCode}" />
+				#{lbl[lblCategoryDesc]}
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.sitevist.report.uploadedfile']}">
 				<table>
-					<ui:repeat var="attch" value="#{task.smSvTemplate.smAttachments}">
+					<ui:repeat var="attch" value="#{selectedTemplate.smAttachments}">
 						<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
 							<tr>
 								<td><p:commandLink ajax="false" value="#{attch.fileName}">

@@ -15,24 +15,14 @@
 		
 		<ui:repeat var="workshopCatVar" value="#{viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 			<table style="width: 100%;">
-				<!-- 29380 - Site Visit Grouping Enhancement -28775 -Start -->
-				<tr>
-					<td style="float: left;">
-					    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} (#{workshopCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{workshopCatVar.pmCategoryL2.categoryName}/#{workshopCatVar.categoryName})" 
-					    style="text-align:left;"/>
-					</td>
-				</tr>
-					<ui:repeat var="categoryVar" value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}" >
 					<tr>
-						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-						    rendered="#{categoryVar.pmCategoryL3.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99 and workshopCatVar.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99
-						    and categoryVar.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS
-						    and categoryVar.pmCategoryL3.categoryL3Id eq workshopCatVar.categoryL3Id}"/>
+						<td>
+						<!-- 29380 - Site Visit Grouping Enhancement -28775 -->
+					    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} 
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(workshopCatVar, false, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
-					</ui:repeat>
-				<!-- 29380 - Site Visit Grouping Enhancement -28775 -End -->
 			</table>
 			<br />
 			
@@ -200,7 +190,7 @@
 					<p:column headerText="#{lbl['lbl.sm.employee.icno']}">
 						<p:outputLabel value="#{empInfo.identificationNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.employee.specialization']}">
+					<p:column headerText="#{lbl['lbl.sm.employee.specialization']}" style="white-space:normal;">
 						<p:outputLabel value="#{empInfo.expertise}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.employee.experience']}">

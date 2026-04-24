@@ -25,6 +25,7 @@ public class PaymentManagedBean extends BaseManagedBean{
 	private String billMobile;
 	private String billDesc;
 	private String country;
+	private String merchantCode;
 	private SmAppl smAppl;
 	private PyBill pyBill;
 	private BigDecimal totalAmount;
@@ -274,5 +275,11 @@ public class PaymentManagedBean extends BaseManagedBean{
 	}
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
+	}
+	public String getMerchantCode() {
+		return merchantCode;
+	}
+	public void setMerchantCode(String merchantCode) {
+		this.merchantCode = merchantCode;
 	}
 }

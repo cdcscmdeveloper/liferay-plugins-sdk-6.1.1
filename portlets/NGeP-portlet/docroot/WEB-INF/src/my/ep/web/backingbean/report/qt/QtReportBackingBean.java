@@ -37,6 +37,7 @@ import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -48,6 +49,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
@@ -67,6 +69,7 @@ import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.report.qt.QtReportManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -185,14 +188,84 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IRPTRequestSO.class);
+		boolean isBuffMax = false;	//Bug #37911
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
+		//#35015 Wip 4ser - Start
+		if (QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_BRIEFING_PAPER_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+		
+		long qtId4ser = Long.parseLong(this.getManagedBean().getQuotationId());
+		
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qtId4ser);
+		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		
+		String reportCode = StringUtils.EMPTY;
+		String reportName = StringUtils.EMPTY;
+		if (QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL;
+				reportName = ReportConst.SC_EC_RPT_JSP;
+			}
+		} else if (QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP;
+				reportName = ReportConst.SC_OC_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_OPENING_COMMITTEE_RPT_VAL;
+				reportName = ReportConst.SC_OC_RPT_JSP;
+			}
+		} else if (QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+				reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL;
+				reportName = ReportConst.SC_TEC_RPT_JSP;
+			}
+		} else if (QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+				reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL;
+				reportName = ReportConst.SC_FEC_RPT_JSP;
+			}
+		} else if (QtReportConst.SC_BRIEFING_PAPER_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP;
+				reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL;
+				reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+			}
+			isBuffMax = true;	//Bug #37911
+		}
+		this.getManagedBean().setReportName(reportName);
+		this.getManagedBean().setReportCode(reportCode);
+		}
+		//#35015 Wip 4ser - End
 		params.put(QtReportConst.PARAM_KEY_REPORT, getManagedBean()
 				.getReportName());
 		params.put(QtReportConst.PARAM_REPORT_CODE, getManagedBean()
 				.getReportCode());
 		params.put(QtReportConst.PARAM_USER_ID, getFacesScopes()
 				.getUserSessionBean().getUserId().toString());
+		//Bug #37911 -- Start
+		if (isBuffMax) {
+			params.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.MAX_BUFFER_SIZE));
+		}
+		//Bug #37911 -- End
 
 		//Bug #28440 start
 		String userRoleLogin = getUserRoleLogin();
@@ -214,14 +287,15 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			//R5 #14076 start		
 			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
 			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
-			
-			if(params.get(QtReportConst.QUOTATION_TENDER_ID) != null){
-				if(getManagedBean().getQuotationNumber()!= null){
+
+			if (params.get(QtReportConst.QUOTATION_TENDER_ID) != null) {
+				if (getManagedBean().getQuotationNumber() != null) {
 					restDtlDTO.getRptRequestDtl().setDocumentNo01(getManagedBean().getQuotationNumber());
-				}		
-			}	
-			if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null ){
-				addRptRequestDetail(restDtlDTO);		
+				}
+			}
+
+			if (restDtlDTO.getRptRequestDtl().getDocumentNo01() != null) {
+				addRptRequestDetail(restDtlDTO);
 			}
 			//R5 #14076 end
 			
@@ -249,13 +323,16 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		List<SelectItem> approverNayakTarafList=retrieveApprovarNaikTarafSCS2();
 		List<String> authoriztionList = retriveUserrloeByUserId();
-		
-		if (approverNayakTarafList.size() > 0) {
+		//Bug #34996@Syazani 17/08/2023 -- Start
+		if (approverNayakTarafList.size() > 0
+				|| (authoriztionList.contains(ReportConst.AUDITOR_GENERAL) || authoriztionList
+						.contains(ReportConst.AUDITOR_INTERNAL))) {
 			userRoleLogin = ReportConst.APPROVERNT;
+			// Bug #34996@Syazani 17/08/2023 -- End
 		} else if (authoriztionList.contains(ReportConst.BUDGET_APPROVER)
 				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
 				|| authoriztionList.contains(ReportConst.COMMITTEE_APPROVER) 
-				|| authoriztionList .contains(ReportConst.PUBLICATION_APPROVER)) {
+				|| authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)) {
 			userRoleLogin = ReportConst.APPROVER;
 		} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)) {
 			userRoleLogin = ReportConst.DESKOFFR;
@@ -734,6 +811,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		String reportCode = this.getManagedBean().getReportCode();
 		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
 				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {//#21692
+			this.getManagedBean().setQuotationTitle(null);//#21692
 			reportFileSearchBean.setScPtj(null);
 			reportFileSearchBean.setScPtjName(null);
 			reportFileSearchBean.setScStatus(null);//#21692 reset status
@@ -776,25 +854,26 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public List<SelectItem> retrieveDescOfficerByAgency() {
 		List<SelectItem> scDescOfficerList = new ArrayList<>();
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			if (isDeskOfficer()) {
-				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
-				selectItem.setValue(getUserIdSessionFromLoginId());
-				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
-				scDescOfficerList.add(selectItem);
-			} else {
-				Long orgProfileId = findScQtByQuotationNumber().getOrgProfileId();
-				
-				List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
-						new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
-				if (CollectionUtils.isNotEmpty(reqLst)) {
-					for (Object[] object : reqLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						scDescOfficerList.add(selectItem);
-					}
+		if (isDeskOfficer()) {
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
+			selectItem.setValue(getUserIdSessionFromLoginId());
+			getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
+			scDescOfficerList.add(selectItem);
+		} else {
+			//#21692 - Start
+			Long orgProfileId = getManagedBean().getScReportSearchBean().getPtjProfile() != null ?
+					getManagedBean().getScReportSearchBean().getPtjProfile().getOrgProfileId() : null;
+			
+			List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+					new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+			//#21692 - End
+			if (CollectionUtils.isNotEmpty(reqLst)) {
+				for (Object[] object : reqLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					scDescOfficerList.add(selectItem);
 				}
 			}
 		}
@@ -936,7 +1015,12 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+		//#21692 - Start
+		boolean procurementBoardSecUser = facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value()) && 
+				!(procurementBoardSecUser);
+		//#21692 - End
 	}
 	
 	/**
@@ -972,28 +1056,41 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		return pmOrgProfile;
 	}
 
-	// 29580 - Start (Harun) change dropdown list to selectManyMenu for status
+	// 29580 - Start (Harun) change dropdown list to select multiple option
+	/**
+	 * reportStatusDropdownValuesSelectManyMenu - Retrieve multiple report status by report code
+	 * 
+	 * statusValuesRemove(List) 
+	 * for Report Status Need to remove
+	 * 
+	 * statusValues(List)
+	 * for Display statusName or Status Desc at Status option menu
+	 * 
+	 * @param reportCode
+	 *            the Report Code
+	 * @return the statusValues(List) 
+	 */
 	public List<String> reportStatusDropdownValuesSelectManyMenu(String reportCode) {
-		List<String> statusValues = new ArrayList<String>();
+		List<String> statusValues = new ArrayList<>();
 		List<String> statusValuesRemove = null;
 		boolean checkRemove = false;
 
-		String[] removeReportStr = { ReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL,
+		String[] removeReportArray = { ReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL,
 				ReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL, ReportConst.SC_PROPOSAL_DTLS_SERVICE_RPT_VAL,
 				ReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL };
-		String[] removeStsStr = { getStatusDesc("lbl.rpt.preparation"), getStatusDesc("lbl.rpt.publishing") };
+		String[] removeStatusArray = { getStatusDesc(QTConstants.RPT_PREPARATION_LBL), getStatusDesc(QTConstants.RPT_PUBLISHING_LBL) };
+		
+		statusValues.add(getStatusDesc(QTConstants.RPT_PREPARATION_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_PUBLISHING_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_PENDING_EVALUATION_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_PENDING_SUPPLIER_FINALIZATION_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_PENDING_LOI_LOA_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_LOA_COMPLETED_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_DROPDOWN_CANCELLED_LBL));
 
-		statusValues.add(getStatusDesc("lbl.rpt.preparation"));
-		statusValues.add(getStatusDesc("lbl.rpt.publishing"));
-		statusValues.add(getStatusDesc("lbl.rpt.pendingEvaluation"));
-		statusValues.add(getStatusDesc("lbl.rpt.pendingSupplierFinalization"));
-		statusValues.add(getStatusDesc("lbl.rpt.pendingLOInLOA"));
-		statusValues.add(getStatusDesc("lbl.rpt.loaCompleted"));
-		statusValues.add(getStatusDesc("lbl.rpt.drpdown.cancelledLabel"));
-
-		for (String strRpt : removeReportStr) {
+		for (String strRpt : removeReportArray) {
 			if (reportCode.equalsIgnoreCase(strRpt)) {
-				statusValuesRemove = new ArrayList<String>(statusValues);
+				statusValuesRemove = new ArrayList<>(statusValues);
 				checkRemove = true;
 				break;
 			} else {
@@ -1003,40 +1100,46 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 		if (checkRemove) {
 			for (Iterator<String> it = statusValuesRemove.iterator(); it.hasNext();) {
-				String strVal = (String) it.next();
-				for (String strSts : removeStsStr) {
-					if (strSts.equalsIgnoreCase(strVal)) {
-						statusValues.remove(strSts);
-					}
+				String removeReport = it.next();
+				boolean flagRemove = removeReportStatus(removeStatusArray, removeReport);
+				if(flagRemove){
+					statusValues.remove(removeReport);
 				}
 			}
 		}
 
 		return statusValues;
 	}
-	// 29580 - End (Harun)
+	//#29580 - Start
+	public boolean isAllSelected() {
+		List<String> selected = this.getManagedBean().getScReportSearchBean().getScStatusManyMenu();
 
-	// 29580 - Start (Harun) for trigger selectALL
+		return selected != null && selected.contains(QTConstants.RPT_ALL_LBL);
+	}
+	//#29580 - End
+
+	/**
+	 * onSelectAll - For select /unselect all select option
+	 * 
+	 * 
+	 * @param reportCode
+	 *            the Report Code
+	 * @return the checkAll(boolean)
+	 */
 	public void onSelectAll(String reportCode) {
 
 		boolean checkAll = false;
-		List<String> statusList = new ArrayList<String>(this.getManagedBean().getScReportSearchBean()
+		List<String> statusList = new ArrayList<>(this.getManagedBean().getScReportSearchBean()
 				.getScStatusManyMenu());
-		List<String> allList = new ArrayList<String>();
 
 		for (String stsvalue : statusList) {
-			if (stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))) {
-				allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+			if (stsvalue.equalsIgnoreCase(getStatusDesc(QTConstants.RPT_ALL_LBL))) {
+				List<String> allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
 
-				List<SelectItem> items = new ArrayList<SelectItem>();
+				List<SelectItem> items = new ArrayList<>();
 				for (String strSelectItem : allList) {
 					items.add(new SelectItem(strSelectItem));
-				}
-				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
-					SelectItem si = (SelectItem) it.next();
-					//this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().add((String) si.getValue());
-					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
-					si.setDisabled(Boolean.TRUE);
+					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().add(strSelectItem);
 				}
 				checkAll = true;
 			} else {
@@ -1044,41 +1147,38 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			}
 		}
 		if (!checkAll) {
-			if (allList.size() == statusList.size()) {
-				List<SelectItem> items = new ArrayList<SelectItem>();
-				for (String strSelectItem : statusList) {
-					items.add(new SelectItem(strSelectItem));
-				}
-				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
-					SelectItem si = (SelectItem) it.next();
-					//this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
-					si.setDisabled(Boolean.FALSE);
-				}
-			}
+			processRemainingStatusList(statusList);
 		}
-
 	}
 	
+	/**
+	 * isDisabled - For enable/disabled select option
+	 * 
+	 * 
+	 * @param item
+	 * @param reportCode
+	 *            the Item code and Report code
+	 * @return the boolean 
+	 */
 	public boolean isDisabled(String item,String reportCode) {
 		List<String> allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+		boolean flagDisabled =  false;
 	
 		if(this.getManagedBean().getScReportSearchBean().getScStatusManyMenu() != null 
 				&& this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().size() > 0){
 			for (String stsvalue : this.getManagedBean().getScReportSearchBean().getScStatusManyMenu()) {
-				if(stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))){
-					for (String strSelectItem : allList) {
-						if(strSelectItem.equalsIgnoreCase(item)){
-							return strSelectItem.equals(item);
-						}
-					}
+				if(stsvalue.equalsIgnoreCase(getStatusDesc(QTConstants.RPT_ALL_LBL))){
+					flagDisabled =  processDisabledItem(allList, item);
 				}
 			}
 		}else{
-			return false;
+			return flagDisabled;
 		}
-		return false;
+		return flagDisabled;
 	}
+	// 29580 - End (Harun)
 	
+	//14306 - Start (Harun)
 	public List<String> reportStatusDropdownValuesProposalOfferSubmission() {
 		List<String> statusValues = new ArrayList<String>();
 
@@ -1087,7 +1187,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	
 		return statusValues;
 	}
-	// 29580 - End (Harun)
+	//14306 - End (Harun)
 	
 	// #21692 - start
 	/**
@@ -1111,6 +1211,13 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ENG_CODE);
 			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
 			statusList.add(selectItem1);
+			//#21692 add for revise - Start
+			SelectItem selectItem2 = new SelectItem();
+			selectItem2
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ENG_CODE);
+			selectItem2.setValue(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ID);
+			statusList.add(selectItem2);
+			//#21692 add for revise - End
 
 		} else if ((strLanguage != null)
 				&& (strLanguage.equalsIgnoreCase("ms"))) {
@@ -1125,6 +1232,13 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_MY_CODE);
 			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
 			statusList.add(selectItem1);
+			//#21692 add for revise - Start
+			SelectItem selectItem2 = new SelectItem();
+			selectItem2
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REVISE_MY_CODE);
+			selectItem2.setValue(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ID);
+			statusList.add(selectItem2);
+			//#21692 add for revise - End
 
 		}
 		return statusList;
@@ -1161,8 +1275,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * @return ScPropSubmitToYear 
 	 */
 	public void propSubmitToDtUpdate(ScReportFieldsSearchBean reportSearchbean) {
-		
-		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScPropSubmitFromYear());
+		reportSearchbean.setScCreatedToYear(reportSearchbean.getScCreatedFromYear());
+		reportSearchbean.setScPropSubmitFromYear(reportSearchbean.getScCreatedFromYear());
+		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScCreatedFromYear());
 	}
 
 	/**
@@ -1173,7 +1288,37 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * @return ScPropSubmitToMonth
 	 */
 	public void propSubmitToMonthUpdate(ScReportFieldsSearchBean reportSearchbean) {
-		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScPropSubmitFromMonth());
+		reportSearchbean.setScCreatedToMonth(reportSearchbean.getScCreatedFromMonth());
+		reportSearchbean.setScPropSubmitFromMonth(reportSearchbean.getScCreatedFromMonth());
+		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScCreatedFromMonth());
 	}
 	//#14306 - End
+	
+	//#29580 - Start 
+	private boolean removeReportStatus(String[] statusValuesRemove, String reportStatus) {
+		boolean flagRemove =  false;
+		for (String strRemoveSts : statusValuesRemove) {
+			if (strRemoveSts.equalsIgnoreCase(reportStatus)) {
+				flagRemove = true;
+			}
+		}
+		return flagRemove;
+	}
+	
+	private void processRemainingStatusList(List<String> statusList) {
+		List<SelectItem> items = new ArrayList<>();
+		for (String strSelectItem : statusList) {
+			items.add(new SelectItem(strSelectItem));
+	    }
+	}
+	
+	private boolean processDisabledItem(List<String> allList, String item) {
+		for (String strSelectItem : allList) {
+			if(strSelectItem.equalsIgnoreCase(item)){
+				return strSelectItem.equals(item);
+			}
+		}
+		return false;
+	}
+	//#29580 - End 
 }

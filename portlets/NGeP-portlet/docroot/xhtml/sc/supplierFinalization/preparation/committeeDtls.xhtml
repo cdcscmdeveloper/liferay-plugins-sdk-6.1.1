@@ -31,7 +31,14 @@
 			<ac:paginator for="committeeDtlTbl" />
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}" />
+				<!-- #12471 Start -->
+				<p:commandLink
+					actionListener="#{suppFinalMeetingBackingBean.onClickMemberInfo(committeeDtl.scCommitteeMember.pmUser)}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					update="@form">
+					<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}" />
+				</p:commandLink>
+				<!-- #12471 End -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
@@ -78,6 +85,10 @@
 					disabled="#{!isSecretaryUser or suppFinalizationBackingBean.managedBean.readOnly}"  />
 			</p:column>
 		</p:dataTable>
+		<!-- #12471 Start -->
+		<ac:qtCommitteMemberInfoPopup bBean="#{suppFinalMeetingBackingBean}"
+			widget="memberInfoPopUp" />
+		<!-- #12471 End -->
 		<div align="right">
 			<ui:param name="actionBtnLbl"
 				value="#{suppFinalizationBackingBean.evaluateEndorseSignoffTask(suppFinalizationBackingBean.managedBean.taskName) ? lbl['lbl.sc.btn.view.committee']: lbl['lbl.sc.btn.update.committee']}" />

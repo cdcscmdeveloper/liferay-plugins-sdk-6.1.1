@@ -1,13 +1,8 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
@@ -61,7 +57,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
-import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -199,7 +194,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	
 	// #27397 - start
 	public void validateMofRegNo(String mofNo) {
-		if (StringUtils.isEmpty(mofNo)) {
+		if (mofNo == null && StringUtils.isEmpty(mofNo)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780029);
 		}
 	}
@@ -215,7 +210,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				throw new EpException(MessageConst.ERROR_REPORT_780062);
 			} else {
 				if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
-					validateMofRegNo(getManagedBean().getMofNo());
+					if(getManagedBean().getSelectedMofAccount() == null){
+						throw new EpException(MessageConst.ERROR_REPORT_780029);
+					}
+					validateMofRegNo(getManagedBean().getSelectedMofAccount().getMofNo()); //30824
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
 					System.out.println("getSelectedSupplier ==> " + getManagedBean().getSelectedBasicAccount());
 					if (getManagedBean().getSelectedBasicAccount() == null) {
@@ -357,6 +355,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
+		
+		//#38227 - START
+		if(SmReportConst.SM_LIST_OF_APPLICATION_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ListOfApplicationRptBackingBean listOfApplRpt = new ListOfApplicationRptBackingBean();
+			listOfApplRpt.resetSearch();
+		} else if(SmReportConst.SM_APPLICATION_APPROVED_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ApplApprovedRptBackingBean applApprovedRpt = new ApplApprovedRptBackingBean();
+			applApprovedRpt.resetSearch();
+		} else if(SmReportConst.SM_APPLICATION_PROCESSED_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ApplProcessedRptBackingBean applProcessedRpt = new ApplProcessedRptBackingBean();
+			applProcessedRpt.resetSearch();
+		} else if(SmReportConst.SM_CATEGORY_STATISTIC_RPT_VAL.equals(getManagedBean().getReportCode())){
+			CategoryStatRptBackingBean catStatRpt = new CategoryStatRptBackingBean();
+			catStatRpt.resetSearch();
+		}
+		//#38227 - END
+		//34031#note-71 : Issue 4 - Start
+		else if(SmReportConst.SM_REVISIT_RPT_VAL.equals(getManagedBean().getReportCode())){
+			SmRevisitRptBackingBean revisitRpt = new SmRevisitRptBackingBean();
+			revisitRpt.resetSearch();
+			revisitRpt.getConditionFieldsSVO();
+		}
+		//34031#note-71 : Issue 4 - Start
 	}
 
 	public void addCompanyNameParam(LinkedHashMap<String, String> params) {
@@ -506,16 +527,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 
 	public List<SelectItem> retrieveApplStatus() {
-		if (EntityHelper
-				.isCollectionEmpty(getManagedBean().getApplStatusList())
-				&& null != new FacesScopes().getUserSessionBean().getUserId()) {
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 			getManagedBean().setApplStatusList(new ArrayList<SelectItem>());
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 			List<Object[]> applStatusList = reportSO
-					.retrieveApplicationStatusList(new FacesScopes()
+					.retrieveStatusListOfApplication(new FacesScopes()
 							.getUserLocale().getLanguage());
 
 			if (CollectionUtils.isNotEmpty(applStatusList)) {
@@ -3426,5 +3445,63 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		return getManagedBean().getApplStatusList();
 	}
+	
+	public String getConditionFieldsCompany(){
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return "";
+		}
+		return "smSupplier.smAppl.supplierType^" + suppType;
+	}
+	
+	/**
+	 * Get condition fields for PO and/or Approver roles.
+	 * @param includeApprover
+	 * @return
+	 */
+	public String getConditionFieldsPO(boolean includeApprover){
+		StringBuilder sb = new StringBuilder();
+		String role = "pmUserOrgs.pmUserRoles.pmRole.roleCode^";
+		sb.append(role + SupplierManagementConst.PO_HQ);
+		if (includeApprover){
+			sb.append("*" + role + SupplierManagementConst.APPROVER_HQ);
+		}
+		
+		String suppType = getManagedBean().getSupplierType();
+		String searchZone = "|pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		String zone = getManagedBean().getZone();
+		
+		if(StringUtils.isBlank(suppType) && StringUtils.isBlank(zone)){
+			return sb.toString();
+		}
+		
+		if ((StringUtils.isBlank(suppType) || suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)) && !StringUtils.isBlank(zone)){
+			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
+				sb.append(searchZone + "1");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
+				sb.append(searchZone + "2");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
+				sb.append(searchZone + "3");
+			}
+		}else if(suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+			sb.append(searchZone + "1");
+		}
+		return sb.toString();
+	}
 	//#32521 - END
+	
+	////#7754_#35984 - Start
+	public String getZoneByUser(){
+		PmZone zone = SmCommonUtil.getInstance().getUserZone();
+		
+		if(zone != null){
+			getManagedBean().setZone(zone.getZoneName());
+		}else{
+			getManagedBean().setZone(null);
+		}
+		
+		log.info("User Zone>>>>>" + getManagedBean().getZone());
+		return getManagedBean().getZone();
+	}
+	//#7754_#35984 - End
 }

@@ -131,7 +131,14 @@
 					<ac:paginator for="evaluationpreparecommittee" />
 					<p:column style="width:29%;white-space: normal;"
 						headerText="#{lbl['lbl.sc.name']}">
-						<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+						<!-- #12471 Start -->
+						<p:commandLink
+							actionListener="#{evaluationMeetingBackingBean.onClickMemberInfo(committeeMember.pmUser)}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							update="@form">
+							<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+						</p:commandLink>
+						<!-- #12471 End -->
 					</p:column>
 					<p:column style="width:15%;white-space: normal;"
 						headerText="#{lbl['lbl.sc.identification.no']}">
@@ -168,6 +175,10 @@
 							value="#{evaluationMeetingBackingBean.getParameterDesc('CR', committeeMember.memberRole.parameterCode)}" />
 					</p:column>
 				</p:dataTable>
+				<!-- #12471 Start -->
+				<ac:qtCommitteMemberInfoPopup
+					bBean="#{evaluationMeetingBackingBean}" widget="memberInfoPopUp" />
+				<!-- #12471 End -->
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}"
 						onclick="blockWidget.show()" styleClass="BtnSpacing"

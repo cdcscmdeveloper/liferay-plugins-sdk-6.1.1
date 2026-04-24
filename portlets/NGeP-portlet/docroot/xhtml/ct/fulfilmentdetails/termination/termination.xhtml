@@ -27,13 +27,14 @@
 		  </h:panelGrid>
 		  
 		     <p:outputLabel value="#{lbl['lbl.ct.decision.date']}"  styleClass="required"/>
-		   <h:panelGrid columns="2">
+		   <h:panelGrid columns="3">
              <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}"
           		disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
           		readonlyInput="true" navigator="true"  id="calItem1" size="12" showOn="button" 
           		mindate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.effDate}"
                 maxdate="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}"
-                pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>                              
+                pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> 
+                <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.termination.decision.date']}" rendered="#{terminationBackingBean.managedBean.mutualTermination}" />                            
 		      <p:message for="calItem1" display="icon"/>
 		   </h:panelGrid>
 		  
@@ -85,11 +86,22 @@
                 </p:calendar>
                 <p:message for="calItem3" display="icon"/>
 		  </h:panelGrid>
-		  
-		  
-		   <p:spacer rendered="#{terminationBackingBean.managedBean.remedy}" />
-		  <p:spacer rendered="#{terminationBackingBean.managedBean.remedy}" />       	
-	     
+			<p:outputLabel value="#{lbl['lbl.ct.scope.of.contract']}"
+				rendered="#{terminationBackingBean.managedBean.remedy}" />
+			<h:panelGrid columns="3"
+				rendered="#{terminationBackingBean.managedBean.remedy}">
+				<p:inputTextarea id="scopeOfContract"
+                 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.scopeOfContract}"
+                 disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
+                 style="width:170px;" autoResize="false" 
+                 onkeyup="limitTextArea(this, 1000);" onkeydown="limitTextArea(this, 1000);">
+				</p:inputTextarea>
+				<td style="margin-top: -3px">
+				<ac:iconTooltip
+					value="#{lbl['lbl.ct.tooltip.termination.scope.of.contract']}" />
+				</td>
+				<p:message for="scopeOfContract" display="icon" />
+			</h:panelGrid>
 		       <p:outputLabel value="#{lbl['lbl.ct.remedy.end.date']}"  styleClass="required" 
 		               rendered="#{terminationBackingBean.managedBean.remedy}"/>
 		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.remedy}">
@@ -140,9 +152,11 @@
              </p:calendar>
 		     <p:message for="calItem8" display="icon"/>
 		 </h:panelGrid>
-		 
-		  <p:outputLabel value="#{lbl['lbl.ct.recommended.agency.date']}"  styleClass="required" rendered="#{terminationBackingBean.managedBean.termination}" />
-		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
+
+			<p:outputLabel value="#{lbl['lbl.ct.recommended.agency.date']}"
+				styleClass="#{terminationBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry ? 'required' : ''}"
+				rendered="#{terminationBackingBean.managedBean.termination}" />
+			<h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
               <p:calendar id="calItem9" size="12"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgencyDate}"
                   disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                   showOn="button" readonlyInput="true" navigator="true"
@@ -165,9 +179,11 @@
              </p:calendar> 
 		     <p:message for="calItem8" display="icon"/>
 		   </h:panelGrid>
-		    
-		   <p:outputLabel value="#{lbl['lbl.ct.recommended.agency']}"   styleClass="required" rendered="#{terminationBackingBean.managedBean.termination}"  />
-		    <h:panelGrid columns="4" rendered="#{terminationBackingBean.managedBean.termination}">
+
+			<p:outputLabel value="#{lbl['lbl.ct.recommended.agency']}"
+				styleClass="#{terminationBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry ? 'required' : ''}"
+				rendered="#{terminationBackingBean.managedBean.termination}" />
+			<h:panelGrid columns="4" rendered="#{terminationBackingBean.managedBean.termination}">
 		       <p:inputTextarea id="recomendAgency" rows="3"  style="width:170px;" 
 					autoResize="false" maxlength="255"
                  	disabled="true"
@@ -220,7 +236,7 @@
 		                    <p:column  style="width:65%;">
 		                          <f:facet name="header">
 					                    <h:outputText value="* " styleClass="mandatory" rendered="#{!terminationBackingBean.managedBean.mutualTermination}" />
-					                    <h:outputText value="#{lbl['lbl.ct.termination.desc']}"  />
+					                    <h:outputText value="#{terminationBackingBean.managedBean.termination ? lbl['lbl.ct.termination.desc'] : lbl['lbl.ct.termination.other']}" />
 				                  </f:facet>
 		                          <p:inputTextarea id="descId" value="#{data.description}" rows="2" 
 		                               disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}" autoResize="false"

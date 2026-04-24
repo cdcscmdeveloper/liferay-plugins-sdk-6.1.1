@@ -220,6 +220,7 @@
 						<p:column headerText="#{lbl['lbl.sc.mof.no']}" style="width:10%">
 							<h:outputText value="#{quoteSupplier.mofNumber}" />
 						</p:column>
+						<ui:remove>#26284 - start</ui:remove>
 						<p:column style="white-space:normal;text-align:center;width:20%;">
 							<f:facet name="header" style="white-space:normal;">
 								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
@@ -233,6 +234,7 @@
 							</p:commandLink>
 							<h:outputText rendered="#{quoteSupplier.smSupplier ne null and !simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>									   
 						</p:column>
+						<ui:remove>#26284 - end</ui:remove>
 					</p:dataTable>
 
 					<c:if test="#{isEditable}">
@@ -259,8 +261,9 @@
 				</p:tab>
 
 				<!--  BY Government Seller   -->
+				<ui:remove>#27868</ui:remove>
 				<p:tab title="#{lbl['lbl.sc.agency']}"
-					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag}">
+					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag or simpleQuoteBackingBean.managedBean.includeG2gSupplier}">
 					<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
 						rowIndexVar="index"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -367,6 +370,7 @@
 			</p:tabView>
 		</h:panelGroup>
 	</p:panel>
-	<ac:disciplinaryActionHistory voList="#{simpleQuoteBackingBean.managedBean.disciplineVOs}" btnView="true"/>
-
+	<ui:remove>#26284 - start</ui:remove>
+	<ac:disciplinaryActionHistory voList="#{simpleQuoteBackingBean.managedBean.disciplineVOs}" btnView="false"/>
+    <ui:remove>#26284 - end</ui:remove>
 </ui:composition>

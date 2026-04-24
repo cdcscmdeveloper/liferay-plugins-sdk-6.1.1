@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.purchaseinquiry;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -213,6 +214,16 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
+    
+    //27868 - start
+    private String parameterTypeRPT;
+    private Date createdDate;
+    private String supplierAccountTypeErrorMessage;
+    private boolean dropDownRPTvalue = Boolean.FALSE;
+    private boolean reasonCodeInActive= Boolean.FALSE;
+    private String inActiveReasonDesc = "";
+    private boolean newPK7Code = Boolean.FALSE;
+    //27868 - end
     
     /**
      * Gets the spki backing bean.
@@ -875,8 +886,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemTierStandardPrices() {
 		if (supplierItemTierStandardPrices == null) 
-				supplierItemTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
-		
+			supplierItemTierStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+			
 		return supplierItemTierStandardPrices;
 	}
 
@@ -896,7 +907,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemTierPromotionPrices() {
 		if (supplierItemTierPromotionPrices == null) 
-				supplierItemTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemTierPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		
 		return supplierItemTierPromotionPrices;
 	}
@@ -917,7 +928,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalStandardPrices() {
 		if (supplierItemZonalStandardPrices == null) 
-				supplierItemZonalStandardPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		
 		return supplierItemZonalStandardPrices;
 	}
@@ -938,7 +949,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalPromotionPrices() {
 		if (supplierItemZonalPromotionPrices == null) 
-				supplierItemZonalPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		
 		return supplierItemZonalPromotionPrices;
 	}
@@ -959,7 +970,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalTierStandardPrices() {
 		if (supplierItemZonalTierStandardPrices == null) 
-				supplierItemZonalTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalTierStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		
 		return supplierItemZonalTierStandardPrices;
 	}
@@ -980,7 +991,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalTierPromotionPrices() {
 		if (supplierItemZonalTierPromotionPrices == null) 
-				supplierItemZonalTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalTierPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		
 		return supplierItemZonalTierPromotionPrices;
 	}
@@ -1330,7 +1341,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemNormalPrices() {
 		if (supplierItemNormalPrices == null)
-			supplierItemNormalPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemNormalPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemNormalPrices;
 	}
@@ -1351,7 +1362,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemPromoPrices() {
 		if (supplierItemPromoPrices == null)
-			supplierItemPromoPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemPromoPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemPromoPrices;
 	}
@@ -1365,4 +1376,79 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 		this.supplierItemPromoPrices = supplierItemPromoPrices;
 	}
 	//29557 - end	
+	//27868 - start
+	/**
+	 * @return the parameterTypeRPT
+	 */
+	public String getParameterTypeRPT() {
+		return parameterTypeRPT;
+	}
+
+	/**
+	 * @param parameterTypeRPT the parameterTypeRPT to set
+	 */
+	public void setParameterTypeRPT(String parameterTypeRPT) {
+		this.parameterTypeRPT = parameterTypeRPT;
+	}
+
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public boolean isDropDownRPTvalue() {
+		return dropDownRPTvalue;
+	}
+
+	public void setDropDownRPTvalue(boolean dropDownRPTvalue) {
+		this.dropDownRPTvalue = dropDownRPTvalue;
+	}
+	
+	public boolean isReasonCodeInActive() {
+		return reasonCodeInActive;
+	}
+
+	public void setReasonCodeInActive(boolean reasonCodeInActive) {
+		this.reasonCodeInActive = reasonCodeInActive;
+	}
+	
+	public String getInActiveReasonDesc() {
+		return inActiveReasonDesc;
+	}
+
+	public void setInActiveReasonDesc(String inActiveReasonDesc) {
+		this.inActiveReasonDesc = inActiveReasonDesc;
+	}
+	
+	public boolean isNewPK7Code() {
+		return newPK7Code;
+	}
+
+	public void setNewPK7Code(boolean newPK7Code) {
+		this.newPK7Code = newPK7Code;
+	}
+	//27868 - end
+
+	/**
+	 * @return the supplierAccountTypeErrorMessage
+	 */
+	public String getSupplierAccountTypeErrorMessage() {
+		return supplierAccountTypeErrorMessage;
+	}
+
+	/**
+	 * @param supplierAccountTypeErrorMessage the supplierAccountTypeErrorMessage to set
+	 */
+	public void setSupplierAccountTypeErrorMessage(String supplierAccountTypeErrorMessage) {
+		this.supplierAccountTypeErrorMessage = supplierAccountTypeErrorMessage;
+	}
 }

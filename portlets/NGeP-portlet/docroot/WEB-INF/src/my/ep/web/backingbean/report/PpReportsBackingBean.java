@@ -1845,7 +1845,7 @@ public class PpReportsBackingBean extends
 							bil,(String)row[0],(String)row[1],Integer.parseInt((String)row[2]),(String)row[3],
 							Integer.parseInt((String)row[4]),(String)row[5],row[6] != null ? (String)row[6] : "",
 							row[7] != null ? (String)row[7] : "",row[8] != null ? (String)row[8] : "",row[9] != null ? (String)row[9] : "",
-							origin,pinda,newRemark,newDateStr,row[14] != null ? (String)row[14] : "",Integer.valueOf(count)
+							origin,pinda,newRemark,newDateStr,row[14] != null ? (String)row[14] : "",count //SONARQUBE PP BUG MINOR AZZA G93
 						});
 						bil++;
 					}

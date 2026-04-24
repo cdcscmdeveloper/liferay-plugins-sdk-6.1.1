@@ -110,7 +110,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private List<FlRemark> rejectionRemarkHistory;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	
@@ -124,6 +124,12 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private List<ScRequestItemSpecOffer> specificationList;
 	private List<ScRequestItemSpecOffer> itemSpecList;
 	// 28855 - End
+	
+	// 30753-Start
+	private boolean showLimitExceededDialog;
+	private String limitExceededMessage;
+
+	// 30753-end
 
 	/**
 	 * Gets the fl remark.
@@ -965,12 +971,12 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -1047,4 +1053,22 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 		this.itemSpecList = itemSpecList;
 	}
 	// 28855 - End
+	
+	// 30753-Start
+	public boolean isShowLimitExceededDialog() {
+		return showLimitExceededDialog;
+	}
+
+	public void setShowLimitExceededDialog(boolean showLimitExceededDialog) {
+		this.showLimitExceededDialog = showLimitExceededDialog;
+	}
+
+	public String getLimitExceededMessage() {
+		return limitExceededMessage;
+	}
+
+	public void setLimitExceededMessage(String limitExceededMessage) {
+		this.limitExceededMessage = limitExceededMessage;
+	}
+	// 30753-end
 }

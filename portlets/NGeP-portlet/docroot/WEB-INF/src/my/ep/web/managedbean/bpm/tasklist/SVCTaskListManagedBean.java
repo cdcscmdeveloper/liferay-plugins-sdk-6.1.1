@@ -293,7 +293,7 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 
 		@Override
 		protected ISearchResultBean<SmAppl> pageChangeListener(ISearchBean<SmAppl> searchBean) {
-			SearchResultBean<SmAppl> resultBean = new SearchResultBean<SmAppl>();
+			SearchResultBean<SmAppl> resultBean = new SearchResultBean<>();
 			resultBean.setResultList(null);
 			resultBean.setTotalRecord(0);
 			List<SmAppl> bumi = SVCTaskListManagedBean.this.getCancelledBumiApplLs();

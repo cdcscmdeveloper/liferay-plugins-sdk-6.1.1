@@ -11,14 +11,19 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
@@ -32,15 +37,14 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMSalutationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.salutation.SalutationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * @author DK
@@ -304,6 +308,17 @@ public class SalutationBackingBean extends
 			 salutationSO = EpEjbBusinessDelegate.getInstance().
 					 getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
 			 
+			/************ AUDIT #28895_35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMSalutationBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION) && salutation.getSalutationId() != null) {
+				SalutationResDTO oldResDTO = salutationSO.retriveSalutaionById(reqDTO);
+				getManagedBean().setOldPmSalutation(oldResDTO.getSalutation());
+			}
+			/************ END AUDIT #28895_35509 *************/
+
 			 SalutationResDTO resDTO= salutationSO.saveOrUpdateSaluationDtls(reqDTO);
 			 this.getManagedBean().setPmSalutation(resDTO.getSalutation());
 			 if(resDTO.isSuccessful()){
@@ -326,13 +341,25 @@ public class SalutationBackingBean extends
 											resDTO.getSalutation().getSalutationCode(),
 											resDTO.getSalutation().getSalutationCode()});					
 					}
+				/************ AUDIT #28895_35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SALUTATION);
+					getManagedBean().setOldPmSalutation(null);
 				}
-		 }catch(Exception e){
-			 throw e;
-		 }finally{
-			 salutationSO = null;
-		 }
-		 return returnUrl;
+				/************ END AUDIT #28895_35509 *************/
+				}
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		}
+		//#34445 End
+		catch (Exception e) {
+			throw e;
+		} finally {
+			salutationSO = null;
+		}
+		return returnUrl;
 	 }
 	 public boolean isExistSalutationCode(PmSalutation salutation) {
 		 ISalutationSO reqSO = null;

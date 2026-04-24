@@ -471,6 +471,7 @@ public class QtnTenderSearchBean implements Serializable {
 		this.qtStatusForQt = qtStatusForQt;
 	}
 
+	//#29468 Start Vinod
 	public String getLoaNo() {
 		return loaNo;
 	}
@@ -478,7 +479,7 @@ public class QtnTenderSearchBean implements Serializable {
 	public void setLoaNo(String loaNo) {
 		this.loaNo = loaNo;
 	}
-	
+	//#29468 End Vinod
 	
 	
 }

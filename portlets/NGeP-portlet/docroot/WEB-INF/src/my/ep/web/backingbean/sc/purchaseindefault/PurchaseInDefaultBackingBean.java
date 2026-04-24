@@ -94,6 +94,7 @@ import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.purchaseindefault.PurchaseInDefaultManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -103,7 +104,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 
@@ -132,9 +132,11 @@ public class PurchaseInDefaultBackingBean extends
 	private String PURCHASE_IN_DEFAULT_PAGE = "purchaseInDefaultMain";
 	
 	// start - #28865
-	private String PURCHASE_IN_DEFAULT_RESPONSE_PAGE = "purchaseInDefaultResponseMain";
+	//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+	private String purchaseInDefaultResponsePage = "purchaseInDefaultResponseMain";
 	
-	private String PURCHASE_IN_DEFAULT_REQUISITIONER_RESPONSE_PAGE = "/xhtml/sc/directpurchase/purchaseindefaultresponse/reqPurchaseInDefaultResponseMain.xhtml";
+	private String purchaseInDefaultRequisitionerResponsePage = "/xhtml/sc/directpurchase/purchaseindefaultresponse/reqPurchaseInDefaultResponseMain.xhtml";
+	//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	// end - #28865
 
 	/**
@@ -209,6 +211,15 @@ public class PurchaseInDefaultBackingBean extends
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									message));
 				}
+				
+				//#26059 - Start
+				if (contractItem.getScRequestItem() != null && contractItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(contractItem.getScRequestItem().getCmItem().getItemName());
+					contractItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
+				//#26059 - End
+				
 				scPurchaseInDefault.setContractedItem(contractItem);
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
@@ -259,6 +270,14 @@ public class PurchaseInDefaultBackingBean extends
 				} else {
 					scPurchaseInDefault.setPanelItem(ctPanelItem);
 				}
+				
+				//#26059 - Start
+				if (ctPanelItem.getScRequestItem() != null && ctPanelItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(ctPanelItem.getScRequestItem().getCmItem().getItemName());
+					ctPanelItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
+				//#26059 - End
 
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
 				purchaseInDefaultReqDTO.setPanelItem(ctPanelItem);
@@ -843,7 +862,7 @@ public class PurchaseInDefaultBackingBean extends
 			Long stsId = getManagedBean().getPidStatus().getStatusId(); //#28865
 			
 			// start - #9133 (reopen comment 146)
-			List<ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark>();
+			List<ScPIDRemark> deleteRemarks = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			for (ScPIDRemark remark : scPurchaseInDefault.getRemarks()) {
 				if (remark.getRemark().equalsIgnoreCase("") && remark.getRemarkId() != null) {
 					deleteRemarks.add(remark);
@@ -1572,6 +1591,8 @@ public class PurchaseInDefaultBackingBean extends
 		// approved by
 		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
 		
+		CommonUtils commonUtils = new CommonUtils(); //#26059 - Start													   
+
 		// contract item
 		if (purchaseInDefault.getContractedItem() != null) {
 			/*
@@ -1597,6 +1618,21 @@ public class PurchaseInDefaultBackingBean extends
 				 getManagedBean().setContractTypeAsMinistry(Boolean.TRUE);
 			}
 			//#9133 - end
+			
+			//#26059 - Start
+			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
+					&& purchaseInDefault.getContractedItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getContractedItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getContractedItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			//#26059 - End
 		}
 		
 		if(purchaseInDefault.getCircularItem() != null) {
@@ -1605,6 +1641,19 @@ public class PurchaseInDefaultBackingBean extends
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {
 			getManagedBean().setCheckContractItem(Boolean.FALSE);
+			
+			// #26059 - Start
+			if (purchaseInDefault.getPanelItem().getScRequestItem() != null
+					&& purchaseInDefault.getPanelItem().getScRequestItem().getCmItem() != null) {
+				purchaseInDefault
+						.getPanelItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
 		}
 
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
@@ -1642,7 +1691,9 @@ public class PurchaseInDefaultBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		
 		// start - #28865
-		String PID_PAGE = PURCHASE_IN_DEFAULT_PAGE;
+		//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		String pidPage = PURCHASE_IN_DEFAULT_PAGE;
+		//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		
 		PortletRequest request = (PortletRequest) fc.getExternalContext().getRequest();
 		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
@@ -1707,7 +1758,7 @@ public class PurchaseInDefaultBackingBean extends
 								}
 							}
 						}
-						PID_PAGE = PURCHASE_IN_DEFAULT_REQUISITIONER_RESPONSE_PAGE;
+						pidPage = purchaseInDefaultRequisitionerResponsePage; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					}
 				}
 			}
@@ -1755,14 +1806,14 @@ public class PurchaseInDefaultBackingBean extends
 						}
 					}
 
-					PID_PAGE = PURCHASE_IN_DEFAULT_REQUISITIONER_RESPONSE_PAGE;
+					pidPage = purchaseInDefaultRequisitionerResponsePage; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				}
 			}
 		}
 		//end - #9133
 		
 		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, PID_PAGE);
+		.handleNavigation(fc, null, pidPage); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		// end - #28865
 	}
 	
@@ -1789,6 +1840,8 @@ public class PurchaseInDefaultBackingBean extends
 				.getPurchaseInDefaultDtl();
 		
 		getManagedBean().setContractId(Long.valueOf(directPurchaseDataType.getContractId()));
+		
+		CommonUtils commonUtils = new CommonUtils(); //#26059 - Start
 		
 		// approved by
 		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
@@ -1823,6 +1876,22 @@ public class PurchaseInDefaultBackingBean extends
 			 * contractItem = ConIresDTO.getCtContractItem();
 			 * purchaseInDefault.setContractedItem(contractItem);
 			 */
+			
+			// #26059 - Start
+			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
+					&& purchaseInDefault.getContractedItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getContractedItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getContractedItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
+			
 			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
 			getManagedBean().setCheckContractItem(Boolean.TRUE);
 		}
@@ -1833,6 +1902,19 @@ public class PurchaseInDefaultBackingBean extends
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {
 			getManagedBean().setCheckContractItem(Boolean.FALSE);
+			
+			// #26059 - Start
+			if (purchaseInDefault.getPanelItem().getScRequestItem() != null
+					&& purchaseInDefault.getPanelItem().getScRequestItem().getCmItem() != null) {
+				purchaseInDefault
+						.getPanelItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
 		}
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
 
@@ -1885,7 +1967,7 @@ public class PurchaseInDefaultBackingBean extends
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()));
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, PURCHASE_IN_DEFAULT_RESPONSE_PAGE);
+				.handleNavigation(fc, null, purchaseInDefaultResponsePage); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	}
 	
 	/**
@@ -1895,7 +1977,7 @@ public class PurchaseInDefaultBackingBean extends
 	public void updatePID(){
 		debugLogger("updatePurchaseInDefault");
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
-		FacesScopes facesScopes = new FacesScopes();
+//		FacesScopes facesScopes = new FacesScopes(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		try {
 			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -2214,15 +2296,16 @@ public class PurchaseInDefaultBackingBean extends
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-		List <ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark> (); //#28865 - minor fixing 22/09/2022
+		List <ScPIDRemark> deleteRemarks = new ArrayList<> (); //#28865 - minor fixing 22/09/2022 //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		try {
+			//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			for (ScPIDRemark remark : getManagedBean().getSuppRemarks()) {
 				if (remark.getRemark() != null && !remark.getRemark().equalsIgnoreCase("")) {
 					if (remark.getRemarkId() == null && getManagedBean().getSuppRemarkId() == null) {
 						reqDTO.setScPIDRemark(remark);
 						PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.updateRemark(reqDTO);
 						getManagedBean().setSuppRemarkId(resDTO.getScPIDRemark().getRemarkId());
-						break;
+						break;//#36311 - Sqube DP Code Smell Major G97
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2231,7 +2314,7 @@ public class PurchaseInDefaultBackingBean extends
 					fetchRemark.setCreatedBy(remark.getCreatedBy());
 					reqDTO.setScPIDRemark(fetchRemark);
 					purchaseInDefaultSO.updateRemark(reqDTO);
-					break;
+					break;//#36311 - Sqube DP Code Smell Major G97
 				}
 				//#28865 - minor fixing 22/09/2022-start
 				else{
@@ -2240,6 +2323,7 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}//#28865 - minor fixing 22/09/2022-end
 			}
+			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			//#28865 - minor fixing 22/09/2022 -start
 			if(CollectionUtils.isNotEmpty(deleteRemarks)){
 				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
@@ -2263,9 +2347,11 @@ public class PurchaseInDefaultBackingBean extends
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-		List <ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark> ();// #9133 (reopen comment 146)
+		List <ScPIDRemark> deleteRemarks = new ArrayList<> ();// #9133 (reopen comment 146) //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		
 		try {
+			//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+			boolean shouldBreak = false;
 			for (ScPIDRemark remark : scPurchaseInDefault.getRemarks()) {
 				if (remark.getRemark() != null && !remark.getRemark().equalsIgnoreCase("")) {
 					if (remark.getRemarkId() == null) {
@@ -2274,7 +2360,7 @@ public class PurchaseInDefaultBackingBean extends
 						
 						if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 								.getPidStatus().getStatusId()))// #31603
-							break;
+							shouldBreak = true;
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2286,7 +2372,7 @@ public class PurchaseInDefaultBackingBean extends
 					
 					if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 							.getPidStatus().getStatusId()))// #31603
-						break;
+						shouldBreak = true;
 				}
 				// start - #9133 (reopen comment 146)
 				else{
@@ -2295,8 +2381,11 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}
 				// end - #9133
+				if (shouldBreak) {
+			        break;
+			    }
 			}
-			
+			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			// start - #9133 (reopen comment 146)
 			if(CollectionUtils.isNotEmpty(deleteRemarks)){
 				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
@@ -2506,11 +2595,9 @@ public class PurchaseInDefaultBackingBean extends
 	 * @return void
 	 */
 	public void savePidReason() {
-		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+//		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IReasonSO.class);
+//		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class); Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
@@ -2521,9 +2608,9 @@ public class PurchaseInDefaultBackingBean extends
 			if (getManagedBean().getPurchaseInDefault().getContractedItem().getCtContractVer().getCtContract()
 					.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 							 
-				boolean IsReasonExist = reasonExitsCtPidReason(pmReason);
+				boolean isReasonExist = reasonExitsCtPidReason(pmReason); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				
-				if(!IsReasonExist){
+				if(!isReasonExist){ //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					CtPidReason ctPidReasons = new CtPidReason();
 					ctPidReasons.setPmReason(pmReason);
 					ctPidReasons.setReasonDesc(null);
@@ -2535,9 +2622,9 @@ public class PurchaseInDefaultBackingBean extends
 
 			} else {
 				
-				boolean IsReasonExist = reasonExitsCtCircularPidReason(pmReason);
+				boolean isReasonExist = reasonExitsCtCircularPidReason(pmReason); // Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
-				if (!IsReasonExist) {
+				if (!isReasonExist) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
 					ctCircularPidReasons.setPmReason(pmReason);
 					ctCircularPidReasons.setReasonDesc(null);
@@ -2653,6 +2740,22 @@ public class PurchaseInDefaultBackingBean extends
 				} else{ //panel item
 					getManagedBean().setCheckContractItem(Boolean.FALSE);
 				}
+				
+				//#26059 - Start
+				CatalogueBackingBean backingBean = new CatalogueBackingBean();
+
+				// Handle Panel Item
+				if (purchaseInDefault.getPanelItem() != null
+						&& purchaseInDefault.getPanelItem().getScRequestItem() != null) {
+					backingBean.cleanItemNameNA(purchaseInDefault.getPanelItem().getScRequestItem().getCmItem());
+				}
+
+				// Handle Contracted Item
+				if (purchaseInDefault.getContractedItem() != null
+						&& purchaseInDefault.getContractedItem().getScRequestItem() != null) {
+					backingBean.cleanItemNameNA(purchaseInDefault.getContractedItem().getScRequestItem().getCmItem());
+				}
+				//#26059 - End
 
 				getManagedBean().setPurchaseInDefault(purchaseInDefault);
 				initializeApproverGroup();
@@ -3186,7 +3289,7 @@ public class PurchaseInDefaultBackingBean extends
 		List<ScPIDRemark> scRemarks =  scPurchaseInDefault.getRemarks();
 		Long statusId = getManagedBean().getPidStatus().getStatusId();
 
-		if (scRemarks.size() > 0) {
+		if (!scRemarks.isEmpty()) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			for (int row = 0; row < scRemarks.size(); row++) {
 				ScRemark scRemark = scRemarks.get(row);
 				
@@ -3222,11 +3325,7 @@ public class PurchaseInDefaultBackingBean extends
 	
 	public boolean compareUsrName(String username) {
 		FacesScopes facesScopes = new FacesScopes();
-		if (username != null && username.equals(facesScopes.getUserScreenName())) {
-			return true;
-		} else {
-			return false;
-		}
+		return username != null && username.equals(facesScopes.getUserScreenName());
 	}
 	//#31603 - end
 }

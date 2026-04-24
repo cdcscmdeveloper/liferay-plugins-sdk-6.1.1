@@ -1,0 +1,50 @@
+<ui:composition 
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:h="http://java.sun.com/jsf/html">
+    
+	<ui:define name="contentSection">
+	 <!-- Import external audit.css -->
+        <h:outputStylesheet library="ep/css" name="auditqt.css" />
+        
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI> 
+
+		<p:panel styleClass="audit-main-panel">
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<div class="BtnSpacing" style="display: inline-block; width: 100%">
+							<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+								action="#{auditQTBackingBean.backAction}" />
+						</div>
+					</td>
+					<td>
+						<div align="right" style="width: 100%">
+							<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
+								ajax="false">
+								<p:fileDownload
+									value="#{auditQTBackingBean.generateAllReport(auditQTBackingBean.managedBean.qtId)}" />
+							</p:commandLink>
+							&#160;
+							<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
+								ajax="false">
+								<p:fileDownload
+									value="#{auditQTBackingBean.getAuditTrailDetailsForExlRpt(auditQTBackingBean.managedBean.qtId, null)}" />
+							</p:commandLink>
+							&#160;
+						</div>
+					</td>
+				</tr>
+			</table>
+
+			<!-- Include Views -->
+			<ui:include src="/xhtml/sc/quatationtender/audit/auditPrintAndDownload.xhtml" />
+			
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

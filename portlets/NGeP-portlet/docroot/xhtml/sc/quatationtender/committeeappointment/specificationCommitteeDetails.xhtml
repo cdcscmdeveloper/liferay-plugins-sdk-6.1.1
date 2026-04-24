@@ -47,8 +47,15 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText value="#{specificationcommittee.memberName}"
-					style="white-space: normal;" />
+					<!-- #12471 Start -->
+					<p:commandLink
+						actionListener="#{qTCommitteBackingBean.onClickMemberInfo(specificationcommittee.pmUser)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						update="@form">
+						<h:outputText value="#{specificationcommittee.memberName}"
+							style="white-space: normal;" />
+					</p:commandLink>
+					<!-- #12471 End -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
@@ -89,8 +96,10 @@
 					<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 							value="#{specificationcommittee.memberRoleId}"
 							style="width: 130px;margin-bottom: 5px;">
-							<p:ajax event="change" partialSubmit="true" process="@this" update="@this, @(.amendButton)"
-								listener="#{qTCommitteBackingBean.roleChangedListener(specificationcommittee)}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{qTCommitteBackingBean.onChangeRole(specificationcommittee)}" /><!-- #35500 issue fix 4-9 -->
+							<!-- <p:ajax event="change" partialSubmit="true" process="@this" update="@this, @(.amendButton)"
+								listener="#{qTCommitteBackingBean.roleChangedListener(specificationcommittee)}" />  -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
@@ -105,6 +114,10 @@
 				</ui:fragment>
 			</p:column>
 		</p:dataTable>
+		<!-- #12471 Start -->
+		<ac:qtCommitteMemberInfoPopup bBean="#{qTCommitteBackingBean}"
+			widget="memberInfoPopUp" />
+		<!-- #12471 End -->
 		</ui:fragment>
 		<ui:fragment rendered="#{showHistory}">
 			<ui:include src="committeeHistory.xhtml" />

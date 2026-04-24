@@ -15,10 +15,6 @@
 	<ui:param name="isFulfilmentTypeScheduled" 
 		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeScheduled}" />
 	<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
-	<!-- #25726 START -->	
-	<ui:param name="isFulfilmentTypeNonPeriodicScheduled" 
-		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeNonPeriodicScheduled}" />
-	<!-- #25726 END -->
 	<!-- #21695 farid add instruction START -->
 	<ui:remove>
 		<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
@@ -129,8 +125,7 @@
 						isItemTypeService,
 						isFulfilmentTypeScheduled, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
-						tplSpecEstimation.tplSpecQuestion.specQuestionId,
-						isFulfilmentTypeNonPeriodicScheduled)}"></p:ajax>
+						tplSpecEstimation.tplSpecQuestion.specQuestionId)}"></p:ajax>
 			</p:inputText>
 			
 			<p:message id="zoneEstCostMsg" for="zoneEstCost" display="icon" />

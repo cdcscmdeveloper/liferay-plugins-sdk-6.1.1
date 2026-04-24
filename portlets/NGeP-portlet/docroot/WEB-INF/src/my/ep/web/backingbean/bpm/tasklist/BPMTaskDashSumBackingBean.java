@@ -35,11 +35,13 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "bpmTaskDashSumBackingBean")
 @RequestScoped
-public class BPMTaskDashSumBackingBean extends
-		BaseBackingBean<BPMTaskDashSumManagedBean> {
+public class BPMTaskDashSumBackingBean extends BaseBackingBean<BPMTaskDashSumManagedBean> {
 
-	private static Logger log = Logger
-			.getLogger(BPMTaskDashSumBackingBean.class);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger .getLogger(BPMTaskDashSumBackingBean.class);
 	private long totalTask = 0;
 	private List<BpmTaskSummaryDTO> dashboardSummary = new ArrayList<BpmTaskSummaryDTO>();
 	private int pendingDeliveryListNum;
@@ -59,8 +61,7 @@ public class BPMTaskDashSumBackingBean extends
 		IDashSummarySO dashSummarySO = null;
 		try {
 
-			dashSummarySO = (IDashSummarySO) BusinessDelegate.getInstance()
-					.getServiceObject("cc", IDashSummarySO.class);
+			dashSummarySO = (IDashSummarySO) BusinessDelegate.getInstance().getServiceObject("cc", IDashSummarySO.class);
 			FacesScopes face = new FacesScopes();
 			Object token = face.getBPMAuthenticationCtxToken();
 			long userId = new FacesScopes().getUserSessionBean().getUserId();
@@ -70,30 +71,25 @@ public class BPMTaskDashSumBackingBean extends
 			reqDTO.setCtxToken(token);
 			reqDTO.setUserId(userId);
 			// ///getting supplier Id//////////////////////////////
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							ISupplierSearchSO.class);
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 			supplierReqDTO.setUserId(userId);
 
-			SupplierSearchResDTO smResDTO = supplierSearchSO
-					.retriveSupplierProfiles(supplierReqDTO);
-//			log.info("smResDTO="+smResDTO);
-//			log.info("smResDTO.getResultBean()="+smResDTO.getResultBean());
-//			log.info("smResDTO.getResultBean().getResultList()="+smResDTO.getResultBean().getResultList());
-//			log.info("smResDTO.getResultBean().getResultList().get(0)="+smResDTO.getResultBean().getResultList().get(0));
-        if(smResDTO.getResultBean().getResultList() != null && smResDTO.getResultBean().getResultList().size() >0 ){
-			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
-					.get(0).getSupplierId());
-         }
+			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+			// log.info("smResDTO="+smResDTO);
+			// log.info("smResDTO.getResultBean()="+smResDTO.getResultBean());
+			// log.info("smResDTO.getResultBean().getResultList()="+smResDTO.getResultBean().getResultList());
+			// log.info("smResDTO.getResultBean().getResultList().get(0)="+smResDTO.getResultBean().getResultList().get(0));
+			if (smResDTO.getResultBean().getResultList() != null && smResDTO.getResultBean().getResultList().size() > 0) {
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+			}
 			// /////////////////////////////////////////////////////
 			if (isCatalogueAdmin()) {
 				reqDTO.setCatalogueAdminRole(true);
 			} else {
 				reqDTO.setCatalogueAdminRole(false);
 			}
-			DashSummaryResDTO responseDTO = dashSummarySO
-					.getTaskSummary(reqDTO);
+			DashSummaryResDTO responseDTO = dashSummarySO.getTaskSummary(reqDTO);
 			// log.info("responseDTO*****" + responseDTO);
 			// log.info("responseDTO.getTaskSummaryDTOList()*****"
 			// + responseDTO.getTaskSummaryDTOList());
@@ -102,31 +98,24 @@ public class BPMTaskDashSumBackingBean extends
 			// log.info("responseDTO.getTotalTask()*****"
 			// + responseDTO.getTotalTask());
 			totalTask = responseDTO.getTotalTask();
-			log.info("after getting responce list in backingBean: "
-					+ new Date());
+			log.info("after getting responce list in backingBean: " + new Date());
 			pendingDeliveryListNum = responseDTO.getPendingDeliveryNum();
 			// log.info("responseDTO.getPendingDeliveryNum()*****"
 			// + responseDTO.getPendingDeliveryNum());
 			// log.info("back in backingBean: " + new Date());
-			log.info("after getting pendingDeliveryListNum in backingBean: "
-					+ new Date());
+			log.info("after getting pendingDeliveryListNum in backingBean: " + new Date());
 			pendingApprovalItemNum = responseDTO.getPendingApprovalItemNum();
-			log.info("after getting pendingApprovalItemNum in backingBean: "
-					+ new Date());
+			log.info("after getting pendingApprovalItemNum in backingBean: " + new Date());
 			pendingCodifiedItemsNum = responseDTO.getPendingCodifiedItemsNum();
-			log.info("after getting pendingPublishedItemsNum in backingBean: "
-					+ new Date());
-			pendingPublishedItemsNum = responseDTO
-					.getPendingPublishedItemsNum();
-			log.info("after getting rejectedItemsNum in backingBean: "
-					+ new Date());
+			log.info("after getting pendingPublishedItemsNum in backingBean: " + new Date());
+			pendingPublishedItemsNum = responseDTO.getPendingPublishedItemsNum();
+			log.info("after getting rejectedItemsNum in backingBean: " + new Date());
 			rejectedItemsNum = responseDTO.getRejectedItemsNum();
 			// log.info("pendingApprovalItemNum*****" + pendingApprovalItemNum);
 			//
 			// log.info("pendingCodifiedItemsNum*****" +
 			// pendingCodifiedItemsNum);
-			log.info("after getting pendingCodifiedItemsNum and end backingBean: "
-					+ new Date());
+			log.info("after getting pendingCodifiedItemsNum and end backingBean: " + new Date());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -146,195 +135,125 @@ public class BPMTaskDashSumBackingBean extends
 		try {
 
 			FacesScopes facesScope = new FacesScopes();
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-					.getRequestScope(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			String commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-									.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-									.getFriendlyURL().length());
+			String commonUrl = themeDisplay.getURLCurrent().substring(0,
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL()) + themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 
 			externalContext.redirect(commonUrl + "/" + "task-list");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
-	public void goToTaskListFilterDocType(String docTypeId)
-			throws PortalException, SystemException {
-		System.out
-				.println("....................goToTaskListFilterDocType.......................");
+	public void goToTaskListFilterDocType(String docTypeId) throws PortalException, SystemException {
+		System.out.println("....................goToTaskListFilterDocType.......................");
 
 		try {
 			FacesScopes facesScope = new FacesScopes();
 
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-					.getRequestScope(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			String commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-									.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-									.getFriendlyURL().length());
+			String commonUrl = themeDisplay.getURLCurrent().substring(0,
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL()) + themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 
-			externalContext.redirect(commonUrl + "/" + "task-list?docTypeId="
-					+ docTypeId);
+			externalContext.redirect(commonUrl + "/" + "task-list?docTypeId=" + docTypeId);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void redirectToCatalogueTaskList() throws PortalException,
-			SystemException {
+	public void redirectToCatalogueTaskList() throws PortalException, SystemException {
 		System.out.println(">>>>>>>>>>redirectToCatalogueTaskList<<<<<<<<<<");
 		try {
 			FacesScopes facesScope = new FacesScopes();
 
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-					.getRequestScope(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			String commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-									.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-									.getFriendlyURL().length());
+			String commonUrl = themeDisplay.getURLCurrent().substring(0,
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL()) + themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 
 			externalContext.redirect(commonUrl + "/" + "pending-approval-item");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void redirectToPendingCodifiedItems() throws PortalException,
-			SystemException {
-		System.out
-				.println(">>>>>>>>>>redirectToPendingCodifiedItems<<<<<<<<<<");
+	public void redirectToPendingCodifiedItems() throws PortalException, SystemException {
+		System.out.println(">>>>>>>>>>redirectToPendingCodifiedItems<<<<<<<<<<");
 		try {
 			FacesScopes facesScope = new FacesScopes();
 
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-					.getRequestScope(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			String commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-									.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-									.getFriendlyURL().length());
+			String commonUrl = themeDisplay.getURLCurrent().substring(0,
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL()) + themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 
-//			externalContext.redirect(commonUrl + "/" + "contracted-item");
+			// externalContext.redirect(commonUrl + "/" + "contracted-item");
 			externalContext.redirect(commonUrl + "/" + "pending-codification-assignment");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void redirectToCatalogueMaintenance(String itemStatus) throws PortalException,
-			SystemException {
-		System.out
-				.println(">>>>>>>>>>redirectToCatalogueMaintenance<<<<<<<<<<");
-		
+	public void redirectToCatalogueMaintenance(String itemStatus) throws PortalException, SystemException {
+		System.out.println(">>>>>>>>>>redirectToCatalogueMaintenance<<<<<<<<<<");
+
 		try {
 			FacesScopes facesScope = new FacesScopes();
 
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-					.getRequestScope(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			String commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-									.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-									.getFriendlyURL().length());
+			String commonUrl = themeDisplay.getURLCurrent().substring(0,
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL()) + themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 			System.out.println("itemStatus=" + itemStatus);
-		
-			externalContext.redirect(commonUrl + "/" + "catalogue-maintenance-file?itemStatus="+itemStatus);
+
+			externalContext.redirect(commonUrl + "/" + "catalogue-maintenance-file?itemStatus=" + itemStatus);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void redirectToPendingDeliveryList() throws PortalException,
-			SystemException {
+	public void redirectToPendingDeliveryList() throws PortalException, SystemException {
 		System.out.println(">>>>>>>>>>redirectToPendingDeliveryList<<<<<<<<<<");
 		try {
 			FacesScopes facesScope = new FacesScopes();
 
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-					.getRequestScope(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			String commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-									.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-									.getFriendlyURL().length());
+			String commonUrl = themeDisplay.getURLCurrent().substring(0,
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL()) + themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 
 			externalContext.redirect(commonUrl + "/" + "pending-delivery-list");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-	// public List<FlFulfilmentOrder> retrievePendingDeliverylist() {
-	// System.out.println(">>>>>>>>>>retrievePendingDeliverylist<<<<<<<<<<");
-	// IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)
-	// BusinessDelegate.getInstance()
-	// .getServiceObject("fl", IFulfilmentOrderSO.class);
-	//
-	//
-	// List<FlFulfilmentOrder> flFulFilmentOrderList =
-	// fulfilmentOrderSO.getPendingDoList();
-	//
-	// return flFulFilmentOrderList;
-	// }
 
 	public List<BpmTaskSummaryDTO> getDashboardSummary() {
 		return dashboardSummary;

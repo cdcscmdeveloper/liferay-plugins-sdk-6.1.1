@@ -61,24 +61,28 @@
 			<c:choose>
 				<c:when test="#{cc.attrs.showAttachment}">
 					<td class="TableFieldLeft" width="100px">
-						<p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" />
+						<c:if test="#{cc.attrs.showAttachments}"><ui:remove>#26059 - add conditon</ui:remove>
+							<p:outputLabel value="#{cc.attrs.documentHeader}" /><ui:remove>#26059 - set documentHeader</ui:remove>
+						</c:if>
 					</td>
 					<td class="TableFieldRight" width="35%">
 						<table border="0" cellspacing="0" cellpadding="0" width="100%">
 							<tr>
 								<td colspan="2">
-									<c:if test="#{!cc.attrs.readonly}">
-										<p:commandButton value="#{lbl['lbl.txt.attach.files']}"
+									<c:if test="#{!cc.attrs.readonly and !cc.attrs.disableUpload}"><ui:remove>#26059 - additional conditon</ui:remove>
+										<p:commandButton value="#{cc.attrs.uploadButtonLabel}"
 											partialSubmit="true" process="@this"
-											update="@([id$=uploadDlgId])" oncomplete="uploadDlg.show()" />
+											update="@([id$=uploadDlgId])" oncomplete="uploadDlg.show()" /><ui:remove>#26059 - set uploadButtonLabel</ui:remove>
 									</c:if>
 								</td>
 							</tr>
 							<tr>
+							<c:if test="#{cc.attrs.showAttachments}"><ui:remove>#26059 - add conditon</ui:remove>
 								<td />
 								<td>
+								<ui:remove>#26059 - set recordsLabel</ui:remove>
 									<p:dataGrid id="attachmentTbId"
-										emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+										emptyMessage="#{cc.attrs.recordsLabel}"
 										value="#{cc.attrs.attachmentList}" var="scAttachment"
 										rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 										<table>
@@ -116,6 +120,7 @@
 										</table>
 									</p:dataGrid>
 								</td>
+							</c:if>
 							</tr>
 						</table>
 					</td>
@@ -127,9 +132,10 @@
 		</tr>
 	</table>
 
-	<c:if test="#{cc.attrs.showAttachment and !cc.attrs.readonly}">			
+	<c:if test="#{cc.attrs.showAttachment and !cc.attrs.readonly}">
+		<ui:remove>#26059 - set documentHeader</ui:remove>			
 		<p:dialog id="delAttPopupId" widgetVar="delAttPopup"
-			header="#{lbl['lbl.sc.supporting.document']}" resizable="false"
+			header="#{cc.attrs.documentHeader}" resizable="false"
 			width="33%" height="100"
 			closable="false" modal="true">
 			<table>

@@ -536,8 +536,9 @@ public class SmBulkApplicationBackingBean extends
 		StringBuilder sbNoRemarks = new StringBuilder();
 		StringBuilder sbNoApprove = new StringBuilder();
 		StringBuilder sbFullMessage = new StringBuilder();
-		String catNoAction = "";
-		String catNoRemarks = "";
+		//Sonarqube #G22 - start
+		StringBuilder catNoAction;
+		StringBuilder catNoRemarks;
 		int countNoAction = 0;
 		int countNoRemarks = 0;
 		boolean catNoApprove = true; //21937
@@ -547,19 +548,19 @@ public class SmBulkApplicationBackingBean extends
 		sbNoApprove.append("<table>");
 
 		for (SmBulkApplicationVO vo : getManagedBean().getSelectedTasks()) {
-			catNoAction = "";
-			catNoRemarks = "";
+			catNoAction = new StringBuilder();
+			catNoRemarks = new StringBuilder();
 
 			for (SmSupplierCategory cat : vo.getPendingApproveCategories()) {
 				if (cat.getApprvrDecFlg() == null) {
-					catNoAction = catNoAction + cat.getPmCategoryL1().getCategoryL1Code()
+					catNoAction.append(cat.getPmCategoryL1().getCategoryL1Code()
 							+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
-							+ ",";
+							+ ",");
 				}
 				if (cat.getApprvrDecFlg() == 0 && StringUtils.isBlank(cat.getApproverRemarks())) {
-					catNoRemarks = catNoRemarks + cat.getPmCategoryL1().getCategoryL1Code()
+					catNoRemarks.append(cat.getPmCategoryL1().getCategoryL1Code()
 							+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
-							+ ",";
+							+ ",");
 				}
 				//21937 - start
 				if (cat.getApprvrDecFlg() != 0) {
@@ -574,22 +575,23 @@ public class SmBulkApplicationBackingBean extends
 			if(vo.getAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
 				for (SmSupplierCategory cat : vo.getApprovedCategories()){
 					if (cat.getApprvrDecFlg() == 0 && StringUtils.isBlank(cat.getApproverRemarks())) {
-						catNoRemarks = catNoRemarks + cat.getPmCategoryL1().getCategoryL1Code()
+						catNoRemarks.append(cat.getPmCategoryL1().getCategoryL1Code()
 								+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
-								+ ",";
+								+ ",");
 					}
 				}
 			}
 			//21937 - end
 
-			if (!catNoAction.equals("")) {
+			if (!("").equals(catNoAction.toString())) {
 				sbNoAction.append("<tr>").append("<td>").append(++countNoAction).append(") ").append("</td><td>");
 				sbNoAction.append(vo.getAppl().getApplNo()).append(" : ")
 						.append(catNoAction.substring(0, catNoAction.length() - 1));
 				sbNoAction.append("</td>").append("</tr>");
 			}
 
-			if (!catNoRemarks.equals("")) {
+			if (!("").equals(catNoRemarks.toString())) {
+				//Sonarqube #G22 - end
 				sbNoRemarks.append("<tr>").append("<td>").append(++countNoRemarks).append(") ").append("</td><td>");
 				sbNoRemarks.append(vo.getAppl().getApplNo()).append(" : ")
 						.append(catNoRemarks.substring(0, catNoRemarks.length() - 1));
@@ -757,6 +759,8 @@ public class SmBulkApplicationBackingBean extends
 		reqDTO.setState("ASSIGNED");
 		reqDTO.setCtxToken(token);
 		reqDTO.setDocType("SR");
+		// #36838
+		reqDTO.setStatus(Integer.valueOf(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_APPROVAL));
 		if (assignmentType.equals(BpmConstants.ASSIGNMENT_GROUP)) {
 			reqDTO.setIsClaimed(false);
 		}

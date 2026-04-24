@@ -30,8 +30,8 @@
 								<h:outputText value="#{travel.machineDesc}" />
 							</td>
 						</tr>
-						</p:outputPanel>
-						<p:outputPanel rendered="#{empty travel.machineId}">
+					</p:outputPanel>
+					<p:outputPanel rendered="#{empty travel.machineId}">
 						<tr>
 							<td colspan="2"><br />
 								<h:outputText value="#{lbl['lbl.sm.sitevisit.if.others']}" />&#160;
@@ -42,8 +42,8 @@
 								</p:inputText>
 							</td>
 						</tr>
-						</p:outputPanel>
-					</ui:repeat>
+					</p:outputPanel>
+				</ui:repeat>
 				</table>
 			</td>
 		</tr>

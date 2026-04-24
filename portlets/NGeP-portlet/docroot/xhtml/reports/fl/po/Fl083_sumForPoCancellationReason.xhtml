@@ -37,12 +37,12 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{poSumForPoCancelReasonRptBB.disablePtjGroupLov()}"
+					disabled="#{poSumForPoCancelReasonRptBB.disablePtjGroupLovAdhocPO()}"
 					value="#{poSumForPoCancelReasonRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="poSumForPoCancelReasonRptBB.resetPtjProfile()"
 					update=":form"
 					saveObject="poSumForPoCancelReasonRptBB.managedBean.ptjGroup"
-					conditionField="#{poSumForPoCancelReasonRptBB.constuctConditionFieldsForPTJGroup()}">
+					conditionField="#{poSumForPoCancelReasonRptBB.constructConditionForPTJGroupByRole()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -54,11 +54,11 @@
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{poSumForPoCancelReasonRptBB.disablePtjLov()}"
+					disabled="#{poSumForPoCancelReasonRptBB.disablePtjLovAdhocPO()}"
 					value="#{poSumForPoCancelReasonRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="poSumForPoCancelReasonRptBB.managedBean.ptj"
-					conditionField="#{poSumForPoCancelReasonRptBB.getPTJCondition()}">
+					conditionField="#{poSumForPoCancelReasonRptBB.constructConditionForPTJByRole()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -75,11 +75,11 @@
 				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
 			</td>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+				<p:outputLabel value="#{lbl['lbl.fl.central.contract.panel.name']}" />
 			</td>
 
 			<td><p:inputText maxlength="30" id="panelNameId"
-					label="#{lbl['lbl.fl.sistem.panel.name']}"
+					label="#{lbl['lbl.fl.central.contract.panel.name']}"
 					value="#{poSumForPoCancelReasonRptBB.managedBean.panelName}"
 					style="margin-top:5px;width:268px;">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
@@ -121,8 +121,8 @@
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
 						itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.sistem.panel.name']}"
-						itemValue="#{lbl['lbl.fl.sistem.panel.name']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
+						itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
       					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>

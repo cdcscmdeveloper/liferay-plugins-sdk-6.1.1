@@ -110,19 +110,33 @@
 			</td>
 		</tr>
 		</table>
-		<!-- #29417 -->
+		<!-- #29417 start-->
 		<p:confirmDialog message="#{lbl['lbl.ct.confirmation.expire.date']}"
 			severity="alert" widgetVar="dateValidationExp" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
-					action="#{agreementBackingBean.saveAgreement(agreementBackingBean.managedBean.buttonProcess)}"
 					onstart="dateValidationExp.hide();blockWidget.show();"
+					action ="#{agreementBackingBean.saveAgreement(agreementBackingBean.managedBean.buttonProcess)}"
 					oncomplete="blockWidget.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="dateValidationExp.hide()" type="button" />
 			</div>
 		</p:confirmDialog>
+		
+		<p:confirmDialog message="#{lbl['lbl.ct.confirmation.expire.date']}"
+			severity="alert" widgetVar="dateValidationExpGpki" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					type="button"
+					onclick="gpki_dlg.show();dateValidationExpGpki.hide();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="dateValidationExpGpki.hide()" type="button" />
+			</div>
+		</p:confirmDialog>
+		<!-- #29417 end-->
 	</ui:define>
 </ui:composition>

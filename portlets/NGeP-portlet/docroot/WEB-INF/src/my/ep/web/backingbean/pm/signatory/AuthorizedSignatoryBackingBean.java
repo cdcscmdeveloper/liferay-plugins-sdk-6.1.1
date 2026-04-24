@@ -3,8 +3,10 @@ package my.ep.web.backingbean.pm.signatory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -12,10 +14,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.signatory.ISignatorySO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.signatory.SignatoryReqDTO;
 import my.ep.dto.pm.common.signatory.SignatoryResDTO;
@@ -30,11 +34,15 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMAuthorizedSignBackingBean;
 import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -214,34 +222,34 @@ public class AuthorizedSignatoryBackingBean extends
 	 */
 	private void validationDate(List<PmCertSignatory> certSignatories)throws Exception {
 		debugLogger("validationDate");
-		if(certSignatories==null || certSignatories.isEmpty()){
+		if (certSignatories == null || certSignatories.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770142);
 		}
-		
+
 		//date overlapping
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date endLess = sdf.parse("2099-12-31");
 		for (int index1 = 0; index1 < certSignatories.size(); index1++) {
-			if (certSignatories.get(index1).getRecordStatusFlg() 
+			if (certSignatories.get(index1).getRecordStatusFlg()
 					== DbValueConst.RECORD_STATUS_ACTIVE) {
 				if (certSignatories.size() > 1) {
 					for (int index2 = index1 + 1; index2 < certSignatories.size(); index2++) {
 						if (certSignatories.get(index2).getRecordStatusFlg() 
 								== DbValueConst.RECORD_STATUS_ACTIVE) {
-							// Overlap exists if (StartA <= EndB) and (EndA
-							// >= StartB)
+							// Overlap exists if (StartA <= EndB) and (EndA >= StartB)
 							Date startA = certSignatories.get(index1).getEffDate();
 							Date endA = certSignatories.get(index1).getExpDate();
 							Date startB = certSignatories.get(index2).getEffDate();
 							Date endB = certSignatories.get(index2).getExpDate();
 
 							// not null
-							if(endA==null){
+							if (endA == null) {
 								endA = endLess;
-							}if(endB==null){
+							}
+							if (endB == null) {
 								endB = endLess;
 							}
-							
+
 							boolean isCurrentPairOverlap = false;
 							isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
 
@@ -251,40 +259,44 @@ public class AuthorizedSignatoryBackingBean extends
 							}
 						}
 					}
-				} 
+				}
 			}
 		}
 		// eff date must not be after exp date
 		PmCertSignatory certSignatory = null;
 		Date effDate = null;
-		Date expDate =null;
+		Date expDate = null;
 		for (int i = 0; i < certSignatories.size(); i++) {
 			certSignatory = certSignatories.get(i);
-			if(DbValueConst.RECORD_STATUS_ACTIVE == certSignatory.getRecordStatusFlg()){
-				if(certSignatory.getEffDate()!=null 
-						&& certSignatory.getExpDate()!=null 
-						&& certSignatory.getExpDate().compareTo(certSignatory.getEffDate())<0){
+			if (DbValueConst.RECORD_STATUS_ACTIVE == certSignatory.getRecordStatusFlg()) {
+				if (certSignatory.getEffDate() != null 
+						&& certSignatory.getExpDate() != null
+						&& certSignatory.getExpDate().compareTo(certSignatory.getEffDate()) < 0) {
 					getManagedBean().setValidationError(true);
 					throw new EpException(MessageConst.ERROR_770146);
 				}
 			}
 		}
-		
+
 		//only one active
 		int activeNumber = 0;
-		if(certSignatories!=null){
-			for(PmCertSignatory pmCertSignatory: certSignatories){
-				if(pmCertSignatory.getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE){
-					if(checkEffDate(pmCertSignatory)){
+		if (certSignatories != null) {
+			for (PmCertSignatory pmCertSignatory : certSignatories) {
+				if (pmCertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (checkEffDate(pmCertSignatory)) {
 						activeNumber++;
 					}
 				}
 			}
 		}
-		if(activeNumber>1){
+
+		if (activeNumber > 1) {
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770144);
-		}else if(activeNumber==0){
+		} else if (activeNumber == 0) {
+			// #34445, Fix as-is bug: #39354 START
+			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
+			// #34445, Fix as-is bug: #39354 END
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770145);
 		}
@@ -300,13 +312,21 @@ public class AuthorizedSignatoryBackingBean extends
 		log.info("checkEffDate");
 		Date currentDate =  DateUtils.getCurrentDateWithoutTime();
 		boolean isActive = true;
+
+		// #34445, Fix as-is bug: #39354 START. Remove code because its no longer use
 		// effDate after currentDate
-		if(! pmCertSignatory.isBrandNew() && pmCertSignatory.getEffDate().compareTo(currentDate)>0){
+		/*if(! pmCertSignatory.isBrandNew() && pmCertSignatory.getEffDate().compareTo(currentDate)>0){
 			isActive = false;
 		// expDate not null and expDate before currentDate
 		}else if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
 			isActive = false;
+		} */
+
+		if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
+			isActive = false;
 		}
+		// #34445, Fix as-is bug: #39354 END. Remove code because its no longer use
+
 		return isActive;
 	}
 	
@@ -344,7 +364,10 @@ public class AuthorizedSignatoryBackingBean extends
 		validation();
 		
 		List<PmCertSignatory> certSignatories = this.getManagedBean().getCertSignatories();
-		
+		/************ AUDIT 35509 Start *************/
+		List<PmCertSignatory> newCertSign = new ArrayList<>();
+		List<PmCertSignatory> modifiedCertSignatories = new ArrayList<>();
+		/************ AUDIT 35509 END *************/
 		validationDate(certSignatories);
 		
 		ISignatorySO iSignatorySO = EpEjbBusinessDelegate.getInstance()
@@ -368,6 +391,10 @@ public class AuthorizedSignatoryBackingBean extends
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				pmcertSignatory.setCreatedBy(getUserIdSessionFromLoginId()); //#34090
 				pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
+				/************ AUDIT 35509 Start *************/
+				newCertSign.add(pmcertSignatory);
+				/************ AUDIT 35509 END *************/
+				
 			} else {
 				if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
@@ -386,6 +413,10 @@ public class AuthorizedSignatoryBackingBean extends
 					messageId = MessageConst.TD_80901;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				}
+				/************ AUDIT 35509 Start *************/
+				// modified
+				modifiedCertSignatories.add(pmcertSignatory);
+				/************ AUDIT 35509 END *************/
 			}
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
@@ -395,10 +426,27 @@ public class AuthorizedSignatoryBackingBean extends
 			}			
 		}
 		reqDTO.setCertSignatorys(certSignatories);
+		/************ AUDIT 35509 Start *************/
+		reqDTO.setZoneId(certSignatories.get(0).getPmZone().getZoneId());
+		getManagedBean().setModifiedCertSignatories(modifiedCertSignatories);
+		getManagedBean().setNewCertSignatories(newCertSign);
+		AuditPMBackingBeanTemplate auTemplate = new AuditPMAuthorizedSignBackingBean();
+		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IAuditPMSO.class);
+
+		if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_AUTHORIZED_SIGNATORY)) {
+			SignatoryResDTO resDTO = iSignatorySO.retrieveCertSignatoryByZone(reqDTO);
+			setExistingCertSignToMap(resDTO.getCertSignatories());
+		}
+		/************ AUDIT 35509 END *************/
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
 		if (resDTO.isSuccessful()) {
 			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
-			
+			/************ AUDIT 35509 Start*************/
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_AUTHORIZED_SIGNATORY)) {
+				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_AUTHORIZED);
+			}
+			/************ AUDIT 35509 END*************/
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 		     FacesMessage.SEVERITY_INFO,
 		     null,
@@ -406,6 +454,23 @@ public class AuthorizedSignatoryBackingBean extends
 
 		}
 	}
+	
+	/************ AUDIT 35509 Start*************/
+	/**
+	 * refactor method to set existing cert signtory
+	 * 
+	 */
+	private void setExistingCertSignToMap(List<PmCertSignatory> certSign) {
+		if (CollectionUtils.isNotEmpty(certSign)) {
+			this.getManagedBean().setExistingCertSignatoriesMap(new HashMap<Long, PmCertSignatory>());
+
+			for (PmCertSignatory ruleValue : certSign) {
+				this.getManagedBean().getExistingCertSignatoriesMap().put(ruleValue.getCertSignatoryId(), ruleValue);
+			}
+		}
+	}
+	/************ AUDIT 35509 END*************/
+	
 	/**
 	 * Track Signatory status
 	 * 

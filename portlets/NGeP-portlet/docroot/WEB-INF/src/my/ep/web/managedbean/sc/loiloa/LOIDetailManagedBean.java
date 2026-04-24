@@ -20,8 +20,11 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -32,7 +35,10 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -40,11 +46,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting; //#38151
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -53,7 +61,10 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean; //#38151
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -413,7 +424,71 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * Enhancement #21694
 	 */
 	private String loiTaskId;
+	//#30008 - Start
+	private PmParameter decision;
+	private String justification;
+	private String notReachAgreement;
+	private boolean negoDecisitionReadOnly;
+	private String decisionCode;
+	//#30008 - end
 	
+	
+	//#12487 start
+    private Map<String, Object> loiObj;
+    private PmUserOrg selectedUserPtj;
+    private PmOrgProfile ministryOrgProfile;
+	//#12487 end
+    
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private List<ScQtEvaluationResultDtl> disqualifiedSupplierList;
+	private List<ScQtRecommend> disqualifiedRecommendList;
+	private boolean flagBranchDeleted = false;
+	// #28777 & #29729 - End
+
+	//#21692 - Start
+	private boolean ableToCancelLOI;
+	private boolean ableToCancelLOIWithoutBPM;
+	private boolean ableToSubmitLOI;
+	private boolean ableToCancelWIP;
+	//#21692 - End
+
+	private List<WeightageScoreBean> weightageScoreBeans;//#38151	
+	private Long overallTechnicalRecommendationPercent;//#38151
+	private Long overallFinancialRecommendationPercent;//#38151
+	private List<ScQtScoreSetting> scoreSettings;//#38151
+	private boolean WeightageReq; //#38151
+	private boolean weightage35384WIP; //#38151
+	
+	
+	// 34491 - start
+	private int meetingPreparationActiveIndex;
+	private ScQtCommittee finalizationQtCommittee;
+	private boolean selectAll;
+	private boolean selectAllMeetings;
+	private boolean selectAllMeetingAttendees;
+	private boolean selectAllMembers;
+	private String finalizationCommitteeDesc;
+	private boolean hasPreviousMeeting;
+	private boolean allowGlobalEndorseSignoff;
+	private Paginator historyPaginator;
+	private Paginator memberHistoryPaginator;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private List<ScCommitteeMember> previousMembers;
+	private ScQtApproval committeeApproval;
+	private List<SelectItem> selections;
+	private UserCommitteeSearchBean userSearchBean;
+	private IPagingDataModel<PmUser> userSearchDataModel;
+	private String tabTitle;
+	private boolean nameRequired;
+	private List<PmUser> selectedPmUsers;
+	private List<ScQtCommitteeActivity> deletedCommitteeActivities;
+	private List<ScCommitteeMember> deletedCommitteeMembers;
+	private List<ScQtMeeting> deletedQtMeetings;
+	private List<ScQtMeetingAttendance> deletedQtMeetingAttendances;
+
+	// 34491 - end
+
     /**
      * Gets the spki backing bean.
      *
@@ -2365,4 +2440,398 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#29007 End Vinod
 	
+	//#28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+
+	public List<ScQtEvaluationResultDtl> getDisqualifiedSupplierList() {
+		return disqualifiedSupplierList;
+	}
+
+	public void setDisqualifiedSupplierList(List<ScQtEvaluationResultDtl> disqualifiedSupplierList) {
+		this.disqualifiedSupplierList = disqualifiedSupplierList;
+	}
+	
+	public List<ScQtRecommend> getDisqualifiedRecommendList() {
+		return disqualifiedRecommendList;
+	}
+
+	public void setDisqualifiedRecommendList(List<ScQtRecommend> disqualifiedRecommendList) {
+		this.disqualifiedRecommendList = disqualifiedRecommendList;
+	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
+	//#28777 & #29729 - End
+	
+	//#30008 - Start
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	public PmParameter getDecision() {
+		return decision;
+	}
+
+	public void setDecision(PmParameter decision) {
+		this.decision = decision;
+	}
+
+	public String getNotReachAgreement() {
+		return notReachAgreement;
+	}
+
+	public void setNotReachAgreement(String notReachAgreement) {
+		this.notReachAgreement = notReachAgreement;
+	}
+
+	public boolean isNegoDecisitionReadOnly() {
+		return negoDecisitionReadOnly;
+	}
+
+	public void setNegoDecisitionReadOnly(boolean negoDecisitionReadOnly) {
+		this.negoDecisitionReadOnly = negoDecisitionReadOnly;
+	}
+
+	public String getDecisionCode() {
+		return decisionCode;
+	}
+
+	public void setDecisionCode(String decisionCode) {
+		this.decisionCode = decisionCode;
+	}
+	//#30008 - end
+	
+	//#12487 start
+	public Map <String, Object> getLoiObj() {
+		return loiObj;
+	}
+
+	public void setLoiObj(Map <String, Object> loiObj) {
+		this.loiObj = loiObj;
+	}
+	
+
+	public PmUserOrg getSelectedUserPtj() {
+		return selectedUserPtj;
+	}
+
+	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
+		this.selectedUserPtj = selectedUserPtj;
+	}
+
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
+	//#12487 end
+
+	//#36339, #21692 - Start
+	public boolean isAbleToCancelLOI() {
+		return ableToCancelLOI;
+	}
+	//#36339, #21692 - End
+
+	//#36339, #21692 - Start
+	public void setAbleToCancelLOI(boolean ableToCancelLOI) {
+		this.ableToCancelLOI = ableToCancelLOI;
+	}
+	//#36339, #21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelLOIWithoutBPM() {
+		return ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelLOIWithoutBPM(boolean ableToCancelLOIWithoutBPM) {
+		this.ableToCancelLOIWithoutBPM = ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToSubmitLOI() {
+		return ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToSubmitLOI(boolean ableToSubmitLOI) {
+		this.ableToSubmitLOI = ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelWIP() {
+		return ableToCancelWIP;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelWIP(boolean ableToCancelWIP) {
+		this.ableToCancelWIP = ableToCancelWIP;
+	}
+	//#21692 - End
+	
+	//#38151 - Start
+	public List<WeightageScoreBean> getWeightageScoreBeans() {
+		return weightageScoreBeans;
+	}
+
+	public void setWeightageScoreBeans(List<WeightageScoreBean> weightageScoreBeans) {
+		this.weightageScoreBeans = weightageScoreBeans;
+	}
+
+	public Long getOverallTechnicalRecommendationPercent() {
+		return overallTechnicalRecommendationPercent;
+	}
+
+	public void setOverallTechnicalRecommendationPercent(Long overallTechnicalRecommendationPercent) {
+		this.overallTechnicalRecommendationPercent = overallTechnicalRecommendationPercent;
+	}
+
+	public List<ScQtScoreSetting> getScoreSettings() {
+		return scoreSettings;
+	}
+
+	public void setScoreSettings(List<ScQtScoreSetting> scoreSettings) {
+		this.scoreSettings = scoreSettings;
+	}
+
+	public Long getOverallFinancialRecommendationPercent() {
+		return overallFinancialRecommendationPercent;
+	}
+
+	public void setOverallFinancialRecommendationPercent(Long overallFinancialRecommendationPercent) {
+		this.overallFinancialRecommendationPercent = overallFinancialRecommendationPercent;
+	}
+
+	public boolean isWeightageReq() {
+		return WeightageReq;
+	}
+
+	public void setWeightageReq(boolean weightageReq) {
+		WeightageReq = weightageReq;
+	}
+	
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - End
+
+	// 34491 - start
+	public int getMeetingPreparationActiveIndex() {
+		return meetingPreparationActiveIndex;
+	}
+
+	public void setMeetingPreparationActiveIndex(int meetingPreparationActiveIndex) {
+		this.meetingPreparationActiveIndex = meetingPreparationActiveIndex;
+	}
+
+	public ScQtCommittee getFinalizationQtCommittee() {
+		return finalizationQtCommittee;
+	}
+
+	public void setFinalizationQtCommittee(ScQtCommittee finalizationQtCommittee) {
+		this.finalizationQtCommittee = finalizationQtCommittee;
+	}
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	public boolean isSelectAllMeetings() {
+		return selectAllMeetings;
+	}
+
+	public void setSelectAllMeetings(boolean selectAllMeetings) {
+		this.selectAllMeetings = selectAllMeetings;
+	}
+
+	public boolean isSelectAllMeetingAttendees() {
+		return selectAllMeetingAttendees;
+	}
+
+	public void setSelectAllMeetingAttendees(boolean selectAllMeetingAttendees) {
+		this.selectAllMeetingAttendees = selectAllMeetingAttendees;
+	}
+
+	public String getFinalizationCommitteeDesc() {
+		return finalizationCommitteeDesc;
+	}
+
+	public void setFinalizationCommitteeDesc(String finalizationCommitteeDesc) {
+		this.finalizationCommitteeDesc = finalizationCommitteeDesc;
+	}
+
+	public boolean isHasPreviousMeeting() {
+		return hasPreviousMeeting;
+	}
+
+	public void setHasPreviousMeeting(boolean hasPreviousMeeting) {
+		this.hasPreviousMeeting = hasPreviousMeeting;
+	}
+
+	public boolean isAllowGlobalEndorseSignoff() {
+		return allowGlobalEndorseSignoff;
+	}
+
+	public void setAllowGlobalEndorseSignoff(boolean allowGlobalEndorseSignoff) {
+		this.allowGlobalEndorseSignoff = allowGlobalEndorseSignoff;
+	}
+
+	public Paginator getHistoryPaginator() {
+		return historyPaginator;
+	}
+
+	public void setHistoryPaginator(Paginator historyPaginator) {
+		this.historyPaginator = historyPaginator;
+	}
+
+	public Paginator getMemberHistoryPaginator() {
+		return memberHistoryPaginator;
+	}
+
+	public void setMemberHistoryPaginator(Paginator memberHistoryPaginator) {
+		this.memberHistoryPaginator = memberHistoryPaginator;
+	}
+
+	public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+		return selectedCommitteeHistory;
+	}
+
+	public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
+		this.selectedCommitteeHistory = selectedCommitteeHistory;
+	}
+
+	public boolean isSelectAllMembers() {
+		return selectAllMembers;
+	}
+
+	public void setSelectAllMembers(boolean selectAllMembers) {
+		this.selectAllMembers = selectAllMembers;
+	}
+
+	public ScQtApproval getCommitteeApproval() {
+		return committeeApproval;
+	}
+
+	public void setCommitteeApproval(ScQtApproval committeeApproval) {
+		this.committeeApproval = committeeApproval;
+	}
+
+	public List<ScCommitteeMember> getPreviousMembers() {
+		return previousMembers;
+	}
+
+	public void setPreviousMembers(List<ScCommitteeMember> previousMembers) {
+		this.previousMembers = previousMembers;
+	}
+
+	public List<SelectItem> getSelections() {
+		return selections;
+	}
+
+	public void setSelections(List<SelectItem> selections) {
+		this.selections = selections;
+	}
+
+	public UserCommitteeSearchBean getUserSearchBean() {
+		return userSearchBean;
+	}
+
+	public void setUserSearchBean(UserCommitteeSearchBean userSearchBean) {
+		this.userSearchBean = userSearchBean;
+	}
+
+	public IPagingDataModel<PmUser> getUserSearchDataModel() {
+		return userSearchDataModel;
+	}
+
+	public void setUserSearchDataModel(IPagingDataModel<PmUser> userSearchDataModel) {
+		this.userSearchDataModel = userSearchDataModel;
+	}
+
+	public String getTabTitle() {
+		return tabTitle;
+	}
+
+	public void setTabTitle(String tabTitle) {
+		this.tabTitle = tabTitle;
+	}
+
+	public boolean isNameRequired() {
+		return nameRequired;
+	}
+
+	public void setNameRequired(boolean nameRequired) {
+		this.nameRequired = nameRequired;
+	}
+
+	public List<PmUser> getSelectedPmUsers() {
+		return selectedPmUsers;
+	}
+
+	public void setSelectedPmUsers(List<PmUser> selectedPmUsers) {
+		this.selectedPmUsers = selectedPmUsers;
+	}
+
+	public List<ScQtCommitteeActivity> getDeletedCommitteeActivities() {
+		return deletedCommitteeActivities;
+	}
+
+	public void setDeletedCommitteeActivities(List<ScQtCommitteeActivity> deletedCommitteeActivities) {
+		this.deletedCommitteeActivities = deletedCommitteeActivities;
+	}
+
+	public List<ScCommitteeMember> getDeletedCommitteeMembers() {
+		return deletedCommitteeMembers;
+	}
+
+	public void setDeletedCommitteeMembers(List<ScCommitteeMember> deletedCommitteeMembers) {
+		this.deletedCommitteeMembers = deletedCommitteeMembers;
+	}
+
+	public List<ScQtMeeting> getDeletedQtMeetings() {
+		return deletedQtMeetings;
+	}
+
+	public void setDeletedQtMeetings(List<ScQtMeeting> deletedQtMeetings) {
+		this.deletedQtMeetings = deletedQtMeetings;
+	}
+
+	public List<ScQtMeetingAttendance> getDeletedQtMeetingAttendances() {
+		return deletedQtMeetingAttendances;
+	}
+
+	public void setDeletedQtMeetingAttendances(List<ScQtMeetingAttendance> deletedQtMeetingAttendances) {
+		this.deletedQtMeetingAttendances = deletedQtMeetingAttendances;
+	}
+	// 34491 - end
 }

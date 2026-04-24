@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:ac="http://ac.my/jsf/composite/cc">
+    
+<cc:interface>
+	<!-- <cc:attribute name="required" />
+	<cc:attribute name="value" /> -->
+</cc:interface>
+
+<cc:implementation>
+	<p:remoteCommand name="updateSearchDialogUser" update="searchPanelAudit lovTitle resultPanelAudit" partialSubmit="true" process="@this resultPanelAudit" oncomplete="lovPopupAudit.show();" />
+	<p:remoteCommand name="resetAllData" update="searchPanelAudit lovTitle resultPanelAudit" partialSubmit="true" action="#{lovAuditBackingBean.resetAll}" process="@this" />
+	<p:remoteCommand name="lovPopsetAutoUpdateValueUser" partialSubmit="true" process="@this" update="@this" action="#{lovAuditBackingBean.setAutoUpdateValue()}" />
+	
+	<p:dialog id="lovPopupAudit" widgetVar="lovPopupAudit" modal="true" width="700" position="top" 
+		onShow="lovPopsetAutoUpdateValueUser([{name:'enableAutoUpdate', value:false}]);"
+		onHide="lovPopsetAutoUpdateValueUser([{name:'enableAutoUpdate', value:true}]); resetAllData();" 
+		resizable="false">
+	
+		<f:facet name="header">
+			<h:panelGroup id="lovTitle">#{lbl['lbl.lov.listing']} - #{lovAuditBackingBean.lovBean.title} </h:panelGroup>
+		</f:facet>
+		
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/>
+		
+		<p:panel header="#{lbl['lbl.cm.search']}" toggleable="true">
+		
+		<h:panelGroup id="searchPanelAudit" style="width:100%;">
+
+		<ui:include src="lovSearchPanelAudit.xhtml" />
+
+		<table style="width:100%;"><tr><TD style="text-align:right;">
+			<p:commandButton id="lovSearchBtn"
+				value="#{lbl['lbl.pm.audit.search']}"
+				action="#{lovAuditBackingBean.searchActionByList}"
+				partialSubmit="true"
+				process="searchPanelAudit"
+				update="resultPanelAudit"
+				widgetVar="lovSearch">
+			</p:commandButton>		
+			<p:commandButton
+				value="#{lbl['lbl.btn.reset']}"
+				action="#{lovAuditBackingBean.resetAction}"
+				partialSubmit="true"
+				process="searchPanelAudit"
+				update="searchPanelAudit resultPanelAudit">
+			</p:commandButton>
+		</TD></tr></table>
+
+		</h:panelGroup>
+		</p:panel>  
+		<p:panel header="#{lbl['lbl.pm.audit.result']}" toggleable="true">
+		<h:panelGroup id="resultPanelAudit" style="width:100%;">
+			
+			<h:panelGroup rendered="#{lovAuditBackingBean.lovBean.selectionMode == 'single'}">
+			<p:dataTable id="lovTbSP"
+				var="entity" 
+				selection="#{lovAuditBackingBean.selectedEntity}"
+				selectionMode="single"
+				rowIndexVar="rowIndex"
+				rowKey="#{entity[lovAuditBackingBean.lovBean.pk]}"
+				rows="10"
+				lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{lovAuditBackingBean.searchPmUserDataModel}" >
+				
+				<ac:paginator for="lovTbSP" />
+				<p:ajax event="rowDblselect" listener="#{lovAuditBackingBean.populateToSaveObject}" 
+                     update="@form" />
+                <p:ajax event="rowSelect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowUnselect" update="@([id$=slbtn])" />   
+								
+				<p:columns var="column" value="#{lovAuditBackingBean.columnsToDisplay}">
+				
+					<f:facet name="header">  
+		                #{column.columnTitle}  
+		            </f:facet>
+						#{column.columnNameve.getValue(facesContext.ELContext)}
+				</p:columns>
+				
+			</p:dataTable>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{lovAuditBackingBean.lovBean.selectionMode == 'multiple'}">
+			<p:remoteCommand name="lovPopulateSelection" partialSubmit="true" update="lovTb2, @([id$=slbtn])" actionListener="#{lovAuditBackingBean.populateSelectedItems()}" />
+			<p:dataTable id="lovTb2"
+				var="entity" 
+				selection="#{lovAuditBackingBean.selectedEntities}"
+				rowIndexVar="rowIndex"
+				rowKey="#{entity[lovAuditBackingBean.lovBean.pk]}"
+				rows="10"
+				lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{lovAuditBackingBean.searchPmUserDataModel}" >
+				
+				<ac:paginator for="lovTb2" />
+				
+				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" /> 
+				<p:ajax event="rowSelectCheckbox" update="@([id$=slbtn])" />
+				<p:ajax event="rowUnselectCheckbox" update="@([id$=slbtn])" listener="#{lovAuditBackingBean.onUnselectRow}"/>
+				<p:ajax event="rowSelect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowUnselect" update="@([id$=slbtn])" />  
+                <p:ajax event="toggleSelect" update="@([id$=slbtn])" listener="#{lovAuditBackingBean.onToggleSelect}"/>
+                <p:ajax event="page" listener="#{lovAuditBackingBean.onPageChange}" oncomplete="lovPopulateSelection()"/>
+             				
+				<p:columns var="column" value="#{lovAuditBackingBean.columnsToDisplay}">				
+					<f:facet name="header">  
+		                #{column.columnTitle}  
+		            </f:facet>
+						#{column.columnNameve.getValue(facesContext.ELContext)}
+				</p:columns>
+				
+			</p:dataTable>
+			</h:panelGroup>
+
+			<table style="width:100%;"><tr><TD style="text-align:right;">
+				<p:commandButton 
+					id="slbtn"
+					value="#{lbl['lbl.pm.audit.select']}"  
+					action="#{lovAuditBackingBean.populateToSaveObject}"
+					update="searchPanelAudit #{lovAuditBackingBean.lovBean.clientId} #{lovAuditBackingBean.lovBean.update}"
+					oncomplete="lovPopupAudit.hide();"
+					process="resultPanelAudit"
+					disabled="#{lovAuditBackingBean.isSelectButtonDisable()}"
+					partialSubmit="true"  styleClass="BtnSpacing"/>	
+			   <p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				  partialSubmit="true" process="@this" update="@this"
+				  action="#{lovAuditBackingBean.resetAction()}"
+				  oncomplete="lovPopupAudit.hide();" styleClass="BtnSpacing"/>
+			</TD>
+			</tr></table>
+			
+		</h:panelGroup>
+		</p:panel>
+	</p:dialog>
+	
+	<p:defaultCommand target="lovSearchBtn" scope="searchPanelAudit"></p:defaultCommand>
+</cc:implementation>
+</ui:composition>

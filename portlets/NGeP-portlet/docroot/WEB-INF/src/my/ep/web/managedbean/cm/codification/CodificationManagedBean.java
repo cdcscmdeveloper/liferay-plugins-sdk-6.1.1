@@ -1,9 +1,7 @@
 package my.ep.web.managedbean.cm.codification;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -12,7 +10,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -23,7 +20,6 @@ import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
-import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -44,12 +40,15 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.ExtensionCodeVO;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "codificationMB")
 @SessionScoped
 public class CodificationManagedBean extends BaseManagedBean {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String cmNavigationURL;
 
@@ -202,7 +201,20 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
+
+	// #31503 - Start
+	private String itemCodeDesc;
+	private Object[] objSelected;
+	private boolean renderButtonAssignCode;
+	private boolean isHideExtension;
+	// #31503 - End
 	
+	//35503 Start
+	private String segmentTitleEng;
+	private String familyTitleEng;
+	private String classTitleEng;
+	private String commodityTitleEng;
+	//35503 End
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -212,13 +224,17 @@ public class CodificationManagedBean extends BaseManagedBean {
 			IPagingDataModel<Object[]> extensionSearchItemDataModel) {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
+	
+	//#26059 - Start
+	private String cmItemCode;
+	//#26059 - End
 
 	
 	public void initRefreshPageNoFlag(){
 		
 		if(this.isRefreshPageNoFlag()){
 			System.out.println("****************************");
-			PagingDataModel paging = new ExtensionSearchItemDataModel();
+			PagingDataModel<?> paging = new ExtensionSearchItemDataModel();
 			paging.setPageNo(0);
 			
 			this.getExtensionSearchItemDataModel().resetData();
@@ -230,8 +246,12 @@ public class CodificationManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	private class ExtensionSearchItemDataModel extends
-	PagingDataModel<Object[]> {
+	private class ExtensionSearchItemDataModel extends PagingDataModel<Object[]> {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public ExtensionSearchItemDataModel() {
 			super("itemTableID");
@@ -247,7 +267,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 						&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
 						&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
 					//20200813@azza - Enhancement27627 - Start 
-					return new SearchResultBean();
+					return new SearchResultBean<Object[]>();
 					//20200813@azza - Enhancement27627 - End
 				}
 			
@@ -443,40 +463,30 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 		public SearchPagingDataModel() {
 			super("unspscTableID");
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		protected ISearchResultBean<CmUnspsc> pageChangeListener(
-				ISearchBean<CmUnspsc> searchBean) {
+		protected ISearchResultBean<CmUnspsc> pageChangeListener(ISearchBean<CmUnspsc> searchBean) {
 
-			if (getAutoCompleteUnspscCode().getUnspscCode() != null
-					&& getAutoCompleteUnspscCode()
-					.getUnspscCode().trim().length() > 0) {
+			if (getAutoCompleteUnspscCode().getUnspscCode() != null && getAutoCompleteUnspscCode().getUnspscCode().trim().length() > 0) {
 				codeFilterBean.setSearchValue(getAutoCompleteUnspscCode().getUnspscCode());
 			}
 
-			if (StringUtils.isBlank((String) codeFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) titleFilterBean
-							.getSearchValue())) {
+			if (StringUtils.isBlank((String) codeFilterBean.getSearchValue()) && StringUtils.isBlank((String) titleFilterBean.getSearchValue())) {
 				return new SearchResultBean();
 			}
 
 			ICodificationSO unspscSO = null;
 			try {
 
-				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
-						.getServiceObject("cm", ICodificationSO.class);
+				unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
 
 				String unspscCode = "";
-				if (getAutoCompleteUnspscCode()
-						.getUnspscCode() != null
-						&&getAutoCompleteUnspscCode()
-						.getUnspscCode().trim().length() > 0) {
-					
-					if(getAutoCompleteUnspscCode().getUnspscCode().equalsIgnoreCase("00000000")){
+				if (getAutoCompleteUnspscCode().getUnspscCode() != null && getAutoCompleteUnspscCode().getUnspscCode().trim().length() > 0) {
+
+					if (getAutoCompleteUnspscCode().getUnspscCode().equalsIgnoreCase("00000000")) {
 						unspscCode = "notValid";
-					}else{
+					} else {
 						unspscCode = getAutoCompleteUnspscCode().getUnspscCode();
 					}
 
@@ -485,8 +495,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(codeFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String) titleFilterBean
-						.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) titleFilterBean.getSearchValue())) {
 
 					titleFilterBean.setSearchField("unspscTitle");
 					titleFilterBean.setCaseInsensitive(true);
@@ -496,17 +505,17 @@ public class CodificationManagedBean extends BaseManagedBean {
 					titleEngFilterBean.setCaseInsensitive(true);
 					titleEngFilterBean.setSearchValue(titleFilterBean.getSearchValue());
 					titleEngFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
-					
-					SearchMultiFilterBean bilingualFilter = new SearchMultiFilterBean(titleFilterBean,titleEngFilterBean);
-					
+
+					SearchMultiFilterBean bilingualFilter = new SearchMultiFilterBean(titleFilterBean, titleEngFilterBean);
+
 					searchBean.getDataFilterBeans().add(bilingualFilter);
 				}
-				
-				/*[#27625] begin*/
+
+				/* [#27625] begin */
 				String itemType;
-				if(StringUtils.isNotBlank(typeName)){
+				if (StringUtils.isNotBlank(typeName)) {
 					itemType = typeName;
-				}else{
+				} else {
 					FacesScopes fs = new FacesScopes();
 					itemType = fs.getParameter("itemType");
 				}
@@ -514,31 +523,21 @@ public class CodificationManagedBean extends BaseManagedBean {
 				if (itemType != null) {// save parameter first time it come from
 					// search button
 					setItemTypeParameter(itemType);
-				}else
+				} else
 					setItemTypeParameter(null);
-				/*[#27625] end*/
+				/* [#27625] end */
 
 				// get parameter from backup property whenever table be reloaded
-				if (getItemTypeParameter() != null
-						&& !getItemTypeParameter().isEmpty()) {
+				if (getItemTypeParameter() != null && !getItemTypeParameter().isEmpty()) {
 
-					if (getItemTypeParameter().equals("S")
-							|| getItemTypeParameter().equals("2")) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("unspscCode",
-										SearchOperator.OPERATOR_GREATER_EQUAL
-										.value(), "70000000"));
-					} else if (getItemTypeParameter().equals("P")
-							|| getItemTypeParameter().equals("1")) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("unspscCode",
-										SearchOperator.OPERATOR_LESS.value(),
-										"70000000"));
+					if (getItemTypeParameter().equals("S") || getItemTypeParameter().equals("2")) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("unspscCode", SearchOperator.OPERATOR_GREATER_EQUAL.value(), "70000000"));
+					} else if (getItemTypeParameter().equals("P") || getItemTypeParameter().equals("1")) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("unspscCode", SearchOperator.OPERATOR_LESS.value(), "70000000"));
 					}
 				}
 
-
-				if(this.getSortField()==null){
+				if (this.getSortField() == null) {
 					SearchOrderBean orderBean = new SearchOrderBean("unspscCode", true);
 
 					searchBean.getSortColumns().add(orderBean);
@@ -549,21 +548,16 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 				CodificationResDTO resDTO = unspscSO.searchUNSPSC(reqDTO);
 
-
 				return resDTO.getResultBean();
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 				unspscSO = null;
 			}
-			return new SearchResultBean();
+			return new SearchResultBean<CmUnspsc>();
 		}
 
 	}
-
-
-
-
 
 	public Object[] getSelectedExtenstionForItem() {
 		return selectedExtenstionForItem;
@@ -1158,54 +1152,36 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 		public PendingCodifiedSearchPagingDataModel() {
 			super("PendingCodifiedItemID");
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		protected ISearchResultBean<VCmPendingCodifiedItem> pageChangeListener(
-				ISearchBean<VCmPendingCodifiedItem> searchBean) {
+		protected ISearchResultBean<VCmPendingCodifiedItem> pageChangeListener(ISearchBean<VCmPendingCodifiedItem> searchBean) {
 
 			IPendingCodifiedItemSO viewSO = null;
 
 			try {
 
-				viewSO = (IPendingCodifiedItemSO) BusinessDelegate
-						.getInstance().getServiceObject("cm",
-								IPendingCodifiedItemSO.class);
+				viewSO = (IPendingCodifiedItemSO) BusinessDelegate.getInstance().getServiceObject("cm", IPendingCodifiedItemSO.class);
 
-				CodificationBackingBean bb = new CodificationBackingBean(); 	
+				CodificationBackingBean bb = new CodificationBackingBean();
 				PendingCodifiedItemReqDTO reqDTO = new PendingCodifiedItemReqDTO();
-				
-				if(bb.getManagedBean().getDocNo()!=null &&bb.getManagedBean().getDocNo().trim().length()>0){
+
+				if (bb.getManagedBean().getDocNo() != null && bb.getManagedBean().getDocNo().trim().length() > 0) {
 					reqDTO.setDocNo(bb.getManagedBean().getDocNo());
 				}
-				if(bb.getManagedBean().getDocTitle()!=null &&bb.getManagedBean().getDocTitle().trim().length()>0){
+				if (bb.getManagedBean().getDocTitle() != null && bb.getManagedBean().getDocTitle().trim().length() > 0) {
 					reqDTO.setDocTitle(bb.getManagedBean().getDocTitle());
 				}
-				
-				
-				
+
 				reqDTO.setViewSearchBean(searchBean);
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
 				reqDTO.setUserId(userId);
-				PendingCodifiedItemResDTO resDTO = viewSO
-						.searchViewPendingCodifiedItems(reqDTO);
-				for (VCmPendingCodifiedItem vCmPendingItem : resDTO
-						.getViewPendingCodifiedItemList()) {
-					//					System.out.println(".................before calling");
-					//					System.out.println(".................vCmPendingItem.getPmOrgProfile()="+vCmPendingItem.getPmOrgProfile());
-					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile());
-					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity());
-					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName());
-					//					if (vCmPendingItem.getOrgProfileId() != null) {
-					//						vCmPendingItem.setPmOrgProfile(CommonMethod
-					//								.retrieveOrgProfile(vCmPendingItem
-					//										.getOrgProfileId()));
-					//					}
-				}
-				setViewPendingCodifiedItemList(resDTO
-						.getViewPendingCodifiedItemList());
+				PendingCodifiedItemResDTO resDTO = viewSO.searchViewPendingCodifiedItems(reqDTO);
+//				for (VCmPendingCodifiedItem vCmPendingItem : resDTO.getViewPendingCodifiedItemList()) {
+//
+//				}
+				setViewPendingCodifiedItemList(resDTO.getViewPendingCodifiedItemList());
 				System.out.println("*********after***********");
 
 				return resDTO.getViewPendingItemResultBean();
@@ -1495,7 +1471,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setTempBrandName(String tempBrandName) {
 		this.tempBrandName = tempBrandName;
 	}
-
+	
+	//[#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
@@ -1527,7 +1504,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
-
+	//[#26282] disciplinary action - End
+	
 	/*[#27625] begin*/
 	public String getTypeName() {
 		return typeName;
@@ -1553,4 +1531,97 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
+
+	// #31503 -start-
+	public String getItemCodeDesc() {
+		return itemCodeDesc;
+	}
+
+	public void setItemCodeDesc(String itemCodeDesc) {
+		this.itemCodeDesc = itemCodeDesc;
+	}
+
+	public Object[] getObjSelected() {
+		return objSelected;
+	}
+
+	public void setObjSelected(Object[] objSelected) {
+		this.objSelected = objSelected;
+	}
+
+	public boolean isRenderButtonAssignCode() {
+		return renderButtonAssignCode;
+	}
+
+	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
+		this.renderButtonAssignCode = renderButtonAssignCode;
+	}
+	
+	/**
+	 * @return the isHideExtension
+	 */
+	public boolean isHideExtension() {
+		return isHideExtension;
+	}
+
+	/**
+	 * @param isHideExtension the isHideExtension to set
+	 */
+	public void setHideExtension(boolean isHideExtension) {
+		this.isHideExtension = isHideExtension;
+	}
+	// #31503 -end-
+
+	//35503 Start
+	public String getSegmentTitleEng() {
+		return segmentTitleEng;
+	}
+
+	public void setSegmentTitleEng(String segmentTitleEng) {
+		this.segmentTitleEng = segmentTitleEng;
+	}
+
+	public String getFamilyTitleEng() {
+		return familyTitleEng;
+	}
+
+	public void setFamilyTitleEng(String familyTitleEng) {
+		this.familyTitleEng = familyTitleEng;
+	}
+
+	public String getClassTitleEng() {
+		return classTitleEng;
+	}
+
+	public void setClassTitleEng(String classTitleEng) {
+		this.classTitleEng = classTitleEng;
+	}
+
+	public String getCommodityTitleEng() {
+		return commodityTitleEng;
+	}
+
+	public void setCommodityTitleEng(String commodityTitleEng) {
+		this.commodityTitleEng = commodityTitleEng;
+	}
+	//35503 End
+
+	//#26059 - Start
+	/**
+	 * @return the cmItemCode
+	 */
+	public String getCmItemCode() {
+		return cmItemCode;
+	}
+
+	/**
+	 * @param cmItemCode the cmItemCode to set
+	 */
+	public void setCmItemCode(String cmItemCode) {
+		this.cmItemCode = cmItemCode;
+	}
+	//#26059 - End
+	
+	
+	
 }

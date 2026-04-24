@@ -25,7 +25,7 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 	}
 	
 	public void generateReport(){
-		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+		LinkedHashMap<String,String> params = new LinkedHashMap<>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		retrieveReportValueFromDb();
 		
@@ -33,14 +33,13 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 
-		if(getManagedBean().getSelectedOrgProfile() != null){
-			if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
-				params.put(SmReportConst.PARAM_COMPANY_NAME, 
-						getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
-			}
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_SUPPLIER_ID,
+					String.valueOf(getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
 		}
 		
-		if(StringUtils.isNotBlank(getManagedBean().getMofNo().toString())){
+		if(StringUtils.isNotBlank(getManagedBean().getMofNo())){
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 		}
 		
@@ -53,6 +52,9 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		if(getManagedBean().getSelectedUser() != null){
 			params.put(SmReportConst.PARAM_USER_ID2, String.valueOf(getManagedBean().getSelectedUser().getUserId()));
 		}
+		if (!StringUtils.isBlank(getManagedBean().getSupplierType())){
+			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
+		}
 		//#32521 - reopen - END
 		//#32521 - END
 		
@@ -64,9 +66,15 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		getManagedBean().setMofNo(null);
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setZone(null);
+		//#38227 - START
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		setDefaultDateFromAndDateTo();
+		//#38227 - END
 		//#32521 - START
 		getManagedBean().setSelectedUser(null);
 		getManagedBean().setApplType(null);
+		getManagedBean().setSupplierType(null);
 		//#32521 - END
 	}
 }

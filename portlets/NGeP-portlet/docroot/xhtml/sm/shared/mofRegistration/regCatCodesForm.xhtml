@@ -1,10 +1,12 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
+<!-- #28175 Reopen #141 Start -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<!-- #28175 Reopen #141 End -->
 	<!-- 30865 Starts -->
 	<table>
 		<tr>
@@ -14,48 +16,97 @@
 	</table>
 	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.smAppl.applType ne 'R' and backingBean.managedBean.smAppl.applType ne 'N'}">
+		<!-- 36504 - START -->
+		<p:outputPanel align="left" rendered="#{backingBean.managedBean.otherDescChangeSupplier or backingBean.managedBean.otherDescChangeSupplierPrev}">
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.click']}"
+							escape="false" />
+						<p:commandLink
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{backingBean.otherDescriptionHistoryPrev}"
+							process="@this"
+							partialSubmit="true"
+							update="@form">
+							<u><h:outputText
+									value="#{lbl['lbl.sm.other.desc.history.here']}"
+									style="color:blue;"
+									escape="false" /></u>
+						</p:commandLink>
+						<p:spacer width="2" />
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+							escape="false" />
+						<br />
+						<p:spacer height="2" />
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
+		<!-- 36504 - END -->
 		<p:dataTable var="aprvdCatBean"
 			widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
 			value="#{backingBean.managedBean.approvedCategoryList}"
 			rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catApprDt" />
-			
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
+			<!-- #37605 -->
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;vertical-align: top;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal">
-				<!-- #28175 Reopen Start -->
-				<h:outputText value="#{aprvdCatBean.pmCategoryL1.categoryL1Code}
-				 - #{aprvdCatBean.pmCategoryL1.categoryName}" /><br />
-				<h:outputText value="#{aprvdCatBean.pmCategoryL2.categoryL2Code}
-				 - #{aprvdCatBean.pmCategoryL2.categoryName}" /><br />
-				<h:outputText value="#{aprvdCatBean.pmCategoryL3.categoryL3Code}
-				 - #{aprvdCatBean.pmCategoryL3.categoryName}" />
-				<!-- #28175 Reopen End -->
-				<!-- 30865,32298 Start -->
-				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'C'}" styleClass="warning" style="color:red !important; text-align:left;">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal;vertical-align: top;">
+				<!-- #28175 Reopen #141 Start -->
+				<c:choose>
+					<c:when	test="#{not backingBean.managedBean.smAppl.activeAppl}">
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} - #{aprvdCatBean.categoryL1Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} - #{aprvdCatBean.categoryL2Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} - #{aprvdCatBean.categoryL3Name}" />
+					</c:when>
+					<c:otherwise>
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} - #{aprvdCatBean.pmCategoryL1.categoryName}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} - #{aprvdCatBean.pmCategoryL2.categoryName}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} - #{aprvdCatBean.pmCategoryL3.categoryName}" />
+					</c:otherwise>
+				</c:choose>
+				<!-- #28175 Reopen #141 End -->
+				<!-- 30865,32298, 38896 Start -->
+				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'C'}" styleClass="warning" 
+					style="color:red !important; text-align:left; float:none">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
-				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'M'}" styleClass="warning" style="color:red !important; text-align:left;">
+				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'M'}" styleClass="warning" 
+					style="color:red !important; text-align:left; float:none">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 				<!-- 30865,32298 End -->
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.no.available']}"
 					rendered="#{empty aprvdCatBean.otherDesc}" />
 				<h:outputText value="#{aprvdCatBean.otherDesc}"
 					rendered="#{not empty aprvdCatBean.otherDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!aprvdCatBean.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{aprvdCatBean.specialCategory}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}"
@@ -74,8 +125,38 @@
 				<ui:include src="overlapCategorySuppDoc.xhtml" />
 		</c:if>
 		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U'}">
-			<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">
-			
+			<p:panel header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true">
+			<!-- 36504 - START -->
+			<p:outputPanel align="left" rendered="#{backingBean.managedBean.otherDescChangeSupplier}">
+				<table style="width: 100%">
+					<tr>
+						<td>
+							<h:outputText
+								value="#{lbl['lbl.sm.other.desc.history.click']}"
+								escape="false" />
+							<p:commandLink
+								onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{backingBean.otherDescriptionHistory}"
+								process="@this"
+								partialSubmit="true"
+								update=":form:tt:catCodeInfPan">
+								<u><h:outputText
+										value="#{lbl['lbl.sm.other.desc.history.here']}"
+										style="color:blue;"
+										escape="false" /></u>
+							</p:commandLink>
+							<p:spacer width="2" />
+							<h:outputText
+								value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+								escape="false" />
+							<br />
+							<p:spacer height="2" />
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<!-- 36504 - END -->
 			<c:choose>
 				<c:when
 					test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser  and backingBean.managedBean.smAppl.supplierType ne 'J'}">
@@ -299,5 +380,21 @@
 		</div>
 
 	</p:confirmDialog>
+	
+	<!-- 36504 - START -->
+	<ac:otherDescriptionHistory
+		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
+		applNo="#{backingBean.managedBean.smAppl.applNo}"
+		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
+	<ac:otherDescriptionHistoryPrev
+		categoryCodeList="#{backingBean.managedBean.previousCategoryList}"
+		applNo="#{backingBean.managedBean.previousCategoryList[0].smAppl.applNo}"
+		otherDescChangePO="#{backingBean.managedBean.otherDescChangePOPrev}"
+		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApproverPrev}"
+		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplierPrev}"  />
+	<ac:otherDescriptionEdit />
+   	<!-- 36504 - END -->
 
 </ui:composition>

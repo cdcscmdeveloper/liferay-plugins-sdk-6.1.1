@@ -21,18 +21,12 @@
 		<ui:param name="isReadOnlyOrSpecMain"
 			value="#{!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
 
-		<table width="100%" class="BtnSpacing">
+		<table style="width:100%;" class="BtnSpacing"><!-- #11104 Reendorse -->
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
-						action="#{specificationBackingBean.sampleViewBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.complete']}" process="@this"
-						partialSubmit="true"
-						rendered="#{((!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
-						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-						action="#{specificationBackingBean.saveSampleTemplateSpecDetails(true)}" />
+						action="#{specificationBackingBean.sampleViewBackAction}" /> 
 
 					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@this"
 						partialSubmit="true"
@@ -57,7 +51,7 @@
 				<p:messages id="samplescorePopupMsg" showDetail="true"
 					autoUpdate="true" closable="true" showSummary="false"
 					severity="error, info" />
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<table style="width:100%;cellspacing:0;cellpadding:0;border:0;"><!-- #11104 Reendorse -->
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.tpl.spec.content.item']}" /></td>

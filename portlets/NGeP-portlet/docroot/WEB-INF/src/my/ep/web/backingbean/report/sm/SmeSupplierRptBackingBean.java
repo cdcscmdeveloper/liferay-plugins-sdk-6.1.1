@@ -11,9 +11,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -23,12 +20,14 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.report.sm.SmeSupplierRptManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "smeSupplierRptBB")
 @ViewScoped
@@ -175,6 +174,7 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		StringBuilder sb = new StringBuilder("smeRegisteredFlag^1,9^" + SearchOperator.OPERATOR_IN.value());
 		
 		String accType = getManagedBean().getAccountType();
+		String smAppl = "|smAppl.supplierType^";
 		if(accType != null && accType.equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 			if (getManagedBean().getZone() != null) {
 				String zone = "|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^";
@@ -188,13 +188,13 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 			}
 			String suppType = getManagedBean().getSupplierType();
 			if (suppType != null && !suppType.equalsIgnoreCase("all")){
-				sb.append("|smAppl.supplierType^" + suppType);
+				sb.append(smAppl + suppType);
 			} else {
-				sb.append("|smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT + "," 
+				sb.append(smAppl + SupplierManagementConst.SUPP_TYPE_CONSULTANT + "," 
 					+ SupplierManagementConst.SUPP_TYPE_CONTRACTOR + "^" + SearchOperator.OPERATOR_IN.value());
 			}
 		} else if (accType != null && accType.equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)){
-			sb.append("|smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_BASIC);
+			sb.append(smAppl + SupplierManagementConst.SUPP_TYPE_BASIC);
 		}
 		log.info("29617- constructConditionFields():"+sb.toString());
 		return sb.toString();

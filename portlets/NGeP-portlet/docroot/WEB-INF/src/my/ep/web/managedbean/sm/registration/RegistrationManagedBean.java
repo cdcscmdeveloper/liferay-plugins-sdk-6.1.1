@@ -181,12 +181,20 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	//#30829 end
 	
 	// 27691 - Add/Delete Supplier Owner
-	private List<SmSupplierOwner> selectedSuppOwners = new ArrayList<SmSupplierOwner>();
+	private List<SmSupplierOwner> selectedSuppOwners = new ArrayList<>();
 	
 	private boolean showOwnerPersonnel = false;
 	
 	private boolean allOwnerSelected;
+	
+	private List<SmSupplierOwner> addSuppOwnerLs = new ArrayList<SmSupplierOwner>();
+	
+	private List<SmSupplierOwner> delSuppOwnerLs = new ArrayList<SmSupplierOwner>();
 	//27691 END
+	
+	// #28895_35501 - AUDIT TRAIL SM
+	private List<SmSupplierBank> oldBanks;
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -1118,5 +1126,31 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setSelectedSuppOwners(List<SmSupplierOwner> selectedSuppOwners) {
 		this.selectedSuppOwners = selectedSuppOwners;
 	}
+
+	public List<SmSupplierOwner> getAddSuppOwnerLs() {
+		return addSuppOwnerLs;
+	}
+
+	public void setAddSuppOwnerLs(List<SmSupplierOwner> addSuppOwnerLs) {
+		this.addSuppOwnerLs = addSuppOwnerLs;
+	}
+
+	public List<SmSupplierOwner> getDelSuppOwnerLs() {
+		return delSuppOwnerLs;
+	}
+
+	public void setDelSuppOwnerLs(List<SmSupplierOwner> delSuppOwnerLs) {
+		this.delSuppOwnerLs = delSuppOwnerLs;
+	}
+
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public List<SmSupplierBank> getOldBanks() {
+		return oldBanks;
+	}
+
+	public void setOldBanks(List<SmSupplierBank> oldBanks) {
+		this.oldBanks = oldBanks;
+	}
+	// #28895_35501 End
 	
 }

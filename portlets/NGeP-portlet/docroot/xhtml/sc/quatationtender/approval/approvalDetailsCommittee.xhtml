@@ -5,7 +5,48 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
+	<script type="text/javascript">
+	  if (PrimeFaces.widget.PickList) {
+		    PrimeFaces.widget.PickList = PrimeFaces.widget.PickList.extend({
+		        init : function(cfg) {
+		            this._super(cfg);
+		            $(this.jqId + " ul.ui-picklist-target").sortable(
+		            		{
+		            	        connectWith: 'ul',
+		            	        receive: function(ev, ui) {
+		            	            if(ui.item.hasClass("ui-state-disabled"))
+		            	              ui.sender.sortable("cancel");
+		            	        }
+		            	    });
+		        }
+		    });
+		}
+
+		var selections = document.querySelectorAll('.cmtApproverPickList .ui-picklist-item');
+		var i = 0;
+		if(selections!=null || selections.length>0){
+			while (i != selections.length) {
+				var validateApprover = function(el) {
+					document.getElementById('#{approverToValidate.clientId}').value = el.target.dataset.itemValue;
+					validatePicklist();
+				};
+				var debounce = function(func, wait) {
+				    var timeout;
+				    return function() {
+				        var context = this, args = arguments;
+				        var later = function() {
+				            timeout = null;
+				            func.apply(context, args);
+				        };
+				        clearTimeout(timeout);
+				        timeout = setTimeout(later, wait);
+				    };
+				};
+				selections[i].addEventListener('mouseup', debounce(validateApprover, 600));
+				i++;
+			}
+		}
+	</script> 
 	<ui:param name="isCmtApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}" />
 	
 	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
@@ -25,14 +66,22 @@
 		toggleable="true">
 		
 		<div style="width: 100%">
-			<p:pickList id="committeeapproverid" value="#{commiteList}"
+			<h:inputHidden id="selectedApproverInput"
+				binding="#{approverToValidate}"
+				value="#{qTDetailBB.managedBean.approverUserId}" />
+			<p:remoteCommand name="validatePicklist"
+				action="#{qTDetailBB.validateApproverPickListSelection()}"  />
+			<p:pickList styleClass="cmtApproverPickList" id="committeeapproverid" value="#{commiteList}"
 				var="approverUser" showTargetControls="true"
 				itemLabel="#{approverUser.pmUser.userName}"
 				disabled="#{!isCmtApprovalDtlsEditable}"
-				itemValue="#{approverUser}" converter="approverPickListConverter">
+				itemValue="#{approverUser}" converter="approverPickListConverter"
+				itemDisabled="#{approverUser.disableRow}">
 				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']}</f:facet>
 				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
 			</p:pickList>
+			<p:blockUI block="committeeapproverid" widgetVar="cmtApproverPickListBlock"/>
+		
 		</div>
 	</p:panel>
 	

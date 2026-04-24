@@ -23,6 +23,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -32,8 +33,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -317,15 +320,16 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Map<Long, List<String>> scRequestItemIdNewSuppOfferAndJustMap;
 	private Long selectedItemId;
 	private boolean multipleSuppOffer = Boolean.FALSE;
+	private List <TplSpecQuestion> listSpecAnswer;
 	//#29006 - end
 	
 	//#25725 start
 	private boolean disabledButton = true;
-	public BigDecimal limit = new BigDecimal(500000);
-	public boolean above500K = true;
-	public boolean AgreementReqChange = false;
-	public String docStatus;
-	public String procurementType;
+	private BigDecimal limit = new BigDecimal(500000); //#Sqube Vulnerability Minor G47 start
+	private boolean above500K = true;
+	private boolean AgreementReqChange = false;
+	private String docStatus;
+	private String procurementType; //#Sqube Vulnerability Minor G47 end
 	private boolean showApprovalLetter = false;//# note 146
 	//#25725 end
 	
@@ -346,12 +350,13 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	private List<ScLoiLoaItem> loiLoaItemsResult;//29007 - fix issue 2 search action note 347
 	private boolean resetAll = false;
+	private boolean resetAllforNoReport = false;
 	/*#29007 End Vinod*/
 	
 	//#27797 - start
 	private ScLoiLoaItem highestZoneScLoiLoaItem;
 	private List<ScLoiLoaItem> highestZoneScLoiLoaItemList;
-	public BigDecimal highestZonePrice = new BigDecimal(0);
+	private BigDecimal highestZonePrice = new BigDecimal(0);
 	private List<ScLoiLoaItem> nameZoneScLoiLoaItemList;
 	private List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList;
 	private List<ScLoiLoaItem> dtlScLoiLoaItemList;
@@ -359,7 +364,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Map<Long, BigDecimal> reqItemMaxSubTotalMap;
 	private Long reqItemSession = 0L;
 	private Long reqItemSubTotalSession = 0L;
-	public BigDecimal totalZonePrice = new BigDecimal(0);
+	private BigDecimal totalZonePrice = new BigDecimal(0);
 	//#27797 - end
 	
 	//#32280 - start
@@ -369,11 +374,31 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
-	
-	private String firstZone;//Bug #34757
+		
+	//Bug #34757 - Start
+	private String firstZone;
+	private List<Long> itemList;
+	private List<Long> loaItemIds;
+	//Bug #34757 - End
 	
 	private int retainPageNumber = 0;//#34242
 	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	private Boolean downloadLOADisabled = true; 
+	
+	private Boolean readOnlyLOADownload = true;
+	// Bug #35078@Syazani -- 22/09/2023 -- End
+	
+	// #29661 start
+	private List<SmSupplierCategory> supplierCategoryList;
+	private List<SmSupplierCategory> procurementRelatedCategoryList;
+	private List<ScQtCategory> qtCategoryList;
+	// #29661 end
+	
+	//start - 27868
+	private List<Long> ptjIds = new ArrayList<>();
+	//end - 27868
+
     /**
      * Gets the spki backing bean.
      *
@@ -1937,9 +1962,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public boolean isResetAll() {
 		return resetAll;
 	}
-
 	public void setResetAll(boolean resetAll) {
 		this.resetAll = resetAll;
+	}
+	public boolean isResetAllforNoReport() {
+		return resetAllforNoReport;
+	}
+	public void setResetAllforNoReport(boolean resetAllforNoReport) {
+		this.resetAllforNoReport = resetAllforNoReport;
 	}
 	/*#29007 End Vinod*/
 
@@ -1992,7 +2022,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	public List<ScLoiLoaItem> getHighestZoneScLoiLoaItemList() {
 		if(highestZoneScLoiLoaItemList ==null) {
-			highestZoneScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
+			highestZoneScLoiLoaItemList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		}
 		return highestZoneScLoiLoaItemList;
 	}
@@ -2153,6 +2183,92 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setFirstZone(String firstZone) {
 		this.firstZone = firstZone;
 	}
+
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	public Boolean getDownloadLOADisabled() {
+		return downloadLOADisabled;
+	}
+
+	public void setDownloadLOADisabled(Boolean downloadLOADisabled) {
+		this.downloadLOADisabled = downloadLOADisabled;
+	}
+
+	public Boolean getReadOnlyLOADownload() {
+		return readOnlyLOADownload;
+	}
+
+	public void setReadOnlyLOADownload(Boolean readOnlyLOADownload) {
+		this.readOnlyLOADownload = readOnlyLOADownload;
+	}
+
+	// Bug #35078@Syazani -- 22/09/2023 -- End
+	
+	//29006 @zaim start
+	/**
+	 * @return the listSpecAnswer
+	 */
+	public List <TplSpecQuestion> getListSpecAnswer() {
+		return listSpecAnswer;
+	}
+
+	/**
+	 * @param listSpecAnswer the listSpecAnswer to set
+	 */
+	public void setListSpecAnswer(List <TplSpecQuestion> listSpecAnswer) {
+		this.listSpecAnswer = listSpecAnswer;
+	}
+	//29006 @zaim end
+
+	public List<Long> getItemList() {
+		return itemList;
+	}
+
+	public void setItemList(List<Long> itemList) {
+		this.itemList = itemList;
+	}
+
+	public List<Long> getLoaItemIds() {
+		return loaItemIds;
+	}
+
+	public void setLoaItemIds(List<Long> loaItemIds) {
+		this.loaItemIds = loaItemIds;
+	}
+
+	//start - #27868
+	public List<Long> getPtjIds() {
+		return ptjIds;
+	}
+
+	public void setPtjIds(List<Long> ptjIds) {
+		this.ptjIds = ptjIds;
+	}
+	//end - #27868
+	// #29661 start
+	public List<SmSupplierCategory> getSupplierCategoryList() {
+		return supplierCategoryList;
+	}
+
+	public void setSupplierCategoryList(List<SmSupplierCategory> supplierCategoryList) {
+		this.supplierCategoryList = supplierCategoryList;
+	}
+
+	public List<SmSupplierCategory> getProcurementRelatedCategoryList() {
+		return procurementRelatedCategoryList;
+	}
+
+	public void setProcurementRelatedCategoryList(List<SmSupplierCategory> procurementRelatedCategoryList) {
+		this.procurementRelatedCategoryList = procurementRelatedCategoryList;
+	}
+
+	public List<ScQtCategory> getQtCategoryList() {
+		return qtCategoryList;
+	}
+
+	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
+		this.qtCategoryList = qtCategoryList;
+	}
+	// #29661 end
 
 }
 

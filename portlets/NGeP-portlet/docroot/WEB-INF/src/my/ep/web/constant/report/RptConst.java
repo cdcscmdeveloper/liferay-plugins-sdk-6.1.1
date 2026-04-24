@@ -92,7 +92,9 @@ public class RptConst {
 	public static final String SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL = "SC_046";
 	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
 	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
+	public static final String SC_BRIEFING_PAPER_RPT_VAL_WIP = "SC_081";
 	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_049";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_082";
 
 	public static final String SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL = "SC_050";
 	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL = "SC_051";
@@ -116,19 +118,24 @@ public class RptConst {
 	public static final String SC_S1_LOA_RPT_VAL = "SC_069";
 	public static final String SC_S1_LOA_CONTENT_RPT_VAL = "SC_070";
 	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
+	public static final String SC_OPENING_COMMITTEE_RPT_VAL_WIP = "SC_084";
 	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
+	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_085";
 	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
+	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_083";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
 	// S1 Report
 	// JSP
 	// OC
 	public static final String SC_OC_RPT_JSP = "SC_OC.jsp";
+	public static final String SC_OC_RPT_WIP_JSP = "SC_OC_WIP.jsp";
 	public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "SC_OC_SHLIST_1A.jsp";
 	public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "SC_OC_METHOD_OF_ASSES_1B.jsp";
 	
 	// FEC
 	public static final String SC_FEC_RPT_JSP = "SC_FEC.jsp";
+	public static final String SC_FEC_RPT_WIP_JSP = "SC_FEC_WIP.jsp";
 	public static final String SC_SPPSAP2_FEC_RPT_JSP = "SC_FEC_SHLIST_LEVEL2_3A.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP = "SC_FEC_FIN_ASSES_LEVEL2_3B.jsp";
 	public static final String SC_AKPT_FEC_RPT_JSP = "SC_FEC_PRICE_EVAL_3C.jsp";
@@ -138,6 +145,7 @@ public class RptConst {
 
 	// TEC
 	public static final String SC_TEC_RPT_JSP = "SC_TEC.jsp";
+	public static final String SC_TEC_RPT_WIP_JSP = "SC_TEC_WIP.jsp";
 	public static final String SC_SPPSAP2_TEC_RPT_JSP = "SC_TEC_SHLISTTECH_EVAL_2A.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP = "SC_TEC_TECHASSES_2B.jsp";
 	public static final String SC_AKPT_TEC_RPT_JSP = "SC_TEC_EVAL_TECH_2C.jsp";
@@ -149,6 +157,7 @@ public class RptConst {
 	
 	// EC
 	public static final String SC_EC_RPT_JSP = "SC_ONE_TIER.jsp";
+	public static final String SC_EC_RPT_WIP_JSP = "SC_ONE_TIER_WIP.jsp";
 	public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_SHORTLIST_ASSES_4A.jsp";
 	public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_METHOD_OF_ASSES_4B.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "SC_EC_GEN_SPEC_TECH_4D.jsp";
@@ -162,6 +171,7 @@ public class RptConst {
 
 	// FC
 	public static final String SC_SUPPLIER_FINALIZATION_RPT_JSP = "SC_SUPP_FINAL.jsp";
+	public static final String SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP = "SC_SUPP_FINAL_WIP.jsp";
 	public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "SC_FC_ANALYSIS_EVAL_REP_8A.jsp";
 
 	public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";

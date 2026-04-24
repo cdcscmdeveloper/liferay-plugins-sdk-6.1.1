@@ -32,6 +32,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private List<ScQtBsvRegistration> briefingRegistrationList;
+	//28895 - 35500
+	private List<ScQtBsvRegistration> newBriefingRegistrationList;
 
 	private List<ScQtBsvAttendance> briefingAttendanceList;
 
@@ -79,6 +81,10 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	/** The attandance count */
 	
 	private int attandance_count;
+
+	// 26247(39088) - start
+	private List<Long> daImposedSupplierIds;
+	// 26247(39088) - end
 	
 	/**
 	 * @return the briefingRegistrationList
@@ -475,7 +481,23 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public void setAttandance_count(int attandance_count) {
 		this.attandance_count = attandance_count;
 	}
-	
-	
-	
+
+	//#28895-35500 start
+	public List<ScQtBsvRegistration> getNewBriefingRegistrationList() {
+		return newBriefingRegistrationList;
+	}
+
+	public void setNewBriefingRegistrationList(List<ScQtBsvRegistration> newBriefingRegistrationList) {
+		this.newBriefingRegistrationList = newBriefingRegistrationList;
+	}
+	//#28895-35500 end
+	// 26247(39088) - start
+	public List<Long> getDaImposedSupplierIds() {
+		return daImposedSupplierIds;
+	}
+
+	public void setDaImposedSupplierIds(List<Long> daImposedSupplierIds) {
+		this.daImposedSupplierIds = daImposedSupplierIds;
+	}
+	// 26247(39088) - end
 }
