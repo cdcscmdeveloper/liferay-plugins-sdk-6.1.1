@@ -107,6 +107,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -166,6 +167,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -18885,6 +18887,21 @@ public class SmApplicationBackingBean extends
 	 * 
 	 */
 	public void otherDescriptionHistory() {
+		if (getManagedBean().getApprovedCategoryList() != null) {
+			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+				
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					
+					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+					getManagedBean().getApprovedCategoryList().add(cat);
+				}
+			}
+		}
+		
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
 	}
 	
@@ -18943,7 +18960,9 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
 			
-			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser()) {
+			initPmUserRole();
+			
+			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_PO);
 			} else if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_APPROVER);
@@ -18973,7 +18992,35 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.hide();");
 		}
 	}
+	
+	/**
+	 * Initialize Login user role
+	 */
+	public void initPmUserRole() {
+		Long userId = getUserIdSessionFromLoginId();
 
+		try {
+			List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(userId);
+			getManagedBean().setApproverUser(false);
+			getManagedBean().setPoUser(false);
+
+			if (!EntityHelper.isCollectionEmpty(userRoles)) { 
+				for (PmUserRole userRole : userRoles) {
+					if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_APPROVER.value())) {
+						getManagedBean().setApproverUser(true);
+						break;
+					} else if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value())) {
+						getManagedBean().setPoUser(true);
+						break;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "OtherDescHistory",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "PmUserRole", userId, e);
+		}
+	}
 	// 36504 - END
 		
 //	#37925 START
