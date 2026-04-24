@@ -17765,26 +17765,31 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			specCommitteeResetData();
 			retriveSampleSpecmaster(specresDTO.getScQtCheckList(), this.getManagedBean().getSampleItemName());
 
-			for (ScQtCheckList checklist : technicalChecklist) {
+			// Bug #40087@Syazani 06/04/2026 -- Start
+			ListIterator<ScQtCheckList> itScQtCheckListTechnical = technicalChecklist.listIterator();
+			while (itScQtCheckListTechnical.hasNext()) {
+				ScQtCheckList checklist = itScQtCheckListTechnical.next();
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
 						.getParameterCode())) {
 					specReqDTO.setSampleCheckList(specresDTO.getSampleChecklist());
-					int index = technicalChecklist.indexOf(checklist);
 					specReqDTO.getSampleCheckList().setSampleWip(Boolean.TRUE);// 11104WIP
-					technicalChecklist.set(index, specresDTO.getSampleChecklist());
+					itScQtCheckListTechnical.set(specresDTO.getSampleChecklist());
 				} else if (specresDTO.getScQtCheckList().getQtChecklistId().equals(checklist.getQtChecklistId())) {
-					int index = technicalChecklist.indexOf(checklist);
-					technicalChecklist.set(index, specresDTO.getScQtCheckList());
+					itScQtCheckListTechnical.set(specresDTO.getScQtCheckList());
 				}
 			}
 
-			for (ScQtCheckList checklist : sampleChecklist) {
+			ListIterator<ScQtCheckList> itScQtCheckListSample = sampleChecklist.listIterator();
+			// #25635-start
+			while (itScQtCheckListSample.hasNext()) {
+				ScQtCheckList checklist = itScQtCheckListSample.next();
 				if (specresDTO.getScQtCheckList().getQtChecklistId().equals(checklist.getQtChecklistId())) {
-					int index = sampleChecklist.indexOf(checklist);
-					sampleChecklist.set(index, specresDTO.getScQtCheckList());
-					break;
+					itScQtCheckListSample.set(specresDTO.getScQtCheckList());
 				}
+				break;
 			}
+			// #25635-End
+			// Bug #40087@Syazani 06/04/2026 -- End
 
 			specReqDTO.setTobeRemoveList(null);
 			getManagedBean().setMarkDeletedTechChecklist(null);
