@@ -854,7 +854,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 			
-			retrieveItemPanelRecord(); //#37620,#34367
+			// #37620,#34367 - Start
+			ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(ctBB.getManagedBean(), "contractVer.ctContract.loa");
+			ctBB.retrieveItemPanelRecord(loa);
+			// #37620,#34367 - End
 			
 			chkBondWaivedAttachment();
 			sortDeductions();
@@ -4959,30 +4962,4 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 	}
 	//#40197 end
-	
-	//#37620,#34367 - Start
-	/**
-	 * The method used to check is item panel record return boolean value in
-	 * case record true
-	 * 
-	 * @return true, if there is an item panel false, if there isn't item panel
-	 */
-	public void retrieveItemPanelRecord() {
-
-		ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(ctBB.getManagedBean(), "contractVer.ctContract.loa");
-
-		boolean hasPanel = loa != null && loa.isPanel() && loa.getCtCircularVer() != null;
-
-		if (hasPanel) {
-			ctBB.getManagedBean().setCtCircularPanel(loa.getCtCircularVer());
-
-			List<CtAttachment> attachments = loa.getCtCircularVer().getCircularAttachments();
-			if (attachments != null && !attachments.isEmpty()) {
-				ctBB.getManagedBean().setCircularPanelAttachment(attachments.get(0));
-			}
-		}
-
-		ctBB.getManagedBean().setContractPanelItem(hasPanel);
-	}
-	//#37620,#34367 - End
 }
