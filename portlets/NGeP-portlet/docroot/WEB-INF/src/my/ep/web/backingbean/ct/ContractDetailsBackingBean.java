@@ -855,6 +855,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			
 			// #37620,#34367 - Start
+			// Retrieve LOA and update panel status, circular data, and attachment.
 			ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(ctBB.getManagedBean(), "contractVer.ctContract.loa");
 			ctBB.retrieveItemPanelRecord(loa);
 			// #37620,#34367 - End
