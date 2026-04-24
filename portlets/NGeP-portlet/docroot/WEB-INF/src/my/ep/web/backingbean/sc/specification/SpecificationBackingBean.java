@@ -10375,7 +10375,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setTechnicalScoreSetting(
 						technicalScoreSetting);
 				throw new EpException(MessageConst.ERROR_760364,
-						new String[] { String.valueOf(passingScore) });
+						new String[] { String.valueOf(passingScore.intValue()) }); //#38151
 			}
 
 		}
@@ -16146,7 +16146,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						&& (technicalScoreSetting.getPassingScore().intValue() < passingScore
 								.intValue())) {
 					throw new EpException(MessageConst.ERROR_760364,
-							new String[] { String.valueOf(passingScore) });
+							new String[] { String.valueOf(passingScore.intValue()) }); //#38151
 				}
 			}
 			// #21695 START FARID
@@ -18899,6 +18899,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				isDisable = true;
 			}
 		}
+		// #40138 Start Vinod
+		if(checkList.isEnableToDelete()){
+			isDisable = false;
+		}
+		// #40138 End Vinod
 		return isDisable;
 	}
 
@@ -25040,17 +25045,25 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 			if (null != passingScore
 					&& technical.getOverallTechnical().intValue() < passingScore
-							.intValue() && !this.getManagedBean().isReadOnly()
-					&& isValidationRequired) {
+							.intValue()&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
 				throw new EpException(MessageConst.ERROR_760826,
-						new String[] { String.valueOf(passingScore) });
+						new String[] { String.valueOf(passingScore.intValue()) });
 			}
+			
 			if (null != technical.getOverallTechnical()
-					&& technical.getOverallTechnical().intValue() > 100 
-					|| null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
-						this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() > 100) {
+					&& technical.getOverallTechnical().intValue() >= 100) {
 				throw new EpException(MessageConst.ERROR_760825,
 						new String[] { String.valueOf(100) });
+			}
+			if (null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
+						this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() > 100) {
+				throw new EpException(MessageConst.ERROR_760827,
+						new String[] { String.valueOf(100) });
+			}
+			if (null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() && 
+					this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() < 0) {
+				throw new EpException(MessageConst.ERROR_760828,
+					new String[] { String.valueOf(0) });
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
@@ -25138,16 +25151,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			currentQtChecklist.addAll(this.getManagedBean().getScQtCheckSt2financeProposalList());
 		}
 
-		List<ScQtCheckList> newMandatoryCheckLists = specSo.getNewMandatoryQtCheckLists(docType, scQt
+		List<ScQtCheckList> newCheckLists = specSo.getNewMandatoryQtCheckLists(docType, scQt
 				.getPmProcurementCategory().getParameterCode(), scQt, specType, currentQtChecklist);
 
-		if (CollectionUtils.isNotEmpty(newMandatoryCheckLists)) {
-			currentQtChecklist.addAll(newMandatoryCheckLists);
-			checklistSorting(currentQtChecklist);
+		if (CollectionUtils.isNotEmpty(newCheckLists)) {
+			checklistSorting(newCheckLists);
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
-				this.getManagedBean().setScQtCheckSt2techProposal(currentQtChecklist);
+				this.getManagedBean().setScQtCheckSt2techProposal(newCheckLists);
 			} else {
-				this.getManagedBean().setScQtCheckSt2financeProposalList(currentQtChecklist);
+				this.getManagedBean().setScQtCheckSt2financeProposalList(newCheckLists);
 			}
 		}
 	}
