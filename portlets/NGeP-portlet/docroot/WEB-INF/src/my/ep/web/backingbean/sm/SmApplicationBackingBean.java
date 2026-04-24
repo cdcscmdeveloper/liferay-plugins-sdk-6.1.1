@@ -18883,16 +18883,18 @@ public class SmApplicationBackingBean extends
 	 * 
 	 */
 	public void otherDescriptionHistory() {
-		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplier().getSmAppl().getSmSupplierCategories()) {
-			
-			String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
-			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
-			
-			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+		if (getManagedBean().getApprovedCategoryList() != null) {
+			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
 				
-				cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				getManagedBean().getApprovedCategoryList().add(cat);
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					
+					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+					getManagedBean().getApprovedCategoryList().add(cat);
+				}
 			}
 		}
 		
