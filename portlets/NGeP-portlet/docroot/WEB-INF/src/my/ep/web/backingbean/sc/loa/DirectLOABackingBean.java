@@ -172,6 +172,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -12231,6 +12232,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScQt scQt = this.getManagedBean().getScQt();
 		boolean isZonal = scQt.isZonal();
 		List<TplSpecAnswer> tplSpecAnswers = new ArrayList<>();
+		List<TplSpecTierQty> tplSpecTierQties = new ArrayList<>();
+		TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
+		
+		tplSpecSuppAnswer.setSmSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
 
 		for (TplSpecAnswer oldAnswer : oldQuestion.getTplSpecAnswers()) {
 			boolean isPriceTypeTier = oldAnswer.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER);
@@ -12250,14 +12255,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				tplSpecTierQty.setFromQty(fromQty);
 				tplSpecTierQty.setToQty(toQty);
 
+				tplSpecTierQties.add(tplSpecTierQty);
 				tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
 			} else if (!isZonal && !isPriceTypeTier) {
 				tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
 				tplSpecAnswer.setAnswerNumeric(oldAnswer.getAnswerNumeric());
 			}
+			tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
 			tplSpecAnswers.add(tplSpecAnswer);
 		}
+		if(CollectionUtils.isNotEmpty(tplSpecTierQties)){
+			newQuestion.setTplSpecTierQties(tplSpecTierQties);
+		}
 		newQuestion.setTplSpecAnswers(tplSpecAnswers);
+		newQuestion.setCmItem(null);
 	}
 	
 	private TemplateSpecBean updateSpecBeanForClone(String itemType) {
