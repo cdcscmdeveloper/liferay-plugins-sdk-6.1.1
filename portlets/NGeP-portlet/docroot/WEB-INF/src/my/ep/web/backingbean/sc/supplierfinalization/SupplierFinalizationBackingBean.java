@@ -12375,8 +12375,10 @@ public class SupplierFinalizationBackingBean extends
 						this.getManagedBean().isDisableSupplierSelection(),
 						isBidding,
 						this.disabledQTProcess(supplier),// 26247
-						periodExtensionRejected, this.isQTMaintenanceScreen(),
-						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
+						// #21692 - Start
+						periodExtensionRejected,
+						// #21692 - End
+						this.isQTMaintenanceScreen(), !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
 	}
 	//35157 - end
 	
