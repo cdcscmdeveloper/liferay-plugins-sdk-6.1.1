@@ -66,6 +66,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //#37620,#34367
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -578,6 +579,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			}
 		}
 		// #24333 - End
+		
+		retrieveItemPanelRecord(); //#37620,#34367
 
 		// Check for migrated contract
 		if (getManagedBean().getCtAgreement().getCtAmendment() == null
@@ -2990,4 +2993,30 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		return false;
 	}
 	//#24333 - End
+	
+	//#37620,#34367 - Start
+	/**
+	 * The method used to check is item panel record return boolean value in
+	 * case record true
+	 * 
+	 * @return true, if there is an item panel false, if there isn't item panel
+	 */
+	public void retrieveItemPanelRecord() {
+
+		ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(getManagedBean(), "ctContract.loa");
+
+		boolean hasPanel = loa != null && loa.isPanel() && loa.getCtCircularVer() != null;
+
+		if (hasPanel) {
+			ctBB.getManagedBean().setCtCircularPanel(loa.getCtCircularVer());
+
+			List<CtAttachment> attachments = loa.getCtCircularVer().getCircularAttachments();
+			if (attachments != null && !attachments.isEmpty()) {
+				ctBB.getManagedBean().setCircularPanelAttachment(attachments.get(0));
+			}
+		}
+
+		ctBB.getManagedBean().setContractPanelItem(hasPanel);
+	}
+	//#37620,#34367 - End
 }
