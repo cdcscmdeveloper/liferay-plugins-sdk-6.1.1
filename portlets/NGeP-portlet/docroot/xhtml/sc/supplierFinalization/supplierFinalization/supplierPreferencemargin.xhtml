@@ -23,7 +23,9 @@
 			widgetVar="qualifiedSupplierDtls"
 			rowKey="#{qualifiedSupp.evaluationResultDtlId}" rowIndexVar="index"
 			rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{preferencemarginList}">
+			value="#{preferencemarginList}"
+			rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq DbValueConst.recordStatusActive or !suppFinalizationBackingBean.managedBean.zoneDetails.get(suppFinalizationBackingBean.managedBean.zoneActiveIndex).branchDeactivated}">
+			<ui:remove> 28777,29729 </ui:remove>
 
 			<ac:paginator for="preferenceMarginSFSuppliers" />
 
@@ -104,9 +106,11 @@
 		<p:dataTable id="preferenceMarginSFSuppliersDis"
 			style="width:100%; height:75%;" var="disqualifiedSupp"
 			widgetVar="qualifiedSupplierDtls"
-			rowKey="#{disqualifiedSupp.evaluationResultDtlId}" rowIndexVar="index"
-			rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{preferencemarginList}">
+			rowKey="#{disqualifiedSupp.evaluationResultDtlId}"
+			rowIndexVar="index" rows="10"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{preferencemarginList}"
+			rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalizationBackingBean.managedBean.zoneDetails.get(suppFinalizationBackingBean.managedBean.zoneActiveIndex).branchDeactivated}">
 
 			<ac:paginator for="preferenceMarginSFSuppliersDis" />
 

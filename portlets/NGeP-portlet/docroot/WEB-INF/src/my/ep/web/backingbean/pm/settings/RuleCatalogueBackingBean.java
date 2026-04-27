@@ -89,6 +89,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;//#36738
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -6047,10 +6048,30 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		log.info("end addPTJCRValues");
 	}
 	
+	//#27827
+	/**
+	 * Retrieve zones
+	 */
 	public void retrievePmZoneList() {
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
+		
+		List<PmZone> zones = new ArrayList<>();
+		//semenanjung, sabah, sarawak
+		List<String> mainCodes = Arrays.asList("1", "2", "3");
+		for (PmZone zone : getManagedBean().getZoneList()) {
+			if (mainCodes.contains(zone.getZoneCode())) {
+				zones.add(zone);
+			}
+		}
+		Collections.sort(zones, new Comparator<PmZone>(){
+			@Override
+			public int compare(final PmZone s1, final PmZone s2) {
+				return s1.getZoneCode().compareTo(s2.getZoneCode());
+			}
+		});
+		getManagedBean().setMainZones(zones);
 	}
 	/* 27827 - END */
 	
@@ -6560,17 +6581,34 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	 */
 	private List<PmPtjSpecialApproval> searchByPtj(List<PmPtjSpecialApproval> ptjApprovalList, String search,
 			boolean useName) {
-		List<PmPtjSpecialApproval> result = new ArrayList<PmPtjSpecialApproval>();
-		for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
-			String value = useName ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName() : ptjApproval
-					.getPmOrgProfile().getOrgValidity().getOrgCode();
-			String searchRegex = searchRegex(search);
+		List<PmPtjSpecialApproval> result = new ArrayList<>();
 
-			if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
-					|| value.toLowerCase().matches(searchRegex)) {
-				result.add(ptjApproval);
+		if (search == null || search.isEmpty()) {
+			return result;
+		}
+
+		String searchLower = search.toLowerCase();
+		String regex = searchRegex(search);
+
+		for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
+			for (PmOrgValidity validity : ptjApproval.getPmOrgProfile().getPmOrgValidityList()) {
+				if (DbValueConst.RECORD_STATUS_ACTIVE !=(validity.getRecordStatusFlg())) {
+					continue;
+				}
+				
+				String value = useName ? validity.getOrgName() : validity.getOrgCode();
+				if (value == null) {
+					continue;
+				}
+				
+				String valueLower = value.toLowerCase();
+				if (valueLower.contains(searchLower) || valueLower.matches(regex)) {
+					result.add(ptjApproval);
+					break;
+				}
 			}
 		}
+
 		return result;
 	}
 
@@ -6671,4 +6709,15 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		return resetMinistryDropdown;
 	}
 	// #36738 End
+	
+	//#27827 - START
+	public List<PmZone> getZones() {
+		String type = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
+		if(RuleTypeConst.PTJ_CODE.equals(type)){
+			return getManagedBean().getMainZones();
+		} else {
+			return getManagedBean().getZoneList();
+		}
+	}
+	//#27827 - END
 }
