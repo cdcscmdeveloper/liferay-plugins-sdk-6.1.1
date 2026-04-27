@@ -11779,10 +11779,6 @@ public class SupplierFinalizationBackingBean extends
 						// #21692 - End
 						periodExtensionRejected,
 						// #21692 - End
-						// #28777, #29729 -start-
-//						this.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplier.getSupplierId(),
-//								getManagedBean().getScQt()), //open comment when 28777 ready for UAT
-						// #28777, #29729 -end-
 						this.isQTMaintenanceScreen(), !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) })
 				.contains(Boolean.TRUE);
 	}
