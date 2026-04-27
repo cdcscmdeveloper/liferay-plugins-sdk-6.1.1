@@ -10625,7 +10625,10 @@ public class SupplierFinalizationBackingBean extends
 						}
 
 						if (!committeeSet.contains(committeeType)) {
+<<<<<<< HEAD
 							//Bug #28235 - start
+=======
+>>>>>>> refs/remotes/origin/release-prd-uat
 							//#35320 - WIP Data - Start
 							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A) || 
 									committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
