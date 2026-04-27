@@ -11776,7 +11776,7 @@ public class SupplierFinalizationBackingBean extends
 				.asList(new Boolean[] { evalResultDtl.isSuppSelectionDisabled(),
 						this.getManagedBean().isDisableSupplierSelection(), isBidding,
 						this.disabledQTProcess(supplier),// 26247
-						// #21692 - End
+						// #21692 - Start
 						periodExtensionRejected,
 						// #21692 - End
 						this.isQTMaintenanceScreen(), !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) })
