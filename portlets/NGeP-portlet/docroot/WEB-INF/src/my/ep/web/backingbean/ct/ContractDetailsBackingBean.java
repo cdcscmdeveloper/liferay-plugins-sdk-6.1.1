@@ -92,6 +92,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote; //Fix - #30045
+import my.ep.persistence.entity.sc.loaloi.ScLoa; //#37620,#34367
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -852,6 +853,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 			}
+			
+			// #37620,#34367 - Start
+			// Retrieve LOA and update contract panel state (flag, circular data, and attachment)
+			// based on validation logic in retrieveItemPanelDetails.
+			ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(ctBB.getManagedBean(), "contractVer.ctContract.loa");
+			ctBB.retrieveItemPanelDetails(loa);
+			// #37620,#34367 - End
 			
 			chkBondWaivedAttachment();
 			sortDeductions();

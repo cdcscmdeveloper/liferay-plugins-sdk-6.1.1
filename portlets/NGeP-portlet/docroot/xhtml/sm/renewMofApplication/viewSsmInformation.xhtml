@@ -38,7 +38,7 @@
 				<h:outputText value="#{backingBean.managedBean.smSupplier.ssmNewRegNo}" rendered="#{!empty backingBean.managedBean.smSupplier.ssmNewRegNo}"></h:outputText>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty backingBean.managedBean.smSupplier.ssmNewRegNo}"></h:outputText>
 				
-				<!-- #33783 - start -->
+				<!-- #32304 - start -->
 				<c:if test="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I'
 							or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}">
 				<h:outputLabel style="font-weight:bold"
@@ -46,7 +46,7 @@
 				<h:outputText value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM == SupplierManagementConst.COMPANY_TYPE_CLBG ?
 							lbl['lbl.btn.yes'] : lbl['lbl.btn.no']}" />
 				</c:if>
-				<!-- #33783 - end -->
+				<!-- #32304 - end -->
 				
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.estdate']} :"></h:outputLabel>
