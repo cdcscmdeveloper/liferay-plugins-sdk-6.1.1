@@ -18888,6 +18888,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void otherDescriptionHistory() {
 		if (getManagedBean().getApprovedCategoryList() != null) {
+			List<SmSupplierCategory> updatedList = new ArrayList<>();
+
 			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
 				
 				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
@@ -18897,9 +18899,10 @@ public class SmApplicationBackingBean extends
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					
 					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-					getManagedBean().getApprovedCategoryList().add(cat);
+				    updatedList.add(cat);
 				}
 			}
+			getManagedBean().setApprovedCategoryList(updatedList);
 		}
 		
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
@@ -18989,7 +18992,6 @@ public class SmApplicationBackingBean extends
 			throw new EpException(e.getMessage());
 		} finally {
 			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
-			RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.hide();");
 		}
 	}
 	
