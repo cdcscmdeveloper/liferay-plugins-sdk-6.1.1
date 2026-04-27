@@ -77,6 +77,11 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}">
                               <p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+                              <ui:remove><!-- #38151 --></ui:remove>
+                              <p:ajax event="blur" update="@([id$=package])"
+									process="@this,package"
+									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
+									rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
 							</p:inputText> <ac:iconTooltip
 								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
 						</td>
