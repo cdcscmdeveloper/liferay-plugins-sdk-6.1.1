@@ -1659,7 +1659,7 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 
 		// 40061 - start
 		if (!Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(status.getStatusId())
-				|| isQTStatusGreaterThan(status.getStatusId(), QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
+				|| isQTStatusGreaterThan(status.getStatusId(), QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL_RESCHEDULE)) {
 		// 40061 - end
 			for (String committee : committeCodes) {
 				if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
