@@ -5342,7 +5342,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param loa
 	 *            the LOA to evaluate; may be null
 	 */
-	public void retrieveItemPanelRecord(ScLoa loa) {
+	public void retrieveItemPanelDetails(ScLoa loa) {
 
 		boolean hasPanel = loa != null && loa.isPanel() && loa.getCtCircularVer() != null;
 

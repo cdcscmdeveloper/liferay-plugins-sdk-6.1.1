@@ -856,9 +856,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 			// #37620,#34367 - Start
 			// Retrieve LOA and update contract panel state (flag, circular data, and attachment)
-			// based on validation logic in retrieveItemPanelRecord.
+			// based on validation logic in retrieveItemPanelDetails.
 			ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(ctBB.getManagedBean(), "contractVer.ctContract.loa");
-			ctBB.retrieveItemPanelRecord(loa);
+			ctBB.retrieveItemPanelDetails(loa);
 			// #37620,#34367 - End
 			
 			chkBondWaivedAttachment();
