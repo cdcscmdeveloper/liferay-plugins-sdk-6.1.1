@@ -11776,13 +11776,9 @@ public class SupplierFinalizationBackingBean extends
 				.asList(new Boolean[] { evalResultDtl.isSuppSelectionDisabled(),
 						this.getManagedBean().isDisableSupplierSelection(), isBidding,
 						this.disabledQTProcess(supplier),// 26247
-						// #21692 - End
+						// #21692 - Start
 						periodExtensionRejected,
 						// #21692 - End
-						// #28777, #29729 -start-
-//						this.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplier.getSupplierId(),
-//								getManagedBean().getScQt()), //open comment when 28777 ready for UAT
-						// #28777, #29729 -end-
 						this.isQTMaintenanceScreen(), !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) })
 				.contains(Boolean.TRUE);
 	}
