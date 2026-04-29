@@ -582,6 +582,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				throw new EpException(MessageConst.ERROR_750037);
 			}
 		}
+		
+		//#30737 - Start
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			log.info("xoxoxoxo ----- SUBMIT --- insert tracking diary & others");
+		}
+		//#30737 - End
+		
 	}
 
 	/**

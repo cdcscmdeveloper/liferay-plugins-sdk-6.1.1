@@ -1535,8 +1535,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			log.info("xoxoxoxoxooxoxox SUBMITTT!!!!!! ERROR_100068");
-//			getManagedBean().setSelectedTabIndex(0);
-//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+			getManagedBean().setSelectedTabIndex(0);
+//			ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_SUBMIT, getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
 		}
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {

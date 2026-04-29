@@ -1045,6 +1045,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setSelectedTabIndex(2);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
 		}
+		
+		//#30737 - Start
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			log.info("xoxoxoxo ----- SUBMIT --- ERROR_100074");
+//			ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_SUBMIT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100074, "RAMLEEE");
+		}
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			//#3 amendment with
+			log.info("xoxoxoxoxooxoxox REVISE AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
+			log.info("Insert tracking diary");
+		}
+		//#30737 - End
+		
 	}
 
 	

@@ -662,6 +662,14 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				&& getManagedBean().getCtContract().getAssignedCtAdmin().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_750054); 
 		}
+		
+		//#30737 - Start
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			log.info("xoxoxoxo ----- ERROR_100068");
+			//ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_SUBMIT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
+		}
+		//#30737 - End
+		
 	}
 	
 	/*

@@ -3191,29 +3191,42 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#25890 - End
 		
 		//#30737 - Start
+		//Amendment with...
 		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			String taskName = getManagedBean().getTaskName();
 			log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT!!!!!!");
+			if(taskName == null){
+				//#3 amendment with
+				log.info("----- ERROR_100068");
+//				ctBackingBean.checkInactiveUserOnAction(getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
+				return;
+			}
+				
 			if(taskName.equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 				log.info("----- ERROR_100071");
 //				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100071, "Role A", "RAMLEEE", "Role B", "SAIZURAF");
-			}if(taskName.equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+			}else if(taskName.equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+				//Pending Supplemental Contract Letter Submission TO Pending Supplemental Contract Letter Approval / Revision Approval
 				log.info("----- ERROR_100072");
 //				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100072, "MOF/DOC/2001", "ALI", "ABU");
 			}else{
+				//#3 submit revision amendment with
+				//Pending Supplemental Contract Letter Submission MCA submit (no action necessary), if signoff chairperson -> MCA (action needed)
+					//if approver -> MCA : check approve.
 				log.info("----- ERROR_100068");
 //				ctBackingBean.checkInactiveUserOnAction(getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
 			}
-			
 		}
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			//#3 amendment with
 			log.info("xoxoxoxoxooxoxox APPROVE AMENDMENT!!!!!! ERROR_100070");
 //			ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100070, "DOCS/MOF/888290", "RAMLEEE");
 		}
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			//from supplier takde checking, kalau ada inactive terus send group task to all active 
 			log.info("xoxoxoxoxooxoxox ACKNOWLEDGE AMENDMENT!!!!!! ERROR_100069");
 //			ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
 		}
@@ -8033,21 +8046,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#30737 - Start
 		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			//#3 amendment with
 			log.info("xoxoxoxoxooxoxox REVISE AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
 			//ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
 		}
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-			/// for cancel, not sure display error or not. 
+			//# amendment with
+			//# 
+			/// for cancel, not sure display error or not. ?
 			log.info("xoxoxoxoxooxoxox CANCEL AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
-			//ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_CANCEL, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "SUPARJO");
 			// send group task
 			//..
 		}
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			log.info("xoxoxoxoxooxoxox REJECT AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
-			//ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_REJECT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
 		}
 		//#30737 - End
 

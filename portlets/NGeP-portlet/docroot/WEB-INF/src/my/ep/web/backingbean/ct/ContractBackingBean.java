@@ -54,6 +54,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -5363,8 +5364,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	// #37620,#34367 - End
 	
 	//#30737 - Start
-	public void checkInactiveUserOnAction(List<PmUser> selectedUsers, String errorCode, String taskName, String... messageKeys) {
-		
+	public void checkInactiveUserOnAction(String action, String taskName, List<PmUser> selectedUsers, String errorCode, String... messageKeys) {
+
 		// Check user by scenario
 		// if no active user, display another notificiation (2.2.1) and send notification to dashboard (2.2.2)
 		// *selected* insert new tracking diary (next role but send to group task instead)
@@ -5388,28 +5389,66 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		// acknowledge = no alert + 2.2.1 + 2.2.2 + tracking diary  :: supplier -> MCA/CCA 
 		
-		
-//		log.info("first username : "+selectedUsers.get(0));
-//		for(PmUser a : selectedUsers){
-//			log.info("username! selectedUsers : "+a.getUserName());
-//		}
-	
-		
-	    FacesScopes facesScopes = new FacesScopes();
-	    String[] resolvedMessages = new String[messageKeys.length];
+		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && selectedUsers.isEmpty()){
+			log.info("xoxoxoxoxo no selected user");
+		}else{
+			
+			log.info("xoxoxoxoxo else");
+			
+			if(!selectedUsers.isEmpty()){
+				for(PmUser a : selectedUsers){
+					log.info("xoxoxoxoxo username! selectedUsers : "+a.getUserName());
+				}
+			}
+			
+			//check user active
+			//check scenario 1 - if not active show alert
+			
+			//check scenario 2 - if active but in differenct organization (tak paham)
+			
+			//check scenario 3 - if user active, same org, but role not active (tak paham)
+			
+			//check scenario 4 - No user is active for the original role in the same organization ????
+			
+			
+			//insert tracking diary
+//			if (actionDesc != null) {
+//				try {
+//					trackingDiarySO.insertTrackingDiary(
+//							actionDesc, actionBy, rolecode,  // #25791 & #26475
+//							ctAgreement.getAgreementId(),
+//							ctAgreement.getCtContract().getContractNo(), 
+//							reqDTO.getDocType(),
+//							ctAgreement.getCtContract().getContractId(),
+//							statusId,
+//							ctAgreement.getCtContract().getContractType() !=null ? ctAgreement.getCtContract().getContractType().getParameterCode() : null);
+//				} catch(Exception e) {
+//					throw new EpException(MessageConst.ERROR_000001);				
+//				}
+//			}
+			
+			//dashboard notification
+			
+			
+			
+			FacesScopes facesScopes = new FacesScopes();
+		    String[] resolvedMessages = new String[messageKeys.length];
 
-	    for (int i = 0; i < messageKeys.length; i++) {
-	        resolvedMessages[i] = ResourceBundleUtils.getMessage(
-	                messageKeys[i],
-	                ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-	                facesScopes.getUserLocale()
-	        );
-	    }
-	    
-	    if (messageKeys == null || messageKeys.length == 0) {
-	        throw new EpException(errorCode);
-	    }
-	    throw new EpException(errorCode, resolvedMessages);
+		    for (int i = 0; i < messageKeys.length; i++) {
+		        resolvedMessages[i] = ResourceBundleUtils.getMessage(
+		                messageKeys[i],
+		                ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		                facesScopes.getUserLocale()
+		        );
+		    }
+		    
+		    if (messageKeys == null || messageKeys.length == 0) {
+		        throw new EpException(errorCode);
+		    }
+		    throw new EpException(errorCode, resolvedMessages);
+		    
+		}
+	
 	}
 	//#30737 - End
 	
