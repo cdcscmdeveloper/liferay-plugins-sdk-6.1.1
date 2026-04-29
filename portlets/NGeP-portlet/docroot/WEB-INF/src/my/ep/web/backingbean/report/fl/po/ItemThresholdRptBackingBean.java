@@ -75,11 +75,11 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 		if (getManagedBean().getStatusDescId() != null) {
 			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
 		}
-		if (getManagedBean().getProcurementTypeCode() != null) {
-			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeCode());
+		if (getManagedBean().getProcurementTypeId() != null) {
+			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeId().toString());
 		}
-		if (getManagedBean().getReasonCode() != null) {
-			params.put(FlReportConst.FL_RPT_REASON, getManagedBean().getReasonCode());
+		if (getManagedBean().getReasonId() != null) {
+			params.put(FlReportConst.FL_RPT_REASON, getManagedBean().getReasonId().toString());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getGroup())) {
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
@@ -93,7 +93,7 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 	 * Handle onChange for selected procurement type
 	 */
 	public void onProcurementTypeChange() {
-		String procType = getManagedBean().getProcurementTypeCode();
+		String procType = ParameterHelper.getInstance().getPmParameterById(getManagedBean().getProcurementTypeId()).getParameterCode();
 		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			getManagedBean().setReasonFlag(Boolean.TRUE);
 			getManagedBean().setReasonDropdown(getReasonDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
@@ -122,7 +122,7 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmReasonDesc reasonDesc : reasonDescs) {
-				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
+				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("FL", "reasonDropdown", "reasonDropdown", null,
@@ -150,7 +150,7 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
 				if (!parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-					items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(),
+					items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
 							parameterDesc.getCodeName());
 				}
 			}
@@ -180,8 +180,8 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 		resetSearchCriteriaValues();
 		getManagedBean().setReasonFlag(Boolean.FALSE);
 		getManagedBean().setFinancialYear(null);
-		getManagedBean().setProcurementTypeCode(null);
-		getManagedBean().setReasonCode(null);
+		getManagedBean().setProcurementTypeId(null);
+		getManagedBean().setReasonId(null);
 
 	}
 }
