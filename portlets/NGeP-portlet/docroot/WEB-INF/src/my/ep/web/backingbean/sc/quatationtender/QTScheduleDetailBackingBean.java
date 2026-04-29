@@ -964,4 +964,21 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 	//#21692 - End
+	
+	/**
+	 * Get value for sample, Bug #39486 - #39877.
+	 * 
+	 * @param scQt the quotation tender object
+	 * 
+	 * @return true if sample exists, false otherwise
+	 */
+	public boolean sampleExist(ScQt scQt) {
+		
+        if (sampleExistCache == null) {
+            sampleExistCache = checkISSampleExistWIPChecklist(scQt);
+        }
+
+        return Boolean.TRUE.equals(sampleExistCache);
+    }
+	
 }
