@@ -1424,11 +1424,13 @@ public class SmApplicationUtil {
 			}
 			//#39860 --START
 			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
-				if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
-					sb.append(++signatoryNotBumiCount + ". ");
-					sb.append(smChequeSignatory.getSmPersonnel().getName());
-					sb.append("<br/>");
-				}
+				if (smChequeSignatory != null){
+					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						sb.append(++signatoryNotBumiCount + ". ");
+						sb.append(smChequeSignatory.getSmPersonnel().getName());
+						sb.append("<br/>");
+					}	
+				}	
 			}//#39860 --END
 		}
 		if (payAccCnt == 0) {
