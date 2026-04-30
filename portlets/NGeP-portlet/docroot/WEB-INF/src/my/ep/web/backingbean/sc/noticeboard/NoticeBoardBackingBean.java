@@ -846,16 +846,18 @@ public class NoticeBoardBackingBean extends
 		
 		// #28777 & #29729 - Start
 		if (managedBean.getScQt().isZonal()) {
-			BriefingZoneBean defaultBsvBean = this.getManagedBean().getZoneBean().get(0);
-			if (defaultBsvBean.isBranchDeactivated()) {
-				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-			} else {
-				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+			List<BriefingZoneBean> zoneBeans = this.getManagedBean().getZoneBean();
+			for (BriefingZoneBean briefingZoneBean : zoneBeans) {
+				if (briefingZoneBean.isBranchDeactivated()) {
+					this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+									MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				} else {
+					this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+				}
 			}
 		}
 		// #28777 & #29729 - End
