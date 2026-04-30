@@ -221,7 +221,9 @@ public class CommonUtils {
 	 */
 	public String removeItemNameNA(String itemName) {
 		if (itemName != null && !itemName.isEmpty()) {
-			return itemName.replaceAll("\\bN\\s*A\\b|\\bN/A\\b|\\bNA\\b", "");
+			return itemName.replaceAll("\\bN\\s*A\\b|\\bN/A\\b|\\bNA\\b", "")
+							.replaceAll("\\s+", " ")
+							.trim();
 		}
 
 		return itemName;
