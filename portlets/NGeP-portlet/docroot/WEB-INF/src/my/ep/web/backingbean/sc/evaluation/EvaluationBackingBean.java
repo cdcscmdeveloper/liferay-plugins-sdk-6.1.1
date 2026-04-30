@@ -11018,6 +11018,7 @@ private void retriveCommitteeRemarksList(){
 					.equalsIgnoreCase(this.getManagedBean().getTaskName()) && !this.getManagedBean().isDemoWip()){
 				for (int i = 0; i < committeActivities.size(); i++){
 					committeActivities.get(i).setSignedOff(false);
+					committeActivities.get(i).setAttended(false);
 				}
 			}//#28784 - end
 			reqDtO.getScQtCommitte().setCommitteeActivities(committeActivities);
@@ -17917,13 +17918,13 @@ private void retriveCommitteeRemarksList(){
 						&& this.getManagedBean().getScQt().getCurrentActiveTab().intValue() == 4) {
 					//do nothing
 				} else {
-					this.getManagedBean().setTabActiveIndex(3);
-					getManagedBean().setTempTab(3);
-					retrivePresentationDemo();
+//					this.getManagedBean().setTabActiveIndex(3);
+//					getManagedBean().setTempTab(3);
+//					retrivePresentationDemo();
 				}
 				//#28784 related to #10542 - end
-				this.getManagedBean().setPresentationDemoActiveIndex(0);
-				retrieveReportTabDtl();
+//				this.getManagedBean().setPresentationDemoActiveIndex(0);
+//				retrieveReportTabDtl();
 				this.getManagedBean().setAfterDemoInv(true);
 				if (SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION
 						.equalsIgnoreCase(taskName) || SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION

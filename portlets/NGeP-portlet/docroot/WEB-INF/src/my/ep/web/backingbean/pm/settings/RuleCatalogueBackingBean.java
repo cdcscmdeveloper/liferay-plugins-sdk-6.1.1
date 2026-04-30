@@ -95,6 +95,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;//#36738
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -6088,19 +6089,35 @@ public class RuleCatalogueBackingBean extends
 	 * @return
 	 */
 	private List<PmPtjSpecialApproval> searchByPtj(List<PmPtjSpecialApproval> ptjApprovalList, String search, boolean useName) {
-	    List<PmPtjSpecialApproval> result = new ArrayList<PmPtjSpecialApproval>();
-	    for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
-	        String value = useName 
-	            ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName()
-	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
-	            String searchRegex = searchRegex(search);
-	            
-	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
-	        		|| value.toLowerCase().matches(searchRegex)) {
-	            result.add(ptjApproval);
-	        }
-	    }
-	    return result;
+		List<PmPtjSpecialApproval> result = new ArrayList<>();
+
+		if (search == null || search.isEmpty()) {
+			return result;
+		}
+
+		String searchLower = search.toLowerCase();
+		String regex = searchRegex(search);
+
+		for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
+			for (PmOrgValidity validity : ptjApproval.getPmOrgProfile().getPmOrgValidityList()) {
+				if (DbValueConst.RECORD_STATUS_ACTIVE !=(validity.getRecordStatusFlg())) {
+					continue;
+				}
+				
+				String value = useName ? validity.getOrgName() : validity.getOrgCode();
+				if (value == null) {
+					continue;
+				}
+				
+				String valueLower = value.toLowerCase();
+				if (valueLower.contains(searchLower) || valueLower.matches(regex)) {
+					result.add(ptjApproval);
+					break;
+				}
+			}
+		}
+
+		return result;
 	}
 	
 	/**
