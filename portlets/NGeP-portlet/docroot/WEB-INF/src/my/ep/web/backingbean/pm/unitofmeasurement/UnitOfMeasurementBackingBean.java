@@ -392,7 +392,6 @@ public class UnitOfMeasurementBackingBean extends
 				messageId = MessageConst.TD_80600;
 			} else {
 				messageId = MessageConst.TD_80601;
-
 			}
 			reqDTO.setTrackingStatus(true);
 

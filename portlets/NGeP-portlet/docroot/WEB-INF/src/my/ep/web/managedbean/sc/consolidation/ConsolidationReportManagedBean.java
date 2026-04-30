@@ -99,7 +99,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private boolean isSetNull ; //Bug #31364
 
 	private boolean isDemoReq; // #28784
-
+	
 	private boolean allSupplierDisagreeEPV;//#21692
 	
 	@SuppressWarnings("serial")
@@ -619,6 +619,27 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	// #18685 - End
 	
+	// #28784 -start-
+	public boolean isDemoReq() {
+		return isDemoReq;
+	}
+	// #28784 -end-
+
+	// #28784 -start-
+	public void setDemoReq(boolean isDemoReq) {
+		this.isDemoReq = isDemoReq;
+	}
+	// #28784 -end-
+	
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
+	
 	//#21695 Farid
 	/**
 	 * @return the isOfferAll
@@ -634,25 +655,4 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.isOfferAll = isOfferAll;
 	}
 	//#21695 End
-
-	// #28784 -start-
-	public boolean isDemoReq() {
-		return isDemoReq;
-	}
-	// #28784 -end-
-
-	// #28784 -start-
-	public void setDemoReq(boolean isDemoReq) {
-		this.isDemoReq = isDemoReq;
-	}
-	// #28784 -end-
-
-	//#21692 - Start
-	public boolean isAllSupplierDisagreeEPV() {
-		return allSupplierDisagreeEPV;
-	}
-	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
-		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
-	}
-	//#21692 - End
 }

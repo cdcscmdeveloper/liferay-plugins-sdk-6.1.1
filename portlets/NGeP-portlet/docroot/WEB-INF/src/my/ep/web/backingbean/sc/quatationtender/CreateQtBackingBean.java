@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;	// Bug #40087@Syazani 06/04/2026
 import java.util.List;
 import java.util.Locale;
 
@@ -154,7 +155,6 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public CreateQtBackingBean() {
 		log.debug("inside constructor");
 		log.debug("@@@@@@@@@ Managed Bean @@@@@@@@@ = " + this.getManagedBean());
-
 	}
 
 	/** Debug logger.
@@ -895,7 +895,6 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					} else {
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 					}
-
 				}
 			}
 		}
@@ -1201,53 +1200,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		}
 	}
-	
-	// #21695 start
-	/**
-	 * Partial offer change.change partialy offer(offer/not offer) radion button
-	 * in owner.
-	 * 
-	 * @param event
-	 *            (String partialChange)
-	 */
-	public void partialChange(AjaxBehaviorEvent event) {
-		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
 
-		this.getManagedBean().getQt().setPartial(type);
-
-		if (type == false) {
-			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.hide()");
-		} else {
-			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.show()");
-		}
-	}
-
-	// #21695 end
-
-	/** #21695 START */
-	public void partialChangePopUpNo() {
-		if (this.getManagedBean().getQt().isPartial() == false) {
-			this.getManagedBean().getQt().setPartial(true);
-		} else if (this.getManagedBean().getQt().isPartial() != false) {
-			this.getManagedBean().getQt().setPartial(false);
-		}
-	}
-
-	/** #21695 END */
-
-	/** #21695 START */
-	public void partialChangePopUpYes() {
-		if (this.getManagedBean().getQt().isPartial() != true) {
-			this.getManagedBean().getQt().setPartial(false);
-		} else if (this.getManagedBean().getQt().isPartial() == true) {
-			this.getManagedBean().getQt().setPartial(true);
-		}
-
-		this.getManagedBean().getQt().setSampleReq(Boolean.FALSE); // #11104
-	}
-
-	/** #21695 END */
-	
 	/**
 	 * Fulfilment change.changed Fulfilemnt Dropdown in specification committee.
 	 * 
@@ -2736,7 +2689,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setProposalValidityChangeValue(true);
 			} else {
 				this.getManagedBean().setProposalValidityChangeValue(false);
-		}
+			}
 			//#21692 - End
 		}
 		// #29425 - end
@@ -2831,9 +2784,9 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
 							technicalchecklist.setPmStatus(status);
 						}
-				}
+					}
 					// #28784 - End
-			}
+				}
 			}
 			if (financialSpecZonesEstimatedpriceUpdate == true) {
 				ZonesUpdateWarningMessage(this.getManagedBean().isZonesWarnMessageUpdate());
@@ -3579,8 +3532,8 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 	}
 	// 9019 End
-	
-	/** #11104  START */	
+
+	/** #11104 START */
 	/**
 	 * sample change.change sample(yes/no) radio button in owner.
 	 * 
@@ -3595,33 +3548,26 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (null == st2technicalproposalList) {
 			st2technicalproposalList = new ArrayList<>();
-
 		}
-		if(type){
-			//this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
-		}else{
+
+		if (type) {
+			// this.getManagedBean().getQt().setPartial(Boolean.FALSE);
+		} else {
 			this.getManagedBean().getQt().setDemoNotificationCheck(null);
-			List<ScQtCheckList> deltechnicalproposalList =	getManagedBean().getMarkDeletedTechChecklist();
+			List<ScQtCheckList> deltechnicalproposalList = getManagedBean().getMarkDeletedTechChecklist();
+
 			if (deltechnicalproposalList == null) {
-				deltechnicalproposalList= new ArrayList<>();
+				deltechnicalproposalList = new ArrayList<>();
 			}
 
 			if (null == st2technicalproposalList || CollectionUtils.isEmpty(st2technicalproposalList)) {
-				SpecificationBackingBean spBB=new SpecificationBackingBean();
+				SpecificationBackingBean spBB = new SpecificationBackingBean();
 				spBB.retriveTechnicalCheckList();
-				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
+				st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 			}
 
-			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
-				for(ScQtCheckList checklist:st2technicalproposalList){
-					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
-							.getParameterCode())) {
-						deltechnicalproposalList.add(checklist);
-						getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
-						st2technicalproposalList.remove(checklist);
-						break;
-					}
-				}
+			if (CollectionUtils.isNotEmpty(st2technicalproposalList)) {
+				removeSampleChecklist(st2technicalproposalList, deltechnicalproposalList);	// Bug #40087@Syazani 06/04/2026
 			}
 		}
 	}
@@ -3629,7 +3575,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 	// #11104 START
 	/***
-	 * check portlet is specpreparation or not
+	 * check portlet is spec preparation or not
 	 */
 	public boolean isSpecScreen() {
 		return QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
@@ -3648,8 +3594,8 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil
 						.getDisplayPortletId());
 	}
-	//#11104-end
-	
+	// #11104-end
+
 	// Bug #36730@Syazani 07/01/2025 -- Start
 	private void reinstateZoneLocationLevel(Long eventLocationLevelId) {
 		PmParameter zoneLocationLevel = new PmParameter();
@@ -3665,14 +3611,24 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	// Bug #36730@Syazani 07/01/2025 -- End
-
-	// #21695 Farid START 3/7/2021
-	public boolean hasroleSCSecretary() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
-	}
-	// #21695 Farid END 3/7/2021
 	
+	// Bug #40087@Syazani 06/04/2026 -- Start
+	private void removeSampleChecklist(List<ScQtCheckList> st2technicalproposalList,
+			List<ScQtCheckList> deltechnicalproposalList) {
+		Iterator<ScQtCheckList> itScQtChecklist = st2technicalproposalList.iterator();
+		while (itScQtChecklist.hasNext()) {
+			ScQtCheckList checklist = itScQtChecklist.next();
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
+					.getParameterCode())) {
+				deltechnicalproposalList.add(checklist);
+				getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
+				itScQtChecklist.remove();
+				break;
+			}
+		}
+	}
+	// Bug #40087@Syazani 06/04/2026 -- End
+
 	// #28784 -start-
 	/**
 	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
@@ -3683,7 +3639,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void renderDemoRadioButton(AjaxBehaviorEvent event) {
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
-	
+
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && this.getManagedBean().isNewVersion()){
 			String type = (String) event.getComponent().getAttributes().get("value");
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();

@@ -628,7 +628,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String maxItemAllOtherElementsScoreLabel;
 	private String tooltipDemo;
 	// #28784 - End
-	private boolean allSupplierRejectEpv;//#21692
 
 	// #28784 - Start
 	public boolean isEvalStatusComp() {
@@ -953,6 +952,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.maxItemTsScore = maxItemTsScore;
 	}
 	// #28784 - End
+	
+	private boolean allSupplierRejectEpv;//#21692
 
 	/**
 	 * Gets the today.
