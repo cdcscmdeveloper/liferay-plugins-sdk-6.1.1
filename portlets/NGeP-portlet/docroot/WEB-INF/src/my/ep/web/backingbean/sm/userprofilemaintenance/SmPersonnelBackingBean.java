@@ -4179,6 +4179,15 @@ public class SmPersonnelBackingBean extends
 		}
 		return retVal;
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getBasicSmPersonnel().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getBasicSmPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	//32515 START
 	public Boolean validateSoftcertExpired(SmSoftcertRequest softcertRequest){

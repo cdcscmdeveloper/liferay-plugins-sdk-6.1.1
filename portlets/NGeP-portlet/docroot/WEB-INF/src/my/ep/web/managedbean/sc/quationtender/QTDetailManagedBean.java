@@ -225,6 +225,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The boolean determine ct panel category */
 	private boolean ctPanelCategory;
+	
+	private boolean showCategoryCodePanel;//#29661 #40094
 	//#29661 end
 	
 	// Drop down Listing for Approver
@@ -1960,6 +1962,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #35320 - Start
 	private boolean afterSF;
 	// #35320 - End
+	
+	//#28188 - Start
+	/** The Briefing/Site Visit postpone date. */
+	private Date briefingSiteVisitPostponeDate;
+	//#28188 - End
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12455,6 +12462,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCtPanelCategory(boolean ctPanelCategory) {
 		this.ctPanelCategory = ctPanelCategory;
 	}
+	
+	public boolean isShowCategoryCodePanel() {
+		return showCategoryCodePanel;
+	}
+
+	public void setShowCategoryCodePanel(boolean showCategoryCodePanel) {
+		this.showCategoryCodePanel = showCategoryCodePanel;
+	}
 	//#29661 end
+	
+	//#28188 - Start
+	/**
+	 * @return the briefingSiteVisitPostponeDate
+	 */
+	public Date getBriefingSiteVisitPostponeDate() {
+		return briefingSiteVisitPostponeDate;
+	}
+
+	/**
+	 * @param briefingSiteVisitPostponeDate the briefingSiteVisitPostponeDate to set
+	 */
+	public void setBriefingSiteVisitPostponeDate(Date briefingSiteVisitPostponeDate) {
+		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
+	}
+	//#28188 - End
 	
 }
