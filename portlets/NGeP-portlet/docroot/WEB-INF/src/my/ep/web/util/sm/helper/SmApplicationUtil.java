@@ -1424,7 +1424,7 @@ public class SmApplicationUtil {
 			}
 			//#39860 --START
 			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
-				if (smChequeSignatory != null){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
 					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
 						sb.append(++signatoryNotBumiCount + ". ");
 						sb.append(smChequeSignatory.getSmPersonnel().getName());
