@@ -18903,19 +18903,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	/**
-	 * To set data for managed bean and show dialog edit
-	 *  
-	 *  * @param smSupCat
-	 */
-	public void otherDescriptionEditApprover(SmSupplierCategory smSupCat) {
-		getManagedBean().setHistorySuppCategory(smSupCat);
-		getManagedBean().setOtherDescEdited(smSupCat.getOtherDesc());
-		getManagedBean().setUpdateRecordTC(false);
-		getManagedBean().setApproverUser(true);
-		RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.show();");
-	}
-	
-	/**
 	 * To reset data
 	 * 
 	 */
