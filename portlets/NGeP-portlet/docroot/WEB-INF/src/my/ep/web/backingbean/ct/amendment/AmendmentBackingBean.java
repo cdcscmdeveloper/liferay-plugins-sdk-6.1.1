@@ -133,6 +133,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;//Fix - #30045
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -676,13 +677,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (taskId == null) {
 				ConstructTabSideMenu();
 				
-				// #24336 - Start
-				// Runs all initial setup when the page is first loaded
-				if (!ctBackingBean.getManagedBean().isInitPage()) {
-				    initializePage();
-				}
-				// #24336 - End
-
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -809,6 +803,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSignOffDecision(false);
 			
 //			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
+			
+			// #24336 - Start
+			// Runs all initial setup when the page is first loaded
+			if (!ctBackingBean.getManagedBean().isInitPage()) {
+			    initializePage();
+			}
+			// #24336 - End
 
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
@@ -1265,6 +1266,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			ctBackingBean.getManagedBean().setDirectPurchase(isDirectPurchase());//#40005
+
+			updateProcModeFlag();//Fix - #30045
 
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
@@ -3400,7 +3403,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Enhancement 15851 - shaqimi end
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);					 
 				if (((ctContractVer.getCtAmendment().getAmendmentLoa().isBondReq()
-						|| ctContractVer.getCtContract().getLoa().isBondReq()) //24333
+						|| ctContractVer.getCtContractAmount().isBondReq()) //24333,//#40194
 						&& !ctContractVer.getCtContractAmount().isBondExempted()
 						&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
@@ -3415,7 +3418,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			}			
 			//24333 - Start
-			if (!getManagedBean().isPrepareLOA() && ctContractVer.getCtContract().getLoa().isBondReq()
+			if (!getManagedBean().isPrepareLOA() && ctContractVer.getCtContractAmount().isBondReq() //#40194
 					&& !ctContractVer.getCtContractAmount().isBondExempted()
 					&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
@@ -3451,7 +3454,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
-			if ((ctContractVer.getCtContract().getLoa().isBondReq() && !ctContractVer.getCtContractAmount().isBondExempted())
+			if ((ctContractVer.getCtContractAmount().isBondReq() && !ctContractVer.getCtContractAmount().isBondExempted())
 					&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
 							|| ctBackingBean.isPk7FromDp())) { //#24333
@@ -6682,51 +6685,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		else if (ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT.equalsIgnoreCase(docDefinitionKey)) {
 			context = new VelocityContext();	
 			vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
-			context.put("supplierName", "");
-			context.put("supplierIcNo", "");
-			context.put("supplierAckDate", "");
-			if (getManagedBean().getTaskName() != null) {
-				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
-						&&  !getManagedBean().isReadOnly()) {
-					//#30453 start
-					if(getFacesScopes().getUserSessionBean().getSalutationCode() != null)
-						context.put("supplierName", getFacesScopes().getUserSessionBean().getSalutationCode().getSalutationName().concat(" ").concat(getFacesScopes().getUserSessionBean().getUserName()));
-					else
-						context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
-					//#30453 end
-					context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-					context.put("supplierAckDate", dateSDF.format(new Date()));					
-					
-				} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
-					//#30453 start
-					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode() != null)
-						context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode().getSalutationName().concat(" ").concat(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName()));
-					else
-						context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
-					//#30453 end
-					context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
-					context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
-				}
-			}
-			context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			String supplierAddress = "";
-
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-				supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-			}
-			context.put("supplierAddress", supplierAddress);
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
-				context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
-			} else {
-				context.put("govSignDate", "_______________");
-			}
-			if (!StringUtils.isEmpty(sclRefNo)) { //Fix - #36708
-				context.put("agencyRefNo", sclRefNo);
-			} else {
-				context.put("agencyRefNo", "_______________");
-			}			
+			generateDocumentLoaReceiptContent(context, dateSDF, sclRefNo); //#30453
 		}
 
 		if (vmFile != null && context != null) {
@@ -9430,8 +9389,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Validate all required amendment checklist items are completed */
 	private void validateAmendmentChecklist(){
-		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		ContractManagedBean bean = ctBackingBean.getManagedBean();
+		
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+		CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
 		
 		boolean[] amendmentFlags = new boolean[]{
 		        amendment.isContractExtend(),
@@ -9443,13 +9403,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		        amendment.isOtherChange()
 		    };
 	    boolean[] checklistFlags = new boolean[]{
-	        bean.isContractExtendChecklist(),
-	        bean.isItemPriceChangeChecklist(),
-	        bean.isQuantityChangeChecklist(),
-	        bean.isValueChangeChecklist(),
-	        bean.isClauseChangeChecklist(),
-	        bean.isValueChangeByGstChecklist(),
-	        bean.isOtherChangeChecklist()
+	    		contractManagedBean.isContractExtendChecklist(),
+	    		contractManagedBean.isItemPriceChangeChecklist(),
+	    		contractManagedBean.isQuantityChangeChecklist(),
+	    		contractManagedBean.isValueChangeChecklist(),
+	    		contractManagedBean.isClauseChangeChecklist(),
+	    		contractManagedBean.isValueChangeByGstChecklist(),
+	    		contractManagedBean.isOtherChangeChecklist()
 	    };
 	    boolean isError = false;
 	    for (int i = 0; i < amendmentFlags.length; i++) {
@@ -9581,7 +9541,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Initializes the committee type during page first load. */
 	private void initCommitteeType() {
-	    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
+		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (ctAmendment == null) {
+	        return;
+	    }
+		
+	    if (ctAmendment.getCommitteeType() == null) {
 	    	// Sets default desk officer committee from QT
 	        handleOriginalDeskOfficerCommitteeQT();
 	    }else{
@@ -9634,9 +9599,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Loads the correct checklist options based on data */
 	private void handleSelectedAmendmentChecklistValue() {
-	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-	    ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
-
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
+	    if(amendment == null){
+	    	return;
+	    }
+	    
 	    if (isCtApproverSetting()) {
 	    	contractManagedBean.setContractExtendChecklist(amendment.isContractExtend());
 	    	contractManagedBean.setItemPriceChangeChecklist(amendment.isItemPriceChange());
@@ -9652,7 +9620,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Updates values when amendment type changes. */
 	private void handleAmendmentTypeValueChange() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
+	    if(amendment == null){
+	    	return;
+	    }
+	    
+		if (amendment.isValueChange()){
 			handleContractValueTypeChange();
 		}
 	}
@@ -9744,4 +9718,226 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return false;
 	}
 	//#40005 end
+	
+	// #30453 start
+	/**
+	 * Generates the HTML content for the Acknowledgement of LOA Receipt
+	 * document.
+	 * 
+	 * <p>
+	 * This method prepares a VelocityContext with supplier acknowledgement
+	 * information, supplier address, company name, government sign date and
+	 * agency reference number. The values are populated depending on the
+	 * current workflow task and contract status.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the task is ACK_FA_HT_NAME and the screen is not read-only, the
+	 * supplier acknowledgement information will be populated using the current
+	 * logged-in user session.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the task is VERIFY_FA_HT_NAME or the contract status is
+	 * FA_LOA_COMPLETED, the acknowledgement information will be retrieved from
+	 * the stored Amendment LOA acknowledgement data.
+	 * </p>
+	 * 
+	 * <p>
+	 * The generated context will then be merged with the Velocity template
+	 * defined by {@link ContractConst#DOCPATH_CT_LOA_RECEIPT} to produce the
+	 * final HTML document.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param sclRefNo the agency reference number
+	 */
+	private void generateDocumentLoaReceiptContent(VelocityContext context, SimpleDateFormat dateSDF, String sclRefNo) {
+		String supplierIcNo = "supplierIcNo";
+		String supplierAckDate = "supplierAckDate";
+
+		context.put("supplierName", "");
+		context.put(supplierIcNo, "");
+		context.put(supplierAckDate, "");
+		if ((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(
+				CTProcessNameConst.ACK_FA_HT_NAME))
+				&& !getManagedBean().isReadOnly()) {
+			loaReceiptPopulateSupplierFromSession(context, dateSDF, supplierIcNo, supplierAckDate);
+		} else if ((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(
+				CTProcessNameConst.VERIFY_FA_HT_NAME))
+				|| ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+						.equals(ContractStatusConst.FA_LOA_COMPLETED)) {
+			loaReceiptPopulateSupplierFromAmendment(context, dateSDF, supplierIcNo, supplierAckDate);
+		}
+		loaReceiptPopulateSupplierOtherInfo(context, dateSDF, sclRefNo);
+	}
+
+	/**
+	 * Populates supplier acknowledgement information in the
+	 * {@link VelocityContext} using the current logged-in user session.
+	 * 
+	 * <p>
+	 * The supplier name is constructed using the user's salutation (if
+	 * available) followed by the user's name. The supplier identification
+	 * number and the current system date are also added as the acknowledgement
+	 * details.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param supplierIcNo the string param for the velocity context
+	 * @param supplierAckDate the string param for the velocity context
+	 */
+	private void loaReceiptPopulateSupplierFromSession(VelocityContext context, SimpleDateFormat dateSDF,
+			String supplierIcNo, String supplierAckDate) {
+		if (getFacesScopes().getUserSessionBean().getSalutationCode() != null) {
+			context.put("supplierName", getFacesScopes().getUserSessionBean().getSalutationCode().getSalutationName()
+					.concat(" ").concat(getFacesScopes().getUserSessionBean().getUserName()));
+		} else {
+			context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
+		}
+		context.put(supplierIcNo, getFacesScopes().getUserSessionBean().getIdentificationNo());
+		context.put(supplierAckDate, dateSDF.format(new Date()));
+	}
+
+	/**
+	 * Populates supplier acknowledgement information in the
+	 * {@link VelocityContext} using the acknowledgement details stored in the
+	 * contract amendment LOA.
+	 * 
+	 * <p>
+	 * The supplier name is constructed using the stored user's salutation (if
+	 * available) followed by the user's name. The supplier identification
+	 * number and acknowledgement date are retrieved from the Amendment LOA
+	 * record.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param supplierIcNo the string param for the velocity context
+	 * @param supplierAckDate the string param for the velocity context
+	 */
+	private void loaReceiptPopulateSupplierFromAmendment(VelocityContext context, SimpleDateFormat dateSDF,
+			String supplierIcNo, String supplierAckDate) {
+		PmUser ackBy = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy();
+
+		if (ackBy.getSalutationCode() != null) {
+			context.put("supplierName",
+					ackBy.getSalutationCode().getSalutationName().concat(" ").concat(ackBy.getUserName()));
+		} else {
+			context.put("supplierName", ackBy.getUserName());
+		}
+		context.put(supplierIcNo, ackBy.getIdentificationNo());
+		context.put(
+				supplierAckDate,
+				dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
+						.getAckDate()));
+
+	}
+
+	/**
+	 * Populates company, supplier address, government sign date information
+	 * into the {@link VelocityContext}.
+	 * 
+	 * <p>
+	 * The supplier company name is retrieved from the contract value. If a
+	 * supplier address exists, it will be formatted into a full address string
+	 * and converted into HTML-friendly format by replacing line breaks with
+	 * {@code <br />} tags and escaping ampersand characters.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the government sign date exists in the Amendment LOA record, it will
+	 * be formatted and inserted into the context. Otherwise, a placeholder line
+	 * will be inserted to indicate that the date has not been provided.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param sclRefNo the agency reference number
+	 */
+	private void loaReceiptPopulateSupplierOtherInfo(VelocityContext context, SimpleDateFormat dateSDF, String sclRefNo) {
+		context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+				.getSupplierName());
+		String supplierAddress = "";
+
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+			supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+					.getSupplierAddress());
+			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+		}
+		context.put("supplierAddress", supplierAddress);
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
+			context.put(
+					"govSignDate",
+					dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
+							.getGovtSignDate()));
+		} else {
+			context.put("govSignDate", "_______________");
+		}
+		if (!StringUtils.isEmpty(sclRefNo)) { // Fix - #36708
+			context.put("agencyRefNo", sclRefNo);
+		} else {
+			context.put("agencyRefNo", "_______________");
+		}
+	}
+	//#30453 end
+	
+	// Start Fix - #30045
+	/**
+	 * Determines and sets the "newPk7" flag on the managed bean based on
+	 * quotation type or procurement type conditions.
+	 * 
+	 * <p>
+	 * Logic flow:
+	 * <ul>
+	 * <li>If quotation type (QtType) exists:
+	 * <ul>
+	 * <li>Enable newPk7 when the parameter code matches QUOTATION_TENDER_TYPE
+	 * and procurement data is available.</li>
+	 * </ul>
+	 * </li>
+	 * <li>If quotation type is null:
+	 * <ul>
+	 * <li>Fallback to request note procurement type.</li>
+	 * <li>Enable newPk7 when procurement type matches PROCUREMENT_TYPE or
+	 * PROCUREMENT_TYPE_RPT and justification data is available.</li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 * 
+	 * @param ctBackingBean
+	 *            the backing bean containing contract and request data
+	 */
+	private void updateProcModeFlag() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getQtType() != null) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode()
+					.equalsIgnoreCase(ParameterTypeConst.QUOTATION_TENDER_TYPE)
+					&& ctBackingBean.newProcurement() != null) {
+				ctBackingBean.getManagedBean().setNewPk7(true);
+			} else {
+				ctBackingBean.getManagedBean().setNewPk7(false);
+			}
+		} else {
+			// The scRequestNote variable is only used to determine the procurement type.
+			// However, the values for reason and procurement type are always retrieved from the CT table.
+			ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(
+					ctBackingBean.getManagedBean(), "contractVer.ctContractItems[0].scRequestItem.requestNote");
+			if (scRequestNote != null) {
+				String procType = EntityHelper
+						.getStringNestedProperty(ctBackingBean.getManagedBean(),
+								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType");
+				if ((procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE) || procType
+						.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT))
+						&& ctBackingBean.newJustification() != null) {
+					ctBackingBean.getManagedBean().setNewPk7(true);
+				} else {
+					ctBackingBean.getManagedBean().setNewPk7(false);
+				}
+			}
+		}
+	}
+	// End Fix - #30045
 }

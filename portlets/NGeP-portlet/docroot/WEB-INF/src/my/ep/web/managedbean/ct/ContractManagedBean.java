@@ -237,6 +237,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	//#24336 - End
 	
 	private boolean isDefaultMinistryExist = false; //Fix - #30045
+	//#37620,#34367 - Start
+	private CtCircularVer ctCircularPanel; 
+	private boolean contractPanelItem;
+	private CtAttachment circularPanelAttachment; 
+	//#37620,#34367 - End
 	
 	/**
 	 * @return the fileDirectory
@@ -1829,4 +1834,30 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.isDefaultMinistryExist = isDefaultMinistryExist;
 	}
 	//End - #30045
+	
+	//#37620,#34367 - Start
+	public CtCircularVer getCtCircularPanel() {
+		return ctCircularPanel;
+	}
+
+	public void setCtCircularPanel(CtCircularVer ctCircularPanel) {
+		this.ctCircularPanel = ctCircularPanel;
+	}
+
+	public boolean isContractPanelItem() {
+		return contractPanelItem;
+	}
+
+	public void setContractPanelItem(boolean contractPanelItem) {
+		this.contractPanelItem = contractPanelItem;
+	}
+
+	public CtAttachment getCircularPanelAttachment() {
+		return circularPanelAttachment;
+	}
+
+	public void setCircularPanelAttachment(CtAttachment circularPanelAttachment) {
+		this.circularPanelAttachment = circularPanelAttachment;
+	}
+	//#37620,#34367 - End
 }

@@ -304,14 +304,14 @@
 			<h:panelGroup id="secretryDropDownPanel">
 				
 				<h:panelGrid rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}" >
-					<p:selectOneRadio id="committeeType" style="margin-bottom: 8px; margin-left: 25px;" styleClass="committee-type-radio" layout="pageDirection"
+					<p:selectOneRadio id="committeeType" styleClass="committee-type-radio" layout="pageDirection"
 						value="#{amendmentBackingBean.managedBean.committeeType}" disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
 						<f:selectItems value="#{amendmentBackingBean.getCommitteeTypeSelectItems()}" />
 						<p:ajax event="change" update="secretaryId" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					</p:selectOneRadio>
 				</h:panelGrid>
 
-				<h:panelGrid columns="3" columnClasses="columnWidth150" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
+				<h:panelGrid columns="3" columnClasses="columnWidth170" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
 					<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
 					<p:spacer width="2" />
 					<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}"
