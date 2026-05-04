@@ -18924,7 +18924,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	/**
-	 * To save data Other Description
+	 * To save data Other Description 
 	 *  
 	 */
 	public void saveOtherDescriptionEdit() {

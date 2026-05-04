@@ -2474,6 +2474,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
 							&& !getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 						getManagedBean().setOtherDescChangeApprover(true);
+						getManagedBean().setOtherDescChangeSupplier(true);
 					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
 							&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
 						getManagedBean().setOtherDescChangeSupApprover(true);
