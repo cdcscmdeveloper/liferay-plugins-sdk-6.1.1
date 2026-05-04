@@ -180,6 +180,8 @@
 							<td><p:inputText style="text-align:right" maxlength="3"
 									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
+									<ui:remove><!-- #38151 --></ui:remove>
+									<f:convertNumber integerOnly="true" />
 									<p:ajax event="blur" process="@all" partialSubmit="true"
 										update="@([id$=passingScoreForTechnicalAndDemoSpecCommittee])"
 										listener="#{specificationBackingBean.checkTechnicalPassingScore(specificationBackingBean.managedBean.technicalScoreSetting)}" />
@@ -385,6 +387,8 @@
 				<td><p:inputText style="text-align:right" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
+						<ui:remove><!-- #38151 --></ui:remove>
+						<f:convertNumber integerOnly="true" />
 						<p:ajax event="blur" process="@all" partialSubmit="true"
 							update="@([id$=passingScoreForTechnicalAndDemoSpecCommittee])"
 							listener="#{specificationBackingBean.checkTechnicalPassingScore(specificationBackingBean.managedBean.technicalScoreSetting)}" />

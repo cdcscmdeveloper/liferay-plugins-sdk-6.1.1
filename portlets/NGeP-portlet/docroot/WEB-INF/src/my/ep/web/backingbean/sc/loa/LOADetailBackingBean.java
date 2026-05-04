@@ -12438,7 +12438,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			PmReason reason = reqSO.retrieveReasonDtlById(reqDTO).getPmReason();
 			if (reason != null && !reason.isRecordStatus()) {
-				throw new EpException(MessageConst.ERROR_760718, new String[] {
+				throw new EpException(MessageConst.ERROR_760715, new String[] {
 						getParameterDesc(getManagedBean().getScLoa().getProcurementType().getParameterType(),
 								getManagedBean().getScLoa().getProcurementType().getParameterCode()),
 						getReasonDesc(getManagedBean().getScLoa().getScQuote().getJustificationType()) });
