@@ -1280,6 +1280,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
 				List<TemplateSpecBean> activeTemplateSpecBeans = new ArrayList<>();//#34363 - note 50 - Added - Vinod
+				//#21695,#40261 - Start
+				boolean isQuotation = ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(this.getManagedBean().getQt()
+						.getProcurementMode().getParameterCode()) ? true : false;
+				boolean isTender = ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
+						.getProcurementMode().getParameterCode()) ? true : false;
+				//#21695,#40261 - End
 				// #28777 & #29729, 35592(35838) - Start
 				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {
 					// #28777 & #29729, 35592(35838) - End
@@ -1293,39 +1299,56 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
+							//#21695,#40261 - Start
+							int answerQuantityZero = 0;				
 							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
-								//#21695 
-								
-								if(null ==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
+								// #21695
+								if (null == specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+										|| null == specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+												.getSpecZoneId()) { // #28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
-								}	//#28785-End
-								
-								//#21695 4serangkai use this only, else is using old codes
-								if (getManagedBean().getQt().isPartial()) {
+								} // #28785-End
+
+								// #21695 4serangkai use this only, else is
+								// using old codes
+								if (getManagedBean().getQt().isPartial() || isQuotation) {
 									if (specAnswer.getRatePerUom() != null) {
+										answers.add(specAnswer);
+									} else {
+										throw new EpException(MessageConst.ERROR_760464);
+									}
+									// #21695 end
+								} else if (isTender) {
+									if (specAnswer.getRatePerUom() != null
+											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 										answers.add(specAnswer);
 									} else {
 										specAnswer.setDeleted(true);
 										toDeleteZoneAnswers.add(specAnswer);
 									}
-									//#21695 end
-								}else{
-									if (specAnswer.getRatePerUom() != null
-											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
-										answers.add(specAnswer);
-									}else {
-										specAnswer.setDeleted(true);
-										toDeleteZoneAnswers.add(specAnswer);
+
+									if ((specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(
+											new BigDecimal(0)) < 1)
+											&& specAnswer.getTplSpecZoneQty().getQty().intValue() == 0) {
+										answerQuantityZero++;
 									}
 								}
 							}
-							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
-									.getSpecAnswerList().size())){
-								for(TplSpecAnswer answerNullPrice : toDeleteZoneAnswers){
-										throw new EpException(MessageConst.ERROR_760464);
+							
+							if (isTender) {
+
+								int sizeOriginalAnswer = templateSpecBean.getSpecAnswerList().size()
+										- answerQuantityZero;
+								int SizeDeleteZoneAnswers = toDeleteZoneAnswers.size() - answerQuantityZero;
+								if (!toDeleteZoneAnswers.isEmpty() && SizeDeleteZoneAnswers != 0
+										&& SizeDeleteZoneAnswers != sizeOriginalAnswer) {
+
+									throw new EpException(MessageConst.ERROR_760464);
 								}
-								
-							} else if (!toDeleteZoneAnswers.isEmpty()) {
+							}
+																																	
+						 if (!toDeleteZoneAnswers.isEmpty()) {
+						//#21695,#40261 - End
 								Set<TplSpecSuppAnswer> zoneSpecSuppAnswersSet = new HashSet<TplSpecSuppAnswer>();
 								for(TplSpecAnswer specAnswer :toDeleteZoneAnswers){
 									TplSpecSuppAnswer specSupplierAnswer = specAnswer.getTplSpecSuppAnswer();
