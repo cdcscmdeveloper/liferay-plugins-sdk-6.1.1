@@ -5862,7 +5862,6 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType()
 				.setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
-		sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 	}
 
 	/**
@@ -6064,18 +6063,6 @@ public class RuleCatalogueBackingBean extends
 		}
 		this.getManagedBean().setDeletedMinistryNameList(deleteMinistryString);
 		return resetMinistryDropdown;
-	}
-	
-	private void sortConfigRuleValueList(List<PmConfigRuleValue> configRuleValueList) {
-		Collections.sort(configRuleValueList, new Comparator<PmConfigRuleValue>() {
-			@Override
-			public int compare(PmConfigRuleValue o1, PmConfigRuleValue o2) {
-				return new CompareToBuilder()
-				.append(o1.getEffDate(), o2.getEffDate())
-				.append(o1.getFromValue(), o2.getFromValue())
-				.toComparison();
-			}
-		});
 	}
 	// #36738 End
 
