@@ -178,6 +178,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -1189,8 +1190,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			Long qtId = scQt.getQtId();
 			
 			// #28784 - Demo WIP
-			boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-			this.getManagedBean().setNewVersion(isQtNewVersion);
+			checkDemoVersion(scQt);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setMaintanceFlow(true);
@@ -1233,7 +1233,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					selectedScQt.getPtjSpecialApproval());
 			this.getManagedBean().setPanel(selectedScQt.isPanel());
 			
-			setAmmendMentBean(resDTO.getAmendMentBean());
+			//#28188 - Start
+			boolean checkApprovalRequest = detailSO.checkApprovalRequestUBD(selectedScQt.getScQtApprovals());
+			if(checkApprovalRequest){
+				setAmmendMentBeanBSV(selectedScQt, resDTO.getAmendMentBean()); 
+			}else{
+				setAmmendMentBean(resDTO.getAmendMentBean());
+			}
+			//#28188 - End
+			
 			checkForPublishperiodAndValidityDays(selectedScQt,fc);
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -3311,7 +3319,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Retrieve briefing sitevisit tab dtl.
 	 */
 	public void retrieveBriefingSitevisitTabDtl() {
-		
 		ScQt qt = this.getManagedBean().getQt();
 		debugLogger("retrieveBriefingSitevisitTabDtl");
 
@@ -3376,10 +3383,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											.getCurrentWorkFlowStatus(),
 									scQtBsv.getBsvRemarks(),
 									ScQtBSVRemark.class));
+//							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+//									specZoneDtl,
+//									briefingResDTO.getBriefingList(),
+//									briefingResDTO.getSiteVisitList(), scQtBsv);
+							//#28188 - Start (for sorting) 
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
-									briefingResDTO.getBriefingList(),
-									briefingResDTO.getSiteVisitList(), scQtBsv);
+									groupAndSortSiteVisitList(briefingResDTO.getBriefingList()),
+									groupAndSortSiteVisitList(briefingResDTO.getSiteVisitList()), scQtBsv);
+							//#28188 - End
 							zoneBeans.add(briefingZoneBean);
 						}
 					}
@@ -3402,9 +3415,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.getManagedBean().getQt()
 							.getCurrentWorkFlowStatus(), qtBsv.getBsvRemarks(),
 							ScQtBSVRemark.class));
+//					BriefingZoneBean briefingZoneBean = new BriefingZoneBean( 
+//							null, resDTO.getBriefingList(),
+//							resDTO.getSiteVisitList(), qtBsv);
+					//#28188 - Start (for sorting)
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							null, resDTO.getBriefingList(),
-							resDTO.getSiteVisitList(), qtBsv);
+							null, groupAndSortSiteVisitList(resDTO.getBriefingList()),
+							groupAndSortSiteVisitList(resDTO.getSiteVisitList()), qtBsv);
+					//#28188 - End
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
 				}
 				QTBriefingSiteVisitBackingBean backingBean = new QTBriefingSiteVisitBackingBean();
@@ -4380,12 +4398,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 * qt.setClosingDate(getManagedBean().getQt().getClosingDate());
 				 */
 			}
-			//#29661 Start
+			//#29661 & 40089 Start
 			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
-					.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))){
+					.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION)) || checkPanelCategoryCodesReviseCommittee()){
 				convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),true);
 			}
-			//#29661 End
+			//#29661 & 40089 End
 			
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
@@ -6428,6 +6446,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					// this.getManagedBean().setContractType(scQt.getContractType());
 					
 					//#28784
+					checkDemoVersion(scQt);
 					if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 						this.getManagedBean().setDemoAction(true);
 						this.getManagedBean().setDemoType(true);						
@@ -7682,18 +7701,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
-	// #10098 Start Vinod changed activeIndex to local varible to avoid
-	// SonarLint issue
-	// because of the activeIndex need to be updated for autosave.
 	/**
 	 * Qt details tab change.
 	 * 
-	 * @param activeIndexMain
+	 * @param activeIndex
 	 *            the active index
 	 */
-	public void qtDetailsTabChange(Integer activeIndexMain) {
-		Integer activeIndex = activeIndexMain;
-		// #10098 End Vinod
+	public void qtDetailsTabChange(Integer activeIndex) {
 		int priviousIndex = this.getManagedBean().getActiveIndex();
 		getManagedBean().getQt().setMitiApproval(false);
 		getManagedBean().getQt().setOtherApproval(false);
@@ -7738,14 +7752,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
-				// #10098 Start Vinod
-				if (null == this.getManagedBean().getQt().getQtNo()) {
-					RequestContext.getCurrentInstance().execute(QTConstants.QT_AUTOSAVE_POPUP); // new dialog
-					activeIndex = priviousIndex; // To Stay in QT Details screen.
-				} else {
-					saveSidemenuQtDetailsAction(reqDTO);
-				}
-				// #10098 End Vinod
+				
 				switch (priviousIndex) {
 				case 0:
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
@@ -8011,38 +8018,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25426 - End
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
-		
-		// #10098 Start Vinod To handle autosave and prevent those from null
-		ScQt scQt = this.getManagedBean().getQt();
-		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-
-			for (ScQtRemark qtRemark : qtRemarks) {
-				qtRemark.setEditable(true);
-			}
-			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-		} else {
-			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-		}
-		
-		if (null == this.getManagedBean().getQt().getProcurementTypeCatId()) {
-			this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());
-			this.getManagedBean().getQt().getProcurementTypeCatId().setParameterId((long) 0);
-		}
-		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
-			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
-			this.getManagedBean().getQt().getFulfilmentType().setParameterId((long) 0);
-		}
-		if (null == this.getManagedBean().getQt().getPmProcurementCategory()) {
-			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
-			this.getManagedBean().getQt().getPmProcurementCategory().setParameterId((long) 0);
-		}
-		if (null == this.getManagedBean().getQt().getContractType()) {
-			this.getManagedBean().getQt().setContractType(new PmParameter());
-			this.getManagedBean().getQt().getContractType().setParameterId((long) 0);
-		}
-		// #10098 End Vinod
 	}	
 
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
@@ -8205,7 +8180,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 
 	public void submitQtDetailsFormMaintanace(boolean confirmResetReendorse) {
-	// 25037 - end
+	    // 25037 - end
 		log.debug("submitQtDetailsFormMaintanace");
 		IQTDetailSO detailSO;
 		try {
@@ -8316,7 +8291,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											}
 										}	
 									}
-									
 								} else {
 									QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(enableField);
 									if (valueBean != null) {
@@ -9069,7 +9043,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		return null;
 	}
-
+	
 	private void setAmmendMentBean(QtAmendMentBean amendMentBean) {
 		if (null != amendMentBean) {
 			this.getManagedBean().setAmendMentBean(amendMentBean);
@@ -15052,24 +15026,146 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * Get category code list 
 	 */
 	public void getPanelCategory() {
-		List<ScQtCategory> listScQtCategories = getQtSpecSO().retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
+
+		// 29661 & 40089 -start-
+		boolean isFromTaskList = StringUtils.isNotBlank(this.getManagedBean()
+				.getTaskName())
+				&& StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
+				&& SCProcessNameConst.REVISE_COMMITTEE.equals(this
+						.getManagedBean().getTaskName());
+		// 29661 & 40089 -end-
+		
+		List<ScQtCategory> listScQtCategories = getQtSpecSO()
+				.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
-		if (CollectionUtils.isNotEmpty(listScQtCategories)){
+		if (CollectionUtils.isNotEmpty(listScQtCategories)) {
 			this.getManagedBean().setQtCategoryList(listScQtCategories);
 			this.getManagedBean().setCtPanelCategory(false);
-		}else if (status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
-			Long circularVerId = this.getManagedBean().getQt().getCircularVer().getCircularVerId();
+			this.getManagedBean().setShowCategoryCodePanel(true);//#29661 #40094
+		}
 
-			ICtPanelCategorySO ctPanelCategorySO = (ICtPanelCategorySO) EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICtPanelCategorySO.class);
+		// 29661 & 40089 -start-
+		else if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(status)
+				|| (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL
+						.equals(status) && isFromTaskList)) {
+			CtCircularVer ctCircularVer = this.getManagedBean().getQt()
+					.getCircularVer();
+			Long circularVerId;
+			boolean isCurrentCircular = null != ctCircularVer.getCtCircular()
+					.getCurrentCircularVerId()
+					&& null != ctCircularVer.getCtCircular()
+							.getCurrentCircularVerId().getCircularVerId()
+					&& !ctCircularVer.getCircularVerId().equals(
+							ctCircularVer.getCtCircular()
+									.getCurrentCircularVerId()
+									.getCircularVerId());
+			if (isCurrentCircular) {
 
-			List<CtPanelCategory> ctPanelCategorycode = new ArrayList<>();
-			ctPanelCategorycode = ctPanelCategorySO.retrievePanelCategoryCodeByCircularVerId(circularVerId);
+				circularVerId = ctCircularVer.getCtCircular()
+						.getCurrentCircularVerId().getCircularVerId();
+
+			} else {
+
+				circularVerId = ctCircularVer.getCircularVerId();
+			}
+
+			ICtPanelCategorySO ctPanelCategorySO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT,
+							ICtPanelCategorySO.class);
+			List<CtPanelCategory> ctPanelCategorycode = ctPanelCategorySO
+					.retrievePanelCategoryCodeByCircularVerId(circularVerId);
+			// 29661 & 40089 -end-
+
 			this.getManagedBean().setCtPanelCategoryCode(ctPanelCategorycode);
 			this.getManagedBean().setCtPanelCategory(true);
+			//#29661 #40094 Start
+			this.getManagedBean().setShowCategoryCodePanel(true);
+			List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
+			for (TabBean committeeTab : committeeTabList){
+				if (!committeeTab.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
+					this.getManagedBean().setShowCategoryCodePanel(false);
+					break;
+				}
+			}
+		}else{
+			this.getManagedBean().setShowCategoryCodePanel(false);
 		}
+		//#29661 #40094 End
+	}
+	
+	// 29661 & 40089 -start-
+	/**
+	 * check panel category codes exist during committee revise.
+	 * 
+	 * @return true/false.
+	 */
+	private boolean checkPanelCategoryCodesReviseCommittee() {
+
+		boolean isFromTaskList = StringUtils.isNotBlank(this.getManagedBean()
+				.getTaskName())
+				&& StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
+				&& SCProcessNameConst.REVISE_COMMITTEE.equals(this
+						.getManagedBean().getTaskName());
+
+		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
+		boolean isPanel = this.getManagedBean().getQt().isPanel();
+		if (isPanel
+				&& QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL
+						.equals(status) && isFromTaskList) {
+			List<CtPanelCategory> ctPanelCategorycode = this.getManagedBean()
+					.getCtPanelCategoryCode();
+			Long qtId = getManagedBean().getQt().getQtId();
+			List<ScQtCategory> listScQtCategories = getQtSpecSO()
+					.retrieveScQtCategorytByQtID(qtId);
+			if (CollectionUtils.isNotEmpty(listScQtCategories)) {
+
+				return Boolean.FALSE;
+			}
+			if (CollectionUtils.isEmpty(ctPanelCategorycode)) {
+				CtCircularVer ctCircularVer = this.getManagedBean().getQt()
+						.getCircularVer();
+				Long circularVerId;
+				boolean isCurrentCircular = null != ctCircularVer
+						.getCtCircular().getCurrentCircularVerId()
+						&& null != ctCircularVer.getCtCircular()
+								.getCurrentCircularVerId().getCircularVerId()
+						&& !ctCircularVer.getCircularVerId().equals(
+								ctCircularVer.getCtCircular()
+										.getCurrentCircularVerId()
+										.getCircularVerId());
+				if (isCurrentCircular) {
+
+					circularVerId = ctCircularVer.getCtCircular()
+							.getCurrentCircularVerId().getCircularVerId();
+
+				} else {
+
+					circularVerId = ctCircularVer.getCircularVerId();
+				}
+
+				ICtPanelCategorySO ctPanelCategorySO = EpEjbBusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.CONTRACT_MANAGEMENT,
+								ICtPanelCategorySO.class);
+				List<CtPanelCategory> ctPanelCategoryList = ctPanelCategorySO
+						.retrievePanelCategoryCodeByCircularVerId(circularVerId);
+
+				this.getManagedBean().setCtPanelCategoryCode(
+						ctPanelCategoryList);
+
+				return Boolean.TRUE;
+			} else if (CollectionUtils.isNotEmpty(ctPanelCategorycode)) {
+
+				return Boolean.TRUE;
+			}
+		}
+
+		return Boolean.FALSE;
 	}
 
+	// 29661 & 40089 -end-
+	
 	/**
 	 * #29661 start
 	 * get parameter description by sc_qt_category's category type
@@ -15132,172 +15228,94 @@ public void retrieveDemoQtDetails(Long qtId) {
         return triggerStatuses.contains(statusId);
 	}
 	
-	// #10098 Start Vinod
-	/**
-	 * Method to Auto Save the QT details when qt number is not generated.
-	 */
-	public void autosaveQtDetailsAction() {
-		debugLogger("start of autosaveQtDetailsAction");
-
-		this.getManagedBean().setSaveFlow(true);
-		try {
-
-			Long currentStatus = this.getManagedBean().getCurrentStatusId();
-			PmOrgProfile qtOrgProfile = this.getManagedBean().getQt().getPmOrgProfile();
-			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus) && qtOrgProfile != null
-					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
-				throw new EpException(MessageConst.ERROR_760450);
-			}
-
-			ScQt scQt = this.getManagedBean().getQt();
-
-			validateQtDetails();
-			retrieveScQtHist();
-			validateIsSupplierQualificationCriteriaChange();
-			validateIsZonalAdded();
-			checkDemoPresentationByStatus();
-
-			if (scQt.getQtNo() == null && scQt.isBrandNew()) {
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
-				reqDTO.setQtdetail(this.getManagedBean().getQt());
-				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
-				detailSO.updateDraftWorkflowStatus(reqDTO);
-
-				successMessage(MessageConst.INFO_7000108, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-			}
-		} catch (Exception e) {
-			String qtNo = this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtNo() != null ? this
-					.getManagedBean().getQt().getQtNo()
-					: " ";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKING_BEAN, qtNo,
-					SLALogConstant.QT_AUTOSAVE_QT_DETAILS_ACTION, getUserIdSessionFromLoginId(), e);
-		}
-
+	//#28188 - Start
+	private void setAmmendMentBeanBSV(ScQt scQt, QtAmendMentBean amendMentBean) {
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+		
+		boolean checkApprovalPending = detailSO.checkApprovalRequestPending(scQt.getScQtApprovals());
+		
+		if (checkApprovalPending && amendMentBean != null) {
+			this.getManagedBean().setAmendMentBean(amendMentBean);
+			amendMentBean = null;
+		} 
 	}
+	
+	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
+	    if (CollectionUtils.isEmpty(inputList)) {
+	        return new ArrayList<ScQtBsvDtl>();
+	    }
 
-	// #10098 End Vinod
+	    // ==========================
+	    // STEP 1: GROUPING by bsvDesc
+	    // ==========================
+	    Map<String, List<ScQtBsvDtl>> grouped = new HashMap<String, List<ScQtBsvDtl>>();
 
-	// #10098 Start Vinod
-	/**
-	 * Method to Auto Save the QT details when the tab is changed.
-	 * 
-	 * @param quationTenderReqDTO
-	 */
-	private void saveSidemenuQtDetailsAction(QuationTenderReqDTO quationTenderReqDTO) {
-		debugLogger("start of saveSidemenuQtDetailsAction");
+	    for (ScQtBsvDtl dtl : inputList) {
 
-		String taskId = this.getManagedBean().getTaskId();
-		String taskName = this.getManagedBean().getTaskName();
-		String[] outComes = this.getManagedBean().getOutComes();
-		String processName = this.getManagedBean().getProcessName();
-		Object payLoad = this.getManagedBean().getPayLoad();
-		Long currentStatus = this.getManagedBean().getCurrentStatusId();
-		quationTenderReqDTO.setSaveFlow(true);
-		quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
-		FacesScopes facesScopes = new FacesScopes();
-		quationTenderReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-		quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		quationTenderReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+	        String key = dtl.getBsvDesc();
 
-		this.getManagedBean().setScQtRemarksEmpty(false);
-		initializeQtRemark();
+	        if (!grouped.containsKey(key)) {
+	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
+	        }
 
-		resetItemGroup();
+	        grouped.get(key).add(dtl);
+	    }
 
-		IQTDetailSO detailSO;
-		QuationTenderResDTO quationTenderResDTO = null;
+	    // ==========================
+	    // STEP 2: SORT EACH GROUP
+	    // ==========================
+	    for (List<ScQtBsvDtl> list : grouped.values()) {
 
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class);
+	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
+	            @Override
+	            public int compare(ScQtBsvDtl bsvDtl1, ScQtBsvDtl bsvDtl2) {
 
-			if (this.getManagedBean().isScQtRemarksEmpty()) {
-				this.getManagedBean().getQt().setScQtRemarks(null);
-			}
-			quationTenderResDTO = detailSO.saveQTDetailsForDraft(quationTenderReqDTO);
+	                Date bsvDate1 = bsvDtl1.getBsvDate();
+	                Date bsvDate2 = bsvDtl2.getBsvDate();
 
-		} catch (Exception e) {
-			String qtNo = this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtNo() != null ? this
-					.getManagedBean().getQt().getQtNo()
-					: " ";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKING_BEAN, qtNo,
-					SLALogConstant.QT_SAVE_SIDE_MENU_QT_DETAILS_ACTION, getUserIdSessionFromLoginId(), e);
-		}
-		renewQTSesionObject();
+	                if (bsvDate1 == null && bsvDate2 == null) return 0;
+	                if (bsvDate1 == null) return 1;
+	                if (bsvDate2 == null) return -1;
 
-		this.getManagedBean().setTaskName(taskName);
-		if (quationTenderResDTO != null && quationTenderResDTO.getQtDetail() != null) {
-			this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
-		}
-		this.getManagedBean().setTaskId(taskId);
-		this.getManagedBean().setOutComes(outComes);
-		this.getManagedBean().setProcessName(processName);
-		this.getManagedBean().setCurrentStatusId(currentStatus);
-		this.getManagedBean().setPayLoad(payLoad);
+	                return bsvDate2.compareTo(bsvDate1);
+	            }
+	        });
+	    }
+
+	    // ==========================
+	    // STEP 3: SORT GROUP ORDER
+	    // ==========================
+	    List<Map.Entry<String, List<ScQtBsvDtl>>> entries =
+	            new ArrayList<Map.Entry<String, List<ScQtBsvDtl>>>(grouped.entrySet());
+
+	    Collections.sort(entries, new Comparator<Map.Entry<String, List<ScQtBsvDtl>>>() {
+	        @Override
+	        public int compare(Map.Entry<String, List<ScQtBsvDtl>> bsvDtls1,
+	                           Map.Entry<String, List<ScQtBsvDtl>> bsvDtls2) {
+
+	            Date bsvDate1 = bsvDtls1.getValue().get(0).getBsvDate();
+	            Date bsvDate2 = bsvDtls2.getValue().get(0).getBsvDate();
+
+	            if (bsvDate1 == null && bsvDate2 == null) return 0;
+	            if (bsvDate1 == null) return 1;
+	            if (bsvDate2 == null) return -1;
+
+	            return bsvDate2.compareTo(bsvDate1);
+	        }
+	    });
+
+	    // ==========================
+	    // STEP 4: MERGE BACK
+	    // ==========================
+	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
+
+	    for (Map.Entry<String, List<ScQtBsvDtl>> entry : entries) {
+	        finalList.addAll(entry.getValue());
+	    }
+
+	    return finalList;
 	}
-
-	// #10098 End Vinod
-	// #10098 Start Vinod
-	private void resetItemGroup() {
-		if (null == this.getManagedBean().getQt().getItemGroup()) {
-			this.getManagedBean().getQt().setCircularVer(null);
-		} else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()
-				|| this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
-			this.getManagedBean().getQt().setItemGroup(null);
-			this.getManagedBean().getQt().setCircularVer(null);
-		}
-	}
-
-	// #10098 End Vinod
-	// #10098 Start Vinod
-	/**
-	 * Method to initialize QT Remark.
-	 * 
-	 */
-	private void initializeQtRemark() {
-
-		boolean emptyRemarksExist = false;
-		if (null != this.getManagedBean().getQt().getScQtRemarks()
-				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
-				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
-				if (null == userRemark || "".equals(userRemark)) {
-					emptyRemarksExist = true;
-					this.getManagedBean().setScQtRemarksEmpty(true);
-				} else {
-					emptyRemarksExist = false;
-				}
-			}
-
-			if (emptyRemarksExist) {
-				ScQt scQt = this.getManagedBean().getQt();
-				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-
-				for (ScQtRemark qtRemark : qtRemarks) {
-					qtRemark.setEditable(true);
-				}
-				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-
-			} else {
-				ScQt scQt = this.getManagedBean().getQt();
-				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-			}
-
-		} else if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
-					.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
-
-			for (ScQtRemark qtRemark : qtRemarks) {
-				qtRemark.setEditable(true);
-			}
-			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-			this.getManagedBean().setScQtRemarksEmpty(true);
-		}
-	}
-	// #10098 End Vinod
+	//#28188 - End
+	
 }
