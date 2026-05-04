@@ -832,6 +832,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("reloadRequestNoteForCodification");
 		ScRequestNote requestNote = null;
 		List<ScRequestNoteDtl> requestNoteDtlList = null;
+		//#26059 - Start
+		ScQuote scQuote = null;
+		//#26059 - End
 
 		if (requestNoteResDTO.getRequestNoteDtlList() != null) {
 			requestNoteDtlList = requestNoteResDTO.getRequestNoteDtlList();
@@ -847,6 +850,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//#26059 - Start
 		if(requestNoteResDTO.getAssignItemDtl()!=null){
 			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
+		}
+		
+		if(requestNoteResDTO.getQuote() !=null){
+			scQuote = requestNoteResDTO.getQuote();
 		}
 		//#26059 - End
 
@@ -890,7 +897,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//#26059 - Start
 					CommonUtils commonUtils = new CommonUtils();
 					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
-					compareItemName(requestItem);
+					compareItemName(requestItem,scQuote);
 					//#26059 - End
 				}
 			}
@@ -1159,10 +1166,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
 		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-				validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
-						getManagedBean().getRequestSupplierItem());
+				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());				
 		    }
+		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+					getManagedBean().getRequestSupplierItem());
 			// 27868 - end
 		}
 		// 26284 - End
@@ -1706,7 +1713,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						rnDtl.getRequestItem().setItemName(utils.removeItemNameNA(rnDtl.getRequestItem().getItemName()));
 						//#26059 - End
 						// 27868 - start
-						if (getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+						String procType = getManagedBean().getProcurementType();
+						
+						if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+								&& getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(
+										ReasonCategory.JUSTIFICATION_PK7.value())) {
 							finalizeWIPCodePK7(rnDtl);
 						}
 						// 27868 - end
@@ -1768,6 +1779,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setSupplierId(supplierId);
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
 				requestNoteReqDTO);
+		getManagedBean().setScQuote(requestNoteResDTO.getQuote()!=null ? requestNoteResDTO.getQuote() : null); //#26059 - Start
 		reloadRequestNoteForCodification(requestNoteResDTO);
 
 		if (!pidExpiredFlag) {
@@ -2443,6 +2455,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				onChangePriceType();
 				// #28789 - end
 			}
+			
+			//#26059 - Start
+			if(cmSupplierItem.getCmItem() !=null){
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				CmItem cmItem = cmSupplierItem.getCmItem();
+				catalogueBackingBean.cleanItemNameNA(cmItem);
+				cmSupplierItem.setCmItem(cmItem);
+			}
+			//#26059 - End	
+			
 		} else {
 			// remove after catalogue team had add the filtering in view.
 			throw new EpException(MessageConst.ERROR_760159);
@@ -2913,6 +2935,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			VCmSupplierItem vCmSupplierItem = new VCmSupplierItem();
 			vCmSupplierItem.setCompanyName(selectedSupplierItem.getSmSupplier().getCompanyName());
 			scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
+			
+			//#26059 - Start
+			if(scRequestItem !=null && scRequestItem.getCmItem() !=null){
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				CmItem cmItem = scRequestItem.getCmItem();
+				catalogueBackingBean.cleanItemNameNA(cmItem);
+				scRequestItem.setCmItem(cmItem);
+			}
+			//#26059 - End
 
 			scRequestItem.setRequestNote(requestNote);
 		}
@@ -7694,7 +7725,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Compares the supplier’s account type with allowed types for PK7 and Special Item procurements.
+	 * Compares the suppliers account type with allowed types for PK7 and Special Item procurements.
 	 * Displays an error message if the supplier account type does not match the restriction list.
 	 *
 	 * @param rnDtl        the request note detail containing justification and reason info
@@ -7744,27 +7775,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
 			List<PmReasonRestr> distinctReasonRestrList) {
 		for (PmReasonRestr rr : listReasonRestr) {
-			PmParameter param = rr.getSupplAcctTypeId();
-			boolean exists = false;
-
-			for (PmReasonRestr dr : distinctReasonRestrList) {
-				PmParameter existingParam = dr.getSupplAcctTypeId();
-
-				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
-						existingParam != null ? existingParam.getParameterCode() : "")) {
-					exists = true;
-					break;
+			if(rr.getSupplAcctTypeId() != null){
+				PmParameter param = rr.getSupplAcctTypeId();
+				boolean exists = false;
+	
+				for (PmReasonRestr dr : distinctReasonRestrList) {
+					PmParameter existingParam = dr.getSupplAcctTypeId();
+	
+					if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+							existingParam != null ? existingParam.getParameterCode() : "")) {
+						exists = true;
+						break;
+					}
 				}
+	
+				if (!exists) {
+		            distinctReasonRestrList.add(rr);
+		        }
 			}
-
-			if (!exists) {
-	            distinctReasonRestrList.add(rr);
-	        }
 	    }
 	}
 
 	/**
-	 * Validates supplier’s MOF account; returns basic account if missing, otherwise keeps the supplied type.
+	 * Validates suppliers MOF account; returns basic account if missing, otherwise keeps the supplied type.
 	 *
 	 * @param supplierItem supplier data to check MOF account
 	 * @param suppAccType  current supplier account type
@@ -8166,7 +8199,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Determines actual date using quote’s created date; defaults to current
+	 * Determines actual date using quotes created date; defaults to current
 	 * date.
 	 * 
 	 * @return resolved actual date
@@ -8194,6 +8227,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			if (pmPK7Mapping != null){
 				defaultToPK7W(pmPK7Mapping, rnDtl);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem(rnDtl);
+				}
 			}
 			else {
 				defaultToSpecialtem(rnDtl);				
@@ -8272,16 +8310,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * false otherwise.
 	 */
 	public boolean checkExtensionCode(ScRequestNoteDtl requestNoteDtl) {
-	    if (isInvalidRequestDetail(requestNoteDtl)) {
-	        return false;
-	    }
+		if (isInvalidRequestDetail(requestNoteDtl)) {
+			return false;
+		}
 
-	    if (getManagedBean().isExistInAssignItemDetail()) {
-	        return true;
-	    }
+		if (getManagedBean().isExistInAssignItemDetail()) {
+			return true;
+		}
 
-	    CmItem cmItem = requestNoteDtl.getRequestItem().getCmItem();
-	    return isValidExtensionLength(cmItem.getExtensionCode());
+		ScRequestItem item = requestNoteDtl.getRequestItem();
+		CmItem cmItem = item.getCmItem();
+		return isValidExtensionLength(cmItem.getExtensionCode());
 	}
 
 	/**
@@ -8310,7 +8349,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    int codeLength = extensionCode.replaceAll("\\s+", "").length();
 
 	    // Logic: Return false if length is NOT between 8 and 18
-	    if (codeLength < DPConstants.NUMBER_EIGHT || codeLength > DPConstants.NUMBER_EIGHTEEN) {
+	    if (codeLength <= DPConstants.NUMBER_EIGHT) {
 	        return false;
 	    }
 
@@ -8325,12 +8364,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestItem
 	 *            the request item containing the CmItem to compare and update
 	 */
-	public void compareItemName(ScRequestItem requestItem) {
+	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote) {
 		if (requestItem == null || requestItem.getCmItem() == null) {
 			return;
 		}
 
 		if (getManagedBean().isExistInAssignItemDetail()) {
+			return;
+		}
+		
+		if(scQuote !=null && scQuote.isPanel() && DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId()) && requestItem.getCmItem() !=null){
 			return;
 		}
 
@@ -8344,7 +8387,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			trimExtensionCode(requestItem.getCmItem());
 		}
 	}
-
+	
 	/**
 	 * Helper to clean item names by removing 'N/A' and trimming whitespace. * @param
 	 * rawName The raw name string from the item.
@@ -8442,17 +8485,38 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return              {@code true} if the "Assign" button should be active (enabled or shown); {@code false} otherwise.
 	 */
 	public boolean validateAssignButton(boolean readOnly, ScRequestNoteDtl requestNoteDtl) {
-		if (readOnly) {
-			return true;
-		}
+	    if (readOnly) {
+	        return true;
+	    }
 
-		if (requestNoteDtl.getProcurementTypeCategory().getParameterId().equals(DbValueConst.PROCUMENT_TYPE_SERVICE)
-				&& StringUtils.isEmpty(requestNoteDtl.getRequestItem().getTempUnspscCode())
-				&& requestNoteDtl.getRequestItem().getCmItem() != null) {
-			return true;
-		}
+	    if (requestNoteDtl == null || requestNoteDtl.getRequestItem() == null) {
+	        return false; 
+	    }
 
-		return false;
-	}
-	//#26059 - End			 
+	    if (getManagedBean().isExistInAssignItemDetail()) {
+	        return false;
+	    }
+
+	    ScRequestItem requestItem = requestNoteDtl.getRequestItem();
+	    String tempUnspscCode = requestItem.getTempUnspscCode();
+	    CmItem cmItem = requestItem.getCmItem();
+	    ScQuote quote = getManagedBean().getScQuote();
+
+	    if (quote != null && quote.isPanel()) {
+	        return cmItem != null;
+	    }
+
+	    if (requestItem.getItemType() != null && 
+	        DbValueConst.ITEM_TYPE_PRODUCT.equals(requestItem.getItemType().getParameterId())) {
+	        return false;
+	    }
+
+	    if (StringUtils.isEmpty(tempUnspscCode) && cmItem != null 
+	            && StringUtils.isNotEmpty(cmItem.getExtensionCode())
+	            && cmItem.getExtensionCode().length() != 8) {
+	        return true;
+	    }
+
+	    return false; 
+	}		 
 }

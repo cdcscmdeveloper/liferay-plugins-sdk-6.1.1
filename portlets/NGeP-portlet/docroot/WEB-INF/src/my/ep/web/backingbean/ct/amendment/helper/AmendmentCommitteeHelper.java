@@ -17,12 +17,14 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -769,5 +771,193 @@ public class AmendmentCommitteeHelper {
 	}
 	
 	//24336 - End
+	
+	//#29549 start
+	/**
+	 * Validates that there is no duplicate Chairperson in the committee list.
+	 * <p>
+	 * This method checks whether more than one committee member is assigned
+	 * with the role of CHAIRPERSON. If more than one is found, an exception
+	 * will be thrown.
+	 * <p>
+	 * It also resets representative type when necessary and re-sorts
+	 * the committee member list after validation.
+	 *
+	 * @param curCommitteeMember the current committee member being processed
+	 * @param parametercode the current parameterCode of the committee member being processed
+	 * @param parameterId        the selected role parameter ID
+	 */
+	public void validateDuplicateChairperson(CtCommitteeMember curCommitteeMember, String parametercode, Long parameterId){
+		int counter = 0;
+		for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {  
+			if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null
+					&& committeMember.getMemberRoleId().longValue() == parameterId.longValue()) {
+				// #26520 - to reset existing value saved before
+				if(committeMember.getRepresentativeType() != null && committeMember.getRepresentativeType().getParameterId() != null) {
+					committeMember.setRepresentativeType(null);
+				}
+				// #26520 - end
+				counter++;
+				if (counter == 2) {
+					throw new EpException(MessageConst.ERROR_750008);
+				}
+			}else{
+			    resetRepresentativeTypeIfApplicable(parametercode, committeMember, curCommitteeMember);
+			}
+		}
+	}
+	
+	/**
+	 * Resets the representative type parameter ID of the given committee member
+	 * when the selected role is either CHAIRPERSON or MEMBER and the processed
+	 * member matches the current committee member.
+	 * <p>
+	 * This method is used to prevent invalid representative type retention
+	 * when role changes occur.
+	 *
+	 * @param parameterCode      the selected role parameter code
+	 * @param committeeMember    the committee member being iterated
+	 * @param currentMember      the currently edited committee member
+	 */
+	private void resetRepresentativeTypeIfApplicable(String parameterCode, CtCommitteeMember committeeMember,
+			CtCommitteeMember currentMember) {
+
+		if (committeeMember == null || currentMember == null) {
+			return;
+		}
+
+		boolean isEligibleRole = ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(parameterCode)
+				|| ParameterConst.COMMITTEE_ROLE_MEMBER.equalsIgnoreCase(parameterCode);
+
+		if (isEligibleRole && committeeMember.equals(currentMember) && committeeMember.getRepresentativeType() != null) {
+			committeeMember.getRepresentativeType().setParameterId(null);
+		}
+	}
+	
+	/**
+	 * This method is to ensure the role for the current member is the same as
+	 * parameterId If it is not the same, the role will be changed accordingly.
+	 * 
+	 * @param curCommitteeMember the committee member being updated
+	 * @param parameterId the selected role parameter ID
+	 */
+	public void checkCurrentUpdatedCommittee(CtCommitteeMember curCommitteeMember, Long parameterId) {
+		if (parameterId != null) {
+			if (curCommitteeMember.getMemberRoleId() != null
+					&& !curCommitteeMember.getMemberRoleId().equals(parameterId)) {
+				// curCommitteeMember.getRepresentativeType().setParameterId(null); //#29549
+				curCommitteeMember.setRepresentativeType(null);
+			}
+			if (curCommitteeMember.getRepresentativeType() == null) {
+				curCommitteeMember.setRepresentativeType(new PmParameter());
+			}
+			curCommitteeMember.setMemberRole(ParameterHelper.getInstance().getPmParameterById(parameterId));
+			curCommitteeMember.setMemberRoleId(parameterId);
+		}
+	}
+	
+	/**
+	 * Sorts committee members according to predefined role priority:
+	 * Chairperson -> Secretary -> Member.
+	 *
+	 * @param list list of committee members to be sorted
+	 */
+	public void sortCommitteeList(List<CtCommitteeMember> list){
+		
+		if (list == null || list.isEmpty()) {
+	        return;
+	    }
+		
+		Collections.sort(list, new Comparator<CtCommitteeMember>() {
+			@Override
+			public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
+				return compareCommittee(o1, o2);
+			}
+		});
+	}
+	
+	/**
+	 * Compares two {@link CtCommitteeMember} objects based on their role priority.
+	 * <p>
+	 * The comparison is performed using the predefined committee role order.
+	 * The method first attempts to compare using the member role's parameter code
+	 * (if both roles and parameter codes are available). If not, it falls back to
+	 * comparing using the memberRoleId by resolving the corresponding parameter code.
+	 * <p>
+	 * If neither comparison can be performed due to missing role information,
+	 * the method returns {@code 0}, indicating no ordering difference.
+	 *
+	 * @param o1 the first committee member to compare
+	 * @param o2 the second committee member to compare
+	 * @return a negative integer, zero, or a positive integer as the first member
+	 *         has higher priority, equal priority, or lower priority than the second member
+	 */
+	private Integer compareCommittee(CtCommitteeMember o1, CtCommitteeMember o2){
+		if (checkMemberNull(o1, o2)) {
+			return compareIntegerValueCommittee(o1.getMemberRole().getParameterCode(), o2.getMemberRole()
+					.getParameterCode());
+		} else if (o1.getMemberRoleId() != null && o2.getMemberRoleId() != null) {
+			return compareIntegerValueCommittee(getParameterCode(o1.getMemberRoleId()),
+					getParameterCode(o2.getMemberRoleId()));
+		} else {
+			return 0;
+		}
+	}
+	
+	/**
+	 * Checks whether both committee members contain a non-null member role
+	 * and that their respective role parameter codes are also non-null.
+	 * <p>
+	 * This method is typically used as a defensive null-safety validation
+	 * before performing role-based comparison or sorting operations.
+	 *
+	 * @param o1 the first committee member to validate
+	 * @param o2 the second committee member to validate
+	 * @return {@code true} if both members have a non-null member role and
+	 *         non-null parameter code; {@code false} otherwise
+	 */
+	private boolean checkMemberNull(CtCommitteeMember o1, CtCommitteeMember o2) {
+		return o1.getMemberRole() != null && o2.getMemberRole() != null
+				&& o1.getMemberRole().getParameterCode() != null && o2.getMemberRole().getParameterCode() != null;
+	}
+	
+	/**
+	 * Compares two committee role parameter codes based on their predefined
+	 * ordering in {@code ContractHashSetConst.ROLE_SORT_ORDER_COMMITTEE}.
+	 * <p>
+	 * The comparison is performed using the index position of each parameter
+	 * inside the role sort order list. The role appearing earlier in the list
+	 * will have higher priority (lower index value).
+	 * <p>
+	 * This method is typically used in sorting operations to ensure committee
+	 * members are arranged according to the configured role hierarchy.
+	 *
+	 * @param parameter1 the first role parameter code to compare
+	 * @param parameter2 the second role parameter code to compare
+	 * @return a negative integer, zero, or a positive integer as the first
+	 *         parameter has higher priority, equal priority, or lower priority
+	 *         than the second parameter
+	 */
+	private Integer compareIntegerValueCommittee(String parameter1, String parameter2) {
+		return Integer.valueOf(ContractHashSetConst.ROLE_SORT_ORDER_COMMITTEE.indexOf(parameter1)).compareTo(
+				Integer.valueOf(ContractHashSetConst.ROLE_SORT_ORDER_COMMITTEE.indexOf(parameter2)));
+	}
+	
+	/**
+	 * Method to get parameterCode by parameterId
+	 * 
+	 * @param parameterId
+	 * @return parameterCode
+	 */
+	private String getParameterCode(Long parameterId) {
+	    if (parameterId == null) {
+	        return null;
+	    }
+
+	    return ParameterHelper.getInstance()
+	            .getPmParameterById(parameterId)
+	            .getParameterCode();
+	}
+	//#29549 end
 
 }

@@ -191,7 +191,8 @@ public class ViewSuppProfileManagedBean extends
 	private SmRvDocFile smRvDocFile;
 	private List<SmRvAssistOfficer> emptyRvAssistOfficers;
 	// #34031 End
-		
+	private boolean ownerChange; // 40078, 26238
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -1108,4 +1109,14 @@ public class ViewSuppProfileManagedBean extends
 		this.emptyRvAssistOfficers = emptyRvAssistOfficers;
 	}
 	// #34031 End
+	
+	// 40078, 26238 - START
+	public boolean isOwnerChange() {
+		return ownerChange;
+	}
+
+	public void setOwnerChange(boolean ownerChange) {
+		this.ownerChange = ownerChange;
+	}
+	// 40078, 26238 - END
 }

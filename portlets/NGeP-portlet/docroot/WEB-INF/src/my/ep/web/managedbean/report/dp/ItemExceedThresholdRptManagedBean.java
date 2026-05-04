@@ -22,7 +22,7 @@ public class ItemExceedThresholdRptManagedBean extends DpReportManagedBean {
 	private Boolean centralPanelContract = null;;
 	private String circularNo;
 	private String itemCode;
-	private Long procurementType;
+	private String procurementType;
 	private String itemName;
 	private String rnNo;
 	private String financialYear;
@@ -31,6 +31,7 @@ public class ItemExceedThresholdRptManagedBean extends DpReportManagedBean {
 	private boolean disablePTJ;
 	private boolean disableRole;
 	private String reason;
+	private String dpStatus;
 	
 	/**
 	 * @param args
@@ -137,13 +138,13 @@ public class ItemExceedThresholdRptManagedBean extends DpReportManagedBean {
 	/**
 	 * @return the procurementType
 	 */
-	public Long getProcurementType() {
+	public String getProcurementType() {
 		return procurementType;
 	}
 	/**
 	 * @param procurementType the procurementType to set
 	 */
-	public void setProcurementType(Long procurementType) {
+	public void setProcurementType(String procurementType) {
 		this.procurementType = procurementType;
 	}
 	/**
@@ -242,6 +243,17 @@ public class ItemExceedThresholdRptManagedBean extends DpReportManagedBean {
 	public void setDisableRole(boolean disableRole) {
 		this.disableRole = disableRole;
 	}
-
+	/**
+	 * @return the dpStatus
+	 */
+	public String getDpStatus() {
+		return dpStatus;
+	}
+	/**
+	 * @param dpStatus the dpStatus to set
+	 */
+	public void setDpStatus(String dpStatus) {
+		this.dpStatus = dpStatus;
+	}
 
 }
