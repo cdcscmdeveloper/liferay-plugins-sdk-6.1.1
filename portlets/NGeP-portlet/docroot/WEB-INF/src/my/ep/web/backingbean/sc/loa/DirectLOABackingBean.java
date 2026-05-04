@@ -12340,7 +12340,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				tplSpecTierQties.add(tplSpecTierQty);
 				tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
-			} else if (!isPriceTypeTier) {
+			} else {
 				tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
 				tplSpecAnswer.setAnswerNumeric(oldAnswer.getAnswerNumeric());
 			}
