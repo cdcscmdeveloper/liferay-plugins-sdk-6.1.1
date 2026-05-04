@@ -4292,13 +4292,15 @@ public class PurchaseInquiryBackingBean extends
 	 *             if the reason code is inactive for any request note detail
 	 */
 	public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
-		PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-				.getReasonId());
-		if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
-			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
-				throw new EpException(MessageConst.ERROR_760716, new String[] {
-						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
-								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
+		if (null != getManagedBean().getRequestNoteDtl().getJustificationType()) {	
+			PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
+					.getReasonId());
+			if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
+				for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
+					throw new EpException(MessageConst.ERROR_760716, new String[] {
+							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+									.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
+				}
 			}
 		}
 	}

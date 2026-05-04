@@ -66,6 +66,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //#37620,#34367
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -578,6 +579,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			}
 		}
 		// #24333 - End
+		
+		// #37620,#34367 - Start
+		// Retrieve LOA and update contract panel state (flag, circular data, and attachment)
+		// based on validation logic in retrieveItemPanelDetails.
+		ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(getManagedBean(), "ctContract.loa");
+		ctBB.retrieveItemPanelDetails(loa);
+		// #37620,#34367 - End
 
 		// Check for migrated contract
 		if (getManagedBean().getCtAgreement().getCtAmendment() == null

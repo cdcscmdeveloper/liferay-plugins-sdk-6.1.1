@@ -15095,10 +15095,17 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
+			List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
+			for (TabBean committeeTab : committeeTabList){
+				if (!committeeTab.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
+					this.getManagedBean().setShowCategoryCodePanel(false);
+					break;
+				}
+			}
 		}else{
 			this.getManagedBean().setShowCategoryCodePanel(false);
 		}
-		//#29661 #40094 EndR
+		//#29661 #40094 End
 	}
 	
 	// 29661 & 40089 -start-
