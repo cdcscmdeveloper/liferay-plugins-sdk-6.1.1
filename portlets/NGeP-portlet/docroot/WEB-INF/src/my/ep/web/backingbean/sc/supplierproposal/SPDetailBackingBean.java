@@ -1320,7 +1320,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 									// #21695 end
 								} else if (isTender) {
 									if (specAnswer.getRatePerUom() != null
-											&& specAnswer.getRatePerUom().compareTo(new BigDecimal(0)) > 0) {
+											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 										answers.add(specAnswer);
 									} else {
 										specAnswer.setDeleted(true);
