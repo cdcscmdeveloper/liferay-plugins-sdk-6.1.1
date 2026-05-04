@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays; //#36738 #40071
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -6063,6 +6064,18 @@ public class RuleCatalogueBackingBean extends
 		}
 		this.getManagedBean().setDeletedMinistryNameList(deleteMinistryString);
 		return resetMinistryDropdown;
+	}
+	
+	private void sortConfigRuleValueList(List<PmConfigRuleValue> configRuleValueList) {
+		Collections.sort(configRuleValueList, new Comparator<PmConfigRuleValue>() {
+			@Override
+			public int compare(PmConfigRuleValue o1, PmConfigRuleValue o2) {
+				return new CompareToBuilder()
+				.append(o1.getEffDate(), o2.getEffDate())
+				.append(o1.getFromValue(), o2.getFromValue())
+				.toComparison();
+			}
+		});
 	}
 	// #36738 End
 
