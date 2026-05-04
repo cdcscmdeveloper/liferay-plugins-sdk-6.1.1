@@ -4336,12 +4336,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
+			//#38107 - Start
+			boolean checkeGPAApprovalFirst = checkSettingPopUpeGPAApprovalNeeded(qt);
+			//#38107 - End
 			//#25077 Start 
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
 					|| currentStatus.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT) ){
-				if(checkSettingPopUpBPKApprovalNeeded(qt)){
+				if(!checkeGPAApprovalFirst && checkSettingPopUpBPKApprovalNeeded(qt)){
 					if(!this.getManagedBean().isResetBpkCurrentArea()){
 						if(popUpBPKApprovalNeededOnceHaveRequestApproval(qt)){
 					      this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
@@ -4508,6 +4511,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							approvalCategory);
 				}
 				this.getManagedBean().setResetBpkCurrentArea(false); //#25077
+				this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 				
 				// 29732 fix duplicate issues -start-
 				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
@@ -4618,6 +4622,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (approverPublication == null 
 					|| CollectionUtils.isEmpty(approverPublication.getApproverSettings())) {
 				this.getManagedBean().setResetBpkCurrentArea(false); // #25077
+				   this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 				throw new EpException(MessageConst.ERROR_775174);
 			}
 
@@ -4708,6 +4713,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (isInactiveCommiteeApproverRole(null, approverSettings, RoleCode.PUBLICATION_APPROVER.value())) {
 			String roleName = getEpRoleDescByRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			this.getManagedBean().setResetBpkCurrentArea(false); // #25077
+			   this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_775171, new String[] { roleName },
 					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 
@@ -12063,6 +12069,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 		 	      	                     if(null == approvalReqAttachement){
 		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
 		 	      	                     }
 	    						  }
@@ -12073,6 +12080,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 		 	      	                     if(null == approvalReqAttachement){
 		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
 		 	      	                     }
 						         } 
@@ -12095,6 +12103,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
 						if (null == approverAction || null == approverAction.getParameterId()) {
 							this.getManagedBean().setResetBpkCurrentArea(false);
+							this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 							//25635,37892 -start-
 							setOtherApprovalLoaded();
 							//25635,37892 -end-
@@ -12104,6 +12113,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
 	                    if(null == approvalReqAttachement){
 	                    	this.getManagedBean().setResetBpkCurrentArea(false);
+	     				   	this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 	                    	throw new EpException(MessageConst.ERROR_760509);
 	                    }
 	                    
@@ -15314,5 +15324,56 @@ public void retrieveDemoQtDetails(Long qtId) {
 	    return finalList;
 	}
 	//#28188 - End
+
+	//#38107 - Start
+	private boolean checkSettingPopUpeGPAApprovalNeeded(ScQt scQt) {
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+
+		List<Long> statusIds = new ArrayList<>();
+		statusIds.add(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+		statusIds.add(QTStatusConst.QT_REVISION_PUBLICATION);
+		statusIds.add(QTStatusConst.QT_PENDING_SCHEDULE_REVISION);
+		statusIds.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
+		statusIds.add(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+
+		boolean checkFirst = Boolean.FALSE;
+		Long statusId = scQt.getQtStatus().getStatusId();
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtdetail(scQt);
+		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
+		if (resDTO.getApproval() != null && statusIds.contains(statusId)
+				&& !this.getManagedBean().isResetBpkCurrentArea()) {
+			List<ScQtApproval> listOfApprovals = resDTO.getApproval();
+			for (ScQtApproval approval : listOfApprovals) {
+				String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();
+				if (!approval.isDeleted() && ParameterConst.APPROVAL_CATEGORY_EGPA.equals(approvalCategoryCode)
+						&& !this.getManagedBean().isMaintanceFlow()) {
+					this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
+					RequestContext.getCurrentInstance().execute("eGPAApprovalNeededDlgTemp.show()");
+					throw new EpException(" ");
+				}
+			}
+		} else {
+			checkFirst = Boolean.TRUE;
+		}
+		return checkFirst;
+	}
+	//#38107 - End
 	
+	//#38107 - Start
+	/**
+	 * Make sure eGPA confirmation box only appear once
+	 * 
+	 * @param actionFlow
+	 */
+	public void reseteGPACurrentArea(boolean actionFlow){
+		if(actionFlow){
+		   this.getManagedBean().setReseteGPACurrentArea(true);
+		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+		}else{
+		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+		}
+	}
+	//#38107 - End
 }

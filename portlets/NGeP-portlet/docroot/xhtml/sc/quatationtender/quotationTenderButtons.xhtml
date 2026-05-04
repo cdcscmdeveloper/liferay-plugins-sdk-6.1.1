@@ -441,6 +441,26 @@
 			</div>
 		</p:dialog>
 		<ui:remove> #25077 End </ui:remove>
+	    <ui:remove> 38107 - Start </ui:remove>
+		<p:dialog id="eGPAApprovalNeededIdTemp" widgetVar="eGPAApprovalNeededDlgTemp"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
+			height="100" closable="false">
+			<table>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period.submit.confirmation1']}" /></td></tr>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period.submit.confirmation2']}" /></td></tr>
+			</table>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="eGPAApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
+					partialSubmit="true" process="@form" update="@form"
+					action="#{qTDetailBB.updateBpmTask(bpAction)}" actionListener="#{qTDetailBB.reseteGPACurrentArea(true)}"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="eGPAApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();"
+					partialSubmit="true" process="@form" update="@form"
+					action="#{qTDetailBB.reseteGPACurrentArea(false)}" />
+			</div>
+		</p:dialog>
+		<ui:remove> 38107 - End </ui:remove>
 		<!-- 15391 Start -->
 		<p:dialog id="specCommAlertdialog" widgetVar="specCommAlert"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
