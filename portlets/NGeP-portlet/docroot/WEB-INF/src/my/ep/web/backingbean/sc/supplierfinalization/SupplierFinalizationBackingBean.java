@@ -3437,8 +3437,11 @@ return	remarksNotFound;
 							
 							if (!committeeSet.contains(committeeType)) {
 								//Bug #28235 - start
-								if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+								//#35320 - WIP Data - Start
+								if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A) || 
+										committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
 									isCurrentCommitteeAuthorisedToSubmit = true;
+									//#35320 - WIP Data - End
 								}else{
 									for (String committee : committeeSet) {
 										isCurrentCommitteeAuthorisedToSubmit = 
@@ -3481,14 +3484,12 @@ return	remarksNotFound;
 					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
 					// 39077 -end-
 					
-					String committeeName = getParameterDesc(
-							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+					//#35320 - Start
+					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 
-					throw new EpException(MessageConst.ERROR_760394,
-							new String[] {
-									committeeName,
-									String.valueOf(totalIntendedPrice
-											.intValue()) });
+					throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode,
+							String.valueOf(totalIntendedPrice.intValue()) });
+					// #35320 - End
 				}
 			}
 				
@@ -3987,8 +3988,11 @@ return	remarksNotFound;
 						
 						if (!committeeSet.contains(committeeType)) {
 							//Bug #28235 - start
-							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+							//#35320 - WIP Data - Start
+							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A) || 
+									committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
 								isCurrentCommitteeAuthorisedToSubmit = true;
+								//#35320 - WIP Data - End
 							}else{
 								for (String committee : committeeSet) {
 									isCurrentCommitteeAuthorisedToSubmit = 
@@ -4031,14 +4035,12 @@ return	remarksNotFound;
 					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
 					// 39077 -end-
 
-					String committeeName = getParameterDesc(
-							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+					//#35320 - Start
+					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 
-					throw new EpException(MessageConst.ERROR_760394,
-							new String[] {
-									committeeName,
-									String.valueOf(totalIntendedPrice
-											.intValue()) });
+					throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode,
+							String.valueOf(totalIntendedPrice.intValue()) });
+					// #35320 - End
 				}
 			}
 			//#26169 - START
@@ -12201,75 +12203,79 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	}
 	// #28834 - End. 
 	
-	//#29562 - START
-		/**
-		 * Reset search field
-		 */
-		public void resetSelectedItemSupplierandRemarks() {
-			//reset select all item list
-			this.getManagedBean().setSelectAll(false);
-			
-			if (this.getManagedBean().getItemList() != null){
-				//reset selected item list
-				for(int i = 0; i < this.getManagedBean().getItemList().size();){
-					if (this.getManagedBean().getItemList().get(i).isSelected()){
-						this.getManagedBean().getItemList().get(i).setSelected(false);
-						//reset selected suppliers
-						if (this.getManagedBean().getItemList().get(i).getSelectedSuppliers() != null){
-							this.getManagedBean().getItemList().get(i).getSelectedSuppliers().clear();
-							ScQtRecommend itemList = this.getManagedBean().getItemList().get(i);
-							getSupplierCodes(itemList);
-						}
-						i++;
-					}
-					else{
-						break;
-					}
-				}
-			}
-			
-			if (	//#29562 - START.
-					null != this.getManagedBean().getShortlistedSuppliersByRecommendType()
-					&& 
-					//#29562 - END.
-					this.getManagedBean().getShortlistedSuppliersByRecommendType().getList() != null){
-				//reset selected suppliers in supplier list table
-				for(int j = 0; j < this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().size();){
-					if (this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j).isShortListed()){
-						this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j).setShortListed(false);
-						j++;
-					}
-					else{
-						break;
-					}
-				}
-			}
+	// #29562 - START
+	/**
+	 * Reset search field
+	 */
+	public void resetSelectedItemSupplierandRemarks() {
+		// reset select all item list
+		this.getManagedBean().setSelectAll(false);
 
-			if (this.getManagedBean().getScRemarks() != null){
-				//reset remarks
-				for(int k = 0; k < this.getManagedBean().getScRemarks().size(); k++){
-					if (this.getManagedBean().getScRemarks().get(k).getRemark() != null){
-						this.getManagedBean().getScRemarks().get(k).setRemark(null);
-					}
-					else{
-						break;
+		if (this.getManagedBean().getItemList() != null) {
+			// reset selected item list
+			for (int i = 0; i < this.getManagedBean().getItemList().size();) {
+
+				if (this.getManagedBean().getItemList().get(i).isCancelled()) {
+					this.getManagedBean().getItemList().get(i).setCancelled(false);
+				}
+
+				if (this.getManagedBean().getItemList().get(i).isSelected()) {
+					this.getManagedBean().getItemList().get(i).setSelected(false);
+					// reset selected suppliers
+					if (this.getManagedBean().getItemList().get(i).getSelectedSuppliers() != null) {
+						this.getManagedBean().getItemList().get(i).getSelectedSuppliers().clear();
+
+						ScQtRecommend itemList = this.getManagedBean().getItemList().get(i);
+
+						getSupplierCodes(itemList);
 					}
 				}
+				i++;
 			}
-			
-			//reset selected supplier for award
-			this.getManagedBean().setRecommendedSupplier(null);
-			this.getManagedBean().setFinalizationMethodBefore(getManagedBean().getFinalizationMethod());
 		}
-		
-		/**
-		* Reset finalization method
-		*/
-		public void resetFinalizationMethod() {
-			this.getManagedBean().setFinalizationMethod(getManagedBean().getFinalizationMethodBefore());
-			finalizationMethodEvent(null);
+
+		if (null != this.getManagedBean().getShortlistedSuppliersByRecommendType()
+				&& this.getManagedBean().getShortlistedSuppliersByRecommendType().getList() != null) {
+			// reset selected suppliers in supplier list table
+			for (int j = 0; j < this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().size();) {
+				if (this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j).isShortListed()) {
+					this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j)
+							.setShortListed(false);
+					j++;
+				} else {
+					break;
+				}
+			}
 		}
-		//#29562 - END
+
+		if (this.getManagedBean().getScRemarks() != null) {
+			// reset remarks
+			for (int k = 0; k < this.getManagedBean().getScRemarks().size(); k++) {
+				if (this.getManagedBean().getScRemarks().get(k).getRemark() != null) {
+					this.getManagedBean().getScRemarks().get(k).setRemark(null);
+				} else {
+					break;
+				}
+			}
+		}
+
+		// reset selected supplier for award
+		this.getManagedBean().setRecommendedSupplier(null);
+		this.getManagedBean().setFinalizationMethodBefore(getManagedBean().getFinalizationMethod());
+	}
+
+	// #29562 -end-
+
+	// #29562 -start-
+	/**
+	 * Reset finalization method
+	 */
+	public void resetFinalizationMethod() {
+		this.getManagedBean().setFinalizationMethod(getManagedBean().getFinalizationMethodBefore());
+		finalizationMethodEvent(null);
+	}
+
+	// #29562 - END
 		
 		
 		public void DateTimeChange(ScQtMeeting meeting){//32613-start
@@ -12540,14 +12546,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				proposal.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);//#21692 include not qualified;
 		boolean isBPKTaskAndClaimed = this.getManagedBean().isInitialDecisionFwdToBPK()
 				&& !this.getManagedBean().isReadOnly(); 
-		return Arrays.asList(
-				new Boolean[] {
-						evalResultDtl.isSuppSelectionDisabled(),
-						this.getManagedBean().isDisableSupplierSelection(),
-						isBidding,
+		
+		return Arrays
+				.asList(new Boolean[] { evalResultDtl.isSuppSelectionDisabled(),
+						this.getManagedBean().isDisableSupplierSelection(), isBidding,
 						this.disabledQTProcess(supplier),// 26247
-						periodExtensionRejected,this.isQTMaintenanceScreen(),
-						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
+						// #21692 - Start
+						periodExtensionRejected,
+						// #21692 - End
+						this.isQTMaintenanceScreen(), !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) })
+				.contains(Boolean.TRUE);
 	}
 	//35157 - end
 	

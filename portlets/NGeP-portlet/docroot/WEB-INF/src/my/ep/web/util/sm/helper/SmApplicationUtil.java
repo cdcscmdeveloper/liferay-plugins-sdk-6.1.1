@@ -1384,7 +1384,9 @@ public class SmApplicationUtil {
 		int payAccCnt = 0;
 		int regAccCnt = 0;
 		StringBuffer sb = new StringBuffer();
+		sb.append("<br/>"); //#39860
 		int noSignatoryCount = 0;
+		int signatoryNotBumiCount = 0; //#39860
 		List<SmSupplierBranch> paymentAccBranch = new ArrayList<SmSupplierBranch>();
 
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
@@ -1420,6 +1422,16 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+			//#39860 --START
+			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
+					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						sb.append(++signatoryNotBumiCount + ". ");
+						sb.append(smChequeSignatory.getSmPersonnel().getName());
+						sb.append("<br/>");
+					}	
+				}	
+			}//#39860 --END
 		}
 		if (payAccCnt == 0) {
 			validSave = false;
@@ -1437,7 +1449,14 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-
+		//#39860 --START
+		if (signatoryNotBumiCount > 0) {
+			log.info("signatoryNotBumiCount"+signatoryNotBumiCount);
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
+		}//#39860 --END
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
 		return validSave;
@@ -4687,7 +4706,6 @@ public class SmApplicationUtil {
 						prevList.add(previouscat);
 					}
 				}
-				
 			}
 			// 36504 - END
 			
