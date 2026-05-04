@@ -99,10 +99,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		}
 		if(isAuditor() || isPanelAdmin()) {
 			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY); //#37620,#34367
 		}
 		if(!isAuditor() && !isPanelAdmin() && !isCentralContractAdmin()) { // public view
 			circularDocTypes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY); //#37620,#34367
 		}
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterType", SearchOperator.OPERATOR_EQUALS.value(), ParameterTypeConst.DOCUMENT_TYPES));
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), circularDocTypes));
