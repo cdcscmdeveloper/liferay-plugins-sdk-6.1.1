@@ -7701,13 +7701,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
+	// #10098 Start Vinod changed activeIndex to local varible to avoid
+	// SonarLint issue
+	// because of the activeIndex need to be updated for autosave.
 	/**
 	 * Qt details tab change.
 	 * 
-	 * @param activeIndex
+	 * @param activeIndexMain
 	 *            the active index
 	 */
-	public void qtDetailsTabChange(Integer activeIndex) {
+	public void qtDetailsTabChange(Integer activeIndexMain) {
+		Integer activeIndex = activeIndexMain;
+		// #10098 End Vinod
 		int priviousIndex = this.getManagedBean().getActiveIndex();
 		getManagedBean().getQt().setMitiApproval(false);
 		getManagedBean().getQt().setOtherApproval(false);
@@ -7752,7 +7757,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
-				
+				// #10098 Start Vinod
+				if (null == this.getManagedBean().getQt().getQtNo()) {
+					RequestContext.getCurrentInstance().execute(QTConstants.QT_AUTOSAVE_POPUP); // new dialog
+					activeIndex = priviousIndex; // To Stay in QT Details screen.
+				} else {
+					saveSidemenuQtDetailsAction(reqDTO);
+				}
+				// #10098 End Vinod
 				switch (priviousIndex) {
 				case 0:
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
@@ -8018,6 +8030,38 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25426 - End
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
+		
+		// #10098 Start Vinod To handle autosave and prevent those from null
+		ScQt scQt = this.getManagedBean().getQt();
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+		} else {
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+		
+		if (null == this.getManagedBean().getQt().getProcurementTypeCatId()) {
+			this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());
+			this.getManagedBean().getQt().getProcurementTypeCatId().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+			this.getManagedBean().getQt().getFulfilmentType().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getPmProcurementCategory()) {
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+			this.getManagedBean().getQt().getPmProcurementCategory().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getContractType()) {
+			this.getManagedBean().getQt().setContractType(new PmParameter());
+			this.getManagedBean().getQt().getContractType().setParameterId((long) 0);
+		}
+		// #10098 End Vinod
 	}	
 
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
@@ -15227,6 +15271,176 @@ public void retrieveDemoQtDetails(Long qtId) {
         );
         return triggerStatuses.contains(statusId);
 	}
+	
+	// #10098 Start Vinod
+	/**
+	 * Method to Auto Save the QT details when qt number is not generated.
+	 */
+	public void autosaveQtDetailsAction() {
+		debugLogger("start of autosaveQtDetailsAction");
+
+		this.getManagedBean().setSaveFlow(true);
+		try {
+
+			Long currentStatus = this.getManagedBean().getCurrentStatusId();
+			PmOrgProfile qtOrgProfile = this.getManagedBean().getQt().getPmOrgProfile();
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus) && qtOrgProfile != null
+					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
+				throw new EpException(MessageConst.ERROR_760450);
+			}
+
+			ScQt scQt = this.getManagedBean().getQt();
+
+			validateQtDetails();
+			retrieveScQtHist();
+			validateIsSupplierQualificationCriteriaChange();
+			validateIsZonalAdded();
+			checkDemoPresentationByStatus();
+
+			if (scQt.getQtNo() == null && scQt.isBrandNew()) {
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+				reqDTO.setQtdetail(this.getManagedBean().getQt());
+				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+				detailSO.updateDraftWorkflowStatus(reqDTO);
+
+				successMessage(MessageConst.INFO_7000108, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+			}
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtNo() != null ? this
+					.getManagedBean().getQt().getQtNo()
+					: " ";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKING_BEAN, qtNo,
+					SLALogConstant.QT_AUTOSAVE_QT_DETAILS_ACTION, getUserIdSessionFromLoginId(), e);
+		}
+
+	}
+
+	// #10098 End Vinod
+
+	// #10098 Start Vinod
+	/**
+	 * Method to Auto Save the QT details when the tab is changed.
+	 * 
+	 * @param quationTenderReqDTO
+	 */
+	private void saveSidemenuQtDetailsAction(QuationTenderReqDTO quationTenderReqDTO) {
+		debugLogger("start of saveSidemenuQtDetailsAction");
+
+		String taskId = this.getManagedBean().getTaskId();
+		String taskName = this.getManagedBean().getTaskName();
+		String[] outComes = this.getManagedBean().getOutComes();
+		String processName = this.getManagedBean().getProcessName();
+		Object payLoad = this.getManagedBean().getPayLoad();
+		Long currentStatus = this.getManagedBean().getCurrentStatusId();
+		quationTenderReqDTO.setSaveFlow(true);
+		quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+		FacesScopes facesScopes = new FacesScopes();
+		quationTenderReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		quationTenderReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+
+		this.getManagedBean().setScQtRemarksEmpty(false);
+		initializeQtRemark();
+
+		resetItemGroup();
+
+		IQTDetailSO detailSO;
+		QuationTenderResDTO quationTenderResDTO = null;
+
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+
+			if (this.getManagedBean().isScQtRemarksEmpty()) {
+				this.getManagedBean().getQt().setScQtRemarks(null);
+			}
+			quationTenderResDTO = detailSO.saveQTDetailsForDraft(quationTenderReqDTO);
+
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtNo() != null ? this
+					.getManagedBean().getQt().getQtNo()
+					: " ";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKING_BEAN, qtNo,
+					SLALogConstant.QT_SAVE_SIDE_MENU_QT_DETAILS_ACTION, getUserIdSessionFromLoginId(), e);
+		}
+		renewQTSesionObject();
+
+		this.getManagedBean().setTaskName(taskName);
+		if (quationTenderResDTO != null && quationTenderResDTO.getQtDetail() != null) {
+			this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
+		}
+		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setOutComes(outComes);
+		this.getManagedBean().setProcessName(processName);
+		this.getManagedBean().setCurrentStatusId(currentStatus);
+		this.getManagedBean().setPayLoad(payLoad);
+	}
+
+	// #10098 End Vinod
+	// #10098 Start Vinod
+	private void resetItemGroup() {
+		if (null == this.getManagedBean().getQt().getItemGroup()) {
+			this.getManagedBean().getQt().setCircularVer(null);
+		} else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()
+				|| this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
+			this.getManagedBean().getQt().setItemGroup(null);
+			this.getManagedBean().getQt().setCircularVer(null);
+		}
+	}
+
+	// #10098 End Vinod
+	// #10098 Start Vinod
+	/**
+	 * Method to initialize QT Remark.
+	 * 
+	 */
+	private void initializeQtRemark() {
+
+		boolean emptyRemarksExist = false;
+		if (null != this.getManagedBean().getQt().getScQtRemarks()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
+				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					emptyRemarksExist = true;
+					this.getManagedBean().setScQtRemarksEmpty(true);
+				} else {
+					emptyRemarksExist = false;
+				}
+			}
+
+			if (emptyRemarksExist) {
+				ScQt scQt = this.getManagedBean().getQt();
+				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+			} else {
+				ScQt scQt = this.getManagedBean().getQt();
+				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+			}
+
+		} else if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+			this.getManagedBean().setScQtRemarksEmpty(true);
+		}
+	}
+
+	// #10098 End Vinod
 	
 	//#28188 - Start
 	private void setAmmendMentBeanBSV(ScQt scQt, QtAmendMentBean amendMentBean) {
