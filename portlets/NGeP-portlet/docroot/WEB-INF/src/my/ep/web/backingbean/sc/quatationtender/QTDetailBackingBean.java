@@ -15082,8 +15082,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
 			List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
-			for (TabBean committeeTab : committeeTabList){
-				if (!committeeTab.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
+			for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
+				if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
 					this.getManagedBean().setShowCategoryCodePanel(false);
 					break;
 				}
