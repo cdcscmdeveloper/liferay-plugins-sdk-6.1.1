@@ -3746,7 +3746,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
-		//#35350 - Start;
+		//#35320 - Start;
 		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
 			if (scQt.getFinalizationCommitte().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
@@ -3759,7 +3759,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		//#35350 - End
+		//#35320 - End
 		
 		if (finalizationSecratary == null
 				&& isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
