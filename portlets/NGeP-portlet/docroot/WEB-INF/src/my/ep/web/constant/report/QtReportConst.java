@@ -37,15 +37,20 @@ public class QtReportConst implements Serializable {
 	public static final String SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL = "SC_046";
 	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
 	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
+	public static final String SC_BRIEFING_PAPER_RPT_VAL_WIP = "SC_081";
 	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_049";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_082";
 	public static final String SC_LETTER_OF_ACCPT_CONTENT_RPT_VAL = "SC_075";
 	//#21692 - Start
 	public static final String SC_PROP_VALID_PERIOD_EXT_RPT_VAL = "SC_076";
 	public static final String SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL = "SC_080";
-	//#21692 - End
+	//#21692 - End	
 	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
+	public static final String SC_OPENING_COMMITTEE_RPT_VAL_WIP = "SC_084";
 	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
+	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_085";
 	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
+	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_083";
 	
 	
 	//Report parameterKey
@@ -71,7 +76,7 @@ public class QtReportConst implements Serializable {
 	//#21692 - End
 	
 	public static final String VELOCITY_CTX_KEY_MOFNO  = "mofNo";// 29819
-	
+
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
 	 */
@@ -173,10 +178,40 @@ public class QtReportConst implements Serializable {
 		return SC_PROP_VALID_PERIOD_EXT_RPT_VAL;
 	}
 	//#21692 - End
-
+	
 	//#21692 - Start
 	public String getSC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL() {
 		return SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL;
 	}
 	//#21692 - End
+	
+	//#35015-start
+	/**
+	 * @return the scEvaluationCommitteeRptValWip
+	 */
+	public String getScEvaluationCommitteeRptValWip() {
+	    return SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	}
+
+	/**
+	 * @return the scOpeningCommitteeRptValWip
+	 */
+	public String getScOpeningCommitteeRptValWip() {
+	    return SC_OPENING_COMMITTEE_RPT_VAL_WIP;
+	}
+
+	/**
+	 * @return the scTechinicalEvaluationCommitteeRptValWip
+	 */
+	public String getScTechinicalEvaluationCommitteeRptValWip() {
+	    return SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	}
+
+	/**
+	 * @return the scFinancialEvaluationCommitteeRptValWip
+	 */
+	public String getScFinancialEvaluationCommitteeRptValWip() {
+	    return SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	}
+	//#35015 -end
 }
