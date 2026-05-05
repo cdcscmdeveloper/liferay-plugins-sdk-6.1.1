@@ -134,11 +134,11 @@
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					action="#{requestNoteBackingBean.saveAction('')}" />
-
+				<ui:remove>#27868 - add outcome SUBMIT</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					update="@([id$=requestNoteId])" onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
-					action="#{requestNoteBackingBean.submitAction('')}" process="@all">
+					action="#{requestNoteBackingBean.submitAction('SUBMIT')}" process="@all">
 					<f:setPropertyActionListener
 						target="#{requestNoteBackingBean.managedBean.action}" value="" />
 				</p:commandButton>

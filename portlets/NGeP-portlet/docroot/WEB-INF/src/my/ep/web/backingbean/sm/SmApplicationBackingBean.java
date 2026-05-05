@@ -1264,6 +1264,17 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 			getManagedBean().setProfBodyLs(
 					SmApplicationUtil.retrievePmProfBodyList());
+			// #39502 - START
+			for(PmCertBody profBody : getManagedBean().getProfBodyLs()){
+				if(profBody.getBodyName().length() > 71 ){
+					profBody.setBodyDsc(profBody.getBodyName()); 
+					String truncName = profBody.getBodyName().substring(0,70) + "...";
+					profBody.setBodyName(truncName);
+				}
+			}
+			// #39502 - END
+
+			
 			getManagedBean().setProfBodyItems(
 					SmApplicationUtil.getProfBodyItems());
 
@@ -4711,7 +4722,10 @@ public class SmApplicationBackingBean extends
 		// validate branch
 		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
 				currentTab, true);
-
+		
+		// validate bank 
+		SmApplicationUtil.validateBankBeforeSave(true, getManagedBean(), -1);//#39860
+				
 		// validate facility
 		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
 
@@ -18947,7 +18961,6 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			
 			if (!getManagedBean().isOtherDescChangeSupplier()){
 				getManagedBean().setOtherDescChangeSupplier(true);
