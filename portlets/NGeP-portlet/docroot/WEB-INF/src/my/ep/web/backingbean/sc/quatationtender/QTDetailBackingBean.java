@@ -15026,14 +15026,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * Get category code list 
 	 */
 	public void getPanelCategory() {
-
-		// 29661 & 40089 -start-
-		boolean isFromTaskList = StringUtils.isNotBlank(this.getManagedBean()
-				.getTaskName())
-				&& StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
-				&& SCProcessNameConst.REVISE_COMMITTEE.equals(this
-						.getManagedBean().getTaskName());
-		// 29661 & 40089 -end-
 		
 		List<ScQtCategory> listScQtCategories = getQtSpecSO()
 				.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
@@ -15045,9 +15037,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 
 		// 29661 & 40089 -start-
-		else if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(status)
-				|| (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL
-						.equals(status) && isFromTaskList)) {
 			CtCircularVer ctCircularVer = this.getManagedBean().getQt()
 					.getCircularVer();
 			Long circularVerId;
@@ -15081,16 +15070,15 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
-			List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
-			for (TabBean committeeTab : committeeTabList){
-				if (!committeeTab.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
-					this.getManagedBean().setShowCategoryCodePanel(false);
-					break;
+			if (isQTStatusPublished(status)){
+				List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
+				for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
+					if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
+						this.getManagedBean().setShowCategoryCodePanel(false);
+						break;
+					}
 				}
-			}
-		}else{
-			this.getManagedBean().setShowCategoryCodePanel(false);
-		}
+			}		
 		//#29661 #40094 End
 	}
 	
