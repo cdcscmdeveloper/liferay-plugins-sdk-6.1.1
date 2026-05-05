@@ -147,7 +147,19 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	private String gstAmtChange = null;
 	private String sTaxAmtChange = null;	
 	//26686 end
+	
+	//#30737 - Start 
+	@Override
+    protected String getTaskName() {
+        return getManagedBean().getTaskName();
+    }
 
+    @Override
+    protected List<PmUser> getSelectedUsers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    //#30737 - End
+	    
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.

@@ -111,6 +111,18 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
+	//#30737 - Start 
+	@Override
+    protected String getTaskName() {
+        return getManagedBean().getTaskName();
+    }
+
+    @Override
+    protected List<PmUser> getSelectedUsers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    //#30737 - End
+	    
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -798,6 +810,19 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				getManagedBean().setTextBeforeSign(sb.toString());	
 				getManagedBean().setButtonAction(action);
 			}
+			
+			//#30737 - Start
+			log.info("xoxoxoxoxo action : "+action);
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				log.info("xoxoxoxoxooxoxox SUBMITTT!!!!!!");
+				log.info("insert tracking diary record....");
+			}
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+				log.info("xoxoxoxoxooxoxox ACKNOWLEDGE FACTORING!!!!!! ERROR_100068");
+//				ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_ACKNOWLEDGE, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "SUPARJO");
+			}
+			//#30737 - End
+			
 		}
 	}
 

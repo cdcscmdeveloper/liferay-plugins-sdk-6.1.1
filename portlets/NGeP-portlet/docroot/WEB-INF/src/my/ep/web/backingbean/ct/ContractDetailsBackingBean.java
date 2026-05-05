@@ -167,6 +167,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private ContractBackingBean ctBB = null;
 	private CtAgency selectedRecommendedAgency;
 	
+	//#30737 - Start 
+	@Override
+    protected String getTaskName() {
+        return getManagedBean().getTaskName();
+    }
+
+    @Override
+    protected List<PmUser> getSelectedUsers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    //#30737 - End
+	    
 	//#13847 start
 	/**
 	 * initialize mapping to contain status for approval for bond waiver/deferment
@@ -1535,7 +1547,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			log.info("xoxoxoxoxooxoxox SUBMITTT!!!!!! ERROR_100068");
-			getManagedBean().setSelectedTabIndex(0);
+//			getManagedBean().setSelectedTabIndex(0);
 //			ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_SUBMIT, getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
 		}
 		

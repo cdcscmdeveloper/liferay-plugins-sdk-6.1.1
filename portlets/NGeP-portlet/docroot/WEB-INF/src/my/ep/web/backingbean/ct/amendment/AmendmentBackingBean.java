@@ -241,6 +241,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public static final boolean REDUCTION_OF_CONTRACT_VALUE = true;
 	//#24336 - End
 	
+	//#30737 - Start 
+	@Override
+    protected String getTaskName() {
+        return getManagedBean().getTaskName();
+    }
+
+    @Override
+    protected List<PmUser> getSelectedUsers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    //#30737 - End
+	    
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -8045,25 +8057,38 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		//#30737 - Start
 		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			//#3 amendment with
-			log.info("xoxoxoxoxooxoxox REVISE AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
-			//ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
-		}
+		
+		CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(getUserRole());
+		reqDTO.setOutcome(action);
+		reqDTO.setCtContractVer(ctContractVer);
+		
+		log.info("xoxoxoxoxooxoxo action : "+action);
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT - ERROR_100069");
+            handleInactiveUserCheck(
+            	reqDTO,
+            	ctContractVer,
+                MessageConst.ERROR_100069,
+                new String[]{"DOCS/MOF/888290", "RAMLEEE"}
+            );
+        }
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			//# amendment with
 			//# 
 			/// for cancel, not sure display error or not. ?
 			log.info("xoxoxoxoxooxoxox CANCEL AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
-			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_CANCEL, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "SUPARJO");
+//			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_CANCEL, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "SUPARJO");
 			// send group task
 			//..
 		}
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			log.info("xoxoxoxoxooxoxox REJECT AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
-			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_REJECT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+//			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_REJECT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
 		}
 		//#30737 - End
 

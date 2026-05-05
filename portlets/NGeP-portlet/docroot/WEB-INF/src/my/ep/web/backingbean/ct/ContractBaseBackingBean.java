@@ -17,12 +17,14 @@ import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.actor.CtActorReqDTO;
 import my.ep.dto.ct.actor.CtActorResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -30,6 +32,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -353,5 +356,64 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 			//throw new EpException(MessageConst.ERROR_750040);
 		}
 	}
+	
+	//#30737 - Start
+	protected void handleInactiveUserCheck(ContractReqDTO reqDTO, CtContractVer contractVer, String errorCode, String[] messageKeys) {
+
+		IContractSO iContractSO = null;
+		
+		log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
+		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
+		log.info("xoxoxoxoxooxoxo contractVer : "+contractVer.getContractVerId());
+		log.info("xoxoxoxoxooxoxo getTaskName() : "+getTaskName());
+    	log.info("xoxoxoxoxooxoxo getSelectedUsers() : "+getSelectedUsers());
+    	
+        try {
+        	iContractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+        	
+        	iContractSO.checkInactiveUserOnAction(
+        		reqDTO,
+        		contractVer,
+                getTaskName(),
+                getSelectedUsers()
+            );
+        	
+        	// TEMP: force error
+        	// TODO if action = REVISE no exception/alert
+        	log.info("xoxoxoxoxoxoxo force throw error");
+            throw new EpException(errorCode);
+
+        } catch (EpException ex) {
+
+        	log.info("xoxoxoxoxoxoxo inside EpException");
+        	
+            String[] resolvedMessages;
+
+            if (messageKeys != null && messageKeys.length > 0) {
+
+                resolvedMessages = new String[messageKeys.length];
+
+                for (int i = 0; i < messageKeys.length; i++) {
+                    resolvedMessages[i] = ResourceBundleUtils.getMessage(
+                        messageKeys[i],
+                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+                        getFacesScopes().getUserLocale()
+                    );
+                }
+
+                throw new EpException(errorCode, resolvedMessages);
+
+            } else {
+                throw new EpException(errorCode);
+            }
+        }
+    }
+	
+	protected abstract String getTaskName();
+    protected abstract List<PmUser> getSelectedUsers();
+    
+    //#30737 - End
+    
 }
 

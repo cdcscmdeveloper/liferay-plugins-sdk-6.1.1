@@ -115,6 +115,19 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	private CtAgency selectedRecommendedAgency;
 	private IPagingDataModel<CtAgency> agencyDataModel = new AgencyPagingDataModel();	
 	SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+	
+	//#30737 - Start 
+	@Override
+    protected String getTaskName() {
+        return getManagedBean().getTaskName();
+    }
+
+    @Override
+    protected List<PmUser> getSelectedUsers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    //#30737 - End
+	    
 	/**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM

@@ -93,6 +93,18 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
+	//#30737 - Start 
+	@Override
+    protected String getTaskName() {
+        return getManagedBean().getTaskName();
+    }
+
+    @Override
+    protected List<PmUser> getSelectedUsers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    //#30737 - End
+    
 	/**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
@@ -716,18 +728,26 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			throw new EpException(MessageConst.ERROR_750010); 
 		}
 		
-		//#30737 - Start (suspend)
-		//suspend contract
-		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
-		log.info("xoxoxoxoxoxo outcome: "+outcome);
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			log.info("xoxoxoxoxooxoxox SUBMIT SUSPEND!!!!!! ERROR_100068");
-//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
-		}
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			log.info("xoxoxoxoxooxoxox REVISE SUSPEND!!!!!! ERROR_100069");
-			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
-		}
+		//#30737 - Start
+//		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+//		log.info("xoxoxoxoxooxoxo action : "+outcome);
+//		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+//			log.info("xoxoxoxoxooxoxo SUBMIT SUSPEND - ERROR_100068");
+//            handleInactiveUserCheck(
+//            	ctContractVer,
+//                MessageConst.ERROR_100068,
+//                new String[]{"DOCS/MOF/888290", "RAMLEEE"}
+//            );
+//        }
+//		
+//		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+//			log.info("xoxoxoxoxooxoxo REVISE SUSPEND - ERROR_100069");
+//            handleInactiveUserCheck(
+//            	ctContractVer,
+//                MessageConst.ERROR_100069,
+//                new String[]{"DOCS/MOF/888290", "RAMLEEE"}
+//            );
+//        }
 		//#30737 - End
 		
 	}

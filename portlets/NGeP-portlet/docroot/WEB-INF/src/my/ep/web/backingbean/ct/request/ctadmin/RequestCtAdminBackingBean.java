@@ -76,6 +76,18 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	private static Logger log = Logger.getLogger(RequestCtAdminBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
+	//#30737 - Start 
+	@Override
+    protected String getTaskName() {
+        return getManagedBean().getTaskName();
+    }
+
+    @Override
+    protected List<PmUser> getSelectedUsers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    //#30737 - End
+	
 	/**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM

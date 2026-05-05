@@ -25,6 +25,7 @@ import java.util.Locale; //24333
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -54,6 +55,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -142,6 +144,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.ct.CtAddressUtil;
@@ -195,7 +198,7 @@ import org.primefaces.model.UploadedFile;
 public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	private static Logger log = EpLogger.getLogger(ContractBackingBean.class);
-
+	
 	private static final long serialVersionUID = 1L;
 	private CtSchedule[] selectedSchedule;
 	private CtProgressivePayment[] selectedProgressive;
@@ -5364,92 +5367,106 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	// #37620,#34367 - End
 	
 	//#30737 - Start
-	public void checkInactiveUserOnAction(String action, String taskName, List<PmUser> selectedUsers, String errorCode, String... messageKeys) {
-
-		// Check user by scenario
-		// if no active user, display another notificiation (2.2.1) and send notification to dashboard (2.2.2)
-		// *selected* insert new tracking diary (next role but send to group task instead)
-		
-		// submit = alert popup + 2.2.1 + 2.2.2
-		// submit = 2.1 + 2.2.1 + 2.2.2 + new tracking :: MCA/CCA -> CA
-		// submit = no alert + 2.2.1 + 2.2.2 + tracking diary :: supplier -> MCA/CCA
-		
-		// revise = no alert + 2.2.1 + 2.2.2 + tracking diary
-		
-		// approve = no alert + 2.2.1 + 2.2.2 + tracking diary  :: CA -> MCA/CCA
-		// aprrove = alert + 2.2.1 + 2.2.2  :: CA -> DO
-		
-		// cancel = no alert + 2.2.1 + 2.2.2 + tracking diary :: DO -> MCA/CCA
-		
-		// SIGN OFF = no alert + 2.2.1 + 2.2.2 + tracking diary :: CHAIR -> MCA/CCA
-		
-		// reject = no alert + 2.2.1 + 2.2.2 + tracking diary
-		
-		// submit @ approve = MCA/CCA @ CA -> supplier = no alert, only system action
-		
-		// acknowledge = no alert + 2.2.1 + 2.2.2 + tracking diary  :: supplier -> MCA/CCA 
-		
-		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && selectedUsers.isEmpty()){
-			log.info("xoxoxoxoxo no selected user");
-		}else{
-			
-			log.info("xoxoxoxoxo else");
-			
-			if(!selectedUsers.isEmpty()){
-				for(PmUser a : selectedUsers){
-					log.info("xoxoxoxoxo username! selectedUsers : "+a.getUserName());
-				}
-			}
-			
-			//check user active
-			//check scenario 1 - if not active show alert
-			
-			//check scenario 2 - if active but in differenct organization (tak paham)
-			
-			//check scenario 3 - if user active, same org, but role not active (tak paham)
-			
-			//check scenario 4 - No user is active for the original role in the same organization ????
-			
-			
-			//insert tracking diary
-//			if (actionDesc != null) {
-//				try {
-//					trackingDiarySO.insertTrackingDiary(
-//							actionDesc, actionBy, rolecode,  // #25791 & #26475
-//							ctAgreement.getAgreementId(),
-//							ctAgreement.getCtContract().getContractNo(), 
-//							reqDTO.getDocType(),
-//							ctAgreement.getCtContract().getContractId(),
-//							statusId,
-//							ctAgreement.getCtContract().getContractType() !=null ? ctAgreement.getCtContract().getContractType().getParameterCode() : null);
-//				} catch(Exception e) {
-//					throw new EpException(MessageConst.ERROR_000001);				
-//				}
-//			}
-			
-			//dashboard notification
-			
-			
-			
-			FacesScopes facesScopes = new FacesScopes();
-		    String[] resolvedMessages = new String[messageKeys.length];
-
-		    for (int i = 0; i < messageKeys.length; i++) {
-		        resolvedMessages[i] = ResourceBundleUtils.getMessage(
-		                messageKeys[i],
-		                ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-		                facesScopes.getUserLocale()
-		        );
-		    }
-		    
-		    if (messageKeys == null || messageKeys.length == 0) {
-		        throw new EpException(errorCode);
-		    }
-		    throw new EpException(errorCode, resolvedMessages);
-		    
-		}
-	
-	}
+//	public void checkInactiveUserOnAction(String action, String taskName, List<PmUser> selectedUsers, String errorCode, String... messageKeys) {
+//
+//		// Check user by scenario
+//		// if no active user, display another notificiation (2.2.1) and send notification to dashboard (2.2.2)
+//		// *selected* insert new tracking diary (next role but send to group task instead)
+//		
+//		// submit = alert popup + 2.2.1 + 2.2.2
+//		// submit = 2.1 + 2.2.1 + 2.2.2 + new tracking :: MCA/CCA -> CA
+//		// submit = no alert + 2.2.1 + 2.2.2 + tracking diary :: supplier -> MCA/CCA
+//		
+//		// revise = no alert + 2.2.1 + 2.2.2 + tracking diary
+//		
+//		// approve = no alert + 2.2.1 + 2.2.2 + tracking diary  :: CA -> MCA/CCA
+//		// aprrove = alert + 2.2.1 + 2.2.2  :: CA -> DO
+//		
+//		// cancel = no alert + 2.2.1 + 2.2.2 + tracking diary :: DO -> MCA/CCA
+//		
+//		// SIGN OFF = no alert + 2.2.1 + 2.2.2 + tracking diary :: CHAIR -> MCA/CCA
+//		
+//		// reject = no alert + 2.2.1 + 2.2.2 + tracking diary
+//		
+//		// submit @ approve = MCA/CCA @ CA -> supplier = no alert, only system action
+//		
+//		// acknowledge = no alert + 2.2.1 + 2.2.2 + tracking diary  :: supplier -> MCA/CCA 
+//		
+////		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && selectedUsers.isEmpty()){
+////			log.info("xoxoxoxoxo no selected user");
+////		}else{
+//			
+////			log.info("xoxoxoxoxo else");
+////			
+////			if(!selectedUsers.isEmpty()){
+////				for(PmUser a : selectedUsers){
+////					log.info("xoxoxoxoxo username! selectedUsers : "+a.getUserName());
+////				}
+////			}
+//			
+//			//check user active
+//			//check scenario 1 - if not active show alert
+//			
+//			//check scenario 2 - if active but in differenct organization (tak paham)
+//			
+//			//check scenario 3 - if user active, same org, but role not active (tak paham)
+//			
+//			//check scenario 4 - No user is active for the original role in the same organization ????
+//			
+//			
+////			String trackingDiaryRecord = getActionDesc(MessageConst.ERROR_100069, new String[] {"MOF/FILE/01", "ENCIK TDR"});
+////			log.info("trackingDiaryRecord "+trackingDiaryRecord);
+//			
+//			//insert tracking diary
+////			if (trackingDiaryRecord != null) {
+////				try {
+////					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ITrackingDiarySO.class);
+////					trackingDiarySO.insertTrackingDiary(
+////							trackingDiaryRecord, actionBy, rolecode,
+////							ctAgreement.getAgreementId(),
+////							ctAgreement.getCtContract().getContractNo(), 
+////							reqDTO.getDocType(),
+////							ctAgreement.getCtContract().getContractId(),
+////							statusId,
+////							ctAgreement.getCtContract().getContractType() !=null ? ctAgreement.getCtContract().getContractType().getParameterCode() : null);
+////				} catch(Exception e) {
+////					throw new EpException(MessageConst.ERROR_000001);				
+////				}
+////			}
+//			
+//			//dashboard notification
+//			//...
+//			
+//			// Alert notification
+//			FacesScopes facesScopes = new FacesScopes();
+//		    String[] resolvedMessages = new String[messageKeys.length];
+//
+//		    for (int i = 0; i < messageKeys.length; i++) {
+//		        resolvedMessages[i] = ResourceBundleUtils.getMessage(
+//		                messageKeys[i],
+//		                ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//		                facesScopes.getUserLocale()
+//		        );
+//		    }
+//		    
+//		    if (messageKeys == null || messageKeys.length == 0) {
+//		        throw new EpException(errorCode);
+//		    }
+//		    throw new EpException(errorCode, resolvedMessages);
+//		    
+////		}
+//	
+//	}
+//	
+//	/**
+//	 * Method to get type of language description
+//	 * @param messageId, Params
+//	 * @return String
+//	 */
+//	private String getActionDesc(String messageId, String[] params){
+//		Locale myLocale = new Locale(CommonConstants.TRACKING_DIARY_LANGUAGE_CODE,CommonConstants.TRACKING_DIARY_COUNTRY_CODE);
+//		return MessageUtils.getMessage(messageId, params, MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);			
+//	}
 	//#30737 - End
 	
 }  
