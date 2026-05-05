@@ -4,7 +4,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.web.bean.au.AuditPatchSearchBean;
-import my.ep.web.bean.pm.AuditPMSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
