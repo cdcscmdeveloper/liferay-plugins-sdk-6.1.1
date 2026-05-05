@@ -6134,7 +6134,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (isGroupOrgTypeKumpPtjAndMinistryHierarchy(groupOrgType)) {
 			setupGroupOrgTypeKumpPtjAndMinistryHierarchy(orgProfileId, groupOrgType);
 		} else if (isGroupOrgTypeHierarchy(groupOrgType)) {
-			setupApproveOtherPtjProOrgHierarchy(orgProfileId);
+			setupApproveOtherPtjProcOrgHierarchy(orgProfileId);
 		}
 	}
 	//#39693_40086 - End
@@ -9323,7 +9323,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 
-	private void setupApproveOtherPtjProOrgHierarchy(Long orgProfileId) {
+	private void setupApproveOtherPtjProcOrgHierarchy(Long orgProfileId) {
 		//usual org hierarchy
 		if (isRolePlanner() || isRoleVerifier() || isRoleApprover()) {
 			setupGroupOrgTypeN(orgProfileId);
