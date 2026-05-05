@@ -2021,11 +2021,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private boolean isAuditor(){
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
 	}
+	
 	//#39693_40086 - Start
 	private boolean isRoleAuditorInternal(){
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
 	}
 	//#39693_40086 - End
+	
 	/**
 	 * Login user has planner role
 	 * @return boolean
@@ -9299,7 +9301,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	//#39693_40086 - Start
 	private boolean isGroupOrgTypeKumpPtjAndMinistryHierarchy(String groupOrgType) {
 		return groupOrgType != null
-				&& (ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(groupOrgType) || ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(groupOrgType));
+				&& (ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(groupOrgType)
+				|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(groupOrgType));
 	}
 
 	private boolean isGroupOrgTypeHierarchy(String groupOrgType) {
