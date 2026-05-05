@@ -1381,7 +1381,9 @@ public class SmApplicationUtil {
 		int payAccCnt = 0;
 		int regAccCnt = 0;
 		StringBuffer sb = new StringBuffer();
+		sb.append("<br/>"); //#39860
 		int noSignatoryCount = 0;
+		int signatoryNotBumiCount = 0; //#39860
 		List<SmSupplierBranch> paymentAccBranch = new ArrayList<SmSupplierBranch>();
 
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
@@ -1417,6 +1419,16 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+			//#39860 --START
+			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
+					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						sb.append(++signatoryNotBumiCount + ". ");
+						sb.append(smChequeSignatory.getSmPersonnel().getName());
+						sb.append("<br/>");
+					}	
+				}	
+			}//#39860 --END
 		}
 		if (payAccCnt == 0) {
 			validSave = false;
@@ -1434,7 +1446,14 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-
+		//#39860 --START
+		if (signatoryNotBumiCount > 0) {
+			log.info("signatoryNotBumiCount"+signatoryNotBumiCount);
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
+			}//#39860 --END
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
 		return validSave;
@@ -4673,7 +4692,6 @@ public class SmApplicationUtil {
 						prevList.add(previouscat);
 					}
 				}
-				retrieveNewRegOtherDescHistory(managedBean, prevList, managedBean.getSmAppl().getSmSupplier()); // add KN history
 			}
 			// 36504 - END
 			
@@ -16057,52 +16075,6 @@ public class SmApplicationUtil {
 
 		return SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveOtherDescHistory(supplierCategoryId);
-	}
-	
-	/**
-	 * 
-	 * @param managedBean 
-	 * @param prevList 
-	 * @param smSupplier.()
-	 * @return
-	 */
-	public static void retrieveNewRegOtherDescHistory(SmApplicationManagedBean managedBean, List<SmSupplierCategory> prevList, SmSupplier smSupplier) {
-		SmAppl newRegHistoryList = new SmAppl();
-		newRegHistoryList = SmServiceLookup.getMofRegistrationSO().findNewRegOtherDescHistory(smSupplier.getSupplierId());
-		
-		if (newRegHistoryList != null) {
-			for (SmSupplierCategory previouscat : newRegHistoryList.getSmSupplierCategories()) {
-				if (!smSupplier.getSmAppl().getApplId().equals(newRegHistoryList.getApplId())) {
-					String catType = previouscat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
-					previouscat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
-	
-					if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
-						
-						previouscat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previouscat.getSupplierCategoryId()));
-						
-						for (SmSuppCatOtherDescHistory history : previouscat.getSmSuppCatOtherDescHistory()) {
-							if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
-									&& !managedBean.isOtherDescChangePOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-								managedBean.setOtherDescChangePOPrev(true);
-							} else if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
-									&& !managedBean.isOtherDescChangeApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
-								managedBean.setOtherDescChangeApproverPrev(true);
-							} else if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
-									&& !managedBean.isOtherDescChangeSupApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
-								managedBean.setOtherDescChangeSupApproverPrev(true);
-								managedBean.setOtherDescChangeSupplierPrev(true);
-							} else if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
-									&& !managedBean.isOtherDescChangeSupPOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
-								managedBean.setOtherDescChangeSupPOPrev(true);
-								managedBean.setOtherDescChangeSupplierPrev(true);
-							}
-						}
-						prevList.add(previouscat);
-					}
-				}
-			}
-		}
 	}
 	// 36504 - END
 
