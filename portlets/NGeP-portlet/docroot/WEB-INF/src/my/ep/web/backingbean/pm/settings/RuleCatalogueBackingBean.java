@@ -5723,63 +5723,6 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	/**
-	 * #36738 #27827 filter rule values by description
-	 * to be added with #27827
-	 * @param configRuleValuesList
-	 * @param searchRuleValueDesc
-	 * @return
-	 */
-//	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList,
-//			String searchRuleValueDesc, Boolean multipleSearchFlag) {
-//		List<PmConfigRuleValue> result = new ArrayList<>();
-//
-//		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {
-//			String searchRegex = searchRegex(searchRuleValueDesc);
-//
-//			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
-//				String desc = configRuleValue.getRuleDescription() != null ? configRuleValue.getRuleDescription()
-//						.toLowerCase() : configRuleValue.getCategoryL3Id().getCategoryName().toLowerCase();
-//				if (desc.contains(searchRuleValueDesc.toLowerCase()) || desc.matches(searchRegex.toLowerCase())) {
-//					result.add(configRuleValue);
-//				}
-//			}
-//		}
-//
-//		if (CollectionUtils.isNotEmpty(result) || !multipleSearchFlag) {
-//			return result;
-//		} else {
-//			return configRuleValuesList;
-//		}
-//	}
-
-	/**
-	 * #36738 #27827 filter rule values by zone
-	 * to be added with #27827
-	 * @param configRuleValuesList
-	 * @param searchRuleZone
-	 * @param multipleSearchFlag
-	 * @return
-	 */
-//	private List<PmConfigRuleValue> searchByZone(List<PmConfigRuleValue> configRuleValuesList, Long searchRuleZone,
-//			Boolean multipleSearchFlag) {
-//		List<PmConfigRuleValue> result = new ArrayList<>();
-//
-//		if (searchRuleZone != null && searchRuleZone != 0) {
-//			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
-//				if (configRuleValue.getZoneId() != null && configRuleValue.getZoneId().equals(searchRuleZone)) {
-//					result.add(configRuleValue);
-//				}
-//			}
-//		}
-//
-//		if (CollectionUtils.isNotEmpty(result) || !multipleSearchFlag) {
-//			return result;
-//		} else {
-//			return configRuleValuesList;
-//		}
-//	}
-
-	/**
 	 * #36738 filter rule values by effective date and expiry date
 	 * 
 	 * @param configRuleValuesList
