@@ -3908,7 +3908,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			// #29006 - start - avoid error 100048
 			if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
-				addLastDocumentPayLoad(scLoa);
+				addLastDocumentPayLoad(scLoa);//#21692, #38604
 				AwardSupplierReqDTO suppReqDTO = new AwardSupplierReqDTO();
 				suppReqDTO.setLoaId(scLoa.getLoaId());
 				AwardSupplierResDTO suppResTO = getQtAwardSO()
@@ -12114,7 +12114,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	// 40252 - end
 
-	//#21692 - Start
+	//#21692, #38604 - Start
 	private void addLastDocumentPayLoad(ScLoa scLoa) {
 		if (scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
 			SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) getManagedBean().getPayLoad();
@@ -12122,5 +12122,5 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setPayLoad(awardSupplierDataType);
 		}
 	}
-	//#21692 - End
+	//#21692, #38604 - End
 }
