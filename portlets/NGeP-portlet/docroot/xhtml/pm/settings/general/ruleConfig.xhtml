@@ -23,7 +23,7 @@
 				</td>
 			</tr>
 		</table>
-
+		
 		<!-- 36738 Start -->
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
 			id="ruleTypeSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.ruleTypeCollapsePanel}">
@@ -44,7 +44,7 @@
 					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch ruleTypePanelGrid addButtonDiv" />
 			</div>
 		</p:panel>
-		<!-- 36738 End -->		
+		<!-- 36738 End -->
 		
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
@@ -150,7 +150,7 @@
 			</div>
 		</p:panel>
 		<!-- 36738 End -->
-							
+		
 		<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget"
 			rows="5"
 			value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.configRuleValues}"
@@ -360,7 +360,7 @@
 	             	#{lbl['lbl.pm.desc']}
 		       </f:facet>
 		      	#{typeValueObj.categoryL3Id.categoryName}
-		</p:column>
+			</p:column>
 
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">
@@ -498,8 +498,8 @@
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 
-		</h:panelGroup> <!-- #36738 -->
-				
+		</h:panelGroup><!-- #36738 -->
+		
 		<ac:confirmationPopup id="ruleValueDeleteId"
 				widget="ruleValueDeletePopUp"
 				okAction="#{ruleCatalogueBackingBean.deleteMoreRuleValue()}"

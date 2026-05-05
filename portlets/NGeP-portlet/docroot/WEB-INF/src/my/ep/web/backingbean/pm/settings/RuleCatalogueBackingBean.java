@@ -136,8 +136,7 @@ public class RuleCatalogueBackingBean extends
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = Logger
-			.getLogger(RuleCatalogueBackingBean.class);
+	private static Logger log = Logger.getLogger(RuleCatalogueBackingBean.class);
 
 	private ISearchBean<PmParameterDesc> parameterSearchBean;
 	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
@@ -173,8 +172,7 @@ public class RuleCatalogueBackingBean extends
 
 	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
 		if (this.parameterSearchBean == null) {
-			this.parameterSearchBean = super.createSearchBean(
-					PmParameterDesc.class, "parameterId");
+			this.parameterSearchBean = super.createSearchBean(PmParameterDesc.class, "parameterId");
 		}
 
 		return this.parameterSearchBean;
@@ -387,25 +385,21 @@ public class RuleCatalogueBackingBean extends
 			initQuotationWithTenderValue();
 			initYearEndForProcessing();
 			onAnyTabChange();//#36738
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
 			e.printStackTrace();
-			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					null, e.getMessage()));
+			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage()));
 			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 		}
 		return "";
 	}
 	
-	private void initYearEndForProcessing(){
+	private void initYearEndForProcessing() {
 		IFeeExemptionSO feeSO = null;
 		this.getManagedBean().setMinDate(null);//32333
 		
 		try {
-			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IFeeExemptionSO.class);
+			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
 			FeeExemptionResDTO resFDTO = null;
 			this.getManagedBean().getFeeExemptionsForYepProcessing().clear();
@@ -415,14 +409,14 @@ public class RuleCatalogueBackingBean extends
 			resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
 			
 			log.info("[#22119] resFDTO.getFeeExemptions size: " + resFDTO.getFeeExemptions().size());
-			/*22119*/
-//			String lang = getLanguage();
-			if(resFDTO != null && resFDTO.getFeeExemptions().size() > 0) {
+			/* 22119 */
+			// String lang = getLanguage();
+			if (resFDTO != null && resFDTO.getFeeExemptions().size() > 0) {
 				this.getManagedBean().setFeeExemptionsForYepProcessing(resFDTO.getFeeExemptions());
 			}
 		} finally {
 			feeSO = null;
-		}	
+		}
 	}
 
 	private void initConfigRule() {
@@ -4727,10 +4721,10 @@ public class RuleCatalogueBackingBean extends
 					.remove(deletedSpecialApproval);
 			}
 		}
-		// #36738 #40071 Start
+		//#36738 #40071 Start
 		if (resetMinistryDropdown) {
 			resetQtValues();
-		}// #36738 #40071 End
+		}//#36738 #40071 End
 	}
 	
 	public void selectPtjAction(List<PmOrgProfile> orgProfileList){
@@ -5070,6 +5064,7 @@ public class RuleCatalogueBackingBean extends
 		if(getManagedBean().getSelectedMinistryId() != null){
 			getManagedBean().setPtjSpecialApprovalList(new ArrayList<PmPtjSpecialApproval>());
 			for(PmPtjSpecialApproval approval : getManagedBean().getMainPtjSpecialApprovalList()){
+				//#36738
 				if(approval.getMinistry() != null &&
 						approval.getMinistry().getOrgProfileId().equals(getManagedBean().getSelectedMinistryId())){
 					getManagedBean().getPtjSpecialApprovalList().add(approval);
@@ -6033,7 +6028,7 @@ public class RuleCatalogueBackingBean extends
 	}
 	
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
-	    this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
+		this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
 	}
 	
 	/**
