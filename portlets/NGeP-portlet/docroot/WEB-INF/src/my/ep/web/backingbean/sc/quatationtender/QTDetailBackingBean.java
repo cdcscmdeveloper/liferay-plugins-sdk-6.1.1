@@ -15026,14 +15026,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * Get category code list 
 	 */
 	public void getPanelCategory() {
-
-		// 29661 & 40089 -start-
-		boolean isFromTaskList = StringUtils.isNotBlank(this.getManagedBean()
-				.getTaskName())
-				&& StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
-				&& SCProcessNameConst.REVISE_COMMITTEE.equals(this
-						.getManagedBean().getTaskName());
-		// 29661 & 40089 -end-
 		
 		List<ScQtCategory> listScQtCategories = getQtSpecSO()
 				.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
