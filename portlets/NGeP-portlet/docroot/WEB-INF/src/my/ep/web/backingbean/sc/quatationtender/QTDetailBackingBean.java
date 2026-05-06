@@ -15034,8 +15034,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setQtCategoryList(listScQtCategories);
 			this.getManagedBean().setCtPanelCategory(false);
 			this.getManagedBean().setShowCategoryCodePanel(true);//#29661 #40094
-		}
-
+		} else { //#29661 #40093 27th Apr
 		// 29661 & 40089 -start-
 			CtCircularVer ctCircularVer = this.getManagedBean().getQt()
 					.getCircularVer();
@@ -15078,7 +15077,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 						break;
 					}
 				}
-			}		
+				//#29661 #40093 27th Apr start
+				if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
+					this.getManagedBean().setShowCategoryCodePanel(false);
+				}
+			} //#29661 #40093 27th Apr end
+		}
 		//#29661 #40094 End
 	}
 	
