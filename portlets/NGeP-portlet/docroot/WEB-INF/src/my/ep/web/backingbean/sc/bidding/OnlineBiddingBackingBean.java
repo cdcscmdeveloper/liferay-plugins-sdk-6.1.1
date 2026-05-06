@@ -44,6 +44,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -313,12 +314,24 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 					Long docId = bidSchedule.getScBid().getDocId();
 					Long supplierId = resDTO.getSmSupplier().getSupplierId();
 
-					if (checkDisqualifiedSupplierBranchDeleted(docId, supplierId)) {
-						FacesContext.getCurrentInstance().addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-										MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+					if (bidSchedule.getTplSpecZoneDtl() != null) {
+						TplSpecZoneDtl tplSpecZoneDtl = bidSchedule.getTplSpecZoneDtl();
+						Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+						if (checkZonesDisqualifiedSupplierBranchDeleted(docId, supplierId, specZoneId)) {
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+											MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						}
+					} else {
+						if (checkDisqualifiedSupplierBranchDeleted(docId, supplierId)) {
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+											MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						}
 					}
 				}
 				// #28777 & #29729 - End
