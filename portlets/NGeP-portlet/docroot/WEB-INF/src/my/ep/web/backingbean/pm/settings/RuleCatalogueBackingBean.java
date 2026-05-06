@@ -5803,6 +5803,7 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
+		// #27827 to be deployed together - START
 		// search via desc
 		if (StringUtils.isNotBlank(searchRuleDesc)) {
 			List<PmConfigRuleValue> byDesc = searchByRuleValueDesc(originalList, searchRuleDesc, false);
@@ -5822,6 +5823,7 @@ public class RuleCatalogueBackingBean extends
 				resultList.retainAll(byZone);
 			}
 		}
+		// #27827 to be deployed together - END
 
 		// search via effective date and expiry date (exact date if only one, between if both)
 		if (searchEffDate != null || searchExpDate != null) {
@@ -5882,6 +5884,7 @@ public class RuleCatalogueBackingBean extends
 		return searchRuleTypeValueList;
 	}
 	
+	// #27827 to be deployed together - START
 	/**
 	 * #36738
 	 * filter rule values by description
@@ -5936,6 +5939,7 @@ public class RuleCatalogueBackingBean extends
 			return configRuleValuesList;
 		}
 	}
+	// #27827 to be deployed together - END
 	
 	/**
 	 * #36738
