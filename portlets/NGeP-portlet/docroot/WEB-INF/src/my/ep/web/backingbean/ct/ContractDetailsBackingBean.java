@@ -1540,24 +1540,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
 
-		//#30737 - Start 
-		//Amendment without supplemental
-		//Notification setting
-		//Fulfilment creation
-		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			log.info("xoxoxoxoxooxoxox SUBMITTT!!!!!! ERROR_100068");
-//			getManagedBean().setSelectedTabIndex(0);
-//			ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_SUBMIT, getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
-		}
-		
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			log.info("xoxoxoxoxooxoxox REVISE!!!!!! ERROR_100069");
-//			getManagedBean().setSelectedTabIndex(0);
-//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
-		}
-		//#30737 - End
-		
 		/*Validation for delivery term main page*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
 				!ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()
@@ -2064,6 +2046,42 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}*/
 		// End - 28292
+		
+		//#30737 - Start 
+		//Amendment without supplemental
+		//Notification setting
+		//Fulfilment creation
+		
+		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(getUserRole());
+		reqDTO.setOutcome(action);
+		reqDTO.setCtContractVer(ctContractVer);
+
+		log.info("xoxoxoxoxooxoxo action : "+action);
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName(); // add defensive code
+			log.info("xoxoxoxoxooxoxo SUBMIT AMENDMENT WITHOUT / NOTIFICATION SETTING / FULFILMENT CREATION - ERROR_100068");
+			//getManagedBean().setSelectedTabIndex(0);
+//            handleInactiveUserCheck(
+//            	reqDTO,
+//                MessageConst.ERROR_100068,
+//                new String[]{approverName}
+//            );
+        }
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT WITHOUT / NOTIFICATION SETTING / FULFILMENT CREATION");
+			//getManagedBean().setSelectedTabIndex(0);
+//			handleInactiveUserCheck(
+//            	reqDTO,
+//                null,
+//                null
+//            );
+        }
+		//#30737 - End
+		
 	}
 	//LOG : 13847, by Fahmi 22032019 start
 	/**

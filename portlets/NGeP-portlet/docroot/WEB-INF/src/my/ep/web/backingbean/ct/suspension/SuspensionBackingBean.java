@@ -738,11 +738,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		
 		log.info("xoxoxoxoxooxoxo action : "+outcome);
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName();
 			log.info("xoxoxoxoxooxoxo SUBMIT SUSPEND - ERROR_100068");
 //            handleInactiveUserCheck(
 //            	reqDTO,
 //                MessageConst.ERROR_100068,
-//                new String[]{"RAMLEEE"}
+//                new String[]{approverName}
 //            );
         }
 		
