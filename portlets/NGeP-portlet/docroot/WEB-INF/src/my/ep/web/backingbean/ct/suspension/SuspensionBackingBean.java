@@ -729,25 +729,31 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 		
 		//#30737 - Start
-//		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-//		log.info("xoxoxoxoxooxoxo action : "+outcome);
-//		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-//			log.info("xoxoxoxoxooxoxo SUBMIT SUSPEND - ERROR_100068");
+		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(getUserRole());
+		reqDTO.setOutcome(outcome);
+		reqDTO.setCtContractVer(ctContractVer);
+		
+		log.info("xoxoxoxoxooxoxo action : "+outcome);
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo SUBMIT SUSPEND - ERROR_100068");
 //            handleInactiveUserCheck(
-//            	ctContractVer,
+//            	reqDTO,
 //                MessageConst.ERROR_100068,
-//                new String[]{"DOCS/MOF/888290", "RAMLEEE"}
+//                new String[]{"RAMLEEE"}
 //            );
-//        }
-//		
-//		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-//			log.info("xoxoxoxoxooxoxo REVISE SUSPEND - ERROR_100069");
+        }
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo REVISE SUSPEND");
 //            handleInactiveUserCheck(
-//            	ctContractVer,
-//                MessageConst.ERROR_100069,
-//                new String[]{"DOCS/MOF/888290", "RAMLEEE"}
+//            	reqDTO,
+//                null,
+//                null
 //            );
-//        }
+        }
 		//#30737 - End
 		
 	}

@@ -3203,32 +3203,55 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#25890 - End
 		
 		//#30737 - Start
-		//Amendment with...
-		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+		CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(getUserRole());
+		reqDTO.setOutcome(action);
+		reqDTO.setCtContractVer(ctContractVer);
+		
+		log.info("xoxoxoxoxooxoxo action : "+action);
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			
+			// TODO ADD CHECKING APPROVER SELECTED OR NOT
+			
 			String taskName = getManagedBean().getTaskName();
-			log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT!!!!!!");
-			if(taskName == null){
-				//#3 amendment with
-				log.info("----- ERROR_100068");
-//				ctBackingBean.checkInactiveUserOnAction(getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
-				return;
-			}
-				
-			if(taskName.equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
-				log.info("----- ERROR_100071");
-//				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100071, "Role A", "RAMLEEE", "Role B", "SAIZURAF");
-			}else if(taskName.equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName();
+			String errorMessage = null;
+			String[] messageParams = null;
+			if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(taskName)) {
+			    log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT (UPDATE_FA_RESULT_HT_NAME) ERROR_100071");
+			    errorMessage = MessageConst.ERROR_100071;
+			    messageParams = new String[]{
+            	    "KADIR", //nama
+            	    "Chairperson", //role
+            	    "KADUK", //name
+            	    "Member" //role
+            	};
+			} else if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)) {
 				//Pending Supplemental Contract Letter Submission TO Pending Supplemental Contract Letter Approval / Revision Approval
-				log.info("----- ERROR_100072");
-//				ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100072, "MOF/DOC/2001", "ALI", "ABU");
-			}else{
-				//#3 submit revision amendment with
+			    log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT (PREPARE_LOA_HT_NAME) ERROR_100072");
+			    errorMessage = MessageConst.ERROR_100072;
+			    messageParams = new String[]{
+            	    "MOF/ABC/20002",
+            	    approverName,
+            	    "RAMLEEE"
+            	};
+			} else {
+				//Amendment with Supplemental -> Pending Amendment With Supplemental Approval
 				//Pending Supplemental Contract Letter Submission MCA submit (no action necessary), if signoff chairperson -> MCA (action needed)
-					//if approver -> MCA : check approve.
-				log.info("----- ERROR_100068");
-//				ctBackingBean.checkInactiveUserOnAction(getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
+				//if approver -> MCA : go to approve.
+			    log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT (ELSE) ERROR_100068");
+			    errorMessage = MessageConst.ERROR_100068;
+			    messageParams = new String[]{approverName};
 			}
+			
+            handleInactiveUserCheck(
+            	reqDTO,
+            	errorMessage,
+            	messageParams
+            );
+			
 		}
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
@@ -8055,9 +8078,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// #26688 end
 		
-		//#30737 - Start
-		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
 		
+		//#30737 - Start
 		CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -8068,17 +8090,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		log.info("xoxoxoxoxooxoxo action : "+action);
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT - ERROR_100069");
-            handleInactiveUserCheck(
-            	reqDTO,
-            	ctContractVer,
-                MessageConst.ERROR_100069,
-                new String[]{"DOCS/MOF/888290", "RAMLEEE"}
-            );
+//            handleInactiveUserCheck(
+//            	reqDTO,
+//                null,
+//                null
+//            );
         }
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			//# amendment with
-			//# 
 			/// for cancel, not sure display error or not. ?
 			log.info("xoxoxoxoxooxoxox CANCEL AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
 //			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_CANCEL, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "SUPARJO");

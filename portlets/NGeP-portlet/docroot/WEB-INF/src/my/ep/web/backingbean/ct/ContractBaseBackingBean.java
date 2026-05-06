@@ -358,35 +358,39 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	}
 	
 	//#30737 - Start
-	protected void handleInactiveUserCheck(ContractReqDTO reqDTO, CtContractVer contractVer, String errorCode, String[] messageKeys) {
+	protected void handleInactiveUserCheck(ContractReqDTO reqDTO, String errorCode, String[] messageKeys) {
 
+		// * If errorCode null mean there is no alert
+		
 		IContractSO iContractSO = null;
 		
 		log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
 		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
-		log.info("xoxoxoxoxooxoxo contractVer : "+contractVer.getContractVerId());
+		log.info("xoxoxoxoxooxoxo contractVer : "+reqDTO.getCtContractVer().getContractVerId());
 		log.info("xoxoxoxoxooxoxo getTaskName() : "+getTaskName());
     	log.info("xoxoxoxoxooxoxo getSelectedUsers() : "+getSelectedUsers());
     	
+    	// Checking if next process need user or not
+    	//....
+    	
         try {
-        	iContractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+        	
+        	iContractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
         	
         	iContractSO.checkInactiveUserOnAction(
         		reqDTO,
-        		contractVer,
-                getTaskName(),
+        		errorCode,
                 getSelectedUsers()
             );
         	
-        	// TEMP: force error
-        	// TODO if action = REVISE no exception/alert
-        	log.info("xoxoxoxoxoxoxo force throw error");
-            throw new EpException(errorCode);
+        	log.info("xoxoxoxoxoxoxo TEMPORARY force throw error");
+        	if(errorCode != null){
+        		throw new EpException(errorCode);
+        	}
 
         } catch (EpException ex) {
 
-        	log.info("xoxoxoxoxoxoxo inside EpException");
+        	log.info("xoxoxoxoxoxoxo catch EpException");
         	
             String[] resolvedMessages;
 
