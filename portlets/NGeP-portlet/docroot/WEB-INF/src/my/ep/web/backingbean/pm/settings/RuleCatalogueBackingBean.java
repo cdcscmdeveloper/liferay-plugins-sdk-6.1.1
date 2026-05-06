@@ -5638,26 +5638,6 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
-		// search via desc to be added with #27827
-//		if (StringUtils.isNotBlank(searchRuleDesc)) {
-//			List<PmConfigRuleValue> byDesc = searchByRuleValueDesc(originalList, searchRuleDesc, false);
-//			if (CollectionUtils.isEmpty(byDesc)) {
-//				resultList.clear();
-//			} else {
-//				resultList.retainAll(byDesc);
-//			}
-//		}
-
-		// search via zone to be added with #27827
-//		if (searchRuleZone != null && !searchRuleZone.equals(0L)) {
-//			List<PmConfigRuleValue> byZone = searchByZone(originalList, searchRuleZone, false);
-//			if (CollectionUtils.isEmpty(byZone)) {
-//				resultList.clear();
-//			} else {
-//				resultList.retainAll(byZone);
-//			}
-//		}
-
 		// search via effective date and expiry date (exact date if only one,
 		// between if both)
 		if (searchEffDate != null || searchExpDate != null) {
