@@ -560,16 +560,7 @@ public class MolPayServlet extends HttpServlet {
 					
 					log.info("######38377#####json cardType: " + cardType);
 				}
-				if (paydate != null && !paydate.isEmpty()) {
-					try {
-						paydate = DateUtils.reformatDate(paydate, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
-						date1 = paydate;
-						log.info("######38377#####json date1: " + date1);
-					} catch (Exception e) {
-						// handle/ log bad date format without breaking the rest
-						// e.g., keep original paydate or set to null
-					}
-				}
+				date1 = paydate;
 				errorCode = jsonObject.optString("errCode", null);
 				log.info("######38377#####json errCode: " + errorCode);
 				errorDesc = jsonObject.optString("errDesc", null);
