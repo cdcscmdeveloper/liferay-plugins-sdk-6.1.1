@@ -1264,6 +1264,17 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 			getManagedBean().setProfBodyLs(
 					SmApplicationUtil.retrievePmProfBodyList());
+			// #39502 - START
+			for(PmCertBody profBody : getManagedBean().getProfBodyLs()){
+				if(profBody.getBodyName().length() > 71 ){
+					profBody.setBodyDsc(profBody.getBodyName()); 
+					String truncName = profBody.getBodyName().substring(0,70) + "...";
+					profBody.setBodyName(truncName);
+				}
+			}
+			// #39502 - END
+
+			
 			getManagedBean().setProfBodyItems(
 					SmApplicationUtil.getProfBodyItems());
 
@@ -4711,7 +4722,10 @@ public class SmApplicationBackingBean extends
 		// validate branch
 		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
 				currentTab, true);
-
+		
+		// validate bank 
+		SmApplicationUtil.validateBankBeforeSave(true, getManagedBean(), -1);//#39860
+				
 		// validate facility
 		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
 
@@ -18888,6 +18902,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void otherDescriptionHistory() {
 		if (getManagedBean().getApprovedCategoryList() != null) {
+			List<SmSupplierCategory> updatedList = new ArrayList<>();
+
 			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
 				
 				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
@@ -18897,9 +18913,10 @@ public class SmApplicationBackingBean extends
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					
 					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-					getManagedBean().getApprovedCategoryList().add(cat);
+				    updatedList.add(cat);
 				}
 			}
+			getManagedBean().setApprovedCategoryList(updatedList);
 		}
 		
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
@@ -18926,19 +18943,6 @@ public class SmApplicationBackingBean extends
 	}
 	
 	/**
-	 * To set data for managed bean and show dialog edit
-	 *  
-	 *  * @param smSupCat
-	 */
-	public void otherDescriptionEditApprover(SmSupplierCategory smSupCat) {
-		getManagedBean().setHistorySuppCategory(smSupCat);
-		getManagedBean().setOtherDescEdited(smSupCat.getOtherDesc());
-		getManagedBean().setUpdateRecordTC(false);
-		getManagedBean().setApproverUser(true);
-		RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.show();");
-	}
-	
-	/**
 	 * To reset data
 	 *  
 	 */
@@ -18957,7 +18961,10 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
+			
+			if (!getManagedBean().isOtherDescChangeSupplier()){
+				getManagedBean().setOtherDescChangeSupplier(true);
+			}
 			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
 			
 			initPmUserRole();
@@ -18989,7 +18996,6 @@ public class SmApplicationBackingBean extends
 			throw new EpException(e.getMessage());
 		} finally {
 			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
-			RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.hide();");
 		}
 	}
 	
