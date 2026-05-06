@@ -5637,7 +5637,7 @@ public class RuleCatalogueBackingBean extends
 				resultList.retainAll(byValue);
 			}
 		}
-		
+
 		// search via desc
 		if (StringUtils.isNotBlank(searchRuleDesc)) {
 			List<PmConfigRuleValue> byDesc = searchByRuleValueDesc(originalList, searchRuleDesc, false);
@@ -5711,20 +5711,21 @@ public class RuleCatalogueBackingBean extends
 		}
 		return searchRuleTypeValueList;
 	}
-	
+
 	/**
-	 * #36738
-	 * filter rule values by description
+	 * #36738 filter rule values by description
+	 * 
 	 * @param configRuleValuesList
 	 * @param searchRuleValueDesc
 	 * @return
 	 */
-	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList,String searchRuleValueDesc, Boolean multipleSearchFlag){		
+	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList,
+			String searchRuleValueDesc, Boolean multipleSearchFlag) {
 		List<PmConfigRuleValue> result = new ArrayList<>();
 
 		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {
 			String searchRegex = searchRegex(searchRuleValueDesc);
-			
+
 			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
 				String desc = configRuleValue.getCategoryL3Id().getCategoryName().toLowerCase();
 				if (desc.contains(searchRuleValueDesc.toLowerCase()) || desc.matches(searchRegex.toLowerCase())) {
@@ -5732,13 +5733,13 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 		}
-		
-		if (CollectionUtils.isNotEmpty(result)|| !multipleSearchFlag){
+
+		if (CollectionUtils.isNotEmpty(result) || !multipleSearchFlag) {
 			return result;
-		}else {
+		} else {
 			return configRuleValuesList;
 		}
-	}	
+	}
 
 	/**
 	 * #36738 filter rule values by effective date and expiry date
