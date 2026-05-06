@@ -102,6 +102,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.circular.CtCircularVer; //#37620,#34367
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -4644,27 +4645,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	public String newProcurement(){
-		String procur = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			procur = getParameterDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getProcurementType());
-			return procur;
-		}
-		return null;
+		String procur = getParameterCode(getManagedBean().getContractVer().getCtContract().getProcurementMode());
+		return ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(procur) ? procur : null;
 	}
 	
-	public String newJustification(){
-		String justifi = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			justifi = getReasonDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getJustificationType());
-
-			return justifi;
-		}
-		return null;
+	public String newJustification() {
+	    return newProcurement() != null ? getReasonDesc(
+	        getManagedBean().getContractVer().getCtContract().getReason()) : null;
 	}
-
-
 
 	public String getLanguage() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -4755,19 +4743,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	    getManagedBean().setExtendContract(false);
 	    getManagedBean().setDisableOriginalBond(false);
-
-	    // Retrieve currentPeriod and extendPeriod
-	    String currentPeriod = (loa.getContractDuration() != null) 
-	            ? BigDecimal.valueOf(loa.getContractDuration().longValue()).toString() 
-	            : null;
-
-	    String extendPeriod = (contractVer.getCtContractValue().getContractPeriod() > 0) 
-	            ? Integer.toString(contractVer.getCtContractValue().getContractPeriod()) 
-	            : null;
-
+	    
+	    //#32418 - Start
+	    // Retrieve currentExpDate and newExpDate
+	    Date currentExpDate = loa.getContractExpDate();
+	    Date newExpDate = contractVer.getCtContractValue().getExpDate();
+	    
+	    // Check if contract is extended
+	    boolean isExtended = currentExpDate != null
+	            && newExpDate != null
+	            && newExpDate.after(currentExpDate);
+	    //#32418 - End
+	    
 	    // Check if the contract needs an extension or requires a bond
 	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
-	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
+	            && isExtended) { //#32418
 
 	        isContractExtendOrIsBond = true;
 	        getManagedBean().setExtendContract(true);
@@ -5330,7 +5320,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         {@code reasonId} is resolved; {@code false} otherwise.
 	 */
 	public boolean isSpecialItemAgencies() {
-		PmReason reason = getReasonForSpecialItem();
+		PmReason reason = getManagedBean().getContractVer().getCtContract().getReason();
 		if (reason == null) {// avoid NullPointerException
 			return false;
 		} else {
@@ -5338,32 +5328,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return true;
 	}
-
-	/**
-	 * <p>
-	 * If a {@link PmReason} is found in either check, the contract is
-	 * considered to be PK7-related. If both checks return {@code null}, the
-	 * contract is treated as a normal (non-PK7) contract.
-	 * </p>
-	 * 
-	 * @return the {@link PmReason} indicating the PK7 justification type, or
-	 *         {@code null} if the contract is not PK7-related.
-	 */
-	public PmReason getReasonForSpecialItem() {
-		PmReason reason = null;
-		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-			List<CtContractItem> items = getManagedBean().getContractVer().getCtContractItems();
-			if (items != null && items.get(0).getScRequestItem().getRequestNote() != null) {
-				reason = (PmReason) EntityHelper
-						.getNestedProperty(getManagedBean(),
-								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
-			}
-		} else {
-			reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
-					"contractVer.ctContract.loa.justificationType");
-		}
-		return reason;
-	}
 	// End - #30045
+	
+	// #37620,#34367 - Start
+	/**
+	 * Updates contract panel state in the managed bean based on the given LOA.
+	 * <p>
+	 * If the LOA is valid (panel-enabled and has a circular version), this
+	 * method sets the panel flag to true and populates the circular panel data
+	 * and its first attachment (if available). Otherwise, the panel flag is set
+	 * to false.
+	 * </p>
+	 * @param loa
+	 *            the LOA to evaluate; may be null
+	 */
+	public void retrieveItemPanelDetails(ScLoa loa) {
+
+		boolean hasPanel = loa != null && loa.isPanel() && loa.getCtCircularVer() != null;
+
+		getManagedBean().setContractPanelItem(hasPanel);
+
+		if (!hasPanel) {
+			return;
+		}
+
+		CtCircularVer circularVer = loa.getCtCircularVer();
+		getManagedBean().setCtCircularPanel(circularVer);
+
+		List<CtAttachment> attachments = circularVer.getCircularAttachments();
+		if (attachments != null && !attachments.isEmpty()) {
+			getManagedBean().setCircularPanelAttachment(attachments.get(0));
+		}
+	}
+	// #37620,#34367 - End
 }  

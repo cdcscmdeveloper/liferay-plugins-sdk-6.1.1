@@ -343,7 +343,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		//END 27465 : Disciplinary Action 
 		
 		//START 26238
-		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
+		if (getManagedBean().getSmAppl().getPmRegStatus() == null 
+				&& !getManagedBean().getSmAppl().getApplType().equals(SupplierManagementConst.ACC_BASIC)) { //40219
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 			getManagedBean().setCancelMofAccount(true);
 		} else {
@@ -401,6 +402,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setSmRvFilePath(filePath);
 		
 		initSmRvHistory();
+		initPmUserRole(); // #36504
 		// #34031 End
 		getManagedBean().setViewMode(true); //#39231
 	}

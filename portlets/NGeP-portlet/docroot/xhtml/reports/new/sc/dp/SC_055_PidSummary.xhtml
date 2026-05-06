@@ -50,9 +50,10 @@
 				</p:inputText></td>
 		</tr>
 		<tr>
-			
+			<!-- #36613 - start -->
 			<td width="15%"><p:outputLabel
-					value="#{lbl['lbl.rpt.CONTRPKPTYPE']}" /></td>
+					value="#{lbl['lbl.rpt.CONTCRCTYPE']}" /></td>
+			<!-- #36613 - end -->
 			<td width="35%"><p:selectOneMenu
 					value="#{pidSummaryRptBackingBean.managedBean.contractType}"
 					style="margin-top:5px;width:300px;">
@@ -68,18 +69,22 @@
 						listener="#{reportBackingBean.onChangeScContractOrPKPType()}"
 						partialSubmit="true" update="@form" />
 				</p:selectOneMenu></td>
+			<!-- #36613 - start -->
 			<td width="15%"><p:outputLabel
-					value="#{lbl['lbl.rpt.CONTRPKPNO']}" /></td>
+					value="#{lbl['lbl.rpt.CONTCRCNO']}" /></td>
+			<!-- #36613 - end -->
 			<td width="35%"><p:inputText maxlength="50" size="50"
 					value="#{pidSummaryRptBackingBean.managedBean.contractNo}">
 				</p:inputText></td>
 		</tr>
-		<tr>
+		<tr>`
+		<!-- #36613 - start -->
 			<td><p:outputLabel
-					value="#{lbl['lbl.rpt.CONTRPKPNM']}" /></td>
+					value="#{lbl['lbl.rpt.CONTCRCNAME']}" /></td>
 			<td><p:inputText maxlength="50" size="50"
 					value="#{pidSummaryRptBackingBean.managedBean.contractName}">
 				</p:inputText></td>
+		<!-- #36613 - end -->
 		</tr>
 
 		<c:if test="#{requisitionerEnableDisable}">

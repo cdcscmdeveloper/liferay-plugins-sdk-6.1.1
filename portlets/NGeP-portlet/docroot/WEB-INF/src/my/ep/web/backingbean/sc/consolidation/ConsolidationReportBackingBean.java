@@ -2576,9 +2576,7 @@ public class ConsolidationReportBackingBean extends
 			}
 		}
 
-		ScQt scQt = this.getManagedBean().getScQt();
-		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(
-				supplierId, scQt);
+		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(supplierId);
 		for (SmSupplierBranch wipSupplierBranch : wipSupplierBranchListDeleted) {
 			int statusFlag = wipSupplierBranch.getRecordStatusFlg();
 			if (statusFlag == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -2588,12 +2586,20 @@ public class ConsolidationReportBackingBean extends
 			}
 		}
 
-		if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
-			supplierBranchListDeleted.addAll(wipSupplierBranchListDeleted);
+		List<SmSupplierBranch> supplierBranchListActive = listSupplierBranchList(supplierId);
+		if (CollectionUtils.isNotEmpty(supplierBranchListDeleted)) {
+			supplierBranchListDeleted.addAll(supplierBranchListActive);
+			getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		} else {
+			if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
+				wipSupplierBranchListDeleted.addAll(supplierBranchListActive);
+				getManagedBean().setSupplierBranchList(wipSupplierBranchListDeleted);
+			} else {
+				if (CollectionUtils.isNotEmpty(supplierBranchListActive)) {
+					getManagedBean().setSupplierBranchList(supplierBranchListActive);
+				}
+			}
 		}
-
-		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
-		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
 
 	}
 

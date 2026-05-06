@@ -221,10 +221,12 @@ public class CommonUtils {
 	 */
 	public String removeItemNameNA(String itemName) {
 		if (itemName != null && !itemName.isEmpty()) {
-			return itemName.replaceAll("\\bN\\s*A\\b|\\bN/A\\b|\\bNA\\b", "");
+			// #26059 -start- added filter to remove extra spacing
+			return itemName.replaceAll("\\bN\\s*A\\b|\\bN/A\\b|\\bNA\\b", "").replaceAll("\\s+", " ").trim();
+			// #26059 -end-
 		}
 
-		return itemName;
+		return ""; // Return empty string to avoid null
 	}
 	// #31503 -end-
 
