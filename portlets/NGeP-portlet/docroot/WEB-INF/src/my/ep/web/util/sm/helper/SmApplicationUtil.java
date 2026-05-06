@@ -3010,7 +3010,7 @@ public class SmApplicationUtil {
 		if (!bean.getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			
-			//#40144 - start
+			//#40144 - start 
 			if(bean.isSupplierUser()){
 				if (!EntityHelper.isCollectionEmpty(categoryList)) {
 					for (PmCategoryL3 l3 : categoryList) {
