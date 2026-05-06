@@ -1501,7 +1501,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.LOPOSelected = LOPOSelected;
 	}
 
-	//#36738 Start	
+	//#36738 Start
 	public String getSearchRuleType() {
 		return searchRuleType;
 	}

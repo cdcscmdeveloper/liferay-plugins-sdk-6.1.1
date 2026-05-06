@@ -5788,7 +5788,7 @@ public class RuleCatalogueBackingBean extends
 		return null;
 	}
 	
-	/**
+	/** 
 	 * #36738
 	 * Reset search rule value
 	 */
