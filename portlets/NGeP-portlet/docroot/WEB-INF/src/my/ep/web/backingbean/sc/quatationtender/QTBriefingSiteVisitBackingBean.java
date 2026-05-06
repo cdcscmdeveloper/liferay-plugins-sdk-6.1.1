@@ -588,7 +588,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			                        temp.getBsvStatus().setStatusId(QTStatusConst.BSV_POSTPONE);
 			                        allSVList.add(temp);
 			                	}else if(dtl.getBsvDate() == null){
-			                        dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
+			                		ScQtBsvDtl temp = getSafeTempDtl(dtl);//Add for tagging parent qt_bsv_dtl_id
+			                		dtl.setParentQtBsvDtlId(temp.getQtBsvDtlId());
+			                		dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
 			                        populateAddress(dtl);
 			                        allSVList.add(dtl);
 			                	}else{
@@ -1362,7 +1364,8 @@ public class QTBriefingSiteVisitBackingBean extends
 			putIntoAmendMentBeanIfChanged(amendMentBean, 
 					fieldPrefix + QTFieldConst.FIELD_QT_BSV_RECORD_STATUS, 
 					//DbValueConst.RECORD_STATUS_IN_PROGRESS, DbValueConst.RECORD_STATUS_ACTIVE,
-					DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_ACTIVE,
+					//DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_ACTIVE, //Change to RE_APPROVAL status for postponed 
+					DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL,
 					true);
 			
 		}
