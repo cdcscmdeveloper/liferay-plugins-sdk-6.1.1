@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.simplequote;
 
@@ -2300,10 +2300,13 @@ public class SimpleQuoteBackingBean extends
 
 					if (quote.getProcurementType().getParameterCode()
 							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-						// govt sellers
-						if (getManagedBean().getGovtSellers() != null) {
-							suppliers.addAll(getManagedBean().getGovtSellers());
+						// govt sellers	    
+						//40234 - start
+						if (getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()) {
+							throw new EpException(MessageConst.ERROR_760109);
 						}
+						suppliers.addAll(getManagedBean().getGovtSellers());
+						//40234 - end
 					} else {
 						// by supplier
 						if (getManagedBean().getSupplierList() != null) {
