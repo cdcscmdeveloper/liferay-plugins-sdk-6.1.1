@@ -226,7 +226,7 @@ public class CommonUtils {
 			// #26059 -end-
 		}
 
-		return itemName;
+		return ""; // Return empty string to avoid null
 	}
 	// #31503 -end-
 
