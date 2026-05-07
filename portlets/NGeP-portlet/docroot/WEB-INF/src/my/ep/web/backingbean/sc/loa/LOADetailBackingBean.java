@@ -1328,10 +1328,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// check performance bond		
 		//Bug #29885 start isPendingSubmissionStatus or isPendingRevisionStatus
-		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa.getPmStatus().getStatusId().longValue()) || 
-				QTStatusConst.LOA_PENDING_REVISION .equals(scLoa.getPmStatus().getStatusId().longValue())){
-			checkPerformanceBondMandatory();
+		// 40234 - start
+		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa.getPmStatus().getStatusId().longValue())
+				|| QTStatusConst.LOA_PENDING_REVISION.equals(scLoa.getPmStatus().getStatusId().longValue())) {
+			if (isFromDP(scLoa)) {
+				getManagedBean().setPerformanceBondMandatory(false);
+			} else {
+				checkPerformanceBondMandatory();
+			}
 		}
+		// 40234 - end
 		//Bug #29885 end
 		
 		//Enhancement #24259 #24269
@@ -6466,7 +6472,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		checkAgreementMandatory();
 
-		checkPerformanceBondMandatory();
+		// 40234 - start
+		if (isFromDP(scLoa)) {
+			getManagedBean().setPerformanceBondMandatory(false);
+		} else {
+			checkPerformanceBondMandatory();
+		}
+		// 40234 - end
 
 		calcBondAmountWithSST(scLoa, Boolean.FALSE);
 		
@@ -12016,4 +12028,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				&& statusEnabled && isQTValid && !isQTMaintenanceScreen();
 	}
 	//#21692 - End
+	// 40234 - start
+	/**
+	 * To differentiate source method either from DP or QT Returns true if the
+	 * doc type in sc_loi_loa is Purchase Request.
+	 * 
+	 * @param scLoa
+	 *            the LOA data to evaluate
+	 * @return true if the doc type is Purchase Request, otherwise false
+	 */
+	public boolean isFromDP(ScLoa scLoa) {
+		return scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getDocType() != null
+				&& scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+	}
+	// 40234 - end
 }
