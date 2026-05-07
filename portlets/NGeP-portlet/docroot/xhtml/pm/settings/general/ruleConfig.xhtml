@@ -24,7 +24,7 @@
 			</tr>
 		</table>
 		
-		<!-- 36738 Start  -->
+		<!-- 36738 Start -->
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
 			id="ruleTypeSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.ruleTypeCollapsePanel}">
 			<p:ajax event="toggle" listener="#{ruleCatalogueBackingBean.onRuleTypeSearchToggle}" />
@@ -64,11 +64,11 @@
 			rowKey="#{ruleTypeDescObj}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="ruleTypeTableID" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				listener="#{ruleCatalogueBackingBean.onRuleType}"
-				update=":form:settingTabId:ruleConfigId :form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch" /><!-- 36738, #35323 -->
+				listener="#{ruleCatalogueBackingBean.onRuleType}" 
+				update=":form:settingTabId:ruleConfigId :form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738, #35323 -->
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"				
-				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch" /><!-- 36738 -->
-			 <p:ajax event="page" process="@this"				
+				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738 -->
+			<p:ajax event="page" process="@this"				
 				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738 -->
 			<p:column>
 				<f:facet name="header">
@@ -100,7 +100,7 @@
                  	(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC') ? '' : 'display:none'}"
          	id="ruleTypeValueSearch"
          	collapsed="#{ruleCatalogueBackingBean.managedBean.ruleValueCollapsePanel}">
-
+         	
 			<h:panelGrid id="ruleTypeValuePanelGrid" columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
 				<p:inputText value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeValues}" maxlength="20" style="width:250px;"/>
@@ -149,8 +149,8 @@
 					update="ruleTypeValueTableID ruleTypeValuePanelGrid" />
 			</div>
 		</p:panel>
-		<!-- 36738 End -->				
-					
+		<!-- 36738 End -->
+		
 		<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget"
 			rows="5"
 			value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.configRuleValues}"
@@ -360,7 +360,7 @@
 	             	#{lbl['lbl.pm.desc']}
 		       </f:facet>
 		      	#{typeValueObj.categoryL3Id.categoryName}
-		</p:column>
+			</p:column>
 
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">
@@ -498,7 +498,7 @@
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 
-		</h:panelGroup> <!-- #36738 -->
+		</h:panelGroup><!-- #36738 -->
 		
 		<ac:confirmationPopup id="ruleValueDeleteId"
 				widget="ruleValueDeletePopUp"

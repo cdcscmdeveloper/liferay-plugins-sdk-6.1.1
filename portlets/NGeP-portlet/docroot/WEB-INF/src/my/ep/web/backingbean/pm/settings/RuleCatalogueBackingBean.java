@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays; //#36738
+import java.util.Arrays; //#36738 #40071
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -82,6 +82,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;//#36738
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -121,10 +122,10 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
-//#36738 start
+//#36738 Start
 import org.primefaces.event.ToggleEvent;
 import org.primefaces.model.Visibility;
-//#36738 end
+//#36738 End
 
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
@@ -135,8 +136,7 @@ public class RuleCatalogueBackingBean extends
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = Logger
-			.getLogger(RuleCatalogueBackingBean.class);
+	private static Logger log = Logger.getLogger(RuleCatalogueBackingBean.class);
 
 	private ISearchBean<PmParameterDesc> parameterSearchBean;
 	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
@@ -172,8 +172,7 @@ public class RuleCatalogueBackingBean extends
 
 	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
 		if (this.parameterSearchBean == null) {
-			this.parameterSearchBean = super.createSearchBean(
-					PmParameterDesc.class, "parameterId");
+			this.parameterSearchBean = super.createSearchBean(PmParameterDesc.class, "parameterId");
 		}
 
 		return this.parameterSearchBean;
@@ -386,25 +385,21 @@ public class RuleCatalogueBackingBean extends
 			initQuotationWithTenderValue();
 			initYearEndForProcessing();
 			onAnyTabChange();//#36738
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
 			e.printStackTrace();
-			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					null, e.getMessage()));
+			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage()));
 			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 		}
 		return "";
 	}
 	
-	private void initYearEndForProcessing(){
+	private void initYearEndForProcessing() {
 		IFeeExemptionSO feeSO = null;
 		this.getManagedBean().setMinDate(null);//32333
 		
 		try {
-			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IFeeExemptionSO.class);
+			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
 			FeeExemptionResDTO resFDTO = null;
 			this.getManagedBean().getFeeExemptionsForYepProcessing().clear();
@@ -414,14 +409,14 @@ public class RuleCatalogueBackingBean extends
 			resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
 			
 			log.info("[#22119] resFDTO.getFeeExemptions size: " + resFDTO.getFeeExemptions().size());
-			/*22119*/
-//			String lang = getLanguage();
-			if(resFDTO != null && resFDTO.getFeeExemptions().size() > 0) {
+			/* 22119 */
+			// String lang = getLanguage();
+			if (resFDTO != null && resFDTO.getFeeExemptions().size() > 0) {
 				this.getManagedBean().setFeeExemptionsForYepProcessing(resFDTO.getFeeExemptions());
 			}
 		} finally {
 			feeSO = null;
-		}	
+		}
 	}
 
 	private void initConfigRule() {
@@ -4726,10 +4721,10 @@ public class RuleCatalogueBackingBean extends
 					.remove(deletedSpecialApproval);
 			}
 		}
-		// #36738 #40071 Start
+		//#36738 #40071 Start
 		if (resetMinistryDropdown) {
 			resetQtValues();
-		}// #36738 #40071 End
+		}//#36738 #40071 End
 	}
 	
 	public void selectPtjAction(List<PmOrgProfile> orgProfileList){
@@ -4755,7 +4750,7 @@ public class RuleCatalogueBackingBean extends
 					new FacesScopes().getUserLocale()));
 			//#36738 #40071 Start
 			List<String> deletedMinistryNameList = this.getManagedBean().getDeletedMinistryNameList() !=  null
-					? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();			
+					? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
 			for (PmOrgProfile orgProfile : list) {
 				if (deletedMinistryNameList.contains(orgProfile.getPmOrgValidity().getOrgName())){
 					continue;
@@ -5069,7 +5064,7 @@ public class RuleCatalogueBackingBean extends
 		if(getManagedBean().getSelectedMinistryId() != null){
 			getManagedBean().setPtjSpecialApprovalList(new ArrayList<PmPtjSpecialApproval>());
 			for(PmPtjSpecialApproval approval : getManagedBean().getMainPtjSpecialApprovalList()){
-				// #36738
+				//#36738
 				if(approval.getMinistry() != null &&
 						approval.getMinistry().getOrgProfileId().equals(getManagedBean().getSelectedMinistryId())){
 					getManagedBean().getPtjSpecialApprovalList().add(approval);
@@ -5558,52 +5553,50 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	// 29650 - end
-	//#36738 Start
+
+	// #36738 Start
 	/**
-	 * #36738
-	 * Search rule type
+	 * #36738 Search rule type
 	 */
-	public void searchRuleType(){
+	public void searchRuleType() {
 		String searchRuleType = this.getManagedBean().getSearchRuleType();
 		List<PmConfigRuleDesc> configRuleDescList = this.getManagedBean().getOriginalConfigRuleDescList();
 		List<PmConfigRuleDesc> searchRuleDescList = new ArrayList<>();
-		
+
 		for (PmConfigRuleDesc configRuleDesc : configRuleDescList) {
 			if (searchRuleType != null && !searchRuleType.isEmpty()) {
 				String searchRegex = searchRegex(searchRuleType);
-				
+
 				if (configRuleDesc.getRuleDesc().toLowerCase().contains(searchRuleType.toLowerCase())
 						|| configRuleDesc.getRuleDesc().toLowerCase().matches(searchRegex.toLowerCase())) {
 					searchRuleDescList.add(configRuleDesc);
 				}
 			}
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
 			this.getManagedBean().setSelectedRuleDescType(searchRuleDescList.get(0));
 			this.getManagedBean().setOriginalConfigRuleValueList(searchRuleDescList.get(0).getRuleType().getConfigRuleValues());
-		}else{
+		} else {
 			this.getManagedBean().setConfigRuleDescList(null);
 			this.getManagedBean().setSelectedRuleDescType(null);
 		}
-		
+
 		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleConfigId");
 	}
-	
+
 	/**
-	 * #36738
-	 * Reset search rule type
+	 * #36738 Reset search rule type
 	 */
-	public void resetRuleType(){
+	public void resetRuleType() {
 		this.getManagedBean().setSearchRuleType(new String());
 		this.getManagedBean().setConfigRuleDescList(this.getManagedBean().getOriginalConfigRuleDescList());
 		this.getManagedBean().setSelectedRuleDescType(this.getManagedBean().getOriginalConfigRuleDescList().get(0));
 	}
-	
+
 	/**
-	 * #36738
-	 * Search by rule values
+	 * #36738 Search by rule values
 	 */
 	public void searchRuleValue() {
 		String searchRuleValues = this.getManagedBean().getSearchRuleDataTypeValues();
@@ -5626,8 +5619,8 @@ public class RuleCatalogueBackingBean extends
 		    map.put(ruleTypeId, originalList);
 		    this.getManagedBean().setOriginalConfigRuleValueMap(map);
 		}
-		
-		// search via value	
+
+		// search via value
 		if (StringUtils.isNotBlank(searchRuleValues)) {
 			List<PmConfigRuleValue> byValue = new ArrayList<>();
 			for (PmConfigRuleValue val : originalList) {
@@ -5644,7 +5637,7 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
-		// search via desc 
+		// search via desc
 		if (StringUtils.isNotBlank(searchRuleDesc)) {
 			List<PmConfigRuleValue> byDesc = searchByRuleValueDesc(originalList, searchRuleDesc, false);
 			if (CollectionUtils.isEmpty(byDesc)) {
@@ -5654,20 +5647,9 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
-		// search via zone to be added with #27827
-//		if (searchRuleZone != null && !searchRuleZone.equals(0L)) {
-//			List<PmConfigRuleValue> byZone = searchByZone(originalList, searchRuleZone, false);
-//			if (CollectionUtils.isEmpty(byZone)) {
-//				resultList.clear();
-//			} else {
-//				resultList.retainAll(byZone);
-//			}
-//		}
-
 		// search via effective date and expiry date (exact date if only one, between if both)
 		if (searchEffDate != null || searchExpDate != null) {
-			List<PmConfigRuleValue> byDate = searchByDate(originalList, searchEffDate, searchExpDate,
-					false);
+			List<PmConfigRuleValue> byDate = searchByDate(originalList, searchEffDate, searchExpDate, false);
 			if (CollectionUtils.isEmpty(byDate)) {
 				resultList.clear();
 			} else {
@@ -5681,21 +5663,22 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(new ArrayList<PmConfigRuleValue>());
 		}
 	}
-	
+
 	/**
 	 * filter rule values by value for rule data type: category code
+	 * 
 	 * @param searchRuleTypeValueList
 	 * @param configRuleValue
 	 * @param searchRuleValues
 	 * @return
 	 */
-	private List<PmConfigRuleValue> searchByRuleValueCategoryCode(List<PmConfigRuleValue> searchRuleTypeValueList, PmConfigRuleValue configRuleValue,String searchRuleValues){	
+	private List<PmConfigRuleValue> searchByRuleValueCategoryCode(List<PmConfigRuleValue> searchRuleTypeValueList, PmConfigRuleValue configRuleValue, String searchRuleValues){	
 		if (searchRuleValues != null && !searchRuleValues.isEmpty()) {
 			String ruleValue = configRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ configRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ configRuleValue.getCategoryL3Id().getCategoryL3Code();
 			String searchRegex = searchRegex(searchRuleValues);
-			
+
 			if (ruleValue.toLowerCase().contains(searchRuleValues.toLowerCase())
 					|| ruleValue.toLowerCase().matches(searchRegex.toLowerCase())) {
 				searchRuleTypeValueList.add(configRuleValue);
@@ -5703,18 +5686,18 @@ public class RuleCatalogueBackingBean extends
 		}
 		return searchRuleTypeValueList;
 	}
-	
+
 	/**
-	 * #36738
-	 * filter rule values by value for rule data type: PTJ code
+	 * #36738 filter rule values by value for rule data type: PTJ code
+	 * 
 	 * @param configRuleValuesList
 	 * @param searchRuleValues
 	 * @return
 	 */
-	private List<PmConfigRuleValue> searchByRuleValuePTJ(List<PmConfigRuleValue> searchRuleTypeValueList, PmConfigRuleValue configRuleValue,String searchRuleValues){		
+	private List<PmConfigRuleValue> searchByRuleValuePTJ(List<PmConfigRuleValue> searchRuleTypeValueList, PmConfigRuleValue configRuleValue, String searchRuleValues){
 		if (searchRuleValues != null && !searchRuleValues.isEmpty()) {
 			String searchRegex = searchRegex(searchRuleValues);
-			
+
 			if (configRuleValue.getRuleValue().toLowerCase().contains(searchRuleValues.toLowerCase())
 					|| configRuleValue.getRuleValue().toLowerCase().matches(searchRegex.toLowerCase())) {
 				searchRuleTypeValueList.add(configRuleValue);
@@ -5722,20 +5705,20 @@ public class RuleCatalogueBackingBean extends
 		}
 		return searchRuleTypeValueList;
 	}
-	
+
 	/**
-	 * #36738
-	 * filter rule values by description
+	 * #36738 filter rule values by description
+	 * 
 	 * @param configRuleValuesList
 	 * @param searchRuleValueDesc
 	 * @return
 	 */
-	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList,String searchRuleValueDesc, Boolean multipleSearchFlag){		
+	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList, String searchRuleValueDesc, Boolean multipleSearchFlag){
 		List<PmConfigRuleValue> result = new ArrayList<>();
 
 		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {
 			String searchRegex = searchRegex(searchRuleValueDesc);
-			
+
 			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
 				String desc = configRuleValue.getCategoryL3Id().getCategoryName().toLowerCase();
 				if (desc.contains(searchRuleValueDesc.toLowerCase()) || desc.matches(searchRegex.toLowerCase())) {
@@ -5743,23 +5726,23 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 		}
-		
-		if (CollectionUtils.isNotEmpty(result)|| !multipleSearchFlag){
+
+		if (CollectionUtils.isNotEmpty(result) || !multipleSearchFlag) {
 			return result;
-		}else {
+		} else {
 			return configRuleValuesList;
 		}
-	}	
-	
+	}
+
 	/**
-	 * #36738
-	 * filter rule values by effective date and expiry date
+	 * #36738 filter rule values by effective date and expiry date
+	 * 
 	 * @param configRuleValuesList
 	 * @param searchEffDate
 	 * @param searchExpDate
 	 * @return
 	 */
-	private List<PmConfigRuleValue>searchByDate(List<PmConfigRuleValue> configRuleValuesList, Date searchEffDate,
+	private List<PmConfigRuleValue> searchByDate(List<PmConfigRuleValue> configRuleValuesList, Date searchEffDate,
 			Date searchExpDate, Boolean multipleSearchFlag) {
 		List<PmConfigRuleValue> result = new ArrayList<>();
 
@@ -5770,10 +5753,10 @@ public class RuleCatalogueBackingBean extends
 		}
 		return CollectionUtils.isNotEmpty(result) || !multipleSearchFlag ? result : configRuleValuesList;
 	}
-	
+
 	/**
-	 * #36738
-	 * check whether the date is matched
+	 * #36738 check whether the date is matched
+	 * 
 	 * @param value
 	 * @param searchEffDate
 	 * @param searchExpDate
@@ -5784,7 +5767,7 @@ public class RuleCatalogueBackingBean extends
 		Date valueExpDate = truncateDate(value.getExpDate());
 		Date searchEffDate = truncateDate(searchEff);
 		Date searchExpDate = truncateDate(searchExp);
-		
+
 		if (searchEffDate != null && searchExpDate == null && valueEffDate != null) {
 			return searchEffDate.equals(valueEffDate);
 		}
@@ -5796,14 +5779,14 @@ public class RuleCatalogueBackingBean extends
 		}
 		return !valueEffDate.before(searchEff) && !valueExpDate.after(searchExp);
 	}
-	
+
 	/**
-	 * #36738
-	 * Standardized the time up to milliseconds of the dates for comparison
+	 * #36738 Standardized the time up to milliseconds of the dates for comparison
+	 * 
 	 * @param date
 	 * @return
 	 */
-	private Date truncateDate(Date date){
+	private Date truncateDate(Date date) {
 		if (date != null) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(date);
@@ -5815,12 +5798,11 @@ public class RuleCatalogueBackingBean extends
 		}
 		return null;
 	}
-	
-	/** 
-	 * #36738
-	 * Reset search rule value
+
+	/**
+	 * #36738 Reset search rule value
 	 */
-	public void resetRuleValue(){
+	public void resetRuleValue() {
 		this.getManagedBean().setSearchRuleDataTypeValues(new String());
 		this.getManagedBean().setSearchRuleDataTypeDesc(new String());
 		this.getManagedBean().setSearchRuleDataTypeEffectiveDate(null);
@@ -5828,73 +5810,72 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
 	}
-	
+
 	/**
-	 * #36738
-	 * search quotation tender values
+	 * #36738 search quotation tender values
 	 */
 	public void searchQtValues() {
-	    Long searchMinistry = this.getManagedBean().getSelectedMinistryId();
-	    String searchPtjName = this.getManagedBean().getSearchPtjName();
-	    String searchPtjCode = this.getManagedBean().getSearchPtjCode();
-	    BigDecimal searchLimit = this.getManagedBean().getSearchQtValueLimit();
+		Long searchMinistry = this.getManagedBean().getSelectedMinistryId();
+		String searchPtjName = this.getManagedBean().getSearchPtjName();
+		String searchPtjCode = this.getManagedBean().getSearchPtjCode();
+		BigDecimal searchLimit = this.getManagedBean().getSearchQtValueLimit();
 
-	    List<PmPtjSpecialApproval> originalList = this.getManagedBean().getOriginalPtjSpecialApprovalList();
-	    List<PmPtjSpecialApproval> resultList = new ArrayList<>(originalList);
+		List<PmPtjSpecialApproval> originalList = this.getManagedBean().getOriginalPtjSpecialApprovalList();
+		List<PmPtjSpecialApproval> resultList = new ArrayList<>(originalList);
 
-	    // Filter by Ministry
-	    if (searchMinistry != null && searchMinistry != 0L) {
-	        selectQtValues();
-	        List<PmPtjSpecialApproval> byMinistry = this.getManagedBean().getPtjSpecialApprovalList();
-	        if (CollectionUtils.isEmpty(byMinistry)) {
-	            resultList.clear();
-	        } else {
-	            resultList.retainAll(byMinistry);
-	        }
-	    }
+		// Filter by Ministry
+		if (searchMinistry != null && searchMinistry != 0L) {
+			selectQtValues();
+			List<PmPtjSpecialApproval> byMinistry = this.getManagedBean().getPtjSpecialApprovalList();
+			if (CollectionUtils.isEmpty(byMinistry)) {
+				resultList.clear();
+			} else {
+				resultList.retainAll(byMinistry);
+			}
+		}
 
-	    // Filter by PTJ name
-	    if (StringUtils.isNotBlank(searchPtjName)) {
-	        List<PmPtjSpecialApproval> byName = searchByPtj(originalList, searchPtjName, true);
-	        if (CollectionUtils.isEmpty(byName)) {
-	            resultList.clear();
-	        } else {
-	            resultList.retainAll(byName);
-	        }
-	    }
+		// Filter by PTJ name
+		if (StringUtils.isNotBlank(searchPtjName)) {
+			List<PmPtjSpecialApproval> byName = searchByPtj(originalList, searchPtjName, true);
+			if (CollectionUtils.isEmpty(byName)) {
+				resultList.clear();
+			} else {
+				resultList.retainAll(byName);
+			}
+		}
 
-	    // Filter by PTJ code
-	    if (StringUtils.isNotBlank(searchPtjCode)) {
-	        List<PmPtjSpecialApproval> byCode = searchByPtj(originalList, searchPtjCode, false);
-	        if (CollectionUtils.isEmpty(byCode)) {
-	            resultList.clear();
-	        } else {
-	            resultList.retainAll(byCode);
-	        }
-	    }
+		// Filter by PTJ code
+		if (StringUtils.isNotBlank(searchPtjCode)) {
+			List<PmPtjSpecialApproval> byCode = searchByPtj(originalList, searchPtjCode, false);
+			if (CollectionUtils.isEmpty(byCode)) {
+				resultList.clear();
+			} else {
+				resultList.retainAll(byCode);
+			}
+		}
 
-	    // Filter by Limit
-	    if (searchLimit != null) {
-	        List<PmPtjSpecialApproval> byLimit = searchByLimit(originalList, searchLimit);
-	        if (CollectionUtils.isEmpty(byLimit)) {
-	            resultList.clear();
-	        } else {
-	            resultList.retainAll(byLimit);
-	        }
-	    }
+		// Filter by Limit
+		if (searchLimit != null) {
+			List<PmPtjSpecialApproval> byLimit = searchByLimit(originalList, searchLimit);
+			if (CollectionUtils.isEmpty(byLimit)) {
+				resultList.clear();
+			} else {
+				resultList.retainAll(byLimit);
+			}
+		}
 
-	    sortPmPtjSpecialApprovalByMinistryName(resultList);
+		sortPmPtjSpecialApprovalByMinistryName(resultList);
 
-	    if (CollectionUtils.isNotEmpty(resultList)) {
-	        this.getManagedBean().setPtjSpecialApprovalList(resultList);
-	    } else {
-	        this.getManagedBean().setPtjSpecialApprovalList(new ArrayList<PmPtjSpecialApproval>());
-	    }
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			this.getManagedBean().setPtjSpecialApprovalList(resultList);
+		} else {
+			this.getManagedBean().setPtjSpecialApprovalList(new ArrayList<PmPtjSpecialApproval>());
+		}
 	}
-	
+
 	/**
-	 * #36738
-	 * filter QT values by PTJ name or PTJ code
+	 * #36738 filter QT values by PTJ name or PTJ code
+	 * 
 	 * @param searchPtjApprovalList
 	 * @param searchPtjApproval
 	 * @param searchValue
@@ -5932,63 +5913,56 @@ public class RuleCatalogueBackingBean extends
 
 		return result;
 	}
-	
+
 	/**
-	 * #36738
-	 * filter by limit
+	 * #36738 filter by limit
+	 * 
 	 * @param searchPtjApprovalList
 	 * @param searchLimitString
 	 * @return
 	 */
 	private List<PmPtjSpecialApproval> searchByLimit(List<PmPtjSpecialApproval> searchPtjApprovalList, BigDecimal searchLimit) {
-	    List<PmPtjSpecialApproval> result = new ArrayList<>();
+		List<PmPtjSpecialApproval> result = new ArrayList<>();
 
-	    if (searchLimit != null) {
-	        for (PmPtjSpecialApproval ptjApproval : searchPtjApprovalList) {
-	            BigDecimal ptjProcureLimitAmount = ptjApproval.getProcureAmt();
-	            if (ptjProcureLimitAmount != null && ptjProcureLimitAmount.compareTo(searchLimit) == 0) {
-	                result.add(ptjApproval);
-	            }
-	        }
-	    }
+		if (searchLimit != null) {
+			for (PmPtjSpecialApproval ptjApproval : searchPtjApprovalList) {
+				BigDecimal ptjProcureLimitAmount = ptjApproval.getProcureAmt();
+				if (ptjProcureLimitAmount != null && ptjProcureLimitAmount.compareTo(searchLimit) == 0) {
+					result.add(ptjApproval);
+				}
+			}
+		}
 
-	    return result;
+		return result;
 	}
-	
+
 	/**
-	 * #36738
-	 * reset filtered quotation values
+	 * #36738 reset filtered quotation values
 	 */
-	public void resetQtValues(){
+	public void resetQtValues() {
 		this.getManagedBean().setPtjSpecialApprovalList(this.getManagedBean().getOriginalPtjSpecialApprovalList());
 		this.getManagedBean().setSelectedMinistryId(null);
-	    this.getManagedBean().setSearchPtjCode(null);
-	    this.getManagedBean().setSearchPtjName(null);
-	    this.getManagedBean().setSearchQtValueLimit(null);
-	}	
-	
+		this.getManagedBean().setSearchPtjCode(null);
+		this.getManagedBean().setSearchPtjName(null);
+		this.getManagedBean().setSearchQtValueLimit(null);
+	}
+
 	/**
-	 * #36738
-	 * Change the search text into a regex
+	 * #36738 Change the search text into a regex
 	 */
-	public String searchRegex(String searchText){
+	public String searchRegex(String searchText) {
 		String searchRegex = "";
-		if (!searchText.isEmpty()){
-			searchRegex = searchText
-			        .replace("%", ".*?")
-			        .replace("_", ".")
-			        .replace("?", ".")
-			        .replace("*", ".*?");
-			
+		if (!searchText.isEmpty()) {
+			searchRegex = searchText.replace("%", ".*?").replace("_", ".").replace("?", ".").replace("*", ".*?");
+
 			return searchRegex;
-		}else{
+		} else {
 			return "";
 		}
 	}
-	
+
 	/**
-	 * #36738
-	 * Reset search value on tab change
+	 * #36738 Reset search value on tab change
 	 */
 	public void onAnyTabChange() {
 		int activeIndex = this.getManagedBean().getTabActiveIndex();
@@ -6005,7 +5979,7 @@ public class RuleCatalogueBackingBean extends
 	}
 	
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
-	    this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
+		this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
 	}
 	
 	/**
@@ -6035,5 +6009,6 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setDeletedMinistryNameList(deleteMinistryString);
 		return resetMinistryDropdown;
 	}
-	//#36738 End	
+	// #36738 End
+
 }

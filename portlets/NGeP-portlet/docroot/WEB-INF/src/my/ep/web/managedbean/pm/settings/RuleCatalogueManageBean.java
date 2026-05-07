@@ -144,7 +144,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String ruleType;  //#22113
 	private boolean LOPOSelected;
 	
-	//#36738 Start
+	// #36738 Start
 	private List<PmConfigRuleDesc> originalConfigRuleDescList;
 	private List<PmConfigRuleValue> originalConfigRuleValueList;
 	private HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap;
@@ -162,8 +162,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Boolean ruleValueCollapsePanel;
 	private Boolean qtValueCollapsePanel;
 	private List<String> deletedMinistryNameList;//#36738 #40071
-	//#36738 End
-
+	// #36738 End
+	
 	public RuleCatalogueManageBean() {
 
 	}
@@ -1501,7 +1501,31 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.LOPOSelected = LOPOSelected;
 	}
 
-	//#36738 Start
+	// #36738 Start
+	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
+		return originalConfigRuleDescList;
+	}
+	
+	public void setOriginalConfigRuleDescList(List<PmConfigRuleDesc> originalConfigRuleDescList) {
+		this.originalConfigRuleDescList = originalConfigRuleDescList;
+	}
+	
+	public List<PmConfigRuleValue> getOriginalConfigRuleValueList() {
+		return originalConfigRuleValueList;
+	}
+	
+	public void setOriginalConfigRuleValueList(List<PmConfigRuleValue> originalConfigRuleValueList) {
+		this.originalConfigRuleValueList = originalConfigRuleValueList;
+	}
+	
+	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {
+		return originalPtjSpecialApprovalList;
+	}
+	
+	public void setOriginalPtjSpecialApprovalList(List<PmPtjSpecialApproval> originalPtjSpecialApprovalList) {
+		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
+	}
+	
 	public String getSearchRuleType() {
 		return searchRuleType;
 	}
@@ -1550,22 +1574,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.searchRuleDataTypeZone = searchRuleDataTypeZone;
 	}
 	
-	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
-		return originalConfigRuleDescList;
-	}
-	
-	public void setOriginalConfigRuleDescList(List<PmConfigRuleDesc> originalConfigRuleDescList) {
-		this.originalConfigRuleDescList = originalConfigRuleDescList;
-	}
-	
-	public List<PmConfigRuleValue> getOriginalConfigRuleValueList() {
-		return originalConfigRuleValueList;
-	}
-	
-	public void setOriginalConfigRuleValueList(List<PmConfigRuleValue> originalConfigRuleValueList) {
-		this.originalConfigRuleValueList = originalConfigRuleValueList;
-	}
-	
 	public String getSearchPtjCode() {
 		return searchPtjCode;
 	}
@@ -1589,15 +1597,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSearchQtValueLimit(BigDecimal searchQtValueLimit) {
 		this.searchQtValueLimit = searchQtValueLimit;
 	}
-
-	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {
-		return originalPtjSpecialApprovalList;
-	}
-
-	public void setOriginalPtjSpecialApprovalList(List<PmPtjSpecialApproval> originalPtjSpecialApprovalList) {
-		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
-	}
-
+	
 	public Boolean getRuleTypeCollapsePanel() {
 		return ruleTypeCollapsePanel;
 	}
@@ -1609,11 +1609,11 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public Boolean getRuleValueCollapsePanel() {
 		return ruleValueCollapsePanel;
 	}
-
+	
 	public void setRuleValueCollapsePanel(Boolean ruleValueCollapsePanel) {
 		this.ruleValueCollapsePanel = ruleValueCollapsePanel;
 	}
-
+	
 	public Boolean getQtValueCollapsePanel() {
 		return qtValueCollapsePanel;
 	}
@@ -1629,14 +1629,13 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setOriginalConfigRuleValueMap(HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap) {
 		this.originalConfigRuleValueMap = originalConfigRuleValueMap;
 	}
-
+	
 	public List<String> getDeletedMinistryNameList() {
 		return deletedMinistryNameList;
 	}
-
+	
 	public void setDeletedMinistryNameList(List<String> deletedMinistryNameList) {
 		this.deletedMinistryNameList = deletedMinistryNameList;
 	}
-	//#36738 End	
-
+	// #36738 End
 }
