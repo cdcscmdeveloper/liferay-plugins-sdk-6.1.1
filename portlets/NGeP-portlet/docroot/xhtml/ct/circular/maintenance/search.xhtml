@@ -115,7 +115,7 @@
 									     (circularBackingBean.isCentralContractAdmin() and (data.status.statusId == CtStatusConst.cqApproved or data.status.statusId == CtStatusConst.cqUpdateApproved
 									 or data.status.statusId == CtStatusConst.cqUpdateRejected or data.status.statusId == CtStatusConst.cqUpdateCancelled
 									 or data.status.statusId == CtStatusConst.cqCancelRequestRejected))) }"
-							action="#{circularBackingBean.gotoPage('update', data.ctCircular.latestCircularVer.circularVerId)}">
+							action="#{circularBackingBean.gotoPage('update', data.ctCircular.latestCircularVer.circularVerId)}"><!-- #34367 -->
 						</p:menuitem>
 						<!-- Start #30866 -->
 						<p:menuitem id="menuItemId5" 
