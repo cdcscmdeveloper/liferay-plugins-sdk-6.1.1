@@ -1177,19 +1177,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					cardMaskedNum = jsonObject.optString("cardMaskedNum", null);
 					log.info("######38377#####json cardMaskedNum: " + cardMaskedNum);
 			    }
-				if (paydate != null && !paydate.isEmpty()) {
-			        try {
-			            paydate = DateUtils.reformatDate(
-			                paydate,
-			                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
-			                "yyyy-MM-dd HH:mm:ss"
-			            );
-			            date1 = paydate;
-			        } catch (Exception e) {
-			            // handle/ log bad date format without breaking the rest
-			            // e.g., keep original paydate or set to null
-			        }
-			    }
+				date1 = paydate;
 				paymentGateway = "Y";
 			} catch (Exception e1) {
 				e1.printStackTrace();
