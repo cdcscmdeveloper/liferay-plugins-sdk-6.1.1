@@ -72,6 +72,11 @@ public class CircularManagedBean extends BaseManagedBean {
 	private transient IPagingDataModel<VCcDp> circularDpListingDataModel = new CircularDpListingPagingDataModel();
 	private transient IPagingDataModel<VCcQt> circularQtListingDataModel = new CircularQtListingPagingDataModel();
 	// End - #30866
+	// Start Fix - #34367
+	private Long userPTJProfile;
+	private boolean ptjOwner = false;
+	// End Fix - #34367
+
 	private class CircularListingPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
 
@@ -152,6 +157,15 @@ public class CircularManagedBean extends BaseManagedBean {
 					resDTO = circularSO.searchCircularVer(reqDTO);
 				}
 				if(resDTO.isSuccessful()) {
+					//Start Fix - #34367
+					for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+						if(circularVer.getCtCircular().getOwnerOrgProfile() != null){
+							if(circularVer.getCtCircular().getOwnerOrgProfile().getOrgProfileId().equals(userPTJProfile)){
+								 setPtjOwner(true);
+							 }
+						}		 
+					}
+					//End Fix - #34367
 					return resDTO.getCircularVerResultBean();
 				}
 			} catch (Exception e) {
@@ -588,4 +602,22 @@ public class CircularManagedBean extends BaseManagedBean {
 		this.circularPqQtList = circularPqQtList;
 	}
 	// End - #30866
+	// Start Fix - #34367
+	public boolean isPtjOwner() {
+		return ptjOwner;
+	}
+
+	public void setPtjOwner(boolean ptjOwner) {
+		this.ptjOwner = ptjOwner;
+	}
+
+	public Long getUserPTJProfile() {
+		return userPTJProfile;
+	}
+
+	public void setUserPTJProfile(Long userPTJProfile) {
+		this.userPTJProfile = userPTJProfile;
+	}
+	// End Fix - #34367
+
 }
