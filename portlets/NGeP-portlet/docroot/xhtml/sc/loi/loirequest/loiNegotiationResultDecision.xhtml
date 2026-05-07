@@ -24,7 +24,7 @@
 								value="#{lOIDetailBackingBean.managedBean.decisionCode}">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.loiNegoDecisionType)}" />
-							</p:selectOneMenu>															
+							</p:selectOneMenu>
 							<p:message id="decisionMsg" for="decisionId" display="icon" />
 						</c:when>
 						<c:otherwise>
@@ -39,7 +39,8 @@
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.justification']}" /></td>
 				<td colspan="3"><p:inputTextarea id="justificationId"
-						disabled="#{readOnlyTask or isNotReachAgreement}" label="#{lbl['lbl.sc.justification']}"
+						disabled="#{readOnlyTask or isNotReachAgreement}"
+						label="#{lbl['lbl.sc.justification']}"
 						required="#{not empty param['skipvalidation']}"
 						value="#{lOIDetailBackingBean.managedBean.justification}"
 						cols="110" rows="3" onkeyup="limitTextArea(this,1000);"
@@ -69,6 +70,30 @@
 					oncomplete="blockWidget.hide();" partialSubmit="true"
 					process="@form" update="@form"
 					action="#{lOIDetailBackingBean.updateBpmTaskAction('SUBMIT')}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="submitNegoConfirmPopUp.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
+
+
+		<p:dialog id="submitMultiLoiNegoConfirmId"
+			widgetVar="submitMultiNegoConfirmPopUp"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
+			height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.nego.result.decision']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="submitNegoConfirmPopUp.hide(); blockWidget.show();"
+					oncomplete="blockWidget.hide();" partialSubmit="true"
+					process="@form" update="@form"
+					action="#{lOIDetailBackingBean.submitMultiLoiBpmTask('SUBMIT')}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="submitNegoConfirmPopUp.hide();" type="button"
 					partialSubmit="true" process="@this" />
