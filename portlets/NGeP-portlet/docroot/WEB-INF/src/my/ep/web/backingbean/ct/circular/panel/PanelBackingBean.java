@@ -531,7 +531,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
-			reqDTO.setCircularType(getManagedBean().getCircularDocType());
+			
+			// #37620,#34367 - Start
+			reqDTO.setDocType(getManagedBean().getCircularDocType());			
+			if (getManagedBean().getCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+					|| getManagedBean().getCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) {
+				reqDTO.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
+			} else {
+				reqDTO.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+			}
+			// #37620,#34367 - End
+			
 			CircularResDTO resDTO = circularSO.retrieveActiveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
 				getManagedBean().setCircularVerList(resDTO.getCircularVerList());
@@ -1851,19 +1861,25 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			String panelString = ResourceBundleUtils.getMessage("lbl.ct.panel.circular",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			String ministryPanelString = ResourceBundleUtils.getMessage("lbl.ct.ministry.panel.circular",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()); //#37620,#34367
 			String centralContractString = ResourceBundleUtils.getMessage("lbl.ct.central.contract.circular",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			//#37620,#34367 - Start
 			if(isPanelAdmin() && isCentralContractAdmin()) { 
-				items = new SelectItem[2];
-				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, panelString);
-				items[1] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, centralContractString);
+				items = new SelectItem[3];
+				items[0] = new SelectItem(ParameterConst.DOCTYPE_PANEL_CIRCULAR, panelString);
+				items[1] = new SelectItem(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY, ministryPanelString); 
+				items[2] = new SelectItem(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, centralContractString);
 			} else if(isPanelAdmin()) {
-				items = new SelectItem[1];
-				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, panelString);
+				items = new SelectItem[2]; 
+				items[0] = new SelectItem(ParameterConst.DOCTYPE_PANEL_CIRCULAR, panelString);
+				items[1] = new SelectItem(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY, ministryPanelString); 
 			} else if(isCentralContractAdmin()) {
 				items = new SelectItem[1];
-				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, centralContractString);
+				items[0] = new SelectItem(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, centralContractString);
 			}
+			//#37620,#34367 - End
 		} catch (Exception e) {
 			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
