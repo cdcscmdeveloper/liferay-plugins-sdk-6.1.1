@@ -61,7 +61,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
-import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;																	  
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -71,7 +71,6 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -10027,46 +10026,52 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		// 11104-End
 
 		// #29732 @idham 25/07/2023 - Start
-		if (isRoleValidationfromTaskList()) {
-			this.getManagedBean().setCategoryDescriptionChange(true);
-		}
-
-		String changedCatCodeList = checkCatCodeChange();
-
-		if (!changedCatCodeList.isEmpty()) {
-			this.getManagedBean().setActiveIndex(1);
-			retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
-
-			if (isRoleValidationPopUpMessagefor()
-					&& (SCProcessNameConst.ENDORSE_SCORING.equals(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_SCORING
-							.equals(this.getManagedBean().getTaskName()))) {
-				this.getManagedBean().setCheckUserCanRevise(true);
-
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-								QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-								QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A,
-								new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-								QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-								QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2,
-								new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
+		// #40140 -start-
+		if (null != this.getManagedBean().getCurrentStatusId()
+				&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(this.getManagedBean()
+						.getCurrentStatusId())) {
+		// #40140 -end-
+			if (isRoleValidationfromTaskList()) {
+				this.getManagedBean().setCategoryDescriptionChange(true);
 			}
-		}
+
+			String changedCatCodeList = checkCatCodeChange();
+
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setActiveIndex(1);
+				retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
+
+				if (isRoleValidationPopUpMessagefor()
+						&& (SCProcessNameConst.ENDORSE_SCORING.equals(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_SCORING
+								.equals(this.getManagedBean().getTaskName()))) {
+					this.getManagedBean().setCheckUserCanRevise(true);
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A,
+									new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2,
+									new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+				}
+			}
+		} // #40140
 		// #29732 @idham 25/07/2023 - End
 		
 		committeSO = null;
@@ -17790,26 +17795,31 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			specCommitteeResetData();
 			retriveSampleSpecmaster(specresDTO.getScQtCheckList(), this.getManagedBean().getSampleItemName());
 
-			for (ScQtCheckList checklist : technicalChecklist) {
+			// Bug #40087@Syazani 06/04/2026 -- Start
+			ListIterator<ScQtCheckList> itScQtCheckListTechnical = technicalChecklist.listIterator();
+			while (itScQtCheckListTechnical.hasNext()) {
+				ScQtCheckList checklist = itScQtCheckListTechnical.next();
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
 						.getParameterCode())) {
 					specReqDTO.setSampleCheckList(specresDTO.getSampleChecklist());
-					int index = technicalChecklist.indexOf(checklist);
 					specReqDTO.getSampleCheckList().setSampleWip(Boolean.TRUE);// 11104WIP
-					technicalChecklist.set(index, specresDTO.getSampleChecklist());
+					itScQtCheckListTechnical.set(specresDTO.getSampleChecklist());
 				} else if (specresDTO.getScQtCheckList().getQtChecklistId().equals(checklist.getQtChecklistId())) {
-					int index = technicalChecklist.indexOf(checklist);
-					technicalChecklist.set(index, specresDTO.getScQtCheckList());
+					itScQtCheckListTechnical.set(specresDTO.getScQtCheckList());
 				}
 			}
 
-			for (ScQtCheckList checklist : sampleChecklist) {
+			ListIterator<ScQtCheckList> itScQtCheckListSample = sampleChecklist.listIterator();
+			// #25635-start
+			while (itScQtCheckListSample.hasNext()) {
+				ScQtCheckList checklist = itScQtCheckListSample.next();
 				if (specresDTO.getScQtCheckList().getQtChecklistId().equals(checklist.getQtChecklistId())) {
-					int index = sampleChecklist.indexOf(checklist);
-					sampleChecklist.set(index, specresDTO.getScQtCheckList());
-					break;
+					itScQtCheckListSample.set(specresDTO.getScQtCheckList());
 				}
+				break;
 			}
+			// #25635-End
+			// Bug #40087@Syazani 06/04/2026 -- End
 
 			specReqDTO.setTobeRemoveList(null);
 			getManagedBean().setMarkDeletedTechChecklist(null);

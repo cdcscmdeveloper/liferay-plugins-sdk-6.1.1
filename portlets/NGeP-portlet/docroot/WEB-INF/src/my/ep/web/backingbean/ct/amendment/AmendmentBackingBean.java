@@ -3347,7 +3347,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Enhancement 15851 - end
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);					 
 				if (((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
-						|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) //24333
+						|| ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) //24333,40194
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 						&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))
@@ -3362,11 +3362,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			}
 			//24333 - Start
-			if (!getManagedBean().isPrepareLOA() && ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+			if (!getManagedBean().isPrepareLOA() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 					&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
-							|| ctBackingBean.isPk7FromDp())){ //24333
+							|| ctBackingBean.isPk7FromDp())){ //24333,40194
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithBond);
 			}
 			//24333 - End
@@ -3383,7 +3383,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() //#24333
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() //#24333,#40194
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 					&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))
@@ -4123,6 +4123,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#20997--Start
 		//Bug #29323 - Start
 		if(getManagedBean().getSelectedItem() != null){	
+			
 			for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemList()){
 				if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId())){
 					//#30879,#31065 for Max QTY & price -Start
@@ -4742,12 +4743,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
+			//Start Fix - #39722
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			resetMOFApprovingAuthReq();
+			//End Fix - #39722
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			//Start Fix - #33287
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
 			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
+			//Start Fix - #39722
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			resetMOFApprovingAuthReq();
+			//End Fix - #39722
 			isCentralContractTypeCheck();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
 			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
@@ -4768,33 +4781,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 
+	// Start Fix #39722
 	/**
 	 * Extracted criteria to set from onChangeValueByGstChecked() method to set
 	 * the gstAmount and staxAmout
 	 */
 	private void setGstAndStaxAmounts() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
-			ctBackingBean
-					.getManagedBean()
-					.getContractVer()
-					.getCtAmendment()
-					.setNewGstAmount(
-							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
+		BigDecimal contractAmountGst = (BigDecimal) EntityHelper.getNestedProperty(ctBackingBean.getManagedBean(),
+						"contractVer.ctContractAmount.gstAmount");
+		BigDecimal contractAmountSst = (BigDecimal) EntityHelper.getNestedProperty(ctBackingBean.getManagedBean(),
+						"contractVer.ctContractAmount.staxAmount");
+		CtAmendment amendment = (CtAmendment) EntityHelper.getNestedProperty(ctBackingBean.getManagedBean(),
+						"contractVer.ctAmendment");
+		if (contractAmountGst != null
+				&& contractAmountGst.compareTo(BigDecimal.ZERO) > 0) {
+			amendment.setNewGstAmount(contractAmountGst);
 		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+			amendment.setNewGstAmount(BigDecimal.ZERO);
 		}
-		
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
-			ctBackingBean
-					.getManagedBean()
-					.getContractVer()
-					.getCtAmendment()
-					.setNewStaxAmount(
-							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
+		if (contractAmountSst != null
+				&& contractAmountSst.compareTo(BigDecimal.ZERO) > 0) {
+			amendment.setNewStaxAmount(contractAmountSst);
 		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			amendment.setNewStaxAmount(BigDecimal.ZERO);
 		}
 	}
+
+	// End Fix #39722
 			
 	// End fix - #33287
 
@@ -8274,6 +8287,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	// End Fix - #39538
 	
+	// Start Fix - #39722
+	/**
+	 * <b>**Only applicable for Untick Scenario**</b></br> Resets the MOF
+	 * (Ministry of Finance) approving authority required flag.
+	 * 
+	 * <p>
+	 * This method checks whether the MOF authority required is currently
+	 * enabled for the active contract amendment. If the flag is set to
+	 * {@code true}, it will be reset to {@code false}.
+	 * </p>
+	 * 
+	 * <p>
+	 * No action is taken if the MOF authority required is already disabled.
+	 * </p>
+	 */
+	public void resetMOFApprovingAuthReq() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofAuthorityReq(false);
+		}
+	}
+	// End Fix - #39722
+
 	//#38823 start
 	/**
 	 * re-setting CtContractAmount in CtContractVer for ViewSCL to show previous
