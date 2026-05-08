@@ -1028,9 +1028,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 27868 - start
 		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-				validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
-						getManagedBean().getRequestSupplierItem());
 		    }
+		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+					getManagedBean().getRequestSupplierItem());
 			// 27868 - end
 		}
 		// 26284 - End
@@ -1085,10 +1085,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		// #27545 - start
-		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
-				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
-			validateAssignedUser(requestNoteDtls);
-		}
+		//-- removed by redmine #27868, #33224 
 		// #27545 - end
 				
 		//26059 - remove if else
@@ -2730,8 +2727,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					ReasonCategory.JUSTIFICATION_AD_HOC.value(), getManagedBean().getJustificationType()));
 		} else if (scRequestNoteDtl.getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(
-					ReasonCategory.JUSTIFICATION_PK7.value(), getManagedBean().getJustificationType()));
+			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(getParameterCodeForPK7(getRequestNoteCreatedDate()),
+					getManagedBean().getJustificationType()));// 27868
 		} // 27868 - start
 		else if (scRequestNoteDtl.getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
@@ -6984,21 +6981,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
 				List<PmReasonRestr> distinctReasonRestrList) {
 			for (PmReasonRestr rr : listReasonRestr) {
-				PmParameter param = rr.getSupplAcctTypeId();
-				boolean exists = false;
-
-				for (PmReasonRestr dr : distinctReasonRestrList) {
-					PmParameter existingParam = dr.getSupplAcctTypeId();
-
-					if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
-							existingParam != null ? existingParam.getParameterCode() : "")) {
-						exists = true;
-						break;
+				if(rr.getSupplAcctTypeId() != null){
+					PmParameter param = rr.getSupplAcctTypeId();
+					boolean exists = false;
+	
+					for (PmReasonRestr dr : distinctReasonRestrList) {
+						PmParameter existingParam = dr.getSupplAcctTypeId();
+	
+						if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+								existingParam != null ? existingParam.getParameterCode() : "")) {
+							exists = true;
+							break;
+						}
 					}
-				}
-
-				if (!exists) {
-					distinctReasonRestrList.add(rr);
+	
+					if (!exists) {
+						distinctReasonRestrList.add(rr);
+					}
 				}
 			}
 		}
@@ -7486,6 +7485,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				if (pmPK7Mapping != null) {
 					defaultToPK7W(pmPK7Mapping, rnDtl);
+					if (pmPK7Mapping.getNewParameterCode() != null
+							&& pmPK7Mapping.getNewParameterCode()
+									.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+						defaultToSpecialtem(rnDtl);
+					}
 				} else {
 					defaultToSpecialtem(rnDtl);
 				}

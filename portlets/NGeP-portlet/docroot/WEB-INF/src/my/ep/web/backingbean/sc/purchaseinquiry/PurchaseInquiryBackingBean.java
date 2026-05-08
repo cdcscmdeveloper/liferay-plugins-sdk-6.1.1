@@ -736,8 +736,10 @@ public class PurchaseInquiryBackingBean extends
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 				if (requestNoteDtl.getJustificationType().getReasonCode() != null) {
 					// 27868 - start
+					String originalReasonCode = requestNoteDtl.getJustificationType().getReasonCode();
 					requestNoteDtl.setJustificationType(getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_PK7W.value(), requestNoteDtl
 							.getJustificationType().getReasonCode()));
+					finaliseJustype(requestNoteDtl, originalReasonCode);
 					// 27868 - end
 				}
 			} // 27868 - start
@@ -801,8 +803,8 @@ public class PurchaseInquiryBackingBean extends
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateReasonStatus(requestNoteDtls);
 					validateUserProfileAgencyForSpecialItem(requestNoteDtls);
-					validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
 				}
+				validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
 				// 27868 - end
 				// Add selected supplier item.
 				scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
@@ -855,9 +857,9 @@ public class PurchaseInquiryBackingBean extends
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateReasonStatus(requestNote.getRequestNoteDtls());
 					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());
-					validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
-							scRequestSupplierItem);
 				}
+				validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
+						scRequestSupplierItem);
 				// 27868 - end
 				
 				reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -899,6 +901,22 @@ public class PurchaseInquiryBackingBean extends
 		}
 		return null;
 	}
+
+	// 27868 - start
+	/**
+	 * Set justification type if missing using original reason code.
+	 */
+	private void finaliseJustype(ScRequestNoteDtl requestNoteDtl, String originalReasonCode) {
+	    if (requestNoteDtl.getJustificationType() == null) {
+	        requestNoteDtl.setJustificationType(
+	            getReasonByCategoryAndCode(
+	                ReasonCategory.JUSTIFICATION_PK7.value(),
+	                originalReasonCode
+	            )
+	        );
+	    }
+	}
+	// 27868 - end
 
 	public String supplierSave() {
 		debugLogger("supplierSave");
@@ -1241,6 +1259,11 @@ public class PurchaseInquiryBackingBean extends
 
 			if (pmPK7Mapping != null) {
 				defaultToPK7W(pmPK7Mapping);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem();
+				}
 			} else {
 				defaultToSpecialtem();
 			}
@@ -4292,13 +4315,15 @@ public class PurchaseInquiryBackingBean extends
 	 *             if the reason code is inactive for any request note detail
 	 */
 	public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
-		PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-				.getReasonId());
-		if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
-			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
-				throw new EpException(MessageConst.ERROR_760716, new String[] {
-						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
-								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
+		if (null != getManagedBean().getRequestNoteDtl().getJustificationType()) {
+			PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
+					.getReasonId());
+			if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
+				for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
+					throw new EpException(MessageConst.ERROR_760716, new String[] {
+							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+									.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
+				}
 			}
 		}
 	}
@@ -4425,21 +4450,23 @@ public class PurchaseInquiryBackingBean extends
 	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
 			List<PmReasonRestr> distinctReasonRestrList) {
 		for (PmReasonRestr rr : listReasonRestr) {
-			PmParameter param = rr.getSupplAcctTypeId();
-			boolean exists = false;
-
-			for (PmReasonRestr dr : distinctReasonRestrList) {
-				PmParameter existingParam = dr.getSupplAcctTypeId();
-
-				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
-						existingParam != null ? existingParam.getParameterCode() : "")) {
-					exists = true;
-					break;
+			if(rr.getSupplAcctTypeId() != null){
+				PmParameter param = rr.getSupplAcctTypeId();
+				boolean exists = false;
+	
+				for (PmReasonRestr dr : distinctReasonRestrList) {
+					PmParameter existingParam = dr.getSupplAcctTypeId();
+	
+					if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+							existingParam != null ? existingParam.getParameterCode() : "")) {
+						exists = true;
+						break;
+					}
 				}
-			}
-
-			if (!exists) {
-				distinctReasonRestrList.add(rr);
+	
+				if (!exists) {
+					distinctReasonRestrList.add(rr);
+				}
 			}
 		}
 	}
@@ -4531,8 +4558,6 @@ public class PurchaseInquiryBackingBean extends
 			if (restr.getAgencyId() != null
 					&& restr.getAgencyId().getOrgProfileId().equals(userAgency.getOrgProfileId())) {
 				return true;
-			} else if (restr.getAgencyId() == null) {
-				return true;
 			}
 		}
 		return false;
@@ -4617,13 +4642,9 @@ public class PurchaseInquiryBackingBean extends
 			appendedCount = suppAccTypeSb.split(",").length;
 		}
 
-		if (rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-				.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())
-				|| rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-						.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+		if (validateProcurementTypeisRPT(rnDtl.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
 			throwJustificationTypeError(rnDtl, suppAccTypeSb, appendedCount);
-		} else if (rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-				.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+		} else {
 			throwSupplierAccountTypeError(rnDtl, suppAccTypeSb, appendedCount);
 		}
 	}
