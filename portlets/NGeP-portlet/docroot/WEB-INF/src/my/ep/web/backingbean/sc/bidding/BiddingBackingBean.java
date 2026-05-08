@@ -25,6 +25,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
@@ -52,6 +53,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.component.datetime.DateTimeInput;
 import my.ep.web.constant.sc.QTConstants;
@@ -573,6 +575,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			if (resDto.isSuccessful()) {
 				getManagedBean().setScheduledBid(resDto.getScBidSchedule());
 				getManagedBean().setBidPackages(resDto.getBidPackages());
+				// #28777 & #29729 - Start
+				this.getManagedBean().setBidPackagesDisqualified(resDto.getBidPackagesDisqualified());
+				this.getManagedBean().setDisqualified(resDto.isDisqualified());
+				// #28777 & #29729 - End
 			}
 			QuationTenderReqDTO qtreqDTO = new QuationTenderReqDTO();
 			QuationTenderResDTO qtresDTO = new QuationTenderResDTO();
@@ -897,6 +903,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setBidPriceItems(resDTO.getBidPriceItems());
+				// #28777 & 29729 - Start
+				this.getManagedBean().setBidPriceItemsDisqualified(resDTO.getBidPriceItemsDisqualified());
+				this.getManagedBean().setDisqualified(resDTO.isDisqualified());
+				// #28777 & 29729 - End
 
 				if (resDTO.getBidPriceItems() != null
 						&& resDTO.getBidPriceItems().size() != 0) {
@@ -1339,4 +1349,36 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				;
 	}
 	//#17376-144 End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if this supplier disqualified
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @return true or false
+	 **/
+	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId);
+	}
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if any zones are disqualified
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @param specZoneId
+	 * @return true or false
+	 **/
+	public Boolean checkZonesDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.flagZonesBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId, specZoneId);
+	}
+	// #28777 & #29729 - End
+	
 }

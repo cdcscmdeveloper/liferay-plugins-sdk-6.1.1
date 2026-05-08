@@ -167,7 +167,8 @@
 				<td class="TableFieldLeft">
 					<!-- #28784 -start- --> 
 					<h:outputText value="* "
-						styleClass="mandatory" /> <p:outputLabel
+						styleClass="mandatory"
+						rendered="#{!evaluationBackingBean.managedBean.demoWip}" /> <p:outputLabel
 						value="#{lbl['lbl.sc.eva.technical.presentation.demo.attached.file']}" /> 
 					<!-- #28784 - end -->
 				</td>

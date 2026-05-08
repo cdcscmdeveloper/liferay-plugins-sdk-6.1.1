@@ -1373,10 +1373,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// check performance bond		
 		//Bug #29885 start isPendingSubmissionStatus or isPendingRevisionStatus
-		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa.getPmStatus().getStatusId().longValue()) || 
-				QTStatusConst.LOA_PENDING_REVISION .equals(scLoa.getPmStatus().getStatusId().longValue())){
-			checkPerformanceBondMandatory();
+		// 40252 - start
+		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa.getPmStatus().getStatusId().longValue()) || QTStatusConst.LOA_PENDING_REVISION
+				.equals(scLoa.getPmStatus().getStatusId().longValue())) {
+			if (isFromDP(scLoa)){
+				getManagedBean().setPerformanceBondMandatory(false);
+			}else{
+				checkPerformanceBondMandatory();
+			}
 		}
+		// 40252 - end
+	
 		//Bug #29885 end
 		
 		//Enhancement #24259 #24269
@@ -3983,6 +3990,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			// #29006 - start - avoid error 100048
 			if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
+				addLastDocumentPayLoad(scLoa);//#21692, #38604
 				AwardSupplierReqDTO suppReqDTO = new AwardSupplierReqDTO();
 				suppReqDTO.setLoaId(scLoa.getLoaId());
 				AwardSupplierResDTO suppResTO = getQtAwardSO()
@@ -6647,7 +6655,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		checkAgreementMandatory();
 
-		checkPerformanceBondMandatory();
+		//40252 - start
+		if (isFromDP(scLoa)){
+			getManagedBean().setPerformanceBondMandatory(false);
+		}else{
+			checkPerformanceBondMandatory();
+		}
+		//40252 - end
 
 		calcBondAmountWithSST(scLoa, Boolean.FALSE);
 		
@@ -12205,6 +12219,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//#21692 - End
 	
+	// 40252 - start
+	/**
+	 * To differentiate source method either from DP or QT
+	 * Returns true if the doc type in sc_loi_loa is Purchase Request.
+	 *
+	 * @param scLoa the LOA data to evaluate
+	 * @return true if the doc type is Purchase Request, otherwise false
+	 */
+	public boolean isFromDP(ScLoa scLoa) {
+		return scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getDocType() != null
+				&& scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+	}
+	// 40252 - end
+
+	//#21692, #38604 - Start
+	private void addLastDocumentPayLoad(ScLoa scLoa) {
+		if (scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+			SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) getManagedBean().getPayLoad();
+			awardSupplierDataType.setLastDocument(getQtAwardSO().isLastDocumentLOA(scLoa.getScLoiLoa().getDocId()));
+			getManagedBean().setPayLoad(awardSupplierDataType);
+		}
+	}
+	//#21692, #38604 - End
 	
 	// #25725/25726 - start
 

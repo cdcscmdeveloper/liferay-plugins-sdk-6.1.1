@@ -87,14 +87,16 @@ a:hover.blue_font {
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			    <td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+			    <!-- Bug #40022@Syazani - Start 16/02/2026 -->
 				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER" label="#{lbl['lbl.sc.supplier.name']}" 
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
+						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.tempSmSupplier)"
 						headerText="#{lbl['lbl.sc.supp.name']}" selectionMode="single"
-						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
+						saveObject="directLOABackingBean.managedBean.tempSmSupplier"
 						conditionField="recordStatus^1|smMofAccounts.recordStatus^1" readonly="true" size="106"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						update="@form" required="true" /></td>
+						<!-- Bug #40022@Syazani - End 16/02/2026 -->
 			</tr>
 			
 			<tr>
@@ -395,7 +397,7 @@ a:hover.blue_font {
 				<td>
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
-							<ui:remove> #19336 - start </ui:remove>
+							<!-- 19336 -start- -->
 							<c:choose>
 							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
 							<p:inputText 
@@ -403,7 +405,7 @@ a:hover.blue_font {
 								size="35" disabled="true" />
 							</c:when>
 							<c:otherwise>
-							<ui:remove> #19336 - end </ui:remove>
+							<!-- 19336 -end- -->
 								<p:selectOneMenu
 										style="width: 206px;margin-bottom: 5px;" id="justificationId"
 										panelStyle="overflow-y: scroll; width:400px; height:200px;"
@@ -419,10 +421,10 @@ a:hover.blue_font {
 									
 									</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId"
 										display="icon" />
-							<ui:remove> #19336 - start </ui:remove>			
+							<!-- 19336 -start- -->
 							</c:otherwise>
 							</c:choose>
-							<ui:remove> #19336 - end </ui:remove>
+							<!-- 19336 -end- -->
 						</c:if>
 					</h:panelGroup>
 				</td>
@@ -432,12 +434,12 @@ a:hover.blue_font {
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
-				     <ui:remove>#39995 Start Vinod 11/02/2026 Added maxlength</ui:remove>
+				     <ui:remove>39995 Start</ui:remove>
 				     <p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
 						label="#{lbl['lbl.sc.qt.fileno']}" size="28" maxlength="50" >
-					 <ui:remove>#39995 End Vinod 11/02/2026</ui:remove>
+					 <ui:remove>39995 End</ui:remove>
 						<p:ajax event="blur" process="fileNoId" update="fileNoId"/>
 						</p:inputText>
 						 <p:spacer width="1px" />
@@ -649,7 +651,7 @@ a:hover.blue_font {
 												<c:when test="#{!directLOABackingBean.isPbDropDown()}">
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
-															<ui:remove> #19336 - start </ui:remove>
+															<!-- 19336 -start- -->
 															<c:choose>
 															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
 																<p:inputText 
@@ -657,7 +659,7 @@ a:hover.blue_font {
 																size="28" disabled="true" />
 															</c:when>
 															<c:otherwise>
-															<ui:remove> #19336 - end </ui:remove>
+															<!-- 19336 -end- -->
 															<p:selectOneMenu id="bondReqPk7" required="true"
 																style="margin-bottom:5px;width:175px;"
 																value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
@@ -672,10 +674,10 @@ a:hover.blue_font {
 														 		listener="#{directLOABackingBean.updatePerformanceBond(directLOABackingBean.managedBean.scLoa)}"/>
 															
 															</p:selectOneMenu>
-															<ui:remove> #19336 - start </ui:remove>															
+															<!-- 19336 -start- -->
 															</c:otherwise>
 															</c:choose>
-															<ui:remove> #19336 - end </ui:remove>
+															<!-- 19336 -end- -->
 														</c:when>
 														<c:otherwise>
 															<p:inputText id="bondReqTxt"
@@ -685,7 +687,7 @@ a:hover.blue_font {
 													</c:choose>
 												</c:when>
 												<c:otherwise>
-													<ui:remove> #19336 - start </ui:remove>												
+													<!-- 19336 -start- -->
 													<c:choose>
 													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
 														<p:inputText 
@@ -693,7 +695,7 @@ a:hover.blue_font {
 														size="28" disabled="true" />
 													</c:when>
 													<c:otherwise>
-													<ui:remove> #19336 - end </ui:remove>
+													<!-- 19336 -end- -->
 													<p:selectOneMenu id="performanceBondValId" required="true"
 														style="margin-bottom:5px;width:175px;"
 														value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
@@ -709,10 +711,10 @@ a:hover.blue_font {
 														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 														 listener="#{directLOABackingBean.updatePerformanceBond(directLOABackingBean.managedBean.scLoa)}"/>
 													</p:selectOneMenu>
-													<ui:remove> #19336 - start </ui:remove>													
+													<!-- 19336 -start- -->
 													</c:otherwise>
 													</c:choose>
-													<ui:remove> #19336 - end </ui:remove>
+													<!-- 19336 -end- -->
 												</c:otherwise>
 											</c:choose>
 										</c:otherwise>
@@ -765,7 +767,7 @@ a:hover.blue_font {
 					<ui:remove> #26770 - start </ui:remove>	
 					<p:outputLabel style="width:145%; text-align:left;" value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
 					<p:outputLabel style="width: 151%;text-align:left;margin-top: -63px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-					<ui:remove> #26770 - end </ui:remove>	
+					<ui:remove> #26770 - end </ui:remove>
 				</td>
 				<td>
 					<table>
@@ -785,7 +787,7 @@ a:hover.blue_font {
 							<td>
 								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" />
 							</td>
-							<ui:remove> #26770 - end </ui:remove>	
+							<ui:remove> #26770 - end </ui:remove>
 						</tr>
 					</table>
 				</td>
@@ -843,12 +845,13 @@ a:hover.blue_font {
 						<p:outputPanel id="opPtjOrgCode" 
 							rendered="#{ParameterConst.orgTypePtj eq directLOABackingBean.managedBean.selectedOrgType.parameterCode or 
 							ParameterConst.orgTypePtjGroup eq directLOABackingBean.managedBean.selectedOrgType.parameterCode}">
+							<!-- 26474 -start- -->
 							<p:inputText 
 								size="106"
 								id="itSelectedPtj" 
 								value="#{directLOABackingBean.managedBean.selectedPtj.orgName}" 
 								readonly="true"
-								/>
+								/> <!-- 26474 -end- -->
 							&#160;
 							<p:commandLink id="ptjSearchCL" partialSubmit="true"
 								disabled="#{directLOABackingBean.managedBean.selectedOrgType.parameterId==null}"
@@ -861,10 +864,12 @@ a:hover.blue_font {
 
 						<h:panelGroup rendered="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
 							or directLOABackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
+							<!-- 26474 -start- -->
 							<ac:ptjPopup 
 								id="orgProfileCcId"
 								orgTypeParamCode="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode}"
 								okAction="directLOABackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj"/>
+								<!-- 26474 -end- -->
 						</h:panelGroup>
 					</c:if>
 					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />
@@ -972,7 +977,7 @@ a:hover.blue_font {
 												<c:when test="#{!directLOABackingBean.isAgreementDropDown()}">
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
-															<ui:remove> #19336 - start </ui:remove>
+															<!-- 19336 -start- -->
 															<c:choose>
 															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
 																<p:inputText 
@@ -980,7 +985,7 @@ a:hover.blue_font {
 																size="28" disabled="true" />
 															</c:when>
 															<c:otherwise>
-															<ui:remove> #19336 - end </ui:remove>
+															<!-- 19336 -end- -->
 															<p:selectOneMenu id="agreementReqPk7" required="true"
 																style="margin-bottom:5px;width:246px;"
 																value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
@@ -994,10 +999,10 @@ a:hover.blue_font {
 																 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
 																
 															</p:selectOneMenu>
-															<ui:remove> #19336 - start </ui:remove>
+															<!-- 19336 -start- -->
 															</c:otherwise>
 															</c:choose>
-															<ui:remove> #19336 - end </ui:remove>
+															<!-- 19336 -end- -->
 														</c:when>
 														<c:otherwise>
 															<p:inputText id="agreementReqTxt"
@@ -1007,7 +1012,7 @@ a:hover.blue_font {
 													</c:choose>
 												</c:when>
 												<c:otherwise>
-												<ui:remove> #19336 - start </ui:remove>
+													<!-- 19336 -start- -->
 													<c:choose>
 													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
 														<p:inputText 
@@ -1051,7 +1056,7 @@ a:hover.blue_font {
 														</c:otherwise>
 														<!-- #25726 - End-->
 													</c:choose>
-													<ui:remove> #19336 - end </ui:remove>
+													<!-- 19336 -end- -->
 												</c:otherwise>
 											</c:choose>
 									</c:otherwise>

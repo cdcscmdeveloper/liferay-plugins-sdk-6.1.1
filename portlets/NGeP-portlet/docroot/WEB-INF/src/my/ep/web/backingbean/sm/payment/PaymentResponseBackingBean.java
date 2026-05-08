@@ -307,6 +307,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
 		
+		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
+		String cardMaskedNum = reqMap.get("cardMaskedNum");
+		
 		//#Start 33137
 		String fpxTranId = null;
 		String molpayTranId = null;
@@ -604,7 +607,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				//#33137 - start
 				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
 				smPaymentRes.setTransactionId(tranID);
-				smPaymentRes.setMolpayTransactionId(molpayTranId);
+				smPaymentRes.setMolpayTransactionId((cardMaskedNum!=null && cardMaskedNum.length()>0)?cardMaskedNum: molpayTranId);
 				smPaymentRes.setFpxTranId(fpxTranId);
 				log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
 				//#33137 - end
@@ -1147,6 +1150,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String paymentRefNo = "";
 		String bankName = "";
 		String providerTransId = "";
+		String cardMaskedNum = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
@@ -1168,20 +1172,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				errorDesc = jsonObject.optString("errDesc",null);
 				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
 			        cardType = ParameterConst.CARD_TYPES_CREDIT;
+			        
+			      //do not include to PROD. Used for generate dummy transaction list excel
+					cardMaskedNum = jsonObject.optString("cardMaskedNum", null);
+					log.info("######38377#####json cardMaskedNum: " + cardMaskedNum);
 			    }
-				if (paydate != null && !paydate.isEmpty()) {
-			        try {
-			            paydate = DateUtils.reformatDate(
-			                paydate,
-			                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
-			                "yyyy-MM-dd HH:mm:ss"
-			            );
-			            date1 = paydate;
-			        } catch (Exception e) {
-			            // handle/ log bad date format without breaking the rest
-			            // e.g., keep original paydate or set to null
-			        }
-			    }
+				date1 = paydate;
 				paymentGateway = "Y";
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -1210,6 +1206,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("paymentRefNo", paymentRefNo);
 		reqMap.put("providerTransId", providerTransId);
 		reqMap.put("bankName", bankName);
+		reqMap.put("cardMaskedNum", cardMaskedNum);
 
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
 		log.info("######38377#####tranID: " + reqMap.get("tranID"));

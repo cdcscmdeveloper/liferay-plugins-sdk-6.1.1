@@ -66,7 +66,11 @@
 	<ui:param name="isDemoEvalDisabled"  
 		value="#{qTDetailBB.managedBean.demoEvalDisabled}" />	
 	<ui:param name="isDemoSpecialCase"  
-		value="#{qTDetailBB.managedBean.demoSpecialCase}" />			
+		value="#{qTDetailBB.managedBean.demoSpecialCase}" />
+	<!-- #40237/25726 - Start -->
+	<ui:param name="isGenInfo"
+		value="#{specificationBackingBean.managedBean.genInfo}" />
+	<!-- #40237/25726 - End -->
 	<ac:lovPopup />
 	<!-- START #28784 -->
 	<p:blockUI block=":form" widgetVar="blockWidget">
