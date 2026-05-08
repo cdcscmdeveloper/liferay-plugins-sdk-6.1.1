@@ -2050,7 +2050,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#30737 - Start 
 		//Amendment without supplemental
 		//Notification setting
-		//Fulfilment creation
+		//Fulfilment creation/update
 		
 		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
 		ContractReqDTO reqDTO = new ContractReqDTO();
@@ -2062,8 +2062,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		log.info("xoxoxoxoxooxoxo action : "+action);
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName(); // add defensive code
-			log.info("xoxoxoxoxooxoxo SUBMIT AMENDMENT WITHOUT / NOTIFICATION SETTING / FULFILMENT CREATION - ERROR_100068");
-			//getManagedBean().setSelectedTabIndex(0);
+			log.info("xoxoxoxoxooxoxo SUBMIT AMENDMENT WITHOUT / NOTIFICATION SETTING / FULFILMENT CREATION/UPDATE - ERROR_100068");
+//			getManagedBean().setSelectedTabIndex(0);
 //            handleInactiveUserCheck(
 //            	reqDTO,
 //                MessageConst.ERROR_100068,
@@ -2072,7 +2072,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
         }
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT WITHOUT / NOTIFICATION SETTING / FULFILMENT CREATION");
+			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT WITHOUT / NOTIFICATION SETTING / FULFILMENT CREATION/UPDATE");
 			//getManagedBean().setSelectedTabIndex(0);
 //			handleInactiveUserCheck(
 //            	reqDTO,

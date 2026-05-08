@@ -5366,30 +5366,4 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	// #37620,#34367 - End
 	
-	//#30737 - Start
-//		// Check user by scenario
-//		// if no active user, display another notificiation (2.2.1) and send notification to dashboard (2.2.2)
-//		// *selected* insert new tracking diary (next role but send to group task instead)
-//		
-//		// submit = alert popup + 2.2.1 + 2.2.2
-//		// submit = 2.1 + 2.2.1 + 2.2.2 + new tracking :: MCA/CCA -> CA
-//		// submit = no alert + 2.2.1 + 2.2.2 + tracking diary :: supplier -> MCA/CCA
-//		
-//		// revise = no alert + 2.2.1 + 2.2.2 + tracking diary
-//		
-//		// approve = no alert + 2.2.1 + 2.2.2 + tracking diary  :: CA -> MCA/CCA
-//		// aprrove = alert + 2.2.1 + 2.2.2  :: CA -> DO
-//		
-//		// cancel = no alert + 2.2.1 + 2.2.2 + tracking diary :: DO -> MCA/CCA
-//		
-//		// SIGN OFF = no alert + 2.2.1 + 2.2.2 + tracking diary :: CHAIR -> MCA/CCA
-//		
-//		// reject = no alert + 2.2.1 + 2.2.2 + tracking diary
-//		
-//		// submit @ approve = MCA/CCA @ CA -> supplier = no alert, only system action
-//		
-//		// acknowledge = no alert + 2.2.1 + 2.2.2 + tracking diary  :: supplier -> MCA/CCA 
-
-	//#30737 - End
-	
 }  

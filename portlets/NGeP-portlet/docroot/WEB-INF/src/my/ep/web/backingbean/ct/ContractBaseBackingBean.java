@@ -383,8 +383,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
                 getSelectedUsers()
             );
         	
-        	log.info("xoxoxoxoxoxoxo TEMPORARY force throw error");
         	if(errorCode != null){
+        		log.info("xoxoxoxoxoxoxo TEMPORARY force throw error");
         		throw new EpException(errorCode);
         	}
 

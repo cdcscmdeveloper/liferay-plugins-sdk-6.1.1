@@ -69,6 +69,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper; //#37620,#34367
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
@@ -992,17 +993,62 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		
 		//#30737 - Start
 		//Agreement
-		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			log.info("xoxoxoxoxooxoxox SUBMITTT AGGREEMENT!!!!!! ERROR_100068");
-//			getManagedBean().setSelectedTabIndex(0);
-//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+		
+		CtContractVer ctContractVer = getManagedBean().getContractVer();
+		CtContractVer agreementContractVer = getManagedBean().getAgreementContractVer();
+		CtAgreement ctAgreement = getManagedBean().getCtAgreement();
+		
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(getUserRole());
+		reqDTO.setOutcome(outcome);
+		reqDTO.setCtContractVer(ctContractVer);
+
+		log.info("xoxoxoxoxooxoxo getContractVerId : "+ctContractVer.getContractVerId());
+		log.info("xoxoxoxoxooxoxo agreementContractVer Id : "+agreementContractVer.getContractVerId());
+		log.info("xoxoxoxoxooxoxo action : "+outcome);
+		
+		log.info("xoxoxoxoxooxoxo STATUS : "+ctContractVer.getStatus());
+		log.info("xoxoxoxoxooxoxo STATUS agreeementContractVer statusId : "+agreementContractVer.getStatus());
+		log.info("xoxoxoxoxooxoxo STATUS agreement statusId : "+ctAgreement.getStatus());
+		
+		
+//		kat mana nak dapat status id untuk tracking diary?
+		
+		
+		if(ctContractVer.getStatus() != null){
+			log.info("xoxoxoxoxooxoxo ctContractVer STATUS ID : "+ctContractVer.getStatus().getStatusId());
 		}
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			log.info("xoxoxoxoxooxoxox REVISE!!!!!! ERROR_100069");
-//			getManagedBean().setSelectedTabIndex(0);
-//			ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		
+		if(agreementContractVer.getStatus() != null){
+			log.info("xoxoxoxoxooxoxo agreementContractVer STATUS ID : "+agreementContractVer.getStatus().getStatusId());
 		}
+		
+		if(ctAgreement.getStatus() != null){
+			log.info("xoxoxoxoxooxoxo ctAgreement STATUS ID : "+ctAgreement.getStatus().getStatusId());
+		}
+		
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+//			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName(); // add defensive code
+//			log.info("xoxoxoxoxooxoxo SUBMIT AGGREEMENT - ERROR_100068");
+//			getManagedBean().setSelectedTabIndex(0);
+//            handleInactiveUserCheck(
+//            	reqDTO,
+//                MessageConst.ERROR_100068,
+//                new String[]{approverName}
+//            );
+        }
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo REVISE AGGREEMENT");
+//			getManagedBean().setSelectedTabIndex(0);
+//			handleInactiveUserCheck(
+//            	reqDTO,
+//                null,
+//                null
+//            );
+        }
+		
 		//#30737 - End
 		
 	}
