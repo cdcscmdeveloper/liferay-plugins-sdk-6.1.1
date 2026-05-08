@@ -52,10 +52,6 @@ public class PaymentReceiptBackingBean extends BaseBackingBean<PaymentReceiptMan
 		
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_PAYMENT_ID, paymentId + "");
-		// #38977 - Start
-		paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT,
-				ReportConst.PARAM_PAYMENT_PREPRINT_SALINAN);
-		// #38977 - End
 		//Enhancement #19056 To replace Receipt document format for SPKI purchase to Tax Invoice format
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -70,6 +66,19 @@ public class PaymentReceiptBackingBean extends BaseBackingBean<PaymentReceiptMan
 			 receiptFileName = ReportConst.SM_TAX_INVOICE_SST;
 		}
 		log.info(":::printReceipt() paymentId: "+ paymentId +". billType: "+ billType +". receiptFileName: " +receiptFileName);
+		
+		// #38977 - Start
+		if (!resDTO.getPyPayment().getReprintReceipt()) {
+			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT,
+					ReportConst.PARAM_PAYMENT_PREPRINT_ASAL);
+			resDTO.getPyPayment().setReprintReceipt(true);
+			reqDTO.setPyPayment(resDTO.getPyPayment());
+			reqSO.updatePaymentReceipt(reqDTO);
+		} else if (resDTO.getPyPayment().getReprintReceipt()) {
+			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT,
+					ReportConst.PARAM_PAYMENT_PREPRINT_SALINAN);
+		}
+		// #38977 - End
 		
 		if (billType.equalsIgnoreCase(
 						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) || 

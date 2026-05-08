@@ -25,7 +25,9 @@
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.name']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.name}" /></td>
+				<!-- 29659 START -->
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.title.salutationName} #{softCertBackingBean.managedBean.loginUserPersonnelInfo.name}" /></td>
+				<!-- 29659 END -->
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mysoftcert.no']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}" /></td>
 			</tr>

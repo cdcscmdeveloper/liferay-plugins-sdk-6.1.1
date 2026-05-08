@@ -259,7 +259,7 @@ public class PaymentUtil {
     public static String constructJsonPayload(String merchantCode,
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
-			String cancelUrl,String responseUrl,String callbackUrl) {
+			String cancelUrl,String responseUrl,String callbackUrl,String language) {
 		log.info("#38377--responseUrl:"+responseUrl);
 		log.info("#38377--callbackUrl:"+callbackUrl);
 		String payload = null;
@@ -272,6 +272,7 @@ public class PaymentUtil {
 				.append("\",").append("\"responseUrl\":\"").append(responseUrl)
 				.append("\",").append("\"callbackUrl\":\"").append(callbackUrl)
 				.append("\",").append("\"cancelUrl\":\"").append(cancelUrl)
+				.append("\",").append("\"language\":\"").append(language)
 				.append("\",").append("\"merchantCode\":\"")
 				.append(merchantCode).append("\",");
 		try {

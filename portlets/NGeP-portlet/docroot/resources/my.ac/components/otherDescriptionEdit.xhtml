@@ -15,7 +15,7 @@
 	<cc:implementation>
 		<p:dialog
 			id="otherDescriptionEditDlgId"
-			header="#{cc.attrs.dialogHeader} #{backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Code}#{backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Code}#{backingBean.managedBean.selectedCategory.pmCategoryL3.categoryL3Code}"
+			header="#{cc.attrs.dialogHeader} #{backingBean.managedBean.historySuppCategory.pmCategoryL1.categoryL1Code}#{backingBean.managedBean.historySuppCategory.pmCategoryL2.categoryL2Code}#{backingBean.managedBean.historySuppCategory.pmCategoryL3.categoryL3Code}"
 			closable="true"
 			widgetVar="otherDescriptionEditDlg"
 			resizable="false" modal="true"
@@ -52,8 +52,10 @@
 								value="#{lbl['lbl.btn.yes']}"
 								disabled="#{!backingBean.managedBean.updateRecordTC}"
 								partialSubmit="true"
-								update=":form"
-								action="#{backingBean.saveOtherDescriptionEdit}" />
+								process="@form"
+    							update="@form"
+								action="#{backingBean.saveOtherDescriptionEdit}"
+								oncomplete="otherDescriptionEditDlg.hide()" />
 							<p:commandButton id="btnNo"
 								value="#{lbl['lbl.btn.no']}"
 								action="#{backingBean.resetOtherDescriptionEdit}"

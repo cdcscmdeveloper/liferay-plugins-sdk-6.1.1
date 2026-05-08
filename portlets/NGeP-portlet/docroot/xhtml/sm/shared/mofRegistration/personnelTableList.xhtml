@@ -37,7 +37,9 @@
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit }"
 				>
-				<h:outputText value="#{person.name}" />
+				<!-- 29659 START -->
+				<h:outputText value="#{person.title.salutationName} #{person.name}" />
+				<!-- 29659 END -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}"
@@ -107,12 +109,10 @@
 					action="#{backingBean.assignSelShareHolder(person)}"
 					process="@this,@([id$=prsnlInfoSecPoRmrk]),:#{p:component('prsnlSecApprvrRmrk')}"
 					partialSubmit="true" update=":form" style="padding-right:5px;">
-					<p:outputPanel
-						rendered="#{backingBean.managedBean.upsCannotEdit or backingBean.managedBean.disAllowOwnerEdit}">
+					<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit or backingBean.managedBean.disAllowOwnerEdit}">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:outputPanel>
-					<p:outputPanel
-						rendered="#{!backingBean.managedBean.upsCannotEdit and !backingBean.managedBean.disAllowOwnerEdit}">
+					<p:outputPanel rendered="#{!backingBean.managedBean.upsCannotEdit and !backingBean.managedBean.disAllowOwnerEdit}">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:outputPanel>
 				</p:commandLink>

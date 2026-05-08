@@ -767,6 +767,11 @@ public class SupplierManagementConst {
 	// #28895_35501 End
 	// #34031
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
+	// #9299 Start
+	public static final String SM_COMP_EXP_FILE_PATH = "/SM/COMPEXP/";
+	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
+	public static final int PHASE_1 = 1;
+	// #9299 End
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
@@ -791,6 +796,12 @@ public class SupplierManagementConst {
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
 //	#37925 END
+	//33783 - start
+	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
+	public String getCOMPANY_TYPE_CLBG() {
+		return COMPANY_TYPE_CLBG;
+	}
+	//33783 - end
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {

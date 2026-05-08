@@ -29,7 +29,7 @@
 				<!-- #34159 - START - add param disableValidation -->
 				<!-- 34810, #34400 - start  -->
 				<td style="white-space: nowrap; float: right;">
-					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" process="@all" update="@form"
 						oncomplete="if (!args.validationFailed) confirmDlg.show()" >
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
@@ -217,9 +217,20 @@
 						<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
 						validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" required="true">	
 						<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-						<p:ajax event="change" process="@this"  update="basicBUEmail"/> 
+						<ui:remove>#28720 Start</ui:remove>
+						<p:ajax event="change" process="@this"
+							listener="#{smPersonnelBackingBean.onChangeEmail()}"
+							update="basicBUEmail" />
+						<ui:remove>#28720 End</ui:remove>
 						</p:inputText>
-							
+						<ui:remove>#28720 Start</ui:remove>
+						<p:graphicImage id="toolTipIcon"
+							value="/css/images/design/tooltips.png" />
+						<p:tooltip id="sourceTooltip" for="toolTipIcon">
+							<h:outputText id="sourceLabel" escape="false"
+								value="#{lbl['lbl.sm.email.change.tooltip']}" />
+						</p:tooltip>
+						<ui:remove>#28720 End</ui:remove>
 						<p:message id="basicBUEmailMsg" for="basicBUEmail" showSummary="true" showDetail="false" display="icon" />
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /> <p:outputLabel
@@ -649,7 +660,7 @@
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}">
 											<!-- #36718 - process division, district, city dropdown -->
 											<p:ajax event="change" update="@([id$=MailingAddressInfo])"
-												partialSubmit="true" process="@this,basicMailAddDivisionList,basicMailAddDistrictList,basicMailAddCityList"
+												partialSubmit="true" process="@([id$=MailingAddressInfo])"
 												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
 												smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}" />
 										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
@@ -851,7 +862,10 @@
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 													size="35">
-													<f:validator validatorId="postcodeValidator" />
+													<!-- #36718 - Start  -->
+													<p:ajax process="@all" partialSubmit="true" update="@this basicMailAddPostCodeMyMsg"
+														listener="#{smPersonnelBackingBean.checkPostcode(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode)}" />
+													<!-- #36718 - End  -->
 												</p:inputText>
 												<p:message id="basicMailAddPostCodeMyMsg"
 													for="basicMailAddPostCodeMy" showSummary="true"
@@ -1401,6 +1415,10 @@
 			</p:outputPanel>
 		</p:dialog>
 		</p:panel>
-		
+		<ui:remove>#28720 Start</ui:remove>
+		<ac:smEmailAlertPopup bBean="#{backingBean}"
+			title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+			btnOkLabel="#{lbl['lbl.btn.ok']}" />
+		<ui:remove>#28720 End</ui:remove>
 	</ui:define>
 </ui:composition>
