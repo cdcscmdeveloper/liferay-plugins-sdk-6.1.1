@@ -375,6 +375,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupPO;
 	private boolean otherDescChangeSupApprover;
 	private String otherDescEdited;
+	private SmSupplierCategory historySuppCategory;
+	private SmSupplierCategory selectedCategory;
 	// 36504 - END
 	
 	public String getSupportingDocMode() {
@@ -2761,7 +2763,36 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
 		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
 	}
+	
+	/**
+	 * @return the historySuppCategory
+	 */
+	public SmSupplierCategory getHistorySuppCategory() {
+		return historySuppCategory;
+	}
+
+	/**
+	 * @param historySuppCategory the historySuppCategory to set
+	 */
+	public void setHistorySuppCategory(SmSupplierCategory historySuppCategory) {
+		this.historySuppCategory = historySuppCategory;
+	}
+	
+	/**
+	 * @return the selectedCategory
+	 */
+	public SmSupplierCategory getSelectedCategory() {
+		return selectedCategory;
+	}
+
+	/**
+	 * @param selectedCategory the selectedCategory to set
+	 */
+	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
+		this.selectedCategory = selectedCategory;
+	}
 	// 36504 - END
+	
 	// 9299 - Start
 	private class MasterAllPagingDataModel extends PagingDataModel<SmCompExpMaster> {
 
@@ -2797,5 +2828,5 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.masterAllDataModel = masterAllDataModel;
 	}
 	// 9299 - END
-	
+
 }

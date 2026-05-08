@@ -3746,7 +3746,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
-		//#35350 - Start;
+		//#35320 - Start;
 		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
 			if (scQt.getFinalizationCommitte().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
@@ -3759,7 +3759,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		//#35350 - End
+		//#35320 - End
 		
 		if (finalizationSecratary == null
 				&& isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
@@ -8146,6 +8146,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#35500 fix issue 5 End
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());
 			//28895 - 35500 end
+			
+			//#28188 - Start
+			if(CollectionUtils.isNotEmpty(qtDetails.getScQtBriefings())){
+				List<ScQtBsv> scQtBsvs = qtDetails.getScQtBriefings();
+				for (ScQtBsv scQtBsv : scQtBsvs) {
+					if (CollectionUtils.isEmpty(scQtBsv.getBsvRemarks())) {
+						initializeBSVRemarks(scQtBsv);
+						// Remarks are mandatory
+						throw new EpException(MessageConst.ERROR_760831);
+					}
+				}	
+			}
+			//#28188 - End
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
@@ -15174,5 +15187,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 	    return finalList;
 	}
 	//#28188 - End
+	
+	//#28188 - Start
+	private void initializeBSVRemarks(ScQtBsv scQtBsv) {
+		log.info("initializeFinalizationRemarks");
+		
+		// Retrieve Finalization remarks
+		List<ScQtBSVRemark> remarks = initializeRemarks(scQtBsv,
+				null, 
+				scQtBsv.getBsvRemarks(), 
+				ScQtBSVRemark.class);
+		scQtBsv.setBsvRemarks(remarks);
 
+		// Finalization Remarks list
+		getManagedBean().getBsvDtlBean().getScQtBsv().setBsvRemarks(remarks);		
+	}
+	//#28188 - End
+	
 }
