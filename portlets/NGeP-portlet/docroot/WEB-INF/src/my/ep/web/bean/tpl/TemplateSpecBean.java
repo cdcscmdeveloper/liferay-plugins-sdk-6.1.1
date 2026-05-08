@@ -375,7 +375,7 @@ public class TemplateSpecBean implements Serializable {
 	public void setWordBreakForQT(boolean wordBreakForQT) {
 		this.wordBreakForQT = wordBreakForQT;
 	}
-	// #29007 End Vinod	
+	// #29007 End Vinod
 	
 	//#38151
 	public boolean isWeightage35384WIP() {
