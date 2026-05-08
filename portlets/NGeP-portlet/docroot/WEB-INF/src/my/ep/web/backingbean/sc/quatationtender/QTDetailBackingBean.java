@@ -8146,6 +8146,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#35500 fix issue 5 End
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());
 			//28895 - 35500 end
+			
+			//#28188 - Start
+			if(CollectionUtils.isNotEmpty(qtDetails.getScQtBriefings())){
+				List<ScQtBsv> scQtBsvs = qtDetails.getScQtBriefings();
+				for (ScQtBsv scQtBsv : scQtBsvs) {
+					if (CollectionUtils.isEmpty(scQtBsv.getBsvRemarks())) {
+						initializeBSVRemarks(scQtBsv);
+						// Remarks are mandatory
+						throw new EpException(MessageConst.ERROR_760831);
+					}
+				}	
+			}
+			//#28188 - End
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
@@ -15175,5 +15188,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 	    return finalList;
 	}
 	//#28188 - End
+	
+	//#28188 - Start
+	private void initializeBSVRemarks(ScQtBsv scQtBsv) {
+		log.info("initializeFinalizationRemarks");
+		
+		// Retrieve Finalization remarks
+		List<ScQtBSVRemark> remarks = initializeRemarks(scQtBsv,
+				null, 
+				scQtBsv.getBsvRemarks(), 
+				ScQtBSVRemark.class);
+		scQtBsv.setBsvRemarks(remarks);
 
+		// Finalization Remarks list
+		getManagedBean().getBsvDtlBean().getScQtBsv().setBsvRemarks(remarks);		
+	}
+	//#28188 - End
+	
 }
