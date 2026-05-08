@@ -516,7 +516,7 @@ public class EvaluationMeetingBackingBean extends
 		List<ScCommitteeMember> committeeActivity = getManagedBean()
 				.getCommitteeMemberActivity();
 		List<ScCommitteeMember>	newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
-				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//adli issue 3
+				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//#28895-35500 6th Jan issue 3 fix
 		if (null == committeeActivity) {
 			committeeActivity = new ArrayList<ScCommitteeMember>();
 		}
@@ -749,7 +749,7 @@ public class EvaluationMeetingBackingBean extends
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
-		this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeAuditTrailList); //#28895-35500//adli issue 3
+		this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeAuditTrailList); //#28895-35500 6th Jan issue 3 fix
 		// 25037 - start
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(),
 				QTSearchBeanConst.SEARCH_GETICPASSPORT);
