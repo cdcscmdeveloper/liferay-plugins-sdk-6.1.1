@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Calendar;
 import java.util.Collections;//#28188
 import java.util.Comparator;//#28188
 import java.util.HashMap;//#28188
@@ -486,20 +487,11 @@ public class QTBriefingSiteVisitBackingBean extends
 			        List<ScQtBsvDtl> finalList = groupAndSortSiteVisitList(allBriefingList);
 			        briefingBean.setBriefingList(finalList);
 			        
-			        List<ScQtBsv> scQtBsvList = retrieveCurrentBsv(bsvDetail.getScQtBsv().getScQt().getQtId()); 
-			        
-			       	if (CollectionUtils.isNotEmpty(scQtBsvList)){
-						for (ScQtBsv currentBsv : scQtBsvList) {
-							List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBSVDetailByBsvType(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_SITEVISIT);
-							if (CollectionUtils.isNotEmpty(originalBsvDtlList)) {
-								for (ScQtBsvDtl originalBsvDtl : originalBsvDtlList) {
-								    ScQtBsvDtl editBsvDtl = retrieveBSVAddressDetail(originalBsvDtl.getQtBsvDtlId(), SourcingConstants.BSV_TYPE_SITEVISIT);
-								    allSVList.add(editBsvDtl);
-									briefingBean.setSitevisitList(allSVList);
-								}
-							}	
-						}
-			    	}
+					/*
+					 *28188 removed this code if site visit details changed and
+					 * Briefing details: Try to change same time reset all
+                     * Site visit details.
+					 */
 			    }
 			} else if (SourcingConstants.BSV_TYPE_SITEVISIT.equalsIgnoreCase(bsvType)) {
 				List<ScQtBsvDtl> siteVisitDetails = briefingBean.getSitevisitList();
@@ -592,20 +584,11 @@ public class QTBriefingSiteVisitBackingBean extends
 			        List<ScQtBsvDtl> finalList = groupAndSortSiteVisitList(allSVList);
 			        briefingBean.setSitevisitList(finalList);
 			        
-			        List<ScQtBsv> scQtBsvList = retrieveCurrentBsv(bsvDetail.getScQtBsv().getScQt().getQtId()); 
-			        
-			       	if (CollectionUtils.isNotEmpty(scQtBsvList)){
-						for (ScQtBsv currentBsv : scQtBsvList) {
-							List<ScQtBsvDtl> originalBsvDtlList = retrieveCurrentBSVDetailByBsvType(currentBsv.getQtBsvId(), SourcingConstants.BSV_TYPE_BRIEFING);
-							if (CollectionUtils.isNotEmpty(originalBsvDtlList)) {
-								for (ScQtBsvDtl originalBsvDtl : originalBsvDtlList) {
-								    ScQtBsvDtl editBsvDtl = retrieveBSVAddressDetail(originalBsvDtl.getQtBsvDtlId(), SourcingConstants.BSV_TYPE_BRIEFING);
-									allBriefingList.add(editBsvDtl);
-									briefingBean.setBriefingList(allBriefingList);
-								}
-							}	
-						}
-			    	}
+			        /*
+					 *28188 removed this code if Briefing details  changed and
+					 * site visit details: Try to change same time reset all
+                     * Briefing details .
+					 */
 			    }
 			}
 		}
@@ -1485,6 +1468,19 @@ public class QTBriefingSiteVisitBackingBean extends
 		//#28188 - Start
 		if(this.getManagedBean().getBriefingSiteVisitPostponeDate() != null){
 			minDate = this.getManagedBean().getBriefingSiteVisitPostponeDate();
+			
+			
+			//28188 -start-
+			ScQtBsvDtl qtBsvDtls = this.getManagedBean().getQtBriefing();
+			if (null != qtBsvDtls 
+					&& null == qtBsvDtls.getBsvDate()) {
+				 Calendar calMin = Calendar.getInstance();
+			        calMin.setTime(minDate);
+			        calMin.add(Calendar.HOUR_OF_DAY, 1);
+			        minDate = calMin.getTime();     
+			}
+			//28188 -end-
+			
 		}
 		//#28188 - End
 		return minDate;
