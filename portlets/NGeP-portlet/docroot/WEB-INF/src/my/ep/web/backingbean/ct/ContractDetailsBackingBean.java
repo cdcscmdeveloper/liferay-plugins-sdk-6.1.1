@@ -1279,27 +1279,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		            syncBondsToTarget(contractAmt, allBondsFromUI, isEffectiveContract);
 
 		            // Set the attachment flag with more readable logic.
-		            boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
-		            boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
-		            int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
-		            contractAmt.setIsBondAttachment(flag);
+					// #40283 - Start ( Set the bond attachment flag for FD/FU
+					// only)
+					if (ctBB.getManagedBean().getContractVer().getDocType()
+							.equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+							|| ctBB.getManagedBean()
+									.getContractVer()
+									.getDocType()
+									.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+
+						boolean isApproved = BpmOutcomeConst.BPM_APPROVE
+								.equalsIgnoreCase(action);
+						boolean hasBonds = !contractAmt.getCtPerformanceBonds()
+								.isEmpty();
+						int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES
+								: ParameterConst.FLAG_INT_NO;
+						contractAmt.setIsBondAttachment(flag);
+					}
+					// #40283 - End
 		        }
 		    }
 			// 24333 - End
 			
 			//#13847 start
-			if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
-					|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null) {
-				//#40114 start
-				Long statusId = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
-				if (checkStatusApprovalForBondWaiver(action, statusId)
-						&& ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
-					ctBB.removeInactiveDefermentHistory();
-					ctBB.removeDefermentLatest();
-				}
-				ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action, statusId));
-				//#40114 end
-			}
+			setBondWaiverDetailsForSave(ctContractVer, action); //#40197
 			//#13847 end
 
 			reqDTO.setCtContractVer(ctContractVer);
@@ -4345,13 +4348,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		if ((BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))
-				&& ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null) {
-
+				&& ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() != null) { //#40194
 			DecimalFormat df = new DecimalFormat("#.00");
 
 			bondAmount = Double.valueOf(df.format(bondAmount));
-			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()
-					.doubleValue()));
+			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt()
+					.doubleValue())); //#40194
 
 			if (Double.compare(bondAmount, originalBondAmt) < 0) {
 				setTabValue("PB");
@@ -4525,4 +4527,38 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return approvalStatus.containsValue(status) && outcome.equals(BpmOutcomeConst.BPM_APPROVE);
 	}
 	//#40114 end
+	
+	// #40197 start
+	/**
+	 * Method to set ct bond waiver details to be saved into the database.
+	 * 
+	 * @param ctContractVer
+	 *            object ctcontracver from save function
+	 * @param action
+	 *            the action button click by the user
+	 */
+	private void setBondWaiverDetailsForSave(CtContractVer ctContractVer,
+			String action) {
+		if (ctBB.getManagedBean().getContractVer()
+				.getBondWaiverDefermentLatest() != null
+				|| ctBB.getManagedBean().getContractVer()
+						.getBondWaiverDefermentHistory() != null) {
+			// #40114 start
+			Long statusId = ctBB.getManagedBean().getContractVer().getStatus()
+					.getStatusId();
+			if (checkStatusApprovalForBondWaiver(action, statusId)
+					&& ctBB.getManagedBean().getCtContractAmount()
+							.isBondExempted()) {
+				ctBB.removeInactiveDefermentHistory();
+				ctBB.removeDefermentLatest();
+			}
+			ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(
+					action, statusId));
+			// #40114 end
+		} else if (CollectionUtils.isNotEmpty(ctContractVer
+				.getCtBondWaiverDetails())) {
+			ctContractVer.setCtBondWaiverDetails(null);
+		}
+	}
+	// #40197 end
 }
