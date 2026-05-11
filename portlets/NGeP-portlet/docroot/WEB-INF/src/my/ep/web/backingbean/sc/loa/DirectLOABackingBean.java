@@ -12479,11 +12479,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<TplSpecZoneQty> newTplSpecZoneQties = new ArrayList<>();
 		List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(this
 				.getManagedBean().getZoneTrees(), null);
+		log.info("===================updateZoneUnitPriceforNewAnswersForQT oldQuestion TplSpecZoneQties Size : "
+				+ oldQuestion.getTplSpecZoneQties().size());
+		log.info("===================updateZoneUnitPriceforNewAnswersForQT zoneDetails Size : " + zoneDetails.size());
 
 		if (CollectionUtils.isNotEmpty(oldQuestion.getTplSpecZoneQties())
 				&& CollectionUtils.isNotEmpty(zoneDetails)
 				&& oldQuestion.getTplSpecZoneQties().size() == zoneDetails
 						.size()) {
+			log.info("===================Inside same zone size TplSpecZoneQties Size : "
+					+ oldQuestion.getTplSpecZoneQties().size());
 
 			for (int i = 0; i < oldQuestion.getTplSpecZoneQties().size(); i++) {
 				TplSpecZoneQty tplSpecZoneQty = new TplSpecZoneQty();
@@ -12502,9 +12507,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				specReq.setQuestionType(ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM);
 				TemplateSpecResDTO templateSpecResDto = templateSpecSO
 						.findQuestionsByQuestionTypeAndParentQuestionIdForClone(specReq);
+				log.info("===================templateSpecResDto SpecQuestionList Size : "
+						+ templateSpecResDto.getSpecQuestionList().size());
 
 				for (TplSpecQuestion tplSpecQuestion : templateSpecResDto
 						.getSpecQuestionList()) {
+					log.info("===================templateSpecResDto tplSpecQuestion SpecQuestionId : "
+							+ tplSpecQuestion.getSpecQuestionId());
 					buildCloneTplSpecAnswersForZoneQT(tplSpecQuestion,
 							oldQtyIds, tplSpecAnswers, tplSpecZoneQtyOld,
 							newQuestion, tplSpecZoneQty, tplSpecTierQties);
@@ -12533,12 +12542,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isZonePriceTypeTier = oldQuestion.getClPriceTypeCode()
 				.getParameterCode()
 				.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+		log.info("===================buildCloneTplSpecAnswersForZoneQT isZonePriceTypeTier : "
+				+ isZonePriceTypeTier);
 		if (isZonePriceTypeTier) {
 
+			log.info("===================Inside Tier Qty oldQuestion SpecQuestionId : "
+					+ oldQuestion.getSpecQuestionId());
 			buildTplSpecAnswersFromEstimationForQT(oldQuestion, newQuestion,
 					oldQtyIds, tplSpecAnswers, tplSpecZoneQtyOld,
 					tplSpecZoneQty, tplSpecTierQties);
 		} else {
+			log.info("===================Inside else Qty oldQuestion SpecQuestionId : "
+					+ oldQuestion.getSpecQuestionId());
+			log.info("===================Inside else Qty oldQuestion TplSpecEstimations size : "
+					+ oldQuestion.getTplSpecEstimations().size());
 			for (TplSpecEstimation oldEstimation : oldQuestion
 					.getTplSpecEstimations()) {
 				TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
@@ -12549,11 +12566,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.getSpecZoneId();
 				Long zoneId2 = oldEstimation.getTplSpecZoneDtl()
 						.getSpecZoneId();
+				log.info("===================Inside else zoneId1 : " + zoneId1);
+				log.info("===================Inside else zoneId2 : " + zoneId2);
 				if (zoneId1 == zoneId2) {
+					log.info("===================Inside Zone===================");
 
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
 
+					log.info("===================Inside Zone oldEstimation IndicativeUnitPrice : "
+							+ oldEstimation.getIndicativeUnitPrice());
 					tplSpecAnswer.setRatePerUom(oldEstimation
 							.getIndicativeUnitPrice());
 
@@ -12562,9 +12584,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					tplSpecSuppAnswer.setTplSpecZoneDtl(tplSpecZoneQty
 							.getTplSpecZoneDtl());
 					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
+					log.info("===================Inside Zone tplSpecAnswer RatePerUom : "
+							+ tplSpecAnswer.getRatePerUom());
 					tplSpecAnswers.add(tplSpecAnswer);
 				}
 			}
+			log.info("===================Completed==================");
 
 		}
 	}
@@ -12577,6 +12602,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			List<Long> oldQtyIds, List<TplSpecAnswer> tplSpecAnswers,
 			TplSpecZoneQty tplSpecZoneQtyOld, TplSpecZoneQty tplSpecZoneQty,
 			List<TplSpecTierQty> tplSpecTierQties) {
+		log.info("===================buildTplSpecAnswersFromEstimationForQT oldQuestion SpecQuestionId : "
+				+ oldQuestion.getSpecQuestionId());
 		for (TplSpecTierQty oldQty : oldQuestion.getTplSpecTierQties()) {
 			for (TplSpecEstimation oldEstimation : oldQuestion
 					.getTplSpecEstimations()) {
@@ -12588,8 +12615,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.getSpecZoneId();
 				Long zoneId2 = oldEstimation.getTplSpecZoneDtl()
 						.getSpecZoneId();
+				log.info("===================zoneId1 : " + zoneId1);
+				log.info("===================zoneId2 : " + zoneId2);
 				if (zoneId1 == zoneId2) {
 
+					log.info("===================Inside same zone===================");
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
 
@@ -12600,6 +12630,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 					BigDecimal fromQty = oldQty.getFromQty();
 					BigDecimal toQty = oldQty.getToQty();
+					log.info("===================oldQty old FromQty : "
+							+ fromQty);
+					log.info("===================oldQty old ToQty : " + toQty);
 
 					tplSpecTierQty.setTplSpecQuestion(newQuestion);
 					tplSpecTierQty.setFromQty(fromQty);
@@ -12612,12 +12645,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					tplSpecSuppAnswer.setTplSpecZoneDtl(tplSpecZoneQty
 							.getTplSpecZoneDtl());
 					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
+					log.info("===================tplSpecAnswer new FromQty : "
+							+ tplSpecAnswer.getTplSpecTierQty().getFromQty());
+					log.info("===================tplSpecAnswer new ToQty : "
+							+ tplSpecAnswer.getTplSpecTierQty().getToQty());
 					tplSpecAnswers.add(tplSpecAnswer);
 					updateSpecTierQties(oldQtyIds, oldQty, tplSpecTierQties,
 							tplSpecTierQty);
 				}
 			}
 		}
+		log.info("===================Completed==================");
 	}
 
 	// #29468 Vinod End
