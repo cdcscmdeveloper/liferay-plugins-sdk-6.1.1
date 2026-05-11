@@ -1312,11 +1312,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								// #21695 4serangkai use this only, else is
 								// using old codes
 								if (getManagedBean().getQt().isPartial() || isQuotation) {
-									if (specAnswer.getRatePerUom() != null) {
-										answers.add(specAnswer);
+									// #3657 - Note #49 - Start
+									if (specAnswer.getRatePerUom() == null
+											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) < 0) {
+										specAnswer.setDeleted(true);
+										toDeleteZoneAnswers.add(specAnswer);
 									} else {
-										throw new EpException(MessageConst.ERROR_760464);
+										answers.add(specAnswer);
 									}
+									// #3657 - Note #49 - End
 									// #21695 end
 								} else if (isTender) {
 									if (specAnswer.getRatePerUom() != null
