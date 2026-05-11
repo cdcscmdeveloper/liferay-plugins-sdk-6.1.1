@@ -141,6 +141,7 @@
 							update="@form,@([id$=messages])" process="@form" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
 					<!-- #9133 - end -->
+					<ui:remove>#34449 - start</ui:remove>
 					<ui:repeat var="bpmAction"
 							value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel"
@@ -155,6 +156,7 @@
 								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
 
 						</ui:repeat></td>
+						<ui:remove>#34449 - end</ui:remove>
 				</tr>
 			</table>
 		</c:if>
