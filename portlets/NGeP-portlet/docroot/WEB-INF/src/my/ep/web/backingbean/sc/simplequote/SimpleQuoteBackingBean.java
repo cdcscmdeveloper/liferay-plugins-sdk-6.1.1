@@ -2503,9 +2503,12 @@ public class SimpleQuoteBackingBean extends
 					if (quote.getProcurementType().getParameterCode()
 							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 						// govt sellers
-						if (getManagedBean().getGovtSellers() != null) {
-							suppliers.addAll(getManagedBean().getGovtSellers());
+						//40234 - start
+						if (getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()) {
+							throw new EpException(MessageConst.ERROR_760109);
 						}
+						suppliers.addAll(getManagedBean().getGovtSellers());
+						//40234 - end
 					} 
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
