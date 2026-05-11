@@ -99,7 +99,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
 	private List<ScQtApprovalRemark> cmtAppointmentApprovalRemarks;	//25037 note 284
 	//#25037-END
-	
+
 	public SupplierFinalizationMeetingManagedBean() {
 		this.userSearchBean = new UserCommitteeSearchBean();
 	}
@@ -654,7 +654,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.cmtAppointmentApprovalRemarks = cmtAppointmentApprovalRemarks;
 	}
 	//25037 note 284 - end
-
+	
 	//#28895 - 35500 start
 	public List<ScCommitteeMember> getRemoveCommitteeAuditTrailList() {
 		return removeCommitteeAuditTrailList;
