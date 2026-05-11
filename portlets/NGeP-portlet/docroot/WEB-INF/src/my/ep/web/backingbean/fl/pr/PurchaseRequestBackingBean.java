@@ -3551,6 +3551,28 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.title",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
+				
+				//#31788 - validate previous selected approver inactive.
+				if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
+						&& getManagedBean().getFulfilmentRequest().getApproverId() != null) {
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getApproverId());
+					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
+							.getOrgProfileId());
+					userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+					userReqDTO.setApprovalLimit(calculatesTotalOrderedAmt());
+					UserResDTO resDTO = userSO.validateFulfilmentApprover(userReqDTO);
+					if (resDTO.getUserStatus().equals(2)) {
+						throw new EpException(MessageConst.ERROR_740090, new String[] { resDTO.getPmUser()
+								.getUserName() });
+					} else if (resDTO.getUserStatus().equals(0)) {
+						// Send notification to Ministry Admin/ Kump PTJ Admin/ PTJ Admin
+						throw new EpException(MessageConst.ERROR_740091, new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
+								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
+					}
+				}
 				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && getManagedBean().getSelectedApprover() == null){
 					getManagedBean().setSelectedTabIndex(4);
 					throw new EpException(MessageConst.ERROR_750010);
@@ -3586,6 +3608,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
 						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.requisitioner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 					}
+					/*
+					 * #31788
+					 * If original Requisitioner is inactive in PTJ, task to be routed to next active Requisitioner with same role in the same PTJ.
+					 * No alert message will be display at FL Approver screen to inform original Requisitioner is inactive.
+					 * Insert tracking diary record for new selected Requisitioner
+					 */
 				}
 			}
 			
@@ -3953,7 +3981,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 			if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
-				throw new EpException(MessageConst.ERROR_745077, new String[]{getFullAddress(delAddr.getFlAddress())});
+				// 31788 - Update new alert message when no exist receiving officer
+				throw new EpException(MessageConst.ERROR_745077, new String[]{delAddr.getFlAddress().getAddressName()});
 			}
 		}
 		
@@ -6024,5 +6053,4 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 	}
 	
-	// #31344 end
 }
