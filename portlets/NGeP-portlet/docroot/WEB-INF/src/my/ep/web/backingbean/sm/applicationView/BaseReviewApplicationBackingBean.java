@@ -5569,8 +5569,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					
 					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				    updatedList.add(cat);
 				}
+				updatedList.add(cat);
 			}
 			getManagedBean().setApprovedCategoryList(updatedList);
 		}
