@@ -102,6 +102,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.circular.CtCircularVer; //#37620,#34367
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -5328,4 +5329,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return true;
 	}
 	// End - #30045
+	
+	// #37620,#34367 - Start
+	/**
+	 * Updates contract panel state in the managed bean based on the given LOA.
+	 * <p>
+	 * If the LOA is valid (panel-enabled and has a circular version), this
+	 * method sets the panel flag to true and populates the circular panel data
+	 * and its first attachment (if available). Otherwise, the panel flag is set
+	 * to false.
+	 * </p>
+	 * @param loa
+	 *            the LOA to evaluate; may be null
+	 */
+	public void retrieveItemPanelDetails(ScLoa loa) {
+
+		boolean hasPanel = loa != null && loa.isPanel() && loa.getCtCircularVer() != null;
+
+		getManagedBean().setContractPanelItem(hasPanel);
+
+		if (!hasPanel) {
+			return;
+		}
+
+		CtCircularVer circularVer = loa.getCtCircularVer();
+		getManagedBean().setCtCircularPanel(circularVer);
+
+		List<CtAttachment> attachments = circularVer.getCircularAttachments();
+		if (attachments != null && !attachments.isEmpty()) {
+			getManagedBean().setCircularPanelAttachment(attachments.get(0));
+		}
+	}
+	// #37620,#34367 - End
 }  

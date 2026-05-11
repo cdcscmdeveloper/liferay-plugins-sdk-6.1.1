@@ -64,10 +64,12 @@
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractNo}" maxlength="17" style="width:170px;"/>
            	<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractName}" maxlength="1000" style="width:170px;"/>
-           	<p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularNo}" maxlength="50" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           	<p:outputLabel value="#{lbl['lbl.ct.circular.name']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularName}" maxlength="500" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<!-- #37620,#34367 Start -->
+           	<p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" rendered="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.isApprover()}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularNo}" maxlength="50" style="width:170px;" rendered="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.isApprover()}"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.circular.name']}" rendered="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.isApprover()}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularName}" maxlength="500" style="width:170px;" rendered="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.isApprover()}"/>
+           	<!-- #37620,#34367 End -->
            	<p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
            	<p:calendar id="popupButtonCal"   showOn="button" readonlyInput="true"  navigator="true"
                	style="width:130px;" value="#{contractDetailsBackingBean.managedBean.searchCtStartDate}" 
@@ -122,13 +124,13 @@
 						<h:outputText value="#{data.contractName}"  style="text-align:left; float:left;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  
-					      styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
+					      styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.isApprover()}">
 						<h:outputText value="#{data.circularNo}" style="text-align:left; float:left;" rendered="#{data.ctCircularVer != null and 
 						(data.ctCircularVer.status.statusId != CtStatusConst.cqRejected
 							or data.ctCircularVer.status.statusId != CtStatusConst.cqCancelled)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.circular.status']}" 
-					     styleClass="column-align-center"  style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
+					     styleClass="column-align-center"  style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.isApprover()}">
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}" 
 						      style="text-align:left; float:left;" rendered="#{data.ctCircularVer != null and 
 						      (data.ctCircularVer.status.statusId != CtStatusConst.cqRejected

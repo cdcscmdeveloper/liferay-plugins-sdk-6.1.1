@@ -58,8 +58,10 @@
 			<td width="35%"><p:inputText maxlength="50" size="50"
 					value="#{pidDetailRptBackingBean.managedBean.docNo}">
 				</p:inputText></td>
+			<!-- #36613 - start -->
 			<td width="15%"><p:outputLabel
-					value="#{lbl['lbl.rpt.CONTRPKPTYPE']}" /></td>
+					value="#{lbl['lbl.rpt.CONTCRCTYPE']}" /></td>
+			<!-- #36613 - end -->
 			<td width="35%"><p:selectOneMenu
 					value="#{pidDetailRptBackingBean.managedBean.contractType}"
 					style="margin-top:5px;width:300px;">
@@ -77,13 +79,17 @@
 				</p:selectOneMenu></td>
 		</tr>
 		<tr>
+			<!-- #36613 -start -->
 			<td width="15%"><p:outputLabel
-					value="#{lbl['lbl.rpt.CONTRPKPNO']}" /></td>
+					value="#{lbl['lbl.rpt.CONTCRCNO']}" /></td>
+			<!-- #36613 -end --> 
 			<td width="35%"><p:inputText maxlength="50" size="50"
 					value="#{pidDetailRptBackingBean.managedBean.contractNo}">
 				</p:inputText></td>
+			<!-- #36613 - start -->
 			<td width="15%"><p:outputLabel
-					value="#{lbl['lbl.rpt.CONTRPKPNM']}" /></td>
+					value="#{lbl['lbl.rpt.CONTCRCNAME']}" /></td>
+			<!-- #36613 - end -->
 			<td width="35%"><p:inputText maxlength="50" size="50"
 					value="#{pidDetailRptBackingBean.managedBean.contractName}">
 				</p:inputText></td>
