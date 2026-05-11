@@ -1310,10 +1310,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		            syncBondsToTarget(contractAmt, allBondsFromUI, isEffectiveContract);
 
 		            // Set the attachment flag with more readable logic.
-		            boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
-		            boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
-		            int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
-		            contractAmt.setIsBondAttachment(flag);
+		            //#40283 - Start ( Set the bond attachment flag for FD/FU only)
+				if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+						|| ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+					
+					boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
+					boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
+					int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
+					contractAmt.setIsBondAttachment(flag);
+				}
+				//#40283 - End
 		        }
 		    }
 		// 24333 - End
