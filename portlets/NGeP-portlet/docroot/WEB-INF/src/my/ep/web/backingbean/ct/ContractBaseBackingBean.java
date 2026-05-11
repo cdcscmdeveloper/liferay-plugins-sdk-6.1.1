@@ -4,9 +4,11 @@
 package my.ep.web.backingbean.ct;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.actor.CtActorReqDTO;
@@ -242,7 +245,47 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	public String getCancelConfirmationContent(String docType) {
 		return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
-
+	
+	//34442 - start
+	/**
+	 * Retrieve fulfilment with bond confirmation message by passing in contractNo
+	 * 
+	 * @param key the statusId to find label values for use
+	 * @param value the Contract Number
+	 * @return Fulfiment with Bond Confirmation message
+	 */
+	public String getConfirmationContent(String key, String value) {
+		String message = "";
+		final Map<Long, String> confirmationMsgs = new HashMap<Long, String>();
+		
+		confirmationMsgs.put(ContractStatusConst.FD_PENDING_CONTRACT_CREATION, "lbl.ct.fd.bond.confirm");
+		confirmationMsgs.put(ContractStatusConst.FD_PENDING_REVISION, "lbl.ct.fd.bond.confirm");
+		confirmationMsgs.put(ContractStatusConst.FD_PENDING_APPROVAL, "lbl.ct.fd.rev.bond.confirm");
+		confirmationMsgs.put(ContractStatusConst.FD_PENDING_REVISION_APPROVAL, "lbl.ct.fd.rev.bond.confirm");
+		confirmationMsgs.put(ContractStatusConst.FU_PENDING_APPROVAL, "lbl.ct.fu.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FU_PENDING_REVISION_APPROVAL, "lbl.ct.fu.rev.app.confirm");
+		
+		//add more here
+		
+		if(value.isEmpty()){
+			message = ResourceBundleUtils.getMessage(
+		        confirmationMsgs.get(key),
+		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		        new FacesScopes().getUserLocale()
+		    );
+		} else {
+			message = ResourceBundleUtils.getMessage(
+		        confirmationMsgs.get(Long.parseLong(key)),
+		        new String[]{value},
+		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		        new FacesScopes().getUserLocale()
+		    );
+		}
+		
+		return message.replace("<br/>", System.lineSeparator());
+	}
+	//34442 - end
+	
 	/*#21387 - basri 13/4/22*/
 	/**
 	 * Retrieve cancel confirmation message for contract request administrator by passing in document type
