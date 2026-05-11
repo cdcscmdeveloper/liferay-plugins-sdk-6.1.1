@@ -264,23 +264,17 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		confirmationMsgs.put(ContractStatusConst.FD_PENDING_REVISION_APPROVAL, "lbl.ct.fd.rev.bond.confirm");
 		confirmationMsgs.put(ContractStatusConst.FU_PENDING_APPROVAL, "lbl.ct.fu.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.FU_PENDING_REVISION_APPROVAL, "lbl.ct.fu.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.NT_PENDING_APPROVAL, "lbl.ct.nt.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.NT_PENDING_REVISION_APPROVAL, "lbl.ct.nt.rev.app.confirm");
 		
 		//add more here
 		
-		if(value.isEmpty()){
-			message = ResourceBundleUtils.getMessage(
-		        confirmationMsgs.get(key),
-		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-		        new FacesScopes().getUserLocale()
-		    );
-		} else {
-			message = ResourceBundleUtils.getMessage(
-		        confirmationMsgs.get(Long.parseLong(key)),
-		        new String[]{value},
-		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-		        new FacesScopes().getUserLocale()
-		    );
-		}
+		message = ResourceBundleUtils.getMessage(
+	        confirmationMsgs.get(Long.parseLong(key)),
+	        new String[]{value},
+	        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+	        new FacesScopes().getUserLocale()
+	    );
 		
 		return message.replace("<br/>", System.lineSeparator());
 	}
