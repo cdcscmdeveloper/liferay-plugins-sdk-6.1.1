@@ -12479,9 +12479,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<TplSpecZoneQty> newTplSpecZoneQties = new ArrayList<>();
 		List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(this
 				.getManagedBean().getZoneTrees(), null);
-		log.info("===================oldQuestion TplSpecZoneQties Size : "
+		log.info("===================updateZoneUnitPriceforNewAnswersForQT oldQuestion TplSpecZoneQties Size : "
 				+ oldQuestion.getTplSpecZoneQties().size());
-		log.info("===================zoneDetails Size : " + zoneDetails.size());
+		log.info("===================updateZoneUnitPriceforNewAnswersForQT zoneDetails Size : " + zoneDetails.size());
 
 		if (CollectionUtils.isNotEmpty(oldQuestion.getTplSpecZoneQties())
 				&& CollectionUtils.isNotEmpty(zoneDetails)
