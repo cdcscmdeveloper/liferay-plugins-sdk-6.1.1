@@ -157,7 +157,7 @@
 							value="#{committeeMember.memberRoleId}"
 							style="width: 110px;margin-bottom: 5px;"
 							disabled="#{!isCommitteeUpdatable}">
-							<p:ajax event="change" partialSubmit="true" process="@this"
+							<p:ajax event="change" partialSubmit="true" process="@this" update="memberListTbl"
 								listener="#{meetingBB.onChangeRole(committeeMember)}" /><!-- #35500 issue fix 4-9 -->
 							<!-- 38067 start -->
 							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
