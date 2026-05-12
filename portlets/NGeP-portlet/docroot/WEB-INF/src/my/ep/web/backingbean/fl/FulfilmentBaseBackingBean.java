@@ -933,7 +933,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
 		cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
 		cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
-		cdbb.getManagedBean().setSegmentTitle(segmentTitle);
+		cdbb.getManagedBean().setSegmentTitle(segmentTitle.replaceAll("\\s+", " ").trim());
 		cdbb.getManagedBean().setSegmentCode(segmentCode);
 		cdbb.getManagedBean().setFamilyTitle(familyTitle);
 		cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
