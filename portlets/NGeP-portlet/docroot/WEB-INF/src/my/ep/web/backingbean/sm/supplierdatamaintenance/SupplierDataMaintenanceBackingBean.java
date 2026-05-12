@@ -1462,6 +1462,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	private void assignApplActiveAndApprovedCategoryList() {
 		List<SmSupplierCategory> catList = new ArrayList<>();
 		List<SmSupplierCategory> apprvList = new ArrayList<>();
+		List<SmSupplierCategory> otherDescList = new ArrayList<>(); // 36504
+
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
@@ -1483,6 +1485,13 @@ public class SupplierDataMaintenanceBackingBean extends
 				// #34031 End
 				//26238: Disciplinary Action - start - 28219
 				apprvList.add(cat);
+				
+				// 36504 - START
+				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
+					otherDescList.add(cat);
+				}
+				// 36504 - END
+
 			}
 		}
 		if (getManagedBean().getActiveCategoryList() != null
@@ -1493,6 +1502,14 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& !getManagedBean().getApprovedCategoryList().isEmpty()) {
 			getManagedBean().getApprovedCategoryList().clear();
 		}
+		
+		// 36504 - START
+		if (!EntityHelper.isCollectionEmpty(otherDescList)) {
+			getManagedBean().setOtherDescChangeSupplier(true);
+		} else {
+			getManagedBean().setOtherDescChangeSupplier(false);
+		}
+		// 36504 - END
 		
 		//14150
 		SmApplicationUtil.sortSupplierCategory(apprvList);
