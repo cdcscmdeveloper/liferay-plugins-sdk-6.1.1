@@ -2184,6 +2184,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	
 	public String gpkiSignAction(String outcome) throws Exception {
+		String docType = ctBB.getManagedBean().getContractVer().getDocType();//34442
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -2215,8 +2216,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 
 			//#34442 - start
-			if(ctBB.getManagedBean().getCtContractAmount().isBondReq() && 
-					ctBB.getManagedBean().getCtPerformanceBond() == null){
+			if(checkPerformanceBondCompleted()){
 				setConfirmationContentMsg(
 					    getConfirmationContent(
 					        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId()),
@@ -2244,11 +2244,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#25406 - End
 		} else {
 			//#34442 - start
-			Long statusId = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
-			Boolean submit = statusId.equals(ContractStatusConst.FU_PENDING_SUBMISSION) || statusId.equals(ContractStatusConst.FU_PENDING_REVISION);
-			
-			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) && (ctBB.getManagedBean().getCtContractAmount().isBondReq() && 
-					ctBB.getManagedBean().getCtPerformanceBond() == null) && Boolean.TRUE.equals(submit)){
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) && checkPerformanceBondCompleted() && 
+					docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)){
 				setConfirmationContentMsg(
 					    getConfirmationContent(
 					        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId()),
@@ -2263,6 +2260,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			//#34442 - end
 			return this.saveContract(outcome);
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean checkPerformanceBondCompleted() {
+		return ctBB.getManagedBean().getCtContractAmount().isBondReq() && 
+				ctBB.getManagedBean().getCtPerformanceBond() == null;
 	}
 
 	/**
