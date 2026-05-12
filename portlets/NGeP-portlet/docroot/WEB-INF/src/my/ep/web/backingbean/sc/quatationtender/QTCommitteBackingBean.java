@@ -248,7 +248,8 @@ public class QTCommitteBackingBean extends
 			}
 			return null;
 		}
-		//12471 - start
+
+		// 12471 - start
 		private void populateUserSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean,
 				ISearchBean<PmUser> userSearchBean) {
 			String name = userCommitteeSearchBean.getName();
@@ -269,7 +270,9 @@ public class QTCommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), identificationType, true));
 			}
 		}
+		// 12471 - end
 		
+		// 12471 - start
 		private void populateOrganizationSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean,
 				ISearchBean<PmUser> userSearchBean) {
 			String orgCategory = null == userCommitteeSearchBean.getOrgCat() ? "" : userCommitteeSearchBean.getOrgCat();
@@ -318,21 +321,21 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
-		//12471 - end
+		// 12471 - end
 	}
 
 	/**
 	 * Search user action.
 	 */
 	public void searchUserAction() {
-		// #12471 Start
+		// 12471 - start
 		UserCommitteeSearchBean searchBean = this.getManagedBean().getUserCommitteeSearchBean();
 		if (null == searchBean)
 			return;
 		if (StringUtils.isBlank(searchBean.getName()) && StringUtils.isBlank(searchBean.getIdentificationNo())) {
 			throw new EpException(MessageConst.ERROR_775300);
 		}
-		// #12471 End
+		// 12471 - end
 		getManagedBean().getUserSearchCommitteeDataModel().reloadData();
 	}
 
@@ -1122,17 +1125,17 @@ public class QTCommitteBackingBean extends
 	 * @param currentTaskName
 	 */
 	public void addCommitteMember(ScQtCommittee committee, String titleName, String currentTaskName) {
-		// #12471 Start
+		// 12471 - start
 		IPagingDataModel<PmUser> userSearchCommitteeDataModel = getManagedBean().getUserSearchCommitteeDataModel();
 		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getUserCommitteeSearchBean();
 		if (null == userSearchCommitteeDataModel) {
 			getManagedBean().setUserSearchCommitteeDataModel(
-					new UserCommitteePagingDataModel(
-							QTConstants.DATATABLE_EXISTINGCOMMITTEESEARCHID, userCommitteeSearchBean));
+					new UserCommitteePagingDataModel(QTConstants.DATATABLE_EXISTINGCOMMITTEESEARCHID,
+							userCommitteeSearchBean));
 		}
 		userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		reset();
-		// #12471 End
+		// 12471 - end
 
 		getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
@@ -1144,8 +1147,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setScQtCommittee(committee);
 		getManagedBean().setTabTitle(titleName);
 		getManagedBean().setAutoUpdate(false);
-		// #12471
-		getManagedBean().setNameRequired(false);
+		getManagedBean().setNameRequired(false);// 12471
 		
 		// 25037 - start
 		Long qtStatus = getCurrentQtStatusId();
@@ -2739,29 +2741,33 @@ public class QTCommitteBackingBean extends
 		return true;
 	}
 	
-	//12471 - start
-		/**
-		 * Validate and add selected new user into the list of selected users.
-		 * @param dataModel 
-		 * */
-		public void addNewCommitteeUsers(IPagingDataModel<PmUser> dataModel) {
-			if (null == dataModel || CollectionUtils.isEmpty(dataModel.getList()))
-				return;
-			List<PmUser> users = new ArrayList<>();
-			List<Long> approvers = this.getApproversUserIds();
-			for (PmUser entity : dataModel.getList()) {
-				if (!entity.isSelected())
-					continue;
-				if (approvers.contains(entity.getUserId()))
-					throw new EpException(MessageConst.ERROR_775301, new String[] { entity.getUserName() });
-				users.add(entity);
-			}
-			if(null == this.getManagedBean().getSelectedPmUser()){
-				this.getManagedBean().setSelectedPmUser(new ArrayList<PmUser>());
-			}
-			this.getManagedBean().getSelectedPmUser().addAll(users);	
+	// 12471 - start
+	/**
+	 * Validate and add selected new user into the list of selected users.
+	 * 
+	 * @param dataModel
+	 * */
+	public void addNewCommitteeUsers(IPagingDataModel<PmUser> dataModel) {
+		if (null == dataModel || CollectionUtils.isEmpty(dataModel.getList()))
+			return;
+		List<PmUser> users = new ArrayList<>();
+		List<Long> approvers = this.getApproversUserIds();
+		for (PmUser entity : dataModel.getList()) {
+			if (!entity.isSelected())
+				continue;
+			if (approvers.contains(entity.getUserId()))
+				throw new EpException(MessageConst.ERROR_775301, new String[] { entity.getUserName() });
+			users.add(entity);
 		}
+		if (null == this.getManagedBean().getSelectedPmUser()) {
+			this.getManagedBean().setSelectedPmUser(new ArrayList<PmUser>());
+		}
+		this.getManagedBean().getSelectedPmUser().addAll(users);
+	}
 
+	// 12471 - end
+
+	// 12471 - start
 	private List<Long> getApproversUserIds() {
 		List<Long> approverUserIds = new ArrayList<>();
 		ScQtApproval approval = this.getManagedBean().getScQtApproval();

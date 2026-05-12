@@ -190,7 +190,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayDropdownRegStatus;
 //	37925 END
 	
-	//12471 Start
+	// 12471 - start
 	private SelectItem[] ministryDDList;
 	private SelectItem[] ptjGroupDDList;
 	private SelectItem[] ptjDDList;
@@ -201,7 +201,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String memberPtjOrgCode;
 	private String memberPtjOrgName;
 	private UserCommitteeSearchBean committeeSearchBean;
-	//12471 End
+	// 12471 - end
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1175,7 +1175,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 //	37925 END
 	
-	//12471 Start
+	// 12471 - start
 	public SelectItem[] getMinistryDDList() {
 		return ministryDDList;
 	}
@@ -1247,7 +1247,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setMemberPtjOrgName(String memberPtjOrgName) {
 		this.memberPtjOrgName = memberPtjOrgName;
 	}
-	
+
 	public UserCommitteeSearchBean getCommitteeSearchBean() {
 		return committeeSearchBean;
 	}
@@ -1255,5 +1255,5 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setCommitteeSearchBean(UserCommitteeSearchBean committeeSearchBean) {
 		this.committeeSearchBean = committeeSearchBean;
 	}
-	//12471 end
+	// 12471 - end
 }

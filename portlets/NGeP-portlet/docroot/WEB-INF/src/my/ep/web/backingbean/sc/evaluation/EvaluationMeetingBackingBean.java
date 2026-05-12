@@ -432,26 +432,25 @@ public class EvaluationMeetingBackingBean extends
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
 						this.getManagedBean().getCommitteeType()));
 
-		// #12471 Start
+		// 12471 - start
 		IPagingDataModel<PmUser> userSearchCommitteeDataModel = getManagedBean().getUserSearchCommitteeDataModel();
 		UserCommitteeSearchBean userCommitteeSearchBean = getManagedBean().getUserCommitteeSearchBean();
 		if (null == userSearchCommitteeDataModel) {
 			getManagedBean().setUserSearchCommitteeDataModel(
-					new ExistingUserPagingDataModel(
-							QTConstants.DATATABLE_EXISTINGCOMMITTEESEARCHID, userCommitteeSearchBean));
+					new ExistingUserPagingDataModel(QTConstants.DATATABLE_EXISTINGCOMMITTEESEARCHID,
+							userCommitteeSearchBean));
 		}
 		userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		reset();
-		// #12471 End
+		// 12471 - end
 
 		getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
-		committeeMember.setUserSelection(QTConstants.USER_SELECTION); // 12471
+		committeeMember.setUserSelection(QTConstants.USER_SELECTION);// 12471
 		this.getManagedBean().setCommitteMember(committeeMember);
-		// #12471
-		this.getManagedBean().setNameRequired(false);
+		this.getManagedBean().setNameRequired(false);// 12471
 		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getSelectionTypes();
 	}
@@ -724,24 +723,26 @@ public class EvaluationMeetingBackingBean extends
 						for (ScCommitteeMember committee : committeeActivity) {
 							itemIds.add(committee.getIcPassport());
 						}
-						if (CollectionUtils.isNotEmpty(itemIds)) {// #12471
+						if (CollectionUtils.isNotEmpty(itemIds)) {// 12471
 							if (itemIds.contains(user.getIdentificationNo())) {
 								throw new EpException(MessageConst.ERROR_760194);
 							} else {
-								// #12471 Start
+								// 12471 - start
 								QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 								reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 								reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
-								ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+								ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO)
+										.getQtApproval();
 								if (approval != null && approval.getApproverSettings() != null) {
 									for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
-										if (approvalUser.getPmUser().getUserId().equals(committeeMember.getPmUser().getUserId())) {
+										if (approvalUser.getPmUser().getUserId()
+												.equals(committeeMember.getPmUser().getUserId())) {
 											throw new EpException(MessageConst.ERROR_775301,
 													new String[] { committeeMember.getMemberName() });
 										}
 									}
 								}
-								// #12471 End
+								// 12471 - end
 								localList.add(committeeMember);
 							}
 						}
@@ -981,15 +982,15 @@ public class EvaluationMeetingBackingBean extends
 	 * committee members list.
 	 */
 	public void existingCommitteeSearchAction() {
-		// #12471 Start
+		// 12471 - start
 		UserCommitteeSearchBean searchBean = this.getManagedBean().getCommitteeSearchBean();
 		if (null == searchBean)
 			return;
 		if (StringUtils.isBlank(searchBean.getName()) && StringUtils.isBlank(searchBean.getIdentificationNo())) {
-			throw new EpException(MessageConst.ERROR_775300); 
-		} 
+			throw new EpException(MessageConst.ERROR_775300);
+		}
 		getManagedBean().getUserSearchCommitteeDataModel().reloadData();
-		// #12471 End
+		// 12471 - end
 	}
 
 	/**
@@ -1070,10 +1071,10 @@ public class EvaluationMeetingBackingBean extends
 	 * Reset.Event handle to reset the values in add popup.
 	 */
 	public void reset() {
-		// #12471 start
+		// 12471 - start
 		resetCommitteeSearchBean(this.getManagedBean().getQt());
 		getManagedBean().getUserSearchCommitteeDataModel().resetData();
-		// #12471 end
+		// 12471 - end
 	}
 
 	/**
@@ -1562,12 +1563,13 @@ public class EvaluationMeetingBackingBean extends
 		private static final long serialVersionUID = 1L;
 		// 12471 - start
 		private UserCommitteeSearchBean userCommitteeSearchBean;
-		
+
 		public ExistingUserPagingDataModel(String componentId, UserCommitteeSearchBean userCommitteeSearchBean) {
 			super(componentId, false);
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
 			getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
-		} 
+		}
+
 		// 12471 - end
 
 		/*
@@ -1585,12 +1587,12 @@ public class EvaluationMeetingBackingBean extends
 				committeSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-				//12471 start
+				// 12471 - start
 				if (null != userCommitteeSearchBean) {
 					populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
 					populateOrganizationSearchCriteria(userCommitteeSearchBean, searchBean);
 				}
-				//12471 end
+				// 12471 - end
 
 				committeReqDTO.setUserSearchBean(searchBean);
 				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
@@ -1607,7 +1609,8 @@ public class EvaluationMeetingBackingBean extends
 			}
 			return null;
 		}
-		//12471 start
+		
+		// 12471 - start
 		private void populateUserSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean,
 				ISearchBean<PmUser> searchBean) {
 			String name = userCommitteeSearchBean.getName();
@@ -1628,7 +1631,9 @@ public class EvaluationMeetingBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), identificationType, true));
 			}
 		}
+		// 12471 - end
 		
+		// 12471 - start
 		private void populateOrganizationSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean,
 				ISearchBean<PmUser> searchBean) {
 			String orgCategory = null == userCommitteeSearchBean.getOrgCat() ? "" : userCommitteeSearchBean.getOrgCat();
@@ -1676,7 +1681,7 @@ public class EvaluationMeetingBackingBean extends
 				}
 			}
 		}
-		//12471 end
+		// 12471 - end
 	}
 
 

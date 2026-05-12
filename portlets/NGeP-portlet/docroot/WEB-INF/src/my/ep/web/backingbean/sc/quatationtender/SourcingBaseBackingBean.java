@@ -859,10 +859,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
+
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScWorkFlowStatusSO.class);
 	}
+
 	// 12471 - end
 
 	//38343 - start
@@ -8303,10 +8306,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	//#35320 - END
 	
-	
-	//12471 Start
+	// 12471 - start
 	/**
-	 * Initialize member info for  
+	 * Initialize member info for
+	 * 
 	 * @param memberInfo
 	 * @return void
 	 */
@@ -8334,8 +8337,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
 	}
+
+	// 12471 - end
+
+	// 12471 - start
 	/**
 	 * Get user organization description
+	 * 
 	 * @param pmUserOrgs
 	 * @param orgType
 	 * @return String - organization description
@@ -8362,7 +8370,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return desc;
 	}
-	
+
+	// 12471 - end
+
+	// 12471 - start
 	/**
 	 * Generate organization type dropdown
 	 */
@@ -8375,6 +8386,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		SelectItem[] items = getDropdownObjectValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 		this.getManagedBean().setOrgTypeDDList(items);
 	}
+
+	// 12471 - end
+
+	// 12471 - start
 	/**
 	 * Generate organization name dropdown
 	 */
@@ -8415,10 +8430,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		this.getManagedBean().setOrgNameDDList(items);
 
 	}
-	
+
+	// 12471 - end
+
+	// 12471 - start
 	/**
 	 * Reset committee user search field and rebuild dropdowns
-	 * @param scQt - ScQt
+	 * 
+	 * @param scQt
+	 *            - ScQt
 	 */
 	public void resetCommitteeSearchBean(ScQt scQt) {
 		UserCommitteeSearchBean searchBean = this.getManagedBean().getCommitteeSearchBean();
@@ -8454,6 +8474,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		searchBean.setIdentificationNo(null);
 	}
 
+	// 12471 - end
+
+	// 12471 - start
 	/**
 	 * Generate ministry dropdown
 	 */
@@ -8461,6 +8484,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		this.getManagedBean().setMinistryDDList(PmCommonUtil.getMinistryDropdown());
 	}
 
+	// 12471 - end
+
+	// 12471 - start
 	/**
 	 * Generate ptj group dropdown
 	 */
@@ -8468,7 +8494,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		UserCommitteeSearchBean searchBean = this.getManagedBean().getCommitteeSearchBean();
 		if (null == searchBean)
 			return;
-		
+
 		SelectItem[] items = new SelectItem[1];
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
@@ -8478,6 +8504,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		this.getManagedBean().setPtjGroupDDList(items);
 	}
 
+	// 12471 - end
+
+	// 12471 - start
 	/**
 	 * Generate ptj dropdown
 	 */
@@ -8498,7 +8527,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
 			list = resDTO.getOrgProfileDDList();
 			items = new SelectItem[list.size() + 1];
-		} 
+		}
 
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
@@ -8510,9 +8539,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		this.getManagedBean().setPtjDDList(items);
 	}
 
+	// 12471 - end
+
+	// 12471 - start
 	/**
 	 * Generate dropdown on parent change
-	 * @param orgType - Dropdown type (Organization Type)
+	 * 
+	 * @param orgType
+	 *            - Dropdown type (Organization Type)
 	 */
 	public void onChangeDD(String orgType) {
 		UserCommitteeSearchBean searchBean = this.getManagedBean().getCommitteeSearchBean();
@@ -8538,5 +8572,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 12471 - end
-
 }

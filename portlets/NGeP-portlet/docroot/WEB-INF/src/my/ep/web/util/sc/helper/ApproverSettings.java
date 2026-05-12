@@ -24,7 +24,7 @@ public class ApproverSettings {
 	private static final Logger log = EpLogger
 			.getLogger(ApproverSettings.class);
 	
-	//12471 - start
+	// 12471 - start
 	/**
 	 * Retrieve approver user list and generate its pick list model
 	 * @param code
@@ -49,6 +49,7 @@ public class ApproverSettings {
 		List<ScQtApproverSettings> availableApprovers = new ArrayList<>();
 		List<ScQtApproverSettings> selectedApprovers = new ArrayList<>();
 		List<PmUser> approvers = new ArrayList<>();
+	// 12471 - end
 		for(Long opid:orgProfileId){
 			List<PmUser> res=getApprovers(code,opid);
 			for(PmUser u:res){
@@ -65,16 +66,17 @@ public class ApproverSettings {
 			if(checkSelectedApprover(approval,pmUser.getUserId())){
 				selectedApprovers.add(qtApproverSettings);
 			}else{
-				if(disabledUserIds!=null && disabledUserIds.contains(qtApproverSettings.getPmUser().getUserId())){
+				// 12471 - start
+				if (disabledUserIds != null && disabledUserIds.contains(qtApproverSettings.getPmUser().getUserId())) {
 					qtApproverSettings.setDisableRow(true);
 				}
+				// 12471 - end
 				availableApprovers.add(qtApproverSettings);
 			}
 			
 		}		
 		
-		return new DualListModel<>(availableApprovers,
-				selectedApprovers);
+		return new DualListModel<>(availableApprovers, selectedApprovers);// 12471
 	}
 	
 	private static boolean checkSelectedApprover(ScQtApproval approval,Long userId){

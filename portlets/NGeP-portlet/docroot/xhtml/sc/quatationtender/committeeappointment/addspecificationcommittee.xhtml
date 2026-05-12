@@ -14,15 +14,13 @@
 			closable="true" showSummary="false" severity="error, info" />
 		<c:if
 			test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-				<!-- #12471 Start -->
+				<ui:remove>12471 start</ui:remove>
 				<ac:instructionText
 					value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
 				<br />
 				<ac:instructionText
 					value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
-				<!-- #12471 End -->
 				<table style="width: 100%;">
-					<!-- #12471 Start -->
 					<tr> 
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.committee.add.member.search.org.cat']}" /></td>
@@ -100,7 +98,7 @@
 								</p:selectOneMenu></td>
 						</tr>
 					</c:if>
-					<!-- #12471 End -->
+					<ui:remove>12471 end</ui:remove>
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
@@ -180,7 +178,7 @@
 							style="white-space: normal;" />
 					</p:column>
 					
-					<!-- #12471 Start -->
+					<ui:remove>12471 start</ui:remove>
 					<c:if
 						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.orgCategoryPtj}">
 						<p:column
@@ -199,7 +197,7 @@
 								value="#{qTCommitteBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.orgTypePtj)}" />
 						</p:column>
 					</c:if>
-					<!-- #12471 End -->
+					<ui:remove>12471 end</ui:remove>
 
 					<p:column headerText="#{lbl['lbl.sc.email']}">
 						<h:outputText value="#{existcommitteeuser.email}"
@@ -334,7 +332,7 @@
 			disabled="#{qTCommitteBackingBean.enableSelectedNewCommitteeList(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 			actionListener="#{qTCommitteBackingBean.addNewCommitteeUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
-				update="@(.scMemberDtl,.amendButton)" />
+				update="@(.scMemberDtl,.amendButton)" /><ui:remove>12471 fix spelling addNewCommitteeUsers</ui:remove>
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				styleClass="BtnSpacing" process="@this" partialSubmit="true"
@@ -344,7 +342,7 @@
 					target="#{qTCommitteBackingBean.managedBean.nameRequired}" />
 			</p:commandButton>
 		</div>
-		<p:ajax event="close" update="@([id$=newspecificationcommitteeid])" listener="#{qTCommitteBackingBean.nameRequired}">
+		<p:ajax event="close" update="@([id$=newspecificationcommitteeid])" listener="#{qTCommitteBackingBean.nameRequired}"><ui:remove>12471</ui:remove>
 		</p:ajax>
 	</p:dialog>
 </ui:composition>

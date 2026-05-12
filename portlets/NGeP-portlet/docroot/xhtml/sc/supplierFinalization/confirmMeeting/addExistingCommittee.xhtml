@@ -13,15 +13,13 @@
 		<p:messages id="committeemessagesid" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 		<h:panelGroup id="userSearch" style="width:100%;margin-top:10px;">
-					<!-- #12471 Start -->
+					<ui:remove>12471 start</ui:remove>
 					<ac:instructionText
 						value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
 					<br />
 					<br />
 					<ac:instructionText
 						value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
-					<!-- #12471 End -->
-					<!-- #12471 Start -->
 					<table style="width:100%">
 						<tr>
 							<td><p:outputLabel
@@ -100,7 +98,7 @@
 									</p:selectOneMenu></td>
 							</tr>
 						</c:if>
-						<!-- #12471 End -->
+						<ui:remove>12471 end</ui:remove>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
@@ -167,7 +165,7 @@
 							<h:outputText value="#{existingMember.designation}"
 								style="white-space: normal;" />
 						</p:column>
-					<!-- #12471 Start -->
+					<ui:remove>12471 start</ui:remove>
 					<c:if
 						test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq ParameterConst.orgCategoryPtj}">
 						<p:column
@@ -186,7 +184,7 @@
 								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.orgTypePtj)}" />
 						</p:column>
 					</c:if>
-					<!-- #12471 End -->
+					<ui:remove>12471 end</ui:remove>
 						
 						<p:column headerText="#{lbl['lbl.sc.email']}">
 							<h:outputText value="#{existingMember.email}"

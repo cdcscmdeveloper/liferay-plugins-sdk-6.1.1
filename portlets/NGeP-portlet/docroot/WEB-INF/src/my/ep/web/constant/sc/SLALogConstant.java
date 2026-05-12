@@ -20,13 +20,13 @@ public class SLALogConstant {
 	public static final String COMMON_BASE_BACKINGBEAN = "BaseBackingBean";
 	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean";
 	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean";	
-	//12471 - start
+	// 12471 - start
 	public static final String QT_COMMITTEE_BACKINGBEAN = "QTCommitteBackingBean";
 	public static final String QT_EVALUATION_MEETING_BACKINGBEAN = "EvaluationMeetingBackingBean";
 	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean";
 	public static final String QT_USER_COMMITTEE_PAGING_DATA_MODEL = "UserCommitteePagingDataModel";
 	public static final String QT_USER_QC_PAGING_DATA_MODEL = "UserQCPagingDataModel";
-	//12471 - end	
+	// 12471 - end
 	// 25037 - start
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
 	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";

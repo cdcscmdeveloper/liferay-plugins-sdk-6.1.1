@@ -174,18 +174,18 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	//#25037-END
 	private boolean hasPreviousMeeting;//#29473
 
-	//12471 - start
+	// 12471 - start
 	private IPagingDataModel<PmUser> userSearchCommitteeDataModel;
 	private UserCommitteeSearchBean userCommitteeSearchBean;
-	
+
 	/**
-	 * Instantiates a new EvaluationMeetingManagedBean. 
+	 * Instantiates a new EvaluationMeetingManagedBean.
 	 */
 	public EvaluationMeetingManagedBean() {
 		userCommitteeSearchBean = new UserCommitteeSearchBean();
 	}
-	//12471 - end
 
+	// 12471 - end
 
 	/**
 	 * Gets the today.
@@ -965,7 +965,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 	//25037 #568 - end
 	
-	//12471 - start
+	// 12471 - start
 	public IPagingDataModel<PmUser> getUserSearchCommitteeDataModel() {
 		return userSearchCommitteeDataModel;
 	}
@@ -981,7 +981,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	public void setUserCommitteeSearchBean(UserCommitteeSearchBean userCommitteeSearchBean) {
 		this.userCommitteeSearchBean = userCommitteeSearchBean;
 	}
-	//12471 - end
+
+	// 12471 - end
 
 	//#28895-35500 start
 	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {

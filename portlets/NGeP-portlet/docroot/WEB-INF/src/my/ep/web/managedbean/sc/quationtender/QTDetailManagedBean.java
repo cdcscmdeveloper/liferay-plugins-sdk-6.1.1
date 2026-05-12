@@ -1958,10 +1958,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Date briefingSiteVisitPostponeDate;
 	//#28188 - End
 	
-	// #12471 Start
+	// 12471 - start
 	private String approverUserId;
-	private Map<String, String> committeeMembersTypeMap; 
-	// #12471 End
+	private Map<String, String> committeeMembersTypeMap;
+
+	// 12471 - end
 
 
 	public QTDetailManagedBean() {
@@ -12494,7 +12495,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#28188 - End
 	
-	// #12471 Start
+	// 12471 - start
 	public String getApproverUserId() {
 		return approverUserId;
 	}
@@ -12502,7 +12503,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setApproverUserId(String approverUserId) {
 		this.approverUserId = approverUserId;
 	}
-	
+
 	public Map<String, String> getCommitteeMembersTypeMap() {
 		return committeeMembersTypeMap;
 	}
@@ -12510,5 +12511,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCommitteeMembersTypeMap(Map<String, String> committeeMembersTypeMap) {
 		this.committeeMembersTypeMap = committeeMembersTypeMap;
 	}
-	// #12471 End	
+	// 12471 - end
 }

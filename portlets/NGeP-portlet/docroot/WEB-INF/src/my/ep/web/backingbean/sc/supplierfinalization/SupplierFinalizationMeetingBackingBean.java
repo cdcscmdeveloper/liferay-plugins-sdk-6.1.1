@@ -513,7 +513,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 */
 	public void addPopupAction() {
 		debugLogger("addCommitteMember");
-		// #12471 Start
+		// 12471 - start
 		IPagingDataModel<PmUser> userSearchQCDataModel = getManagedBean().getUserSearchDataModel();
 		UserCommitteeSearchBean userCommitteeSearchBean = getManagedBean().getUserSearchBean();
 		if (userSearchQCDataModel == null) {
@@ -521,8 +521,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 					new UserQCPagingDataModel(QTConstants.DATATABLE_EXISTINGMEMBERTBL, userCommitteeSearchBean));
 		}
 		userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
-		resetUserAction(); 
-		// #12471 End
+		resetUserAction();
+		// 12471 - end
 
 		this.getManagedBean().setNameRequired(false);
 
@@ -588,14 +588,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 * Search user action.
 	 */
 	public void searchUserAction() { 
-		// #12471 Start
+		// 12471 - start
 		UserCommitteeSearchBean searchBean = this.getManagedBean().getUserSearchBean();
 		if (null == searchBean)
 			return;
 		if (StringUtils.isBlank(searchBean.getName()) && StringUtils.isBlank(searchBean.getIdentificationNo())) {
 			throw new EpException(MessageConst.ERROR_775300);
 		}
-		// #12471 End
+		// 12471 - end
 		this.getManagedBean().getUserSearchDataModel().reloadData();
 	}
 	
@@ -750,7 +750,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				&& CollectionUtils.isNotEmpty(committeeMemberList)) {
 			List<String> duplicateUsersList = new ArrayList<String>();
 			for (PmUser user : selectedPmUserList) {
-				// #12471 Start
+				// 12471 - start
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
@@ -758,12 +758,11 @@ public class SupplierFinalizationMeetingBackingBean extends
 				if (approval != null && approval.getApproverSettings() != null) {
 					for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
 						if (approvalUser.getPmUser().getUserId().equals(user.getUserId())) {
-							throw new EpException(MessageConst.ERROR_775301,
-									new String[] { user.getUserName() });
+							throw new EpException(MessageConst.ERROR_775301, new String[] { user.getUserName() });
 						}
 					}
 				}
-				// #12471 End
+				// 12471 - end
 
 				for (ScCommitteeMember member : committeeMemberList) {
 					if (StringUtils.equalsIgnoreCase(
@@ -1049,8 +1048,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 			return null;
 		}
-		
-		//12471 - start
+
+		// 12471 - start
 		private void populateUserSearchCriteria(UserCommitteeSearchBean userSearchBean, ISearchBean<PmUser> searchBean) {
 			String name = userSearchBean.getName();
 			if (StringUtils.isNotBlank(name)) {
@@ -1073,6 +1072,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 		}
 
+		// 12471 - end
+
+		// 12471 - start
 		private void populateOrganizationSearchCriteria(UserCommitteeSearchBean userSearchBean,
 				ISearchBean<PmUser> searchBean) {
 			String orgCategory = null == userSearchBean.getOrgCat() ? "" : userSearchBean.getOrgCat();
