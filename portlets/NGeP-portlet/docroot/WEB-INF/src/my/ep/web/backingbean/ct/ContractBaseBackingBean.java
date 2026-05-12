@@ -264,6 +264,10 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		confirmationMsgs.put(ContractStatusConst.FD_PENDING_REVISION_APPROVAL, "lbl.ct.fd.rev.bond.confirm");
 		confirmationMsgs.put(ContractStatusConst.FU_PENDING_APPROVAL, "lbl.ct.fu.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.FU_PENDING_REVISION_APPROVAL, "lbl.ct.fu.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.NT_PENDING_APPROVAL, "lbl.ct.nt.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.NT_PENDING_REVISION_APPROVAL, "lbl.ct.nt.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FW_PENDING_APPROVAL, "lbl.ct.fw.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FW_PENDING_REVISION_APPROVAL, "lbl.ct.fw.app.confirm");
 		
 		message = ResourceBundleUtils.getMessage(
 	        confirmationMsgs.get(Long.parseLong(key)),
@@ -271,32 +275,6 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 	        new FacesScopes().getUserLocale()
 	    );
-		
-		return message.replace("<br/>", System.lineSeparator());
-	}
-	
-	/**
-	 * Retrieve fulfilment with bond confirmation message
-	 * 
-	 * @param key the statusId to find label values for use
-	 * @return Fulfiment with Bond Confirmation message
-	 */
-	public String getConfirmationContent(String key) {
-		String message = "";
-		final Map<Long, String> confirmationMsgs = new HashMap<Long, String>();
-		
-		confirmationMsgs.put(ContractStatusConst.NT_PENDING_APPROVAL, "lbl.ct.nt.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.NT_PENDING_REVISION_APPROVAL, "lbl.ct.nt.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.FW_PENDING_APPROVAL, "lbl.ct.fw.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.FW_PENDING_REVISION_APPROVAL, "lbl.ct.fw.app.confirm");
-		
-		//add more here
-		
-		message = ResourceBundleUtils.getMessage(
-				confirmationMsgs.get(Long.parseLong(key)),
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()
-				);
 		
 		return message.replace("<br/>", System.lineSeparator());
 	}
