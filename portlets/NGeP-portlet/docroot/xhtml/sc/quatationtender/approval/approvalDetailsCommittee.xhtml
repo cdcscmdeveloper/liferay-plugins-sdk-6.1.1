@@ -67,6 +67,7 @@
 		toggleable="true">
 		
 		<div style="width: 100%">
+			<ui:remove>12471 start</ui:remove>
 			<h:inputHidden id="selectedApproverInput"
 				binding="#{approverToValidate}"
 				value="#{qTDetailBB.managedBean.approverUserId}" />
@@ -82,6 +83,7 @@
 				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
 			</p:pickList>
 			<p:blockUI block="committeeapproverid" widgetVar="cmtApproverPickListBlock"/>
+			<ui:remove>12471 end</ui:remove>
 		</div>
 	</p:panel>
 	
