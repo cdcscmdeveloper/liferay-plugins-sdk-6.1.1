@@ -512,19 +512,19 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 * Action to add committee members from the popup
 	 */
 	public void addPopupAction() {
-		debugLogger("addCommitteMember");
 		// 12471 - start
 		IPagingDataModel<PmUser> userSearchQCDataModel = getManagedBean().getUserSearchDataModel();
 		UserCommitteeSearchBean userCommitteeSearchBean = getManagedBean().getUserSearchBean();
+
 		if (userSearchQCDataModel == null) {
 			this.getManagedBean().setUserSearchDataModel(
 					new UserQCPagingDataModel(QTConstants.DATATABLE_EXISTINGMEMBERTBL, userCommitteeSearchBean));
 		}
+
 		userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		resetUserAction();
-		// 12471 - end
-
 		this.getManagedBean().setNameRequired(false);
+		// 12471 - end
 
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
@@ -1037,16 +1037,19 @@ public class SupplierFinalizationMeetingBackingBean extends
 				
 				return committeSO.retrieveUserListByCommType(committeReqDTO)
 						.getUserResultBean();
+				// 12471 -start-
 			} catch (Exception e) {
 				ScQt scQt = getManagedBean().getScQt();
 				String qtNo = null != scQt ? scQt.getQtNo() : "";
 				SLAUtils.getInstance().logSLAError(
 						SLALogConstant.QT_MODULE,
-						SLALogConstant.QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN, qtNo,
-						SLALogConstant.QT_USER_QC_PAGING_DATA_MODEL.concat(SLALogConstant.QT_SLA_DOT_SEPARATOR)
-								.concat(SLALogConstant.QT_PAGE_CHANGE_LISTENER), getUserIdSessionFromLoginId(), e);
+						SLALogConstant.QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN,
+						qtNo,
+						SLALogConstant.QT_USER_QC_PAGING_DATA_MODEL.concat(SLALogConstant.QT_SLA_DOT_SEPARATOR).concat(
+								SLALogConstant.QT_PAGE_CHANGE_LISTENER), getUserIdSessionFromLoginId(), e);
 			}
 			return null;
+			// 12471 -end-
 		}
 
 		// 12471 - start
