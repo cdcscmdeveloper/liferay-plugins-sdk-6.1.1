@@ -1468,19 +1468,6 @@ public class QTBriefingSiteVisitBackingBean extends
 		//#28188 - Start
 		if(this.getManagedBean().getBriefingSiteVisitPostponeDate() != null){
 			minDate = this.getManagedBean().getBriefingSiteVisitPostponeDate();
-			
-			
-			//28188 -start-
-			ScQtBsvDtl qtBsvDtls = this.getManagedBean().getQtBriefing();
-			if (null != qtBsvDtls 
-					&& null == qtBsvDtls.getBsvDate()) {
-				 Calendar calMin = Calendar.getInstance();
-			        calMin.setTime(minDate);
-			        calMin.add(Calendar.HOUR_OF_DAY, 1);
-			        minDate = calMin.getTime();     
-			}
-			//28188 -end-
-			
 		}
 		//#28188 - End
 		return minDate;
