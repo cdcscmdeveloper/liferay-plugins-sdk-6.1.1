@@ -12549,7 +12549,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.getSpecZoneId();
 				Long zoneId2 = oldEstimation.getTplSpecZoneDtl()
 						.getSpecZoneId();
-				if (zoneId1 == zoneId2) {
+				if (zoneId1.equals(zoneId2)) {
 
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
@@ -12588,7 +12588,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.getSpecZoneId();
 				Long zoneId2 = oldEstimation.getTplSpecZoneDtl()
 						.getSpecZoneId();
-				if (zoneId1 == zoneId2) {
+				if (zoneId1.equals(zoneId2)) {
 
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
@@ -12753,7 +12753,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Long zoneQtyId1 = tplSpecZoneQtyOld.getSpecZoneQtyId();
 				Long zoneQtyId2 = oldAnswer.getTplSpecZoneQty()
 						.getSpecZoneQtyId();
-				if (zoneQtyId1 == zoneQtyId2) {
+				if (zoneQtyId1.equals(zoneQtyId2)) {
 
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
@@ -12790,7 +12790,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Long zoneQtyId1 = tplSpecZoneQtyOld.getSpecZoneQtyId();
 				Long zoneQtyId2 = oldAnswer.getTplSpecZoneQty()
 						.getSpecZoneQtyId();
-				if (zoneQtyId1 == zoneQtyId2) {
+				if (zoneQtyId1.equals(zoneQtyId2)) {
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
 					tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
