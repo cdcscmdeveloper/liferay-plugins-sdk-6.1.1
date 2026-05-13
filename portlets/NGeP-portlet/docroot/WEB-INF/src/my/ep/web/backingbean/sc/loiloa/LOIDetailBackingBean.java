@@ -43,6 +43,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#38151
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -118,6 +119,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
@@ -1717,6 +1719,11 @@ public class LOIDetailBackingBean extends
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+	
+	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 	}
 
 	/**
