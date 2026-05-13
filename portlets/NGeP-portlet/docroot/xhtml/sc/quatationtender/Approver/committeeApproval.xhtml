@@ -28,15 +28,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<ui:remove>12471 start</ui:remove>
-				<p:commandLink
-					actionListener="#{approvalBackingBean.onClickMemberInfo(committeeapprover.pmUser)}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					update="@form">
-					<h:outputText value="#{committeeapprover.memberName}"
-						style="white-space: normal;" />
-				</p:commandLink>
-				<ui:remove>12471 end</ui:remove>
+				<h:outputText value="#{committeeapprover.memberName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
@@ -93,9 +85,5 @@
 			</p:column>
 
 		</p:dataTable>
-		<ui:remove>12471 start</ui:remove>
-		<ac:qtCommitteMemberInfoPopup bBean="#{approvalBackingBean}"
-			widget="memberInfoPopUp" />
-		<ui:remove>12471 end</ui:remove>
 	</p:panel>
 </ui:composition>
