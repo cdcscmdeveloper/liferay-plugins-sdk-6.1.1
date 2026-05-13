@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct;
 
@@ -268,6 +268,12 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		confirmationMsgs.put(ContractStatusConst.NT_PENDING_REVISION_APPROVAL, "lbl.ct.nt.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.FW_PENDING_APPROVAL, "lbl.ct.fw.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.FW_PENDING_REVISION_APPROVAL, "lbl.ct.fw.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.AC_PENDING_AGREEMENT_APPROVAL, "lbl.ct.ac.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.AC_PENDING_AGREEMENT_REVISION_APPROVAL, "lbl.ct.ac.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FS_PENDING_APPROVAL, "lbl.ct.fs.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FS_PENDING_REVISION_APPROVAL, "lbl.ct.fs.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FT_PENDING_APPROVAL, "lbl.ct.ft.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FT_PENDING_REVISION_APPROVAL, "lbl.ct.ft.app.confirm");
 		
 		message = ResourceBundleUtils.getMessage(
 	        confirmationMsgs.get(Long.parseLong(key)),

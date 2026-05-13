@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.suspension;
 
@@ -92,6 +92,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	private ContractBackingBean ctBB = null;
 	private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+
+	private String confirmationContentMsg;//34442 
 
 	/**
 	 * This constructor method used to initialize the variable on start up
@@ -816,6 +818,19 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+			CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
+
+			setConfirmationContentMsg(
+				getConfirmationContent(
+					String.valueOf(contractVer.getStatus().getStatusId()),
+					contractVer.getCtContract().getContractNo()
+				)
+			);
+			RequestContext.getCurrentInstance().update("submitConfirmDlgId");
+			RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+			return null;
+		}
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 			validateSuspensionDetails(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
@@ -1079,4 +1094,14 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 	}
 	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
+
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }
