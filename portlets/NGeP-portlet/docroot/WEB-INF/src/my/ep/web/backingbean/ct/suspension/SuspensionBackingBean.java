@@ -817,7 +817,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * Call save suspension method once authentication done
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+	//34442 - start
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 			CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
 
 			setConfirmationContentMsg(
@@ -826,33 +827,52 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					contractVer.getCtContract().getContractNo()
 				)
 			);
+			getManagedBean().setButtonAction(outcome);
 			RequestContext.getCurrentInstance().update("submitConfirmDlgId");
 			RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
 			return null;
-		}
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-			validateSuspensionDetails(outcome);
-			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(outcome);			
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());			
-			getManagedBean().setTextBeforeSign(sb.toString());	
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			return null;
-		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
+    	} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+        	return gpkiSignConfirmed(outcome);
+    	} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
-		}   else {
+		} else {
 			return saveContractSuspension(outcome);
 		}
 	}
+
+	/**
+	 * Method called when user confirms yes on the confirmation dialog
+	 * Retrieve saved outcome from managed bean
+	 * Proceed to GPKI sign dialog for signing
+	 */
+	public String gpkiSignConfirmed() throws Exception {
+    	return gpkiSignConfirmed(getManagedBean().getButtonAction());
+	}
+
+	/**
+	 * Method to prepare and show GPKI sign dialog
+	 * Build text before sign with contract details for digital signing
+	 * Used by both approve confirmation flow and direct reject flow
+	 */
+	private String gpkiSignConfirmed(String outcome) throws Exception {
+		validateSuspensionDetails(outcome);
+		//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(outcome);
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+		getManagedBean().setTextBeforeSign(sb.toString());
+		getManagedBean().setButtonAction(outcome);
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		return null;
+	}
+	//34442 - end
 
 	/**
 	 * The method used to invoke and initiate the item specification dialog.
