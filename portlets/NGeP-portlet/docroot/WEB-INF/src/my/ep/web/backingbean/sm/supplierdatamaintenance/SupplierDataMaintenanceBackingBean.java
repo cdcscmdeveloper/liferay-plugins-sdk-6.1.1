@@ -65,6 +65,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
@@ -342,7 +343,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		//END 27465 : Disciplinary Action 
 		
 		//START 26238
-		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
+		if (getManagedBean().getSmAppl().getPmRegStatus() == null 
+				&& !getManagedBean().getSmAppl().getApplType().equals(SupplierManagementConst.ACC_BASIC)) { //40219
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 			getManagedBean().setCancelMofAccount(true);
 		} else {
@@ -400,6 +402,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setSmRvFilePath(filePath);
 		
 		initSmRvHistory();
+		initPmUserRole(); // #36504
 		// #34031 End
 		getManagedBean().setViewMode(true); //#39231
 	}
@@ -600,7 +603,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
-		validateAddedCategory(getManagedBean().getActiveCategoryList());
+		// #34031#note-162
+		validateCategory(getManagedBean().getApprovedCategoryList(), getManagedBean().getActiveCategoryList());
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<>();
@@ -773,6 +777,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
+			getManagedBean().setOwnerChange(resDTO.isOwnerChange()); // 40078, 26238
 			// #28895_35501 Start - AUDIT TRAIL SM
 			if (resDTO.isSuccessful()) {
 				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
@@ -1230,19 +1235,21 @@ public class SupplierDataMaintenanceBackingBean extends
 		//27460 : Disciplinary Action, //32827
 		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
 		validateCancelManufacturer();	//38742
-		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
+		// 40029, 26238 - START
+		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null || 
+				getManagedBean().isBlacklistOwnerOrDirector() ){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
 			}
 			
-			//#28147 - start - #28494
+			// 28147, 28494 - START
 			if (getManagedBean().isBlacklistOwnerOrDirector() 
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.owner", null));
 			}
-			//#28147 - end
+			// 28147, 40029, 26238 - END
 		}
 		// #34031 Start
 		if (this.getManagedBean().getSmRevisit().getRevisitDate() != null) {
@@ -1439,6 +1446,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	private void assignApplActiveAndApprovedCategoryList() {
 		List<SmSupplierCategory> catList = new ArrayList<>();
 		List<SmSupplierCategory> apprvList = new ArrayList<>();
+		List<SmSupplierCategory> otherDescList = new ArrayList<>(); // 36504
+
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
@@ -1460,6 +1469,13 @@ public class SupplierDataMaintenanceBackingBean extends
 				// #34031 End 
 				//26238: Disciplinary Action - start - 28219
 				apprvList.add(cat);
+				
+				// 36504 - START
+				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
+					otherDescList.add(cat);
+				}
+				// 36504 - END
+
 			}
 		}
 		if (getManagedBean().getActiveCategoryList() != null
@@ -1470,6 +1486,14 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& !getManagedBean().getApprovedCategoryList().isEmpty()) {
 			getManagedBean().getApprovedCategoryList().clear();
 		}
+		
+		// 36504 - START
+		if (!EntityHelper.isCollectionEmpty(otherDescList)) {
+			getManagedBean().setOtherDescChangeSupplier(true);
+		} else {
+			getManagedBean().setOtherDescChangeSupplier(false);
+		}
+		// 36504 - END
 		
 		//14150
 		SmApplicationUtil.sortSupplierCategory(apprvList);
@@ -3251,5 +3275,89 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(MessageConst.ERROR_723103, new String[] { suppDoc.getPmDocument().getDocName() });
 		}
 	}
+	// #34031#note-162 Start
+	private void validateCategory(List<SmSupplierCategory> approvedCategoryList, List<SmSupplierCategory> activeCategoryList) {
+		List<SmSupplierCategory> catList = new ArrayList<>();
+		catList.addAll(approvedCategoryList);
+		catList.addAll(activeCategoryList);
+
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+
+		for (SmSupplierCategory cat : catList) {
+			if (cat.getPmCategoryL3().getOtherDescReq() != null && cat.getPmCategoryL3().getOtherDescReq().equals(ParameterConst.FLAG_INT_YES)
+					&& StringUtils.isEmpty(cat.getOtherDesc())) {
+				sb.append("<br/>").append(++i).append(".) ").append(cat.getPmCategoryL1().getCategoryL1Code())
+						.append(cat.getPmCategoryL2().getCategoryL2Code()).append(cat.getPmCategoryL3().getCategoryL3Code());
+			}
+		}
+
+		if (!StringUtils.isBlank(sb.toString())) {
+			throw new EpException(MessageConst.ERROR_722514, new String[] { sb.toString() });
+		}
+	}
+	// #34031#note-162 End
 	// #34031 End
+	
+	// 36504 - START
+	public String getOtherDescVal(SmSuppCatOtherDescHistory otherDescBean, String param) {
+
+	    if (otherDescBean == null || param == null) {
+	        return SmCommonUtil.getMessage("lbl.sm.no.available", null);
+	    }
+
+	    String roleType = otherDescBean.getRoleType();
+	    String noValue = SmCommonUtil.getMessage("lbl.sm.no.available", null);
+
+	    switch (param.toUpperCase()) {
+
+	        case "ONE":
+	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
+	                                SupplierManagementConst.SUPPLIER_APPROVER)) {
+	                return otherDescBean.getOtherDesc();
+	            }
+	            break;
+
+	        case "TWO":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+	                return otherDescBean.getOtherDesc();
+	            }
+	            break;
+
+	        case "THREE":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
+	                                SupplierManagementConst.SUPPLIER_PO)) {
+	                return getUserNameByUserId(otherDescBean.getCreatedBy());
+	            }
+	            break;
+
+	        case "FOUR":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+	                return otherDescBean.getOtherDesc();
+	            }
+	            break;
+
+	        case "FIVE":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
+	                                SupplierManagementConst.SUPPLIER_APPROVER)) {
+	                return getUserNameByUserId(otherDescBean.getCreatedBy());
+	            }
+	            break;
+	    }
+
+	    return noValue;
+	}
+
+	private boolean isRole(String roleType, String... roles) {
+	    if (roleType == null) {
+	        return false;
+	    }
+	    for (String role : roles) {
+	        if (roleType.equalsIgnoreCase(role)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	// 36504 - END
 }

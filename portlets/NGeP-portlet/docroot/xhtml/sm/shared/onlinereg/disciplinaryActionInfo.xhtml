@@ -21,11 +21,13 @@
 			<p:spacer height="2"/>
 		</p:outputPanel>
 		
-		<table style="width: 50%;table-layout:fixed">
+		<!-- 40139 - START -->
+		<table>
 			<tr>
 				<td style="vertical-align: top;">
-					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" />
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="font-weight: bold;"/>
 				</td>
+				<td style="vertical-align: top;"><p:outputLabel value=":" style="font-weight: bold;"/></td>
 				<td style="vertical-align: top;">
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
@@ -49,9 +51,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" />
+				<td style="vertical-align: top;">
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" style="font-weight: bold;"/>
 				</td>
+				<td style="vertical-align: top;"><p:outputLabel value=":" style="font-weight: bold;"/></td>
 				<td>
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
@@ -60,9 +63,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" />
+				<td style="vertical-align: top;">
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" style="font-weight: bold;"/>
 				</td>
+				<td style="vertical-align: top;"><p:outputLabel value=":" style="font-weight: bold;"/></td>
 				<td>
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
@@ -71,9 +75,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" />
+				<td style="vertical-align: top;">
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="font-weight: bold;"/>
 				</td>
+				<td style="vertical-align: top;"><p:outputLabel value=":" style="font-weight: bold;"/></td>
 				<td>
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
@@ -82,9 +87,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" />
+				<td style="vertical-align: top;">
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="font-weight: bold;"/>
 				</td>
+				<td style="vertical-align: top;"><p:outputLabel value=":" style="font-weight: bold;"/></td>
+				<!-- 40139 - END -->
 				<td>
 					<p:outputLabel rendered="#{empty registrationBackingBean.managedBean.blacklistownerDirectorList}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>

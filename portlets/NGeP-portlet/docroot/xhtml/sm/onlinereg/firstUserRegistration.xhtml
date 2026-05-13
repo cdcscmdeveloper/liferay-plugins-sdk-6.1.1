@@ -232,7 +232,7 @@
 								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}"
 								rendered="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
-								<p:ajax event="blur" partialSubmit="true"/><!-- #26238 - 39681 -->
+								<!-- #26238 - 39681 -->
 							</p:inputText>
 						
 							<p:inputText id="txtIdNumber2" required="#{!empty param['disableValidation']}"

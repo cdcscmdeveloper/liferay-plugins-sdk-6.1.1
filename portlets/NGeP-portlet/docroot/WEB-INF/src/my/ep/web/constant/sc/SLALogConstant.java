@@ -134,6 +134,11 @@ public class SLALogConstant {
 	public static final String DP_GET_RADIOBUTTON_CODEVALUES = "getReasonCodeDropdownValues";
 	// #27868 - end
 	
+	// 34491 - start
+	public static final String QT_LOI_DETAIL_BACKINGBEAN = "LOIDetailBackingBean";
+	public static final String QT_SELECTALL  = "selectAll";
+	// 34491 - end
+	
 	private SLALogConstant(){
 		
 	}	

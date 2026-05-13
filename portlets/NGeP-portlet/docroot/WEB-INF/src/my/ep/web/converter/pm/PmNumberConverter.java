@@ -15,9 +15,9 @@ import my.ep.util.ResourceBundleUtils;
  */
 @FacesConverter(value = "pmNumberConverter")
 public class PmNumberConverter extends NumberConverter {
-	String DECIMAL = "DECIMAL";
-	String DECIMAL_PATTERN = "#,##0.00";
-	String INTEGER_PATTERN = "#,##0";
+	public static final String DECIMAL = "DECIMAL";
+	public static final String DECIMAL_PATTERN = "#,##0.00";
+	public static final String INTEGER_PATTERN = "#,##0";
 
 	@Override
 	public Object getAsObject(FacesContext ctx, UIComponent comp, String value) {
@@ -33,11 +33,20 @@ public class PmNumberConverter extends NumberConverter {
 
 			String label = (String) comp.getAttributes().get("label");
 			String ruleType = (String) comp.getAttributes().get("ruleType");
+			//#34397 - Start
+			String zoneName = (String) comp.getAttributes().get("zoneName");
+			FacesMessage fac;
 
-			FacesMessage fac = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-					"lbl.pm.settings.number.error", new String[] { label, value,
-							ruleType }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new my.ep.web.util.FacesScopes().getUserLocale()));
+			if (zoneName != null && !zoneName.isEmpty()) {
+				fac = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+						"lbl.pm.settings.int.zone.error", new String[] { label, value, ruleType, zoneName },
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new my.ep.web.util.FacesScopes().getUserLocale()));
+			} else {
+				fac = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+						"lbl.pm.settings.number.error", new String[] { label, value, ruleType },
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new my.ep.web.util.FacesScopes().getUserLocale()));
+			}
+			//#34397 - End
 
 			throw new ConverterException(fac, e);
 		}

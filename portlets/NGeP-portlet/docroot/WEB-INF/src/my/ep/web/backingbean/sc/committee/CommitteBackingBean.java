@@ -548,7 +548,7 @@ public class CommitteBackingBean extends
 				toCreatedDate = toDate.getTime();
 				
 				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.CREATED_DATE);
+				bean.setSearchField("scQt.createdDate"); //#35320
 				/*bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(fromCreatedDate);*/
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
@@ -2681,7 +2681,6 @@ public class CommitteBackingBean extends
 	 * Method to retrieve Committee Type detail based on the tab id
 	 */
 	public void getTabInfo() {
-
 		Long loggedInUserId = getUserIdSessionFromLoginId();
 		
 		ICommitteSO committeeSO = null;
@@ -2709,7 +2708,7 @@ public class CommitteBackingBean extends
 				}
 			}
 
-			reqDto.setTplCommitteeId(null != displayCommittee ? displayCommittee.getTplCommitteeId() : null);
+			reqDto.setTplCommitteeId(null != displayCommittee ? displayCommittee.getCommitteeId() : null);
 			reqDto.setOmitCurrent(false);
 			reqDto.setUserId(loggedInUserId);
 
@@ -2722,13 +2721,14 @@ public class CommitteBackingBean extends
 			List<TplCommMember> latestCommittee = resDto.getTplMemberList();
 			if (null != latestCommittee) {
 				Collections.sort(latestCommittee, new TplMemberRoleComparator());
+				setTplCommMemberRepresentativeType(latestCommittee);
 			}
 
 			TplCommittee scCommittee = resDto.getTplCommittee();
 			TplCommMember loggedInMember = getSecretaryMember(latestCommittee);
 			this.getManagedBean().setTplCommMember(loggedInMember);
 			if (null != getManagedBean().getTplCommMember()) {
-				retrieveTplUserDetails(loggedInUserId);
+				retrieveTplUserDetails();
 			}
 
 			Paginator historyPaginator = new Paginator(histories);
@@ -3065,10 +3065,10 @@ public class CommitteBackingBean extends
 			CustomUtils.sortQtCommitteeMemberRole(list);
 			list = sortMemberByAlphabetOrder(list);
 			this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
-			reqDTO.setTplCommitteeId(history.getTplCommittee().getTplCommitteeId());
+			reqDTO.setTplCommitteeId(history.getTplCommittee().getCommitteeId());
 		} else {
 			if (null != this.getManagedBean().getTplCommittee()) {
-				reqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getTplCommitteeId());
+				reqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getCommitteeId());
 			}
 		}
 
@@ -3111,7 +3111,7 @@ public class CommitteBackingBean extends
 	 *
 	 * @param userid the userid
 	 */
-	public void retrieveTplUserDetails(Long userid) {
+	public void retrieveTplUserDetails() {
 
 		IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IUserSO.class);
@@ -3190,7 +3190,15 @@ public class CommitteBackingBean extends
 	
 	// #35320 - START
 	/**
-	 * Get user role description
+	 * Returns the committee role description for the given user.
+	 * <p>
+	 * Checks the user's eligibility for the committee role based on the
+	 * committee type, organization profile, and existing members.
+	 * Assigns Chairperson role if none exists, otherwise assigns Member role.
+	 * </p>
+	 *
+	 * @param pmUser the user whose role description is to be determined
+	 * @return the role description assigned to the user; defaults to Member if undetermined
 	 */
 	public String getTplRoleDesc(PmUser pmUser) {
 
@@ -3226,11 +3234,7 @@ public class CommitteBackingBean extends
 
 			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
 			if (resDTO.isSuccessful() && resDTO.isHasRequiredCommitteeRole()) {
-				for (TplCommMember commMember : scCommMember) {
-					if (commMember.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-						hasChairperson = true;
-					}
-				}
+				hasChairperson = isChairpersonExist(scCommMember);
 
 				if (hasChairperson) {
 					PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
@@ -3244,8 +3248,9 @@ public class CommitteBackingBean extends
 					userRole = getParameterDesc(chairPersonRole);
 				}
 			}
-		} finally {
-			committeeSO = null;
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
+					"CommitteBackingBean.getTplRoleDesc", null, ex);
 		}
 
 		if (userRole == null) {
@@ -3286,9 +3291,9 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 
 		List<TplCommMember> committeeMemberList = this.getManagedBean().getTplCommittee().getTplCommMembers();
-		List<TplCommMember> deleteList = new ArrayList<TplCommMember>();
+		List<TplCommMember> deleteList = new ArrayList<>();
 		if (null == toBeDelCommitteMembers) {
-			toBeDelCommitteMembers = new ArrayList<TplCommMember>();
+			toBeDelCommitteMembers = new ArrayList<>();
 			this.getManagedBean().setToBeDelTplCommitteMembers(toBeDelCommitteMembers);
 		}
 
@@ -3318,13 +3323,11 @@ public class CommitteBackingBean extends
 	 */
 	public String updateTplCommitteDetails(String outCome) {
 
-		debugLogger("submitTplCommitteDetails");
-
 		CommitteReqDTO committeReqDTO = constructSaveTplCommitte();
 
 		TplCommittee tplCommittee = getManagedBean().getTplCommittee();
 		committeReqDTO.setTplCommittee(tplCommittee);
-		committeReqDTO.setTplCommitteeId(tplCommittee.getTplCommitteeId());
+		committeReqDTO.setTplCommitteeId(tplCommittee.getCommitteeId());
 		committeReqDTO.setOutcome(outCome);
 		committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		committeReqDTO.setRoleCode(getTplCommitteeRoleCode());
@@ -3338,7 +3341,7 @@ public class CommitteBackingBean extends
 					ICommitteSO.class);
 			resDTO = committeSo.validateFcTplCommitteDetails(committeReqDTO);
 			resDTO = committeSo.updateFCCommitteDetails(committeReqDTO);
-
+			
 			if (resDTO.isSuccessful()) {
 				if (CollectionUtils.isNotEmpty(committeReqDTO.getToBeDeletedTplMembers())) {
 					getManagedBean().setToBeDelTplCommitteMembers(null); 
@@ -3367,17 +3370,17 @@ public class CommitteBackingBean extends
 	 * @return the committe req dto
 	 */
 	private CommitteReqDTO constructSaveTplCommitte() {
-		
+
 		CommitteReqDTO committeeReqDTO = new CommitteReqDTO();
 
 		// If a record is deleted and added back to the same committee,
 		// remove the record from deleted members list
 		List<TplCommMember> committeeMembers = getManagedBean().getTplCommMembers();
 		List<TplCommMember> deletedCommitteeMembers = this.getManagedBean().getToBeDelTplCommitteMembers();
-		List<TplCommMember> toBeAddedMembers = new ArrayList<TplCommMember>();
+		List<TplCommMember> toBeAddedMembers = new ArrayList<>();
 		
 		if (CollectionUtils.isNotEmpty(deletedCommitteeMembers) && CollectionUtils.isNotEmpty(committeeMembers)) {
-			Map<String, TplCommMember> currentCommMemberIcs = new HashMap<String, TplCommMember>();
+			Map<String, TplCommMember> currentCommMemberIcs = new HashMap<>();
 
 			for (TplCommMember currCommMem : committeeMembers) {
 				currentCommMemberIcs.put(currCommMem.getIcPassport(), currCommMem);
@@ -3406,7 +3409,7 @@ public class CommitteBackingBean extends
 
 		committeeReqDTO.setToBeDeletedTplMembers(getManagedBean().getToBeDelTplCommitteMembers());
 		committeeReqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
-		
+
 		FacesScopes facesScopes = new FacesScopes();
 		committeeReqDTO.setUserLocale(facesScopes.getUserLocale());
 		return committeeReqDTO;
@@ -3430,7 +3433,7 @@ public class CommitteBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						ICommitteSO.class);
 		CommitteReqDTO committeeReqDTO = new CommitteReqDTO();
-		committeeReqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getTplCommitteeId());
+		committeeReqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getCommitteeId());
 		committeeReqDTO.setPmUser(curLogedInUser);
 		committeeReqDTO.setCommitteeType(committeeType);
 		return committeSO.retrieveTplCommitteMemberByUserId(committeeReqDTO);
@@ -3454,10 +3457,31 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
 		
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setTplCommitteeId(history.getTplCommittee().getTplCommitteeId());
+		reqDTO.setTplCommitteeId(history.getTplCommittee().getCommitteeId());
 		CommitteResDTO resDTO = this.getCommitteeSO().retrieveCommitteDtlByCommitteeId(reqDTO);
 		history.setTplCommittee(resDTO.getTplCommittee());
 	}
 	// #35320 - END
-
+	
+	// #35320 - START
+	private boolean isChairpersonExist(List<TplCommMember> scCommMember){
+		boolean hasChairperson = false;
+		for (TplCommMember commMember : scCommMember) {
+			if (commMember.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				hasChairperson = true;
+			}
+		}
+		return hasChairperson;
+	}
+	// #35320 - END
+	
+	// #35320 - START
+	private void setTplCommMemberRepresentativeType(List<TplCommMember> latestCommittee){
+		for(TplCommMember mem : latestCommittee){
+			if(mem.getRepresentativeType() != null){
+				mem.setRepresentativeTypeId(mem.getRepresentativeType().getParameterId());
+			}
+		}
+	}
+	// #35320 - END
 }

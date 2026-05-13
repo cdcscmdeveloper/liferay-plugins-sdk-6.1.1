@@ -128,12 +128,13 @@
 						<td><p:message for="title" display="icon" /></td>
 				<td style="width: 134px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
-				<td><p:inputText size="25" disabled="true"
-						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType)}" />
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/>	
+				<ui:remove>#27476 start</ui:remove>
+				<td><p:inputTextarea rows="1" cols="27" readonly="true"
+						autoResize="false" style="margin-bottom:5px;"
+						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType)}"
+						disabled="true"></p:inputTextarea><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/>	
 				</td>
 			</tr>
-			<ui:remove>#27476 start</ui:remove>
 			<tr>
 				<td colspan="2"><p:outputLabel
 						value="#{lbl['lbl.fl.pr.reason']}" /></td>

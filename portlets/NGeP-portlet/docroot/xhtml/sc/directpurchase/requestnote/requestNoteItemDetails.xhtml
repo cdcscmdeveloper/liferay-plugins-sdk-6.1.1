@@ -101,7 +101,7 @@
 					<ui:remove> 27868 - start</ui:remove>
 					<ui:fragment
 						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A' or requestNoteDtl.procurementType.parameterCode eq 'P' or requestNoteDtl.procurementType.parameterCode eq 'S'}">
-						<p:commandLink value="#{requestNoteBackingBean.getParameterDescForView(requestNoteDtl.procurementType.parameterCode)}"
+						<p:commandLink value="#{requestNoteBackingBean.getParameterDescription(requestNoteDtl.procurementType)}"
 							styleClass="command-link"
 							id="procButtonRPT"
 							partialSubmit="true" process="@this" update=":form:justPopup"

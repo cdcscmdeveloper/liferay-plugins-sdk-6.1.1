@@ -1137,19 +1137,15 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * @return financial year options
 	 */
 	public static List<SelectItem> getFinancialYearOpt() {
-		int years = 0;
 		//29550 - Start(add yearLength variable to display year from 2016)
-		int yearLength = 7;
-		List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
-		
-		if(isFactoringUser()){
-			yearLength = 8;
-		}
-		
-		for(Integer i = 0;i < yearLength;i++){
-			years = CommonMethod.getYear(-i);
-			 financialYearOpt.add(new SelectItem(years, Integer.toString(years)));
-		}
+		List<SelectItem> financialYearOpt = new ArrayList<>();
+
+	    int startYear = 2016;
+	    int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+	    for (int year = currentYear; year >= startYear; year--) {
+	        financialYearOpt.add(new SelectItem(year, Integer.toString(year)));
+	    }
 		//29550 - End
 		return financialYearOpt;
 	}
