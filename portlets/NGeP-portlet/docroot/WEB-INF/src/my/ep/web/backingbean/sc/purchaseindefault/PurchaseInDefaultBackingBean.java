@@ -38,6 +38,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst; //27868
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -2515,8 +2516,10 @@ public class PurchaseInDefaultBackingBean extends
 		
 		PmReason pmReason = new PmReason();
 		for (PmReason reason : reasonResDTO.getPmReasonList()) {
-			pmReason = reason;
-			break;
+			if (reason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY)) { // start #27868
+				pmReason = reason;
+				break;
+			}// end #27868
 		}
 		
 		return pmReason;
