@@ -4649,11 +4649,11 @@ public class SmApplicationUtil {
 			
 			// 36504 - START
 			List<SmSupplierCategory> prevList = new ArrayList<>();
-			managedBean.setOtherDescChangePO(false);
-			managedBean.setOtherDescChangeApprover(false);
-			managedBean.setOtherDescChangeSupplier(false);
-			managedBean.setOtherDescChangeSupPO(false);
-			managedBean.setOtherDescChangeSupApprover(false);
+			managedBean.setOtherDescChangePOPrev(false);
+			managedBean.setOtherDescChangeApproverPrev(false);
+			managedBean.setOtherDescChangeSupplierPrev(false);
+			managedBean.setOtherDescChangeSupPOPrev(false);
+			managedBean.setOtherDescChangeSupApproverPrev(false);
 			
 			if (managedBean.getSmAppl().getApplType()
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
