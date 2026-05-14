@@ -144,15 +144,17 @@ public class BSVAttendanceBackingBean extends
 			
 			// getting Briefing Same As Site Visit value
 			ScQt scQt = resDTO.getScQt();
-			ScQt selectedScQt = qtResDTO.getQtDetail();//#28188	
+			ScQt selectedScQt = qtResDTO.getQtDetail();//#28188
+			
 			this.getManagedBean().setScQt(scQt);
 			this.getManagedBean().setDaImposedSupplierIds(new ArrayList<Long>());// 26247(39088)
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
 				// Need to construct tab bean for zone
 				List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
-
+				
 				if (null != zoneDtls) {
+					boolean checkApprovalPending = detailSO.checkApprovalRequestPending(selectedScQt.getScQtApprovals());//#28188 - Start
 					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 						reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
 						BriefingResDTO briefingResDTO = qTBriefingSO.retrieveBriefingSiteVisitDtls(reqDTO);
@@ -173,8 +175,16 @@ public class BSVAttendanceBackingBean extends
 							List<ScQtBsvDtl> newBriefingList = new ArrayList<ScQtBsvDtl>();
 							for (ScQtBsvDtl scqtdtl : briefingResDTO.getBriefingList()){
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
-								newBriefingList.add(scqtdtl);
-								briefingZoneBean.setBriefingList(newBriefingList);
+								//newBriefingList.add(scqtdtl);
+								//briefingZoneBean.setBriefingList(newBriefingList);
+								//#28188 - Start
+								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)
+										|| (!checkApprovalPending && scqtdtl.getBsvStatus().getStatusId()
+											.equals(QTStatusConst.BSV_REQUEST_REJECT))) {
+									newBriefingList.add(scqtdtl);
+									briefingZoneBean.setBriefingList(newBriefingList);
+								}
+								//#28188 - End
 							}
 						}
 						
@@ -182,8 +192,16 @@ public class BSVAttendanceBackingBean extends
 							List<ScQtBsvDtl> newSiteVisitList = new ArrayList<ScQtBsvDtl>();
 							for (ScQtBsvDtl scqtdtl : briefingResDTO.getSiteVisitList()){
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
-								newSiteVisitList.add(scqtdtl);
-								briefingZoneBean.setSitevisitList(newSiteVisitList);
+								//newSiteVisitList.add(scqtdtl);
+								//briefingZoneBean.setSitevisitList(newSiteVisitList);
+								//#28188 - Start
+								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)
+										|| (!checkApprovalPending && scqtdtl.getBsvStatus().getStatusId()
+											.equals(QTStatusConst.BSV_REQUEST_REJECT))) {
+									newSiteVisitList.add(scqtdtl);
+									briefingZoneBean.setSitevisitList(newSiteVisitList);
+								}
+								//#28188 - End
 							}
 						}
 						bsvZoneBeans.add(briefingZoneBean);
@@ -237,7 +255,7 @@ public class BSVAttendanceBackingBean extends
 				boolean checkApprovalPending = detailSO.checkApprovalRequestPending(selectedScQt.getScQtApprovals());
 				
 				briefingZoneFinalBean = new BriefingZoneBean(null,null,null, scQtBsv);
-				if(!CollectionUtils.isEmpty(briefingZoneBean.getBriefingList()) && briefingZoneBean.getBriefingList().size() > 1){
+				if(CollectionUtils.isNotEmpty(briefingZoneBean.getBriefingList()) && briefingZoneBean.getBriefingList().size() > 1){
 					List<ScQtBsvDtl> newBriefingFinalList = new ArrayList<ScQtBsvDtl>();
 
 					for (ScQtBsvDtl scQtBsvDtl : briefingZoneBean.getBriefingList()) {
@@ -252,7 +270,7 @@ public class BSVAttendanceBackingBean extends
 					briefingZoneFinalBean.setBriefingList(briefingZoneBean.getBriefingList());
 				}
 				
-				if(!CollectionUtils.isEmpty(briefingZoneBean.getSitevisitList()) && briefingZoneBean.getSitevisitList().size() > 1){
+				if(CollectionUtils.isNotEmpty(briefingZoneBean.getSitevisitList()) && briefingZoneBean.getSitevisitList().size() > 1){
 					List<ScQtBsvDtl> newSiteVisitFinalList = new ArrayList<ScQtBsvDtl>();
 					
 					for (ScQtBsvDtl scQtBsvDtl : briefingZoneBean.getSitevisitList()) {
