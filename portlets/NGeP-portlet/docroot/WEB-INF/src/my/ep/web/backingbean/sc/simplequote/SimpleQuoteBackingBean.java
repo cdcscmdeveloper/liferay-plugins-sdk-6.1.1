@@ -9934,6 +9934,12 @@ public class SimpleQuoteBackingBean extends
 	}
 	// #26059 - End
 	//40234 - start
+	/**
+	 * To remove govt seller from supplier list 
+	 * when change procurement type from G2G -> Normal
+	 * 
+	 * @param suppliers
+	 */
 	private void removeGovtSellerFromSupplierList(List<ScQuoteSupplier> suppliers) {
 	    IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 	            .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
@@ -9949,6 +9955,13 @@ public class SimpleQuoteBackingBean extends
 	    suppliers.removeAll(suppliersToRemove);
 	}
 	
+	/**
+	 * To identify supplier is Goverment Seller
+	 * 
+	 * @param supplier
+	 * @param orgProfileSO
+	 * @return
+	 */
 	private boolean isGovtSeller(ScQuoteSupplier supplier, IOrgProfileSO orgProfileSO) {
 	    if (supplier == null || supplier.getSmSupplier() == null) {
 	        return false;
