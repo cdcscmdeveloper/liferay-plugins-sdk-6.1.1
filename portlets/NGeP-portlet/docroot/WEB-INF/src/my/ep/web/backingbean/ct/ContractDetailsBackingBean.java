@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -176,6 +177,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     @Override
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return ctBB.getManagedBean().getContractVer();
     }
     //#30737 - End
 	    
@@ -2057,38 +2063,41 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Amendment without supplemental
 		//Notification setting
 		//Fulfilment creation/update
-		
-		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		reqDTO.setUserRole(getUserRole());
-		reqDTO.setOutcome(action);
-		reqDTO.setCtContractVer(ctContractVer);
-
-		log.info("xoxoxoxoxooxoxo action : "+action);
+		//TODO - REVISE in validation + save/submit
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName(); // add defensive code
-			log.info("xoxoxoxoxooxoxo SUBMIT AMENDMENT WITHOUT / NOTIFICATION SETTING / FULFILMENT CREATION/UPDATE - ERROR_100068");
-//			getManagedBean().setSelectedTabIndex(0);
-//            handleInactiveUserCheck(
-//            	reqDTO,
-//                MessageConst.ERROR_100068,
-//                new String[]{approverName}
-//            );
-        }
-		
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT WITHOUT / NOTIFICATION SETTING / FULFILMENT CREATION/UPDATE");
-			//getManagedBean().setSelectedTabIndex(0);
-//			handleInactiveUserCheck(
-//            	reqDTO,
-//                null,
-//                null
-//            );
-        }
+			log.info("xoxoxoxoxooxoxo action : "+action);
+			handleInactiveUserValidation(action);
+		}
 		//#30737 - End
 		
 	}
+	
+	//#30737 - Start
+	public void handleInactiveUserValidation(String outcome) {
+
+		IContractSO contractSO 
+			= (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+    	
+    	String[] messageKeys = null;
+    	String errorCode = null;
+    	
+    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100068;
+    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
+    	}
+    	
+        try {
+        	contractSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+            	errorCode,
+            	getSelectedUsers()	
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(errorCode, messageKeys);
+        }
+    }
+	//#30737 - End
+	
 	//LOG : 13847, by Fahmi 22032019 start
 	/**
 	 * Validates the performance bond based on the specified action and the current state of the contract.

@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -158,6 +159,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
     @Override
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
     }
     //#30737 - End
 	    
@@ -993,65 +999,40 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		
 		//#30737 - Start
 		//Agreement
-		
-		CtContractVer ctContractVer = getManagedBean().getContractVer();
-		CtContractVer agreementContractVer = getManagedBean().getAgreementContractVer();
-		CtAgreement ctAgreement = getManagedBean().getCtAgreement();
-		
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		reqDTO.setUserRole(getUserRole());
-		reqDTO.setOutcome(outcome);
-		reqDTO.setCtContractVer(ctContractVer);
-
-		log.info("xoxoxoxoxooxoxo getContractVerId : "+ctContractVer.getContractVerId());
-		log.info("xoxoxoxoxooxoxo agreementContractVer Id : "+agreementContractVer.getContractVerId());
-		log.info("xoxoxoxoxooxoxo action : "+outcome);
-		
-		log.info("xoxoxoxoxooxoxo STATUS : "+ctContractVer.getStatus());
-		log.info("xoxoxoxoxooxoxo STATUS agreeementContractVer statusId : "+agreementContractVer.getStatus());
-		log.info("xoxoxoxoxooxoxo STATUS agreement statusId : "+ctAgreement.getStatus());
-		
-		
-//		kat mana nak dapat status id untuk tracking diary?
-		
-		
-		if(ctContractVer.getStatus() != null){
-			log.info("xoxoxoxoxooxoxo ctContractVer STATUS ID : "+ctContractVer.getStatus().getStatusId());
-		}
-		
-		if(agreementContractVer.getStatus() != null){
-			log.info("xoxoxoxoxooxoxo agreementContractVer STATUS ID : "+agreementContractVer.getStatus().getStatusId());
-		}
-		
-		if(ctAgreement.getStatus() != null){
-			log.info("xoxoxoxoxooxoxo ctAgreement STATUS ID : "+ctAgreement.getStatus().getStatusId());
-		}
-		
+		//TODO - REVISE in validation + save/submit
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-//			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName(); // add defensive code
-//			log.info("xoxoxoxoxooxoxo SUBMIT AGGREEMENT - ERROR_100068");
-//			getManagedBean().setSelectedTabIndex(0);
-//            handleInactiveUserCheck(
-//            	reqDTO,
-//                MessageConst.ERROR_100068,
-//                new String[]{approverName}
-//            );
-        }
-		
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-			log.info("xoxoxoxoxooxoxo REVISE AGGREEMENT");
-//			getManagedBean().setSelectedTabIndex(0);
-//			handleInactiveUserCheck(
-//            	reqDTO,
-//                null,
-//                null
-//            );
-        }
-		
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			handleInactiveUserValidation(outcome);
+		}
 		//#30737 - End
 		
 	}
+	
+	//#30737 - Start
+	public void handleInactiveUserValidation(String outcome) {
+
+		IAgreementSO agreementSO 
+			= (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+    	
+    	String[] messageKeys = null;
+    	String errorCode = null;
+    	
+    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100068;
+    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
+    	}
+    	
+        try {
+        	agreementSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+            	errorCode,
+            	getSelectedUsers()	
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(errorCode, messageKeys);
+        }
+    }
+	//#30737 - End
 
 	/**
 	 * The method used to check duplicated identification no of agreement parties.

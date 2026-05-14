@@ -26,6 +26,7 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.reqctadmin.IRequestContractAdminSO;
+import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -85,6 +86,11 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
     @Override
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
     }
     //#30737 - End
 	
@@ -676,13 +682,39 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		}
 		
 		//#30737 - Start
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			log.info("xoxoxoxo ----- ERROR_100068");
-			//ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_SUBMIT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "RAMLEEE");
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			handleInactiveUserValidation(outcome);
 		}
 		//#30737 - End
 		
 	}
+	
+	//#30737 - Start
+	public void handleInactiveUserValidation(String outcome) {
+
+		IRequestContractAdminSO contractReqAdminSO 
+			= (IRequestContractAdminSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IRequestContractAdminSO.class);
+    	
+    	String[] messageKeys = null;
+    	String errorCode = null;
+    	
+    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100068;
+    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
+    	}
+    	
+        try {
+        	contractReqAdminSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+            	errorCode,
+            	getSelectedUsers()	
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(errorCode, messageKeys);
+        }
+    }
+	//#30737 - End
 	
 	/*
 	 * Method to set user role as per user login

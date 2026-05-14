@@ -126,6 +126,11 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
     }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
+    }
     //#30737 - End
 	    
 	/**

@@ -121,6 +121,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
     }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
+    }
     //#30737 - End
 	    
 	/**

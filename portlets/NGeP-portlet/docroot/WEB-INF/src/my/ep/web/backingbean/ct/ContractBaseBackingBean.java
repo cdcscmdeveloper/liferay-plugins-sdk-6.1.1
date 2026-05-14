@@ -357,66 +357,45 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		}
 	}
 	
-	//#30737 - Start
-	protected void handleInactiveUserCheck(ContractReqDTO reqDTO, String errorCode, String[] messageKeys) {
-
-		// * If errorCode null mean there is no alert
-		
-		IContractSO iContractSO = null;
-		
-		log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
+    //#30737 - Start
+    protected ContractReqDTO buildContractReqDTO(String outcome, String userRole) {
+        ContractReqDTO reqDTO = new ContractReqDTO();
+        reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+        reqDTO.setUserRole(userRole);
+        reqDTO.setOutcome(outcome);
+        reqDTO.setCtContractVer(getContractVer());
+        
+        log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
 		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
 		log.info("xoxoxoxoxooxoxo contractVer : "+reqDTO.getCtContractVer().getContractVerId());
 		log.info("xoxoxoxoxooxoxo getTaskName() : "+getTaskName());
     	log.info("xoxoxoxoxooxoxo getSelectedUsers() : "+getSelectedUsers());
     	
-    	// Checking if next process need user or not
-    	//....
-    	
-        try {
-        	
-        	iContractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-        	
-        	iContractSO.checkInactiveUserOnAction(
-        		reqDTO,
-        		errorCode,
-                getSelectedUsers()
-            );
-        	
-        	if(errorCode != null){
-        		log.info("xoxoxoxoxoxoxo TEMPORARY force throw error");
-        		throw new EpException(errorCode);
-        	}
+        return reqDTO;
+    }
+    
+    protected EpException buildInactiveUserException(String errorCode, String[] messageKeys) {
+    	log.info("xoxoxoxoxoxoxo catch EpException");
+        if (messageKeys != null && messageKeys.length > 0) {
 
-        } catch (EpException ex) {
+            String[] resolvedMessages = new String[messageKeys.length];
 
-        	log.info("xoxoxoxoxoxoxo catch EpException");
-        	
-            String[] resolvedMessages;
-
-            if (messageKeys != null && messageKeys.length > 0) {
-
-                resolvedMessages = new String[messageKeys.length];
-
-                for (int i = 0; i < messageKeys.length; i++) {
-                    resolvedMessages[i] = ResourceBundleUtils.getMessage(
+            for (int i = 0; i < messageKeys.length; i++) {
+                resolvedMessages[i] =
+                    ResourceBundleUtils.getMessage(
                         messageKeys[i],
                         ResourceBundleUtils.BUNDLE_COMMON_LABELS,
                         getFacesScopes().getUserLocale()
                     );
-                }
-
-                throw new EpException(errorCode, resolvedMessages);
-
-            } else {
-                throw new EpException(errorCode);
             }
+            return new EpException(errorCode, resolvedMessages);
         }
+        return new EpException(errorCode);
     }
-	
-	protected abstract String getTaskName();
-    protected abstract List<PmUser> getSelectedUsers();
     
+    protected abstract String getTaskName();
+    protected abstract List<PmUser> getSelectedUsers();
+    protected abstract CtContractVer getContractVer();
     //#30737 - End
     
 }

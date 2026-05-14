@@ -251,6 +251,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
     }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return ctBackingBean.getManagedBean().getContractVer();
+    }
     //#30737 - End
 	    
 	/**
@@ -3246,11 +3251,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    messageParams = new String[]{approverName};
 			}
 			
-            handleInactiveUserCheck(
-            	reqDTO,
-            	errorMessage,
-            	messageParams
-            );
+//            handleInactiveUserCheck(
+//            	reqDTO,
+//            	errorMessage,
+//            	messageParams
+//            );
 			
 		}
 

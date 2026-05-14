@@ -103,6 +103,11 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
     }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
+    }
     //#30737 - End
     
 	/**
@@ -729,35 +734,40 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 		
 		//#30737 - Start
-		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		reqDTO.setUserRole(getUserRole());
-		reqDTO.setOutcome(outcome);
-		reqDTO.setCtContractVer(ctContractVer);
-		
-		log.info("xoxoxoxoxooxoxo action : "+outcome);
+		//TODO - REVISE in validation + save/submit
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName();
-			log.info("xoxoxoxoxooxoxo SUBMIT SUSPEND - ERROR_100068");
-//            handleInactiveUserCheck(
-//            	reqDTO,
-//                MessageConst.ERROR_100068,
-//                new String[]{approverName}
-//            );
-        }
-		
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-			log.info("xoxoxoxoxooxoxo REVISE SUSPEND");
-//            handleInactiveUserCheck(
-//            	reqDTO,
-//                null,
-//                null
-//            );
-        }
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			handleInactiveUserValidation(outcome);
+		}
 		//#30737 - End
 		
 	}
+	
+	//#30737 - Start
+	public void handleInactiveUserValidation(String outcome) {
+
+		IContractSuspensionSO contractSuspensionSO 
+			= (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
+    	
+    	String[] messageKeys = null;
+    	String errorCode = null;
+    	
+    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100068;
+    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
+    	}
+    	
+        try {
+        	contractSuspensionSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+            	errorCode,
+            	getSelectedUsers()	
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(errorCode, messageKeys);
+        }
+    }
+	//#30737 - End
 
 	/**
 	 * Method to set user role as per user login
