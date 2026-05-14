@@ -49,6 +49,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
@@ -1057,19 +1058,72 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 		
 		//#30737 - Start
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			log.info("xoxoxoxo ----- SUBMIT --- ERROR_100074");
-//			ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_SUBMIT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100074, "RAMLEEE");
-		}
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			//#3 amendment with
-			log.info("xoxoxoxoxooxoxox REVISE AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
-			log.info("Insert tracking diary");
+		//TODO - REVISE in validation + save/submit
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			handleInactiveUserValidation(outcome);
 		}
 		//#30737 - End
 		
 	}
 
+	//#30737 - Start
+	public void handleInactiveUserValidation(String outcome) {
+
+		ICircularSO circularSO 
+			= (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+    	
+		List<PmUser> selectedUsers = getManagedBean().getApproverModel().getTarget();
+    	String[] messageKeys = null;
+    	String errorCode = null;
+    	
+    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100074;
+    		messageKeys = new String[]{selectedUsers.get(0).getUserName()};
+    	}
+    	
+        try {
+        	circularSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+            	errorCode,
+            	selectedUsers	
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(errorCode, messageKeys);
+        }
+    }
+	
+	private ContractReqDTO buildContractReqDTO(String outcome, String userRole) {
+        ContractReqDTO reqDTO = new ContractReqDTO();
+        reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+        reqDTO.setUserRole(userRole);
+        reqDTO.setOutcome(outcome);
+        
+        log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
+		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
+    	
+        return reqDTO;
+    }
+	
+	private EpException buildInactiveUserException(String errorCode, String[] messageKeys) {
+    	log.info("xoxoxoxoxoxoxo catch EpException");
+        if (messageKeys != null && messageKeys.length > 0) {
+
+            String[] resolvedMessages = new String[messageKeys.length];
+
+            for (int i = 0; i < messageKeys.length; i++) {
+                resolvedMessages[i] =
+                    ResourceBundleUtils.getMessage(
+                        messageKeys[i],
+                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+                        getFacesScopes().getUserLocale()
+                    );
+            }
+            return new EpException(errorCode, resolvedMessages);
+        }
+        return new EpException(errorCode);
+    }
+	//#30737 - End
 	
 	//#28713 start basri
 	/**

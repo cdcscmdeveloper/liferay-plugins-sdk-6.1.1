@@ -3208,26 +3208,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#25890 - End
 		
 		//#30737 - Start
-		CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		reqDTO.setUserRole(getUserRole());
-		reqDTO.setOutcome(action);
-		reqDTO.setCtContractVer(ctContractVer);
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+				|| BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action) 
+				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+			log.info("xoxoxoxoxooxoxo action : "+action);
+			handleInactiveUserValidation(action);
+		}
+		//#30737 - End
 		
-		log.info("xoxoxoxoxooxoxo action : "+action);
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-			
-			// TODO ADD CHECKING APPROVER SELECTED OR NOT
-			
-			String taskName = getManagedBean().getTaskName();
-			String approverName = getManagedBean().getApproverModel().getTarget().get(0).getUserName();
-			String errorMessage = null;
-			String[] messageParams = null;
-			if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(taskName)) {
-			    log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT (UPDATE_FA_RESULT_HT_NAME) ERROR_100071");
-			    errorMessage = MessageConst.ERROR_100071;
-			    messageParams = new String[]{
+	}
+	//24333 - End, Refactor code for Validate Amendment because tab menu changes
+	
+	//#30737 - Start
+	public void handleInactiveUserValidation(String outcome) {
+
+		IContractAmendmentSO contractAmendmentSO 
+			= (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
+    	
+		String taskName = getManagedBean().getTaskName();
+		String selectedUserName = getManagedBean().getApproverModel().getTarget().get(0).getUserName();
+    	String[] messageKeys = null;
+    	String errorCode = null;
+    	
+    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+    		
+    		if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(taskName)) {
+			    errorCode = MessageConst.ERROR_100071;
+			    messageKeys = new String[]{
             	    "KADIR", //nama
             	    "Chairperson", //role
             	    "KADUK", //name
@@ -3236,10 +3243,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)) {
 				//Pending Supplemental Contract Letter Submission TO Pending Supplemental Contract Letter Approval / Revision Approval
 			    log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT (PREPARE_LOA_HT_NAME) ERROR_100072");
-			    errorMessage = MessageConst.ERROR_100072;
-			    messageParams = new String[]{
+			    errorCode = MessageConst.ERROR_100072;
+			    messageKeys = new String[]{
             	    "MOF/ABC/20002",
-            	    approverName,
+            	    selectedUserName,
             	    "RAMLEEE"
             	};
 			} else {
@@ -3247,35 +3254,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//Pending Supplemental Contract Letter Submission MCA submit (no action necessary), if signoff chairperson -> MCA (action needed)
 				//if approver -> MCA : go to approve.
 			    log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT (ELSE) ERROR_100068");
-			    errorMessage = MessageConst.ERROR_100068;
-			    messageParams = new String[]{approverName};
+			    errorCode = MessageConst.ERROR_100068;
+			    messageKeys = new String[]{selectedUserName};
 			}
-			
-//            handleInactiveUserCheck(
-//            	reqDTO,
-//            	errorMessage,
-//            	messageParams
-//            );
-			
-		}
-
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			//#3 amendment with
-			log.info("xoxoxoxoxooxoxox APPROVE AMENDMENT!!!!!! ERROR_100070");
-//			ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100070, "DOCS/MOF/888290", "RAMLEEE");
-		}
+    		
+    	}
+    	else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100070;
+    		messageKeys = new String[]{selectedUserName};
+    	}
+    	else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100069;
+    		messageKeys = new String[]{selectedUserName};
+    	}
+    	
+        try {
+        	contractAmendmentSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+            	errorCode,
+            	getSelectedUsers()	
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(errorCode, messageKeys);
+        }
+    }
+	//#30737 - End
 		
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-			//from supplier takde checking, kalau ada inactive terus send group task to all active 
-			log.info("xoxoxoxoxooxoxox ACKNOWLEDGE AMENDMENT!!!!!! ERROR_100069");
-//			ctBackingBean.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
-		}
-		
-		//#30737 - End
-		
-	}
-	//24333 - End, Refactor code for Validate Amendment because tab menu changes
-	
 	/**
 	 * The method used to authenticate user during submit the contract amendment.
 	 * This method will invoke a confirmation dialog for user authentication.

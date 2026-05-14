@@ -601,12 +601,40 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 		
 		//#30737 - Start
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			log.info("xoxoxoxo ----- SUBMIT --- insert tracking diary & others");
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			log.info("xoxoxoxoxooxoxo action : "+action);
+			log.info("xoxoxoxoxooxoxo insert tracking diary & group task");
+			handleInactiveUserValidation(action);
 		}
 		//#30737 - End
 		
 	}
+	
+	//#30737 - Start
+	public void handleInactiveUserValidation(String outcome) {
+
+		IContractSupplierSO supplierSO 
+			= (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
+    	
+    	String[] messageKeys = null;
+    	String errorCode = null;
+
+    	if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100068;
+    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
+    	}
+    	
+        try {
+        	supplierSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+            	errorCode,
+            	getSelectedUsers()	
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(errorCode, messageKeys);
+        }
+    }
+	//#30737 - End
 
 	/**
 	 * The method used to save the factoring request
@@ -817,14 +845,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			
 			//#30737 - Start
-			log.info("xoxoxoxoxo action : "+action);
-			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				log.info("xoxoxoxoxooxoxox SUBMITTT!!!!!!");
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+				log.info("xoxoxoxoxooxoxo action : "+action);
 				log.info("insert tracking diary record....");
+				handleInactiveUserValidation(action);
 			}
-			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-				log.info("xoxoxoxoxooxoxox ACKNOWLEDGE FACTORING!!!!!! ERROR_100068");
-//				ctBB.checkInactiveUserOnAction(BpmOutcomeConst.BPM_ACKNOWLEDGE, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100068, "SUPARJO");
+			
+			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)) {
+				log.info("xoxoxoxoxooxoxo action : "+action);
+				handleInactiveUserValidation(action);
 			}
 			//#30737 - End
 			

@@ -610,24 +610,49 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		}
 		
 		//#30737 - Start
-		log.info("xoxoxoxoxoxo task name: "+getManagedBean().getTaskName());
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			log.info("xoxoxoxoxooxoxox SUBMITTT TERMINATION!!!!!! ERROR_100068");
-			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100068, "RAMLEEE");
+		//TODO - REVISE in validation + save/submit
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			handleInactiveUserValidation(outcome);
 		}
-		
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			log.info("xoxoxoxoxooxoxox REVISE TERMINATION!!!!!! ERROR_100069");
-			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
-		}
-		
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			log.info("xoxoxoxoxooxoxox APPROVE TERMINATION!!!!!! ERROR_100069");
-			//ctBB.checkInactiveUserOnAction(MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			handleInactiveUserValidation(outcome);
 		}
 		//#30737 - End
 		
 	}
+	
+	//#30737 - Start
+	public void handleInactiveUserValidation(String outcome) {
+
+		IContractTerminationSO contractTerminationSO 
+			= (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
+    	
+		PmUser selectedUser = getManagedBean().getApproverModel().getTarget().get(0);
+    	String[] messageKeys = null;
+    	String errorCode = null;
+    	
+    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100068;
+    		messageKeys = new String[]{selectedUser.getUserName()};
+    	}
+    	else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+    		errorCode = MessageConst.ERROR_100069;
+    		messageKeys = new String[]{"MOF/CDC/2000192", selectedUser.getUserName()};
+    	}
+    	
+        try {
+        	contractTerminationSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+            	errorCode,
+            	getSelectedUsers()	
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(errorCode, messageKeys);
+        }
+    }
+	//#30737 - End
 
 	/**
 	 * This method is used to change the type of termination 
