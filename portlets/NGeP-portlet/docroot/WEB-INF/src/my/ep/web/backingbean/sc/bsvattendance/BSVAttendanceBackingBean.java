@@ -144,25 +144,37 @@ public class BSVAttendanceBackingBean extends
 			
 			// getting Briefing Same As Site Visit value
 			ScQt scQt = resDTO.getScQt();
-			ScQt selectedScQt = qtResDTO.getQtDetail();//#28188	
+			ScQt selectedScQt = qtResDTO.getQtDetail();//#28188
+			ScQtBsv scQtBsvZonal = new ScQtBsv();//#28188
+			
 			this.getManagedBean().setScQt(scQt);
 			this.getManagedBean().setDaImposedSupplierIds(new ArrayList<Long>());// 26247(39088)
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
 				// Need to construct tab bean for zone
 				List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
-
+				List<BriefingZoneBean> bsvZoneFinalBeans = new ArrayList<BriefingZoneBean>();//#28188
+	
 				if (null != zoneDtls) {
 					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 						reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
 						BriefingResDTO briefingResDTO = qTBriefingSO.retrieveBriefingSiteVisitDtls(reqDTO);
 						
-						ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
-
-						if (null != scQtBsv) {
+						//#28188 - Start
+						//ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
+			
+						/*if (null != scQtBsv) {
 							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,this.getManagedBean().getScQt().getCurrentWorkFlowStatus(),
 									scQtBsv.getBsvRemarks(),ScQtBSVRemark.class));
+						}*/
+						
+						scQtBsvZonal = briefingResDTO.getScQtBsv();
+						
+						if (null != scQtBsvZonal) {
+							scQtBsvZonal.setBsvRemarks(initializeRemarks(scQtBsvZonal,this.getManagedBean().getScQt().getCurrentWorkFlowStatus(),
+									scQtBsvZonal.getBsvRemarks(),ScQtBSVRemark.class));
 						}
+						//#28188 - End
 						
 						BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 							specZoneDtl, briefingResDTO.getBriefingList(),
@@ -193,10 +205,55 @@ public class BSVAttendanceBackingBean extends
 						throw new EpException(
 								"No Bsv Details Available For this");
 					}
+					
+					//#28188 - Start
+					boolean checkApprovalPending = detailSO.checkApprovalRequestPending(selectedScQt.getScQtApprovals());
+					BriefingZoneBean briefingZoneFinalBean = new BriefingZoneBean(
+							null, null,null,scQtBsvZonal);
+					
+					if(CollectionUtils.isNotEmpty(bsvZoneBeans)){
+						for (BriefingZoneBean briefingZoneBean : bsvZoneBeans) {
+							if(CollectionUtils.isNotEmpty(briefingZoneBean.getBriefingList()) && briefingZoneBean.getBriefingList().size() > 1){
+								List<ScQtBsvDtl> newBriefingFinalList = new ArrayList<ScQtBsvDtl>();
+
+								for (ScQtBsvDtl scQtBsvDtl : briefingZoneBean.getBriefingList()) {
+									if (scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)
+											|| (!checkApprovalPending && scQtBsvDtl.getBsvStatus().getStatusId()
+												.equals(QTStatusConst.BSV_REQUEST_REJECT))) {
+								        newBriefingFinalList.add(scQtBsvDtl);
+								        briefingZoneFinalBean.setBriefingList(newBriefingFinalList);
+									}
+							    }
+							}else{
+								briefingZoneFinalBean.setBriefingList(briefingZoneBean.getBriefingList());
+							}
+							
+							if(CollectionUtils.isNotEmpty(briefingZoneBean.getSitevisitList()) && briefingZoneBean.getSitevisitList().size() > 1){
+								List<ScQtBsvDtl> newSiteVisitFinalList = new ArrayList<ScQtBsvDtl>();
+								
+								for (ScQtBsvDtl scQtBsvDtl : briefingZoneBean.getSitevisitList()) {
+									if (scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)
+											|| (!checkApprovalPending && scQtBsvDtl.getBsvStatus().getStatusId()
+												.equals(QTStatusConst.BSV_REQUEST_REJECT))) {
+										newSiteVisitFinalList.add(scQtBsvDtl);
+								        briefingZoneFinalBean.setSitevisitList(newSiteVisitFinalList);
+									}
+							    }
+							}else{
+								briefingZoneFinalBean.setSitevisitList(briefingZoneBean.getSitevisitList());
+							}
+							
+							bsvZoneFinalBeans.add(briefingZoneFinalBean);
+						}
+					}
+					//#28188 - End
 				}
 
-				this.getManagedBean().setZoneBean(bsvZoneBeans);
-				this.getManagedBean().setNormalBsvBean(bsvZoneBeans.get(Integer.valueOf(this.getManagedBean().getBsvZoneindx())));
+				//this.getManagedBean().setZoneBean(bsvZoneBeans);
+				//this.getManagedBean().setNormalBsvBean(bsvZoneBeans.get(Integer.valueOf(this.getManagedBean().getBsvZoneindx())));
+				
+				this.getManagedBean().setZoneBean(bsvZoneFinalBeans);//#28188
+				this.getManagedBean().setNormalBsvBean(bsvZoneFinalBeans.get(Integer.valueOf(this.getManagedBean().getBsvZoneindx())));//#28188
 								
 			} else {
 				// #31518
@@ -237,7 +294,7 @@ public class BSVAttendanceBackingBean extends
 				boolean checkApprovalPending = detailSO.checkApprovalRequestPending(selectedScQt.getScQtApprovals());
 				
 				briefingZoneFinalBean = new BriefingZoneBean(null,null,null, scQtBsv);
-				if(!CollectionUtils.isEmpty(briefingZoneBean.getBriefingList()) && briefingZoneBean.getBriefingList().size() > 1){
+				if(CollectionUtils.isNotEmpty(briefingZoneBean.getBriefingList()) && briefingZoneBean.getBriefingList().size() > 1){
 					List<ScQtBsvDtl> newBriefingFinalList = new ArrayList<ScQtBsvDtl>();
 
 					for (ScQtBsvDtl scQtBsvDtl : briefingZoneBean.getBriefingList()) {
@@ -252,7 +309,7 @@ public class BSVAttendanceBackingBean extends
 					briefingZoneFinalBean.setBriefingList(briefingZoneBean.getBriefingList());
 				}
 				
-				if(!CollectionUtils.isEmpty(briefingZoneBean.getSitevisitList()) && briefingZoneBean.getSitevisitList().size() > 1){
+				if(CollectionUtils.isNotEmpty(briefingZoneBean.getSitevisitList()) && briefingZoneBean.getSitevisitList().size() > 1){
 					List<ScQtBsvDtl> newSiteVisitFinalList = new ArrayList<ScQtBsvDtl>();
 					
 					for (ScQtBsvDtl scQtBsvDtl : briefingZoneBean.getSitevisitList()) {
