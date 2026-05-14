@@ -311,9 +311,21 @@
 			header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" update="@form"
+					rendered="#{ctBackingBean.managedBean.contractVer.docType == ParameterConst.doctypeContractCreation
+						or ctBackingBean.managedBean.contractVer.docType == ParameterConst.doctypeContractUpdate}"
 					partialSubmit="true" process="@this"
 					onstart="approvalConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();gpki_dlg.show();" />
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					rendered="#{ctBackingBean.managedBean.contractVer.docType ne ParameterConst.doctypeContractCreation
+						and ctBackingBean.managedBean.contractVer.docType ne ParameterConst.doctypeContractUpdate}"
+					partialSubmit="true" process="@this"
+					onstart="approvalConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();gpki_dlg.show();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					rendered="#{ctBackingBean.managedBean.contractVer.docType ne ParameterConst.doctypeContractCreation
+						and ctBackingBean.managedBean.contractVer.docType ne ParameterConst.doctypeContractUpdate}"
+					onclick="approvalConfirmDlg.hide()" type="button" />
 			</div>
 		</p:confirmDialog>
 		<!-- #34442 - end -->
