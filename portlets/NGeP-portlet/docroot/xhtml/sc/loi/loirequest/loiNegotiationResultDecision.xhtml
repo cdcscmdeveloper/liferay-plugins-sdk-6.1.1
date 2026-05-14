@@ -75,32 +75,6 @@
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
-
-
-		<p:dialog id="submitMultiLoiNegoConfirmId"
-			widgetVar="submitMultiNegoConfirmPopUp"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
-			height="100" closable="false">
-			<table>
-				<tr>
-					<td align="center"><p:outputLabel
-							value="#{lbl['lbl.sc.nego.result.decision']}" /></td>
-				</tr>
-			</table>
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					onclick="submitNegoConfirmPopUp.hide(); blockWidget.show();"
-					oncomplete="blockWidget.hide();" partialSubmit="true"
-					process="@form" update="@form"
-					action="#{lOIDetailBackingBean.submitMultiLoiBpmTask('SUBMIT')}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="submitNegoConfirmPopUp.hide();" type="button"
-					partialSubmit="true" process="@this" />
-			</div>
-		</p:dialog>
-
-
 	</p:panel>
 
 </ui:composition>

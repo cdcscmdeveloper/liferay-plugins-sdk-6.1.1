@@ -3358,12 +3358,7 @@ public class LOIDetailBackingBean extends
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			signOff();
-			
-			//#30008 - Start
-			validateMultipleLOINegoDecisionAction(outcome);
-			//#30008 - End
-			
-			//updateMultiLoiBpmTask(outcome, null);
+			updateMultiLoiBpmTask(outcome, null);
 		}
 	}
 	
@@ -7843,37 +7838,7 @@ public class LOIDetailBackingBean extends
 		} finally {
 		}
 
-	}
-	
-	/**
-	 * #30008 - Validate Multiple LOI Negotiation result before submit
-	 * @param bpmAction
-	 * @return void
-	 */
-	public void validateMultipleLOINegoDecisionAction(String outcome) {
-
-		String decision = this.getManagedBean().getDecisionCode();
-		String justification = this.getManagedBean().getJustification();
-
-		if (decision == null) {
-			throw new EpException(MessageConst.ERROR_775194);
-		} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
-			throw new EpException(MessageConst.ERROR_775193);
-		} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
-			RequestContext.getCurrentInstance().execute("submitMultiNegoConfirmPopUp.show()");
-		} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
-			updateMultiLoiBpmTask(outcome, null);
-		} else {
-			return;
-		}
-
-	}
-	
-	public void submitMultiLoiBpmTask(String outcome){
-		updateMultiLoiBpmTask(outcome, null);
-	}
-	
-	// #30008 - end
+	}// #30008 - end
 	
 	//20230111@Haziq - #12487
 	/**
