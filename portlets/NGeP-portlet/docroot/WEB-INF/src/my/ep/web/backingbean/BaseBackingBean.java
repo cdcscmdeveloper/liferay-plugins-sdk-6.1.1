@@ -4857,10 +4857,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		CmColor color = cmitem.getCmColor();
 		CmUnspsc unspsc = cmitem.getCmUnspsc();
 		// segment title
-		String itemName = common.removeItemNameNA(type.getTypeName()) + " "
+		String itemName = (common.removeItemNameNA(type.getTypeName()) + " "
 				+ common.removeItemNameNA(brand.getBrandName()) + " "
 				+ common.removeItemNameNA(measurement.getMeasurementName()) + " "
-				+ common.removeItemNameNA(color.getColorName());
+				+ common.removeItemNameNA(color.getColorName())).trim().replaceAll("\\s+", " ");
 		// segment code
 		String extCode = type.getTypeCode() + brand.getBrandCode() + measurement.getMeasurementCode()
 				+ color.getColorCode();
