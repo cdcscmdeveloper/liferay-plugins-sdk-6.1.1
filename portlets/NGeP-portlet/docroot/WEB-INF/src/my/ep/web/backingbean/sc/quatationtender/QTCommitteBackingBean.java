@@ -204,6 +204,7 @@ public class QTCommitteBackingBean extends
 				UserCommitteeSearchBean userCommitteeSearchBean) {
 			super(componentId, false);
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
+			getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);// 12471
 		}
 
 		/*
@@ -1114,7 +1115,8 @@ public class QTCommitteBackingBean extends
 	 */
 	// 25037 - start
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
-		addCommitteMember(committee, titleName, null);
+		System.out.println("---> g9a70fr3ta 880229035077,user");
+		addCommitteMember(committee, titleName, null); 
 	}
 
 	/**
