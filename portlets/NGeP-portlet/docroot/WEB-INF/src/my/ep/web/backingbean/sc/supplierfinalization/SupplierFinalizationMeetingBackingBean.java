@@ -1005,6 +1005,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				UserCommitteeSearchBean userQCSearchBean) {
 			super(componentId,false);
 			this.userSearchBean = userQCSearchBean;
+			getManagedBean().setCommitteeSearchBean(userQCSearchBean);// 12471
 		}
 
 		/* (non-Javadoc)
