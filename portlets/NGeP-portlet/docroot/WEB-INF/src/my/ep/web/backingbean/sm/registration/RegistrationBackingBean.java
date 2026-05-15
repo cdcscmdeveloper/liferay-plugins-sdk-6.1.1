@@ -175,6 +175,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public String proceedToCompanyInfo() {
 		
+		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37900
 		if (this.getManagedBean().getSmSupp() == null) {
 			//default to malaysia
 			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -4583,6 +4584,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setAgreeTC(false);
 		getManagedBean().setValidateWithSSM(true);
 		getManagedBean().setCompanyValidWithSSM(false);
+		// #37900 -start
+		getManagedBean().getSmSupp().setRegNo(null);
+		getManagedBean().getSmSupp().setBusinessType(null);
+		getManagedBean().getSmAppl().setSupplierType(null);
+		getManagedBean().getSmAppl().setApplValidWithSsm(false);
+		getManagedBean().setRegIcCheckSSM(null);
+		getManagedBean().getSmAppl().setSmCompanyBasic(new SmCompanyBasic());
+		getManagedBean().getSmAppl().getSmSupplierBanks().clear();
+		getManagedBean().getSmSupp().getSmSupplierBusinesses().clear();
+		getManagedBean().getSmPersonnelOwners().clear();
+		getManagedBean().getSmPersonnelDirector().clear();
+		getManagedBean().getSmBusinessAdd().setAddress1("");
+		getManagedBean().getSmBusinessAdd().setAddress2("");
+		getManagedBean().getSmBusinessAdd().setAddress3("");
+		getManagedBean().getSmSupp().setSsmNewRegNo(null);
+		// #37900 -end
 		return termAndCondition;
 
 	}
