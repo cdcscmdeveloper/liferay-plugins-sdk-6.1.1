@@ -46,7 +46,7 @@
 			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
 			postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{purchaseInDefaultBackingBean.enableAutoUpdate()}" />
-
+<!--  pending submission kot task baru create dari catalogue -->
 		<c:if
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 			<table style="width: 100%">
@@ -96,6 +96,7 @@
 			</table>
 		</c:if>
 		<!-- #9133 - start -->
+<!-- task id ada dan status pending submission / mungki dari save -->
 		<c:if
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null and isPendingSubmissionStatus}">
 			<table style="width: 100%">
@@ -129,6 +130,7 @@
 			</table>
 		</c:if>
 		<!-- #9133 - end -->
+		<!-- task id ada dan status selain pending submission-->
 		<c:if
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null and !isPendingSubmissionStatus}"> <!-- #9133 - add condition not isPendingSubmissionStatus-->
 			<table style="width: 100%">
@@ -188,6 +190,14 @@
 			</div>
 		</p:confirmDialog>
 		<!-- #9133 - end -->
+		<ui:remove>34449 - start</ui:remove>
+		<ac:confirmationPopup id="submitConformDlgPid"
+			widget="submitConformDlg" width="400" height="100"
+			okAction="purchaseInDefaultBackingBean.submitPurchaseInDefault(null)"
+			title="#{lbl['lbl.sc.pid.submit.header.message']}"
+			content="#{lbl['lbl.sc.pid.submit.confirmation.message']}"
+			update="@form" />
+		<ui:remove>34449 - end</ui:remove>
 		<ui:include
 			src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefaultHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefault.xhtml" />

@@ -411,16 +411,21 @@ public class PurchaseInDefaultBackingBean extends
 	/**
 	 * Checking for dialog message shown 
 	 */
-	public void dialogMsgCheck(){
-		if(getManagedBean().getPmReason() != null){
-			if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId().intValue())
+	public void dialogMsgCheck() {
+		// 34449 - start
+		if (getManagedBean().getPmReason() != null) {
+			if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId()
+					.intValue()) {
 				RequestContext.getCurrentInstance().execute("submitSuppDlg.show()");
-			else
-				submitPurchaseInDefault(null); //#9133
+			} else {
+				RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+				// submitPurchaseInDefault(null); //#9133
+			}
+		} else {
+			RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+			// submitPurchaseInDefault(null); //#9133
 		}
-		else{
-			submitPurchaseInDefault(null); //#9133
-		}
+		// 34449 - end
 	}
 	//end #28865
 
