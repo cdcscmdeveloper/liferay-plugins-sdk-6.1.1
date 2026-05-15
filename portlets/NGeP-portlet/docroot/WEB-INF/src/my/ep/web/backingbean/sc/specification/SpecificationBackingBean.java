@@ -446,6 +446,7 @@ public class SpecificationBackingBean extends
 
 					scQtCheckList2.setQtScoreWeightage(scQtCheckList.getQtScoreWeightage());
 				}
+			}
 		}
 		return finSpecCheckLists;
 	}
@@ -628,16 +629,14 @@ public class SpecificationBackingBean extends
 			isTemplateSpecStatus(techCheckList, scqt);
 
 		} else {
-			// 1873 note 195 start
-			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
+			//1873 note 195 start
+			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
 				retriveTechnicalCheckList();
 			}
-			// 1873 note 195 end
-
+			//1873 note 195 end
 			techCheckList = this.getManagedBean().getScQtCheckSt2techProposal();
 
-			if (null == techCheckList || techCheckList.isEmpty()
-					) {
+			if (null == techCheckList || techCheckList.isEmpty()) {
 				throw new EpException(MessageConst.ERROR_760138);
 
 			} else {
@@ -1052,9 +1051,7 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().setTechnicalOtherCheckList(true);	//1873 - note 52
 		boolean isFromTabSpecCommitteDtlsLoad = true; //29732
-
 		boolean financialOtherCheckList = true;
-		boolean isFromTabSpecCommitteDtlsLoad = true; //29732 - use for load only & avoiding trigger at save/update function.
 
 		switch (previousIndex) {
 		case 0:
@@ -2032,10 +2029,10 @@ public class SpecificationBackingBean extends
 	 */
 	//38343 - start
 	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
-		return isAtleastOneSeriveReq(checklist, null);
+		return isAtleastOneSeriveReq(checklist, null); 
 	}
 	
-	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
+	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist, ScQtCheckList excludedChecklist) {
 	//38343 - end
 		int i = 0;
 		if (null != checklist && !checklist.isEmpty()) {
@@ -2270,7 +2267,7 @@ public class SpecificationBackingBean extends
 				// #21695 & #30557 Start retrieve totalscore of sum overalltech + overallothertech
 				retriveItemScore(this.getManagedBean().getTechnicalItemScoreSetting());
 				// #21695 End
-			}
+			
 				this.getManagedBean().setTechnicalUserScoringSchema(false);
 				for (ScQtCheckList technicalScoringChecklist : this
 						.getManagedBean().getTechnicalScoring()) {
@@ -2291,7 +2288,7 @@ public class SpecificationBackingBean extends
 
 				}
 			}
-checklistSorting(this.getManagedBean().getTechnicalScoring());
+			checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			specSo = null;
 		}
@@ -18932,42 +18929,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	//#28784 - End
-	
-	
-	//#34048 - Start
-	public boolean isSpecQuestionNotExist(ScQtCheckList qtCheckList) {
-		
-		TplSpecMaster spec = qtCheckList.getScQtDoc().getTplSpecMaster();
-		List<TplSpecQuestion> questionList = spec.getTplSpecQuestions();
-		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(spec.getSpecTypeCode().getParameterCode());
-		int specCount = 0;
-		String item = null;
-		
-		if (!isFinancialSpec) {
-			for (TplSpecQuestion ques : questionList) {
-				boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(ques.getQuestionType());
-				
-				if (item != null && !item.equals(ques.getClItem()) && spec.isSpecificationReq() && isQuestionTypeItem
-						&& specCount == 0) {
-					return true;
-				}
-				
-				if (isQuestionTypeItem) {
-					specCount = 0;
-					item = ques.getClItem();
-				} else {
-					specCount++;
-				}
-			}
-			
-			if (item != null && spec.isSpecificationReq() && specCount == 0 && questionList.size() > 0) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	//#34048 - End
 	
 	// #28784 - Start
 	public boolean isSpecItemNotExist(ScQtCheckList qtCheckList) {

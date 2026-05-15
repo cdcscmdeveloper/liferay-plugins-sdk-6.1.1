@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator; //#25138
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -2074,64 +2075,7 @@ public class TemplateSpecBackingBean extends
 	}
 	// Bug #33947 All method 5/9/2022 - related to #21695	
 	//Bug #32952 related to #21695 End (farid) 14/4/2022
-	
-	/**
-	 * Calculate the total amount and amount per year for all spec answer for each item.
-	 * 
-	 * @param templateSpecBean
-	 *            the TemplateSpecBean instance
-	 * @param isItemTypeService
-	 *            the item type service flag
-	 */
-	// FARID #21695 START	
-	public void calcAllSpecAnswerTotalAmount(TemplateSpecBean templateSpecBean) {
-		
-		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
-			
-		if (specAnswerList != null) {
-			for (TplSpecAnswer specAnswer : specAnswerList) {
-				if (null != specAnswer) {
-					TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
-					BigDecimal quantity = null;
-					
-					if (specAnswer.getTplSpecZoneQty() != null) {
-						quantity = specAnswer.getTplSpecZoneQty().getQty();
-					} else {
-						quantity = specQuestion.getClQuantity();
-					}
-					
-					BigDecimal totalPrice = TemplateSpecHelper.getInstance()
-							.calcTotalAmount(specQuestion, specAnswer.getRatePerUom(),
-									quantity);
 
-					if (totalPrice != null && templateSpecBean.getSpecMaster().getItemTypeCode().getParameterCode() == ParameterConst.ITEM_TYPE_SERVICE) {
-						TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
-						BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice
-								.doubleValue());
-						BigDecimal itemDurationMonth = specQuestion
-								.getClDurationMonth();
-
-						if (itemDurationMonth != null) {
-							amountPerYear = amountPerYear.divide(itemDurationMonth, 2, RoundingMode.HALF_UP);
-						} else {
-							BigDecimal durationMonth = specMaster.getDurationMonth();
-
-							if (durationMonth != null) {
-								amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
-							}
-						}
-
-						specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal
-								.valueOf(12)));
-					}
-					specAnswer.setAnswerNumeric(totalPrice);
-				}
-			}
-		}
-		
-	}
-	// FARID #21695 END
- 
 	// #21695 Farid start 29/6/2021
 	/**
 	 * Item type change.Change Item Type(product/Service) Checkbox in Template
@@ -3636,20 +3580,6 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	// #25039 End - version zonal
-	
-	// #31134&11104 -start-
-	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
-		//int count = 0;
-
-		for (TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()) {
-			if (retrieveAns != null && retrieveAns.getTplSpecTierQty() != null) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-	// #31134&11104 -end-
 	
 	// #35384, #36248_haziq - start
 	/**

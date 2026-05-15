@@ -342,6 +342,8 @@ public interface QTConstants {
 	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
 	// #11104 -end-
 
+	public static final String SERVICE_OBJECT_CC = "cc";//#28784
+	
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";
