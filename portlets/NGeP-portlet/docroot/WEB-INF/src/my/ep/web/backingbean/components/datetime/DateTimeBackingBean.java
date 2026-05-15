@@ -163,42 +163,66 @@ public class DateTimeBackingBean {
 	                    facesScopes.findComponentById(component, "calMin"))
 	                    .getValue();
 
-	    if (dateObj != null && hourObj != null && minuteObj != null) {
-	        int hourValue = Integer.parseInt((String) hourObj);
-	        int minuteValue = Integer.parseInt((String) minuteObj);
+	  //#28188 - Start
+//	    if (dateObj != null && hourObj != null && minuteObj != null) {
+//	        int hourValue = Integer.parseInt((String) hourObj);
+//	        int minuteValue = Integer.parseInt((String) minuteObj);
+//
+//	        Calendar selectedCal = Calendar.getInstance();
+//	        selectedCal.setTime((Date) dateObj);
+//	        selectedCal.set(Calendar.HOUR_OF_DAY, hourValue);
+//	        selectedCal.set(Calendar.MINUTE, minuteValue);
+//
+//	        UIComponent composite =
+//	                UIComponent.getCurrentCompositeComponent(
+//	                        FacesContext.getCurrentInstance());
+//
+//	        Date minDate = (Date) composite.getAttributes().get("mindate");
+//
+//	        if (minDate != null) {
+//	            Calendar minCal = Calendar.getInstance();
+//	            minCal.setTime(minDate);
+//
+//	            boolean sameDay =
+//	                    selectedCal.get(Calendar.YEAR) == minCal.get(Calendar.YEAR) &&
+//	                    selectedCal.get(Calendar.DAY_OF_YEAR) == minCal.get(Calendar.DAY_OF_YEAR);
+//
+//	            if (sameDay &&
+//	                selectedCal.get(Calendar.HOUR_OF_DAY) <
+//	                minCal.get(Calendar.HOUR_OF_DAY)) {
+//
+//	                selectedCal.set(Calendar.HOUR_OF_DAY,
+//	                        minCal.get(Calendar.HOUR_OF_DAY));
+//
+//	                selectedCal.set(Calendar.MINUTE,
+//	                        minCal.get(Calendar.MINUTE));
+//	            }
+//	        }
+//	        dateValue = selectedCal.getTime();
+//	    }
+	    
+	    if (dateObj != null && minuteObj != null) {
+
+	        if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
+	            //hourObj = "00";
+	        	hourObj = getFirstAvailableHour(component);
+	        }
+
+	        int hourValue = Integer.parseInt(hourObj.toString());
+	        int minuteValue = Integer.parseInt(minuteObj.toString());
 
 	        Calendar selectedCal = Calendar.getInstance();
 	        selectedCal.setTime((Date) dateObj);
 	        selectedCal.set(Calendar.HOUR_OF_DAY, hourValue);
 	        selectedCal.set(Calendar.MINUTE, minuteValue);
+	        selectedCal.set(Calendar.SECOND, 0);
+	        selectedCal.set(Calendar.MILLISECOND, 0);
 
-	        UIComponent composite =
-	                UIComponent.getCurrentCompositeComponent(
-	                        FacesContext.getCurrentInstance());
-
-	        Date minDate = (Date) composite.getAttributes().get("mindate");
-
-	        if (minDate != null) {
-	            Calendar minCal = Calendar.getInstance();
-	            minCal.setTime(minDate);
-
-	            boolean sameDay =
-	                    selectedCal.get(Calendar.YEAR) == minCal.get(Calendar.YEAR) &&
-	                    selectedCal.get(Calendar.DAY_OF_YEAR) == minCal.get(Calendar.DAY_OF_YEAR);
-
-	            if (sameDay &&
-	                selectedCal.get(Calendar.HOUR_OF_DAY) <
-	                minCal.get(Calendar.HOUR_OF_DAY)) {
-
-	                selectedCal.set(Calendar.HOUR_OF_DAY,
-	                        minCal.get(Calendar.HOUR_OF_DAY));
-
-	                selectedCal.set(Calendar.MINUTE,
-	                        minCal.get(Calendar.MINUTE));
-	            }
-	        }
 	        dateValue = selectedCal.getTime();
 	    }
+	  //#28188 - End
+	    
+	    
 	    return dateValue;
 	}
 	
@@ -258,6 +282,20 @@ public class DateTimeBackingBean {
 	    }
 
 	    return hours;
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private String getFirstAvailableHour(UIComponent component) {
+	    List<SelectItem> hours = getHoursDropdownValues(component);
+
+	    for (SelectItem item : hours) {
+	        if (item.getValue() != null) {
+	            return item.getValue().toString();
+	        }
+	    }
+
+	    return "00";
 	}
 	//#28188 - End
 		

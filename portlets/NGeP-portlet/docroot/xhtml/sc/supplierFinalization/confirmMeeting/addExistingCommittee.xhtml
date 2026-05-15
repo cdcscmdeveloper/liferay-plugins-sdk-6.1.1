@@ -13,10 +13,11 @@
 		<p:messages id="committeemessagesid" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 		<h:panelGroup id="userSearch" style="width:100%;margin-top:10px;">
-					<ui:remove>12471 start</ui:remove>
+				<p:panel id="memberPanel" header="#{lbl['lbl.btn.search']}"
+					toggleable="true" style="width:100%;margin-top:0px;">
+					<!-- #12471 Start -->
 					<ac:instructionText
 						value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
-					<br />
 					<br />
 					<ac:instructionText
 						value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
@@ -99,18 +100,19 @@
 							</tr>
 						</c:if>
 						<ui:remove>12471 end</ui:remove>
-
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
+								<ui:remove>12471 -remove-</ui:remove></td>
 							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
 									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.name}"
 									size="64" id="name1"  label="#{lbl['lbl.sc.name']}" required="#{suppFinalMeetingBackingBean.managedBean.nameRequired}"/>
 									<p:message id="name1Msg" for="name1" display="icon" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel
-									value="#{lbl['lbl.sc.id.type']}" /></td>
-							<td colspan="3"><p:selectOneMenu
+					<ui:remove>12471 -start-</ui:remove>
+					<td><ui:remove>12471 -end-</ui:remove> <p:outputLabel
+							value="#{lbl['lbl.sc.id.type']}" /></td>
+					<td colspan="3"><p:selectOneMenu
 									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.identificationType}"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
@@ -185,8 +187,8 @@
 						</p:column>
 					</c:if>
 					<ui:remove>12471 end</ui:remove>
-						
-						<p:column headerText="#{lbl['lbl.sc.email']}">
+
+					<p:column headerText="#{lbl['lbl.sc.email']}">
 							<h:outputText value="#{existingMember.email}"
 								style="white-space: normal;" />
 						</p:column>

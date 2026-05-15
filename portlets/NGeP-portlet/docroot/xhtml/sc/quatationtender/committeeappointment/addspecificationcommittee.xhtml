@@ -103,8 +103,9 @@
 					<ui:remove>12471 end</ui:remove>
 
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
-						<td colspan="3"><p:inputText  onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentAddSearch.jq.click(); return false; }"
+					<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
+					<ui:remove>12471 -remove-</ui:remove></td>
+					<td colspan="3"><p:inputText  onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentAddSearch.jq.click(); return false; }"
 								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.name}"
 								size="64" required="#{qTCommitteBackingBean.managedBean.nameRequired}" id="name2" 
 								label="#{lbl['lbl.sc.name']}" styleClass="name2Class"/>
@@ -150,9 +151,11 @@
 					rowIndexVar="index">
 
 					<ac:paginator for="existingcommitteesearchid" />
-                   <p:ajax event="page"
+					<ui:remove>12471 -start-</ui:remove>
+					<p:ajax event="page"
 						listener="#{qTCommitteBackingBean.addNewCommitteeUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 						update="@([id$=existingcommitteesearchid])" />
+					<ui:remove>12471 -end-</ui:remove>
 					<p:column style="width:3px;text-align:center;" >
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
@@ -330,11 +333,14 @@
 			</p:panel>
 		</c:if>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing" id="committeeAppointmentAddSpecificationBtnId"
-			disabled="#{qTCommitteBackingBean.enableSelectedNewCommitteeList(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
-			actionListener="#{qTCommitteBackingBean.addNewCommitteeUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
+			<ui:remove>12471 -start-</ui:remove>
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+				id="committeeAppointmentAddSpecificationBtnId"
+				disabled="#{qTCommitteBackingBean.enableSelectedNewCommitteeList(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
+				actionListener="#{qTCommitteBackingBean.addNewCommitteeUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
-				update="@(.scMemberDtl,.amendButton)" /><ui:remove>12471 fix spelling addNewCommitteeUsers</ui:remove>
+				update="@(.scMemberDtl,.amendButton)" />
+			<ui:remove>12471 -end-</ui:remove>
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				styleClass="BtnSpacing" process="@this" partialSubmit="true"
@@ -344,7 +350,10 @@
 					target="#{qTCommitteBackingBean.managedBean.nameRequired}" />
 			</p:commandButton>
 		</div>
-		<p:ajax event="close" update="@([id$=newspecificationcommitteeid])" listener="#{qTCommitteBackingBean.nameRequired}"><ui:remove>12471</ui:remove>
+		<ui:remove>12471 -start-</ui:remove>
+		<p:ajax event="close" update="@([id$=newspecificationcommitteeid])"
+			listener="#{qTCommitteBackingBean.nameRequired}">
+			<ui:remove>12471 -end-</ui:remove>
 		</p:ajax>
 	</p:dialog>
 </ui:composition>
