@@ -11514,4 +11514,95 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.resetHistoryCatCode = resetHistoryCatCode;
 	}
 	// #29732 -end-
+	
+	// #25635 start
+	public boolean isCloned() {
+		return isCloned;
+	}
+
+	public void setCloned(boolean isCloned) {
+		this.isCloned = isCloned;
+	}	
+	//#25635 end
+	
+	////ahmaa-#25138 -start
+	/**
+	 * @return the scQtScoreOfferPrice
+	 *
+	public ScQtScoreOfferPrice getScQtScoreOfferPrice() {
+		return scQtScoreOfferPrice;
+	}
+
+	/**
+	 * @param scQtScoreOfferPrice the scQtScoreOfferPrice to set
+	 */
+	public void setScQtScoreOfferPrice(ScQtScoreOfferPrice scQtScoreOfferPrice) {
+		this.scQtScoreOfferPrice = scQtScoreOfferPrice;
+	}
+
+	/**
+	 * @return the offerScoreType
+	 */
+	public String getOfferScoreType() {
+		return offerScoreType;
+	}
+
+	/**
+	 * @param offerScoreType the offerScoreType to set
+	 */
+	public void setOfferScoreType(String offerScoreType) {
+		this.offerScoreType = offerScoreType;
+	}//	ahmaa-#25138 -end
+	
+	//#25635 danial
+	public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingTechnical() {
+		return markDeletedScQtScoreSettingTechnical;
+	}
+
+	public void setMarkDeletedScQtScoreSettingTechnical(
+			List<ScQtScoreSetting> markDeletedScQtScoreSettingTechnical) {
+		this.markDeletedScQtScoreSettingTechnical = markDeletedScQtScoreSettingTechnical;
+	}
+
+	//#25635 danial start
+	public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingFinancial() {
+		return markDeletedScQtScoreSettingFinancial;
+	}
+
+	public void setMarkDeletedScQtScoreSettingFinancial(
+			List<ScQtScoreSetting> markDeletedScQtScoreSettingFinancial) {
+		this.markDeletedScQtScoreSettingFinancial = markDeletedScQtScoreSettingFinancial;
+	}
+
+	public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingOverall() {
+		return markDeletedScQtScoreSettingOverall;
+	}
+
+	public void setMarkDeletedScQtScoreSettingOverall(
+			List<ScQtScoreSetting> markDeletedScQtScoreSettingOverall) {
+		this.markDeletedScQtScoreSettingOverall = markDeletedScQtScoreSettingOverall;
+	}
+	//#25635 danial end
+	
+	/** #21695 FARID START*/		
+	public void setSecretaryValidate(boolean secretaryValidate) {
+		this.secretaryValidate = secretaryValidate;
+	}
+	
+	/**
+	 * @return the orgProfileOfLoginUser
+	 */
+	public boolean getSecretaryValidate() {
+		return secretaryValidate;
+	}
+
+	public BigDecimal getTechnicalItemScore() {
+		return technicalItemScore;	   
+	}
+
+	public void setTechnicalItemScore(BigDecimal technicalItemScore) {
+		this.technicalItemScore = technicalItemScore;
+  
+	}
+	/** #21695 FARID END*/
 }

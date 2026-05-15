@@ -1268,16 +1268,6 @@ public class SPDetailBackingBean extends
 							getManagedBean().getTemplateSpecBean());
 				}
 				
-				// #28777 & #29729, 35592 - Start
-				List<Long> deactivatedZones = new ArrayList<>();
-				if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
-					for (TplSpecZoneDtl zoneDtl : this.getManagedBean().getZones()) {
-						if (zoneDtl.isBranchDeactivated())
-							deactivatedZones.add(zoneDtl.getSpecZoneId());
-					}
-				}
-				// #28777 & #29729, 35592 - End
-				
 				// #21695 - #33391 - #33949 - Start.
 				if (null != getManagedBean().getQt().getQtStatus()
 						&& null != getManagedBean().getQt().getQtStatus().getStatusId()
@@ -1311,10 +1301,7 @@ public class SPDetailBackingBean extends
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785	
-						// #28777 & #29729, 35592 - Start
-						if (deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
-							continue;
-						// #28777 & #29729, 35592 - End
+
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -4688,17 +4675,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
-			// #28777 & #29729 - Start
-			boolean branchDeleted = checkValidationSupplierBranchDeleted();
-			if (branchDeleted) {
-				this.getManagedBean().setReadOnly(branchDeleted);
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-			}
-			// #28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -5688,25 +5664,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
 	
-	// #28777 & #29729 - Start
-	/**
-	 * Method to return true, if branch in supplier has been deleted
-	 * 
-	 * @param supplier
-	 *            id
-	 * @return true or false
-	 **/
-	public boolean checkValidationSupplierBranchDeleted() {
-		boolean isSupplierBranchDeleted = false;
-		ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
-		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
-			isSupplierBranchDeleted = true;
-			this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
-		}
-		return isSupplierBranchDeleted;
-	}
-	
-	// #28777 & #29729 - End
+
 	
 	//Bug #30073 Start
 	public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){

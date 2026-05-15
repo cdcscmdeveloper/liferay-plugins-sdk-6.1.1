@@ -574,6 +574,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtScoreOfferPrice> offerPricePackageList;
 	private boolean scoringReq = false; 
 	private boolean speczonedtlReq = false;
+	private int tabTechnicalIndex;
+	private int tabFinancialIndex;
 	// #25138, #21695 - end
 
 	// #31485, #21695, #25138 - start
@@ -4098,6 +4100,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.userPackageScore = userPackageScore;
 	}
 
+	public int getTabTechnicalIndex() {
+		return tabTechnicalIndex;
+	}
+
+	public void setTabTechnicalIndex(int tabTechnicalIndex) {
+		this.tabTechnicalIndex = tabTechnicalIndex;
+	}
+
+	public int getTabFinancialIndex() {
+		return tabFinancialIndex;
+	}
+
+	public void setTabFinancialIndex(int tabFinancialIndex) {
+		this.tabFinancialIndex = tabFinancialIndex;
+	}
+	
 	public Boolean getFinPackageScore() {
 		return finPackageScore;
 	}
@@ -4422,4 +4440,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.technicalSummaryView = technicalSummaryView;
 	}
 	//#21695 end
+	
+	//#25138 start
+	public Map<String, Object> getEvaluationContext() {
+		return evaluationContext;
+	}
+
+	public void setEvaluationContext(Map<String, Object> evaluationContext) {
+		this.evaluationContext = evaluationContext;
+	}
+	//#25138 end
 }
