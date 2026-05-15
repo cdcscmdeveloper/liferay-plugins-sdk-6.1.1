@@ -233,7 +233,7 @@
 					<p:commandButton value="#{lbl['lbl.sc.qt.assign.code']}"
 						action="#{codificationBackingBean.assignItemConfirmation}"
 						disabled="#{codificationBackingBean.managedBean.isRenderButtonAssignCode()}"
-						update="@([id$=asignCodeDialConfirm])" />
+						update="@([id$=assignCodeDialConfirm])" />
 				</div>
 				<!-- #31503 End -->
 				<div class="clear"></div>
@@ -252,10 +252,10 @@
 
 			<!-- #31503 Start -->
 			<ui:remove>#26059 - Start</ui:remove>
-			<p:dialog id="asignCodeDialConfirm"
-				widgetVar="asignCodeDialConfirm"
+			<p:dialog id="assignCodeDialConfirm"
+				widgetVar="assignCodeDialConfirm"
 				header="#{lbl['lbl.sc.item.details']}" style="width:100%"
-				closable="true">
+				modal="true" closable="true">
 
 				<!-- Display item details -->
 				<h:panelGroup style="margin-bottom: 20px; display:block;">
@@ -270,12 +270,12 @@
 
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}"
-						onclick="asignCodeDialConfirm.hide();"
+						onclick="assignCodeDialConfirm.hide();"
 						action="#{codificationBackingBean.insertContractedItemCode(codificationBackingBean.managedBean.objSelected)}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						update="@form" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
-						onclick="asignCodeDialConfirm.hide();" update="@form" />
+						onclick="assignCodeDialConfirm.hide();" update="@form" />
 				</div>
 			</p:dialog>
 			<ui:remove>#26059 - End</ui:remove>

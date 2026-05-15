@@ -3849,7 +3849,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				
 				this.getManagedBean().setItemCodeDesc(codeDesc);
 
-				RequestContext.getCurrentInstance().execute("asignCodeDialConfirm.show()");
+				RequestContext.getCurrentInstance().execute("assignCodeDialConfirm.show()");
 
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError("QT", "selectedItemCode", "selectedItemCode", null,
