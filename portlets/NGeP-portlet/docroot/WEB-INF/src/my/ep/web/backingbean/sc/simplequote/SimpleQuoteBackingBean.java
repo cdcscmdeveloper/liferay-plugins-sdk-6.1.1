@@ -1688,6 +1688,9 @@ public class SimpleQuoteBackingBean extends
 						    quote.getScQuoteSuppliers().clear();
 						}
 						//40234 - end
+						if (getManagedBean().getGovtSellers() != null) {
+							suppliers.addAll(getManagedBean().getGovtSellers());
+						}
 					} 
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
