@@ -4405,4 +4405,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.financialPackagePaginator = financialPackagePaginator;
 	}
 	//34528-uat 4serangkai - end
+	
+	//#21695 start
+	/**
+	 * @return the technicalSummaryView
+	 */
+	public String getTechnicalSummaryView() {
+		return technicalSummaryView;
+	}
+
+	/**
+	 * @param technicalSummaryView
+	 *            the technicalSummaryView to set
+	 */
+	public void setTechnicalSummaryView(String technicalSummaryView) {
+		this.technicalSummaryView = technicalSummaryView;
+	}
+	//#21695 end
 }
