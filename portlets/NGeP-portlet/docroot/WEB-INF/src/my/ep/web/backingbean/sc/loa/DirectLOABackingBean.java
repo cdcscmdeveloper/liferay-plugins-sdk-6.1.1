@@ -12395,13 +12395,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.getSpecZoneId();
 				Long zoneId2 = oldEstimation.getTplSpecZoneDtl()
 						.getSpecZoneId();
-				if (zoneId1 == zoneId2) {
+				if (zoneId1.equals(zoneId2)) {
 
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
 
 					tplSpecAnswer.setRatePerUom(oldEstimation
 							.getIndicativeUnitPrice());
+					tplSpecAnswer.setAnswerNumeric(oldEstimation
+							.getEstimatedCost());
 
 					tplSpecAnswer.setTplSpecZoneQty(tplSpecZoneQty);
 
@@ -12434,13 +12436,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.getSpecZoneId();
 				Long zoneId2 = oldEstimation.getTplSpecZoneDtl()
 						.getSpecZoneId();
-				if (zoneId1 == zoneId2) {
+				if (zoneId1.equals(zoneId2)) {
 
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
 
 					tplSpecAnswer.setRatePerUom(oldEstimation
 							.getIndicativeUnitPrice());
+					tplSpecAnswer.setAnswerNumeric(oldEstimation
+							.getEstimatedCost());
 
 					TplSpecTierQty tplSpecTierQty = new TplSpecTierQty();
 
@@ -12509,6 +12513,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 					tplSpecAnswer.setRatePerUom(oldEstimation
 							.getIndicativeUnitPrice());
+					tplSpecAnswer.setAnswerNumeric(oldEstimation
+							.getEstimatedCost());
 
 					tplSpecTierQty.setTplSpecQuestion(newQuestion);
 					tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
@@ -12532,6 +12538,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				tplSpecAnswer.setRatePerUom(oldEstimation
 						.getIndicativeUnitPrice());
+				tplSpecAnswer.setAnswerNumeric(oldEstimation
+						.getEstimatedCost());
 
 				tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
 				tplSpecAnswers.add(tplSpecAnswer);
@@ -12599,11 +12607,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Long zoneQtyId1 = tplSpecZoneQtyOld.getSpecZoneQtyId();
 				Long zoneQtyId2 = oldAnswer.getTplSpecZoneQty()
 						.getSpecZoneQtyId();
-				if (zoneQtyId1 == zoneQtyId2) {
+				if (zoneQtyId1.equals(zoneQtyId2)) {
 
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
 					tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
+					tplSpecAnswer
+					.setAnswerNumeric(oldAnswer.getAnswerNumeric());
 
 					TplSpecTierQty tplSpecTierQtyOld = oldAnswer
 							.getTplSpecTierQty();
@@ -12636,10 +12646,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Long zoneQtyId1 = tplSpecZoneQtyOld.getSpecZoneQtyId();
 				Long zoneQtyId2 = oldAnswer.getTplSpecZoneQty()
 						.getSpecZoneQtyId();
-				if (zoneQtyId1 == zoneQtyId2) {
+				if (zoneQtyId1.equals(zoneQtyId2)) {
 					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 					tplSpecAnswer.setTplSpecQuestion(newQuestion);
 					tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
+					tplSpecAnswer
+					.setAnswerNumeric(oldAnswer.getAnswerNumeric());
 
 					tplSpecAnswer.setTplSpecZoneQty(tplSpecZoneQty);
 					tplSpecSuppAnswer.setTplSpecZoneDtl(tplSpecZoneQty
@@ -12719,6 +12731,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
 				tplSpecAnswer.setTplSpecQuestion(newQuestion);
 				tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
+				tplSpecAnswer
+				.setAnswerNumeric(oldAnswer.getAnswerNumeric());
 
 				TplSpecTierQty tplSpecTierQtyOld = oldAnswer
 						.getTplSpecTierQty();
@@ -12745,6 +12759,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				tplSpecAnswer.setTplSpecQuestion(newQuestion);
 
 				tplSpecAnswer.setRatePerUom(oldAnswer.getRatePerUom());
+				tplSpecAnswer
+				.setAnswerNumeric(oldAnswer.getAnswerNumeric());
 				tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
 				tplSpecAnswers.add(tplSpecAnswer);
 			}
