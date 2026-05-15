@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.bank.IChangeBankAccSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -616,22 +617,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		IContractSupplierSO supplierSO 
 			= (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
     	
-    	String[] messageKeys = null;
-    	String errorCode = null;
-
-    	if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100068;
-    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
-    	}
-    	
         try {
+
+        	Long inactiveUserCheckResult = 1L; //TEMP
+        	
         	supplierSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-            	errorCode,
-            	getSelectedUsers()	
+            	getSelectedUsers(),
+            	inactiveUserCheckResult
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(errorCode, messageKeys);
+        	throw buildInactiveUserException(ex);
         }
     }
 	//#30737 - End

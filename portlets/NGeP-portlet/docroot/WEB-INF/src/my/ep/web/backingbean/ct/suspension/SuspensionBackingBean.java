@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
@@ -749,22 +750,17 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		IContractSuspensionSO contractSuspensionSO 
 			= (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
     	
-    	String[] messageKeys = null;
-    	String errorCode = null;
-    	
-    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100068;
-    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
-    	}
-    	
         try {
+        	
+        	Long inactiveUserCheckResult = 1L; //TEMP
+        	
         	contractSuspensionSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-            	errorCode,
-            	getSelectedUsers()	
+            	getSelectedUsers(),
+            	inactiveUserCheckResult
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(errorCode, messageKeys);
+        	throw buildInactiveUserException(ex);
         }
     }
 	//#30737 - End

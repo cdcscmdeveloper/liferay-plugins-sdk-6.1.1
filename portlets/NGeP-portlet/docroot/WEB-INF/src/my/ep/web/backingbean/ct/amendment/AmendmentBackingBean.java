@@ -3220,62 +3220,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//24333 - End, Refactor code for Validate Amendment because tab menu changes
 	
 	//#30737 - Start
-	public void handleInactiveUserValidation(String outcome) {
+	private void handleInactiveUserValidation(String outcome) {
 
 		IContractAmendmentSO contractAmendmentSO 
 			= (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
     	
-		String taskName = getManagedBean().getTaskName();
-		String selectedUserName = getManagedBean().getApproverModel().getTarget().get(0).getUserName();
-    	String[] messageKeys = null;
-    	String errorCode = null;
-    	
-    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-    		
-    		if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(taskName)) {
-			    errorCode = MessageConst.ERROR_100071;
-			    messageKeys = new String[]{
-            	    "KADIR", //nama
-            	    "Chairperson", //role
-            	    "KADUK", //name
-            	    "Member" //role
-            	};
-			} else if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)) {
-				//Pending Supplemental Contract Letter Submission TO Pending Supplemental Contract Letter Approval / Revision Approval
-			    log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT (PREPARE_LOA_HT_NAME) ERROR_100072");
-			    errorCode = MessageConst.ERROR_100072;
-			    messageKeys = new String[]{
-            	    "MOF/ABC/20002",
-            	    selectedUserName,
-            	    "RAMLEEE"
-            	};
-			} else {
-				//Amendment with Supplemental -> Pending Amendment With Supplemental Approval
-				//Pending Supplemental Contract Letter Submission MCA submit (no action necessary), if signoff chairperson -> MCA (action needed)
-				//if approver -> MCA : go to approve.
-			    log.info("xoxoxoxoxooxoxox SUBMITTT AMENDMENT (ELSE) ERROR_100068");
-			    errorCode = MessageConst.ERROR_100068;
-			    messageKeys = new String[]{selectedUserName};
-			}
-    		
-    	}
-    	else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100070;
-    		messageKeys = new String[]{selectedUserName};
-    	}
-    	else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100069;
-    		messageKeys = new String[]{selectedUserName};
-    	}
-    	
         try {
+        	
+        	Long inactiveUserCheckResult = 1L; //TEMP
+        	
         	contractAmendmentSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-            	errorCode,
-            	getSelectedUsers()	
+            	getSelectedUsers(),
+            	inactiveUserCheckResult,
+            	getTaskName()
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(errorCode, messageKeys);
+        	throw buildInactiveUserException(ex);
         }
     }
 	//#30737 - End

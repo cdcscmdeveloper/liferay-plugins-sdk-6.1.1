@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -374,12 +375,42 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         return reqDTO;
     }
     
-    protected EpException buildInactiveUserException(String errorCode, String[] messageKeys) {
+    protected EpException buildInactiveUserException(EpException ex) {
     	log.info("xoxoxoxoxoxoxo catch EpException");
+    	
+    	String errorCode = ex.getMessage();
+    	String selectedUserName = getSelectedUsers().get(0).getUserName();
+        String[] messageKeys = null;
+        
+        log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
+        
+        if (MessageConst.ERROR_100068.equals(errorCode)) {
+            messageKeys = new String[]{selectedUserName};
+        }
+        else if (MessageConst.ERROR_100069.equals(errorCode)) {
+            messageKeys = new String[]{"MOF/CDC/2000192", selectedUserName};
+        }
+        else if (MessageConst.ERROR_100070.equals(errorCode)) {
+            messageKeys = new String[]{selectedUserName};
+        }
+        else if (MessageConst.ERROR_100071.equals(errorCode)) {
+        	messageKeys = new String[]{
+    			"KADIR", //nama
+    			"Chairperson", //role
+    			"KADUK", //name
+    			"Member" //role
+        	};
+        }
+        else if (MessageConst.ERROR_100072.equals(errorCode)) {
+            messageKeys = new String[]{"MOF/ABC/20002", selectedUserName, "RAMLEEE"};
+        }
+        else if (MessageConst.ERROR_100073.equals(errorCode)) {
+            messageKeys = new String[]{"Requisitioner", "Pejabat Pengarah Hospital Kuala Lumpur Unit Pentadbiran"};
+        }
+        
         if (messageKeys != null && messageKeys.length > 0) {
 
             String[] resolvedMessages = new String[messageKeys.length];
-
             for (int i = 0; i < messageKeys.length; i++) {
                 resolvedMessages[i] =
                     ResourceBundleUtils.getMessage(

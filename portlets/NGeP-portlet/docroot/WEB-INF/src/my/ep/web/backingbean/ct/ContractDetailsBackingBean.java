@@ -2078,22 +2078,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		IContractSO contractSO 
 			= (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
     	
-    	String[] messageKeys = null;
-    	String errorCode = null;
-    	
-    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100068;
-    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
-    	}
-    	
         try {
+        	
+        	Long inactiveUserCheckResult = 1L; //TEMP
+        	
         	contractSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-            	errorCode,
-            	getSelectedUsers()	
+            	getSelectedUsers(),
+            	inactiveUserCheckResult
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(errorCode, messageKeys);
+        	throw buildInactiveUserException(ex);
         }
     }
 	//#30737 - End

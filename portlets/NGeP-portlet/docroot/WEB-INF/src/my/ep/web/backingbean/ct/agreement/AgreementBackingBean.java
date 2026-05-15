@@ -1014,22 +1014,17 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		IAgreementSO agreementSO 
 			= (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
     	
-    	String[] messageKeys = null;
-    	String errorCode = null;
-    	
-    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100068;
-    		messageKeys = new String[]{getManagedBean().getApproverModel().getTarget().get(0).getUserName()};
-    	}
-    	
         try {
+        	
+        	Long inactiveUserCheckResult = 1L; //TEMP
+        	
         	agreementSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-            	errorCode,
-            	getSelectedUsers()	
+            	getSelectedUsers(),
+            	inactiveUserCheckResult
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(errorCode, messageKeys);
+        	throw buildInactiveUserException(ex);
         }
     }
 	//#30737 - End

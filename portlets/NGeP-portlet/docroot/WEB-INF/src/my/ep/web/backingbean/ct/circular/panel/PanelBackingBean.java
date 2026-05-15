@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -1080,30 +1081,26 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		//#30737 - End
 		
 	}
-
+	
 	//#30737 - Start
-	public void handleInactiveUserValidation(String outcome) {
+	private void handleInactiveUserValidation(String outcome) {
 
 		ICircularSO circularSO 
 			= (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
     	
 		List<PmUser> selectedUsers = getManagedBean().getApproverModel().getTarget();
-    	String[] messageKeys = null;
-    	String errorCode = null;
-    	
-    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100074;
-    		messageKeys = new String[]{selectedUsers.get(0).getUserName()};
-    	}
-    	
+   
         try {
+        	
+        	Long inactiveUserCheckResult = 1L; //TEMP
+        	
         	circularSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-            	errorCode,
-            	selectedUsers	
+        		selectedUsers,
+            	inactiveUserCheckResult
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(errorCode, messageKeys);
+        	throw buildInactiveUserException(ex, selectedUsers);
         }
     }
 	
@@ -1119,12 +1116,21 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
         return reqDTO;
     }
 	
-	private EpException buildInactiveUserException(String errorCode, String[] messageKeys) {
+	private EpException buildInactiveUserException(EpException ex, List<PmUser> selectedUsers) {
     	log.info("xoxoxoxoxoxoxo catch EpException");
+    	
+    	String errorCode = ex.getMessage();
+        String[] messageKeys = null;
+        
+        log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
+        
+        if (MessageConst.ERROR_100074.equals(errorCode)) {
+            messageKeys = new String[]{selectedUsers.get(0).getUserName()};
+        }
+        
         if (messageKeys != null && messageKeys.length > 0) {
 
             String[] resolvedMessages = new String[messageKeys.length];
-
             for (int i = 0; i < messageKeys.length; i++) {
                 resolvedMessages[i] =
                     ResourceBundleUtils.getMessage(

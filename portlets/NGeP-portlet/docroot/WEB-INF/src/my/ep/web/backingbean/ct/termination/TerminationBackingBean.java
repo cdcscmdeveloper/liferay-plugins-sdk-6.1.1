@@ -611,11 +611,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		
 		//#30737 - Start
 		//TODO - REVISE in validation + save/submit
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			log.info("xoxoxoxoxooxoxo action : "+outcome);
-			handleInactiveUserValidation(outcome);
-		}
-		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
+				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
 			handleInactiveUserValidation(outcome);
 		}
@@ -629,31 +626,21 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		IContractTerminationSO contractTerminationSO 
 			= (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
     	
-		PmUser selectedUser = getManagedBean().getApproverModel().getTarget().get(0);
-    	String[] messageKeys = null;
-    	String errorCode = null;
-    	
-    	if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100068;
-    		messageKeys = new String[]{selectedUser.getUserName()};
-    	}
-    	else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-    		errorCode = MessageConst.ERROR_100069;
-    		messageKeys = new String[]{"MOF/CDC/2000192", selectedUser.getUserName()};
-    	}
-    	
         try {
+        	
+        	Long inactiveUserCheckResult = 1L; //TEMP
+        	
         	contractTerminationSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-            	errorCode,
-            	getSelectedUsers()	
+            	getSelectedUsers(),
+            	inactiveUserCheckResult
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(errorCode, messageKeys);
+        	throw buildInactiveUserException(ex);
         }
     }
 	//#30737 - End
-
+		
 	/**
 	 * This method is used to change the type of termination 
 	 * such as termination, mutual termination and termination remedy
