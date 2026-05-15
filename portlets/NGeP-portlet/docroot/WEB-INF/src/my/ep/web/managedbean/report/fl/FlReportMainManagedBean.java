@@ -16,4 +16,20 @@ import javax.faces.bean.SessionScoped;
 public class FlReportMainManagedBean extends FlReportManagedBean{
 
 	private static final long serialVersionUID = 1L;
+	
+	private boolean showRptCategory;
+
+	/**
+	 * @return the showRptCategory
+	 */
+	public boolean isShowRptCategory() {
+		return showRptCategory;
+	}
+
+	/**
+	 * @param showRptCategory the showRptCategory to set
+	 */
+	public void setShowRptCategory(boolean showRptCategory) {
+		this.showRptCategory = showRptCategory;
+	}
 }
