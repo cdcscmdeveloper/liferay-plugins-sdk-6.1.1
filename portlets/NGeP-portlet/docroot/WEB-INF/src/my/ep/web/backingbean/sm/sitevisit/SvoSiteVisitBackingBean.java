@@ -81,6 +81,8 @@ import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -89,6 +91,7 @@ import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmPoRoleTask;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -2258,12 +2261,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				// #30504 start
+				// #30504 #34795 start
 				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
-				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
-				log.info("---Curent PO: "+currPo.getUserName());
+				PmUser currPo = PmCommonUtil.retrieveUserWithPoRoleTaskByLoginId(currPoLoginId);
+				log.info("---Curent PO: " + currPo.getUserName());
 
-				if (currPo.getPmUserOrgs().get(0).getRecordStatusFlg() == 0) {
+				if (currPo.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						|| currPo.getPmUserOrgs().get(0).getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						|| isExistInPoRoleTask(svTask.getSmAppl().getApplType(), currPo)
+						|| isExistInUserRole(currPo.getPmUserOrgs())) {
 					IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 					ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
@@ -2272,17 +2278,23 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
 							svTask.getSmAppl().getSupplierType(), svTask.getSmAppl().getApplType(),
 							svTask.getSmAppl().getApplCategoryType(),
-							zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());  
-					//#30504 Re-open start
+							zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
+					// #30504 Re-open start
 					currPo = newPo;
+					svTask.getSmAppl().setPoUserId(newPo.getUserId());
 					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
-					smObj.setPoUsers(newPo.getLoginId());
+					smObj.setPoUsers(currPo.getLoginId());
 					this.getManagedBean().setBpmPojo(smObj);
 
+				} else {
+					svTask.getSmAppl().setPoUserId(currPo.getUserId());
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(currPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
 				}
-				log.info("---Curent PO Latest: "+currPo.getUserName());
-				
-				// #30504 end
+				log.info("---Curent PO Latest: " + currPo.getUserName());
+				// 34795 end
+
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				reqDTO.setAppId(this.getManagedBean().getAppId());
 				reqDTO.setToken(token);
@@ -2290,9 +2302,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 				reqDTO.setPoName(currPo.getUserName());
-				//#30504 Re-open end
+				// #30504 Re-open end #34795 end
 			}
-
+			
 			reqDTO.setSmSvTask(svTask);
 			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 			ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
@@ -3086,4 +3098,43 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	// #34166 - End
+	
+	// #34795 start
+	private boolean isExistInPoRoleTask(String applType, PmUser user) {
+		boolean retVal = false;
+		if (user.getPmPoRoleTasks() != null) {
+			for (PmPoRoleTask roleTask : user.getPmPoRoleTasks()) {
+				if (roleTask.getApplType().equals(applType)
+						&& roleTask.getPmUser().getUserId().compareTo(user.getUserId()) == 0
+						&& roleTask.getRecordStatusFlg() == 0) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	// 33955 -start
+	public boolean isExistInUserRole(List<PmUserOrg> userlist) {
+		boolean retVal = false;
+		if (userlist != null) {
+			for (PmUserOrg userOrg : userlist) {
+				if (userOrg.getPmUserRoles() != null) {
+					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+						if (userRole.getPmRole().getRoleCode().equals(SupplierManagementConst.PO_HQ)
+								&& userRole.getRecordStatusFlg() == 0) {
+							retVal = true;
+							break;
+						}
+					}
+				}
+				if (retVal) {
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+	// #34795,33955 - end
 }
