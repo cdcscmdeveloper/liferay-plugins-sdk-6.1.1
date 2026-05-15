@@ -14243,43 +14243,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 	// #28784 -end-
 
 	// #28784 -start-
-	private void afterDemoInv(boolean demoStage) {
-		String taskName = this.getManagedBean().getTaskName();
-		List<String> demoProceses = new ArrayList<>();
-		demoProceses.add(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION);
-		demoProceses.add(SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION);
-
-		if (demoProceses.contains(taskName)) {
-			if (!demoStage) {
-				this.getManagedBean().setAfterDemoInv(true);
-				this.getManagedBean().setReadOnly(true);
-			} else {
-				this.getManagedBean().setTabActiveIndex(3);
-				getManagedBean().setTempTab(3);
-				retrivePresentationDemo();
-				this.getManagedBean().setPresentationDemoActiveIndex(0);
-				retrieveReportTabDtl();
-				this.getManagedBean().setAfterDemoInv(true);
-				if (SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
-						|| SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
-						|| SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
-						|| SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)) {
-					this.getManagedBean().setReadOnly(true);
-				} else if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)) {
-					this.getManagedBean().setReadOnly(false);
-				}
-			}
-		} else {
-			this.getManagedBean().setAfterDemoInv(false);
-		}
-	}
-
-	// #28784 -end-
-
-	// #28784 -start-
 	/** Use in 4ser */
 	public String retrieveTotalTechnicalItemScore(ScQtEvaluationResultDtl propId) {
 		String totalTechScore = null;
@@ -14384,81 +14347,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 	}
 
 	// #28784 summary bug - end
-
-	// #28784 -start-
-	/**
-	 * Suppliers file upload by TEC Secretary during Presentation/Demonstration
-	 * Stage
-	 * 
-	 * @param event
-	 *            File Upload
-	 * @throws IOException
-	 */
-	public void demoSupplierListFileUpload(FileUploadEvent event) throws IOException {
-		IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDemoSO.class);
-		ScQtDemoSupplier scQtDemoSupplier = this.getManagedBean().getScQtDemoSupplier();
-		if (null != scQtDemoSupplier) {
-			ScQtDemoSupplierAttachment attachment = scQtDemoSupplier.getScQtDemoSupplierAttachment();
-			if (null == attachment) {
-				attachment = new ScQtDemoSupplierAttachment();
-				attachment.setScQtDemoSchedule(scQtDemoSupplier);
-			}
-			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
-
-			uploadAttachment(event.getFile(), attachment);
-
-			scQtDemoSupplier.setScQtDemoSupplierAttachment(attachment);
-		}
-		DemoReqDTO demoReqDTO = new DemoReqDTO();
-		demoReqDTO.setScQtDemoSupplier(scQtDemoSupplier);
-		DemoResDTO demoResDTO = qtDemoSO.saveOrUpdateDemoSupplier(demoReqDTO);
-
-		this.getManagedBean().setScQtDemoSupplier(demoResDTO.getScQtDemoSupplier());
-	}
-
-	// #28784 -end-
-
-	// #28784 -start-
-	/**
-	 * Deleting supplier file during Presentation/Demonstration Stage
-	 * 
-	 * @param delEntity
-	 */
-	public void deleteProposalDemoUploadFile(BaseEntity delEntity) {
-		IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDemoSO.class);
-		getManagedBean().getScQtDemoSupplier().setScQtDemoSupplierAttachment(null);
-		DemoReqDTO demoReqDTO = new DemoReqDTO();
-		demoReqDTO.setScQtDemoSupplier(getManagedBean().getScQtDemoSupplier());
-
-		DemoResDTO demoResDTO = qtDemoSO.saveOrUpdateDemoSupplier(demoReqDTO);
-
-		this.getManagedBean().setScQtDemoSupplier(demoResDTO.getScQtDemoSupplier());
-
-	}
-
-	// #28784 -end-
-
-	// #28784 -start-
-	/**
-	 * Retrieve all technical checklist to have total max score for other
-	 * checklists
-	 */
-	public void retrieveAllTechnicalChecklist() {
-		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
-		reqDTO.setCompliance(null);
-		EvaluationResDTO resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
-
-		this.getManagedBean().setOtherScore(resDTO.getOtherScore());
-		this.getManagedBean().setEvaluationStgTechnicalCheckList(resDTO.getCheckListResultBean().getResultList());
-	}
-
-	// #28784 -end-
 
 	// #28784 -start-
 	private void afterDemoInv(boolean demoStage) {
@@ -14870,14 +14758,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 	// #28784 - End
 
-	// #28784 - Start
-	private boolean checkDemoStatuses() {
-		return this.getManagedBean().getScQt().isDemoRequired()
-				&& (Arrays.asList(QTStatusConst.TEC_DEMO_STATUSES).contains(this.getManagedBean().getCurrentStatusId()))
-				&& !this.getManagedBean().isDemoWip();
-	}
-
-	// #28784 - End
 
 	// #28784 - Start
 	private void demoUserRemarkValidation(String userRemark) {
@@ -15038,16 +14918,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 	// #28784 - End
 
 	// #28784 - Start
-	public void checkingForBeforeDemoMeetingDetails() {
-		if (!this.getManagedBean().isReadOnly()) {
-			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
-		}
-		RequestContext.getCurrentInstance().execute("confirmUpdatePresentationDemoPopup.show()");
-	}
-
-	// #28784 - End
-
-	// #28784 - Start
 	private boolean checkDemoStatuses() {
 		List<Long> demoStatuses = new ArrayList<>();
 		demoStatuses.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION);
@@ -15062,16 +14932,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		return this.getManagedBean().getScQt().isDemoRequired()
 				&& (demoStatuses.contains(this.getManagedBean().getCurrentStatusId()))
 				&& !this.getManagedBean().isDemoWip();
-	}
-
-	// #28784 - End
-
-	// #28784 - Start
-	private void demoUserRemarkValidation(String userRemark) {
-		if (null == userRemark || "".equals(userRemark)) {
-			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.remarks", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
-		}
 	}
 
 	// #28784 - End
