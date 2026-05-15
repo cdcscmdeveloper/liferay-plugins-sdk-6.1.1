@@ -1115,12 +1115,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			//String userconstantRuleType = getPTJRuleTypeByOrgProfile(reqDTO.getOrgProfileId());//Fix - #34367
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
-			//Start - #34367
-//			if (userconstantRuleType != null
-//					&& userconstantRuleType.equalsIgnoreCase(ParameterConst.NEW_DOCTYPE_PANEL_CIRCULAR)) {
-//				userSO.filterValidApproverUserForNewRules(resDTO.getUserList());
-//			}
-			//End - #34367
 			for (PmUser user : list) {
 				sourceList.add(user);
 				getManagedBean().getUserMap().put(user.getUserId(), user);
