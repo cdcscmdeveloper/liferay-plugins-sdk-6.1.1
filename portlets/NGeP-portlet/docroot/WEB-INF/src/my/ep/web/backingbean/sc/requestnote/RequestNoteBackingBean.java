@@ -1831,6 +1831,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							getManagedBean().setShowAttachments(Boolean.FALSE);
 						}
 					}
+					CommonUtils commonUtils = new CommonUtils();
+					scRequestNoteDtl.getRequestItem().setItemName(commonUtils.removeItemNameNA(scRequestNoteDtl.getRequestItem().getItemName()));
 					// #26059 - end
 
 					scRequestNoteDtl.setConditionField(sb.toString());
@@ -2336,7 +2338,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_PRODUCT));
 		}
 		scRequestItem.setCmItem(cmItem);
-		scRequestItem.setItemName(cmItem.getItemName());
+		//#26059 - Start
+		CommonUtils commonUtils = new CommonUtils();
+		scRequestItem.setItemName(commonUtils.removeItemNameNA(cmItem.getItemName()));
+		//#26059 - End
 		scRequestItem.setItemDesc(cmSupplierItem.getItemDesc());
 		scRequestItem.setMinqty(cmSupplierItem.getMinOrder());
 		
