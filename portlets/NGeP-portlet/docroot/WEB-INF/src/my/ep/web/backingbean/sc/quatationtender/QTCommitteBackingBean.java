@@ -1115,8 +1115,7 @@ public class QTCommitteBackingBean extends
 	 */
 	// 25037 - start
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
-		System.out.println("---> g9a70fr3ta 880229035077,user");
-		addCommitteMember(committee, titleName, null); 
+		addCommitteMember(committee, titleName, null);
 	}
 
 	/**
