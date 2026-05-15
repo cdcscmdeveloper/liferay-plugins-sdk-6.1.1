@@ -14,7 +14,9 @@
 			closable="true" showSummary="false" severity="error, info" />
 		<c:if
 			test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-				<ui:remove>12471 start</ui:remove>
+			<ui:remove>12471 start</ui:remove>
+			<p:panel id="usersearchpnlid" header="#{lbl['lbl.sc.search']}"
+				toggleable="true">
 				<ac:instructionText
 					value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
 				<br />
