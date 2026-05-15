@@ -204,6 +204,7 @@ public class QTCommitteBackingBean extends
 				UserCommitteeSearchBean userCommitteeSearchBean) {
 			super(componentId, false);
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
+			getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);// 12471
 		}
 
 		/*

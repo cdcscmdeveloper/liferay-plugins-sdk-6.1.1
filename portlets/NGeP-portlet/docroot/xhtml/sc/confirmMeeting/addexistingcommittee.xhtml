@@ -56,7 +56,7 @@
 										<td><p:outputLabel
 												value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
 										<td><p:selectOneMenu id="ministryDD"
-												value="#{evaluationMeetingBackingBean.userCommitteeSearchBean.managedBean.ministry}"><ui:remove>12471 userCommitteeSearchBean</ui:remove>
+												value="#{evaluationMeetingBackingBean.managedBean.userCommitteeSearchBean.ministry}"><ui:remove>12471 userCommitteeSearchBean</ui:remove>
 												<p:ajax onstart="blockWidget.show()"
 													oncomplete="blockWidget.hide()" update="PtjGroupDD PtjDD"
 													listener="#{evaluationMeetingBackingBean.onChangeDD(ParameterConst.orgTypeMinistry)}" />
