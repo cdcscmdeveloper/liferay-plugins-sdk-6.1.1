@@ -164,8 +164,7 @@ public class DateTimeBackingBean {
 	                    .getValue();
 
 	    //#28188 - Start
-	    if (dateObj != null && minuteObj != null) {
-
+	    if (dateObj != null){
 	        if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
 	            //hourObj = "00";
 	        	hourObj = getFirstAvailableHour(component);
@@ -187,8 +186,7 @@ public class DateTimeBackingBean {
 
 	        dateValue = selectedCal.getTime();
 	    }
-	  //#28188 - End
-	    
+	    //#28188 - End
 	    
 	    return dateValue;
 	}
