@@ -163,49 +163,15 @@ public class DateTimeBackingBean {
 	                    facesScopes.findComponentById(component, "calMin"))
 	                    .getValue();
 
-	  //#28188 - Start
-//	    if (dateObj != null && hourObj != null && minuteObj != null) {
-//	        int hourValue = Integer.parseInt((String) hourObj);
-//	        int minuteValue = Integer.parseInt((String) minuteObj);
-//
-//	        Calendar selectedCal = Calendar.getInstance();
-//	        selectedCal.setTime((Date) dateObj);
-//	        selectedCal.set(Calendar.HOUR_OF_DAY, hourValue);
-//	        selectedCal.set(Calendar.MINUTE, minuteValue);
-//
-//	        UIComponent composite =
-//	                UIComponent.getCurrentCompositeComponent(
-//	                        FacesContext.getCurrentInstance());
-//
-//	        Date minDate = (Date) composite.getAttributes().get("mindate");
-//
-//	        if (minDate != null) {
-//	            Calendar minCal = Calendar.getInstance();
-//	            minCal.setTime(minDate);
-//
-//	            boolean sameDay =
-//	                    selectedCal.get(Calendar.YEAR) == minCal.get(Calendar.YEAR) &&
-//	                    selectedCal.get(Calendar.DAY_OF_YEAR) == minCal.get(Calendar.DAY_OF_YEAR);
-//
-//	            if (sameDay &&
-//	                selectedCal.get(Calendar.HOUR_OF_DAY) <
-//	                minCal.get(Calendar.HOUR_OF_DAY)) {
-//
-//	                selectedCal.set(Calendar.HOUR_OF_DAY,
-//	                        minCal.get(Calendar.HOUR_OF_DAY));
-//
-//	                selectedCal.set(Calendar.MINUTE,
-//	                        minCal.get(Calendar.MINUTE));
-//	            }
-//	        }
-//	        dateValue = selectedCal.getTime();
-//	    }
-	    
-	    if (dateObj != null && minuteObj != null) {
-
+	    //#28188 - Start
+	    if (dateObj != null){
 	        if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
 	            //hourObj = "00";
 	        	hourObj = getFirstAvailableHour(component);
+	        }
+	        
+	        if (minuteObj == null || StringUtils.isBlank(minuteObj.toString())) {
+	            minuteObj = getFirstAvailableMinute(component);
 	        }
 
 	        int hourValue = Integer.parseInt(hourObj.toString());
@@ -220,8 +186,7 @@ public class DateTimeBackingBean {
 
 	        dateValue = selectedCal.getTime();
 	    }
-	  //#28188 - End
-	    
+	    //#28188 - End
 	    
 	    return dateValue;
 	}
@@ -296,6 +261,104 @@ public class DateTimeBackingBean {
 	    }
 
 	    return "00";
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private String getFirstAvailableMinute(UIComponent component) {
+	    List<SelectItem> minutes = getMinutesDropdownValuesBSV(component);
+
+	    for (SelectItem item : minutes) {
+	        if (item.getValue() != null) {
+	            return item.getValue().toString();
+	        }
+	    }
+
+	    return "00";
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	/**
+	 * Gets the minutes dropdown values for BSV.
+	 *
+	 * @param UIComponent the component
+	 * @return the minutes dropdown values
+	 */
+	public List<SelectItem> getMinutesDropdownValuesBSV(UIComponent component) {
+	    List<SelectItem> minutes = new ArrayList<>();
+
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    UIComponent composite =
+	            UIComponent.getCurrentCompositeComponent(context);
+
+	    Date minDate = (Date) composite.getAttributes().get("mindate");
+
+	    FacesScopes facesScopes = new FacesScopes();
+
+	    org.primefaces.component.calendar.Calendar calDateObj =
+	            (org.primefaces.component.calendar.Calendar)
+	                    facesScopes.findComponentById(composite, "calDate");
+
+	    Object hourObj =
+	            ((HtmlSelectOneMenu)
+	                    facesScopes.findComponentById(composite, "calHour"))
+	                    .getValue();
+
+	    // FIX HERE
+	    if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
+	        hourObj = getFirstAvailableHour(component);
+	    }
+
+	    Date selectedDate = null;
+
+	    if (calDateObj != null && calDateObj.getValue() instanceof Date) {
+	        selectedDate = (Date) calDateObj.getValue();
+	    }
+
+	    int modValue = Integer.parseInt(
+	            composite.getAttributes().get("modVal").toString()
+	    );
+
+	    int minMinute = 0;
+
+	    if (minDate != null && selectedDate != null && hourObj != null) {
+
+	        Calendar calMin = Calendar.getInstance();
+	        calMin.setTime(minDate);
+
+	        Calendar calSel = Calendar.getInstance();
+	        calSel.setTime(selectedDate);
+
+	        boolean sameDay =
+	                calMin.get(Calendar.YEAR) == calSel.get(Calendar.YEAR)
+	                        && calMin.get(Calendar.DAY_OF_YEAR) == calSel.get(Calendar.DAY_OF_YEAR);
+
+	        int selectedHour = Integer.parseInt(hourObj.toString());
+
+	        if (sameDay &&
+	                selectedHour == calMin.get(Calendar.HOUR_OF_DAY)) {
+
+	            minMinute = calMin.get(Calendar.MINUTE);
+
+	            // round up to nearest modValue
+	            if (minMinute % modValue != 0) {
+	                minMinute =
+	                        ((minMinute / modValue) + 1) * modValue;
+	            }
+	        }
+	    }
+
+	    for (int i = minMinute; i < 60; i++) {
+	        if (i % modValue == 0) {
+	            minutes.add(new SelectItem(
+	                    String.format("%02d", i),
+	                    String.format("%02d", i)
+	            ));
+	        }
+	    }
+
+	    return minutes;
 	}
 	//#28188 - End
 		

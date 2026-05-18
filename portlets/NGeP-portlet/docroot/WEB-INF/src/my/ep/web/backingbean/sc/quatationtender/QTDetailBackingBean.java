@@ -8103,6 +8103,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			updateApprovalDetails(this.getManagedBean().getQt());
+			
+			//28188 -start-
+			if(this.getManagedBean().getQt().isBsvRequired()){
+				checkBsvDtlsChangeRemraks();
+			}
+			//28188 -end-
+			
 			retrieveApprovalTabDtl();
 
 			// 25037 - start
@@ -8159,19 +8166,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#35500 fix issue 5 End
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());
 			//28895 - 35500 end
-			
-			//#28188 - Start
-			if(CollectionUtils.isNotEmpty(qtDetails.getScQtBriefings())){
-				List<ScQtBsv> scQtBsvs = qtDetails.getScQtBriefings();
-				for (ScQtBsv scQtBsv : scQtBsvs) {
-					if (CollectionUtils.isEmpty(scQtBsv.getBsvRemarks())) {
-						initializeBSVRemarks(scQtBsv);
-						// Remarks are mandatory
-						throw new EpException(MessageConst.ERROR_760831);
-					}
-				}	
-			}
-			//#28188 - End
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
@@ -15201,22 +15195,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//#28188 - End
 	
-	//#28188 - Start
-	private void initializeBSVRemarks(ScQtBsv scQtBsv) {
-		log.info("initializeFinalizationRemarks");
-		
-		// Retrieve Finalization remarks
-		List<ScQtBSVRemark> remarks = initializeRemarks(scQtBsv,
-				null, 
-				scQtBsv.getBsvRemarks(), 
-				ScQtBSVRemark.class);
-		scQtBsv.setBsvRemarks(remarks);
-
-		// Finalization Remarks list
-		getManagedBean().getBsvDtlBean().getScQtBsv().setBsvRemarks(remarks);		
-	}
-	//#28188 - End
-	
 	// 12471 - start
 	/**
 	 * Validate selected approver from picklist
@@ -15271,5 +15249,78 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return isQTAfterPublicationApproved && isDeskOfficerPendingCMT;
 	}
 	// 12471 - end - Dayan
+	
+	//28188 -start-
+	/**
+	 * check any bsvDetailschnaged during qtmaintenance.
+	 */
+	private void checkBsvDtlsChangeRemraks() {
+
+		List<BriefingZoneBean> beansList = this.getManagedBean()
+				.getBriefingZoneBean();
+		if (CollectionUtils.isNotEmpty(beansList)) {
+
+			for (BriefingZoneBean bsvDtlBean : beansList) {
+				ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+				boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
+						.getScQtBsvDtls());
+				
+				if (isBsvdtlsChange) {
+					checkBsvRemarksMandatory(scQtBsv);
+				}
+			}
+		} else {
+			
+			BriefingZoneBean bsvDtlBean = this.getManagedBean().getBsvDtlBean();
+			ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+			boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
+					.getScQtBsvDtls());
+			
+			if (isBsvdtlsChange) {
+				checkBsvRemarksMandatory(scQtBsv);
+			}
+
+		}
+	}
+	//28188 -end-
+	
+	//28188 -start-
+	/**
+	 * check bsvDeails changed or not.
+	 * @param bsvdetails
+	 * @return true/false.
+	 */
+	private boolean checkBsvdtlsChange(List<ScQtBsvDtl> bsvdetails){
+	
+	if(CollectionUtils.isNotEmpty(bsvdetails)){
+		for(ScQtBsvDtl bsvDtl:bsvdetails){
+			
+			if(null==bsvDtl.getQtBsvDtlId()){
+				 return Boolean.TRUE;	
+			}
+		}
+	}
+	return Boolean.FALSE;
+	}
+	//28188 -end-
+	
+	//28188 -start-
+	/**
+	 * check remarks key in after bsvDetails change.
+	 * @param qtBsv
+	 */
+	private void checkBsvRemarksMandatory(ScQtBsv qtBsv){
+		List<ScQtBSVRemark> bsvRemarks=	qtBsv.getBsvRemarks();
+		if (CollectionUtils.isNotEmpty(bsvRemarks)) {
+			for (int i = 0; i < bsvRemarks.size(); i++) {
+				String userRemark = bsvRemarks.get(i).getRemark();
+				
+				if (StringUtils.isBlank(userRemark) || StringUtils.isEmpty(userRemark)) {
+					throw new EpException(MessageConst.ERROR_760831);
+				}
+			}
+		}
+	}
+	//28188 -end-
 
 }
