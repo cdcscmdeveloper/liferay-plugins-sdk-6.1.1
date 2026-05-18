@@ -3757,21 +3757,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		CtContractValue contractValue = current.getCtContractValue();
 
-		int totalMonths = contractValue.getContractPeriod();
-		int totalDays = contractValue.getContractDaysPeriod();
+		Date effectiveDate = contractValue.getEffDate();
+
+		Date expiredDate = contractValue.getExpDate();
 
 		CtAmendment amendment = current.getCtAmendment();
 
-		if (isOngoingAmendment(current) && amendment != null && amendment.isContractExtend()) {
+		// Use amendment extend end date during ongoing amendment
+		if (isOngoingAmendment(current)
+				&& amendment != null
+				&& amendment.isContractExtend()
+				&& amendment.getExtendEndDate() != null) {
 
-			Integer extendPeriod = amendment.getExtendPeriod();
-			Integer extendDays = amendment.getExtendDaysPeriod();
-
-			totalMonths += extendPeriod != null ? extendPeriod : 0;
-			totalDays += extendDays != null ? extendDays : 0;
+			expiredDate = amendment.getExtendEndDate();
 		}
 
-		return normalizePeriod(totalMonths, totalDays);
+		return DateUtils.getMonthsAndDaysDifference(
+				effectiveDate,
+				expiredDate);
 	}
 
 	/**
@@ -3841,7 +3844,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 
-		return new int[] { contractValue.getContractPeriod(), contractValue.getContractDaysPeriod() };
+		return DateUtils.getMonthsAndDaysDifference(
+				contractValue.getEffDate(),
+				contractValue.getExpDate());
 	}
 
 	/**
@@ -3897,31 +3902,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		int[] result = calculateSupplementalContractPeriod();
 
 		return String.valueOf(result[1]);
-	}
-
-	/**
-	 * Normalizes contract days when the total days exceed the maximum allowed
-	 * days per month (27 days).
-	 * 
-	 * @param months
-	 *            total contract months
-	 * @param days
-	 *            total contract days
-	 * @return an array containing normalized months and remaining days
-	 */
-	private int[] normalizePeriod(int months, int days) {
-
-		int normalizedMonths = months;
-		int normalizedDays = days;
-
-		if (normalizedDays >= ContractConst.MAX_DAY_PER_MONTH) {
-
-			normalizedMonths += normalizedDays / ContractConst.MAX_DAY_PER_MONTH;
-
-			normalizedDays = normalizedDays % ContractConst.MAX_DAY_PER_MONTH;
-		}
-
-		return new int[] { normalizedMonths, normalizedDays };
 	}
 
 	/**
