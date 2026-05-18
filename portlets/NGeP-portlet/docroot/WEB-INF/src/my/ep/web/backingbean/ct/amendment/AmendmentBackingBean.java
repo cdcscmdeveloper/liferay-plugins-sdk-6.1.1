@@ -8929,11 +8929,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(StringUtils.isNotBlank(sb.toString())){
 			sb.append(", ");
 		}
-		sb.append(supCat.getCategoryL1Name().trim());
-	    sb.append(", ");
-	    sb.append(supCat.getCategoryL2Name().trim());
-	    sb.append(", ");
-	    sb.append(supCat.getCategoryL3Name().trim());
+		sb.append(supCat.getPmCategoryL1().getCategoryL1Code()).append(supCat.getPmCategoryL2().getCategoryL2Code())
+				.append(supCat.getPmCategoryL3().getCategoryL3Code());
 	}
 
 	/**
