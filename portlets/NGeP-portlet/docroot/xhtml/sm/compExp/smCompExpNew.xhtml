@@ -289,7 +289,7 @@
 						<p:ajax event="change" update="subDDId,subDivDDId"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, 
-							smCompExpCatCode.categoryL2, smCompExpCatCode.categoryL3)}" />
+							smCompExpCatCode.categoryL2, smCompExpCatCode.categoryL3, index)}" />
 					</p:selectOneMenu>
 				</p:column>
 				<p:column style="width:32% !important;"
@@ -306,7 +306,7 @@
 						<p:ajax event="change" update="subDivDDId"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id,
-							smCompExpCatCode.categoryL3)}" />
+							smCompExpCatCode.categoryL3, index)}" />
 					</p:selectOneMenu>
 				</p:column>
 				<p:column style="width:32% !important;"

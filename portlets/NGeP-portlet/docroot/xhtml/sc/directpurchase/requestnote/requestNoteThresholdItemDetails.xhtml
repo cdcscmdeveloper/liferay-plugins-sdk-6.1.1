@@ -105,11 +105,11 @@
 									value="#{lbl['lbl.sc.request.note.proc.type.normal']}" />
 							</ui:fragment>
 							<ui:fragment
-								rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A' or requestNoteDtl.procurementType.parameterCode eq 'P'}">
+								rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A' or requestNoteDtl.procurementType.parameterCode eq 'P' or requestNoteDtl.procurementType.parameterCode eq 'S'}">
 								<p:commandLink
-									value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}"
-									styleClass="command-link" partialSubmit="true" process="@this"
-									update=":form:justPopup"
+									value="#{requestNoteBackingBean.getParameterDescription(requestNoteDtl.procurementType)}"
+									styleClass="command-link" id="procButtonRPT"
+									partialSubmit="true" process="@this" update=":form:justPopup"
 									actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 									oncomplete="justPopup.show();" />
 							</ui:fragment>

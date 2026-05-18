@@ -186,7 +186,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		log.info("*******Bill Object**********"
 				+ resDTO.getPyBill().getBillId());
-		log.info("######38377#####billId init: " + resDTO.getPyBill().getBillId());
 		this.getManagedBean().setPyBill(resDTO.getPyBill());
 		List<PyBillDtl> smBillDtls = resDTO.getPyBill().getPyBillDtls();
 
@@ -219,9 +218,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
-		log.info("#38377#####inside billDtl ID:"
-				+ this.getManagedBean().getApplicationPayment() != null ? this
-				.getManagedBean().getApplicationPayment().getBillDtlId() : null);
+
 		if (getManagedBean().isSoftcertPayment()) {
 			setBilledSoftCertPersonnels(pyBillDtlLs);
 		}
@@ -245,8 +242,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setBillId(this.getManagedBean().getPyBill().getBillId());
 		PendingPaymentResDTO resDTO = reqSO.checkAlreadyDonePayement(reqDTO);
-		
-		log.info("#38377#####inside proceedToPaymentSummary completePayment:"+resDTO.isFoundCompletePayment());
+				
 		if(resDTO.isFoundCompletePayment()){
 			log.info("<<<< Failure Payment - Bill ID >>>> "+reqDTO.getBillId());
 			throw new EpException(MessageConst.ERROR_721055);
@@ -372,7 +368,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			PaymentResDTO resDTO = new PaymentResDTO();
 			resDTO = reqSO.createPayment(reqDTO);
 
-			log.info("******Payment ID********"
+			log.info("******Payment ID*********"
 					+ resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -432,7 +428,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 							.getManagedBean().getBillDesc(), this
 							.getManagedBean().getCountry(),
 							this.getCancelUrl(), this.responseUrl,
-							this.callbackUrl));
+							this.callbackUrl, new FacesScopes().getUserLocale()
+									.getLanguage()));
+			log.info("#38377##########"+this.getManagedBean().getPayLoad());
 			
 			return "paymentRequestSubmission";
 
@@ -1097,15 +1095,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		}else{
 			// #38377
 			if (isCdcPaymentGateway(billType)) {
-				return EpPropertiesUtils.getInstance().getProperty(
-						"payment.url");
+				return EpPropertiesUtils.getInstance().getProperty("payment.url");
 			} else {
 				// #26307 - payment gateway change
-				return EpPropertiesUtils.getInstance().getProperty(
-						"molpay.gov.url")
-						+ merchantId
-						+ EpPropertiesUtils.getInstance().getProperty(
-								"molpay.gov.url.ext");
+				return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId
+						+ EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
 			}
 		}		
 		

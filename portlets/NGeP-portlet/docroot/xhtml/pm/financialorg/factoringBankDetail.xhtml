@@ -51,10 +51,17 @@
 					<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
 				</f:facet>
 
+				<!-- #34445, Fix as-is bug: #39508 START -->
 				<p:inputText id="accountNo" value="#{financialacc.accountNo}"
 					 label="#{lbl['lbl.pm.financialorg.acnumber']}" required="true"
 					size="18" styleClass="ppDisplayTextS" maxlength="18" 
-					disabled="#{!financialacc.brandNew}"/>
+					disabled="#{!financialacc.brandNew}">
+					<f:attribute name="bankName" value="#{financialacc.pmPaymentBankOrg.finOrgName}" />
+    				<f:attribute name="bankCode" value="#{financialacc.bankCode}" />
+    				<f:attribute name="sequence" value="#{financialacc.sequence}" />
+					<p:ajax event="blur" listener="#{financialOrgBackingBean.setAccountNo}"/>
+				</p:inputText>
+				<!-- #34445, Fix as-is bug: #39508 START -->
 				<p:message for="accountNo" id="accountNoMsg" display="icon" />
 			</p:column>
 

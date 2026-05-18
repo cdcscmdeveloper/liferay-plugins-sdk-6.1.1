@@ -470,6 +470,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
     private boolean includeG2gSupplier = Boolean.FALSE;
     private boolean newPK7Code = Boolean.FALSE;
 	private ScQuoteSupplier tempScQuoteSupplier = null;
+	private String wipReasonCategory;
 	//27868 - end
 	
 	private Boolean deleteBusinessNature = false;
@@ -3018,7 +3019,14 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 
 	public void setTempScQuoteSupplier(ScQuoteSupplier tempScQuoteSupplier) {
 		this.tempScQuoteSupplier = tempScQuoteSupplier;
-	}	
-	
+	}
+
+	public String getWipReasonCategory() {
+		return wipReasonCategory;
+	}
+
+	public void setWipReasonCategory(String wipReasonCategory) {
+		this.wipReasonCategory = wipReasonCategory;
+	}
 	//27868 - end
 }

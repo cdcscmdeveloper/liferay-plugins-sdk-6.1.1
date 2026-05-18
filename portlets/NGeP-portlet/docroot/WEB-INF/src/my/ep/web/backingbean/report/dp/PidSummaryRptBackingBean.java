@@ -25,6 +25,7 @@ import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.DpReportConst;
 import my.ep.web.managedbean.report.dp.PidSummaryRptManagedBean;
 
+import org.apache.commons.collections.CollectionUtils;//#29558
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -49,7 +50,10 @@ public class PidSummaryRptBackingBean extends DpReportBackingBean<PidSummaryRptM
 	public void resetSearch(){
 		getManagedBean().setDateFrom(null);
 		getManagedBean().setDateTo(null);
-		getManagedBean().setStatus(null);
+		getManagedBean().setScStatusManyMenu(null); //#29558
+		getManagedBean().setScStatusManyMenuTemp(null);//#29558
+		getManagedBean().setScRequisitioner(null);//#29558
+		getManagedBean().setContractType(null);//#29558
 		getManagedBean().setDocNo(null);
 		getManagedBean().setContractNo(null);
 		getManagedBean().setContractType(null);
@@ -77,9 +81,12 @@ public class PidSummaryRptBackingBean extends DpReportBackingBean<PidSummaryRptM
 		if (getManagedBean().getDateTo() != null) {
 			params.put(DpReportConst.PARAM_CREATED_TO_DATE, df.format(getManagedBean().getDateTo()));
 		}
-		if (getManagedBean().getStatus() != null) {
-			params.put(DpReportConst.PARAM_STATUS, getManagedBean().getStatus().toString());
+		// 29558 - Start (Harun) Change option from single status to multiple
+		if(CollectionUtils.isNotEmpty(getManagedBean().getScStatusManyMenu())){
+			String status = StringUtils.join(getManagedBean().getScStatusManyMenu(),",");
+			params.put(DpReportConst.PARAM_STATUS, status.replaceAll(",$",""));
 		}
+		// 29558 - End (Harun)
 		if (StringUtils.isNotEmpty(getManagedBean().getDocNo())) {
 			params.put(DpReportConst.PARAM_PID_NO, getManagedBean().getDocNo());
 		}
@@ -96,16 +103,35 @@ public class PidSummaryRptBackingBean extends DpReportBackingBean<PidSummaryRptM
 	}
 
 	@Override
+	//29558 - Start (Harun) fixing sonarlint issues
 	public void validateCriteria() {
-		if(this.getManagedBean().getDateFrom() == null
-				&& this.getManagedBean().getDateTo() == null
-				&& this.getManagedBean().getStatus() == null
-				&& StringUtils.isEmpty(this.getManagedBean().getDocNo())
-				&& StringUtils.isEmpty(this.getManagedBean().getContractType())
-				&& StringUtils.isEmpty(this.getManagedBean().getContractNo())
-				&& StringUtils.isEmpty(this.getManagedBean().getContractName())){
-			FacesContext.getCurrentInstance().validationFailed();
-			throw new EpException(MessageConst.ERROR_780003);
-		}
+	    if (allCriteriaNullOrEmpty()) {
+	        FacesContext.getCurrentInstance().validationFailed();
+	        throw new EpException(MessageConst.ERROR_780003);
+	    }
 	}
+
+	private boolean allCriteriaNullOrEmpty() {
+	    return isDateRangeNull() && isStatusAndTempNull() && isOtherCriteriaEmpty() && isContractEmpty();
+	}
+
+	private boolean isDateRangeNull() {
+	    return this.getManagedBean().getDateFrom() == null && this.getManagedBean().getDateTo() == null;
+	}
+
+	private boolean isStatusAndTempNull() {
+	    return this.getManagedBean().getScStatusManyMenu() == null && this.getManagedBean().getScStatusManyMenuTemp() == null;
+	}
+
+	private boolean isOtherCriteriaEmpty() {
+	    return StringUtils.isEmpty(this.getManagedBean().getDocNo());
+	}
+	
+	private boolean isContractEmpty() {
+	    return  StringUtils.isEmpty(this.getManagedBean().getContractType()) &&
+	    		StringUtils.isEmpty(this.getManagedBean().getContractNo()) && 
+	    		StringUtils.isEmpty(this.getManagedBean().getContractName());
+	    	   
+	}
+	//29558 - End
 }

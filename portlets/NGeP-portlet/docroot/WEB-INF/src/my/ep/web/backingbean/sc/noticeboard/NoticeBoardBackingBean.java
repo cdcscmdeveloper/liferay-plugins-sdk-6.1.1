@@ -853,16 +853,18 @@ public class NoticeBoardBackingBean extends
 		
 		// #28777 & #29729 - Start
 		if (managedBean.getScQt().isZonal()) {
-			BriefingZoneBean defaultBsvBean = this.getManagedBean().getZoneBean().get(0);
-			if (defaultBsvBean.isBranchDeactivated()) {
-				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-			} else {
-				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+			List<BriefingZoneBean> zoneBeans = this.getManagedBean().getZoneBean();
+			for (BriefingZoneBean briefingZoneBean : zoneBeans) {
+				if (briefingZoneBean.isBranchDeactivated()) {
+					this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+									MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				} else {
+					this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+				}
 			}
 		}
 		// #28777 & #29729 - End
@@ -1695,8 +1697,10 @@ public class NoticeBoardBackingBean extends
 				
 				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
 					populateClosingQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBeans());
+					populateBsvQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBSVBeans());//#28188
 				} else {
 					getManagedBean().setAmendmentClosingDateMap(null);
+					getManagedBean().setAmendmentBSVDateMap(null);
 				}
 				getManagedBean().setCommitteeFormed(resDTO.getCommitteeFormed());
 				return resDTO.getQtResultBean();
@@ -2987,9 +2991,9 @@ public class NoticeBoardBackingBean extends
 						boolean resultL3vsPublish = pmChangeDateL3.after(publishTimestamp);
 
 						if ((resultL1vsPublish ||resultL2vsPublish ||resultL3vsPublish) && (resultL1 || resultL2 || resultL3)) {
-							getManagedBean().setPmCatL1flag(resultL1);
-							getManagedBean().setPmCatL2flag(resultL2);
-							getManagedBean().setPmCatL3flag(resultL3);
+							getManagedBean().setPmCatL1flag(resultL1vsPublish);
+							getManagedBean().setPmCatL2flag(resultL2vsPublish);
+							getManagedBean().setPmCatL3flag(resultL3vsPublish);
 							getManagedBean().setDisplayAfterPublish(true);
 						}
 						if (null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()) {
@@ -3674,9 +3678,11 @@ public class NoticeBoardBackingBean extends
 		}
 		
 		List<PmRemarkCategory> listCategoryDB = new ArrayList();
-		for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
-			if (null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
-				listCategoryDB.add(removeIndex);
+		if (null != getManagedBean().getHistoryList()) {
+			for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+				if (null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
+					listCategoryDB.add(removeIndex);
+				}
 			}
 		}
 		getManagedBean().setHistoryList(listCategoryDB);
@@ -3685,9 +3691,11 @@ public class NoticeBoardBackingBean extends
 	}
 
 	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
-		for (PmRemarkCategory rc : remarkList) {
-			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
-			rc.setCreatedUsername(user.getUserName());
+		if (null != remarkList) {
+			for (PmRemarkCategory rc : remarkList) {
+				PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
+				rc.setCreatedUsername(user.getUserName());
+			}
 		}
 		return remarkList;
 	}
@@ -3906,4 +3914,32 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 	// #29732 end
+	
+	//#28188 - Start
+	private void populateBsvQtAmendIntoAmendmentBeanMap(List<QtAmendMentBean> qtAmendMentBeans) {
+		Map<BigDecimal, Date> amendmentBSVDateMap = new HashMap<BigDecimal, Date>();
+		
+		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
+			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
+				if (amendMentBean.getValueMap() != null) {
+					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
+						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
+					
+						Date approvalDate = valueBean.getApprovalDate();
+						if (valueBean != null && amendMentBeanValue.getKey().contains(QTFieldConst.FIELD_QT_BSV)
+								&& approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
+							
+							Date prevApprovalDate = amendmentBSVDateMap.get(amendMentBeanValue.getKey());
+							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
+								continue;
+							}
+							amendmentBSVDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);
+						}
+					}
+				}
+			}	
+		}
+		this.getManagedBean().setAmendmentBSVDateMap(amendmentBSVDateMap);
+	}	
+	//#28188 - End
 }

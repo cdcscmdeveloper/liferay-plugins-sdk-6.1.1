@@ -58,12 +58,12 @@
         });
       }
       <!--  google credential for the google map api key  -->
-      <!--  Username : cdc.eperolehan@gmail.com / Password : ngep_welcome1  -->
       <!--  url: https://developers.google.com/maps/documentation/javascript/get-api-key  -->
       function loadScript() {
     	    var script = document.createElement('script');
     	    script.type = 'text/javascript';
-    	    script.src = '//maps.googleapis.com/maps/api/js?key=AIzaSyBqLJrFGH_S1q19bnLpDTRVnCzcgRgYQnE';
+    	 	// #40306
+    	    script.src = '#{backingBean.gmapsScriptSrc}';
     	    document.body.appendChild(script);
     	}
 

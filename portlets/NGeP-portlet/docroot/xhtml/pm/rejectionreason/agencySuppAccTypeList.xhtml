@@ -19,13 +19,11 @@
 
 						<p:dataTable id="dtAgencyResult"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							var="agency"
+							var="agency" widgetVar="dtSuppAccTypeWidget"
 							value="#{rejectionReasonBackingBean.managedBean.agencyList}"
-							rowIndexVar="rowIndex" rowKey="#{agency}" rows="10"
-							paginator="true" paginatorPosition="bottom"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
-							lazy="true">
+							rowIndexVar="rowIndex" rowKey="#{agency}" rows="10">
+							
+							<ac:paginator for="dtAgencyResult" />
 
 							<p:column style="text-align:center;" headerText="#{lbl['lbl.pm.reason.ministry']}">
 								<h:panelGroup maxlength="277" style="display:block; text-align:left; white-space: normal; word-wrap: break-word; word-break: break-word;">

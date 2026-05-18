@@ -103,6 +103,7 @@
                 	<p:tabView id="thresholdId"
                 		activeIndex="#{ruleCatalogueBackingBean.managedBean.thresholdIndex}"
                 		dynamic="true" cache="false"><!-- #36738 -->
+                		<p:ajax event="tabChange" process="@this" /> <!-- #34445, Fix as-is bug:#40055 -->
                 		<p:tab title="#{lbl['lbl.pm.settings.unplanned.qt.threshold']}">
 							<ui:include src="unplannedQtThreshold.xhtml"></ui:include>
 						</p:tab>
@@ -133,6 +134,7 @@
     <!-- 27827 - START -->
     <ui:include src="/xhtml/pm/settings/general/common/ptjPopupForConstantRule.xhtml"/>
     <!-- 27827 - END -->
+	<ui:include src="/xhtml/pm/settings/general/common/supplierAccountTypePopUp.xhtml" /> <!-- #35323 -->
     
 		</p:outputPanel>
 	</ui:define>

@@ -182,12 +182,33 @@
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
 								itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>							
 						</c:otherwise>
 					</c:choose>
 					<!-- 29550 - end -->
+					<ui:remove>#27476 start</ui:remove>
+					<c:if test="#{poPurRptBB.hasRoleForProcumentType()}">
+						<f:selectItem itemLabel="#{lbl['lbl.fl.procurement.type']}"
+							itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+					</c:if>
+					<ui:remove>#27476 end</ui:remove>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+
+			<ui:remove>#27476 start</ui:remove>
+			<c:if test="#{poPurRptBB.hasRoleForProcumentType()}">
+				<td width="15%"><p:outputLabel
+						value="#{lbl['lbl.fl.procurement.type']}" /></td>
+				<td width="35%"><p:selectOneMenu
+						value="#{poPurRptBB.managedBean.procumentType}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.all']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{poPurRptBB.getDropDownValuesCombineWIPParameter(ParameterTypeConst.procurementTypeRpt,ParameterTypeConst.procurementType,ParameterTypeConst.procurementCodePk7)}" />
+						<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					</p:selectOneMenu></td>
+			</c:if>
+			<ui:remove>#27476 end</ui:remove>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
