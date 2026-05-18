@@ -97,6 +97,7 @@ public class MolPayServlet extends HttpServlet {
 		String currency = reqMap.get("currency");
 		String paydate = reqMap.get("paydate");
 		String skey = reqMap.get("skey");
+		String paymentGateway = StringUtils.defaultIfEmpty(reqMap.get("paymentGateway"), "N");
 		String channel = reqMap.get("channel");
 		String paymentRefNo = reqMap.get("paymentRefNo");
 		String bankName = reqMap.get("bankName");
@@ -136,7 +137,7 @@ public class MolPayServlet extends HttpServlet {
 		
 		//#38377
 		log.info("#38377########paymentGateway map:"+reqMap.get("paymentGateway"));
-		if(reqMap.get("paymentGateway").equals("Y") || nbcb != null){
+		if("Y".equals(paymentGateway) || nbcb != null){
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -152,12 +153,12 @@ public class MolPayServlet extends HttpServlet {
 			log.info("Key1>>>>" + key1);
 			
 			//#38377
-			if(reqMap.get("paymentGateway").equals("Y") || skey.equals(key1)){
+			if("Y".equals(paymentGateway) || skey.equals(key1)){
 				log.info("SKey & Key1 Are Match>>>>");
 				
 				//#38377
-				if(amount==null){
-					amount = resDTO.getPyPayment().getPaymentAmt().toString();
+				if (StringUtils.isBlank(amount) && resDTO.getPyPayment().getPaymentAmt() != null) {
+				    amount = resDTO.getPyPayment().getPaymentAmt().toString();
 				}
 				BigDecimal txAmount = new BigDecimal(amount);
 				boolean validPayment = false;
@@ -570,16 +571,7 @@ public class MolPayServlet extends HttpServlet {
 					
 					log.info("######38377#####json cardType: " + cardType);
 				}
-				if (paydate != null && !paydate.isEmpty()) {
-					try {
-						paydate = DateUtils.reformatDate(paydate, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
-						date1 = paydate;
-						log.info("######38377#####json date1: " + date1);
-					} catch (Exception e) {
-						// handle/ log bad date format without breaking the rest
-						// e.g., keep original paydate or set to null
-					}
-				}
+				date1 = paydate;
 				errorCode = jsonObject.optString("errCode", null);
 				log.info("######38377#####json errCode: " + errorCode);
 				errorDesc = jsonObject.optString("errDesc", null);
