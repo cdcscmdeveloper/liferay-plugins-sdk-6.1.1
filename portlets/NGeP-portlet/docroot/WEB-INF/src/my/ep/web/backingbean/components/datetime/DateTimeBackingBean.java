@@ -339,9 +339,10 @@ public class DateTimeBackingBean {
 	        if (sameDay &&
 	                selectedHour == calMin.get(Calendar.HOUR_OF_DAY)) {
 
-	            minMinute = calMin.get(Calendar.MINUTE);
+	        	// move to NEXT valid minute
+	        	minMinute = calMin.get(Calendar.MINUTE) + modValue;
 
-	            // round up to nearest modValue
+	        	// round properly
 	            if (minMinute % modValue != 0) {
 	                minMinute =
 	                        ((minMinute / modValue) + 1) * modValue;
