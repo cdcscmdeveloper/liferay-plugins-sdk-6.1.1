@@ -4639,7 +4639,49 @@ public class SmApplicationUtil {
 	 */
 	public static void assignActiveAndApprovedCategoryList(
 			SmApplicationManagedBean managedBean) {
-
+		
+		// 36504 - START
+		List<SmSupplierCategory> prevList = new ArrayList<>();
+		managedBean.setOtherDescChangePOPrev(false);
+		managedBean.setOtherDescChangeApproverPrev(false);
+		managedBean.setOtherDescChangeSupplierPrev(false);
+		managedBean.setOtherDescChangeSupPOPrev(false);
+		managedBean.setOtherDescChangeSupApproverPrev(false);
+		
+		SmAppl applNewReg = findNewRegHistoryOtherDesc(managedBean);
+		
+		for (SmSupplierCategory previousKN : applNewReg.getSmSupplierCategories()) {
+			String catType = previousKN.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+			previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+			
+			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+				
+				previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
+				managedBean.getOtherDescDataModel().reloadData();
+				
+				for (SmSuppCatOtherDescHistory history : previousKN.getSmSuppCatOtherDescHistory()) {
+					if (!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangePOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						managedBean.setOtherDescChangePOPrev(true);
+					} else if (!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangeApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+						managedBean.setOtherDescChangeApproverPrev(true);
+					} else if (!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangeSupApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+						managedBean.setOtherDescChangeSupApproverPrev(true);
+						managedBean.setOtherDescChangeSupplierPrev(true);
+					} else if (!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangeSupPOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+						managedBean.setOtherDescChangeSupPOPrev(true);
+						managedBean.setOtherDescChangeSupplierPrev(true);
+					}
+				}
+				prevList.add(previousKN);
+			}
+		}
+		// 36504 - END
+		
 		if (managedBean.getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			assignExistingAndAdditionalCategoryList(managedBean);
@@ -4648,13 +4690,6 @@ public class SmApplicationUtil {
 			List<SmSupplierCategory> apprvList = new ArrayList<>();
 			
 			// 36504 - START
-			List<SmSupplierCategory> prevList = new ArrayList<>();
-			managedBean.setOtherDescChangePOPrev(false);
-			managedBean.setOtherDescChangeApproverPrev(false);
-			managedBean.setOtherDescChangeSupplierPrev(false);
-			managedBean.setOtherDescChangeSupPOPrev(false);
-			managedBean.setOtherDescChangeSupApproverPrev(false);
-			
 			if (managedBean.getSmAppl().getApplType()
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
 					|| managedBean.getSmAppl().getApplType()
@@ -4778,6 +4813,7 @@ public class SmApplicationUtil {
 			}
 			sortSupplierCategory(apprvList);
 			sortSupplierCategory(catList);
+			sortSupplierCategory(prevList);
 			managedBean.setActiveCategoryList(catList);
 			managedBean.setApprovedCategoryList(apprvList);
 			managedBean.setPreviousCategoryList(prevList); // 36504
@@ -16089,6 +16125,17 @@ public class SmApplicationUtil {
 		return SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveOtherDescHistory(supplierCategoryId);
 	}
+	
+	public static SmAppl findNewRegHistoryOtherDesc(SmApplicationManagedBean managedBean) {
+		
+		SmAppl applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+		
+		if (applNewReg == null) {
+			return null;
+		}
+
+		return applNewReg;
+	}
 	// 36504 - END
 
 //	#37925 START
@@ -16284,11 +16331,6 @@ public class SmApplicationUtil {
 	// 39392 - END
 	// #9299 - Start
 	public static boolean getAppVersionDetailsWithRedmineNo(SmAppl smAppl, Long redmineNo, int phase) {
-		PmAppVersion appVerDtls = SmServiceLookup.getMofRegistrationSO().getAppVersionDetails(redmineNo, ParameterConst.DOCTYPE_SUPPLIER_MANAGEMENT,
-				phase);
-		if (smAppl.getCreatedDate().before(appVerDtls.getEffDate())) {
-			return true;
-		}
 
 		return false;
 	}
