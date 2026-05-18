@@ -480,14 +480,6 @@ public class CircularBackingBean extends CircularBaseBackingBean<CircularManaged
 	
 	// Start - #30866
 	/**
-	 * This method used to retrieve login user information.
-	 */
-	public FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-
-	/**
 	 * The method used to verify the login user is supplier.
 	 * 
 	 * @return true, if login user is supplier false, if login user is not
