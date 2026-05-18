@@ -3847,7 +3847,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param isOneOff
 	 */
 	public void updateAgreement() {
-		log.info("updateAgreement");
 
 		if (null == this.getManagedBean().getScLoa().getQtType()
 				|| null == this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()) {

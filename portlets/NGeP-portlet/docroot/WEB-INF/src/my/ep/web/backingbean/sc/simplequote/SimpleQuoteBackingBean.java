@@ -2582,7 +2582,6 @@ public class SimpleQuoteBackingBean extends
 					.getPmParameter();
 			quote.setProcurementType(procType);
 			
-			log.info("Procurement Type" + procType);
 			//#25725 end
 		} finally {
 			// quoteSO = null;
