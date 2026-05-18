@@ -3762,7 +3762,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		CtAmendment amendment = current.getCtAmendment();
 
-		if (isOngoing(current) && amendment != null && amendment.isContractExtend()) {
+		if (isOngoingAmendment(current) && amendment != null && amendment.isContractExtend()) {
 
 			Integer extendPeriod = amendment.getExtendPeriod();
 			Integer extendDays = amendment.getExtendDaysPeriod();
@@ -3810,7 +3810,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		CtContractValue contractValue;
 
 		// ONGOING
-		if (isOngoing(current)) {
+		if (isOngoingAmendment(current)) {
 
 			contractValue = current.getCtContractValue();
 
@@ -3931,7 +3931,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 *            contract version data
 	 * @return true if the amendment is ongoing, otherwise false
 	 */
-	private boolean isOngoing(CtContractVer contractVer) {
+	private boolean isOngoingAmendment (CtContractVer contractVer) {
 
 		Long statusId = contractVer.getStatus() != null ? contractVer.getStatus().getStatusId() : null;
 
