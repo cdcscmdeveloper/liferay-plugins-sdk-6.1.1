@@ -18929,8 +18929,8 @@ public class SmApplicationBackingBean extends
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					
 					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				    updatedList.add(cat);
 				}
+				updatedList.add(cat);
 			}
 			getManagedBean().setApprovedCategoryList(updatedList);
 		}
@@ -19815,4 +19815,11 @@ public class SmApplicationBackingBean extends
 
         return oriFilename + "_" + timestamp + extension;
     }
+	// #40306 Start
+	private static String gmapsScriptSrc = EpPropertiesUtils.getInstance().getProperty("gmaps.script.src");
+
+	public String getGmapsScriptSrc() {
+	    return gmapsScriptSrc;
+	}
+	// #40306 End
 }
