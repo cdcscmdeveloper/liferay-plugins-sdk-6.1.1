@@ -18688,5 +18688,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return allBranchName;
 	}
 	// END #29727
+	// #40306 Start
+	private static String gmapsScriptSrc = EpPropertiesUtils.getInstance().getProperty("gmaps.script.src");
+
+	public String getGmapsScriptSrc() {
+	    return gmapsScriptSrc;
+	}
+	// #40306 End
 	
 }
