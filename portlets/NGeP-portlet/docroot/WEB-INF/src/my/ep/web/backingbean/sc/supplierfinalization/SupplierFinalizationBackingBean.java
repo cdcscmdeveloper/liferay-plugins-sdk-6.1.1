@@ -13180,49 +13180,4 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	//#38151 End
-	
-	// 12471 - start
-	/**
-	 * Initialize member info for popup
-	 */
-	public void onClickMemberInfo(PmUser memberInfo) {
-		this.getManagedBean().setMemberName(memberInfo.getUserName());
-		for (PmUserOrg org : memberInfo.getPmUserOrgs()) {
-			if (org.getRecordStatusFlg() == 1) {
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
-				reqDTO.setOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
-				OrgProfileResDTO resDTO = new OrgProfileResDTO();
-				if (org.getPmOrgProfile().getEpPtj()) {
-					resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
-					this.getManagedBean().setMemberMinOrg(resDTO.getPmOrgProfile().getPmOrgValidity().getOrgName());
-					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
-					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
-				} else {
-					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-					ParameterReqDTO reqDTO2 = new ParameterReqDTO();
-					reqDTO2.setParameterId(org.getPmOrgProfile().getOrgTypeCode().getParameterId());
-					ParameterResDTO resDTO2 = new ParameterResDTO();
-					resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
-					String orgType = "";
-					for (PmParameterDesc desc : resDTO2.getPmParameter().getPmParameterDescsSpecCallOnly()) {
-						if (desc.getLanguageCode().equalsIgnoreCase(new FacesScopes().getUserLocale().getLanguage())) {
-							orgType = desc.getCodeName();
-							break;
-						}
-					}
-					this.getManagedBean().setMemberMinOrg(orgType);
-					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
-					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
-				}
-				break;
-			}
-		}
-		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
-	}
-	// 12471 - end
-
 }
