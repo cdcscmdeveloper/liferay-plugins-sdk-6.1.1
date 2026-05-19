@@ -105,11 +105,12 @@
 					target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
 					value="#{action}" />
 			</p:commandButton>
-
+			<!-- 34449 - start  -->
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
-				action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-				process="@this" partialSubmit="true" rendered="#{isEditable}" />
+				onclick="blockWidget.show();" oncomplete="blockWidget.hide();" 
+				actionListener="#{simpleQuoteBackingBean.cancelPromptAction}" style="float:right;"
+				process="@this" update="quoteSubmitConform" partialSubmit="true" rendered="#{isEditable}" />
+			<!-- 34449 - end  -->
 		</c:if>
 	</div>
 
