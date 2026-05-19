@@ -110,7 +110,7 @@
 							value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.role']}">
-						#{committeBackingBean.getRoleDesc(existcommitteeuser)}
+						#{committeBackingBean.getTplRoleDesc(existcommitteeuser)}
 					</p:column>
 				</p:dataTable>
 			</p:panel>

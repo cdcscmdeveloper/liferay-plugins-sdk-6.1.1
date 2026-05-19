@@ -58,6 +58,13 @@ import org.apache.log4j.Logger;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode; //#21695 Farid
 
+//29661 -start-
+import my.ep.biz.bean.sc.CompanyExpBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+
+//29661 -end-
+
+
 /**
  * Supplier Proposal Managed Bean
  * 
@@ -230,6 +237,24 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// #21695 - #33391 - Start.
 	private Map<Long, List<TplSpecAnswer>> zoneTplSpecAnsMap;
 	// #21695 - #33391 - End.
+	
+	// 29661 -start-
+	private String closeCompanyExpReminderPopUp;
+	private String companyExpProcRelated;
+	private String companyExpNonProcRelated;
+	private BigDecimal companyExpProcRelatedValue;
+	private BigDecimal companyExpNonProcRelatedValue;
+	private List<ScQtPRPExperience> companyExpProcRelatedList;
+	private List<ScQtPRPExperience> companyExpNonProcRelatedList;
+	private List<CompanyExpBean> contractStatusvalueProcRelated;
+	private List<CompanyExpBean> contractStatusvalueNonProcRelated;
+	private int companyExpProcRelatedContracts;
+	private int companyExpNonProcRelatedContracts;
+	private IPagingDataModel<ScQtPRPExperience> companyExpProcRelatedPagingModel;
+	private IPagingDataModel<ScQtPRPExperience> companyExpNonProcRelatedPagingModel;
+
+	// 29661 -end-
+
 	
 	/**
 	 * Default Consructor
@@ -2005,5 +2030,217 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.zoneTplSpecAnsMap = zoneTplSpecAnsMap;
 	}
 	// #21695 - #33391 - End.
+	
+	
+	// 29661 -start-
+	/**
+	 * @return the closeCompanyExpReminderPopUp
+	 */
+	public String getCloseCompanyExpReminderPopUp() {
+		return closeCompanyExpReminderPopUp;
+	}
+
+	/**
+	 * @param closeCompanyExpReminderPopUp
+	 *            the closeCompanyExpReminderPopUp to set
+	 */
+	public void setCloseCompanyExpReminderPopUp(
+			String closeCompanyExpReminderPopUp) {
+		this.closeCompanyExpReminderPopUp = closeCompanyExpReminderPopUp;
+	}
+
+	/**
+	 * @return the companyExpProcRelated
+	 */
+	public String getCompanyExpProcRelated() {
+		return companyExpProcRelated;
+	}
+
+	/**
+	 * @param companyExpProcRelated
+	 *            the companyExpProcRelated to set
+	 */
+	public void setCompanyExpProcRelated(String companyExpProcRelated) {
+		this.companyExpProcRelated = companyExpProcRelated;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelated
+	 */
+	public String getCompanyExpNonProcRelated() {
+		return companyExpNonProcRelated;
+	}
+
+	/**
+	 * @param companyExpNonProcRelated
+	 *            the companyExpNonProcRelated to set
+	 */
+	public void setCompanyExpNonProcRelated(String companyExpNonProcRelated) {
+		this.companyExpNonProcRelated = companyExpNonProcRelated;
+	}
+
+	/**
+	 * @return the companyExpProcRelatedValue
+	 */
+	public BigDecimal getCompanyExpProcRelatedValue() {
+		return companyExpProcRelatedValue;
+	}
+
+	/**
+	 * @param companyExpProcRelatedValue
+	 *            the companyExpProcRelatedValue to set
+	 */
+	public void setCompanyExpProcRelatedValue(
+			BigDecimal companyExpProcRelatedValue) {
+		this.companyExpProcRelatedValue = companyExpProcRelatedValue;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelatedValue
+	 */
+	public BigDecimal getCompanyExpNonProcRelatedValue() {
+		return companyExpNonProcRelatedValue;
+	}
+
+	/**
+	 * @param companyExpNonProcRelatedValue
+	 *            the companyExpNonProcRelatedValue to set
+	 */
+	public void setCompanyExpNonProcRelatedValue(
+			BigDecimal companyExpNonProcRelatedValue) {
+		this.companyExpNonProcRelatedValue = companyExpNonProcRelatedValue;
+	}
+
+	/**
+	 * @return the companyExpProcRelatedList
+	 */
+	public List<ScQtPRPExperience> getCompanyExpProcRelatedList() {
+		return companyExpProcRelatedList;
+	}
+
+	/**
+	 * @param companyExpProcRelatedList
+	 *            the companyExpProcRelatedList to set
+	 */
+	public void setCompanyExpProcRelatedList(
+			List<ScQtPRPExperience> companyExpProcRelatedList) {
+		this.companyExpProcRelatedList = companyExpProcRelatedList;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelatedList
+	 */
+	public List<ScQtPRPExperience> getCompanyExpNonProcRelatedList() {
+		return companyExpNonProcRelatedList;
+	}
+
+	/**
+	 * @param companyExpNonProcRelatedList
+	 *            the companyExpNonProcRelatedList to set
+	 */
+	public void setCompanyExpNonProcRelatedList(
+			List<ScQtPRPExperience> companyExpNonProcRelatedList) {
+		this.companyExpNonProcRelatedList = companyExpNonProcRelatedList;
+	}
+
+	/**
+	 * @return the contractStatusvalueProcRelated
+	 */
+	public List<CompanyExpBean> getContractStatusvalueProcRelated() {
+		return contractStatusvalueProcRelated;
+	}
+
+	/**
+	 * @param contractStatusvalueProcRelated
+	 *            the contractStatusvalueProcRelated to set
+	 */
+	public void setContractStatusvalueProcRelated(
+			List<CompanyExpBean> contractStatusvalueProcRelated) {
+		this.contractStatusvalueProcRelated = contractStatusvalueProcRelated;
+	}
+
+	/**
+	 * @return the contractStatusvalueNonProcRelated
+	 */
+	public List<CompanyExpBean> getContractStatusvalueNonProcRelated() {
+		return contractStatusvalueNonProcRelated;
+	}
+
+	/**
+	 * @param contractStatusvalueNonProcRelated
+	 *            the contractStatusvalueNonProcRelated to set
+	 */
+	public void setContractStatusvalueNonProcRelated(
+			List<CompanyExpBean> contractStatusvalueNonProcRelated) {
+		this.contractStatusvalueNonProcRelated = contractStatusvalueNonProcRelated;
+	}
+
+	/**
+	 * @return the companyExpProcRelatedContracts
+	 */
+	public int getCompanyExpProcRelatedContracts() {
+		return companyExpProcRelatedContracts;
+	}
+
+	/**
+	 * @param companyExpProcRelatedContracts
+	 *            the companyExpProcRelatedContracts to set
+	 */
+	public void setCompanyExpProcRelatedContracts(
+			int companyExpProcRelatedContracts) {
+		this.companyExpProcRelatedContracts = companyExpProcRelatedContracts;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelatedContracts
+	 */
+	public int getCompanyExpNonProcRelatedContracts() {
+		return companyExpNonProcRelatedContracts;
+	}
+
+	/**
+	 * @param companyExpNonProcRelatedContracts
+	 *            the companyExpNonProcRelatedContracts to set
+	 */
+	public void setCompanyExpNonProcRelatedContracts(
+			int companyExpNonProcRelatedContracts) {
+		this.companyExpNonProcRelatedContracts = companyExpNonProcRelatedContracts;
+	}
+
+	/**
+	 * @return the companyExpProcRelatedPagingModel
+	 */
+	public IPagingDataModel<ScQtPRPExperience> getCompanyExpProcRelatedPagingModel() {
+		return companyExpProcRelatedPagingModel;
+	}
+
+	/**
+	 * @param companyExpProcRelatedPagingModel
+	 *            the companyExpProcRelatedPagingModel to set
+	 */
+	public void setCompanyExpProcRelatedPagingModel(
+			IPagingDataModel<ScQtPRPExperience> companyExpProcRelatedPagingModel) {
+		this.companyExpProcRelatedPagingModel = companyExpProcRelatedPagingModel;
+	}
+
+	/**
+	 * @return the companyExpNonProcRelatedPagingModel
+	 */
+	public IPagingDataModel<ScQtPRPExperience> getCompanyExpNonProcRelatedPagingModel() {
+		return companyExpNonProcRelatedPagingModel;
+	}
+
+	/**
+	 * @param companyExpNonProcRelatedPagingModel
+	 *            the companyExpNonProcRelatedPagingModel to set
+	 */
+	public void setCompanyExpNonProcRelatedPagingModel(
+			IPagingDataModel<ScQtPRPExperience> companyExpNonProcRelatedPagingModel) {
+		this.companyExpNonProcRelatedPagingModel = companyExpNonProcRelatedPagingModel;
+	}
+
+	// 29661 -end-
+	
+	
 	
 }

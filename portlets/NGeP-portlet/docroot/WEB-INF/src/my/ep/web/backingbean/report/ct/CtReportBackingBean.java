@@ -123,6 +123,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		//29416 end		
 		//#30918 -start
 		ctManagementReportBB.resetSearch();
+		ctManagementReportBB.getManagedBean().setSupplierVisible(false);
 		//#30918 - end
 		ccContractItemUsageMonitoringDtlsBackingBean.resetSearch(); //#34889 
 
@@ -131,7 +132,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	/**
 	 * retrieve and set the current active org
 	 */
-	private void setCurrentActiveOrg() {
+	//Fix - #40102 *change from private to public for other bean accessibility*
+	public void setCurrentActiveOrg() {
 		log.debug("setCurrentActiveOrg");
 		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
@@ -200,8 +202,9 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				
 				ContractItemMonitoringCCRptBackingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBackingBean();
 				
-				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
-						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+						&& !getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))//Fix - #40184, #29416
+						|| (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()) && !getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))//Fix - #40184, #29416
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 					
 					if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
@@ -252,8 +255,9 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				
 				ContractItemUsageMonitoringDtlsBackingBean ccContractItemUsageMonitoringDtlsReportBB = new ContractItemUsageMonitoringDtlsBackingBean();
 
-				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
-						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+						&& !getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))//Fix - #40184, #29416
+						|| (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()) && !getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) //Fix - #40184, #29416
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 					
 					defaultValueRoles(pmOrgProfile);
@@ -342,6 +346,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					ctManagementReportBB.getManagedBean().setDisableOrgField(
 							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
+				} else {
+					ctManagementReportBB.getManagedBean().setSupplierVisible(true); //#30918
 				}
 			}
 			else if (getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_MANAGEMENT_RPT_CC_VAL)) {
@@ -356,6 +362,11 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
 
 				ContractManagementReportBackingBean ctManagementReportBB = new ContractManagementReportBackingBean();
+				//Start Fix - #40102
+				ctManagementReportBB.getManagedBean().setSelectedMinistry(null);
+				ctManagementReportBB.getManagedBean().setSelectedKumpulanPTJ(null);
+				ctManagementReportBB.getManagedBean().setSelectedPTJ(null);
+				//End Fix - #40102
 
 				if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
@@ -446,8 +457,12 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		getManagedBean().setFormattedSelectedItems(null);
 		getManagedBean().setLovSelectedItemList(null);
 		getManagedBean().setSelectedSupplier(null);
-
 		// End fix- #29416
+		// Start Fix - #40102
+		if (getManagedBean().getReportCode() != null) {
+			setCurrentActiveOrg();
+		}
+		// End Fix - #40102
 	}
 
 	/**

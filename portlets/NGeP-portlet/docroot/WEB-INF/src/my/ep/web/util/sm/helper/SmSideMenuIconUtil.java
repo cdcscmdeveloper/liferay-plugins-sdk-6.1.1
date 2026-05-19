@@ -344,6 +344,17 @@ public class SmSideMenuIconUtil {
 				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				
+				// 36504 - START
+				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
+					bean.getEditVO().setPoEditCategory(true);
+				}
+				
+				if (bean.isOtherDescChangeApprover() || bean.isOtherDescChangeSupApprover()) {
+					bean.getEditVO().setAppEditCategory(true);
+				}
+				// 36504 - END
+				
 				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
@@ -358,6 +369,17 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				
+				// 36504 - START
+				if (bean.isOtherDescChangeApprover() || bean.isOtherDescChangeSupApprover()) {
+					bean.getEditVO().setAppEditCategory(true);
+				}
+				
+				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
+					bean.getEditVO().setPoEditCategory(true);
+				}
+				// 36504 - END
+				
 				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {

@@ -33,6 +33,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;//#28188
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -102,6 +103,7 @@ import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtAmend;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -743,7 +745,33 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} finally {
 				workFlowStatusSO = null;
 			}
-		}
+		}else if (SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE //#28188 - Start
+				.equalsIgnoreCase(taskName)) {
+			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
+					.getXflagPublication());
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_PTJ;
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
+
+			if (CollectionUtils.isNotEmpty(paramTypes)) {
+		//200520@asyrafhaziq_27839 - Start
+				for (String paramType : paramTypes){
+					if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(paramType)) {
+						approvalCategoryCode = ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL;
+	
+						QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
+						qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();
+						break;
+					}
+				}
+		//200520@asyrafhaziq_27839 - End
+			}
+			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PTJ_APPROVAL,
+					getManagedBean().getQt().getQtId());
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_PTJ_APPROVAL; //#25692#128
+
+		}//#28188 - End
 		
 		if (currentStatus == null) {
 			currentStatus = getManagedBean().getQt().getCurrentWorkFlowStatus();
@@ -967,6 +995,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			boolean readOnlyOri = qtDetailBB.getManagedBean().isReadOnly();
 			this.getManagedBean().copyBPMTaskDetails(qtDetailBB.getManagedBean());
 			qtDetailBB.getManagedBean().setReadOnly(readOnlyOri);
+			// #10141 Start Vinod
+			qtDetailBB.checkInactiveChecklistAndDisplayWarning(this
+					.getManagedBean().getTaskName());
+			// #10141 End Vinod
 
 			if(page.equalsIgnoreCase(QTConstants.MAINTANANCE_PAGE)){
 				page = QTConstants.MAINTANANCE_PAGE_FULL;				
@@ -1181,11 +1213,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		checkNullRemark();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 
-			Long decessionType = approvalRequest.getDecessionType().getParameterId();
-
-			//35500 fix issue 1 Start
-			approveValidityPeriodAuditTrail(scQt,supplierApprove);
-			//#35500 fix issue 1 End
+			Long decessionType = approvalRequest.getDecessionType().getParameterId();			
 
 			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decessionType.longValue()
 					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) { // 1834L || 1854L
@@ -1208,6 +1236,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 		}
+		
+		//35500 fix issue 1 Start
+		approveValidityPeriodAuditTrail(scQt,supplierApprove);
+		//#35500 fix issue 1 End
 	}
 	//#21692 - End
 	
@@ -2483,12 +2515,65 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 
 				} else if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(approvalType)) {
+					//#28188 - Start
 					// Proposal Start Date
-					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
-					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
-						scQt.setProposalStartDate((Date)valueBean.getOldValue());
-						updatePublishClosingDate(scQt);
-					}
+					//Disabled  old code as getAmendMentBean() could be NPE(Null Pointer Exception) and change with NPE handler
+					//With added Closing date amend data
+//					QtAmendMentValueBean valueBean = getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+//					if (valueBean != null && valueBean.getOldValue() != null && valueBean.getOldValue() instanceof Date) {
+//						scQt.setProposalStartDate((Date)valueBean.getOldValue());
+//						updatePublishClosingDate(scQt);
+//					}
+					
+					if (this.getManagedBean() != null && this.getManagedBean().getAmendMentBean() != null) {
+						// Proposal Start Date
+						QtAmendMentValueBean valueBean = this.getManagedBean().getAmendMentBean()
+					                    				.getValueMap()
+					                    				.get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+
+					    if (valueBean != null) {
+					        Object oldValue = valueBean.getOldValue();
+
+					        if (oldValue instanceof Date) {
+					            scQt.setProposalStartDate((Date) oldValue);
+					            updatePublishClosingDate(scQt);
+					        }
+					    }
+					}else{
+						QtAmendMentBean amendMentBean = null;
+						IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						
+						ScQtAmend scQtAmend = detailSO.retrieveQtAmend(scQt.getQtId());
+						
+						if (null != scQtAmend) {
+							amendMentBean = detailSO.getQtAmendMentBean(scQtAmend);
+
+							if (amendMentBean != null) {
+								QtAmendMentValueBean valueBean = amendMentBean.getValueMap()
+										.get(QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+								// Proposal Start Date
+							    if (valueBean != null) {
+							        Object oldValue = valueBean.getOldValue();
+
+							        if (oldValue instanceof Date) {
+							            scQt.setProposalStartDate((Date) oldValue);
+							            updatePublishClosingDate(scQt);
+							        }
+							    }
+								
+								// Closing Date
+							    if (valueBean != null) {
+							        Object oldValue = valueBean.getOldValue();
+
+							        if (oldValue instanceof Date) {
+							        	scQt.setClosingDate((Date) oldValue);
+							            updatePublishClosingDate(scQt);
+							        }
+							    }
+							}
+						}
+					}//#28188 - End
 				}
 			}
 		}
@@ -3731,6 +3816,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (date.after(this.getManagedBean().getScQtApprovalRequestList().get(0).getProposalValidityEndDateNew())
 				&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecessionType().getParameterId()
 						|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == request.getDecessionType().getParameterId())) {
+			request.setApproverAction(null);
 			throw new EpException(MessageConst.ERROR_770405);
 		}
 	}
@@ -3777,7 +3863,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			auditResDTO.setAuGroupSectionId(groupTabSection);
 			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#355500 Flag changes
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
 			if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REJECT)){
 				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
 			}else{
@@ -3798,7 +3884,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
-				auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+				auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDeletedDoaaList();
@@ -3844,14 +3930,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)) {
 					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);
-					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 				} else if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_REVISE)) {//#35500 fix issue 6
 					auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
-					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				} else {
-					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);//#355500 Flag changes
+					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);//#35500 Flag changes
 					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
 				}
@@ -3880,11 +3966,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-		auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
 		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);//check and/or change later
 		auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
 		auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
-
 		
 		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTO);
@@ -3897,10 +3981,19 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @param member
 	 */
 	public void onChangeRole(ScCommitteeMember member){
-		if (member.getMemberRoleId() == null){
+		// #35500 Fix Reopen 6th Jan Start issue 1
+		List<ScCommitteeMember> newScCommitteeMemberAuditTrailList = this.getManagedBean().getNewScCommitteeMemberAuditTrailList() != null 
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null 
+				? this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+
+		if (member.getMemberRoleId() == null || newScCommitteeMemberAuditTrailList.contains(member)) {
+
 			this.roleChangedListener(member);
 			return;
 		}
+		//#35500 Fix Reopen 6th Jan End
 		
 		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
 		String changedRole = ParameterHelper.getInstance().getParameterDesc(
@@ -3910,10 +4003,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
 				SourcingConstants.MY_LOCALE);
 		
-		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
-				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
-		List<String> userRoles = new ArrayList<>();
-				
 		if (!mapModifiedRole.isEmpty()) {
 			if (mapModifiedRole.containsKey(member.getPmUser())) {
 				userRoles = mapModifiedRole.get(member.getPmUser());

@@ -60,7 +60,18 @@
 							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}" 
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}"/>
 					</td>
-					
+					<!-- #33783 - start -->
+					<c:if test="#{backingBean.managedBean.smAppl.smSupplier.businessType == 'I'
+								or backingBean.managedBean.smAppl.smSupplier.businessType == 'J'}">
+					<td><p:outputLabel value="#{lbl['lbl.sm.clbg']}"/></td>
+					<td><p:selectOneRadio value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM eq
+										SupplierManagementConst.COMPANY_TYPE_CLBG}" disabled="true">
+							<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false"/>
+						</p:selectOneRadio>
+					</td>
+					</c:if>
+					<!-- #33783 - end  -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}" /></td>
 					<td>
 					<c:if test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">
@@ -156,7 +167,7 @@
 							</p:inputText></td>
 					</tr>
 				</ui:remove>
-				<!-- #34159 - START -->
+				<!-- #34159, #39529 - START -->
 				<tr>
 					<td style="vertical-align: top;">
 						<p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" style="padding-top :5px;" />
@@ -375,7 +386,7 @@
 						<p:message id="basicCompCityMsg" for="basicCompCity" showSummary="true" showDetail="false" display="icon" />	
 					</td>
 				</tr>
-				<!-- #34159 - END  -->
+				<!-- #34159, #39529 - END  -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>

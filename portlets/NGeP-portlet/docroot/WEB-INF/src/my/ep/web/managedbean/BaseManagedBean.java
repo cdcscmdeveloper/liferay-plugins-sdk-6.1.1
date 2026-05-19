@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 
@@ -166,7 +167,9 @@ public abstract class BaseManagedBean implements Serializable {
 	private StreamedContent downloadfile;
 	private String inactiveSCMemberStr; //25037 - note 510
 
-
+	//#25726 start
+	private BigDecimal lowerLimit = new BigDecimal (200000);	
+	//#25726 end
 	
 	//#32236 start
 	private String outputPage;
@@ -186,6 +189,19 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
 //	37925 END
+	
+	// 12471 - start
+	private SelectItem[] ministryDDList;
+	private SelectItem[] ptjGroupDDList;
+	private SelectItem[] ptjDDList;
+	private SelectItem[] orgTypeDDList;
+	private SelectItem[] orgNameDDList;
+	private String memberName;
+	private String memberMinOrg;
+	private String memberPtjOrgCode;
+	private String memberPtjOrgName;
+	private UserCommitteeSearchBean committeeSearchBean;
+	// 12471 - end
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1061,6 +1077,15 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	//25037 - end - note 510
 
+	//#25726 start
+	public BigDecimal getLowerLimit() {
+		return lowerLimit;
+	}
+
+	public void setLowerLimit(BigDecimal lowerLimit) {
+		this.lowerLimit = lowerLimit;
+	}	
+	//#25726 end
 
 	//#32236 start
 	public String getOutputPage() {
@@ -1149,4 +1174,86 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
 //	37925 END
+	
+	// 12471 - start
+	public SelectItem[] getMinistryDDList() {
+		return ministryDDList;
+	}
+
+	public void setMinistryDDList(SelectItem[] ministryDDList) {
+		this.ministryDDList = ministryDDList;
+	}
+
+	public SelectItem[] getPtjGroupDDList() {
+		return ptjGroupDDList;
+	}
+
+	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
+		this.ptjGroupDDList = ptjGroupDDList;
+	}
+
+	public SelectItem[] getPtjDDList() {
+		return ptjDDList;
+	}
+
+	public void setPtjDDList(SelectItem[] ptjDDList) {
+		this.ptjDDList = ptjDDList;
+	}
+
+	public SelectItem[] getOrgTypeDDList() {
+		return orgTypeDDList;
+	}
+
+	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
+		this.orgTypeDDList = orgTypeDDList;
+	}
+
+	public SelectItem[] getOrgNameDDList() {
+		return orgNameDDList;
+	}
+
+	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
+		this.orgNameDDList = orgNameDDList;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	public String getMemberMinOrg() {
+		return memberMinOrg;
+	}
+
+	public void setMemberMinOrg(String memberMinOrg) {
+		this.memberMinOrg = memberMinOrg;
+	}
+
+	public String getMemberPtjOrgCode() {
+		return memberPtjOrgCode;
+	}
+
+	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
+		this.memberPtjOrgCode = memberPtjOrgCode;
+	}
+
+	public String getMemberPtjOrgName() {
+		return memberPtjOrgName;
+	}
+
+	public void setMemberPtjOrgName(String memberPtjOrgName) {
+		this.memberPtjOrgName = memberPtjOrgName;
+	}
+
+	public UserCommitteeSearchBean getCommitteeSearchBean() {
+		return committeeSearchBean;
+	}
+
+	public void setCommitteeSearchBean(UserCommitteeSearchBean committeeSearchBean) {
+		this.committeeSearchBean = committeeSearchBean;
+	}
+	// 12471 - end
 }

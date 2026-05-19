@@ -33,6 +33,8 @@ public class LovColumnBean implements Serializable {
 	
 	private ValueExpression columnNameve;
 	
+	private String searchColumn; //Fix - #29416
+	
 	
 	public LovColumnBean() {
 		viewable = true;
@@ -117,6 +119,14 @@ public class LovColumnBean implements Serializable {
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
 	}
-	
+	// Start Fix - #29416
+	public String getSearchColumn() {
+		return searchColumn;
+	}
+
+	public void setSearchColumn(String searchColumn) {
+		this.searchColumn = searchColumn;
+	}
+	// End Fix - #29416
 	
 }

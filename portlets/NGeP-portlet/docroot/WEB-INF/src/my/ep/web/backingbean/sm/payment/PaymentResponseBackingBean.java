@@ -101,21 +101,23 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		session.removeAttribute("paymentBpmTaskId");
 		session.removeAttribute("paymentBpmPojo");
 		
-		String orderId = httpServletRequest.getParameter("orderid");
-		String tranID = httpServletRequest.getParameter("tranID");
-		String status = httpServletRequest.getParameter("status");
-		String domain = httpServletRequest.getParameter("domain");
-		String amount = httpServletRequest.getParameter("amount");
-		String currency = httpServletRequest.getParameter("currency");
-		String appcode = httpServletRequest.getParameter("appcode");
-		String paydate = httpServletRequest.getParameter("paydate");
-		String skey = httpServletRequest.getParameter("skey");
-		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
-		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
-		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
-		// #26307 start
-		String cardType = null; 
-		String extraP = httpServletRequest.getParameter("extraP");
+		//#38377
+		Map<String, String> reqMap = getHttpReqMap(httpServletRequest);
+		String paymentGateway = StringUtils.defaultIfEmpty(reqMap.get("paymentGateway"), "N");
+	
+		String orderId = reqMap.get("orderid");
+		String tranID = reqMap.get("tranID");
+		String status = reqMap.get("status");
+		String domain = reqMap.get("domain");
+		String amount = reqMap.get("amount");
+		String currency = reqMap.get("currency");
+		String appcode = reqMap.get("appcode");
+		String paydate = reqMap.get("paydate");
+		String skey = reqMap.get("skey");
+		String channel = reqMap.get("channel");
+		String errorCode = StringUtils.defaultIfEmpty(reqMap.get("errorCode"), reqMap.get("error_code"));
+		String errorDesc = StringUtils.defaultIfEmpty(reqMap.get("errorDesc"), reqMap.get("error_desc"));
+		String extraP = reqMap.get("extraP");
 		boolean fromManualPayment = false;
 		//Start //26307
 		boolean skipChecking = false;
@@ -236,7 +238,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					log.info("SKey>>>>" + skey);
 					log.info("Key1>>>>" + key1);
 					//26307
-					if (key1.equals(skey) || skipChecking) {
+					if ("Y".equals(paymentGateway) || skipChecking) {
 						log.info("Enter 1");
 						String billType = StringUtils.EMPTY;
 						String personnelName = null;
@@ -299,16 +301,21 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String appcode = reqMap.get("appcode");
 		String paydate = reqMap.get("paydate");
 		String skey = reqMap.get("skey");
-		String channel = reqMap.get("channel") != null ? reqMap.get("channel") : null;
-		String errorCode = reqMap.get("error_code") != null ? reqMap.get("error_code") : null;
-		String errorDesc = reqMap.get("error_desc") != null ? reqMap.get("error_desc") : null;
+		String paymentGateway = StringUtils.defaultIfEmpty(reqMap.get("paymentGateway"), "N");
+		String channel = reqMap.get("channel");
+		String errorCode = StringUtils.defaultIfEmpty(reqMap.get("errorCode"), reqMap.get("error_code"));
+		String errorDesc = StringUtils.defaultIfEmpty(reqMap.get("errorDesc"), reqMap.get("error_desc"));
 		String paymentRefNo = reqMap.get("paymentRefNo");
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
 		
+		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
+		String cardMaskedNum = reqMap.get("cardMaskedNum");
+		
 		//#Start 33137
 		String fpxTranId = null;
-		String molpayTranId = null;
+		//#38377
+		String molpayTranId = reqMap.get("molpayTransId");;
 		//#End 33137
 		// #26307 start
 		
@@ -438,13 +445,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			//26307
 			
 			//#38377
-			if (reqMap.get("paymentGateway").equals("Y") || key1.equals(skey) || skipChecking) {
+			if ("Y".equals(paymentGateway) || key1.equals(skey) || skipChecking) {
 				//if(paymentTaskId != null && paymentBpmPojo != null){
 				log.info("SKey & Key1 Are Match>>>>");
 				
 				//#38377
-				if(amount == null){
-					amount = resDTO.getPyPayment().getPaymentAmt().toString();
+				if (StringUtils.isBlank(amount) && resDTO.getPyPayment().getPaymentAmt() != null) {
+				    amount = resDTO.getPyPayment().getPaymentAmt().toString();
 				}
 				
 				BigDecimal txAmount = new BigDecimal(amount);
@@ -511,7 +518,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				if (cardType != null) { 
 					if (cardType.equalsIgnoreCase("Credit")) {
 						cardType = "CC";
-					} else if (cardType.equalsIgnoreCase("Debit")) {
+					} else if (cardType.equalsIgnoreCase("Debit") || cardType.equalsIgnoreCase("Prepaid")) { //#39654 - add prepaid
 						cardType = "DC";
 					} 
 					ParameterReqDTO reqPmDTO = new ParameterReqDTO();
@@ -605,7 +612,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				//#33137 - start
 				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
 				smPaymentRes.setTransactionId(tranID);
-				smPaymentRes.setMolpayTransactionId(molpayTranId);
+				smPaymentRes.setMolpayTransactionId((cardMaskedNum!=null && cardMaskedNum.length()>0)?cardMaskedNum: molpayTranId);
 				smPaymentRes.setFpxTranId(fpxTranId);
 				log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
 				//#33137 - end
@@ -684,8 +691,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info(">>>>#38377 enable payment update<<<");
 				// #38377
-				if(isResponseValid(pyPayment.getPyBill().getBillType(), payload)){
-					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)) {
+				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				} else {
+				    log.warn("Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
+				            + ", paymentGateway=" + paymentGateway
+				            + ", payloadEmpty=" + StringUtils.isBlank(payload));
+				    status = SupplierManagementConst.PAYMENT_INVALID_RES;
 				}
 
 				log.info("******ResponsePreRender - After Update******");
@@ -1149,12 +1161,14 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String paymentRefNo = "";
 		String bankName = "";
 		String providerTransId = "";
+		String cardMaskedNum = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
 				paymentRefNo = jsonObject.optString("paymentRefNo",null);
 				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
 				providerTransId = jsonObject.optString("providerTransId",null);
+				providerTransId = providerTransId==null?paymentRefNo:providerTransId;
 				log.info("######38377#####json providerTransId: " + providerTransId);
 				bankName = jsonObject.optString("bankName",null);
 				log.info("######38377#####json bankName: " + bankName);
@@ -1169,20 +1183,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				errorDesc = jsonObject.optString("errDesc",null);
 				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
 			        cardType = ParameterConst.CARD_TYPES_CREDIT;
+			        
+			      //do not include to PROD. Used for generate dummy transaction list excel
+					cardMaskedNum = jsonObject.optString("cardMaskedNum", null);
+					log.info("######38377#####json cardMaskedNum: " + cardMaskedNum);
 			    }
-				if (paydate != null && !paydate.isEmpty()) {
-			        try {
-			            paydate = DateUtils.reformatDate(
-			                paydate,
-			                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
-			                "yyyy-MM-dd HH:mm:ss"
-			            );
-			            date1 = paydate;
-			        } catch (Exception e) {
-			            // handle/ log bad date format without breaking the rest
-			            // e.g., keep original paydate or set to null
-			        }
-			    }
+				date1 = paydate;
 				paymentGateway = "Y";
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -1199,6 +1205,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("status", status);
 		reqMap.put("errorCode", errorCode);
 		reqMap.put("errorDesc", errorDesc);
+		// backward-compatible aliases
+		reqMap.put("error_code", errorCode);
+		reqMap.put("error_desc", errorDesc);
 		reqMap.put("currency", currency);
 		reqMap.put("paydate", paydate);
 		reqMap.put("skey", skey);
@@ -1211,6 +1220,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("paymentRefNo", paymentRefNo);
 		reqMap.put("providerTransId", providerTransId);
 		reqMap.put("bankName", bankName);
+		reqMap.put("cardMaskedNum", cardMaskedNum);
 
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
 		log.info("######38377#####tranID: " + reqMap.get("tranID"));
@@ -1237,19 +1247,30 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	}
 	
 	//#38377
-	private boolean isResponseValid(String billType, String payload) {
-		boolean retVal = true;
-		if (billType != null
-				&& !billType
-						.equalsIgnoreCase(
-								my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)
-				&& paymentGatewayEpOnOff != null
-				&& paymentGatewayEpOnOff.trim().equals("1") && (payload == null
-				|| payload.isEmpty())) {
-			retVal = false;
-		}
-		log.info("######38377#####isResponseValid:"+retVal);
-		return retVal;
+	private boolean isResponseValid(String billType, String payload, String paymentGateway) {
+	    boolean retVal = true;
+
+	    // Preserve legacy MOLPay/raw-parameter flow
+	    if (!"1".equals(StringUtils.trimToEmpty(paymentGatewayEpOnOff))) {
+	        log.info("######38377#####isResponseValid:" + retVal);
+	        return true;
+	    }
+
+	    if (billType != null
+	            && billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+	        log.info("######38377#####isResponseValid:" + retVal);
+	        return true;
+	    }
+
+	    // Only enforce payload presence for the new payment gateway flow itself
+	    if ("Y".equals(paymentGateway)) {
+	        retVal = StringUtils.isNotBlank(payload);
+	    } else {
+	        retVal = true;
+	    }
+
+	    log.info("######38377#####isResponseValid:" + retVal);
+	    return retVal;
 	}
 	
 }
