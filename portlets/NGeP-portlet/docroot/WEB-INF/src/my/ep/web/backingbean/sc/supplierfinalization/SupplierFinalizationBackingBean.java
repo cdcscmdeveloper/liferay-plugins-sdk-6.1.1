@@ -39,7 +39,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
@@ -75,7 +74,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
-import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -105,6 +103,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -12369,14 +12368,16 @@ public class SupplierFinalizationBackingBean extends
 				proposal.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);//#21692 include not qualified
 		boolean isBPKTaskAndClaimed = this.getManagedBean().isInitialDecisionFwdToBPK()
 				&& !this.getManagedBean().isReadOnly(); 
-		return Arrays.asList(
-				new Boolean[] {
-						evalResultDtl.isSuppSelectionDisabled(),
-						this.getManagedBean().isDisableSupplierSelection(),
-						isBidding,
+		
+		return Arrays
+				.asList(new Boolean[] { evalResultDtl.isSuppSelectionDisabled(),
+						this.getManagedBean().isDisableSupplierSelection(), isBidding,
 						this.disabledQTProcess(supplier),// 26247
-						periodExtensionRejected, this.isQTMaintenanceScreen(),
-						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
+						// #21692 - Start
+						periodExtensionRejected,
+						// #21692 - End
+						this.isQTMaintenanceScreen(), !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) })
+				.contains(Boolean.TRUE);
 	}
 	//35157 - end
 	

@@ -1381,7 +1381,9 @@ public class SmApplicationUtil {
 		int payAccCnt = 0;
 		int regAccCnt = 0;
 		StringBuffer sb = new StringBuffer();
+		sb.append("<br/>"); //#39860
 		int noSignatoryCount = 0;
+		int signatoryNotBumiCount = 0; //#39860
 		List<SmSupplierBranch> paymentAccBranch = new ArrayList<SmSupplierBranch>();
 
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
@@ -1417,6 +1419,16 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+			//#39860 --START
+			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
+					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						sb.append(++signatoryNotBumiCount + ". ");
+						sb.append(smChequeSignatory.getSmPersonnel().getName());
+						sb.append("<br/>");
+					}	
+				}	
+			}//#39860 --END
 		}
 		if (payAccCnt == 0) {
 			validSave = false;
@@ -1434,7 +1446,14 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-
+		//#39860 --START
+		if (signatoryNotBumiCount > 0) {
+			log.info("signatoryNotBumiCount"+signatoryNotBumiCount);
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
+			}//#39860 --END
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
 		return validSave;
@@ -2979,23 +2998,26 @@ public class SmApplicationUtil {
 			List<PmCategoryL3> categoryList) {
 		if (!bean.getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-
-			if (!EntityHelper.isCollectionEmpty(categoryList)) {
-				for (PmCategoryL3 l3 : categoryList) {
-					if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
-						valid = false;
-						if (currentTab != -1) {
-							setNavigationBackToCurrentPage(currentTab, bean);
+			//#40144 - start
+			if(bean.isSupplierUser()){
+				if (!EntityHelper.isCollectionEmpty(categoryList)) {
+					for (PmCategoryL3 l3 : categoryList) {
+						if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
+							valid = false;
+							if (currentTab != -1) {
+								setNavigationBackToCurrentPage(currentTab, bean);
+							}
+							throw new EpException(MessageConst.ERROR_722621,
+									new String[] {
+											SmCommonUtil.getMessage(facTypeLabel,
+													null),
+											l3.getFullCatcode() + " ("
+													+ l3.getCategoryName() + ")" });
 						}
-						throw new EpException(MessageConst.ERROR_722621,
-								new String[] {
-										SmCommonUtil.getMessage(facTypeLabel,
-												null),
-										l3.getFullCatcode() + " ("
-												+ l3.getCategoryName() + ")" });
 					}
 				}
-			}
+			} //#40144 - end
+			
 		}
 		return valid;
 	}
@@ -4617,7 +4639,16 @@ public class SmApplicationUtil {
 	 */
 	public static void assignActiveAndApprovedCategoryList(
 			SmApplicationManagedBean managedBean) {
-
+		
+		// 36504 - START
+		List<SmSupplierCategory> prevList = new ArrayList<>();
+		managedBean.setOtherDescChangePOPrev(false);
+		managedBean.setOtherDescChangeApproverPrev(false);
+		managedBean.setOtherDescChangeSupplierPrev(false);
+		managedBean.setOtherDescChangeSupPOPrev(false);
+		managedBean.setOtherDescChangeSupApproverPrev(false);
+		// 36504 - END
+		
 		if (managedBean.getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			assignExistingAndAdditionalCategoryList(managedBean);
@@ -4626,13 +4657,6 @@ public class SmApplicationUtil {
 			List<SmSupplierCategory> apprvList = new ArrayList<>();
 			
 			// 36504 - START
-			List<SmSupplierCategory> prevList = new ArrayList<>();
-			managedBean.setOtherDescChangePO(false);
-			managedBean.setOtherDescChangeApprover(false);
-			managedBean.setOtherDescChangeSupplier(false);
-			managedBean.setOtherDescChangeSupPO(false);
-			managedBean.setOtherDescChangeSupApprover(false);
-			
 			if (managedBean.getSmAppl().getApplType()
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
 					|| managedBean.getSmAppl().getApplType()
@@ -4758,8 +4782,46 @@ public class SmApplicationUtil {
 			sortSupplierCategory(catList);
 			managedBean.setActiveCategoryList(catList);
 			managedBean.setApprovedCategoryList(apprvList);
-			managedBean.setPreviousCategoryList(prevList); // 36504
 		}
+		
+		// 36504 - START - KN Other Description history display last. 
+		SmAppl applNewReg = findNewRegHistoryOtherDesc(managedBean);
+		
+		if (applNewReg != null) {
+			for (SmSupplierCategory previousKN : applNewReg.getSmSupplierCategories()) {
+				String catType = previousKN.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					
+					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
+					managedBean.getOtherDescDataModel().reloadData();
+					
+					for (SmSuppCatOtherDescHistory history : previousKN.getSmSuppCatOtherDescHistory()) {
+						if (!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())
+								&& !managedBean.isOtherDescChangePOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+							managedBean.setOtherDescChangePOPrev(true);
+						} else if (!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())
+								&& !managedBean.isOtherDescChangeApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+							managedBean.setOtherDescChangeApproverPrev(true);
+						} else if (!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())
+								&& !managedBean.isOtherDescChangeSupApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+							managedBean.setOtherDescChangeSupApproverPrev(true);
+							managedBean.setOtherDescChangeSupplierPrev(true);
+						} else if (!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())
+								&& !managedBean.isOtherDescChangeSupPOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+							managedBean.setOtherDescChangeSupPOPrev(true);
+							managedBean.setOtherDescChangeSupplierPrev(true);
+						}
+					}
+					prevList.add(previousKN);
+				}
+			}
+			managedBean.setPreviousCategoryList(prevList);
+		}
+		// 36504 - END - KN Other Description history display last. 
+		
 	}
 	
 	//#26238 - 38984
@@ -15908,9 +15970,19 @@ public class SmApplicationUtil {
         for (char character : input.toCharArray()) {
             int asciiValue = (int) character; 
             log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
-            if(asciiValue > 127){
+            //#40165 - START
+            // Allow:
+            // 0   = NUL
+            // 10  = LF \n
+            // 13  = CR \r
+            // 32-127 = printable ASCII
+            if(!(asciiValue == 0 ||
+            	 asciiValue == 10 ||
+            	 asciiValue == 13 ||
+            	 (asciiValue >= 32 && asciiValue < 128))){
             	isValid = false;
             }
+            //#40165 - END
         }
         return isValid;
     }
@@ -16056,6 +16128,17 @@ public class SmApplicationUtil {
 
 		return SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveOtherDescHistory(supplierCategoryId);
+	}
+	
+	public static SmAppl findNewRegHistoryOtherDesc(SmApplicationManagedBean managedBean) {
+		
+		SmAppl applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+		
+		if (applNewReg == null) {
+			return null;
+		}
+
+		return applNewReg;
 	}
 	// 36504 - END
 
@@ -16328,5 +16411,20 @@ public class SmApplicationUtil {
 		smAppl.setSmCompExpDraft(smCompExpDraft);
 	}
 	// #9299 - End
+	
+	//#40165 - START
+	public static void CheckAsciiValidation(Map<String, String> fields) throws EpException {
+	    for (Map.Entry<String, String> entry : fields.entrySet()) {
+	        String fieldName = entry.getKey();
+	        String value = entry.getValue();
+	        
+	        if (value != null && !value.isEmpty()) {
+	            if (!convertToAscii(value)) {
+	                throw new EpException(MessageConst.ERROR_760543, new String[] { fieldName });
+	            }
+	        }
+	    }
+	}
+	//#40165 - END
 
 }
