@@ -7764,6 +7764,7 @@ public class SmApplicationUtil {
 		
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
 		if(!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				&& bean.getSmAppl().isSiteVisitGroup()
 				&& checkAddressAndParamSvTask(bean.getSvTaskList(), facVO, addr, siteType)){
 			return;
 		}
@@ -15958,9 +15959,19 @@ public class SmApplicationUtil {
         for (char character : input.toCharArray()) {
             int asciiValue = (int) character; 
             log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
-            if(asciiValue > 127){
+            //#40165 - START
+            // Allow:
+            // 0   = NUL
+            // 10  = LF
+            // 13  = CR
+            // 32-127 = printable ASCII
+            if(!(asciiValue == 0 ||
+            	 asciiValue == 10 ||
+            	 asciiValue == 13 ||
+            	 (asciiValue >= 32 && asciiValue < 128))){
             	isValid = false;
             }
+            //#40165 - END
         }
         return isValid;
     }
