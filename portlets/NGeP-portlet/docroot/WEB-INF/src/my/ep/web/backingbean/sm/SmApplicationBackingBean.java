@@ -13936,7 +13936,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 					//31210-start
 					if (rev.getRecommendation() !=null) {
+						String language = new FacesScopes().getUserLocale().getLanguage();
+						if(language.equals("en")){
+							getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
+						}else if(language.equals("my")){
+							getManagedBean().setPoRecommendationDesc("SETUJU");
+							//getManagedBean().setPoRecommendationDesc("lbl.btn.agree");
+						}else{
 						getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
+						}
 					}//31210-end
 				}
 			} else if (getManagedBean().isPoUser()
