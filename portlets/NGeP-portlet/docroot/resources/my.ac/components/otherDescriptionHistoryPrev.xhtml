@@ -2,7 +2,6 @@
   <cc:interface>
     <cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.other.desc.history.header']}" />
     <cc:attribute name="categoryCodeList" type="java.util.List" required="true" />
-    <cc:attribute name="applNo" type="java.lang.String" required="true" />
     <cc:attribute name="otherDescChangePO" type="java.lang.Boolean" />
     <cc:attribute name="otherDescChangeApprover" type="java.lang.Boolean" />
     <cc:attribute name="otherDescChangeSupplier" type="java.lang.Boolean" />
@@ -35,7 +34,7 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.application.no']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText value="#{cc.attrs.applNo}" />
+							<h:outputText value="#{cat.smAppl.applNo}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}"
