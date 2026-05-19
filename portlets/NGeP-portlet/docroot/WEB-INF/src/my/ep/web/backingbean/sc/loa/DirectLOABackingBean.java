@@ -13084,7 +13084,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			} else if (isZonePriceTypeTier
 					&& CollectionUtils.isEmpty(question.getTplSpecTierQties())) {
 				String zoneName = getZoneNameFromAnswers(question);
-				throw new EpException(MessageConst.ERROR_775193, new String[] {
+				throw new EpException(MessageConst.ERROR_790201, new String[] {
 						ResourceBundleUtils.getMessage(
 								QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -13092,7 +13092,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			} else if (isZonePriceTypeStandard
 					&& CollectionUtils.isEmpty(question.getTplSpecZoneQties())) {
 				String zoneName = getZoneNameFromAnswers(question);
-				throw new EpException(MessageConst.ERROR_775193, new String[] {
+				throw new EpException(MessageConst.ERROR_790201, new String[] {
 						ResourceBundleUtils.getMessage(
 								QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -13156,7 +13156,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				&& !isZonePriceTypeTier) {
 			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
 					this.getManagedBean().getZoneTrees(), null);
-			throw new EpException(MessageConst.ERROR_775193, new String[] {
+			throw new EpException(MessageConst.ERROR_790201, new String[] {
 					ResourceBundleUtils.getMessage(
 							QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -13169,7 +13169,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			TplSpecTierQty tierQty = question.getTplSpecTierQties().get(0);
 			String tier = tierQty.getFromQty().toString() + " - "
 					+ tierQty.getToQty().toString();
-			throw new EpException(MessageConst.ERROR_775199, new String[] {
+			throw new EpException(MessageConst.ERROR_790203, new String[] {
 					zoneDetails.get(0).getZoneName(), tier });
 		}
 
@@ -13179,12 +13179,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.toString()
 						+ " - "
 						+ specAnswer.getTplSpecTierQty().getToQty().toString();
-				throw new EpException(MessageConst.ERROR_775199, new String[] {
+				throw new EpException(MessageConst.ERROR_790203, new String[] {
 						specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl()
 								.getZoneName(), tier });
 			} else if (specAnswer.getRatePerUom() == null
 					&& !isZonePriceTypeTier) {
-				throw new EpException(MessageConst.ERROR_775193, new String[] {
+				throw new EpException(MessageConst.ERROR_790201, new String[] {
 						ResourceBundleUtils.getMessage(
 								QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -13217,7 +13217,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			TplSpecTierQty tierQty = question.getTplSpecTierQties().get(0);
 			String tier = tierQty.getFromQty().toString() + " - "
 					+ tierQty.getToQty().toString();
-			throw new EpException(MessageConst.ERROR_775194, new String[] {
+			throw new EpException(MessageConst.ERROR_790202, new String[] {
 					tier, "" });
 		}
 
@@ -13227,7 +13227,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.toString()
 						+ " - "
 						+ specAnswer.getTplSpecTierQty().getToQty().toString();
-				throw new EpException(MessageConst.ERROR_775194, new String[] {
+				throw new EpException(MessageConst.ERROR_790202, new String[] {
 						tier, "" });
 			} else if (specAnswer.getRatePerUom() == null && !isPriceTypeTier) {
 				throw new EpException(MessageConst.ERROR_100022, new String[] {
