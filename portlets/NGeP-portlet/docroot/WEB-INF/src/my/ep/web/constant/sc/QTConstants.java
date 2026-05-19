@@ -459,4 +459,9 @@ public interface QTConstants {
 	// #36757 Start Vinod
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 End Vinod
+	
+	// #25726 - Start
+	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
+	// #25726 - End
+
 }
