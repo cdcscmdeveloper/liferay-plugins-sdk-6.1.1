@@ -164,8 +164,7 @@ public class DateTimeBackingBean {
 	                    .getValue();
 
 	    //#28188 - Start
-	    if (dateObj != null && minuteObj != null) {
-
+	    if (dateObj != null){
 	        if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
 	            //hourObj = "00";
 	        	hourObj = getFirstAvailableHour(component);
@@ -187,8 +186,7 @@ public class DateTimeBackingBean {
 
 	        dateValue = selectedCal.getTime();
 	    }
-	  //#28188 - End
-	    
+	    //#28188 - End
 	    
 	    return dateValue;
 	}
@@ -341,9 +339,10 @@ public class DateTimeBackingBean {
 	        if (sameDay &&
 	                selectedHour == calMin.get(Calendar.HOUR_OF_DAY)) {
 
-	            minMinute = calMin.get(Calendar.MINUTE);
+	        	// move to NEXT valid minute
+	        	minMinute = calMin.get(Calendar.MINUTE) + modValue;
 
-	            // round up to nearest modValue
+	        	// round properly
 	            if (minMinute % modValue != 0) {
 	                minMinute =
 	                        ((minMinute / modValue) + 1) * modValue;

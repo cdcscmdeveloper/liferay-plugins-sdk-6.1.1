@@ -1688,6 +1688,9 @@ public class SimpleQuoteBackingBean extends
 						    quote.getScQuoteSuppliers().clear();
 						}
 						//40234 - end
+						if (getManagedBean().getGovtSellers() != null) {
+							suppliers.addAll(getManagedBean().getGovtSellers());
+						}
 					} 
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
@@ -5502,6 +5505,8 @@ public class SimpleQuoteBackingBean extends
 				if ((resDTO != null) && (resDTO.getCtPanelItem() != null)) {
 					getManagedBean().setPanelItems(new ArrayList<CtPanelItem>());
 					getManagedBean().getPanelItems().add(resDTO.getCtPanelItem());
+
+					assignPanelSupplierPid(scQuote, resDTO);//#27868
 				}
 			}
 		}
@@ -5546,6 +5551,18 @@ public class SimpleQuoteBackingBean extends
 		.handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 	}
 
+	//start - 27868
+	/**
+	 * Assigns panel supplier details for Simple Quote created from PID.
+	 */
+	private void assignPanelSupplierPid(ScQuote scQuote, PanelSupplierResDTO resDTO) {
+		if (scQuote.getPurchaseInDefault() != null && resDTO.getCtPanelItem().getCtPanelSuppliers() != null
+				&& !resDTO.getCtPanelItem().getCtPanelSuppliers().isEmpty()) {
+			panelItemListener(resDTO.getCtPanelItem().getCtPanelSuppliers(), scQuote);
+		}
+	}
+	//end - 27868
+	
 	/**
 	 * render the supplier view based on the task id from notification.
 	 */
