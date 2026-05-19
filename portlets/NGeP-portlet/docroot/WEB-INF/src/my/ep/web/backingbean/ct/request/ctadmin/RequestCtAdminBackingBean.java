@@ -76,6 +76,8 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	private static Logger log = Logger.getLogger(RequestCtAdminBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
+	private String confirmationContentMsg;//34442 
+
 	/**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
@@ -195,7 +197,18 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
 			}
 			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				//34442 - start
+				CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
+
+				setConfirmationContentMsg(
+					getConfirmationContent(
+						String.valueOf(contractVer.getStatus().getStatusId()),
+						contractVer.getCtContract().getContractNo()
+					)
+				);
+				RequestContext.getCurrentInstance().update("approveConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+				//34442 - end
 			}//21387 end
 			return null;
 		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
@@ -750,4 +763,14 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		}
 	}
 	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
+
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }
