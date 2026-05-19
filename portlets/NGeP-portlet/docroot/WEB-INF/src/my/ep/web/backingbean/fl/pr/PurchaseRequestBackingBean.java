@@ -369,6 +369,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
+			
+			// 31788 - start
+			// Check new user need to be assigned
+			if(getManagedBean().isAssignNewUser()){
+				reqDTO.setAssignNewUser(Boolean.TRUE);
+				reqDTO.setNewUser(getManagedBean().getNewUser());
+			}
+			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			reqDTO.setTriggerBPM(true);
 			reqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
@@ -381,7 +389,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
+					// #31788
+					if(getManagedBean().isAssignNewUser()) {
+						messageId = MessageConst.INFO_700128;
+					} else {
+						messageId = MessageConst.INFO_700009;
+					}
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
@@ -389,10 +402,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 				//28718 - start
 				if(!getManagedBean().isTriggerPRErrorMsg()) {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(messageId, 
-									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					// #31788
+					if (getManagedBean().isAssignNewUser()) {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										messageId,
+										new String[] {
+												getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+														ParameterConst.DOCTYPE_PURCHASE_REQUEST),
+												flFulfilmentRequest.getDocNo(),
+												getManagedBean().getNewUser().getUserName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
 				}
 				//28718 - end
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
@@ -3565,11 +3592,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					userReqDTO.setApprovalLimit(calculatesTotalOrderedAmt());
 					UserResDTO resDTO = userSO.validateFulfilmentApprover(userReqDTO);
 					if (resDTO.getUserStatus().equals(2)) {
-						throw new EpException(MessageConst.ERROR_740090, new String[] { resDTO.getPmUser()
+						throw new EpException(MessageConst.ERROR_740129, new String[] { resDTO.getPmUser()
 								.getUserName() });
 					} else if (resDTO.getUserStatus().equals(0)) {
 						// Send notification to Ministry Admin/ Kump PTJ Admin/ PTJ Admin
-						throw new EpException(MessageConst.ERROR_740091, new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
+						// TODO - Create a service to send the notification, wait for PM team prepare the notification template
+						throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
 								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
 					}
 				}
@@ -3601,20 +3629,41 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
-					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					/*IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
 					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
 					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
 						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.requisitioner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-					}
+					}*/
 					/*
 					 * #31788
-					 * If original Requisitioner is inactive in PTJ, task to be routed to next active Requisitioner with same role in the same PTJ.
-					 * No alert message will be display at FL Approver screen to inform original Requisitioner is inactive.
-					 * Insert tracking diary record for new selected Requisitioner
+					 * check active user and alternative user if the previous user is inactive.
+					 * previous inactive -> reroute to next active user same role/ptj -> insert tracking diary -> acknowledgement display upon click revise.
+					 * previous inactive with no alternative user -> block revise -> display alert message -> send notification to Ministry Admin/ Kump PTJ Admin/ PTJ Admin.
 					 */
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getRequistioner().getUser().getUserId());
+					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
+							.getOrgProfileId());
+					userReqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
+					UserResDTO resDTO = userSO.validateUser(userReqDTO);
+					if (resDTO.getUserStatus().equals(2)) {
+						getManagedBean().setAssignNewUser(Boolean.TRUE);
+						UserResDTO availableUser = userSO.retrieveUserByRoleWithLoginHistory(userReqDTO);
+						getManagedBean().setNewUser(availableUser.getPmUser());
+					} else if (resDTO.getUserStatus().equals(0)) {
+						// Send notification to Ministry Admin/ Kump PTJ Admin/ PTJ Admin
+						// TODO - Create a service to send the notification, wait for PM team prepare the notification template
+						throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.REQUISITIONER.value()),
+								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
+					}
 				}
+				
+				// #31788 - validate receiving officer listing
+				checkReceivingOfficerList();
 			}
 			
 			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
