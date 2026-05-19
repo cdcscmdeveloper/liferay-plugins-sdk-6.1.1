@@ -92,6 +92,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote; //Fix - #30045
+import my.ep.persistence.entity.sc.loaloi.ScLoa; //#37620,#34367
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -853,6 +854,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 			
+			// #37620,#34367 - Start
+			// Retrieve LOA and update contract panel state (flag, circular data, and attachment)
+			// based on validation logic in retrieveItemPanelDetails.
+			ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(ctBB.getManagedBean(), "contractVer.ctContract.loa");
+			ctBB.retrieveItemPanelDetails(loa);
+			// #37620,#34367 - End
+			
 			chkBondWaivedAttachment();
 			sortDeductions();
 			
@@ -1300,10 +1308,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		            syncBondsToTarget(contractAmt, allBondsFromUI, isEffectiveContract);
 
 		            // Set the attachment flag with more readable logic.
-		            boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
-		            boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
-		            int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
-		            contractAmt.setIsBondAttachment(flag);
+		            //#40283 - Start ( Set the bond attachment flag for FD/FU only)
+				if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+						|| ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+					
+					boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
+					boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
+					int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
+					contractAmt.setIsBondAttachment(flag);
+				}
+				//#40283 - End
 		        }
 		    }
 		// 24333 - End

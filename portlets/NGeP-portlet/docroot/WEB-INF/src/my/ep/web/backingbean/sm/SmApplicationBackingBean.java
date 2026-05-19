@@ -24,6 +24,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -106,6 +107,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -165,6 +167,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -4658,7 +4661,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// validate branch
 		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
 				currentTab, true);
-
+		
+		// validate bank 
+		SmApplicationUtil.validateBankBeforeSave(true, getManagedBean(), -1);//#39860
+				
 		// validate facility
 		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
 
@@ -5842,6 +5848,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * application.
 	 */
 	public void addOrUpdateCompanyExperienceToSmAppl() {
+		//#40165 - START
+		SmCompanyExperience exp = getManagedBean().getSelectedCompanyExperience();
+		
+		Map<String, String> fieldsToCheck = new LinkedHashMap<String, String>();
+		fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projTitle", null), exp.getTitle());
+	    fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.statBody", null), exp.getClientName());
+	    
+	    if (SupplierManagementConst.STYPE_CONSULTANT.equals(getManagedBean().getSmAppl().getSupplierType())) {
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.refNo", null), exp.getRefNo());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projLoc", null), exp.getProjectLocation());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.serviceProvide", null), exp.getWorkServiceDesc());
+	    }
+		
+	    SmApplicationUtil.CheckAsciiValidation(fieldsToCheck);
+		//#40165 - END
 		if (EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSelectedCompanyExperience().getSmCompanyExperienceCats())
 				&& (getManagedBean().getSelectedCompanyExperience()
@@ -7252,6 +7273,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null)));
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -9893,6 +9915,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		validateNoChangesBeenMadeToApplication();
 		//#28775 - Site Grouping Enhancement
 		validateAllWorkshops();
+		getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		//#28775 end
 
 		// try {
 		//#28776 - start
@@ -11738,9 +11762,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
-			getManagedBean().getSmAppl().setSiteVisitGroup(true);
 			getManagedBean().getSmAppl().setSmSvTasks(getManagedBean().getSvTaskList());
-			//reqDTO.setSvTask(getManagedBean().getSvTask());
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
 			actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
@@ -18856,6 +18878,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * 
 	 */
 	public void otherDescriptionHistory() {
+		if (getManagedBean().getApprovedCategoryList() != null) {
+			List<SmSupplierCategory> updatedList = new ArrayList<>();
+
+			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+				
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					
+					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+				}
+				updatedList.add(cat);
+			}
+			getManagedBean().setApprovedCategoryList(updatedList);
+		}
+		
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
 	}
 	
@@ -18880,19 +18920,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	/**
-	 * To set data for managed bean and show dialog edit
-	 *  
-	 *  * @param smSupCat
-	 */
-	public void otherDescriptionEditApprover(SmSupplierCategory smSupCat) {
-		getManagedBean().setHistorySuppCategory(smSupCat);
-		getManagedBean().setOtherDescEdited(smSupCat.getOtherDesc());
-		getManagedBean().setUpdateRecordTC(false);
-		getManagedBean().setApproverUser(true);
-		RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.show();");
-	}
-	
-	/**
 	 * To reset data
 	 * 
 	 */
@@ -18901,7 +18928,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	/**
-	 * To save data Other Description
+	 * To save data Other Description 
 	 *  
 	 */
 	public void saveOtherDescriptionEdit() {
@@ -18911,14 +18938,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
+			
+			if (!getManagedBean().isOtherDescChangeSupplier()){
+				getManagedBean().setOtherDescChangeSupplier(true);
+			}
 			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
-
-			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser()) {
+			
+			initPmUserRole();
+			
+			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_PO);
 			} else if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_APPROVER);
-			} else if (getManagedBean().isPoUser()) {
+			} else if (getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
 			} else if (getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
@@ -18941,7 +18973,35 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			throw new EpException(e.getMessage());
 		} finally {
 			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
-			RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.hide();");
+		}
+	}
+	
+	/**
+	 * Initialize Login user role
+	 */
+	public void initPmUserRole() {
+		Long userId = getUserIdSessionFromLoginId();
+
+		try {
+			List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(userId);
+			getManagedBean().setApproverUser(false);
+			getManagedBean().setPoUser(false);
+
+			if (!EntityHelper.isCollectionEmpty(userRoles)) { 
+				for (PmUserRole userRole : userRoles) {
+					if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_APPROVER.value())) {
+						getManagedBean().setApproverUser(true);
+						break;
+					} else if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value())) {
+						getManagedBean().setPoUser(true);
+						break;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "OtherDescHistory",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "PmUserRole", userId, e);
 		}
 	}
 	// 36504 - END
@@ -19757,4 +19817,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
         return oriFilename + "_" + timestamp + extension;
     }
+	// #40306 Start
+	private static String gmapsScriptSrc = EpPropertiesUtils.getInstance().getProperty("gmaps.script.src");
+
+	public String getGmapsScriptSrc() {
+	    return gmapsScriptSrc;
+	}
+	// #40306 End
 }

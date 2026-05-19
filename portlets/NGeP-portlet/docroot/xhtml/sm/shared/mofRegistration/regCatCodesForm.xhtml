@@ -17,7 +17,7 @@
 	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.smAppl.applType ne 'R' and backingBean.managedBean.smAppl.applType ne 'N'}">
 		<!-- 36504 - START -->
-		<p:outputPanel align="left" rendered="#{backingBean.managedBean.otherDescChangeSupplier or backingBean.managedBean.otherDescChangeSupplierPrev}">
+		<p:outputPanel align="left" rendered="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and backingBean.managedBean.otherDescChangeSupplierPrev}">
 			<table style="width: 100%">
 				<tr>
 					<td>
@@ -127,7 +127,7 @@
 		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U'}">
 			<p:panel header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true">
 			<!-- 36504 - START -->
-			<p:outputPanel align="left" rendered="#{backingBean.managedBean.otherDescChangeSupplier}">
+			<p:outputPanel align="left" rendered="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and backingBean.managedBean.otherDescChangeSupplier}">
 				<table style="width: 100%">
 					<tr>
 						<td>
@@ -390,7 +390,6 @@
 		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
 	<ac:otherDescriptionHistoryPrev
 		categoryCodeList="#{backingBean.managedBean.previousCategoryList}"
-		applNo="#{backingBean.managedBean.previousCategoryList[0].smAppl.applNo}"
 		otherDescChangePO="#{backingBean.managedBean.otherDescChangePOPrev}"
 		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApproverPrev}"
 		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplierPrev}"  />

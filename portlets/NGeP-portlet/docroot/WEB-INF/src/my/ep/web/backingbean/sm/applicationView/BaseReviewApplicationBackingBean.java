@@ -67,6 +67,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.smSuppCatOtherDescHistory.SmSuppCatOtherDescHistoryReqDTO;
 // #29617
 import my.ep.dto.sm.sme.SupplierSmeReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -136,6 +137,7 @@ import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -2474,6 +2476,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
 							&& !getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 						getManagedBean().setOtherDescChangeApprover(true);
+						getManagedBean().setOtherDescChangeSupplier(true);
 					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
 							&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
 						getManagedBean().setOtherDescChangeSupApprover(true);
@@ -5575,10 +5578,111 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	// #34031#note-111 : Issue 20 - End
 	
+	// 36504 - START
+	/**
+	 * To show history dialog
+	 * 
+	 */
+	public void otherDescriptionHistory() {
+		if (getManagedBean().getApprovedCategoryList() != null) {
+			List<SmSupplierCategory> updatedList = new ArrayList<>();
+
+			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+				
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					
+					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+				}
+			    updatedList.add(cat);
+			}
+			getManagedBean().setApprovedCategoryList(updatedList);
+		}
+		
+		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
+	}
+	
+	/**
+	 * To show previous history dialog
+	 * 
+	 */
+	public void otherDescriptionHistoryPrev() {
+		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlgPrev.show();");
+	}
+	
+	/**
+	 * To set data for managed bean and show dialog edit
+	 *  
+	 *  * @param smSupCat
+	 */
+	public void otherDescriptionEdit(SmSupplierCategory smSupCat) {
+		getManagedBean().setHistorySuppCategory(smSupCat);
+		getManagedBean().setOtherDescEdited(smSupCat.getOtherDesc());
+		getManagedBean().setUpdateRecordTC(false);
+		RequestContext.getCurrentInstance().execute("otherDescriptionEditMaintenanceDlg.show();");
+	}
+	
+	/**
+	 * To reset data
+	 *  
+	 */
+	public void resetOtherDescriptionEdit() {
+		getManagedBean().setOtherDescEdited(getManagedBean().getSelectedCategory().getOtherDesc());
+	}
+	
+	/**
+	 * To save data Other Description
+	 *  
+	 */
+	public void saveOtherDescriptionEdit() {
+		try {
+			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
+			reqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
+			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
+			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
+			
+			if (!getManagedBean().isOtherDescChangeSupplier()){
+				getManagedBean().setOtherDescChangeSupplier(true);
+			}
+			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
+			
+			initPmUserRole();
+			
+			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
+				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_PO);
+			} else if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isApproverUser()) {
+				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_APPROVER);
+			} else if (getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
+				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
+			} else if (getManagedBean().isApproverUser()) {
+				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			}
+			
+			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(reqDTO);
+			
+			if (getManagedBean().getSmAppl().getApplNo() == null) {
+				getManagedBean().setSmAppl(reqDTO.getSmAppl());
+			}
+			
+			SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(getManagedBean().getHistorySuppCategory());
+
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				MessageUtils.getMessage(MessageConst.INFO_721228, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	
 	/**
 	 * Initialize Login user role
 	 */
-	// 36504 - START
 	public void initPmUserRole() {
 		Long userId = getUserIdSessionFromLoginId();
 

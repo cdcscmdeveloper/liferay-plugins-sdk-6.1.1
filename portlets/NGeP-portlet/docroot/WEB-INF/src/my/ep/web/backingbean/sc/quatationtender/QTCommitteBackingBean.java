@@ -1825,7 +1825,10 @@ public class QTCommitteBackingBean extends
 						new String[] { committee });
 			}
 		}
-		if (isQTStatusGreaterThan(status.getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+		// 40061 - start
+		if (!Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(status.getStatusId())
+				|| isQTStatusGreaterThan(status.getStatusId(), QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL_RESCHEDULE)) {
+		// 40061 - end
 			for (String committee : committeCodes) {
 				if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 						.equalsIgnoreCase(committee)) {
@@ -1878,7 +1881,8 @@ public class QTCommitteBackingBean extends
 		//28895 - 35500 start
 		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberAuditTrailList())
 				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();	
-		List<ScCommitteeMember> deletedCommitteeMembers = new ArrayList<>();
+		List<ScCommitteeMember> deletedCommitteeMembers = CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedScCommitteeMemberAuditTrailList())
+				? this.getManagedBean().getDeletedScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 fix 15th May
 		//28895 - 35500 end
 		
 		if (committeeMembers == null) {
