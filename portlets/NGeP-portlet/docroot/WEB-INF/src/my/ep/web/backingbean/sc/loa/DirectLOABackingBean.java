@@ -337,7 +337,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) && procCatId == null) {
 				throw new EpException(MessageConst.ERROR_775181);
 			}
-			if(this.getManagedBean().getSelectedTabIndex() == 3){
+			if (this.getManagedBean().getSelectedTabIndex() == QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
 				validateTierQuantityAndUnitPriceForSideMenueOrSave();
 			}
 			// #29468 End Vinod
