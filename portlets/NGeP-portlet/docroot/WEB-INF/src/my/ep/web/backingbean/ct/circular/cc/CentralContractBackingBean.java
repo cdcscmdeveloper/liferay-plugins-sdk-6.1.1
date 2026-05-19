@@ -48,7 +48,9 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -118,6 +120,7 @@ import my.ep.util.SLAUtils; //#39594
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -132,6 +135,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;
 
 
 /**
@@ -142,14 +146,14 @@ import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
  */
 @ManagedBean (name = "centralContractBackingBean") 
 @ViewScoped
-public class CentralContractBackingBean extends BaseBackingBean<CentralContractManagedBean>{
+public class CentralContractBackingBean extends CircularBaseBackingBean<CentralContractManagedBean> { // 30737
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private IPagingDataModel<PmOrgProfile> exemptedOrgDataModel = new ExemptedOrgDataModel();	
-
+	
 	/**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
@@ -177,13 +181,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		}
 	}
-
-	/**
-	 * This method used to retrieve user login  information
-	 */
-	private FacesScopes getFacesScopes() {
-		return new FacesScopes();
-	}
+	
+	//30737 - start
+//	/**
+//	 * This method used to retrieve user login  information
+//	 */
+//	private FacesScopes getFacesScopes() {
+//		return new FacesScopes();
+//	}
+	//30737 - end
 
 	/**
 	 * This  method used to initialize approver list
@@ -710,6 +716,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					getManagedBean().setViewContract(false);
 					setContractCircularVar(reqDTO);
 				}
+				System.out.println("ACTIONNN :" + action);
+				//#30737 - Start
+				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+						|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
+						|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+					log.info("xoxoxoxoxooxoxo action : "+action);
+					handleInactiveUserValidation(action);
+				}
+				//#30737 - End
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -718,6 +733,70 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 		return null;
 	}
+	
+	//#30737 - Start
+	private void handleInactiveUserValidation(String outcome) {
+
+		ICircularSO circularSO 
+			= (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+    	
+		List<PmUser> selectedUsers = getManagedBean().getApproverModel().getTarget();
+   
+        try {
+        	
+        	Long inactiveUserCheckResult = 1L; //TEMP
+        	
+        	circularSO.checkInactiveUserOnAction(
+        		buildContractReqDTO(outcome, getUserRole()),
+        		selectedUsers,
+            	inactiveUserCheckResult
+        	);
+        } catch (EpException ex) {
+        	throw buildInactiveUserException(ex, selectedUsers);
+        }
+    }
+	
+	private ContractReqDTO buildContractReqDTO(String outcome, String userRole) {
+        ContractReqDTO reqDTO = new ContractReqDTO();
+        reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+        reqDTO.setUserRole(userRole);
+        reqDTO.setOutcome(outcome);
+        
+        log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
+		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
+    	
+        return reqDTO;
+    }
+	
+	private EpException buildInactiveUserException(EpException ex, List<PmUser> selectedUsers) {
+    	log.info("xoxoxoxoxoxoxo catch EpException");
+    	
+    	String errorCode = ex.getMessage();
+        String[] messageKeys = null;
+        
+        log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
+        
+        if (MessageConst.ERROR_100074.equals(errorCode)) {
+            messageKeys = new String[]{selectedUsers.get(0).getUserName()};
+        }
+        
+        if (messageKeys != null && messageKeys.length > 0) {
+
+            String[] resolvedMessages = new String[messageKeys.length];
+            for (int i = 0; i < messageKeys.length; i++) {
+                resolvedMessages[i] =
+                    ResourceBundleUtils.getMessage(
+                        messageKeys[i],
+                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+                        getFacesScopes().getUserLocale()
+                    );
+            }
+            return new EpException(errorCode, resolvedMessages);
+        }
+        return new EpException(errorCode);
+    }
+	
+	//#30737 - End
 	
 	//#35506 - Start
 	/**
