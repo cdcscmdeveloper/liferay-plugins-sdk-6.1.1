@@ -348,6 +348,10 @@ public class SmSideMenuIconUtil {
 				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
+				
+				if (bean.isOtherDescChangeApprover() || bean.isOtherDescChangeSupApprover()) {
+					bean.getEditVO().setAppEditCategory(true);
+				}
 				// 36504 - END
 				
 				/*//#32008
