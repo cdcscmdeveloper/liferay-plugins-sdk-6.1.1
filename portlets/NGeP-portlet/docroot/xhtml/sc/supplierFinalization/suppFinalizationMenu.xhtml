@@ -97,11 +97,11 @@
                     	<h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
                     	<!-- ***28834 ends -->
 							<ui:remove>21692 - Start</ui:remove>
+							<ui:remove>26247 remove update form</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								action="#{suppFinalizationBackingBean.submitAction}"
-								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
-								partialSubmit="true" process="@form" update="@form"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}" process="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen() and (bpmAction == 'SUBMIT')}" />
 							<p:commandButton value="#{lbl[buttonLabel]}"
@@ -187,6 +187,11 @@
 					src="/xhtml/sc/supplierFinalization/committeeEndorsement/endorsementReport.xhtml" />
 			</c:if>
 		</p:panel>
+		
+		<ui:remove> 28777,29729 - Start </ui:remove>
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierBranchListPopup.xhtml" />
+		<ui:remove> 28777,29729 - End </ui:remove>
 
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
@@ -301,11 +306,12 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<!-- ***28834 start  new -->
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<ui:remove>26247 remove update form</ui:remove>
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					onclick="blockWidget.show();"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
-					oncomplete="submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "
-					update="@form">
+					oncomplete="blockWidget.hide();submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "
+					process="@form">
 					<!-- ***28834 end new -->
 				</p:commandButton>
 

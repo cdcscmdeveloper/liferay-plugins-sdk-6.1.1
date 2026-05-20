@@ -36,12 +36,19 @@
 			<p:inputText style="width:300px;" disabled="true"
 				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userName}" />				
 			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
-			<h:panelGrid columns="3">
+			<!-- #32418 Start -->
+			<h:panelGrid columns="6">
 				<p:inputText style="width:75px;" disabled="true"
 					value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+				
+				<p:inputText value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractDaysPeriod}" style="width:75px;" maxlength="3" disabled="true" >
+				</p:inputText>
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
 			</h:panelGrid>
+			<!-- #32418 End -->
 			<p:outputLabel value="#{lbl['lbl.ct.contract.effective.date']}" />
 			<p:calendar id="popupButtonCal1" showOn="button" styleClass="calanderWidth" disabled="true"
 			    	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -55,12 +62,20 @@
 			     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 		         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			<p:outputLabel value="#{lbl['lbl.ct.extension.period']}" />
-			<h:panelGrid columns="3">
+			<!-- #32418 Start -->
+			<h:panelGrid columns="6">
 				<p:inputText style="width:75px;"  disabled="true"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+				
+				<p:inputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendDaysPeriod}" style="width:75px;" maxlength="3" disabled="true" >
+				</p:inputText>
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+				
 			</h:panelGrid>
+			<!-- #32418 End -->
 			<p:outputLabel value="#{lbl['lbl.ct.extension.effective.date']}" />
 			<h:panelGrid columns="3" style="width:500px;"	columnClasses="columnWidth20,columnWidth30,columnWidth30">
 				<p:calendar id="popupButtonCal4" showOn="button" disabled="true" styleClass="calanderWidth1"

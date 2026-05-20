@@ -89,6 +89,10 @@ import org.primefaces.model.TreeNode;
 @SessionScoped
 public class ContractRequestManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	//29728 - start
+  	private boolean isBranchNeedToBeChanged;
+  	private Long branchCode;
+  	//29728 - end
 	
 	public ContractRequestManagedBean(){
 
@@ -335,6 +339,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<ScRequestItemSpecOffer> specificationList;
 	private List<ScRequestItemSpecOffer> itemSpecList;
     	// 28855 - End
+	
+	//24956 start
+    private boolean ctTypeMinistry;
+    //24956 end
+	
 	//11076 - start
 	private int totalExistingItem;
 	private int totalNewItemsAdded;
@@ -3254,6 +3263,47 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.itemSpecification = itemSpecification;
 	}
 	// 28855 - End
+	
+	//29728 - start
+	/**
+	 * @return the isBranchNeedToChange
+	 */
+	public boolean isBranchNeedToBeChanged() {
+		return isBranchNeedToBeChanged;
+	}
+
+	/**
+	 * @param isBranchNeedToBeChanged the isBranchNeedToChange to set
+	 */
+	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
+		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
+	}
+	
+	/**
+	 * @return the branchCode
+	 */
+	public Long getBranchCode() {
+		return branchCode;
+	}
+
+	/**
+	 * @param branchCode the branchCode to set
+	 */
+	public void setBranchCode(Long branchCode) {
+		this.branchCode = branchCode;
+	}
+	
+	//29728 - end
+	
+	// 24956 - start
+	public boolean isCtTypeMinistry() {
+		return ctTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		this.ctTypeMinistry = ctTypeMinistry;
+	}
+	// 24956 - end
 		
 	//11076 -start
 	public int getTotalExistingItem() {

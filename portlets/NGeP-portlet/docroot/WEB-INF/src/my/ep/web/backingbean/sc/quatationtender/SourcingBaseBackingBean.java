@@ -61,6 +61,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -193,6 +194,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.comm.TplCommMember;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -270,15 +272,16 @@ import com.liferay.portal.util.PortalUtil;
  */
 public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends BaseBackingBean<T> {
 	private static final long serialVersionUID = 1L;
+	// 26226 - start
+	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
+			SourcingConstants.MALAYSIA_COUNTRY_CODE);
+	// 26226 - end
 	
 	/**
 	 * Logger instance.
 	 */
 	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
 	
-	// 26226 - start
-	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE, SourcingConstants.MALAYSIA_COUNTRY_CODE);
-	// 26226 - end
 	
 	//26247 - start
 	private final Map<String, String> recordStatusParamMap = new HashMap<>();
@@ -339,10 +342,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	protected void populateAttachmentDetails(ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		//#21692 - Start
-		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
-		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
-		//#21692 - End
+		PmUser createdUser = new FacesScopes().getUserSessionBean();
 
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		if (attachment.getAttachmentId() == null
@@ -845,6 +845,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
 	}
 	//38343 - end
+	
+	// 38523, #35320 - start
+	protected IReasonSO getReasonSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+	}
+
+	// 38523, #35320 - end
 
 	/**
 	 * To initialize remarks.
@@ -951,11 +958,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	 * @return StreamContent instance
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
-			ATTACHMENT scAttachment, String contentType) throws IOException {
+	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(ATTACHMENT scAttachment, String contentType) throws IOException {
 		ByteArrayOutputStream tmpOut = null;
 		FileInputStream in = null;
-		try{
+		try {
 			if (scAttachment != null) {
 				File file = new File(getActualFilePath(scAttachment));
 				tmpOut = new ByteArrayOutputStream();
@@ -969,10 +975,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 					}
 					tmpOut.write(buf, 0, len);
 				}
-				in.close();
-				tmpOut.close();
-				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
-						tmpOut.size());
+				
+				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0, tmpOut.size());
 
 				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
 
@@ -980,9 +984,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			} else {
 				return null;
 			}
-		}finally{
+		} finally {
+			in.close();
+			tmpOut.close();
 		}
-		
+
 	}
 
 	protected List<PmParameterDesc> retrieveParametersBySearchBean(
@@ -991,6 +997,91 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 				parameterType, searchBean);
 
 	}
+
+	// 36715 START
+	/**
+	 * To get report from orcle reports only for .rtf format file
+	 * 
+	 * @param reportName
+	 * @param paramMap
+	 * @param attachment
+	 * @param isDirectDownload
+	 * @return File instance
+	 * @throws IOException
+	 */
+	protected File generateRtfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment,
+			boolean isDirectDownload) throws IOException {
+
+		String reportUrl = generateReportURL(reportName, paramMap);
+
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+
+		OutputStream out = null;
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+				.getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		InputStream input = null;
+		FileOutputStream fos = null;
+
+		try {
+			String finalFileName = attachment.getFileName();
+
+			if (!isDirectDownload) {
+				res.setContentType("application/rtf");
+				res.setHeader("Content-Disposition", "attachment; filename=\"" + finalFileName + "\"");
+
+				res.flushBuffer();
+				out = res.getOutputStream();
+			}
+
+			File localFile = new File(getActualFilePath(attachment));
+
+			if (reportUrl.toString() != null) {
+				try {
+					URL obj = new URL(reportUrl.toString());
+					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
+					input = new BufferedInputStream(uc.getInputStream());
+				} catch (ConnectException e) {
+					throw new EpException(MessageConst.ERROR_100058);
+				}
+
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				byte[] buf = new byte[1024];
+
+				try {
+					for (int readNum; (readNum = input.read(buf)) != -1;) {
+						bos.write(buf, 0, readNum);
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+
+				byte[] bytes = bos.toByteArray();
+				fos = new FileOutputStream(localFile);
+				fos.write(bytes);
+				fos.flush();
+			}
+
+			if (!isDirectDownload) {
+				out.flush();
+			}
+
+			return localFile;
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
+			if (input != null) {
+				input.close();
+			}
+			if (out != null) {
+				out.close();
+			}
+		}
+	}
+	// 36715 END
 
 	/**
 	 * To get report from orcle reports
@@ -1029,17 +1120,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		//21692 - Start
-		HttpServletResponse res;
-		if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
-			res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		} else {
-			PortletResponse portletResponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			res = com.liferay.portal.util.PortalUtil
-					.getHttpServletResponse(portletResponse);
-		}
-		//21692 - End
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try{
@@ -2077,20 +2161,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		if(isDirectLoa) {
 			//#24540 - start -
 			boolean setBondReq = true;
-			//#25726 commit under #39080 - Start
-			//remove contract type condition.
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
-					||scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
-			//#25726 commit under #39080 - End
+			//#25726 - Start
+				
+			boolean isQTtypePK7 = null != scLoa.getQtType() && null != scLoa.getQtType().getParameterId()
+					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode());
+		
+			if (isQTtypePK7 ) {
+		
+			//#25726 - End
+
 				setBondReq = false;
 			}
 			
@@ -2354,7 +2433,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	public boolean isQTStatusEvaluation(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
 	}
-
 	// 25037 - end
 	
 	/**
@@ -3152,11 +3230,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType){
 		SelectItem[] items = null;
 		
-		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
+		// #35320 - Start
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
-			//Enhancement #21691 - start -
-		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
+		}// #35320 - End
+		else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PPR);
 			//Enhancement #21691 - end -
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
@@ -3706,7 +3786,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
-							iterator.remove();
+							//iterator.remove(); // 37622 - remove code
 						}
 					}
 				}
@@ -3720,7 +3800,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
-							iterator.remove(); 
+							//iterator.remove(); // 37622 - remove code
 						}
 					}
 					
@@ -4040,9 +4120,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
+						boolean isDemoRequired = report.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);//#28784
 
 						// #28784 -start-
-						if (null != report.getPmDocument() || report.getTitle().equalsIgnoreCase(SourcingConstants.DEMO_EVALUATION_REPORT))
+						if (null != report.getPmDocument() || isDemoRequired)
 						// #28784 -end-
 						{
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
@@ -4976,59 +5059,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		// No need to explicitly close the stream; it's done automatically
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End	
-
-	// 25791-start
-	/**
-	 * The method used to retrieve the contract status of the contract.
-	 * 
-	 * @param contractStatus
-	 * @return Effective, Terminated, Expired, Inactive
-	 */
-	public String getContractStatusDesc(int contractStatus) {
-		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
-			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EFFECTIVE,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
-			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INACTIVE,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
-			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EXPIRED,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
-			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_TERMINATED,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else {
-			return "";
-		}
-	}
-	// 25791 -end-
-
-	// 25791 -start-
-	/**
-	 * The method used to retrieve the status completion of the contract.
-	 * 
-	 * @param contractNo
-	 * @param status
-	 * @return complete or incomplete
-	 */
-	public String chkContractStatusType(String contractNo, int status) {
-		if (StringUtils.isNotEmpty(contractNo) && StringUtils.isNotBlank(contractNo)) {
-			if (status == ContractConst.STATUS_COMPLETE) {
-				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_COMPLETE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-			} else if (status == ContractConst.STATUS_INCOMPLETE) {
-				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INCOMPLETE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
-				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-			}
-		}
-
-		return "";
-	}
-	// 25791-End
-
+	
 	// #26226 - Start
 	/**
 	 * @param context
@@ -5100,6 +5131,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 						if (days == null) {
 							days = answer.getTplSpecQuestion().getClDeliveryTerm();
 						} else {
+
 							if (!days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())
 									&& (answer.getTplSpecQuestion().getClDeliveryTerm() != null)) {
 								days = answer.getTplSpecQuestion().getClDeliveryTerm();
@@ -5161,6 +5193,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 														.getSpecQuestionId()))) {
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
 									if (master.getTplSpecZone() != null) {
+
 										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
 											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
 													.getTplSpecZoneDtls().get(i);
@@ -5184,6 +5217,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 								if (days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) {
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
 									if (master.getTplSpecZone() != null) {
+
 										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
 											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
 													.getTplSpecZoneDtls().get(i);
@@ -5302,8 +5336,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 							for (TplSpecAnswer tplSpecAns : quoteResDTO.getProductAnswersTpl()) {
 								if (tplSpecAns == null || tplSpecAns.getTplSpecQuestion() == null) {
-									continue; // Skip null values to prevent
-												// NullPointerException
+									continue; // Skip null values to prevent NullPointerException
 								}
 								if (Objects.equals(tplSpecAns.getTplSpecQuestion().getSpecQuestionId(), answer
 										.getTplSpecQuestion().getSpecQuestionId())
@@ -5314,8 +5347,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 									if (specList == null) {
 										specList = new ArrayList<>();
 									}
-
-									specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+									//start #29006 - note 850,852,856
+									String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+									
+									specValue = specValue.replace("<", "#60;");
+									specValue = specValue.replace(">", "#62;");
+									specValue = specValue.replace("&", "#and;");
+									
+									specList.add(specValue);
+									tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+									//end #29006 - note 850,852,856
 								}
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
@@ -5366,7 +5407,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 									populateSpecAnswers(answer);
 									// #26226 - End
 									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
 									isSpecificationEnable = true;
+									// #25025 - End.
 								}
 							}
 						} else if (isSpecificationEnable && answer.getTplSpecQuestion().getClSpecDetail() != null) {
@@ -5876,6 +5919,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		// #26130 #97 - End
 		for (ScQtCheckList scQtCheckList : scQtCheckLists) {
 			List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
 			TplSpecMaster master = null;
 			// Bug #36438@Syazani - 24/10/2024 -- Start
 			// Making sure it didn't impact original value
@@ -5960,13 +6004,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				
+				//Bug #39043 #39512 start
 				if (null != suppAns.getSupplierId()
-						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()   
-						&& null != tplSpecAnswer.getAnswerRemark()){					
-					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
+					String remark = tplSpecAnswer.getAnswerRemark();
+					answerRemarkList.add(remark != null ? remark : getDefaultValue());
 					break;
 				}
+				//Bug #39043 #39512 end
 			}
 		}
 	}
@@ -6121,7 +6166,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 						if (tempRemark == null) {
 							tempRemark = getDefaultValue();
-						} else {
+						} //else { Bug #39043 #39512
 							if (tempSpecZoneQty > 0) {
 								if (tempRemarkIndex >= tempSpecZoneQty) {
 									if (indexRemarkStore == 0) {
@@ -6146,7 +6191,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 								tempRemarkIndex++;
 							}
-						}
+						//} Bug #39043 #39512
 
 					}
 
@@ -6159,6 +6204,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			}
 		}
 	}
+
 	// #26130 - End
 
 	// #26130 - zaim start
@@ -6167,6 +6213,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 		return defaultValue;
 	}
+
 	// #26130 - zaim -end-
 
 	// #26130 start
@@ -6338,6 +6385,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 		return sb.toString();
 	}
+
 	// #26130 end
 
 	// 26130 - start
@@ -6366,6 +6414,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 		return isExist;
 	}
+
 	// #26130 -end-
 
 	// #26130 -start-
@@ -6391,6 +6440,105 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return isExist;
 	}
 	// 26130 - end
+
+	// 11104-start
+	/***
+	 * 
+	 * check status for sample Radio buttons.
+	 * 
+	 * @param currentStatusId
+	 * @return status
+	 */
+	public boolean isQTSampleStatus(Long currentStatusId) {
+		List<Long> CheckStatus = new ArrayList<Long>();
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+		CheckStatus.add(QTStatusConst.SE_PENDING_ENDORSMENT);
+		CheckStatus.add(QTStatusConst.SE_PENDING_SIGNOFF);
+
+		return CheckStatus.contains(currentStatusId);
+	}
+	// 11104-End
+
+	// 11104_newEndorseStart
+	/***
+	 * 
+	 * get TemplatespecQuestion based on Checklist.
+	 * 
+	 * @param sampleSpecs
+	 * @return List<TplSpecQuestion>
+	 */
+	protected List<TplSpecQuestion> getTemplateSampleQuestions(ScQtCheckList sampleSpecs) {// 11104_newEndorseStart
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+
+		specReqDTO.setSpecMaster(sampleSpecs.getScQtDoc().getTplSpecMaster());
+		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+		specReqDTO.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);
+
+		TemplateSpecResDTO tmpresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+
+		return tmpresDTO.getSpecMaster().getTplSpecQuestions();
+	}
+	// 11104_newEndorseEnd
+
+	// 11104_newEndorseStart
+	/***
+	 * Start check Sample Item exist in the questions for work in progress qt.
+	 * 
+	 * @param scQt
+	 * @return boolean
+	 */
+	public boolean checkISSampleExistWIPChecklist(ScQt scQt) {
+		boolean qtSample = scQt.isSampleReq();
+
+		if (qtSample && !isQTStatusPublished(scQt.getQtStatus().getStatusId())
+				&& SourcingConstants.SAMPLE_WIP_CHECK.equals(scQt.getDemoNotificationCheck())) {
+			return Boolean.TRUE;
+		} else if (qtSample && !isQTStatusPublished(scQt.getQtStatus().getStatusId())
+				&& null == scQt.getDemoNotificationCheck()) {
+
+			return Boolean.FALSE;
+		} else if (qtSample) {
+			IQTSpecSO qtSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+			specificationReqDTO.setScQt(scQt);
+			specificationReqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+
+			SpecificationResDTO specificationResDTO = qtSpecSO.retrieveTechnicalService(specificationReqDTO);
+			List<ScQtCheckList> sampleTemplateSpecChecklist = new ArrayList<>();
+
+			for (ScQtCheckList sampleCheckList : specificationResDTO.getTechnicalCheckList()) {
+				if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(sampleCheckList.getDefinationType()
+						.getParameterCode())
+						&& QTStatusConst.TS_COMPLETED.equals(sampleCheckList.getPmStatus().getStatusId())) {
+					sampleTemplateSpecChecklist.add(sampleCheckList);
+				}
+			}
+
+			return checkWiPSampleQuestionExist(sampleTemplateSpecChecklist);
+		}
+
+		return Boolean.FALSE;
+	}
+	// 11104_newEndorseEnd
+
+	// 11104_newEndorseStart
+	private boolean checkWiPSampleQuestionExist(List<ScQtCheckList> sampleTemplateSpecChecklist) {
+		for (ScQtCheckList sampleSpecs : sampleTemplateSpecChecklist) {
+			for (TplSpecQuestion specQuestion : getTemplateSampleQuestions(sampleSpecs)) {
+				if (BooleanUtils.isTrue(specQuestion.isSampleReq())) {
+					return Boolean.TRUE;
+				}
+			}
+		}
+
+		return Boolean.FALSE;
+	}
+	// 11104_newEndorseEnd
 	
 	// 25037 - Start
 	/**
@@ -6616,14 +6764,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	}
 	// 25037 - end
 
+	// 25037 - start
 	// 25037 - start - note 510
-	/**
-	 * Validate if maintenance was in progress
-	 * 
-	 * @param qt
-	 * @param validateCommitteeApproval
-	 */
-
 	/**
 	 * Validate if maintenance was in progress
 	 * 
@@ -6753,19 +6895,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return inactiveUserSb.toString();
 	}
 	// 25037 - end - note 510
-
-	//11104-start
-	public boolean isQTSampleStatus(Long currentStatusId) {
-		List<Long> CheckStatus = new ArrayList<Long>();
-		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
-		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
-		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
-		CheckStatus.add(QTStatusConst.SE_PENDING_ENDORSMENT);
-		CheckStatus.add(QTStatusConst.SE_PENDING_SIGNOFF);
-		
-		return CheckStatus.contains(currentStatusId);
-	}
-	//11104-End
   	
 	// 25635-start
 	public boolean isQTCloneStatus(Long currentStatusId) {
@@ -6781,16 +6910,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	// 25635-End
 
 	// 25037 - start
+	// 25037 - start - note 677 
 	/**
-	 * Evaluate if taskname is endorsement and signoff
+	 * Evaluate the corresponding Representative/Agency parameter type based on
+	 * committee type. PBA, PBB, QCA, FSW, FSB, QCB, PPB
 	 * 
-	 * @param taskName
-	 * @return String (BPM task Name)
+	 * @return String (Parameter Type Code)
 	 */
 	public String getRepresentativeType(String committeeType) {
 		switch (committeeType) {
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE: // #35320
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
 		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
@@ -6806,6 +6937,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			return StringUtils.EMPTY;
 		}
 	}
+	// 25037 - end - note 677 
 	// 25037 - end
 
 	// 25037 - start
@@ -6969,91 +7101,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	}
 	// Bug #36730@Syazani 07/01/2025 -- End
 	
-	/***
-	 * 11104_newEndorseStart get TemplatespecQuestion based on Checklist.
-	 * 
-	 * @param sampleSpecs
-	 * @return List<TplSpecQuestion>
-	 */
-	protected List<TplSpecQuestion> getTemplateSampleQuestions(
-			ScQtCheckList sampleSpecs) {// 11104_newEndorseStart
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
-		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		specReqDTO.setSpecMaster(sampleSpecs.getScQtDoc().getTplSpecMaster());
-		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-		specReqDTO.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);
-		TemplateSpecResDTO tmpresDTO = templateSpecSO
-				.getTemplateMaster(specReqDTO);
-		return tmpresDTO.getSpecMaster().getTplSpecQuestions();
-	}// 11104_newEndorseStart
-
-	/***
-	 * 11104_newEndorseStart check Sample Item exist in the questions for work
-	 * in progress qt.
-	 * 
-	 * @param scQt
-	 * @return boolean
-	 */
-	public boolean checkISSampleExistWIPChecklist(ScQt scQt) {// 11104_newEndorseStart
-		boolean qtSample = scQt.isSampleReq();
-		if (qtSample
-				&& !isQTStatusPublished(scQt.getQtStatus().getStatusId())
-				&& SourcingConstants.SAMPLE_WIP_CHECK.equals(scQt
-						.getDemoNotificationCheck())) {
-			return Boolean.TRUE;
-		} else if (qtSample
-				&& !isQTStatusPublished(scQt.getQtStatus().getStatusId())
-				&& null == scQt.getDemoNotificationCheck()) {
-
-			return Boolean.FALSE;
-		} else if (qtSample) {
-			IQTSpecSO qtSpecSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSpecSO.class);
-			SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
-			specificationReqDTO.setScQt(scQt);
-			specificationReqDTO
-					.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			SpecificationResDTO specificationResDTO = qtSpecSO
-					.retrieveTechnicalService(specificationReqDTO);
-			List<ScQtCheckList> sampleTemplateSpecChecklist = new ArrayList<>();
-			for (ScQtCheckList sampleCheckList : specificationResDTO
-					.getTechnicalCheckList()) {
-				if (QTConstants.TEMPLETE_SPEC_CODE
-						.equalsIgnoreCase(sampleCheckList.getDefinationType()
-								.getParameterCode())
-						&& QTStatusConst.TS_COMPLETED.equals(sampleCheckList
-								.getPmStatus().getStatusId())) {
-					sampleTemplateSpecChecklist.add(sampleCheckList);
-				}
-			}
-			return checkWiPSampleQuestionExist(sampleTemplateSpecChecklist);
-
-		}
-		return Boolean.FALSE;
-	}// 11104_newEndorseEnd
-    
-	/**
-	 * check wip sample exist.
-	 * @param sampleTemplateSpecChecklist
-	 * @return
-	 */
-	private boolean checkWiPSampleQuestionExist(
-			List<ScQtCheckList> sampleTemplateSpecChecklist) {
-		for (ScQtCheckList sampleSpecs : sampleTemplateSpecChecklist) {
-			for (TplSpecQuestion specQuestion : getTemplateSampleQuestions(sampleSpecs)) {
-				if (BooleanUtils.isTrue(specQuestion.isSampleReq())) {
-					return Boolean.TRUE;
-				}
-			}
-
-		}
-		return Boolean.FALSE;
-	}
-	// 11104-end
-	
 	// 37622 - start
 	/**
 	 * Create a new list for displaying briefing paper report and filter
@@ -7081,6 +7128,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		}
 		return reportList;
 	}
+	// 37622 - end
 
 	// #29007 Start vinod
 	/**
@@ -7095,9 +7143,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		Long workFlowStatus = scLoa.getPmStatus().getStatusId();
 		String docType = scLoa.getScLoiLoa().getDocType();
 
-		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICompositeValiditySO.class);
+		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
 
 		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
 
@@ -7107,33 +7154,79 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_QT);
 		}
 
-		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO)
-				.getPmCompositeValidity().getMinCompositeVersion();
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
 		String version = this.getManagedBean().getBpmVersionNo();
 
-		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion,
-				version);
+		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion, version);
 	}
-
 	// #29007 End vinod
+
 	// #29007 Start vinod
-	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus,
-			String minVersion, String version) {
-		boolean isOldVersion = StringUtils.isNotBlank(minVersion)
-				&& StringUtils.isNotBlank(version)
+	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus, String minVersion, String version) {
+		boolean isOldVersion = StringUtils.isNotBlank(minVersion) && StringUtils.isNotBlank(version)
 				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
-		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-				.equals(workFlowStatus);
-		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION
-				.equals(workFlowStatus);
+		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(workFlowStatus);
+		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION.equals(workFlowStatus);
 
 		if ((isPendingAcknowledgement || isPendingVerify) && isOldVersion) {
 			return true;
 		}
 		return false;
 	}
-
 	// #29007 End vinod
+	
+	// 25791-start
+	/**
+	 * The method used to retrieve the contract status of the contract.
+	 * 
+	 * @param contractStatus
+	 * @return Effective, Terminated, Expired, Inactive
+	 */
+	public String getContractStatusDesc(int contractStatus) {
+		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EFFECTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INACTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EXPIRED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_TERMINATED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return "";
+		}
+	}
+	// 25791 -end-
+
+	// 25791 -start-
+	/**
+	 * The method used to retrieve the status completion of the contract.
+	 * 
+	 * @param contractNo
+	 * @param status
+	 * @return complete or incomplete
+	 */
+	public String chkContractStatusType(String contractNo, int status) {
+		if (StringUtils.isNotEmpty(contractNo) && StringUtils.isNotBlank(contractNo)) {
+			if (status == ContractConst.STATUS_COMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_COMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_INCOMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INCOMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			}
+		}
+
+		return "";
+	}
+	// 25791-End	
 	
 	// 26247 - start
 	/**
@@ -7181,22 +7274,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			reqDTO.setDocId(scQt.getParentQtId());
+			reqDTO.setDocId(scQt.getQtId());
+			List<Long> includedStatus = new ArrayList<>();
+			includedStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+			reqDTO.setStatusIds(includedStatus);
+			reqDTO.setCurrent(null);
 
-			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO)
-					.getWorkFlowStatus();
-			if (currentWorkFlowStatus != null
-					&& currentWorkFlowStatus.getPmStatus() != null
-					&& currentWorkFlowStatus.getPmStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH)) {
-				return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			List<ScWorkFlowStatus> currentWorkFlowStatus = workFlowStatusSO.retrieveWorkFlowStatus(reqDTO)
+					.getWorkFlowStatusList();
+			// Checking for current QT, if status is 60034L, then it is without Specification changes
+			if (CollectionUtils.isNotEmpty(currentWorkFlowStatus)) {
+				// checking for Parent QT, if WIP then Republished QT will also be WIP
+				return validateSupportedTask(getQTDetailSO().retrieveQtNoByparentQtId(scQt.getParentQtId()),
+						CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "checkParentRepublishQT", scQt.getQtNo(),
 					"checkParentRepublishQT", getUserIdSessionFromLoginId(), e);
 		}
 
-		return Boolean.TRUE;
+		return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 	}
 	//#28784 - End
 
@@ -7212,4 +7309,232 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		this.getManagedBean().setNewVersion(isQtNewVersion);
 	}
 	//#28784 - End
+	
+	//#28784 - Start
+	private boolean checkDemoWIP(ScQt scQt) {
+		try {
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			return evaluationSO.checkDemoWip(reqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoWIP",
+					scQt.getQtNo(), "checkDemoWIP", getUserIdSessionFromLoginId(), e);
+		}
+		return true;
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * Only used by demo to ensure that demo pdf/file able to be open even within zip file
+	 * 
+	 * @param zos
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFilesAsZipFile(ZipOutputStream zos,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		String demoKey = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);
+
+	    for (ScAttachment scAttachment : scAttachments) {
+
+	    	try {
+		        if (scAttachment == null || StringUtils.isBlank(scAttachment.getFilePath())) {
+		            continue;
+		        }
+
+		        File file = new File(getActualFilePath(scAttachment));
+		        String pdfEntryName = resolvePdfEntryName(scAttachment, demoKey);
+
+		        if (isDemoReport(scAttachment, demoKey)) {
+		            writeInnerZip(zos, file, pdfEntryName);
+		        } else {
+		            writePdfToOuterZip(zos, file, pdfEntryName);
+		        }
+			} catch (FileNotFoundException fnfe) {
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						"downloadSFAndRecommendationFilesAsZipFile", "",
+						"downloadSFAndRecommendationFilesAsZipFile", getUserIdSessionFromLoginId(), fnfe);
+				continue;
+	        }
+	    }
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private String resolvePdfEntryName(ScAttachment attachment, String demoKey) {
+
+	    String extension = FilenameUtils.getExtension(attachment.getFileName());
+
+	    if (StringUtils.isBlank(attachment.getTempFileName())) {
+	        return attachment.getFileName();
+	    }
+
+	    if (attachment.getTempFileName().contains(demoKey)) {
+	        return SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + "." + extension;
+	    }
+
+	    return attachment.getTempFileName() + "." + extension;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private boolean isDemoReport(ScAttachment attachment, String demoKey) {
+	    return StringUtils.isNotBlank(attachment.getTempFileName())
+	            && attachment.getTempFileName().contains(demoKey);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writeInnerZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    ByteArrayOutputStream innerBaos = new ByteArrayOutputStream();
+
+	    try (ZipOutputStream innerZos = new ZipOutputStream(innerBaos)) {
+	        innerZos.putNextEntry(new ZipEntry(pdfEntryName));
+	        copyFile(file, innerZos);
+	        innerZos.closeEntry();
+	    }
+
+	    zos.putNextEntry(
+	        new ZipEntry(SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + ".zip")
+	    );
+	    zos.write(innerBaos.toByteArray());
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writePdfToOuterZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    zos.putNextEntry(new ZipEntry(pdfEntryName));
+	    copyFile(file, zos);
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void copyFile(File file, OutputStream out) throws IOException {
+
+	    try (BufferedInputStream bis =
+	                 new BufferedInputStream(new FileInputStream(file))) {
+
+	        byte[] buffer = new byte[8192];
+	        int len;
+	        while ((len = bis.read(buffer)) > 0) {
+	            out.write(buffer, 0, len);
+	        }
+	    }
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * To download multiple files.
+	 * 
+	 * @param zipFileName
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		HttpServletResponse response = null;
+		ZipOutputStream zos = null;
+		try {
+			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response = PortalUtil.getHttpServletResponse(portalresponse);
+			String finalFileName = zipFileName + ".zip";
+			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+
+			zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+
+			downloadSFAndRecommendationFilesAsZipFile(zos, scAttachments);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			zos.close();
+			response.flushBuffer();
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	//#28784 - End
+	
+	//#35320 - START
+	/**
+	 * Set PTJ Org Profile of user for committee member.
+	 * 
+	 * @param tplMember
+	 */
+	public void setTplCommMemberOrgProfile(TplCommMember tplMember) {
+
+		if (tplMember.getPmUser() != null && tplMember.getPmUser().getOrgTypeCode() != null) {
+			String orgTypeCode = tplMember.getPmUser().getOrgTypeCode().getParameterCode();
+			if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)) {
+				tplMember.setPmOrgProfile(getBKPOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)) {
+				tplMember.setPmOrgProfile(getOTHOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else {
+				tplMember.setPmOrgProfile(getPTJOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			}
+		}
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Set Committeemember data.
+	 * 
+	 * @param deleteScMember
+	 *  @param currentScMember
+	 */
+	public TplCommMember setTplCommitteeMemberData(TplCommMember deletedCommitteeMember,
+			TplCommMember currentCommitteeMember) {
+
+		deletedCommitteeMember.setDeleted(false);
+		deletedCommitteeMember.setRepresentativeType(currentCommitteeMember.getRepresentativeType());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setMemberRoleId(currentCommitteeMember.getMemberRoleId());
+		deletedCommitteeMember.setMemberName(currentCommitteeMember.getMemberName());
+		deletedCommitteeMember.setDesignation(currentCommitteeMember.getDesignation());
+		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
+		deletedCommitteeMember.setGrade(currentCommitteeMember.getGrade());
+		deletedCommitteeMember.setPNP(currentCommitteeMember.isPNP());
+		deletedCommitteeMember.setPmUser(currentCommitteeMember.getPmUser());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setAccessRight(currentCommitteeMember.getAccessRight());
+		deletedCommitteeMember.setTplCommittee(currentCommitteeMember.getTplCommittee());
+
+		if (deletedCommitteeMember.getMemberRole() != null) {
+			deletedCommitteeMember.setMemberRoleId(deletedCommitteeMember.getMemberRole().getParameterId());
+		}
+
+		if (deletedCommitteeMember.getRepresentativeType() != null) {
+			deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType()
+					.getParameterId());
+		}
+		return deletedCommitteeMember;
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Representive type change.
+	 *
+	 * @param member the member
+	 */
+	public void tplRepresentiveTypeChangedListener(TplCommMember member) {
+		Long paramId = member.getRepresentativeTypeId();
+		if (null != paramId) {
+			member.setRepresentativeType(ParameterHelper.getInstance()
+					.getPmParameterById(paramId));
+		}
+	}
+	//#35320 - END
 }

@@ -2572,6 +2572,17 @@ public class SimpleQuoteBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
+			
+			//#25725 start
+			ParameterReqDTO prmtrReqDTO = new ParameterReqDTO();
+			prmtrReqDTO.setParameterId(quote
+					.getProcurementType().getParameterId());
+			PmParameter procType = getParameterSO()
+					.retrieveParameterById(prmtrReqDTO)
+					.getPmParameter();
+			quote.setProcurementType(procType);
+			
+			//#25725 end
 		} finally {
 			// quoteSO = null;
 		}
@@ -5030,7 +5041,9 @@ public class SimpleQuoteBackingBean extends
 		
 		// #26284 - Start
 		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
-		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED);
+		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_SUSPENDED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
 
 		criteria.append("recordStatus").append("^").append(recordStatus.toString()).append("^")
 				.append(SearchOperator.OPERATOR_IN.value());
