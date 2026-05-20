@@ -825,6 +825,11 @@
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+			<!-- #25726 Start -->	
+			<td>
+			 <table>
+			   <tr>
+			<!-- #25726 End -->
 				<td><c:choose>
 						<!-- 15391 -start- -->
 						<c:when
@@ -872,11 +877,14 @@
 							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose></td>
-					<!-- #25726 start -->
+			<!-- #25726 start -->
 					 <td style="margin-top: -3px">
 						<ac:iconTooltip rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
 					 </td>
-					<!-- #25726 end -->			
+			   </tr>
+			 </table>
+			</td>
+			<!-- #25726 end -->			
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"
