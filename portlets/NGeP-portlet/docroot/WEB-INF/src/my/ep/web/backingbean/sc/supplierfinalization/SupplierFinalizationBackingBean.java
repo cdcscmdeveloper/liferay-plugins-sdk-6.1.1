@@ -8571,7 +8571,10 @@ return	remarksNotFound;
 		
 		//#28834 - Start
 		if(!supplierSelected && (isNotSelectedRadioButton > 0)){ 
-		   validationRevisionSupplierBranchDeleted(zoneDtl, scQtRecommend, supplierSelected); //#28777&#29729
+		   //#28777&#29729 - Start
+		   setZoneAndTabIndexOnException(zoneDtl);
+		   validationRevisionSupplierBranchDeleted(zoneDtl, scQtRecommend, supplierSelected); 
+		   //#28777&#29729 - End
 		   throw new EpException(MessageConst.ERROR_760206);
 		} 
 		//#28834 - End
