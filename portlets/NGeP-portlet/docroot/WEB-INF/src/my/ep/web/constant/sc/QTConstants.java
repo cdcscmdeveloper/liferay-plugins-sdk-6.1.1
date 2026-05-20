@@ -309,6 +309,8 @@ public interface QTConstants {
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
 	public static final String CLOSE_CLONE_LOA_SPEC_POPUP = "cloneLoaSpec.hide()";
+	public static final String LBL_TPL_SPEC_CONTENT_QUANTITY = "lbl.tpl.spec.content.quantity";
+	public static final int DIRECT_LOA_TAB_INDEX_THREE=3;
 	//#29468 End Vinod
 	
 	// #33831 - Start
