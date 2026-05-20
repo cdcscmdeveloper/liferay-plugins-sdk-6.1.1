@@ -2023,7 +2023,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	
 	//#39693_40086 - Start
-	private boolean isRoleAuditorInternal(){
+	public boolean isRoleAuditorInternal(){
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
 	}
 	//#39693_40086 - End
@@ -9328,8 +9328,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 	private void setupApproveOtherPtjProcOrgHierarchy(Long orgProfileId) {
 		//usual org hierarchy
-		if (isRolePlanner() || isRoleVerifier() || isRoleApprover()) {
+		if (isRolePlanner() || isRoleVerifier() || isRoleApprover() ) {
 			setupGroupOrgTypeN(orgProfileId);
+		} else if (isRoleAuditorInternal()) {
+			PmOrgProfile ministry = retrieveMinistryOrgProfile(orgProfileId);
+
+			getManagedBean().setSelectedMinistry(ministry);
+			getManagedBean().setDisabledMinistryLov(true);
+			getManagedBean().getPlanSearchBean().setMinistry(ministry);
 		}
 	}
 
@@ -9359,7 +9365,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 
 	private void setupKumpulanPtjGroupOrg(Long orgProfileId) {
-		if (isRoleApprover() || isRoleAuditorInternal()) {
+		if (isRoleApprover()) {
 			PmOrgProfile ministry = retrieveMinistryOrgProfile(orgProfileId);
 			PmOrgProfile jabatan = retrieveJabatanOrgProfile(orgProfileId);
 

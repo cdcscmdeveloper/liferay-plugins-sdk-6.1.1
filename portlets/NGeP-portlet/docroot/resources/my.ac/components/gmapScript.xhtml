@@ -62,7 +62,8 @@
       function loadScript() {
     	    var script = document.createElement('script');
     	    script.type = 'text/javascript';
-    	    script.src = '//maps.googleapis.com/maps/api/js?key=AIzaSyBbfdeqtVd9i67p2wlvMAn0VgPaR9yOfNE';
+    	 	// #40306
+    	    script.src = '#{backingBean.gmapsScriptSrc}';
     	    document.body.appendChild(script);
     	}
 
