@@ -12422,6 +12422,113 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING)) {
 					checkDLOAZoneToUpdateUnitPriceForCloneItems(oldQuestion,
 							newQuestion);
+				} else if (bothQuestionsItem
+						&& newQuestion
+								.getClItem()
+								.trim()
+								.replaceAll("\\s", "")
+								.equalsIgnoreCase(
+										oldQuestion.getClItem().trim()
+												.replaceAll("\\s", ""))
+						&& StringUtils.equals(this.getManagedBean()
+								.getStandardTemplate(),
+								ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING)) {
+					createAnswersAndQuantitiesForQt(oldQuestion, newQuestion);
+				}
+			}
+		}
+	}
+
+	// #29468 Vinod End
+
+	// #29468 Vinod Start
+	private void createAnswersAndQuantitiesForQt(TplSpecQuestion oldQuestion,
+			TplSpecQuestion newQuestion) {
+		ScQt scQt = this.getManagedBean().getScQt();
+		boolean isZonal = scQt.isZonal();
+
+		if (isZonal) {
+			List<TplSpecZoneQty> newTplSpecZoneQties = new ArrayList<>();
+			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+					this.getManagedBean().getZoneTrees(), null);
+			boolean isZonePriceTypeTier = oldQuestion.getClPriceTypeCode()
+					.getParameterCode()
+					.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+
+			if (CollectionUtils.isNotEmpty(oldQuestion.getTplSpecZoneQties())
+					&& CollectionUtils.isNotEmpty(zoneDetails)
+					&& oldQuestion.getTplSpecZoneQties().size() == zoneDetails
+							.size()) {
+				for (int i = 0; i < oldQuestion.getTplSpecZoneQties().size(); i++) {
+					TplSpecZoneQty tplSpecZoneQty = new TplSpecZoneQty();
+					TplSpecZoneQty tplSpecZoneQtyOld = oldQuestion
+							.getTplSpecZoneQties().get(i);
+					tplSpecZoneQty.setQty(tplSpecZoneQtyOld.getQty());
+					tplSpecZoneQty.setTplSpecQuestion(newQuestion);
+					tplSpecZoneQty.setTplSpecZoneDtl(zoneDetails.get(i));
+					newTplSpecZoneQties.add(tplSpecZoneQty);
+				}
+			} else if (CollectionUtils.isNotEmpty(oldQuestion
+					.getTplSpecZoneQties())
+					&& CollectionUtils.isNotEmpty(zoneDetails)
+					&& oldQuestion.getTplSpecZoneQties().size() != zoneDetails
+							.size()) {
+				TplSpecZoneQty tplSpecZoneQtyOld = oldQuestion
+						.getTplSpecZoneQties().get(0);
+				for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
+					TplSpecZoneQty tplSpecZoneQty = new TplSpecZoneQty();
+
+					tplSpecZoneQty.setQty(tplSpecZoneQtyOld.getQty());
+					tplSpecZoneQty.setTplSpecQuestion(newQuestion);
+					tplSpecZoneQty.setTplSpecZoneDtl(tplSpecZoneDtl);
+					newTplSpecZoneQties.add(tplSpecZoneQty);
+				}
+			}
+			if (isZonePriceTypeTier) {
+				List<TplSpecAnswer> tplSpecAnswers = new ArrayList<>();
+				for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
+					for (TplSpecTierQty tplSpecTierQty : newQuestion
+							.getTplSpecTierQties()) {
+
+						TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
+
+						tplSpecSuppAnswer.setSmSupplier(this.getManagedBean()
+								.getScLoa().getScLoiLoa().getSmSupplier());
+						TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
+						tplSpecAnswer.setTplSpecQuestion(newQuestion);
+						tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
+						tplSpecSuppAnswer.setTplSpecZoneDtl(tplSpecZoneDtl);
+						tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
+						tplSpecAnswers.add(tplSpecAnswer);
+					}
+				}
+				if (CollectionUtils.isNotEmpty(tplSpecAnswers)) {
+					newQuestion.setTplSpecAnswers(tplSpecAnswers);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(newTplSpecZoneQties)) {
+				newQuestion.setTplSpecZoneQties(newTplSpecZoneQties);
+			}
+		} else {
+			boolean isPriceTypeTier = oldQuestion.getClPriceTypeCode()
+					.getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER);
+			if (isPriceTypeTier) {
+				List<TplSpecAnswer> tplSpecAnswers = new ArrayList<>();
+				for (TplSpecTierQty tplSpecTierQty : newQuestion
+						.getTplSpecTierQties()) {
+					TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
+
+					tplSpecSuppAnswer.setSmSupplier(this.getManagedBean()
+							.getScLoa().getScLoiLoa().getSmSupplier());
+					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
+					tplSpecAnswer.setTplSpecQuestion(newQuestion);
+					tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
+					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
+					tplSpecAnswers.add(tplSpecAnswer);
+				}
+				if (CollectionUtils.isNotEmpty(tplSpecAnswers)) {
+					newQuestion.setTplSpecAnswers(tplSpecAnswers);
 				}
 			}
 		}
@@ -13417,15 +13524,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #29468 Vinod Start
 	private String getZoneNameFromAnswers(TplSpecQuestion question) {
 		StringBuilder zoneName = new StringBuilder();
+		List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+				this.getManagedBean().getZoneTrees(), null);
 		if (CollectionUtils.isEmpty(question.getTplSpecAnswers())) {
-			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
-					this.getManagedBean().getZoneTrees(), null);
 			return zoneDetails.get(0).getZoneName();
 		}
 		for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
-			zoneName.append(specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl()
-					.getZoneName());
-			break;
+			if (specAnswer.getTplSpecZoneQty() != null
+					&& specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl() != null) {
+				zoneName.append(specAnswer.getTplSpecZoneQty()
+						.getTplSpecZoneDtl().getZoneName());
+				break;
+			} else {
+				return zoneDetails.get(0).getZoneName();
+			}
 		}
 
 		return zoneName.toString();
