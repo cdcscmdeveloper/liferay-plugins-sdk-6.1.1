@@ -156,6 +156,13 @@
 								styleClass="ui-button" update="#{isReject ? '@form' : ''},@([id$=messages])"
 								partialSubmit="true"
 								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
+						<ui:remove>Popup Verify Action</ui:remove>
+						<ac:confirmationPopup id="verifyConformDlgPid"
+								widget="verifyConformDlg" width="400" height="100"
+								okAction="purchaseInDefaultBackingBean.approverAction(bpmAction)"
+								title="#{lbl['lbl.sc.pid.verify.header.message']}"
+								content="#{lbl['lbl.sc.pid.verify.confirmation.message']}"
+								update="@form" />
 
 						</ui:repeat></td>
 						<ui:remove>#34449 - end</ui:remove>
@@ -191,12 +198,14 @@
 		</p:confirmDialog>
 		<!-- #9133 - end -->
 		<ui:remove>34449 - start</ui:remove>
+		<ui:remove> Popup Submit Action </ui:remove>
 		<ac:confirmationPopup id="submitConformDlgPid"
 			widget="submitConformDlg" width="400" height="100"
 			okAction="purchaseInDefaultBackingBean.submitPurchaseInDefault(null)"
 			title="#{lbl['lbl.sc.pid.submit.header.message']}"
 			content="#{lbl['lbl.sc.pid.submit.confirmation.message']}"
 			update="@form" />
+		
 		<ui:remove>34449 - end</ui:remove>
 		<ui:include
 			src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefaultHeader.xhtml" />

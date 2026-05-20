@@ -166,6 +166,8 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	private Long suppRemarkId = null;//#28865
 
 	private Object payLoad; //#9133
+	
+	private String bpmButtonOutcome; //#34449;
 	/**
 	 * Instantiates a new purchase in default managed bean.
 	 */

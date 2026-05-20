@@ -1143,8 +1143,16 @@ public class PurchaseInDefaultBackingBean extends
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 				getManagedBean().setAutoUpdate(true);//#9133
 				RequestContext.getCurrentInstance().execute("rejectPID.show()");
-		} else {
-			approverAction(outcome);
+		} 
+		//34449 - start
+		else if (BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(outcome)){
+			RequestContext.getCurrentInstance().execute("verifyConformDlg.show()");
+		//	approverAction(outcome);
+			//34449 - end
+		}else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+		}else if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
 		}
 	}
 	// 20190417@asyrafhaziq_12095 - End 	
