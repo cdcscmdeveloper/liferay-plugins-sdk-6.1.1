@@ -232,5 +232,32 @@
 		
 		
 		</p:confirmDialog>
+		//34442 - start
+		<p:confirmDialog id="submitConfirmDlgId"
+			message="#{requestCtAdminBackingBean.confirmationContentMsg}" 
+			severity="alert" widgetVar="submitConfirmDlg" closable="true"
+			header="#{lbl['lbl.msg.confirm.reject.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form" partialSubmit="true"
+					process="@this" action="#{requestCtAdminBackingBean.saveRequestCtAdmin('SUBMIT')}" 
+					onstart="submitConfirmDlg.hide();blockWidget.show();" 
+					oncomplete="blockWidget.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					type="button"  onclick="submitConfirmDlg.hide()" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog id="approveConfirmDlgId"
+			message="#{requestCtAdminBackingBean.confirmationContentMsg}" 
+			severity="alert" widgetVar="approveConfirmDlg" closable="true"
+			header="#{lbl['lbl.msg.confirm.reject.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					type="button" onclick="approveConfirmDlg.hide();gpki_dlg.show()"
+					/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					type="button"  onclick="approveConfirmDlg.hide()" />
+			</div>
+		</p:confirmDialog>
+		//34442 - end
 	</ui:define>
 </ui:composition>

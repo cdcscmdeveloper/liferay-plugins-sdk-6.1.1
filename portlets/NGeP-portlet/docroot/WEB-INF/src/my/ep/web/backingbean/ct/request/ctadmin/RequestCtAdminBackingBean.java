@@ -171,6 +171,22 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			return null;
 		}
 	}
+
+	//34442 - start
+	/**
+	 * The method used to prepare the confirmation dialog message content
+	 * by retrieving the contract status and contract number.
+	 */
+	private void prepareConfirmationContent() {
+		CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
+		setConfirmationContentMsg(
+			getConfirmationContent(
+				String.valueOf(contractVer.getStatus().getStatusId()),
+				contractVer.getCtContract().getContractNo()
+			)
+		);
+	}
+	//34442 - end
 	
 	/**
 	 * Method to authenticate user during submit of requestCtadmin
@@ -198,15 +214,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			}
 			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 				//34442 - start
-				CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
-
-				setConfirmationContentMsg(
-					getConfirmationContent(
-						String.valueOf(contractVer.getStatus().getStatusId()),
-						contractVer.getCtContract().getContractNo()
-					)
-				);
-				RequestContext.getCurrentInstance().update("approveConfirmDlgId");
+				prepareConfirmationContent();
 				RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
 				//34442 - end
 			}//21387 end
@@ -214,7 +222,15 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
-		}   else {
+		} 
+		//34442 - start
+		else if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+			prepareConfirmationContent();
+			RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+			return null;
+		} 
+		//34442 - end
+		else {
 			return saveRequestCtAdmin(outcome);
 		}
 	}
