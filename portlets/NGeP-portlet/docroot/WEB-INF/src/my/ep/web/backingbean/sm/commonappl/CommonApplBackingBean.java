@@ -1330,7 +1330,7 @@ public class CommonApplBackingBean extends
 				}
 			}
 		}else{
-			log.info("No Supplier");
+			log.info("No Supplier"); 
 		}
 		log.info(getManagedBean().getMofBeforeExpiryMsg());
 		log.info(getManagedBean().getMofAfterExpiryMsg());
