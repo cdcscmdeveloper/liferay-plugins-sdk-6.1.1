@@ -85,6 +85,8 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
 	//#34392 - end
+	// #38688
+	private String mofNo;
 	
 	public ViewApplHistoryManagedBean() {
 
@@ -462,4 +464,12 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
 	}
 	//#34392 - end
+	// #38688 Start
+	public String getMofNo() {
+		return mofNo;
+	}
+	public void setMofNo(String mofNo) {
+		this.mofNo = mofNo;
+	}
+	// #38688 End
 }

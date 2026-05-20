@@ -115,6 +115,7 @@
 						action="#{viewSuppProfileBackingBean.initSmApplByApplNo(smAppl[10],smAppl[6])}"
 						process="@this" partialSubmit="true" update="@form"
 						style="padding-right:5px;">
+						<f:setPropertyActionListener target="#{viewSuppProfileBackingBean.managedBean.mofNo}" value="#{smAppl[8]}"/>
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
