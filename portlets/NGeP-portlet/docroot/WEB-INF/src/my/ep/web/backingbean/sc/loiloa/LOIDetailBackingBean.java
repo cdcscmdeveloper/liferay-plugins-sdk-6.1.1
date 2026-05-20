@@ -3265,7 +3265,7 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				renewSessionWithPreviousValues();
-
+				populateMeetingPreparationTab(); // 34491
 				retrieveMultipleLoiDtls(scQtFinalization.getScQt().getQtId(),
 						getManagedBean().getCommitteeType(), getManagedBean()
 								.getRecommendDtlIds());
@@ -4627,7 +4627,6 @@ public class LOIDetailBackingBean extends
 		}
 		// 34491 - start
 		getManagedBean().setScQtCommittee(scQtCommittee);
-		this.populateMeetingPreparationTab(); 
 		// 34491 - end
 	}
 
@@ -7363,9 +7362,7 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
-		ScQt scQt = this.getManagedBean().getScQt();
-		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(
-				supplierId, scQt);
+		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(supplierId);
 		for (SmSupplierBranch wipSupplierBranch : wipSupplierBranchListDeleted) {
 			int statusFlag = wipSupplierBranch.getRecordStatusFlg();
 			if (statusFlag == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -7375,12 +7372,20 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
-		if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
-			supplierBranchListDeleted.addAll(wipSupplierBranchListDeleted);
+		List<SmSupplierBranch> supplierBranchListActive = listSupplierBranchList(supplierId);
+		if (CollectionUtils.isNotEmpty(supplierBranchListDeleted)) {
+			supplierBranchListDeleted.addAll(supplierBranchListActive);
+			getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		} else {
+			if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
+				wipSupplierBranchListDeleted.addAll(supplierBranchListActive);
+				getManagedBean().setSupplierBranchList(wipSupplierBranchListDeleted);
+			} else {
+				if (CollectionUtils.isNotEmpty(supplierBranchListActive)) {
+					getManagedBean().setSupplierBranchList(supplierBranchListActive);
+				}
+			}
 		}
-
-		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
-		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
 		
 	}
 
@@ -8110,9 +8115,7 @@ public class LOIDetailBackingBean extends
 		Long selectedZoneId = null;
 		retrievescoresettings(this.getManagedBean().getScQt());
 		//#38679 use new calculation if only has quantity 0 for zonal only
-		boolean isQtyNotNull = null != selectedZoneId
-		        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
-		
+
 		requestNoteItemId = (CollectionUtils.isNotEmpty(this.getManagedBean().getRecommendList()))
 			    ? this.getManagedBean().getRecommendList().get(0).getRequestItem().getRequestNoteItemId()
 			    : requestNoteItemId;
@@ -8121,6 +8124,9 @@ public class LOIDetailBackingBean extends
 			    ? this.getManagedBean().getSelectedZone().getSpecZoneId()
 			    : selectedZoneId;
 
+		boolean isQtyNotNull = null != selectedZoneId
+				        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
+		
 		if (null != this.getManagedBean().getRecommendedSupplierList()) {
 				if (null == this.getManagedBean().getSelectItemList()) {
 					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG;

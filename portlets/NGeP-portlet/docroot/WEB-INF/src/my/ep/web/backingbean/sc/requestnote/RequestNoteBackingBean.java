@@ -1166,10 +1166,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
 		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-				validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
-						getManagedBean().getRequestSupplierItem());
+				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());				
 		    }
+		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+					getManagedBean().getRequestSupplierItem());
 			// 27868 - end
 		}
 		// 26284 - End
@@ -1235,10 +1235,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// #29693 end
 
 		// #27545 - start
-		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
-				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
-			validateAssignedUser(requestNoteDtls);
-		}
+		//-- removed by redmine #27868, #33224 
 		// #27545 - end
 
 		// 26059 - remove if else
@@ -1713,7 +1710,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						rnDtl.getRequestItem().setItemName(utils.removeItemNameNA(rnDtl.getRequestItem().getItemName()));
 						//#26059 - End
 						// 27868 - start
-						if (getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+						String procType = getManagedBean().getProcurementType();
+						
+						if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+								&& getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(
+										ReasonCategory.JUSTIFICATION_PK7.value())) {
 							finalizeWIPCodePK7(rnDtl);
 						}
 						// 27868 - end
@@ -1962,6 +1963,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						getManagedBean().setShowAttachments(Boolean.FALSE);
 					}
 				}
+				CommonUtils commonUtils = new CommonUtils();
+				scRequestNoteDtl.getRequestItem().setItemName(commonUtils.removeItemNameNA(scRequestNoteDtl.getRequestItem().getItemName()));
 				// #26059 - end
 
 				scRequestNoteDtl.setConditionField(sb.toString());
@@ -2539,8 +2542,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			scRequestItem.setItemType(getParameterByTypeAndCode(ParameterTypeConst.SC_ITEM_TYPE,
 					ParameterConst.ITEM_TYPE_PRODUCT));
 		}
+
 		scRequestItem.setCmItem(cmItem);
-		scRequestItem.setItemName(cmItem.getItemName());
+		//#26059 - Start
+		CommonUtils commonUtils = new CommonUtils();
+		scRequestItem.setItemName(commonUtils.removeItemNameNA(cmItem.getItemName()));
+		//#26059 - End
 		scRequestItem.setItemDesc(cmSupplierItem.getItemDesc());
 		scRequestItem.setMinqty(cmSupplierItem.getMinOrder());
 
@@ -7771,22 +7778,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
 			List<PmReasonRestr> distinctReasonRestrList) {
 		for (PmReasonRestr rr : listReasonRestr) {
-			PmParameter param = rr.getSupplAcctTypeId();
-			boolean exists = false;
-
-			for (PmReasonRestr dr : distinctReasonRestrList) {
-				PmParameter existingParam = dr.getSupplAcctTypeId();
-
-				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
-						existingParam != null ? existingParam.getParameterCode() : "")) {
-					exists = true;
-					break;
+			if(rr.getSupplAcctTypeId() != null){
+				PmParameter param = rr.getSupplAcctTypeId();
+				boolean exists = false;
+	
+				for (PmReasonRestr dr : distinctReasonRestrList) {
+					PmParameter existingParam = dr.getSupplAcctTypeId();
+	
+					if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+							existingParam != null ? existingParam.getParameterCode() : "")) {
+						exists = true;
+						break;
+					}
 				}
+	
+				if (!exists) {
+		            distinctReasonRestrList.add(rr);
+		        }
 			}
-
-			if (!exists) {
-	            distinctReasonRestrList.add(rr);
-	        }
 	    }
 	}
 
@@ -8221,6 +8230,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			if (pmPK7Mapping != null){
 				defaultToPK7W(pmPK7Mapping, rnDtl);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem(rnDtl);
+				}
 			}
 			else {
 				defaultToSpecialtem(rnDtl);				

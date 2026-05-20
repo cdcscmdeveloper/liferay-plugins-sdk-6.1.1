@@ -95,6 +95,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;//#36738
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -5461,7 +5462,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
-	//#34397, #34398
+	//#34397, #34398, #27827
 	/**
 	 * Retrieve zones
 	 */
@@ -5593,6 +5594,7 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	// 29650 - end
+	
 	//#34397, #34398 - start
 	/**
 	 * @param type
@@ -5603,12 +5605,18 @@ public class RuleCatalogueBackingBean extends
 			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
 			|| RuleTypeConst.RENEW_PERIOD.equals(type);
 	}
-	
+    
+	//#27827 - start
 	public List<PmZone> getZones() {
-		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
-				getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		String type = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
+		if(RuleTypeConst.PTJ_CODE.equals(type)){
+			return getManagedBean().getMainZones();
+		} else {
+			return isRenewTypes(type) ? getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		}
 	}
-	
+	//#27827 - end
+
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
 			if (val.getZoneId() == null && val.isBrandNew()) {
@@ -5795,6 +5803,7 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
+		// #27827 to be deployed together - START
 		// search via desc
 		if (StringUtils.isNotBlank(searchRuleDesc)) {
 			List<PmConfigRuleValue> byDesc = searchByRuleValueDesc(originalList, searchRuleDesc, false);
@@ -5814,6 +5823,7 @@ public class RuleCatalogueBackingBean extends
 				resultList.retainAll(byZone);
 			}
 		}
+		// #27827 to be deployed together - END
 
 		// search via effective date and expiry date (exact date if only one, between if both)
 		if (searchEffDate != null || searchExpDate != null) {
@@ -5874,6 +5884,7 @@ public class RuleCatalogueBackingBean extends
 		return searchRuleTypeValueList;
 	}
 	
+	// #27827 to be deployed together - START
 	/**
 	 * #36738
 	 * filter rule values by description
@@ -5928,6 +5939,7 @@ public class RuleCatalogueBackingBean extends
 			return configRuleValuesList;
 		}
 	}
+	// #27827 to be deployed together - END
 	
 	/**
 	 * #36738
@@ -6081,19 +6093,35 @@ public class RuleCatalogueBackingBean extends
 	 * @return
 	 */
 	private List<PmPtjSpecialApproval> searchByPtj(List<PmPtjSpecialApproval> ptjApprovalList, String search, boolean useName) {
-	    List<PmPtjSpecialApproval> result = new ArrayList<PmPtjSpecialApproval>();
-	    for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
-	        String value = useName 
-	            ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName()
-	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
-	            String searchRegex = searchRegex(search);
-	            
-	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
-	        		|| value.toLowerCase().matches(searchRegex)) {
-	            result.add(ptjApproval);
-	        }
-	    }
-	    return result;
+		List<PmPtjSpecialApproval> result = new ArrayList<>();
+
+		if (search == null || search.isEmpty()) {
+			return result;
+		}
+
+		String searchLower = search.toLowerCase();
+		String regex = searchRegex(search);
+
+		for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
+			for (PmOrgValidity validity : ptjApproval.getPmOrgProfile().getPmOrgValidityList()) {
+				if (DbValueConst.RECORD_STATUS_ACTIVE !=(validity.getRecordStatusFlg())) {
+					continue;
+				}
+				
+				String value = useName ? validity.getOrgName() : validity.getOrgCode();
+				if (value == null) {
+					continue;
+				}
+				
+				String valueLower = value.toLowerCase();
+				if (valueLower.contains(searchLower) || valueLower.matches(regex)) {
+					result.add(ptjApproval);
+					break;
+				}
+			}
+		}
+
+		return result;
 	}
 	
 	/**

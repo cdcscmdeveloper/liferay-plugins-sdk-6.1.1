@@ -1190,8 +1190,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			Long qtId = scQt.getQtId();
 			
 			// #28784 - Demo WIP
-			boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-			this.getManagedBean().setNewVersion(isQtNewVersion);
+			checkDemoVersion(scQt);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setMaintanceFlow(true);
@@ -3320,7 +3319,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Retrieve briefing sitevisit tab dtl.
 	 */
 	public void retrieveBriefingSitevisitTabDtl() {
-		
 		ScQt qt = this.getManagedBean().getQt();
 		debugLogger("retrieveBriefingSitevisitTabDtl");
 
@@ -3385,10 +3383,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											.getCurrentWorkFlowStatus(),
 									scQtBsv.getBsvRemarks(),
 									ScQtBSVRemark.class));
+//							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+//									specZoneDtl,
+//									briefingResDTO.getBriefingList(),
+//									briefingResDTO.getSiteVisitList(), scQtBsv);
+							//#28188 - Start (for sorting) 
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
-									briefingResDTO.getBriefingList(),
-									briefingResDTO.getSiteVisitList(), scQtBsv);
+									groupAndSortSiteVisitList(briefingResDTO.getBriefingList()),
+									groupAndSortSiteVisitList(briefingResDTO.getSiteVisitList()), scQtBsv);
+							//#28188 - End
 							zoneBeans.add(briefingZoneBean);
 						}
 					}
@@ -3411,9 +3415,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.getManagedBean().getQt()
 							.getCurrentWorkFlowStatus(), qtBsv.getBsvRemarks(),
 							ScQtBSVRemark.class));
+//					BriefingZoneBean briefingZoneBean = new BriefingZoneBean( 
+//							null, resDTO.getBriefingList(),
+//							resDTO.getSiteVisitList(), qtBsv);
+					//#28188 - Start (for sorting)
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							null, resDTO.getBriefingList(),
-							resDTO.getSiteVisitList(), qtBsv);
+							null, groupAndSortSiteVisitList(resDTO.getBriefingList()),
+							groupAndSortSiteVisitList(resDTO.getSiteVisitList()), qtBsv);
+					//#28188 - End
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
 				}
 				QTBriefingSiteVisitBackingBean backingBean = new QTBriefingSiteVisitBackingBean();
@@ -3779,7 +3788,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
-		// #35350 - Start;
+		// #35320 - Start;
 		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
 			if (scQt.getFinalizationCommitte().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
@@ -3792,7 +3801,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		// #35350 - End
+		// #35320 - End
 		
 		if (finalizationSecratary == null
 				&& isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
@@ -6437,6 +6446,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					// this.getManagedBean().setContractType(scQt.getContractType());
 					
 					//#28784
+					checkDemoVersion(scQt);
 					if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 						this.getManagedBean().setDemoAction(true);
 						this.getManagedBean().setDemoType(true);						
@@ -15016,14 +15026,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * Get category code list 
 	 */
 	public void getPanelCategory() {
-
-		// 29661 & 40089 -start-
-		boolean isFromTaskList = StringUtils.isNotBlank(this.getManagedBean()
-				.getTaskName())
-				&& StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
-				&& SCProcessNameConst.REVISE_COMMITTEE.equals(this
-						.getManagedBean().getTaskName());
-		// 29661 & 40089 -end-
 		
 		List<ScQtCategory> listScQtCategories = getQtSpecSO()
 				.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
@@ -15032,12 +15034,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setQtCategoryList(listScQtCategories);
 			this.getManagedBean().setCtPanelCategory(false);
 			this.getManagedBean().setShowCategoryCodePanel(true);//#29661 #40094
-		}
-
+		} else { //#29661 #40093 27th Apr
 		// 29661 & 40089 -start-
-		else if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(status)
-				|| (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL
-						.equals(status) && isFromTaskList)) {
 			CtCircularVer ctCircularVer = this.getManagedBean().getQt()
 					.getCircularVer();
 			Long circularVerId;
@@ -15071,10 +15069,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
-		}else{
-			this.getManagedBean().setShowCategoryCodePanel(false);
+			if (isQTStatusPublished(status)){
+				List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
+				for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
+					if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
+						this.getManagedBean().setShowCategoryCodePanel(false);
+						break;
+					}
+				}
+				//#29661 #40093 27th Apr start
+				if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
+					this.getManagedBean().setShowCategoryCodePanel(false);
+				}
+			} //#29661 #40093 27th Apr end
 		}
-		//#29661 #40094 EndR
+		//#29661 #40094 End
 	}
 	
 	// 29661 & 40089 -start-
@@ -15222,6 +15231,82 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setAmendMentBean(amendMentBean);
 			amendMentBean = null;
 		} 
+	}
+	
+	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
+	    if (CollectionUtils.isEmpty(inputList)) {
+	        return new ArrayList<ScQtBsvDtl>();
+	    }
+
+	    // ==========================
+	    // STEP 1: GROUPING by bsvDesc
+	    // ==========================
+	    Map<String, List<ScQtBsvDtl>> grouped = new HashMap<String, List<ScQtBsvDtl>>();
+
+	    for (ScQtBsvDtl dtl : inputList) {
+
+	        String key = dtl.getBsvDesc();
+
+	        if (!grouped.containsKey(key)) {
+	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
+	        }
+
+	        grouped.get(key).add(dtl);
+	    }
+
+	    // ==========================
+	    // STEP 2: SORT EACH GROUP
+	    // ==========================
+	    for (List<ScQtBsvDtl> list : grouped.values()) {
+
+	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
+	            @Override
+	            public int compare(ScQtBsvDtl bsvDtl1, ScQtBsvDtl bsvDtl2) {
+
+	                Date bsvDate1 = bsvDtl1.getBsvDate();
+	                Date bsvDate2 = bsvDtl2.getBsvDate();
+
+	                if (bsvDate1 == null && bsvDate2 == null) return 0;
+	                if (bsvDate1 == null) return 1;
+	                if (bsvDate2 == null) return -1;
+
+	                return bsvDate2.compareTo(bsvDate1);
+	            }
+	        });
+	    }
+
+	    // ==========================
+	    // STEP 3: SORT GROUP ORDER
+	    // ==========================
+	    List<Map.Entry<String, List<ScQtBsvDtl>>> entries =
+	            new ArrayList<Map.Entry<String, List<ScQtBsvDtl>>>(grouped.entrySet());
+
+	    Collections.sort(entries, new Comparator<Map.Entry<String, List<ScQtBsvDtl>>>() {
+	        @Override
+	        public int compare(Map.Entry<String, List<ScQtBsvDtl>> bsvDtls1,
+	                           Map.Entry<String, List<ScQtBsvDtl>> bsvDtls2) {
+
+	            Date bsvDate1 = bsvDtls1.getValue().get(0).getBsvDate();
+	            Date bsvDate2 = bsvDtls2.getValue().get(0).getBsvDate();
+
+	            if (bsvDate1 == null && bsvDate2 == null) return 0;
+	            if (bsvDate1 == null) return 1;
+	            if (bsvDate2 == null) return -1;
+
+	            return bsvDate2.compareTo(bsvDate1);
+	        }
+	    });
+
+	    // ==========================
+	    // STEP 4: MERGE BACK
+	    // ==========================
+	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
+
+	    for (Map.Entry<String, List<ScQtBsvDtl>> entry : entries) {
+	        finalList.addAll(entry.getValue());
+	    }
+
+	    return finalList;
 	}
 	//#28188 - End
 	

@@ -940,7 +940,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
 		cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
 		cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
-		cdbb.getManagedBean().setSegmentTitle(segmentTitle);
+		cdbb.getManagedBean().setSegmentTitle(segmentTitle.replaceAll("\\s+", " ").trim());
 		cdbb.getManagedBean().setSegmentCode(segmentCode);
 		cdbb.getManagedBean().setFamilyTitle(familyTitle);
 		cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
@@ -1020,8 +1020,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.COMMON);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
+		filePath.append(CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
 
-		commonDownload(filePath.toString(), ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
+		commonDownload(filePath.toString(), CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
 	}
 }
