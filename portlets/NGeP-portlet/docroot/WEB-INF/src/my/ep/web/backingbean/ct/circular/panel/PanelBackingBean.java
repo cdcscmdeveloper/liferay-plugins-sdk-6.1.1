@@ -778,7 +778,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 				String docType = null;
-				if (getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+				if (getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) { //#37620,#34367
 					docType = ResourceBundleUtils.getMessage("lbl.ct.cancel.cc.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				} else {
 					docType = ResourceBundleUtils.getMessage("lbl.ct.cancel.panel.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -1218,31 +1218,34 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 					userRole = RoleCode.BPK_PQ_APPROVER.value();
 				}
 			}
-		} else { // Cancellation Request
+		} else { // Cancellation Request Process
+			// #37620,#34367 - Start
 			if (getManagedBean().getTaskName() == null
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)) {
 				if (getManagedBean().getCircularDocType() != null 
-						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)
+						&& (getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+								|| getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY))
 						&& getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) {
 					return RoleCode.BPK_PCA.value();
 				} else if (getManagedBean().getCircularDocType() != null 
-						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)
+						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)
 						&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
 					return RoleCode.BPK_CCA.value();
 				}
 			} else if (getManagedBean().getTaskName() != null
 					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME))) {
 				if (getManagedBean().getCircularDocType() != null 
-						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)
+						&& (getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+								|| getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY))
 						&& getFacesScopes().hasRoleUser(RoleCode.BPK_PQ_APPROVER.value())) {
 					return RoleCode.BPK_PQ_APPROVER.value();
 				} else if (getManagedBean().getCircularDocType() != null 
-						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)
+						&& getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)
 						&& getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value())) {
 					return RoleCode.BPK_CQ_APPROVER.value();
 				}
-			}
+			} // #37620,#34367 - End
 		}
 
 		if (userRole == null) {
@@ -2742,12 +2745,12 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 
 	/**
 	 * The method used to retrieve the approver role code base on doc type.
-	 * 
+	 * for Cancellation Request Process
 	 * @return the roleCode
 	 */
 	private String getApproverRoleCodeByDocType() {
 		String roleCode = null;
-		if(getManagedBean().getCircularDocType() != null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+		if(getManagedBean().getCircularDocType() != null && getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) { //#37620,#34367
 			roleCode = RoleCode.BPK_CQ_APPROVER.value();
 		} else {
 			roleCode = RoleCode.BPK_PQ_APPROVER.value();
