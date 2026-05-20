@@ -314,6 +314,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		confirmationMsgs.put(ContractStatusConst.FT_PENDING_REVISION_APPROVAL, "lbl.ct.ft.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.RA_PENDING_SUBMISSION, "lbl.ct.ra.submit.confirm");
 		confirmationMsgs.put(ContractStatusConst.RA_PENDING_APPROVAL, "lbl.ct.ra.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.XA_PENDING_SUBMISSION, "lbl.ct.xa.submit.confirm");
+		confirmationMsgs.put(ContractStatusConst.XA_PENDING_APPROVAL, "lbl.ct.xa.app.confirm");
 		
 		return confirmationMsgs.get(key);
 	}
