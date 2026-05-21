@@ -938,11 +938,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public void responseRedirect(){
 		log.info("*************responseRedirect*********");
 		FacesContext fc = FacesContext.getCurrentInstance();
-
+		
 		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
+		log.info("*************responseRedirect errorDesc : 40340 >>>*********" + errorDesc);
 		if(fc.getMessageList().size() < 1){
 			String[] msgParam = null;
-			
+			log.info("*************responseRedirect before message : 40340*********");
 			//#29481 - Start - added INFO_721068
 			List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
 			if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
@@ -951,6 +952,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			}else{
 				msgParam = new String[]{errorDesc};
 			}
+			log.info("*************responseRedirect msgParam : 40340 >>>*********" + msgParam);
 			fc.addMessage(
 					null,
 					new FacesMessage(getManagedBean().getMessageSeverity(), null,
