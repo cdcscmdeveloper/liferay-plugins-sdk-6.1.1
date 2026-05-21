@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.circular.cc;
 
@@ -135,7 +135,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
-import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;//Fix - #34367
 
 
 /**
@@ -146,7 +146,7 @@ import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;
  */
 @ManagedBean (name = "centralContractBackingBean") 
 @ViewScoped
-public class CentralContractBackingBean extends CircularBaseBackingBean<CentralContractManagedBean> { // 30737
+public class CentralContractBackingBean extends CircularCircularBaseBackingBean<CentralContractManagedBean> { // 30737 //Fix - #34367
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
@@ -181,15 +181,13 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		}
 	}
-	
-	//30737 - start
-//	/**
-//	 * This method used to retrieve user login  information
-//	 */
-//	private FacesScopes getFacesScopes() {
-//		return new FacesScopes();
-//	}
-	//30737 - end
+
+	/**
+	 * This method used to retrieve user login  information
+	 */
+	private FacesScopes getFacesScopes() {
+		return new FacesScopes();
+	}
 
 	/**
 	 * This  method used to initialize approver list
@@ -606,10 +604,11 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
 			}
-
+			getPTJOwner();//Fix - #34367
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
 				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
 			}
 			
 			// #39594 - Start
