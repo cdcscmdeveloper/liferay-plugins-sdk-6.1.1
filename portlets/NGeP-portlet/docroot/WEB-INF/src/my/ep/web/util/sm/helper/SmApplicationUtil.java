@@ -4671,9 +4671,13 @@ public class SmApplicationUtil {
 					String catType = previouscat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 					previouscat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					
+					// filter Appl Type MOF to prevent repeated KN on approved category.
+					// filter 20116 to prevent repeated category code after approval.
 					if ((catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) &&
-							!previouscat.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_MOF)) {
+							!previouscat.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_MOF) &&
+							!managedBean.getSmAppl().getPmStatus().getStatusId().
+							equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED)) {
 						
 						previouscat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previouscat.getSupplierCategoryId()));
 						managedBean.getOtherDescDataModel().reloadData();
