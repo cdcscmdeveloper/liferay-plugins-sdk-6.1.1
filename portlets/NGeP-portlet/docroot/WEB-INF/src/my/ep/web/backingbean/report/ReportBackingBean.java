@@ -13,11 +13,8 @@
 package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
@@ -40,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -52,6 +50,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -71,7 +70,6 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.biz.service.rpt.IReportTempInfoSO;
-import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.EpPropertiesConst;
@@ -119,16 +117,15 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
+import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.report.EnumReportType;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -148,7 +145,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -161,7 +157,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
-// TODO: Auto-generated Javadoc
 /**-
  * The Class ReportBackingBean.
  * 
@@ -169,12 +164,15 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "reportBackingBean")
 @ViewScoped
-public class ReportBackingBean extends
-		SourcingBaseBackingBean<ReportMangedBean>{
+public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(ReportBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(ReportBackingBean.class);
 
 	/**
 	 * Instantiates a new report backing bean.
@@ -10433,28 +10431,23 @@ public class ReportBackingBean extends
 		 */
 		List<Object[]> reportModList = null;
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IPMReportSO.class);
-			if (StringUtils.isNotEmpty(strLanguage)
-					&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
-				reportModList = reportSO.retrieveReportListBySubModule(
-						this.getModuleValue(), this.getReportCategory(),
-						lngUserId);
-			} else if (StringUtils.isNotEmpty(strLanguage)
-					&& (strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
-				reportModList = reportSO.retrieveMalayReportListBySubModule(
-						this.getModuleValue(), this.getReportCategory(),
-						lngUserId);
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+			if (StringUtils.isNotEmpty(strLanguage) && (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
+				reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(), this.getReportCategory(), lngUserId);
+			} else if (StringUtils.isNotEmpty(strLanguage) && (strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
+				reportModList = reportSO.retrieveMalayReportListBySubModule(this.getModuleValue(), this.getReportCategory(), lngUserId);
 			}
 			// List<Object[]> reportModList =
 			// reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
-			for (Object[] object : reportModList) {
-				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(object[0].toString());
-				selectItem.setValue(object[1].toString());
-				reportList.add(selectItem);
+			if (reportModList != null) {
+				for (Object[] object : reportModList) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1].toString());
+					reportList.add(selectItem);
+				}
 			}
+			
 		}
 		return reportList;
 	}
@@ -12964,6 +12957,7 @@ public class ReportBackingBean extends
 	/**
 	 * retrieveDates - Retrieve dates.
 	 */
+	@SuppressWarnings("deprecation")
 	public void retrieveDates() {
 		log.info("ReportBackingBean-retrieveDates");
 		if (StringUtils.isNotEmpty(this.getReportValue())) {
@@ -13096,7 +13090,7 @@ public class ReportBackingBean extends
 				.getInstance()
 				.getServiceObject(ReportConst.PM_MODULE_SER_OBJ, IStateSO.class);
 		StateReqDTO stateReqDTO = new StateReqDTO();
-		stateReqDTO.setCountryId(1L);// TODO malaysia
+		stateReqDTO.setCountryId(1L);
 		StateResDTO resStateDTO = stateSO
 				.retriveStatesListByCountryID(stateReqDTO);
 		if (CollectionUtils.isNotEmpty(resStateDTO.getStateList())) {
@@ -14339,81 +14333,52 @@ public class ReportBackingBean extends
 	 * generateReport - Generate all modules reports.
 	 */
 	public void generateReport() {
-		
+
 		log.info("ReportBackingBean-generateReport");
-		
-		if(reportValue.equals(ReportConst.LST_PUB_CAT_ITM_RPT_VAL) || reportValue.equals(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL)){
-			
+
+		if (reportValue.equals(ReportConst.LST_PUB_CAT_ITM_RPT_VAL) || reportValue.equals(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL)) {
+
 			String companyName = null;
-			
-			if(getManagedBean().getSelectedOrgProfile() != null){
-				if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
+
+			if (getManagedBean().getSelectedOrgProfile() != null) {
+				if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 					companyName = getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName();
 				}
 			}
 
-			String errMsg = ResourceBundleUtils.getMessage(
-					"lbl.rpt.report.validation",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-			
-			if(StringUtils.isEmpty(cmUnspscCode) && StringUtils.isEmpty(companyName)){
+			String errMsg = ResourceBundleUtils.getMessage("lbl.rpt.report.validation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+
+			if (StringUtils.isEmpty(cmUnspscCode) && StringUtils.isEmpty(companyName)) {
 				throw new EpException(errMsg);
 			}
 		}
-		
-		if ((StringUtils.isNotEmpty(this.getReportValue()) && this
-				.getReportValue().toString()
-				.equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))
-				|| ((StringUtils.isNotEmpty(this.getReportValue())) && this
-						.getReportValue()
-						.toString()
-						.equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL))
-				|| ((StringUtils.isNotEmpty(this.getReportValue())) && this
-						.getReportValue()
-						.toString()
-						.equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))
-				|| ((StringUtils.isNotEmpty(this.getReportValue())) && this
-						.getReportValue().toString()
-						.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))
-				){
+
+		if ((StringUtils.isNotEmpty(this.getReportValue()) && this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))
+				|| ((StringUtils.isNotEmpty(this.getReportValue())) && this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL))
+				|| ((StringUtils.isNotEmpty(this.getReportValue())) && this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))
+				|| ((StringUtils.isNotEmpty(this.getReportValue())) && this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
 			mofRegNoNumericValidation();
 		}
-		
-		if (StringUtils.isNotEmpty(this.getReportValue()) && (this
-				.getReportValue().toString()
-				.equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||
-				this
-				.getReportValue().toString()
-				.equals(ReportConst.SM_LIST_OF_PER_MORE_COMPANY_RPT_VAL)
-				)){
-			
-			if (this.getFromDate() == null
-					|| this.getToDate() == null) {
+
+		if (StringUtils.isNotEmpty(this.getReportValue())
+				&& (this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL) || this.getReportValue().toString()
+						.equals(ReportConst.SM_LIST_OF_PER_MORE_COMPANY_RPT_VAL))) {
+
+			if (this.getFromDate() == null || this.getToDate() == null) {
 				throw new EpException(MessageConst.ERROR_REPORT_780051);
 			}
 		}
-		
+
 		rptGenBean = new ReportsGenerateBean();
 		// rptGenBean.setReportCategory(this.getReportCategory());
 
-		if (StringUtils.isNotEmpty(this.getModuleValue())
-				&& (StringUtils.isNotEmpty(this.getManagedBean()
-						.getReportValue()))) {
-			if (!(getManagedBean().getReportValue().toString()
-					.equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))
-					&& !(getManagedBean().getReportValue().toString()
-							.equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))
-					&& !(getManagedBean().getReportValue().toString()
-							.equals(ReportConst.PDW_EC_RPT_VAL))) {
-				if (((this.getFromDate() == null && this.getToDate() != null) || ((this
-						.getFromDate() != null && this.getToDate() == null)))
-						|| (StringUtils.isEmpty(this.getScCreatedToMonth())
-								&& StringUtils.isNotEmpty(this
-										.getScCreatedFromMonth()) || StringUtils
-								.isNotEmpty(this.getScCreatedToMonth())
-								&& StringUtils.isEmpty(this
-										.getScCreatedFromMonth()))) {
+		if (StringUtils.isNotEmpty(this.getModuleValue()) && (StringUtils.isNotEmpty(this.getManagedBean().getReportValue()))) {
+			if (!(getManagedBean().getReportValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))
+					&& !(getManagedBean().getReportValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))
+					&& !(getManagedBean().getReportValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))) {
+				if (((this.getFromDate() == null && this.getToDate() != null) || ((this.getFromDate() != null && this.getToDate() == null)))
+						|| (StringUtils.isEmpty(this.getScCreatedToMonth()) && StringUtils.isNotEmpty(this.getScCreatedFromMonth()) || StringUtils.isNotEmpty(this.getScCreatedToMonth())
+								&& StringUtils.isEmpty(this.getScCreatedFromMonth()))) {
 					throw new EpException(MessageConst.ERROR_REPORT_780004);
 				}
 			}
@@ -14427,105 +14392,60 @@ public class ReportBackingBean extends
 					checkOneYearDefference(this.getFromDate(), this.getToDate());
 				}
 			}
-			if ((this.getCtCircularEffectiveFromDate() != null)
-					&& (this.getCtCircularEffectiveToDate() != null)) {
-				if (this.getCtCircularEffectiveFromDate().after(
-						this.getCtCircularEffectiveToDate())) {
+			if ((this.getCtCircularEffectiveFromDate() != null) && (this.getCtCircularEffectiveToDate() != null)) {
+				if (this.getCtCircularEffectiveFromDate().after(this.getCtCircularEffectiveToDate())) {
 					throw new EpException(MessageConst.ERROR_REPORT_780008);
 				}
 			}
-			if ((this.getCtCircularEffectiveFromDate() != null)
-					&& (this.getCtCircularEffectiveToDate() != null)) {
-				if (this.getCtCircularEffectiveFromDate().after(
-						this.getCtCircularEffectiveToDate())) {
-					checkOneYearDefference(
-							this.getCtCircularEffectiveFromDate(),
-							this.getCtCircularEffectiveToDate());
+			if ((this.getCtCircularEffectiveFromDate() != null) && (this.getCtCircularEffectiveToDate() != null)) {
+				if (this.getCtCircularEffectiveFromDate().after(this.getCtCircularEffectiveToDate())) {
+					checkOneYearDefference(this.getCtCircularEffectiveFromDate(), this.getCtCircularEffectiveToDate());
 				}
 			}
 
-			if ((this.getScSoneCrtdFromDate() != null)
-					&& (this.getScSoneCrtdToDate() != null)) {
-				if (this.getScSoneCrtdFromDate().after(
-						this.getScSoneCrtdToDate())) {
+			if ((this.getScSoneCrtdFromDate() != null) && (this.getScSoneCrtdToDate() != null)) {
+				if (this.getScSoneCrtdFromDate().after(this.getScSoneCrtdToDate())) {
 					throw new EpException(MessageConst.ERROR_REPORT_780008);
 				}
 			}
-			if ((this.getScSoneCrtdFromDate() != null)
-					&& (this.getScSoneCrtdToDate() != null)) {
-				if (this.getScSoneCrtdToDate().after(
-						this.getScSoneCrtdFromDate())) {
-					checkOneYearDefference(this.getScSoneCrtdFromDate(),
-							this.getScSoneCrtdToDate());
+			if ((this.getScSoneCrtdFromDate() != null) && (this.getScSoneCrtdToDate() != null)) {
+				if (this.getScSoneCrtdToDate().after(this.getScSoneCrtdFromDate())) {
+					checkOneYearDefference(this.getScSoneCrtdFromDate(), this.getScSoneCrtdToDate());
 				}
 			}
 			if (StringUtils.isNotEmpty(this.getManagedBean().getReportValue())) {
-				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-						+ getManagedBean().getReportValue());
+				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ + getManagedBean().getReportValue());
 			}
 
-			if ((((PmUser) new FacesScopes().getUserSessionBean()).getUserId() != null)
-					&& (new FacesScopes().getUserSessionBean().getUserId()
-							.toString() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setUserIdVar(ReportConst.FL_AMP_USER_ID_EQ
-						+ new FacesScopes().getUserSessionBean().getUserId()
-								.toString());
+			if ((((PmUser) new FacesScopes().getUserSessionBean()).getUserId() != null) && (new FacesScopes().getUserSessionBean().getUserId().toString() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setUserIdVar(ReportConst.FL_AMP_USER_ID_EQ + new FacesScopes().getUserSessionBean().getUserId().toString());
 			}
-			if (StringUtils.isNotEmpty(this.getReportValue())
-					&& (this.getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL))
-					|| (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean()
-							.getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_COLLECTION_PAYMENT_METHODS_RPT_VAL)))
-					|| (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean()
-							.getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_REVENUE_COLLECTION_RPT_VAL)))) {
-				if ((CollectionUtils
-						.isEmpty(this.getSmMofRegistrationFeeList())
-						&& CollectionUtils.isEmpty(this
-								.getSmProcessingFeeList()) && CollectionUtils
-							.isEmpty(this.getSmSoftCertificateFeeList()))) {
+			if (StringUtils.isNotEmpty(this.getReportValue()) && (this.getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL))
+					|| (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_COLLECTION_PAYMENT_METHODS_RPT_VAL)))
+					|| (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_REVENUE_COLLECTION_RPT_VAL)))) {
+				if ((CollectionUtils.isEmpty(this.getSmMofRegistrationFeeList()) && CollectionUtils.isEmpty(this.getSmProcessingFeeList()) && CollectionUtils.isEmpty(this
+						.getSmSoftCertificateFeeList()))) {
 					throw new EpException(MessageConst.ERROR_REPORT_780027);
 				}
 			}
-			if (StringUtils.isNotEmpty(this.getReportValue())
-					&& this.getManagedBean()
-							.getReportValue()
-							.trim()
-							.equalsIgnoreCase(
-									ReportConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL)) {
+			if (StringUtils.isNotEmpty(this.getReportValue()) && this.getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_COLLECTION_AND_TRANSACTION_DATE_RPT_VAL)) {
 				if (this.getFromDate() == null || this.getToDate() == null) {
 					throw new EpException(MessageConst.ERROR_REPORT_780034);
 				}
 			}
-			if (StringUtils.isNotEmpty(this.getReportValue())
-					&& this.getManagedBean()
-							.getReportValue()
-							.trim()
-							.equalsIgnoreCase(
-									ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL)) {
+			if (StringUtils.isNotEmpty(this.getReportValue()) && this.getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL)) {
 				if (this.getSmApplicationStatus() == null) {
 					throw new EpException(MessageConst.ERROR_REPORT_780036);
 				}
 			}
 
-			if (StringUtils.isNotEmpty(this.getReportValue())
-					&& this.getManagedBean()
-							.getReportValue()
-							.trim()
-							.equalsIgnoreCase(
-									ReportConst.SM_LIST_OF_PRE_EXPIRY_COMPANY_RPT_VAL)) {
+			if (StringUtils.isNotEmpty(this.getReportValue()) && this.getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_LIST_OF_PRE_EXPIRY_COMPANY_RPT_VAL)) {
 				if (this.getFromDate() == null || this.getToDate() == null) {
 					throw new EpException(MessageConst.ERROR_REPORT_780037);
 				}
 			}
-			
-			if (StringUtils.isNotEmpty(this.getReportValue())
-					&& this.getManagedBean()
-							.getReportValue()
-							.trim()
-							.equalsIgnoreCase(
-									ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER)) {
+
+			if (StringUtils.isNotEmpty(this.getReportValue()) && this.getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER)) {
 				if (StringUtils.isEmpty(this.getSmGSTRegisteredStatus())) {
 					throw new EpException(MessageConst.ERROR_REPORT_780038);
 				}
@@ -14533,215 +14453,108 @@ public class ReportBackingBean extends
 					throw new EpException(MessageConst.ERROR_REPORT_780039);
 				}
 			}
-			if (StringUtils.isNotEmpty(this.getReportValue())
-					&& this.getManagedBean()
-							.getReportValue()
-							.trim()
-							.equalsIgnoreCase(
-									ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL)) {
+			if (StringUtils.isNotEmpty(this.getReportValue()) && this.getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL)) {
 				if (this.getFromDate() == null || this.getToDate() == null) {
 					throw new EpException(MessageConst.ERROR_REPORT_780040);
 				}
 			}
 
-			/*
-			 * if (StringUtils.isNotEmpty(this.getReportValue()) &&
-			 * this.getManagedBean() .getReportValue() .trim()
-			 * .equalsIgnoreCase(
-			 * ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL)) { if
-			 * (StringUtils.isEmpty(this.getSmCompanyName())) { throw new
-			 * EpException(MessageConst.ERROR_REPORT_780044); } if
-			 * (StringUtils.isEmpty(this.getSmApplicationNo())) { throw new
-			 * EpException(MessageConst.ERROR_REPORT_780046); } if
-			 * (StringUtils.isEmpty(this.getSmSVOUser())) { throw new
-			 * EpException(MessageConst.ERROR_REPORT_780045); } if
-			 * (StringUtils.isEmpty(this.getSmState())) { throw new
-			 * EpException(MessageConst.ERROR_REPORT_780042); } if
-			 * (StringUtils.isEmpty(this.getSmDistrict())) { throw new
-			 * EpException(MessageConst.ERROR_REPORT_780043); } if
-			 * (this.getFromDate() == null || this.getToDate() == null) { throw
-			 * new EpException(MessageConst.ERROR_REPORT_780041); } }
-			 */
-
-			/*
-			 * if (StringUtils.isNotEmpty(this.getReportValue()) &&
-			 * this.getManagedBean() .getReportValue() .trim()
-			 * .equalsIgnoreCase(
-			 * ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL)) { if
-			 * (CollectionUtils.isNotEmpty(selectedCatList)) { for
-			 * (SmSupplierCategory supCat : selectedCatList) { if
-			 * (supCat.getPmCategoryL1().getCategoryL1Id() == null) { throw new
-			 * EpException( MessageConst.ERROR_REPORT_780047); } } } }
-			 */
-			if (((StringUtils.isNotEmpty(this.getSmThresholdFromYear())) && (StringUtils
-					.isEmpty(this.getSmThresholdToYear())))
-					|| ((StringUtils.isEmpty(this.getSmThresholdFromYear())) && StringUtils
-							.isNotEmpty(this.getSmThresholdToYear()))) {
+			if (((StringUtils.isNotEmpty(this.getSmThresholdFromYear())) && (StringUtils.isEmpty(this.getSmThresholdToYear())))
+					|| ((StringUtils.isEmpty(this.getSmThresholdFromYear())) && StringUtils.isNotEmpty(this.getSmThresholdToYear()))) {
 				throw new EpException(MessageConst.ERROR_REPORT_780016);
 			}
-			if ((StringUtils.isNotEmpty(this.getSmThresholdFromYear()))
-					&& (StringUtils.isNotEmpty(this.getSmThresholdToYear()))) {
-				checkOnlyYearFieldDefference(this.getSmThresholdFromYear(),
-						this.getSmThresholdToYear());
+			if ((StringUtils.isNotEmpty(this.getSmThresholdFromYear())) && (StringUtils.isNotEmpty(this.getSmThresholdToYear()))) {
+				checkOnlyYearFieldDefference(this.getSmThresholdFromYear(), this.getSmThresholdToYear());
 			}
-			if ((StringUtils.isNotEmpty(this.getSmCreatedFromYear()))
-					&& (StringUtils.isNotEmpty(this.getSmCreatedToYear()))) {
-				checkOnlyYearFieldDefference(this.getSmCreatedFromYear(),
-						this.getSmCreatedToYear());
+			if ((StringUtils.isNotEmpty(this.getSmCreatedFromYear())) && (StringUtils.isNotEmpty(this.getSmCreatedToYear()))) {
+				checkOnlyYearFieldDefference(this.getSmCreatedFromYear(), this.getSmCreatedToYear());
 			}
-			if ((StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean()
-					.getReportValue().trim()
-					.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE)))
-					|| (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean()
-							.getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_THRESHOLD)))
-					|| (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean()
-							.getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_THRESHOLD_VALUE)))) {
-				if ((StringUtils.isNotEmpty(this.getSmThresholdFromYear()))
-						&& (StringUtils.isNotEmpty(this.getSmThresholdToYear()))) {
-					checkTwoYearsFieldDefference(this.getSmThresholdFromYear(),
-							this.getSmThresholdToYear());
+			if ((StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE)))
+					|| (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_THRESHOLD)))
+					|| (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_THRESHOLD_VALUE)))) {
+				if ((StringUtils.isNotEmpty(this.getSmThresholdFromYear())) && (StringUtils.isNotEmpty(this.getSmThresholdToYear()))) {
+					checkTwoYearsFieldDefference(this.getSmThresholdFromYear(), this.getSmThresholdToYear());
 				}
 			}
-			if (StringUtils.isNotEmpty(this.getReportValue())
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL))) {
-				if ((StringUtils.isNotEmpty(this.getSmCreatedFromYear()))
-						&& (StringUtils.isNotEmpty(this.getSmCreatedToYear()))) {
-					checkTwoYearsFieldDefference(this.getSmCreatedFromYear(),
-							this.getSmCreatedToYear());
+			if (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL))) {
+				if ((StringUtils.isNotEmpty(this.getSmCreatedFromYear())) && (StringUtils.isNotEmpty(this.getSmCreatedToYear()))) {
+					checkTwoYearsFieldDefference(this.getSmCreatedFromYear(), this.getSmCreatedToYear());
 				}
 			}
 
-			if (StringUtils.isNotEmpty(this.getReportValue())
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL))) {
+			if (StringUtils.isNotEmpty(this.getReportValue()) && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL))) {
 				if (StringUtils.isEmpty(this.getSmMofRegNo())) {
 					// throw new EpException("MOF No. is mandatory.");
 					throw new EpException(MessageConst.ERROR_REPORT_780029);
 				}
 			}
 
-			if (StringUtils.isNotEmpty(this.getModuleValue())
-					&& (this.getModuleValue()
-							.equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN))) {
+			if (StringUtils.isNotEmpty(this.getModuleValue()) && (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN))) {
 				if (StringUtils.isBlank(this.getPpYear())) {
 					throw new EpException(MessageConst.ERROR_REPORT_780030);
 				}
-			} else if (StringUtils.isNotEmpty(this.getModuleValue())
-					&& (this.getModuleValue()
-							.equalsIgnoreCase(ModuleCodeConst.PROFILE_MANAGEMENT))) {
+			} else if (StringUtils.isNotEmpty(this.getModuleValue()) && (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.PROFILE_MANAGEMENT))) {
 				if (this.isValuesEmpty()) {
-					
-					if (StringUtils.isNotBlank(this.getPmOrgCategory())
-							&& StringUtils.isNotBlank(this.getPmOrgType())) {
+
+					if (StringUtils.isNotBlank(this.getPmOrgCategory()) && StringUtils.isNotBlank(this.getPmOrgType())) {
 						this.setValuesEmpty(false);
 					}
-					if (StringUtils.isNotBlank(this.getPmOrgType())
-							&& StringUtils.isNotBlank(this.getPmOrgName())) {
+					if (StringUtils.isNotBlank(this.getPmOrgType()) && StringUtils.isNotBlank(this.getPmOrgName())) {
 						this.setValuesEmpty(false);
 					}
-					if (StringUtils.isNotBlank(this.getPmOrgCode())
-							&& StringUtils.isNotBlank(this.getPmOrgName())
-							&& StringUtils.isNotBlank(this.getPmStatus())) {
+					if (StringUtils.isNotBlank(this.getPmOrgCode()) && StringUtils.isNotBlank(this.getPmOrgName()) && StringUtils.isNotBlank(this.getPmStatus())) {
 						this.setValuesEmpty(false);
 					}
-					if (StringUtils.isNotEmpty(this.getManagedBean()
-							.getReportCode())) {
-						if ((this
-								.getManagedBean()
-								.getReportCode()
-								.equals(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL)
-								|| this.getManagedBean()
-										.getReportCode()
-										.equals(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL) || this
-								.getManagedBean()
-								.getReportCode()
+					if (StringUtils.isNotEmpty(this.getManagedBean().getReportCode())) {
+						if ((this.getManagedBean().getReportCode().equals(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL)
+								|| this.getManagedBean().getReportCode().equals(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL) || this.getManagedBean().getReportCode()
 								.equals(ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL))) {
 							this.setValuesEmpty(false);
 						} else {
-							switch (EnumReportType.valueOf(this
-									.getManagedBean().getReportCode())) {
+							switch (EnumReportType.valueOf(this.getManagedBean().getReportCode())) {
 
-							case PM_002:
-
-								if (StringUtils
-										.isBlank(this.getPmOrgCategory())) {
-									throw new EpException(
-											MessageConst.ERROR_REPORT_780031);
+								case PM_002:
+	
+									if (StringUtils.isBlank(this.getPmOrgCategory())) {
+										throw new EpException(MessageConst.ERROR_REPORT_780031);
+									}
+									if (StringUtils.isBlank(this.getPmOrgType())) {
+										throw new EpException(MessageConst.ERROR_REPORT_780032);
+									}
+									break;
+								case PM_003:
+	
+									if (StringUtils.isBlank(this.getPmOrgType())) {
+										throw new EpException(MessageConst.ERROR_REPORT_780032);
+									}
+									if (StringUtils.isBlank(this.getPmOrgName())) {
+										throw new EpException(MessageConst.ERROR_REPORT_780033);
+									}
+									break;
+								case PM_004:
+	
+									if (StringUtils.isBlank(this.getPmOrgCode()) && StringUtils.isBlank(this.getPmOrgName()) && StringUtils.isBlank(this.getPmStatus())) {
+										throw new EpException(MessageConst.ERROR_REPORT_780003);
+									}
+									break;
+								case PM_001:
+	
+									if (StringUtils.isBlank(this.getPmServiceType()) && StringUtils.isBlank(this.getPmFinancialOrgName()) && StringUtils.isBlank(this.getPmBusinessRegNo())
+											&& StringUtils.isBlank(this.getPmStatus())) {
+										throw new EpException(MessageConst.ERROR_REPORT_780003);
+									}
+									break;
+								default: {
+									System.out.println("In generateReport unknown for PM report value" + this.getReportValue());
+									log.info("In generateReport unknown for PM report value \t" + this.getReportValue());
 								}
-								if (StringUtils.isBlank(this.getPmOrgType())) {
-									throw new EpException(
-											MessageConst.ERROR_REPORT_780032);
-								}
-								break;
-							case PM_003:
-
-								/*if (StringUtils.isBlank(this.getPmOrgType())
-										&& StringUtils.isBlank(this
-												.getPmOrgName())
-										&& StringUtils.isBlank(this
-												.getPmIdentificationNo())
-										&& StringUtils.isBlank(this
-												.getPmUserName())
-										&& StringUtils.isBlank(this
-												.getPmRoleCode())
-										&& StringUtils.isBlank(this
-												.getPmStatus())) {
-									throw new EpException(
-											MessageConst.ERROR_REPORT_780003);
-								}*/
-								
-								if (StringUtils.isBlank(this.getPmOrgType())) {
-									throw new EpException(
-											MessageConst.ERROR_REPORT_780032);
-								}
-								if (StringUtils.isBlank(this.getPmOrgName())) {
-									throw new EpException(
-											MessageConst.ERROR_REPORT_780033);
-								}								
-								break;
-							case PM_004:
-
-								if (StringUtils.isBlank(this.getPmOrgCode())
-										&& StringUtils.isBlank(this
-												.getPmOrgName())
-										&& StringUtils.isBlank(this
-												.getPmStatus())) {
-									throw new EpException(
-											MessageConst.ERROR_REPORT_780003);
-								}
-								break;
-							case PM_001:
-
-								if (StringUtils
-										.isBlank(this.getPmServiceType())
-										&& StringUtils.isBlank(this
-												.getPmFinancialOrgName())
-										&& StringUtils.isBlank(this
-												.getPmBusinessRegNo())
-										&& StringUtils.isBlank(this
-												.getPmStatus())) {
-									throw new EpException(
-											MessageConst.ERROR_REPORT_780003);
-								}
-							default: {
-								System.out
-										.println("In generateReport unknown for PM report value"
-												+ this.getReportValue());
-								log.info("In generateReport unknown for PM report value \t"
-										+ this.getReportValue());
-							}
 							}
 						}
 					} else {
 						this.setValuesEmpty(false);
 					}
 				}
-			} else if (StringUtils.isNotEmpty(this.getModuleValue())
-					&& (this.getModuleValue()
-							.equalsIgnoreCase(ModuleCodeConst.DIRECT_PURCHASE))) {
+			} else if (StringUtils.isNotEmpty(this.getModuleValue()) && (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.DIRECT_PURCHASE))) {
 				if (this.isValuesEmpty()) {
 					if (StringUtils.isNotBlank(this.getScCommonStatus())) {
 						this.setValuesEmpty(false);
@@ -14749,118 +14562,63 @@ public class ReportBackingBean extends
 					if (StringUtils.isNotEmpty(this.getReportValue())) {
 
 						switch (EnumReportType.valueOf(this.getReportValue())) {
-						case SC_050:
-						case SC_051:
-
-							if (StringUtils.isBlank(this.getScSupplier())
-									&& StringUtils.isBlank(this.getScPIno())
-									&& StringUtils.isBlank(this
-											.getScCommonStatus())
-									&& StringUtils.isBlank(this
-											.getScRequisenerId())
-									&& StringUtils.isBlank(this.getScPtj())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
+							case SC_050:
+							case SC_051:
+	
+								if (StringUtils.isBlank(this.getScSupplier()) && StringUtils.isBlank(this.getScPIno()) && StringUtils.isBlank(this.getScCommonStatus())
+										&& StringUtils.isBlank(this.getScRequisenerId()) && StringUtils.isBlank(this.getScPtj())) {
+									throw new EpException(MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							case SC_055:
+	
+								if (StringUtils.isBlank(this.getScPurchaseInDefaultStatus()) && StringUtils.isBlank(this.getScPIDNo()) && StringUtils.isBlank(this.getScContractOrPKPType())
+										&& StringUtils.isBlank(this.getScContractOrPKPName()) && StringUtils.isBlank(this.getScContractOrPKPNo()) && StringUtils.isBlank(this.getScRequisenerId())
+										&& StringUtils.isBlank(this.getScPtj())) {
+									throw new EpException(MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							case SC_067:
+	
+								if (StringUtils.isBlank(this.getScPurchaseInDefaultStatus()) && StringUtils.isBlank(this.getScSupplier()) && StringUtils.isBlank(this.getScPIDNo())
+										&& StringUtils.isBlank(this.getScContractOrPKPType()) && StringUtils.isBlank(this.getScContractOrPKPName()) && StringUtils.isBlank(this.getScContractOrPKPNo())
+										&& StringUtils.isBlank(this.getScRequisenerId()) && StringUtils.isBlank(this.getScPtj())) {
+									throw new EpException(MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							case SC_058:
+							case SC_056:
+	
+								if (StringUtils.isBlank(this.getScSupplier()) && StringUtils.isBlank(this.getScRequestNoteStatus()) && StringUtils.isBlank(this.getScProcurementType())
+										&& StringUtils.isBlank(this.getScRequestQuoteNo()) && StringUtils.isBlank(this.getScRequisenerId()) && StringUtils.isBlank(this.getScPtj())) {
+									throw new EpException(MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							case SC_060:
+							case SC_062:
+	
+								if (StringUtils.isBlank(this.getScSupplier()) && StringUtils.isBlank(this.getScProcurementType()) && StringUtils.isBlank(this.getScSimpleQuoteStatus())
+										&& StringUtils.isBlank(this.getScProcessRptQuotationNo()) && StringUtils.isBlank(this.getScRequisenerId()) && StringUtils.isBlank(this.getScPtj())) {
+									throw new EpException(MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							case SC_068:
+	
+								if (StringUtils.isBlank(this.getScProcessRptQuotationNo())) {
+									throw new EpException(MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							case SC_069:
+								if (StringUtils.isBlank(this.getScSupplier()) && StringUtils.isBlank(this.getScSimpleQuoteType()) && StringUtils.isBlank(this.getScSOAStatus())
+										&& StringUtils.isBlank(this.getScProcessRptQuotationNo()) && StringUtils.isBlank(this.getScLOANo()) && StringUtils.isBlank(this.getScRequisenerId())
+										&& StringUtils.isBlank(this.getScPtj())) {
+									throw new EpException(MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							default: {
+								System.out.println("In generateReport unknown report value" + this.getReportValue());
+								log.info("In generateReport unknown report value \t" + this.getReportValue());
 							}
-						case SC_055:
-
-							if (StringUtils.isBlank(this
-									.getScPurchaseInDefaultStatus())
-									&& StringUtils.isBlank(this.getScPIDNo())
-									&& StringUtils.isBlank(this
-											.getScContractOrPKPType())
-									&& StringUtils.isBlank(this
-											.getScContractOrPKPName())
-									&& StringUtils.isBlank(this
-											.getScContractOrPKPNo())
-									&& StringUtils.isBlank(this
-											.getScRequisenerId())
-									&& StringUtils.isBlank(this.getScPtj())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-
-						case SC_067:
-
-							if (StringUtils.isBlank(this
-									.getScPurchaseInDefaultStatus())
-									&& StringUtils
-											.isBlank(this.getScSupplier())
-									&& StringUtils.isBlank(this.getScPIDNo())
-									&& StringUtils.isBlank(this
-											.getScContractOrPKPType())
-									&& StringUtils.isBlank(this
-											.getScContractOrPKPName())
-									&& StringUtils.isBlank(this
-											.getScContractOrPKPNo())
-									&& StringUtils.isBlank(this
-											.getScRequisenerId())
-									&& StringUtils.isBlank(this.getScPtj())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-						case SC_058:
-						case SC_056:
-
-							if (StringUtils.isBlank(this.getScSupplier())
-									&& StringUtils.isBlank(this
-											.getScRequestNoteStatus())
-									&& StringUtils.isBlank(this
-											.getScProcurementType())
-									&& StringUtils.isBlank(this
-											.getScRequestQuoteNo())
-									&& StringUtils.isBlank(this
-											.getScRequisenerId())
-									&& StringUtils.isBlank(this.getScPtj())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-						case SC_060:
-						case SC_062:
-
-							if (StringUtils.isBlank(this.getScSupplier())
-									&& StringUtils.isBlank(this
-											.getScProcurementType())
-									&& StringUtils.isBlank(this
-											.getScSimpleQuoteStatus())
-									&& StringUtils.isBlank(this
-											.getScProcessRptQuotationNo())
-									&& StringUtils.isBlank(this
-											.getScRequisenerId())
-									&& StringUtils.isBlank(this.getScPtj())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-						case SC_068:
-
-							if (StringUtils.isBlank(this
-									.getScProcessRptQuotationNo())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-
-						case SC_069:
-							if (StringUtils.isBlank(this.getScSupplier())
-									&& StringUtils.isBlank(this
-											.getScSimpleQuoteType())
-									&& StringUtils.isBlank(this
-											.getScSOAStatus())
-									&& StringUtils.isBlank(this
-											.getScProcessRptQuotationNo())
-									&& StringUtils.isBlank(this.getScLOANo())
-									&& StringUtils.isBlank(this
-											.getScRequisenerId())
-									&& StringUtils.isBlank(this.getScPtj())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-						default: {
-							System.out
-									.println("In generateReport unknown report value"
-											+ this.getReportValue());
-							log.info("In generateReport unknown report value \t"
-									+ this.getReportValue());
-						}
 						}
 					}
 				} else {
@@ -14868,137 +14626,61 @@ public class ReportBackingBean extends
 				}
 			}
 
-			if (StringUtils.isNotEmpty(this.getModuleValue())
-					&& (this.getModuleValue()
-							.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
-				if (StringUtils.isNotEmpty(this.getReportValue())
-						&& (this.getReportValue().trim()
-								.equalsIgnoreCase(ReportConst.LST_ITM_CODE_RPT_VAL))) {
+			if (StringUtils.isNotEmpty(this.getModuleValue()) && (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
+				if (StringUtils.isNotEmpty(this.getReportValue()) && (this.getReportValue().trim().equalsIgnoreCase(ReportConst.LST_ITM_CODE_RPT_VAL))) {
 					this.setFromDate(null);
 					this.setToDate(null);
-					if (StringUtils.isBlank(this.getCmUnspscCode())
-							&& StringUtils.isBlank(this.getCmUnspscTitle())
-							&& StringUtils.isBlank(this.getCmItemName())) {
+					if (StringUtils.isBlank(this.getCmUnspscCode()) 
+							&& StringUtils.isBlank(this.getCmUnspscTitle()) && StringUtils.isBlank(this.getCmItemName())) {
 						throw new EpException(MessageConst.ERROR_REPORT_780003);
 					}
 				}
 			}
-			 reloadLovsValues();
-			// this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+			reloadLovsValues();
 
-			if (this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.SUPPLIER_SELECTION)
-					|| this.getModuleValue().equalsIgnoreCase(
-							ReportConst.DP_MOD_VAL)) {
+			if (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION) 
+					|| this.getModuleValue().equalsIgnoreCase(ReportConst.DP_MOD_VAL)) {
 				generateSCReport();
-			} else if (this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.CATALOGUE_MANAGEMENT)) {
+			} else if (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)) {
 				generateCMReport();
-			} else if (this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.ORDER_FULFILLMENT)) {
+			} else if (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)) {
 				generateFLReport();
-			} else if (this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT)) {
+			} else if (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)) {
 				generateSMReport();
-			} else if (this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.CONTRACT_MANAGEMENT)) {
+			} else if (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)) {
 				generateCTReport();
-			} else if (this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.PROCUREMENT_PLAN)) {
+			} else if (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN)) {
 				generatePPReport();
-			} else if (this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.PROFILE_MANAGEMENT)) {
+			} else if (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.PROFILE_MANAGEMENT)) {
 				generatePMReport();
 			}
 			if (StringUtils.isNotEmpty(constructedparamConstrString)) {
-				// try {
-				//getManagedBean().getRptGenBean().setGenerateButtonView(true);
-				// generateReportTimer();
-				// generateReportIntime();
 
-				/*
-				 * 1.TO replace '%20' as in total white spacce Of
-				 * constructedparamConstrString 2.Report Server(Linux Env) Consider
-				 * white space as '%20'
-				 */
-
-				String spaceRemovalParameter = constructedparamConstrString
-						.replaceAll(" ", "%20");
-				if (StringUtils.isNotEmpty(strLanguage)
-						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
-					fileGenerateReport(getManagedBean().getReportTitle(),
-							spaceRemovalParameter);
-				} else if (StringUtils.isNotEmpty(strLanguage)
-						&& (strLanguage
-								.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
-					fileGenerateReport(getManagedBean().getReportTitle(),
-							spaceRemovalParameter);
+				String spaceRemovalParameter = constructedparamConstrString.replaceAll(" ", "%20");
+				if (StringUtils.isNotEmpty(strLanguage) && (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
+					fileGenerateReport(getManagedBean().getReportTitle(), spaceRemovalParameter);
+				} else if (StringUtils.isNotEmpty(strLanguage) && (strLanguage.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
+					fileGenerateReport(getManagedBean().getReportTitle(), spaceRemovalParameter);
 				}
-				
-				if (this.getModuleValue().equalsIgnoreCase(
-						ModuleCodeConst.SUPPLIER_SELECTION)) {
-					if (this.reportValue
-							.equals(ReportConst.SC_QUOT_TENDER_OR_RPT_VAL) || this.reportValue
-							.equals(ReportConst.SC_SUMMRY_SRC_OR_RPT_VAL)) {
 
-						int count = deleteDecryptedDataAfterReportGeneration(
-								lngUserId, this.reportValue);
-						
+				if (this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)) {
+					if (this.reportValue.equals(ReportConst.SC_QUOT_TENDER_OR_RPT_VAL) || this.reportValue.equals(ReportConst.SC_SUMMRY_SRC_OR_RPT_VAL)) {
+
+						int count = deleteDecryptedDataAfterReportGeneration(lngUserId, this.reportValue);
+
 						log.info("deleted Decrypted Records Count===> " + count);
 					}
 				}
-			
-				
-				/*
-				 * if (StringUtils.isNotEmpty(strLanguage) &&
-				 * (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
-				 * fileGenerateReport(getManagedBean().getReportTitle(),
-				 * constructedparamConstrString); } else if
-				 * (StringUtils.isNotEmpty(strLanguage) && (strLanguage
-				 * .equalsIgnoreCase(ReportConst.MALAY_LANG))) {
-				 * fileGenerateReport(getManagedBean().getReportTitle(),
-				 * constructedparamConstrString); }
-				 */
 
-				/*
-				 * FacesContext.getCurrentInstance().getPartialViewContext().
-				 * getRenderIds().add("reportGenDialog.hide()");//execute(
-				 * "reportGenDialog.hide()");
-				 * RequestContext.getCurrentInstance()
-				 * .execute("reportGenDialog.hide()");
-				 */
 				getManagedBean().getRptGenBean().setGenerateButtonView(false);
-				/*
-				 * } catch (IOException e) {
-				 * getManagedBean().getRptGenBean().setGenerateButtonView
-				 * (false); throw new
-				 * EpException(MessageConst.ERROR_REPORT_780009); }
-				 */
-			}
-			// InputStream stream =
-			// ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream("/css/images/optimus.jpg");
-			// //file = new DefaultStreamedContent(stream, "image/jpg",
-			// "downloaded_optimus.jpg");
-			// RequestContext.getCurrentInstance().execute("statusDialog.hide()");
-			/*
-			 * RequestContext context = RequestContext.getCurrentInstance();
-			 * context.addCallbackParam(ReportConst.RPT_IN_VALID,
-			 * ReportConst.RPT_TRUE);
-			 */
-			// externalContext.addResponseCookie("primefaces.download", "true",
-			// Collections.<String, Object>emptyMap());
 
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
-			externalContext.addResponseCookie("primefaces.download",
-					ReportConst.RPT_TRUE,
-					Collections.<String, Object> emptyMap());
+			}
+
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object> emptyMap());
 		} else {
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
-			externalContext.addResponseCookie("primefaces.download",
-					ReportConst.RPT_TRUE,
-					Collections.<String, Object> emptyMap());
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object> emptyMap());
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 
@@ -18896,219 +18578,183 @@ public class ReportBackingBean extends
 	 * @param paramConstrString
 	 *            the param constr string
 	 */
-	protected void fileGenerateReport(String reportTitle,			
-			String paramConstrString) {
-		
+	protected void fileGenerateReport(String reportTitle, String paramConstrString) {
+
 		Timestamp time = DateUtils.getCurrentDate();
-		
+
 		log.info("ReportBackingBean-fileGenerateReport Time stamp =" + time);
-		
+
 		StringBuilder gnrtdURL = new StringBuilder();
 
 		if (this.getManagedBean().getReportUrlValue().equals("1")) {
-			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.EXC_PREV_URL2));
+			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL2));
 		} else if (this.getManagedBean().getReportUrlValue().equals("0")) {
-			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.EXC_PREV_URL));
+			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
 		}
-		
+
 		gnrtdURL.append(paramConstrString);
-		
+
 		String footerStr = "";
-		
+
 		boolean isExcel = false;
-		
-		if (this.getManagedBean().getReportValue()
-				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || this.getManagedBean().getReportValue()
-				.equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL) ) {
-			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.EXC_NEXT_URL_XLS));
-			
+
+		if (this.getManagedBean().getReportValue().equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || this.getManagedBean().getReportValue().equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL)) {
+			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL_XLS));
+
 			footerStr = " destype=cache desformat=enhancedspreadsheet ";
-			
+
 			isExcel = true;
-			
+
 		} else {
-			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.EXC_NEXT_URL));
-			
+			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));
+
 			footerStr = " destype=cache desformat=pdf ";
 		}
 
-				String reportStr = gnrtdURL.toString();
+		String reportStr = gnrtdURL.toString();
 
-				FacesScopes facesScope = new FacesScopes();
-				ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-						.getRequestScope(WebKeys.THEME_DISPLAY);
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 
+		String commonUrl = "";
 
-				String commonUrl = "";
-				
-				try {
-					commonUrl = themeDisplay.getURLCurrent().substring(
-							0,
-							themeDisplay.getURLCurrent().indexOf(
-									themeDisplay.getLayout().getGroup()
-											.getFriendlyURL())
-									+ themeDisplay.getLayout().getGroup()
-											.getFriendlyURL().length());
-				} catch (PortalException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (SystemException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+		try {
+			commonUrl = themeDisplay.getURLCurrent().substring(0,
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL()) + themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+		} catch (PortalException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		if (testing) {
+
+			log.info("1");
+
+			boolean isTempAccess = false;
+
+			log.info("2");
+
+			int i = Integer.parseInt(this.getManagedBean().getReportUrlValue());
+
+			log.info("3");
+
+			if (i == 1) {
+				isTempAccess = true;
+			}
+
+			log.info("4");
+
+			// paramConstrString = paramConstrString.replace("&", " ");
+			// paramConstrString = paramConstrString.replaceAll("^\\s+", "");
+			// paramConstrString = paramConstrString.replaceAll("\\s+$", "");
+			// paramConstrString = paramConstrString.replaceAll("(=)","$1\"");
+			// paramConstrString = paramConstrString.replaceAll("( )","\"$1");
+			// paramConstrString = paramConstrString + "\"";
+
+			paramConstrString = paramConstrString.replaceAll("%20", " ");
+
+			paramConstrString = paramConstrString.substring(1, paramConstrString.length());
+
+			log.info("5");
+
+			StringBuffer reportUrl = new StringBuffer(paramConstrString);
+
+			// PmUser user = new FacesScopes().getUserSessionBean();
+
+			log.info("6");
+
+			IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
+
+			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl.toString(), this.getReportValue(), reportTitle, lngUserId, isExcel, isTempAccess);
+
+			log.info("6");
+
+			// System.out.println("reportbackingbean - " + reportTitle);
+
+			this.getManagedBean().setRequestId(String.valueOf(resDTO.getRequestId()));
+			this.getManagedBean().setJobId(String.valueOf(resDTO.getJobId()));
+			this.getManagedBean().setReportServerHasError(resDTO.isReportServerHasError());
+
+			if (!resDTO.isReportServerHasError()) {
+				RequestContext.getCurrentInstance().execute("ex.show();");
+			} else {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Error while communicating with report server. Please try again later."));
+			}
+
+			if (isReportTest()) {
+				this.getManagedBean().setReportUrl(resDTO.getReportUrl());
+			}
+
+		} else {
+
+			HttpURLConnection urlConnection = null;
+			URL obj;
+			BufferedInputStream buf = null;
+			try {
+				obj = new URL(gnrtdURL.toString());
+				log.info(gnrtdURL.toString());
+				urlConnection = (HttpURLConnection) obj.openConnection();
+
+				// new Thread(new InterruptThread(urlConnection)).start();
+				log.info("@@@@ Report URL = " + urlConnection.getURL() + " @@@@ Time stamp =" + time);
+				buf = new BufferedInputStream(urlConnection.getInputStream());
+
+				log.info("@@@@ Report URL222 = " + urlConnection.getURL() + "@@@@ Response Code222 = " + urlConnection.getResponseCode() + " @@@@ Time stamp =" + time);
+				log.info("@@@@ Report getContentLength = " + urlConnection.getContentLength() + " @@@@ Time stamp =" + time);
+
+				log.info("@@@@ Start the PortletResponse from here" + " @@@@ Time stamp =" + time);
+				PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+				log.info("@@@@ PortletResponse = " + portletResponse + " @@@@ Time stamp =" + time);
+
+				HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
+				log.info("@@@@ HttpServletResponse = " + res + " @@@@ Time stamp =" + time);
+
+				writeReportDataToPDFOrExcel(reportTitle, time, buf, res);
+
+			} catch (MalformedURLException e) {
+				log.info("@@@@ ReportBackingBean-MalformedURLException" + e + " @@@@ Time stamp =" + time);
+				e.printStackTrace();
+				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+				externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object> emptyMap());
+				getManagedBean().getRptGenBean().setGenerateButtonView(false);
+				throw new EpException(MessageConst.ERROR_REPORT_780009);
+			} catch (IllegalArgumentException e) {
+				log.info("@@@@ ReportBackingBean-IllegalArgumentException " + e + " @@@@ Time stamp =" + time);
+				e.printStackTrace();
+				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+				externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object> emptyMap());
+				getManagedBean().getRptGenBean().setGenerateButtonView(false);
+				throw new EpException(MessageConst.ERROR_REPORT_780009);
+			} catch (IOException e) {
+				log.info("@@@@ ReportBackingBean-IOException " + e);
+				e.printStackTrace();
+				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+				externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object> emptyMap());
+				getManagedBean().getRptGenBean().setGenerateButtonView(false);
+				throw new EpException(MessageConst.ERROR_REPORT_780020);
+			} catch (Exception e) {
+				log.info("@@@@ ReportBackingBean-Exception " + e + " @@@@ Time stamp =" + time);
+				e.printStackTrace();
+			} finally {
+				log.info("@@@@ ReportBackingBean-fileGenerateReport finally block" + " @@@@ Time stamp =" + time);
+				if (buf != null) {
+					try {
+						buf.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						log.error(e.getMessage(), e);
+					}
+				}
+				if (urlConnection != null) {
+					urlConnection.disconnect();
 				}
 				
-				if(testing){
-
-					log.info("1");
-					
-					boolean isTempAccess = false;
-					
-					log.info("2");
-					
-					int i = Integer.parseInt(this.getManagedBean().getReportUrlValue());
-					
-					log.info("3");
-					
-					if(i == 1){
-						isTempAccess = true;
-					}
-
-					log.info("4");
-					
-					//paramConstrString = paramConstrString.replace("&", " ");
-					//paramConstrString = paramConstrString.replaceAll("^\\s+", "");
-					//paramConstrString = paramConstrString.replaceAll("\\s+$", "");
-					//paramConstrString = paramConstrString.replaceAll("(=)","$1\"");
-					//paramConstrString = paramConstrString.replaceAll("( )","\"$1");
-					//paramConstrString = paramConstrString + "\"";
-					
-					paramConstrString = paramConstrString.replaceAll("%20" , " ");
-
-					paramConstrString = paramConstrString.substring(1, paramConstrString.length());
-				
-					log.info("5");
-					
-					StringBuffer reportUrl = new StringBuffer(paramConstrString);
-					
-					//PmUser user = new FacesScopes().getUserSessionBean();
-					
-					
-					
-					log.info("6");
-					
-					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IRPTRequestSO.class);
-					
-					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl.toString(), this.getReportValue(), reportTitle, lngUserId, isExcel, isTempAccess);
-					
-					log.info("6");
-					
-					//System.out.println("reportbackingbean - " + reportTitle);
-					
-					this.getManagedBean().setRequestId(String.valueOf(resDTO.getRequestId()));
-					this.getManagedBean().setJobId(String.valueOf(resDTO.getJobId()));
-					this.getManagedBean().setReportServerHasError(resDTO.isReportServerHasError());
-					
-					if(!resDTO.isReportServerHasError()){
-						RequestContext.getCurrentInstance().execute("ex.show();");
-					} else {
-						FacesContext facesContext = FacesContext.getCurrentInstance();
-						facesContext.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Error while communicating with report server. Please try again later."));
-					}
-					
-					if(isReportTest()){
-						this.getManagedBean().setReportUrl(resDTO.getReportUrl());
-					}
-					
-				}  else {
-		
-		HttpURLConnection urlConnection = null;
-		URL obj;
-		BufferedInputStream buf;
-		try {
-			obj = new URL(gnrtdURL.toString());
-			log.info(gnrtdURL.toString());
-			urlConnection = (HttpURLConnection) obj.openConnection();
-			
-			// new Thread(new InterruptThread(urlConnection)).start();
-			log.info("@@@@ Report URL = " + urlConnection.getURL()
-					+ " @@@@ Time stamp =" + time);
-			buf = new BufferedInputStream(urlConnection.getInputStream());
-
-			log.info("@@@@ Report URL222 = " + urlConnection.getURL()
-					+ "@@@@ Response Code222 = "
-					+ urlConnection.getResponseCode() + " @@@@ Time stamp ="
-					+ time);
-			log.info("@@@@ Report getContentLength = "
-					+ urlConnection.getContentLength() + " @@@@ Time stamp ="
-					+ time);
-
-			log.info("@@@@ Start the PortletResponse from here"
-					+ " @@@@ Time stamp =" + time);
-			PortletResponse portletResponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			log.info("@@@@ PortletResponse = " + portletResponse
-					+ " @@@@ Time stamp =" + time);
-
-			HttpServletResponse res = PortalUtil
-					.getHttpServletResponse(portletResponse);
-			log.info("@@@@ HttpServletResponse = " + res + " @@@@ Time stamp ="
-					+ time);
-			
-		     writeReportDataToPDFOrExcel(reportTitle, time, buf, res);
-		     
-		} catch (MalformedURLException e) {
-			log.info("@@@@ ReportBackingBean-MalformedURLException" + e
-					+ " @@@@ Time stamp =" + time);
-			e.printStackTrace();
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
-			externalContext.addResponseCookie(
-					org.primefaces.util.Constants.DOWNLOAD_COOKIE,
-					ReportConst.RPT_TRUE,
-					Collections.<String, Object> emptyMap());
-			getManagedBean().getRptGenBean().setGenerateButtonView(false);
-			throw new EpException(MessageConst.ERROR_REPORT_780009);
-		} catch (IllegalArgumentException e) {
-			log.info("@@@@ ReportBackingBean-IllegalArgumentException " + e
-					+ " @@@@ Time stamp =" + time);
-			e.printStackTrace();
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
-			externalContext.addResponseCookie(
-					org.primefaces.util.Constants.DOWNLOAD_COOKIE,
-					ReportConst.RPT_TRUE,
-					Collections.<String, Object> emptyMap());
-			getManagedBean().getRptGenBean().setGenerateButtonView(false);
-			throw new EpException(MessageConst.ERROR_REPORT_780009);
-		} catch (IOException e) {
-			log.info("@@@@ ReportBackingBean-IOException " + e);
-			e.printStackTrace();
-			ExternalContext externalContext = FacesContext.getCurrentInstance()
-					.getExternalContext();
-			externalContext.addResponseCookie("primefaces.download",
-					ReportConst.RPT_TRUE,
-					Collections.<String, Object> emptyMap());
-			getManagedBean().getRptGenBean().setGenerateButtonView(false);
-			throw new EpException(MessageConst.ERROR_REPORT_780020);
-		} catch (Exception e) {
-			log.info("@@@@ ReportBackingBean-Exception " + e
-					+ " @@@@ Time stamp =" + time);
-			e.printStackTrace();
-		} finally {
-			log.info("@@@@ ReportBackingBean-fileGenerateReport finally block"
-					+ " @@@@ Time stamp =" + time);
-			urlConnection.disconnect();
-		}
-		log.info("@@@@ End of ReportBackingBean-fileGenerateReport"
-				+ " @@@@ Time stamp =" + time);
+			}
+			log.info("@@@@ End of ReportBackingBean-fileGenerateReport" + " @@@@ Time stamp =" + time);
 		}
 	}
 
@@ -20241,6 +19887,7 @@ public class ReportBackingBean extends
 	 * 
 	 * @return true, if successful
 	 */
+	/*
 	private boolean checkDefaultValuesForAllModules() {
 		return StringUtils.isNotEmpty(this.getCtContrMontrStatus())
 				|| StringUtils.isNotEmpty(this.getCtUserType())
@@ -20320,6 +19967,7 @@ public class ReportBackingBean extends
 				|| StringUtils.isNotEmpty(this.getFlContractRequest())
 				|| StringUtils.isNotEmpty(this.getFlPurchaseOrderNo());
 	}
+	*/
 
 	/**
 	 * Construct condition fields.
