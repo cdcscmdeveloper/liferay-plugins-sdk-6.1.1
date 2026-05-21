@@ -48,9 +48,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
-import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -118,9 +116,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils; //#39594
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
-import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -146,7 +142,7 @@ import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;//Fix - #34367
  */
 @ManagedBean (name = "centralContractBackingBean") 
 @ViewScoped
-public class CentralContractBackingBean extends CircularCircularBaseBackingBean<CentralContractManagedBean> { // 30737 //Fix - #34367
+public class CentralContractBackingBean extends CircularBaseBackingBean<CentralContractManagedBean> { // 30737 //Fix - #34367
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
@@ -185,7 +181,7 @@ public class CentralContractBackingBean extends CircularCircularBaseBackingBean<
 	/**
 	 * This method used to retrieve user login  information
 	 */
-	private FacesScopes getFacesScopes() {
+	public FacesScopes getFacesScopes() {
 		return new FacesScopes();
 	}
 

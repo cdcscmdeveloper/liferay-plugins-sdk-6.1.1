@@ -34,7 +34,7 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	 * This method used to initiate FacesScopes
 	 * instances of current request
 	 */
-	public FacesScopes getFacesScopes() {
+	protected FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
