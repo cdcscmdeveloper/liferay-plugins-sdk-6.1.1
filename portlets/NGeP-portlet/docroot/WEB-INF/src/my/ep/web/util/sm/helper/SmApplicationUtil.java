@@ -4671,8 +4671,9 @@ public class SmApplicationUtil {
 					String catType = previouscat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 					previouscat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					
-					if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					if ((catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) &&
+							!previouscat.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_MOF)) {
 						
 						previouscat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previouscat.getSupplierCategoryId()));
 						managedBean.getOtherDescDataModel().reloadData();
