@@ -941,25 +941,30 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		
 		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
 		log.info("*************responseRedirect errorDesc : 40340 >>>*********" + errorDesc);
-		if(fc.getMessageList().size() < 1){
-			String[] msgParam = null;
-			log.info("*************responseRedirect before message : 40340*********");
-			//#29481 - Start - added INFO_721068
-			List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
-			if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
-			//#29481 - End
-				msgParam = getManagedBean().getMsgParam();
-			}else{
-				msgParam = new String[]{errorDesc};
-			}
-			log.info("*************responseRedirect msgParam : 40340 >>>*********" + msgParam);
-			fc.addMessage(
-					null,
-					new FacesMessage(getManagedBean().getMessageSeverity(), null,
-							MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
 		
+		try {
+			if(fc.getMessageList().size() < 1){
+				String[] msgParam = null;
+				log.info("*************responseRedirect before message : 40340*********");
+				//#29481 - Start - added INFO_721068
+				List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
+				if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
+				//#29481 - End
+					msgParam = getManagedBean().getMsgParam();
+				}else{
+					msgParam = new String[]{errorDesc};
+				}
+				log.info("*************responseRedirect msgParam : 40340 >>>*********" + msgParam);
+				fc.addMessage(
+						null,
+						new FacesMessage(getManagedBean().getMessageSeverity(), null,
+								MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		fc.getApplication()
