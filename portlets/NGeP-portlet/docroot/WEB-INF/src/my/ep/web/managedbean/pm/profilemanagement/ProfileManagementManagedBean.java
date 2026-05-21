@@ -94,6 +94,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean isUserStatusChange = false;
 	//#35489 - End
 	private boolean suppGovSellerUser = false; // #36489
+	
+	/************ AUDIT #28895-35509 *************/
+	private Long brandNewUserOrgId;
+	private PmUser oldAuditPmUser;
+	private PmUserOrg oldAuditPmUserOrg;
+	private List<PmUserRole> oldAuditPmUserRoles;
+	private List<PmAddressType> oldAuditPmAddressTypes;
+	private PmUser newAuditPmUser;
+	private PmUserOrg newAuditPmUserOrg;
+	private List<PmUserRole> newAuditPmUserRoles;
+	private List<PmAddressType> newAuditPmAddressTypes;
+	/************ AUDIT #28895-35509 *************/
 
 	public ProfileManagementManagedBean(){}
 	
@@ -841,4 +853,120 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	}
 	//#36489 - End
 
+	/************ AUDIT *************/
+	public PmUser getOldAuditPmUser() {
+		return oldAuditPmUser;
+	}
+	
+	public void setOldAuditPmUser(PmUser oldAuditPmUser) {
+		this.oldAuditPmUser = oldAuditPmUser;
+	}
+	
+	public PmUserOrg getOldAuditPmUserOrg() {
+		return oldAuditPmUserOrg;
+	}
+
+	public void setOldAuditPmUserOrg(PmUserOrg oldAuditPmUserOrg) {
+		this.oldAuditPmUserOrg = oldAuditPmUserOrg;
+	}
+
+	/**
+	 * @return the oldAuditPmUserRole
+	 */
+	public List<PmUserRole> getOldAuditPmUserRoles() {
+		return oldAuditPmUserRoles;
+	}
+
+	/**
+	 * @param oldAuditPmUserRole the oldAuditPmUserRole to set
+	 */
+	public void setOldAuditPmUserRoles(List<PmUserRole> oldAuditPmUserRoles) {
+		this.oldAuditPmUserRoles = oldAuditPmUserRoles;
+	}
+
+	/**
+	 * @return the newAuditPmUser
+	 */
+	public PmUser getNewAuditPmUser() {
+		return newAuditPmUser;
+	}
+
+	/**
+	 * @param newAuditPmUser the newAuditPmUser to set
+	 */
+	public void setNewAuditPmUser(PmUser newAuditPmUser) {
+		this.newAuditPmUser = newAuditPmUser;
+	}
+
+	/**
+	 * @return the newAuditPmUserOrg
+	 */
+	public PmUserOrg getNewAuditPmUserOrg() {
+		return newAuditPmUserOrg;
+	}
+
+	/**
+	 * @param newAuditPmUserOrg the newAuditPmUserOrg to set
+	 */
+	public void setNewAuditPmUserOrg(PmUserOrg newAuditPmUserOrg) {
+		this.newAuditPmUserOrg = newAuditPmUserOrg;
+	}
+
+	/**
+	 * @return the newAuditPmUserRole
+	 */
+	public List<PmUserRole> getNewAuditPmUserRoles() {
+		return newAuditPmUserRoles;
+	}
+
+	/**
+	 * @param newAuditPmUserRole the newAuditPmUserRole to set
+	 */
+
+	public void setNewAuditPmUserRoles(List<PmUserRole> newAuditPmUserRoles) {
+		this.newAuditPmUserRoles = newAuditPmUserRoles;
+	}
+
+	/**
+	 * @return the oldAuditPmAddressTypes
+	 */
+	public List<PmAddressType> getOldAuditPmAddressTypes() {
+		return oldAuditPmAddressTypes;
+	}
+
+	/**
+	 * @param oldAuditPmAddressTypes the oldAuditPmAddressTypes to set
+	 */
+	public void setOldAuditPmAddressTypes(List<PmAddressType> oldAuditPmAddressTypes) {
+		this.oldAuditPmAddressTypes = oldAuditPmAddressTypes;
+	}
+
+	/**
+	 * @return the newAuditPmAddressTypes
+	 */
+	public List<PmAddressType> getNewAuditPmAddressTypes() {
+		return newAuditPmAddressTypes;
+	}
+
+	/**
+	 * @param newAuditPmAddressTypes the newAuditPmAddressTypes to set
+	 */
+	public void setNewAuditPmAddressTypes(List<PmAddressType> newAuditPmAddressTypes) {
+		this.newAuditPmAddressTypes = newAuditPmAddressTypes;
+	}
+
+	/**
+	 * @return the brandNewUserOrgId
+	 */
+	public Long getBrandNewUserOrgId() {
+		return brandNewUserOrgId;
+	}
+
+	/**
+	 * @param brandNewUserOrgId the brandNewUserOrgId to set
+	 */
+	public void setBrandNewUserOrgId(Long brandNewUserOrgId) {
+		this.brandNewUserOrgId = brandNewUserOrgId;
+	}
+	/************ AUDIT *************/
 }

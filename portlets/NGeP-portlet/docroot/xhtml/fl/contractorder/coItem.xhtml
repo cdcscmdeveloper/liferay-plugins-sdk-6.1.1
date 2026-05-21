@@ -10,9 +10,12 @@
 	<p:graphicImage value="/css/images/icon-expand.png" />&#160;
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.summary2']}" escape="false"/>
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.items.spec.guideline']}" escape="false"  />
-	<p:commandLink value="#{lbl['lbl.fl.instruction.items.spec.click.here']}" ajax="false" 
-				style="font-size:10px;font-style:italic" process="@this"
-				action="#{flOrderBB.downloadFile('/shared/FL/Garis_Panduan_Item_dan_Spesifikasi.pdf')}"></p:commandLink>
+		<ui:remove>#29556-Start</ui:remove>
+		<p:commandLink
+			value="#{lbl['lbl.fl.instruction.items.spec.click.here']}"
+			ajax="false" style="font-size:12px;font-style:italic" process="@this"
+			action="#{flOrderBB.downloadItemSpecGuideline()}"></p:commandLink>
+		<ui:remove>#29556-End</ui:remove>
 		<p:dataTable id="delAddressSummary" var="delAddressSummary"
 			styleClass="orderSummaryChange"
 			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
@@ -109,11 +112,20 @@
 							<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
 						</f:facet>
-						<h:outputText
-							value="#{newItems.itemCode}" />
+						<!-- #31344 display item details in popup -->				
+						<p:commandLink oncomplete="itemDescDialogId.show();" 
+							value="#{newItems.scRequestItem.cmItem.extensionCode}" 
+							style="color: #009ae5; font-size:12px; font-style:italic; float:right;"
+							action="#{flOrderBB.showItemDescPopup(newItems.scRequestItem.cmItem.itemId)}" 
+							process="@this" 
+							update="@([id$=itemDescDialogId])"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%">
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="float:left;text-align:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
+						<!--#31344 filter item name-->
+						<h:outputText
+							value="#{contractRequestBackingBean.filterNARequestItemName(newItems.scRequestItem.requestNoteItemId)}"
+							id="itemDesc" style="float:left;text-align:left;"
+							title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>

@@ -295,7 +295,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVO;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//24893 - start
@@ -314,6 +314,19 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//29555 start
     private String preparedBy;
     //29555 end
+    
+	// #27476 start
+    private String reason;
+    private String justification;
+    private boolean isPRExceedThreshold;
+    private List<String> itemNameExceedThresholdList;
+	// #27476 end
+    
+    // 31344 - start
+    private boolean isExceedBpkThreshold;
+    private boolean isExceedItemPanelThreshold;
+    private List<ScRequestItem> itemExceedBpkThreshold;
+    private List<ScRequestItem> itemExceedItemPanelThreshold;
 
 /**
  * Gets the charge line item root.
@@ -3338,12 +3351,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 	
-	public List<DisciplinaryActionVO> getDisciplineVO() {
-		return disciplineVO;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVO(List<DisciplinaryActionVO> disciplineVO) {
-		this.disciplineVO = disciplineVO;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 	
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -3417,6 +3430,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	//29728 - end
 
+	// 29555-Start
 	public String getPreparedBy() {
 		return preparedBy;
 	}
@@ -3424,5 +3438,119 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setPreparedBy(String preparedBy) {
 		this.preparedBy = preparedBy;
 	}
+	// 29555-End
 
+	/**
+	 * @return the reason
+	 */
+	public String getReason() {
+		return reason;
+	}
+
+	/**
+	 * @param reason the reason to set
+	 */
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	/**
+	 * @return the justification
+	 */
+	public String getJustification() {
+		return justification;
+	}
+
+	/**
+	 * @param justification the justification to set
+	 */
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	/**
+	 * @return the isPRExceedThreshold
+	 */
+	public boolean isPRExceedThreshold() {
+		return isPRExceedThreshold;
+	}
+
+	/**
+	 * @param isPRExceedThreshold the isPRExceedThreshold to set
+	 */
+	public void setPRExceedThreshold(boolean isPRExceedThreshold) {
+		this.isPRExceedThreshold = isPRExceedThreshold;
+	}
+
+	/**
+	 * @return the itemNameExceedThresholdList
+	 */
+	public List<String> getItemNameExceedThresholdList() {
+		return itemNameExceedThresholdList;
+	}
+
+	/**
+	 * @param itemNameExceedThresholdList the itemNameExceedThresholdList to set
+	 */
+	public void setItemNameExceedThresholdList(List<String> itemNameExceedThresholdList) {
+		this.itemNameExceedThresholdList = itemNameExceedThresholdList;
+	}
+
+	/**
+	 * @return the isExceedBpkThreshold
+	 */
+	public boolean isExceedBpkThreshold() {
+		return isExceedBpkThreshold;
+	}
+
+	/**
+	 * @param isExceedBpkThreshold the isExceedBpkThreshold to set
+	 */
+	public void setExceedBpkThreshold(boolean isExceedBpkThreshold) {
+		this.isExceedBpkThreshold = isExceedBpkThreshold;
+	}
+
+	/**
+	 * @return the itemExceedBpkThreshold
+	 */
+	public List<ScRequestItem> getItemExceedBpkThreshold() {
+		return itemExceedBpkThreshold;
+	}
+
+	/**
+	 * @param itemExceedBpkThreshold the itemExceedBpkThreshold to set
+	 */
+	public void setItemExceedBpkThreshold(List<ScRequestItem> itemExceedBpkThreshold) {
+		this.itemExceedBpkThreshold = itemExceedBpkThreshold;
+	}
+
+	/**
+	 * @return the isExceedItemPanelThreshold
+	 */
+	public boolean isExceedItemPanelThreshold() {
+		return isExceedItemPanelThreshold;
+	}
+
+	/**
+	 * @param isExceedItemPanelThreshold the isExceedItemPanelThreshold to set
+	 */
+	public void setExceedItemPanelThreshold(boolean isExceedItemPanelThreshold) {
+		this.isExceedItemPanelThreshold = isExceedItemPanelThreshold;
+	}
+
+	/**
+	 * @return the itemExceedItemPanelThreshold
+	 */
+	public List<ScRequestItem> getItemExceedItemPanelThreshold() {
+		return itemExceedItemPanelThreshold;
+	}
+
+	/**
+	 * @param itemExceedItemPanelThreshold the itemExceedItemPanelThreshold to set
+	 */
+	public void setItemExceedItemPanelThreshold(List<ScRequestItem> itemExceedItemPanelThreshold) {
+		this.itemExceedItemPanelThreshold = itemExceedItemPanelThreshold;
+	}
+
+	
 }

@@ -621,6 +621,14 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+				
+				//#35508 fl audit trail - set original DO supplier ref no
+				log.info("35508 start setOriginalSupplierDoRef");
+				if(resDTO.getFlDeliveryOrder() != null){
+					doBB.getManagedBean().setOriginalSupplierDoRef(resDTO.getFlDeliveryOrder().getSupplierDoRef());
+				}
+				//#35508 fl audit trail
+				
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else { // view
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
@@ -677,10 +685,10 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			//#35508 fl audit trail
-			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) && invBB.getManagedBean().getInvoice() != null){
-				String originalBankAccNoName = invBB.getManagedBean().getInvoice().getAccountNo()+" "+invBB.getManagedBean().getInvoice().getPaymentBankName();
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) && resDTO.getInvoice() != null){
+				String originalBankAccNoName = resDTO.getInvoice().getAccountNo()+" "+resDTO.getInvoice().getPaymentBankName();
 				invBB.getManagedBean().setOriginalBankAccNoName(originalBankAccNoName);
-				invBB.getManagedBean().setOriginalSupplierInvRef(invBB.getManagedBean().getInvoice().getSupplierInvoiceRef());
+				invBB.getManagedBean().setOriginalSupplierInvRef(resDTO.getInvoice().getSupplierInvoiceRef());
 			}
 			//#35508 fl audit trail
 			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
@@ -1129,19 +1137,15 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * @return financial year options
 	 */
 	public static List<SelectItem> getFinancialYearOpt() {
-		int years = 0;
 		//29550 - Start(add yearLength variable to display year from 2016)
-		int yearLength = 7;
-		List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
-		
-		if(isFactoringUser()){
-			yearLength = 8;
-		}
-		
-		for(Integer i = 0;i < yearLength;i++){
-			years = CommonMethod.getYear(-i);
-			 financialYearOpt.add(new SelectItem(years, Integer.toString(years)));
-		}
+		List<SelectItem> financialYearOpt = new ArrayList<>();
+
+	    int startYear = 2016;
+	    int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+	    for (int year = currentYear; year >= startYear; year--) {
+	        financialYearOpt.add(new SelectItem(year, Integer.toString(year)));
+	    }
 		//29550 - End
 		return financialYearOpt;
 	}

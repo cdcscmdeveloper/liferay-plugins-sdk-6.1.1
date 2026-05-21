@@ -20,14 +20,20 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
@@ -39,15 +45,14 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMSupplierZoneBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ZoneSearchBean;
 import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 
 /**
@@ -124,7 +129,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 * @return the string
 	 */
 	public String backToSearch() {
-		this.getManagedBean().setLazy(true);		
+		this.getManagedBean().setLazy(true);
+		getManagedBean().setZoneStateListDeleted(null);
+		getManagedBean().setZoneStateListNewAdded(null);
 		return NAV_TO_MAIN;
 	}
 
@@ -189,6 +196,20 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 							IZoneSO.class);
 			ZoneReqDTO reqDTO = new ZoneReqDTO();
 			reqDTO.setPmZone(zone);
+
+			/************ AUDIT #28895_35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMSupplierZoneBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ZONE) && reqDTO.getPmZone() != null
+					&& reqDTO.getPmZone().getZoneId() != null) {
+				zoneReqDTO.setZoneId(reqDTO.getPmZone().getZoneId());
+				ZoneResDTO resDTO = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
+				getManagedBean().setPmZoneOld(resDTO.getPmZone());
+			}
+			/************ AUDIT #28895_35509 *************/
+
 			ZoneResDTO resDTO = zoneSO.saveOrUpdateZone(reqDTO);	
 			if (resDTO.isSuccessful()) {
 				result = resDTO.isSuccessful();
@@ -211,10 +232,24 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 									resDTO.getPmZone().getZoneCode(),
 									resDTO.getPmZone().getZoneName()});
 				}
+				/************ AUDIT #28895_35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ZONE)) {
+					zoneReqDTO.setZoneId(resDTO.getPmZone().getZoneId());
+					ZoneResDTO zonResDTOnew = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
+					getManagedBean().setZoneResDTO(zonResDTOnew);
+					getManagedBean().setResZone(resDTO.getPmZone());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SPZ);
+				}
+				/************ END AUDIT #28895_35509 *************/
 			}
-		}catch(Exception e){
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		//#34445 End
+		} catch (Exception e) {
 			throw e;
-		}finally{
+		} finally {
 			zoneSO = null;
 		}
 		
@@ -391,10 +426,23 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				selectedList.add(zonelist);
 			}
 		}
+		/************ END AUDIT #28895_35509 *************/
+		if (getManagedBean().getZoneStateListDeleted() == null) {
+			getManagedBean().setZoneStateListDeleted(new ArrayList<PmZoneState>());
+		}
+		/************ END AUDIT #28895_35509 *************/
 		if (zoneList.size() == selectedList.size()) {
+			/************ END AUDIT #28895_35509 *************/
+			for (PmZoneState zoneState : selectedList) {
+				this.getManagedBean().getZoneStateListDeleted().add(zoneState);
+			}
+			/************ END AUDIT #28895_35509 *************/
 			zoneList.clear();
 		} else {
 			for (PmZoneState zoneState : selectedList) {
+				/************ END AUDIT #28895_35509 *************/
+				this.getManagedBean().getZoneStateListDeleted().add(zoneState);
+				/************ END AUDIT #28895_35509 *************/
 				zoneList.remove(zoneState);
 			}
 		}
@@ -408,7 +456,11 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
 		StateReqDTO reqStateDTO = new StateReqDTO();
-		
+		/************ END AUDIT #28895_35509 START *************/
+		if (getManagedBean().getZoneStateListNewAdded() == null) {
+			getManagedBean().setZoneStateListNewAdded(new ArrayList<PmZoneState>());
+		}
+		/************ END AUDIT #28895_35509 START *************/
 		for (PmState state : getManagedBean().getSelectedStates()) {
 			PmZoneState zoneState = new PmZoneState();
 			reqStateDTO.setStateId(state.getStateId());
@@ -417,6 +469,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			zoneState.setPmState(newState);
 			zoneState.setPmZone(getManagedBean().getPmZone());
 			this.getManagedBean().getZoneStateList().add(zoneState);
+			this.getManagedBean().getZoneStateListNewAdded().add(zoneState);
 		}
 		if (getManagedBean().getSelectedStates().isEmpty()&&getManagedBean().getZoneStateList().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770051);

@@ -12,20 +12,26 @@
 		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
 			<script>
 				var emptyText = document.createTextNode("");
+				var checkBasicUser = #{backingBean.managedBean.basicSupplier};
 				$('#breadcrumbs').find('.last').append(emptyText);
 				if (emptyText.parentNode != null) {
 					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.mof.acc.appl']}";
 					/* #34831 - Start */
-					var checkBasicUser = #{backingBean.managedBean.basicSupplier};
 					if (checkBasicUser) {
 						emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.upgrade.acc.appl']}";
 					}
 					/* #34831 - End */
 				}
 
-				$('#portlet_MOFApplication_WAR_NGePportlet').find(
-						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.newMofAppln']}");
+				if (checkBasicUser) {
+					$('#portlet_MOFApplication_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.sm.upgrade.acc.appl']}");
+				}else{
+					$('#portlet_MOFApplication_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.sm.newMofAppln']}");
+				}
 
 				$('#portlet_DirectMofRegistration_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
@@ -77,7 +83,7 @@
 						<td><div class="navDiv" id="menuDiv" align="center">
 								<ul class="menu-text">
 									<li>
-										<!-- #34159 - START - add param disablevalidation foreach button -->
+										<!-- #39097 & #34159 - Start - add param disablevalidation foreach button -->
 										<p:commandLink value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
@@ -293,7 +299,7 @@
 													<f:param name="disableValidation" value="true" />
 												</p:commandLink>
 											</li>
-											<!-- #34159 - END -->
+											<!-- #39097 & #34159 - End -->
 										</c:otherwise>
 									</c:choose>
 
@@ -365,7 +371,7 @@
 									<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
 										update=":form" onclick="mofApplDelConfirm.show()"
 										type="button" style="margin-bottom:5px;" />
-									<!-- #34159 - START -->
+									<!-- #39097 & #39097 & #34159 - Start -->
 									<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 										onclick="this.disabled=true;" onstart="blockWidget.show()"
 										oncomplete="this.disabled=false;blockWidget.hide();"
@@ -374,7 +380,7 @@
 										update=":form" style="margin-bottom:5px;" >
 										<f:param name="disableValidation" value="true" />
 									</p:commandButton>
-									<!-- #34159 - END -->
+									<!-- #39097 & #34159 - End -->
 									<p:outputPanel rendered="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}">
 										<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 									</p:outputPanel>

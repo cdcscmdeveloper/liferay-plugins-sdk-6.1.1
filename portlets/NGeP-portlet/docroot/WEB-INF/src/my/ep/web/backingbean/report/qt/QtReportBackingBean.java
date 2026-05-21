@@ -69,6 +69,7 @@ import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.report.qt.QtReportManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -187,6 +188,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IRPTRequestSO.class);
+		boolean isBuffMax = false;	//Bug #37911
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
 		//#35015 Wip 4ser - Start
@@ -247,6 +249,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL;
 				reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
 			}
+			isBuffMax = true;	//Bug #37911
 		}
 		this.getManagedBean().setReportName(reportName);
 		this.getManagedBean().setReportCode(reportCode);
@@ -258,6 +261,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				.getReportCode());
 		params.put(QtReportConst.PARAM_USER_ID, getFacesScopes()
 				.getUserSessionBean().getUserId().toString());
+		//Bug #37911 -- Start
+		if (isBuffMax) {
+			params.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.MAX_BUFFER_SIZE));
+		}
+		//Bug #37911 -- End
 
 		//Bug #28440 start
 		String userRoleLogin = getUserRoleLogin();
@@ -1048,28 +1056,41 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		return pmOrgProfile;
 	}
 
-	// 29580 - Start (Harun) change dropdown list to selectManyMenu for status
+	// 29580 - Start (Harun) change dropdown list to select multiple option
+	/**
+	 * reportStatusDropdownValuesSelectManyMenu - Retrieve multiple report status by report code
+	 * 
+	 * statusValuesRemove(List) 
+	 * for Report Status Need to remove
+	 * 
+	 * statusValues(List)
+	 * for Display statusName or Status Desc at Status option menu
+	 * 
+	 * @param reportCode
+	 *            the Report Code
+	 * @return the statusValues(List) 
+	 */
 	public List<String> reportStatusDropdownValuesSelectManyMenu(String reportCode) {
-		List<String> statusValues = new ArrayList<String>();
+		List<String> statusValues = new ArrayList<>();
 		List<String> statusValuesRemove = null;
 		boolean checkRemove = false;
 
-		String[] removeReportStr = { ReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL,
+		String[] removeReportArray = { ReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL,
 				ReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL, ReportConst.SC_PROPOSAL_DTLS_SERVICE_RPT_VAL,
 				ReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL };
-		String[] removeStsStr = { getStatusDesc("lbl.rpt.preparation"), getStatusDesc("lbl.rpt.publishing") };
+		String[] removeStatusArray = { getStatusDesc(QTConstants.RPT_PREPARATION_LBL), getStatusDesc(QTConstants.RPT_PUBLISHING_LBL) };
+		
+		statusValues.add(getStatusDesc(QTConstants.RPT_PREPARATION_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_PUBLISHING_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_PENDING_EVALUATION_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_PENDING_SUPPLIER_FINALIZATION_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_PENDING_LOI_LOA_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_LOA_COMPLETED_LBL));
+		statusValues.add(getStatusDesc(QTConstants.RPT_DROPDOWN_CANCELLED_LBL));
 
-		statusValues.add(getStatusDesc("lbl.rpt.preparation"));
-		statusValues.add(getStatusDesc("lbl.rpt.publishing"));
-		statusValues.add(getStatusDesc("lbl.rpt.pendingEvaluation"));
-		statusValues.add(getStatusDesc("lbl.rpt.pendingSupplierFinalization"));
-		statusValues.add(getStatusDesc("lbl.rpt.pendingLOInLOA"));
-		statusValues.add(getStatusDesc("lbl.rpt.loaCompleted"));
-		statusValues.add(getStatusDesc("lbl.rpt.drpdown.cancelledLabel"));
-
-		for (String strRpt : removeReportStr) {
+		for (String strRpt : removeReportArray) {
 			if (reportCode.equalsIgnoreCase(strRpt)) {
-				statusValuesRemove = new ArrayList<String>(statusValues);
+				statusValuesRemove = new ArrayList<>(statusValues);
 				checkRemove = true;
 				break;
 			} else {
@@ -1079,40 +1100,46 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 		if (checkRemove) {
 			for (Iterator<String> it = statusValuesRemove.iterator(); it.hasNext();) {
-				String strVal = (String) it.next();
-				for (String strSts : removeStsStr) {
-					if (strSts.equalsIgnoreCase(strVal)) {
-						statusValues.remove(strSts);
-					}
+				String removeReport = it.next();
+				boolean flagRemove = removeReportStatus(removeStatusArray, removeReport);
+				if(flagRemove){
+					statusValues.remove(removeReport);
 				}
 			}
 		}
 
 		return statusValues;
 	}
-	// 29580 - End (Harun)
+	//#29580 - Start
+	public boolean isAllSelected() {
+		List<String> selected = this.getManagedBean().getScReportSearchBean().getScStatusManyMenu();
 
-	// 29580 - Start (Harun) for trigger selectALL
+		return selected != null && selected.contains(QTConstants.RPT_ALL_LBL);
+	}
+	//#29580 - End
+
+	/**
+	 * onSelectAll - For select /unselect all select option
+	 * 
+	 * 
+	 * @param reportCode
+	 *            the Report Code
+	 * @return the checkAll(boolean)
+	 */
 	public void onSelectAll(String reportCode) {
 
 		boolean checkAll = false;
-		List<String> statusList = new ArrayList<String>(this.getManagedBean().getScReportSearchBean()
+		List<String> statusList = new ArrayList<>(this.getManagedBean().getScReportSearchBean()
 				.getScStatusManyMenu());
-		List<String> allList = new ArrayList<String>();
 
 		for (String stsvalue : statusList) {
-			if (stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))) {
-				allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+			if (stsvalue.equalsIgnoreCase(getStatusDesc(QTConstants.RPT_ALL_LBL))) {
+				List<String> allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
 
-				List<SelectItem> items = new ArrayList<SelectItem>();
+				List<SelectItem> items = new ArrayList<>();
 				for (String strSelectItem : allList) {
 					items.add(new SelectItem(strSelectItem));
-				}
-				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
-					SelectItem si = (SelectItem) it.next();
-					//this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().add((String) si.getValue());
-					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
-					si.setDisabled(Boolean.TRUE);
+					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().add(strSelectItem);
 				}
 				checkAll = true;
 			} else {
@@ -1120,41 +1147,38 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			}
 		}
 		if (!checkAll) {
-			if (allList.size() == statusList.size()) {
-				List<SelectItem> items = new ArrayList<SelectItem>();
-				for (String strSelectItem : statusList) {
-					items.add(new SelectItem(strSelectItem));
-				}
-				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
-					SelectItem si = (SelectItem) it.next();
-					//this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
-					si.setDisabled(Boolean.FALSE);
-				}
-			}
+			processRemainingStatusList(statusList);
 		}
-
 	}
 	
+	/**
+	 * isDisabled - For enable/disabled select option
+	 * 
+	 * 
+	 * @param item
+	 * @param reportCode
+	 *            the Item code and Report code
+	 * @return the boolean 
+	 */
 	public boolean isDisabled(String item,String reportCode) {
 		List<String> allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+		boolean flagDisabled =  false;
 	
 		if(this.getManagedBean().getScReportSearchBean().getScStatusManyMenu() != null 
 				&& this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().size() > 0){
 			for (String stsvalue : this.getManagedBean().getScReportSearchBean().getScStatusManyMenu()) {
-				if(stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))){
-					for (String strSelectItem : allList) {
-						if(strSelectItem.equalsIgnoreCase(item)){
-							return strSelectItem.equals(item);
-						}
-					}
+				if(stsvalue.equalsIgnoreCase(getStatusDesc(QTConstants.RPT_ALL_LBL))){
+					flagDisabled =  processDisabledItem(allList, item);
 				}
 			}
 		}else{
-			return false;
+			return flagDisabled;
 		}
-		return false;
+		return flagDisabled;
 	}
+	// 29580 - End (Harun)
 	
+	//14306 - Start (Harun)
 	public List<String> reportStatusDropdownValuesProposalOfferSubmission() {
 		List<String> statusValues = new ArrayList<String>();
 
@@ -1163,7 +1187,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	
 		return statusValues;
 	}
-	// 29580 - End (Harun)
+	//14306 - End (Harun)
 	
 	// #21692 - start
 	/**
@@ -1269,4 +1293,32 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScCreatedFromMonth());
 	}
 	//#14306 - End
+	
+	//#29580 - Start 
+	private boolean removeReportStatus(String[] statusValuesRemove, String reportStatus) {
+		boolean flagRemove =  false;
+		for (String strRemoveSts : statusValuesRemove) {
+			if (strRemoveSts.equalsIgnoreCase(reportStatus)) {
+				flagRemove = true;
+			}
+		}
+		return flagRemove;
+	}
+	
+	private void processRemainingStatusList(List<String> statusList) {
+		List<SelectItem> items = new ArrayList<>();
+		for (String strSelectItem : statusList) {
+			items.add(new SelectItem(strSelectItem));
+	    }
+	}
+	
+	private boolean processDisabledItem(List<String> allList, String item) {
+		for (String strSelectItem : allList) {
+			if(strSelectItem.equalsIgnoreCase(item)){
+				return strSelectItem.equals(item);
+			}
+		}
+		return false;
+	}
+	//#29580 - End 
 }

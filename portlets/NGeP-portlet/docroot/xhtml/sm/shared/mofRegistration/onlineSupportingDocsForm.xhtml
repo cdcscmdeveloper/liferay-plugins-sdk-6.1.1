@@ -76,7 +76,7 @@
 		<p:spacer height="10px" />
 		
 		<ac:smSupplierOnlineSuppDoc tableId="mandatoryTableId" uploadDialogId="mandatoryUploadId"
-			smApplSupportDocs="#{backingBean.managedBean.mandatoryDocs}" mandatory="true" />
+			smApplSupportDocs="#{backingBean.managedBean.mandatoryDocs}" mandatory="true" hasAI="true"/> <!-- #38890 -->
 		<ui:include src="onlineLicenseInfoForm.xhtml" />
 		<ac:smSupplierOnlineSuppDoc tableId="nonMandatoryTableId" uploadDialogId="nonMandatoryUploadId"
 			smApplSupportDocs="#{backingBean.managedBean.nonMandatoryDocs}" mandatory="false" />

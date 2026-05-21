@@ -3162,13 +3162,20 @@ public class SmCommonUtil {
 	 */
 	public static SmAppl getActiveApplBySupplier(SmSupplier supplier) {
 		SmAppl activeAppl = null;
+		//38517 - START
+		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+
+		if (supplier.getSmAppl() != null){
+			mofRegistrationReqDTO.setSmAppl(supplier.getSmAppl());
+		}
+		
 		if (supplier != null) {
-			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
 			mofRegistrationReqDTO.setSupplierId(supplier.getSupplierId());
 			activeAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveActiveSmApplBySupp(mofRegistrationReqDTO)
 					.getSmAppl();
 		}
+		//38517 - END
 		return activeAppl;
 	}
 
@@ -4223,6 +4230,12 @@ public class SmCommonUtil {
 			SmAddress smAddress) {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		SelectItem item = null;
+		//#36718 - START
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.txt.select", null));
+		item.setValue(null);
+		items.add(item);
+		//#36718 - END
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		if (SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
 				.contains(businessType)) {
@@ -4244,11 +4257,13 @@ public class SmCommonUtil {
 							.retrieveLocalAuthorityOrgProfileByAddress(reqDTO)
 							.getOrgProfileList();
 					if (!EntityHelper.isCollectionEmpty(orgProfileList)) {
-						item = new SelectItem();
+						//#36718 - START
+						/*item = new SelectItem();
 						item.setLabel(SmCommonUtil.getMessage("lbl.txt.select",
 								null));
 						item.setValue(null);
-						items.add(item);
+						items.add(item);*/
+						//#36718 - END
 						for (PmOrgProfile orgProfile : orgProfileList) {
 							item = new SelectItem();
 							item.setLabel(orgProfile.getPmOrgValidity()

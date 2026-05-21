@@ -12,8 +12,10 @@
 	<ui:remove>#29187 End Vinod</ui:remove>
 	<p:columnGroup type="header">
 		<p:row>
-			<p:column colspan="1" style="white-space: normal;word-break:normal;"
+			<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+			<p:column colspan="1" style="#{isManSpecAndCompliance ? 'width: 30%;' : ''} white-space: normal;word-break:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.item']}"><!-- #29006 add CSS property -->
+			<ui:remove>#29187 End Vinod</ui:remove>
 				
 
 			</p:column>

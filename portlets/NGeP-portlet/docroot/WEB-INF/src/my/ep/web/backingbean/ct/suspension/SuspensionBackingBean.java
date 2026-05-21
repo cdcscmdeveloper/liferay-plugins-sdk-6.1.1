@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap; //#39038
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map; //#39038
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -28,17 +30,20 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.ct.audit.AuditContractConst; //35506
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContractVer; //35506
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -55,6 +60,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -170,14 +176,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setTaskId(taskId);
 			return;
 		}/*End if statement to check  login user */
-		// 20997 - start : to reset search list after save
-	    //added reloadDatatable() for #28643
-		if(getManagedBean().getTaskId()!= null){
-			
-		  getManagedBean().getSuspensionProductListingPagingDataModel().reloadDatatable();
-		}
-		
-		// 20997 - end
+
 		/*Return when not call from tasklist*/
 		if(taskId==null) 
 		 return;
@@ -534,22 +533,39 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			validateSuspensionDetails(outcome);		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
-			//#20997 - to copy from searching list to items list
-			if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
-				for (CtContractItem ctContractItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {			
-					for(CtContractItem ctItem : this.getManagedBean().getContractVer().getCtContractItems()){
-						if(ctContractItem.getContractItemId().equals(ctItem.getContractItemId())
-								|| ctItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())) {
-							ctItem.setEffDate(ctContractItem.getEffDate());
-							ctItem.setExpDate(ctContractItem.getExpDate());
-							if(ctContractItem.getRecordStatusFlg() != null) {
-								ctItem.setRecordStatusFlg(ctContractItem.getRecordStatusFlg().intValue());
-							}
+			//#39038 - Start
+			// Step 1: Ambil updateItemMap yang menyimpan perubahan dari semua halaman
+			Map<Long, CtContractItem> updateItemMap = ctBB.getManagedBean().getUpdateItemMap();
+			// Jika tidak ada perubahan, skip
+			if (updateItemMap != null && !updateItemMap.isEmpty()) {
+				// Step 2: Ambil list asli dari kontrak (semua item, semua halaman)
+				List<CtContractItem> originalItems = getManagedBean().getContractVer().getCtContractItems();
+
+				// Buat lookup map untuk O(1) access
+				// Step 3: Untuk setiap perubahan di updateItemMap, update item aslinya
+				Map<Long, CtContractItem> originalItemMap = new HashMap<>();
+				for (CtContractItem item : originalItems) {
+					if (item.getScRequestItem() != null) {
+						originalItemMap.put(item.getScRequestItem().getRequestNoteItemId(), item);
+					}
+				}
+
+				// Terapkan perubahan
+				for (Map.Entry<Long, CtContractItem> entry : updateItemMap.entrySet()) {
+					Long itemId = entry.getKey();
+					CtContractItem changed = entry.getValue();
+					CtContractItem target = originalItemMap.get(itemId);
+
+					if (target != null && changed != null) {
+						target.setEffDate(changed.getEffDate());
+						target.setExpDate(changed.getExpDate());
+						if (changed.getRecordStatusFlg() != null) {
+							target.setRecordStatusFlg(changed.getRecordStatusFlg().intValue());
 						}
 					}
 				}
 			}
-			//#20997 - end
+			//#39038 - End
 
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			reqDTO = new ContractReqDTO();
@@ -585,6 +601,41 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
+				
+				// Optional: Kosongkan updateItemMap setelah berhasil disimpan
+				ctBB.getManagedBean().getUpdateItemMap().clear(); //#39038
+				
+				// #35506 Start
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+
+						CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+						auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+						auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
+						auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+						auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
+
+						if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						}
+
+						if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
+					}
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 

@@ -115,6 +115,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.log4j.Logger;
@@ -341,26 +342,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 			if(scCommittee != null){
 				List<ScCommitteeMember> membersList = 
 							scCommittee.getScCommitteeMembers();
-				// Start #26189:PK2.1 
-				if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
-						committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					for (ScCommitteeMember member : membersList) {
-						if(!ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
-								.equals(member.getMemberRole().getParameterCode())){
-							if(member.getRepresentativeType() == null && !ParameterConst.COMMITTEE_ROLE_SECRETARY
-									.equals(member.getMemberRole().getParameterCode())){
-								ParameterReqDTO roleReqDTO = new ParameterReqDTO();
-								roleReqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-								roleReqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-								ParameterResDTO roleResDTO = parameterSO.retrieveParameterByTypeAndCode(roleReqDTO);
-								member.setMemberRole(roleResDTO.getPmParameter());
-								long memberRoleId = 378;
-								member.setMemberRoleId(memberRoleId);
-							}
-						}
-					}
-				}
-				// End #26189:PK2.1
+ 
+				//Bug #38067 remove code #26189:PK2.1
+
 				if (CollectionUtils.isNotEmpty(membersList)) {
 					//#31870 - START
 					Boolean checkIsExistFCSecretary = Boolean.FALSE;
@@ -888,20 +872,29 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScCommitteeMember> localList=new ArrayList<ScCommitteeMember>();
 			List<ScCommitteeMember> newCommitteeMember = this.getManagedBean().getNewCommitteeAuditTrailList() != null
 					? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>() ;//28895-35500
+			List<ScCommitteeMember> deletedCommitteeMember = this.getManagedBean().getRemoveCommitteeAuditTrailList() != null ? this
+					.getManagedBean().getRemoveCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 Fix Reopen 27th Nov
 			
 			if (CollectionUtils.isNotEmpty(currentCommitteeMemList)) {
 				
 				for(ScCommitteeMember committeemember:currentCommitteeMemList){
 					if(committeemember.isSelected()){
 						localList.add(committeemember);
-						newCommitteeMember.remove(committeemember);//28895-35500
+						if (CollectionUtils.isNotEmpty(deletedCommitteeMember) && !deletedCommitteeMember.contains(committeemember)){//#35500 Fix Reopen 27th Nov
+							deletedCommitteeMember.add(committeemember);
+						}else if (CollectionUtils.isEmpty(deletedCommitteeMember)) {
+							deletedCommitteeMember.add(committeemember);
+						}
+						if (!(newCommitteeMember == null || newCommitteeMember.isEmpty())) {
+							newCommitteeMember.remove(committeemember);
+						}
 					}				
 				}
 				if(CollectionUtils.isNotEmpty(localList)){
 				
 				currentCommitteeMemList.removeAll(localList);
 				//28895-35500 Start
-				this.getManagedBean().setRemoveCommitteeAuditTrailList(localList);
+				this.getManagedBean().setRemoveCommitteeAuditTrailList(deletedCommitteeMember);
 				this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeMember);
 				//28895-35500 End
 				}
@@ -1557,12 +1550,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			renewSessionAndRetrieve();
 			
-			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
-								ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
-			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
+			//#35320 - Start
+			String committeeType = this.getManagedBean().getCommitteeType();			
+			String variable2 = getMessageCommon(getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
+			
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{getManagedBean().getScQt().getQtNo(), variable2}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 	
+			//#35320 - Start 				  
 		} finally {
 			qtMeetingSO = null;
 		}
@@ -2030,6 +2025,8 @@ if (CollectionUtils.isNotEmpty(
 			//28895 - 35500 start
 			List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeAuditTrailList() != null
 					? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
+			HashMap<PmUser,List<String>> mapModifiedRoleCommitteeAudit = this.getManagedBean().getMapModifiedRole() != null
+					? this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser,List<String>>();
 			List<ScCommitteeMember> deletedCommitteeMembers = this.getManagedBean().getRemoveCommitteeAuditTrailList() != null
 					? this.getManagedBean().getRemoveCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
 			//28895 - 35500 end
@@ -2043,6 +2040,7 @@ if (CollectionUtils.isNotEmpty(
 			}
 
 			prepareCommitteeAuditTrail(newCommitteeMembers,deletedCommitteeMembers);//28895 - 35500
+			prepareCommitteeRoleModified(mapModifiedRoleCommitteeAudit);
 		}
 	}
 
@@ -2182,8 +2180,15 @@ if (CollectionUtils.isNotEmpty(
 		}
 		// 25037 - end - note 284
 
-		this.getManagedBean().setCurrentCommitteeType(
-				this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
+		// #35320 - Set QCA, QCB to QQC - Start
+		PmParameter committeeType = qtCommittee.getScCommittee().getCommitteeType();
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType.getParameterCode())
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType.getParameterCode())) {
+			committeeType.setParameterCode(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+		}
+		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(committeeType));
+		// #35320 - End
+				
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
 				QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
@@ -2363,9 +2368,13 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
+					this.getManagedBean().getCurrentStatusId() : 
+					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
 					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
 				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
@@ -2383,8 +2392,111 @@ if (CollectionUtils.isNotEmpty(
 				auditReqList.addAll(deleteCommitteeList);
 			}
 
+			qtAuditTrailSO.insertAuditTrail(auditReqList);			
+		}
+	}
+	
+	/**
+	 * #35500 issue fix 4-9
+	 * Method to prepare audit trail for committee's role change
+	 * @param reqDTO
+	 */
+	public void prepareCommitteeRoleModified(HashMap<PmUser, List<String>> committeeModifiedRole) {
+
+		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
+		IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.AUDIT, IAuditTrailSO.class);		
+
+		if (auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID) && MapUtils.isNotEmpty(committeeModifiedRole)){
+			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+			
+			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
+			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
+			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
+			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
+					this.getManagedBean().getCurrentStatusId() : 
+					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
+			auditResDTO.setRoleCode(checkRolesForAuditTrail());
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
+			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())//#35500 Fix Reopen 11th Feb
+					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
+				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
+			}
+			
+			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
+				auditResDTO.setNewValue(entry.getValue().get(0));
+				auditResDTO.setOldValue(entry.getValue().get(1));
+				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_ROLE);
+
+				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+				auditReqList.add(auditReqDTO);
+			}
+
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		}
+			
+	}
+
+	
+	/**
+	 * #35500 issue fix 4-9
+	 * Capture the modified role values
+	 * @param member
+	 */
+	public void onChangeRole(ScCommitteeMember member){
+		// #35500 Fix Reopen 6th Jan Start issue 1
+		List<ScCommitteeMember>	newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
+				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+		
+		if (member.getMemberRoleId() == null || newCommitteeAuditTrailList.contains(member)){
+			this.roleChangedListener(member);
+			return;
+		}
+		// #35500 Fix Reopen 6th Jan End
+	
+		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
+		String changedRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		String previousRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+				
+		if (!mapModifiedRole.isEmpty()) {
+			if (mapModifiedRole.containsKey(member.getPmUser())) {
+				userRoles = mapModifiedRole.get(member.getPmUser());
+				if (userRoles.get(1).equals(changedRole)){
+					mapModifiedRole.remove(member.getPmUser());
+				} else {
+					userRoles.add(0, changedRole);
+					mapModifiedRole.remove(member.getPmUser());
+					mapModifiedRole.put(member.getPmUser(),userRoles);					
+				}
+			} else {
+				userRoles.add(changedRole);
+				userRoles.add(previousRole);
+				userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+				mapModifiedRole.put(member.getPmUser(),userRoles);
+			}
+		} else {
+			userRoles.add(changedRole);
+			userRoles.add(previousRole);
+			userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+			mapModifiedRole.put(member.getPmUser(),userRoles);
+		}
+		
+		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
+		
+		this.roleChangedListener(member);//#39858
 	}
 	
 	/**
@@ -2447,7 +2559,7 @@ if (CollectionUtils.isNotEmpty(
 	 */
 	public String checkRolesForAuditTrail() {
 		FacesScopes facesScopes = new FacesScopes();
-		String role = RoleCode.QCA_SECRETARY.value();
+		String role = RoleCode.QQC_SECRETARY.value();
 
 		try {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2461,10 +2573,13 @@ if (CollectionUtils.isNotEmpty(
 			String currentCommitteeType = this.getManagedBean().getCommitteeType();
 			if (currentCommitteeType.equals("FSB") || currentCommitteeType.equals("FSW")) {
 				currentCommitteeType = "FPB";
+			}else if (currentCommitteeType.equals("QCA") || currentCommitteeType.equals("QCB")){
+				currentCommitteeType = "QQC";
 			}
+			
 			for (String userRole : pmRoles) {
 				String trimmedRole = userRole.substring(0, 3);
-				if (trimmedRole.equals(currentCommitteeType)) {
+				if (trimmedRole.equals(currentCommitteeType) && userRole.toLowerCase().contains("secretary")) {
 					return userRole;
 				}
 			}
@@ -2477,4 +2592,73 @@ if (CollectionUtils.isNotEmpty(
 		}
 		return role;
 	}
+	
+	//#38067 start
+	/**
+	 * Gets the role type dropdown values.
+	 * @param pmUser
+	 * @return list
+	 */
+	public List<PmParameterDesc> getSFRoleDesc(PmUser pmUser) {
+		String committeeType = getManagedBean().getCommitteeType();
+
+		ICommitteSO committeeSO = null;
+		IOrgProfileSO orgProfileSO = null;
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
+		List<String> recommendList = new ArrayList<>();
+		List<PmParameterDesc> list = new ArrayList<>();
+
+		try {
+			committeeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					ICommitteSO.class);
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IOrgProfileSO.class);
+
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			List<PmUserOrg> userOrgs = userOrgDetails(pmUser);
+			pmUser.setPmUserOrgs(userOrgs);
+
+			reqDTO.setPmUser(pmUser);
+			reqDTO.setCommitteeType(committeeType);
+
+			PmOrgProfile pmOrgProfile = getManagedBean().getScQt().getPmOrgProfile();
+
+			// Bug #25021 Task Reassignment Sabah & Sarawak - Finalization Comm
+			if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+					|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { // FSB/FSW
+				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
+				mofReqDTO.setOrgCode("103"); // KEMENTERIAN KEWANGAN MALAYSIA
+
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				pmOrgProfile = mofResDTO.getPmOrgProfile();
+			}
+			// end Bug #25021
+
+			reqDTO.setPmOrgProfile(pmOrgProfile);
+
+			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
+			
+			if (resDTO.isSuccessful() && resDTO.isHasRequiredCommitteeRole()) {
+				recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+								recommendList));
+			}
+						
+			recommendList.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+							recommendList));
+
+			list = retrieveParametersBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+
+		} catch (Exception ex) {
+			log.error("Error getting role for FC User", ex);
+		}
+		
+		return list;
+	}
+	//#38067 end
+	
 }

@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct.circular;
 
 import java.util.ArrayList;
+import java.util.Collections; //#30014
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -55,7 +56,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  */
 @ManagedBean
 @ViewScoped
-public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
+public class CircularBackingBean extends CircularBaseBackingBean<CircularManagedBean>{ //Fix - #34367
 	
 	private static final long serialVersionUID = 1L;
 	// Start - #30866
@@ -98,10 +99,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		}
 		if(isAuditor() || isPanelAdmin()) {
 			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY); //#37620,#34367
 		}
 		if(!isAuditor() && !isPanelAdmin() && !isCentralContractAdmin()) { // public view
 			circularDocTypes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY); //#37620,#34367
 		}
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterType", SearchOperator.OPERATOR_EQUALS.value(), ParameterTypeConst.DOCUMENT_TYPES));
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), circularDocTypes));
@@ -286,21 +289,35 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		try {
 			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
-
+			
 			int i = 1;
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode(ModuleCodeConst.CONTRACT_MANAGEMENT);
 			reqDTO.setDocType(getManagedBean().getSearchCircularDocType());
 			reqDTO.setLanguageCode(languageCode);
-			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			//#30014 - Start
+			StatusResDTO resDTO = (reqDTO.getDocType() != null)
+			        ? statusSO.retrieveStatusDescList(reqDTO)
+			        : new StatusResDTO();			
 
 			List<PmStatusDesc> list =  resDTO.getStatusDescList();
-			items = new SelectItem[list.size()+1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
+			if (list == null) {
+	            list = Collections.emptyList();
+	        }
+			items = new SelectItem[list.size() + 1];
+	        items[0] = new SelectItem(
+	                null,
+	                ResourceBundleUtils.getMessage(
+	                        "lbl.txt.select",
+	                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+	                        new FacesScopes().getUserLocale()
+	                )
+	        );
+	        //#340014 - End
 			for(PmStatusDesc statusDesc : list) {
 				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
+			}			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -326,6 +343,11 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			getManagedBean().setContinuityCircularAuditSearch(true);
 		}
 		// End - #30866
+		// Start Fix - #34367
+		if (!trackingDiarySearch) {
+			getPTJOwner();
+		}
+		// End Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
 	}
 	//Start - #30866
@@ -457,14 +479,6 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	}
 	
 	// Start - #30866
-	/**
-	 * This method used to retrieve login user information.
-	 */
-	public FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-
 	/**
 	 * The method used to verify the login user is supplier.
 	 * 
@@ -707,4 +721,19 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return searchDefault;
 	}
 	// End - #30866
+	
+	//#35506 - Start
+	/**
+	 * Determines if the user has a specific role for audit CT Trail access.
+	 * Only users with designated roles (Auditor General, Auditor Internal, BPK Auditor, or System Admin) are allowed.
+	 *
+	 * @return true if the user has one of the specified roles, false otherwise
+	 */
+	public boolean isAuditRoleCheck() {
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+	//#35506 - End
 }

@@ -124,8 +124,8 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 				
 				//private String contractId = null;
 				IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				ContractReqDTO ctReqDTO  = new ContractReqDTO();				
-				
+				ContractReqDTO ctReqDTO  = new ContractReqDTO();
+				searchBean.setNavigatable(true); //#39038
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				
@@ -229,6 +229,15 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 				ContractItemResDTO resDTO = contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
 		        ISearchResultBean<CtContractItem> resultBean = resDTO.getContractItemResultBean();
 		        
+		     //#39038 - Start
+		     // APPLY PERUBAHAN DARI updateItemMap KE ITEM YANG DITAMPILKAN
+				Map<Long, CtContractItem> updateItemMap = contractBb.getManagedBean().getUpdateItemMap();				
+		        // Terapkan perubahan dengan metode helper
+		        for (CtContractItem currentItem : resultBean.getResultList()) {
+		        	applyChangesToItem(currentItem, updateItemMap);
+		        }
+		      //#39038 - End
+		        
 		     // Simplified sorting logic: itemType first, then itemName, both case-insensitive
 		        Collections.sort(resultBean.getResultList(), new Comparator<CtContractItem>() {
 		            @Override
@@ -249,9 +258,35 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 			}
 			return null;
 		}
+		//#39038 - Start
+		/**
+		 * Applies pending updates to a contract item from a map of changes.
+		 * 
+		 * @param item
+		 *            the {@link CtContractItem} to update.
+		 * @param updateMap
+		 *            the map containing changed items, keyed by ID.
+		 */
+		private void applyChangesToItem(CtContractItem item, Map<Long, CtContractItem> updateMap) {
+			// Pastikan item tidak null dan memiliki RequestNoteItemId
+			if (item == null || item.getScRequestItem() == null) {
+				return;
+			}
+			Long itemId = item.getScRequestItem().getRequestNoteItemId();
+			if (itemId == null) {
+				return;
+			}
 
+			// Jika item sudah diubah, terapkan perubahannya
+			if (updateMap.containsKey(itemId)) {
+				CtContractItem changedItem = updateMap.get(itemId);
+				item.setRecordStatusFlg(changedItem.getRecordStatusFlg());
+				item.setEffDate(changedItem.getEffDate());
+				item.setExpDate(changedItem.getExpDate());
+			}
+		}
+		//#39038 - End
 	}
-
 
 
 	/**

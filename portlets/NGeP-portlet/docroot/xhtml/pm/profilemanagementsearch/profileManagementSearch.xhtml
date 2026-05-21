@@ -89,6 +89,36 @@
 				<th></th>
 				<td></td>
 			</tr>
+			<ui:remove>#38016 -Start</ui:remove>
+			<tr>
+				<th><p:outputLabel
+						value="#{lbl['lbl.pm.access.app.request.userstatus']}" /></th>
+				<td><p:selectOneMenu id="somUserStatus"
+						label="#{lbl['lbl.pm.access.app.request.userstatus']}"
+						styleClass="ppDropDownWidthL"
+						value="#{profileManagSearchBackingBean.managedBean.profileManagSearchBean.userStatusId}">
+						<f:selectItems
+							value="#{profileManagSearchBackingBean.getStatus()}" />
+								<p:ajax update="somUserStatus" />
+					</p:selectOneMenu></td>
+					<th></th>
+				<td></td>
+			</tr>
+			<tr>
+				<th><p:outputLabel
+						value="#{lbl['lbl.pm.access.app.request.rolestatus']}" /></th>
+				<td><p:selectOneMenu id="somRoleStatus"
+						label="#{lbl['lbl.pm.access.app.request.rolestatus']}"
+						styleClass="ppDropDownWidthL"
+						value="#{profileManagSearchBackingBean.managedBean.profileManagSearchBean.roleStatusId}">
+						<f:selectItems
+							value="#{profileManagSearchBackingBean.getStatus()}" />
+								<p:ajax update="somRoleStatus" />
+					</p:selectOneMenu></td>
+					<th></th>
+				<td></td>
+			</tr>
+			<ui:remove>#38016 -End</ui:remove>
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">

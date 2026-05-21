@@ -52,75 +52,28 @@
 					</p:column>
 					<!-- 32792 END -->
 					    <!-- new requirement for wording #29778 -START -->
+					    <!-- 38340 - START -->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :25%;white-space : normal">
-						<h:outputText value="#{lbl['lbl.sm.mof.status.active']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_ACTIVE}" />
-						<h:outputText value="#{lbl['lbl.sm.mof.status.expired']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED and smSupplier.pendingSuspend ne true and smSupplier.blacklistStats ne true}" /> <!-- #32822 -->
-						<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE}" />
-						<!-- bug #28278 -START @harith -->
-						<!-- 26238 -  Disciplonary action - 29156 29778 START @akmal -->
-					    <!-- akmal - 33248 - reopen 31/05: Disciplinary Action - 26238 -start  --> 
-						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" 
-						rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG 
-						and smSupplier.pendingCancel eq true and smSupplier.suspendRegistrationStats ne true}" />	
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})"
-						 rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG
-						  and smSupplier.pendingCancel ne true and smSupplier.suspendRegistrationStats ne true}" />	
-						
-						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" 
-						rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST 
-						and smSupplier.pendingBlacklist eq true and smSupplier.suspendRegistrationStats ne true}" />	
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" 
-						rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST 
-						and smSupplier.pendingBlacklist ne true and smSupplier.suspendRegistrationStats ne true}" />	
-						
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted2']} (#{smSupplier.smAppl.applNo})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED}" />	
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted3']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />	
-						<!-- 26238 -  Disciplonary action - 29156  29778 -END -->		
-					    <!-- bug #28278 -END -->
-					    <!-- bug #32970 -START -->
-					    <!-- 32970 - akmal - multiple Da with pending txn  -->
-					    <h:outputText 
-							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']}, #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})"
-							rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST
-							 and smSupplier.pendingBlacklist eq true and smSupplier.suspendRegistrationStats eq true and smSupplier.blacklistStats eq true}" /> 
-					    <h:outputText 
-							value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.status.suspend']}, #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})"
-							rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST
-							 and smSupplier.pendingBlacklist ne true and smSupplier.suspendRegistrationStats eq true and smSupplier.blacklistStats eq true}" /> 
-							<h:outputText 
-							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']}, #{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})"
-							rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and smSupplier.pendingCancel eq true 
-							and smSupplier.suspendRegistrationStats eq true and smSupplier.cancelRegStats eq true}" /> 
-					    <h:outputText 
-							value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.status.suspend']}, #{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})"
-							rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and smSupplier.pendingCancel ne true 
-							and smSupplier.suspendRegistrationStats eq true and smSupplier.cancelRegStats eq true}" /> 
-					    <!-- bug #29690 -START -->
-					    <!-- akmal - 33248 - reopen 31/05: Disciplinary Action - 26238 - end  --> 
-						<h:outputText
-							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']})"
-							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and smSupplier.pendingSuspend eq true and smSupplier.blacklistStats ne true}" />
-						<h:outputText 
-							value="#{lbl['lbl.sm.status.deleted_suspend']} (#{lbl['lbl.sm.status.suspend']})"
-							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and smSupplier.pendingSuspend ne true and smSupplier.blacklistStats ne true}" /> 
-					    <!-- bug #29690 -END -->
-					    <!-- bug #32970 -END -->
-					    <!-- new requirement for wording #29778 -END -->
+						<!-- #38899 -->
+						<h:outputText value="#{supplierDataMaintenanceBackingBean.getSupplierAccountStatus(smSupplier)}" />
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
 						<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smSupplier.smAppl.supplierType eq 'K'}"/>
 						<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smSupplier.smAppl.supplierType eq 'J'}"/>
 					</p:column>
-
+					<!-- #38350 -Start -->
 					<p:column headerText="#{lbl['lbl.sm.regStatus']}">
 						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}"
 							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED}" />
+						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}"
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and (smSupplier.pendingBlacklist eq true or smSupplier.pendingCancel eq true)}" />
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty smSupplier.smAppl.pmRegStatus}" />
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
-							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and (smSupplier.pendingBlacklist eq false and smSupplier.pendingCancel eq false)}" />
 					</p:column>
+					<!-- #38350 -END -->
 
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
 						<p:commandLink onstart="blockWidget.show()"
@@ -207,6 +160,8 @@
 				<!-- #33783 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regOwnerAndDirectorMaintenance.xhtml" /> <!-- 26238 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regCatCodesMaintenance.xhtml" />
+				<ui:remove>#34031</ui:remove>
+				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/revisitMaintenance.xhtml" />
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/approverRemarkMaintenance.xhtml" />
 				
 				<p:confirmDialog id="confirmDialog" closable="true"

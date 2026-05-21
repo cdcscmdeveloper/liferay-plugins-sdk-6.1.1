@@ -102,7 +102,7 @@
     		<tr>
 				<td>
 					<p>
-						<span class="standard">Saya, <span class="underline"><b>$userName</b></span> No. Kad Pengenalan 
+						<span class="standard">Saya, <span class="underline"><b>$salutation $userName</b></span> No. Kad Pengenalan 
 						<span class="underline"><b>$icNo</b></span> yang mewakili <span class="underline"><b>$supplierName</b></span> 
 						nombor Pendaftaran <span class="underline">$mofNo</span> dengan ini mengisytiharkan bahawa saya atau mana-mana orang 
 						yang mewakili syarikat ini:
@@ -210,7 +210,7 @@
 							<tr class="standard">
 								<td>Nama</td>
 								<td><span class="text_indent_point"/></td>
-								<td>: $userName</td>
+								<td>: $salutation $userName</td>
 							</tr>
 							<tr class="standard">
 								<td>No.KP</td>
