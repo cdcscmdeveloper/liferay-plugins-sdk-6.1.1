@@ -110,6 +110,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	private ContractBackingBean ctBB = null;
 	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+	
+	private String confirmationContentMsg;//34442 
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -871,24 +873,24 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @see    Exception
 	 */
 	public String factoringRequestSignAction(String outcome) throws Exception {
-		StringBuilder sb = null;
-		if ((BpmOutcomeConst.BPM_APPROVE.equals(outcome) || 
-				BpmOutcomeConst.BPM_REJECT.equals(outcome)) && !isContractAdmin()) {
-			validateFactoringRequest(outcome);
-			sb = new StringBuilder();
-			sb.append(getManagedBean().getContractNo());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(getManagedBean().getDocType());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(outcome);		
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());    
-			getManagedBean().setTextBeforeSign(sb.toString());	
+		//34442 - start
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)  && !isContractAdmin()) {
+			setConfirmationContentMsg(
+				getConfirmationContent(
+					String.valueOf(getManagedBean().getFactoring()
+							.getStatus().getStatusId()),
+					getManagedBean().getContractNo()
+				)
+			);
+
 			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
 			return null;
-		}else if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
+		}else if(BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isContractAdmin()){
+			return gpkiSignConfirmed(outcome);
+		}
+		//34442 - end
+		else if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
 			validateFactoringRequest(outcome);	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);		
@@ -908,6 +910,39 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			return saveFactoringRequest(outcome);
 		}
 	}
+	
+	//34442 - start
+	/**
+	 * Method called when user confirms yes on the confirmation dialog
+	 * Retrieve saved outcome from managed bean
+	 * Proceed to GPKI sign dialog for signing
+	 */
+	public String gpkiSignConfirmed() throws Exception {
+    	return gpkiSignConfirmed(getManagedBean().getButtonAction());
+	}
+
+	/**
+	 * Method to prepare and show GPKI sign dialog
+	 * Build text before sign with contract details for digital signing
+	 * Used by both approve confirmation flow and direct reject flow
+	 */
+	private String gpkiSignConfirmed(String outcome) throws Exception {
+		validateFactoringRequest(outcome);
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getContractNo());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(getManagedBean().getDocType());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(outcome);		
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());    
+		getManagedBean().setTextBeforeSign(sb.toString());	
+		getManagedBean().setButtonAction(outcome);
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		return null;
+	}
+	//34442 - end
 
 	/**
 	 * The method used to set value for security check
@@ -1878,5 +1913,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 	}
 	//#15851 end	
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
 
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }
