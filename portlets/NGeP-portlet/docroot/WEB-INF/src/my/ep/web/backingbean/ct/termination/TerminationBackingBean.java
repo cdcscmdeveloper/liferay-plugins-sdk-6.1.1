@@ -117,10 +117,10 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 	
 	//#30737 - Start 
-	@Override
-    protected String getTaskName() {
-        return getManagedBean().getTaskName();
-    }
+//	@Override
+//    protected String getTaskName() {
+//        return getManagedBean().getTaskName();
+//    }
 
     @Override
     protected List<PmUser> getSelectedUsers() {

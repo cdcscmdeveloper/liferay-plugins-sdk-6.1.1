@@ -369,7 +369,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
 		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
 		log.info("xoxoxoxoxooxoxo contractVer : "+reqDTO.getCtContractVer().getContractVerId());
-		log.info("xoxoxoxoxooxoxo getTaskName() : "+getTaskName());
+//		log.info("xoxoxoxoxooxoxo getTaskName() : "+getTaskName());
     	log.info("xoxoxoxoxooxoxo getSelectedUsers() : "+getSelectedUsers());
     	
         return reqDTO;
@@ -379,8 +379,12 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     	log.info("xoxoxoxoxoxoxo catch EpException");
     	
     	String errorCode = ex.getMessage();
-    	String selectedUserName = getSelectedUsers().get(0).getUserName();
         String[] messageKeys = null;
+        
+        String selectedUserName = null;
+        if(getSelectedUsers().size() > 0){
+        	selectedUserName = getSelectedUsers().get(0).getUserName();
+        }
         
         log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
         
@@ -424,7 +428,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         return new EpException(errorCode);
     }
     
-    protected abstract String getTaskName();
+//    protected abstract String getTaskName();
     protected abstract List<PmUser> getSelectedUsers();
     protected abstract CtContractVer getContractVer();
     //#30737 - End

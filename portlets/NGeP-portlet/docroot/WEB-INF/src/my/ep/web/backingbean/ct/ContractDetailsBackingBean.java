@@ -169,10 +169,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private CtAgency selectedRecommendedAgency;
 	
 	//#30737 - Start 
-	@Override
-    protected String getTaskName() {
-        return getManagedBean().getTaskName();
-    }
+//	@Override
+//    protected String getTaskName() {
+//        return getManagedBean().getTaskName();
+//    }
 
     @Override
     protected List<PmUser> getSelectedUsers() {

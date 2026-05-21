@@ -79,10 +79,10 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
 	//#30737 - Start 
-	@Override
-    protected String getTaskName() {
-        return getManagedBean().getTaskName();
-    }
+//	@Override
+//    protected String getTaskName() {
+//        return getManagedBean().getTaskName();
+//    }
 
     @Override
     protected List<PmUser> getSelectedUsers() {

@@ -242,10 +242,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//#24336 - End
 	
 	//#30737 - Start 
-	@Override
-    protected String getTaskName() {
-        return getManagedBean().getTaskName();
-    }
+//	@Override
+//    protected String getTaskName() {
+//        return getManagedBean().getTaskName();
+//    }
 
     @Override
     protected List<PmUser> getSelectedUsers() {
@@ -3233,7 +3233,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
         		buildContractReqDTO(outcome, getUserRole()),
             	getSelectedUsers(),
             	inactiveUserCheckResult,
-            	getTaskName()
+            	getManagedBean().getTaskName()
         	);
         } catch (EpException ex) {
         	throw buildInactiveUserException(ex);

@@ -20,7 +20,6 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
@@ -95,10 +94,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
 	//#30737 - Start 
-	@Override
-    protected String getTaskName() {
-        return getManagedBean().getTaskName();
-    }
+//	@Override
+//    protected String getTaskName() {
+//        return getManagedBean().getTaskName();
+//    }
 
     @Override
     protected List<PmUser> getSelectedUsers() {
@@ -549,7 +548,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 			
-			validateSuspensionDetails(outcome);		
+			//#30737
+			Long inactiveUserCheckResult = 1L; //TEMP (get value from SP)
+			
+			validateSuspensionDetails(outcome, inactiveUserCheckResult); //#30737 (add param inactiveUserCheckResult)		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
 			//#39038 - Start
 			// Step 1: Ambil updateItemMap yang menyimpan perubahan dari semua halaman
@@ -616,7 +618,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			if(this.getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
-			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
+			
+			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO, inactiveUserCheckResult); //#30737 (add param inactiveUserCheckResult)
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
 				
@@ -717,7 +720,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	/**
 	 * This method used to validate suspend item and agency as per rule
 	 */
-	public void validateSuspensionDetails(String outcome){
+	public void validateSuspensionDetails(String outcome, Long inactiveUserCheckResult){ //#30737 (add param inactiveUserCheckResult)
+		
+		log.info("xoxoxoxoxo MASUK! validateSuspensionDetails");
+		
 		getManagedBean().setAutoUpdate(true);
 		/*Remark is mandatory during revise and reject*/
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -738,22 +744,25 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		//TODO - REVISE in validation + save/submit
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
-			handleInactiveUserValidation(outcome);
+			handleInactiveUserValidation(outcome, inactiveUserCheckResult);
+		}
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
+				&& inactiveUserCheckResult == 5L) {
+			log.info("xoxoxoxoxooxoxo revise & return 5");
+			handleInactiveUserValidation(outcome, inactiveUserCheckResult);
 		}
 		//#30737 - End
 		
 	}
 	
 	//#30737 - Start
-	public void handleInactiveUserValidation(String outcome) {
+	public void handleInactiveUserValidation(String outcome, Long inactiveUserCheckResult) {
 
 		IContractSuspensionSO contractSuspensionSO 
 			= (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
     	
         try {
-        	
-        	Long inactiveUserCheckResult = 1L; //TEMP
-        	
         	contractSuspensionSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
             	getSelectedUsers(),
@@ -864,7 +873,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-			validateSuspensionDetails(outcome);
+			validateSuspensionDetails(outcome, null); //#30737 (add param null for cater inactiveUserCheckResult)
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());

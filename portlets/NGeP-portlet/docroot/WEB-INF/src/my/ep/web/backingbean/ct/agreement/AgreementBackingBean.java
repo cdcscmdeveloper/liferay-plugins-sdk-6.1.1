@@ -151,10 +151,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	//26686 end
 	
 	//#30737 - Start 
-	@Override
-    protected String getTaskName() {
-        return getManagedBean().getTaskName();
-    }
+//	@Override
+//    protected String getTaskName() {
+//        return getManagedBean().getTaskName();
+//    }
 
     @Override
     protected List<PmUser> getSelectedUsers() {
