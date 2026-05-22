@@ -13938,23 +13938,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 					//31210-start
 					if (rev.getRecommendation() != null) {
-						//38001 - start 
-						String language = new FacesScopes().getUserLocale().getLanguage();
-						String recommend = rev.getRecommendation();
 
-						if (language.equals(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
-							getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
-						} else if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
-							if (recommend.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
-								getManagedBean().setPoRecommendationDesc(
-										SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY);
-							} else if (recommend.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
-								getManagedBean().setPoRecommendationDesc(
-										SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY);
-							}
-						}
-						//38001 - end 
-					}//31210-end
+						String language = new FacesScopes().getUserLocale().getLanguage();
+						String recommendationDesc = SmApplicationUtil.getRecommendationDescription(
+								rev.getRecommendation(), language);
+
+						getManagedBean().setPoRecommendationDesc(recommendationDesc);
+					}
+					//31210-end
 				}
 			} else if (getManagedBean().isPoUser()
 					|| (getManagedBean().isSupplierUser() && getManagedBean()
