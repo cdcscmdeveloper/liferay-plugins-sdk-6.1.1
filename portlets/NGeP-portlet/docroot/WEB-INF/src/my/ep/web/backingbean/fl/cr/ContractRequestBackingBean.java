@@ -1848,15 +1848,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		CtContractValue ctSupplierDtl  = contractSO.getCtValueSupplierAddressByContractId(contractId);
 		
-		if (ctSupplierDtl != null) {//40227-Start
+		if (ctSupplierDtl != null) {//40227
 			supplierDtl.setMofNo(ctSupplierDtl.getSupplierMofNo());
 			supplierDtl.setSupplierName(ctSupplierDtl.getSupplierName());
 			convertCtAddressToFlAddress(ctSupplierDtl,supplierDtl);
-		}//40227-End
+		}//40227
 		//33917-End
 		supplierDtl.setFlFulfilmentRequest(flRequest);
 		flRequest.setFlSupplierDtl(supplierDtl);
-//		}
+//		}// 40227
 	}
 	
 	/**
