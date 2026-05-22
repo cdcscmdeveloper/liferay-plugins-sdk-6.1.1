@@ -12271,10 +12271,16 @@ public class SpecificationBackingBean extends
 		spReqDTO.setRoleCode(getUserRoleCode());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean().getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
-		
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//25138 - ahmaa
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
+		//#25138 - set for one item only - start
+		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());
+		//#25138 - set for one item only - end
+		//#31450 - bug for #25138 - start
+		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
+		//#31450 - bug for #25138 - end
 		
 		IQTSpecSO specSO = getSpecSO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
