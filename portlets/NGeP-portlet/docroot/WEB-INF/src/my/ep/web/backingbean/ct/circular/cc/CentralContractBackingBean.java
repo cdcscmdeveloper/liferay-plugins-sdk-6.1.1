@@ -182,7 +182,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 	/**
 	 * This  method used to initialize approver list
 	 */
-	public void preRenderCircular() {			
+	public void preRenderCircular() {	
 		renewSesionObject();
 		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 		FacesContext fc = FacesContext.getCurrentInstance();
