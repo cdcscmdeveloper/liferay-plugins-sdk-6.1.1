@@ -4663,6 +4663,11 @@ public class SmApplicationUtil {
 		managedBean.setOtherDescChangeSupplierPrev(false);
 		managedBean.setOtherDescChangeSupPOPrev(false);
 		managedBean.setOtherDescChangeSupApproverPrev(false);
+		managedBean.setOtherDescChangePO(false);
+		managedBean.setOtherDescChangeApprover(false);
+		managedBean.setOtherDescChangeSupplier(false);
+		managedBean.setOtherDescChangeSupPO(false);
+		managedBean.setOtherDescChangeSupApprover(false);
 		// 36504 - END
 		
 		if (managedBean.getSmAppl().getApplType()
@@ -4687,8 +4692,13 @@ public class SmApplicationUtil {
 					String catType = previouscat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 					previouscat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					
-					if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					// filter Appl Type MOF to prevent repeated KN on approved category.
+					// filter 20116 to prevent repeated category code after approval.
+					if ((catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) &&
+							!previouscat.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_MOF) &&
+							!managedBean.getSmAppl().getPmStatus().getStatusId().
+							equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED)) {
 						
 						previouscat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previouscat.getSupplierCategoryId()));
 						

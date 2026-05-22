@@ -71,10 +71,10 @@
 
 			<p:dataTable id="supplierListTblSingle" var="shortlistedSupp" 
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
-						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp.evaluationResultDtlId}"  
+						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}"  
 						 style="width:100%;" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						 selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
-						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}" styleClass="shortlistedTableClass"> <ui:remove> 28777,29729 </ui:remove>
+						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}" styleClass="shortlistedTableClass">
 				
 				<ac:paginator for="supplierListTblSingle" />
 				
