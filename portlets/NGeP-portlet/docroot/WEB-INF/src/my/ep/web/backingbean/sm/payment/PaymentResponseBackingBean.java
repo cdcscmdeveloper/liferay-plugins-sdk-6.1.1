@@ -941,30 +941,25 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		
 		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
 		log.info("*************responseRedirect errorDesc : 40340 >>>*********" + errorDesc);
-		
-		try {
-			if(fc.getMessageList().size() < 1){
-				String[] msgParam = null;
-				log.info("*************responseRedirect before message : 40340*********");
-				//#29481 - Start - added INFO_721068
-				List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
-				if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
-				//#29481 - End
-					msgParam = getManagedBean().getMsgParam();
-				}else{
-					msgParam = new String[]{errorDesc};
-				}
-				log.info("*************responseRedirect msgParam : 40340 >>>*********" + msgParam);
-				fc.addMessage(
-						null,
-						new FacesMessage(getManagedBean().getMessageSeverity(), null,
-								MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			
+		if(fc.getMessageList().size() < 1){
+			String[] msgParam = null;
+			log.info("*************responseRedirect before message : 40340*********");
+			//#29481 - Start - added INFO_721068
+			List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
+			if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
+			//#29481 - End
+				msgParam = getManagedBean().getMsgParam();
+			}else{
+				msgParam = new String[]{errorDesc};
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			log.info("*************responseRedirect msgParam : 40340 >>>*********" + msgParam);
+			fc.addMessage(
+					null,
+					new FacesMessage(getManagedBean().getMessageSeverity(), null,
+							MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		
 		}
 
 		fc.getApplication()
@@ -1058,10 +1053,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			//#40340 : remove personnel.getPmUser().getUserId().equals(currentUserId) in below checking
-			log.info("######40340  inside setMessageSoftcert single user#####");
-			if(personnel != null){
-				log.info("######40340  inside setMessageSoftcert checking personnel#####");
+			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
 			}
