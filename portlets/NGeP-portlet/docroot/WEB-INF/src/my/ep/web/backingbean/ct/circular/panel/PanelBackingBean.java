@@ -553,14 +553,21 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			CircularResDTO resDTO = circularSO.retrieveActiveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
 				// Start Fix - #34367
-					for (CtCircularVer circularver : resDTO.getCircularVerList()) {
-						if (circularver.getCtCircular().getOwnerOrgProfile() != null
-								&& circularver.getCtCircular().getOwnerOrgProfile().getOrgProfileId()
-										.equals(getOwnerOrgProfile().getOrgProfileId())) {
-							updatedCircularList.add(circularver);
-						}
-						getManagedBean().setCircularVerList(updatedCircularList);
+				for (CtCircularVer circularver : resDTO.getCircularVerList()) {
+
+				    if (circularver.getCtCircular().getCircularType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+				        // PANEL
+				        if (circularver.getCtCircular().getOwnerOrgProfile() != null
+				                && circularver.getCtCircular().getOwnerOrgProfile().getOrgProfileId().equals(getOwnerOrgProfile().getOrgProfileId())) {
+
+				            updatedCircularList.add(circularver);
+				        }
+				    } else {
+				        // NON-PANEL
+				        updatedCircularList.add(circularver);
+				    }
 				}
+				getManagedBean().setCircularVerList(updatedCircularList);
 				// End Fix - #34367
 			}
 		} catch (Exception e) {

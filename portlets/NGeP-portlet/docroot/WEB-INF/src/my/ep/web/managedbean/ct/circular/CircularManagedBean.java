@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst; //Fix - #34367
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
@@ -159,10 +160,11 @@ public class CircularManagedBean extends BaseManagedBean {
 				if(resDTO.isSuccessful()) {
 					//Start Fix - #34367
 					for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
-						if(circularVer.getCtCircular().getOwnerOrgProfile() != null){
-							if(circularVer.getCtCircular().getOwnerOrgProfile().getOrgProfileId().equals(userPTJProfile)){
-								 setPtjOwner(true);
-							 }
+						if (circularVer.getCtCircular().getOwnerOrgProfile() != null
+								&& circularVer.getCtCircular().getCircularType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+							if (circularVer.getCtCircular().getOwnerOrgProfile().getOrgProfileId().equals(userPTJProfile)) {
+								setPtjOwner(true);
+							}
 						}		 
 					}
 					//End Fix - #34367
@@ -619,5 +621,5 @@ public class CircularManagedBean extends BaseManagedBean {
 		this.userPTJProfile = userPTJProfile;
 	}
 	// End Fix - #34367
-
+	
 }
