@@ -4647,6 +4647,11 @@ public class SmApplicationUtil {
 		managedBean.setOtherDescChangeSupplierPrev(false);
 		managedBean.setOtherDescChangeSupPOPrev(false);
 		managedBean.setOtherDescChangeSupApproverPrev(false);
+		managedBean.setOtherDescChangePO(false);
+		managedBean.setOtherDescChangeApprover(false);
+		managedBean.setOtherDescChangeSupplier(false);
+		managedBean.setOtherDescChangeSupPO(false);
+		managedBean.setOtherDescChangeSupApprover(false);
 		// 36504 - END
 		
 		if (managedBean.getSmAppl().getApplType()
