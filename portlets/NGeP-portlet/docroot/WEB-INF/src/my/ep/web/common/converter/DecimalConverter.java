@@ -13,7 +13,9 @@ import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 import javax.faces.convert.NumberConverter;
 
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -84,8 +86,14 @@ public class DecimalConverter extends NumberConverter {
 						minValue, maxValue, isIntegerOnly);
 
 			} else if (maxFractionDigits < decimalValue) {
-				throw getDecimalConverterException(context, component, value,
-						minValue, maxValue, isIntegerOnly);
+				// #35293 - Start
+				String label = (String) MessageFactory.getLabel(context, component);
+				String labelManualScore = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.user.score",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				if (!labelManualScore.equalsIgnoreCase(label)) {
+					throw getDecimalConverterException(context, component, value, minValue, maxValue, isIntegerOnly);
+				}
+				// #35293 - End
 
 			}
 			// Code to allow only digits and one dot. dot should be in between
