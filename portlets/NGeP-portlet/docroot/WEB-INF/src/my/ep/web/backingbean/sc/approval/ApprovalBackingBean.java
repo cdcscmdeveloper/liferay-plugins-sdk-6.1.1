@@ -1612,6 +1612,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
+				boolean userActive = false; //#33222
 				List<String> approvalTypes = null;
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
@@ -1715,8 +1716,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				qtReqDTO.setDigiSignData(digiSign);
 				
-				tenderResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
-				// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
+				//#33222 - Start
+				if (bpkRevise) {
+					userActive = checkActiveUserAfterRevice(qt);
+				} 
+				
+				if (!userActive) {
+					tenderResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
+					// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
+				}//#33222 - End
 				
 				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					if (CollectionUtils.isNotEmpty(approvalTypes)) {
@@ -1788,6 +1796,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	    }
 		return tenderResDTO;
 	}
+	
+
 	// Bug #31759 - Start
 	public void checkApprovalAndRefreshDetails (Long qtId, String taskName, ScQtApproval approval){
 
@@ -4377,5 +4387,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End
+	
+	/**
+	 * #33222 - Check Desk officer active or not after revise
+	 * @param qt
+	 * @return
+	 */
+	private boolean checkActiveUserAfterRevice(ScQt qt) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }
