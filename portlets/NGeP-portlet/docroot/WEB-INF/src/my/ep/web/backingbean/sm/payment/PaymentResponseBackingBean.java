@@ -1039,7 +1039,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
+			//#40340 : remove personnel.getPmUser().getUserId().equals(currentUserId) in below checking
+			log.info("######40340  inside setMessageSoftcert single user#####");
+			if(personnel != null){
+				log.info("######40340  inside setMessageSoftcert checking personnel#####");
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
 			}
