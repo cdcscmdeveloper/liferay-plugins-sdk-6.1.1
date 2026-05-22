@@ -350,7 +350,11 @@ public interface QTConstants {
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX = 7;// 35148&11104
 	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
 	// #11104 -end-
-
+	
+	//#38151
+	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
+	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
+	
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";
