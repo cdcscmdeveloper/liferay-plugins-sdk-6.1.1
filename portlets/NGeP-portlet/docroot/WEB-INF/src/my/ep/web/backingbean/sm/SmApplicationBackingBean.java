@@ -66,6 +66,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
@@ -13936,8 +13937,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						}
 					}
 					//31210-start
-					if (rev.getRecommendation() !=null) {
-						getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
+					if (rev.getRecommendation() != null) {
+						//38001 - start 
+						String language = new FacesScopes().getUserLocale().getLanguage();
+						String recommend = rev.getRecommendation();
+
+						if (language.equals(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
+							getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
+						} else if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
+							if (recommend.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+								getManagedBean().setPoRecommendationDesc(
+										SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY);
+							} else if (recommend.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
+								getManagedBean().setPoRecommendationDesc(
+										SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY);
+							}
+						}
+						//38001 - end 
 					}//31210-end
 				}
 			} else if (getManagedBean().isPoUser()
