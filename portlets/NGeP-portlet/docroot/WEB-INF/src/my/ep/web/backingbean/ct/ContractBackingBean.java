@@ -1248,34 +1248,101 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return items;
 	}
-
+	
+	// #35506,#39632 (Resetting and validation) - Start
 	/**
-	 * The method used to validate deduction type.
-	 * User can not selected same type of deduction again.
-	 */	
-	public void validateDeductionType(CtDeduction deduction)  {
+	 * Validates the selected deduction type to prevent unsupported duplicates.
+	 * 
+	 * @param selectedDeduction
+	 *            the deduction row currently being edited
+	 * @param action
+	 *            optional context (e.g., from bulk operations); unused in
+	 *            current implementation
+	 */
+	public void validateDeductionType(CtDeduction selectedDeduction, String action) {
 
-		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+		if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 			int count = 0;
-			String parameterCode;
-			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
+			for (CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()) {
 				PmParameter deductionTypeById = deId.getDeductionType();
-				PmParameter deductionType = deduction.getDeductionType();
+				PmParameter deductionType = selectedDeduction.getDeductionType();
 				if (deductionTypeById == null || deductionType == null)
 					break;
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					parameterCode =  getParameterCode(deductionTypeById);
-					if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
-						throw new EpException(MessageConst.ERROR_100046,
-								new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId()))});
+					resetAndValidateDeduction(selectedDeduction, deductionTypeById, count, action);
 				}
 			}
 		}
 	}
+
+	
+	/**
+	 * Overloaded method used for Ajax listener calls. Delegates to the main
+	 * method with action = null.
+	 * 
+	 * @param deduction
+	 *            the deduction row being validated during user selection
+	 */
+	public void validateDeductionType(CtDeduction deduction) {
+		validateDeductionType(deduction, null);
+	}
+
+	/**
+	 * Processes validation and reset rules for deduction types.
+	 */
+	private void resetAndValidateDeduction(CtDeduction selectedDeduction, PmParameter deductionTypeById, int count,
+			String action) { // #39632
+
+		String parameterCode = getParameterCode(deductionTypeById);
+		if (parameterCode == null) {
+			return;
+		}
+
+		resetDeductionIfNew(selectedDeduction, action);
+		validateDuplicateDeductionType(selectedDeduction, parameterCode, count);
+	}
+
+	/**
+	 * Resets amount and description for a new deduction row when no action
+	 * context is provided.
+	 */
+	private void resetDeductionIfNew(CtDeduction selectedDeduction, String action) {
+		if (action == null) {
+			final double zeroAmount = BigDecimal.ZERO.doubleValue();
+			selectedDeduction.setAmount(zeroAmount);
+			selectedDeduction.setDeductionDesc(null);
+
+			// Safely clear deduction clauses if the list is not null
+			List<CtDeductionClause> clauses = selectedDeduction.getCtDeductionClauses();
+			if (clauses != null) {
+				clauses.clear();
+			}
+		}
+	}
+
+	/**
+	 * Validates that duplicate deduction types are not used (except for allowed
+	 * types).
+	 */
+	private void validateDuplicateDeductionType(CtDeduction selectedDeduction, String parameterCode, int count) {
+		boolean isAllowedDuplicate = parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+				|| parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+				|| parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED);
+
+		if (!isAllowedDuplicate && count == 2) {
+			// Capture the description BEFORE clearing the selection
+			String deductionTypeName = getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+					selectedDeduction.getDeductionType().getParameterId()));
+
+			selectedDeduction.setDeductionType(new PmParameter());
+
+			// Now safely throw the error with the saved name
+			throw new EpException(MessageConst.ERROR_100046, new String[] { deductionTypeName });
+		}
+	}
+	// #35506,#39632 (Resetting and validation) - End
 
 	/**
 	 * The method used to add new deduction.
@@ -2443,6 +2510,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(defermentLatest);
 			bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 			bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			bondWaiver.setPrevId(null); //#35506
+			bondWaiver.setCreatedDate(new Timestamp(new Date().getTime())); //#35506
 
 			defermentHistory.add(bondWaiver);
 			Collections.reverse(defermentHistory);
@@ -5126,4 +5195,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return isContractUpdateOrView(getManagedBean().getContractVer());
 	}
 	// #24333 - End
+	
+	// #35506 - Start
+	/**
+	 * Determines if the user has a specific role for audit CT Trail access.
+	 * Only users with designated roles (Auditor General, Auditor Internal, BPK
+	 * Auditor, or System Admin) are allowed.
+	 * 
+	 * @return true if the user has one of the specified roles, false otherwise
+	 */
+	public boolean isAuditRoleCheck() {
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+	// #35506 - End
 }  
