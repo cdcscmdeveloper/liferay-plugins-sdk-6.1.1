@@ -337,6 +337,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) && procCatId == null) {
 				throw new EpException(MessageConst.ERROR_775181);
 			}
+			if (this.getManagedBean().getSelectedTabIndex() == QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
+				validateTierQuantityAndUnitPriceForSideMenueOrSave();
+			}
 			// #29468 End Vinod
 			//20200325@asyrafhaziq _ Bug #27740 - Start
 			validateLoaAmount(scLoa);
@@ -12414,10 +12417,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								.equalsIgnoreCase(
 										oldQuestion.getClItem().trim()
 												.replaceAll("\\s", ""))
-						&& StringUtils.equals(this.getManagedBean()
+						&& !StringUtils.equals(this.getManagedBean()
 								.getStandardTemplate(),
 								ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING)) {
-					checkQTZoneToUpdateUnitPriceForCloneItems(oldQuestion,
+					checkDLOAZoneToUpdateUnitPriceForCloneItems(oldQuestion,
 							newQuestion);
 				} else if (bothQuestionsItem
 						&& newQuestion
@@ -12427,10 +12430,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								.equalsIgnoreCase(
 										oldQuestion.getClItem().trim()
 												.replaceAll("\\s", ""))
-						&& !StringUtils.equals(this.getManagedBean()
+						&& StringUtils.equals(this.getManagedBean()
 								.getStandardTemplate(),
 								ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING)) {
-					checkDLOAZoneToUpdateUnitPriceForCloneItems(oldQuestion,
+					createAnswersAndQuantitiesForQt(oldQuestion,
 							newQuestion);
 				}
 			}
@@ -12440,15 +12443,95 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #29468 Vinod End
 
 	// #29468 Vinod Start
-	private void checkQTZoneToUpdateUnitPriceForCloneItems(
-			TplSpecQuestion oldQuestion, TplSpecQuestion newQuestion) {
+	private void createAnswersAndQuantitiesForQt(TplSpecQuestion oldQuestion,
+			TplSpecQuestion newQuestion) {
 		ScQt scQt = this.getManagedBean().getScQt();
 		boolean isZonal = scQt.isZonal();
 
 		if (isZonal) {
-			updateZoneUnitPriceforNewAnswersForQT(oldQuestion, newQuestion);
+			List<TplSpecZoneQty> newTplSpecZoneQties = new ArrayList<>();
+			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+					this.getManagedBean().getZoneTrees(), null);
+			boolean isZonePriceTypeTier = oldQuestion.getClPriceTypeCode()
+					.getParameterCode()
+					.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+			
+			if (CollectionUtils.isNotEmpty(oldQuestion.getTplSpecZoneQties())
+					&& CollectionUtils.isNotEmpty(zoneDetails)
+					&& oldQuestion.getTplSpecZoneQties().size() == zoneDetails
+							.size()) {
+				for (int i = 0; i < oldQuestion.getTplSpecZoneQties().size(); i++) {
+					TplSpecZoneQty tplSpecZoneQty = new TplSpecZoneQty();
+					TplSpecZoneQty tplSpecZoneQtyOld = oldQuestion
+							.getTplSpecZoneQties().get(i);
+					tplSpecZoneQty.setQty(tplSpecZoneQtyOld.getQty());
+					tplSpecZoneQty.setTplSpecQuestion(newQuestion);
+					tplSpecZoneQty.setTplSpecZoneDtl(zoneDetails.get(i));
+					newTplSpecZoneQties.add(tplSpecZoneQty);
+				}
+			} else if (CollectionUtils.isNotEmpty(oldQuestion
+					.getTplSpecZoneQties())
+					&& CollectionUtils.isNotEmpty(zoneDetails)
+					&& oldQuestion.getTplSpecZoneQties().size() != zoneDetails
+							.size()) {
+				TplSpecZoneQty tplSpecZoneQtyOld = oldQuestion
+						.getTplSpecZoneQties().get(0);
+				for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
+					TplSpecZoneQty tplSpecZoneQty = new TplSpecZoneQty();
+
+					tplSpecZoneQty.setQty(tplSpecZoneQtyOld.getQty());
+					tplSpecZoneQty.setTplSpecQuestion(newQuestion);
+					tplSpecZoneQty.setTplSpecZoneDtl(tplSpecZoneDtl);
+					newTplSpecZoneQties.add(tplSpecZoneQty);
+				}
+			}
+			if (isZonePriceTypeTier) {
+				List<TplSpecAnswer> tplSpecAnswers = new ArrayList<>();
+				for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
+					for (TplSpecTierQty tplSpecTierQty : newQuestion
+							.getTplSpecTierQties()) {
+
+						TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
+
+						tplSpecSuppAnswer.setSmSupplier(this.getManagedBean()
+								.getScLoa().getScLoiLoa().getSmSupplier());
+						TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
+						tplSpecAnswer.setTplSpecQuestion(newQuestion);
+						tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
+						tplSpecSuppAnswer.setTplSpecZoneDtl(tplSpecZoneDtl);
+						tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
+						tplSpecAnswers.add(tplSpecAnswer);
+					}
+				}
+				if (CollectionUtils.isNotEmpty(tplSpecAnswers)) {
+					newQuestion.setTplSpecAnswers(tplSpecAnswers);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(newTplSpecZoneQties)) {
+				newQuestion.setTplSpecZoneQties(newTplSpecZoneQties);
+			}
 		} else {
-			updateUnitPriceforNewAnswersForQT(oldQuestion, newQuestion);
+			boolean isPriceTypeTier = oldQuestion.getClPriceTypeCode()
+					.getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER);
+			if (isPriceTypeTier) {
+				List<TplSpecAnswer> tplSpecAnswers = new ArrayList<>();
+				for (TplSpecTierQty tplSpecTierQty : newQuestion
+						.getTplSpecTierQties()) {
+					TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
+
+					tplSpecSuppAnswer.setSmSupplier(this.getManagedBean()
+							.getScLoa().getScLoiLoa().getSmSupplier());
+					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
+					tplSpecAnswer.setTplSpecQuestion(newQuestion);
+					tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
+					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
+					tplSpecAnswers.add(tplSpecAnswer);
+				}
+				if (CollectionUtils.isNotEmpty(tplSpecAnswers)) {
+					newQuestion.setTplSpecAnswers(tplSpecAnswers);
+				}
+			}
 		}
 	}
 
@@ -12470,163 +12553,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #29468 Vinod End
 
 	// #29468 Vinod Start
-	private void updateZoneUnitPriceforNewAnswersForQT(
-			TplSpecQuestion oldQuestion, TplSpecQuestion newQuestion) {
-		List<TplSpecAnswer> tplSpecAnswers = new ArrayList<>();
-		List<TplSpecTierQty> tplSpecTierQties = new ArrayList<>();
-		List<Long> oldQtyIds = new ArrayList<>();
-
-		List<TplSpecZoneQty> newTplSpecZoneQties = new ArrayList<>();
-		List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(this
-				.getManagedBean().getZoneTrees(), null);
-
-		if (CollectionUtils.isNotEmpty(oldQuestion.getTplSpecZoneQties())
-				&& CollectionUtils.isNotEmpty(zoneDetails)
-				&& oldQuestion.getTplSpecZoneQties().size() == zoneDetails
-						.size()) {
-
-			for (int i = 0; i < oldQuestion.getTplSpecZoneQties().size(); i++) {
-				TplSpecZoneQty tplSpecZoneQty = new TplSpecZoneQty();
-				TplSpecZoneQty tplSpecZoneQtyOld = oldQuestion
-						.getTplSpecZoneQties().get(i);
-				tplSpecZoneQty.setQty(tplSpecZoneQtyOld.getQty());
-				tplSpecZoneQty.setTplSpecQuestion(newQuestion);
-				tplSpecZoneQty.setTplSpecZoneDtl(zoneDetails.get(i));
-
-				ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-								ITemplateSpecSO.class);
-				TemplateSpecReqDTO specReq = new TemplateSpecReqDTO();
-
-				specReq.setSpecQuestionId(oldQuestion.getSpecQuestionId());
-				specReq.setQuestionType(ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM);
-				TemplateSpecResDTO templateSpecResDto = templateSpecSO
-						.findQuestionsByQuestionTypeAndParentQuestionIdForClone(specReq);
-
-				for (TplSpecQuestion tplSpecQuestion : templateSpecResDto
-						.getSpecQuestionList()) {
-					buildCloneTplSpecAnswersForZoneQT(tplSpecQuestion,
-							oldQtyIds, tplSpecAnswers, tplSpecZoneQtyOld,
-							newQuestion, tplSpecZoneQty, tplSpecTierQties);
-				}
-				newTplSpecZoneQties.add(tplSpecZoneQty);
-			}
-			if (CollectionUtils.isNotEmpty(tplSpecAnswers)) {
-				newQuestion.setTplSpecAnswers(tplSpecAnswers);
-			}
-			if (CollectionUtils.isNotEmpty(tplSpecTierQties)) {
-				newQuestion.setTplSpecTierQties(tplSpecTierQties);
-			}
-			if (CollectionUtils.isNotEmpty(newTplSpecZoneQties)) {
-				newQuestion.setTplSpecZoneQties(newTplSpecZoneQties);
-			}
-		}
-	}
-
-	// #29468 Vinod End
-
-	// #29468 Vinod Start
-	private void buildCloneTplSpecAnswersForZoneQT(TplSpecQuestion oldQuestion,
-			List<Long> oldQtyIds, List<TplSpecAnswer> tplSpecAnswers,
-			TplSpecZoneQty tplSpecZoneQtyOld, TplSpecQuestion newQuestion,
-			TplSpecZoneQty tplSpecZoneQty, List<TplSpecTierQty> tplSpecTierQties) {
-		boolean isZonePriceTypeTier = oldQuestion.getClPriceTypeCode()
-				.getParameterCode()
-				.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
-		if (isZonePriceTypeTier) {
-
-			buildTplSpecAnswersFromEstimationForQT(oldQuestion, newQuestion,
-					oldQtyIds, tplSpecAnswers, tplSpecZoneQtyOld,
-					tplSpecZoneQty, tplSpecTierQties);
-		} else {
-			for (TplSpecEstimation oldEstimation : oldQuestion
-					.getTplSpecEstimations()) {
-				TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
-
-				tplSpecSuppAnswer.setSmSupplier(this.getManagedBean()
-						.getScLoa().getScLoiLoa().getSmSupplier());
-				Long zoneId1 = tplSpecZoneQtyOld.getTplSpecZoneDtl()
-						.getSpecZoneId();
-				Long zoneId2 = oldEstimation.getTplSpecZoneDtl()
-						.getSpecZoneId();
-				if (zoneId1.equals(zoneId2)) {
-
-					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
-					tplSpecAnswer.setTplSpecQuestion(newQuestion);
-
-					tplSpecAnswer.setRatePerUom(oldEstimation
-							.getIndicativeUnitPrice());
-					tplSpecAnswer.setAnswerNumeric(oldEstimation
-							.getEstimatedCost());
-
-					tplSpecAnswer.setTplSpecZoneQty(tplSpecZoneQty);
-
-					tplSpecSuppAnswer.setTplSpecZoneDtl(tplSpecZoneQty
-							.getTplSpecZoneDtl());
-					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
-					tplSpecAnswers.add(tplSpecAnswer);
-				}
-			}
-
-		}
-	}
-
-	// #29468 Vinod End
-
-	// #29468 Vinod Start
-	private void buildTplSpecAnswersFromEstimationForQT(
-			TplSpecQuestion oldQuestion, TplSpecQuestion newQuestion,
-			List<Long> oldQtyIds, List<TplSpecAnswer> tplSpecAnswers,
-			TplSpecZoneQty tplSpecZoneQtyOld, TplSpecZoneQty tplSpecZoneQty,
-			List<TplSpecTierQty> tplSpecTierQties) {
-		for (TplSpecTierQty oldQty : oldQuestion.getTplSpecTierQties()) {
-			for (TplSpecEstimation oldEstimation : oldQuestion
-					.getTplSpecEstimations()) {
-				TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
-
-				tplSpecSuppAnswer.setSmSupplier(this.getManagedBean()
-						.getScLoa().getScLoiLoa().getSmSupplier());
-				Long zoneId1 = tplSpecZoneQtyOld.getTplSpecZoneDtl()
-						.getSpecZoneId();
-				Long zoneId2 = oldEstimation.getTplSpecZoneDtl()
-						.getSpecZoneId();
-				if (zoneId1.equals(zoneId2)) {
-
-					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
-					tplSpecAnswer.setTplSpecQuestion(newQuestion);
-
-					tplSpecAnswer.setRatePerUom(oldEstimation
-							.getIndicativeUnitPrice());
-					tplSpecAnswer.setAnswerNumeric(oldEstimation
-							.getEstimatedCost());
-
-					TplSpecTierQty tplSpecTierQty = new TplSpecTierQty();
-
-					BigDecimal fromQty = oldQty.getFromQty();
-					BigDecimal toQty = oldQty.getToQty();
-
-					tplSpecTierQty.setTplSpecQuestion(newQuestion);
-					tplSpecTierQty.setFromQty(fromQty);
-					tplSpecTierQty.setToQty(toQty);
-
-					tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
-
-					tplSpecAnswer.setTplSpecZoneQty(tplSpecZoneQty);
-
-					tplSpecSuppAnswer.setTplSpecZoneDtl(tplSpecZoneQty
-							.getTplSpecZoneDtl());
-					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
-					tplSpecAnswers.add(tplSpecAnswer);
-					updateSpecTierQties(oldQtyIds, oldQty, tplSpecTierQties,
-							tplSpecTierQty);
-				}
-			}
-		}
-	}
-
-	// #29468 Vinod End
-
-	// #29468 Vinod Start
 	private void updateSpecTierQties(List<Long> oldQtyIds,
 			TplSpecTierQty oldQty, List<TplSpecTierQty> tplSpecTierQties,
 			TplSpecTierQty tplSpecTierQty) {
@@ -12634,70 +12560,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				|| !oldQtyIds.contains(oldQty.getSpecTierQtyId())) {
 			tplSpecTierQties.add(tplSpecTierQty);
 			oldQtyIds.add(oldQty.getSpecTierQtyId());
-		}
-	}
-
-	// #29468 Vinod End
-
-	// #29468 Vinod Start
-	private void buildCloneTplSpecAnswersForQT(TplSpecQuestion oldQuestion,
-			List<Long> oldQtyIds, List<TplSpecAnswer> tplSpecAnswers,
-			TplSpecQuestion newQuestion, List<TplSpecTierQty> tplSpecTierQties) {
-		boolean isPriceTypeTier = oldQuestion.getClPriceTypeCode()
-				.getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER);
-		if (isPriceTypeTier) {
-			for (TplSpecTierQty oldQty : oldQuestion.getTplSpecTierQties()) {
-				TplSpecTierQty tplSpecTierQty = new TplSpecTierQty();
-
-				BigDecimal fromQty = oldQty.getFromQty();
-				BigDecimal toQty = oldQty.getToQty();
-
-				tplSpecTierQty.setTplSpecQuestion(newQuestion);
-				tplSpecTierQty.setFromQty(fromQty);
-				tplSpecTierQty.setToQty(toQty);
-				for (TplSpecEstimation oldEstimation : oldQuestion
-						.getTplSpecEstimations()) {
-					TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
-
-					tplSpecSuppAnswer.setSmSupplier(this.getManagedBean()
-							.getScLoa().getScLoiLoa().getSmSupplier());
-
-					TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
-					tplSpecAnswer.setTplSpecQuestion(newQuestion);
-
-					tplSpecAnswer.setRatePerUom(oldEstimation
-							.getIndicativeUnitPrice());
-					tplSpecAnswer.setAnswerNumeric(oldEstimation
-							.getEstimatedCost());
-
-					tplSpecTierQty.setTplSpecQuestion(newQuestion);
-					tplSpecAnswer.setTplSpecTierQty(tplSpecTierQty);
-					updateSpecTierQties(oldQtyIds, oldQty, tplSpecTierQties,
-							tplSpecTierQty);
-
-					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
-					tplSpecAnswers.add(tplSpecAnswer);
-				}
-			}
-		} else {
-			for (TplSpecEstimation oldEstimation : oldQuestion
-					.getTplSpecEstimations()) {
-				TplSpecSuppAnswer tplSpecSuppAnswer = new TplSpecSuppAnswer();
-
-				tplSpecSuppAnswer.setSmSupplier(this.getManagedBean()
-						.getScLoa().getScLoiLoa().getSmSupplier());
-
-				TplSpecAnswer tplSpecAnswer = new TplSpecAnswer();
-				tplSpecAnswer.setTplSpecQuestion(newQuestion);
-
-				tplSpecAnswer.setRatePerUom(oldEstimation
-						.getIndicativeUnitPrice());
-				tplSpecAnswer
-						.setAnswerNumeric(oldEstimation.getEstimatedCost());
-
-				tplSpecAnswer.setTplSpecSuppAnswer(tplSpecSuppAnswer);
-				tplSpecAnswers.add(tplSpecAnswer);
-			}
 		}
 	}
 
@@ -12816,37 +12678,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 
-	}
-
-	// #29468 Vinod End
-
-	// #29468 Vinod Start
-	private void updateUnitPriceforNewAnswersForQT(TplSpecQuestion oldQuestion,
-			TplSpecQuestion newQuestion) {
-		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
-		TemplateSpecReqDTO specReq = new TemplateSpecReqDTO();
-		List<TplSpecAnswer> tplSpecAnswers = new ArrayList<>();
-		List<TplSpecTierQty> tplSpecTierQties = new ArrayList<>();
-		List<Long> oldQtyIds = new ArrayList<>();
-		specReq.setSpecQuestionId(oldQuestion.getSpecQuestionId());
-		specReq.setQuestionType(ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM);
-		TemplateSpecResDTO templateSpecResDto = templateSpecSO
-				.findQuestionsByQuestionTypeAndParentQuestionIdForClone(specReq);
-
-		for (TplSpecQuestion tplSpecQuestion : templateSpecResDto
-				.getSpecQuestionList()) {
-			buildCloneTplSpecAnswersForQT(tplSpecQuestion, oldQtyIds,
-					tplSpecAnswers, newQuestion, tplSpecTierQties);
-		}
-		if (CollectionUtils.isNotEmpty(tplSpecTierQties)) {
-			newQuestion.setTplSpecTierQties(tplSpecTierQties);
-		}
-		if (CollectionUtils.isNotEmpty(tplSpecAnswers)) {
-			newQuestion.setTplSpecAnswers(tplSpecAnswers);
-		}
-		newQuestion.setCmItem(null);
 	}
 
 	// #29468 Vinod End
@@ -13597,7 +13428,244 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		question.setTplSpecZoneQties(new ArrayList<TplSpecZoneQty>());
 	}
 	// #29468 Vinod End
+	
+	// #29468 Vinod Start
+	/**
+	 * Tab change action to validate unit price for zone or tier quantity.
+	 * 
+	 * @param selectedTabIndex
+	 *            the selected tab index
+	 */
+	public void tabChangeActionDirectLOA(int selectedTabIndex) {
 
+		int previousTabIndex = this.getManagedBean().getSelectedTabIndex();
+		if (previousTabIndex == QTConstants.DIRECT_LOA_TAB_INDEX_THREE
+				&& selectedTabIndex != QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
+			validateTierQuantityAndUnitPriceForSideMenueOrSave();
+		} 
+		
+		this.getManagedBean().setSelectedTabIndex(selectedTabIndex);
+
+	}
+
+	// #29468 Vinod End
+	
+	// #29468 Vinod Start
+	private void validateTierQuantityAndUnitPriceForSideMenueOrSave() {
+		TplSpecMaster specMasterProduct = this.getManagedBean()
+				.getProdscQtDoc().getTplSpecMaster();
+		if (CollectionUtils.isNotEmpty(specMasterProduct.getTplSpecQuestions())) {
+			validateTierQuantity(specMasterProduct);
+			validateUnitPrice(specMasterProduct);
+		}
+		TplSpecMaster specMasterService = this.getManagedBean()
+				.getServicescQtDoc().getTplSpecMaster();
+		if (CollectionUtils.isNotEmpty(specMasterService.getTplSpecQuestions())) {
+			validateTierQuantity(specMasterService);
+			validateUnitPrice(specMasterService);
+		}
+	}
+
+	// #29468 Vinod End
+
+	// #29468 Vinod Start
+	/**
+	 * This method will validate Tier Quantity for tab change and save.
+	 * 
+	 * @param
+	 * 
+	 */
+	private void validateTierQuantity(TplSpecMaster specMaster) {
+		FacesScopes facesScopes = new FacesScopes();
+		TplSpecMaster specMasterLocal = specMaster;
+		List<TplSpecQuestion> questions = specMasterLocal.getTplSpecQuestions();
+
+		for (TplSpecQuestion question : questions) {
+			boolean isPriceTypeTier = TemplateSpecConst.QUESTION_TYPE_ITEM
+					.equals(question.getQuestionType())
+					&& question.getClPriceTypeCode().getParameterCode()
+							.equals(ParameterConst.PRICE_TYPE_TIER);
+			boolean isZonePriceTypeTier = TemplateSpecConst.QUESTION_TYPE_ITEM
+					.equals(question.getQuestionType())
+					&& question.getClPriceTypeCode().getParameterCode()
+							.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+			boolean isZonePriceTypeStandard = TemplateSpecConst.QUESTION_TYPE_ITEM
+					.equals(question.getQuestionType())
+					&& question.getClPriceTypeCode().getParameterCode()
+							.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
+			if (isPriceTypeTier
+					&& CollectionUtils.isEmpty(question.getTplSpecTierQties())) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] {
+						ResourceBundleUtils.getMessage(
+								QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()), "" });
+			} else if (isZonePriceTypeTier
+					&& CollectionUtils.isEmpty(question.getTplSpecTierQties())) {
+				String zoneName = getZoneNameFromAnswers(question);
+				throw new EpException(MessageConst.ERROR_790201, new String[] {
+						ResourceBundleUtils.getMessage(
+								QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()), zoneName });
+			} else if (isZonePriceTypeStandard
+					&& CollectionUtils.isEmpty(question.getTplSpecZoneQties())) {
+				String zoneName = getZoneNameFromAnswers(question);
+				throw new EpException(MessageConst.ERROR_790201, new String[] {
+						ResourceBundleUtils.getMessage(
+								QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()), zoneName });
+			}
+		}
+	}
+
+	// #29468 Vinod End
+
+	// #29468 Vinod Start
+	private String getZoneNameFromAnswers(TplSpecQuestion question) {
+		StringBuilder zoneName = new StringBuilder();
+		List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+				this.getManagedBean().getZoneTrees(), null);
+		if (CollectionUtils.isEmpty(question.getTplSpecAnswers())) {
+			return zoneDetails.get(0).getZoneName();
+		}
+		for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
+			if (specAnswer.getTplSpecZoneQty() != null
+					&& specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl() != null) {
+				zoneName.append(specAnswer.getTplSpecZoneQty()
+						.getTplSpecZoneDtl().getZoneName());
+				break;
+			} else {
+				return zoneDetails.get(0).getZoneName();
+			}
+		}
+
+		return zoneName.toString();
+	}
+
+	// #29468 Vinod End
+
+	// #29468 Vinod Start
+	/**
+	 * This method will validate unit price for tab change and save.
+	 * 
+	 * @param
+	 * 
+	 */
+	private void validateUnitPrice(TplSpecMaster specMaster) {
+		TplSpecMaster specMasterLocal = specMaster;
+		List<TplSpecQuestion> questions = specMasterLocal.getTplSpecQuestions();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		for (TplSpecQuestion question : questions) {
+			if (isZonal) {
+				checkUnitPriceForZone(question);
+			} else {
+				checkUnitPriceForNonZone(question);
+			}
+		}
+	}
+
+	// #29468 Vinod End
+
+	// #29468 Vinod Start
+	private void checkUnitPriceForZone(TplSpecQuestion question) {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean isZonePriceTypeTier = TemplateSpecConst.QUESTION_TYPE_ITEM
+				.equals(question.getQuestionType())
+				&& question.getClPriceTypeCode().getParameterCode()
+						.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+		if (CollectionUtils.isEmpty(question.getTplSpecAnswers())
+				&& !isZonePriceTypeTier) {
+			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+					this.getManagedBean().getZoneTrees(), null);
+			throw new EpException(MessageConst.ERROR_790201, new String[] {
+					ResourceBundleUtils.getMessage(
+							QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()),
+					zoneDetails.get(0).getZoneName() });
+		} else if (CollectionUtils.isEmpty(question.getTplSpecAnswers())
+				&& isZonePriceTypeTier) {
+			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+					this.getManagedBean().getZoneTrees(), null);
+			TplSpecTierQty tierQty = question.getTplSpecTierQties().get(0);
+			String tier = tierQty.getFromQty().toString() + " - "
+					+ tierQty.getToQty().toString();
+			throw new EpException(MessageConst.ERROR_790203, new String[] {
+					zoneDetails.get(0).getZoneName(), tier });
+		}
+
+		for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
+			if (specAnswer.getRatePerUom() == null && isZonePriceTypeTier) {
+				String tier = specAnswer.getTplSpecTierQty().getFromQty()
+						.toString()
+						+ " - "
+						+ specAnswer.getTplSpecTierQty().getToQty().toString();
+				throw new EpException(MessageConst.ERROR_790203, new String[] {
+						specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl()
+								.getZoneName(), tier });
+			} else if (specAnswer.getRatePerUom() == null
+					&& !isZonePriceTypeTier) {
+				throw new EpException(MessageConst.ERROR_790201, new String[] {
+						ResourceBundleUtils.getMessage(
+								QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()),
+						specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl()
+								.getZoneName() });
+			}
+		}
+
+	}
+
+	// #29468 Vinod End
+
+	// #29468 Vinod Start
+	private void checkUnitPriceForNonZone(TplSpecQuestion question) {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean isPriceTypeTier = TemplateSpecConst.QUESTION_TYPE_ITEM
+				.equals(question.getQuestionType())
+				&& question.getClPriceTypeCode().getParameterCode()
+						.equals(ParameterConst.PRICE_TYPE_TIER);
+		if (CollectionUtils.isEmpty(question.getTplSpecAnswers())
+				&& !isPriceTypeTier) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage(
+							QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
+		} else if (CollectionUtils.isEmpty(question.getTplSpecAnswers())
+				&& isPriceTypeTier) {
+			TplSpecTierQty tierQty = question.getTplSpecTierQties().get(0);
+			String tier = tierQty.getFromQty().toString() + " - "
+					+ tierQty.getToQty().toString();
+			throw new EpException(MessageConst.ERROR_790202, new String[] {
+					tier, "" });
+		}
+
+		for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
+			if (specAnswer.getRatePerUom() == null && isPriceTypeTier) {
+				String tier = specAnswer.getTplSpecTierQty().getFromQty()
+						.toString()
+						+ " - "
+						+ specAnswer.getTplSpecTierQty().getToQty().toString();
+				throw new EpException(MessageConst.ERROR_790202, new String[] {
+						tier, "" });
+			} else if (specAnswer.getRatePerUom() == null && !isPriceTypeTier) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] {
+						ResourceBundleUtils.getMessage(
+								QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()), "" });
+			}
+		}
+
+	}
+
+	// #29468 Vinod End
+	
 	// #29468 Vinod Start
 	private void setQuestionOrder(List<TplSpecQuestion> questionsListNew) {
 		int questionOrder = 0;

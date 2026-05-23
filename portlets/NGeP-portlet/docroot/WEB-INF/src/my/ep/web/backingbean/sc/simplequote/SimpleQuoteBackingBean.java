@@ -1688,6 +1688,9 @@ public class SimpleQuoteBackingBean extends
 						    quote.getScQuoteSuppliers().clear();
 						}
 						//40234 - end
+						if (getManagedBean().getGovtSellers() != null) {
+							suppliers.addAll(getManagedBean().getGovtSellers());
+						}
 					} 
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
@@ -2921,6 +2924,11 @@ public class SimpleQuoteBackingBean extends
 		//27868 - end - remove #34274 code
 		// #28536 - start
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			//40234 - start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
+		    }
+			//40234 - end
 			getGovtSellerCriteria();
 		} else {
 			//40234 - start
@@ -9940,6 +9948,21 @@ public class SimpleQuoteBackingBean extends
 		PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
 
 		return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
+	}
+	/**
+	 * To remove non g2g supplier from govt list when change procurement type
+	 * 
+	 * 
+	 * @param suppliers
+	 */
+	private void removeSupplierListFromGovtSeller(List<ScQuoteSupplier> suppliers) {
+		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+
+		for (ScQuoteSupplier supplier : suppliers) {
+				suppliersToRemove.add(supplier);
+		}
+
+		suppliers.removeAll(suppliersToRemove);
 	}
 	// 40234 - end
 }

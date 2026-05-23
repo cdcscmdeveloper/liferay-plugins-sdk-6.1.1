@@ -18967,7 +18967,7 @@ public class SmApplicationBackingBean extends
 	}
 	
 	/**
-	 * To save data Other Description
+	 * To save data Other Description WIP SM
 	 *  
 	 */
 	public void saveOtherDescriptionEdit() {
@@ -18983,7 +18983,9 @@ public class SmApplicationBackingBean extends
 			}
 			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
 			
-			initPmUserRole();
+			if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
+				initPmUserRole();
+			}
 			
 			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_PO);
@@ -19815,4 +19817,11 @@ public class SmApplicationBackingBean extends
 
         return oriFilename + "_" + timestamp + extension;
     }
+	// #40306 Start
+	private static String gmapsScriptSrc = EpPropertiesUtils.getInstance().getProperty("gmaps.script.src");
+
+	public String getGmapsScriptSrc() {
+	    return gmapsScriptSrc;
+	}
+	// #40306 End
 }
