@@ -27,17 +27,17 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	 * Logger instance.
 	 */
 	public static Logger log = EpLogger.getLogger(CircularBaseBackingBean.class);
+	
+	private PmOrgProfile ownerOrgProfile;
 
 	/**
-	 * This method used to retrieve login user information.
+	 * This method used to initiate FacesScopes
+	 * instances of current request
 	 */
 	public FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
-	private PmOrgProfile ownerOrgProfile;
-	
 	/**
 	 * Retrieves and sets the PTJ (organization profile) owner for the current user.
 	 *
