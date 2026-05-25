@@ -1319,16 +1319,19 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			
 			//#34442 - start
-			setConfirmationContentMsg(
-				    getConfirmationContent(
-				        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId())
-				    )
-				);
-			RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
-			RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				setConfirmationContentMsg(
+					    getConfirmationContent(
+					        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId())
+					    )
+					);
+				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
 			//#34442 - end
 			
-//			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
