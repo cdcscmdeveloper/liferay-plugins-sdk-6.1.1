@@ -149,11 +149,8 @@
 					value="#{agreementBackingBean.confirmationContentMsg}" />
 			</f:facet>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
-					partialSubmit="true" process="@this"
-					action="#{agreementBackingBean.gpkiSignConfirmed()}"
-					onstart="submitConfirmDlg.hide(); blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="submitConfirmDlg.hide();gpki_dlg.show();" type="button" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="submitConfirmDlg.hide()" type="button" />
 			</div>

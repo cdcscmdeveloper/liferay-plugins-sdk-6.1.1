@@ -1012,20 +1012,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}		
 	}
 
-	//34442 - start
-	/**
-	 * The method used to check if the agreement signed date is after the expiry date.
-	 * 
-	 * @return true if signed date is after expiry date, false otherwise
-	 */
-	private boolean isSignDateExpired() {
-		Date signDate = getManagedBean().getAgreementContractVer() != null ? 
-			getManagedBean().getAgreementContractVer().getSignedDate() : null;
-		Date expDate = getManagedBean().getCtAgreement().getExpDate();
-		return signDate != null && expDate != null && signDate.after(expDate);
-	}
-	//34442 - end
-
 	/**
 	 * The method used to authenticate user during submit the agreement.
 	 * This method will invoke a confirmation dialog for user authentication.
@@ -1039,26 +1025,50 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	public String gpkiSignAction(String outcome) throws Exception {
 		
 		//#29417 start
+		Date signDate = getManagedBean().getAgreementContractVer()!=null ? getManagedBean().getAgreementContractVer().getSignedDate() : null;
+		Date expDate = getManagedBean().getCtAgreement().getExpDate();
 		getManagedBean().setButtonProcess(outcome);
 		//#29417 end
 		
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
-			//34442 - start
-			setConfirmationContentMsg(
-				getConfirmationContent(
-					String.valueOf(getManagedBean().getCtAgreement().getStatus().getStatusId()),
-					getManagedBean().getCtContract().getContractNo()
-				)
-			);
+			validateAgreement(outcome);
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getCtContract().getContractNo());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(getManagedBean().getContractVer().getDocType());
+			sb.append(ContractConst.SEPRATE_LINE);
+			//#28715
+			if(getManagedBean().isApproveFinalAgreement()){
+				sb.append(ContractConst.AGREEMENT_FINAL);
+			} else {
+				sb.append(ContractConst.AGREEMENT_DRAFT);
+			}
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(outcome);
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
-			RequestContext.getCurrentInstance().update("submitConfirmDlgId");
-			RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
-			//34442 - end
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			
+			//#29417 start
+			if(signDate != null && expDate != null && signDate.after(expDate)){	
+				RequestContext.getCurrentInstance().execute("dateValidationExpGpki.show()");				
+			}else{
+				// 34442 - start
+				setConfirmationContentMsg(getConfirmationContent(String.valueOf(getManagedBean().getCtAgreement()
+						.getStatus().getStatusId()), getManagedBean().getCtContract().getContractNo()));
+				RequestContext.getCurrentInstance().update("submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+				// 34442 - end
+			}
+			//#29417 end
 			return null;
 		}
 		// 29417 - START
 		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){			
-			if(isSignDateExpired()){	
+			if(signDate != null && expDate != null && signDate.after(expDate)){	
 				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");				
 			}
 			else {
@@ -1072,53 +1082,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			return this.saveAgreement(outcome);
 		}
 	}
-
-	//34442 - start
-	/**
-	 * Method called when user confirms yes on the confirmation dialog
-	 * Retrieve saved outcome from managed bean
-	 * Proceed to GPKI sign dialog for signing
-	 */
-	public String gpkiSignConfirmed() throws Exception {
-    	return gpkiSignConfirmed(getManagedBean().getButtonAction());
-	}
-
-	/**
-	 * Method to prepare and show GPKI sign dialog
-	 * Build text before sign with contract details for digital signing
-	 * Used by both approve confirmation flow and direct reject flow
-	 */
-	private String gpkiSignConfirmed(String outcome) throws Exception {
-		validateAgreement(outcome);
-		//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-		StringBuilder sb = new StringBuilder();
-		sb.append(getManagedBean().getCtContract().getContractNo());
-		sb.append(ContractConst.SEPRATE_LINE);
-		sb.append(getManagedBean().getContractVer().getDocType());
-		sb.append(ContractConst.SEPRATE_LINE);
-
-		if(getManagedBean().isApproveFinalAgreement()){
-			sb.append(ContractConst.AGREEMENT_FINAL);
-		} else {
-			sb.append(ContractConst.AGREEMENT_DRAFT);
-		}
-		sb.append(ContractConst.SEPRATE_LINE);
-		sb.append(outcome);
-		sb.append(ContractConst.SEPRATE_LINE);
-		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
-		getManagedBean().setTextBeforeSign(sb.toString());	
-		getManagedBean().setButtonAction(outcome);
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
-		
-		if(isSignDateExpired()){	
-			RequestContext.getCurrentInstance().execute("dateValidationExpGpki.show()");				
-		}else{
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-		}
-
-		return null;
-	}
-	//34442 - end
 
 	/**
 	 * The method used to set value for security check
