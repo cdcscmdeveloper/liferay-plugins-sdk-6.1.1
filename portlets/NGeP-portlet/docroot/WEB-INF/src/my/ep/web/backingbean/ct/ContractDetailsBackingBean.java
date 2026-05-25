@@ -2236,8 +2236,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
 			}
 			//#34442 - end
-			
-//			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		//#25406 - Start	
 		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)

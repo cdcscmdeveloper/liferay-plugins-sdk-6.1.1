@@ -41,6 +41,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
@@ -257,13 +258,17 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	 */
 	public String getConfirmationContent(String key, String value) {
 		String message = "";
-		
-		message = ResourceBundleUtils.getMessage(
-			getConfirmationMsgs(Long.parseLong(key)),
-	        new String[]{value},
-	        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-	        new FacesScopes().getUserLocale()
-	    );
+		try{
+			message = ResourceBundleUtils.getMessage(
+				getConfirmationMsgs(Long.parseLong(key)),
+		        new String[]{value},
+		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		        new FacesScopes().getUserLocale()
+		    );
+		}catch(Exception e){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getConfirmationContent(String key, String value)", 
+					key, "ContractBaseBackingBean", getUserIdSessionFromLoginId(), e);
+		}
 		
 		return message.replace("<br/>", System.lineSeparator());
 	}
@@ -277,11 +282,16 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	public String getConfirmationContent(String key) {
 		String message = "";
 		
-		message = ResourceBundleUtils.getMessage(
-				getConfirmationMsgs(Long.parseLong(key)),
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		try{
+			message = ResourceBundleUtils.getMessage(
+					getConfirmationMsgs(Long.parseLong(key)),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()
 				);
+		}catch(Exception e){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getConfirmationContent(String key)", 
+					key, "ContractBaseBackingBean", getUserIdSessionFromLoginId(), e);
+		}
 		
 		return message.replace("<br/>", System.lineSeparator());
 	}
