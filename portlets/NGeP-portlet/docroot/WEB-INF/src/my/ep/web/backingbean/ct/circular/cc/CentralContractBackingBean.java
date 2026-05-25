@@ -1,5 +1,5 @@
 /**
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.circular.cc;
 
@@ -149,7 +149,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private IPagingDataModel<PmOrgProfile> exemptedOrgDataModel = new ExemptedOrgDataModel();	
-	
+
 	/**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
@@ -176,13 +176,6 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 			initializeApproverList();
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		}
-	}
-
-	/**
-	 * This method used to retrieve user login  information
-	 */
-	public FacesScopes getFacesScopes() {
-		return new FacesScopes();
 	}
 
 	/**

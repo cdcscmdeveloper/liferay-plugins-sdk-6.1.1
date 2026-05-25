@@ -18,7 +18,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.CtContractVer; //#30737
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;

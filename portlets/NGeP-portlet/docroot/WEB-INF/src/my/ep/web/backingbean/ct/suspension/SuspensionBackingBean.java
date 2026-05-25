@@ -619,6 +619,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			
+			//#30737
+			reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
+			
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO, inactiveUserCheckResult); //#30737 (add param inactiveUserCheckResult)
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
@@ -721,9 +724,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * This method used to validate suspend item and agency as per rule
 	 */
 	public void validateSuspensionDetails(String outcome, Long inactiveUserCheckResult){ //#30737 (add param inactiveUserCheckResult)
-		
-		log.info("xoxoxoxoxo MASUK! validateSuspensionDetails");
-		
 		getManagedBean().setAutoUpdate(true);
 		/*Remark is mandatory during revise and reject*/
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {

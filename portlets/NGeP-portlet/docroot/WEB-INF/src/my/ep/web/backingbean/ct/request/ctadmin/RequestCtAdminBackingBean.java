@@ -24,10 +24,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.reqctadmin.IRequestContractAdminSO;
-import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;

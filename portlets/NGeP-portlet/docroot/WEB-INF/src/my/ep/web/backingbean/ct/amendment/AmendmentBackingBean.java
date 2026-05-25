@@ -8209,22 +8209,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		
 		//#30737 - Start
-		CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		reqDTO.setUserRole(getUserRole());
-		reqDTO.setOutcome(action);
-		reqDTO.setCtContractVer(ctContractVer);
-		
-		log.info("xoxoxoxoxooxoxo action : "+action);
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT - ERROR_100069");
+//		CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
+//		ContractReqDTO reqDTO = new ContractReqDTO();
+//		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+//		reqDTO.setUserRole(getUserRole());
+//		reqDTO.setOutcome(action);
+//		reqDTO.setCtContractVer(ctContractVer);
+//		
+//		log.info("xoxoxoxoxooxoxo action : "+action);
+//		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+//			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT - ERROR_100069");
 //            handleInactiveUserCheck(
 //            	reqDTO,
 //                null,
 //                null
 //            );
-        }
+//        }
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			//# amendment with
