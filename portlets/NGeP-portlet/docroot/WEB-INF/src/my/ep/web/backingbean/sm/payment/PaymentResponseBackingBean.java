@@ -309,7 +309,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String paymentRefNo = reqMap.get("paymentRefNo");
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
-		boolean isValidToSave = ((skey==null||skey.isEmpty()) && (payload==null || payload.isEmpty()))?false:true;
+		boolean isValidToSave = (StringUtils.isBlank(skey) && StringUtils.isBlank(payload))?false:true;
 		log.info("######38377 skey:"+skey+"  isValidSave:"+isValidToSave);
 		
 		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
