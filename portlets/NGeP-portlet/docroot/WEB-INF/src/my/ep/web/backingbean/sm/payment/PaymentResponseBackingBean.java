@@ -695,10 +695,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					log.info("###############38377 update payment");
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				} else {
-				    log.warn("Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
+				    log.warn("###############38377 Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
 				            + ", paymentGateway=" + paymentGateway
 				            + ", payloadEmpty=" + StringUtils.isBlank(payload));
-				    status = SupplierManagementConst.PAYMENT_INVALID_RES;
 				}
 
 				log.info("******ResponsePreRender - After Update******");
