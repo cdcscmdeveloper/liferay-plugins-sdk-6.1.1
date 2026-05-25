@@ -73,6 +73,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachmen
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
