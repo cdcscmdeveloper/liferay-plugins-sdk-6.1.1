@@ -309,6 +309,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String paymentRefNo = reqMap.get("paymentRefNo");
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
+		boolean isValidToSave = ((skey==null||skey.isEmpty()) && (payload==null || payload.isEmpty()))?false:true;
+		log.info("######38377 skey:"+skey+"  isValidSave:"+isValidToSave);
 		
 		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
 		String cardMaskedNum = reqMap.get("cardMaskedNum");
@@ -689,7 +691,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info(">>>>#38377 enable payment update<<<");
 				// #38377
-				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)) {
+				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)&& isValidToSave) {
+					log.info("###############38377 update payment");
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				} else {
 				    log.warn("Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
