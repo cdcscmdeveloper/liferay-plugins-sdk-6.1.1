@@ -41,6 +41,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.IAuditTrailSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -67,6 +68,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -181,6 +184,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public ApprovalBackingBean() {
 
+	}
+	
+	/**
+	 * Use in #33222
+	 * Gets the user so.
+	 *
+	 * @return the user so
+	 */
+	private IUserSO getUserSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 
 	// TODO Need to check why this code... vidya
@@ -1718,13 +1732,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				//#33222 - Start
 				if (bpkRevise) {
-					userActive = checkActiveUserAfterRevice(qt);
+					userActive = checkActiveUserAfterRevice(qtReqDTO);
 				} 
 				
 				if (!userActive) {
 					tenderResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
-					// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
-				}//#33222 - End
+					// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());			
+				
 				
 				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					if (CollectionUtils.isNotEmpty(approvalTypes)) {
@@ -1788,6 +1802,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					//28895-35500 End
 				}
+				}//#33222 - End
 			}
 			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
 		} catch (Exception e) {
@@ -4393,8 +4408,23 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @param qt
 	 * @return
 	 */
-	private boolean checkActiveUserAfterRevice(ScQt qt) {
-		// TODO Auto-generated method stub
+	private boolean checkActiveUserAfterRevice(QuationTenderReqDTO qtReq) {
+
+		/* SP Return Status
+		 * P_STATUS - User is active/not active
+		 * P_NEXT_ACTIVE_USER_LOGINID - Login ID of the next available active user identified 
+		 * P_NEXT_ACTIVE_USER_USERID - User ID of the next available active user identified
+		 * P_MSG - Message returned by the procedure indicating the verification or processing result
+		 */
+		
+		InactiveUserResDTO userResDto = new InactiveUserResDTO();
+		InactiveUserReqDTO userReqDto = new InactiveUserReqDTO();
+		userResDto = getUserSO().checkInactiveUserBySP(userReqDto);
+		
+//		if(userResDto.getStatus().equals(anObject)){
+//			
+//		}
+		
 		return false;
 	}
 	
