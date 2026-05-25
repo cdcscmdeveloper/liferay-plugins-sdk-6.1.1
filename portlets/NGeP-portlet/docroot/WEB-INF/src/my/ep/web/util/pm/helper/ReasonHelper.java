@@ -151,7 +151,7 @@ public class ReasonHelper implements Serializable {
 			reqDTO.setOrgProfileId(orgProfileId);
 
 			// Get reason description list from db.
-			ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
+			ReasonResDTO resDTO = reasonSO.retrieveReasonDescriptionListByCategory(reqDTO);
 
 			list = resDTO.getReasonDescList();
 
