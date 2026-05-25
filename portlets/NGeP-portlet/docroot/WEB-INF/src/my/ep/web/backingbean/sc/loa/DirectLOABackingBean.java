@@ -13479,44 +13479,53 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		FacesScopes facesScopes = new FacesScopes();
 		TplSpecMaster specMasterLocal = specMaster;
 		List<TplSpecQuestion> questions = specMasterLocal.getTplSpecQuestions();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 
 		for (TplSpecQuestion question : questions) {
-			boolean isPriceTypeTier = TemplateSpecConst.QUESTION_TYPE_ITEM
-					.equals(question.getQuestionType())
-					&& question.getClPriceTypeCode().getParameterCode()
-							.equals(ParameterConst.PRICE_TYPE_TIER);
-			boolean isZonePriceTypeTier = TemplateSpecConst.QUESTION_TYPE_ITEM
-					.equals(question.getQuestionType())
-					&& question.getClPriceTypeCode().getParameterCode()
-							.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
-			boolean isZonePriceTypeStandard = TemplateSpecConst.QUESTION_TYPE_ITEM
-					.equals(question.getQuestionType())
-					&& question.getClPriceTypeCode().getParameterCode()
-							.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
-			if (isPriceTypeTier
-					&& CollectionUtils.isEmpty(question.getTplSpecTierQties())) {
-				throw new EpException(MessageConst.ERROR_100022, new String[] {
-						ResourceBundleUtils.getMessage(
-								QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								facesScopes.getUserLocale()), "" });
-			} else if (isZonePriceTypeTier
-					&& CollectionUtils.isEmpty(question.getTplSpecTierQties())) {
-				String zoneName = getZoneNameFromAnswers(question);
-				throw new EpException(MessageConst.ERROR_790201, new String[] {
-						ResourceBundleUtils.getMessage(
-								QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								facesScopes.getUserLocale()), zoneName });
-			} else if (isZonePriceTypeStandard
-					&& CollectionUtils.isEmpty(question.getTplSpecZoneQties())) {
-				String zoneName = getZoneNameFromAnswers(question);
-				throw new EpException(MessageConst.ERROR_790201, new String[] {
-						ResourceBundleUtils.getMessage(
-								QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								facesScopes.getUserLocale()), zoneName });
+			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question
+					.getQuestionType()) && !isZonal) {
+				if (question.getClPriceTypeCode().getParameterCode()
+						.equals(ParameterConst.PRICE_TYPE_TIER)
+						&& CollectionUtils.isEmpty(question
+								.getTplSpecTierQties())) {
+					throw new EpException(
+							MessageConst.ERROR_100022,
+							new String[] {
+									ResourceBundleUtils
+											.getMessage(
+													QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													facesScopes.getUserLocale()),
+									"" });
+				}
+			} else if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question
+					.getQuestionType()) && isZonal) {
+				validateQuantityForZone(question);
 			}
+		}
+	}
+
+	// #29468 Vinod End
+	
+	// #29468 Vinod Start
+	private void validateQuantityForZone(TplSpecQuestion question) {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean isPriceTypeZonalTier = question.getClPriceTypeCode()
+				.getParameterCode()
+				.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+		boolean isPriceTypeZonalStandard = question.getClPriceTypeCode()
+				.getParameterCode()
+				.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
+		if ((isPriceTypeZonalTier && CollectionUtils.isEmpty(question
+				.getTplSpecTierQties()))
+				|| (isPriceTypeZonalStandard && CollectionUtils
+						.isEmpty(question.getTplSpecZoneQties()))) {
+			String zoneName = getZoneNameFromAnswers(question);
+			throw new EpException(MessageConst.ERROR_790201, new String[] {
+					ResourceBundleUtils.getMessage(
+							QTConstants.LBL_TPL_SPEC_CONTENT_QUANTITY,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), zoneName });
 		}
 	}
 
@@ -13572,10 +13581,49 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #29468 Vinod Start
 	private void checkUnitPriceForZone(TplSpecQuestion question) {
 		FacesScopes facesScopes = new FacesScopes();
-		boolean isZonePriceTypeTier = TemplateSpecConst.QUESTION_TYPE_ITEM
-				.equals(question.getQuestionType())
-				&& question.getClPriceTypeCode().getParameterCode()
-						.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+		boolean isItem = TemplateSpecConst.QUESTION_TYPE_ITEM
+				.equals(question.getQuestionType());
+		if (isItem) {
+			boolean isZonePriceTypeTier = question.getClPriceTypeCode()
+					.getParameterCode()
+					.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+			checkAnswersAndValidateUnitPriceZone(question, isZonePriceTypeTier);
+
+			for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
+				if (specAnswer.getRatePerUom() == null && isZonePriceTypeTier) {
+					String tier = specAnswer.getTplSpecTierQty().getFromQty()
+							.toString()
+							+ " - "
+							+ specAnswer.getTplSpecTierQty().getToQty()
+									.toString();
+					throw new EpException(MessageConst.ERROR_790203,
+							new String[] {
+									specAnswer.getTplSpecZoneQty()
+											.getTplSpecZoneDtl().getZoneName(),
+									tier });
+				} else if (specAnswer.getRatePerUom() == null && !isZonePriceTypeTier) {
+					throw new EpException(
+							MessageConst.ERROR_790201,
+							new String[] {
+									ResourceBundleUtils
+											.getMessage(
+													QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													facesScopes.getUserLocale()),
+									specAnswer.getTplSpecZoneQty()
+											.getTplSpecZoneDtl().getZoneName() });
+				}
+			}
+		}
+
+	}
+
+	// #29468 Vinod End
+
+	// #29468 Vinod Start
+	private void checkAnswersAndValidateUnitPriceZone(TplSpecQuestion question,
+			boolean isZonePriceTypeTier) {
+		FacesScopes facesScopes = new FacesScopes();
 		if (CollectionUtils.isEmpty(question.getTplSpecAnswers())
 				&& !isZonePriceTypeTier) {
 			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
@@ -13596,25 +13644,41 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			throw new EpException(MessageConst.ERROR_790203, new String[] {
 					zoneDetails.get(0).getZoneName(), tier });
 		}
+	}
 
-		for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
-			if (specAnswer.getRatePerUom() == null && isZonePriceTypeTier) {
-				String tier = specAnswer.getTplSpecTierQty().getFromQty()
-						.toString()
-						+ " - "
-						+ specAnswer.getTplSpecTierQty().getToQty().toString();
-				throw new EpException(MessageConst.ERROR_790203, new String[] {
-						specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl()
-								.getZoneName(), tier });
-			} else if (specAnswer.getRatePerUom() == null
-					&& !isZonePriceTypeTier) {
-				throw new EpException(MessageConst.ERROR_790201, new String[] {
-						ResourceBundleUtils.getMessage(
-								QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								facesScopes.getUserLocale()),
-						specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl()
-								.getZoneName() });
+	// #29468 Vinod End
+
+	// #29468 Vinod Start
+	private void checkUnitPriceForNonZone(TplSpecQuestion question) {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean isItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question
+				.getQuestionType());
+		if (isItem) {
+			boolean isPriceTypeTier = question.getClPriceTypeCode()
+					.getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER);
+			checkAnswersAndValidateUnitPriceNonZone(question, isPriceTypeTier);
+
+			for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
+				if (specAnswer.getRatePerUom() == null && isPriceTypeTier) {
+					String tier = specAnswer.getTplSpecTierQty().getFromQty()
+							.toString()
+							+ " - "
+							+ specAnswer.getTplSpecTierQty().getToQty()
+									.toString();
+					throw new EpException(MessageConst.ERROR_790202,
+							new String[] { tier, "" });
+				} else if (specAnswer.getRatePerUom() == null
+						&& !isPriceTypeTier) {
+					throw new EpException(
+							MessageConst.ERROR_100022,
+							new String[] {
+									ResourceBundleUtils
+											.getMessage(
+													QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													facesScopes.getUserLocale()),
+									"" });
+				}
 			}
 		}
 
@@ -13623,12 +13687,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #29468 Vinod End
 
 	// #29468 Vinod Start
-	private void checkUnitPriceForNonZone(TplSpecQuestion question) {
+	private void checkAnswersAndValidateUnitPriceNonZone(
+			TplSpecQuestion question, boolean isPriceTypeTier) {
 		FacesScopes facesScopes = new FacesScopes();
-		boolean isPriceTypeTier = TemplateSpecConst.QUESTION_TYPE_ITEM
-				.equals(question.getQuestionType())
-				&& question.getClPriceTypeCode().getParameterCode()
-						.equals(ParameterConst.PRICE_TYPE_TIER);
 		if (CollectionUtils.isEmpty(question.getTplSpecAnswers())
 				&& !isPriceTypeTier) {
 			throw new EpException(MessageConst.ERROR_100022, new String[] {
@@ -13644,24 +13705,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			throw new EpException(MessageConst.ERROR_790202, new String[] {
 					tier, "" });
 		}
-
-		for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
-			if (specAnswer.getRatePerUom() == null && isPriceTypeTier) {
-				String tier = specAnswer.getTplSpecTierQty().getFromQty()
-						.toString()
-						+ " - "
-						+ specAnswer.getTplSpecTierQty().getToQty().toString();
-				throw new EpException(MessageConst.ERROR_790202, new String[] {
-						tier, "" });
-			} else if (specAnswer.getRatePerUom() == null && !isPriceTypeTier) {
-				throw new EpException(MessageConst.ERROR_100022, new String[] {
-						ResourceBundleUtils.getMessage(
-								QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								facesScopes.getUserLocale()), "" });
-			}
-		}
-
 	}
 
 	// #29468 Vinod End
