@@ -3586,17 +3586,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
 					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getApproverId());
-					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
-							.getOrgProfileId());
+					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+					userReqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 					userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
 					userReqDTO.setApprovalLimit(calculatesTotalOrderedAmt());
-					UserResDTO resDTO = userSO.validateFulfilmentApprover(userReqDTO);
+					userReqDTO.setDocType(getManagedBean().getFulfilmentRequest().getDocType());
+					userReqDTO.setDocNo(getManagedBean().getFulfilmentRequest().getDocNo());
+					UserResDTO resDTO = userSO.validateUserGroupLimit(userReqDTO);
 					if (resDTO.getUserStatus().equals(2)) {
 						throw new EpException(MessageConst.ERROR_740129, new String[] { resDTO.getPmUser()
 								.getUserName() });
 					} else if (resDTO.getUserStatus().equals(0)) {
-						// Send notification to Ministry Admin/ Kump PTJ Admin/ PTJ Admin
-						// TODO - Create a service to send the notification, wait for PM team prepare the notification template
+						// Send notification PTJ Admin
 						throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
 								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
 					}
@@ -3629,19 +3630,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
-					/*IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
-					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
-						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.requisitioner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-					}*/
-					/*
-					 * #31788
-					 * check active user and alternative user if the previous user is inactive.
-					 * previous inactive -> reroute to next active user same role/ptj -> insert tracking diary -> acknowledgement display upon click revise.
-					 * previous inactive with no alternative user -> block revise -> display alert message -> send notification to Ministry Admin/ Kump PTJ Admin/ PTJ Admin.
-					 */
+					// #31788
 					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
@@ -3649,14 +3638,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
 							.getOrgProfileId());
 					userReqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
-					UserResDTO resDTO = userSO.validateUser(userReqDTO);
+					userReqDTO.setDocType(getManagedBean().getFulfilmentRequest().getDocType());
+					userReqDTO.setDocNo(getManagedBean().getFulfilmentRequest().getDocNo());
+					UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
 					if (resDTO.getUserStatus().equals(2)) {
 						getManagedBean().setAssignNewUser(Boolean.TRUE);
 						UserResDTO availableUser = userSO.retrieveUserByRoleWithLoginHistory(userReqDTO);
 						getManagedBean().setNewUser(availableUser.getPmUser());
 					} else if (resDTO.getUserStatus().equals(0)) {
-						// Send notification to Ministry Admin/ Kump PTJ Admin/ PTJ Admin
-						// TODO - Create a service to send the notification, wait for PM team prepare the notification template
 						throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.REQUISITIONER.value()),
 								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
 					}
