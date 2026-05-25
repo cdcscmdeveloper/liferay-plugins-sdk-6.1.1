@@ -112,7 +112,8 @@
 					<tr >
 						<h:panelGroup
 							rendered="#{ctBackingBean.managedBean.newPk7 
-							and ctBackingBean.newProcurement()!= null }">
+							and ctBackingBean.newProcurement() != null
+							and ctBackingBean.managedBean.contractVer.ctContract.procQtType != null }"> <!-- #30045 -->
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.type']}" />
 							</td>
 							<td><p:inputTextarea autoResize="false" maxlength="500" rows="2" style="width:170px;" disabled="true"
@@ -123,7 +124,7 @@
 					<tr>
 						<h:panelGroup
 							rendered="#{ctBackingBean.managedBean.newPk7 
-							and ctBackingBean.newJustification()!= null}">
+							and ctBackingBean.newJustification() != null}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.pk7.justification.reason']}" /> <!-- #30045-->
 							</td>
 						<td colspan="3">
