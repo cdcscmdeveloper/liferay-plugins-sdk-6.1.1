@@ -897,12 +897,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// #34442 - start
 			Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
 			if (statusId.equals(ContractStatusConst.FA_PENDING_APPROVAL)
-			        || statusId.equals(ContractStatusConst.FA_PENDING_REVISION_APPROVAL)) {
-			    FacesContext.getCurrentInstance().addMessage(null,
-			        new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-			            ResourceBundleUtils.getMessage("lbl.ct.fa.app.confirm",
-			                MessageUtils.BUNDLE_COMMON_MESSAGES,
-			                new FacesScopes().getUserLocale())));
+					|| statusId.equals(ContractStatusConst.FA_PENDING_REVISION_APPROVAL)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
+								"lbl.ct.fa.app.confirm", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
 			}
 			// #34442 - end
 			
