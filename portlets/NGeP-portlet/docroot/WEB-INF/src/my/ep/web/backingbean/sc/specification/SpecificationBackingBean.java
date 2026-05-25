@@ -137,6 +137,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmAppVersion;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -11292,40 +11293,20 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			ScQtScoreSetting newTechnicalScoreSetting = checkScoreSetting(reqTempDTO);
 			if(newTechnicalScoreSetting != null && newTechnicalScoreSetting.getQtScoreSettingId() != null
 					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
-				newItemScoreSetting.setWeightageReq(itemScoreSetting.isWeightageReq());//Bug #34744 under 28784
-				//#38151 To apply the same scoring settings/calculation for both packages and items.
-				newItemScoreSetting.setPassingScore(
-					    this.getManagedBean().isWeightage35384WIP()
-					        ? itemScoreSetting.getPassingScore()
-					        : packageScoreSetting.getPassingScore()
-					);
-				
-				//#38151 To apply the same scoring settings/calculation for both packages and items.
-				newItemScoreSetting.setOverallTechnical(
-					    !this.getManagedBean().isWeightage35384WIP()
-					        ? itemScoreSetting.getOverallTechnical()
-					        : packageScoreSetting.getOverallTechnical()
-					);
-				
-				newItemScoreSetting.setOverallOtherTechnical(itemScoreSetting.getOverallOtherTechnical());
-				
-				//#38151 To apply the same scoring settings/calculation for both packages and items.
-				newItemScoreSetting.setOverallFin(
-						    !this.getManagedBean().isWeightage35384WIP()
-						        ? itemScoreSetting.getOverallFin()
-						        : packageScoreSetting.getOverallFin()
-						);
-				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
-				itemScoreSetting = newItemScoreSetting;
+				newTechnicalScoreSetting.setWeightageReq(technicalScoreSetting.isWeightageReq());//Bug #34744 under 28784
+				newTechnicalScoreSetting.setPassingScore(technicalScoreSetting.getPassingScore());
+				newTechnicalScoreSetting.setOverallTechnical(technicalScoreSetting.getOverallTechnical());
+				newTechnicalScoreSetting.setOverallOtherTechnical(technicalScoreSetting.getOverallOtherTechnical());
+				newTechnicalScoreSetting.setOverallFin(technicalScoreSetting.getOverallFin());
+				newTechnicalScoreSetting.setOverallOtherFin(technicalScoreSetting.getOverallOtherFin());
+				technicalScoreSetting = newTechnicalScoreSetting;
 			}//#28784 - end
 			scoreSetting.add(technicalScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
-			
-			// #21695 farid, if partial set weightage to false -start-
-			if (this.getManagedBean().getQt().isPartial() == true) {
-				this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
-			}
-			// #21695 -end-
+			// #21695 farid, if partial set weightage to false			
+//			if (this.getManagedBean().getQt().isPartial() == true){
+//				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
+//			} // #38679 remove,based on new requirement. 
 		}
 		ScQtScoreSetting financialScoreSetting = this.getManagedBean()
 				.getFinancialScoreSetting();
@@ -11460,6 +11441,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		ScQtScoreSetting itemScoreSetting = this.getManagedBean()
 				.getRecommendationScore();
 		if (null != itemScoreSetting && itemScoreSetting.getSettingType() == 5) {
+			
 			/*
 			 * #28785,  Checking if score setting already created or not
 			 * Start
@@ -11473,14 +11455,32 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if(newItemScoreSetting != null && newItemScoreSetting.getQtScoreSettingId() != null
 					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newItemScoreSetting.setWeightageReq(itemScoreSetting.isWeightageReq());//Bug #34744 under 28784
-				newItemScoreSetting.setPassingScore(itemScoreSetting.getPassingScore());
-				newItemScoreSetting.setOverallTechnical(itemScoreSetting.getOverallTechnical());
-				newItemScoreSetting.setOverallOtherTechnical(itemScoreSetting.getOverallOtherTechnical());
-				newItemScoreSetting.setOverallFin(itemScoreSetting.getOverallFin());
-				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setPassingScore(
+					    this.getManagedBean().isWeightage35384WIP()
+					        ? itemScoreSetting.getPassingScore()
+					        : packageScoreSetting.getPassingScore()
+					);
 				
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setOverallTechnical(
+					    !this.getManagedBean().isWeightage35384WIP()
+					        ? itemScoreSetting.getOverallTechnical()
+					        : packageScoreSetting.getOverallTechnical()
+					);
+				
+				newItemScoreSetting.setOverallOtherTechnical(itemScoreSetting.getOverallOtherTechnical());
+				
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setOverallFin(
+						    !this.getManagedBean().isWeightage35384WIP()
+						        ? itemScoreSetting.getOverallFin()
+						        : packageScoreSetting.getOverallFin()
+						);
+				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
 				itemScoreSetting = newItemScoreSetting;
 			}//#28784 - end
+
 			scoreSetting.add(itemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
