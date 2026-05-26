@@ -130,8 +130,8 @@ public class QTCommitteBackingBean extends
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger.getLogger(QTCommitteBackingBean.class);
 	
-	private ScWorkFlowStatus ocWorkFlowStatus;
-	private ScWorkFlowStatus tecWorkFlowStatus;
+	//private ScWorkFlowStatus ocWorkFlowStatus;
+	//private ScWorkFlowStatus tecWorkFlowStatus;
 
 	/**
 	 * Debug logger.
@@ -1994,25 +1994,21 @@ public class QTCommitteBackingBean extends
 								scQtFinalization = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO)
 										.getScQtFinalization();
 								getManagedBean().setScQtFinalization(scQtFinalization);
+
 							} finally {
 								qtSuppFinalizationSO = null;
-							}		
+							}			
 						}
 						
 						if (scQtFinalization != null) {
 							if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
-							} else if (scQtFinalization.isReEvaluateCompReq()
-									&& ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(commType)) {
-							} else if (scQtFinalization.isReEvaluateTechReq()
-									&& ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-											.equalsIgnoreCase(commType)) {
-							} else if (scQtFinalization.isReEvaluateFinReq()
-									&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-											.equalsIgnoreCase(commType)) {
+							} else if (scQtFinalization.isReEvaluateCompReq() && ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(commType)) {
+							} else if (scQtFinalization.isReEvaluateTechReq() && ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
+							} else if (scQtFinalization.isReEvaluateFinReq() && ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
 							} else {
-								return false;
+								return false;		
 							}
-						}
+						}	
 					}
 					// 25037 - start
 					if (QTStatusConst.CMT_PENDING_REVISION.equals(currentCmtStatus)
@@ -2375,10 +2371,9 @@ public class QTCommitteBackingBean extends
 	
 	// 25037 - start
 	private boolean isEligibleStatusForBtns(Long statusId, String commType) {
-		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)){
+		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)) {
 			return true;
 		}
-		
 		if (commType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
 			boolean specCheck = Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)
 					&& this.getManagedBean().isValidFor25037();
