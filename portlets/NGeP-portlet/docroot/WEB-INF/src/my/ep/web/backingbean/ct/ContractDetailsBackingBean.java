@@ -2120,9 +2120,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		Map<String, Long> userNameStatus = new HashMap<>();
 
         for (String status : arr) {
-        	if (("1").equalsIgnoreCase(status)){
+//        	if (!("1").equalsIgnoreCase(status)){
         		userNameStatus.put(getSelectedUsers().get(i).getUserName(), Long.parseLong(status.trim()));
-        	}
+//        	}
         	i++;
         }
         
