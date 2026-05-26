@@ -1202,10 +1202,9 @@ public class CommonApplBackingBean extends
 				
 				
 				if (currDateAfter90Days.getTime().after(acc.getExpDate()) && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					// +1: if MOF end date is today, the countdown must be 1 day
-					long expiringDays = daysBetween(currDate, expDate) + 1;
+					long expiringDays = daysBetween(currDate, expDate);
 					getManagedBean().setDays(expiringDays + "");
-					if(expiringDays <= 90){
+					if(expiringDays >= 1 && expiringDays <= 90){
 					getManagedBean().setMofBeforeExpiryMsg(
 							SmCommonUtil.getMessage(
 									"lbl.sm.MOF.alert.beforeexpiry", new String[] {getManagedBean().getDays(), DateUtils.dateToString("dd/MM/yyyy", expDate)}));
@@ -1231,7 +1230,7 @@ public class CommonApplBackingBean extends
 				dateAfterOneYear.add(Calendar.MONTH, 12);
 				Date renewalEnd = dateAfterOneYear.getTime();
 
-				long togo = daysBetween(currDate, renewalEnd) + 1;
+				long togo = daysBetween(currDate, renewalEnd);
 
 				if (togo >= 1 && togo <= 366
 						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
