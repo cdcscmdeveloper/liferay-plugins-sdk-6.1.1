@@ -55,6 +55,8 @@ import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -2065,14 +2067,68 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//TODO - REVISE in validation + save/submit
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			log.info("xoxoxoxoxooxoxo action : "+action);
-			handleInactiveUserValidation(action);
+			// ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId()
+			
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
+			CtContract contract = ctBB.getManagedBean().getContractVer().getCtContract();
+			
+			populateInactiveUserIdIntoString(getSelectedUsers());  // to get string for user id
+			
+			inactiveDto.setUserIds(String.valueOf(getSelectedUsers().get(0).getUserId())); // should populate it into string with delimiter if more than 1
+			log.info("xoxoxoxoxooxoxo USER ID : "+  getSelectedUsers().get(0).getUserId()); // if SUBMIT = Approver Model // REVISE = MCA name
+			inactiveDto.setUserRoleCode(RoleCode.CT_APPROVER.value()); // for submit = approver / REVISE = RoleCode.MIN_CONTRACT_ADMIN.value()
+			inactiveDto.setOrgProfileId(contract.getOwnerOrgProfile().getOrgProfileId());  // 992192L;
+			log.info("xoxoxoxoxooxoxo PROFILE ID : "+  contract.getOwnerOrgProfile().getOrgProfileId());
+			inactiveDto.setDocType(ctBB.getManagedBean().getContractVer().getDocType());
+			inactiveDto.setDocNo(contract.getContractNo());
+			
+			InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+			log.info("xoxoxoxoxooxoxo STATUSSS : "+  resDto.getStatus());
+			log.info("xoxoxoxoxooxoxo END ");
+			
+			// before call handle inactive user, check in the status, is there any not success(1) user
+			List<Long> listResultStatusUser = getInactiveUserStatus(resDto.getStatus());
+			
+			handleInactiveUserValidation(action, listResultStatusUser);
 		}
 		//#30737 - End
 		
 	}
 	
 	//#30737 - Start
-	public void handleInactiveUserValidation(String outcome) {
+	// private to populate user id into string with comma delimiter 
+	private String populateInactiveUserIdIntoString(List<PmUser> userIds){
+		StringBuilder sb = new StringBuilder();
+		
+		for(PmUser user : userIds){
+			
+			if (sb.length() > 0) {
+		        sb.append(",");
+		    }
+
+		    sb.append(user.getUserId());
+		}
+		
+		return sb.toString();
+		
+	}
+	
+	private List<Long> getInactiveUserStatus(String userStatus){
+		
+		String[] arr = userStatus.split(",");
+
+        List<Long> list = new ArrayList<>();
+
+        for (String s : arr) {
+            list.add(Long.parseLong(s.trim()));
+        }
+        
+		return list;
+		
+	}
+		
+	public void handleInactiveUserValidation(String outcome, List<Long> listResultStatusUser) {
 
 		IContractSO contractSO 
 			= (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
