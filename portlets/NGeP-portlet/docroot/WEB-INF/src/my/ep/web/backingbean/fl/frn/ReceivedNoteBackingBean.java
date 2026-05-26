@@ -780,14 +780,37 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
-			if(getManagedBean().getPmUserList().isEmpty()){
-				getManagedBean().setSelectedTabIndex(0);
-				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-			}
-			if(getManagedBean().getUserLoginId() == null) {
-				getManagedBean().setSelectedTabIndex(0);
-				throw new EpException(MessageConst.ERROR_100022, new String[]{
-						ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			// #31788 - Validate existing officer active/inactive
+			if (getManagedBean().getFulfilmentNote().getApproverId() != null) {
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getManagedBean().getFulfilmentNote().getApproverId());
+				userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
+						.getOrgProfileId());
+				userReqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
+				userReqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				userReqDTO.setDocNo(getManagedBean().getFulfilmentNote().getFulfilmentNoteNo());
+				UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
+				if (resDTO.getUserStatus().equals(2)) {
+					throw new EpException(MessageConst.ERROR_740131, new String[] { resDTO.getPmUser().getUserName() });
+				} else if (resDTO.getUserStatus().equals(0)) {
+					throw new EpException(MessageConst.ERROR_700128, new String[] {
+							getEpRoleDescByRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value()),
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity()
+									.getOrgName() });
+				}
+			} else {
+				if(getManagedBean().getPmUserList().isEmpty()){
+					getManagedBean().setSelectedTabIndex(0);
+					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+				
+				if(getManagedBean().getUserLoginId() == null) {
+					getManagedBean().setSelectedTabIndex(0);
+					throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
 			}
 			for(PmUser user : getManagedBean().getPmUserList()){
 				if(getManagedBean().getUserLoginId().equals(user.getUserId())){
