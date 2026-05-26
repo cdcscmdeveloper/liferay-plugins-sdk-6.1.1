@@ -24,6 +24,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -5664,6 +5665,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * application.
 	 */
 	public void addOrUpdateCompanyExperienceToSmAppl() {
+		//#40165 - START
+		SmCompanyExperience exp = getManagedBean().getSelectedCompanyExperience();
+		
+		Map<String, String> fieldsToCheck = new LinkedHashMap<String, String>();
+		fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projTitle", null), exp.getTitle());
+	    fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.statBody", null), exp.getClientName());
+	    
+	    if (SupplierManagementConst.STYPE_CONSULTANT.equals(getManagedBean().getSmAppl().getSupplierType())) {
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.refNo", null), exp.getRefNo());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projLoc", null), exp.getProjectLocation());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.serviceProvide", null), exp.getWorkServiceDesc());
+	    }
+		
+	    SmApplicationUtil.CheckAsciiValidation(fieldsToCheck);
+		//#40165 - END
 		if (EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSelectedCompanyExperience().getSmCompanyExperienceCats())
 				&& (getManagedBean().getSelectedCompanyExperience()
@@ -9515,6 +9531,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		} else {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 		}
+		
+		// #39771 & 40081 START
+		if (bpmAppl.getProcessingOfficerProcess() != null) {
+			if (bpmAppl.getProcessingOfficerProcess().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PENDING_REVISE)) {
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION);
+			} else if (bpmAppl.getProcessingOfficerProcess().equalsIgnoreCase(
+					my.ep.constant.sm.SupplierManagementConst.PENDING_SITE_VISIT_BEFORE_APPROVE)) {
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT);
+			}
+		}
+		// #39771 & 40081 END
 
 		getManagedBean().getSmAppl().setApplSubmitDate(new Date());
 
@@ -18672,5 +18699,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return allBranchName;
 	}
 	// END #29727
+	// #40306 Start
+	private static String gmapsScriptSrc = EpPropertiesUtils.getInstance().getProperty("gmaps.script.src");
+
+	public String getGmapsScriptSrc() {
+	    return gmapsScriptSrc;
+	}
+	// #40306 End
 	
 }

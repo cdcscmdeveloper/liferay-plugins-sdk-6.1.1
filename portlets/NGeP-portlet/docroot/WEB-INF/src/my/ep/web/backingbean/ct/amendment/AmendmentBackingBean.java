@@ -2485,7 +2485,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						//24333 - End
 					}
-					ctBackingBean.validateDeductionType(deduction);
+					ctBackingBean.validateDeductionType(deduction, action); //#35506
 					if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
 						for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
 							if(ctDeductionClauses.getClauseDescription().isEmpty()){
@@ -8795,11 +8795,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(StringUtils.isNotBlank(sb.toString())){
 			sb.append(", ");
 		}
-		sb.append(supCat.getCategoryL1Name().trim());
-	    sb.append(", ");
-	    sb.append(supCat.getCategoryL2Name().trim());
-	    sb.append(", ");
-	    sb.append(supCat.getCategoryL3Name().trim());
+		if(supCat.getPmCategoryL1()!=null){
+			sb.append(supCat.getPmCategoryL1().getCategoryL1Code());
+		}
+		if(supCat.getPmCategoryL2()!=null){
+			sb.append(supCat.getPmCategoryL2().getCategoryL2Code());
+		}
+		if(supCat.getPmCategoryL3()!=null){
+			sb.append(supCat.getPmCategoryL3().getCategoryL3Code());
+		}
 	}
 
 	/**

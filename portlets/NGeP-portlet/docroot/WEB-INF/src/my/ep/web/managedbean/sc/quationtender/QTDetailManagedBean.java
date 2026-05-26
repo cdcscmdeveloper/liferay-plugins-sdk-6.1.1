@@ -1702,7 +1702,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #15391 - start
 	private boolean isChecklist;
-	private boolean isGenInfo;
+	private boolean isGenInfo = Boolean.FALSE; //#25726
 	private boolean specUpdateInProgress;
 	// #15391 - end
 	
@@ -1863,6 +1863,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
+	
+	// #35320 - Start
+	private boolean afterSF;
+	// #35320 - End
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -11747,4 +11751,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.resetHistoryCatCode = resetHistoryCatCode;
 	}
 	//#29732
+	
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
 }
