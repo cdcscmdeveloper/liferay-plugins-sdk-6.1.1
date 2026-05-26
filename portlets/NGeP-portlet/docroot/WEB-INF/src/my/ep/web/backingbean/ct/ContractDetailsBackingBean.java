@@ -2070,25 +2070,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			// ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId()
 			
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
 			CtContract contract = ctBB.getManagedBean().getContractVer().getCtContract();
-			
-			populateInactiveUserIdIntoString(getSelectedUsers());  // to get string for user id
-			
-			inactiveDto.setUserIds(String.valueOf(getSelectedUsers().get(0).getUserId())); // should populate it into string with delimiter if more than 1
-			log.info("xoxoxoxoxooxoxo USER ID : "+  getSelectedUsers().get(0).getUserId()); // if SUBMIT = Approver Model // REVISE = MCA name
+			InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
+			inactiveDto.setUserIds(populateInactiveUserIdIntoString(getSelectedUsers())); // should populate it into string with delimiter if more than 1
 			inactiveDto.setUserRoleCode(RoleCode.CT_APPROVER.value()); // for submit = approver / REVISE = RoleCode.MIN_CONTRACT_ADMIN.value()
 			inactiveDto.setOrgProfileId(contract.getOwnerOrgProfile().getOrgProfileId());  // 992192L;
-			log.info("xoxoxoxoxooxoxo PROFILE ID : "+  contract.getOwnerOrgProfile().getOrgProfileId());
 			inactiveDto.setDocType(ctBB.getManagedBean().getContractVer().getDocType());
 			inactiveDto.setDocNo(contract.getContractNo());
 			
 			InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+			
+			log.info("xoxoxoxoxooxoxo USER ID : "+  getSelectedUsers().get(0).getUserId()); // if SUBMIT = Approver Model // REVISE = MCA name
+			log.info("xoxoxoxoxooxoxo PROFILE ID : "+  contract.getOwnerOrgProfile().getOrgProfileId());
 			log.info("xoxoxoxoxooxoxo STATUSSS : "+  resDto.getStatus());
 			log.info("xoxoxoxoxooxoxo END ");
 			
 			// before call handle inactive user, check in the status, is there any not success(1) user
-			List<Long> listResultStatusUser = getInactiveUserStatus(resDto.getStatus());
+			Map<String, Long> listResultStatusUser = getInactiveUserStatus(resDto.getStatus());
 			
 			handleInactiveUserValidation(action, listResultStatusUser);
 		}
@@ -2114,28 +2112,36 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 	}
 	
-	private List<Long> getInactiveUserStatus(String userStatus){
+	private Map<String, Long> getInactiveUserStatus(String userStatus){
 		
 		String[] arr = userStatus.split(",");
+		int i = 0;
 
-        List<Long> list = new ArrayList<>();
+		Map<String, Long> userNameStatus = new HashMap<>();
 
-        for (String s : arr) {
-            list.add(Long.parseLong(s.trim()));
+        for (String status : arr) {
+        	if (("1").equalsIgnoreCase(status)){
+        		userNameStatus.put(getSelectedUsers().get(i).getUserName(), Long.parseLong(status.trim()));
+        	}
+        	i++;
         }
         
-		return list;
+		return userNameStatus;
 		
 	}
 		
-	public void handleInactiveUserValidation(String outcome, List<Long> listResultStatusUser) {
+	public void handleInactiveUserValidation(String outcome, Map<String, Long>listResultStatusUser) {
 
 		IContractSO contractSO 
 			= (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
     	
         try {
         	
-        	Long inactiveUserCheckResult = 1L; //TEMP
+        	Long inactiveUserCheckResult = 1L; //TEMP listResultStatusUser
+        	// syaz ko kene tukar ni jadi Map<String, Long>
+        	// nanti looping untuk tau dia status 1,2,3,4,5
+        	// so far aku simpan key name : status
+        	// kalau 1 proceed success, 2,3,4 proceed keluar kan nama user tu dekat alert
         	
         	contractSO.checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
