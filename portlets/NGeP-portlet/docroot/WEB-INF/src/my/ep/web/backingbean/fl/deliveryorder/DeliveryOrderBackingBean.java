@@ -1221,7 +1221,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 				AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 				if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
-					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					// #31788 - Update New Message for No Active Receiving Officer  
+					//throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					throw new EpException(MessageConst.ERROR_740130, new String[]{ flDeliveryAddress.getFlAddress().getAddressName(), getEpRoleDescByRoleCode(RoleCode.RECEIVING_OFFICER.value()) });
 				}
 			}
 		}
