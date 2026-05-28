@@ -12454,11 +12454,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				result = false;
 
 				boolean isDisabledStatus = scLoa.getPmStatus().getStatusId().equals(62505L);
-				boolean isReason = (isReasonPK2(scLoa) || isReasonSpecialItem(scLoa)) && isPeriodicAbove4;
-
-				if (isDisabledStatus || isReason) {
+				//change this because of CR27868 not include in UAT
+				//#25725 - Start
+				if (isDisabledStatus) {
 					result = true;
 				}
+				//#25725 - End
 			}
 		} else {
 			result = isPeriodicAbove4 || isContractTypeCentral; //only periodic & above 4 years or Contract type central is allowed 
