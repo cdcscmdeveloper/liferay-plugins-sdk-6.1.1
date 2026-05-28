@@ -309,6 +309,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String paymentRefNo = reqMap.get("paymentRefNo");
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
+		boolean isValidToSave = (StringUtils.isBlank(skey) && StringUtils.isBlank(payload))?false:true;
+		log.info("######38377 skey:"+skey+"  isValidSave:"+isValidToSave);
 		
 		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
 		String cardMaskedNum = reqMap.get("cardMaskedNum");
@@ -689,13 +691,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info(">>>>#38377 enable payment update<<<");
 				// #38377
-				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)) {
+				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)&& isValidToSave) {
+					log.info("###############38377 update payment");
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				} else {
-				    log.warn("Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
+				    log.warn("###############38377 Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
 				            + ", paymentGateway=" + paymentGateway
 				            + ", payloadEmpty=" + StringUtils.isBlank(payload));
-				    status = SupplierManagementConst.PAYMENT_INVALID_RES;
 				}
 
 				log.info("******ResponsePreRender - After Update******");
@@ -1048,7 +1050,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
+			//#40340 : Remove personnel.getPmUser().getUserId().equals(currentUserId)
+			if(personnel != null){
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
 			}

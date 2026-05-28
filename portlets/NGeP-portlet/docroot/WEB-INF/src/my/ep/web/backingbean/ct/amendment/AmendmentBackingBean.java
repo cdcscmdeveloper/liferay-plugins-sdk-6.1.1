@@ -2485,7 +2485,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						//24333 - End
 					}
-					ctBackingBean.validateDeductionType(deduction);
+					ctBackingBean.validateDeductionType(deduction, action); //#35506
 					if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
 						for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
 							if(ctDeductionClauses.getClauseDescription().isEmpty()){
