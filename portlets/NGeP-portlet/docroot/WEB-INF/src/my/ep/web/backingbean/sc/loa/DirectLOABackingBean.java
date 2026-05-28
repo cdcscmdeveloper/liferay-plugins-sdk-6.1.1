@@ -11805,6 +11805,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void agreementReqYes() {
 		getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 		getManagedBean().getScLoa().setAgreementReq(false);
+		changeResetRequiredAgreement();
 		RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
 	}
 
@@ -11812,6 +11813,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void agreementReqNo() {
 		getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 		getManagedBean().getScLoa().setAgreementReq(true);
+		changeResetRequiredAgreement();
 		RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
 	}
     //new #25726 - Start
