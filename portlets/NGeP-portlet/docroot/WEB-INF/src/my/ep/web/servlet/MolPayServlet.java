@@ -401,10 +401,10 @@ public class MolPayServlet extends HttpServlet {
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						//#38377
-						if(reqMap.get("paymentGateway").equals("Y")){
+						if("Y".equals(paymentGateway)){
 							PrintWriter out = res.getWriter();
 							try{
-								out.print("Success backend call new payment gateway");
+								out.print("CODE:"+SupplierManagementConst.MOL_SUCCESS);
 							}finally{
 								out.close();
 							}
