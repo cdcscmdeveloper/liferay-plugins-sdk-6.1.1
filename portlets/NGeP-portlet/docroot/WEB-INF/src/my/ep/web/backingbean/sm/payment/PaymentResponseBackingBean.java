@@ -308,6 +308,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String paymentRefNo = reqMap.get("paymentRefNo");
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
+		boolean isValidToSave = (StringUtils.isBlank(skey) && StringUtils.isBlank(payload))?false:true;
+		log.info("######38377 skey:"+skey+"  isValidSave:"+isValidToSave);
 		
 		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
 		String cardMaskedNum = reqMap.get("cardMaskedNum");
@@ -691,13 +693,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info(">>>>#38377 enable payment update<<<");
 				// #38377
-				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)) {
+				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)&& isValidToSave) {
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				} else {
 				    log.warn("Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
 				            + ", paymentGateway=" + paymentGateway
 				            + ", payloadEmpty=" + StringUtils.isBlank(payload));
-				    status = SupplierManagementConst.PAYMENT_INVALID_RES;
 				}
 
 				log.info("******ResponsePreRender - After Update******");
@@ -938,26 +939,32 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public void responseRedirect(){
 		log.info("*************responseRedirect*********");
 		FacesContext fc = FacesContext.getCurrentInstance();
-
-		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
-		if(fc.getMessageList().size() < 1){
-			String[] msgParam = null;
-			
-			//#29481 - Start - added INFO_721068
-			List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
-			if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
-			//#29481 - End
-				msgParam = getManagedBean().getMsgParam();
-			}else{
-				msgParam = new String[]{errorDesc};
-			}
-			fc.addMessage(
-					null,
-					new FacesMessage(getManagedBean().getMessageSeverity(), null,
-							MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
 		
+		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
+		log.info("*************responseRedirect errorDesc : 40340 >>>*********" + errorDesc);
+		try {
+			if(fc.getMessageList().size() < 1){
+				String[] msgParam = null;
+				log.info("*************responseRedirect before message : 40340*********");
+				//#29481 - Start - added INFO_721068
+				List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
+				if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
+				//#29481 - End
+					msgParam = getManagedBean().getMsgParam();
+				}else{
+					msgParam = new String[]{errorDesc};
+				}
+				log.info("*************responseRedirect msgParam : 40340 >>>*********" + msgParam);
+				fc.addMessage(
+						null,
+						new FacesMessage(getManagedBean().getMessageSeverity(), null,
+								MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		fc.getApplication()
@@ -1051,14 +1058,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
+			log.info("######40340  inside setMessageSoftcert single user#####");
 			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
+				log.info("######40340  inside setMessageSoftcert checking personnel#####");
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
+				return;
 			}
-		} else {
-			getManagedBean().setMessageId(MessageConst.INFO_721068);
-			getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 		}
+		// #40340
+		getManagedBean().setMessageId(MessageConst.INFO_721068);
+		getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 	}
 	//#29481 - End
 /*	public static void main(String args[]){
