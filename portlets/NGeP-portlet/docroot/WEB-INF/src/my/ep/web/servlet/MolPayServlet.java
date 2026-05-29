@@ -398,18 +398,23 @@ public class MolPayServlet extends HttpServlet {
 					}
 					
 					pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
-					log.info(">>>>Before paymentBackendUpdate<<<");
-					if(pymtResDTO.isSuccessful()){
-						//#38377
-						if("Y".equals(paymentGateway)){
+					
+					//#38377
+					if ("Y".equals(paymentGateway)) {
+						if (pymtResDTO.isSuccessful() || statusCode == null) {
 							PrintWriter out = res.getWriter();
-							try{
+							try {
 								out.print(SupplierManagementConst.MOL_SUCCESS);
-							}finally{
+								log.info("#38377########response code:" + SupplierManagementConst.MOL_SUCCESS);
+							} finally {
 								out.close();
 							}
 						}
-						else if(nbcb.equals("1")){
+					}
+					
+					log.info(">>>>Before paymentBackendUpdate<<<");
+					if(pymtResDTO.isSuccessful()){
+						if(nbcb.equals("1")){
 							//to auto generate mof cert
 							if(smPayment.getPyBill().getBillType().
 									equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) && 
