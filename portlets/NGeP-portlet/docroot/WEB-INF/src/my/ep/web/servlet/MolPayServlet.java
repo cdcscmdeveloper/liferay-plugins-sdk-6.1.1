@@ -397,20 +397,12 @@ public class MolPayServlet extends HttpServlet {
 						reqSO.sendSuccessPaymentEmail(pymtReqDTO);
 					}
 					
+					// #38377
+					printSuccessResponseCode(paymentGateway, statusCode, pymtResDTO.isSuccessful(), res.getWriter());
+					log.info("#38377########updateBackend before for statusCode:" + statusCode + "  isSuccessful:" + pymtResDTO.isSuccessful());
 					pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
-					
-					//#38377
-					if ("Y".equals(paymentGateway)) {
-						if (pymtResDTO.isSuccessful() || statusCode == null) {
-							PrintWriter out = res.getWriter();
-							try {
-								out.print(SupplierManagementConst.MOL_SUCCESS);
-								log.info("#38377########response code:" + SupplierManagementConst.MOL_SUCCESS);
-							} finally {
-								out.close();
-							}
-						}
-					}
+					log.info("#38377########updateBackend after for statusCode:" + statusCode + "  isSuccessful:" + pymtResDTO.isSuccessful());
+					printSuccessResponseCode(paymentGateway, statusCode, pymtResDTO.isSuccessful(), res.getWriter());
 					
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
@@ -632,5 +624,18 @@ public class MolPayServlet extends HttpServlet {
 		log.info("######38377#####cardMaskedNum:" + reqMap.get("cardMaskedNum"));
 		
 		return reqMap;
+	}
+	
+	private void printSuccessResponseCode(String paymentGateway, Long statusCode, boolean isSuccessSave, PrintWriter out) {
+		if ("Y".equals(paymentGateway)) {
+			if (isSuccessSave || statusCode == null) {
+				try {
+					out.print(SupplierManagementConst.MOL_SUCCESS);
+					log.info("#38377########response code:" + SupplierManagementConst.MOL_SUCCESS);
+				} finally {
+					out.close();
+				}
+			}
+		}
 	}
 }
