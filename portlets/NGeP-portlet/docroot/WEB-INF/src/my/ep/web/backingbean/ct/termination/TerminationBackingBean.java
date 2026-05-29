@@ -117,11 +117,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 	
 	//#30737 - Start 
-//	@Override
-//    protected String getTaskName() {
-//        return getManagedBean().getTaskName();
-//    }
-
     @Override
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
@@ -621,10 +616,18 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	}
 	
 	//#30737 - Start
+	/**
+	 * Handles inactive user validation during actions.
+	 *
+	 * @param outcome -action outcome such as SUBMIT or REVISE
+	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
+	 * @throws EpException if inactive user conditions are met during validation. 
+	 * Different error messages will be generated based on the returned error code.
+	 */
 	public void handleInactiveUserValidation(String outcome) {
 
 		IContractTerminationSO contractTerminationSO 
-			= (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
+			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
     	
         try {
         	

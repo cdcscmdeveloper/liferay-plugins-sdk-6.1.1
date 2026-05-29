@@ -242,11 +242,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//#24336 - End
 	
 	//#30737 - Start 
-//	@Override
-//    protected String getTaskName() {
-//        return getManagedBean().getTaskName();
-//    }
-
     @Override
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
@@ -3220,10 +3215,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//24333 - End, Refactor code for Validate Amendment because tab menu changes
 	
 	//#30737 - Start
+	/**
+	 * Handles inactive user validation during actions.
+	 *
+	 * @param outcome -action outcome such as SUBMIT or REVISE
+	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
+	 * @throws EpException if inactive user conditions are met during validation. 
+	 * Different error messages will be generated based on the returned error code.
+	 */
 	private void handleInactiveUserValidation(String outcome) {
 
 		IContractAmendmentSO contractAmendmentSO 
-			= (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
+			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
     	
         try {
         	

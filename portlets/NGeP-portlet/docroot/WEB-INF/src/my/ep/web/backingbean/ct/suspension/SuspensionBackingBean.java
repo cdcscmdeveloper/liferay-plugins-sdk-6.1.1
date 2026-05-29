@@ -94,11 +94,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
 	//#30737 - Start 
-//	@Override
-//    protected String getTaskName() {
-//        return getManagedBean().getTaskName();
-//    }
-
     @Override
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
@@ -549,7 +544,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			}
 			
 			//#30737
-			Long inactiveUserCheckResult = 1L; //TEMP (get value from SP)
+			Long inactiveUserCheckResult = 2L; //TEMP (get value from SP)
 			
 			validateSuspensionDetails(outcome, inactiveUserCheckResult); //#30737 (add param inactiveUserCheckResult)		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
@@ -741,7 +736,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 		
 		//#30737 - Start
-		//TODO - REVISE in validation + save/submit
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
 			handleInactiveUserValidation(outcome, inactiveUserCheckResult);
@@ -757,10 +751,18 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	}
 	
 	//#30737 - Start
+	/**
+	 * Handles inactive user validation during actions.
+	 *
+	 * @param outcome -action outcome such as SUBMIT or REVISE
+	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
+	 * @throws EpException if inactive user conditions are met during validation. 
+	 * Different error messages will be generated based on the returned error code.
+	 */
 	public void handleInactiveUserValidation(String outcome, Long inactiveUserCheckResult) {
 
 		IContractSuspensionSO contractSuspensionSO 
-			= (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
+			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
     	
         try {
         	contractSuspensionSO.checkInactiveUserOnAction(

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct;
 
@@ -101,6 +101,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
@@ -170,11 +171,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private CtAgency selectedRecommendedAgency;
 	
 	//#30737 - Start 
-//	@Override
-//    protected String getTaskName() {
-//        return getManagedBean().getTaskName();
-//    }
-
     @Override
     protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
@@ -2095,6 +2091,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	//#30737 - Start
+	
 	// private to populate user id into string with comma delimiter 
 	private String populateInactiveUserIdIntoString(List<PmUser> userIds){
 		StringBuilder sb = new StringBuilder();
@@ -2130,10 +2127,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 	}
 		
+	/**
+	 * Handles inactive user validation during actions.
+	 *
+	 * @param outcome -action outcome such as SUBMIT or REVISE
+	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
+	 * @throws EpException if inactive user conditions are met during validation. 
+	 * Different error messages will be generated based on the returned error code.
+	 */
 	public void handleInactiveUserValidation(String outcome, Map<String, Long>listResultStatusUser) {
 
 		IContractSO contractSO 
-			= (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
     	
         try {
         	

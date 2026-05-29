@@ -357,58 +357,49 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	}
 	
     //#30737 - Start
+	/**
+	 * Builds and returns a {@link ContractReqDTO} containing the
+	 * required contract and user information for inactive user
+	 * validation processing.
+	 *
+	 * @param outcome -action outcome such as SUBMIT, REVISE, etc
+	 * @param userRole -current user role used
+	 * @return populated {@link ContractReqDTO} for inactive user validation
+	*/
     protected ContractReqDTO buildContractReqDTO(String outcome, String userRole) {
         ContractReqDTO reqDTO = new ContractReqDTO();
         reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
         reqDTO.setUserRole(userRole);
         reqDTO.setOutcome(outcome);
         reqDTO.setCtContractVer(getContractVer());
-        
-        log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
-		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
-		log.info("xoxoxoxoxooxoxo contractVer : "+reqDTO.getCtContractVer().getContractVerId());
-//		log.info("xoxoxoxoxooxoxo getTaskName() : "+getTaskName());
-    	log.info("xoxoxoxoxooxoxo getSelectedUsers() : "+getSelectedUsers());
-    	
         return reqDTO;
     }
     
+    /**
+     * Builds and returns a localized {@link EpException} based on the
+     * inactive user validation error code.
+     *
+     * @param ex the original exception containing the inactive user
+     * validation error code
+     * @return localized {@link EpException} with resolved message
+     * parameters
+    */
     protected EpException buildInactiveUserException(EpException ex) {
     	log.info("xoxoxoxoxoxoxo catch EpException");
     	
-    	String errorCode = ex.getMessage();
-        String[] messageKeys = null;
-        
         String selectedUserName = null;
-        if(getSelectedUsers().size() > 0){
+        if(!getSelectedUsers().isEmpty()){
         	selectedUserName = getSelectedUsers().get(0).getUserName();
         }
         
+        String errorCode = ex.getMessage();
         log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
         
-        if (MessageConst.ERROR_100068.equals(errorCode)) {
-            messageKeys = new String[]{selectedUserName};
-        }
-        else if (MessageConst.ERROR_100069.equals(errorCode)) {
-            messageKeys = new String[]{"MOF/CDC/2000192", selectedUserName};
-        }
-        else if (MessageConst.ERROR_100070.equals(errorCode)) {
-            messageKeys = new String[]{selectedUserName};
-        }
-        else if (MessageConst.ERROR_100071.equals(errorCode)) {
-        	messageKeys = new String[]{
-    			"KADIR", //nama
-    			"Chairperson", //role
-    			"KADUK", //name
-    			"Member" //role
-        	};
-        }
-        else if (MessageConst.ERROR_100072.equals(errorCode)) {
-            messageKeys = new String[]{"MOF/ABC/20002", selectedUserName, "RAMLEEE"};
-        }
-        else if (MessageConst.ERROR_100073.equals(errorCode)) {
-            messageKeys = new String[]{"Requisitioner", "Pejabat Pengarah Hospital Kuala Lumpur Unit Pentadbiran"};
-        }
+        String[] messageKeys =
+                getInactiveUserMessageKeys(
+                    errorCode,
+                    selectedUserName
+                );
         
         if (messageKeys != null && messageKeys.length > 0) {
 
@@ -426,7 +417,56 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         return new EpException(errorCode);
     }
     
-//    protected abstract String getTaskName();
+    /**
+     * Returns message parameters based on inactive user validation error code.
+     *
+     * @param errorCode -inactive user validation error code
+     * @param selectedUserName -selected user name used in message parameter generation
+     * @return message parameters for inactive user validation message
+     * 
+     * NOTE:
+     * Complexity is caused by explicit business error code mapping.
+    */
+    private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserName) {
+
+        if (MessageConst.ERROR_100068.equals(errorCode)
+        		|| MessageConst.ERROR_100070.equals(errorCode)) {
+            return new String[]{selectedUserName};
+        }
+
+        if (MessageConst.ERROR_100069.equals(errorCode)) {
+            return new String[]{
+                "MOF/CDC/2000192",
+                selectedUserName
+            };
+        }
+
+        if (MessageConst.ERROR_100071.equals(errorCode)) {
+            return new String[]{
+                "KADIR",
+                "Chairperson",
+                "KADUK",
+                "Member"
+            };
+        }
+
+        if (MessageConst.ERROR_100072.equals(errorCode)) {
+            return new String[]{
+                "MOF/ABC/20002",
+                selectedUserName,
+                "RAMLEEE"
+            };
+        }
+
+        if (MessageConst.ERROR_100073.equals(errorCode)) {
+            return new String[]{
+                "Requisitioner",
+                "Pejabat Pengarah Hospital Kuala Lumpur Unit Pentadbiran"
+            };
+        }
+        return new String[0];
+    }
+    
     protected abstract List<PmUser> getSelectedUsers();
     protected abstract CtContractVer getContractVer();
     //#30737 - End

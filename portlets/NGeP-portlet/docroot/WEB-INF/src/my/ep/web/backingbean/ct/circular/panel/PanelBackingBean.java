@@ -1100,10 +1100,18 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	}
 	
 	//#30737 - Start
+	/**
+	 * Handles inactive user validation during actions.
+	 *
+	 * @param outcome -action outcome such as SUBMIT or REVISE
+	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
+	 * @throws EpException if inactive user conditions are met during validation. 
+	 * Different error messages will be generated based on the returned error code.
+	 */
 	private void handleInactiveUserValidation(String outcome) {
 
 		ICircularSO circularSO 
-			= (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
     	
 		List<PmUser> selectedUsers = getManagedBean().getApproverModel().getTarget();
    
