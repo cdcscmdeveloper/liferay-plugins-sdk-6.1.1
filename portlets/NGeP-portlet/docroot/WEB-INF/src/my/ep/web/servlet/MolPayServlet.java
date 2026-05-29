@@ -404,7 +404,7 @@ public class MolPayServlet extends HttpServlet {
 						if("Y".equals(paymentGateway)){
 							PrintWriter out = res.getWriter();
 							try{
-								out.print("CODE:"+SupplierManagementConst.MOL_SUCCESS);
+								out.print(SupplierManagementConst.MOL_SUCCESS);
 							}finally{
 								out.close();
 							}
