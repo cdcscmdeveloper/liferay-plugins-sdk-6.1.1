@@ -399,11 +399,9 @@ public class MolPayServlet extends HttpServlet {
 					
 					// #38377
 					printSuccessResponseCode(paymentGateway, statusCode, pymtResDTO.isSuccessful(), res.getWriter());
-					log.info("#38377########updateBackend before for statusCode:" + statusCode + "  isSuccessful:" + pymtResDTO.isSuccessful());
 					if (statusCode != null) {
 						pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					}
-					log.info("#38377########updateBackend after for statusCode:" + statusCode + "  isSuccessful:" + pymtResDTO.isSuccessful());
 					printSuccessResponseCode(paymentGateway, statusCode, pymtResDTO.isSuccessful(), res.getWriter());
 					
 					log.info(">>>>Before paymentBackendUpdate<<<");
