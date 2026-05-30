@@ -388,17 +388,19 @@ public class MolPayServlet extends HttpServlet {
 					
 					PaymentResDTO pymtResDTO = new PaymentResDTO();
 					
-					//#38377 send success payment email (status code null means already got success payment for this payment id)
-					log.info(">>>>before send success email payment statusCode:"+statusCode+"<<<<<");
-					if (statusCode!=null && statusCode == SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT) {
+					// #38377 send success payment email (status code null means
+					// already got success payment for this payment id)
+					log.info(">>>>before send success email payment statusCode:" + statusCode + "<<<<<");
+					if (statusCode != null && statusCode == SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT) {
 						log.info(">>>>start send success email payment<<<");
 						pymtResDTO = reqSO.saveSuccessPaymentEmailTemplateParams(pymtReqDTO);
 						pymtReqDTO.setNotifyMessageId(pymtResDTO.getNotifyMessageId());
 						reqSO.sendSuccessPaymentEmail(pymtReqDTO);
 					}
-					
-					// #38377
-					printSuccessResponseCode(paymentGateway, statusCode, pymtResDTO.isSuccessful(), res.getWriter());
+
+					// #38377 status code null means already got success payment
+					// for this payment id so no need to save to avoid duplicate
+					// resit
 					if (statusCode != null) {
 						pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					}
@@ -627,7 +629,7 @@ public class MolPayServlet extends HttpServlet {
 	}
 	
 	private void printSuccessResponseCode(String paymentGateway, Long statusCode, boolean isSuccessSave, PrintWriter out) {
-		log.info("#38377########printSuccessResponseCode:"+paymentGateway+"||"+statusCode+"||"+isSuccessSave);
+		log.info("#38377########printSuccessResponseCode:" + paymentGateway + "||" + statusCode + "||" + isSuccessSave);
 		if ("Y".equals(paymentGateway)) {
 			if (isSuccessSave || statusCode == null) {
 				try {
