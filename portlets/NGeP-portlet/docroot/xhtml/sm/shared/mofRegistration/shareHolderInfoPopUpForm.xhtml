@@ -524,11 +524,15 @@
 							value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 							disabled="#{backingBean.managedBean.disableRoleSelection}"
 							style="width: 207px;margin: 5px 0px 5px 0px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{backingBean.managedBean.ePRoleList}" />
-							<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}" 
-								process="@this" listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
+							<!-- #40031 - Start -->
+							<f:selectItem
+								itemLabel="#{empty backingBean.managedBean.prevRole ? lbl['lbl.txt.select'] : lbl['lbl.sm.maintenance.delete.role']}"
+								itemValue="" />
+							<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
+							<p:ajax event="change"
+								update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}, deleteRoleDlg"
+								process="@this" listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true" />
+							<!-- #40031 - End -->
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -1477,4 +1481,19 @@
 			</table>
 		</p:scrollPanel>
 	</p:dialog>
+
+	<!-- #40031 - Start -->
+	<p:dialog header="#{lbl['lbl.btn.dialog.cofirm.header']}" widgetVar="confirmDeleteRoleDlg" id="deleteRoleDlg" modal="true" closable="false"
+		resizable="false" draggable="false">
+		<p:outputLabel value="#{backingBean.managedBean.removedRoleMsg}" />
+		<div align="right">
+			<!-- Yes button -->
+			<p:commandButton value="#{lbl['lbl.btn.dialog.cofirm.yes']}" process="@this" update="shrPrivPanel smPersnEpRole"
+				oncomplete="confirmDeleteRoleDlg.hide()" />
+			<!-- No button -->
+			<p:commandButton value="#{lbl['lbl.btn.dialog.cofirm.no']}" process="@this" update="shrPrivPanel smPersnEpRole"
+				actionListener="#{backingBean.revertRole(backingBean.managedBean.prevRole)}" oncomplete="confirmDeleteRoleDlg.hide()" />
+		</div>
+	</p:dialog>
+	<!-- #40031 - End -->
 </ui:composition>
