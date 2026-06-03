@@ -16438,4 +16438,27 @@ public class SmApplicationUtil {
 	}
 	//#40165 - END
 
+	// #38001
+	public static String getRecommendationDescription(String recommendation, String language) {
+
+		if (recommendation == null) {
+			return null;
+		}
+
+		if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
+
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY;
+
+			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
+
+				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY;
+			}
+		}
+
+		return recommendation;
+	}
+	
+	
 }

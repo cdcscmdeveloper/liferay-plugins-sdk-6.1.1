@@ -692,13 +692,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info(">>>>#38377 enable payment update<<<");
+
 				// #38377
-				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)&& isValidToSave) {
+				if (!"Y".equals(paymentGateway)) {
+					log.info("###############38377 update payment");
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-				} else {
-				    log.warn("Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
-				            + ", paymentGateway=" + paymentGateway
-				            + ", payloadEmpty=" + StringUtils.isBlank(payload));
 				}
 
 				log.info("******ResponsePreRender - After Update******");
@@ -1058,17 +1056,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			//#40340 : remove personnel.getPmUser().getUserId().equals(currentUserId) in below checking
 			log.info("######40340  inside setMessageSoftcert single user#####");
-			if(personnel != null){
+			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
 				log.info("######40340  inside setMessageSoftcert checking personnel#####");
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
+				return;
 			}
-		} else {
-			getManagedBean().setMessageId(MessageConst.INFO_721068);
-			getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 		}
+		// #40340
+		getManagedBean().setMessageId(MessageConst.INFO_721068);
+		getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 	}
 	//#29481 - End
 /*	public static void main(String args[]){
