@@ -35,12 +35,14 @@
 		<!-- #9133 - start -->
 		<ui:param name="draft" value="DRAFT" />
 		<!-- #9133 - end -->
+		<ui:remove>#34449 - start</ui:remove>
 		<ac:cancelRejectPopup id="#{rejectPID}" widget="rejectPID" width="30%"
 			height="100"
 			okAction="#{purchaseInDefaultBackingBean.approverAction(reject)}"
-			title="#{lbl['lbl.reject.details']}"
+			title="#{lbl['lbl.sc.pid.reject.header.message']}"
 			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this,@([id$=messages])" />
 		<!-- 20190417@asyrafhaziq_12095 - End -->
+		<ui:remove>#34449 - end</ui:remove>
 
 		<ac:gpkiPopup
 			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
@@ -153,21 +155,24 @@
 
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 							    onstart="#{isReject ? '' : 'blockWidget.show();'}" oncomplete="#{isReject ? '' : 'blockWidget.hide();'}" 
-								styleClass="ui-button" update="#{isReject ? '@form' : ''},@([id$=messages])"
+								styleClass="ui-button" update="#{isReject ? '@form' : ':form:pidConformDlgWrapper'},@([id$=messages])"
 								partialSubmit="true"
 								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
-						<ui:remove>Popup Verify Action</ui:remove>
-						<ac:confirmationPopup id="verifyConformDlgPid"
-								widget="verifyConformDlg" width="400" height="100"
-								okAction="purchaseInDefaultBackingBean.approverAction(bpmAction)"
-								title="#{lbl['lbl.sc.pid.verify.header.message']}"
-								content="#{lbl['lbl.sc.pid.verify.confirmation.message']}"
-								update="@form" />
-
-						</ui:repeat></td>
+						</ui:repeat>
 						<ui:remove>#34449 - end</ui:remove>
+						</td>
 				</tr>
 			</table>
+			<ui:remove> 34449 - Popup button from bpm</ui:remove>
+			<p:outputPanel id="pidConformDlgWrapper">
+				<ac:confirmationPopup id="pidConformDlgPid" widget="pidConformDlg"
+					width="400" height="100"
+					okAction="#{purchaseInDefaultBackingBean.approverAction(purchaseInDefaultBackingBean.managedBean.selectedAction)}"
+					title="#{purchaseInDefaultBackingBean.managedBean.confirmationMessageTitle}"
+					content="#{purchaseInDefaultBackingBean.managedBean.confirmationMessageContent}"
+					update="@form" />
+			</p:outputPanel>
+			<ui:remove>#34449 - end</ui:remove>					
 		</c:if>
 		<!-- #28865 start -->
 		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.msg']}"

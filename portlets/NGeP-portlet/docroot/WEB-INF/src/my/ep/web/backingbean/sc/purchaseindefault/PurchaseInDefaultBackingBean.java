@@ -413,15 +413,15 @@ public class PurchaseInDefaultBackingBean extends
 	 */
 	public void dialogMsgCheck() {
 		// 34449 - start
-		if (getManagedBean().getPmReason() != null) {
-			if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId()
-					.intValue()) {
-				RequestContext.getCurrentInstance().execute("submitSuppDlg.show()");
+			if (getManagedBean().getPmReason() != null) {
+				if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId()
+						.intValue()) {
+					RequestContext.getCurrentInstance().execute("submitSuppDlg.show()");
+				} else {
+					RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+					// submitPurchaseInDefault(null); //#9133
+				}
 			} else {
-				RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
-				// submitPurchaseInDefault(null); //#9133
-			}
-		} else {
 			RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
 			// submitPurchaseInDefault(null); //#9133
 		}
@@ -1145,14 +1145,12 @@ public class PurchaseInDefaultBackingBean extends
 				RequestContext.getCurrentInstance().execute("rejectPID.show()");
 		} 
 		//34449 - start
-		else if (BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(outcome)){
-			RequestContext.getCurrentInstance().execute("verifyConformDlg.show()");
+		else {
+			constructConfirmationPopup(outcome,"pidConformDlg.show()");
+			//RequestContext.getCurrentInstance().execute("verifyConformDlg.show()");
+			
 		//	approverAction(outcome);
 			//34449 - end
-		}else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
-		}else if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
 		}
 	}
 	// 20190417@asyrafhaziq_12095 - End 	
@@ -3343,5 +3341,32 @@ public class PurchaseInDefaultBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return username != null && username.equals(facesScopes.getUserScreenName());
 	}
+	
 	//#31603 - end
+	// 34449 - start
+	/**
+	 * Setup confirmation message pop up based on bpm outcome
+	 * Bpm Outcome Verify, Cancel.
+	 * 
+	 * @param outcome
+	 * @param lovId
+	 */
+	public void constructConfirmationPopup(String outcome, String lovId) {
+		if (outcome == null || outcome.isEmpty()){
+			return;
+		}
+
+		String outcomeLowerCase = outcome.toLowerCase();
+		String confirmationMessageContent = ResourceBundleUtils.getMessage("lbl.sc.pid." + outcomeLowerCase
+				+ ".confirmation.message", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+
+		String confirmationMessageTitle = ResourceBundleUtils.getMessage("lbl.sc.pid." + outcomeLowerCase + ".header.message",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+		
+		this.getManagedBean().setConfirmationMessageContent(confirmationMessageContent);
+		this.getManagedBean().setConfirmationMessageTitle(confirmationMessageTitle);
+		this.getManagedBean().setSelectedAction(outcome);
+		RequestContext.getCurrentInstance().execute(lovId);
+	}
+	// 34449 - end
 }
