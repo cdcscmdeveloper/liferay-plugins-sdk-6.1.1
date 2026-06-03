@@ -4794,8 +4794,9 @@ public class SmApplicationUtil {
 			managedBean.setApprovedCategoryList(apprvList);
 		}
 		
-		// 36504 - START - KN Other Description history display last. 
-		SmAppl applNewReg = findNewRegHistoryOtherDesc(managedBean);
+		// 36504 - START - KN Other Description history display last.
+		Long supplierId = managedBean.getSmAppl().getSmSupplier().getSupplierId();
+		SmAppl applNewReg = findNewRegHistoryOtherDesc(supplierId);
 		
 		if (applNewReg != null) {
 			for (SmSupplierCategory previousKN : applNewReg.getSmSupplierCategories()) {
@@ -16140,9 +16141,9 @@ public class SmApplicationUtil {
 				.retrieveActiveOtherDescHistory(supplierCategoryId);
 	}
 	
-	public static SmAppl findNewRegHistoryOtherDesc(SmApplicationManagedBean managedBean) {
+	public static SmAppl findNewRegHistoryOtherDesc(Long supplierId) {
 		
-		SmAppl applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+		SmAppl applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(supplierId);
 		
 		if (applNewReg == null) {
 			return null;
@@ -16345,11 +16346,6 @@ public class SmApplicationUtil {
 	// 39392 - END
 	// #9299 - Start
 	public static boolean getAppVersionDetailsWithRedmineNo(SmAppl smAppl, Long redmineNo, int phase) {
-		PmAppVersion appVerDtls = SmServiceLookup.getMofRegistrationSO().getAppVersionDetails(redmineNo, ParameterConst.DOCTYPE_SUPPLIER_MANAGEMENT,
-				phase);
-		if (smAppl.getCreatedDate().before(appVerDtls.getEffDate())) {
-			return true;
-		}
 
 		return false;
 	}
