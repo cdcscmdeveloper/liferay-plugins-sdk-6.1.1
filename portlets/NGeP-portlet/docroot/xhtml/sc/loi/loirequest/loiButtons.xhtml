@@ -101,7 +101,7 @@
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>
 							<ui:remove>#30008 - End</ui:remove>
-							<ui:remove>#21692 - Start</ui:remove>
+							<ui:remove>#21692, 30008 - Start</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								rendered="#{validityDaysExpiredQt and (bpmAction == 'APPROVE' or bpmAction == 'SUBMIT') and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -109,7 +109,7 @@
 								action="#{lOIDetailBackingBean.validateNegoDecisionAction(bpmAction)}"
 								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 								update="#{isReject ? '@this' : '@form'}" />
-							<ui:remove>#21692 - End</ui:remove>
+							<ui:remove>#21692, 30008 - End</ui:remove>
 								
 						</ui:repeat>
 					</c:when>

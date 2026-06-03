@@ -58,9 +58,6 @@ import my.ep.biz.service.ct.ICtPanelCategorySO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-//#21695 Farid
-//#21695 Farid
-//#29732 Start
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -184,16 +181,14 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-//#21695 Farid
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.common.PmAppVersion;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
-import my.ep.persistence.entity.pm.common.PmAppVersion;
-//#29732 End
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -207,6 +202,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
@@ -268,7 +264,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -283,10 +278,9 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
-import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
@@ -303,7 +297,6 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-//#21695 Farid
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
@@ -314,7 +307,6 @@ import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.ApproverSettings;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.QTFieldMapper;
@@ -329,12 +321,6 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.util.Constants;
-
-//25791 -start-
-import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
-
-//25791 -end-
-
 
 /**
  * The Class QTDetailBackingBean.
@@ -7580,9 +7566,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDocumentTabDtl();
-				getfulfilmentDtls(resDTO.getQtDetail());
-				break;
+				getfulfilmentDtls(resDTO.getQtDetail());				
 			}
+			break;
 		case 9:
 			getfulfilmentDtls(this.getManagedBean().getQt());
 			break;
@@ -8391,9 +8377,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}// #35320 - End
 			} else {
              //9019 null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
-                List<ScQtRemark> remarks = null;
+                //List<ScQtRemark> remarks = new ArrayList<ScQtRemark>();
 				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks()) && StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
-					remarks = scQt.getScQtRemarks();
+					//remarks = scQt.getScQtRemarks();
 				}
 
 				scQt.setScQtRemarks(initializeRemarks(scQt, this
