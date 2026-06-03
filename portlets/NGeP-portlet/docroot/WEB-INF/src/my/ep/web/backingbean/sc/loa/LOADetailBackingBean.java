@@ -12265,6 +12265,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public boolean isPK7(ScLoa loa) {
 		boolean PK7 = false;
+		//Add this because of CR27868 not include in UAT
+		//#25725 - Start
+		if (getManagedBean().getScLoa().getProcurementMode().getParameterCode()
+				.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			loa.setProcurementType(loa.getScQuote().getProcurementType());
+		}
+		//#25725 - End
 		if (loa.getProcurementType() != null) {
 			if (loa.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7)) {
 				this.getManagedBean().setProcurementType(loa.getProcurementType().getParameterCode());
@@ -12325,7 +12332,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		boolean isDocTypeQuotation = loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION);
 		boolean meetsFulfilmentCondition = (isPeriodic && !isContractDurationAbove4)
 				|| (isDocTypeQuotation && isOneOff);
-		boolean validPKCondition = !isPK7(loa) || isReasonPK2(loa) || isReasonSpecialItem(loa);
+		//change this because of CR27868 not include in UAT
+		//#25725
+		boolean validPKCondition = !isPK7(loa);
 
 		if (!loa.isAgreementReq() && over500K(loa) && meetsFulfilmentCondition && validPKCondition) {
 			this.getManagedBean().setShowApprovalLetter(Boolean.TRUE);
@@ -12384,7 +12393,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Case 1: PK7 (strict check), Periodic contract, agreement false
 		if (!agreementReq) {
-			if (isContractTypeAsMinistry && (isPK7 && !isPK2OrSpecial) && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
+			//change this because of CR27868 not include in UAT
+			//#25725
+			if (isContractTypeAsMinistry && isPK7 && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
 				this.getManagedBean().setAgreementReqChange(true);
 				RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");
 
@@ -12443,11 +12454,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				result = false;
 
 				boolean isDisabledStatus = scLoa.getPmStatus().getStatusId().equals(62505L);
-				boolean isReason = (isReasonPK2(scLoa) || isReasonSpecialItem(scLoa)) && isPeriodicAbove4;
-
-				if (isDisabledStatus || isReason) {
+				//change this because of CR27868 not include in UAT
+				//#25725 - Start
+				if (isDisabledStatus) {
 					result = true;
 				}
+				//#25725 - End
 			}
 		} else {
 			result = isPeriodicAbove4 || isContractTypeCentral; //only periodic & above 4 years or Contract type central is allowed 
