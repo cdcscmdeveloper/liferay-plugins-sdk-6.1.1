@@ -241,6 +241,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public static final boolean REDUCTION_OF_CONTRACT_VALUE = true;
 	//#24336 - End
 	
+	private String confirmationContentMsg;//34442 
+	
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -902,6 +904,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
 								"lbl.ct.fa.app.confirm", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			} else if (statusId.equals(ContractStatusConst.FA_PENDING_LOA_APPROVAL)
+					|| statusId.equals(ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
+								"lbl.ct.fa.scl.app.confirm", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
 			}
 			// #34442 - end
@@ -3253,15 +3262,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			validateContractAmendment(outcome);	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			if(hasGovtSellerRole()) {
-				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			} else {
-				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-			}
+			
+			// 34442 - start
+			CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+			setConfirmationContentMsg(getConfirmationContent(String.valueOf(contractVer.getStatus().getStatusId()),
+					contractVer.getCtContract().getContractNo()));
+			RequestContext.getCurrentInstance().execute("acknowledgeConfirmDlg.show()");
+			// 34442 - end
+						
 			return null;
 		}
+		// 34442 - start
+		else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()) {
+			CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+			setConfirmationContentMsg(getConfirmationContent(String.valueOf(contractVer.getStatus().getStatusId()),
+					contractVer.getCtContract().getContractNo()));
+			RequestContext.getCurrentInstance().execute("acknowledgeConfirmDlg.show()");
+
+			return null;
+		}
+		// 34442 - end
 		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 //			validateContractAmendment(outcome);
 			validateRemarkCancel(outcome);
@@ -3302,6 +3322,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return saveContractAmendment(outcome);
 		}
 	}
+	
+	// 34442 - start
+	public String acknowledgeAction() throws Exception {
+		if (isSupplierRole()) {
+			if (hasGovtSellerRole()) {
+				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else {
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			}
+
+			return null;
+		} else {
+			return saveContractAmendment(getManagedBean().getButtonAction());
+		}
+	}
+	// 34442 - end
 
 	/**
 	 * The method used to set value for security check
@@ -10115,4 +10153,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #30045
+	// 34442 - start
+	public String getConfirmationContentMsg() {
+		return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+		this.confirmationContentMsg = confirmationContentMsg;
+	}
+	// 34442 - end
 }
