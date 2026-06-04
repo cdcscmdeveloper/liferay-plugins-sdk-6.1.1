@@ -12268,7 +12268,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//Add this because of CR27868 not include in UAT
 		//#25725 - Start
 		if (getManagedBean().getScLoa().getProcurementMode().getParameterCode()
-				.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
+				&& loa.getProcurementType() == null) {
 			loa.setProcurementType(loa.getScQuote().getProcurementType());
 		}
 		//#25725 - End
