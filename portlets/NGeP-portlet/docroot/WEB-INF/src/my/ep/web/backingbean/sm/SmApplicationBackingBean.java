@@ -6914,7 +6914,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
 		final int minEmployee = 2;
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
-		
+		/*
 		if(smFac.getSmSvWorkers().size() < minEmployee){
 			throw new EpException(
 					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
@@ -6935,6 +6935,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			worker1.setOldName(worker1.getName());
 			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
+		*/
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
 		SmCommonUtil.getInstance().setUserDetails(smFac);
@@ -6951,7 +6952,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		assignValReqdToFalse();
 		// 29379 - Site Visit Grouping Enhancement -28775
-		validateWorkshopWorkers();
+		//validateWorkshopWorkers();
 		
 		saveOrUpdateAppl();
 		getManagedBean().setWorkshopFacilitiesVOList(
@@ -9730,7 +9731,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
 		//#28775 - Site Grouping Enhancement
-		validateAllWorkshops();
+		//validateAllWorkshops();
 
 		// try {
 		//#28776 - start
@@ -13507,9 +13508,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						}
 					}
 					//31210-start
-					if (rev.getRecommendation() !=null) {
-						getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
-					}//31210-end
+					if (rev.getRecommendation() != null) {
+
+						String language = new FacesScopes().getUserLocale().getLanguage();
+						String recommendationDesc = SmApplicationUtil.getRecommendationDescription(
+								rev.getRecommendation(), language);
+
+						getManagedBean().setPoRecommendationDesc(recommendationDesc);
+					}
+					//31210-end
 				}
 			} else if (getManagedBean().isPoUser()
 					|| (getManagedBean().isSupplierUser() && getManagedBean()
