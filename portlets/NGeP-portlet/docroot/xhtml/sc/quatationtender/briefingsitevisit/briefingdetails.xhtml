@@ -40,15 +40,15 @@
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="1">
 							<ac:dateTimeBsv id="briefdate"
-								mindate="#{qTBriefingSiteVisitBackingBean.handleOriginalBSVMinDate()}"
-								minDateTime="#{qTBriefingSiteVisitBackingBean.handleBSVMinDate()}"
-								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-								disabled="#{not empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.qtBsvDtlId and 
-						    			not empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
-								label="#{lbl['lbl.sc.date.time.day']}"
-								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
-								validator="#{qTBriefingSiteVisitBackingBean.validateBsvDate}"
-								update="@this, @([id$=pday]) "  >									
+							    mindate="#{qTBriefingSiteVisitBackingBean.handleOriginalBSVMinDate()}"
+							    minDateTime="#{qTBriefingSiteVisitBackingBean.handleOriginalBSVMinDate()}"
+							    required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+							    disabled="#{not empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.qtBsvDtlId and 
+							    			not empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
+							    label="#{lbl['lbl.sc.date.time.day']}"
+							    value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
+							    validator="#{qTBriefingSiteVisitBackingBean.validateBsvDate}"
+							    update="@this, @([id$=pday])">
 							</ac:dateTimeBsv>
 						</td>
 						<ui:remove>#28188 - End </ui:remove>
