@@ -1,15 +1,22 @@
 package my.ep.web.backingbean.ct.circular;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -98,6 +105,50 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 		}
 		return ruleType;
 	}
+	
+	//34442 - start
+	/**
+	 * Retrieve confirmation message
+	 * 
+	 * @param key the statusId to find label values for use
+	 * @return Fulfiment with Bond Confirmation message
+	 */
+	public String getConfirmationContent(String key) {
+		String message = "";
+		
+		try{
+			message = ResourceBundleUtils.getMessage(
+					getConfirmationMsgs(Long.parseLong(key)),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()
+				);
+		}catch(Exception e){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getConfirmationContent(String key)", 
+					key, "CircularBaseBackingBean", getUserIdSessionFromLoginId(), e);
+		}
+		
+		return message.replace("<br/>", System.lineSeparator());
+	}
+	
+	public String getConfirmationMsgs(Long key){
+		final Map<Long, String> confirmationMsgs = new HashMap<Long, String>();
+
+		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_APPROVAL, "lbl.ct.cq.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_REVISION_APPROVAL, "lbl.ct.cq.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL, "lbl.ct.cq.upd.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.cq.upd.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.CR_PENDING_APPROVAL, "lbl.ct.cq.cancel.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION_APPROVAL, "lbl.ct.cq.cancel.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_APPROVAL, "lbl.ct.pq.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_REVISION_APPROVAL, "lbl.ct.pq.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION, "lbl.ct.pq.cancel.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION_APPROVAL, "lbl.ct.pq.cancel.rev.app.confirm");
+		
+		return confirmationMsgs.get(key);
+	}
+	//34442 - end
 
 
 	public PmOrgProfile getOwnerOrgProfile() {

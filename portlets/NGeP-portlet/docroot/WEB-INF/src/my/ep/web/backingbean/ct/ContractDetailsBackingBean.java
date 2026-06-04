@@ -2185,6 +2185,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	public String gpkiSignAction(String outcome) throws Exception {
 		String docType = ctBB.getManagedBean().getContractVer().getDocType();//34442
+		String statusId = String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId());
+		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -2219,22 +2221,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if(checkPerformanceBondCompleted(ctBB.getManagedBean().getCtContractAmount().isBondReq(),
 					ctBB.getManagedBean().getCtPerformanceBond())){
 				setConfirmationContentMsg(
-					    getConfirmationContent(
-					        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId()),
-					        ctBB.getManagedBean().getContractVer().getCtContract().getContractNo()
-					    )
+					    getConfirmationContent(statusId, ctBB.getManagedBean().getContractVer().getCtContract().getContractNo())
 					);
-				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
-				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
 			} else {
 				setConfirmationContentMsg(
-					    getConfirmationContent(
-					        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId())
-					    )
+					    getConfirmationContent(statusId)
 					);
-				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
-				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
 			}
+			
+			RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+			RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
 			//#34442 - end
 			return null;
 		//#25406 - Start	
@@ -2255,28 +2251,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						checkPerformanceBondCompleted(ctBB.getManagedBean().getCtContractAmount().isBondReq(), 
 								ctBB.getManagedBean().getCtPerformanceBond())){
 					setConfirmationContentMsg(
-						    getConfirmationContent(
-						        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId()),
-						        ctBB.getManagedBean().getContractVer().getCtContract().getContractNo()
-						    )
+						    getConfirmationContent(statusId,ctBB.getManagedBean().getContractVer().getCtContract().getContractNo())
 						);
-					
-					RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
-					RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
 					return null;
 				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION) || 
 						docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
-					setConfirmationContentMsg(
-						    getConfirmationContent(
-						        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId())
-						    )
-						);
-					
-					RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
-					RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
-					return null;
+					setConfirmationContentMsg(getConfirmationContent(statusId));
 				}
-
+				
+				RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+				return null;
 			}
 			//#34442 - end
 			return this.saveContract(outcome);
