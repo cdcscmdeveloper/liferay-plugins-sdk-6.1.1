@@ -16,7 +16,7 @@
 	<ui:define name="contentSection">
 		<p:remoteCommand
 		name="autoSearch"
-		action="#{approvalExceedThresholdBackingBean.search}"
+		action="#{approvalExceedThresholdBackingBean.search()}"
 		update="resultPanel"
 		onstart="blockWidget.show();"
 		oncomplete="blockWidget.hide();" />		
