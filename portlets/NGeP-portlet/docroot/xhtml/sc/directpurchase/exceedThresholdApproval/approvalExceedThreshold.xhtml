@@ -14,16 +14,15 @@
 		</script>
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:remoteCommand
-		name="autoSearch"
-		action="#{approvalExceedThresholdBackingBean.search()}"
-		update="resultPanel"
-		onstart="blockWidget.show();"
-		oncomplete="blockWidget.hide();" />		
+		<p:remoteCommand name="autoSearch"
+			action="#{approvalExceedThresholdBackingBean.search}"
+			update="resultPanel" onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();" />
 		<script>
-			window.onload = function() {
+			function triggerSearch() {
 				autoSearch();
 			}
+			window.onload = triggerSearch;
 		</script>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
