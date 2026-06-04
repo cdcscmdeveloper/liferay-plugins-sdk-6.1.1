@@ -24,6 +24,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1264,6 +1265,17 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 			getManagedBean().setProfBodyLs(
 					SmApplicationUtil.retrievePmProfBodyList());
+			// #39502 - START
+			for(PmCertBody profBody : getManagedBean().getProfBodyLs()){
+				if(profBody.getBodyName().length() > 71 ){
+					profBody.setBodyDsc(profBody.getBodyName()); 
+					String truncName = profBody.getBodyName().substring(0,70) + "...";
+					profBody.setBodyName(truncName);
+				}
+			}
+			// #39502 - END
+
+			
 			getManagedBean().setProfBodyItems(
 					SmApplicationUtil.getProfBodyItems());
 
@@ -5905,6 +5917,21 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateCompanyExperienceToSmAppl() {
+		//#40165 - START
+		SmCompanyExperience exp = getManagedBean().getSelectedCompanyExperience();
+		
+		Map<String, String> fieldsToCheck = new LinkedHashMap<String, String>();
+		fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projTitle", null), exp.getTitle());
+	    fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.statBody", null), exp.getClientName());
+	    
+	    if (SupplierManagementConst.STYPE_CONSULTANT.equals(getManagedBean().getSmAppl().getSupplierType())) {
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.refNo", null), exp.getRefNo());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projLoc", null), exp.getProjectLocation());
+	        fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.serviceProvide", null), exp.getWorkServiceDesc());
+	    }
+		
+	    SmApplicationUtil.CheckAsciiValidation(fieldsToCheck);
+		//#40165 - END
 		if (EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSelectedCompanyExperience().getSmCompanyExperienceCats())
 				&& (getManagedBean().getSelectedCompanyExperience()
@@ -7145,7 +7172,7 @@ public class SmApplicationBackingBean extends
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
 		final int minEmployee = 2;
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
-		
+		/*
 		if(smFac.getSmSvWorkers().size() < minEmployee){
 			throw new EpException(
 					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
@@ -7166,6 +7193,7 @@ public class SmApplicationBackingBean extends
 			worker1.setOldName(worker1.getName());
 			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
+		*/
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
 		SmCommonUtil.getInstance().setUserDetails(smFac);
@@ -7182,7 +7210,7 @@ public class SmApplicationBackingBean extends
 		}
 		assignValReqdToFalse();
 		// 29379 - Site Visit Grouping Enhancement -28775
-		validateWorkshopWorkers();
+		//validateWorkshopWorkers();
 		
 		saveOrUpdateAppl();
 		getManagedBean().setWorkshopFacilitiesVOList(
@@ -9982,7 +10010,7 @@ public class SmApplicationBackingBean extends
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
 		//#28775 - Site Grouping Enhancement
-		validateAllWorkshops();
+		//validateAllWorkshops();
 
 		// try {
 		//#28776 - start
@@ -14044,9 +14072,15 @@ public class SmApplicationBackingBean extends
 						}
 					}
 					//31210-start
-					if (rev.getRecommendation() !=null) {
-						getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
-					}//31210-end
+					if (rev.getRecommendation() != null) {
+
+						String language = new FacesScopes().getUserLocale().getLanguage();
+						String recommendationDesc = SmApplicationUtil.getRecommendationDescription(
+								rev.getRecommendation(), language);
+
+						getManagedBean().setPoRecommendationDesc(recommendationDesc);
+					}
+					//31210-end
 				}
 			} else if (getManagedBean().isPoUser()
 					|| (getManagedBean().isSupplierUser() && getManagedBean()
@@ -18902,8 +18936,8 @@ public class SmApplicationBackingBean extends
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					
 					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				    updatedList.add(cat);
 				}
+				updatedList.add(cat);
 			}
 			getManagedBean().setApprovedCategoryList(updatedList);
 		}
@@ -18940,7 +18974,7 @@ public class SmApplicationBackingBean extends
 	}
 	
 	/**
-	 * To save data Other Description
+	 * To save data Other Description WIP SM
 	 *  
 	 */
 	public void saveOtherDescriptionEdit() {
@@ -18950,14 +18984,15 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			
 			if (!getManagedBean().isOtherDescChangeSupplier()){
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
 			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
 			
-			initPmUserRole();
+			if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
+				initPmUserRole();
+			}
 			
 			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_PO);
@@ -19789,4 +19824,11 @@ public class SmApplicationBackingBean extends
 
         return oriFilename + "_" + timestamp + extension;
     }
+	// #40306 Start
+	private static String gmapsScriptSrc = EpPropertiesUtils.getInstance().getProperty("gmaps.script.src");
+
+	public String getGmapsScriptSrc() {
+	    return gmapsScriptSrc;
+	}
+	// #40306 End
 }

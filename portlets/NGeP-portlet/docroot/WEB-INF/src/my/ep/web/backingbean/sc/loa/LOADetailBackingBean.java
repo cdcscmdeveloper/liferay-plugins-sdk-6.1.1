@@ -13448,17 +13448,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			newItem.setCmBrand(brandObj);
 			newItem.setCmMeasurement(meaObj);
 			newItem.setCmColor(colorObj);
-			newItem.setItemName(common.removeItemNameNA(typeObj.getTypeName()) + " "
-					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
-					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
-					+ common.removeItemNameNA(colorObj.getColorName()));
+			// #26059 -start- to prevent unwanted spacing
 
-			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle() + " "
-					+ common.removeItemNameNA(typeObj.getTypeName()) + " "
-					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
-					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
-					+ common.removeItemNameNA(colorObj.getColorName());
+			newItem.setItemName(common.removeItemNameNA(typeObj.getTypeName() + " " + brandObj.getBrandName() + " "
+					+ meaObj.getMeasurementName() + " " + colorObj.getColorName()));
 
+			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle()
+					+ " "
+					+ common.removeItemNameNA(typeObj.getTypeName() + " " + brandObj.getBrandName() + " "
+							+ meaObj.getMeasurementName() + " " + colorObj.getColorName());
+			// #26059 -end-
+			
 			newItem.setExtensionCode(typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
 					+ colorObj.getColorCode());
 

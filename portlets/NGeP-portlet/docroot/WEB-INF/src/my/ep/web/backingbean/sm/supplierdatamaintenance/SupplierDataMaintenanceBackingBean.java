@@ -1462,6 +1462,16 @@ public class SupplierDataMaintenanceBackingBean extends
 	private void assignApplActiveAndApprovedCategoryList() {
 		List<SmSupplierCategory> catList = new ArrayList<>();
 		List<SmSupplierCategory> apprvList = new ArrayList<>();
+		List<SmSupplierCategory> otherDescList = new ArrayList<>(); // 36504
+		
+		// 36504 - START
+		getManagedBean().setOtherDescChangePO(false);
+		getManagedBean().setOtherDescChangeApprover(false);
+		getManagedBean().setOtherDescChangeSupplier(false);
+		getManagedBean().setOtherDescChangeSupPO(false);
+		getManagedBean().setOtherDescChangeSupApprover(false);
+		// 36504 - END
+				
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
@@ -1483,6 +1493,13 @@ public class SupplierDataMaintenanceBackingBean extends
 				// #34031 End
 				//26238: Disciplinary Action - start - 28219
 				apprvList.add(cat);
+				
+				// 36504 - START
+				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
+					otherDescList.add(cat);
+				}
+				// 36504 - END
+
 			}
 		}
 		if (getManagedBean().getActiveCategoryList() != null
@@ -1494,11 +1511,41 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().getApprovedCategoryList().clear();
 		}
 		
+		// 36504 - START - KN Other Description history display last. 
+		SmAppl applNewReg = SmApplicationUtil.findNewRegHistoryOtherDesc(getManagedBean().getSmSupplier().getSupplierId());
+		
+		if (applNewReg != null) {
+			for (SmSupplierCategory previousKN : applNewReg.getSmSupplierCategories()) {
+				String catType = previousKN.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					
+					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
+					
+					if (previousKN.getSmSuppCatOtherDescHistory() != null) {
+						otherDescList.add(previousKN);
+					}
+				}
+			}
+		}
+		// 36504 - END - KN Other Description history display last. 
+				
+		// 36504 - START
+		if (!EntityHelper.isCollectionEmpty(otherDescList)) {
+			getManagedBean().setOtherDescChangeSupplier(true);
+		} else {
+			getManagedBean().setOtherDescChangeSupplier(false);
+		}
+		// 36504 - END
+		
 		//14150
 		SmApplicationUtil.sortSupplierCategory(apprvList);
 		SmApplicationUtil.sortSupplierCategory(catList);
 		getManagedBean().setApprovedCategoryList(apprvList);
 		getManagedBean().setActiveCategoryList(catList);
+		getManagedBean().setHistoryOtherDescList(otherDescList);
 	}
 
 	/**
