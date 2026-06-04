@@ -4794,8 +4794,9 @@ public class SmApplicationUtil {
 			managedBean.setApprovedCategoryList(apprvList);
 		}
 		
-		// 36504 - START - KN Other Description history display last. 
-		SmAppl applNewReg = findNewRegHistoryOtherDesc(managedBean);
+		// 36504 - START - KN Other Description history display last.
+		Long supplierId = managedBean.getSmAppl().getSmSupplier().getSupplierId();
+		SmAppl applNewReg = findNewRegHistoryOtherDesc(supplierId);
 		
 		if (applNewReg != null) {
 			for (SmSupplierCategory previousKN : applNewReg.getSmSupplierCategories()) {
@@ -16140,9 +16141,9 @@ public class SmApplicationUtil {
 				.retrieveActiveOtherDescHistory(supplierCategoryId);
 	}
 	
-	public static SmAppl findNewRegHistoryOtherDesc(SmApplicationManagedBean managedBean) {
+	public static SmAppl findNewRegHistoryOtherDesc(Long supplierId) {
 		
-		SmAppl applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+		SmAppl applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(supplierId);
 		
 		if (applNewReg == null) {
 			return null;
@@ -16437,4 +16438,27 @@ public class SmApplicationUtil {
 	}
 	//#40165 - END
 
+	// #38001
+	public static String getRecommendationDescription(String recommendation, String language) {
+
+		if (recommendation == null) {
+			return null;
+		}
+
+		if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
+
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY;
+
+			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
+
+				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY;
+			}
+		}
+
+		return recommendation;
+	}
+	
+	
 }
