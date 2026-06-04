@@ -8009,7 +8009,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		        "lbl.sc.decision.reject",
 		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 		        locale);
-		FacesScopes facesScopes = new FacesScopes();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(locale);
