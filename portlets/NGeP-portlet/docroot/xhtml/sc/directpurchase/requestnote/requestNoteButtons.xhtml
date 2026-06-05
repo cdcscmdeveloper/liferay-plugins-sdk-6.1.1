@@ -50,19 +50,49 @@
 	<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancel" value="CANCEL" />
 	<ui:param name="cancelRN" value="cancelRN" />
-	<ac:cancelRejectPopup id="#{cancelRN}" widget="cancelRN" width="30%"
-		height="100" okAction="#{requestNoteBackingBean.submitAction(cancel)}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
-
+	<!-- 34449 - Start -->
+	<!--  Normalize Using LOV -->
+	<ac:confirmationPopup id="#{cancelRN}"
+    	widget="cancelRN"
+	    width="400"
+	    height="100"
+	    okAction="requestNoteBackingBean.submitAction('CANCEL')"
+	    title="#{lbl['lbl.sc.confirmation.submit']}"
+    	content="#{lbl['lbl.sc.dialog.confirm.message.submit']}"
+	    update="@form" />
+	<!-- 34449 - End -->
 	<ui:param name="reject" value="REJECT" />
 	<ui:param name="rejectRN" value="rejectRN" />
-	<ac:cancelRejectPopup id="#{rejectRN}" widget="rejectRN" width="30%"
-		height="100" okAction="#{requestNoteBackingBean.submitAction(reject)}"
-		title="#{lbl['lbl.reject.details']}"
-		content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />
+	<!-- 34449 - Start -->
+	<ac:confirmationPopup id="#{rejectRN}"
+	    widget="rejectRN"
+	    width="400"
+	    height="100"
+	    okAction="requestNoteBackingBean.submitAction('REJECT')"
+	    title="#{lbl['lbl.sc.cancel.details']}"
+    	content="#{lbl['lbl.sc.cancel.dialog.confirm.message']}"
+	    update="@form" />
+	
 	<!-- 20190417@asyrafhaziq_12095 - End -->
-
+	<!-- New Submit Confirm Popup -->
+	<ac:confirmationPopup id="submitRNConfirmDlgId"
+    widget="submitRNConfirmDlg"
+    width="400"
+    height="100"
+    okAction="requestNoteBackingBean.submitAction('')"
+    title="#{lbl['lbl.sc.submit.confirmation']}"
+    content="#{lbl['lbl.sc.dialog.confirm.message.submit']}"
+    update="@form" />
+    
+    <ac:confirmationPopup id="cancelRNBackConfirmDlgId"
+    widget="cancelRNBackConfirmDlg"
+    width="400"
+    height="100"
+    okAction="requestNoteBackingBean.cancel()"
+    title="#{lbl['lbl.cancel.details']}"
+    content="#{lbl['lbl.cancel.dialog.confirm.message']}"
+    update="@form" />
+    <!-- 34449 - End -->
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 			id="backPrevious" partialSubmit="true" process="@this"
@@ -131,19 +161,17 @@
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					action="#{requestNoteBackingBean.saveAction('')}" />
-
+		<!--  34449 - Start -->
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					update="@([id$=requestNoteId])" onclick="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					action="#{requestNoteBackingBean.submitAction('')}" process="@all">
-					<f:setPropertyActionListener
-						target="#{requestNoteBackingBean.managedBean.action}" value="" />
+					type="button"
+					onclick="submitRNConfirmDlg.show();" />
 				</p:commandButton>
-
+		
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					action="#{requestNoteBackingBean.cancel}"
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					style="float:right;" process="@this" partialSubmit="true" />
+					type="button"
+					onclick="cancelRNBackConfirmDlg.show();"
+					style="float:right;" />
+		<!--  34449 - End -->
 			</c:if>
 		</div>
 		<div>

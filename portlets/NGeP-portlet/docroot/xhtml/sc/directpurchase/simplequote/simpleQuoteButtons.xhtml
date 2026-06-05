@@ -66,6 +66,17 @@
 		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
 <!-- 20190417@asyrafhaziq_12095 - End -->
 
+<!-- 34449 -start -->
+	<ac:confirmationPopup id="cancelBackConfirmDlg"
+		    widget="cancelBackConfirmDlg"
+		    width="400"
+		    height="100"
+		    okAction="simpleQuoteBackingBean.backToPrevious()"
+		    title="#{lbl['lbl.sc.cancel.details']}"
+		    content="#{lbl['lbl.sc.cancel.dialog.confirm.message']}"
+		    update="@form" />
+<!-- 34449 -end -->
+	
 	<table style="width: 100%">
 		<tr>
 			<td><p:commandButton immediate="true"
@@ -107,9 +118,10 @@
 			</p:commandButton>
 			<!-- 34449 - start  -->
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				onclick="blockWidget.show();" oncomplete="blockWidget.hide();" 
-				actionListener="#{simpleQuoteBackingBean.cancelPromptAction}" style="float:right;"
-				process="@this" update="quoteSubmitConform" partialSubmit="true" rendered="#{isEditable}" />
+			    type="button"
+			    onclick="cancelBackConfirmDlg.show();"
+			    style="float:right;"
+			    rendered="#{isEditable}" />
 			<!-- 34449 - end  -->
 		</c:if>
 	</div>

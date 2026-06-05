@@ -4502,25 +4502,6 @@ public class SimpleQuoteBackingBean extends
 			throw new EpException(MessageConst.ERROR_760388);
 		}
 	}
-
-	/** 34449 - start
-	 * Cancel prompt action, after user click on "cancel" button, shows the popup for 
-	 * double confirmation
-	 */
-	public void cancelPromptAction(){		
-	getManagedBean().setAutoUpdate(Boolean.TRUE);
-	getManagedBean().setSelectedAction(BpmOutcomeConst.BPM_CANCEL);
-	getManagedBean().setConformDlgBtnFlag(Boolean.TRUE);
-	getManagedBean().setPromptMessage(
-	        ResourceBundleUtils.getMessage(
-	            "lbl.cancel.dialog.confirm.message",
-	            ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-	            new FacesScopes().getUserLocale()
-	        )
-	    );
-		RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
-	}
-	/** 34449 - end */
 	private String getHours(Date fromDate, Date toDate){
 		long timeDiff = Math.abs(fromDate.getTime() - toDate.getTime());
 		String hours = String.format("%d",
