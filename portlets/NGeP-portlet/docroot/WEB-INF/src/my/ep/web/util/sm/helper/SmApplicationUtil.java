@@ -4829,8 +4829,8 @@ public class SmApplicationUtil {
 					prevList.add(previousKN);
 				}
 			}
-			managedBean.setPreviousCategoryList(prevList);
 		}
+		managedBean.setPreviousCategoryList(prevList);
 		// 36504 - END - KN Other Description history display last. 
 		
 	}
