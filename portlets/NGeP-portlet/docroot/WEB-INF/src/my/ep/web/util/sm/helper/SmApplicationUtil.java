@@ -1381,9 +1381,7 @@ public class SmApplicationUtil {
 		int payAccCnt = 0;
 		int regAccCnt = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append("<br/>"); //#39860
 		int noSignatoryCount = 0;
-		int signatoryNotBumiCount = 0; //#39860
 		List<SmSupplierBranch> paymentAccBranch = new ArrayList<SmSupplierBranch>();
 
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
@@ -1419,16 +1417,6 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-			//#39860 --START
-			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
-				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
-					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
-						sb.append(++signatoryNotBumiCount + ". ");
-						sb.append(smChequeSignatory.getSmPersonnel().getName());
-						sb.append("<br/>");
-					}	
-				}	
-			}//#39860 --END
 		}
 		if (payAccCnt == 0) {
 			validSave = false;
@@ -1446,18 +1434,48 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-		//#39860 --START
-		if (signatoryNotBumiCount > 0) {
-			log.info("signatoryNotBumiCount"+signatoryNotBumiCount);
-			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
-			throw new EpException(MessageConst.ERROR_721082,
-					new String[] { sb.toString() });
-			}//#39860 --END
+
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
 		return validSave;
 	}
+	
+	//#39860 --START
+	/**
+	 * Validate cheque signatory based on Bumi status.
+	 * 
+	 * @param appl - getSmAppl
+	 * @param bank - List of SmSupplierBank
+	 * 
+	 * @param boolean validSignatoryBumi- check signatory Bumi status
+	 * @param int signatoryNotBumiCount- count signatory not Bumi 
+	 * @return true, if successful
+	 */
+	public static boolean validateChequeSignatoryBumi(SmApplicationManagedBean managedBean) {
+		SmAppl appl = managedBean.getSmAppl();
+		boolean validSignatoryBumi = true;
+		int signatoryNotBumiCount = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
+					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						sb.append(++signatoryNotBumiCount + ". ");
+						sb.append(smChequeSignatory.getSmPersonnel().getName());
+						sb.append("<br/>");
+						validSignatoryBumi = false;
+					}	
+				}	
+			}
+		}
+		if (!validSignatoryBumi && signatoryNotBumiCount > 0) {
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
+		} 
+		return validSignatoryBumi;
+	}
+	//#39860 --END		
 
 	/**
 	 * Check if each registered branch already assigned to bank account type

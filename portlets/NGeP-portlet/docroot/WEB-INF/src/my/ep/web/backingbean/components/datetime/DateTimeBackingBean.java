@@ -249,7 +249,21 @@ public class DateTimeBackingBean {
 	             * SAME DATE
 	             * disable lower hours
 	             */
-	            minHour = calMin.get(Calendar.HOUR_OF_DAY);
+	            
+	            int modValue = Integer.parseInt(
+	                    composite.getAttributes().get("modVal").toString()
+	            );
+
+	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
+	            int oldMinute = calMin.get(Calendar.MINUTE);
+
+	            int nextMinute = oldMinute + modValue;
+
+	            if (nextMinute >= 60) {
+	                minHour = oldHour + 1;
+	            } else {
+	                minHour = oldHour;
+	            }
 
 	        } else {
 	            /*
@@ -364,22 +378,22 @@ public class DateTimeBackingBean {
 	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
 	            int oldMinute = calMin.get(Calendar.MINUTE);
 
-	            /*
-	             * Stale hour case:
-	             * Example:
-	             * Other date selected 31/05/2026 04:15
-	             * Then back to old date 27/05/2026.
-	             * Backend may still read selectedHour = 04.
-	             * Since old date cannot use hour less than 09,
-	             * force selectedHour to oldHour.
-	             */
-	            if (selectedHour < oldHour) {
-	                selectedHour = oldHour;
-	            }
+	            int nextMinute = oldMinute + modValue;
 
-	            if (selectedHour == oldHour) {
+	            if (nextMinute >= 60) {
+	                /*
+	                 * Old time is at last minute slot, example 07:45.
+	                 * Next valid time is next hour 08:00.
+	                 */
+	                if (selectedHour <= oldHour) {
+	                    selectedHour = oldHour + 1;
+	                }
 
-	                minMinute = oldMinute + modValue;
+	                minMinute = 0;
+
+	            } else if (selectedHour <= oldHour) {
+
+	                minMinute = nextMinute;
 
 	                if (minMinute % modValue != 0) {
 	                    minMinute = ((minMinute / modValue) + 1) * modValue;
@@ -388,6 +402,9 @@ public class DateTimeBackingBean {
 	            } else {
 	                minMinute = 0;
 	            }
+
+	        } else {
+	            minMinute = 0;
 	        }
 	        //#28188 - End
 	    }

@@ -7894,6 +7894,31 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
+	 * Returns the locale based on the user's preferred language.
+	 */
+	private Locale getLocale(String preferredLang) {
+	    return CommonConstants.DEFAULT_LANGUAGE_CODE.equalsIgnoreCase(preferredLang)
+	            ? new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE)
+	            : new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+	}
+	
+	/**
+	 * Retrieves the preferred language for the specified user login ID.
+	 */	
+	private String getUserPreferredLanguage(String loginId){
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(loginId);
+		
+		PmUser user = getUserSO().retrieveUserByLoginId(reqDTO).getPmUser();
+		
+		if(user != null){
+			return user.getPreferredLanguage();
+		}
+		
+		return null;
+	}	
+
+	/**
 	 * Handles the file upload event, associating the uploaded file as an
 	 * attachment to the current request note.
 	 * 
@@ -7972,18 +7997,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void bpkApprovalNotification(List<CommodityGroup> commodityGroup,
 			ScRequestNote updatedRequestNote) {
+		Locale locale = getLocale(getUserPreferredLanguage(
+		        getManagedBean().getRequestNote().getApprover().getLoginId()));
+
 		String approve = ResourceBundleUtils.getMessage(
-				"lbl.sc.decision.approve",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
+		        "lbl.sc.decision.approve",
+		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		        locale);
+
 		String reject = ResourceBundleUtils.getMessage(
-				"lbl.sc.decision.reject",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
-		FacesScopes facesScopes = new FacesScopes();
+		        "lbl.sc.decision.reject",
+		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		        locale);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
-		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		requestNoteReqDTO.setUserLocale(locale);
 		StringBuilder sb = new StringBuilder();
 
 		for (CommodityGroup group : commodityGroup) {
