@@ -301,16 +301,16 @@ public class MolPayServlet extends HttpServlet {
 					//#33137 - start
 					if(channel.equalsIgnoreCase("FPX")){
 						smPaymentRes.setTransactionId(tranID);
+						smPaymentRes.setFpxTranId(tranID);
 						log.info("SET TRANSACTION ID--------------------33137"+tranID);
 					}else{
 						//#38377
-						smPaymentRes.setTransactionId(reqMap.get("paymentGateway").equals("Y")?tranID:molpayTransId);
+						smPaymentRes.setTransactionId("Y".equals(paymentGateway)?tranID:molpayTransId);
 						log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
 					}
 					//#38377
-					pymtReqDTO.setEpPaymentGateway(reqMap.get("paymentGateway").equals("Y")?true:false);
-					smPaymentRes.setMolpayTransactionId(reqMap.get("paymentGateway").equals("Y")?null:molpayTransId);
-					smPaymentRes.setFpxTranId(reqMap.get("paymentGateway").equals("Y")?null:tranID);
+					pymtReqDTO.setEpPaymentGateway("Y".equals(paymentGateway)?true:false);
+					smPaymentRes.setMolpayTransactionId("Y".equals(paymentGateway)?null:molpayTransId);
 					log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
 					log.info("#38377########smPaymentRes.setFpxTranId:"+smPaymentRes.getFpxTranId());
 					log.info("#38377########smPaymentRes.setMolpayTransactionId:"+smPaymentRes.getMolpayTransactionId());
