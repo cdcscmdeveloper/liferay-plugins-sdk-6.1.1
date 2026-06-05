@@ -5574,6 +5574,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 				updatedList.add(cat);
 			}
+			getManagedBean().setHistoryOtherDescList(updatedList);
 			getManagedBean().setApprovedCategoryList(updatedList);
 		}
 		
@@ -5615,12 +5616,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void saveOtherDescriptionEdit() {
 		try {
 			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
-			reqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+			reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
-
+			
+			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
+				reqDTO.setOtherDescOld(getManagedBean().getHistorySuppCategory().getOtherDesc());
+				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_APPROVER);
+			} else {
+				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			}
+			
 			if (!getManagedBean().isOtherDescChangeSupplier()){
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
