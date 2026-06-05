@@ -3150,6 +3150,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// #37779 - Start
 			if (getManagedBean().isSupplierUser()) {
 				SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+				// #39860 - START
+				if(currentTab < outputTab){
+					validateChequeSignatoryBumi();
+				}// #39860 - END
 			}
 			// #37779 - End
 		}
@@ -4663,8 +4667,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
 				currentTab, true);
 		
-		// validate bank 
-		SmApplicationUtil.validateBankBeforeSave(true, getManagedBean(), -1);//#39860
+		// validate cheque signatory bumi 
+		SmApplicationUtil.validateChequeSignatoryBumi(getManagedBean()); //#39860
 				
 		// validate facility
 		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
@@ -5124,6 +5128,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
+		
+		// #40031 - Start - Change Value same as -selectOne-, since no need to change process
+		String dropdownRole = getManagedBean().getSelectedShareHolder().getEpRole();
+		boolean showPopup = false;
+		if (StringUtils.isBlank(dropdownRole) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
+			String Msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
+					new String[] { getEpRoleDescByRoleCode(getManagedBean().getPrevRole()) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+
+			getManagedBean().setRemovedRoleMsg(Msg);
+			showPopup = true;
+		}
+		// #40031 - End
+				
 		SmApplicationUtil.setPersonnelRoleChange(getManagedBean().getSmAppl(),
 				SmApplicationUtil.getPrevApprovedPersonnel(getManagedBean()
 						.getSelectedShareHolder(), getManagedBean()
@@ -5137,7 +5155,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setDisableAuthorizedRadio(
 				disableAuthorizedRadio(getManagedBean()
 						.getSelectedShareHolder()));
+		
+		// #40031 - Start
+		if (showPopup) {
+			RequestContext.getCurrentInstance().execute("confirmDeleteRoleDlg.show()");
+		}
+		// #40031 - End
 	}
+	
+	// #40031 - Start
+	/**
+	 * revert back role on its original role
+	 * @param role
+	 */
+	public void revertRole(String role) {
+		getManagedBean().getSelectedShareHolder().setEpRole(role);
+	}
+	// #40031 - End
 
 	/**
 	 * Ajax call to set approve or reject date for the selected category.
@@ -8691,6 +8725,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#36718 - START
 		getManagedBean().setLatestMailAddr((SmPersonnelAddress) getManagedBean().getShareHolderMailAddr().deepCopy());
 		//#36718 - END
+		
+		// #40031 - Start - Store role incase ajax rendered role changed
+		if (null != getManagedBean().getLatestPersonnel() && null != getManagedBean().getLatestPersonnel().getEpRole()
+				&& StringUtils.isNotBlank(getManagedBean().getLatestPersonnel().getEpRole())) {
+			getManagedBean().setPrevRole(getManagedBean().getLatestPersonnel().getEpRole());
+		}
+		// #40031 - End
 	}
 	
 	//start #31479
@@ -14327,6 +14368,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getSmAppl().getSmApplSupportDocs());
 	}
 	
+	//#39860 - START
+	/**
+	 * Validate cheque signatory.
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean validateChequeSignatoryBumi() {
+		return SmApplicationUtil.validateChequeSignatoryBumi(getManagedBean());
+	}//#39860 - END
+		
 	/**
 	 * Validate supporting docs.
 	 * 
