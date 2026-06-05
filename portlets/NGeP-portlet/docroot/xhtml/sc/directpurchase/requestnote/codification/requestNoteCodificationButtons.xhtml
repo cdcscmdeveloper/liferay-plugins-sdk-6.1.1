@@ -36,7 +36,7 @@
 							<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
 								process="#{isCancel ? '@this, @([id$= remark])' : '@form'}"
 								update="@([id$=assignCodeDialogConfirm])"
-								onstart="blockWidget').show();"
+								onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide(); assignCodeDialogConfirm.show();" />
 
 						</ui:repeat>
