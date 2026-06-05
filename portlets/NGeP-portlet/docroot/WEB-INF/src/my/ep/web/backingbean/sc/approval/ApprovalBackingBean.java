@@ -33,7 +33,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 
-import my.ep.biz.bean.sc.QtAmendMentBean;//#28188
+import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -115,7 +115,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
@@ -157,6 +156,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+//#28188
 
 /**
  * Backing Bean for Approvals.
@@ -1731,11 +1731,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtReqDTO.setDigiSignData(digiSign);
 				
 				//#33222 - Start
-				if (bpkRevise) {
+				if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
 					userActive = checkActiveUserAfterRevice(qtReqDTO);
-				} 
+				}
 				
-				if (!userActive) {
+				if (userActive) {
 					tenderResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
 					// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());			
 				
@@ -4417,9 +4417,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 * P_MSG - Message returned by the procedure indicating the verification or processing result
 		 */
 		
-		InactiveUserResDTO userResDto = new InactiveUserResDTO();
 		InactiveUserReqDTO userReqDto = new InactiveUserReqDTO();
-		userResDto = getUserSO().checkInactiveUserBySP(userReqDto);
+		ScQt qt = qtReq.getQtdetail();
+		PmUser user = qtReq.getPmUser();
+		userReqDto.setDocNo(qt.getQtNo());
+		userReqDto.setDocType(qt.getQtType());
+		userReqDto.setUserIds(user.getUserId().toString());
+		userReqDto.setUserRoleCode(qtReq.getRoleCode());
+		userReqDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+		userReqDto.setOrgProfileId(qt.getOrgProfileId());
+		InactiveUserResDTO userResDto = getUserSO().checkInactiveUserBySP(userReqDto);
 		
 //		if(userResDto.getStatus().equals(anObject)){
 //			
