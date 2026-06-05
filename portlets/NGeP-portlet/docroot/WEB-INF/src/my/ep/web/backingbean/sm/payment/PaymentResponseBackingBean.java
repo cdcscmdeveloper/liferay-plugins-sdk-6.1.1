@@ -444,6 +444,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 			log.info("SKey>>>>" + skey);
 			log.info("Key1>>>>" + key1);
+			log.info("######38377#####skipChecking>>>>" + skipChecking);
 			//26307
 			
 			//#38377
