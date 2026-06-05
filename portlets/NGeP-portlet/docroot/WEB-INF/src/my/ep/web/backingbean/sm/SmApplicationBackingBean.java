@@ -3150,6 +3150,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// #37779 - Start
 			if (getManagedBean().isSupplierUser()) {
 				SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+				// #39860 - START
+				if(currentTab < outputTab){
+					validateChequeSignatoryBumi();
+				}// #39860 - END
 			}
 			// #37779 - End
 		}
@@ -4663,8 +4667,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
 				currentTab, true);
 		
-		// validate bank 
-		SmApplicationUtil.validateBankBeforeSave(true, getManagedBean(), -1);//#39860
+		// validate cheque signatory bumi 
+		SmApplicationUtil.validateChequeSignatoryBumi(getManagedBean()); //#39860
 				
 		// validate facility
 		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
@@ -14364,6 +14368,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getSmAppl().getSmApplSupportDocs());
 	}
 	
+	//#39860 - START
+	/**
+	 * Validate cheque signatory.
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean validateChequeSignatoryBumi() {
+		return SmApplicationUtil.validateChequeSignatoryBumi(getManagedBean());
+	}//#39860 - END
+		
 	/**
 	 * Validate supporting docs.
 	 * 
