@@ -809,10 +809,10 @@ public class SupplierManagementConst {
 //	#37925 END
 	
 	// #38001 START
-	public static final String PO_RECOMMENDATION_APPROVE_MY = "LULUS";
-	public static final String PO_RECOMMENDATION_REJECT_MY = "TOLAK";
-	public static final String PO_RECOMMENDATION_APPROVE_EN = "APPROVE";
-	public static final String PO_RECOMMENDATION_REJECT_EN = "REJECT"; 
+	public static final String PO_RECOMMENDATION_APPROVE_MY = "Lulus";
+	public static final String PO_RECOMMENDATION_REJECT_MY = "Tolak";
+	public static final String PO_RECOMMENDATION_APPROVE_EN = "Approve";
+	public static final String PO_RECOMMENDATION_REJECT_EN = "Reject"; 
 	// #38001 END
 	
 	
