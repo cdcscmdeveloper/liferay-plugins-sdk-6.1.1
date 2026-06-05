@@ -4274,6 +4274,7 @@ public class SimpleQuoteBackingBean extends
 			CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 			
 			catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
+			catalogueBackingBean.resetCatalogueSearch(); //26059
 
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "catalogueSearch");
