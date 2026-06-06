@@ -2106,6 +2106,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setOrgTypeId(currentOrgTypeId);
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
+				roleReqDTO.setPtjAuthCC(getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC()); //#34945
 				roleReqDTO.setAssignRole(true);
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
