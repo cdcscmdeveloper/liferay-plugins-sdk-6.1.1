@@ -3150,6 +3150,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// #37779 - Start
 			if (getManagedBean().isSupplierUser()) {
 				SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+				// #39860 - START
+				if(currentTab < outputTab){
+					validateChequeSignatoryBumi();
+				}// #39860 - END
 			}
 			// #37779 - End
 		}
@@ -4663,8 +4667,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
 				currentTab, true);
 		
-		// validate bank 
-		SmApplicationUtil.validateBankBeforeSave(true, getManagedBean(), -1);//#39860
+		// validate cheque signatory bumi 
+		SmApplicationUtil.validateChequeSignatoryBumi(getManagedBean()); //#39860
 				
 		// validate facility
 		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
@@ -8723,9 +8727,26 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#36718 - END
 		
 		// #40031 - Start - Store role incase ajax rendered role changed
-		if (null != getManagedBean().getLatestPersonnel() && null != getManagedBean().getLatestPersonnel().getEpRole()
-				&& StringUtils.isNotBlank(getManagedBean().getLatestPersonnel().getEpRole())) {
-			getManagedBean().setPrevRole(getManagedBean().getLatestPersonnel().getEpRole());
+		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
+		SmPersonnel personnel = getManagedBean().getLatestPersonnel();
+		getManagedBean().setPrevRole(null);
+		// If resubmit appl, get the lastest approved info
+		if (resubmitAppl) {
+			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
+			if (null != latestApprovedPersons) {
+				for (SmPersonnel person : latestApprovedPersons) {
+					if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
+						getManagedBean().setPrevRole(person.getEpRole());
+						break;
+					}
+				}
+
+			}
+
+		} else {
+			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
+				getManagedBean().setPrevRole(personnel.getEpRole());
+			}
 		}
 		// #40031 - End
 	}
@@ -14364,6 +14385,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getSmAppl().getSmApplSupportDocs());
 	}
 	
+	//#39860 - START
+	/**
+	 * Validate cheque signatory.
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean validateChequeSignatoryBumi() {
+		return SmApplicationUtil.validateChequeSignatoryBumi(getManagedBean());
+	}//#39860 - END
+		
 	/**
 	 * Validate supporting docs.
 	 * 
