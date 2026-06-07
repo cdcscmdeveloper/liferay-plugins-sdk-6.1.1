@@ -1460,19 +1460,27 @@ public class SmApplicationUtil {
 		int signatoryNotBumiCount = 0;
 		StringBuilder sb = new StringBuilder();
 		sb.append("<br/>");
+		
+        Set<Long> processedPersonnelIds = new HashSet<Long>();
+		
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
 			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
 				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
-					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
-						sb.append(++signatoryNotBumiCount + ". ");
-						sb.append(smChequeSignatory.getSmPersonnel().getName());
-						sb.append("<br/>");
-						validSignatoryBumi = false;
+					
+					SmPersonnel personnel = smChequeSignatory.getSmPersonnel();
+					
+					if (personnel.getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						if (processedPersonnelIds.add(personnel.getPersonnelId())) {
+							sb.append(++signatoryNotBumiCount + ". ");
+							sb.append(personnel.getName());
+							sb.append("<br/>");
+							validSignatoryBumi = false;	
+						}
 					}	
 				}	
 			}
 		}
-		if (!validSignatoryBumi && signatoryNotBumiCount > 0) {
+		if (!validSignatoryBumi && signatoryNotBumiCount > 0 && managedBean.isSupplierUser()) {
 			throw new EpException(MessageConst.ERROR_721082,
 					new String[] { sb.toString() });
 		} 
@@ -16488,14 +16496,16 @@ public class SmApplicationUtil {
 		}
 
 		if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
-
 			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
-
 				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY;
-
 			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
-
 				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY;
+			}
+		} else if (language.equals(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN;
+			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN;
 			}
 		}
 
