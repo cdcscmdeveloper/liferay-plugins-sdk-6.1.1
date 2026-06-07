@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -585,9 +587,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 			if(!getManagedBean().getCircularVer().isPid()){
 				getManagedBean().getCircularVer().setCtCircularPidReason(null);
 			}
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
-				validateCircular(action);
-
+			
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
@@ -600,13 +600,36 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
 			}
 			
+			//#30737 - start
+			Map<String, Long> userListStatus = new HashMap<String, Long>();
+			
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+				log.info("save circular action : "+action);
+				userListStatus = getLoginStatusFromSP(circular, 
+						circularVer, 
+						getManagedBean().getApproverModel().getTarget(), 
+						RoleCode.BPK_CQ_APPROVER);
+			}
+			
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				log.info("save circular action : "+action);
+				userListStatus = getLoginStatusFromSP(circular, 
+						circularVer, 
+						getManagedBean().getApproverModel().getTarget(), 
+						RoleCode.BPK_CCA);
+			}
+			//#30737 - end
+			
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
+				validateCircular(action, userListStatus); //#30737 add parameter for inactiveuser
+			
 			// #39594 - Start
 			if (!circularVer.getCtCircularPidReason().isEmpty()) {
 				circularVer.getCtCircularPidReason().clear();
 			}
 			circularVer.getCtCircularPidReason().addAll(getManagedBean().getCtCircularPidReasons());
 			// #39594 - End
-
+			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setUserMap(getManagedBean().getUserMap());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -629,7 +652,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 
-			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
+			CircularResDTO resDTO = circularSO.saveCircular(reqDTO, userListStatus);
 			if(resDTO.isSuccessful()) {
 				// #35506 Start
 				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
@@ -704,15 +727,6 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 					getManagedBean().setViewContract(false);
 					setContractCircularVar(reqDTO);
 				}
-				System.out.println("ACTIONNN :" + action);
-				//#30737 - Start
-				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
-						|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
-						|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
-					log.info("xoxoxoxoxooxoxo action : "+action);
-					handleInactiveUserValidation(action);
-				}
-				//#30737 - End
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -721,76 +735,6 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 		}
 		return null;
 	}
-	
-	//#30737 - Start
-	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
-	 */
-	private void handleInactiveUserValidation(String outcome) {
-
-		ICircularSO circularSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-    	
-		List<PmUser> selectedUsers = getManagedBean().getApproverModel().getTarget();
-   
-        try {
-        	
-        	Long inactiveUserCheckResult = 1L; //TEMP
-        	
-        	circularSO.checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-        		selectedUsers,
-            	inactiveUserCheckResult
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex, selectedUsers);
-        }
-    }
-	
-	private ContractReqDTO buildContractReqDTO(String outcome, String userRole) {
-        ContractReqDTO reqDTO = new ContractReqDTO();
-        reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-        reqDTO.setUserRole(userRole);
-        reqDTO.setOutcome(outcome);
-        log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
-		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
-        return reqDTO;
-    }
-	
-	private EpException buildInactiveUserException(EpException ex, List<PmUser> selectedUsers) {
-    	log.info("xoxoxoxoxoxoxo catch EpException");
-    	
-    	String errorCode = ex.getMessage();
-        String[] messageKeys = null;
-        
-        log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
-        
-        if (MessageConst.ERROR_100074.equals(errorCode)) {
-            messageKeys = new String[]{selectedUsers.get(0).getUserName()};
-        }
-        
-        if (messageKeys != null && messageKeys.length > 0) {
-
-            String[] resolvedMessages = new String[messageKeys.length];
-            for (int i = 0; i < messageKeys.length; i++) {
-                resolvedMessages[i] =
-                    ResourceBundleUtils.getMessage(
-                        messageKeys[i],
-                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-                        getFacesScopes().getUserLocale()
-                    );
-            }
-            return new EpException(errorCode, resolvedMessages);
-        }
-        return new EpException(errorCode);
-    }
-	
-	//#30737 - End
 	
 	//#35506 - Start
 	/**
@@ -842,7 +786,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 	 * @param  outcome  the user action on this contract. The validation 
 	 * 					will invoke base on the action
 	 */
-	public void validateCircular(String outcome) {
+	public void validateCircular(String outcome, Map<String, Long> userListStatus) {
 		try {
 			 getManagedBean().setAutoUpdate(true);
 			 
@@ -972,6 +916,20 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				 }
 			 }
+			 
+			//#30737 - Start
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) && userListStatus != null) {
+				log.info("xoxoxoxoxooxoxo action : "+outcome);
+//				Map<String, Long> userListStatus = getLoginStatusFromSP(getManagedBean().getCircularVer(), getManagedBean().getApproverModel().getTarget(), RoleCode.BPK_CQ_APPROVER);
+				handleInactiveUserValidation(outcome, userListStatus, getManagedBean().getApproverModel().getTarget());
+			}
+			
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && userListStatus != null) {
+				log.info("xoxoxoxoxooxoxo action : "+outcome);
+//				Map<String, Long> userListStatus = getLoginStatusFromSP(getManagedBean().getCircularVer(), getManagedBean().getApproverModel().getTarget(), RoleCode.BPK_CCA);
+				handleInactiveUserValidation(outcome, userListStatus, getManagedBean().getApproverModel().getTarget());
+			}
+			//#30737 - End
 		}finally{
 
 		}
@@ -1499,7 +1457,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-			validateCircular(outcome);
+			validateCircular(outcome, null);
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();

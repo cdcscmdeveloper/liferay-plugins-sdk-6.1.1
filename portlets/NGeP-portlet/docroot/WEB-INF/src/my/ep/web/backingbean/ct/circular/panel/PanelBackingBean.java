@@ -10,8 +10,10 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -595,6 +597,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				validateCircular(action);
 			}
+			
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
@@ -649,8 +652,28 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if (this.getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
+			
+			//#30737 - start
+			Map<String, Long> inactiveUserCheckResult = new HashMap<String, Long>();
+			
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+				log.info("save circular action : "+action);
+				inactiveUserCheckResult = getLoginStatusFromSP(circular, 
+						circularVer, 
+						getManagedBean().getApproverModel().getTarget(), 
+						RoleCode.BPK_CQ_APPROVER);
+			}
+			
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				log.info("save circular action : "+action);
+				inactiveUserCheckResult = getLoginStatusFromSP(circular, 
+						circularVer, 
+						getManagedBean().getApproverModel().getTarget(), 
+						RoleCode.BPK_CCA);
+			}
+			//#30737 - end
 
-			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
+			CircularResDTO resDTO = circularSO.saveCircular(reqDTO, inactiveUserCheckResult); //#30737 to add inactiveuser param
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
 				
@@ -1093,83 +1116,24 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		//TODO - REVISE in validation + save/submit
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
-			handleInactiveUserValidation(outcome);
+			Map<String, Long> userListStatus = getLoginStatusFromSP(getManagedBean().getCircularVer().getCtCircular(), 
+					getManagedBean().getCircularVer(), 
+					getManagedBean().getApproverModel().getTarget(), 
+					RoleCode.BPK_CQ_APPROVER);
+			handleInactiveUserValidation(outcome, userListStatus, getManagedBean().getApproverModel().getTarget());
+		}
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			Map<String, Long> userListStatus = getLoginStatusFromSP(getManagedBean().getCircularVer().getCtCircular(), 
+					getManagedBean().getCircularVer(), 
+					getManagedBean().getApproverModel().getTarget(), 
+					RoleCode.BPK_CCA);
+			handleInactiveUserValidation(outcome, userListStatus, getManagedBean().getApproverModel().getTarget());
 		}
 		//#30737 - End
 		
 	}
-	
-	//#30737 - Start
-	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
-	 */
-	private void handleInactiveUserValidation(String outcome) {
-
-		ICircularSO circularSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-    	
-		List<PmUser> selectedUsers = getManagedBean().getApproverModel().getTarget();
-   
-        try {
-        	
-        	Long inactiveUserCheckResult = 1L; //TEMP
-        	
-        	circularSO.checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-        		selectedUsers,
-            	inactiveUserCheckResult
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex, selectedUsers);
-        }
-    }
-	
-	private ContractReqDTO buildContractReqDTO(String outcome, String userRole) {
-        ContractReqDTO reqDTO = new ContractReqDTO();
-        reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-        reqDTO.setUserRole(userRole);
-        reqDTO.setOutcome(outcome);
-        
-        log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
-		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
-    	
-        return reqDTO;
-    }
-	
-	private EpException buildInactiveUserException(EpException ex, List<PmUser> selectedUsers) {
-    	log.info("xoxoxoxoxoxoxo catch EpException");
-    	
-    	String errorCode = ex.getMessage();
-        String[] messageKeys = null;
-        
-        log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
-        
-        if (MessageConst.ERROR_100074.equals(errorCode)) {
-            messageKeys = new String[]{selectedUsers.get(0).getUserName()};
-        }
-        
-        if (messageKeys != null && messageKeys.length > 0) {
-
-            String[] resolvedMessages = new String[messageKeys.length];
-            for (int i = 0; i < messageKeys.length; i++) {
-                resolvedMessages[i] =
-                    ResourceBundleUtils.getMessage(
-                        messageKeys[i],
-                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-                        getFacesScopes().getUserLocale()
-                    );
-            }
-            return new EpException(errorCode, resolvedMessages);
-        }
-        return new EpException(errorCode);
-    }
-	//#30737 - End
-	
 	//#28713 start basri
 	/**
 	 * The method used to retrieve circular attachment from the circularAttachment.
@@ -2755,7 +2719,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-			validateCircular(outcome);
+			validateCircular(outcome); // #30737 - add parameter inactive user
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
