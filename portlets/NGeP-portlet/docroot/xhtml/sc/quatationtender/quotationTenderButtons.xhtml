@@ -113,14 +113,17 @@
 									value="#{approvalBackingBean.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									
+									<ui:remove>#34444 Start Ann Amendment on button Approve/Revise 5May2026</ui:remove>
 									<ui:remove>#10141 Start Vinod added disable</ui:remove>
-									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-										styleClass="ui-button" onstart="blockWidget.show();"
-										oncomplete="blockWidget.hide();"
-										disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
-										action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
+									<p:commandButton value="#{lbl[buttonLabel]}"
+										styleClass="ui-button"
+										disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"										
+										onstart="blockWidget.show();"
+										actionListener="#{approvalBackingBean.managedBean.prepareAction(bpmAction)}"
+    									update="@form"
+    									oncomplete="blockWidget.hide(); approvalConfirmInfoDlg.show();" />										
 									<ui:remove>#10141 End Vinod</ui:remove>
+									<ui:remove>#34444 Start End Amendment on button Approve/Revise 5May2026</ui:remove>
 								</ui:repeat>
 							</ui:define>
 						</ui:decorate>						
@@ -516,5 +519,14 @@
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
 			content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />
-		
+
+	<ui:remove>#34444 Start Ann</ui:remove>
+	<ac:confirmationPopupQT id="approvalConfirmInfoDlg"
+		widget="approvalConfirmInfoDlg"
+		okAction="#{approvalBackingBean.approvalBpmTask(approvalBackingBean.managedBean.btnAction)}"
+		title="#{approvalBackingBean.managedBean.confirmTitle}"
+		content="#{approvalBackingBean.managedBean.confirmContent}" 
+		update="@form"/>
+	<ui:remove>#34444 End Ann</ui:remove>
+
 </ui:composition>

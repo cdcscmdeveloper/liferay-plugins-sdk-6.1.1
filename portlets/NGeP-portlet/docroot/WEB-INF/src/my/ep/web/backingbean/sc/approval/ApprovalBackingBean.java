@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -1340,9 +1340,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				showDialog = "reviceApprovalDlg.show()";
 				// #32376 - Start
-				if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName) || 
-						SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)){//#34694
-					showDialog = "reviceApprovalDlgTemp.show()";
+				if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)
+						|| SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {// #34694
+					/*34444 START*/
+					showDialog = null;
+					reqDTO.setOutcome(action);
+					detailSO.validateQtApprovalDtl(reqDTO);
+					updateReviceBpmTask();
+					/*34444 END*/
 				}
 				// #32376 - End
 			} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)
@@ -4377,5 +4382,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End
+	
+	
+	/*34444 START*/
+//	public void executeConfirmAction() {
+//	    String action = this.getManagedBean().getBtnAction();
+//	    if ("APPROVE".equals(action)) {
+//	        approvalBpmTask(action);
+//	    } else if ("REVISE".equals(action)) 
+//	    	updateReviceBpmTask();
+//	    }
+//	}
+	/*34444 END*/
 	
 }
