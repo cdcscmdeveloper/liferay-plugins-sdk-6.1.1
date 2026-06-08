@@ -31,6 +31,7 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
@@ -62,6 +63,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -93,6 +96,7 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCriteria;
@@ -103,6 +107,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -197,13 +202,50 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					validatePOCOCurrentStatus(action, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());// 36361/40227
 				}
 				// 36247-End
+				
+				// 31788
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
-					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+					FlActor flActor = fulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE,
+							getManagedBean().getFulfilmentNote().getFulfilmentNoteId(),
+							RoleCode.RECEIVING_OFFICER.value());
+					FlDeliveryAddress flDelAddress = getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getFlDeliveryAddress();
+					Long addressId = flDelAddress.getPmAddressId();
+					PmOrgProfile addressOrgProfile = getManagedBean().getFulfilmentRequest().getPreparedOrgProfile();
+					if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
+						IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+						AddressReqDTO addrReqDTO = new AddressReqDTO();
+						addrReqDTO.setAddressTypeId(flDelAddress.getReceivingGrp().getAddressTypeId());
+						AddressResDTO addrResDTO = addressSO.retrieveAddressTypeByAddressTypeId(addrReqDTO);
+						addressId = addrResDTO.getPmAddressType().getPmAddress().getAddressId();
+						addressOrgProfile = addrResDTO.getPmAddressType().getPmOrgProfile();
+					}		
 					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(getManagedBean().getFulfilmentNote().getCreatedBy());
-					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
-						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					userReqDTO.setUserId(flActor.getUser().getUserId());
+					userReqDTO.setOrgProfileId(getOrgProfileByReceivingOfficerAddress(getManagedBean()
+							.getFulfilmentNote()));
+					userReqDTO.setRoleCode(RoleCode.RECEIVING_OFFICER.value());
+					userReqDTO.setAddressID(addressId);
+					userReqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+					userReqDTO.setDocNo(getManagedBean().getFulfilmentNote().getFulfilmentNoteNo());
+					UserResDTO userResDTO = userSO.validateUserAlt(userReqDTO);
+					if (userResDTO.getUserStatus().equals(2)) {
+						getManagedBean().setAssignNewUser(Boolean.TRUE);
+						IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+						AddressReqDTO addressReqDTO = new AddressReqDTO();
+						addressReqDTO.setAddressId(addressId);
+						addressReqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
+						AddressResDTO addressResDTO = addressSO.retrieveReceivingOfficerListWithLoginHistory(addressReqDTO);
+						getManagedBean().setNewUser(addressResDTO.getAddressTypeList().get(0).getPmUser());
+					} else if (userResDTO.getUserStatus().equals(0)) {
+						throw new EpException(MessageConst.ERROR_700128, new String[] {
+								getEpRoleDescByRoleCode(RoleCode.RECEIVING_OFFICER.value()),
+								addressOrgProfile.getOrgValidity()
+										.getOrgName() });
 					}
 				}
 			}
@@ -260,6 +302,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			
+			// 31788 - start
+			// Check new user need to be assigned
+			if(getManagedBean().isAssignNewUser()){
+				reqDTO.setAssignNewUser(Boolean.TRUE);
+				reqDTO.setNewUser(getManagedBean().getNewUser());
+			}
+			
 			//#34178 - added inside if statement to also include process name without space to cater Oracle 12C upgrade issue
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
@@ -289,7 +338,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 						messageId = MessageConst.INFO_745016;
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-						messageId = MessageConst.INFO_700009;
+						// #31788
+						if(getManagedBean().isAssignNewUser()) {
+							messageId = MessageConst.INFO_700128;
+						} else {
+							messageId = MessageConst.INFO_700009;
+						}
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 						messageId = MessageConst.INFO_700008;
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
@@ -317,12 +371,26 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 										MessageUtils.BUNDLE_COMMON_MESSAGES, 
 										new FacesScopes().getUserLocale())));
 					}else{
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(messageId, 
-										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
-										ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+ resDTO.getFulfilmentNoteNo()}, 
-										MessageUtils.BUNDLE_COMMON_MESSAGES, 
-										new FacesScopes().getUserLocale())));
+						// #31788
+						if (getManagedBean().isAssignNewUser()) {
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+											messageId,
+											new String[] {
+													getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+															ParameterConst.DOCTYPE_FULFILMENT_NOTE),
+													resDTO.getFulfilmentNoteNo(),
+													getManagedBean().getNewUser().getUserName() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						} else {
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(messageId, 
+											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
+											ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+ resDTO.getFulfilmentNoteNo()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES, 
+											new FacesScopes().getUserLocale())));
+						}
 					}
 				} else {
 					if(getManagedBean().isLastFRNTaxInv() && checkTaxInvoice(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId())){
@@ -2276,5 +2344,31 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				IFulfilmentSO.class);
 		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
+	
+	// #31788
+	private Long getOrgProfileByReceivingOfficerAddress(FlFulfilmentNote fulfilmentNote){
+		Long orgProfileId = fulfilmentNote.getFlRequest().getPreparedOrgProfile().getOrgProfileId();
+		FlDeliveryAddress flDelAddress = fulfilmentNote.getFlDeliveryOrder().getFlDeliveryAddress();
+		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setAddressTypeId(flDelAddress.getReceivingGrp().getAddressTypeId());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			orgProfileId = resDTO.getAddressTypeList().get(0).getPmOrgProfile().getOrgProfileId();
+		}
+		return orgProfileId;
+	}
 
+	private Long getReceivingOfficerAddressId(FlFulfilmentNote fulfilmentNote){
+		FlDeliveryAddress flDelAddress = fulfilmentNote.getFlDeliveryOrder().getFlDeliveryAddress();
+		Long addressId = flDelAddress.getPmAddressId();
+		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setAddressTypeId(flDelAddress.getReceivingGrp().getAddressTypeId());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
+		}		
+		return addressId;
+	}
 }

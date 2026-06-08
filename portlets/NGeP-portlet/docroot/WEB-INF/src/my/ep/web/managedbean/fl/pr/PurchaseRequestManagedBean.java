@@ -327,10 +327,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
     private boolean isExceedItemPanelThreshold;
     private List<ScRequestItem> itemExceedBpkThreshold;
     private List<ScRequestItem> itemExceedItemPanelThreshold;
-    
-    // 31788 - start
-    private boolean assignNewUser = false;
-	private PmUser newUser;
 
 /**
  * Gets the charge line item root.
@@ -3556,33 +3552,4 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.itemExceedItemPanelThreshold = itemExceedItemPanelThreshold;
 	}
 
-	/**
-	 * @return the assignNewUser
-	 */
-	public boolean isAssignNewUser() {
-		return assignNewUser;
-	}
-
-	/**
-	 * @param assignNewUser the assignNewUser to set
-	 */
-	public void setAssignNewUser(boolean assignNewUser) {
-		this.assignNewUser = assignNewUser;
-	}
-
-	/**
-	 * @return the newUser
-	 */
-	public PmUser getNewUser() {
-		return newUser;
-	}
-
-	/**
-	 * @param newUser the newUser to set
-	 */
-	public void setNewUser(PmUser newUser) {
-		this.newUser = newUser;
-	}
-
-	
 }

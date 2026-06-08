@@ -3592,7 +3592,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					userReqDTO.setApprovalLimit(calculatesTotalOrderedAmt());
 					userReqDTO.setDocType(getManagedBean().getFulfilmentRequest().getDocType());
 					userReqDTO.setDocNo(getManagedBean().getFulfilmentRequest().getDocNo());
-					UserResDTO resDTO = userSO.validateUserGroupLimit(userReqDTO);
+					UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
 					if (resDTO.getUserStatus().equals(2)) {
 						throw new EpException(MessageConst.ERROR_740129, new String[] { resDTO.getPmUser()
 								.getUserName() });
