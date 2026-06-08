@@ -17,7 +17,7 @@
 
 		<p:confirmDialog
 			message="#{lbl['lbl.sc.loa.cancel.dialog.confirm.reject.message']}"
-			header="#{lbl['lbl.sm.decision.reject.uppercase']}" severity="alert" widgetVar="rj">
+			header="#{lbl['lbl.sc.reject.header.message']}" severity="alert" widgetVar="rj">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					actionListener="#{lOACancelDetailBackingBean.updateBpmTaskAction(bpmActionReject)}"
@@ -30,7 +30,7 @@
 
 		<p:confirmDialog
 			message="#{lbl['lbl.sc.loa.cancel.dialog.confirm.approval.message']}"
-			header="#{lbl['lbl.sm.decision.approve.uppercase']}" severity="alert" widgetVar="ap">
+			header="#{lbl['lbl.sc.approve.header.message']}" severity="alert" widgetVar="ap">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					actionListener="#{lOACancelDetailBackingBean.updateBpmTaskAction(bpmActionApprove)}"

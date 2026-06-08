@@ -98,6 +98,15 @@
 					</td>
 				</tr>
 			</table>
+			<ui:remove>34449 - start</ui:remove>
+			<ui:remove> Popup Submit Action </ui:remove>
+				<ac:confirmationPopup id="reqSubmitDlgPid"
+					widget="reqSubmitDlg" width="400" height="100"
+					okAction="purchaseInDefaultBackingBean.wrappedUpdateBPMTask('SUBMIT')"
+					title="#{lbl['lbl.sc.pid.submit.header.message']}"
+					content="#{lbl['lbl.sc.pid.submit.confirmation.message']}"
+					update="@form" />
+			<ui:remove>34449 - end</ui:remove>
 		</c:if>
 		
 		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.msg']}"

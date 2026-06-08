@@ -34,7 +34,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.accept']}"
 							onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{purchaseInDefaultBackingBean.supplierAction(accept)}"></p:commandButton>
+							action="#{purchaseInDefaultBackingBean.populateConfirmationDialog(accept)}"></p:commandButton>
 						<p:commandButton value="#{lbl['lbl.btn.reject']}"
 							onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
@@ -43,6 +43,15 @@
 					</h:panelGroup></td>
 			</tr>
 			</table>
+		<ui:remove>#34449 - start</ui:remove>
+		<ui:remove> Popup Accept Action </ui:remove>
+		<ac:confirmationPopup id="acceptSuppDlgPid"
+			widget="acceptSuppDlg" width="400" height="100"
+			okAction="purchaseInDefaultBackingBean.supplierAction(accept)"
+			title="#{lbl['lbl.sc.pid.accept.header.message']}"
+			content="#{lbl['lbl.sc.pid.accept.confirmation.message']}"
+			update="@form" />
+		<ui:remove>#34449 - end</ui:remove>	
 		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.reject.msg']}"
 			severity="alert" widgetVar="rejectDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.sc.dialog.confirm.header.reject']}">

@@ -2372,7 +2372,7 @@ public class PurchaseInDefaultBackingBean extends
 						
 						if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 								.getPidStatus().getStatusId()))// #31603
-							shouldBreak = true;
+							break;
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2384,7 +2384,7 @@ public class PurchaseInDefaultBackingBean extends
 					
 					if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 							.getPidStatus().getStatusId()))// #31603
-						shouldBreak = true;
+						break;
 				}
 				// start - #9133 (reopen comment 146)
 				else{
@@ -2393,9 +2393,6 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}
 				// end - #9133
-				if (shouldBreak) {
-			        break;
-			    }
 			}
 			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			// start - #9133 (reopen comment 146)
@@ -2439,10 +2436,8 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("requisitionerAction");
 		this.getManagedBean().setAction(outcome);
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.FALSE);
-			updateBPMTask(outcome, null);
+			RequestContext.getCurrentInstance().execute("reqSubmitDlg.show()"); //34449
 		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.TRUE);
 			RequestContext.getCurrentInstance().execute("cancelDlg.show()");
 		}
 	}
@@ -3345,7 +3340,7 @@ public class PurchaseInDefaultBackingBean extends
 	//#31603 - end
 	// 34449 - start
 	/**
-	 * Setup confirmation message pop up based on bpm outcome
+	 * Construct confirmation message pop up based on bpm outcome
 	 * Bpm Outcome Verify, Cancel.
 	 * 
 	 * @param outcome
@@ -3367,6 +3362,41 @@ public class PurchaseInDefaultBackingBean extends
 		this.getManagedBean().setConfirmationMessageTitle(confirmationMessageTitle);
 		this.getManagedBean().setSelectedAction(outcome);
 		RequestContext.getCurrentInstance().execute(lovId);
+	}
+	
+	/**
+	 * Shows the appropriate confirmation dialog based on the selected outcome
+	 * and current PID status.
+	 * 
+	 * @param outcome selected BPM outcome
+	 */
+	public void populateConfirmationDialog(String outcome){
+		PmStatus pidStatus = getManagedBean().getPidStatus();
+		Long statusId = pidStatus != null ? pidStatus.getStatusId() : null;
+
+		if (DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE.equals(statusId)
+		        && BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
+		    RequestContext.getCurrentInstance().execute("acceptSuppDlg.show()");
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * <p>
+	 * This method is a wrapper that delegates to the main BPM task update logic
+	 * without digi sign information.
+	 * </p>
+	 * 
+	 * @param outcome
+	 *            the selected BPM outcome
+	 * @return the update result
+	 * 
+	 * @param outcome
+	 * @return
+	 */
+	public PurchaseInDefaultResDTO wrappedUpdateBPMTask (String outcome){
+		return updateBPMTask(outcome, null);
 	}
 	// 34449 - end
 }
