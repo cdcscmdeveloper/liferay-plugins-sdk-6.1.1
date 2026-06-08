@@ -441,9 +441,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			// To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 			String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
-
+			
+			log.info("######38377#####vKey>>>>" + vKey);
 			log.info("SKey>>>>" + skey);
 			log.info("Key1>>>>" + key1);
+			log.info("######38377#####skipChecking>>>>" + skipChecking);
 			//26307
 			
 			//#38377
