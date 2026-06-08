@@ -441,9 +441,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			// To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 			String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
-
+			
+			log.info("######38377#####vKey>>>>" + vKey);
 			log.info("SKey>>>>" + skey);
 			log.info("Key1>>>>" + key1);
+			log.info("######38377#####skipChecking>>>>" + skipChecking);
 			//26307
 			
 			//#38377
@@ -692,7 +694,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info(">>>>#38377 enable payment update<<<");
 				
 				// #38377
-				if (!"Y".equals(paymentGateway)) {
+				if (!"Y".equals(paymentGateway) && isValidToSave) {
 					log.info("###############38377 update payment");
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				}
@@ -1047,15 +1049,15 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
+			//#40340 : Remove personnel.getPmUser().getUserId().equals(currentUserId)
+			if(personnel != null){
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
-				return;
 			}
+		} else {
+			getManagedBean().setMessageId(MessageConst.INFO_721068);
+			getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 		}
-		// #40340
-		getManagedBean().setMessageId(MessageConst.INFO_721068);
-		getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 	}
 	//#29481 - End
 /*	public static void main(String args[]){
