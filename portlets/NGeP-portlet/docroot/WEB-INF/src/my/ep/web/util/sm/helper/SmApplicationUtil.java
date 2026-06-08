@@ -16471,14 +16471,16 @@ public class SmApplicationUtil {
 			return null;
 		}
 
-		if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
-
+		if (language.equals(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
 			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
-
-				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY;
-
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN;
 			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
-
+				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN;
+			}
+		} else if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY;
+			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
 				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY;
 			}
 		}
