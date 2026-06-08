@@ -40,6 +40,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.smSuppCatOtherDescHistory.SmSuppCatOtherDescHistoryReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
@@ -1463,7 +1464,15 @@ public class SupplierDataMaintenanceBackingBean extends
 		List<SmSupplierCategory> catList = new ArrayList<>();
 		List<SmSupplierCategory> apprvList = new ArrayList<>();
 		List<SmSupplierCategory> otherDescList = new ArrayList<>(); // 36504
-
+		
+		// 36504 - START
+		getManagedBean().setOtherDescChangePO(false);
+		getManagedBean().setOtherDescChangeApprover(false);
+		getManagedBean().setOtherDescChangeSupplier(false);
+		getManagedBean().setOtherDescChangeSupPO(false);
+		getManagedBean().setOtherDescChangeSupApprover(false);
+		// 36504 - END
+				
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
@@ -1503,6 +1512,27 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().getApprovedCategoryList().clear();
 		}
 		
+		// 36504 - START - KN Other Description history display last. 
+		SmAppl applNewReg = SmApplicationUtil.findNewRegHistoryOtherDesc(getManagedBean().getSmSupplier().getSupplierId());
+		
+		if (applNewReg != null) {
+			for (SmSupplierCategory previousKN : applNewReg.getSmSupplierCategories()) {
+				String catType = previousKN.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					
+					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
+					
+					if (previousKN.getSmSuppCatOtherDescHistory() != null) {
+						otherDescList.add(previousKN);
+					}
+				}
+			}
+		}
+		// 36504 - END - KN Other Description history display last. 
+				
 		// 36504 - START
 		if (!EntityHelper.isCollectionEmpty(otherDescList)) {
 			getManagedBean().setOtherDescChangeSupplier(true);
@@ -1516,6 +1546,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmApplicationUtil.sortSupplierCategory(catList);
 		getManagedBean().setApprovedCategoryList(apprvList);
 		getManagedBean().setActiveCategoryList(catList);
+		getManagedBean().setHistoryOtherDescList(otherDescList);
 	}
 
 	/**
@@ -3341,26 +3372,29 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	        case "ONE":
 	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
-	                                SupplierManagementConst.SUPPLIER_APPROVER)) {
-	                return otherDescBean.getOtherDesc();
+	            		SupplierManagementConst.SUPPLIER_APPROVER) &&
+	                    otherDescBean.getOtherDescOld() != null) {
+	                return otherDescBean.getOtherDescOld();
 	            }
 	            break;
 
 	        case "TWO":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
+	            		SupplierManagementConst.SUPPLIER_PO)) {
 	                return otherDescBean.getOtherDesc();
 	            }
 	            break;
 
 	        case "THREE":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-	                                SupplierManagementConst.SUPPLIER_PO)) {
+	        	if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
+                        SupplierManagementConst.SUPPLIER_PO)) {
 	                return getUserNameByUserId(otherDescBean.getCreatedBy());
 	            }
 	            break;
 
 	        case "FOUR":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
+	            		SupplierManagementConst.SUPPLIER_APPROVER)) {
 	                return otherDescBean.getOtherDesc();
 	            }
 	            break;
@@ -3386,6 +3420,137 @@ public class SupplierDataMaintenanceBackingBean extends
 	        }
 	    }
 	    return false;
+	}
+	
+	/**
+	 * To save data Other Description Supplier Data Maintenance
+	 *  
+	 */
+	public void saveOtherDescriptionEdit() {
+		try {
+			List<SmAppl> smApplList = new ArrayList<>();
+			smApplList.add(getManagedBean().getHistorySuppCategory().getSmAppl());
+			getManagedBean().setOtherDescOld(null);
+			getManagedBean().setOtherDescOld(getManagedBean().getHistorySuppCategory().getOtherDesc());
+
+			// save edit category for appl in progress.
+			if (getManagedBean().isHasActiveTransaction() && CollectionUtils.isNotEmpty(getManagedBean().getActiveApplList())) {
+				MofRegistrationReqDTO reqMofDTO = new MofRegistrationReqDTO();
+				String applNo = String.valueOf(getManagedBean().getActiveApplList().get(0)[0]);
+				reqMofDTO.setApplNo(applNo);
+				SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqMofDTO).getSmAppl();
+				smApplList.add(activeAppl);
+			}
+			
+			for (SmAppl appl : smApplList) {
+				SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
+				reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
+				reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
+				reqDTO.setSmAppl(appl);
+				
+				SmSupplierCategory catCode = getManagedBean().getHistorySuppCategory();
+				if (smApplList.size() > 1) {
+					String mainCatcode = catCode
+							.getPmCategoryL3()
+							.getPmCategoryL2()
+							.getPmCategoryL1()
+							.getCategoryL1Code()
+							.concat(catCode.getPmCategoryL3().getPmCategoryL2()
+									.getCategoryL2Code())
+							.concat(catCode.getPmCategoryL3()
+									.getCategoryL3Code());
+					getManagedBean().getHistorySuppCategory();
+					
+					for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+						String suppCatCode = cat
+								.getPmCategoryL3()
+								.getPmCategoryL2()
+								.getPmCategoryL1()
+								.getCategoryL1Code()
+								.concat(cat.getPmCategoryL3().getPmCategoryL2()
+										.getCategoryL2Code())
+								.concat(cat.getPmCategoryL3()
+										.getCategoryL3Code());
+						
+						if (suppCatCode.equalsIgnoreCase(mainCatcode)) {
+							reqDTO.setSmSupplierCategory(cat);
+						}
+					}
+				} else {
+					reqDTO.setSmSupplierCategory(catCode);
+				}
+				
+				if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
+					reqDTO.setOtherDescOld(getManagedBean().getOtherDescOld());
+					reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_APPROVER);
+				} else {
+					reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+				}
+				
+				if (!getManagedBean().isOtherDescChangeSupplier()){
+					getManagedBean().setOtherDescChangeSupplier(true);
+				}
+				
+				SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(reqDTO);
+				
+				if (getManagedBean().getSmAppl().getApplNo() == null) {
+					getManagedBean().setSmAppl(reqDTO.getSmAppl());
+				}
+				
+				reqDTO.getSmSupplierCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
+				SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(reqDTO.getSmSupplierCategory());
+			}
+			
+			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
+			
+			if (getManagedBean().getApprovedCategoryList() != null) {
+				List<SmSupplierCategory> updatedList = new ArrayList<>();
+
+				for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+					
+					String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+					cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+					
+					if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+						
+						cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+					}
+					updatedList.add(cat);
+				}
+				
+				// 36504 - START - KN Other Description history display last. 
+				SmAppl applNewReg = SmApplicationUtil.findNewRegHistoryOtherDesc(getManagedBean().getSmSupplier().getSupplierId());
+				
+				if (applNewReg != null) {
+					for (SmSupplierCategory previousKN : applNewReg.getSmSupplierCategories()) {
+						String catType = previousKN.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+						previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+						
+						if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+								|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+							
+							previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
+							
+							if (previousKN.getSmSuppCatOtherDescHistory() != null) {
+								updatedList.add(previousKN);
+							}
+						}
+					}
+				}
+				// 36504 - END - KN Other Description history display last. 
+				
+				getManagedBean().setHistoryOtherDescList(updatedList);
+				getManagedBean().setApprovedCategoryList(updatedList);
+			}
+			
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				MessageUtils.getMessage(MessageConst.INFO_721228, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
 	}
 	// 36504 - END
 }
