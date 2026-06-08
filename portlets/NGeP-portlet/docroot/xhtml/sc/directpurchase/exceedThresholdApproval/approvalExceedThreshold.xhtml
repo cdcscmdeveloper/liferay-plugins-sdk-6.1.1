@@ -11,19 +11,17 @@
 	<ui:define name="resourceSection">
 		<script>
 			$('#portlet_dpApprovalExceedThreshold_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sc.direct.purchase.approval.exceed.threshold.title']}");			
+			
+			$(document).ready(function() {
+			$(window).load(function() {
+				setTimeout(function() {
+					$('[id$="btnSearch"]').click();
+				}, 1000);
+			});
+			});
 		</script>
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:remoteCommand name="autoSearch"
-			action="#{approvalExceedThresholdBackingBean.search}"
-			update="resultPanel" onstart="blockWidget.show();"
-			oncomplete="blockWidget.hide();" />
-		<script>
-			function triggerSearch() {
-				autoSearch();
-			}
-			window.onload = triggerSearch;
-		</script>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
@@ -87,7 +85,7 @@
 			</table>
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.sc.search.button']}"
+				<p:commandButton id="btnSearch" value="#{lbl['lbl.sc.search.button']}"
 					action="#{approvalExceedThresholdBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{approvalExceedThresholdBackingBean.reset()}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
