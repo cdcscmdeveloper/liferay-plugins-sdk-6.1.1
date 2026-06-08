@@ -7480,7 +7480,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    private StringBuilder thresholdItems = new StringBuilder();
 	    private int count = 0;
 	    private BigDecimal thresholdValue = BigDecimal.ZERO;
-	    private List<Long> itemsRequiredBPKApproval = new ArrayList<>();
+	    private Map<Long, BigDecimal> itemsRequiredBPKApproval = new HashMap<>();
 	}
 	
 	/**
@@ -7563,7 +7563,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				thresholdData.count++;
 				thresholdData.thresholdItems.append(thresholdData.count + ". "
 						+ requestNoteDtl.getRequestItem().getItemName() + "</br>");
-				thresholdData.itemsRequiredBPKApproval.add(requestNoteDtl.getRequestNoteDtlId());
+				thresholdData.itemsRequiredBPKApproval.put(requestNoteDtl.getRequestNoteDtlId(), requestNoteDtl.getRequestItem().getQuantity());
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_770222,
@@ -7735,7 +7735,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				thresholdData.count++;
 				thresholdData.thresholdItems.append(thresholdData.count + ". "
 						+ requestNoteDtl.getRequestItem().getItemName() + "</br>");
-				thresholdData.itemsRequiredBPKApproval.add(requestNoteDtl.getRequestNoteDtlId());
+				thresholdData.itemsRequiredBPKApproval.put(requestNoteDtl.getRequestNoteDtlId(), requestNoteDtl.getRequestItem().getQuantity());
 			}
 		}
 	}
@@ -8272,8 +8272,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
 
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
-				if (thresholdData.itemsRequiredBPKApproval.contains(scRequestNoteDtl.getRequestNoteDtlId())) {
+				if (thresholdData.itemsRequiredBPKApproval.containsKey(scRequestNoteDtl.getRequestNoteDtlId())) {
 					scRequestNoteDtl.setExceedThreshold(true);
+					BigDecimal quantity = thresholdData.itemsRequiredBPKApproval.get(
+				            scRequestNoteDtl.getRequestNoteDtlId());
+
+				    scRequestNoteDtl.getRequestItem().setQuantity(quantity);
 				} else {
 					scRequestNoteDtl.setExceedThreshold(false);
 				}
