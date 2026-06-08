@@ -15866,7 +15866,7 @@ public class SmApplicationUtil {
 		}
 
 		if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
-6			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
 				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY;
 			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
 				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY;
