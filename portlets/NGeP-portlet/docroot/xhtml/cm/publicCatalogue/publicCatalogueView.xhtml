@@ -193,15 +193,17 @@
 											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												value="#{pCatalogueBackingBean.managedBean.priceForm}"
+												maxlength="12"
 												size="10">
 											    <f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
 													converterId="priceRangeConverter" />
 											</p:inputText> 
-											#{lbl['lbl.cm.pub.catalog.to']} 
+											#{lbl['lbl.cm.pub.catalog.to']}
 											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												value="#{pCatalogueBackingBean.managedBean.priceTo}"
+												maxlength="12"
 												size="10">
 												<f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
@@ -220,6 +222,7 @@
 											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
 												value="#{pCatalogueBackingBean.managedBean.deliveryFrom}"
+												maxlength="3"
 												size="10">
 												<f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
@@ -229,6 +232,7 @@
 											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
 												value="#{pCatalogueBackingBean.managedBean.deliveryTo}"
+												maxlength="3"
 												size="10">
 												<f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
