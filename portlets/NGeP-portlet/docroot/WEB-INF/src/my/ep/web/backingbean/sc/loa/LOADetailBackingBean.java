@@ -12333,9 +12333,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		boolean isDocTypeQuotation = loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION);
 		boolean meetsFulfilmentCondition = (isPeriodic && !isContractDurationAbove4)
 				|| (isDocTypeQuotation && isOneOff);
-		//change this because of CR27868 not include in UAT
-		//#25725
-		boolean validPKCondition = !isPK7(loa);
+		
+		boolean validPKCondition = !isPK7(loa) || isReasonPK2(loa) || isReasonSpecialItem(loa);
 
 		if (!loa.isAgreementReq() && over500K(loa) && meetsFulfilmentCondition && validPKCondition) {
 			this.getManagedBean().setShowApprovalLetter(Boolean.TRUE);
@@ -12394,9 +12393,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Case 1: PK7 (strict check), Periodic contract, agreement false
 		if (!agreementReq) {
-			//change this because of CR27868 not include in UAT
-			//#25725
-			if (isContractTypeAsMinistry && isPK7 && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
+			if (isContractTypeAsMinistry && (isPK7 && !isPK2OrSpecial) && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
 				this.getManagedBean().setAgreementReqChange(true);
 				RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");
 
@@ -12452,15 +12449,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String procurementMode = scLoa.getProcurementMode().getParameterCode();
 		if (procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			if (isPeriodicBelow4 || (isPK7(scLoa) && isPeriodicAbove4)) {
+				
 				result = false;
 
 				boolean isDisabledStatus = scLoa.getPmStatus().getStatusId().equals(62505L);
-				//change this because of CR27868 not include in UAT
-				//#25725 - Start
-				if (isDisabledStatus) {
+				boolean isReason = (isReasonPK2(scLoa) || isReasonSpecialItem(scLoa)) && isPeriodicAbove4;
+
+				if (isDisabledStatus || isReason) {
 					result = true;
 				}
-				//#25725 - End
 			}
 		} else {
 			result = isPeriodicAbove4 || isContractTypeCentral; //only periodic & above 4 years or Contract type central is allowed 
