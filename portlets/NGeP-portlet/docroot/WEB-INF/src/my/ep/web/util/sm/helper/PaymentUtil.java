@@ -260,8 +260,6 @@ public class PaymentUtil {
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
 			String cancelUrl,String responseUrl,String callbackUrl,String language) {
-		log.info("#38377--responseUrl:"+responseUrl);
-		log.info("#38377--callbackUrl:"+callbackUrl);
 		String payload = null;
 		StringBuilder sb = new StringBuilder();
 		sb.append("{").append("\"orderId\":\"").append(orderId.toString())
@@ -280,8 +278,9 @@ public class PaymentUtil {
 			String amountStr = df.format(amount);
 			sb.append("\"billAmt\":\"").append(amountStr).append("\"")
 					.append("}");
-			payload = encrypt(sb.toString(),
+			payload = CryptoUtils.encryptAES(sb.toString(),
 					PasswordUtils.decrypt(clientKey));
+			log.info("######38377 after encrypt payload using AES no padding#####");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
