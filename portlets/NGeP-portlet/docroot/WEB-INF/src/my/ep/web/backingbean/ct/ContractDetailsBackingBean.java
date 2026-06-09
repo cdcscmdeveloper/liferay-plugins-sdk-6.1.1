@@ -1533,6 +1533,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
+		String docType = ctBB.getManagedBean().getContractVer().getDocType(); //#40283
 
 		/*Validation for delivery term main page*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
@@ -1990,7 +1991,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    log.info("validateCtContractVer method test : End Checking ");
 		  //#24333 - End
 		}
-		validationPerformanceBond(action); //#13847
+		
+		//#40283 start
+		if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+				|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
+				|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+			validationPerformanceBond(action); // #13847
+		}
+		//#40283 end
 		
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
