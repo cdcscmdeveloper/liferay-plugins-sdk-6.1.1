@@ -1993,9 +1993,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		
 		//#40283 start
-		if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+		if (docType!=null && (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
 				|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)
-				|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+				|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
 			validationPerformanceBond(action); // #13847
 		}
 		//#40283 end
