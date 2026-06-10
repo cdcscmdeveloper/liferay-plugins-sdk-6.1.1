@@ -13592,7 +13592,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			checkAnswersAndValidateUnitPriceZone(question, isZonePriceTypeTier);
 
 			for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
-				TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+				TplSpecZoneDtl tplSpecZoneDtl;
 				if (specAnswer.getTplSpecZoneQty() != null
 						&& specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl() != null) {
 					tplSpecZoneDtl = specAnswer.getTplSpecZoneQty()
