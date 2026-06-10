@@ -1322,7 +1322,7 @@ public class CommonApplBackingBean extends
 					
 					dateAfterOneYear.setTime(expDate);
 					dateAfterOneYear.add(Calendar.DATE, 1);
-					Date dayAfterExp = dateAfterOneYear.getTime();
+					Date dayAfterExp = dateAfterOneYear.getTime(); 
 					
 					getManagedBean().setMofAfterExpiryMsg(
 							SmCommonUtil.getMessage(
