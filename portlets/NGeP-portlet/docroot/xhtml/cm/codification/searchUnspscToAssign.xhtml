@@ -138,15 +138,15 @@
 							header="#{lbl['lbl.sc.item.details']}" resizable="true"
 							modal="true" closable="true">
 
-							<h:panelGroup style="display:block; margin-bottom:20px;">
-								<p:outputLabel
-									value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
-							</h:panelGroup>
 							<h:panelGroup style="display:block; margin-bottom:15px;">
 								<h:outputText
 									value="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}" />
 							</h:panelGroup>
-
+							<h:panelGroup style="display:block; margin-bottom:20px;">
+								<p:outputLabel
+									value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
+							</h:panelGroup>
+							
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.btn.ok']}"
 									onclick="assignCodeDialogConfirm.hide();"

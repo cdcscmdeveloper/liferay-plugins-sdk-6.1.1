@@ -1381,9 +1381,7 @@ public class SmApplicationUtil {
 		int payAccCnt = 0;
 		int regAccCnt = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append("<br/>"); //#39860
 		int noSignatoryCount = 0;
-		int signatoryNotBumiCount = 0; //#39860
 		List<SmSupplierBranch> paymentAccBranch = new ArrayList<SmSupplierBranch>();
 
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
@@ -1419,16 +1417,6 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-			//#39860 --START
-			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
-				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
-					if (smChequeSignatory.getSmPersonnel().getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
-						sb.append(++signatoryNotBumiCount + ". ");
-						sb.append(smChequeSignatory.getSmPersonnel().getName());
-						sb.append("<br/>");
-					}	
-				}	
-			}//#39860 --END
 		}
 		if (payAccCnt == 0) {
 			validSave = false;
@@ -1446,18 +1434,56 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-		//#39860 --START
-		if (signatoryNotBumiCount > 0) {
-			log.info("signatoryNotBumiCount"+signatoryNotBumiCount);
-			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
-			throw new EpException(MessageConst.ERROR_721082,
-					new String[] { sb.toString() });
-			}//#39860 --END
+
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
 		return validSave;
 	}
+	
+	//#39860 --START
+	/**
+	 * Validate cheque signatory based on Bumi status.
+	 * 
+	 * @param appl - getSmAppl
+	 * @param bank - List of SmSupplierBank
+	 * 
+	 * @param boolean validSignatoryBumi- check signatory Bumi status
+	 * @param int signatoryNotBumiCount- count signatory not Bumi 
+	 * @return true, if successful
+	 */
+	public static boolean validateChequeSignatoryBumi(SmApplicationManagedBean managedBean) {
+		SmAppl appl = managedBean.getSmAppl();
+		boolean validSignatoryBumi = true;
+		int signatoryNotBumiCount = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		
+        Set<Long> processedPersonnelIds = new HashSet<Long>();
+		
+		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
+					
+					SmPersonnel personnel = smChequeSignatory.getSmPersonnel();
+					
+					if (personnel.getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						if (processedPersonnelIds.add(personnel.getPersonnelId())) {
+							sb.append(++signatoryNotBumiCount + ". ");
+							sb.append(personnel.getName());
+							sb.append("<br/>");
+							validSignatoryBumi = false;	
+						}
+					}	
+				}	
+			}
+		}
+		if (!validSignatoryBumi && signatoryNotBumiCount > 0 && managedBean.isSupplierUser()) {
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
+		} 
+		return validSignatoryBumi;
+	}
+	//#39860 --END		
 
 	/**
 	 * Check if each registered branch already assigned to bank account type
@@ -4794,8 +4820,9 @@ public class SmApplicationUtil {
 			managedBean.setApprovedCategoryList(apprvList);
 		}
 		
-		// 36504 - START - KN Other Description history display last. 
-		SmAppl applNewReg = findNewRegHistoryOtherDesc(managedBean);
+		// 36504 - START - KN Other Description history display last.
+		Long supplierId = managedBean.getSmAppl().getSmSupplier().getSupplierId();
+		SmAppl applNewReg = findNewRegHistoryOtherDesc(supplierId);
 		
 		if (applNewReg != null) {
 			for (SmSupplierCategory previousKN : applNewReg.getSmSupplierCategories()) {
@@ -4828,8 +4855,8 @@ public class SmApplicationUtil {
 					prevList.add(previousKN);
 				}
 			}
-			managedBean.setPreviousCategoryList(prevList);
 		}
+		managedBean.setPreviousCategoryList(prevList);
 		// 36504 - END - KN Other Description history display last. 
 		
 	}
@@ -16140,9 +16167,9 @@ public class SmApplicationUtil {
 				.retrieveActiveOtherDescHistory(supplierCategoryId);
 	}
 	
-	public static SmAppl findNewRegHistoryOtherDesc(SmApplicationManagedBean managedBean) {
+	public static SmAppl findNewRegHistoryOtherDesc(Long supplierId) {
 		
-		SmAppl applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+		SmAppl applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(supplierId);
 		
 		if (applNewReg == null) {
 			return null;
@@ -16437,4 +16464,30 @@ public class SmApplicationUtil {
 	}
 	//#40165 - END
 
+	// #38001
+	public static String getRecommendationDescription(String recommendation, String language) {
+
+		if (recommendation == null) {
+			return null;
+		}
+
+		if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY;
+			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY;
+			}
+		} else if (language.equals(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN;
+			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN;
+			}
+		}
+
+		return recommendation;
+	}
+
+	
+	
 }

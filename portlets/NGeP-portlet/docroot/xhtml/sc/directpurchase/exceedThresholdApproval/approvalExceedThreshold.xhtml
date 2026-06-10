@@ -11,6 +11,14 @@
 	<ui:define name="resourceSection">
 		<script>
 			$('#portlet_dpApprovalExceedThreshold_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sc.direct.purchase.approval.exceed.threshold.title']}");			
+			
+			$(document).ready(function() {
+			$(window).load(function() {
+				setTimeout(function() {
+					$('[id$="btnSearch"]').click();
+				}, 1000);
+			});
+			});
 		</script>
 	</ui:define>
 	<ui:define name="contentSection">
@@ -66,20 +74,20 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.request.note.no']}" /></td>
 					<td><p:inputText size="35"
-							value="#{approvalExceedThresholdBackingBean.managedBean.requestNoteNo}" readonly="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"></p:inputText>
+							value="#{approvalExceedThresholdBackingBean.managedBean.requestNoteNo}"></p:inputText>
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.title']}" /></td>
 					<td colspan="3"><p:inputText size="148"
-							value="#{approvalExceedThresholdBackingBean.managedBean.requestNoteTitle}" readonly="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"></p:inputText></td>
+							value="#{approvalExceedThresholdBackingBean.managedBean.requestNoteTitle}"></p:inputText></td>
 				</tr>				
 			</table>
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.sc.search.button']}" disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"
+				<p:commandButton id="btnSearch" value="#{lbl['lbl.sc.search.button']}"
 					action="#{approvalExceedThresholdBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{approvalExceedThresholdBackingBean.reset()}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			</div>
 		</p:panel>

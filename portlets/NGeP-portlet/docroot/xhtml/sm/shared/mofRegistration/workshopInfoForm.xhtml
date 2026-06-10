@@ -297,7 +297,9 @@
 	
 			</table>
 			<!-- 29379 - Site Visit Grouping Enhancement -28775 -->
+			<!-- 
 			<ui:include src="/xhtml/sm/shared/mofRegistration/employeeInfoForm.xhtml" />
+			-->
 			<br />
 			<div align="right">
 				<!-- #34159 - START - add param disablevalidation -->
@@ -329,10 +331,12 @@
 		update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" />
 
 	<!-- 29379 - Site Visit Grouping Enhancement -28775  START-->
+	<!--
 	<ac:confirmationPopup id="empDeletePopUpId" widget="empDeletePopUp"
 		okAction="backingBean.removeEmployee()" width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}"
 		update=":#{p:component('pnlEmployeeInfo')}" />
+		-->
 	<!-- 29379 - Site Visit Grouping Enhancement -28775  END-->
 </ui:composition>

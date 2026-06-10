@@ -5559,24 +5559,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * 
 	 */
 	public void otherDescriptionHistory() {
-		if (getManagedBean().getApprovedCategoryList() != null) {
-			List<SmSupplierCategory> updatedList = new ArrayList<>();
-
-			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
-				
-				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
-				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
-				
-				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
-					
-					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				}
-				updatedList.add(cat);
-			}
-			getManagedBean().setApprovedCategoryList(updatedList);
-		}
-		
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
 	}
 	
@@ -5605,42 +5587,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 *  
 	 */
 	public void resetOtherDescriptionEdit() {
-		getManagedBean().setOtherDescEdited(getManagedBean().getSelectedCategory().getOtherDesc());
-	}
-	
-	/**
-	 * To save data Other Description Supplier Data Maintenance
-	 *  
-	 */
-	public void saveOtherDescriptionEdit() {
-		try {
-			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
-			reqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
-			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
-			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
-			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
-
-			if (!getManagedBean().isOtherDescChangeSupplier()){
-				getManagedBean().setOtherDescChangeSupplier(true);
-			}
-			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
-			
-			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(reqDTO);
-			
-			if (getManagedBean().getSmAppl().getApplNo() == null) {
-				getManagedBean().setSmAppl(reqDTO.getSmAppl());
-			}
-			
-			SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(getManagedBean().getHistorySuppCategory());
-
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-				MessageUtils.getMessage(MessageConst.INFO_721228, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
-		}
+		getManagedBean().setOtherDescEdited(getManagedBean().getHistorySuppCategory().getOtherDesc());
 	}
 	
 	/**

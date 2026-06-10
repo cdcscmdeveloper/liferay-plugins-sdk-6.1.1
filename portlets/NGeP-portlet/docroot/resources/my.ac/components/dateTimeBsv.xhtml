@@ -50,10 +50,10 @@
 			required="#{cc.attrs.required}"
 			label="#{cc.attrs.label} #{lbl['lbl.txt.hour']}">
 			<ui:remove>#28188 - Start Change selectItem method </ui:remove>
-			<f:selectItems value="#{dateTimeBackingBean.getHoursDropdownValues(cc)}" />
+			<f:selectItems value="#{dateTimeBackingBean.getHoursDropdownValuesBSV(cc)}" />
 			<ui:remove>#28188 - End Change selectItem method </ui:remove>
 			<ui:remove>#28188 - Start Change update attribute </ui:remove>
-			<p:ajax event="change" partialSubmit="true" process="@this" update="calMin @this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<p:ajax event="change" partialSubmit="true" process="@this calDate" update="calMin" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 			<ui:remove>#28188 - End Change update attribute </ui:remove>
 		</h:selectOneMenu>
 		<h:selectOneMenu id="calMin" style="width: 72px;"
@@ -62,7 +62,7 @@
 			label="#{cc.attrs.label} #{lbl['lbl.txt.minute']}">
 			<ui:remove>#28188 - Start Change selectItem method and update attribute </ui:remove>
 			<f:selectItems value="#{dateTimeBackingBean.getMinutesDropdownValuesBSV(cc)}" />
-			<p:ajax event="change" partialSubmit="true" process="@this" update="calMin @this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<p:ajax event="change" partialSubmit="true" process="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 			<ui:remove>#28188 - End Change selectItem method and update attribute</ui:remove>
 		</h:selectOneMenu>
 		<p:message id="calDateMsg" for="calDate" display="icon" />
