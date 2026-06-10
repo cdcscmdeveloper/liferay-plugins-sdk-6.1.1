@@ -3371,26 +3371,29 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	        case "ONE":
 	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
-	                                SupplierManagementConst.SUPPLIER_APPROVER)) {
-	                return otherDescBean.getOtherDesc();
+	            		SupplierManagementConst.SUPPLIER_APPROVER) &&
+	                    otherDescBean.getOtherDescOld() != null) {
+	                return otherDescBean.getOtherDescOld();
 	            }
 	            break;
 
 	        case "TWO":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
+	            		SupplierManagementConst.SUPPLIER_PO)) {
 	                return otherDescBean.getOtherDesc();
 	            }
 	            break;
 
 	        case "THREE":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-	                                SupplierManagementConst.SUPPLIER_PO)) {
+	        	if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
+                        SupplierManagementConst.SUPPLIER_PO)) {
 	                return getUserNameByUserId(otherDescBean.getCreatedBy());
 	            }
 	            break;
 
 	        case "FOUR":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
+	            		SupplierManagementConst.SUPPLIER_APPROVER)) {
 	                return otherDescBean.getOtherDesc();
 	            }
 	            break;
