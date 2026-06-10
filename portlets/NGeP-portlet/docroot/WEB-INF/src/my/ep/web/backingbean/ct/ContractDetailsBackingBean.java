@@ -57,6 +57,7 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
 import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
 import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -2090,50 +2091,39 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			log.info("xoxoxoxoxooxoxo STATUSSS : "+  resDto.getStatus());
 			log.info("xoxoxoxoxooxoxo END ");
 			
-			// before call handle inactive user, check in the status, is there any not success(1) user
-			Map<String, Long> listResultStatusUser = getInactiveUserStatus(resDto.getStatus());
+			List<SelectedInactiveUserDTO> selectedInactiveUsers = resolveInactiveUserStatus(resDto);
+			handleInactiveUserValidation(action, selectedInactiveUsers);
 			
-			handleInactiveUserValidation(action, listResultStatusUser);
 		}
 		//#30737 - End
 		
 	}
 	
 	//#30737 - Start
+	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(InactiveUserResDTO resDto) {
+
+	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
+
+	    String[] statuses = resDto.getStatus().split(",");
+	    for (int i = 0; i < statuses.length; i++) {
+	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
+	        selectedUser.setUserName(getSelectedUsers().get(i).getUserName());
+	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+	        selectedUsers.add(selectedUser);
+	    }
+	    return selectedUsers;
+	}
 	
 	// private to populate user id into string with comma delimiter 
 	private String populateInactiveUserIdIntoString(List<PmUser> userIds){
 		StringBuilder sb = new StringBuilder();
-		
 		for(PmUser user : userIds){
-			
 			if (sb.length() > 0) {
 		        sb.append(",");
 		    }
-
 		    sb.append(user.getUserId());
 		}
-		
 		return sb.toString();
-		
-	}
-	
-	private Map<String, Long> getInactiveUserStatus(String userStatus){
-		
-		String[] arr = userStatus.split(",");
-		int i = 0;
-
-		Map<String, Long> userNameStatus = new HashMap<>();
-
-        for (String status : arr) {
-//        	if (!("1").equalsIgnoreCase(status)){
-        		userNameStatus.put(getSelectedUsers().get(i).getUserName(), Long.parseLong(status.trim()));
-//        	}
-        	i++;
-        }
-        
-		return userNameStatus;
-		
 	}
 		
 	/**
@@ -2144,23 +2134,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @throws EpException if inactive user conditions are met during validation. 
 	 * Different error messages will be generated based on the returned error code.
 	 */
-	public void handleInactiveUserValidation(String outcome, Map<String, Long>listResultStatusUser) {
-
-		IContractSO contractSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-    	
+	public void handleInactiveUserValidation(String outcome, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
         try {
-        	
-        	Long inactiveUserCheckResult = 1L; //TEMP listResultStatusUser
-        	// syaz ko kene tukar ni jadi Map<String, Long>
-        	// nanti looping untuk tau dia status 1,2,3,4,5
-        	// so far aku simpan key name : status
-        	// kalau 1 proceed success, 2,3,4 proceed keluar kan nama user tu dekat alert
-        	
-        	contractSO.checkInactiveUserOnAction(
+        	checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-            	getSelectedUsers(),
-            	inactiveUserCheckResult
+        		selectedInactiveUsers
         	);
         } catch (EpException ex) {
         	throw buildInactiveUserException(ex);

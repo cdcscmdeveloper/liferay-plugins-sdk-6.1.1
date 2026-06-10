@@ -26,6 +26,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO; //#30737
 import my.ep.dto.ct.actor.CtActorReqDTO;
 import my.ep.dto.ct.actor.CtActorResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -385,21 +386,16 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
      * parameters
     */
     protected EpException buildInactiveUserException(EpException ex) {
-    	log.info("xoxoxoxoxoxoxo catch EpException");
-    	
-        String selectedUserName = null;
-        if(!getSelectedUsers().isEmpty()){
-        	selectedUserName = getSelectedUsers().get(0).getUserName();
-        }
+    	log.info("xoxoxoxoxoxoxo catch buildInactiveUserException");
         
         String errorCode = ex.getMessage();
         log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
         
         String[] messageKeys =
                 getInactiveUserMessageKeys(
-                    errorCode,
-                    selectedUserName
-                );
+                        errorCode,
+                        getSelectedUserNames(),
+                        ex.getParameters());
         
         if (messageKeys != null && messageKeys.length > 0) {
 
@@ -427,7 +423,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
      * NOTE:
      * Complexity is caused by explicit business error code mapping.
     */
-    private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserName) {
+    private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserName, String[] parameters) {
 
         if (MessageConst.ERROR_100068.equals(errorCode)
         		|| MessageConst.ERROR_100070.equals(errorCode)) {
@@ -464,7 +460,98 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
                 "Pejabat Pengarah Hospital Kuala Lumpur Unit Pentadbiran"
             };
         }
+        
+        if (MessageConst.ERROR_100075.equals(errorCode)) {
+            return parameters;
+        }
+        
         return new String[0];
+    }
+    
+    private String getSelectedUserNames() {
+        List<String> userNames = new ArrayList<String>();
+        for (PmUser user : getSelectedUsers()) {
+            userNames.add(user.getUserName());
+        }
+        return buildUserNames(userNames);
+    }
+    
+    public void checkInactiveUserOnAction(ContractReqDTO reqDTO, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+
+    	log.info("xoxoxoxoxoxoxo checkInactiveUserOnAction....");
+    	
+        List<SelectedInactiveUserDTO> invalidUsers = new ArrayList<SelectedInactiveUserDTO>();
+
+        int activeCount = 0;
+
+        for (SelectedInactiveUserDTO user : selectedInactiveUsers) {
+
+            Long status = user.getStatus();
+
+            if (Long.valueOf(1L).equals(status)) {
+                activeCount++;
+            }
+
+            if (Long.valueOf(2L).equals(status)
+                    || Long.valueOf(3L).equals(status)
+                    || Long.valueOf(4L).equals(status)) {
+
+                invalidUsers.add(user);
+            }
+        }
+
+        // Single selected user and inactive
+        if (selectedInactiveUsers.size() == 1 && !invalidUsers.isEmpty()) {
+        	log.info("Single selected user and inactive");
+            throw new EpException(MessageConst.ERROR_100068);
+        }
+
+        // Mixed active and inactive
+        if (activeCount > 0 && !invalidUsers.isEmpty()) {
+        	log.info("Mixed active and inactive");
+            String userNames = getSelectedInactiveUserNames(invalidUsers);
+            throw new EpException(MessageConst.ERROR_100075, new String[] { userNames });
+        }
+
+        // All inactive (2,3,4)
+        if (activeCount == 0 && !invalidUsers.isEmpty()) {
+        	log.info("All inactive (2,3,4)");
+            throw new EpException(MessageConst.ERROR_100068);
+        }
+
+        // All status = 5
+        if (Long.valueOf(5L).equals(selectedInactiveUsers.get(0).getStatus())) {
+        	log.info("All status = 5");
+            throw new EpException(MessageConst.ERROR_100073);
+        }
+
+        // Single active or all active
+        log.info("PASSED!");
+        //throw new EpException(MessageConst.ERROR_100068); //TEMP
+        return;
+    }
+    
+    private String getSelectedInactiveUserNames(List<SelectedInactiveUserDTO> inactiveUsers) {
+        List<String> userNames = new ArrayList<String>();
+        for (SelectedInactiveUserDTO user : inactiveUsers) {
+            userNames.add(user.getUserName());
+        }
+        return buildUserNames(userNames);
+    }
+    
+    private String buildUserNames(List<String> userNames) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < userNames.size(); i++) {
+            if (i > 0) {
+                if (i == userNames.size() - 1) {
+                    sb.append(" and ");
+                } else {
+                    sb.append(", ");
+                }
+            }
+            sb.append(userNames.get(i));
+        }
+        return sb.toString();
     }
     
     protected abstract List<PmUser> getSelectedUsers();
