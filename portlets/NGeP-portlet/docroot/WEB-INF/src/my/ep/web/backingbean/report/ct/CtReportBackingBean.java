@@ -351,6 +351,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				}
 			}
 			else if (getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_MANAGEMENT_RPT_CC_VAL)) {
+				ContractManagementReportBackingBean ctManagementReportBB = new ContractManagementReportBackingBean();
 			if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
@@ -361,7 +362,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
 
-				ContractManagementReportBackingBean ctManagementReportBB = new ContractManagementReportBackingBean();
 				//Start Fix - #40102
 				ctManagementReportBB.getManagedBean().setSelectedMinistry(null);
 				ctManagementReportBB.getManagedBean().setSelectedKumpulanPTJ(null);
@@ -380,13 +380,42 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					SmSupplier currSupp = null;
 					currSupp = SmApplicationUtil.getCurrentSupplier();
 					ctManagementReportBB.getManagedBean().setSupplierID(currSupp.getSupplierId());
-				} else {
-					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
-				}
+				} 
 				// cc
 				ctManagementReportBB.getManagedBean().setDisableMinistryField(false);
 
-			}
+			} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) { //Start Fix - #40102, #30918
+
+					ctManagementReportBB.getManagedBean().setSupplierID(null);
+					ctManagementReportBB.getManagedBean().setSelectedSupplier(null);
+
+					List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrgWithoutRole(getFacesScopes()
+							.getUserSessionBean().getUserId(), false);
+
+					if (userOrgList == null || userOrgList.isEmpty()) {
+						throw new EpException(MessageConst.ERROR_770105);
+	}
+	
+					PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+
+					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+					getManagedBean().setSelectedPTJ(pmOrgProfile);
+
+					// #Assign val to ContractItemMonitoringCCRptBakingBean
+					ctManagementReportBB.getManagedBean().setSelectedMinistry(getManagedBean().getSelectedMinistry());
+					ctManagementReportBB.getManagedBean().setSelectedKumpulanPTJ(
+							getManagedBean().getSelectedKumpulanPTJ());
+					ctManagementReportBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
+					// cc
+					ctManagementReportBB.getManagedBean().setDisableMinistryField(true);
+					ctManagementReportBB.getManagedBean().setDisableOrgField(
+							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
+					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
+				}else {
+					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
+				}//Start Fix - #40102, #30918
 		}
 		// #30918 - end
 	}
