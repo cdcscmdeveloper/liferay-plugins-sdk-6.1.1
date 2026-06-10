@@ -2886,7 +2886,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		user.setMobileNo(userOrg.getMobileNo());
 		user.setMobileArea(userOrg.getMobileArea());
 		user.setMobileCountry(userOrg.getMobileCountry());
-		user.setMobileTelcoId(userOrg.getMobileTelcoId());
+		//user.setMobileTelcoId(userOrg.getMobileTelcoId()); //#40246 
 	}
 
 	private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, UserReqDTO reqDTO) {
@@ -4031,17 +4031,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	public void notifySmsChangeListener() {
 		logger.info("...........notifySmsChangeListener............");
-
 		if (getManagedBean().getSelectedUser().isNotifyBySms()
 				&& StringUtils.isBlank(getManagedBean().getSelectedUserOrg().getMobileNo())) {
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770090);
 		}
-		if (getManagedBean().getSelectedUser().isNotifyBySms()
+		// #40246 Start
+		/*if (getManagedBean().getSelectedUser().isNotifyBySms()
 				&& getManagedBean().getSelectedUserOrg().getMobileTelcoId() == null) {
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770250);
-		}
+		}*/
+		// #40246 End
 		this.getManagedBean().getSelectedUser().setModified(true);
 	}
 
@@ -4507,14 +4508,15 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-
 		if (user.isNotifyBySms()) {
 			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
 				throw new EpException(MessageConst.ERROR_770090);
 			}
-			if (pmUserOrg.getMobileTelcoId() == null) {
+			// #40246 Start
+			/*if (pmUserOrg.getMobileTelcoId() == null) {
 				throw new EpException(MessageConst.ERROR_770250);
-			}
+			}*/
+			// #40246 End
 		}
 	}
 
