@@ -257,15 +257,15 @@
 				header="#{lbl['lbl.sc.item.details']}" style="width:100%"
 				modal="true" closable="true">
 
-				<!-- Display item details -->
-				<h:panelGroup style="margin-bottom: 20px; display:block;">
-					<p:outputLabel
-						value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
-				</h:panelGroup>
 				<!-- Confirmation question -->
 				<h:panelGroup style="margin-bottom: 15px; display:block;">
 					<h:outputText
 						value="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}" />
+				</h:panelGroup>
+				<!-- Display item details -->
+				<h:panelGroup style="margin-bottom: 20px; display:block;">
+					<p:outputLabel
+						value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
 				</h:panelGroup>
 
 				<div align="right">
