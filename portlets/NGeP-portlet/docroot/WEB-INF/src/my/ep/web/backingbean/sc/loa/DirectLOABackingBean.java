@@ -13231,16 +13231,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			checkAnswersAndValidateUnitPriceZone(question, isZonePriceTypeTier);
 
 			for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
+				TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+				if (specAnswer.getTplSpecZoneQty() != null
+						&& specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl() != null) {
+					tplSpecZoneDtl = specAnswer.getTplSpecZoneQty()
+							.getTplSpecZoneDtl();
+				} else {
+					tplSpecZoneDtl = convertTreeNodesToZoneCriteria(
+							this.getManagedBean().getZoneTrees(), null).get(0);
+				}
 				if (specAnswer.getRatePerUom() == null && isZonePriceTypeTier) {
 					String tier = specAnswer.getTplSpecTierQty().getFromQty().toString() + " - "
 							+ specAnswer.getTplSpecTierQty().getToQty().toString();
 					throw new EpException(MessageConst.ERROR_790203, new String[] {
-							specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName(), tier });
+							tplSpecZoneDtl.getZoneName(), tier });
 				} else if (specAnswer.getRatePerUom() == null && !isZonePriceTypeTier) {
 					throw new EpException(MessageConst.ERROR_790201, new String[] {
 							ResourceBundleUtils.getMessage(QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()),
-							specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() });
+							tplSpecZoneDtl.getZoneName() });
 				}
 			}
 		}
