@@ -197,7 +197,8 @@
 												size="10">
 											    <f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-													converterId="priceRangeConverter" />
+													converterId="cmNumberConverter" />
+												<f:attribute name="numberType" value="DECIMAL"/>
 											</p:inputText> 
 											#{lbl['lbl.cm.pub.catalog.to']}
 											<p:inputText
@@ -207,7 +208,8 @@
 												size="10">
 												<f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-													converterId="priceRangeConverter" />
+													converterId="cmNumberConverter" />
+												<f:attribute name="numberType" value="DECIMAL"/>
 											</p:inputText>
 										</td>
 									</tr>
@@ -226,7 +228,8 @@
 												size="10">
 												<f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-													converterId="deliveryTermConverter" />
+													converterId="cmNumberConverter" />
+												<f:attribute name="numberType" value="INTEGER"/>
 											</p:inputText> 
 											#{lbl['lbl.cm.pub.catalog.to']} 
 											<p:inputText
@@ -236,7 +239,8 @@
 												size="10">
 												<f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-													converterId="deliveryTermConverter" />
+													converterId="cmNumberConverter" />
+												<f:attribute name="numberType" value="INTEGER"/>
 											</p:inputText>
 										</td>
 									</tr>
