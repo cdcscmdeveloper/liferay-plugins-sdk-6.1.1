@@ -152,6 +152,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	// Authorization
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 
+	// fix_pm_using_ai: cross-tab corruption guard. Carries the userId originally loaded into this view (per-tab via @ViewScoped)
+	// and is re-submitted via hidden field on save, so we can detect if managed-bean state belongs to a different user.
+	private Long formUserId;
+
+	public Long getFormUserId() {
+		return formUserId;
+	}
+
+	public void setFormUserId(Long formUserId) {
+		this.formUserId = formUserId;
+	}
+
 	public ISearchBean<PmParameterDesc> getOrgTypeSearchBean() {
 		logger.info("getOrgTypeSearchBean");
 		if (this.orgTypeSearchBean == null) {
@@ -543,6 +555,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			pmUser.setConfirmPassword(null);
 
 			this.getManagedBean().setSelectedUser(pmUser);
+			this.formUserId = pmUser.getUserId(); // fix_pm_using_ai: snapshot userId for cross-tab guard
 			this.getManagedBean().setDeleteUserRoles(null);
 			this.getManagedBean().setDeleteReceivingAddrTypes(null);
 			this.getManagedBean().setSelectedDeliveringAddrTypes(null);
@@ -3089,6 +3102,25 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		PmUserOrg userOrg = null;
 		boolean isNewUser = this.getManagedBean().getSelectedUser().isBrandNew();
 		logger.info("..............saveUserProfile.................isNewUser=" + isNewUser);
+
+		// fix_pm_using_ai: cross-tab corruption guard.
+		// If formUserId (snapshot at loadUserProfile time, submitted via hidden field)
+		// differs from selectedUser.userId in the managed bean, another tab has clobbered
+		// the state. Abort rather than write the wrong row.
+		if (!isNewUser) {
+			Long beanUserId = this.getManagedBean().getSelectedUser() != null
+					? this.getManagedBean().getSelectedUser().getUserId() : null;
+			if (this.formUserId != null && beanUserId != null
+					&& !this.formUserId.equals(beanUserId)) {
+				logger.error("CROSS-TAB STATE BLEED detected. formUserId=" + this.formUserId
+						+ " bean.selectedUser.userId=" + beanUserId
+						+ ". Aborting save to prevent data corruption.");
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770016,
+						new String[] { "Session inconsistent across tabs. Sila refresh halaman dan cuba semula." });
+				return null;
+			}
+		}
 
 		try {
 			user = this.getManagedBean().getSelectedUser();

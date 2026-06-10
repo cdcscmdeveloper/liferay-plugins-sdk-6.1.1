@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ * Copyright ï¿½ 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.managedbean.pm.profilemanagement;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
@@ -37,7 +37,7 @@ import org.primefaces.event.FileUploadEvent;
  * 
  */
 @ManagedBean(name = "profileManagementManagedBean")
-@SessionScoped
+@ViewScoped // fix_pm_using_ai: was @SessionScoped â€” caused cross-tab data corruption (SYAFIAH/FLORENCE incident 2026-06-08)
 public class ProfileManagementManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;

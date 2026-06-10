@@ -7,6 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:outputPanel id="pUserProfileHeader">
+		<!-- fix_pm_using_ai: hidden field carries the userId loaded into this view back on POST, so saveUserProfile can detect cross-tab state bleed -->
+		<h:inputHidden id="formUserIdGuard" value="#{profileManagementBackingBean.formUserId}"/>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
