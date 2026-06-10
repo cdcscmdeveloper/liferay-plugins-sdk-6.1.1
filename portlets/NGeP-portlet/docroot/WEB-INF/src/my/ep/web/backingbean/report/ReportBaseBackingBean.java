@@ -29,6 +29,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.report.IReportSectionSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -513,4 +514,16 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		}
 	}
 	//30824 END
+	
+	// #40017 START
+	public void executeRefreshPrcRefreshMvMof() {
+		try {
+			IReportSectionSO reportSectionSo = (IReportSectionSO) BusinessDelegate.getInstance().getServiceObject("pm",
+					IReportSectionSO.class);
+			reportSectionSo.callRefreshPrcRefreshMvMof();
+		} catch (Exception e) {
+			throw new EpException(e.getMessage());
+		}
+	}
+	// #40017 END
 }
