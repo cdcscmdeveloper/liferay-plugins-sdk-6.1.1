@@ -402,7 +402,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 				//28718 - start
 				if(!getManagedBean().isTriggerPRErrorMsg()) {
-					// #31788
+					// 31788 - acknowledgement message assign new user.
 					if (getManagedBean().isAssignNewUser()) {
 						FacesContext.getCurrentInstance().addMessage(
 								null,
