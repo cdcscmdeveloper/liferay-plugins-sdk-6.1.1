@@ -460,7 +460,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	@Override
 	public void resetSearch() {
 		log.debug("resetSearch: ctReportBB");
-		
 		// #29416 Nordin start
 		if (!getManagedBean().isDisableMinistryField()) {
 			getManagedBean().setSelectedMinistry(null);
@@ -468,7 +467,11 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 			getManagedBean().setDisableOrgField(false);
 			getManagedBean().setSelectedKumpulanPTJ(null);
 			getManagedBean().setSelectedPTJ(null);
-		}
+		} else { // Start Fix #40102,// #40398,// #30918
+			getManagedBean().setDisableMinistryField(false); 
+			getManagedBean().setDisableOrgField(false);
+			getManagedBean().setSelectedPTJ(null);
+		}// End Fix #40102,// #40398,// #30918
 				
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
