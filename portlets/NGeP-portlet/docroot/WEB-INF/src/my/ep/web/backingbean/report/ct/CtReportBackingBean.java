@@ -393,7 +393,11 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 			getManagedBean().setDisableOrgField(false);
 			getManagedBean().setSelectedKumpulanPTJ(null);
 			getManagedBean().setSelectedPTJ(null);
-		}
+		} else { // Start Fix #40102, #40398, #30918
+			getManagedBean().setDisableMinistryField(false); 
+			getManagedBean().setDisableOrgField(false);
+			getManagedBean().setSelectedPTJ(null);
+		}// End Fix #40102, #40398, #30918
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
 		//#29416, #40102 - start
