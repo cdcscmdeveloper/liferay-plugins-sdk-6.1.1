@@ -386,8 +386,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				// cc
 				ctManagementReportBB.getManagedBean().setDisableMinistryField(false);
 
-			} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) { //Start Fix - #40102, #30918
+			} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) { //Start Fix - #40102, #30918
 
 					ctManagementReportBB.getManagedBean().setSupplierID(null);
 					ctManagementReportBB.getManagedBean().setSelectedSupplier(null);
@@ -412,8 +411,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					ctManagementReportBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
 					// cc
 					ctManagementReportBB.getManagedBean().setDisableMinistryField(true);
-					ctManagementReportBB.getManagedBean().setDisableOrgField(
-							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
 					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
 				}//End Fix - #40102, #30918
 		}
