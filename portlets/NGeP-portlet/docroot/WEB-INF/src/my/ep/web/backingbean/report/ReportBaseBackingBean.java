@@ -571,7 +571,7 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 					"ReportBaseBackingBean.callRefreshPrcRefreshMvMof", "reportSectionSo.callRefreshPrcRefreshMvMof", 
 					subStartTime);
 		} catch (Exception e) {
-			log.info(e);
+			e.printStackTrace();
 			throw new EpException(e.getMessage());
 		}
 		log.info("#40017 :: executeRefreshPrcRefreshMvMof - END");
