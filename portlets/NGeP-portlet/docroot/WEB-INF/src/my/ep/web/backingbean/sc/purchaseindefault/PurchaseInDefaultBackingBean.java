@@ -3352,10 +3352,10 @@ public class PurchaseInDefaultBackingBean extends
 		}
 
 		String outcomeLowerCase = outcome.toLowerCase();
-		String confirmationMessageContent = ResourceBundleUtils.getMessage("lbl.sc.pid." + outcomeLowerCase
-				+ ".confirmation.message", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+		String confirmationMessageContent = ResourceBundleUtils.getMessage("lbl.sc.confirmation.message." + outcomeLowerCase,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
 
-		String confirmationMessageTitle = ResourceBundleUtils.getMessage("lbl.sc.pid." + outcomeLowerCase + ".header.message",
+		String confirmationMessageTitle = ResourceBundleUtils.getMessage("lbl.sc.header.message." + outcomeLowerCase,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
 		
 		this.getManagedBean().setConfirmationMessageContent(confirmationMessageContent);

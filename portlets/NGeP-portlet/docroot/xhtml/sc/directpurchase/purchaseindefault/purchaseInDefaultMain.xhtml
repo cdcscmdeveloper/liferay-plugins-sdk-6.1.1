@@ -39,7 +39,7 @@
 		<ac:cancelRejectPopup id="#{rejectPID}" widget="rejectPID" width="30%"
 			height="100"
 			okAction="#{purchaseInDefaultBackingBean.approverAction(reject)}"
-			title="#{lbl['lbl.sc.pid.reject.header.message']}"
+			title="#{lbl['lbl.sc.header.message.reject']}"
 			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this,@([id$=messages])" />
 		<!-- 20190417@asyrafhaziq_12095 - End -->
 		<ui:remove>#34449 - end</ui:remove>
@@ -207,8 +207,8 @@
 		<ac:confirmationPopup id="submitConformDlgPid"
 			widget="submitConformDlg" width="400" height="100"
 			okAction="purchaseInDefaultBackingBean.submitPurchaseInDefault(null)"
-			title="#{lbl['lbl.sc.pid.submit.header.message']}"
-			content="#{lbl['lbl.sc.pid.submit.confirmation.message']}"
+			title="#{lbl['lbl.sc.header.message.submit']}"
+			content="#{lbl['lbl.sc.confirmation.message.submit']}"
 			update="@form" />
 		
 		<ui:remove>34449 - end</ui:remove>
