@@ -1245,7 +1245,7 @@ public class CommonApplBackingBean extends
 							SmCommonUtil.getMessage(
 									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", dayAfterExp), getManagedBean().getDays()}));
 				}
-			}
+			} 
 		}else{
 			log.info("No Supplier");
 		}
