@@ -658,6 +658,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean inquirySiteVisitAfter;
 	//#34392 - end
 	
+	// #40031 - Start
+	private String prevRole;
+	private String removedRoleMsg;
+	// #40031 - End
+	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4822,4 +4827,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setBasicSupplier(boolean basicSupplier) {
 		this.basicSupplier = basicSupplier;
 	}
+	
+	// #40031 - Start
+	public String getPrevRole() {
+		return prevRole;
+	}
+
+	public void setPrevRole(String prevRole) {
+		this.prevRole = prevRole;
+	}
+
+	public String getRemovedRoleMsg() {
+		return removedRoleMsg;
+	}
+
+	public void setRemovedRoleMsg(String removedRoleMsg) {
+		this.removedRoleMsg = removedRoleMsg;
+	}
+	// #40031 - End
 }
