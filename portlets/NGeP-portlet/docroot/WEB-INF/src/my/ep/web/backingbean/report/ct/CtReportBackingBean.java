@@ -411,7 +411,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
 					getManagedBean().setSelectedPTJ(pmOrgProfile);
 
-					// #Assign val to ContractItemMonitoringCCRptBakingBean
 					ctManagementReportBB.getManagedBean().setSelectedMinistry(getManagedBean().getSelectedMinistry());
 					ctManagementReportBB.getManagedBean().setSelectedKumpulanPTJ(
 							getManagedBean().getSelectedKumpulanPTJ());
