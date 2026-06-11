@@ -1231,7 +1231,7 @@ public class CommonApplBackingBean extends
 				dateAfterOneYear.add(Calendar.MONTH, 12);
 				Date renewalEnd = dateAfterOneYear.getTime();
 
-				long togo = daysBetween(currDate, renewalEnd) + 2;
+				long togo = daysBetween(currDate, renewalEnd) + 1;
 
 				if (togo >= 1 && togo <= 366
 						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
@@ -1245,7 +1245,7 @@ public class CommonApplBackingBean extends
 							SmCommonUtil.getMessage(
 									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", dayAfterExp), getManagedBean().getDays()}));
 				}
-			}
+			} 
 		}else{
 			log.info("No Supplier");
 		}
