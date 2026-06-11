@@ -8954,6 +8954,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the personel type to define equity or not
 	 */
 	public void assignNewShareHolder() {
+		// #40031 - Start
+		getManagedBean().setPrevRole(null);
+		// #40031 - End
+		
 		if (getManagedBean().getIdentificationTypes() == null) {
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
