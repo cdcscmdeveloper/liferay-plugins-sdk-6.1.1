@@ -18814,8 +18814,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return other description for category code
 	 */
 	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return null;
+		}
 		return SmApplicationUtil.getCategoryCodeOtherDesc(
-				getManagedBean().getSmAppl().getSmSupplierCategories(), catL3);
+				appl.getSmSupplierCategories(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
 	//#31043 START

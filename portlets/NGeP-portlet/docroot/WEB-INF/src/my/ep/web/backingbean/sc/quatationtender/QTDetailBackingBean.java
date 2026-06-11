@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;//#28188
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -1015,7 +1016,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveApprovalTabDtl();
 			}
 			//bug #30435 - end
-			convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),false);//#29661
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
@@ -8175,6 +8175,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			updateApprovalDetails(this.getManagedBean().getQt());
+			
+			//28188 -start-
+			if(this.getManagedBean().getQt().isBsvRequired()){
+				checkBsvDtlsChangeRemarks();
+			}
+			//28188 -end-
+			
 			retrieveApprovalTabDtl();
 
 			// 25037 - start
@@ -15218,20 +15225,106 @@ public void retrieveDemoQtDetails(Long qtId) {
 			amendMentBean = null;
 		} 
 	}
+	//#28188 - End
 	
+	//28188 -start-
+	/**
+	 * check any bsvDetailschnaged during qtmaintenance.
+	 */
+	private void checkBsvDtlsChangeRemarks() {
+
+		List<BriefingZoneBean> beansList = this.getManagedBean()
+				.getBriefingZoneBean();
+		if (CollectionUtils.isNotEmpty(beansList)) {
+
+			for (BriefingZoneBean bsvDtlBean : beansList) {
+				ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+				boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
+						.getScQtBsvDtls());
+				
+				if (isBsvdtlsChange) {
+					checkBsvRemarksMandatory(scQtBsv);
+				}
+			}
+		} else {
+			
+			BriefingZoneBean bsvDtlBean = this.getManagedBean().getBsvDtlBean();
+			ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+			boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
+					.getScQtBsvDtls());
+			
+			if (isBsvdtlsChange) {
+				checkBsvRemarksMandatory(scQtBsv);
+			}
+
+		}
+	}
+	//28188 -end-
+	
+	//28188 -start-
+	/**
+	 * check bsvDeails changed or not.
+	 * @param bsvdetails
+	 * @return true/false.
+	 */
+	private boolean checkBsvdtlsChange(List<ScQtBsvDtl> bsvdetails){
+	
+	if(CollectionUtils.isNotEmpty(bsvdetails)){
+		for(ScQtBsvDtl bsvDtl:bsvdetails){
+			
+			if(null==bsvDtl.getQtBsvDtlId()){
+				 return Boolean.TRUE;	
+			}
+		}
+	}
+	return Boolean.FALSE;
+	}
+	//28188 -end-
+	
+	//28188 -start-
+	/**
+	 * check remarks key in after bsvDetails change.
+	 * @param qtBsv
+	 */
+	private void checkBsvRemarksMandatory(ScQtBsv qtBsv){
+		List<ScQtBSVRemark> bsvRemarks=	qtBsv.getBsvRemarks();
+		if (CollectionUtils.isNotEmpty(bsvRemarks)) {
+			for (int i = 0; i < bsvRemarks.size(); i++) {
+				String userRemark = bsvRemarks.get(i).getRemark();
+				
+				if (StringUtils.isBlank(userRemark) || StringUtils.isEmpty(userRemark)) {
+					throw new EpException(MessageConst.ERROR_760831);
+				}
+			}
+		}
+	}
+	//28188 -end-
+	
+	//#28188 - Start
 	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
+
 	    if (CollectionUtils.isEmpty(inputList)) {
 	        return new ArrayList<ScQtBsvDtl>();
 	    }
 
-	    // ==========================
-	    // STEP 1: GROUPING by bsvDesc
-	    // ==========================
-	    Map<String, List<ScQtBsvDtl>> grouped = new HashMap<String, List<ScQtBsvDtl>>();
+	    // ==================================================
+	    // STEP 1 : GROUP USING PARENT RELATION
+	    // ==================================================
+	    Map<Long, List<ScQtBsvDtl>> grouped =
+	            new LinkedHashMap<Long, List<ScQtBsvDtl>>();
 
 	    for (ScQtBsvDtl dtl : inputList) {
 
-	        String key = dtl.getBsvDesc();
+	        Long key = null;
+
+	        // child record
+	        if (dtl.getParentQtBsvDtlId() != null) {
+	            key = dtl.getParentQtBsvDtlId();
+	        }
+	        // original/parent record
+	        else {
+	            key = dtl.getQtBsvDtlId();
+	        }
 
 	        if (!grouped.containsKey(key)) {
 	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
@@ -15240,60 +15333,99 @@ public void retrieveDemoQtDetails(Long qtId) {
 	        grouped.get(key).add(dtl);
 	    }
 
-	    // ==========================
-	    // STEP 2: SORT EACH GROUP
-	    // ==========================
+	    // ==================================================
+	    // STEP 2 : SORT INSIDE EACH GROUP
+	    // Parent(Postpone) first
+	    // Child(Pending) second
+	    // ==================================================
 	    for (List<ScQtBsvDtl> list : grouped.values()) {
 
 	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
+
 	            @Override
-	            public int compare(ScQtBsvDtl bsvDtl1, ScQtBsvDtl bsvDtl2) {
+	            public int compare(ScQtBsvDtl bsvDtl1,
+	                               ScQtBsvDtl bsvDtl2) {
 
-	                Date bsvDate1 = bsvDtl1.getBsvDate();
-	                Date bsvDate2 = bsvDtl2.getBsvDate();
+	                boolean isChild1 =
+	                        bsvDtl1.getParentQtBsvDtlId() != null;
 
-	                if (bsvDate1 == null && bsvDate2 == null) return 0;
-	                if (bsvDate1 == null) return 1;
-	                if (bsvDate2 == null) return -1;
+	                boolean isChild2 =
+	                        bsvDtl2.getParentQtBsvDtlId() != null;
 
-	                return bsvDate2.compareTo(bsvDate1);
+	                // parent first
+	                if (isChild1 && !isChild2) {
+	                    return 1;
+	                }
+
+	                if (!isChild1 && isChild2) {
+	                    return -1;
+	                }
+
+	                Date date1 = bsvDtl1.getBsvDate();
+	                Date date2 = bsvDtl2.getBsvDate();
+
+	                if (date1 == null && date2 == null) {
+	                    return 0;
+	                }
+
+	                if (date1 == null) {
+	                    return 1;
+	                }
+
+	                if (date2 == null) {
+	                    return -1;
+	                }
+
+	                return date1.compareTo(date2);
 	            }
 	        });
 	    }
 
-	    // ==========================
-	    // STEP 3: SORT GROUP ORDER
-	    // ==========================
-	    List<Map.Entry<String, List<ScQtBsvDtl>>> entries =
-	            new ArrayList<Map.Entry<String, List<ScQtBsvDtl>>>(grouped.entrySet());
+	    // ==================================================
+	    // STEP 3 : SORT GROUP ORDER
+	    // Based on parent/original date
+	    // ==================================================
+	    List<List<ScQtBsvDtl>> groupedList =
+	            new ArrayList<List<ScQtBsvDtl>>(grouped.values());
 
-	    Collections.sort(entries, new Comparator<Map.Entry<String, List<ScQtBsvDtl>>>() {
+	    Collections.sort(groupedList,
+	            new Comparator<List<ScQtBsvDtl>>() {
+
 	        @Override
-	        public int compare(Map.Entry<String, List<ScQtBsvDtl>> bsvDtls1,
-	                           Map.Entry<String, List<ScQtBsvDtl>> bsvDtls2) {
+	        public int compare(List<ScQtBsvDtl> list1,
+	                           List<ScQtBsvDtl> list2) {
 
-	            Date bsvDate1 = bsvDtls1.getValue().get(0).getBsvDate();
-	            Date bsvDate2 = bsvDtls2.getValue().get(0).getBsvDate();
+	            Date date1 = list1.get(0).getBsvDate();
+	            Date date2 = list2.get(0).getBsvDate();
 
-	            if (bsvDate1 == null && bsvDate2 == null) return 0;
-	            if (bsvDate1 == null) return 1;
-	            if (bsvDate2 == null) return -1;
+	            if (date1 == null && date2 == null) {
+	                return 0;
+	            }
 
-	            return bsvDate2.compareTo(bsvDate1);
+	            if (date1 == null) {
+	                return 1;
+	            }
+
+	            if (date2 == null) {
+	                return -1;
+	            }
+
+	            return date1.compareTo(date2);
 	        }
 	    });
 
-	    // ==========================
-	    // STEP 4: MERGE BACK
-	    // ==========================
-	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
+	    // ==================================================
+	    // STEP 4 : MERGE BACK
+	    // ==================================================
+	    List<ScQtBsvDtl> finalList =
+	            new ArrayList<ScQtBsvDtl>();
 
-	    for (Map.Entry<String, List<ScQtBsvDtl>> entry : entries) {
-	        finalList.addAll(entry.getValue());
+	    for (List<ScQtBsvDtl> list : groupedList) {
+	        finalList.addAll(list);
 	    }
 
 	    return finalList;
 	}
 	//#28188 - End
-	
+
 }

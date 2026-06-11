@@ -1231,7 +1231,7 @@ public class CommonApplBackingBean extends
 				dateAfterOneYear.add(Calendar.MONTH, 12);
 				Date renewalEnd = dateAfterOneYear.getTime();
 
-				long togo = daysBetween(currDate, renewalEnd) + 1;
+				long togo = daysBetween(currDate, renewalEnd) + 2;
 
 				if (togo >= 1 && togo <= 366
 						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
