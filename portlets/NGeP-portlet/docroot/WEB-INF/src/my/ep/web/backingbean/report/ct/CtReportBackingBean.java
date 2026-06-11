@@ -383,8 +383,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					}
 					// cc
 					ctManagementReportBB.getManagedBean().setDisableMinistryField(true);
-					ctManagementReportBB.getManagedBean().setDisableOrgField(
-							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
 				} else {
 					ctManagementReportBB.getManagedBean().setSupplierVisible(true); //#30918
@@ -460,8 +458,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					}
 					// cc
 					ctManagementReportBB.getManagedBean().setDisableMinistryField(true);
-					ctManagementReportBB.getManagedBean().setDisableOrgField(
-							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
 					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
 				}//End Fix - #40102, #30918
 		}
