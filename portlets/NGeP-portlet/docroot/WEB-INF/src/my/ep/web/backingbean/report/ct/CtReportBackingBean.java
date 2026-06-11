@@ -332,7 +332,11 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	
 					PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+						getManagedBean().setSelectedMinistry(pmOrgProfile);
+					} else {
+						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					}
 					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
 					getManagedBean().setSelectedPTJ(pmOrgProfile);
 
@@ -384,7 +388,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				// cc
 				ctManagementReportBB.getManagedBean().setDisableMinistryField(false);
 
-			} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) { //Start Fix - #40102, #30918
+			} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) { //Start Fix - #40102, #30918
 
 					ctManagementReportBB.getManagedBean().setSupplierID(null);
 					ctManagementReportBB.getManagedBean().setSelectedSupplier(null);
@@ -398,7 +403,11 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	
 					PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+						getManagedBean().setSelectedMinistry(pmOrgProfile);
+					} else {
+						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					}
 					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
 					getManagedBean().setSelectedPTJ(pmOrgProfile);
 
