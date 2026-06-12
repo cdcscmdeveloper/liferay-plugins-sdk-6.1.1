@@ -135,7 +135,7 @@
 						<ui:remove>#26059 - Start</ui:remove>
 						<p:dialog id="assignCodeDialogConfirm"
 							widgetVar="assignCodeDialogConfirm"
-							header="#{lbl['lbl.sc.item.details']}" modal="true"
+							header="#{lbl['lbl.sc.item.details']}" modal="true" style="width:100%"
 							closable="true">
 
 							<h:panelGroup style="display:block; margin-bottom:15px;">
@@ -148,12 +148,12 @@
 							</h:panelGroup>
 
 							<div align="right">
-								<p:commandButton value="#{lbl['lbl.btn.ok']}"
+								<p:commandButton value="#{lbl['lbl.btn.yes']}"
 									onclick="assignCodeDialogConfirm.hide();"
 									action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									update="@form" />
-								<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+								<p:commandButton value="#{lbl['lbl.btn.no']}"
 									onclick="assignCodeDialogConfirm.hide();" update="@form" />
 							</div>
 						</p:dialog>
