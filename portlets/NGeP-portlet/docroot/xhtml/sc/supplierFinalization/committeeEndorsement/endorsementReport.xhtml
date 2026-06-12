@@ -91,7 +91,7 @@
 							value="*" styleClass="mandatory" 
 							rendered="#{!suppFinalizationBackingBean.managedBean.disableJustifications}"/></td>
 
-					<td style="margin-left: 55px;"><p:selectOneMenu
+					<!-- <td style="margin-left: 55px;"><p:selectOneMenu
 							id="justificationDDId"
 							value="#{suppFinalizationBackingBean.managedBean.justification.reasonCode}"
 							style="width: 300px;margin-bottom: 5px;"
@@ -104,7 +104,25 @@
 								listener="#{suppFinalizationBackingBean.justificationChange}"
 								disabled="#{readOnly}" />
 						</p:selectOneMenu> <p:message id="justificationDDMsgId" for="justificationDDId"
+							display="icon" /></td> -->
+					
+					<!-- #34860 Start -->
+					<td style="margin-left: 55px;"><p:selectManyCheckbox
+							id="justificationDDId"
+							value="#{suppFinalizationBackingBean.managedBean.justificationList}"
+							layout="pageDirection"
+							disabled="#{readOnly or suppFinalizationBackingBean.managedBean.disableJustifications}">
+
+							<f:selectItems
+								value="#{suppFinalizationBackingBean.managedBean.justDropdown}" />
+
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="panelWithJustificationTxtId"
+								listener="#{suppFinalizationBackingBean.justificationChange}"
+								disabled="#{readOnly}" />
+						</p:selectManyCheckbox> <p:message id="justificationDDMsgId" for="justificationDDId"
 							display="icon" /></td>
+					<!-- #34680 End -->		
 				</tr>
 			</table>
 			<h:panelGroup id="panelWithJustificationTxtId">
