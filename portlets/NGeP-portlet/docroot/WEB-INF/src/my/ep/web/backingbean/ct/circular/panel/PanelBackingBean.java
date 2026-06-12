@@ -748,9 +748,13 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	/**
 	 * Handles the action button click - shows the confirmation dialog for
 	 * approve actions, or proceeds directly for other actions.
+	 *
+	 * @param action the BPM outcome action being performed
+	 * @return {@code null} if the confirmation dialog was shown; otherwise
+	 *         the navigation outcome from {@link #saveCancelCircularReq(String)}
 	 */
 	public String showConfirmationDialog(String action) {
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			String docType = getManagedBean().getCircularDocType();
 
 			boolean isPanelCircular = ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(docType)
@@ -766,12 +770,17 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			getManagedBean().setAction(action);
 			RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
 			return null;
-		}
-		else {
+		} else {
 			return saveCancelCircularReq(action);
 		}
 	}
 	
+	/**
+	 * Saves the cancel circular request using the action currently set on
+	 * the managed bean.
+	 *
+	 * @return the navigation outcome from {@link #saveCancelCircularReq(String)}
+	 */
 	public String saveCancelCircularReq() {
 		String action = getManagedBean().getAction();
 		return saveCancelCircularReq(action);
