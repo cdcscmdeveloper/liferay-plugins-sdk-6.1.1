@@ -111,27 +111,33 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	 * Retrieve confirmation message
 	 * 
 	 * @param key the statusId to find label values for use
-	 * @return Fulfiment with Bond Confirmation message
+	 * @return Fulfillment with Bond Confirmation message
 	 */
 	public String getConfirmationContent(String key) {
 		String message = "";
-		
-		try{
-			message = ResourceBundleUtils.getMessage(
-					getConfirmationMsgs(Long.parseLong(key)),
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()
-				);
-		}catch(Exception e){
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getConfirmationContent(String key)", 
-					key, "CircularBaseBackingBean", getUserIdSessionFromLoginId(), e);
+
+		try {
+			message = ResourceBundleUtils.getMessage(getConfirmationMsgs(Long.parseLong(key)),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					"getConfirmationContent(String key)", key, "CircularBaseBackingBean",
+					getUserIdSessionFromLoginId(), e);
 		}
-		
+
 		return message.replace("<br/>", System.lineSeparator());
 	}
 	
-	public String getConfirmationMsgs(Long key){
-		final Map<Long, String> confirmationMsgs = new HashMap<Long, String>();
+	/**
+	 * Returns the resource bundle message key for the confirmation prompt
+	 * associated with the given contract status code.
+	 *
+	 * @param key the contract status code (see {@link ContractStatusConst})
+	 * @return the message key for the confirmation text, or {@code null}
+	 *         if no confirmation message is defined for the given status
+	 */
+	public String getConfirmationMsgs(Long key) {
+		final Map<Long, String> confirmationMsgs = new HashMap<>();
 
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_APPROVAL, "lbl.ct.cq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_REVISION_APPROVAL, "lbl.ct.cq.rev.app.confirm");
@@ -145,7 +151,7 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION, "lbl.ct.pq.cancel.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION_APPROVAL, "lbl.ct.pq.cancel.rev.app.confirm");
-		
+
 		return confirmationMsgs.get(key);
 	}
 	//34442 - end
