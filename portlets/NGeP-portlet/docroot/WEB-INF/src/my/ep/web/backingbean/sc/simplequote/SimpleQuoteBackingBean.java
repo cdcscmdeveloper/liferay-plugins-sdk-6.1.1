@@ -2899,6 +2899,11 @@ public class SimpleQuoteBackingBean extends
 		//27868 - end
 		// #28536 - start
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			//40234 - start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
+		    }
+			//40234 - end
 			getGovtSellerCriteria();
 		} else {
 			//40234 - start
@@ -4269,6 +4274,7 @@ public class SimpleQuoteBackingBean extends
 			CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 			
 			catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
+			catalogueBackingBean.resetCatalogueSearch(); //26059
 
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "catalogueSearch");
@@ -5527,6 +5533,8 @@ public class SimpleQuoteBackingBean extends
 				if ((resDTO != null) && (resDTO.getCtPanelItem() != null)) {
 					getManagedBean().setPanelItems(new ArrayList<CtPanelItem>());
 					getManagedBean().getPanelItems().add(resDTO.getCtPanelItem());
+
+					assignPanelSupplierPid(scQuote, resDTO);//#27868
 				}
 			}
 		}
@@ -5572,6 +5580,19 @@ public class SimpleQuoteBackingBean extends
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 	}
+
+	//start - 27868
+	/**
+	 * Assigns panel supplier details for Simple Quote created from PID.
+	 */
+	private void assignPanelSupplierPid(ScQuote scQuote, PanelSupplierResDTO resDTO) {
+		if (scQuote.getPurchaseInDefault() != null && resDTO.getCtPanelItem().getCtPanelSuppliers() != null
+				&& !resDTO.getCtPanelItem().getCtPanelSuppliers().isEmpty()) {
+			panelItemListener(resDTO.getCtPanelItem().getCtPanelSuppliers(), scQuote);
+		}
+	}
+	//end - 27868
+
 
 	/**
 	 * render the supplier view based on the task id from notification.
@@ -9974,6 +9995,21 @@ public class SimpleQuoteBackingBean extends
 	    PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
 
 	    return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
+	}
+	/**
+	 * To remove non g2g supplier from govt list when change procurement type
+	 * 
+	 * 
+	 * @param suppliers
+	 */
+	private void removeSupplierListFromGovtSeller(List<ScQuoteSupplier> suppliers) {
+		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+
+		for (ScQuoteSupplier supplier : suppliers) {
+				suppliersToRemove.add(supplier);
+		}
+
+		suppliers.removeAll(suppliersToRemove);
 	}
 	//40234 - end
 }

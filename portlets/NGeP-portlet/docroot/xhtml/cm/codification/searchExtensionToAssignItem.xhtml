@@ -233,7 +233,7 @@
 					<p:commandButton value="#{lbl['lbl.sc.qt.assign.code']}"
 						action="#{codificationBackingBean.assignItemConfirmation}"
 						disabled="#{codificationBackingBean.managedBean.isRenderButtonAssignCode()}"
-						update="@([id$=asignCodeDialConfirm])" />
+						update="@([id$=assignCodeDialConfirm])" />
 				</div>
 				<!-- #31503 End -->
 				<div class="clear"></div>
@@ -252,33 +252,32 @@
 
 			<!-- #31503 Start -->
 			<ui:remove>#26059 - Start</ui:remove>
-			<p:confirmDialog id="asignCodeDialConfirm"
-				widgetVar="asignCodeDialConfirm" message=""
+			<p:dialog id="assignCodeDialConfirm"
+				widgetVar="assignCodeDialConfirm"
 				header="#{lbl['lbl.sc.item.details']}" style="width:100%"
-				closable="true">
-
-				<!-- Display item details -->
-				<h:panelGroup style="margin-bottom: 15px; display:block;">
-					<h:outputText
-						value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
-				</h:panelGroup>
+				modal="true" closable="true">
 
 				<!-- Confirmation question -->
 				<h:panelGroup style="margin-bottom: 15px; display:block;">
 					<h:outputText
 						value="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}" />
 				</h:panelGroup>
+				<!-- Display item details -->
+				<h:panelGroup style="margin-bottom: 20px; display:block;">
+					<p:outputLabel
+						value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
+				</h:panelGroup>
 
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}"
-						onclick="asignCodeDialConfirm.hide();"
+						onclick="assignCodeDialConfirm.hide();"
 						action="#{codificationBackingBean.insertContractedItemCode(codificationBackingBean.managedBean.objSelected)}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						update="@form" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
-						onclick="asignCodeDialConfirm.hide();" update="@form" />
+						onclick="assignCodeDialConfirm.hide();" update="@form" />
 				</div>
-			</p:confirmDialog>
+			</p:dialog>
 			<ui:remove>#26059 - End</ui:remove>
 			<!-- #31503 End -->
 
