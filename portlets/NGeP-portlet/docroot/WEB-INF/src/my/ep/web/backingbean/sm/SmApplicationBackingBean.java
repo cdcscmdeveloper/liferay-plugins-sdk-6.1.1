@@ -7087,6 +7087,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				StringUtils.upperCase(SmCommonUtil.getMessage(
 						"lbl.sm.facility.type.workshop", null)));
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		//getManagedBean().getSmAppl().setSiteVisitGroup(true);  //TEMP hide workers
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -9730,8 +9731,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
-		//#28775 - Site Grouping Enhancement
+		//#28775 - Site Grouping Enhancement (TEMP hide workers)
 		//validateAllWorkshops();
+		//getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		//#28775 end
 
 		// try {
 		//#28776 - start
@@ -11448,9 +11451,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
-			getManagedBean().getSmAppl().setSiteVisitGroup(true);
 			getManagedBean().getSmAppl().setSmSvTasks(getManagedBean().getSvTaskList());
-			//reqDTO.setSvTask(getManagedBean().getSvTask());
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
 			actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
@@ -17524,8 +17525,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return other description for category code
 	 */
 	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return null;
+		}
 		return SmApplicationUtil.getCategoryCodeOtherDesc(
-				getManagedBean().getSmAppl().getSmSupplierCategories(), catL3);
+				appl.getSmSupplierCategories(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
 	//#31043 START
