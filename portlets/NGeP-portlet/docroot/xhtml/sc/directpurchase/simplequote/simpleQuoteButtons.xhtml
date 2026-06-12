@@ -66,16 +66,17 @@
 		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
 <!-- 20190417@asyrafhaziq_12095 - End -->
 
-<!-- 34449 -start -->
+	<ui:remove>#34449 - start</ui:remove>
+	<ui:remove> New cancel popup</ui:remove>
 	<ac:confirmationPopup id="cancelBackConfirmDlg"
 		    widget="cancelBackConfirmDlg"
 		    width="400"
 		    height="100"
 		    okAction="simpleQuoteBackingBean.backToPrevious()"
-		    title="#{lbl['lbl.sc.cancel.details']}"
-		    content="#{lbl['lbl.sc.cancel.dialog.confirm.message']}"
+		    title="#{lbl['lbl.sc.confirmation.cancel']}"
+		    content="#{lbl['lbl.sc.confirmation.cancel.message']}"
 		    update="@form" />
-<!-- 34449 -end -->
+	<ui:remove>#34449 - end</ui:remove>
 	
 	<table style="width: 100%">
 		<tr>
