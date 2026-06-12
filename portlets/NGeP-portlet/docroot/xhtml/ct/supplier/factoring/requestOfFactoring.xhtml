@@ -462,7 +462,8 @@
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 		<!-- #34442 - start -->
-		<p:confirmDialog message="#{supplierBackingBean.confirmationContentMsg}"
+		<p:confirmDialog
+			message="#{supplierBackingBean.confirmationContentMsg}"
 			severity="alert" widgetVar="approveConfirmDlg" closable="true"
 			header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
