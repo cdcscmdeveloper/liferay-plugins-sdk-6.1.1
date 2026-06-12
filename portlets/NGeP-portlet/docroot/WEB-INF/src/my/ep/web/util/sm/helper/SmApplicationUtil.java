@@ -15180,9 +15180,19 @@ public class SmApplicationUtil {
         for (char character : input.toCharArray()) {
             int asciiValue = (int) character; 
             log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
-            if(asciiValue > 127){
+            //#40165 - START
+            // Allow:
+            // 0   = NUL
+            // 10  = LF \n
+            // 13  = CR \r
+            // 32-127 = printable ASCII
+            if(!(asciiValue == 0 ||
+            	 asciiValue == 10 ||
+            	 asciiValue == 13 ||
+            	 (asciiValue >= 32 && asciiValue < 128))){
             	isValid = false;
             }
+            //#40165 - END
         }
         return isValid;
     }
@@ -15331,4 +15341,19 @@ public class SmApplicationUtil {
 		return validSave;
 		}
 	//#38991 -END	
+	
+	//#40165 - START
+	public static void CheckAsciiValidation(Map<String, String> fields) throws EpException {
+	    for (Map.Entry<String, String> entry : fields.entrySet()) {
+	        String fieldName = entry.getKey();
+	        String value = entry.getValue();
+	        
+	        if (value != null && !value.isEmpty()) {
+	            if (!convertToAscii(value)) {
+	                throw new EpException(MessageConst.ERROR_760543, new String[] { fieldName });
+	            }
+	        }
+	    }
+	}
+	//#40165 - END
 }
