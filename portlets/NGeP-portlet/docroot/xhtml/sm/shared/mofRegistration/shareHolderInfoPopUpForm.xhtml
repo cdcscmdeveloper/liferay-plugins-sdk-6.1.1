@@ -1488,11 +1488,12 @@
 		<p:outputLabel value="#{backingBean.managedBean.removedRoleMsg}" />
 		<div align="right">
 			<!-- Yes button -->
-			<p:commandButton value="#{lbl['lbl.btn.dialog.cofirm.yes']}" process="@this" update="shrPrivPanel smPersnEpRole"
-				oncomplete="confirmDeleteRoleDlg.hide()" />
+			<p:commandButton value="#{lbl['lbl.btn.dialog.cofirm.yes']}" process="@this" update="shrPrivPanel smPersnEpRole" onclick="blockWidget.show();"
+				oncomplete="blockWidget.hide(); confirmDeleteRoleDlg.hide()" />
 			<!-- No button -->
 			<p:commandButton value="#{lbl['lbl.btn.dialog.cofirm.no']}" process="@this" update="shrPrivPanel smPersnEpRole"
-				actionListener="#{backingBean.revertRole(backingBean.managedBean.prevRole)}" oncomplete="confirmDeleteRoleDlg.hide()" />
+				actionListener="#{backingBean.revertRole(backingBean.managedBean.prevRole)}" onclick="blockWidget.show();"
+				oncomplete="confirmDeleteRoleDlg.hide(); blockWidget.hide();" />
 		</div>
 	</p:dialog>
 	<!-- #40031 - End -->

@@ -25,11 +25,13 @@ import java.util.Map;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.report.IReportSectionSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -42,17 +44,16 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.rpt.ReportUtil;
-import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 //start #27472
@@ -555,4 +556,25 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		}
 	}
 	//30824 END
+	
+	// #40017 START
+	public void executeRefreshPrcRefreshMvMof() {
+		log.info("#40017 :: executeRefreshPrcRefreshMvMof - START");
+		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestedSessionId();
+		long subStartTime = 0L;
+		subStartTime = System.currentTimeMillis();
+		try {
+			IReportSectionSO reportSectionSo = (IReportSectionSO) BusinessDelegate.getInstance().getServiceObject("pm",
+					IReportSectionSO.class);
+			reportSectionSo.callRefreshPrcRefreshMvMof();
+			SLAUtils.getInstance().logSLASubInfo("SM", "SP", sessionId, "null",
+					"ReportBaseBackingBean.callRefreshPrcRefreshMvMof", "reportSectionSo.callRefreshPrcRefreshMvMof", 
+					subStartTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+		log.info("#40017 :: executeRefreshPrcRefreshMvMof - END");
+	}
+	// #40017 END
 }
