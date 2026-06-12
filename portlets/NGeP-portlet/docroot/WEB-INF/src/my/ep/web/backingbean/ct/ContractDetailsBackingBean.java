@@ -66,6 +66,7 @@ import my.ep.helper.EntityHelper; //Fix - #30045
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtActor; // #30737
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtBondWaiverDetail;
 import my.ep.persistence.entity.ct.CtContract;
@@ -1225,6 +1226,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		validateFDDescAndAmount(action);
 		ctBB.getZoneObjDetails();
+		
+		//#30737 - start - for revise purpose
+		List<SelectedInactiveUserDTO> inactiveUsersForRevise = getInactiveUsersForRevise(
+				ctBB.getManagedBean().getContractVer().getCtContract()
+				.getContractType().getParameterCode(), ctBB
+				.getManagedBean().getContractVer().getDocType());
+		log.info("xoxoxoxoxo inactiveUsersForRevise : "+inactiveUsersForRevise);
+		//#30737 - end
 
 		if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){
 			ctBB.getManagedBean().getContractVer().setCtPidReasons(null);
@@ -1233,7 +1242,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
 			validateContractOwnerManagement(action);		
 		}else{
-			validateCtContractVer(action);
+			validateCtContractVer(action, inactiveUsersForRevise); //#30737 (add param list inactiveUsersForRevise)
 		}
 		//#25406 - End
 		ContractReqDTO reqDTO = new ContractReqDTO();
@@ -1372,9 +1381,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (this.getManagedBean().getPmDigiSign() != null) {
 			reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 		}
+		
+		//#30737 - start - for revise purpose
+		Long inactiveUserCheckResult = null;
+        if (!inactiveUsersForRevise.isEmpty()) {
+        	inactiveUserCheckResult = inactiveUsersForRevise.get(0).getStatus();
+        	log.info("xoxoxoxoxo [revise]user status is : "+inactiveUserCheckResult);
+        }
+        //#30737 - end 
+        
 		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
-		ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);			
+		ContractResDTO resDTO = contractSO.saveContractVer(reqDTO, inactiveUserCheckResult); //#30737 (add param inactiveUserCheckResult)			
 
 		//#35156 - End
 		log.debug("**END** Check Bug #35156 :"+"***saveContract** "+"ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId());
@@ -1547,7 +1565,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @param  outcome  the user action on this contract. The validation 
 	 * 					will invoke base on the action
 	 */
-	public void validateCtContractVer(String action) throws EpException {
+	public void validateCtContractVer(String action, List<SelectedInactiveUserDTO> inactiveUsersForRevise) throws EpException { //#30737 (add param list inactiveUsersForRevise)
 		getManagedBean().setAutoUpdate(true);
 		String docType = ctBB.getManagedBean().getContractVer().getDocType(); //#40283
 
@@ -2070,54 +2088,109 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Amendment without supplemental
 		//Notification setting
 		//Fulfilment creation/update
-		//TODO - REVISE in validation + save/submit
+		String parameterCode = 
+				ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode();
+		
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-			log.info("xoxoxoxoxooxoxo action : "+action);
-			// ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId()
-			
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			CtContract contract = ctBB.getManagedBean().getContractVer().getCtContract();
-			InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
-			inactiveDto.setUserIds(populateInactiveUserIdIntoString(getSelectedUsers())); // should populate it into string with delimiter if more than 1
-			inactiveDto.setUserRoleCode(RoleCode.CT_APPROVER.value()); // for submit = approver / REVISE = RoleCode.MIN_CONTRACT_ADMIN.value()
-			inactiveDto.setOrgProfileId(contract.getOwnerOrgProfile().getOrgProfileId());  // 992192L;
-			inactiveDto.setDocType(ctBB.getManagedBean().getContractVer().getDocType());
-			inactiveDto.setDocNo(contract.getContractNo());
-			
-			InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
-			
-			log.info("xoxoxoxoxooxoxo USER ID : "+  getSelectedUsers().get(0).getUserId()); // if SUBMIT = Approver Model // REVISE = MCA name
-			log.info("xoxoxoxoxooxoxo PROFILE ID : "+  contract.getOwnerOrgProfile().getOrgProfileId());
-			log.info("xoxoxoxoxooxoxo STATUSSS : "+  resDto.getStatus());
-			log.info("xoxoxoxoxooxoxo END ");
-			
-			List<SelectedInactiveUserDTO> selectedInactiveUsers = resolveInactiveUserStatus(resDto);
-			handleInactiveUserValidation(action, selectedInactiveUsers);
-			
-		}
+	        log.info("xoxoxoxoxooxoxo action : SUBMIT");
+	        
+	        String approverType;
+	        if (parameterCode.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+	        	approverType = RoleCode.CT_APPROVER.value();
+			} else {
+				approverType = RoleCode.BPK_CC_APPROVER.value();
+			}
+	        
+	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+	        		getInactiveUsers(approverType, getSelectedUsers(), docType);
+	        handleInactiveUserValidation(action, selectedInactiveUsers);
+	    }
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+	        log.info("xoxoxoxoxooxoxo action : REVISE");
+	        if (!inactiveUsersForRevise.isEmpty() && inactiveUsersForRevise.get(0).getStatus() == 5L) {
+	        	log.info("xoxoxoxoxooxoxo REVISE + return 5L");
+                handleInactiveUserValidation(action, inactiveUsersForRevise);
+            }
+	    }
 		//#30737 - End
 		
 	}
 	
 	//#30737 - Start
-	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(InactiveUserResDTO resDto) {
+	private List<SelectedInactiveUserDTO> getInactiveUsersForRevise(String parameterCode, String docType){
+		
+		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+		
+		log.info("xoxoxoxoxooxoxo docId 1 : "+ ctContractVer.getContractVerId());
+        log.info("xoxoxoxoxooxoxo docId 2? : "+ ctContractVer.getCtContract().getContractId());
+        
+		String userRole;
+        if(parameterCode.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+        	userRole = RoleCode.BPK_CCA.value();
+        } else{
+        	userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+        }
+        
+        CtActor ctActor = retrieveContractActor(ctContractVer.getContractVerId(), docType, userRole);
+        
+        if (ctActor != null) {
+            List<PmUser> users = new ArrayList<PmUser>();
+            users.add(ctActor.getUser());
+
+            return getInactiveUsers(RoleCode.MIN_CONTRACT_ADMIN.value(), users, docType);
+        }
+        
+        return new ArrayList<>();
+	}
+	
+	private List<SelectedInactiveUserDTO> getInactiveUsers(String roleCode, List<PmUser> users, String docType) {
+		
+	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	    CtContract contract = ctBB.getManagedBean().getContractVer().getCtContract();
+
+	    InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
+	    inactiveDto.setUserIds(populateInactiveUserIdIntoString(users));
+	    inactiveDto.setUserRoleCode(roleCode);
+	    inactiveDto.setOrgProfileId(contract.getOwnerOrgProfile().getOrgProfileId());
+	    inactiveDto.setDocType(docType);
+	    inactiveDto.setDocNo(contract.getContractNo());
+	    inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+	    
+	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+	    
+	    log.info("xoxoxo getStatus "+resDto.getStatus());
+	    log.info("xoxoxo getMessage "+resDto.getMessage());
+
+	    return resolveInactiveUserStatus(users, resDto);
+	}
+	
+	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(List<PmUser> users, InactiveUserResDTO resDto) {
 
 	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
 
 	    String[] statuses = resDto.getStatus().split(",");
 	    for (int i = 0; i < statuses.length; i++) {
 	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
-	        selectedUser.setUserName(getSelectedUsers().get(i).getUserName());
+	        selectedUser.setUserName(users.get(i).getUserName());
 	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+	        
+	        // FOR TESTING PURPOSE ONLY
+//	        if (i == 0) {
+//	            selectedUser.setStatus(5L);
+//	        } else {
+//	           	selectedUser.setStatus(3L);
+//	        }
+	        
 	        selectedUsers.add(selectedUser);
 	    }
 	    return selectedUsers;
 	}
 	
 	// private to populate user id into string with comma delimiter 
-	private String populateInactiveUserIdIntoString(List<PmUser> userIds){
+	private String populateInactiveUserIdIntoString(List<PmUser> pmUsers){
 		StringBuilder sb = new StringBuilder();
-		for(PmUser user : userIds){
+		for(PmUser user : pmUsers){
 			if (sb.length() > 0) {
 		        sb.append(",");
 		    }
@@ -2288,7 +2361,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	public String gpkiSignAction(String outcome) throws Exception {
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			validateCtContractVer(outcome);
+			validateCtContractVer(outcome, new ArrayList<SelectedInactiveUserDTO>()); //#30737 (add param list inactiveUsersForRevise)
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			// Start - 25890 - Minh
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
