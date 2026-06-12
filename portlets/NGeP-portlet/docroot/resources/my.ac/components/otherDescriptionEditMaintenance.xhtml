@@ -14,10 +14,10 @@
 	</cc:interface>
 	<cc:implementation>
 		<p:dialog
-			id="otherDescriptionEditDlgId"
-			header="#{cc.attrs.dialogHeader} #{backingBean.managedBean.historySuppCategory.pmCategoryL1.categoryL1Code}#{backingBean.managedBean.historySuppCategory.pmCategoryL2.categoryL2Code}#{backingBean.managedBean.historySuppCategory.pmCategoryL3.categoryL3Code}"
+			id="otherDescriptionEditMaintenanceDlgId"
+			header="#{cc.attrs.dialogHeader} #{supplierDataMaintenanceBackingBean.managedBean.historySuppCategory.pmCategoryL1.categoryL1Code}#{supplierDataMaintenanceBackingBean.managedBean.historySuppCategory.pmCategoryL2.categoryL2Code}#{supplierDataMaintenanceBackingBean.managedBean.historySuppCategory.pmCategoryL3.categoryL3Code}"
 			closable="true"
-			widgetVar="otherDescriptionEditDlg"
+			widgetVar="otherDescriptionEditMaintenanceDlg"
 			resizable="false" modal="true"
 			style="width: auto; height: auto; display: block;">
 			<p:outputPanel
@@ -28,7 +28,7 @@
 								value="#{lbl['lbl.sm.other.desc.edit.text']}" style="margin: 10px;"/>
 							<p:inputTextarea id="smOtherDesc"
 								maxlength="5000"
-								value="#{backingBean.managedBean.otherDescEdited}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.otherDescEdited}"
 								style="width:auto;" cols="90" rows="10"
 								autoResize="false" />
 						</td>
@@ -36,7 +36,7 @@
 					<tr>
 						<td><p:selectBooleanCheckbox
 								id="cbSavRecordId"
-								value="#{backingBean.managedBean.updateRecordTC}">
+								value="#{supplierDataMaintenanceBackingBean.managedBean.updateRecordTC}">
 								<p:ajax update="btnYes"
 									partialSubmit="true"
 									process="@this" />
@@ -50,16 +50,16 @@
 							<p:commandButton
 								id="btnYes"
 								value="#{lbl['lbl.btn.yes']}"
-								disabled="#{!backingBean.managedBean.updateRecordTC}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.updateRecordTC}"
 								partialSubmit="true"
 								process="@form"
     							update="@form"
-								action="#{backingBean.saveOtherDescriptionEdit}"
-								oncomplete="otherDescriptionEditDlg.hide()" />
+								action="#{supplierDataMaintenanceBackingBean.saveOtherDescriptionEdit}"
+								oncomplete="otherDescriptionEditMaintenanceDlg.hide()" />
 							<p:commandButton id="btnNo"
 								value="#{lbl['lbl.btn.no']}"
-								action="#{backingBean.resetOtherDescriptionEdit}"
-								onclick="otherDescriptionEditDlg.hide();" />
+								action="#{supplierDataMaintenanceBackingBean.resetOtherDescriptionEdit}"
+								onclick="otherDescriptionEditMaintenanceDlg.hide();" />
 							</div>
 						</td>
 					</tr>

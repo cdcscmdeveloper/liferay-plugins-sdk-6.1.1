@@ -149,4 +149,10 @@
 		</p:outputPanel>
 
 	</p:panel>
+	
+	<ac:confirmationPopup id="empDeletePopUpId" widget="empDeletePopUp"
+		okAction="backingBean.removeEmployee()" width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}"
+		update=":#{p:component('pnlEmployeeInfo')}" />
 </ui:composition>
