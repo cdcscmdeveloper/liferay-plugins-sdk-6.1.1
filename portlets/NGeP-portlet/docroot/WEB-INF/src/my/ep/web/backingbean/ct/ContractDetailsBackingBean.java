@@ -1228,11 +1228,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getZoneObjDetails();
 		
 		//#30737 - start - for revise purpose
-		List<SelectedInactiveUserDTO> inactiveUsersForRevise = getInactiveUsersForRevise(
-				ctBB.getManagedBean().getContractVer().getCtContract()
-				.getContractType().getParameterCode(), ctBB
-				.getManagedBean().getContractVer().getDocType());
-		log.info("xoxoxoxoxo inactiveUsersForRevise : "+inactiveUsersForRevise);
+		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+		List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+			inactiveUsersForRevise = getInactiveUsersForRevise(
+					ctContractVer.getContractVerId(),
+					ctContractVer.getCtContract().getContractType().getParameterCode(), 
+					ctContractVer.getDocType());
+			log.info("xoxoxoxoxo inactiveUsersForRevise : "+inactiveUsersForRevise);
+		}
 		//#30737 - end
 
 		if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){
@@ -1270,7 +1274,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
-		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+//		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer(); // #30737 Moved to above
 		//#25406 - Start
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
@@ -2088,136 +2092,34 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Amendment without supplemental
 		//Notification setting
 		//Fulfilment creation/update
-		String parameterCode = 
-				ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode();
+		CtContract ctContract = ctBB.getManagedBean().getContractVer().getCtContract();
 		
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 	        log.info("xoxoxoxoxooxoxo action : SUBMIT");
 	        
 	        String approverType;
-	        if (parameterCode.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+	        if (ctContract.getContractType().getParameterCode()
+	        		.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 	        	approverType = RoleCode.CT_APPROVER.value();
-			} else {
-				approverType = RoleCode.BPK_CC_APPROVER.value();
-			}
+	        } else {
+	        	approverType = RoleCode.BPK_CC_APPROVER.value();
+	        }
 	        
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 	        		getInactiveUsers(approverType, getSelectedUsers(), docType);
-	        handleInactiveUserValidation(action, selectedInactiveUsers);
+	        handleInactiveUserValidation(action, selectedInactiveUsers, getUserRole());
 	    }
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 	        log.info("xoxoxoxoxooxoxo action : REVISE");
 	        if (!inactiveUsersForRevise.isEmpty() && inactiveUsersForRevise.get(0).getStatus() == 5L) {
 	        	log.info("xoxoxoxoxooxoxo REVISE + return 5L");
-                handleInactiveUserValidation(action, inactiveUsersForRevise);
+                handleInactiveUserValidation(action, inactiveUsersForRevise, getUserRole());
             }
 	    }
 		//#30737 - End
 		
 	}
-	
-	//#30737 - Start
-	private List<SelectedInactiveUserDTO> getInactiveUsersForRevise(String parameterCode, String docType){
-		
-		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-		
-		log.info("xoxoxoxoxooxoxo docId 1 : "+ ctContractVer.getContractVerId());
-        log.info("xoxoxoxoxooxoxo docId 2? : "+ ctContractVer.getCtContract().getContractId());
-        
-		String userRole;
-        if(parameterCode.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-        	userRole = RoleCode.BPK_CCA.value();
-        } else{
-        	userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
-        }
-        
-        CtActor ctActor = retrieveContractActor(ctContractVer.getContractVerId(), docType, userRole);
-        
-        if (ctActor != null) {
-            List<PmUser> users = new ArrayList<PmUser>();
-            users.add(ctActor.getUser());
-
-            return getInactiveUsers(RoleCode.MIN_CONTRACT_ADMIN.value(), users, docType);
-        }
-        
-        return new ArrayList<>();
-	}
-	
-	private List<SelectedInactiveUserDTO> getInactiveUsers(String roleCode, List<PmUser> users, String docType) {
-		
-	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	    CtContract contract = ctBB.getManagedBean().getContractVer().getCtContract();
-
-	    InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
-	    inactiveDto.setUserIds(populateInactiveUserIdIntoString(users));
-	    inactiveDto.setUserRoleCode(roleCode);
-	    inactiveDto.setOrgProfileId(contract.getOwnerOrgProfile().getOrgProfileId());
-	    inactiveDto.setDocType(docType);
-	    inactiveDto.setDocNo(contract.getContractNo());
-	    inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
-	    
-	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
-	    
-	    log.info("xoxoxo getStatus "+resDto.getStatus());
-	    log.info("xoxoxo getMessage "+resDto.getMessage());
-
-	    return resolveInactiveUserStatus(users, resDto);
-	}
-	
-	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(List<PmUser> users, InactiveUserResDTO resDto) {
-
-	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
-
-	    String[] statuses = resDto.getStatus().split(",");
-	    for (int i = 0; i < statuses.length; i++) {
-	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
-	        selectedUser.setUserName(users.get(i).getUserName());
-	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
-	        
-	        // FOR TESTING PURPOSE ONLY
-//	        if (i == 0) {
-//	            selectedUser.setStatus(5L);
-//	        } else {
-//	           	selectedUser.setStatus(3L);
-//	        }
-	        
-	        selectedUsers.add(selectedUser);
-	    }
-	    return selectedUsers;
-	}
-	
-	// private to populate user id into string with comma delimiter 
-	private String populateInactiveUserIdIntoString(List<PmUser> pmUsers){
-		StringBuilder sb = new StringBuilder();
-		for(PmUser user : pmUsers){
-			if (sb.length() > 0) {
-		        sb.append(",");
-		    }
-		    sb.append(user.getUserId());
-		}
-		return sb.toString();
-	}
-		
-	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
-	 */
-	public void handleInactiveUserValidation(String outcome, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
-        try {
-        	checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-        		selectedInactiveUsers
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex);
-        }
-    }
-	//#30737 - End
 	
 	//LOG : 13847, by Fahmi 22032019 start
 	/**
@@ -2361,7 +2263,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	public String gpkiSignAction(String outcome) throws Exception {
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			validateCtContractVer(outcome, new ArrayList<SelectedInactiveUserDTO>()); //#30737 (add param list inactiveUsersForRevise)
+			validateCtContractVer(outcome, new ArrayList<SelectedInactiveUserDTO>()); //#30737 (add empty list to inactiveUsersForRevise)
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			// Start - 25890 - Minh
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {

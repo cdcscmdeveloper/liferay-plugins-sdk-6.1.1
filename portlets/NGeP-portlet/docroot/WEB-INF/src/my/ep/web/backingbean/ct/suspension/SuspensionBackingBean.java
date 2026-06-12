@@ -40,9 +40,11 @@ import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; // #30737
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContract; // #30737
 import my.ep.persistence.entity.ct.CtContractVer; //35506
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -543,10 +545,19 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 			
-			//#30737
-			Long inactiveUserCheckResult = 2L; //TEMP (get value from SP)
+			//#30737 - start - for revise purpose
+			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+			List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+				inactiveUsersForRevise = getInactiveUsersForRevise(
+						ctContractVer.getContractVerId(),
+						ctContractVer.getCtContract().getContractType().getParameterCode(), 
+						ctContractVer.getDocType());
+				log.info("xoxoxoxoxo inactiveUsersForRevise : "+inactiveUsersForRevise);
+			}
+			//#30737 - end
 			
-			validateSuspensionDetails(outcome, inactiveUserCheckResult); //#30737 (add param inactiveUserCheckResult)		
+			validateSuspensionDetails(outcome, inactiveUsersForRevise); //#30737 (add param inactiveUsersForRevise)		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
 			//#39038 - Start
 			// Step 1: Ambil updateItemMap yang menyimpan perubahan dari semua halaman
@@ -614,8 +625,14 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			
-			//#30737
+			//#30737 - start - for revise purpose
 			reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
+			Long inactiveUserCheckResult = null;
+	        if (!inactiveUsersForRevise.isEmpty()) {
+	        	inactiveUserCheckResult = inactiveUsersForRevise.get(0).getStatus();
+	        	log.info("xoxoxoxoxo [revise]user status is : "+inactiveUserCheckResult);
+	        }
+	        //#30737 - end 
 			
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO, inactiveUserCheckResult); //#30737 (add param inactiveUserCheckResult)
 			if(resDTO.isSuccessful()) {
@@ -630,7 +647,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 
-						CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+//						CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer(); // #30737 Moved to above
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(ctContractVer.getCtContract().getContractId());
 						auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
@@ -718,7 +735,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	/**
 	 * This method used to validate suspend item and agency as per rule
 	 */
-	public void validateSuspensionDetails(String outcome, Long inactiveUserCheckResult){ //#30737 (add param inactiveUserCheckResult)
+	public void validateSuspensionDetails(String outcome, List<SelectedInactiveUserDTO> inactiveUsersForRevise){ //#30737 (add param inactiveUsersForRevise)
 		getManagedBean().setAutoUpdate(true);
 		/*Remark is mandatory during revise and reject*/
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -736,46 +753,34 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 		
 		//#30737 - Start
+		CtContract ctContract = ctBB.getManagedBean().getContractVer().getCtContract();
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			log.info("xoxoxoxoxooxoxo action : "+outcome);
-			handleInactiveUserValidation(outcome, inactiveUserCheckResult);
+			log.info("xoxoxoxoxooxoxo action : SUBMIT");
+			
+			String approverType;
+			if (ctContract.getContractType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				approverType = RoleCode.CT_APPROVER.value();
+			} else {
+				approverType = RoleCode.BPK_CC_APPROVER.value();
+			}
+	        
+	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+	        		getInactiveUsers(approverType, getSelectedUsers(), getManagedBean().getContractVer().getDocType());
+	        handleInactiveUserValidation(outcome, selectedInactiveUsers, getUserRole());
 		}
 		
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
-				&& inactiveUserCheckResult == 5L) {
-			log.info("xoxoxoxoxooxoxo revise & return 5");
-			handleInactiveUserValidation(outcome, inactiveUserCheckResult);
-		}
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+	        log.info("xoxoxoxoxooxoxo action : REVISE");
+	        if (!inactiveUsersForRevise.isEmpty() && inactiveUsersForRevise.get(0).getStatus() == 5L) {
+	        	log.info("xoxoxoxoxooxoxo REVISE + return 5L");
+	        	handleInactiveUserValidation(outcome, inactiveUsersForRevise, getUserRole());
+            }
+	    }
 		//#30737 - End
 		
 	}
 	
-	//#30737 - Start
-	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
-	 */
-	public void handleInactiveUserValidation(String outcome, Long inactiveUserCheckResult) {
-
-		IContractSuspensionSO contractSuspensionSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
-    	
-        try {
-        	contractSuspensionSO.checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-            	getSelectedUsers(),
-            	inactiveUserCheckResult
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex);
-        }
-    }
-	//#30737 - End
-
 	/**
 	 * Method to set user role as per user login
 	 * User role used in BPM to identify the task
@@ -875,7 +880,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-			validateSuspensionDetails(outcome, null); //#30737 (add param null to cater inactiveUserCheckResult)
+			validateSuspensionDetails(outcome, new ArrayList<SelectedInactiveUserDTO>()); //#30737 (add empty list to inactiveUsersForRevise)
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());

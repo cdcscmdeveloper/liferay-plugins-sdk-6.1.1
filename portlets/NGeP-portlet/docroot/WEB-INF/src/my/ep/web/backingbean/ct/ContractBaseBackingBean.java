@@ -26,6 +26,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO; //#30737
 import my.ep.dto.ct.actor.CtActorReqDTO;
 import my.ep.dto.ct.actor.CtActorResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; // #30737
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; // #30737
 import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -556,6 +558,105 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     
     protected abstract List<PmUser> getSelectedUsers();
     protected abstract CtContractVer getContractVer();
+    
+    //#30737 - Start
+  	protected List<SelectedInactiveUserDTO> getInactiveUsersForRevise(Long contractVerId, String parameterCode, String docType){
+  		
+  		log.info("xoxoxoxoxooxoxo docId : "+ contractVerId);
+  		log.info("xoxoxoxoxooxoxo parameterCode : "+ parameterCode);
+  		log.info("xoxoxoxoxooxoxo docType : "+ docType);
+          
+  		String userRole;
+          if(parameterCode.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+          	userRole = RoleCode.BPK_CCA.value();
+          } else{
+          	userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+          }
+          
+          CtActor ctActor = retrieveContractActor(contractVerId, docType, userRole);
+          
+          if (ctActor != null) {
+              List<PmUser> users = new ArrayList<PmUser>();
+              users.add(ctActor.getUser());
+
+              return getInactiveUsers(RoleCode.MIN_CONTRACT_ADMIN.value(), users, docType);
+          }
+          
+          return new ArrayList<>();
+  	}
+  	
+  	protected List<SelectedInactiveUserDTO> getInactiveUsers(String roleCode, List<PmUser> users, String docType) {
+  		
+  	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+  	    InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
+  	    inactiveDto.setUserIds(populateInactiveUserIdIntoString(users));
+  	    inactiveDto.setUserRoleCode(roleCode);
+  	    inactiveDto.setOrgProfileId(getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+  	    inactiveDto.setDocType(docType);
+  	    inactiveDto.setDocNo(getContractVer().getCtContract().getContractNo());
+  	    inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+  	    
+  	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+  	    
+  	    log.info("xoxoxo getStatus "+resDto.getStatus());
+  	    log.info("xoxoxo getMessage "+resDto.getMessage());
+
+  	    return resolveInactiveUserStatus(users, resDto);
+  	}
+  	
+  	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(List<PmUser> users, InactiveUserResDTO resDto) {
+
+  	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
+
+  	    String[] statuses = resDto.getStatus().split(",");
+  	    for (int i = 0; i < statuses.length; i++) {
+  	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
+  	        selectedUser.setUserName(users.get(i).getUserName());
+  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+  	        
+  	        // FOR TESTING PURPOSE ONLY
+//  	        if (i == 0) {
+//  	            selectedUser.setStatus(5L);
+//  	        } else {
+//  	           	selectedUser.setStatus(3L);
+//  	        }
+  	        
+  	        selectedUsers.add(selectedUser);
+  	    }
+  	    return selectedUsers;
+  	}
+  	
+  	// private to populate user id into string with comma delimiter 
+  	private String populateInactiveUserIdIntoString(List<PmUser> pmUsers){
+  		StringBuilder sb = new StringBuilder();
+  		for(PmUser user : pmUsers){
+  			if (sb.length() > 0) {
+  		        sb.append(",");
+  		    }
+  		    sb.append(user.getUserId());
+  		}
+  		return sb.toString();
+  	}
+  		
+  	/**
+  	 * Handles inactive user validation during actions.
+  	 *
+  	 * @param outcome -action outcome such as SUBMIT or REVISE
+  	 * @param selectedInactiveUsers - list of result returned from inactive user checking process (SP)
+  	 * @throws EpException if inactive user conditions are met during validation. 
+  	 * Different error messages will be generated based on the returned error code.
+  	 */
+  	protected void handleInactiveUserValidation(String outcome, List<SelectedInactiveUserDTO> selectedInactiveUsers, String userRole) {
+  		try {
+	      	checkInactiveUserOnAction(
+	      		buildContractReqDTO(outcome, userRole),
+	      		selectedInactiveUsers
+	      	);
+  		} catch (EpException ex) {
+  			throw buildInactiveUserException(ex);
+  		}
+    }
     //#30737 - End
     
 }
