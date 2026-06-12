@@ -3324,6 +3324,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	// 34442 - start
+	/**
+	 * Acknowledges the amendment: opens a signing dialog for suppliers
+	 * (GPKI or SPKI), otherwise saves the contract amendment.
+	 *
+	 * @return navigation outcome, or {@code null} if a dialog was shown
+	 * @throws Exception if processing fails
+	 */
 	public String acknowledgeAction() throws Exception {
 		if (isSupplierRole()) {
 			if (hasGovtSellerRole()) {
