@@ -5285,6 +5285,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @return other description for category code
 	 */
 	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return null;
+		}
 		return SmApplicationUtil.getCategoryCodeOtherDesc(
 				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
 	}
