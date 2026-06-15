@@ -1023,7 +1023,7 @@ public class SupplierFinalizationBackingBean extends
 		// #28834 - End.
 		
 		try {
-			//#38640 Start adli
+			//#34860 Start adli
 //			this.getManagedBean()
 //					.setJustDropdown(
 //							getReasonCodeDropdownValues(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION
@@ -1032,7 +1032,7 @@ public class SupplierFinalizationBackingBean extends
 			.setJustDropdown(
 					getReasonCodeCheckboxValues(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION
 							.value()));
-			//#38640 End
+			//#34860 End
 			//getSuppFinalizationEndorsementReportStreamContent();
 		} catch (Exception e) {
 			log.error(e);
@@ -1040,7 +1040,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	/**
-	 * #38640
+	 * #34860
 	 * Populate values for Reason Check Box base on reason category code
 	 * @param categoryCode
 	 *            the reason category code
@@ -1049,11 +1049,10 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public SelectItem[] getReasonCodeCheckboxValues(String categoryCode) {
 		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
 		try {
 			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(categoryCode);
 
-			items = new SelectItem[reasonDescs.size() + 1];
+			items = new SelectItem[reasonDescs.size()];
 			int i = 0;
 			for (PmReasonDesc reasonDesc : reasonDescs) {
 				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
@@ -10200,7 +10199,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 */
 	public void justificationChange(AjaxBehaviorEvent event) {
 		log.info("justificationChange");
-		//#38640 adli start
+		//#34860 adli start
 		List<String> values = this.getManagedBean().getJustificationReasonList();
 		for (String reasonCode : values){
 //			String reasonCode = (String) event.getComponent().getAttributes()
@@ -10217,13 +10216,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				this.getManagedBean().setJustification(reason);
 				if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reason.getReasonCode())) {
 					this.getManagedBean().setRenderjustificationTextbox(true);
+					break;
 				} else {
 					this.getManagedBean().getScQtFinalization().setJustificationText(null);
 				}
 			}
 			//Bug #29707 - end
 		}
-		//#36840 End
+		//#34860 End
 	}
 	
 	/**
