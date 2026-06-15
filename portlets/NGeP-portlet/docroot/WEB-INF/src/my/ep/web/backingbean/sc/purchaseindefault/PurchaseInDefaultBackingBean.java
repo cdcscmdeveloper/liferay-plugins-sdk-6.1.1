@@ -1147,9 +1147,6 @@ public class PurchaseInDefaultBackingBean extends
 		//34449 - start
 		else {
 			constructConfirmationPopup(outcome,"pidConformDlg.show()");
-			//RequestContext.getCurrentInstance().execute("verifyConformDlg.show()");
-			
-		//	approverAction(outcome);
 			//34449 - end
 		}
 	}
@@ -2372,7 +2369,7 @@ public class PurchaseInDefaultBackingBean extends
 						
 						if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 								.getPidStatus().getStatusId()))// #31603
-							break;
+							break; //#34449 - changes from sonarqube fixing that cause logic issue during execute. Revert to existing code
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2384,7 +2381,7 @@ public class PurchaseInDefaultBackingBean extends
 					
 					if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 							.getPidStatus().getStatusId()))// #31603
-						break;
+						break; //#34449 - changes from sonarqube fixing that cause logic issue during execute. Revert to existing code
 				}
 				// start - #9133 (reopen comment 146)
 				else{
@@ -2405,7 +2402,7 @@ public class PurchaseInDefaultBackingBean extends
 			log.info(e.getStackTrace());
 		}
 	}
-	
+	//#34449 - start
 	/**
 	 * Checking for reject dialog popup shown
 	 * 
@@ -2417,13 +2414,12 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("supplierAction");
 		this.getManagedBean().setAction(outcome);
 		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.FALSE);
-			updateBPMTask(outcome, null);
+			RequestContext.getCurrentInstance().execute("acceptSuppDlg.show()");
 		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.TRUE);
 			RequestContext.getCurrentInstance().execute("rejectDlg.show()");
 		}
 	}
+	//#34449 - end
 	
 	/**
 	 * Checking for cancel dialog popup shown
@@ -3363,23 +3359,6 @@ public class PurchaseInDefaultBackingBean extends
 		this.getManagedBean().setSelectedAction(outcome);
 		RequestContext.getCurrentInstance().execute(lovId);
 	}
-	
-	/**
-	 * Shows the appropriate confirmation dialog based on the selected outcome
-	 * and current PID status.
-	 * 
-	 * @param outcome selected BPM outcome
-	 */
-	public void populateConfirmationDialog(String outcome){
-		PmStatus pidStatus = getManagedBean().getPidStatus();
-		Long statusId = pidStatus != null ? pidStatus.getStatusId() : null;
-
-		if (DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE.equals(statusId)
-		        && BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
-		    RequestContext.getCurrentInstance().execute("acceptSuppDlg.show()");
-		}
-	}
-	
 	
 	/**
 	 * 

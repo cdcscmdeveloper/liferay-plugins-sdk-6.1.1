@@ -48,7 +48,6 @@
 			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
 			postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{purchaseInDefaultBackingBean.enableAutoUpdate()}" />
-<!--  pending submission kot task baru create dari catalogue -->
 		<c:if
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 			<table style="width: 100%">
@@ -98,7 +97,6 @@
 			</table>
 		</c:if>
 		<!-- #9133 - start -->
-<!-- task id ada dan status pending submission / mungki dari save -->
 		<c:if
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null and isPendingSubmissionStatus}">
 			<table style="width: 100%">
@@ -132,7 +130,6 @@
 			</table>
 		</c:if>
 		<!-- #9133 - end -->
-		<!-- task id ada dan status selain pending submission-->
 		<c:if
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null and !isPendingSubmissionStatus}"> <!-- #9133 - add condition not isPendingSubmissionStatus-->
 			<table style="width: 100%">
