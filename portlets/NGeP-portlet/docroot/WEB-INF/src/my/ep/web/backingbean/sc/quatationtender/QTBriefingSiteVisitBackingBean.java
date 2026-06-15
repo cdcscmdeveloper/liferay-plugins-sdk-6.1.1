@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import java.util.Calendar;
 import java.util.Collections;//#28188
 import java.util.Comparator;//#28188
-import java.util.HashMap;//#28188
+import java.util.LinkedHashMap;//#28188
 import java.util.Map;//#28188
 
 import javax.faces.application.FacesMessage;//#28188
@@ -1090,7 +1090,6 @@ public class QTBriefingSiteVisitBackingBean extends
 				QTStatusConst.QT_BRIEFING_SITE_VISIT)){
 			
 			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
-			Date bsvDatePospone = null;//#28188
 			
 			ScAddress tempPmAddress = new ScAddress();
 			PmStatus currentBsvStatus = bsvDtl.getBsvStatus();
@@ -1131,10 +1130,29 @@ public class QTBriefingSiteVisitBackingBean extends
 				}
 				
 				//#28188 - Start
-				bsvDatePospone = bsvDtl.getBsvDate();
-				if(bsvDatePospone != null){
-					this.getManagedBean().setBriefingSiteVisitPostponeDate(bsvDatePospone);
-					bsvDatePospone = null;
+				ScQtBsvDtl dbDtl = 
+				        (bsvDtl.getQtBsvDtlId() != null || bsvDtl.getParentQtBsvDtlId() != null)
+				        ? retrieveBSVDetail(
+				                bsvDtl.getQtBsvDtlId() != null
+				                        ? bsvDtl.getQtBsvDtlId()
+				                        : bsvDtl.getParentQtBsvDtlId())
+				        : null;
+	
+				Date originalBsvDate = null;
+
+				if (dbDtl != null && dbDtl.getBsvDate() != null) {
+				    originalBsvDate = dbDtl.getBsvDate();
+				} else {
+				    originalBsvDate = bsvDtl.getBsvDate();
+				}
+
+				if (originalBsvDate != null) {
+				    this.getManagedBean().setBriefingSiteVisitPostponeDate(originalBsvDate);
+				    tempScQtBsvDtl.setBsvDate(originalBsvDate);
+				}
+	
+				if (tempScQtBsvDtl.getBsvDate() != null) {
+				    this.getManagedBean().setBriefingSiteVisitPostponeDate(tempScQtBsvDtl.getBsvDate());
 				}
 				//#28188 - End
 				
@@ -1458,21 +1476,54 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * @return minDate
 	 */
 	public Date handleBSVMinDate() {
-		
-		Date minDate = DateUtils.addDays(handlePublishDate(),1);
+
+		Date minDate = DateUtils.addDays(handlePublishDate(), 1);
 		ScQt scQt = this.getManagedBean().getQt();
 		Long statusId = scQt.getQtStatus().getStatusId();
 		if (isQTStatusPublished(statusId)) {
-			minDate = DateUtils.addDays(scQt.getPublishDate(),1);
+			minDate = DateUtils.addDays(scQt.getPublishDate(), 1);
 		}
 		//#28188 - Start
-		if(this.getManagedBean().getBriefingSiteVisitPostponeDate() != null){
-			minDate = this.getManagedBean().getBriefingSiteVisitPostponeDate();
+		Date currentDate = new Date();
+		Date postponeDate = this.getManagedBean().getBriefingSiteVisitPostponeDate();
+
+		if (postponeDate != null) {
+			if (postponeDate.before(currentDate)) {
+				minDate = currentDate;
+			} else {
+				minDate = postponeDate;
+			}
 		}
 		//#28188 - End
 		return minDate;
-
 	}
+	
+	//#28188 - Start
+	/**
+	 * Get the landing method for retrieve BSV Min Date.
+	 * @return handleBSVMinDate
+	 */
+	public Date handleOriginalBSVMinDate() {
+
+	    /*
+	     * For BSV edit/postpone case:
+	     * Always use original old BSV date/time as minimum reference.
+	     * Example:
+	     * Old BSV = 27/05/2026 09:00
+	     * Allowed minutes = 09:15, 09:30, 09:45
+	     */
+	    ScQtBsvDtl tempDtl = this.getManagedBean().getTempScQtBsvDtl();
+
+	    if (tempDtl != null && tempDtl.getBsvDate() != null) {
+	        return tempDtl.getBsvDate();
+	    }
+
+	    /*
+	     * For normal case, fallback to existing min date logic.
+	     */
+	    return handleBSVMinDate();
+	}
+	//#28188 - End
 	
 	/**
 	 * Get BSV Status Dropdown
@@ -1747,9 +1798,9 @@ public class QTBriefingSiteVisitBackingBean extends
 	//#28188 - Start
 	public void validateBsvDate(FacesContext context, UIComponent component, Object value) {
 	    Date selectedDate = (Date) value;
-	    Date minDate = handleBSVMinDate();
+	    Date minDate = handleOriginalBSVMinDate();
 
-	    if (selectedDate != null && selectedDate.before(minDate)) {
+	    if (selectedDate != null && minDate != null && selectedDate.before(minDate)) {
 	        throw new ValidatorException(
 	            new FacesMessage(FacesMessage.SEVERITY_ERROR,
 	                "Date/Time cannot be before " + minDate,
@@ -1805,18 +1856,29 @@ public class QTBriefingSiteVisitBackingBean extends
 	
 	//#28188 - Start
 	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
+
 	    if (CollectionUtils.isEmpty(inputList)) {
 	        return new ArrayList<ScQtBsvDtl>();
 	    }
 
-	    // ==========================
-	    // STEP 1: GROUPING by bsvDesc
-	    // ==========================
-	    Map<String, List<ScQtBsvDtl>> grouped = new HashMap<String, List<ScQtBsvDtl>>();
+	    // ==================================================
+	    // STEP 1 : GROUP USING PARENT RELATION
+	    // ==================================================
+	    Map<Long, List<ScQtBsvDtl>> grouped =
+	            new LinkedHashMap<Long, List<ScQtBsvDtl>>();
 
 	    for (ScQtBsvDtl dtl : inputList) {
 
-	        String key = dtl.getBsvDesc();
+	        Long key = null;
+
+	        // child record
+	        if (dtl.getParentQtBsvDtlId() != null) {
+	            key = dtl.getParentQtBsvDtlId();
+	        }
+	        // original/parent record
+	        else {
+	            key = dtl.getQtBsvDtlId();
+	        }
 
 	        if (!grouped.containsKey(key)) {
 	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
@@ -1825,56 +1887,95 @@ public class QTBriefingSiteVisitBackingBean extends
 	        grouped.get(key).add(dtl);
 	    }
 
-	    // ==========================
-	    // STEP 2: SORT EACH GROUP
-	    // ==========================
+	    // ==================================================
+	    // STEP 2 : SORT INSIDE EACH GROUP
+	    // Parent(Postpone) first
+	    // Child(Pending) second
+	    // ==================================================
 	    for (List<ScQtBsvDtl> list : grouped.values()) {
 
 	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
+
 	            @Override
-	            public int compare(ScQtBsvDtl bsvDtl1, ScQtBsvDtl bsvDtl2) {
+	            public int compare(ScQtBsvDtl bsvDtl1,
+	                               ScQtBsvDtl bsvDtl2) {
 
-	                Date bsvDate1 = bsvDtl1.getBsvDate();
-	                Date bsvDate2 = bsvDtl2.getBsvDate();
+	                boolean isChild1 =
+	                        bsvDtl1.getParentQtBsvDtlId() != null;
 
-	                if (bsvDate1 == null && bsvDate2 == null) return 0;
-	                if (bsvDate1 == null) return 1;
-	                if (bsvDate2 == null) return -1;
+	                boolean isChild2 =
+	                        bsvDtl2.getParentQtBsvDtlId() != null;
 
-	                return bsvDate2.compareTo(bsvDate1);
+	                // parent first
+	                if (isChild1 && !isChild2) {
+	                    return 1;
+	                }
+
+	                if (!isChild1 && isChild2) {
+	                    return -1;
+	                }
+
+	                Date date1 = bsvDtl1.getBsvDate();
+	                Date date2 = bsvDtl2.getBsvDate();
+
+	                if (date1 == null && date2 == null) {
+	                    return 0;
+	                }
+
+	                if (date1 == null) {
+	                    return 1;
+	                }
+
+	                if (date2 == null) {
+	                    return -1;
+	                }
+
+	                return date1.compareTo(date2);
 	            }
 	        });
 	    }
 
-	    // ==========================
-	    // STEP 3: SORT GROUP ORDER
-	    // ==========================
-	    List<Map.Entry<String, List<ScQtBsvDtl>>> entries =
-	            new ArrayList<Map.Entry<String, List<ScQtBsvDtl>>>(grouped.entrySet());
+	    // ==================================================
+	    // STEP 3 : SORT GROUP ORDER
+	    // Based on parent/original date
+	    // ==================================================
+	    List<List<ScQtBsvDtl>> groupedList =
+	            new ArrayList<List<ScQtBsvDtl>>(grouped.values());
 
-	    Collections.sort(entries, new Comparator<Map.Entry<String, List<ScQtBsvDtl>>>() {
+	    Collections.sort(groupedList,
+	            new Comparator<List<ScQtBsvDtl>>() {
+
 	        @Override
-	        public int compare(Map.Entry<String, List<ScQtBsvDtl>> bsvDtls1,
-	                           Map.Entry<String, List<ScQtBsvDtl>> bsvDtls2) {
+	        public int compare(List<ScQtBsvDtl> list1,
+	                           List<ScQtBsvDtl> list2) {
 
-	            Date bsvDate1 = bsvDtls1.getValue().get(0).getBsvDate();
-	            Date bsvDate2 = bsvDtls2.getValue().get(0).getBsvDate();
+	            Date date1 = list1.get(0).getBsvDate();
+	            Date date2 = list2.get(0).getBsvDate();
 
-	            if (bsvDate1 == null && bsvDate2 == null) return 0;
-	            if (bsvDate1 == null) return 1;
-	            if (bsvDate2 == null) return -1;
+	            if (date1 == null && date2 == null) {
+	                return 0;
+	            }
 
-	            return bsvDate2.compareTo(bsvDate1);
+	            if (date1 == null) {
+	                return 1;
+	            }
+
+	            if (date2 == null) {
+	                return -1;
+	            }
+
+	            return date1.compareTo(date2);
 	        }
 	    });
 
-	    // ==========================
-	    // STEP 4: MERGE BACK
-	    // ==========================
-	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
+	    // ==================================================
+	    // STEP 4 : MERGE BACK
+	    // ==================================================
+	    List<ScQtBsvDtl> finalList =
+	            new ArrayList<ScQtBsvDtl>();
 
-	    for (Map.Entry<String, List<ScQtBsvDtl>> entry : entries) {
-	        finalList.addAll(entry.getValue());
+	    for (List<ScQtBsvDtl> list : groupedList) {
+	        finalList.addAll(list);
 	    }
 
 	    return finalList;

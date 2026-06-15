@@ -161,7 +161,8 @@ public class BSVAttendanceBackingBean extends
 							for (ScQtBsvDtl scqtdtl : briefingResDTO.getBriefingList()){
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 								//#28188 - Start
-								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {	
+								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
 									newBriefingList.add(scqtdtl);
 									briefingZoneBean.setBriefingList(newBriefingList);
 								}
@@ -174,7 +175,8 @@ public class BSVAttendanceBackingBean extends
 							for (ScQtBsvDtl scqtdtl : briefingResDTO.getSiteVisitList()){
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 								//#28188 - Start
-								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {
+								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
 									newSiteVisitList.add(scqtdtl);
 									briefingZoneBean.setSitevisitList(newSiteVisitList);
 								}
@@ -209,7 +211,8 @@ public class BSVAttendanceBackingBean extends
 						for (ScQtBsvDtl scqtdtl : resDTO.getBriefingList()){
 							scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 							//#28188 - Start
-							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {	
+							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+									|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {	
 								newBriefingList.add(scqtdtl);
 								briefingZoneBean.setBriefingList(newBriefingList);
 							}
@@ -222,7 +225,8 @@ public class BSVAttendanceBackingBean extends
 						for (ScQtBsvDtl scqtdtl : resDTO.getSiteVisitList()){
 							scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 							//#28188 - Start
-							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {
+							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+									|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
 								newSiteVisitList.add(scqtdtl);
 								briefingZoneBean.setSitevisitList(newSiteVisitList);
 							}
