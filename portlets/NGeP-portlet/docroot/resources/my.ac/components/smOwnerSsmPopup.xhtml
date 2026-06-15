@@ -65,11 +65,13 @@
 			style="overflow-wrap: break-word;" 
 			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
 			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
-			height="auto !important" width="800" resizable="false" >
-			<p:outputPanel id="popupRolePanelId">
+			height="250" width="800" resizable="false" >
+			<p:outputPanel id="popupRolePanelId" style="height: 150px; overflow: hidden; display: block; margin-bottom: 15px;">
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt" 
+					scrollable="true" 
+					scrollHeight="150"
 					>
 					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
 						<h:outputText value="#{person.name}" />
