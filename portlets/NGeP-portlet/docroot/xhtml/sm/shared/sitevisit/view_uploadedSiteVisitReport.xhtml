@@ -31,5 +31,33 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
+	<!-- 28775 -->
+	<c:if test="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
+	<p:panel header="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}">
+		<table class="customTbl">
+				<tr>
+					<td class="tdTitle">
+						<p:outputLabel
+							value="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td class="tdContent">
+						<p:calendar showOn="button" id="actualSvDate" required="#{!empty param['disableValidation']}"
+							label="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}"
+							maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
+							value="#{svoSiteVisitBackingBean.managedBean.smSvTask.actualVisitDate}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+							disabled="#{viewFlag}" />
+					</td>
+
+					<td class="tdTitle">
+					</td>
+
+					<td class="tdContent">
+					</td>
+				</tr>
+		</table>
+	</p:panel>
+	</c:if>
 	
 </ui:composition>
