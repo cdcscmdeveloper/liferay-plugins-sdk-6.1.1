@@ -16,6 +16,7 @@ import javax.faces.model.SelectItem;
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -362,6 +363,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#35320 - End
 	
 	private ScQtEvaluationResultDtl tempRecommendedSupplier;//#39620 
+	private List<String> justificationReasonList;//#34860
 	
 	/**
 	 * @return the activeIndex
@@ -2763,7 +2765,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setTempRecommendedSupplier(ScQtEvaluationResultDtl tempRecommendedSupplier) {
 		this.tempRecommendedSupplier = tempRecommendedSupplier;
 	}//#39620 - End
-	
+
+	//#34860 Start
+	public List<String> getJustificationReasonList() {
+		return justificationReasonList;
+	}
+
+	public void setJustificationReasonList(List<String> justificationReasonList) {
+		this.justificationReasonList = justificationReasonList;
+	}
+	//#34860 End
 	
 }
 // ***25201
