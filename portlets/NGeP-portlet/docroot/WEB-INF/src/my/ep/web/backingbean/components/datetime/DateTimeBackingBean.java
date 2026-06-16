@@ -206,7 +206,9 @@ public class DateTimeBackingBean {
 	    UIComponent composite =
 	            UIComponent.getCurrentCompositeComponent(context);
 
-	    Date minDate = (Date) composite.getAttributes().get("mindate");
+	    //Date minDate = (Date) composite.getAttributes().get("mindate");
+	    
+	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
 	    
 	    FacesScopes facesScopes = new FacesScopes();
 
@@ -328,7 +330,9 @@ public class DateTimeBackingBean {
 	    UIComponent composite =
 	            UIComponent.getCurrentCompositeComponent(context);
 
-	    Date minDate = (Date) composite.getAttributes().get("mindate");
+	    //Date minDate = (Date) composite.getAttributes().get("mindate");
+	    
+	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
 
 	    FacesScopes facesScopes = new FacesScopes();
 
