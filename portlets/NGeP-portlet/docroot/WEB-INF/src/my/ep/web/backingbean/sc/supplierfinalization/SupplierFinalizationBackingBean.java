@@ -10214,7 +10214,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			} else {
 				this.getManagedBean().getScQtFinalization().setJustification(reason);
 				this.getManagedBean().setJustification(reason);
-				if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reason.getReasonCode())) {
+				if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reasonCode)) {//#36840
 					this.getManagedBean().setRenderjustificationTextbox(true);
 					break;
 				} else {
