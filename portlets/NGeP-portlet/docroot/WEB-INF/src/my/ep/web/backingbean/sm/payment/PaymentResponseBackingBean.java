@@ -234,7 +234,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					// To verify the data integrity sending by MOLPay
 					String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 					String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
-
+					
+					log.info("######38377#####vKey>>>>" + vKey);
 					log.info("SKey>>>>" + skey);
 					log.info("Key1>>>>" + key1);
 					//26307
@@ -441,9 +442,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			// To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 			String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
-
+			
+			log.info("######38377#####vKey>>>>" + vKey);
 			log.info("SKey>>>>" + skey);
 			log.info("Key1>>>>" + key1);
+			log.info("######38377#####skipChecking>>>>" + skipChecking);
 			//26307
 			
 			//#38377
@@ -690,14 +693,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info(">>>>#38377 enable payment update<<<");
+				
 				// #38377
-				if (isResponseValid(pyPayment.getPyBill().getBillType(), payload, paymentGateway)&& isValidToSave) {
+				if (!"Y".equals(paymentGateway) && isValidToSave) {
 					log.info("###############38377 update payment");
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-				} else {
-				    log.warn("###############38377 Invalid payment response. billType=" + pyPayment.getPyBill().getBillType()
-				            + ", paymentGateway=" + paymentGateway
-				            + ", payloadEmpty=" + StringUtils.isBlank(payload));
 				}
 
 				log.info("******ResponsePreRender - After Update******");
