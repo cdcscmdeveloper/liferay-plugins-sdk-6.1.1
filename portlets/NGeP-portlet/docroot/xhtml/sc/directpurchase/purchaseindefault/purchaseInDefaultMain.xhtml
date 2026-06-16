@@ -171,10 +171,10 @@
 			</p:outputPanel>
 			<ui:remove>#34449 - end</ui:remove>					
 		</c:if>
-		<!-- #28865 start -->
+		<ui:remove> #28865, #34449 - start</ui:remove>
 		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.msg']}"
 			severity="alert" widgetVar="submitSuppDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.sc.submit.confirmation']}">
+			appendToBody="true" header="#{lbl['lbl.sc.header.message.submit']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
@@ -184,11 +184,11 @@
 					onclick="submitSuppDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<!-- #28865 end -->
-		<!-- #9133 - start -->
+		<ui:remove> #28865, #34449 - end</ui:remove>
+		<ui:remove> #9133, #34449 - start</ui:remove>
 		<p:confirmDialog message="#{lbl['lbl.cancel.dialog.confirm.message']}"
 			severity="alert" widgetVar="cancelDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.sc.cancel.confirm']}">
+			appendToBody="true" header="#{lbl['lbl.sc.header.message.cancel']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					actionListener="#{purchaseInDefaultBackingBean.updateBPMTasks('CANCEL')}"
@@ -198,7 +198,7 @@
 					oncomplete="cancelDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<!-- #9133 - end -->
+		<ui:remove> #9133, #34449 - end</ui:remove>
 		<ui:remove>34449 - start</ui:remove>
 		<ui:remove> Popup Submit Action </ui:remove>
 		<ac:confirmationPopup id="submitConformDlgPid"
