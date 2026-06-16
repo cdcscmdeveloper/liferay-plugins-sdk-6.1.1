@@ -66,7 +66,7 @@
 			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
 			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
 			height="250" width="800" resizable="false" ><!-- #40385 --> 
-			<p:outputPanel id="popupRolePanelId" style="height: 150px; overflow: hidden; display: block; margin-bottom: 15px;"><!-- #40385 --> 
+			<p:outputPanel id="popupRolePanelId" style="display: block; margin-bottom: 15px;"><!-- #40385 --> 
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt" 
@@ -76,7 +76,7 @@
 					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
 						<h:outputText value="#{person.name}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.roles']}">
+					<p:column headerText="#{lbl['lbl.sm.roles']}" style="width: auto; white-space: nowrap;"><!-- #40385 --> 
 						<c:if test="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
 							<!-- #27951 p:selectBooleanCheckbox value="#{person.director}" itemLabel="#{lbl['lbl.sm.person.dir']}" disabled="#{(person.directorSsm or person.clerical)}">
 								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
