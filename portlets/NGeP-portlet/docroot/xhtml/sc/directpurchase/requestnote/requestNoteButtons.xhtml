@@ -46,8 +46,7 @@
 			</div>
 		</p:panel>
 	</p:dialog>
-	<ui:remove>#34449 - start</ui:remove>
-	<ui:remove> Change label</ui:remove>
+	<ui:remove>#34449 - start (Change label)</ui:remove>
 	<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancel" value="CANCEL" />
 	<ui:param name="cancelRN" value="cancelRN" />
@@ -67,35 +66,35 @@
 	<ui:remove>#34449 - start</ui:remove>
 	<ui:remove> New Submit popup</ui:remove>
 	<ac:confirmationPopup id="submitRNConfirmDlgId"
-    widget="submitRNConfirmDlg"
-    width="400"
-    height="100"
-    okAction="#{requestNoteBackingBean.submitAction('')}"
-    title="#{lbl['lbl.sc.confirmation.submit']}"
-    content="#{lbl['lbl.sc.confirmation.submit.message']}"
-    update="@form" />
+		widget="submitRNConfirmDlg"
+		width="400"
+		height="100"
+		okAction="#{requestNoteBackingBean.submitAction('')}"
+		title="#{lbl['lbl.sc.confirmation.submit']}"
+		content="#{lbl['lbl.sc.confirmation.submit.message']}"
+		update="@form" />
     
     <ui:remove> New Revise popup</ui:remove>
     <ui:param name="revise" value="REVISE" />
     <ac:confirmationPopup id="reviseRNConfirmDlgId"
-    widget="reviseRNConfirmDlg"
-    width="400"
-    height="100"
-    okAction="#{requestNoteBackingBean.cancelRejectAction(revise)}"
-    title="#{lbl['lbl.sc.confirmation.revise']}"
-    content="#{lbl['lbl.sc.confirmation.revise.message']}"
-    update="@form" />
+		widget="reviseRNConfirmDlg"
+		width="400"
+		height="100"
+		okAction="#{requestNoteBackingBean.cancelRejectAction(revise)}"
+		title="#{lbl['lbl.sc.confirmation.revise']}"
+		content="#{lbl['lbl.sc.confirmation.revise.message']}"
+		update="@form" />
     
     <ui:remove> New Approve popup</ui:remove>
     <ui:param name="approve" value="APPROVE" />
     <ac:confirmationPopup id="approveRNConfirmDlgId"
-    widget="approveRNConfirmDlg"
-    width="400"
-    height="100"
-    okAction="#{requestNoteBackingBean.cancelRejectAction(approve)}"
-    title="#{lbl['lbl.sc.confirmation.approve']}"
-    content="#{lbl['lbl.sc.confirmation.approve.message']}"
-    update="@form" /> 
+		widget="approveRNConfirmDlg"
+		width="400"
+		height="100"
+		okAction="#{requestNoteBackingBean.cancelRejectAction(approve)}"
+		title="#{lbl['lbl.sc.confirmation.approve']}"
+		content="#{lbl['lbl.sc.confirmation.approve.message']}"
+		update="@form" /> 
     <ui:remove>#34449 - end</ui:remove>
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
