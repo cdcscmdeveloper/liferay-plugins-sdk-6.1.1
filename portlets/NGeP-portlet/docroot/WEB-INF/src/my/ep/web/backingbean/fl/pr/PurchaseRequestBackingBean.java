@@ -4062,8 +4062,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
 			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
-			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
 			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+			
+			sumAmt = map.getValue().add(sumAmt);
 			
 			// #31344
 			boolean exceedThreshold = sumAmt.doubleValue() > thresholdAmt;
@@ -5071,10 +5072,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 		
 		catalogueReqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
-		catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
-		CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
-		skuDesc = catalogueResDTO.getSkuNumber();
+		//40227-Start
+		if(scRequestItem.getCmItem()!=null){
+			catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
+			catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
+			CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
+			skuDesc = catalogueResDTO.getSkuNumber();
+		}
+		//40227-End
+		
 		//29396-end
 		
 		return skuDesc;
@@ -5514,7 +5520,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setExceedBpkThreshold(isBpkExceed);
 		// 31344
 
-		if (!isExceedThreshold) {
+		if (!isExceedThreshold  && !isBpkExceed) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(

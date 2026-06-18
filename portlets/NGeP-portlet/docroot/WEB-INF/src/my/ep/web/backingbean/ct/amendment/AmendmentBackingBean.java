@@ -131,6 +131,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;//Fix - #30045
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -1258,6 +1259,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			ctBackingBean.getManagedBean().setDirectPurchase(isDirectPurchase());//#40005
+			updateProcModeFlag();//Fix - #30045
 
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
@@ -3318,7 +3320,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Enhancement 15851 - shaqimi end
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);					 
 				if (((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
-						|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) //24333
+						|| ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) //24333,//#40194
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 						&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))
@@ -3333,11 +3335,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			}			
 			//24333 - Start
-			if (!getManagedBean().isPrepareLOA() && ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+			if (!getManagedBean().isPrepareLOA() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 					&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
-							|| ctBackingBean.isPk7FromDp())){ //24333
+							|| ctBackingBean.isPk7FromDp())){ //24333,#40194
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithBond);
 			}
 			//24333 - End
@@ -3355,10 +3357,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())
 					&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
-							|| ctBackingBean.isPk7FromDp())) { //24333
+							|| ctBackingBean.isPk7FromDp())) { //24333,#40194
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 			}
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
@@ -3623,21 +3625,175 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	// End - #29589
 	
   
+	// End - #29589
+	
+	// #40279 - Start
 	/**
-	 * The method used to retrieve the new contract period
-	 * with addition of old contract period and extended period.
+	 * Calculates contract period including ongoing amendment extension.
+	 * Supplemental Performance Bond Section
 	 * 
-	 * @return new contract period
+	 * @return an array containing: [0] = total months, [1] = remaining days
 	 */
-	public String calculateNewContractPeriod(boolean isCalculateNew) {
-		if (isCalculateNew) {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().intValue()
-					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()); //#24333
-		} else {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
-					.getLatestContractVer().getCtContractValue().getContractPeriod());
+	private int[] calculateNewContractPeriod() {
+
+		CtContractVer current = ctBackingBean.getManagedBean().getContractVer();
+
+		CtContractValue contractValue = current.getCtContractValue();
+
+		Date effectiveDate = contractValue.getEffDate();
+
+		Date expiredDate = contractValue.getExpDate();
+
+		CtAmendment amendment = current.getCtAmendment();
+
+		// Use amendment extend end date during ongoing amendment
+		if (isOngoingAmendment(current) && amendment != null && amendment.isContractExtend() && amendment.getExtendEndDate() != null) {
+
+			expiredDate = amendment.getExtendEndDate();
 		}
+
+		return DateUtils.getMonthsAndDaysDifference(effectiveDate, expiredDate);
 	}
+
+	/**
+	 * Returns total contract months for Performance Bond Section display.
+	 * 
+	 * @return total contract months
+	 */
+	public String getDisplayContractPeriod() {
+
+		int[] result = calculateNewContractPeriod();
+
+		return String.valueOf(result[0]);
+	}
+
+	/**
+	 * Returns total contract days for Performance Bond Section display
+	 * 
+	 * @return remaining contract days
+	 */
+	public String getDisplayContractDays() {
+
+		int[] result = calculateNewContractPeriod();
+
+		return String.valueOf(result[1]);
+	}
+
+	/**
+	 * Calculates contract period for Supplemental Letter display.
+	 * 
+	 * @return an array containing: [0] = contract months, [1] = contract days
+	 */
+	private int[] calculateSupplementalContractPeriod() {
+
+		CtContractVer current = ctBackingBean.getManagedBean().getContractVer();
+
+		CtContractValue contractValue;
+
+		// ONGOING
+		if (isOngoingAmendment(current)) {
+
+			contractValue = current.getCtContractValue();
+
+		} else {
+
+			List<CtContractVer> history = getManagedBean().getAmendHistoryList();
+
+			// COMPLETED WITH AMENDMENT HISTORY
+			if (history != null && !history.isEmpty()) {
+
+				contractValue = history.get(history.size() - 1).getCtContractValue();
+
+			} else {
+
+				// FIRST AMENDMENT COMPLETED
+				// fallback to previous contract version
+				CtContractVer previousContractVer = getPreviousContractVersion(current);
+
+				if (previousContractVer != null) {
+
+					contractValue = previousContractVer.getCtContractValue();
+
+				} else {
+
+					// fallback safety
+					contractValue = current.getCtContractValue();
+				}
+			}
+		}
+
+		return DateUtils.getMonthsAndDaysDifference(contractValue.getEffDate(), contractValue.getExpDate());
+	}
+
+	/**
+	 * Retrieves previous contract version before current version.
+	 * 
+	 * @param current
+	 *            current contract version
+	 * @return previous contract version
+	 */
+	private CtContractVer getPreviousContractVersion(CtContractVer current) {
+
+		List<CtContractVer> contractVersions = current.getCtContract().getCtContractVers();
+
+		if (contractVersions == null || contractVersions.isEmpty()) {
+			return null;
+		}
+
+		CtContractVer previous = null;
+
+		for (CtContractVer contractVer : contractVersions) {
+
+			if (contractVer.getContractVerId().compareTo(current.getContractVerId()) < 0) {
+
+				if (previous == null || contractVer.getContractVerId().compareTo(previous.getContractVerId()) > 0) {
+
+					previous = contractVer;
+				}
+			}
+		}
+
+		return previous;
+	}
+
+	/**
+	 * Returns contract months for Supplemental Letter Section display.
+	 * 
+	 * @return contract months
+	 */
+	public String getSupplementalDisplayContractPeriod() {
+
+		int[] result = calculateSupplementalContractPeriod();
+
+		return String.valueOf(result[0]);
+	}
+
+	/**
+	 * Returns contract days for Supplemental Letter Section display.
+	 * 
+	 * @return contract days
+	 */
+	public String getSupplementalDisplayContractDays() {
+
+		int[] result = calculateSupplementalContractPeriod();
+
+		return String.valueOf(result[1]);
+	}
+
+	/**
+	 * Checks whether the contract amendment is still ongoing.
+	 * 
+	 * @param contractVer
+	 *            contract version data
+	 * @return true if the amendment is ongoing, otherwise false
+	 */
+	private boolean isOngoingAmendment (CtContractVer contractVer) {
+
+		Long statusId = contractVer.getStatus() != null ? contractVer.getStatus().getStatusId() : null;
+
+		return !ContractStatusConst.FA_LOA_COMPLETED.equals(statusId);
+	}
+	// #40279 - End
 
 	//#24333 - Start
 	/**
@@ -8598,11 +8754,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(StringUtils.isNotBlank(sb.toString())){
 			sb.append(", ");
 		}
-		sb.append(supCat.getCategoryL1Name().trim());
-	    sb.append(", ");
-	    sb.append(supCat.getCategoryL2Name().trim());
-	    sb.append(", ");
-	    sb.append(supCat.getCategoryL3Name().trim());
+		if(supCat.getPmCategoryL1()!=null){
+			sb.append(supCat.getPmCategoryL1().getCategoryL1Code());
+		}
+		if(supCat.getPmCategoryL2()!=null){
+			sb.append(supCat.getPmCategoryL2().getCategoryL2Code());
+		}
+		if(supCat.getPmCategoryL3()!=null){
+			sb.append(supCat.getPmCategoryL3().getCategoryL3Code());
+		}
 	}
 
 	/**
@@ -9068,5 +9228,61 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//End Fix - #39722
+	
+	// Start Fix - #30045
+	/**
+	 * Determines and sets the "newPk7" flag on the managed bean based on
+	 * quotation type or procurement type conditions.
+	 * 
+	 * <p>
+	 * Logic flow:
+	 * <ul>
+	 * <li>If quotation type (QtType) exists:
+	 * <ul>
+	 * <li>Enable newPk7 when the parameter code matches QUOTATION_TENDER_TYPE
+	 * and procurement data is available.</li>
+	 * </ul>
+	 * </li>
+	 * <li>If quotation type is null:
+	 * <ul>
+	 * <li>Fallback to request note procurement type.</li>
+	 * <li>Enable newPk7 when procurement type matches PROCUREMENT_TYPE or
+	 * PROCUREMENT_TYPE_RPT and justification data is available.</li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 * 
+	 * @param ctBackingBean
+	 *            the backing bean containing contract and request data
+	 */
+	private void updateProcModeFlag() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getQtType() != null) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode()
+					.equalsIgnoreCase(ParameterTypeConst.QUOTATION_TENDER_TYPE)
+					&& ctBackingBean.newProcurement() != null) {
+				ctBackingBean.getManagedBean().setNewPk7(true);
+			} else {
+				ctBackingBean.getManagedBean().setNewPk7(false);
+			}
+		} else {
+			// The scRequestNote variable is only used to determine the procurement type.
+			// However, the values for reason and procurement type are always retrieved from the CT table.
+			ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(
+					ctBackingBean.getManagedBean(), "contractVer.ctContractItems[0].scRequestItem.requestNote");
+			if (scRequestNote != null) {
+				String procType = EntityHelper
+						.getStringNestedProperty(ctBackingBean.getManagedBean(),
+								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType");
+				if ((procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE) || procType
+						.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT))
+						&& ctBackingBean.newJustification() != null) {
+					ctBackingBean.getManagedBean().setNewPk7(true);
+				} else {
+					ctBackingBean.getManagedBean().setNewPk7(false);
+				}
+			}
+		}
+	}
+	// End Fix - #30045
 
 }
