@@ -10103,4 +10103,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #30045
+	
+	//#37808 start
+	public SelectItem[] getDropdownCommittee(String dropdown){
+		switch(dropdown.toUpperCase()){
+		case ContractConst.DROPDOWN_MINISTRY_COMMITTEE:
+			return getAmendmentCommitteeHelper().getMinistryDropdown();
+		case ContractConst.DROPDOWN_JABATAN_COMMITTEE:
+			return getAmendmentCommitteeHelper().getJabatanDropdown();
+		case ContractConst.DROPDOWN_PTJ_COMMITTEE:
+			return getAmendmentCommitteeHelper().getPTJDropdown();
+		default:
+			return null;
+		}
+	}
+	//#37808 end
 }

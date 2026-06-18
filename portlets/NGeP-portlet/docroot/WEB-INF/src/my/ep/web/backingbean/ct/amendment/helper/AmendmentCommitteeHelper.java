@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.faces.application.FacesMessage; //#37808
+import javax.faces.context.FacesContext; //#37808
 import javax.faces.model.SelectItem;
 
 import org.primefaces.context.RequestContext;
@@ -16,16 +18,20 @@ import org.primefaces.context.RequestContext;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO; //#37808
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO; //#37808
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile; //#37808
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -33,7 +39,9 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType; //#37808
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils; //#37808
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.ct.ContractHashSetConst;
@@ -959,5 +967,116 @@ public class AmendmentCommitteeHelper {
 	            .getParameterCode();
 	}
 	//#29549 end
+	
+	//#37808 start
+	/**
+	 * The method used for generating a list of available ministry for searching
+	 * secretary as selection.
+	 * 
+	 * @return the selection list of ministry
+	 */
+	public SelectItem[] getMinistryDropdown() {
+		SelectItem[] items = null;
+		try {
+			int i = 0;
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
+			List<PmOrgProfile> list = resDTO.getOrgProfileList();
+			items = new SelectItem[list.size()];
+			for (PmOrgProfile orgProfile : list) {
+				// Start - #30045
+				// Checking if default/user ministry is exist in the list
+				if (orgProfile.getOrgProfileId().equals(ctBackingBean.getManagedBean().getMinistryProfileId())) {
+					ctBackingBean.getManagedBean().setDefaultMinistryExist(true);
+				}
+				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
+			// Start - #30045
+			// To set the first record from the list as a default ministry for getJabatanDropdown()
+			if (!ctBackingBean.getManagedBean().isDefaultMinistryExist()) {
+				ctBackingBean.getManagedBean().setMinistryProfileId(list.get(0).getOrgProfileId());
+			}
+			// End - #30045
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_AMENDMENTBACKINGBEAN, null, ContractConst.SLA_DROPDOWN_COMMITTEE_MINISTRY, null,
+					e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return items;
+	}
+
+	/**
+	 * The method used for generating a list of available jabatan for searching
+	 * secretary as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getJabatanDropdown() {
+		SelectItem[] items = null;
+		try {
+			int i = 1;
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setParentOrgProfileId(ctBackingBean.getManagedBean().getMinistryProfileId());
+			reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+
+			List<Object[]> list = resDTO.getOrgProfileDDList();
+			items = new SelectItem[list.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+
+			for (Object[] object : list) {
+				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance()
+					.logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_AMENDMENTBACKINGBEAN, null,
+							ContractConst.SLA_DROPDOWN_COMMITTEE_JABATAN, null, e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return items;
+	}
+
+	/**
+	 * The method used for generating a list of available PTJ for searching
+	 * secretary as selection.
+	 * 
+	 * @return the selection list of PTJ
+	 */
+	public SelectItem[] getPTJDropdown() {
+		SelectItem[] items = null;
+		try {
+			int i = 1;
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setParentOrgProfileId(ctBackingBean.getManagedBean().getMinistryProfileId());
+			reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+
+			List<Object[]> list = resDTO.getOrgProfileDDList();
+			items = new SelectItem[list.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+
+			for (Object[] object : list) {
+				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_AMENDMENTBACKINGBEAN, null, ContractConst.SLA_DROPDOWN_COMMITTEE_PTJ, null, e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return items;
+	}
+	//#37808 end
 }
