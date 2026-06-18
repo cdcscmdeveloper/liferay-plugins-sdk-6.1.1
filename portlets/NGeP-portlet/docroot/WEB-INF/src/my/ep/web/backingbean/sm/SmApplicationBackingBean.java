@@ -8727,11 +8727,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#36718 - END
 		
 		// #40031 - Start - Store role incase ajax rendered role changed
+		SmMofAccount mofAccount = getManagedBean().getSmSupplier().getSmMofAccount();
 		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
+		boolean basicAcc = mofAccount == null || mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE;
 		SmPersonnel personnel = getManagedBean().getLatestPersonnel();
 		getManagedBean().setPrevRole(null);
 		// If resubmit appl, get the lastest approved info
-		if (resubmitAppl) {
+		if (resubmitAppl || basicAcc) {
+			// Since basic didn't get the latest personnel
+			personnel = getManagedBean().getSelectedShareHolder();
 			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
 			if (null != latestApprovedPersons) {
 				for (SmPersonnel person : latestApprovedPersons) {
@@ -8740,9 +8744,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						break;
 					}
 				}
-
 			}
-
 		} else {
 			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
 				getManagedBean().setPrevRole(personnel.getEpRole());
