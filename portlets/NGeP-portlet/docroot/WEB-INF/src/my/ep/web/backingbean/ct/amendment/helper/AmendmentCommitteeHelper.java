@@ -3,12 +3,21 @@
  */
 package my.ep.web.backingbean.ct.amendment.helper;
 
+import java.util.ArrayList; //#24336
+import java.util.Arrays; //#24336
+import java.util.Collections; //#24336
+import java.util.Comparator; //#24336
 import java.util.List;
 
+import javax.faces.model.SelectItem; //#24336
 import org.primefaces.context.RequestContext;
 
+import my.ep.biz.bean.search.SearchBean; //#24336
+import my.ep.biz.bean.search.SearchFilterBean; //#24336
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO; //#24336
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst; //#24336
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -19,12 +28,16 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc; //#24336
+import my.ep.type.aut.SearchOperator; //#24336
 import my.ep.type.pm.RoleCode;
+import my.ep.util.SLAUtils; //#24336
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.ct.ContractHashSetConst;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper; //#24336
 
 /**
  * CommitteeHelper is a domain-specific helper class responsible for
@@ -676,5 +689,84 @@ public class AmendmentCommitteeHelper {
 	    }
 	    return currentUserRole;
 	}
+	
+	//24336 - Start
+	/** Gets committee type options and hides the ones not allowed based on the contract owner's state 
+	 * @param userIdSession
+	 * @return List<SelectItem> */
+	public List<SelectItem> findCommitteeTypeSelectItems(Long userIdSession) {
+		IContractAmendmentSO contractAmendmentSO 
+			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+		
+		List<SelectItem> items = new ArrayList<>();
+	    try {
+	        final List<String> codes = Arrays.asList(
+	            ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE,
+	            ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD,
+	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH,
+	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
+	        );
+	        SearchBean<PmParameterDesc> searchBean = new SearchBean<>();
+	        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), codes));
+	        List<PmParameterDesc> parameterDescs 
+	        	= ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
+    		String stateCode = contractAmendmentSO.getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
+    		
+    		// Sort codes
+    		if (parameterDescs != null && !parameterDescs.isEmpty()) {
+	    		Collections.sort(parameterDescs, new Comparator<PmParameterDesc>() {
+	    		    @Override
+	    		    public int compare(PmParameterDesc o1, PmParameterDesc o2) {
+	    		        return codes.indexOf(o1.getPmParameter().getParameterCode())
+	    		             - codes.indexOf(o2.getPmParameter().getParameterCode());
+	    		    }
+	    		});
+    		}
+    		
+	        for (PmParameterDesc desc : parameterDescs) {
+	        	String code = desc.getPmParameter().getParameterCode();
+	        	SelectItem item = new SelectItem(code, desc.getCodeName());
+	        	
+	        	// Checking PTJ contract owner location
+	        	boolean hide;
+	        	if (ContractConst.STATE_CODE_SABAH.equals(stateCode)) {
+	        		hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(code);
+	            } else if (ContractConst.STATE_CODE_SARAWAK.equals(stateCode)) {
+	            	hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(code);
+	            } else {
+	            	hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(code)
+	                       || ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(code);
+	            }
+	        	
+	        	if (!hide){
+	        		items.add(item);
+	        	}
+	        }
+	    } catch (Exception e) {
+	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getCommitteeTypeSelectItems",
+	            ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "getCommitteeTypeSelectItems", userIdSession, e);
+	    }
+	    return items;
+	}
+	
+	/** 
+	 * Normalizes legacy committee codes for UI display. 
+	 * @param code - committee type code
+	 * @return committee type code
+	 */
+	public String normalizeCommitteeCode(String code) {
+	    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
+	        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
+	        return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+	    }
 
+	    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
+	        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
+	        return ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
+	    }
+	    return code;
+	}
+	
+	//24336 - End
+		
 }
