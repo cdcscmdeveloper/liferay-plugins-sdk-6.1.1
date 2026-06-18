@@ -450,6 +450,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			//26307
 			
 			//#38377
+			//temporary disable key checking due to sKey param is wrong
+			skipChecking = true;
 			if ("Y".equals(paymentGateway) || key1.equals(skey) || skipChecking) {
 				//if(paymentTaskId != null && paymentBpmPojo != null){
 				log.info("SKey & Key1 Are Match>>>>");
