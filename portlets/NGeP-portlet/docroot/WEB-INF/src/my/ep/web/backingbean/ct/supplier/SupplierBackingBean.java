@@ -753,6 +753,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			// Validation for valid contract admin for next task assignment
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
+
+				//#30910 start
+				if (!getManagedBean().isRemoveFactoring()){
+					boolean statusOfFactoringCompany = checkFactoringCompanyStatus();
+					if (!statusOfFactoringCompany) {
+						throw new EpException(MessageConst.ERROR_750072);
+					}
+				}
+				//#30910 end
 				getContractAdminlist();
 				if (getManagedBean().getContractAdminlist() == null 
 						|| getManagedBean().getContractAdminlist().isEmpty()) {
@@ -1755,6 +1764,57 @@ public void selectFinancialAcc(){
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
+	
+	//#30910 start
+	public boolean  checkFactoringCompanyStatus(){
+		boolean statusFactoringCompany = false;
+		boolean statusFactoringFinAcc = false;
+		String financialAccountNo = null;
+		IFinancialOrgSO financialOrgSO = null;
+		FinancialOrgReqDTO reqDTO = null;
+		FinancialOrgResDTO resDTO = null;
+		
+		try{
+			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			reqDTO = new FinancialOrgReqDTO();
+			reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
+			resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
+			
+			if (resDTO.getPmFinancialOrg()!=null && resDTO.getPmFinancialOrg().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+				statusFactoringCompany = true;
+			}
+
+			if(getManagedBean().getFactoring().getBankAccountNo()!=null){
+				financialAccountNo = getManagedBean().getFactoring().getBankAccountNo().trim();
+			}else{
+				String[] accBankList = getManagedBean().getAccBankName().split("/");
+				financialAccountNo = accBankList[0].trim();
+			}
+			reqDTO.setAccountNo(financialAccountNo);
+			
+			resDTO = financialOrgSO.retriveFinAccByFinOrgIdAccNo(reqDTO);
+			if (resDTO.getPmFinancialAcc()!=null 
+					&& financialAccountNo.equals(resDTO.getPmFinancialAcc().getAccountNo().trim())){
+				statusFactoringFinAcc = true;
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+
+		if (!statusFactoringCompany || !statusFactoringFinAcc){
+			getManagedBean().setAccBankName(null);
+			getManagedBean().setPopulateBankAccountList(null);
+			getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(null);
+			getManagedBean().getFactoring().setBankAccountNo(null);
+			getManagedBean().getFactoring().setBankName(null);
+			return false;
+		}
+		
+		return true;
+	}
+	//#30910 end
 	
 	//Start Fix - #33399
 	public String[] splittedAccNoAndBankname(){
