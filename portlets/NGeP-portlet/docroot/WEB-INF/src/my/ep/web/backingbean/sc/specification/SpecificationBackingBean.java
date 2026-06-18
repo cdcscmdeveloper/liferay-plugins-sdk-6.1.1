@@ -16275,7 +16275,19 @@ public class SpecificationBackingBean extends
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
-
+		
+		//#25138 start
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());
+		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
+		
+		SpecificationReqDTO specReqDto=new SpecificationReqDTO();
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(getSpecSO().checkWipScoreSettingMax(specReqDto));
+		if (this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+			spReqDTO.setZonesQt(this.getManagedBean().getQt().isZonal());
+		}
+		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
+		//#25138 end
 		spReqDTO.setSampleExist(checkISSampleExistWIPChecklist()); // 11104-Reendorse
 
 		IQTSpecSO specSO = getSpecSO();
