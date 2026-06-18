@@ -73,7 +73,8 @@
 				    	and !ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt)
 				    	or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  ><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change"  update=":form:amend" process="@form"
+					<!-- #24336 change 'update' attribute -->
+					<p:ajax event="change"  update=":form" process="@form"
 						listener="#{amendmentBackingBean.onChangeValueChecked}"
 					  	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
 					</p:selectBooleanCheckbox>
@@ -218,7 +219,8 @@
 			<!-- #24336 - End-->
 
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.showEffectiveDateInput}">
-				<p:calendar style="width:80px;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
+				<!-- #24336 add styleClass-->
+				<p:calendar styleClass="calanderWidth110" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
 			    	required="true" 
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 				    label="#{lbl['lbl.ct.effective.date']}" 

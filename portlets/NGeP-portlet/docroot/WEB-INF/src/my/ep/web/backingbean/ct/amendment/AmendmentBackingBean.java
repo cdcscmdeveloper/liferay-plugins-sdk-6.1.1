@@ -105,6 +105,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtBondWaiverDetail;
+import my.ep.persistence.entity.ct.CtContract; //#24336
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
@@ -1775,13 +1776,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// #24336 - Start
 			// Convert committee type code to reference object for saving.
 			setCommitteeTypeValue();
+			// Refactoring
+			CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 			
 			// Clear input value change if checkbox unchecked
-			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReduction(false);
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(null);
+			if (!ctAmendment.isValueChange()) {
+				ctAmendment.setReduction(false);
+				ctAmendment.setAdditionalAmount(BigDecimal.ZERO);
+				ctAmendment.setReductionAmt(BigDecimal.ZERO);
+				ctAmendment.setNewAmtEffDate(null);
 			}
 			// #24336 - End
 			
@@ -4925,12 +4928,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user wish to amend the item price.
 	 */
 	public void onItemPriceChecked() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
+		
+		// #24336 - refactoring
+		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		
+		if (ctAmendment.isItemPriceChange()) {
 			// contract type: central and followLoaAmount: false, disallow to change contract value
 			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) { //Fix - #33287
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+				ctAmendment.setValueChange(false);
 			} else {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
+				ctAmendment.setValueChange(true);				
 			}
 			
 			// #24336 - Start
@@ -4940,20 +4947,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						
 			spToCheck = false; //Fix - #33287
 			isUntickItemPrice = false; //Fix - #33287
-		} else if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+		} else if(!ctAmendment.isItemPriceChange() 
+				&& !ctAmendment.isQuantityChange()
+				&& !ctAmendment.isValueChangeByGst()
+				&& !ctAmendment.isValueChangeByStax()) {
+			ctAmendment.setValueChange(false);
 			onChangeValueChecked();
 //			resetItemPrice(); // #30879 
 		}
-		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
+		if(!ctAmendment.isItemPriceChange()) {
 			resetItemPrice(); // #30879
 			//Start Fix - #33287
 			isUntickItemPrice = true;
 			spToCheck = true;
-			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
+			resetEffDate(ctAmendment); //Fix - #39538
 			//End Fix - #33287
 		}
 		ConstructTabSideMenu();
@@ -4976,12 +4983,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user wish to amend the item quantity.
 	 */
 	public void onQuantityChecked() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
+		
+		// #24336 - refactoring
+		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+				
+		if (ctAmendment.isQuantityChange()) {
 			// contract type: central and followLoaAmount: false, disallow to change contract value
 			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+				ctAmendment.setValueChange(false);
 			} else {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
+				ctAmendment.setValueChange(true);				
 			}
 			
 			// #24336 - Start
@@ -4990,20 +5001,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						
 			spToCheck = false; //Fix - #33287
 			isUntickItemMaxQty = false; //Fix - #33287
-		} else if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+		} else if(!ctAmendment.isItemPriceChange() 
+				&& !ctAmendment.isQuantityChange()
+				&& !ctAmendment.isValueChangeByGst()
+				&& !ctAmendment.isValueChangeByStax()) {
+			ctAmendment.setValueChange(false);
 			onChangeValueChecked();
 //			resetItemQty(); // #30879 
 		}
-		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
+		if(!ctAmendment.isQuantityChange()) {
 			resetItemQty(); // #30879
 			//Start Fix - #33287
 			isUntickItemMaxQty = true;
 			spToCheck = true;
-			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
+			resetEffDate(ctAmendment); //Fix - #39538
 			//End Fix - #33287
 		}
 		ConstructTabSideMenu();
@@ -5045,14 +5056,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user wish to amend the contract value caused by gst.
 	 */
 	public void onChangeValueByGstChecked() {
-		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){ //Fix - #33287
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+		
+		//#24336 - refactoring
+		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		
+		if(ctAmendment.isValueChangeByGst()){ //Fix - #33287
+		ctAmendment.setAdditionalAmount(BigDecimal.ZERO);
 		setGstAndStaxAmounts();
 		
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(true);
+		ctAmendment.setApproverAuthorityReq(false);
+		if (ctAmendment.isValueChangeByGst() || ctAmendment.isValueChangeByStax()) {
+			ctAmendment.setValueChange(true);
+			ctAmendment.setApproverAuthorityReq(true);
 			
 			// #24336 - Start
 			onChangeValueChecked();
@@ -5060,36 +5075,36 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		spToCheck = false; //Fix - #33287
 		}//Fix - #33287
-		else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
-				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
+		else if (!ctAmendment.isItemPriceChange()
+				&& !ctAmendment.isQuantityChange()
+				&& !ctAmendment.isValueChangeByGst()
+				&& !ctAmendment.isValueChangeByStax()) {
 			//Start Fix - #39722
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			ctAmendment.setAdditionalAmount(BigDecimal.ZERO);
+			ctAmendment.setNewGstAmount(BigDecimal.ZERO);
+			ctAmendment.setNewStaxAmount(BigDecimal.ZERO);
 			resetMOFApprovingAuthReq();
 			//End Fix - #39722
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			ctAmendment.setValueChange(false);
 			//Start Fix - #33287
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
+			ctAmendment.setApproverAuthorityReq(false);
 			
 			// #24336 - Start
 			onChangeValueChecked();
 			// #24336 - End
 			
-			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
+			resetEffDate(ctAmendment); //Fix - #39538
 			spToCheck = true;
-		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
+		}else if (!ctAmendment.isValueChangeByGst()){
 			//Start Fix - #39722
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			ctAmendment.setAdditionalAmount(BigDecimal.ZERO);
+			ctAmendment.setNewGstAmount(BigDecimal.ZERO);
+			ctAmendment.setNewStaxAmount(BigDecimal.ZERO);
 			resetMOFApprovingAuthReq();
 			//End Fix - #39722
 			isCentralContractTypeCheck();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
+			ctAmendment.setApproverAuthorityReq(false);
+			resetEffDate(ctAmendment); //Fix - #39538
 			spToCheck = true;
 		}
 		//End Fix - #33287
@@ -5933,6 +5948,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(committeeType != null){
 	// #24336 - End		
 			
+			//#24336 - refactoring
+			CtContract ctContract = ctBackingBean.getManagedBean().getContractVer().getCtContract();
+			
 			ICommitteSO committeSO = null;
 			ISearchResultBean<PmUser> userResultList = null;
 			//Bug #29740
@@ -5945,17 +5963,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				committeSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-				committeReqDTO.setDocId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
-				committeReqDTO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
+				committeReqDTO.setDocId(ctContract.getLatestContractVer().getContractVerId());
+				committeReqDTO.setDocType(ctContract.getContractType().getParameterCode());
 				//Bug #25326
-				committeReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				committeReqDTO.setOrgProfileId(ctContract.getOwnerOrgProfile().getOrgProfileId());
 				//end Bug #25326
 				
 				//Bug #29740 - Add DO PB
 				CommitteReqDTO commReqDO = new CommitteReqDTO();
-				commReqDO.setDocId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
-				commReqDO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
-				//commReqDO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()); //Bug #33857
+				commReqDO.setDocId(ctContract.getLatestContractVer().getContractVerId());
+				commReqDO.setDocType(ctContract.getContractType().getParameterCode());
+				//commReqDO.setOrgProfileId(ctContract.getOwnerOrgProfile().getOrgProfileId()); //Bug #33857
 								
 				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
