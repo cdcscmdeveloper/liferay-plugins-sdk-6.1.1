@@ -887,22 +887,22 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				BigDecimal amtSupplier = row[17] != null ? (BigDecimal) row[17] : BigDecimal.ZERO;
 
 				fiList.put(fiCount, new Object[] {
-						// need to recheck query
-						row[6].toString(), // POCO DATE
-						row[3].toString(), // POCO NO
-						row[8].toString(), // PROCUMENT CATEGORY
-						row[10].toString(), // PTJ CODE
-						row[9].toString(), // PTJ NAME
-						row[15].toString(), // SERVICE FEE
-						row[11].toString(), // POCO TITLE
-						amtTransIncCBP, // TOTAL AMOUNT
-						amtDeduction, // DEDUCTION AMOUNT
-						amtCBP, // GST AMOUNT
-						amtServiceFee, // SERVICE FEE AMOUNT
-						amtSupplier, // AMT PAYABLE SUPPLIER
-						row[21].toString(), // POCO STATUS
-						row[4].toString(), // AG Office Code
-				});
+						//need to recheck query
+						String.valueOf(row[6]), //POCO DATE
+						String.valueOf(row[3]), // POCO NO
+						String.valueOf(row[8]), //PROCUMENT CATEGORY
+						String.valueOf(row[10]), //PTJ CODE
+						String.valueOf(row[9]), //PTJ NAME
+						String.valueOf(row[15]), //SERVICE FEE
+						String.valueOf(row[11]), //POCO TITLE
+						amtTransIncCBP, //TOTAL AMOUNT
+						amtDeduction, //DEDUCTION AMOUNT
+						amtCBP, //GST AMOUNT
+						amtServiceFee, //SERVICE FEE AMOUNT
+						amtSupplier, //AMT PAYABLE SUPPLIER
+						String.valueOf(row[21]), //POCO STATUS
+						String.valueOf(row[4]), //AG Office Code
+					});
 				fiCount++;
 			}
 		}
@@ -934,16 +934,16 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				accsumpoco += sumpoco;
 				// end summary calculation
 
-				summaryFiList.put(summaryfiCount, new Object[] { row[8].toString() + " - " + row[0].toString(), // PEJABAT
-																												// PERAKAUNAN
-						row[1].toString(), // SERVICE FEE
-						sumpoco, // TOTAL POCO
-						sumTotalAmtWithGST, // NILAI TRANSAKSI CBP
-						sumTotalDeduc, // NILAI POTONGAN
-						sumGST, // CBP
-						sumServiceFee, // FI PERKHIDMATAN
-						sumPayableToSupplier // BAYARAN KEPADA PEMBEKAL
-						});
+				summaryFiList.put(summaryfiCount, new Object[] {
+						String.valueOf(row[8]) + " - " + row[0].toString(), //PEJABAT PERAKAUNAN
+						String.valueOf(row[1]), //SERVICE FEE
+						sumpoco, //TOTAL POCO
+						sumTotalAmtWithGST, //NILAI TRANSAKSI CBP
+						sumTotalDeduc, //NILAI POTONGAN
+						sumGST, //CBP
+						sumServiceFee, //FI PERKHIDMATAN
+						sumPayableToSupplier //BAYARAN KEPADA PEMBEKAL
+				});
 				summaryfiCount++;
 			}
 
@@ -1185,37 +1185,37 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			// summary report sheet cell - total poco
 			Cell cellSummaryTotalPOCO = row.createCell(4);
 			cellSummaryTotalPOCO.setCellValue(((Integer) accsumpoco).intValue());
-			cellSummaryTotalPOCO.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, false, false,
+			cellSummaryTotalPOCO.setCellStyle(columnStyle(wb, createHelper, false, true, true, false, false, false,
 					false));
 
 			// summary report total amt
 			Cell cellSummaryTotalAmt = row.createCell(5);
 			cellSummaryTotalAmt.setCellValue((accsumTotalAmtWithGST).doubleValue());
-			cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report total deduct
 			Cell cellSummaryTotalDeduct = row.createCell(6);
 			cellSummaryTotalDeduct.setCellValue((accsumTotalDeduc).doubleValue());
-			cellSummaryTotalDeduct.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalDeduct.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report total gst
 			Cell cellSummaryTotalGST = row.createCell(7);
 			cellSummaryTotalGST.setCellValue((accsumGST).doubleValue());
-			cellSummaryTotalGST.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalGST.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report total service fee
 			Cell cellSummaryTotalServiceFee = row.createCell(8);
 			cellSummaryTotalServiceFee.setCellValue((accsumServiceFee).doubleValue());
-			cellSummaryTotalServiceFee.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true,
+			cellSummaryTotalServiceFee.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true,
 					false, false));
 
 			// summary report total pay supplier
 			Cell cellSummaryTotalPaySupplier = row.createCell(9);
 			cellSummaryTotalPaySupplier.setCellValue((accsumPayableToSupplier).doubleValue());
-			cellSummaryTotalPaySupplier.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true,
+			cellSummaryTotalPaySupplier.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true,
 					false, false));
 
 		}
@@ -1280,25 +1280,25 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		// summary report sheet cell - total amount with gst
 		Cell cellSummaryTotalAmt = row.createCell(9);
 		cellSummaryTotalAmt.setCellValue(summaryTotalAmt.doubleValue());
-		cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+		cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 		// summary report sheet cell - deduction amount
 		Cell cellSummaryDeductionAmt = row.createCell(10);
 		cellSummaryDeductionAmt.setCellValue(summaryDeductionAmt.doubleValue());
-		cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+		cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 				false));
 		// summary report sheet cell - gst amount
 		Cell cellSummaryGSTAmt = row.createCell(11);
 		cellSummaryGSTAmt.setCellValue(summaryGSTAmt.doubleValue());
-		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 		// summary report sheet cell - service fee amount
 		Cell cellSummaryServiceFeeAmt = row.createCell(12);
 		cellSummaryServiceFeeAmt.setCellValue(summaryServiceFeeAmt.doubleValue());
-		cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+		cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 				false));
 		// summary report sheet cell - accumulate amount payable supplier
 		Cell cellSummaryAmtPayableSupplier = row.createCell(13);
 		cellSummaryAmtPayableSupplier.setCellValue(summaryAmtPayableSupplier.doubleValue());
-		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, true,
+		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true,
 				false, false));
 
 		CellRangeAddress cellZoneSummaryAmt = new CellRangeAddress(rowSummary, rowSummary, 13, 14);
@@ -1493,22 +1493,23 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				totalAll = (totalAll).add(totalRow);
 				// end calculate
 
-				fiList.put(fiCount, new Object[] { row[1].toString() + " - " + row[2].toString(),
-						(BigDecimal) row[3] != null ? (BigDecimal) row[3] : "-", // jan
-						(BigDecimal) row[4] != null ? (BigDecimal) row[4] : "-", // feb
-						(BigDecimal) row[5] != null ? (BigDecimal) row[5] : "-", // mar
-						(BigDecimal) row[6] != null ? (BigDecimal) row[6] : "-", // apr
-						(BigDecimal) row[7] != null ? (BigDecimal) row[7] : "-", // may
-						(BigDecimal) row[8] != null ? (BigDecimal) row[8] : "-", // jun
-						(BigDecimal) row[9] != null ? (BigDecimal) row[9] : "-", // jul
-						(BigDecimal) row[10] != null ? (BigDecimal) row[10] : "-", // aug
-						(BigDecimal) row[11] != null ? (BigDecimal) row[11] : "-", // sept
-						(BigDecimal) row[12] != null ? (BigDecimal) row[12] : "-", // oct
-						(BigDecimal) row[13] != null ? (BigDecimal) row[13] : "-", // nov
-						(BigDecimal) row[14] != null ? (BigDecimal) row[14] : "-", // dec
+				fiList.put(fiCount, new Object[] {
+						String.valueOf(row[1]) +" - " + String.valueOf(row[2]),
+						(BigDecimal)row[3] != null ? (BigDecimal)row[3] : "-", //jan
+						(BigDecimal)row[4] != null ? (BigDecimal)row[4] : "-", //feb
+						(BigDecimal)row[5] != null ? (BigDecimal)row[5] : "-", //mar
+						(BigDecimal)row[6] != null ? (BigDecimal)row[6] : "-", //apr
+						(BigDecimal)row[7] != null ? (BigDecimal)row[7] : "-", //may
+						(BigDecimal)row[8] != null ? (BigDecimal)row[8] : "-", //jun
+						(BigDecimal)row[9] != null ? (BigDecimal)row[9] : "-", //jul
+						(BigDecimal)row[10] != null ? (BigDecimal)row[10] : "-", //aug
+						(BigDecimal)row[11] != null ? (BigDecimal)row[11] : "-", //sept
+						(BigDecimal)row[12] != null ? (BigDecimal)row[12] : "-", //oct
+						(BigDecimal)row[13] != null ? (BigDecimal)row[13] : "-", //nov
+						(BigDecimal)row[14] != null ? (BigDecimal)row[14] : "-", //dec
 						totalRow.doubleValue() != 0.00 ? totalRow : "-"
-
-				});
+						
+					});
 				fiCount++;
 			}
 		}
@@ -1616,79 +1617,79 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			// summary report sheet cell - jan
 			Cell cellSummaryTotalJan = row.createCell(3);
 			cellSummaryTotalJan.setCellValue((janTotal).doubleValue());
-			cellSummaryTotalJan.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJan.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - feb
 			Cell cellSummaryTotalFeb = row.createCell(4);
 			cellSummaryTotalFeb.setCellValue((febTotal).doubleValue());
-			cellSummaryTotalFeb.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalFeb.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - mar
 			Cell cellSummaryTotalMac = row.createCell(5);
 			cellSummaryTotalMac.setCellValue((macTotal).doubleValue());
-			cellSummaryTotalMac.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalMac.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - april
 			Cell cellSummaryTotalApr = row.createCell(6);
 			cellSummaryTotalApr.setCellValue((aprTotal).doubleValue());
-			cellSummaryTotalApr.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalApr.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - may
 			Cell cellSummaryTotalMay = row.createCell(7);
 			cellSummaryTotalMay.setCellValue((mayTotal).doubleValue());
-			cellSummaryTotalMay.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalMay.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - june
 			Cell cellSummaryTotalJun = row.createCell(8);
 			cellSummaryTotalJun.setCellValue((junTotal).doubleValue());
-			cellSummaryTotalJun.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJun.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - july
 			Cell cellSummaryTotalJuly = row.createCell(9);
 			cellSummaryTotalJuly.setCellValue((julyTotal).doubleValue());
-			cellSummaryTotalJuly.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJuly.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - aug
 			Cell cellSummaryTotalAug = row.createCell(10);
 			cellSummaryTotalAug.setCellValue((augTotal).doubleValue());
-			cellSummaryTotalAug.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalAug.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - sept
 			Cell cellSummaryTotalSep = row.createCell(11);
 			cellSummaryTotalSep.setCellValue((sepTotal).doubleValue());
-			cellSummaryTotalSep.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalSep.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - oct
 			Cell cellSummaryTotalOct = row.createCell(12);
 			cellSummaryTotalOct.setCellValue((octTotal).doubleValue());
-			cellSummaryTotalOct.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalOct.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - nov
 			Cell cellSummaryTotalNov = row.createCell(13);
 			cellSummaryTotalNov.setCellValue((novTotal).doubleValue());
-			cellSummaryTotalNov.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalNov.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - dec
 			Cell cellSummaryTotalDec = row.createCell(14);
 			cellSummaryTotalDec.setCellValue((decTotal).doubleValue());
-			cellSummaryTotalDec.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalDec.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - total
 			Cell cellSummaryTotalAll = row.createCell(15);
 			cellSummaryTotalAll.setCellValue((totalAll).doubleValue());
-			cellSummaryTotalAll.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalAll.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 		}
 		if (reportList.isEmpty()) {

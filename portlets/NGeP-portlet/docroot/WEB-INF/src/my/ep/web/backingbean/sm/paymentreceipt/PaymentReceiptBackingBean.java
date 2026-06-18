@@ -26,6 +26,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "paymentReceiptBB")
 @RequestScoped
 public class PaymentReceiptBackingBean extends BaseBackingBean<PaymentReceiptManagedBean>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(PaymentReceiptBackingBean.class);
 	private static String PAYMENT_RECEIPT_MAIN = "/xhtml/sm/paymentReceipt/paymentReceiptMain.xhtml";
 	
@@ -70,14 +74,12 @@ public class PaymentReceiptBackingBean extends BaseBackingBean<PaymentReceiptMan
 		
 		// #38977 - Start
 		if (!resDTO.getPyPayment().getReprintReceipt()) {
-			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT,
-					ReportConst.PARAM_PAYMENT_PREPRINT_ASAL);
+			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT, ReportConst.PARAM_PAYMENT_PREPRINT_ASAL);
 			resDTO.getPyPayment().setReprintReceipt(true);
 			reqDTO.setPyPayment(resDTO.getPyPayment());
 			reqSO.updatePaymentReceipt(reqDTO);
 		} else if (resDTO.getPyPayment().getReprintReceipt()) {
-			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT,
-					ReportConst.PARAM_PAYMENT_PREPRINT_SALINAN);
+			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT, ReportConst.PARAM_PAYMENT_PREPRINT_SALINAN);
 		}
 		// #38977 - End
 		
