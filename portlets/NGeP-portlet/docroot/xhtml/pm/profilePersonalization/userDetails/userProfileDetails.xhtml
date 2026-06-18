@@ -233,10 +233,12 @@
 							countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileCountry}" 
 							areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileArea}" 
 							number="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
-							isMobile="true"
+							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+							<!-- #40246 Start -->
+							<!-- isMobile="true"
 							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}"
-							telcoId="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileTelcoId}">
-							
+							telcoId="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileTelcoId}"> -->
+							<!-- #40246 End -->
 							</ac:phone>
 							
 						</td>
