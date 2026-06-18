@@ -1504,24 +1504,53 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * @return handleBSVMinDate
 	 */
 	public Date handleOriginalBSVMinDate() {
-
-	    /*
-	     * For BSV edit/postpone case:
-	     * Always use original old BSV date/time as minimum reference.
-	     * Example:
-	     * Old BSV = 27/05/2026 09:00
-	     * Allowed minutes = 09:15, 09:30, 09:45
-	     */
+	
+	    Date normalMinDate = handleBSVMinDate();
 	    ScQtBsvDtl tempDtl = this.getManagedBean().getTempScQtBsvDtl();
 
 	    if (tempDtl != null && tempDtl.getBsvDate() != null) {
-	        return tempDtl.getBsvDate();
+	        Date originalDate = tempDtl.getBsvDate();
+	        /*
+	         * If original old BSV date is backdated,
+	         * use current/normal min date instead.
+	         */
+	        if (originalDate.before(normalMinDate)) {
+	            return normalMinDate;
+	        }
+	        return originalDate;
 	    }
 
-	    /*
-	     * For normal case, fallback to existing min date logic.
-	     */
-	    return handleBSVMinDate();
+	    return normalMinDate;
+	}
+	
+	public Date handleBSVCalendarMinDate() {
+	    Date currentDate = clearTime(new Date());
+	    ScQtBsvDtl tempDtl = this.getManagedBean().getTempScQtBsvDtl();
+
+	    if (tempDtl != null && tempDtl.getBsvDate() != null) {
+	        Date oldDateOnly = clearTime(tempDtl.getBsvDate());
+
+	        if (oldDateOnly.after(currentDate)) {
+	            return oldDateOnly;
+	        }
+	    }
+
+	    return currentDate;
+	}
+	
+	public Date handleBSVRestrictionDateTime() {
+	    Date currentDate = clearTime(new Date());
+	    ScQtBsvDtl tempDtl = this.getManagedBean().getTempScQtBsvDtl();
+
+	    if (tempDtl != null && tempDtl.getBsvDate() != null) {
+	        Date oldDateOnly = clearTime(tempDtl.getBsvDate());
+
+	        if (!oldDateOnly.before(currentDate)) {
+	            return tempDtl.getBsvDate();
+	        }
+	    }
+
+	    return null;
 	}
 	//#28188 - End
 	
@@ -1981,4 +2010,16 @@ public class QTBriefingSiteVisitBackingBean extends
 	    return finalList;
 	}
 	//#28188 - End
+	
+	//#28188 - Start
+	private Date clearTime(Date date) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(date);
+	    cal.set(Calendar.HOUR_OF_DAY, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    return cal.getTime();
+	}
+	//#28188 - End 
 }
