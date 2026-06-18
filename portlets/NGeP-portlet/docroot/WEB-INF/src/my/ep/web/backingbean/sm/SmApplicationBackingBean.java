@@ -4984,6 +4984,20 @@ public class SmApplicationBackingBean extends
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
+		
+		// #40031 - Start - Change Value same as -selectOne-, since no need to change process
+		String dropdownRole = getManagedBean().getSelectedShareHolder().getEpRole();
+		boolean showPopup = false;
+		if (StringUtils.isBlank(dropdownRole) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
+			String Msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
+					new String[] { getEpRoleDescByRoleCode(getManagedBean().getPrevRole()) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+
+			getManagedBean().setRemovedRoleMsg(Msg);
+			showPopup = true;
+		}
+		// #40031 - End
+				
 		SmApplicationUtil.setPersonnelRoleChange(getManagedBean().getSmAppl(),
 				SmApplicationUtil.getPrevApprovedPersonnel(getManagedBean()
 						.getSelectedShareHolder(), getManagedBean()
@@ -4997,7 +5011,24 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setDisableAuthorizedRadio(
 				disableAuthorizedRadio(getManagedBean()
 						.getSelectedShareHolder()));
+		
+		// #40031 - Start
+		if (showPopup) {
+			RequestContext.getCurrentInstance().execute("confirmDeleteRoleDlg.show()");
+		}
+		// #40031 - End
 	}
+	
+	// #40031 - Start
+	/**
+	 * revert back role on its original role
+	 * 
+	 * @param role
+	 */
+	public void revertRole(String role) {
+		getManagedBean().getSelectedShareHolder().setEpRole(role);
+	}
+	// #40031 - End
 
 	/**
 	 * Ajax call to set approve or reject date for the selected category.
@@ -8298,6 +8329,32 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, getManagedBean());
 		}
 		//#34138 - end
+		
+		// #40031 - Start - Store role incase ajax rendered role changed
+		SmMofAccount mofAccount = getManagedBean().getSmSupplier().getSmMofAccount();
+		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
+		boolean basicAcc = mofAccount == null || mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE;
+		SmPersonnel personnel = getManagedBean().getLatestPersonnel();
+		getManagedBean().setPrevRole(null);
+		// If resubmit appl, get the lastest approved info
+		if (resubmitAppl || basicAcc) {
+			// Since basic didn't get the latest personnel
+			personnel = getManagedBean().getSelectedShareHolder();
+			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
+			if (null != latestApprovedPersons) {
+				for (SmPersonnel person : latestApprovedPersons) {
+					if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
+						getManagedBean().setPrevRole(person.getEpRole());
+						break;
+					}
+				}
+			}
+		} else {
+			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
+				getManagedBean().setPrevRole(personnel.getEpRole());
+			}
+		}
+		// #40031 - End
 	}
 	
 	//start #31479
@@ -8501,6 +8558,9 @@ public class SmApplicationBackingBean extends
 				.setDisableStaff(false);
 			}
 		}*/
+		// #40031 - Start
+		getManagedBean().setPrevRole(null);
+		// #40031 - End
 		if (getManagedBean().getIdentificationTypes() == null) {
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
