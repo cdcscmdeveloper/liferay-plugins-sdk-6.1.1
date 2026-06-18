@@ -479,6 +479,12 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 */
 	protected void convertCtAddressToFlAddress(CtContractValue ctSupplierDtl,FlSupplierDtl supplierDtl){//33917
 		//CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue(); //33917
+		//40227-Start
+		if (ctSupplierDtl == null) {
+			return;
+		}
+		//40227-end
+		
 		if(ctSupplierDtl.getSupplierBranch() != null){
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(ctSupplierDtl.getSupplierBranch());
@@ -488,6 +494,14 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		FlAddress flAddress = new FlAddress();
 		CtAddress ctAddress = ctSupplierDtl.getSupplierAddress();
+		
+		//40227-Start
+		if (ctAddress == null) {
+	        supplierDtl.setFlAddress(flAddress);
+	        return;
+	    }
+		//40227-end
+		
 		flAddress.setAddress1(ctAddress.getAddress1());
 		flAddress.setAddress2(ctAddress.getAddress2());
 		flAddress.setAddress3(ctAddress.getAddress3());
@@ -940,7 +954,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
 		cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
 		cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
-		cdbb.getManagedBean().setSegmentTitle(segmentTitle);
+		cdbb.getManagedBean().setSegmentTitle(segmentTitle.replaceAll("\\s+", " ").trim());
 		cdbb.getManagedBean().setSegmentCode(segmentCode);
 		cdbb.getManagedBean().setFamilyTitle(familyTitle);
 		cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
@@ -1020,8 +1034,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.COMMON);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
+		filePath.append(CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
 
-		commonDownload(filePath.toString(), ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
+		commonDownload(filePath.toString(), CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
 	}
 }

@@ -299,16 +299,16 @@ public class NoticeBoardBackingBean extends
 										.constuctTreeNode(
 												specZoneDtl,specZoneDtl.getTplSpecZoneLocs()));
 						}
-						BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-						briefingReqDTO.setQtId(scQt.getQtId());
-						briefingReqDTO.setSpecZoneId(specZoneDtl
-								.getSpecZoneId());
-						IQTBriefingSO briefingSO = EpEjbBusinessDelegate
-								.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION,
-										IQTBriefingSO.class);
-						BriefingResDTO briefingResDTO = briefingSO
-								.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+						
+						// 28188 -start-
+						NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
+						noticeBoardReqDTO.setQtId(scQt.getQtId());
+						noticeBoardReqDTO
+								.setZoneId(specZoneDtl.getSpecZoneId());
+						NoticeBoardResDTO noticeBoardResDTO = qtNoticeBoardSO
+								.retrieveBriefingSiteVisitZoneDtls(noticeBoardReqDTO);
+						// 28188 -end-
+
 						ScQtSampleSubmission sampleAddress = null; 
 						for (ScQtSampleSubmission sampleaddr : sampleAddrList) {
 							TplSpecZoneDtl addrZoneDtl = sampleaddr.getTplSpecZoneDtl();
@@ -317,10 +317,15 @@ public class NoticeBoardBackingBean extends
 								sampleAddress = sampleaddr;
 							}
 						}
+						
+						// 28188 -start-
 						BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-								specZoneDtl, briefingResDTO.getBriefingList(),
-								briefingResDTO.getSiteVisitList(),
-								briefingResDTO.getScQtBsv(),sampleAddress);
+								specZoneDtl,
+								noticeBoardResDTO.getBriefingResultBean(),
+								noticeBoardResDTO.getSiteVisitResultBean(),
+								noticeBoardResDTO.getScQtBsv(), sampleAddress);
+						// 28188 -end-
+						
 						bsvZoneBeans.add(briefingZoneBean);
 					}
 					this.getManagedBean().setLocationNodes(
@@ -853,16 +858,18 @@ public class NoticeBoardBackingBean extends
 		
 		// #28777 & #29729 - Start
 		if (managedBean.getScQt().isZonal()) {
-			BriefingZoneBean defaultBsvBean = this.getManagedBean().getZoneBean().get(0);
-			if (defaultBsvBean.isBranchDeactivated()) {
-				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-			} else {
-				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+			List<BriefingZoneBean> zoneBeans = this.getManagedBean().getZoneBean();
+			for (BriefingZoneBean briefingZoneBean : zoneBeans) {
+				if (briefingZoneBean.isBranchDeactivated()) {
+					this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+									MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				} else {
+					this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+				}
 			}
 		}
 		// #28777 & #29729 - End
@@ -1698,7 +1705,7 @@ public class NoticeBoardBackingBean extends
 					populateBsvQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBSVBeans());//#28188
 				} else {
 					getManagedBean().setAmendmentClosingDateMap(null);
-					getManagedBean().setAmendmentBSVDateMap(null);
+					getManagedBean().setAmendmentBSVDateMap(null);//#28188
 				}
 				getManagedBean().setCommitteeFormed(resDTO.getCommitteeFormed());
 				return resDTO.getQtResultBean();
