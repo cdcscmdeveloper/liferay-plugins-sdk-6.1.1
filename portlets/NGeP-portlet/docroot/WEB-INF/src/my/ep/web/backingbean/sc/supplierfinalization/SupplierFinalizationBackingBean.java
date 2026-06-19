@@ -2719,12 +2719,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 		//#21692 - End
 		
-		// #39620 - start
-		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
-		if (isRecommendByAward() && recommendedSupplier != null) {
-			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
-		}// #39620 - End
-		
 		//#28777#29729 - Start
 		if(checkFlagForSupplierBranchDeleted()){
 		    checkNeedSupplierIfHaveBranchDeleted();
@@ -2995,12 +2989,6 @@ public class SupplierFinalizationBackingBean extends
 				  .getParameterCode();
 	log.info("decisionTypeCode"+decisionTypeCode);
 		this.checkIfLoggedinUserIsSecretary();
-		
-		// #39620 - start
-		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
-		if (isRecommendByAward() && recommendedSupplier != null) {
-			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
-		}// #39620 - End
 				
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
@@ -6915,6 +6903,7 @@ return	remarksNotFound;
 				createShortlistedSuppliersDataModel();//35140
 			} 
 			
+			setDisableSFJustification();	//40314
 			//#28834 - Start
 			if(scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION)){
 				this.getManagedBean().setDisableJustifications(false);
@@ -9307,7 +9296,6 @@ return	remarksNotFound;
 							if (!disabledSupplier) {
 								if (recommendationBean.isAwarded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
-									getManagedBean().setTempRecommendedSupplier(qualSupplier);//#39620 
 								}
 							} else {
 								if (getManagedBean().getDisabledSupplierIds() == null) {
