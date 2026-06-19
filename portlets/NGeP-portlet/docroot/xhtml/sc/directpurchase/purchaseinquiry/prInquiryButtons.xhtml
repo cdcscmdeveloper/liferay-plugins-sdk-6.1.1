@@ -12,26 +12,34 @@
 		postSignAction="#{purchaseInquiryBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 		enableAutoUpdate="#{purchaseInquiryBackingBean.enableAutoUpdate()}" />
 		
+		<!-- 34449 - Start -->
 		<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancelPI" value="cancelPI" />
-	<ac:cancelRejectPopup id="#{cancelPI}" widget="cancelPI" width="30%"
-		height="100"
-		okAction="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+	<ac:confirmationPopup id="#{cancelPI}" widget="cancelPI"
+    	width="400" height="100"
+    	okAction="purchaseInquiryBackingBean.requisitionerAction('CANCEL')"
+    	title="#{lbl['lbl.cancel.details']}"
+    	content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@form" />
+    	
 		
      <!-- 20190417@asyrafhaziq_12095 - End -->
      
      <!-- 26129 - Start -->
      <ui:param name="cancelPiPendingSubmission" value="cancelPiPendingSubmission" />
-	 <ac:cancelRejectPopup id="#{cancelPiPendingSubmission}" widget="cancelPiPendingSubmission" width="30%"
-		height="100"
-		okAction="#{purchaseInquiryBackingBean.requisitionerAction('CANCELPI')}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+	 <ac:confirmationPopup id="#{cancelPiPendingSubmission}" widget="cancelPiPendingSubmission" 
+		width="400"
+	    height="100"
+	    okAction="purchaseInquiryBackingBean.requisitionerAction('CANCELPI')"
+	    title="#{lbl['lbl.cancel.details']}"
+	    content="#{lbl['lbl.cancel.dialog.confirm.message']}"  update="@form" />
      <!-- 26129 - End -->
-		
-
+	<!-- New Confirmation Popup -->
+	<ac:confirmationPopup id="submitPrInquiryConfirmDlgId"
+	    widget="submitPrInquiryConfirmDlg"  width="400" height="100"
+	    okAction="purchaseInquiryBackingBean.submitPrInquiryDtl('SUBMIT')"
+	    title="#{lbl['lbl.sc.confirmation.submit']}"
+	    content="#{lbl['lbl.sc.dialog.confirm.message.submit']}"  update="@form" />
+		<!-- 34449 - End -->	
 	<div>
 		<!-- view back button -->
 		<p:commandButton immediate="true" process="@this" partialSubmit="true"
@@ -70,11 +78,9 @@
 					<!-- 26129 - End -->
 					<td style="float:right;">
 						<p:commandButton
-							value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
+							value="#{lbl['lbl.btn.submit']}" type="button"
 							process="@form"
-							action="#{purchaseInquiryBackingBean.submitPrInquiryDtl('SUBMIT')}"
-							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" update="@form" />
+							onclick="submitPrInquiryConfirmDlg.show();" />
 					</td>
 					<c:if test="#{purchaseInquiryBackingBean.managedBean.disProcTyp}" >
 						<td style="float:right;">

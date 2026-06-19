@@ -27,6 +27,39 @@
 			</tr>
 		</table>
 	</h:panelGroup>
+	
+	<ui:remove>#34449 - start (New Popups: Submit, Cancel, Revise)</ui:remove>
+	<ac:confirmationPopup id="submitLoaConfirmDlgId"
+	    widget="submitLoaConfirmDlg"
+	    width="400"
+	    height="100"
+	    okAction="#{lOADetailBackingBean.submitConformationForLampiranA3}"
+	    title="#{lbl['lbl.sc.loa.confirmation.submit']}"
+	    content="#{lbl['lbl.sc.loa.confirmation.submit.message']}"
+	    update="@form"
+	    okProcess="@form" />
+	
+	<ac:confirmationPopup id="cancelLoaConfirmDlgId"
+	    widget="cancelLoaConfirmDlg"
+	    width="400"
+	    height="100"
+	    okAction="#{lOADetailBackingBean.cancelPrepareLoaAction}"
+	    title="#{lbl['lbl.sc.loa.confirmation.cancel']}"
+	    content="#{lbl['lbl.sc.loa.confirmation.cancel.message']}"
+	    update="@form"
+	    okProcess="@form" />
+	
+	<ac:confirmationPopup id="reviseLoaConfirmDlgId"
+	    widget="reviseLoaConfirmDlg"
+	    width="400"
+	    height="100"
+	    okAction="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction('REVISE')}"
+	    title="#{lbl['lbl.sc.loa.confirmation.revise']}"
+	    content="#{lbl['lbl.sc.loa.confirmation.revise.message']}"
+	    update="@form"
+	    okProcess="@form" />
+	<ui:remove>#34449 - end</ui:remove>
+	
 
 	<div class="ppRightBtn">
 		<h:panelGroup rendered="#{!isTrackingDairyView}">
@@ -40,18 +73,16 @@
 					rendered="#{isEditableStatus and !isSaveHideSqExpired
 					and !(!qtLOABackingBean.managedBean.ableToSubmitLOA and lOADetailBackingBean.isApproverAbleToSave())}" process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
-
+				<ui:remove> #34449 - Start (Connect the popup to command button)</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
-					action="#{lOADetailBackingBean.submitConformationForLampiranA3}" process="@form"
-					update="@form" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
+					onclick="submitLoaConfirmDlg.show(); return false;"
+    				process="@this" update="@form" /> /><ui:remove>#21692</ui:remove>
 				<ui:remove>START - #33639 (by include another checking by LOA Doc Type during render the cancel button)</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isPendingSubmissionStatus and !isSqStillValid and isDocTypePurchaseRequest}"
-					action="#{lOADetailBackingBean.cancelPrepareLoaAction}" process="@form"
-					update="@form" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
+					onclick="cancelLoaConfirmDlg.show(); return false;"
+    				process="@this" update="@form" />
 				<ui:remove>END - #33639</ui:remove>
 				<!-- <ui:remove>
 					Enhancement #22211 START
