@@ -9402,6 +9402,15 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
 		SmCommonUtil.getInstance().setUserDetails(bpmAppl);
+		
+		// #40031 - Start
+		// To record if it is from pending appl declaration - 20100
+		Long initialPmStatusId = null;
+		if (bpmAppl != null && bpmAppl.getPmStatus() != null) {
+			initialPmStatusId = bpmAppl.getPmStatus().getStatusId();
+		}
+		// #40031 - End
+		
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -9529,6 +9538,9 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
 				+ getManagedBean().getTaskId());
 		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		// #40031 - Start
+		reqDTO.setInitialStatusId(initialPmStatusId);
+		// #40031 - End
 		resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		regSo = null;
 		retriveLatestApplAfterUpdate("", "");
