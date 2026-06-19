@@ -2106,7 +2106,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setOrgTypeId(currentOrgTypeId);
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
-				roleReqDTO.setPtjAuthCC(getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC()); //#34945
+				roleReqDTO.setPtjAuthCC(getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC() != null 
+						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC() : false); // #34945
 				roleReqDTO.setAssignRole(true);
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
@@ -3116,12 +3117,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
 			
-			PmUserOrg oldPmUserOrg = !this.getManagedBean().getSelectedUser().isBrandNew() ? 
+			/*PmUserOrg oldPmUserOrg = !this.getManagedBean().getSelectedUser().isBrandNew() ? 
 					PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(this.getManagedBean().getSelectedUser().getUserId(),
 							 this.getManagedBean().getSelectedUserOrg().getUserOrgId()) : null;
 			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
 			List<PmUserRole> oldPmUserRoles = oldPmUserOrg != null ? oldPmUserOrg.getPmUserRoles() : null;
-			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;
+			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;*/
 			/** AUDIT 28895_35509 START END **/
 
 			reqDTO = new UserReqDTO();
@@ -3274,10 +3275,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					getManagedBean().setNewAuditPmUserOrg(userOrg);
 					setNewAuditPmUserRoles(userOrg.getPmUserRoles());
 					getManagedBean().setNewAuditPmAddressTypes(getManagedBean().getSelectedReceivingAddrTypes());
-					getManagedBean().setOldAuditPmUser(oldPmUser);
+					/*getManagedBean().setOldAuditPmUser(oldPmUser);
 					getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
 					getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
-					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
+					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);*/
 				}
 				/************ END AUDIT #28895_35509 shaqimi 24072025 *************/
 				
