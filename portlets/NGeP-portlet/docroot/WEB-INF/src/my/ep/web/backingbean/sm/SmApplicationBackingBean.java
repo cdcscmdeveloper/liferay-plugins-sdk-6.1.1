@@ -5165,6 +5165,49 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	// #40031 - Start
 	/**
+	 * To determine previous role when popup for delete action appear
+	 */
+	public void determinePreviousRole() {
+		SmMofAccount mofAccount = getManagedBean().getSmSupplier().getSmMofAccount();
+		String applType = getManagedBean().getSmAppl().getApplType();
+		SmPersonnel personnel = getManagedBean().getSelectedShareHolder();
+		getManagedBean().setPrevRole(null);
+		// For resubmitted applications, use the current personnel role if it already exists in the rejected application.
+		// (Cover for deleted only)
+		boolean hasCurrentRole = StringUtils.isNotBlank(personnel.getEpRole());
+		// resubmit appl indicator
+		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
+		// Basic acc indicator
+		boolean basicAcc = mofAccount == null || mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE;
+		// inProgress Basic Appl
+		boolean basicAccAppl = basicAcc
+				&& (ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType) || ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType));
+
+		// If resubmit appl and doesnt have role, get the lastest approved info
+		if (resubmitAppl && !hasCurrentRole) {
+			// Since basic didn't get the latest personnel
+			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
+			if (null != latestApprovedPersons) {
+				for (SmPersonnel person : latestApprovedPersons) {
+					if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
+						String prevRole = person.getEpRole();
+						// latest approved application may still contain BASIC_SUPPLIER_USER role. Treat it as MOF_SUPPLIER_USER
+						if (basicAccAppl && StringUtils.equals(prevRole, RoleCode.BASIC_SUPPLIER_USER.value())) {
+							prevRole = RoleCode.MOF_SUPPLIER_USER.value();
+						}
+						getManagedBean().setPrevRole(prevRole);
+						break;
+					}
+				}
+			}
+		} else {
+			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
+				getManagedBean().setPrevRole(personnel.getEpRole());
+			}
+		}
+	}
+	
+	/**
 	 * revert back role on its original role
 	 * @param role
 	 */
@@ -8727,29 +8770,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#36718 - END
 		
 		// #40031 - Start - Store role incase ajax rendered role changed
-		SmMofAccount mofAccount = getManagedBean().getSmSupplier().getSmMofAccount();
-		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
-		boolean basicAcc = mofAccount == null || mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE;
-		SmPersonnel personnel = getManagedBean().getLatestPersonnel();
-		getManagedBean().setPrevRole(null);
-		// If resubmit appl, get the lastest approved info
-		if (resubmitAppl || basicAcc) {
-			// Since basic didn't get the latest personnel
-			personnel = getManagedBean().getSelectedShareHolder();
-			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
-			if (null != latestApprovedPersons) {
-				for (SmPersonnel person : latestApprovedPersons) {
-					if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
-						getManagedBean().setPrevRole(person.getEpRole());
-						break;
-					}
-				}
-			}
-		} else {
-			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
-				getManagedBean().setPrevRole(personnel.getEpRole());
-			}
-		}
+		determinePreviousRole();
 		// #40031 - End
 	}
 	
