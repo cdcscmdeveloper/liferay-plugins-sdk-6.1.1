@@ -102,6 +102,7 @@ import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
+import my.ep.persistence.entity.ct.dtl.CtContractValue; //#32418
 import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtPidReason;
@@ -2675,8 +2676,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			// Start Fix - #33952, #25956
 			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
-					&& ctBackingBean.getManagedBean().isContractExpired()){
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)
+					&& ctBackingBean.getManagedBean().isContractExpired()){ //#32418
 	
 					if ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
 						|| (ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
@@ -2728,16 +2730,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			// End Fix - #33952, #25956
-
-			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
-			// Validation for amendment when extension period - 0 
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
+			
+			//32418 Start
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= ContractConst.VALUE_OF_28){ 
 
 				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
-				throw new EpException(MessageConst.ERROR_750048);
+			   throw new EpException(MessageConst.ERROR_750074);
+			  }
+			//32418 End
+
+			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
+			// Validation for amendment when extension period - 0 
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == ContractConst.VALUE_OF_0 && ctBackingBean
+							.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == ContractConst.VALUE_OF_0)) { // 32418
+
+				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				throw new EpException(MessageConst.ERROR_750073); // 32418
 			}
 			//End Fix - #38613, #33287
 
@@ -3647,21 +3661,175 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return contractAmount;
 	}
 
+	// #32418,#40279 - Start
 	/**
-	 * The method used to retrieve the new contract period
-	 * with addition of old contract period and extended period.
+	 * Calculates contract period including ongoing amendment extension.
+	 * Supplemental Performance Bond Section
 	 * 
-	 * @return new contract period
+	 * @return an array containing: [0] = total months, [1] = remaining days
 	 */
-	public String calculateNewContractPeriod(boolean isCalculateNew) {
-		if (isCalculateNew) {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().intValue()
-					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()); //#24333
-		} else {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
-					.getLatestContractVer().getCtContractValue().getContractPeriod());
+	private int[] calculateNewContractPeriod() {
+
+		CtContractVer current = ctBackingBean.getManagedBean().getContractVer();
+
+		CtContractValue contractValue = current.getCtContractValue();
+
+		Date effectiveDate = contractValue.getEffDate();
+
+		Date expiredDate = contractValue.getExpDate();
+
+		CtAmendment amendment = current.getCtAmendment();
+
+		// Use amendment extend end date during ongoing amendment
+		if (isOngoingAmendment(current) && amendment != null && amendment.isContractExtend()
+				&& amendment.getExtendEndDate() != null) {
+
+			expiredDate = amendment.getExtendEndDate();
 		}
+
+		return DateUtils.getMonthsAndDaysDifference(effectiveDate, expiredDate);
 	}
+
+	/**
+	 * Returns total contract months for Performance Bond Section display.
+	 * 
+	 * @return total contract months
+	 */
+	public String getDisplayContractPeriod() {
+
+		int[] result = calculateNewContractPeriod();
+
+		return String.valueOf(result[0]);
+	}
+
+	/**
+	 * Returns total contract days for Performance Bond Section display
+	 * 
+	 * @return remaining contract days
+	 */
+	public String getDisplayContractDays() {
+
+		int[] result = calculateNewContractPeriod();
+
+		return String.valueOf(result[1]);
+	}
+
+	/**
+	 * Calculates contract period for Supplemental Letter display.
+	 * 
+	 * @return an array containing: [0] = contract months, [1] = contract days
+	 */
+	private int[] calculateSupplementalContractPeriod() {
+
+		CtContractVer current = ctBackingBean.getManagedBean().getContractVer();
+
+		CtContractValue contractValue;
+
+		// ONGOING
+		if (isOngoingAmendment(current)) {
+
+			contractValue = current.getCtContractValue();
+
+		} else {
+
+			List<CtContractVer> history = getManagedBean().getAmendHistoryList();
+
+			// COMPLETED WITH AMENDMENT HISTORY
+			if (history != null && !history.isEmpty()) {
+
+				contractValue = history.get(history.size() - 1).getCtContractValue();
+
+			} else {
+
+				// FIRST AMENDMENT COMPLETED
+				// fallback to previous contract version
+				CtContractVer previousContractVer = getPreviousContractVersion(current);
+
+				if (previousContractVer != null) {
+
+					contractValue = previousContractVer.getCtContractValue();
+
+				} else {
+
+					// fallback safety
+					contractValue = current.getCtContractValue();
+				}
+			}
+		}
+
+		return DateUtils.getMonthsAndDaysDifference(contractValue.getEffDate(), contractValue.getExpDate());
+	}
+
+	/**
+	 * Retrieves previous contract version before current version.
+	 * 
+	 * @param current
+	 *            current contract version
+	 * @return previous contract version
+	 */
+	private CtContractVer getPreviousContractVersion(CtContractVer current) {
+
+		List<CtContractVer> contractVersions = current.getCtContract().getCtContractVers();
+
+		if (contractVersions == null || contractVersions.isEmpty()) {
+			return null;
+		}
+
+		CtContractVer previous = null;
+
+		for (CtContractVer contractVer : contractVersions) {
+
+			if (contractVer.getContractVerId().compareTo(current.getContractVerId()) < 0) {
+
+				if (previous == null || contractVer.getContractVerId().compareTo(previous.getContractVerId()) > 0) {
+
+					previous = contractVer;
+				}
+			}
+		}
+
+		return previous;
+	}
+
+	/**
+	 * Returns contract months for Supplemental Letter Section display.
+	 * 
+	 * @return contract months
+	 */
+	public String getSupplementalDisplayContractPeriod() {
+
+		int[] result = calculateSupplementalContractPeriod();
+
+		return String.valueOf(result[0]);
+	}
+
+	/**
+	 * Returns contract days for Supplemental Letter Section display.
+	 * 
+	 * @return contract days
+	 */
+	public String getSupplementalDisplayContractDays() {
+
+		int[] result = calculateSupplementalContractPeriod();
+
+		return String.valueOf(result[1]);
+	}
+
+	/**
+	 * Checks whether the contract amendment is still ongoing.
+	 * 
+	 * @param contractVer
+	 *            contract version data
+	 * @return true if the amendment is ongoing, otherwise false
+	 */
+	private boolean isOngoingAmendment(CtContractVer contractVer) {
+
+		Long statusId = contractVer.getStatus() != null ? contractVer.getStatus().getStatusId() : null;
+
+		return !ContractStatusConst.FA_LOA_COMPLETED.equals(statusId);
+	}
+
+	// #32418,#40279 - End
 
 	//#24333 - Start
 	/**
@@ -4602,16 +4770,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onContractExtensionChecked() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(1); // default to 1 month
+			//#32418 - start
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(ContractConst.VALUE_OF_0); // default to 0 month
+			//#32418 - end
 			Calendar c = Calendar.getInstance();
 			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			c.add(Calendar.DATE, 1);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
 
 			//#26076 - start
 			//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			c.add(Calendar.MONTH, 1);
-			c.add(Calendar.DATE, -1);
 			//#26076 - end
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
@@ -4828,18 +4995,46 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user extended the contract period.
 	 */
 	public void onExtensionPeriodChanged() {
-		Calendar c = Calendar.getInstance();
-		c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		c.add(Calendar.DATE, 1);
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
+		// 32418 Start
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		CtContractValue contractValue = ctBackingBean.getManagedBean().getContractVer().getCtContractValue();
 
-		//#26076 - start
-		//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		c.add(Calendar.MONTH, ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
-		c.add(Calendar.DATE, -1);
-		//#26076 - end
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+		Integer extendPeriod = amendment.getExtendPeriod();
+		if (extendPeriod <= ContractConst.VALUE_OF_0) {
+			amendment.setExtendPeriod(ContractConst.VALUE_OF_0);
+		}
+
+		Integer extendDaysPeriod = amendment.getExtendDaysPeriod();
+		if (extendDaysPeriod <= ContractConst.VALUE_OF_0) {
+			amendment.setExtendDaysPeriod(ContractConst.VALUE_OF_0);
+		}
+		// Validate max days (must be < 28)
+		if (extendDaysPeriod >= ContractConst.VALUE_OF_28) {
+			amendment.setExtendDaysPeriod(ContractConst.VALUE_OF_0);
+			throw new EpException(MessageConst.ERROR_750074);
+		}
+
+		Date expDate = contractValue.getExpDate();
+		if (extendPeriod > 0 || extendDaysPeriod > 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(expDate);
+			c.add(Calendar.DATE, 1);
+			amendment.setExtendStartDate(c.getTime());
+
+			// #26076 - start
+			c.add(Calendar.MONTH, extendPeriod);
+			// #32418 - start
+			c.add(Calendar.DAY_OF_MONTH, extendDaysPeriod);
+			// #32418 - end
+			c.add(Calendar.DATE, -1);
+			// #26076 - end
+			amendment.setExtendEndDate(c.getTime());
+			amendment.setAmendmentEffDate(amendment.getExtendStartDate());
+		} else {
+			amendment.setExtendStartDate(expDate);
+			amendment.setExtendEndDate(expDate);
+		}
+		// 32418 End
 		changeAmendmentEffDate();
 	}
 
