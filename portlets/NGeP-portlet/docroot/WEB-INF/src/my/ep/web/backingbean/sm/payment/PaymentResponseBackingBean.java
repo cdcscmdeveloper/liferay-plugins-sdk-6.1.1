@@ -680,6 +680,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
+				log.info("###############38377 isValidPayment:"+validPayment);
 				if (!"Y".equals(paymentGateway)) {
 					log.info("###############38377 update payment");
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
