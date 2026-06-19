@@ -5991,7 +5991,9 @@ public class SupplierFinalizationBackingBean extends
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){// Bug #37969
+			//#40396 - Start
+			if(!getManagedBean().isHasSupplierQualified() && !isQTCancelledBidSchedule()){// Bug #37969
+			//#40396 - End
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -6458,7 +6460,9 @@ public class SupplierFinalizationBackingBean extends
 		boolean hasItemWithPriceTypeTier 
 						= getManagedBean().isHasItemWithPriceTypeTier();
 		
-		if (hasItemWithPriceTypeTier) {
+		// #40396 - Start
+		if (hasItemWithPriceTypeTier || isQTCancelledBidSchedule()) {
+		// #40396 - End	
 			excludedList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
 		}
 		
@@ -13167,4 +13171,14 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	//#38151 End
+	// #40396 - Start
+	/**
+	 * @return
+	 */
+	public boolean isQTCancelledBidSchedule() {
+		ScQt scQt = this.getManagedBean().getScQt();
+		return getQTSuppFinalizationSO().isQTCancelledBidSchedule(scQt.getQtId());
+	}
+	// #40396 - End
+
 }
