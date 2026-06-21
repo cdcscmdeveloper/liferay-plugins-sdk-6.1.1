@@ -5020,48 +5020,26 @@ public class SmApplicationBackingBean extends
 	}
 	
 	// #40031 - Start
-	/**
-	 * To determine previous role when popup for delete action appear
-	 */
 	public void determinePreviousRole() {
 		SmMofAccount mofAccount = getManagedBean().getSmSupplier().getSmMofAccount();
 		String applType = getManagedBean().getSmAppl().getApplType();
+		List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
 		SmPersonnel personnel = getManagedBean().getSelectedShareHolder();
 		getManagedBean().setPrevRole(null);
-		// For resubmitted applications, use the current personnel role if it
-		// already exists in the rejected application.
-		// (Cover for deleted only)
-		boolean hasCurrentRole = StringUtils.isNotBlank(personnel.getEpRole());
-		// resubmit appl indicator
-		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
-		// Basic acc indicator
 		boolean basicAcc = mofAccount == null || mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE;
-		// inProgress Basic Appl
-		boolean basicAccAppl = basicAcc
-				&& (ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType) || ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType));
-
-		// If resubmit appl and doesnt have role, get the lastest approved info
-		if (resubmitAppl && !hasCurrentRole) {
-			// Since basic didn't get the latest personnel
-			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
-			if (null != latestApprovedPersons) {
-				for (SmPersonnel person : latestApprovedPersons) {
-					if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
-						String prevRole = person.getEpRole();
-						// latest approved application may still contain
-						// BASIC_SUPPLIER_USER role. Treat it as
-						// MOF_SUPPLIER_USER
-						if (basicAccAppl && StringUtils.equals(prevRole, RoleCode.BASIC_SUPPLIER_USER.value())) {
-							prevRole = RoleCode.MOF_SUPPLIER_USER.value();
-						}
-						getManagedBean().setPrevRole(prevRole);
+		boolean basicAccAppl = basicAcc && (ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType) || ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType));
+		
+		if(latestApprovedPersons != null && !latestApprovedPersons.isEmpty()){
+			for (SmPersonnel person : latestApprovedPersons) {
+				if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
+					if (basicAccAppl && StringUtils.equals(person.getEpRole(), RoleCode.BASIC_SUPPLIER_USER.value())) {
+						getManagedBean().setPrevRole(RoleCode.MOF_SUPPLIER_USER.value());
+						break;
+					}else {
+						getManagedBean().setPrevRole(person.getEpRole());
 						break;
 					}
 				}
-			}
-		} else {
-			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
-				getManagedBean().setPrevRole(personnel.getEpRole());
 			}
 		}
 	}
