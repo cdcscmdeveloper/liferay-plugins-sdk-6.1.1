@@ -102,8 +102,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		session.removeAttribute("paymentBpmPojo");
 		
 		//#38377
-		paymentGateway = StringUtils.defaultIfEmpty(httpServletRequest.getParameter("payload"), "N");
+		String payload = httpServletRequest.getParameter("payload");
+		paymentGateway = (payload!=null && !payload.isEmpty())?"Y":"N";
 		log.info("##38377####################@PostConstruct isPaymentGateway:" + paymentGateway);
+		log.info("##38377####################@PostConstruct payload:" + payload);
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
@@ -291,8 +293,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		
 		//#38377
-		paymentGateway = StringUtils.defaultIfEmpty(httpServletRequest.getParameter("payload"), "N");
-		log.info("##38377####################responsePreRender isPaymentGateway:" + paymentGateway);
+		String payload = httpServletRequest.getParameter("payload");
+		paymentGateway = (payload!=null && !payload.isEmpty())?"Y":"N";
+		log.info("##38377####################@PostConstruct isPaymentGateway:" + paymentGateway);
+		log.info("##38377####################@PostConstruct payload:" + payload);
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
