@@ -5020,6 +5020,9 @@ public class SmApplicationBackingBean extends
 	}
 	
 	// #40031 - Start
+	/**
+	 * To determine previous role when popup for delete action appear
+	 */
 	public void determinePreviousRole() {
 		SmMofAccount mofAccount = getManagedBean().getSmSupplier().getSmMofAccount();
 		String applType = getManagedBean().getSmAppl().getApplType();
@@ -5027,18 +5030,18 @@ public class SmApplicationBackingBean extends
 		SmPersonnel personnel = getManagedBean().getSelectedShareHolder();
 		getManagedBean().setPrevRole(null);
 		boolean basicAcc = mofAccount == null || mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE;
-		boolean basicAccAppl = basicAcc && (ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType) || ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType));
-		
-		if(latestApprovedPersons != null && !latestApprovedPersons.isEmpty()){
+		boolean basicAccAppl = basicAcc
+				&& (ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType) || ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType));
+
+		if (latestApprovedPersons != null && !latestApprovedPersons.isEmpty()) {
 			for (SmPersonnel person : latestApprovedPersons) {
 				if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
 					if (basicAccAppl && StringUtils.equals(person.getEpRole(), RoleCode.BASIC_SUPPLIER_USER.value())) {
 						getManagedBean().setPrevRole(RoleCode.MOF_SUPPLIER_USER.value());
-						break;
-					}else {
+					} else {
 						getManagedBean().setPrevRole(person.getEpRole());
-						break;
 					}
+					break;
 				}
 			}
 		}
