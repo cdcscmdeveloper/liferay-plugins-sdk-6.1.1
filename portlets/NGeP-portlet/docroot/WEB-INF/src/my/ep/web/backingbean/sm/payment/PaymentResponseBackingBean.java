@@ -295,8 +295,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		//#38377
 		String payload = httpServletRequest.getParameter("payload");
 		paymentGateway = (payload!=null && !payload.isEmpty())?"Y":"N";
-		log.info("##38377####################@PostConstruct isPaymentGateway:" + paymentGateway);
-		log.info("##38377####################@PostConstruct payload:" + payload);
+		log.info("##38377####################responsePreRender isPaymentGateway:" + paymentGateway);
+		log.info("##38377####################responsePreRender payload:" + payload);
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
