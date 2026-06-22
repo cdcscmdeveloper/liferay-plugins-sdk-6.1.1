@@ -526,7 +526,7 @@
 							disabled="#{backingBean.managedBean.disableRoleSelection}"
 							style="width: 207px;margin: 5px 0px 5px 0px;">
 							<!-- #40031 - Start -->
-							<f:selectItem itemLabel="#{empty backingBean.managedBean.prevRole ? lbl['lbl.txt.select'] : lbl['lbl.sm.maintenance.delete.role']}"
+							<f:selectItem itemLabel="#{backingBean.managedBean.isLatestApplHasPrevRole() ? lbl['lbl.sm.maintenance.delete.role'] : lbl['lbl.txt.select']}"
 								itemValue="" />
 							<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
 							<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}, deleteRoleDlg"
