@@ -63,6 +63,10 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
+	
+	//30730 - start
+	private Long inactiveUserRevise;
+	//30730 - end
 
 	/**
 	 * @return the taskName
@@ -408,4 +412,15 @@ public class TerminationManagedBean extends BaseManagedBean {
 	public void setDisableField(boolean disableField) {
 		this.disableField = disableField;
 	}
+
+	//30730 - start
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
+	}
+
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
+	}
+	//30730 - end
+	
 }

@@ -41,7 +41,9 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -54,10 +56,14 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAddress;
+import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
@@ -436,7 +442,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 			if(getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
-			}    
+			}   
+			
+			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveUserRevise()); // 30737
 
 			resDTO = contractTerminationSO.saveContractTerminationDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -605,43 +613,100 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		}
 		
 		//#30737 - Start
-		//TODO - REVISE in validation + save/submit
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
-				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+		// CtContract ctContract = ctBB.getManagedBean().getContractVer().getCtContract();
+		String docType = ctBB.getManagedBean().getContractVer().getDocType();
+		
+		//TODO - SUBMIT in validation + save/submit
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			
+			String approverType = determineRoleCode();
+	        /**if (ctContract.getContractType().getParameterCode()
+	        		.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+	        	approverType = RoleCode.CT_APPROVER.value();
+	        } else {
+	        	approverType = RoleCode.BPK_CC_APPROVER.value();
+	        }*/
+	        
+	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+	        		getInactiveUsers(approverType, getSelectedUsers(), docType);
+	        handleInactiveUserValidation(outcome, selectedInactiveUsers, getUserRole());
+	        
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
-			handleInactiveUserValidation(outcome);
+		}
+		//TODO - REVISE in validation + approve/revise
+	
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
+				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+			
+			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+			List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
+			
+			inactiveUsersForRevise = getInactiveUsersForRevise(
+					ctContractVer.getContractVerId(),
+					ctContractVer.getCtContract().getContractType().getParameterCode(), 
+					ctContractVer.getDocType());
+			
+			 if (!inactiveUsersForRevise.isEmpty()) {
+				 Long userStatus = null;
+				 
+				 for(SelectedInactiveUserDTO inactiveActor : inactiveUsersForRevise){
+					 userStatus = inactiveActor.getStatus();
+					 this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
+					 break;
+					}
+				 
+				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
+		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
+	                handleInactiveUserValidation(outcome, inactiveUsersForRevise, getUserRole());
+				 }
+            }
+				
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
 		}
 		//#30737 - End
 		
 	}
 	
 	//#30737 - Start
-	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
-	 */
-	public void handleInactiveUserValidation(String outcome) {
+	private InactiveUserResDTO validateUserStatus(String roleCode, List<PmUser> userList){
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		CtContract contract = ctBB.getManagedBean().getContractVer().getCtContract();
+		InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
+		inactiveDto.setUserIds(populateInactiveUserIdIntoString(userList));
+		inactiveDto.setUserRoleCode(roleCode); 
+		inactiveDto.setOrgProfileId(contract.getOwnerOrgProfile().getOrgProfileId());
+		inactiveDto.setDocType(ctBB.getManagedBean().getContractVer().getDocType());
+		inactiveDto.setDocNo(contract.getContractNo());
+		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+		
+		InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+		
+		log.info("xoxoxoxoxooxoxo USER ID : " );
+		log.info("xoxoxoxoxooxoxo PROFILE ID : "+  contract.getOwnerOrgProfile().getOrgProfileId());
+		log.info("xoxoxoxoxooxoxo STATUSSS : "+  resDto.getStatus());
+		log.info("xoxoxoxoxooxoxo END ");
+		
+		
+		return resDto;
+	}
+	
+	// private to populate user id into string with comma delimiter 
+	private String populateInactiveUserIdIntoString(List<PmUser> userIds){
+		StringBuilder sb = new StringBuilder();
+		
+		for(PmUser user : userIds){
+			
+			if (sb.length() > 0) {
+		        sb.append(",");
+		    }
 
-		IContractTerminationSO contractTerminationSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
-    	
-        try {
-        	
-        	Long inactiveUserCheckResult = 1L; //TEMP
-        	
-        	contractTerminationSO.checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-            	getSelectedUsers(),
-            	inactiveUserCheckResult
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex);
-        }
-    }
+		    sb.append(user.getUserId());
+		}
+		
+		return sb.toString();
+		
+	}
+		
 	//#30737 - End
 		
 	/**
