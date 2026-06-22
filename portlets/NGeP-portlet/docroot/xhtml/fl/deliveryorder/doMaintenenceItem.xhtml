@@ -18,6 +18,17 @@
 	</table>
 		
 	<p:panel header="#{lbl['lbl.fl.do.delivery.items']}" toggleable="true">
+		<ui:remove>#29556-Start</ui:remove>
+		<h:outputText styleClass="instruction"
+			rendered="#{createDOBackingBean.managedBean.contractFlag}" 
+			value="#{lbl['lbl.fl.instruction.items.spec.guideline']}"
+			escape="false" />
+		<p:commandLink
+			rendered="#{createDOBackingBean.managedBean.contractFlag}" 
+			value="#{lbl['lbl.fl.instruction.items.spec.click.here']}"
+			ajax="false" style="font-size:12px;font-style:italic" process="@this"
+			action="#{createDOBackingBean.downloadItemSpecGuideline()}"></p:commandLink>
+		<ui:remove>#29556-End</ui:remove>
 		<p:dataTable id="doItems" var="doItems" rowIndexVar="index"
 			rowKey="#{flItem}"
 			value="#{createDOBackingBean.managedBean.flDeliveryOrder.flDeliveryAddress.flFulfilmentItemAddr}">
