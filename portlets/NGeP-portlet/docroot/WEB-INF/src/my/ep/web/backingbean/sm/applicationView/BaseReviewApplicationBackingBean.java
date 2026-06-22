@@ -822,12 +822,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setShowFieldChanges(false);
 		getManagedBean().setLatestAppl(null);
 		getManagedBean().setEditVO(new SmSectionEditorVO());
+		
+		// 36504 - START
+		getManagedBean().getEditVO().setPoEditCategory(false);
+		getManagedBean().getEditVO().setAppEditCategory(false);
+		
 		if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog() 
 				&& getManagedBean().isViewApplicationHistory() 
 				&& !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 			SmFieldChangeUtil.initLatestAppl(getManagedBean());
 			SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
+		} else if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog() 
+				&& getManagedBean().isViewApplicationHistory() ) {
+			if (getManagedBean().isOtherDescChangePO() || getManagedBean().isOtherDescChangeSupPO()) {
+				this.getManagedBean().getEditVO().setPoEditCategory(true);
+			}
+			
+			if (getManagedBean().isOtherDescChangeApprover() || getManagedBean().isOtherDescChangeSupApprover()) {
+				this.getManagedBean().getEditVO().setAppEditCategory(true);
+			}
 		}
+		// 36504 - END
 		//#32008 - end
 	}
 
