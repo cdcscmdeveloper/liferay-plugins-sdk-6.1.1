@@ -4508,7 +4508,6 @@ public class SimpleQuoteBackingBean extends
 			throw new EpException(MessageConst.ERROR_760388);
 		}
 	}
-	
 	private String getHours(Date fromDate, Date toDate){
 		long timeDiff = Math.abs(fromDate.getTime() - toDate.getTime());
 		String hours = String.format("%d",

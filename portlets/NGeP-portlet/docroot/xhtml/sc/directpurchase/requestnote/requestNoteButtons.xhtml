@@ -46,23 +46,56 @@
 			</div>
 		</p:panel>
 	</p:dialog>
-
+	<ui:remove>#34449 - start (Change label)</ui:remove>
 	<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancel" value="CANCEL" />
 	<ui:param name="cancelRN" value="cancelRN" />
 	<ac:cancelRejectPopup id="#{cancelRN}" widget="cancelRN" width="30%"
 		height="100" okAction="#{requestNoteBackingBean.submitAction(cancel)}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
-
+		title="#{lbl['lbl.sc.confirmation.cancel']}"
+		content="#{lbl['lbl.sc.confirmation.cancel.message']}" update="@this" />
 	<ui:param name="reject" value="REJECT" />
 	<ui:param name="rejectRN" value="rejectRN" />
 	<ac:cancelRejectPopup id="#{rejectRN}" widget="rejectRN" width="30%"
 		height="100" okAction="#{requestNoteBackingBean.submitAction(reject)}"
-		title="#{lbl['lbl.reject.details']}"
-		content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />
+		title="#{lbl['lbl.sc.confirmation.reject']}"
+		content="#{lbl['lbl.sc.confirmation.reject.message']}" update="@this" />
 	<!-- 20190417@asyrafhaziq_12095 - End -->
-
+	<ui:remove>#34449 - end</ui:remove>
+	
+	<ui:remove>#34449 - start</ui:remove>
+	<ui:remove> New Submit popup</ui:remove>
+	<ac:confirmationPopup id="submitRNConfirmDlgId"
+		widget="submitRNConfirmDlg"
+		width="400"
+		height="100"
+		okAction="#{requestNoteBackingBean.submitAction('')}"
+		title="#{lbl['lbl.sc.confirmation.submit']}"
+		content="#{lbl['lbl.sc.confirmation.submit.message']}"
+		update="@form" />
+    
+    <ui:remove> New Revise popup</ui:remove>
+    <ui:param name="revise" value="REVISE" />
+    <ac:confirmationPopup id="reviseRNConfirmDlgId"
+		widget="reviseRNConfirmDlg"
+		width="400"
+		height="100"
+		okAction="#{requestNoteBackingBean.cancelRejectAction(revise)}"
+		title="#{lbl['lbl.sc.confirmation.revise']}"
+		content="#{lbl['lbl.sc.confirmation.revise.message']}"
+		update="@form" />
+    
+    <ui:remove> New Approve popup</ui:remove>
+    <ui:param name="approve" value="APPROVE" />
+    <ac:confirmationPopup id="approveRNConfirmDlgId"
+		widget="approveRNConfirmDlg"
+		width="400"
+		height="100"
+		okAction="#{requestNoteBackingBean.cancelRejectAction(approve)}"
+		title="#{lbl['lbl.sc.confirmation.approve']}"
+		content="#{lbl['lbl.sc.confirmation.approve.message']}"
+		update="@form" /> 
+    <ui:remove>#34449 - end</ui:remove>
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 			id="backPrevious" partialSubmit="true" process="@this"
@@ -131,15 +164,15 @@
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					action="#{requestNoteBackingBean.saveAction('')}" />
-
+				<ui:remove>#34449 - start</ui:remove>
+				<ui:remove>Connect the popup</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					update="@([id$=requestNoteId])" onclick="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					action="#{requestNoteBackingBean.submitAction('')}" process="@all">
+					update="@([id$=requestNoteId])" onclick="submitRNConfirmDlg.show(); return false;"
+					process="@this">
 					<f:setPropertyActionListener
 						target="#{requestNoteBackingBean.managedBean.action}" value="" />
 				</p:commandButton>
-
+				<ui:remove>#34449 - end</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					action="#{requestNoteBackingBean.cancel}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -180,14 +213,20 @@
 						<!-- 20190417@asyrafhaziq_12095 - Start -->
 						<ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
 						<ui:param name="isCancelReject" value="${ isCancel || isReject}" />
+					<ui:remove>#34449 - start</ui:remove>
+						<ui:param name="isApprove" value="#{bpmAction eq 'APPROVE'}" />
+						<ui:param name="isRevise" value="#{bpmAction eq 'REVISE'}" />
+					<ui:remove>#34449 - end</ui:remove>
 						<!-- 20190417@asyrafhaziq_12095 - End -->
-
+					<ui:remove>#34449 - start</ui:remove>
 						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
+							onclick="#{isRevise ? 'reviseRNConfirmDlg.show(); return false;' : ''}#{isApprove ? 'approveRNConfirmDlg.show(); return false;' : ''}"
 							onstart="#{isCancelReject ? '' : 'blockWidget.show();'}"
 							oncomplete="#{isCancelReject ? '' : 'blockWidget.hide();'}"
 							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							actionListener="#{requestNoteBackingBean.cancelRejectAction(bpmAction)}" />
+					<ui:remove>#34449 - end</ui:remove>
 					</ui:repeat>
 				</div>
 			</c:if>
