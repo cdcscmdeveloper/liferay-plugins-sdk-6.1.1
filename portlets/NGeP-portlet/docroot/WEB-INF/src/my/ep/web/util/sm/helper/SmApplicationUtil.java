@@ -4756,9 +4756,10 @@ public class SmApplicationUtil {
 
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
-						|| cat.getRecordStatusFlg()
-								.compareTo(
-										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+						|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0 || 
+						(cat.getRecordStatusFlg().compareTo(SupplierManagementConst.RECORD_STATUS_ACTIVE) == 0 && 
+								(managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) ||
+								 managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {
 					
 					// 36504 - START - Applied Application
 					String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();

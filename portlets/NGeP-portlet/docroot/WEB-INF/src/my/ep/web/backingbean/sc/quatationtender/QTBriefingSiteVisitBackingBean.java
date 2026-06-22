@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
 */
@@ -420,8 +420,6 @@ public class QTBriefingSiteVisitBackingBean extends
 			        List<ScQtBsvDtl> currentList = briefingBean.getBriefingList();
 			        if (currentList == null) currentList = new ArrayList<ScQtBsvDtl>();
 			
-			        // Result list to replace the old one (prevents duplicates)
-			        //List<ScQtBsvDtl> updatedCurrentList = new ArrayList<ScQtBsvDtl>();
 			        
 			        // Result list to replace the old one (prevents duplicates)
 			        List<ScQtBsvDtl> resultList = new ArrayList<ScQtBsvDtl>();
@@ -429,8 +427,6 @@ public class QTBriefingSiteVisitBackingBean extends
 			        // All list to replace the old one (prevents duplicates)
 			        List<ScQtBsvDtl> allBriefingList = new ArrayList<ScQtBsvDtl>();
 			        
-			        // All list to replace the old one (prevents duplicates)
-			        List<ScQtBsvDtl> allSVList = new ArrayList<ScQtBsvDtl>();
 			    	
 			    	boolean existFlag = checkBSVDetailExistAndPostpone(editQtBsvDtlId, currentList);
 					
@@ -464,8 +460,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			                        temp.getBsvStatus().setStatusId(QTStatusConst.BSV_POSTPONE);
 			                        allBriefingList.add(temp);
 			                	}else if(dtl.getBsvDate() == null){
-			                		ScQtBsvDtl temp = getSafeTempDtl(dtl);//Add for tagging parent qt_bsv_dtl_id
-			                		dtl.setParentQtBsvDtlId(temp.getQtBsvDtlId());
+			                		ScQtBsvDtl temp = getSafeTempDtl(dtl);
+			                		dtl.setParentQtBsvDtlId(temp.getQtBsvDtlId());//Add for tagging parent_qt_bsv_dtl_id(Notification purpose)
+			                		dtl.setParentPostponeId(temp.getQtBsvDtlId());//Add for tagging parentBsvId(QT Maintenance purpose)
 			                		dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
 			                        populateAddress(dtl);
 			                        allBriefingList.add(dtl);
@@ -516,18 +513,12 @@ public class QTBriefingSiteVisitBackingBean extends
 			        // Always have a usable list
 			        List<ScQtBsvDtl> currentList = briefingBean.getSitevisitList();
 			        if (currentList == null) currentList = new ArrayList<ScQtBsvDtl>();
-			
-			        // Result list to replace the old one (prevents duplicates)
-			        //List<ScQtBsvDtl> updatedCurrentList = new ArrayList<ScQtBsvDtl>();
 			        
 			        // Result list to replace the old one (prevents duplicates)
 			        List<ScQtBsvDtl> resultList = new ArrayList<ScQtBsvDtl>();
 			        
 			        // All list to replace the old one (prevents duplicates)
 			        List<ScQtBsvDtl> allSVList = new ArrayList<ScQtBsvDtl>();
-			        
-			        // All list to replace the old one (prevents duplicates)
-			        List<ScQtBsvDtl> allBriefingList = new ArrayList<ScQtBsvDtl>();
 			        
 			
 			    	boolean existFlag = checkBSVDetailExistAndPostpone(editQtBsvDtlId, currentList);
@@ -561,8 +552,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			                        temp.getBsvStatus().setStatusId(QTStatusConst.BSV_POSTPONE);
 			                        allSVList.add(temp);
 			                	}else if(dtl.getBsvDate() == null){
-			                		ScQtBsvDtl temp = getSafeTempDtl(dtl);//Add for tagging parent qt_bsv_dtl_id
-			                		dtl.setParentQtBsvDtlId(temp.getQtBsvDtlId());
+			                		ScQtBsvDtl temp = getSafeTempDtl(dtl);
+			                		dtl.setParentQtBsvDtlId(temp.getQtBsvDtlId());//Add for tagging parent_qt_bsv_dtl_id(Notification purpose) 
+			                	    dtl.setParentPostponeId(temp.getQtBsvDtlId());//Add for tagging parentBsvId(QT Maintenance purpose) 
 			                		dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
 			                        populateAddress(dtl);
 			                        allSVList.add(dtl);
@@ -1522,7 +1514,13 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	    return normalMinDate;
 	}
+	//#28188 - End
 	
+	//#28188 - Start
+	/**
+	 * Get the BSV Calendar  Min Date.
+	 * @return CalendarMinDate
+	 */
 	public Date handleBSVCalendarMinDate() {
 	    Date currentDate = clearTime(new Date());
 	    ScQtBsvDtl tempDtl = this.getManagedBean().getTempScQtBsvDtl();
@@ -1537,20 +1535,29 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	    return currentDate;
 	}
+	//#28188 - End
 	
+	//#28188 - Start
+	/**
+	 * Get the BSV Restriction Date Time.
+	 * @return DateTime
+	 */
 	public Date handleBSVRestrictionDateTime() {
-	    Date currentDate = clearTime(new Date());
+	    Date now = new Date();
+	    Date currentDateOnly = clearTime(now);
+
 	    ScQtBsvDtl tempDtl = this.getManagedBean().getTempScQtBsvDtl();
 
 	    if (tempDtl != null && tempDtl.getBsvDate() != null) {
 	        Date oldDateOnly = clearTime(tempDtl.getBsvDate());
 
-	        if (!oldDateOnly.before(currentDate)) {
+	        if (!oldDateOnly.before(currentDateOnly)) {
 	            return tempDtl.getBsvDate();
 	        }
 	    }
 
-	    return null;
+	    // important: do not return null
+	    return now;
 	}
 	//#28188 - End
 	
@@ -1563,9 +1570,18 @@ public class QTBriefingSiteVisitBackingBean extends
 		SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
 		// Filter By - statusId
 		List<Long> statusIds = new ArrayList<Long>();
-		statusIds.add(QTStatusConst.BSV_COMPLETED);
-		statusIds.add(QTStatusConst.BSV_REQUEST_REJECT);//#28188
-		statusIds.add(QTStatusConst.BSV_CANCELLED);//#28188
+		//#28188 - Start
+		if(this.getManagedBean().getQtBriefing().isBrandNew()  || this.getManagedBean().getQtBriefing().getQtBsvDtlId()== null){
+			statusIds.add(QTStatusConst.BSV_POSTPONE);//#28188
+			statusIds.add(QTStatusConst.BSV_COMPLETED);
+			statusIds.add(QTStatusConst.BSV_REQUEST_REJECT);//#28188
+			statusIds.add(QTStatusConst.BSV_CANCELLED);//#28188
+		}else{
+			statusIds.add(QTStatusConst.BSV_COMPLETED);
+			statusIds.add(QTStatusConst.BSV_REQUEST_REJECT);//#28188
+			statusIds.add(QTStatusConst.BSV_CANCELLED);//#28188
+		}
+		//#28188 - End
 		searchBean.getDataFilterBeans().add(new SearchFilterBean(
 				"pmStatus.statusId",
 				SearchOperator.OPERATOR_NOT_IN.value(),
@@ -1719,7 +1735,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	/** Clone helper that ensures new ID, clears bsvDate, and sets a safe PmStatus with the same statusId. */
 	private ScQtBsvDtl makeCloneWithStatus(ScQtBsvDtl src, Long statusId) {
 	    ScQtBsvDtl clone = cloneForList(src);    // your existing method
-	    // Ensure “new” identity and date reset per your requirement
+	    // Ensure ï¿½newï¿½ identity and date reset per your requirement
 	    clone.setQtBsvDtlId(null); //-- disabled temp
 	    clone.setBsvDate(null);
 	    clone.setRecordStatus(DbValueConst.FLAG_NO);
@@ -1890,124 +1906,121 @@ public class QTBriefingSiteVisitBackingBean extends
 	        return new ArrayList<ScQtBsvDtl>();
 	    }
 
-	    // ==================================================
-	    // STEP 1 : GROUP USING PARENT RELATION
-	    // ==================================================
-	    Map<Long, List<ScQtBsvDtl>> grouped =
-	            new LinkedHashMap<Long, List<ScQtBsvDtl>>();
-
+	    // STEP 1: Build id -> dtl map for lookup (only non-null IDs)
+	    Map<Long, ScQtBsvDtl> idMap = new LinkedHashMap<Long, ScQtBsvDtl>();
 	    for (ScQtBsvDtl dtl : inputList) {
-
-	        Long key = null;
-
-	        // child record
-	        if (dtl.getParentQtBsvDtlId() != null) {
-	            key = dtl.getParentQtBsvDtlId();
+	        if (dtl.getQtBsvDtlId() != null) {
+	            idMap.put(dtl.getQtBsvDtlId(), dtl);
 	        }
-	        // original/parent record
-	        else {
-	            key = dtl.getQtBsvDtlId();
-	        }
-
-	        if (!grouped.containsKey(key)) {
-	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
-	        }
-
-	        grouped.get(key).add(dtl);
 	    }
 
-	    // ==================================================
-	    // STEP 2 : SORT INSIDE EACH GROUP
-	    // Parent(Postpone) first
-	    // Child(Pending) second
-	    // ==================================================
+	    // STEP 2: Group by root ancestor key (walks up via getParentBsvId).
+	    Map<Long, List<ScQtBsvDtl>> grouped = new LinkedHashMap<Long, List<ScQtBsvDtl>>();
+	    long phantomKey = Long.MIN_VALUE;
+
+	    for (ScQtBsvDtl dtl : inputList) {
+	        Long rootKey = getRootParentBsvId(dtl, idMap);
+
+	        if (rootKey == null) {
+	            rootKey = phantomKey--;
+	        }
+
+	        if (!grouped.containsKey(rootKey)) {
+	            grouped.put(rootKey, new ArrayList<ScQtBsvDtl>());
+	        }
+	        grouped.get(rootKey).add(dtl);
+	    }
+
+	    // STEP 3: Sort within each group by getQtBsvDtlId, smaller to bigger
 	    for (List<ScQtBsvDtl> list : grouped.values()) {
-
 	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
-
 	            @Override
-	            public int compare(ScQtBsvDtl bsvDtl1,
-	                               ScQtBsvDtl bsvDtl2) {
-
-	                boolean isChild1 =
-	                        bsvDtl1.getParentQtBsvDtlId() != null;
-
-	                boolean isChild2 =
-	                        bsvDtl2.getParentQtBsvDtlId() != null;
-
-	                // parent first
-	                if (isChild1 && !isChild2) {
-	                    return 1;
-	                }
-
-	                if (!isChild1 && isChild2) {
-	                    return -1;
-	                }
-
-	                Date date1 = bsvDtl1.getBsvDate();
-	                Date date2 = bsvDtl2.getBsvDate();
-
-	                if (date1 == null && date2 == null) {
-	                    return 0;
-	                }
-
-	                if (date1 == null) {
-	                    return 1;
-	                }
-
-	                if (date2 == null) {
-	                    return -1;
-	                }
-
-	                return date1.compareTo(date2);
+	            public int compare(ScQtBsvDtl dtl1, ScQtBsvDtl dtl2) {
+	                return compareById(dtl1, dtl2);
 	            }
 	        });
 	    }
 
-	    // ==================================================
-	    // STEP 3 : SORT GROUP ORDER
-	    // Based on parent/original date
-	    // ==================================================
+	    // STEP 4: Sort groups by their root record's getQtBsvDtlId, smaller to bigger
 	    List<List<ScQtBsvDtl>> groupedList =
 	            new ArrayList<List<ScQtBsvDtl>>(grouped.values());
 
-	    Collections.sort(groupedList,
-	            new Comparator<List<ScQtBsvDtl>>() {
-
+	    Collections.sort(groupedList, new Comparator<List<ScQtBsvDtl>>() {
 	        @Override
-	        public int compare(List<ScQtBsvDtl> list1,
-	                           List<ScQtBsvDtl> list2) {
-
-	            Date date1 = list1.get(0).getBsvDate();
-	            Date date2 = list2.get(0).getBsvDate();
-
-	            if (date1 == null && date2 == null) {
-	                return 0;
-	            }
-
-	            if (date1 == null) {
-	                return 1;
-	            }
-
-	            if (date2 == null) {
-	                return -1;
-	            }
-
-	            return date1.compareTo(date2);
+	        public int compare(List<ScQtBsvDtl> list1, List<ScQtBsvDtl> list2) {
+	            ScQtBsvDtl root1 = getRootDtl(list1);
+	            ScQtBsvDtl root2 = getRootDtl(list2);
+	            return compareById(root1, root2);
 	        }
 	    });
 
-	    // ==================================================
-	    // STEP 4 : MERGE BACK
-	    // ==================================================
-	    List<ScQtBsvDtl> finalList =
-	            new ArrayList<ScQtBsvDtl>();
-
+	    // STEP 5: Flatten - each group kept together, ordered by root ID
+	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
 	    for (List<ScQtBsvDtl> list : groupedList) {
 	        finalList.addAll(list);
 	    }
 
 	    return finalList;
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private ScQtBsvDtl getRootDtl(List<ScQtBsvDtl> list) {
+
+	    if (CollectionUtils.isEmpty(list)) {
+	        return null;
+	    }
+
+	    for (ScQtBsvDtl dtl : list) {
+	        if (dtl.getParentPostponeId() == null) {
+	            return dtl;
+	        }
+	    }
+
+	    return list.get(0);
+	}
+	//#28188 - End
+
+	//#28188 - Start
+	private int compareById(ScQtBsvDtl dtl1, ScQtBsvDtl dtl2) {
+
+	    Long id1 = dtl1 != null ? dtl1.getQtBsvDtlId() : null;
+	    Long id2 = dtl2 != null ? dtl2.getQtBsvDtlId() : null;
+
+	    if (id1 == null && id2 == null) {
+	        return 0;
+	    }
+
+	    if (id1 == null) {
+	        return 1; // null ID last
+	    }
+
+	    if (id2 == null) {
+	        return -1;
+	    }
+
+	    return id1.compareTo(id2);
+	}
+	//#28188 - End
+
+	//#28188 - Start
+	private Long getRootParentBsvId(ScQtBsvDtl dtl,
+	                                Map<Long, ScQtBsvDtl> idMap) {
+	    if (dtl == null) return null;
+
+	    if (dtl.getParentPostponeId() == null) {
+	        return dtl.getQtBsvDtlId(); // may be null for brand-new roots
+	    }
+
+	    Long parentId = dtl.getParentPostponeId();
+	    ScQtBsvDtl parent = idMap.get(parentId);
+
+	    while (parent != null && parent.getParentPostponeId() != null) {
+	        parentId = parent.getParentPostponeId();
+	        parent = idMap.get(parentId);
+	    }
+
+	    return parentId;
 	}
 	//#28188 - End
 	
