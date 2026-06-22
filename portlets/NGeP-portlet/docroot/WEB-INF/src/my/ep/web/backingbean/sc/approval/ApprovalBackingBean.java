@@ -1765,17 +1765,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						// 28895-35500 End
 					}
-				} else if(userStatus.getStatus().equals("2") || userStatus.getStatus().equals("3")){
+				} else if(userStatus.getStatus().equals("2") || userStatus.getStatus().equals("3")|| userStatus.getStatus().equals("4")){
 					throw new EpException(MessageConst.ERROR_761000, new String[] { ParameterHelper.getInstance()
 							.getParameterDesc(qtReqDTO.getDeskOfficer().getUserName(),
 									qt.getOwnerOrgProfile().getOrgName()) });				
 					
-				} else if(userStatus.getStatus().equals("4")){
+				}  else if(userStatus.getStatus().equals("5")){
 					throw new EpException(MessageConst.ERROR_761000, new String[] { ParameterHelper.getInstance()
 							.getParameterDesc(qtReqDTO.getDeskOfficer().getUserName(),
 									qt.getOwnerOrgProfile().getOrgName()) });	
-					
-				} else if(userStatus.getStatus().equals("5")){
 					
 				} else {
 					throw new EpException(MessageConst.ERROR_761001, new String[] { ParameterHelper.getInstance()
