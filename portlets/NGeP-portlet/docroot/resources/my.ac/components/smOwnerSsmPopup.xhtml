@@ -47,7 +47,7 @@
  				</c:when>
 				<c:otherwise>
 					<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}" 
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}"
 							escape="false" />
 				</c:otherwise>
 				</c:choose> 
@@ -65,18 +65,18 @@
 			style="overflow-wrap: break-word;" 
 			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
 			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
-			height="250" resizable="false" ><!-- #40385 --> 
-			<p:outputPanel id="popupRolePanelId" style="display: block; margin-bottom: 15px;"><!-- #40385 --> 
+			height="auto !important" width="800" resizable="false" >
+			<p:outputPanel id="popupRolePanelId">
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt" 
-					scrollable="true" 
+					scrollable="true"
 					scrollHeight="150"
-					><!-- #40385 --> 
+					>
 					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
 						<h:outputText value="#{person.name}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.roles']}" style="width: auto; white-space: nowrap;"><!-- #40385 --> 
+					<p:column headerText="#{lbl['lbl.sm.roles']}">
 						<c:if test="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
 							<!-- #27951 p:selectBooleanCheckbox value="#{person.director}" itemLabel="#{lbl['lbl.sm.person.dir']}" disabled="#{(person.directorSsm or person.clerical)}">
 								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
@@ -98,7 +98,7 @@
 				<p:commandButton value="#{cc.attrs.btnOkLabel}"
 					process="#{cc.attrs.btnOkProcess}" partialSubmit="true"
 					immediate="true" action="#{cc.attrs.bBean.changeRoleAndProceed()}"
-					update="#{cc.attrs.btnOkUpdate}"
+					update="#{cc.attrs.btnOkUpdate}" 
 					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()}" />
 					
 				<p:commandButton value="#{cc.attrs.btnCancelLabel}" immediate="true" partialSubmit="true" action="#{cc.attrs.bBean.resetRoleValue()}"
