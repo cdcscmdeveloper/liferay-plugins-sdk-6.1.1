@@ -65,16 +65,19 @@
 			style="overflow-wrap: break-word;" 
 			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
 			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
-			height="auto !important" width="800" resizable="false" >
-			<p:outputPanel id="popupRolePanelId">
+			width="800" resizable="false" ><!-- #40385 --> 
+			<p:outputPanel id="popupRolePanelId" style="display: block; margin-bottom: 15px;"><!-- #40385 --> 
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt" 
-					>
-					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
-						<h:outputText value="#{person.name}" />
+					scrollable="true" 
+					scrollHeight="150"
+					style="width: 100%; table-layout: fixed;"
+					><!-- #40385 --> 
+					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	style="width:440px">
+						<h:outputText value="#{person.name}" style="word-break: break-all;" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.roles']}">
+					<p:column headerText="#{lbl['lbl.sm.roles']}" style="width: 320px; white-space: nowrap;"><!-- #40385 --> 
 						<c:if test="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
 							<!-- #27951 p:selectBooleanCheckbox value="#{person.director}" itemLabel="#{lbl['lbl.sm.person.dir']}" disabled="#{(person.directorSsm or person.clerical)}">
 								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />

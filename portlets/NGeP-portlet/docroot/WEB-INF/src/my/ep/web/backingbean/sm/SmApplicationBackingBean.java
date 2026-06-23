@@ -5165,6 +5165,33 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	// #40031 - Start
 	/**
+	 * To determine previous role when popup for delete action appear
+	 */
+	public void determinePreviousRole() {
+		SmMofAccount mofAccount = getManagedBean().getSmSupplier().getSmMofAccount();
+		String applType = getManagedBean().getSmAppl().getApplType();
+		List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
+		SmPersonnel personnel = getManagedBean().getSelectedShareHolder();
+		getManagedBean().setPrevRole(null);
+		boolean basicAcc = mofAccount == null || mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE;
+		boolean basicAccAppl = basicAcc
+				&& (ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType) || ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType));
+
+		if (latestApprovedPersons != null && !latestApprovedPersons.isEmpty()) {
+			for (SmPersonnel person : latestApprovedPersons) {
+				if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
+					if (basicAccAppl && StringUtils.equals(person.getEpRole(), RoleCode.BASIC_SUPPLIER_USER.value())) {
+						getManagedBean().setPrevRole(RoleCode.MOF_SUPPLIER_USER.value());
+					} else {
+						getManagedBean().setPrevRole(person.getEpRole());
+					}
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
 	 * revert back role on its original role
 	 * @param role
 	 */
@@ -8727,27 +8754,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#36718 - END
 		
 		// #40031 - Start - Store role incase ajax rendered role changed
-		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
-		SmPersonnel personnel = getManagedBean().getLatestPersonnel();
-		getManagedBean().setPrevRole(null);
-		// If resubmit appl, get the lastest approved info
-		if (resubmitAppl) {
-			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
-			if (null != latestApprovedPersons) {
-				for (SmPersonnel person : latestApprovedPersons) {
-					if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
-						getManagedBean().setPrevRole(person.getEpRole());
-						break;
-					}
-				}
-
-			}
-
-		} else {
-			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
-				getManagedBean().setPrevRole(personnel.getEpRole());
-			}
-		}
+		determinePreviousRole();
 		// #40031 - End
 	}
 	
@@ -9775,6 +9782,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
 		SmCommonUtil.getInstance().setUserDetails(bpmAppl);
+		
+		// #40031 - Start
+		// To record if it is from pending appl declaration - 20100
+		Long initialPmStatusId = null;
+		if (bpmAppl != null && bpmAppl.getPmStatus() != null) {
+			initialPmStatusId = bpmAppl.getPmStatus().getStatusId();
+		}
+		// #40031 - End
+		
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -9900,6 +9916,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
 				+ getManagedBean().getTaskId());
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
+		// #40031 - Start
+		reqDTO.setInitialStatusId(initialPmStatusId);
+		// #40031 - End
 		resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		regSo = null;
 		retriveLatestApplAfterUpdate("", "");
@@ -19017,11 +19036,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void saveOtherDescriptionEdit() {
 		try {
 			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
-			reqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+			reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			
+			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
+				reqDTO.setOtherDescOld(getManagedBean().getHistorySuppCategory().getOtherDesc());
+			}
+		
 			if (!getManagedBean().isOtherDescChangeSupplier()){
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
