@@ -4756,7 +4756,7 @@ public class TaskReassignmentBackingBean extends
 	
 	
 	private ISearchResultBean<PmUser> generateCommitteAssigneesForCT(ISearchBean<PmUser> searchBean,
-			Long docId, String docType, String docNo, List<String> roleCodeList, Long orgProfileId, int task){ //#36053
+			Long docId, String docType, String docNo, List<String> roleCodeList, Long orgProfileId, int statusId){ //#36053
 		ICommitteSO committeSO;
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4766,7 +4766,7 @@ public class TaskReassignmentBackingBean extends
 			committeReqDTO.setDocType(docType);
 			//#36053 - Start
 			committeReqDTO.setDocNo(docNo);
-			committeReqDTO.setTask(task);
+			committeReqDTO.setStatusId(statusId);
 			//#36053 - End
 			committeReqDTO.setRoleCode(roleCodeList != null && !roleCodeList.isEmpty() ? roleCodeList.get(0) : "");
 			committeReqDTO.setUserSearchBean(searchBean);

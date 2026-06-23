@@ -182,7 +182,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String proceedToCompanyInfo() {
-		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37900
+//		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37900 comment related #40254 comment related #40254
 		if (this.getManagedBean().getSmSupp() == null) {
 			//default to malaysia
 			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -4247,12 +4247,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		this.getManagedBean().setBusinessStateLs(stateSelectLs);
 		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
-		
-		// #36718 - Start - reset regNo when business type changed
-		if (this.getManagedBean().getSmAppl().isBrandNew() && !this.getManagedBean().getSmAppl().isApplValidWithSsm()) {
-			this.getManagedBean().getSmSupp().setRegNo(null);
-		}
-		// #36718 - End
 	}
 			
 	/**

@@ -133,6 +133,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;//Fix - #30045
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -230,7 +231,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean spToCheck = false;
 	//End Fix - #33287
 	//#35238 start
-	private AmendmentCommitteeHelper amendmentCommitteeHelper;
+	private transient AmendmentCommitteeHelper amendmentCommitteeHelper;
 	private AmendmentManagedBean lastManagedBean;
 	private FacesScopes lastFacesScopes;
 	//#35238 end
@@ -676,13 +677,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (taskId == null) {
 				ConstructTabSideMenu();
 				
-				// #24336 - Start
-				// Runs all initial setup when the page is first loaded
-				if (!ctBackingBean.getManagedBean().isInitPage()) {
-				    initializePage();
-				}
-				// #24336 - End
-
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -809,6 +803,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSignOffDecision(false);
 			
 //			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
+			
+			// #24336 - Start
+			// Runs all initial setup when the page is first loaded
+			if (!ctBackingBean.getManagedBean().isInitPage()) {
+			    initializePage();
+			}
+			// #24336 - End
 
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
@@ -1265,6 +1266,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			ctBackingBean.getManagedBean().setDirectPurchase(isDirectPurchase());//#40005
+
+			updateProcModeFlag();//Fix - #30045
 
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
@@ -3400,7 +3403,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Enhancement 15851 - shaqimi end
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);					 
 				if (((ctContractVer.getCtAmendment().getAmendmentLoa().isBondReq()
-						|| ctContractVer.getCtContract().getLoa().isBondReq()) //24333
+						|| ctContractVer.getCtContractAmount().isBondReq()) //24333,//#40194
 						&& !ctContractVer.getCtContractAmount().isBondExempted()
 						&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
@@ -3415,7 +3418,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			}			
 			//24333 - Start
-			if (!getManagedBean().isPrepareLOA() && ctContractVer.getCtContract().getLoa().isBondReq()
+			if (!getManagedBean().isPrepareLOA() && ctContractVer.getCtContractAmount().isBondReq() //#40194
 					&& !ctContractVer.getCtContractAmount().isBondExempted()
 					&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
@@ -3451,7 +3454,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
-			if ((ctContractVer.getCtContract().getLoa().isBondReq() && !ctContractVer.getCtContractAmount().isBondExempted())
+			if ((ctContractVer.getCtContractAmount().isBondReq() && !ctContractVer.getCtContractAmount().isBondExempted())
 					&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
 							|| ctBackingBean.isPk7FromDp())) { //#24333
@@ -3740,22 +3743,181 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return contractAmount;
 	}
 	// End - #29589
-  
+	
+	// #40279 - Start
 	/**
-	 * The method used to retrieve the new contract period
-	 * with addition of old contract period and extended period.
+	 * Calculates contract period including ongoing amendment extension.
+	 * Supplemental Performance Bond Section
 	 * 
-	 * @return new contract period
+	 * @return an array containing: [0] = total months, [1] = remaining days
 	 */
-	public String calculateNewContractPeriod(boolean isCalculateNew) {
-		if (isCalculateNew) {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().intValue()
-					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()); //#24333
-		} else {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
-					.getLatestContractVer().getCtContractValue().getContractPeriod());
+	private int[] calculateNewContractPeriod() {
+
+		CtContractVer current = ctBackingBean.getManagedBean().getContractVer();
+
+		CtContractValue contractValue = current.getCtContractValue();
+
+		Date effectiveDate = contractValue.getEffDate();
+
+		Date expiredDate = contractValue.getExpDate();
+
+		CtAmendment amendment = current.getCtAmendment();
+
+		// Use amendment extend end date during ongoing amendment
+		if (isOngoingAmendment(current)
+				&& amendment != null
+				&& amendment.isContractExtend()
+				&& amendment.getExtendEndDate() != null) {
+
+			expiredDate = amendment.getExtendEndDate();
 		}
+
+		return DateUtils.getMonthsAndDaysDifference(
+				effectiveDate,
+				expiredDate);
 	}
+
+	/**
+	 * Returns total contract months for Performance Bond Section display.
+	 * 
+	 * @return total contract months
+	 */
+	public String getDisplayContractPeriod() {
+
+		int[] result = calculateNewContractPeriod();
+
+		return String.valueOf(result[0]);
+	}
+
+	/**
+	 * Returns total contract days for Performance Bond Section display
+	 * 
+	 * @return remaining contract days
+	 */
+	public String getDisplayContractDays() {
+
+		int[] result = calculateNewContractPeriod();
+
+		return String.valueOf(result[1]);
+	}
+
+	/**
+	 * Calculates contract period for Supplemental Letter display.
+	 * 
+	 * @return an array containing: [0] = contract months, [1] = contract days
+	 */
+	private int[] calculateSupplementalContractPeriod() {
+
+		CtContractVer current = ctBackingBean.getManagedBean().getContractVer();
+
+		CtContractValue contractValue;
+
+		// ONGOING
+		if (isOngoingAmendment(current)) {
+
+			contractValue = current.getCtContractValue();
+
+		} else {
+
+			List<CtContractVer> history = getManagedBean().getAmendHistoryList();
+
+			// COMPLETED WITH AMENDMENT HISTORY
+			if (history != null && !history.isEmpty()) {
+
+				contractValue = history.get(history.size() - 1).getCtContractValue();
+
+			} else {
+
+				// FIRST AMENDMENT COMPLETED
+				// fallback to previous contract version
+				CtContractVer previousContractVer = getPreviousContractVersion(current);
+
+				if (previousContractVer != null) {
+
+					contractValue = previousContractVer.getCtContractValue();
+
+				} else {
+
+					// fallback safety
+					contractValue = current.getCtContractValue();
+				}
+			}
+		}
+
+		return DateUtils.getMonthsAndDaysDifference(
+				contractValue.getEffDate(),
+				contractValue.getExpDate());
+	}
+
+	/**
+	 * Retrieves previous contract version before current version.
+	 * 
+	 * @param current
+	 *            current contract version
+	 * @return previous contract version
+	 */
+	private CtContractVer getPreviousContractVersion(CtContractVer current) {
+
+		List<CtContractVer> contractVersions = current.getCtContract().getCtContractVers();
+
+		if (contractVersions == null || contractVersions.isEmpty()) {
+			return null;
+		}
+
+		CtContractVer previous = null;
+
+		for (CtContractVer contractVer : contractVersions) {
+
+			if (contractVer.getContractVerId().compareTo(current.getContractVerId()) < 0) {
+
+				if (previous == null || contractVer.getContractVerId().compareTo(previous.getContractVerId()) > 0) {
+
+					previous = contractVer;
+				}
+			}
+		}
+
+		return previous;
+	}
+
+	/**
+	 * Returns contract months for Supplemental Letter Section display.
+	 * 
+	 * @return contract months
+	 */
+	public String getSupplementalDisplayContractPeriod() {
+
+		int[] result = calculateSupplementalContractPeriod();
+
+		return String.valueOf(result[0]);
+	}
+
+	/**
+	 * Returns contract days for Supplemental Letter Section display.
+	 * 
+	 * @return contract days
+	 */
+	public String getSupplementalDisplayContractDays() {
+
+		int[] result = calculateSupplementalContractPeriod();
+
+		return String.valueOf(result[1]);
+	}
+
+	/**
+	 * Checks whether the contract amendment is still ongoing.
+	 * 
+	 * @param contractVer
+	 *            contract version data
+	 * @return true if the amendment is ongoing, otherwise false
+	 */
+	private boolean isOngoingAmendment (CtContractVer contractVer) {
+
+		Long statusId = contractVer.getStatus() != null ? contractVer.getStatus().getStatusId() : null;
+
+		return !ContractStatusConst.FA_LOA_COMPLETED.equals(statusId);
+	}
+	// #40279 - End
 
 	//#24333 - Start
 	/**
@@ -5178,44 +5340,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 //  End Fix - #33674 
-
+	
+	//#29549 start
 	/**
 	 * The method used for validating the duplicate chairperson.
 	 * A warning message will display on screen when more than one chairperson
 	 * is added as committee.
 	 * 
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
+	 * @param curCommitteeMember the object of current committee member 
+	 * @param parameterId current parameter id for representative type
 	 */
-	public void validateDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { //#29549
+	public void validateDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) { 
 		if (parameterId == null || parameterId.intValue() == 0) {
 			return;
 		}
-		int counter = 0;
 		String parametercode = ParameterHelper.getInstance().getPmParameterById(parameterId).getParameterCode();
 		if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-			for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {  
-				if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null
-						&& committeMember.getMemberRoleId().longValue() == parameterId.longValue()) {
-					// #26520 - to reset existing value saved before
-					if(committeMember.getRepresentativeType() != null && committeMember.getRepresentativeType().getParameterId() != null) {
-						committeMember.setRepresentativeType(null);
-					}
-					// #26520 - end
-					counter++;
-					if (counter == 2) {
-						throw new EpException(MessageConst.ERROR_750008);
-					}
-				}else{
-					if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
-						if(committeMember.getRepresentativeType() != null && committeMember.equals(curCommitteeMember)) //#29549
-							committeMember.getRepresentativeType().setParameterId(null);
-				}
-			}
+			getAmendmentCommitteeHelper().validateDuplicateChairperson(curCommitteeMember, parametercode, parameterId);
 		}
 		
-		sortCTCommitteeMemberRoleMeeting(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()); //#29549
+		sortCTCommitteeMemberRole(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
 	}
+	//#29549 end
 
 	/**
 	 * The method used for validating the meeting attendance.
@@ -6698,51 +6844,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		else if (ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT.equalsIgnoreCase(docDefinitionKey)) {
 			context = new VelocityContext();	
 			vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
-			context.put("supplierName", "");
-			context.put("supplierIcNo", "");
-			context.put("supplierAckDate", "");
-			if (getManagedBean().getTaskName() != null) {
-				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
-						&&  !getManagedBean().isReadOnly()) {
-					//#30453 start
-					if(getFacesScopes().getUserSessionBean().getSalutationCode() != null)
-						context.put("supplierName", getFacesScopes().getUserSessionBean().getSalutationCode().getSalutationName().concat(" ").concat(getFacesScopes().getUserSessionBean().getUserName()));
-					else
-						context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
-					//#30453 end
-					context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-					context.put("supplierAckDate", dateSDF.format(new Date()));					
-					
-				} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
-					//#30453 start
-					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode() != null)
-						context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode().getSalutationName().concat(" ").concat(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName()));
-					else
-						context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
-					//#30453 end
-					context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
-					context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
-				}
-			}
-			context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			String supplierAddress = "";
-
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-				supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-			}
-			context.put("supplierAddress", supplierAddress);
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
-				context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
-			} else {
-				context.put("govSignDate", "_______________");
-			}
-			if (!StringUtils.isEmpty(sclRefNo)) { //Fix - #36708
-				context.put("agencyRefNo", sclRefNo);
-			} else {
-				context.put("agencyRefNo", "_______________");
-			}			
+			generateDocumentLoaReceiptContent(context, dateSDF, sclRefNo); //#30453
 		}
 
 		if (vmFile != null && context != null) {
@@ -7654,62 +7756,49 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setHasChanges(Boolean.FALSE); //#29403
 		}   
 		
-		
-		/**
-		 * The method used for validating the duplicate chairperson.
-		 * A warning message will display on screen when more than one chairperson
-		 * is added as committee. Also updating current committee member role id.
-		 * 
-		 * @throws Exception  if an exception occurred
-		 * @see    Exception
-		 */
-		//#29403 start
-//		public void validateUpdatedCommitteeListDuplicateChairperson(Long parameterId) throws Exception {
-		public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { 
-		
-			int counter = 0;
-			String curParameterCode = "";
-			
-			if (parameterId != null) {
-				if(curCommitteeMember.getMemberRoleId()!=null && !curCommitteeMember.getMemberRoleId().equals(parameterId)){
-					//curCommitteeMember.getRepresentativeType().setParameterId(null); //#29549
-					curCommitteeMember.setRepresentativeType(null);
+	//#29549 start
+	/**
+	 * The method used during update committee to validate the duplicate
+	 * chairperson. A warning message will display on screen when more than one
+	 * chairperson is added as committee. Also updating current committee member
+	 * role id.
+	 * 
+	 * The updated committee member list will be sorted after validation.
+	 * 
+	 * @param curCommitteeMember the committee member being updated
+	 * @param parameterId the selected role parameter ID
+	 */
+	public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) {
+
+		getAmendmentCommitteeHelper().checkCurrentUpdatedCommittee(curCommitteeMember, parameterId);
+
+		int counter = 0;
+		Long memberRoleId = curCommitteeMember.getMemberRoleId() != null ? curCommitteeMember.getMemberRoleId()
+				: curCommitteeMember.getMemberRole().getParameterId();
+		String curParameterCode = ParameterHelper.getInstance().getPmParameterById(memberRoleId).getParameterCode();
+
+		if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+			for (CtCommitteeMember allCommitteMember : getFilteredCommitteeMembers()) {
+				String allParameterCode = "";
+				if (allCommitteMember.getMemberRoleId() != null) {
+					allParameterCode = ParameterHelper.getInstance()
+							.getPmParameterById(allCommitteMember.getMemberRoleId()).getParameterCode();
 				}
-				if (curCommitteeMember.getRepresentativeType()==null){
-					curCommitteeMember.setRepresentativeType(new PmParameter());
-				}
-				curCommitteeMember.setMemberRole(ParameterHelper.getInstance().getPmParameterById(parameterId));
-				curCommitteeMember.setMemberRoleId(parameterId);
-			}
-			
-			if (curCommitteeMember.getMemberRoleId() != null){
-				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId()).getParameterCode();
-			}else{
-				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId()).getParameterCode();
-			}
-			
-			if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-				for (CtCommitteeMember allCommitteMember : getFilteredCommitteeMembers()) {
-					String allParameterCode = "";
-					if (allCommitteMember.getMemberRoleId() != null){
-						allParameterCode = ParameterHelper.getInstance().getPmParameterById(allCommitteMember.getMemberRoleId()).getParameterCode();
-					}
-					
-					if (allCommitteMember.getMemberRole() != null && allCommitteMember.getMemberRole().getParameterId() != null
-							&& allParameterCode == curParameterCode) {
-						counter++;
-					}
+
+				if (allCommitteMember.getMemberRole() != null
+						&& allCommitteMember.getMemberRole().getParameterId() != null
+						&& allParameterCode == curParameterCode) {
+					counter++;
 				}
 			}
-			
-			if (counter > 1) {
-				throw new EpException(MessageConst.ERROR_750008);
-			}
-			//#29549 start
-			sortCTCommitteeMemberRole(getManagedBean().getUpdatedCommitteeMembers());
-			//#29549 end
 		}
-		//29403 end
+
+		if (counter > 1) {
+			throw new EpException(MessageConst.ERROR_750008);
+		}
+		sortCTCommitteeMemberRole(getManagedBean().getUpdatedCommitteeMembers());
+	}
+	// #29549 end
 		
 		/**
 		 * The method used to delete the selected meeting committee(s).
@@ -8111,48 +8200,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 		//#30428 - End
 		
-		//#29549 start
-		public void sortCTCommitteeMemberRole (List<CtCommitteeMember> list){
-			if(list!=null){
-				Collections.sort(list, new Comparator<CtCommitteeMember>() {
-					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
-					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
-						if(o1.getMemberRole()!=null && o2.getMemberRole()!=null && o1.getMemberRole().getParameterCode()!=null && o2.getMemberRole().getParameterCode()!=null){
-							return Integer.valueOf(sortOrder.indexOf(o1.getMemberRole().getParameterCode())).compareTo(Integer.valueOf(sortOrder.indexOf(o2.getMemberRole().getParameterCode())));
-						}else if (o1.getMemberRoleId()!=null && o2.getMemberRoleId()!=null){
-							return Integer.valueOf(
-									sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o1.getMemberRoleId()).getParameterCode())).compareTo(
-									Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
-						}else{
-							return 0;
-						}
-					}
-				});
-			}
-		}
-		
-		public void sortCTCommitteeMemberRoleMeeting (List<CtCommitteeMember> list){
-			if(list!=null){
-				Collections.sort(list, new Comparator<CtCommitteeMember>() {
-					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
-					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
-						if(o1.getMemberRoleId()!=null && o2.getMemberRoleId()!=null){
-							return Integer.valueOf(
-									sortOrder.indexOf(ParameterHelper.getInstance().getPmParameterById(o1.getMemberRoleId())
-											.getParameterCode())).compareTo(
-									Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
-											.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
-						}
-						else{
-							return 0;
-						}
-					}
-				});
-			}
-		}
-		//#29549 end
+	//#29549 start
+	/**
+	 * Sorts committee members according to predefined role priority:
+	 * Chairperson -> Secretary -> Member.
+	 *
+	 * @param list list of committee members to be sorted
+	 */
+	public void sortCTCommitteeMemberRole (List<CtCommitteeMember> list){
+		getAmendmentCommitteeHelper().sortCommitteeList(list);
+	}
+	//#29549 end
 		
 		// Start Fix - #30022	
 		/**
@@ -8871,11 +8929,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(StringUtils.isNotBlank(sb.toString())){
 			sb.append(", ");
 		}
-		sb.append(supCat.getCategoryL1Name().trim());
-	    sb.append(", ");
-	    sb.append(supCat.getCategoryL2Name().trim());
-	    sb.append(", ");
-	    sb.append(supCat.getCategoryL3Name().trim());
+		if(supCat.getPmCategoryL1()!=null){
+			sb.append(supCat.getPmCategoryL1().getCategoryL1Code());
+		}
+		if(supCat.getPmCategoryL2()!=null){
+			sb.append(supCat.getPmCategoryL2().getCategoryL2Code());
+		}
+		if(supCat.getPmCategoryL3()!=null){
+			sb.append(supCat.getPmCategoryL3().getCategoryL3Code());
+		}
 	}
 
 	/**
@@ -9490,8 +9552,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Validate all required amendment checklist items are completed */
 	private void validateAmendmentChecklist(){
-		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		ContractManagedBean bean = ctBackingBean.getManagedBean();
+		
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+		CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
 		
 		boolean[] amendmentFlags = new boolean[]{
 		        amendment.isContractExtend(),
@@ -9503,13 +9566,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		        amendment.isOtherChange()
 		    };
 	    boolean[] checklistFlags = new boolean[]{
-	        bean.isContractExtendChecklist(),
-	        bean.isItemPriceChangeChecklist(),
-	        bean.isQuantityChangeChecklist(),
-	        bean.isValueChangeChecklist(),
-	        bean.isClauseChangeChecklist(),
-	        bean.isValueChangeByGstChecklist(),
-	        bean.isOtherChangeChecklist()
+	    		contractManagedBean.isContractExtendChecklist(),
+	    		contractManagedBean.isItemPriceChangeChecklist(),
+	    		contractManagedBean.isQuantityChangeChecklist(),
+	    		contractManagedBean.isValueChangeChecklist(),
+	    		contractManagedBean.isClauseChangeChecklist(),
+	    		contractManagedBean.isValueChangeByGstChecklist(),
+	    		contractManagedBean.isOtherChangeChecklist()
 	    };
 	    boolean isError = false;
 	    for (int i = 0; i < amendmentFlags.length; i++) {
@@ -9641,7 +9704,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Initializes the committee type during page first load. */
 	private void initCommitteeType() {
-	    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
+		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (ctAmendment == null) {
+	        return;
+	    }
+		
+	    if (ctAmendment.getCommitteeType() == null) {
 	    	// Sets default desk officer committee from QT
 	        handleOriginalDeskOfficerCommitteeQT();
 	    }else{
@@ -9694,9 +9762,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Loads the correct checklist options based on data */
 	private void handleSelectedAmendmentChecklistValue() {
-	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-	    ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
-
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
+	    if(amendment == null){
+	    	return;
+	    }
+	    
 	    if (isCtApproverSetting()) {
 	    	contractManagedBean.setContractExtendChecklist(amendment.isContractExtend());
 	    	contractManagedBean.setItemPriceChangeChecklist(amendment.isItemPriceChange());
@@ -9712,7 +9783,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Updates values when amendment type changes. */
 	private void handleAmendmentTypeValueChange() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = contractManagedBean.getContractVer().getCtAmendment();
+	    if(amendment == null){
+	    	return;
+	    }
+	    
+		if (amendment.isValueChange()){
 			handleContractValueTypeChange();
 		}
 	}
@@ -9804,4 +9881,226 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return false;
 	}
 	//#40005 end
+	
+	// #30453 start
+	/**
+	 * Generates the HTML content for the Acknowledgement of LOA Receipt
+	 * document.
+	 * 
+	 * <p>
+	 * This method prepares a VelocityContext with supplier acknowledgement
+	 * information, supplier address, company name, government sign date and
+	 * agency reference number. The values are populated depending on the
+	 * current workflow task and contract status.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the task is ACK_FA_HT_NAME and the screen is not read-only, the
+	 * supplier acknowledgement information will be populated using the current
+	 * logged-in user session.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the task is VERIFY_FA_HT_NAME or the contract status is
+	 * FA_LOA_COMPLETED, the acknowledgement information will be retrieved from
+	 * the stored Amendment LOA acknowledgement data.
+	 * </p>
+	 * 
+	 * <p>
+	 * The generated context will then be merged with the Velocity template
+	 * defined by {@link ContractConst#DOCPATH_CT_LOA_RECEIPT} to produce the
+	 * final HTML document.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param sclRefNo the agency reference number
+	 */
+	private void generateDocumentLoaReceiptContent(VelocityContext context, SimpleDateFormat dateSDF, String sclRefNo) {
+		String supplierIcNo = "supplierIcNo";
+		String supplierAckDate = "supplierAckDate";
+
+		context.put("supplierName", "");
+		context.put(supplierIcNo, "");
+		context.put(supplierAckDate, "");
+		if ((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(
+				CTProcessNameConst.ACK_FA_HT_NAME))
+				&& !getManagedBean().isReadOnly()) {
+			loaReceiptPopulateSupplierFromSession(context, dateSDF, supplierIcNo, supplierAckDate);
+		} else if ((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(
+				CTProcessNameConst.VERIFY_FA_HT_NAME))
+				|| ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+						.equals(ContractStatusConst.FA_LOA_COMPLETED)) {
+			loaReceiptPopulateSupplierFromAmendment(context, dateSDF, supplierIcNo, supplierAckDate);
+		}
+		loaReceiptPopulateSupplierOtherInfo(context, dateSDF, sclRefNo);
+	}
+
+	/**
+	 * Populates supplier acknowledgement information in the
+	 * {@link VelocityContext} using the current logged-in user session.
+	 * 
+	 * <p>
+	 * The supplier name is constructed using the user's salutation (if
+	 * available) followed by the user's name. The supplier identification
+	 * number and the current system date are also added as the acknowledgement
+	 * details.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param supplierIcNo the string param for the velocity context
+	 * @param supplierAckDate the string param for the velocity context
+	 */
+	private void loaReceiptPopulateSupplierFromSession(VelocityContext context, SimpleDateFormat dateSDF,
+			String supplierIcNo, String supplierAckDate) {
+		if (getFacesScopes().getUserSessionBean().getSalutationCode() != null) {
+			context.put("supplierName", getFacesScopes().getUserSessionBean().getSalutationCode().getSalutationName()
+					.concat(" ").concat(getFacesScopes().getUserSessionBean().getUserName()));
+		} else {
+			context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
+		}
+		context.put(supplierIcNo, getFacesScopes().getUserSessionBean().getIdentificationNo());
+		context.put(supplierAckDate, dateSDF.format(new Date()));
+	}
+
+	/**
+	 * Populates supplier acknowledgement information in the
+	 * {@link VelocityContext} using the acknowledgement details stored in the
+	 * contract amendment LOA.
+	 * 
+	 * <p>
+	 * The supplier name is constructed using the stored user's salutation (if
+	 * available) followed by the user's name. The supplier identification
+	 * number and acknowledgement date are retrieved from the Amendment LOA
+	 * record.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param supplierIcNo the string param for the velocity context
+	 * @param supplierAckDate the string param for the velocity context
+	 */
+	private void loaReceiptPopulateSupplierFromAmendment(VelocityContext context, SimpleDateFormat dateSDF,
+			String supplierIcNo, String supplierAckDate) {
+		PmUser ackBy = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy();
+
+		if (ackBy.getSalutationCode() != null) {
+			context.put("supplierName",
+					ackBy.getSalutationCode().getSalutationName().concat(" ").concat(ackBy.getUserName()));
+		} else {
+			context.put("supplierName", ackBy.getUserName());
+		}
+		context.put(supplierIcNo, ackBy.getIdentificationNo());
+		context.put(
+				supplierAckDate,
+				dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
+						.getAckDate()));
+
+	}
+
+	/**
+	 * Populates company, supplier address, government sign date information
+	 * into the {@link VelocityContext}.
+	 * 
+	 * <p>
+	 * The supplier company name is retrieved from the contract value. If a
+	 * supplier address exists, it will be formatted into a full address string
+	 * and converted into HTML-friendly format by replacing line breaks with
+	 * {@code <br />} tags and escaping ampersand characters.
+	 * </p>
+	 * 
+	 * <p>
+	 * If the government sign date exists in the Amendment LOA record, it will
+	 * be formatted and inserted into the context. Otherwise, a placeholder line
+	 * will be inserted to indicate that the date has not been provided.
+	 * </p>
+	 * 
+	 * @param context the Velocity context used for generating the document template
+	 * @param dateSDF the date for the acknowledgement
+	 * @param sclRefNo the agency reference number
+	 */
+	private void loaReceiptPopulateSupplierOtherInfo(VelocityContext context, SimpleDateFormat dateSDF, String sclRefNo) {
+		context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+				.getSupplierName());
+		String supplierAddress = "";
+
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+			supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+					.getSupplierAddress());
+			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+		}
+		context.put("supplierAddress", supplierAddress);
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
+			context.put(
+					"govSignDate",
+					dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
+							.getGovtSignDate()));
+		} else {
+			context.put("govSignDate", "_______________");
+		}
+		if (!StringUtils.isEmpty(sclRefNo)) { // Fix - #36708
+			context.put("agencyRefNo", sclRefNo);
+		} else {
+			context.put("agencyRefNo", "_______________");
+		}
+	}
+	//#30453 end
+	
+	// Start Fix - #30045
+	/**
+	 * Determines and sets the "newPk7" flag on the managed bean based on
+	 * quotation type or procurement type conditions.
+	 * 
+	 * <p>
+	 * Logic flow:
+	 * <ul>
+	 * <li>If quotation type (QtType) exists:
+	 * <ul>
+	 * <li>Enable newPk7 when the parameter code matches QUOTATION_TENDER_TYPE
+	 * and procurement data is available.</li>
+	 * </ul>
+	 * </li>
+	 * <li>If quotation type is null:
+	 * <ul>
+	 * <li>Fallback to request note procurement type.</li>
+	 * <li>Enable newPk7 when procurement type matches PROCUREMENT_TYPE or
+	 * PROCUREMENT_TYPE_RPT and justification data is available.</li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 * 
+	 * @param ctBackingBean
+	 *            the backing bean containing contract and request data
+	 */
+	private void updateProcModeFlag() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getQtType() != null) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode()
+					.equalsIgnoreCase(ParameterTypeConst.QUOTATION_TENDER_TYPE)
+					&& ctBackingBean.newProcurement() != null) {
+				ctBackingBean.getManagedBean().setNewPk7(true);
+			} else {
+				ctBackingBean.getManagedBean().setNewPk7(false);
+			}
+		} else {
+			// The scRequestNote variable is only used to determine the procurement type.
+			// However, the values for reason and procurement type are always retrieved from the CT table.
+			ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(
+					ctBackingBean.getManagedBean(), "contractVer.ctContractItems[0].scRequestItem.requestNote");
+			if (scRequestNote != null) {
+				String procType = EntityHelper
+						.getStringNestedProperty(ctBackingBean.getManagedBean(),
+								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType");
+				if ((procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE) || procType
+						.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT))
+						&& ctBackingBean.newJustification() != null) {
+					ctBackingBean.getManagedBean().setNewPk7(true);
+				} else {
+					ctBackingBean.getManagedBean().setNewPk7(false);
+				}
+			}
+		}
+	}
+	// End Fix - #30045
 }

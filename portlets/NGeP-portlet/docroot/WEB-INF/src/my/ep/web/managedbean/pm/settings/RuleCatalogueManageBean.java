@@ -143,9 +143,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	/* 27827 - START */
 	private List<PmZone> zoneList;
 	private Long selectedZoneId;
-	/* 27827 - END */
-	//#34397, #34398
+	//#34397, #34398, #27827
 	private List<PmZone> mainZones;
+	/* 27827 - END */
 
 	/************ AUDIT #28895_35509 *************/
 	private FeeExemptionResDTO resDTO;
@@ -200,6 +200,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Boolean ruleTypeCollapsePanel;
 	private Boolean ruleValueCollapsePanel;
 	private Boolean qtValueCollapsePanel;
+	private List<String> deletedMinistryNameList;//#36738 #40071
 	//#36738 End
 
 	// #35323 - Start
@@ -1536,6 +1537,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.LOPOSelected = LOPOSelected;
 	}
 	
+	//#27827 - START
 	public List<PmZone> getZoneList() {
 		return zoneList;
 	}
@@ -1552,6 +1554,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.selectedZoneId = selectedZoneId;
 	}
 	
+	//#34397, #34398, #27827 - START
 	public List<PmZone> getMainZones() {
 		return mainZones;
 	}
@@ -1559,6 +1562,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setMainZones(List<PmZone> mainZones) {
 		this.mainZones = mainZones;
 	}
+	//#34397, #34398, #27827 - END
+	//#27827 - END
 
 	/************ AUDIT #28895_35509 *************/
 	public FeeExemptionResDTO getResDTO() {
@@ -2010,6 +2015,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	
 	public void setOriginalConfigRuleValueMap(HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap) {
 		this.originalConfigRuleValueMap = originalConfigRuleValueMap;
+	}
+
+	public List<String> getDeletedMinistryNameList() {
+		return deletedMinistryNameList;
+	}
+
+	public void setDeletedMinistryNameList(List<String> deletedMinistryNameList) {
+		this.deletedMinistryNameList = deletedMinistryNameList;
 	}
 	//#36738 End
 	

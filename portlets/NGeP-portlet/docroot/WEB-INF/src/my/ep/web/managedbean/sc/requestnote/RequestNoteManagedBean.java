@@ -35,6 +35,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -419,15 +420,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private PmOrgProfile ministryOrgProfile;
 	private Integer saveIndex; 
     //27868 - end
-	private boolean bpkApproverMode = Boolean.FALSE; //#26059
-	private boolean rnExceedThreshold = Boolean.FALSE; //#26059
-	private boolean showAttachments = Boolean.TRUE; //#26059
-	private boolean containRejectDecision = Boolean.FALSE; //#26059
-    private List<CommodityGroup> commodityGroups =	new ArrayList<>(); //#26059
-    
-    private	Integer	counter = 0; //#26059
-    
-    private boolean existInAssignItemDetail = Boolean.FALSE; //#26059
+	
+	//#26059 - Start
+	private boolean bpkApproverMode = Boolean.FALSE;
+	private boolean rnExceedThreshold = Boolean.FALSE;
+	private boolean showAttachments = Boolean.TRUE; 
+	private boolean containRejectDecision = Boolean.FALSE;
+    private List<CommodityGroup> commodityGroups =	new ArrayList<>();
+    private	Integer	counter = 0;
+    private boolean existInAssignItemDetail = Boolean.FALSE;
+    private ScQuote scQuote;
+  //#26059 - End
     
     /**
      * Instantiates a new request note managed bean.
@@ -2656,6 +2659,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setExistInAssignItemDetail(boolean existInAssignItemDetail) {
 		this.existInAssignItemDetail = existInAssignItemDetail;
+	}
+
+	/**
+	 * @return the scQuote
+	 */
+	public ScQuote getScQuote() {
+		return scQuote;
+	}
+
+	/**
+	 * @param scQuote the scQuote to set
+	 */
+	public void setScQuote(ScQuote scQuote) {
+		this.scQuote = scQuote;
 	}
 	
 	
