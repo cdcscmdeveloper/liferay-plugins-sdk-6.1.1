@@ -5193,12 +5193,14 @@ public class SmApplicationBackingBean extends
 		// #40031 - Start - Change Value same as -selectOne-, since no need to change process
 		String dropdownRole = getManagedBean().getSelectedShareHolder().getEpRole();
 		boolean showPopup = false;
-		if (StringUtils.isBlank(dropdownRole) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
-			String Msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
+
+		if (!StringUtils.equals(dropdownRole, getManagedBean().getPrevRole()) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
+
+			String msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
 					new String[] { getEpRoleDescByRoleCode(getManagedBean().getPrevRole()) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 
-			getManagedBean().setRemovedRoleMsg(Msg);
+			getManagedBean().setRemovedRoleMsg(msg);
 			showPopup = true;
 		}
 		// #40031 - End
@@ -5225,6 +5227,32 @@ public class SmApplicationBackingBean extends
 	}
 	
 	// #40031 - Start
+	/**
+	 * To determine previous role when popup for delete action appear
+	 */
+	public void determinePreviousRole() {
+		SmPersonnel personnel = getManagedBean().getSelectedShareHolder();
+		SmAppl latestAppl = getManagedBean().getSmSupplier().getSmAppl();
+		SmAppl appl = getManagedBean().getSmAppl();
+		String normalizeRole = StringUtils.trimToEmpty(personnel.getEpRole());
+		getManagedBean().setPrevRole(normalizeRole);
+		getManagedBean().setLatestApplHasPrevRole(false);
+		List<SmPersonnel> personnels = latestAppl.getSmPersonnels();
+		if(appl.isResubmit()){
+			appl = SmCommonUtil.getLatestRejectedApplBySupplier(getManagedBean().getSmSupplier());
+			personnels = appl.getSmPersonnels();
+		}
+		
+		if (personnels != null && !personnels.isEmpty()) {
+			for (SmPersonnel person : personnels) {
+				if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo()) && StringUtils.isNotBlank(person.getEpRole())) {
+					getManagedBean().setLatestApplHasPrevRole(true);
+					break;
+				}
+			}
+		}
+	}
+	
 	/**
 	 * revert back role on its original role
 	 * 
@@ -8803,27 +8831,7 @@ public class SmApplicationBackingBean extends
 		//#36718 - END
 		
 		// #40031 - Start - Store role incase ajax rendered role changed
-		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
-		SmPersonnel personnel = getManagedBean().getLatestPersonnel();
-		getManagedBean().setPrevRole(null);
-		// If resubmit appl, get the lastest approved info
-		if (resubmitAppl) {
-			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
-			if (null != latestApprovedPersons) {
-				for (SmPersonnel person : latestApprovedPersons) {
-					if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
-						getManagedBean().setPrevRole(person.getEpRole());
-						break;
-					}
-				}
-
-			}
-
-		} else {
-			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
-				getManagedBean().setPrevRole(personnel.getEpRole());
-			}
-		}
+		determinePreviousRole();
 		// #40031 - End
 	}
 	
@@ -9867,6 +9875,15 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
 		SmCommonUtil.getInstance().setUserDetails(bpmAppl);
+		
+		// #40031 - Start
+		// To record if it is from pending appl declaration - 20100
+		Long initialPmStatusId = null;
+		if (bpmAppl != null && bpmAppl.getPmStatus() != null) {
+			initialPmStatusId = bpmAppl.getPmStatus().getStatusId();
+		}
+		// #40031 - End	
+				
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -9992,6 +10009,9 @@ public class SmApplicationBackingBean extends
 			//	+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
 			//	+ getManagedBean().getTaskId());
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
+		// #40031 - Start
+		reqDTO.setInitialStatusId(initialPmStatusId);
+		// #40031 - End
 		resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		regSo = null;
 		retriveLatestApplAfterUpdate("", "");
@@ -19003,7 +19023,12 @@ public class SmApplicationBackingBean extends
 	public void otherDescriptionHistory() {
 		if (getManagedBean().getApprovedCategoryList() != null) {
 			List<SmSupplierCategory> updatedList = new ArrayList<>();
-
+			getManagedBean().setOtherDescChangePO(false);
+			getManagedBean().setOtherDescChangeApprover(false);
+			getManagedBean().setOtherDescChangeSupplier(false);
+			getManagedBean().setOtherDescChangeSupPO(false);
+			getManagedBean().setOtherDescChangeSupApprover(false);
+			
 			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
 				
 				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
@@ -19013,6 +19038,27 @@ public class SmApplicationBackingBean extends
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					
 					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+					
+					for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
+						
+						history.setApplNoHistory(history.getSmAppl().getApplNo());
+
+						if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !getManagedBean().isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+							getManagedBean().setOtherDescChangePO(true);
+						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+							getManagedBean().setOtherDescChangeApprover(true);
+						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+							getManagedBean().setOtherDescChangeSupApprover(true);
+							getManagedBean().setOtherDescChangeSupplier(true);
+						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+							getManagedBean().setOtherDescChangeSupPO(true);
+							getManagedBean().setOtherDescChangeSupplier(true);
+						}
+					}
 				}
 				updatedList.add(cat);
 			}
