@@ -668,44 +668,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	}
 	
 	//#30737 - Start
-	private InactiveUserResDTO validateUserStatus(String roleCode, List<PmUser> userList){
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		CtContract contract = ctBB.getManagedBean().getContractVer().getCtContract();
-		InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
-		inactiveDto.setUserIds(populateInactiveUserIdIntoString(userList));
-		inactiveDto.setUserRoleCode(roleCode); 
-		inactiveDto.setOrgProfileId(contract.getOwnerOrgProfile().getOrgProfileId());
-		inactiveDto.setDocType(ctBB.getManagedBean().getContractVer().getDocType());
-		inactiveDto.setDocNo(contract.getContractNo());
-		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
-		
-		InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
-		
-		log.info("xoxoxoxoxooxoxo USER ID : " );
-		log.info("xoxoxoxoxooxoxo PROFILE ID : "+  contract.getOwnerOrgProfile().getOrgProfileId());
-		log.info("xoxoxoxoxooxoxo STATUSSS : "+  resDto.getStatus());
-		log.info("xoxoxoxoxooxoxo END ");
-		
-		
-		return resDto;
-	}
-	
-	// private to populate user id into string with comma delimiter 
-	private String populateInactiveUserIdIntoString(List<PmUser> userIds){
-		StringBuilder sb = new StringBuilder();
-		
-		for(PmUser user : userIds){
-			
-			if (sb.length() > 0) {
-		        sb.append(",");
-		    }
 
-		    sb.append(user.getUserId());
-		}
-		
-		return sb.toString();
-		
-	}
 		
 	//#30737 - End
 		
