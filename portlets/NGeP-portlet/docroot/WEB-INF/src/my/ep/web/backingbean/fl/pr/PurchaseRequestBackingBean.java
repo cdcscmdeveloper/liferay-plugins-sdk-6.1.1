@@ -3589,6 +3589,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 					userReqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 					userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+					userReqDTO.setNotify(Boolean.TRUE);
 					userReqDTO.setApprovalLimit(calculatesTotalOrderedAmt());
 					userReqDTO.setDocType(getManagedBean().getFulfilmentRequest().getDocType());
 					userReqDTO.setDocNo(getManagedBean().getFulfilmentRequest().getDocNo());
@@ -3650,9 +3651,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
 					}
 				}
-				
-				// #31788 - validate receiving officer listing
-				checkReceivingOfficerList();
 			}
 			
 			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){

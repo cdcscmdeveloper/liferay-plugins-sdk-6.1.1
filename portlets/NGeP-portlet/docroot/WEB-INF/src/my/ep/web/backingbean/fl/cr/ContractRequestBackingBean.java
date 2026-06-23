@@ -424,6 +424,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				iFulfilmentRequestSO.resetFLItemSummaryItem(flRequest.getFulfilmentReqId());
 			}
 			//26646-end
+			
+			// 31788 - Check new user need to be assigned
+			if(getManagedBean().isAssignNewUser()){
+				reqDTO.setAssignNewUser(Boolean.TRUE);
+				reqDTO.setNewUser(getManagedBean().getNewUser());
+			}
+						
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			reqDTO.setTriggerBPM(true);
 			reqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
@@ -435,16 +442,35 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
+					// #31788
+					if(getManagedBean().isAssignNewUser()) {
+						messageId = MessageConst.INFO_700128;
+					} else {
+						messageId = MessageConst.INFO_700009;
+					}
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
 				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), resDTO.getFlFulfilmentRequest().getDocNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// 31788 - acknowledgement message assign new user.
+				if (getManagedBean().isAssignNewUser()) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									messageId,
+									new String[] {
+											getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+													ParameterConst.DOCTYPE_CONTRACT_REQUEST),
+											resDTO.getFlFulfilmentRequest().getDocNo(),
+											getManagedBean().getNewUser().getUserName() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), resDTO.getFlFulfilmentRequest().getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -5367,6 +5393,29 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						}
 					}
 				} else {
+					//#31788 - validate previous selected approver inactive.
+					if (getManagedBean().getFlRequest().getApproverId() != null) {
+						userSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+						UserReqDTO userReqDTO = new UserReqDTO();
+						userReqDTO.setUserId(getManagedBean().getFlRequest().getApproverId());
+						userReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+						userReqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+						userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+						userReqDTO.setNotify(Boolean.TRUE);
+						userReqDTO.setApprovalLimit(calculatesTotalOrderedAmt());
+						userReqDTO.setDocType(getManagedBean().getFlRequest().getDocType());
+						userReqDTO.setDocNo(getManagedBean().getFlRequest().getDocNo());
+						UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
+						if (resDTO.getUserStatus().equals(2)) {
+							throw new EpException(MessageConst.ERROR_740129, new String[] { resDTO.getPmUser()
+									.getUserName() });
+						} else if (resDTO.getUserStatus().equals(0)) {
+							// Send notification PTJ Admin
+							throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
+									getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
+						}
+					}
 					if(getManagedBean().getSelectedApprover() == null){
 						getManagedBean().setSelectedTabIndex(4);
 						throw new EpException(MessageConst.ERROR_750010);
@@ -5390,12 +5439,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
-					userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					// #31788
+					userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(getManagedBean().getFlRequest().getCreatedBy());
-					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
-						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.requisitioner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					userReqDTO.setUserId(getManagedBean().getFlRequest().getRequistioner().getUser().getUserId());
+					userReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile()
+							.getOrgProfileId());
+					userReqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
+					userReqDTO.setDocType(getManagedBean().getFlRequest().getDocType());
+					userReqDTO.setDocNo(getManagedBean().getFlRequest().getDocNo());
+					UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
+					if (resDTO.getUserStatus().equals(2)) {
+						getManagedBean().setAssignNewUser(Boolean.TRUE);
+						UserResDTO availableUser = userSO.retrieveUserByRoleWithLoginHistory(userReqDTO);
+						getManagedBean().setNewUser(availableUser.getPmUser());
+					} else if (resDTO.getUserStatus().equals(0)) {
+						throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.REQUISITIONER.value()),
+								getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
 					}
 				}
 			}
@@ -5932,7 +5993,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 			if(resDTO.getAddressTypeList().isEmpty()){
-				throw new EpException(MessageConst.ERROR_745077, new String[]{getFullAddress(delAddr.getFlAddress())});
+				// 31788 - Update new alert message when no exist receiving officer
+				throw new EpException(MessageConst.ERROR_745077, new String[]{delAddr.getFlAddress().getAddressName()});
 			}
 		}
 		
