@@ -36,6 +36,8 @@
 			.confirm-ui-dialog{
 				max-width: 500px;
 				width: auto;
+				min-height: #{cc.attrs.height}px;
+				min-width: #{cc.attrs.width}px;
 			}
 			.confirm-ui-dialog .ui-dialog-content table{
 				margin: auto;
@@ -48,7 +50,7 @@
 			}
 			.confirm-ui-dialog .ui-dialog-content{
 				padding: 1em 1em !important;
-				height: auto !important;
+				
 			}
 			.confirm-ui-dialog .ui-dialog-content span img{
 				margin-top: -4px;
@@ -80,25 +82,25 @@
 					<c:when test="#{cc.attrs.hasParam}">
 						<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
-							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							onstart="confimationPopupSMBlockWidget.show()"
 							action="#{cc.attrs.okParam}"
-							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="confimationPopupSMBlockWidget.hide()" update="#{cc.attrs.update}" />
 					</c:when>
 					<c:when test="#{not empty cc.attrs.bean}">
 						<p:commandButton id="yesWithBeanId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
-							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							onstart="confimationPopupSMBlockWidget.show()"
 							action="#{cc.attrs.bean[cc.attrs.okAction]}"
-							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="confimationPopupSMBlockWidget.hide()" update="#{cc.attrs.update}" />
 					</c:when>
 					<!-- #34400 - end -->
 					<c:when test="#{not empty cc.attrs.loadingWidget}">
 						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
 						<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
-							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							onstart="confimationPopupSMBlockWidget.show()"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="confimationPopupSMBlockWidget.hide()" update="#{cc.attrs.update}" />
 					</c:when>
 				    <c:when test="#{empty cc.attrs.resetInput}">
 				       <p:commandButton id="yesWithResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
@@ -134,6 +136,9 @@
 				    </c:choose>
 				
 			</div>
+			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="confimationPopupSMBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
 			</p:outputPanel> <!-- #29665 change component type -->
 		</p:dialog>
 	</cc:implementation>
