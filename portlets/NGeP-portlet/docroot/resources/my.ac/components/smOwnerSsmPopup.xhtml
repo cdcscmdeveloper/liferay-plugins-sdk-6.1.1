@@ -47,7 +47,7 @@
  				</c:when>
 				<c:otherwise>
 					<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}" 
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}"
 							escape="false" />
 				</c:otherwise>
 				</c:choose> 
@@ -70,6 +70,8 @@
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt" 
+					scrollable="true"
+					scrollHeight="150"
 					>
 					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
 						<h:outputText value="#{person.name}" />
@@ -96,7 +98,7 @@
 				<p:commandButton value="#{cc.attrs.btnOkLabel}"
 					process="#{cc.attrs.btnOkProcess}" partialSubmit="true"
 					immediate="true" action="#{cc.attrs.bBean.changeRoleAndProceed()}"
-					update="#{cc.attrs.btnOkUpdate}"
+					update="#{cc.attrs.btnOkUpdate}" 
 					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()}" />
 					
 				<p:commandButton value="#{cc.attrs.btnCancelLabel}" immediate="true" partialSubmit="true" action="#{cc.attrs.bBean.resetRoleValue()}"
