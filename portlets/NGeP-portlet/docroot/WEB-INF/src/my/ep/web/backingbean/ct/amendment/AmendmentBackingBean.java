@@ -5975,6 +5975,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setSecretaryId((Long)items[1].getValue());
 					}
 					getManagedBean().setSecretaryList(items);
+					getManagedBean().setSecretaryListSearch(userList); //#37808
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -10116,6 +10117,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		default:
 			return null;
 		}
+	}
+	
+	public void searchMinistryReset(){
+		getManagedBean().setMinistryProfileId(null);
+		getManagedBean().setJabatanProfileId(null);
+		getManagedBean().setPtjProfileId(null);
 	}
 	//#37808 end
 }

@@ -1023,7 +1023,7 @@ public class AmendmentCommitteeHelper {
 			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setParentOrgProfileId(ctBackingBean.getManagedBean().getMinistryProfileId());
+			reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
 			reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
 
@@ -1058,8 +1058,8 @@ public class AmendmentCommitteeHelper {
 			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setParentOrgProfileId(ctBackingBean.getManagedBean().getMinistryProfileId());
-			reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+			reqDTO.setParentOrgProfileId(getManagedBean().getJabatanProfileId());
+			reqDTO.setOrgCode(OrganizationType.DIVISION.value());
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
 
 			List<Object[]> list = resDTO.getOrgProfileDDList();

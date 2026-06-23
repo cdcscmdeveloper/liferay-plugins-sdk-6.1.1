@@ -189,6 +189,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private boolean committeeQCBSecretaryWIP; //#35238
 	
+	//#37808 start 
+	private List<PmUser> secretaryListSearch;
+	private Long ministryProfileId;
+	private Long jabatanProfileId;
+	private Long ptjProfileId;
+	//#37808 end
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -1704,4 +1711,54 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.committeeQCBSecretaryWIP = committeeQCBSecretaryWIP;
 	}
 	//#35238 end
+	//#37808 start 
+	/**
+	 * @return the secretaryListSearch
+	 */
+	public List<PmUser> getSecretaryListSearch() {
+		return secretaryListSearch;
+	}
+	/**
+	 * @param secretaryListSearch the secretaryListSearch to set
+	 */
+	public void setSecretaryListSearch(List<PmUser> secretaryListSearch) {
+		this.secretaryListSearch = secretaryListSearch;
+	}
+	/**
+	 * @return the ministryProfileId
+	 */
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+	/**
+	 * @param ministryProfileId the ministryProfileId to set
+	 */
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+	/**
+	 * @return the jabatanProfileId
+	 */
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+	/**
+	 * @param jabatanProfileId the jabatanProfileId to set
+	 */
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+	/**
+	 * @return the ptjProfileId
+	 */
+	public Long getPtjProfileId() {
+		return ptjProfileId;
+	}
+	/**
+	 * @param ptjProfileId the ptjProfileId to set
+	 */
+	public void setPtjProfileId(Long ptjProfileId) {
+		this.ptjProfileId = ptjProfileId;
+	}
+	//#37808 end
 }
