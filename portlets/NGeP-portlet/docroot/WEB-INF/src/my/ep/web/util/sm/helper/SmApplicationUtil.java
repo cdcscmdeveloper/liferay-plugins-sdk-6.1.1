@@ -4986,6 +4986,9 @@ public class SmApplicationUtil {
 					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
 				
 				for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
+					
+					history.setApplNoHistory(history.getSmAppl().getApplNo());
+
 					if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
 							&& !managedBean.isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 						managedBean.setOtherDescChangePO(true);
