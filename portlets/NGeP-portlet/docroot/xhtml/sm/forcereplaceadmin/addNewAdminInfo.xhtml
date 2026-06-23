@@ -259,9 +259,9 @@
 							countryCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileCountry}" 
 							areaCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileArea}" 
 							number="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileNo}" 
-							isMobile="true" required="true"
-							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" />
+							isMobile="true" hideTelco="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" /> 
+							<!-- telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" /> --> <!-- 40200 -->
 					</td>
 				</tr>
 				<h:panelGroup layout="block" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRolePanel}">
