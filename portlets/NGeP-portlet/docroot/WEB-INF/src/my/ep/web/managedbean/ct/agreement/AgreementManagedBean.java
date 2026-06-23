@@ -95,6 +95,10 @@ public class AgreementManagedBean extends BaseManagedBean {
 	//#24333 - Start
 	private boolean isBondAttachmentCompleted;
 	//#24333 - End
+	
+	//30730 - start
+	private Long inactiveUserRevise;
+	//30730 - end
 		
 	/**
 	 * @return the action
@@ -840,4 +844,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.isBondAttachmentCompleted = isBondAttachmentCompleted;
 	}
 	// 24333 - End
+	
+	//30730 - start
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
+	}
+
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
+	}
+	//30730 - end
 }

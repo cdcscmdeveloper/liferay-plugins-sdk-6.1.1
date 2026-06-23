@@ -429,6 +429,9 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 
         if (MessageConst.ERROR_100068.equals(errorCode)
         		|| MessageConst.ERROR_100070.equals(errorCode)) {
+        	if(parameters != null){
+        		return parameters;
+        	}
             return new String[]{selectedUserName};
         }
 
@@ -463,10 +466,6 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
             };
         }
         
-        if (MessageConst.ERROR_100075.equals(errorCode)) {
-            return parameters;
-        }
-        
         return new String[0];
     }
     
@@ -481,6 +480,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     public void checkInactiveUserOnAction(ContractReqDTO reqDTO, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
 
     	log.info("xoxoxoxoxoxoxo checkInactiveUserOnAction....");
+    	log.info("xoxoxoxoxoxoxo selectedInactiveUsers size : "+selectedInactiveUsers.size());
     	
         List<SelectedInactiveUserDTO> invalidUsers = new ArrayList<SelectedInactiveUserDTO>();
 
@@ -512,7 +512,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         if (activeCount > 0 && !invalidUsers.isEmpty()) {
         	log.info("Mixed active and inactive");
             String userNames = getSelectedInactiveUserNames(invalidUsers);
-            throw new EpException(MessageConst.ERROR_100075, new String[] { userNames });
+            throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
         }
 
         // All inactive (2,3,4)
@@ -560,9 +560,9 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     protected abstract CtContractVer getContractVer();
     
     //#30737 - Start
-  	protected List<SelectedInactiveUserDTO> getInactiveUsersForRevise(Long contractVerId, String parameterCode, String docType){
+  	protected List<SelectedInactiveUserDTO> getInactiveUsersForRevise(Long docId, String parameterCode, String docType){
   		
-  		log.info("xoxoxoxoxooxoxo docId : "+ contractVerId);
+  		log.info("xoxoxoxoxooxoxo docId : "+ docId);
   		log.info("xoxoxoxoxooxoxo parameterCode : "+ parameterCode);
   		log.info("xoxoxoxoxooxoxo docType : "+ docType);
           
@@ -573,12 +573,12 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
           	userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
           }
           
-          CtActor ctActor = retrieveContractActor(contractVerId, docType, userRole);
-          
+          CtActor ctActor = retrieveContractActor(docId, docType, userRole);
+          log.info("xoxoxoxoxooxoxo ctActor : "+ctActor);
           if (ctActor != null) {
+        	  log.info("xoxoxoxoxooxoxo ctActor name : "+ctActor.getUserName());
               List<PmUser> users = new ArrayList<PmUser>();
               users.add(ctActor.getUser());
-
               return getInactiveUsers(RoleCode.MIN_CONTRACT_ADMIN.value(), users, docType);
           }
           
@@ -597,6 +597,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	    inactiveDto.setDocNo(getContractVer().getCtContract().getContractNo());
   	    inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
   	    
+  	    log.info("xoxoxoxoxo getInactiveUsers docType : "+docType);
+  	    
   	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
   	    
   	    log.info("xoxoxo getStatus "+resDto.getStatus());
@@ -613,11 +615,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	    for (int i = 0; i < statuses.length; i++) {
   	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
   	        selectedUser.setUserName(users.get(i).getUserName());
-  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+//  	    selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
   	        
   	        // FOR TESTING PURPOSE ONLY
 //  	        if (i == 0) {
-//  	            selectedUser.setStatus(5L);
+  	            selectedUser.setStatus(2L);
 //  	        } else {
 //  	           	selectedUser.setStatus(3L);
 //  	        }
