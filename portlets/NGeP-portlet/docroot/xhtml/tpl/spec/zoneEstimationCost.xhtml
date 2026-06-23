@@ -98,7 +98,6 @@
 			</f:facet>
 			<p:inputText id="zoneEstCost" 
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
-				required="#{empty tplSpecEstimation.estimatedCost}"
 				maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"
 				disabled="#{!editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}">
