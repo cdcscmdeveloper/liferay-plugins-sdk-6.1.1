@@ -5129,15 +5129,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
 		
-		// #40031 - Start - Change Value same as -selectOne-, since no need to change process
+		// #40031 - Start - Change Value same as -selectOne-, since no need to
+		// change process
 		String dropdownRole = getManagedBean().getSelectedShareHolder().getEpRole();
 		boolean showPopup = false;
-		if (StringUtils.isBlank(dropdownRole) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
-			String Msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
+
+		if (!StringUtils.equals(dropdownRole, getManagedBean().getPrevRole()) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
+
+			String msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
 					new String[] { getEpRoleDescByRoleCode(getManagedBean().getPrevRole()) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 
-			getManagedBean().setRemovedRoleMsg(Msg);
+			getManagedBean().setRemovedRoleMsg(msg);
 			showPopup = true;
 		}
 		// #40031 - End
@@ -5164,6 +5167,32 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	// #40031 - Start
+	/**
+	 * To determine previous role when popup for delete action appear
+	 */
+	public void determinePreviousRole() {
+		SmPersonnel personnel = getManagedBean().getSelectedShareHolder();
+		SmAppl latestAppl = getManagedBean().getSmSupplier().getSmAppl();
+		SmAppl appl = getManagedBean().getSmAppl();
+		String normalizeRole = StringUtils.trimToEmpty(personnel.getEpRole());
+		getManagedBean().setPrevRole(normalizeRole);
+		getManagedBean().setLatestApplHasPrevRole(false);
+		List<SmPersonnel> personnels = latestAppl.getSmPersonnels();
+		if(appl.isResubmit()){
+			appl = SmCommonUtil.getLatestRejectedApplBySupplier(getManagedBean().getSmSupplier());
+			personnels = appl.getSmPersonnels();
+		}
+		
+		if (personnels != null && !personnels.isEmpty()) {
+			for (SmPersonnel person : personnels) {
+				if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo()) && StringUtils.isNotBlank(person.getEpRole())) {
+					getManagedBean().setLatestApplHasPrevRole(true);
+					break;
+				}
+			}
+		}
+	}
+	
 	/**
 	 * revert back role on its original role
 	 * @param role
@@ -8727,29 +8756,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#36718 - END
 		
 		// #40031 - Start - Store role incase ajax rendered role changed
-		SmMofAccount mofAccount = getManagedBean().getSmSupplier().getSmMofAccount();
-		boolean resubmitAppl = getManagedBean().getSmAppl().isResubmit();
-		boolean basicAcc = mofAccount == null || mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE;
-		SmPersonnel personnel = getManagedBean().getLatestPersonnel();
-		getManagedBean().setPrevRole(null);
-		// If resubmit appl, get the lastest approved info
-		if (resubmitAppl || basicAcc) {
-			// Since basic didn't get the latest personnel
-			personnel = getManagedBean().getSelectedShareHolder();
-			List<SmPersonnel> latestApprovedPersons = getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
-			if (null != latestApprovedPersons) {
-				for (SmPersonnel person : latestApprovedPersons) {
-					if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo())) {
-						getManagedBean().setPrevRole(person.getEpRole());
-						break;
-					}
-				}
-			}
-		} else {
-			if (null != personnel && StringUtils.isNotBlank(personnel.getEpRole())) {
-				getManagedBean().setPrevRole(personnel.getEpRole());
-			}
-		}
+		determinePreviousRole();
 		// #40031 - End
 	}
 	
@@ -9777,6 +9784,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
 		SmCommonUtil.getInstance().setUserDetails(bpmAppl);
+		
+		// #40031 - Start
+		// To record if it is from pending appl declaration - 20100
+		Long initialPmStatusId = null;
+		if (bpmAppl != null && bpmAppl.getPmStatus() != null) {
+			initialPmStatusId = bpmAppl.getPmStatus().getStatusId();
+		}
+		// #40031 - End
+		
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -9902,6 +9918,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
 				+ getManagedBean().getTaskId());
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
+		// #40031 - Start
+		reqDTO.setInitialStatusId(initialPmStatusId);
+		// #40031 - End
 		resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		regSo = null;
 		retriveLatestApplAfterUpdate("", "");
