@@ -208,7 +208,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		if(getManagedBean().getCircularDocType()==null) {
 			getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 		}
-		log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 	}
 
 	/**
@@ -226,7 +225,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 		}
 		// #37620,#34367 - End
-		log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 
@@ -243,7 +241,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});			
 		CircularReqDTO circularReqDTO = new CircularReqDTO();
 		circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
-		log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 		setPanelCircularVar(circularReqDTO);
 	}
 
@@ -264,7 +261,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		}
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 			resDTO= circularSO.retrieveCircularVerById(reqDTO);
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
@@ -275,7 +271,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 			}
 			
-			log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 
 			if(getManagedBean().getCircularVer().getExtendStartDate() != null && getManagedBean().getCircularVer().getExtendEndDate() != null){
 				getManagedBean().setCircularExtension(true);
@@ -2029,7 +2024,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 
 		String filePath = getManagedBean().getFileDirectory();
-		log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
