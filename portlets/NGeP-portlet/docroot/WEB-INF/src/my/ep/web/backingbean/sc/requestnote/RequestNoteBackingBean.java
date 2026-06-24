@@ -7333,14 +7333,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param updatedRequestNote The {@link ScRequestNote} object with the latest updates to be used in the notification.
 	 */
 	public void bpkApprovalNotification(List<CommodityGroup> commodityGroup, ScRequestNote updatedRequestNote) {
-		String approve = ResourceBundleUtils.getMessage("lbl.sc.decision.approve",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		String reject = ResourceBundleUtils.getMessage("lbl.sc.decision.reject",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		FacesScopes facesScopes = new FacesScopes();
+		Locale locale = getLocale(getUserPreferredLanguage(
+		        getManagedBean().getRequestNote().getApprover().getLoginId()));
+
+		String approve = ResourceBundleUtils.getMessage(
+		        "lbl.sc.decision.approve",
+		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		        locale);
+
+		String reject = ResourceBundleUtils.getMessage(
+		        "lbl.sc.decision.reject",
+		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		        locale);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
-		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		requestNoteReqDTO.setUserLocale(locale);
 		StringBuilder sb = new StringBuilder();
 		
 		for (CommodityGroup group : commodityGroup) {
@@ -7400,6 +7407,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	}
 	
+	/**
+	 * Returns the locale based on the user's preferred language.
+	 */
+	private Locale getLocale(String preferredLang) {
+		return CommonConstants.DEFAULT_LANGUAGE_CODE.equalsIgnoreCase(preferredLang) ? new Locale(
+				CommonConstants.DEFAULT_LANGUAGE_CODE) : new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+				CommonConstants.DEFAULT_COUNTRY_CODE);
+	}
+
+	/**
+	 * Retrieves the preferred language for the specified user login ID.
+	 */
+	private String getUserPreferredLanguage(String loginId) {
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(loginId);
+
+		PmUser user = getUserSO().retrieveUserByLoginId(reqDTO).getPmUser();
+
+		if (user != null) {
+			return user.getPreferredLanguage();
+		}
+
+		return null;
+	}	
 	
 	/**
 	 * Generates an HTML table row using template constants and provided values.
@@ -7449,7 +7480,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    private StringBuilder thresholdItems = new StringBuilder();
 	    private int count = 0;
 	    private BigDecimal thresholdValue = BigDecimal.ZERO;
-	    private List<Long> itemsRequiredBPKApproval = new ArrayList<>();
+	    private Map<Long, BigDecimal> itemsRequiredBPKApproval = new HashMap<>();
 	}
 	
 	/**
@@ -7532,7 +7563,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				thresholdData.count++;
 				thresholdData.thresholdItems.append(thresholdData.count + ". "
 						+ requestNoteDtl.getRequestItem().getItemName() + "</br>");
-				thresholdData.itemsRequiredBPKApproval.add(requestNoteDtl.getRequestNoteDtlId());
+				thresholdData.itemsRequiredBPKApproval.put(requestNoteDtl.getRequestNoteDtlId(), requestNoteDtl.getRequestItem().getQuantity());
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_770222,
@@ -7704,7 +7735,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				thresholdData.count++;
 				thresholdData.thresholdItems.append(thresholdData.count + ". "
 						+ requestNoteDtl.getRequestItem().getItemName() + "</br>");
-				thresholdData.itemsRequiredBPKApproval.add(requestNoteDtl.getRequestNoteDtlId());
+				thresholdData.itemsRequiredBPKApproval.put(requestNoteDtl.getRequestNoteDtlId(), requestNoteDtl.getRequestItem().getQuantity());
 			}
 		}
 	}
@@ -8241,8 +8272,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
 
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
-				if (thresholdData.itemsRequiredBPKApproval.contains(scRequestNoteDtl.getRequestNoteDtlId())) {
+				if (thresholdData.itemsRequiredBPKApproval.containsKey(scRequestNoteDtl.getRequestNoteDtlId())) {
 					scRequestNoteDtl.setExceedThreshold(true);
+					BigDecimal quantity = thresholdData.itemsRequiredBPKApproval.get(
+				            scRequestNoteDtl.getRequestNoteDtlId());
+
+				    scRequestNoteDtl.getRequestItem().setQuantity(quantity);
 				} else {
 					scRequestNoteDtl.setExceedThreshold(false);
 				}
