@@ -114,6 +114,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	
 	//#30737 start
 	private CtContractVer contractVer;
+	private Long inactiveUserRevise;
 	//#30737 end
 
 	/**
@@ -888,6 +889,14 @@ public class CentralContractManagedBean extends BaseManagedBean {
 
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
+	}
+
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
+	}
+
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
 	}
 	//#30737 end
 }

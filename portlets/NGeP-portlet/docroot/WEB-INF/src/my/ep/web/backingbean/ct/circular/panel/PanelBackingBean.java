@@ -57,6 +57,7 @@ import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -77,6 +78,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtActor; //#30737
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
@@ -593,9 +595,37 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if(!getManagedBean().getCircularVer().isPid()){
 				getManagedBean().getCircularVer().setCtCircularPidReason(null);
 			}
+			
+			//#30737 - start
+			CtCircularVer circularVer = getManagedBean().getCircularVer();
+			CtCircular circular = getManagedBean().getCircular();
+			
+			List<SelectedInactiveUserDTO> inactiveUserCheckResult = new ArrayList<SelectedInactiveUserDTO>();
+			
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+                log.info("save circular action : "+action);
+                String userRole = null;
+                if(circularVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)){
+                	userRole = RoleCode.BPK_CQ_APPROVER.value();
+                } else if(circularVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
+                	userRole = RoleCode.BPK_PQ_APPROVER.value();
+                }
+                inactiveUserCheckResult = getLoginStatusFromSP(circular, 
+                        circularVer, 
+                        getManagedBean().getApproverModel().getTarget(), 
+                        userRole);
+            }
+            
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+                log.info("save circular action : "+action);
+                inactiveUserCheckResult = validateInactiveUserForRevise(circular, 
+                        circularVer, 
+                        RoleCode.BPK_CCA.value());
+            }
+			//#30737 - end
 
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				validateCircular(action);
+				validateCircular(action, inactiveUserCheckResult);
 			}
 			
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
@@ -603,14 +633,12 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
 			}
 			getPTJOwner();//Fix - #34367
-			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null){
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
 			}
 			
-			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			//Start Fix - #34367
 			if (circularVer.getDocType() == null) {
 				String userDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
@@ -653,27 +681,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
 			
-			//#30737 - start
-			Map<String, Long> inactiveUserCheckResult = new HashMap<String, Long>();
-			
-			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-				log.info("save circular action : "+action);
-				inactiveUserCheckResult = getLoginStatusFromSP(circular, 
-						circularVer, 
-						getManagedBean().getApproverModel().getTarget(), 
-						RoleCode.BPK_CQ_APPROVER);
-			}
-			
-			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-				log.info("save circular action : "+action);
-				inactiveUserCheckResult = getLoginStatusFromSP(circular, 
-						circularVer, 
-						getManagedBean().getApproverModel().getTarget(), 
-						RoleCode.BPK_CCA);
-			}
-			//#30737 - end
-
-			CircularResDTO resDTO = circularSO.saveCircular(reqDTO, inactiveUserCheckResult); //#30737 to add inactiveuser param
+			CircularResDTO resDTO = circularSO.saveCircular(reqDTO); //#30737 to add inactiveuser param
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
 				
@@ -868,7 +876,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 * A warning or error message will display on screen during validation as per rule
 	 * Function validate as per user action 
 	 */
-	public void validateCircular(String outcome) {
+	public void validateCircular(String outcome, List<SelectedInactiveUserDTO> userListStatus) {
 		getManagedBean().setAutoUpdate(true);
 
 		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
@@ -1116,20 +1124,12 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		//TODO - REVISE in validation + save/submit
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
-			Map<String, Long> userListStatus = getLoginStatusFromSP(getManagedBean().getCircularVer().getCtCircular(), 
-					getManagedBean().getCircularVer(), 
-					getManagedBean().getApproverModel().getTarget(), 
-					RoleCode.BPK_CQ_APPROVER);
-			handleInactiveUserValidation(outcome, userListStatus, getManagedBean().getApproverModel().getTarget());
+			handleInactiveUserValidation(outcome, userListStatus);
 		}
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
-			Map<String, Long> userListStatus = getLoginStatusFromSP(getManagedBean().getCircularVer().getCtCircular(), 
-					getManagedBean().getCircularVer(), 
-					getManagedBean().getApproverModel().getTarget(), 
-					RoleCode.BPK_CCA);
-			handleInactiveUserValidation(outcome, userListStatus, getManagedBean().getApproverModel().getTarget());
+			handleInactiveUserValidation(outcome, userListStatus);
 		}
 		//#30737 - End
 		
@@ -2719,7 +2719,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-			validateCircular(outcome); // #30737 - add parameter inactive user
+			validateCircular(outcome, new ArrayList<SelectedInactiveUserDTO>()); // #30737 - add parameter inactive user
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
@@ -3791,5 +3791,36 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
 	}
 	//#35506 - End
+	
+	//#30737 - start
+	
+		public List<SelectedInactiveUserDTO> validateInactiveUserForRevise(CtCircular circular, CtCircularVer ctCircularVer, String userRole) {
+			
+			ICircularSO circularSO = null;
+			
+			try {
+				circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+				CtActor ctActor = circularSO.retrieveContractActor(ctCircularVer.getCircularVerId(), ctCircularVer.getDocType(), userRole);
+				if (ctActor != null) {
+		            List<PmUser> users = new ArrayList<PmUser>();
+		            users.add(ctActor.getUser());
+
+		            return getLoginStatusFromSP(circular, 
+		            		ctCircularVer,
+		            		users,
+		            		RoleCode.BPK_CCA.value());
+		        }
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			} finally {
+				circularSO = null;
+			}
+			return new ArrayList<SelectedInactiveUserDTO>();
+			
+			
+		}
+		
+		//#30737 - end
 
 }
