@@ -177,8 +177,16 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			getManagedBean().setCircularVer(new CtCircularVer());
 			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
+			//#37620,#34367 - Start
+			getPTJOwner();
+			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId()); 
 			PmStatus status = new PmStatus();
-			status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
+			if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
+				status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
+			} else {
+				status.setStatusId(ContractStatusConst.MQ_PENDING_SUBMISSION);
+			}
+			//#37620,#34367 - End			
 			getManagedBean().getCircularVer().setStatus(status);
 			status = new PmStatus();
 			status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
@@ -200,6 +208,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		if(getManagedBean().getCircularDocType()==null) {
 			getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 		}
+		log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 	}
 
 	/**
@@ -207,9 +216,17 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 */
 	public void preRenderCircular() {		
 		renewSesionObject();
-		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getPTJOwner();//Fix - #34367
+		// #37620,#34367 - Start
+		String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
+		if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
+			getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		} else {
+			getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
+		}
+		// #37620,#34367 - End
+		log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 
@@ -226,6 +243,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});			
 		CircularReqDTO circularReqDTO = new CircularReqDTO();
 		circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
+		log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 		setPanelCircularVar(circularReqDTO);
 	}
 
@@ -246,9 +264,18 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		}
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 			resDTO= circularSO.retrieveCircularVerById(reqDTO);
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+			
+			if (getManagedBean().getCircularVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
+				getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			} else {
+				getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
+			}
+			
+			log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 
 			if(getManagedBean().getCircularVer().getExtendStartDate() != null && getManagedBean().getCircularVer().getExtendEndDate() != null){
 				getManagedBean().setCircularExtension(true);
@@ -293,7 +320,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			initializeCtCircularPidReasons(getManagedBean().getCircularVer(), getManagedBean().getCtCircularPidReasons());
 			// #39594 - End
 
-			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		} catch (Exception e) {
@@ -553,14 +580,21 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			CircularResDTO resDTO = circularSO.retrieveActiveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
 				// Start Fix - #34367
-					for (CtCircularVer circularver : resDTO.getCircularVerList()) {
-						if (circularver.getCtCircular().getOwnerOrgProfile() != null
-								&& circularver.getCtCircular().getOwnerOrgProfile().getOrgProfileId()
-										.equals(getOwnerOrgProfile().getOrgProfileId())) {
-							updatedCircularList.add(circularver);
-						}
-						getManagedBean().setCircularVerList(updatedCircularList);
+				for (CtCircularVer circularver : resDTO.getCircularVerList()) {
+
+				    if (circularver.getCtCircular().getCircularType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+				        // PANEL
+				        if (circularver.getCtCircular().getOwnerOrgProfile() != null
+				                && circularver.getCtCircular().getOwnerOrgProfile().getOrgProfileId().equals(getOwnerOrgProfile().getOrgProfileId())) {
+
+				            updatedCircularList.add(circularver);
+				        }
+				    } else {
+				        // NON-PANEL
+				        updatedCircularList.add(circularver);
+				    }
 				}
+				getManagedBean().setCircularVerList(updatedCircularList);
 				// End Fix - #34367
 			}
 		} catch (Exception e) {
@@ -1995,6 +2029,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 
 		String filePath = getManagedBean().getFileDirectory();
+		log.info("fileDirectory :" + getManagedBean().getFileDirectory());
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);

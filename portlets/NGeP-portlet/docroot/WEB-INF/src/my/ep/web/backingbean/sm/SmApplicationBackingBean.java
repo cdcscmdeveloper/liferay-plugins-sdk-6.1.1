@@ -66,6 +66,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
@@ -5123,6 +5124,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
+		
+		// #40031 - Start - Change Value same as -selectOne-, since no need to change process
+		String dropdownRole = getManagedBean().getSelectedShareHolder().getEpRole();
+		boolean showPopup = false;
+		if (StringUtils.isBlank(dropdownRole) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
+			String Msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
+					new String[] { getEpRoleDescByRoleCode(getManagedBean().getPrevRole()) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+
+			getManagedBean().setRemovedRoleMsg(Msg);
+			showPopup = true;
+		}
+		// #40031 - End
+				
 		SmApplicationUtil.setPersonnelRoleChange(getManagedBean().getSmAppl(),
 				SmApplicationUtil.getPrevApprovedPersonnel(getManagedBean()
 						.getSelectedShareHolder(), getManagedBean()
@@ -5136,7 +5151,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setDisableAuthorizedRadio(
 				disableAuthorizedRadio(getManagedBean()
 						.getSelectedShareHolder()));
+		
+		// #40031 - Start
+		if (showPopup) {
+			RequestContext.getCurrentInstance().execute("confirmDeleteRoleDlg.show()");
+		}
+		// #40031 - End
 	}
+	
+	// #40031 - Start
+	/**
+	 * revert back role on its original role
+	 * @param role
+	 */
+	public void revertRole(String role) {
+		getManagedBean().getSelectedShareHolder().setEpRole(role);
+	}
+	// #40031 - End
 
 	/**
 	 * Ajax call to set approve or reject date for the selected category.
@@ -8690,6 +8721,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#36718 - START
 		getManagedBean().setLatestMailAddr((SmPersonnelAddress) getManagedBean().getShareHolderMailAddr().deepCopy());
 		//#36718 - END
+		
+		// #40031 - Start - Store role incase ajax rendered role changed
+		if (null != getManagedBean().getLatestPersonnel() && null != getManagedBean().getLatestPersonnel().getEpRole()
+				&& StringUtils.isNotBlank(getManagedBean().getLatestPersonnel().getEpRole())) {
+			getManagedBean().setPrevRole(getManagedBean().getLatestPersonnel().getEpRole());
+		}
+		// #40031 - End
 	}
 	
 	//start #31479
@@ -13936,9 +13974,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						}
 					}
 					//31210-start
-					if (rev.getRecommendation() !=null) {
-						getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
-					}//31210-end
+					if (rev.getRecommendation() != null) {
+
+						String language = new FacesScopes().getUserLocale().getLanguage();
+						String recommendationDesc = SmApplicationUtil.getRecommendationDescription(
+								rev.getRecommendation(), language);
+
+						getManagedBean().setPoRecommendationDesc(recommendationDesc);
+					}
+					//31210-end
 				}
 			} else if (getManagedBean().isPoUser()
 					|| (getManagedBean().isSupplierUser() && getManagedBean()
@@ -18928,7 +18972,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	/**
-	 * To save data Other Description 
+	 * To save data Other Description WIP SM
 	 *  
 	 */
 	public void saveOtherDescriptionEdit() {
@@ -18944,7 +18988,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
 			
-			initPmUserRole();
+			if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
+				initPmUserRole();
+			}
 			
 			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_PO);
