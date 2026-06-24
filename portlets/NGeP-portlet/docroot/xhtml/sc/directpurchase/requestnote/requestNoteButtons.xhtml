@@ -95,6 +95,24 @@
 		title="#{lbl['lbl.sc.confirmation.approve']}"
 		content="#{lbl['lbl.sc.confirmation.approve.message']}"
 		update="@form" /> 
+
+	<ui:remove> New BPK Approve popup</ui:remove>
+	<ac:confirmationPopup id="submitBpkApproverConfirmDlgId"
+		widget="submitBpkApproverConfirmDlg"
+		width="400"
+		height="100"
+		okAction="#{requestNoteBackingBean.bpkApproverSubmit()}"
+		title="#{lbl['lbl.sc.confirmation.submit']}"
+		content="#{lbl['lbl.sc.confirmation.submit.message']}"
+		update="@form" />
+
+	<ui:remove> New Cancel popup</ui:remove>
+	<ac:confirmationPopup id="cancelConfirmDlgId"
+		widget="cancelConfirmDlg"
+		okAction="#{requestNoteBackingBean.cancel}"
+		title="#{lbl['lbl.sc.confirmation.cancel']}"
+		content="#{lbl['lbl.sc.confirmation.cancel.message']}"
+		update="@form" />
     <ui:remove>#34449 - end</ui:remove>
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
@@ -138,15 +156,13 @@
 				rendered="#{auditSearchDPRequestNoteBackingBean.getRoleCode() and requestNoteBackingBean.managedBean.trackingDairyView}" />
 			&#160;
 			<ui:remove>END : #28895#35492</ui:remove>
+			<ui:remove>#34449 - start Connect BPK Popup</ui:remove>
 			<ui:remove>#26059-start</ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				rendered="#{requestNoteBackingBean.managedBean.bpkApproverMode and isViewOnly}"
-				action="#{requestNoteBackingBean.bpkApproverSubmit}" process="@all">
-				<f:setPropertyActionListener
-					target="#{requestNoteBackingBean.managedBean.action}" value="" />
-			</p:commandButton>
-			<ui:remove>#26059-end</ui:remove>
+				onclick="submitBpkApproverConfirmDlg.show(); return false;"
+				process="@this" partialSubmit="true" />
+			<ui:remove>#26059-end</ui:remove> <ui:remove>#34449 - end Connect BPK Popup</ui:remove>
 		</div>
 	</div>
 	<h:panelGroup rendered="#{!isViewOnly}">
@@ -172,11 +188,11 @@
 					<f:setPropertyActionListener
 						target="#{requestNoteBackingBean.managedBean.action}" value="" />
 				</p:commandButton>
-				<ui:remove>#34449 - end</ui:remove>
+				
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					action="#{requestNoteBackingBean.cancel}"
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					style="float:right;" process="@this" partialSubmit="true" />
+					onclick="cancelConfirmDlg.show(); return false;"
+    				process="@this" partialSubmit="true" />
+				<ui:remove>#34449 - end</ui:remove>
 			</c:if>
 		</div>
 		<div>
