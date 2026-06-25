@@ -368,9 +368,9 @@
 					countryCode="#{backingBean.managedBean.selectedShareHolder.mobileCountry}" 
 					areaCode="#{backingBean.managedBean.selectedShareHolder.mobileArea}" 
 					number="#{backingBean.managedBean.selectedShareHolder.mobileNo}" 
-					isMobile="true" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
-					validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-					telcoId="#{backingBean.managedBean.selectedShareHolder.mobileTelcoId}" />
+					isMobile="true" hideTelco="true" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
+					validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" />
+					<!-- telcoId="#{backingBean.managedBean.selectedShareHolder.mobileTelcoId}" /> --> <!-- 40200 -->
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.latestPersonnel}"
@@ -531,7 +531,7 @@
 							style="width: 207px;margin: 5px 0px 5px 0px;">
 							<!-- #40031 - Start -->
 							<f:selectItem
-								itemLabel="#{empty backingBean.managedBean.prevRole ? lbl['lbl.txt.select'] : lbl['lbl.sm.maintenance.delete.role']}"
+								itemLabel="#{backingBean.managedBean.isLatestApplHasPrevRole() ? lbl['lbl.sm.maintenance.delete.role'] : lbl['lbl.txt.select']}"
 								itemValue="" />
 							<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
 							<p:ajax event="change"

@@ -150,9 +150,9 @@
 							countryCode="#{resendAccountActivationEmailBackingBean.suppAdminMobileCountry}" 
 							areaCode="#{resendAccountActivationEmailBackingBean.suppAdminMobileArea}" 
 							number="#{resendAccountActivationEmailBackingBean.suppAdminMobileNo}" 
-							isMobile="true" required="true"
-							validatorMessage="#{lbl['lbl.sm.person.composition.suppAdmin.mobile']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{resendAccountActivationEmailBackingBean.suppAdminMobileTelcoId}" />
+							isMobile="true" hideTelco="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.person.composition.suppAdmin.mobile']} - #{lbl['lbl.sm.invalidNo']}" />
+							<!-- telcoId="#{resendAccountActivationEmailBackingBean.suppAdminMobileTelcoId}" /> --> <!-- 40200 -->
 					</td>
 				</tr>
 				<tr>

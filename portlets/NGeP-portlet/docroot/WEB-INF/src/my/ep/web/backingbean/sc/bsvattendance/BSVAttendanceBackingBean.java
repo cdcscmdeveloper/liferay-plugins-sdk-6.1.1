@@ -1140,12 +1140,13 @@ public class BSVAttendanceBackingBean extends
 				throw new EpException(MessageConst.ERROR_760206);
 			}
 
-			// reqDTO.setQtBriefingList(briefingDetails);
-			// reqDTO.setBriefingDetail(scQtBrief);
+			// #28188 start
+			reqDTO.setBriefingDetail(scQtBrief);
 			reqDTO.setBriefingReqDtls(this.getManagedBean()
 					.getBriefingRegistrationList());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
-			
+			reqDTO.setBsvStatusId(QTStatusConst.BSV_COMPLETED);
+			// #28188 end
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
 			List<ScQtApprovalRemark> scQtApprovalRemarks = super.finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
 			List<ScQtApprovalRemark> newApprovalRemarks = super.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
