@@ -8520,7 +8520,8 @@ public class SimpleQuoteBackingBean extends
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			
-			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+					|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
 				PanelBackingBean ppBB = new PanelBackingBean();
 				ppBB.getManagedBean().setSelectionOfZone(false);
 				ppBB.getManagedBean().setSelectedPanelItems(null);

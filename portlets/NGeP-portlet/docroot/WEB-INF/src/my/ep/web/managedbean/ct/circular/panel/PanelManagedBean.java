@@ -54,7 +54,7 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
+	private String fileDirectory ;//#37620,#34367- Remove line code = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
 	private String circularDocType;
 	private String circularType; //#37620,#34367
 	private String action;
