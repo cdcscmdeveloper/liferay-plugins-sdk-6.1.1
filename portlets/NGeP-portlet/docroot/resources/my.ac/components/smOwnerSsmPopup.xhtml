@@ -18,6 +18,30 @@
 	</cc:interface>
 
 	<cc:implementation>
+		<!-- START #40385 -->
+		<style type="text/css">
+			.ui-dialog.no-scroll-dialog {
+			    overflow: hidden !important;
+			}
+			
+    		.no-scroll-dialog .ui-dialog-content {
+        		overflow: hidden !important;
+    		}
+    		
+    		.responsive-dialog {
+ 			   box-sizing: border-box;
+			}
+
+			@media screen and (max-width: 768px) {
+    			.responsive-dialog {
+        			width: 90% !important;
+        			left: 5% !important;
+        			max-width: 100% !important;
+        		}
+    		}
+		</style>
+		<!-- END #40385 -->
+		
 		<p:dialog id="#{cc.attrs.dialogId}" header="#{cc.attrs.title}"
 			widgetVar="#{cc.attrs.dialogId}WidgetVar" modal="true"
 			height="#{cc.attrs.height}" width="#{cc.attrs.width}"
@@ -65,22 +89,22 @@
 			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
 			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true" 
 			resizable="false" 
-			styleClass="responsive-dialog" 
-			style="width: 800px; max-width: 65%; box-sizing: border-box;">
-			<p:outputPanel id="popupRolePanelId" style="width: 100%; overflow-x: auto; margin-bottom: 15px;">
+			styleClass="responsive-dialog no-scroll-dialog" 
+			style="width: 800px; max-width: 65%; box-sizing: border-box;"><!-- #40385 -->
+			<p:outputPanel id="popupRolePanelId" style="width: 100%;"><!-- #40385 -->
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt" 
 					style="width: 100%;" 
-					scrollable="true" scrollHeight="200">
+					scrollable="true" scrollHeight="200"><!-- #40385 -->
 					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
-						<h:outputText value="#{person.name}" style="white-space: normal; word-break: break-word;" />
+						<h:outputText value="#{person.name}" style="white-space: normal; word-break: break-word;" /><!-- #40385 -->
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.roles']}">
 						<p:selectBooleanCheckbox value="#{person.higherManagement}" itemLabel="#{lbl['lbl.sm.person.hghMngmt']}" disabled="#{(person.clerical)}"
 							rendered="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
 							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
-						</p:selectBooleanCheckbox>
+						</p:selectBooleanCheckbox><!-- #40385 change c:if to rendered -->
 						<p:selectBooleanCheckbox value="#{person.management}" itemLabel="#{lbl['lbl.sm.person.mngmt']}" disabled="#{(person.clerical)}">
 							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
 						</p:selectBooleanCheckbox>
