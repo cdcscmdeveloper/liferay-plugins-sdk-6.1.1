@@ -25,6 +25,7 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 		initBusinesTypeList();
 		onChangeBussType();
 		getManagedBean().setRegStatusLs(retrieveRegStatusList());
+		onChangeZone();  //#33783
 	}
 
 	public void generateReport() {
@@ -51,6 +52,17 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
 					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
 		}
+		//#33783 - start
+		if(StringUtils.isNotBlank(getManagedBean().getState())){
+			params.put(SmReportConst.PARAM_STATE, getManagedBean().getState());
+		}
+		if(StringUtils.isNotBlank(getManagedBean().getDistrict())){
+			params.put(SmReportConst.PARAM_DISTRICT, getManagedBean().getDistrict());
+		}
+		if(getManagedBean().getIsCLBG() != null){
+			params.put(SmReportConst.PARAM_IS_CLBG, getManagedBean().getIsCLBG() ? "1" : "0");
+		}
+		/*
 		if (!StringUtils.isBlank(getManagedBean().getMofRegNoFrom())) {
 			params.put(SmReportConst.PARAM_MOF_REG_NO_FROM, getManagedBean()
 					.getMofRegNoFrom());
@@ -59,6 +71,8 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 			params.put(SmReportConst.PARAM_MOF_REG_NO_TO, getManagedBean()
 					.getMofRegNoTo());
 		}
+		*/
+		//#33783 - end
 
 		addCatParamWithoutMainCatChecking(params);
 
@@ -73,6 +87,11 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 		getManagedBean().setRegStatus(null);
 		getManagedBean().setMofRegNoFrom(StringUtils.EMPTY);
 		getManagedBean().setMofRegNoTo(StringUtils.EMPTY);
+		//#33783 - start
+		getManagedBean().setIsCLBG(null);
+		getManagedBean().setState(null);
+		getManagedBean().setDistrict(null);
+		//#33783 - end
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 			getManagedBean().getSelectedOrgProfile().getSmSupplier()
@@ -80,5 +99,22 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 		}
 		addCategory();
 	}
+	
+	//#33783 - start
+	public void onChangeZone() {
+		initStatesByZone();
+		getManagedBean().setState(null);
+		getManagedBean().setDistrict(null);
+	}
+	
+	public void onChangeState(){
+		if(StringUtils.isNotBlank(getManagedBean().getState())){
+			Long stateId = Long.parseLong(getManagedBean().getState());
+			getManagedBean().setDistrictLst(retrieveDistrictLsByStateId(stateId));
+		}else{
+			getManagedBean().setDistrictLst(null);
+		}
+	}
+	//#33783 - end
 
 }

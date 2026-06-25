@@ -213,6 +213,7 @@
 							id="apprReviseReason"
 							maxlength="2500"
 							required="#{backingBean.managedBean.reviseMandatory}"
+							validatorMessage="#{lbl['lbl.sm.revise.reason.max.length']}"
 							requiredMessage="#{lbl['lbl.sm.revise.reason.required']}">
 							<f:validateLength maximum="2500" />
 							<p:ajax process="@this" update="@this"/>

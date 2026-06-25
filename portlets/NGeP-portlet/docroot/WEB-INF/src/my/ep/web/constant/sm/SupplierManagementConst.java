@@ -796,6 +796,20 @@ public class SupplierManagementConst {
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
 //	#37925 END
+	
+	// #38001 START
+	public static final String PO_RECOMMENDATION_APPROVE_MY = "Lulus";
+	public static final String PO_RECOMMENDATION_REJECT_MY = "Tolak";
+	public static final String PO_RECOMMENDATION_APPROVE_EN = "Approve";
+	public static final String PO_RECOMMENDATION_REJECT_EN = "Reject";
+	// #38001 END
+	
+	//33783 - start
+	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
+	public String getCOMPANY_TYPE_CLBG() {
+		return COMPANY_TYPE_CLBG;
+	}
+	//33783 - end
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {

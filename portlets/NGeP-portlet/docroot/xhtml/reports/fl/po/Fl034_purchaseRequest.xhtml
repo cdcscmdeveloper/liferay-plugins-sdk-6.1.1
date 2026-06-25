@@ -137,17 +137,37 @@
 					<f:selectItem itemLabel="#{lbl['lbl.fl.do.requisitioner']}"
 						itemValue="#{lbl['lbl.fl.do.requisitioner']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					<ui:remove>#27476 start</ui:remove>
+					<c:if test="#{prRptBB.hasRoleForProcumentType()}">
+						<f:selectItem itemLabel="#{lbl['lbl.fl.procurement.type']}"
+							itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+					</c:if>
+					<ui:remove>#27476 end</ui:remove>
 				</p:selectOneMenu></td>
 							
 		</tr>
-		
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
-			<td colspan="2"><p:calendar showOn="button" navigator="true"
+			<td><p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
 					value="#{prRptBB.managedBean.fromDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form" /></td>
+
+			<ui:remove>#27476 start</ui:remove>
+			<c:if test="#{prRptBB.hasRoleForProcumentType()}">
+				<td width="15%"><p:outputLabel
+						value="#{lbl['lbl.fl.procurement.type']}" /></td>
+				<td width="35%"><p:selectOneMenu
+						value="#{prRptBB.managedBean.procumentType}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.all']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{prRptBB.getDropDownValuesCombineWIPParameter(ParameterTypeConst.procurementTypeRpt,ParameterTypeConst.procurementType,ParameterTypeConst.procurementCodePk7)}" />
+						<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					</p:selectOneMenu></td>
+			</c:if>
+			<ui:remove>#27476 end</ui:remove>
 
 		</tr>
 		<tr>

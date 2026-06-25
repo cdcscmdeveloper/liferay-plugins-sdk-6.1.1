@@ -1261,21 +1261,14 @@ public class CommonApplBackingBean extends
 	// //this.getManagedBean().setTaskId(taskId);
 	// }
 	
-	//10724 START
+	//#10724-START
 	public void preRenderCommonSmOverviewInfo() {
-		//10724 START
 		renewSesionObject();
 		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
-		if (null != supp) {
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
-		}
-		if (supp != null && null != supp.getSupplierId() && supp.getSupplierId() > 0) {
+		
+		if (supp != null && supp.getSupplierId() > 0) {
 			log.info("10724 to TB issue liferay "+supp.getSupplierId());
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl(): " + supp.getSmAppl());
-			if (null != supp.getSmAppl()) {
-				log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl().getSupplierType(): " + supp.getSmAppl().getSupplierType());
-			}
+
 			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
 					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 			if (acc != null
@@ -1286,18 +1279,14 @@ public class CommonApplBackingBean extends
 				
 				Calendar currDateAfterThreeMonths = Calendar.getInstance();
 				currDateAfterThreeMonths.setTime(currDate);
-				currDateAfterThreeMonths.add(Calendar.MONTH, 3);
+				currDateAfterThreeMonths.add(Calendar.DATE, 90);
 				
 				
-				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					int secsInADay = 24 * 60 * 60;
-					long togo = (getManagedBean().getExpDate().getTime() - currDate
-							.getTime()) / 1000;
-					getManagedBean().setDays((togo / secsInADay) + "");
-					
-					//17024 - add condition
-					int expiringDays = Integer.parseInt(getManagedBean().getDays());
-					
+				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) 
+						&& acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					long expiringDays = daysBetween(currDate, expDate) + 1;
+
+					getManagedBean().setDays(expiringDays + "");
 					if(expiringDays <= 90){
 					getManagedBean().setMofBeforeExpiryMsg(
 							SmCommonUtil.getMessage(
@@ -1310,31 +1299,57 @@ public class CommonApplBackingBean extends
 						supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 				
 				Date currDate = new Date();
+				if (supp.getCompanyName().contains("Leap Year")){
+					Calendar leapYear = Calendar.getInstance();
+					leapYear.set(2027, Calendar.MAY, 10, 0, 0, 0);
+					currDate = leapYear.getTime();
+					log.info("Test Leap Year: Today is " + DateUtils.dateToString("dd/MM/yyyy", currDate));
+				}
 				getManagedBean().setExpDate(expiredAcc.getExpDate());
-				Date expDate = getManagedBean().getExpDate(); 
+				Date expDate = getManagedBean().getExpDate();
 				
-				if (currDate.after(expiredAcc.getExpDate()) && expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-					Calendar dateAfterOneYear = Calendar.getInstance();
-					dateAfterOneYear.setTime(expDate);
-					dateAfterOneYear.add(Calendar.MONTH, 12);
+				Calendar dateAfterOneYear = Calendar.getInstance();
+				dateAfterOneYear.setTime(expDate);
+				dateAfterOneYear.add(Calendar.MONTH, 12);
+				
+				Date renewalEnd = dateAfterOneYear.getTime();
+
+				long togo = daysBetween(currDate, renewalEnd) + 1;
+				 
+				if (togo >= 1 && togo <= 366
+						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+					getManagedBean().setDays(String.valueOf(togo));
 					
-					int secsInADay = 24 * 60 * 60;
-					long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate
-							.getTime()) / 1000;
-					getManagedBean().setDays(((togo + secsInADay) / secsInADay) + "");
+					dateAfterOneYear.setTime(expDate);
+					dateAfterOneYear.add(Calendar.DATE, 1);
+					Date dayAfterExp = dateAfterOneYear.getTime(); 
 					
 					getManagedBean().setMofAfterExpiryMsg(
 							SmCommonUtil.getMessage(
-									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", expDate), getManagedBean().getDays()}));
+									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", dayAfterExp), getManagedBean().getDays()}));
 				}
 			}
 		}else{
-			log.info("No Supplier");
+			log.info("No Supplier"); 
 		}
-		//10724 END
 		log.info(getManagedBean().getMofBeforeExpiryMsg());
 		log.info(getManagedBean().getMofAfterExpiryMsg());
 		SmCommonUtil.redirectToPage("commonSmOverviewInfo.xhtml", "", null, null);
 	}
-	//10724 END
+	
+	private static long daysBetween(Date from, Date to) {
+		long msInADay = 24L * 60 * 60 * 1000;
+		return (atMidnight(to) - atMidnight(from)) / msInADay;
+	}
+
+	private static long atMidnight(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTimeInMillis();
+	}
+	//#10724-END
 }

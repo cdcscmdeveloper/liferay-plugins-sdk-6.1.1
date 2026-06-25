@@ -510,9 +510,9 @@
 						countryCode="#{bb.managedBean.smPersonnel.mobileCountry}" 
 						areaCode="#{bb.managedBean.smPersonnel.mobileArea}" 
 						number="#{bb.managedBean.smPersonnel.mobileNo}" 
-						isMobile="true" required="#{!empty param['disableValidation']}"
-						validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}"
-						telcoId="#{bb.managedBean.smPersonnel.mobileTelcoId}" /></td>
+						isMobile="true" hideTelco="true" required="#{!empty param['disableValidation']}"
+						validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}"/></td>
+						<!-- telcoId="#{bb.managedBean.smPersonnel.mobileTelcoId}" /></td> --> <!-- 40200 -->
 			</tr>
 
 			<tr>

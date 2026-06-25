@@ -20,6 +20,14 @@
 	<cc:attribute name="autoUpdateValue" />
 	<cc:attribute name="numberOfCols" default="40" />
 	<cc:attribute name="updatable" default="true" />
+	<ui:remove>#26059 - start</ui:remove>
+	<cc:attribute name="documentHeader" default="#{lbl['lbl.sc.supporting.document']}" />
+	<cc:attribute name="uploadButtonLabel" default="#{lbl['lbl.txt.attach.files']}" />
+	<cc:attribute name="recordsLabel" default="#{lbl['lbl.datatable.msg.no.records.found']}" />
+	<cc:attribute name="disableUpload" default="false" />
+	<cc:attribute name="invalidFileMessage" default="#{lbl['lbl.txt.upload.invalid.file']}" />
+	<cc:attribute name="showAttachments" default="true" />
+	<ui:remove>#26059 - end</ui:remove>
 	
 </cc:interface>
 
@@ -44,12 +52,13 @@
 			onShow="uploadListener(uploadDlgFU); uploadDlgsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);">
 			<p:messages id="uploadDlgMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 			<p:ajax event="close" oncomplete="uploadDlgsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]);" />
+			<ui:remove>#26059 - changes on invalidFileMessage</ui:remove>
 			<p:fileUpload id="fileUploadId" style="display:inline;"
 				fileUploadListener="#{scRemarkAndAttachmentBackingBean.handleFileUploadListener}"
 				mode="advanced" multiple="true"
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				invalidFileMessage= "#{cc.attrs.invalidFileMessage}"
 				label="#{lbl['lbl.btn.choose']}" 
 				uploadLabel="#{lbl['lbl.btn.upload.all']}" 
 				cancelLabel="#{lbl['lbl.btn.remove.all']}"
