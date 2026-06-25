@@ -68,6 +68,7 @@ import my.ep.util.BpmCommonUtils; // Fix - #31962
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#30910
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
@@ -1776,8 +1777,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
-	
+
 	//#30910 start
+	/**
+	 * Check factoring bank status whether the bank still active or not.
+	 * 
+	 * @return true if the bank still active, otherwise false.
+	 */
 	public boolean  checkFactoringCompanyStatus(){
 		boolean statusFactoringCompany = false;
 		boolean statusFactoringFinAcc = false;
@@ -1787,7 +1793,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		FinancialOrgResDTO resDTO = null;
 		
 		try{
-			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
 			reqDTO = new FinancialOrgReqDTO();
 			reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
 			resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
@@ -1804,14 +1810,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			reqDTO.setAccountNo(financialAccountNo);
 			
-			resDTO = financialOrgSO.retriveFinAccByFinOrgIdAccNo(reqDTO);
+			resDTO = financialOrgSO.retrieveFinAccByFinOrgIdAccNo(reqDTO);
 			if (resDTO.getPmFinancialAcc()!=null 
 					&& financialAccountNo.equals(resDTO.getPmFinancialAcc().getAccountNo().trim())){
 				statusFactoringFinAcc = true;
 			}
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, "SupplierBackingBean",
+					"", "checkFactoringCompanyStatus",
+					getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 
