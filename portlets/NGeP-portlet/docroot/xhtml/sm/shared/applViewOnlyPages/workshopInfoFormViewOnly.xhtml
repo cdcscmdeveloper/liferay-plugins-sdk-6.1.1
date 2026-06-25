@@ -64,11 +64,13 @@
 	</p:panel>
 	
 	<!-- 29379 - Site Visit Grouping Enhancement -28775 -->
-	<p:dialog style="max-height:450px;width:900px;" header="#{lbl['lbl.sm.workshop.information']}"
+	<c:set var="wsDlgWidth" value="#{viewSmApplBackingBean.managedBean.smAppl.siteVisitGroup ? '900px' : '500px'}" />
+	<p:dialog style="max-height:450px;width:#{wsDlgWidth};"
+		header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="workShopDialog">
-		
-		<p:scrollPanel mode="native" style="max-height:400px;width:900px;border:none">
+
+		<p:scrollPanel mode="native" style="max-height:400px;width:#{wsDlgWidth};border:none">
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
@@ -180,7 +182,8 @@
 	
 			</table>
 			<!-- 29379 - Site Visit Grouping Enhancement -28775 - start -->
-			<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true"
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.siteVisitGroup}">
 				<p:dataTable var="empInfo" id="empInfoId" rowKey="#{empInfo}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smSvWorkers}">

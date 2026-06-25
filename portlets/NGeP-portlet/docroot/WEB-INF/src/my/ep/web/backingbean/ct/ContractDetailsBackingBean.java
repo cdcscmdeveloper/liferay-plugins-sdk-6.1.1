@@ -125,6 +125,10 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
+import my.ep.constant.ct.audit.AuditContractConst; //35506
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
+
 
 /**
  * Backing Bean For Contract Details
@@ -363,15 +367,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			
 			// Start Fix - #30856
-			if(ctBB.getManagedBean().getCtContractAmount().isBondExempted()){
+			//#40170 start
+			if (ctBB.getManagedBean().getCtContractAmount().isBondExempted() && 
+					ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)) {
 				//Remove Code for removePerformanceDatatableRow - #40072 
-				
 				// Start - Fix #29368
-				if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-					checkandResetBondExempted();
-				  }
+				checkandResetBondExempted();
 				// End - Fix #29368
-				}
+			}
+			//#40170 end
 			// End Fix - #30856
 			
 			//Bug 34142, 15851 - shaqimi start 04/12/2022
@@ -475,11 +479,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		//Start - Fix 29368
 		//from tasklist
-		if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
-			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
-				ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
-			  }
-		   }
+		checkandResetBondExempted(); //#40170
 		//End - Fix 29368
 	
 	}
@@ -1277,10 +1277,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		            syncBondsToTarget(contractAmt, allBondsFromUI, isEffectiveContract);
 
 		            // Set the attachment flag with more readable logic.
-		            boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
-		            boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
-		            int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
-		            contractAmt.setIsBondAttachment(flag);
+					// #40283 - Start ( Set the bond attachment flag for FD/FU
+					// only)
+					if (ctBB.getManagedBean().getContractVer().getDocType()
+							.equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+							|| ctBB.getManagedBean()
+									.getContractVer()
+									.getDocType()
+									.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+
+						boolean isApproved = BpmOutcomeConst.BPM_APPROVE
+								.equalsIgnoreCase(action);
+						boolean hasBonds = !contractAmt.getCtPerformanceBonds()
+								.isEmpty();
+						int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES
+								: ParameterConst.FLAG_INT_NO;
+						contractAmt.setIsBondAttachment(flag);
+					}
+					// #40283 - End
 		        }
 		    }
 			// 24333 - End
@@ -1340,6 +1354,42 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					   //log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
 				}
 		        // End Fix - #31740
+				
+				// #35506 Start
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					if (!ctBB.getManagedBean().getContractVer().getDocType()
+							.equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+									|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+									|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action
+										.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+						auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+						auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer()
+								.getContractVerId());
+						auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+						auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
+
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+								|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean()
+										.getContractVer().getDocType()
+										.equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT))) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
+					}
+				}
+				// #35506 End
 
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 					messageId = MessageConst.INFO_700021;
@@ -1449,6 +1499,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
+		String docType = ctBB.getManagedBean().getContractVer().getDocType(); //#40283
 
 		/*Validation for delivery term main page*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
@@ -1683,7 +1734,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.type");
 				}
 
-				ctBB.validateDeductionType(deduction);
+				ctBB.validateDeductionType(deduction, action); //#35506
 				if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
 					for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
 						if(ctDeductionClauses.getClauseDescription().isEmpty()){
@@ -1885,7 +1936,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    //#24333 - End
 		}
 		
-		validationPerformanceBond(action); //#13847
+		//#40283 start
+		if (docType != null
+				&& (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION) 
+						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
+			validationPerformanceBond(action); // #13847
+		}
+		//#40283 end
 
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
@@ -3901,6 +3959,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	// End Fix - #30856, #40072
 	
+	//#40170 start
 	//Start - Fix #29368
 	/**
 	 * The method used to check the bond exempted condition,
@@ -3908,16 +3967,38 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * otherwise true
 	 */
 	public void checkandResetBondExempted(){
-				
-		if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
-			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
-				ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
-			  }
-		   }
+		// Check Contract Version
+	    if (ctBB.getManagedBean().getContractVer() != null
+	            && ctBB.getManagedBean().getContractVer().getCtContractAmount() != null) {
+	        resetBondExemptionIfInvalid(ctBB.getManagedBean().getContractVer().getCtContractAmount());
+	    }
+
+	    // Check Managed Bean Contract Amount
+	    if (ctBB.getManagedBean().getCtContractAmount() != null) {
+	        resetBondExemptionIfInvalid(ctBB.getManagedBean().getCtContractAmount());
+	    }
 	//End - Fix #29368
 
 	}
 	// End Fix - #30856
+	
+	/**
+	 * Resets bond exemption flag if bond is required, marked as exempted,
+	 * and no supporting document is provided.
+	 *
+	 * @param contractAmount the contract amount object to validate
+	 */
+	private void resetBondExemptionIfInvalid(CtContractAmount contractAmount) {
+		if (contractAmount.isBondReq() && contractAmount.isBondExempted()) {
+			boolean isFileNameMissing = contractAmount.getBondExemptedFileName() == null;
+	        boolean isFilePathMissing = contractAmount.getBondExemptedFilePath() == null;
+
+	        if (isFileNameMissing && isFilePathMissing) {
+				contractAmount.setBondExempted(false);
+			}
+		}
+	}
+	//#40170 end
 	
 	//#25406 - Start
 	/**

@@ -5255,7 +5255,9 @@ public class SupplierFinalizationBackingBean extends
 		// START - #26169
 		else {
 			// If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){// Bug #37969
+			//#40396 - Start
+			if(!getManagedBean().isHasSupplierQualified() && !isQTCancelledBidSchedule()){// Bug #37969
+			//#40396 - End
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -5692,8 +5694,9 @@ public class SupplierFinalizationBackingBean extends
 		
 		boolean hasItemWithPriceTypeTier 
 						= getManagedBean().isHasItemWithPriceTypeTier();
-		
-		if (hasItemWithPriceTypeTier) {
+		//#40396 - Start
+		if (hasItemWithPriceTypeTier || isQTCancelledBidSchedule()) {
+		//#40396 - End	
 			excludedList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
 		}
 		
@@ -11776,13 +11779,9 @@ public class SupplierFinalizationBackingBean extends
 				.asList(new Boolean[] { evalResultDtl.isSuppSelectionDisabled(),
 						this.getManagedBean().isDisableSupplierSelection(), isBidding,
 						this.disabledQTProcess(supplier),// 26247
-						// #21692 - End
+						// #21692 - Start
 						periodExtensionRejected,
 						// #21692 - End
-						// #28777, #29729 -start-
-//						this.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplier.getSupplierId(),
-//								getManagedBean().getScQt()), //open comment when 28777 ready for UAT
-						// #28777, #29729 -end-
 						this.isQTMaintenanceScreen(), !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) })
 				.contains(Boolean.TRUE);
 	}
@@ -12491,6 +12490,15 @@ public class SupplierFinalizationBackingBean extends
 	    return offeredPrice != null && offeredPrice.compareTo(committeeThreshold) > 0;
 	}
 	
+	//#40396 - Start
+	/**
+	 * @return
+	 */
+	public boolean isQTCancelledBidSchedule (){
+		ScQt scQt = this.getManagedBean().getScQt();
+		return getQTSuppFinalizationSO().isQTCancelledBidSchedule(scQt.getQtId());
+	}
+	//#40396 - End
 	
 	
 }

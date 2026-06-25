@@ -684,7 +684,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	private String setPOJobRoleWeigtage(SdoReviewReqDTO reqDTO){
-		String processingOfficer = null;
+		// #38054 - Start
+		String processingOfficer;
+		// #38054 - End
 		if(!getManagedBean().getSmAppl().isResubmit()) {
 			log.info("<<<<<<<<<<not resubmit>>>>>>>>>>");
 			PmUser poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
@@ -703,7 +705,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			setPendingWeightage(reqDTO);
 		}else{
 			log.info("<<<<<<<<<<is resubmit>>>>>>>>>>");
-			PmUser poUser = null;
+			// #38054 - Start
+			PmUser poUser;
+			// #38054 - End
 			String payloadPO = ((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).getPoUsers();
 			String loginId = StringUtils.isNotBlank(payloadPO) ? payloadPO.trim() : null;
 			if(loginId == null){
@@ -728,6 +732,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			reqDTO.setPmUser(poUser);
 			reqDTO.getSmAppl().setPoUserId(poUser.getUserId());
 		}
+		// #38054 - Start
+		setPendingWeightage(reqDTO);
+		// #38054 - End
 		
 		
 		return processingOfficer;
