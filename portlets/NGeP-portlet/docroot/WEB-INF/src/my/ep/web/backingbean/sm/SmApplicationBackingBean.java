@@ -19029,7 +19029,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setOtherDescChangeSupPO(false);
 			getManagedBean().setOtherDescChangeSupApprover(false);
 			
-			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
 				
 				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
@@ -19062,7 +19062,7 @@ public class SmApplicationBackingBean extends
 				}
 				updatedList.add(cat);
 			}
-			getManagedBean().setApprovedCategoryList(updatedList);
+			getManagedBean().setActiveCategoryList(updatedList);
 		}
 		
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");

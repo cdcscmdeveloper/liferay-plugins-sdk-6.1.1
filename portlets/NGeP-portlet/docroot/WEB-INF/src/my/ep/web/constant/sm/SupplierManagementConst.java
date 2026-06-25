@@ -804,6 +804,12 @@ public class SupplierManagementConst {
 	public static final String PO_RECOMMENDATION_REJECT_EN = "Reject";
 	// #38001 END
 	
+	// 36504 - START
+	public static final String APPLIED_CAT = "APPLIED";
+	public static final String PREVIOUS_CAT = "PREVIOUS";
+	// 36504 - END
+
+	
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
 	public String getCOMPANY_TYPE_CLBG() {
