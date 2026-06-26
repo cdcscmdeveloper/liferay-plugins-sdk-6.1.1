@@ -180,7 +180,8 @@
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@none" 
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmCancel)}"
 					onstart="cancelConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -193,7 +194,8 @@
 			severity="alert" widgetVar="submitConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@none" 
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmSubmit)}"
 					onstart="submitConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -206,7 +208,8 @@
 			severity="alert" widgetVar="stopFlConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@none" 
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmStopFulfilment)}"
 					onstart="stopFlConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -220,7 +223,7 @@
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
-					update="@form"
+					update="@none"
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmApprove)}"
 					onstart="approveConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -234,7 +237,7 @@
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
-					update="@form"
+					update="@none"
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmReject)}"
 					onstart="rejectConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
