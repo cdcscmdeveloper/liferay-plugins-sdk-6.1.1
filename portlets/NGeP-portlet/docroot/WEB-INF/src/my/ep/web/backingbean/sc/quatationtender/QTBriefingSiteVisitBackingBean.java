@@ -2035,4 +2035,28 @@ public class QTBriefingSiteVisitBackingBean extends
 	    return cal.getTime();
 	}
 	//#28188 - End 
+	
+	// #28188 - Start
+	/**
+	 * check published qt for added time.
+	 * 
+	 * @return Date.
+	 */
+	public Date checkBsvMaintenaceNormal() {
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
+		if (!isQTStatusPublished(statusId)) {
+			return null;
+		} else {
+			ScQtBsvDtl tempDtl = this.getManagedBean().getTempScQtBsvDtl();
+			if (tempDtl != null && tempDtl.getBsvDate() != null
+					&& null != tempDtl.getQtBsvDtlId()) {
+				return tempDtl.getBsvDate();
+			} else if (tempDtl != null && null == tempDtl.getQtBsvDtlId()) {
+				return null;
+			}
+		}
+		return null;
+	}
+	// #28188 - End
 }
