@@ -33,8 +33,9 @@
 				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
 				id="supplierUpdateInstructionIconQT" rendered="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}"
 				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" /><br />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification']}" /><br />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification2']}" />
+			<ui:remove> "Add Instruction at QT will be cater after FRS 29362 is deployed."</ui:remove>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification']}" rendered="#{!isDocTypeQuotation}"/><br />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification2']}" rendered="#{!isDocTypeQuotation}"/>
 			<ui:remove>#26059 - End</ui:remove>
 			<p:spacer height="10" />
 			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"
