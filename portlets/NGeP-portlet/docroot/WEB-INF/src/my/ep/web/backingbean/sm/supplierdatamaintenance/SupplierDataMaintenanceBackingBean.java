@@ -1497,6 +1497,20 @@ public class SupplierDataMaintenanceBackingBean extends
 				// #34031 End
 				//26238: Disciplinary Action - start - 28219
 				
+				// 36504 - SDM - START
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+				
+				if ((catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) &&
+						!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
+						
+						setApplNoHistory(cat);
+				}
+				// 36504 - SDM - START
+
+				
 				apprvList.add(cat);
 			}
 		}

@@ -4887,6 +4887,7 @@ public class SmApplicationUtil {
 					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
 							&& !managedBean.isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 						managedBean.setOtherDescChangeApprover(true);
+						managedBean.setOtherDescChangeSupplier(true);
 						managedBean.getEditVO().setAppEditCategory(true);
 					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
 							&& !managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
@@ -16498,6 +16499,7 @@ public class SmApplicationUtil {
 					managedBean.getEditVO().setPoEditCategory(true);
 				} else if (!managedBean.isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 					managedBean.setOtherDescChangeApprover(true);
+					managedBean.setOtherDescChangeSupplier(true);
 					managedBean.getEditVO().setAppEditCategory(true);
 				} else if (!managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
 					managedBean.setOtherDescChangeSupApprover(true);
