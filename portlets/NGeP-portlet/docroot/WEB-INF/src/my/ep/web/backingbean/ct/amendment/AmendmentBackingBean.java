@@ -5039,7 +5039,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#24336 - Start
 			// Handle changes when the contract value type (addition/reduction) is selected.
-			ctAmendment.setReduction(true);
+			ctAmendment.setReduction(false);
 			handleContractValueTypeChange();
 			//#24336 - End
 		}
