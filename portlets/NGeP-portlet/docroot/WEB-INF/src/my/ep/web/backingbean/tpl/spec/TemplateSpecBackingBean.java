@@ -3344,6 +3344,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.getSpecMaster().setTotalEstAmount(totalEstAmount);
 			}
 		}
+		templateSpecBean.setSelectedSpecQuestion(null); //#40402
 	}
 	// #25039 End - version zonal
 	
