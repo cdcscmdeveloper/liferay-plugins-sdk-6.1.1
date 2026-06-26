@@ -1140,12 +1140,13 @@ public class BSVAttendanceBackingBean extends
 				throw new EpException(MessageConst.ERROR_760206);
 			}
 
-			// reqDTO.setQtBriefingList(briefingDetails);
-			// reqDTO.setBriefingDetail(scQtBrief);
+			// #28188 start
+			reqDTO.setBriefingDetail(scQtBrief);
 			reqDTO.setBriefingReqDtls(this.getManagedBean()
 					.getBriefingRegistrationList());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
-			
+			reqDTO.setBsvStatusId(QTStatusConst.BSV_COMPLETED);
+			// #28188 end
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
 			List<ScQtApprovalRemark> scQtApprovalRemarks = super.finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
 			List<ScQtApprovalRemark> newApprovalRemarks = super.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
@@ -1200,10 +1201,9 @@ public class BSVAttendanceBackingBean extends
 				//return CommonUIConst.ACKNOWLEDGE_PAGE;
 				
 				//#28188 - Start - Change to SAVE Acknowledge
-				String[] param = new String[3];
+				String[] param = new String[2];
 				
 				param[0] = this.getManagedBean().getScQt().getQtNo();
-				param[1] = retrieveCommmitteeTypeDesc(this.getManagedBean().getScQt().getQtId(), languageCode);
 				successMessage(MessageConst.INFO_700128,param);
 				//#28188 - End 
 

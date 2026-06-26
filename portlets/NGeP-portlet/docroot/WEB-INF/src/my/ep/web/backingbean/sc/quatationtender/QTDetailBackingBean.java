@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -15301,35 +15302,70 @@ public void retrieveDemoQtDetails(Long qtId) {
 	        if (!grouped.containsKey(rootKey)) {
 	            grouped.put(rootKey, new ArrayList<ScQtBsvDtl>());
 	        }
-	        grouped.get(rootKey).add(dtl);
-	    }
-
-	    // STEP 3: Sort within each group by getQtBsvDtlId, smaller to bigger
-	    for (List<ScQtBsvDtl> list : grouped.values()) {
-	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
-	            @Override
-	            public int compare(ScQtBsvDtl dtl1, ScQtBsvDtl dtl2) {
-	                return compareById(dtl1, dtl2);
-	            }
-	        });
-	    }
-
-	    // STEP 4: Sort groups by their root record's getQtBsvDtlId, smaller to bigger
-	    List<List<ScQtBsvDtl>> groupedList =
-	            new ArrayList<List<ScQtBsvDtl>>(grouped.values());
-
-	    Collections.sort(groupedList, new Comparator<List<ScQtBsvDtl>>() {
-	        @Override
-	        public int compare(List<ScQtBsvDtl> list1, List<ScQtBsvDtl> list2) {
-	            ScQtBsvDtl root1 = getRootDtl(list1);
-	            ScQtBsvDtl root2 = getRootDtl(list2);
-	            return compareById(root1, root2);
+	        List<ScQtBsvDtl> list = grouped.get(rootKey);
+	        if(CollectionUtils.isNotEmpty(list)){
+	        	list.add(dtl);
+	        	grouped.put(rootKey, list);
+	        }else{
+	        	grouped.get(rootKey).add(dtl);
 	        }
-	    });
+	        
+	    }
+	    // STEP 3: sort grouped list based on status
+	    for (Map.Entry<Long, List<ScQtBsvDtl>> entry : grouped.entrySet()) {
+            Long key = entry.getKey();
+            List<ScQtBsvDtl> list = entry.getValue();
+            
+            List<ScQtBsvDtl> sortedList = new ArrayList<>();
+            List<ScQtBsvDtl> postponeList = new ArrayList<>();
+            List<ScQtBsvDtl> rejectList = new ArrayList<>();
+            List<ScQtBsvDtl> pendingList = new ArrayList<>();
+            List<ScQtBsvDtl> completedList = new ArrayList<>();
+            List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
+			for (ScQtBsvDtl scQtBsvDtl : list) {
+				if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)) {
+					postponeList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_REQUEST_REJECT)) {
+					rejectList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {
+					pendingList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
+					completedList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING_UPDATE_APPROVAL)) {
+					pendingUpdateApprList.add(scQtBsvDtl);
+				}
+			}
+			
+			if (CollectionUtils.isNotEmpty(rejectList)) {
+				sortedList.addAll(rejectList);
+			}
+            if(CollectionUtils.isNotEmpty(postponeList)){
+            	sortedList.addAll(postponeList);
+	        }
+           
+            if(CollectionUtils.isNotEmpty(pendingList)){
+            	sortedList.addAll(pendingList);
+	        }
+            if(CollectionUtils.isNotEmpty(completedList)){
+            	sortedList.addAll(completedList);
+	        }
+            if(CollectionUtils.isNotEmpty(pendingUpdateApprList)){
+            	sortedList.addAll(pendingUpdateApprList);
+	        }
+            
+            if(CollectionUtils.isNotEmpty(sortedList)){
+	        	grouped.put(key, sortedList);
+	        }
+        }
 
-	    // STEP 5: Flatten - each group kept together, ordered by root ID
+	    // STEP 4: Flatten - each group kept together, ordered by root ID
 	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
-	    for (List<ScQtBsvDtl> list : groupedList) {
+	    for (List<ScQtBsvDtl> list : grouped.values()) {
 	        finalList.addAll(list);
 	    }
 
