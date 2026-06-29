@@ -1776,7 +1776,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
 							IAuditTrailSO.class);
 					if ((SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)
-							||SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE.equalsIgnoreCase(taskName))//#35500 reopen 24th June
+							||SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE.equalsIgnoreCase(taskName))//#35500 reopen 24th June for #28188
 							&& auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 						prepareQtMaintenanceAuditTrail(qt, tenderResDTO.getGroupTabSection(), null);
 					}
