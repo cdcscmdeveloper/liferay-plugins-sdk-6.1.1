@@ -693,6 +693,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #40031 - Start
 	private String prevRole;
 	private String removedRoleMsg;
+	private boolean latestApplHasPrevRole;
 	// #40031 - End
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
@@ -4921,6 +4922,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRemovedRoleMsg(String removedRoleMsg) {
 		this.removedRoleMsg = removedRoleMsg;
+	}
+
+	public boolean isLatestApplHasPrevRole() {
+		return latestApplHasPrevRole;
+	}
+
+	public void setLatestApplHasPrevRole(boolean latestApplHasPrevRole) {
+		this.latestApplHasPrevRole = latestApplHasPrevRole;
 	}
 	// #40031 - End
 }
