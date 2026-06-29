@@ -12,11 +12,12 @@
 
 	<ui:param name="isReQuote"
 		value="#{simpleQuoteBackingBean.managedBean.scQuote.parentQuoteId eq null}" />
-
+	<ui:remove>#34449 - Start Change Label</ui:remove>
 	<p:dialog id="quoteSubmitConform" widgetVar="sqConformDlg"
-		header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="600"
+	
+		header="#{lbl['lbl.sc.confirmation.submit']}" resizable="false" width="600"
 		closable="false" modal="true">
-
+	<ui:remove>#34449 - End</ui:remove>
 		<p:blockUI block="conformDlgId" trigger="yesButton">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -73,6 +74,14 @@
 			width="400"
 			height="100"
 			okAction="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}"
+			title="#{lbl['lbl.sc.confirmation.submit']}"
+			content="#{lbl['lbl.sc.confirmation.submit.message']}"
+			update="@form" />
+	<ac:confirmationPopup id="submitSQConfirmNotNullDlg"
+			widget="submitSQConfirmNotNullDlg"
+			width="400"
+			height="100"
+			okAction="#{simpleQuoteBackingBean.submitPromptAction()}"
 			title="#{lbl['lbl.sc.confirmation.submit']}"
 			content="#{lbl['lbl.sc.confirmation.submit.message']}"
 			update="@form" />
@@ -156,7 +165,7 @@
 				value="#{simpleQuoteBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-
+					
 				<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
