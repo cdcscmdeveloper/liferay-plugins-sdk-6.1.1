@@ -271,6 +271,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			// set active status for newly added category
 			setActiveStatusForNewAddedCategories();
+			// #34031: Ahead of #26238
+			reqDTO.setSupplier(getManagedBean().getSmSupplier());
 			reqDTO.setListRegCategories(getManagedBean().getSmAppl().getSmSupplierCategories());
 			reqDTO.setActiveAppl(activeAppl);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
