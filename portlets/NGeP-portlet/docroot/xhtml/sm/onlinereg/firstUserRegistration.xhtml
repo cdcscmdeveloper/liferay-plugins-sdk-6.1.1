@@ -686,9 +686,9 @@
 						countryCode="#{registrationBackingBean.managedBean.smPersonnel.mobileCountry}" 
 						areaCode="#{registrationBackingBean.managedBean.smPersonnel.mobileArea}" 
 						number="#{registrationBackingBean.managedBean.smPersonnel.mobileNo}" 
-						isMobile="true" required="#{!empty param['disableValidation']}"
-						validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}"
-						telcoId="#{registrationBackingBean.managedBean.smPersonnel.mobileTelcoId}" /></td>
+						isMobile="true" hideTelco="true" required="#{!empty param['disableValidation']}"
+						validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}" /></td>
+						<!-- telcoId="#{registrationBackingBean.managedBean.smPersonnel.mobileTelcoId}" /></td> -->
 			</tr>
 
 			<tr>
