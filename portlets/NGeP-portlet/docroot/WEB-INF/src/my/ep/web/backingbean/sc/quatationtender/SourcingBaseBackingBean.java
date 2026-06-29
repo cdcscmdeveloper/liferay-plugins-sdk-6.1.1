@@ -109,6 +109,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -8555,4 +8557,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		this.getManagedBean().setNewVersion(isQtNewVersion);
 	}
 	//#28784 - End
+	
+	/**
+	 * #33222 - Check Desk officer active or not after revise
+	 * @param qt
+	 * @return
+	 */
+	public InactiveUserResDTO checkActiveUser(QuationTenderReqDTO qtReq) {
+
+		/* SP Return Status
+		 * P_STATUS - User is active/not active
+		 * P_NEXT_ACTIVE_USER_LOGINID - Login ID of the next available active user identified 
+		 * P_NEXT_ACTIVE_USER_USERID - User ID of the next available active user identified
+		 * P_MSG - Message returned by the procedure indicating the verification or processing result
+		 */
+		
+		InactiveUserReqDTO userReqDto = new InactiveUserReqDTO();
+		ScQt qt = qtReq.getQtdetail();
+		PmUser user = qtReq.getPmUser();
+		userReqDto.setDocNo(qt.getQtNo());
+		userReqDto.setDocType(qt.getQtType());
+		userReqDto.setUserIds(user.getUserId().toString());
+		userReqDto.setUserRoleCode(qtReq.getRoleCode());
+		userReqDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+		userReqDto.setOrgProfileId(qt.getOrgProfileId());
+		InactiveUserResDTO userResDto = getUserSOGlobal().checkInactiveUserBySP(userReqDto);
+		
+		return userResDto;
+	}
 }

@@ -1732,7 +1732,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				//#33222 - Start
 				if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-					userStatus = checkActiveUserAfterRevice(qtReqDTO);
+					userStatus = checkActiveUser(qtReqDTO);
 				}
 				
 				if (userStatus.getStatus().equals("1")) {
@@ -4413,35 +4413,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void replaceResponsePeriodValue() {
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
-	//#21692 #note-504 - End
-	
-	
-	/**
-	 * #33222 - Check Desk officer active or not after revise
-	 * @param qt
-	 * @return
-	 */
-	private InactiveUserResDTO checkActiveUserAfterRevice(QuationTenderReqDTO qtReq) {
-
-		/* SP Return Status
-		 * P_STATUS - User is active/not active
-		 * P_NEXT_ACTIVE_USER_LOGINID - Login ID of the next available active user identified 
-		 * P_NEXT_ACTIVE_USER_USERID - User ID of the next available active user identified
-		 * P_MSG - Message returned by the procedure indicating the verification or processing result
-		 */
-		
-		InactiveUserReqDTO userReqDto = new InactiveUserReqDTO();
-		ScQt qt = qtReq.getQtdetail();
-		PmUser user = qtReq.getPmUser();
-		userReqDto.setDocNo(qt.getQtNo());
-		userReqDto.setDocType(qt.getQtType());
-		userReqDto.setUserIds(user.getUserId().toString());
-		userReqDto.setUserRoleCode(qtReq.getRoleCode());
-		userReqDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
-		userReqDto.setOrgProfileId(qt.getOrgProfileId());
-		InactiveUserResDTO userResDto = getUserSO().checkInactiveUserBySP(userReqDto);
-		
-		return userResDto;
-	}
+	//#21692 #note-504 - End	
 	
 }
