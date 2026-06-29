@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -230,6 +231,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategoryHistory;
@@ -1023,7 +1025,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveApprovalTabDtl();
 			}
 			//bug #30435 - end
-			convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),false);//#29661
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
@@ -8167,6 +8168,32 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#35500 fix issue 5 End
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());
 			//28895 - 35500 end
+			
+			//#28188 - Start
+			List<ScQtBsvRegistration> briefingRegistrationList = getBriefingRegistrationListFromSession();
+	
+			if (CollectionUtils.isNotEmpty(briefingRegistrationList)) {
+
+			    quationTenderReqDTO.setBriefingRegistrationList(
+			            briefingRegistrationList);
+
+			    FacesContext.getCurrentInstance()
+			            .getExternalContext()
+			            .getSessionMap()
+			            .remove("briefingRegistrationList");
+			}
+			
+			ScQtApproval scQtApproval = getApprovalRegistrationFromSession();
+	
+			if (scQtApproval != null) {
+			    quationTenderReqDTO.setQtApproval(scQtApproval);
+
+			    FacesContext.getCurrentInstance()
+			            .getExternalContext()
+			            .getSessionMap()
+			            .remove("scQtApprovalRegistration");
+			}
+			//#28188 - End
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
@@ -15253,124 +15280,189 @@ public void retrieveDemoQtDetails(Long qtId) {
 	        return new ArrayList<ScQtBsvDtl>();
 	    }
 
-	    // ==================================================
-	    // STEP 1 : GROUP USING PARENT RELATION
-	    // ==================================================
-	    Map<Long, List<ScQtBsvDtl>> grouped =
-	            new LinkedHashMap<Long, List<ScQtBsvDtl>>();
+	    // STEP 1: Build id -> dtl map for lookup (only non-null IDs)
+	    Map<Long, ScQtBsvDtl> idMap = new LinkedHashMap<Long, ScQtBsvDtl>();
+	    for (ScQtBsvDtl dtl : inputList) {
+	        if (dtl.getQtBsvDtlId() != null) {
+	            idMap.put(dtl.getQtBsvDtlId(), dtl);
+	        }
+	    }
+
+	    // STEP 2: Group by root ancestor key (walks up via getParentBsvId).
+	    Map<Long, List<ScQtBsvDtl>> grouped = new LinkedHashMap<Long, List<ScQtBsvDtl>>();
+	    long phantomKey = Long.MIN_VALUE;
 
 	    for (ScQtBsvDtl dtl : inputList) {
+	        Long rootKey = getRootParentBsvId(dtl, idMap);
 
-	        Long key = null;
-
-	        // child record
-	        if (dtl.getParentQtBsvDtlId() != null) {
-	            key = dtl.getParentQtBsvDtlId();
-	        }
-	        // original/parent record
-	        else {
-	            key = dtl.getQtBsvDtlId();
+	        if (rootKey == null) {
+	            rootKey = phantomKey--;
 	        }
 
-	        if (!grouped.containsKey(key)) {
-	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
+	        if (!grouped.containsKey(rootKey)) {
+	            grouped.put(rootKey, new ArrayList<ScQtBsvDtl>());
 	        }
-
-	        grouped.get(key).add(dtl);
+	        List<ScQtBsvDtl> list = grouped.get(rootKey);
+	        if(CollectionUtils.isNotEmpty(list)){
+	        	list.add(dtl);
+	        	grouped.put(rootKey, list);
+	        }else{
+	        	grouped.get(rootKey).add(dtl);
+	        }
+	        
 	    }
+	    // STEP 3: sort grouped list based on status
+	    for (Map.Entry<Long, List<ScQtBsvDtl>> entry : grouped.entrySet()) {
+            Long key = entry.getKey();
+            List<ScQtBsvDtl> list = entry.getValue();
+            
+            List<ScQtBsvDtl> sortedList = new ArrayList<>();
+            List<ScQtBsvDtl> postponeList = new ArrayList<>();
+            List<ScQtBsvDtl> rejectList = new ArrayList<>();
+            List<ScQtBsvDtl> pendingList = new ArrayList<>();
+            List<ScQtBsvDtl> completedList = new ArrayList<>();
+            List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
+			for (ScQtBsvDtl scQtBsvDtl : list) {
+				if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)) {
+					postponeList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_REQUEST_REJECT)) {
+					rejectList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {
+					pendingList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
+					completedList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING_UPDATE_APPROVAL)) {
+					pendingUpdateApprList.add(scQtBsvDtl);
+				}
+			}
+			
+			if (CollectionUtils.isNotEmpty(rejectList)) {
+				sortedList.addAll(rejectList);
+			}
+            if(CollectionUtils.isNotEmpty(postponeList)){
+            	sortedList.addAll(postponeList);
+	        }
+           
+            if(CollectionUtils.isNotEmpty(pendingList)){
+            	sortedList.addAll(pendingList);
+	        }
+            if(CollectionUtils.isNotEmpty(completedList)){
+            	sortedList.addAll(completedList);
+	        }
+            if(CollectionUtils.isNotEmpty(pendingUpdateApprList)){
+            	sortedList.addAll(pendingUpdateApprList);
+	        }
+            
+            if(CollectionUtils.isNotEmpty(sortedList)){
+	        	grouped.put(key, sortedList);
+	        }
+        }
 
-	    // ==================================================
-	    // STEP 2 : SORT INSIDE EACH GROUP
-	    // Parent(Postpone) first
-	    // Child(Pending) second
-	    // ==================================================
+	    // STEP 4: Flatten - each group kept together, ordered by root ID
+	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
 	    for (List<ScQtBsvDtl> list : grouped.values()) {
-
-	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
-
-	            @Override
-	            public int compare(ScQtBsvDtl bsvDtl1,
-	                               ScQtBsvDtl bsvDtl2) {
-
-	                boolean isChild1 =
-	                        bsvDtl1.getParentQtBsvDtlId() != null;
-
-	                boolean isChild2 =
-	                        bsvDtl2.getParentQtBsvDtlId() != null;
-
-	                // parent first
-	                if (isChild1 && !isChild2) {
-	                    return 1;
-	                }
-
-	                if (!isChild1 && isChild2) {
-	                    return -1;
-	                }
-
-	                Date date1 = bsvDtl1.getBsvDate();
-	                Date date2 = bsvDtl2.getBsvDate();
-
-	                if (date1 == null && date2 == null) {
-	                    return 0;
-	                }
-
-	                if (date1 == null) {
-	                    return 1;
-	                }
-
-	                if (date2 == null) {
-	                    return -1;
-	                }
-
-	                return date1.compareTo(date2);
-	            }
-	        });
-	    }
-
-	    // ==================================================
-	    // STEP 3 : SORT GROUP ORDER
-	    // Based on parent/original date
-	    // ==================================================
-	    List<List<ScQtBsvDtl>> groupedList =
-	            new ArrayList<List<ScQtBsvDtl>>(grouped.values());
-
-	    Collections.sort(groupedList,
-	            new Comparator<List<ScQtBsvDtl>>() {
-
-	        @Override
-	        public int compare(List<ScQtBsvDtl> list1,
-	                           List<ScQtBsvDtl> list2) {
-
-	            Date date1 = list1.get(0).getBsvDate();
-	            Date date2 = list2.get(0).getBsvDate();
-
-	            if (date1 == null && date2 == null) {
-	                return 0;
-	            }
-
-	            if (date1 == null) {
-	                return 1;
-	            }
-
-	            if (date2 == null) {
-	                return -1;
-	            }
-
-	            return date1.compareTo(date2);
-	        }
-	    });
-
-	    // ==================================================
-	    // STEP 4 : MERGE BACK
-	    // ==================================================
-	    List<ScQtBsvDtl> finalList =
-	            new ArrayList<ScQtBsvDtl>();
-
-	    for (List<ScQtBsvDtl> list : groupedList) {
 	        finalList.addAll(list);
 	    }
 
 	    return finalList;
+	}
+	//#28188 - End
+
+	//#28188 - Start
+	private ScQtBsvDtl getRootDtl(List<ScQtBsvDtl> list) {
+
+	    if (CollectionUtils.isEmpty(list)) {
+	        return null;
+	    }
+
+	    for (ScQtBsvDtl dtl : list) {
+	        if (dtl.getParentPostponeId() == null) {
+	            return dtl;
+	        }
+	    }
+
+	    return list.get(0);
+	}
+	//#28188 - End
+
+	//#28188 - Start
+	private int compareById(ScQtBsvDtl dtl1, ScQtBsvDtl dtl2) {
+
+	    Long id1 = dtl1 != null ? dtl1.getQtBsvDtlId() : null;
+	    Long id2 = dtl2 != null ? dtl2.getQtBsvDtlId() : null;
+
+	    if (id1 == null && id2 == null) {
+	        return 0;
+	    }
+
+	    if (id1 == null) {
+	        return 1; // null ID last
+	    }
+
+	    if (id2 == null) {
+	        return -1;
+	    }
+
+	    return id1.compareTo(id2);
+	}
+	//#28188 - End
+
+	//#28188 - Start
+	private Long getRootParentBsvId(ScQtBsvDtl dtl,
+	                                Map<Long, ScQtBsvDtl> idMap) {
+	    if (dtl == null) return null;
+
+	    if (dtl.getParentPostponeId() == null) {
+	        return dtl.getQtBsvDtlId(); // may be null for brand-new roots
+	    }
+
+	    Long parentId = dtl.getParentPostponeId();
+	    ScQtBsvDtl parent = idMap.get(parentId);
+
+	    while (parent != null && parent.getParentPostponeId() != null) {
+	        parentId = parent.getParentPostponeId();
+	        parent = idMap.get(parentId);
+	    }
+
+	    return parentId;
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	@SuppressWarnings("unchecked")
+	private List<ScQtBsvRegistration> getBriefingRegistrationListFromSession() {
+
+	    Object obj = FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap()
+	            .get("briefingRegistrationList");
+
+	    if (obj instanceof List<?>) {
+	        return (List<ScQtBsvRegistration>) obj;
+	    }
+
+	    return new ArrayList<ScQtBsvRegistration>();
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private ScQtApproval getApprovalRegistrationFromSession() {
+
+	    Object obj = FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap()
+	            .get("scQtApprovalRegistration");
+
+	    if (obj instanceof ScQtApproval) {
+	        return (ScQtApproval) obj;
+	    }
+
+	    return null;
 	}
 	//#28188 - End
 

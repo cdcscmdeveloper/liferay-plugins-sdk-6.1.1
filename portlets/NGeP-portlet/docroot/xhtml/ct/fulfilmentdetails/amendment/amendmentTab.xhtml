@@ -13,48 +13,75 @@
 		.column-align-center {
 			text-align: center !important;
 		}
-			 .calanderWidth input {
-	       width:75px;margin-bottom: 5px;
-	   }
+		.calanderWidth input {
+	    	width:75px;margin-bottom: 5px;
+	   	}
 		.top-aligned-columns td {
 			vertical-align: top;
 		}
 		.column-align-right {
 			text-align: right !important;
 		}
-		 .columnWidth150 {
+		.columnWidth150 {
 	        width: 150px;
 	        vertical-align: top;
 	        text-align: right;
-         }
-          .columnWidth170 {
+        }
+        .columnWidth170 {
 	        width: 170px;
-	         vertical-align: top;
+	        vertical-align: top;
 	        text-align: right;
-         }         
-         .columnWidth225 {
+        }         
+        .columnWidth225 {
 	        width: 225px;
 	        vertical-align: top;
 	        text-align: right;
-         }
-         .columnWidth300 {
+        }
+        .columnWidth300 {
 	        width: 300px;
 	        vertical-align: top;
 	        text-align: right;
-         }
-         .confirmation-message-box {
+        }
+        .confirmation-message-box {
          	border: 1px solid #cecece;
 			font-family: Arial;
 			font-size: 12px;
 			cursor: default;
 			padding: 10px;
-         }
-         .zone-tree-node tr td {
+        }
+        .zone-tree-node tr td {
 			border: none;
 			padding: 4px 3px;
 		}
-		</style>
-		<script type="text/javascript">  
+		/* 24336 Start*/
+		.calanderWidth110 input {
+	        width: 110px;
+	        vertical-align: top;
+        } 
+		.columnWidth320 {
+			width: 320px;
+			vertical-align: top;
+			text-align: right;
+		}
+		.reduction-type-radio label {
+			float: left;
+			margin-left: 10px;
+		}
+		.change-contract-value-inputtext {
+			width: 110px;
+		}	
+		.committee-type-radio {
+			float: left;
+			margin-left: 25px !important;
+		}
+		.committee-type-radio tr:first-child label {
+		    display: inline-table;
+		    margin-left: 10px;
+		}
+		/* 24336 End*/
+	  </style>
+	  
+	<script type="text/javascript">  
 	    $(document).on("keypress", 'form', function (e) {
     	    var code = e.keyCode || e.which;
     	    if (code == 13) {
@@ -185,11 +212,15 @@
 			or amendmentBackingBean.managedBean.decisionPbQcLOA}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.decision']))}" update=":form" />
 	
-	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
+			<!-- #24336 change menuitem value - Start -->
+	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting.amendment.checklist']}" 
+			update=":form"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
-			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting']))}" update=":form" />
-	
+			rendered="#{(amendmentBackingBean.isCtApproverSetting() or amendmentBackingBean.isApproverSetting()) 
+				and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
+			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting.amendment.checklist']))}"  />
+			<!-- #24336 - End -->
+			 
 		</p:tabMenu>
 		 </td>
 		 <td width="80%">
@@ -286,11 +317,17 @@
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.approver.setting'] }"> <!-- #35132 -->
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) 
+											== lbl['lbl.ct.menu.approver.setting.amendment.checklist'] }"> <!-- #35132 #24336 -->
+					<!-- #24336 start -->
+					<ui:include	src="amendmentChecklist.xhtml" />
+					<!-- #24336 end -->
+					 
 					<ui:include	src="approverSetting.xhtml" />
 					<ui:include src="/xhtml/ct/shared/remarkAppSetting.xhtml" />
 					<!-- <ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" /> -->
-				</p:outputPanel>				
+				</p:outputPanel>
+			
 			</td>
 		</tr>
 		</table>

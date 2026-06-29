@@ -187,6 +187,7 @@ import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -11912,6 +11913,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void agreementReqYes() {
 		getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 		getManagedBean().getScLoa().setAgreementReq(false);
+		changeResetRequiredAgreement();
 		RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
 	}
 
@@ -11919,6 +11921,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void agreementReqNo() {
 		getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 		getManagedBean().getScLoa().setAgreementReq(true);
+		changeResetRequiredAgreement();
 		RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
 	}
 
@@ -13590,6 +13593,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			checkAnswersAndValidateUnitPriceZone(question, isZonePriceTypeTier);
 
 			for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
+				TplSpecZoneDtl tplSpecZoneDtl;
+				if (specAnswer.getTplSpecZoneQty() != null
+						&& specAnswer.getTplSpecZoneQty().getTplSpecZoneDtl() != null) {
+					tplSpecZoneDtl = specAnswer.getTplSpecZoneQty()
+							.getTplSpecZoneDtl();
+				} else {
+					tplSpecZoneDtl = convertTreeNodesToZoneCriteria(
+							this.getManagedBean().getZoneTrees(), null).get(0);
+				}
 				if (specAnswer.getRatePerUom() == null && isZonePriceTypeTier) {
 					String tier = specAnswer.getTplSpecTierQty().getFromQty()
 							.toString()
@@ -13598,8 +13610,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 									.toString();
 					throw new EpException(MessageConst.ERROR_790203,
 							new String[] {
-									specAnswer.getTplSpecZoneQty()
-											.getTplSpecZoneDtl().getZoneName(),
+									tplSpecZoneDtl.getZoneName(),
 									tier });
 				} else if (specAnswer.getRatePerUom() == null && !isZonePriceTypeTier) {
 					throw new EpException(
@@ -13610,8 +13621,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 													QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
 													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 													facesScopes.getUserLocale()),
-									specAnswer.getTplSpecZoneQty()
-											.getTplSpecZoneDtl().getZoneName() });
+													tplSpecZoneDtl.getZoneName() });
 				}
 			}
 		}
@@ -14474,6 +14484,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	    convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList,categoryCodeSO);
 	    }
 	    
+	    CustomUtils.sort(filteredSmSupplierCategoryList, new Comparator<SmSupplierCategory>() {//#29661 #40403
+			@Override
+			public int compare(SmSupplierCategory cat01, SmSupplierCategory cat02) {
+				String catCode01 = cat01.getPmCategoryL1().getCategoryL1Code()+cat01.getPmCategoryL2().getCategoryL2Code()+cat01.getPmCategoryL3().getCategoryL3Code();
+				String catCode02 = cat02.getPmCategoryL1().getCategoryL1Code()+cat02.getPmCategoryL2().getCategoryL2Code()+cat02.getPmCategoryL3().getCategoryL3Code();
+				Long catCodeLong01 = Long.valueOf(catCode01);
+				Long catCodeLong02 = Long.valueOf(catCode02);
+				
+				return catCodeLong01.compareTo(catCodeLong02);
+			}
+		});
+
 	    this.getManagedBean().setSupplierCategoryList(filteredSmSupplierCategoryList);//#29661 #40093
 	}
 
@@ -14502,6 +14524,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				supplierCategoryCode.setQtCategoryId(scQtCategory.getQtCategoryId());
 				supplierCategoryList.add(supplierCategoryCode);
 			}
+			
+			 CustomUtils.sort(supplierCategoryList, new Comparator<SmSupplierCategory>() {//#29661 #40403
+					@Override
+					public int compare(SmSupplierCategory cat01, SmSupplierCategory cat02) {
+						String catCode01 = cat01.getPmCategoryL1().getCategoryL1Code()+cat01.getPmCategoryL2().getCategoryL2Code()+cat01.getPmCategoryL3().getCategoryL3Code();
+						String catCode02 = cat02.getPmCategoryL1().getCategoryL1Code()+cat02.getPmCategoryL2().getCategoryL2Code()+cat02.getPmCategoryL3().getCategoryL3Code();
+						Long catCodeLong01 = Long.valueOf(catCode01);
+						Long catCodeLong02 = Long.valueOf(catCode02);
+						
+						return catCodeLong01.compareTo(catCodeLong02);
+					}
+				});
 			this.getManagedBean().setProcurementRelatedCategoryList(supplierCategoryList);
 			this.getManagedBean().setShowCategoryCode(true);//#29661 #40096
 		}

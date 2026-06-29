@@ -35,7 +35,7 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.application.no']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText value="#{cat.smAppl.applType eq 'N' ? cat.smAppl.applNo : cc.attrs.applNo}" />
+							<h:outputText value="#{otherDescBean.applNoHistory}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}"

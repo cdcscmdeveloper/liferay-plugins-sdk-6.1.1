@@ -206,24 +206,17 @@ public class DateTimeBackingBean {
 	    UIComponent composite =
 	            UIComponent.getCurrentCompositeComponent(context);
 
-	    Date minDate = (Date) composite.getAttributes().get("mindate");
 	    
-	    FacesScopes facesScopes = new FacesScopes();
+	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
+	    
+	    /*FacesScopes facesScopes = new FacesScopes();
 
 	    org.primefaces.component.calendar.Calendar calDateObj =
 	            (org.primefaces.component.calendar.Calendar)
-	                    facesScopes.findComponentById(composite, "calDate");
+	                    facesScopes.findComponentById(composite, "calDate");*/
 
-	    Date selectedDate = null;
-
-	    if (calDateObj != null) {
-	        // FIRST check local value
-	        Object localValue = calDateObj.getValue();
-
-	        if (localValue instanceof Date) {
-	            selectedDate = (Date) localValue;
-	        }
-	    }
+	    
+	    Date selectedDate = getSelectedCalendarDate(composite, minDate);
 
 	    log.info("MIN DATE = " + minDate);
 	    log.info("SELECTED DATE = " + selectedDate);
@@ -243,35 +236,28 @@ public class DateTimeBackingBean {
 	            calMin.get(Calendar.YEAR) == calSel.get(Calendar.YEAR)
 	            &&
 	            calMin.get(Calendar.DAY_OF_YEAR) == calSel.get(Calendar.DAY_OF_YEAR);
-
+	        
 	        if (sameDay) {
-	            /*
-	             * SAME DATE
-	             * disable lower hours
-	             */
-	            
+
 	            int modValue = Integer.parseInt(
-	                    composite.getAttributes().get("modVal").toString()
+	                composite.getAttributes().get("modVal").toString()
 	            );
 
 	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
 	            int oldMinute = calMin.get(Calendar.MINUTE);
 
-	            int nextMinute = oldMinute + modValue;
+	            int lastMinuteSlot = 60 - modValue; // 45 if modVal = 15
 
-	            if (nextMinute >= 60) {
+	            if (oldMinute >= lastMinuteSlot) {
 	                minHour = oldHour + 1;
 	            } else {
 	                minHour = oldHour;
 	            }
 
 	        } else {
-	            /*
-	             * DIFFERENT DATE
-	             * allow all hours
-	             */
 	            minHour = 0;
 	        }
+	        
 	    }
 	    //#28188 - End
 
@@ -281,6 +267,10 @@ public class DateTimeBackingBean {
 	                String.format("%02d", i)
 	        ));
 	    }
+	    
+	    log.info("restrictionDateTime = " + minDate);
+	    log.info("selectedDate = " + selectedDate);
+	    log.info("minHour = " + minHour);
 
 	    return hours;
 	}
@@ -328,13 +318,19 @@ public class DateTimeBackingBean {
 	    UIComponent composite =
 	            UIComponent.getCurrentCompositeComponent(context);
 
-	    Date minDate = (Date) composite.getAttributes().get("mindate");
+		// 28188 -start-
+
+		Date bsvNormalMaintain = (Date) composite.getAttributes().get(
+				"checkBsvNormalMain");
+		// 28188 -end-
+	    
+	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
 
 	    FacesScopes facesScopes = new FacesScopes();
 
-	    org.primefaces.component.calendar.Calendar calDateObj =
+	    /*org.primefaces.component.calendar.Calendar calDateObj =
 	            (org.primefaces.component.calendar.Calendar)
-	                    facesScopes.findComponentById(composite, "calDate");
+	                    facesScopes.findComponentById(composite, "calDate");*/
 
 	    Object hourObj =
 	            ((HtmlSelectOneMenu)
@@ -344,12 +340,8 @@ public class DateTimeBackingBean {
 	    if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
 	        hourObj = getFirstAvailableHour(component);
 	    }
-
-	    Date selectedDate = null;
-
-	    if (calDateObj != null && calDateObj.getValue() instanceof Date) {
-	        selectedDate = (Date) calDateObj.getValue();
-	    }
+	    
+	    Date selectedDate = getSelectedCalendarDate(composite, minDate);
 
 	    int modValue = Integer.parseInt(
 	            composite.getAttributes().get("modVal").toString()
@@ -377,9 +369,14 @@ public class DateTimeBackingBean {
 
 	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
 	            int oldMinute = calMin.get(Calendar.MINUTE);
-
-	            int nextMinute = oldMinute + modValue;
-
+	            
+				// 28188 -start-
+				int nextMinute = oldMinute;
+				if (null == bsvNormalMaintain) {
+					nextMinute = oldMinute + modValue;
+				}
+				// 28188 -end-
+                
 	            if (nextMinute >= 60) {
 	                /*
 	                 * Old time is at last minute slot, example 07:45.
@@ -421,5 +418,32 @@ public class DateTimeBackingBean {
 	    return minutes;
 	}
 	//#28188 - End
-		
+
+	//#28188 - Start
+	private Date getSelectedCalendarDate(UIComponent composite, Date fallbackDate) {
+	    FacesScopes facesScopes = new FacesScopes();
+
+	    org.primefaces.component.calendar.Calendar calDateObj =
+	        (org.primefaces.component.calendar.Calendar)
+	            facesScopes.findComponentById(composite, "calDate");
+
+	    if (calDateObj == null) {
+	        return fallbackDate;
+	    }
+
+	    Object value = calDateObj.getLocalValue();
+
+	    if (value == null) {
+	        value = calDateObj.getValue();
+	    }
+
+	    if (value instanceof Date) {
+	        return (Date) value;
+	    }
+
+	    // IMPORTANT: if calendar value not available during AJAX/render,
+	    // use restrictionDateTime date as selected date
+	    return fallbackDate;
+	}
+	//#28188 - End
 }

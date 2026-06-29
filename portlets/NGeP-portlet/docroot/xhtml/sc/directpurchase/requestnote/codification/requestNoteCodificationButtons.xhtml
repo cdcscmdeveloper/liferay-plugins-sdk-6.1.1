@@ -38,8 +38,11 @@
 								process="#{isCancel ? '@this, @([id$= remark])' : '@form'}"
 								update="@([id$=assignCodeDialogConfirm])"
 								onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide(); assignCodeDialogConfirm.show();" />
+								oncomplete="blockWidget.hide(); assignCodeDialogConfirm.show();">
 
+								<f:setPropertyActionListener value="#{bpmAction}"
+									target="#{requestNoteBackingBean.managedBean.selectedBpmAction}" />
+							</p:commandButton>
 						</ui:repeat>
 					</div>
 				</div>
@@ -53,12 +56,13 @@
 				</h:panelGroup>
 
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
 						onclick="assignCodeDialogConfirm.hide();"
-						action="#{requestNoteBackingBean.submitCodificationAction(bpmAction)}"
+						action="#{requestNoteBackingBean.submitCodificationAction(requestNoteBackingBean.managedBean.selectedBpmAction)}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						update="@form" />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						update="#{requestNoteBackingBean.managedBean.selectedBpmAction == 'CANCEL' ? '@this,  @([id$= remark])' : '@form'}" 
+						process="#{requestNoteBackingBean.managedBean.selectedBpmAction == 'CANCEL' ? '@this, @([id$= remark])' : '@form'}" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						onclick="assignCodeDialogConfirm.hide();" update="@form" />
 				</div>
 			</p:dialog>
