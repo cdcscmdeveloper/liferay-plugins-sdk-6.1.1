@@ -7,11 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supp.data.maintenance.delete.approved.cat.instruction']}" />
-	
+	<!-- 28281 - added listener -->
 	<p:dataTable var="aprvdCatBean"
 		widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
 		value="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}" 
 		selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories}"
+		listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 		rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		<ac:paginator for="catApprDt" />
@@ -25,6 +26,23 @@
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowDblselect"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
+			<!-- 32618 - START -->	
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowUnselect"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowSelectCheckbox"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowUnselectCheckbox"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowDblselect"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<!-- 32618 - END -->
 		<p:columnGroup type="header">
 			<p:row>
 				<p:column style="width:2%" />
@@ -38,12 +56,14 @@
 			</p:row>
 		</p:columnGroup>
 		<!-- #37605 -->
-		<p:column selectionMode="multiple" style="width:2%;vertical-align: top;" />
+		<p:column selectionMode="multiple"  style="width:2%;vertical-align: top;" disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" />
 		<p:column style="width : 2%;vertical-align: top;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
 		</p:column>
-		<p:column style="width :350px;white-space : normal;vertical-align: top;">
+		<!-- 32618 - START -->	
+		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width :350px;white-space : normal;vertical-align: top;">
+		<!-- 32618 - END -->
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
 			<br />
@@ -53,13 +73,17 @@
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
 		</p:column>
-		<p:column style="width : 10% !important;vertical-align: top;">
+		<!-- 32618 - START -->
+		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width : 10% !important;vertical-align: top;">
+		<!-- 32618 - END -->
 			<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 				rendered="#{!aprvdCatBean.specialCategory}" />
 			<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 				rendered="#{aprvdCatBean.specialCategory}" />
 		</p:column>
-		<p:column style="width : 30% !important;vertical-align: top;">
+		<!-- 32618 - START -->
+		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width : 30% !important;vertical-align: top;">
+		<!-- 32618 - END -->
 			<p:inputTextarea id="otherDescMaintenance" maxlength="5000"
 				style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 				value="#{aprvdCatBean.otherDesc}" rows="5" cols="90"
@@ -80,7 +104,10 @@
 			<p:message for="otherDescMaintenance" showDetail="false" showSummary="true"
 				display="icon" />
 		</p:column>
-		<p:column style="white-space : normal;vertical-align: top;width: 80px">
+		<!-- 32618 - START -->
+		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}"
+			style="white-space : normal;vertical-align: top;width:80px">
+		<!-- 32618 - END -->
 			<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}" />
 		</p:column>
 	</p:dataTable>
@@ -88,7 +115,7 @@
 	<div align="right">
 		<!-- #30766 & #34209 - START - add component to update -->
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
-			disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
+			disabled="#{supplierDataMaintenanceBackingBean.managedBean.disableDeleteButtonAprrovedCategoryCodePanel or empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
 				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories)}" 
 			update=":#{p:component('catcodeMainPanelId')},:#{p:component('messages')}" partialSubmit="true" 
