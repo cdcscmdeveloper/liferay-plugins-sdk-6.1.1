@@ -1295,67 +1295,73 @@ public class SPDetailBackingBean extends
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
+				// #21695,#40261,40215 - Start
+				boolean isQuotation = ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(this.getManagedBean()
+						.getQt().getProcurementMode().getParameterCode()) ? true : false;
+				boolean isTender = ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean()
+						.getQt().getProcurementMode().getParameterCode()) ? true : false;
+				// #21695,#40261,40215 - End
 				// #28777 & #29729, 35592(35838) - Start
 				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {
 					// #28777 & #29729, 35592(35838) - End
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
-						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785	
-
+						TplSpecZoneDtl specZoneDtl = getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(),
+								templateSpecBean);// #28785
+						// #21695,#40261,40215 - Start
 						if (templateSpecBean.getSpecAnswerList() != null
-								&& templateSpecBean.getSpecAnswerList().size() > 0) {
-							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
+								&& !templateSpecBean.getSpecAnswerList().isEmpty()) {
+							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();
+							int answerQuantityZero = 0;
 							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
-								//#21695 
-								
-								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
+								// #21695
+								if (null == specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+										|| null == specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+												.getSpecZoneId()) { // #28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
-								}	//#28785-End
-								
-								if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
-									answers.add(specAnswer);
-								}
-								//Bug_34259 - Start
-								else if (specAnswer.getRatePerUom() != null
-											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-									answers.add(specAnswer);
-								
-								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-									answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
-									answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
-									answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-									answers.add(specAnswer);
-								//#21695 	
-								}
-								//Bug_34259 - End
-								else{
-									//#21695 as is error for tender , 2times deleted if user null the value of the rate per uom.
-									 if (!ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())) {
+								} // #28785-End
+
+								// #21695 4serangkai use this only, else is
+								// using old codes
+								if (getManagedBean().getQt().isPartial() || isQuotation) {
+									if (specAnswer.getRatePerUom() != null) {
+										answers.add(specAnswer);
+									} else {
+										throw new EpException(MessageConst.ERROR_760464);
+									}
+									// #21695 end
+								} else if (isTender) {
+									if (specAnswer.getRatePerUom() != null
+											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
+										answers.add(specAnswer);
+									} else {
 										specAnswer.setDeleted(true);
 										toDeleteZoneAnswers.add(specAnswer);
-									 }
+									}
+
+									if ((specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(
+											new BigDecimal(0)) < 1)
+											&& specAnswer.getTplSpecZoneQty().getQty().intValue() == 0) {
+										answerQuantityZero++;
+									}
 								}
 							}
-							if (!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean.getSpecAnswerList().size())){
-								// #21695 -start-
-								for (TplSpecAnswer answerNullPrice : toDeleteZoneAnswers) {
+
+							if (isTender) {
+								int sizeOriginalAnswer = templateSpecBean.getSpecAnswerList().size()
+										- answerQuantityZero;
+								int sizeDeleteZoneAnswers = toDeleteZoneAnswers.size() - answerQuantityZero;
+								if (!toDeleteZoneAnswers.isEmpty() && sizeDeleteZoneAnswers != 0
+										&& sizeDeleteZoneAnswers != sizeOriginalAnswer) {
+
 									throw new EpException(MessageConst.ERROR_760464);
 								}
-								// #21695 -end-
-							} else if (!toDeleteZoneAnswers.isEmpty()) {
+							}
+
+							if (!toDeleteZoneAnswers.isEmpty()) {
+								// #21695,#40261,40215 - End
 								Set<TplSpecSuppAnswer> zoneSpecSuppAnswersSet = new HashSet<TplSpecSuppAnswer>();
-								for(TplSpecAnswer specAnswer :toDeleteZoneAnswers){
+								for (TplSpecAnswer specAnswer : toDeleteZoneAnswers) {
 									TplSpecSuppAnswer specSupplierAnswer = specAnswer.getTplSpecSuppAnswer();
 									specSupplierAnswer.setDeleted(true);
 									zoneSpecSuppAnswersSet.add(specSupplierAnswer);
@@ -1372,16 +1378,11 @@ public class SPDetailBackingBean extends
 			} else {
 				answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
 			}
-            if(answers == null || answers.size() == 0){
-				// #21695 -start-
-            	for(TplSpecAnswer answer:answers){
-					// #21695 to allow item has 0 qty and 0 price
-					if (answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() != null
-							|| answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() == null) {
-						throw new EpException(MessageConst.ERROR_760463);
-					}
-				}
-				// #21695 -end-
+			// #21695,#32783,#40215 - Start
+			if (answers == null || answers.isEmpty()) {
+				throw new EpException(MessageConst.ERROR_760463);
+			// #21695,#32783,#40215 - End
+
 			} else {
 				for (TplSpecAnswer answer : answers) {
 					if (isCompleted) {
