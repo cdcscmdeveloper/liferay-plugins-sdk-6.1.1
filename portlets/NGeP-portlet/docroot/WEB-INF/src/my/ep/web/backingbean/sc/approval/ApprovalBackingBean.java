@@ -33,7 +33,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 
-import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtAmendMentBean;//#28188
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -115,6 +115,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
@@ -156,7 +157,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-//#28188
 
 /**
  * Backing Bean for Approvals.
@@ -185,17 +185,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public ApprovalBackingBean() {
 
 	}
-	
-	/**
-	 * Use in #33222
-	 * Gets the user so.
-	 *
-	 * @return the user so
-	 */
-	private IUserSO getUserSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	}
 
 	// TODO Need to check why this code... vidya
 
@@ -213,6 +202,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.setApprovalCategory(new PmParameter());
 		}
 
+	}
+	
+	/**
+	 * Use in #33222
+	 * Gets the user so.
+	 *
+	 * @return the user so
+	 */
+	private IUserSO getUserSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 
 	/**
@@ -1626,9 +1626,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
-				InactiveUserResDTO userStatus = new InactiveUserResDTO(); //#33222
 				List<String> approvalTypes = null;
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+				InactiveUserResDTO userStatus = new InactiveUserResDTO(); //#33222
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
 				
 				qtReqDTO.setApprovalFlow(true);
@@ -1736,63 +1736,95 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				
 				if (userStatus.getStatus().equals("1")) {
-					tenderResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
-					// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
-
-					if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-						if (CollectionUtils.isNotEmpty(approvalTypes)) {
-							if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
-								new QTDocumentsBackingBean().reGenerateDocuments(qt.getQtId(),
-										QTFieldConst.FIELD_QT_PUBLISH_PERIOD);
-								
-							} else if (approvalTypes
-									.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {
-								if (isFinalApproval) {
-									new QTDocumentsBackingBean().reGenerateDocuments(qt.getQtId(),
-											QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
+				tenderResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
+				// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
+				
+				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+					if (CollectionUtils.isNotEmpty(approvalTypes)) {
+						/*if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
+							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+							if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
+								try {
+									log.info("call simple scheduler if QT is publishing today.");
+									IQTNoticeBoardSO nbSO = BusinessDelegate.getInstance()
+											.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+													IQTNoticeBoardSO.class);
+									NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+									reqDTO.setScQt(qt);
+									NoticeBoardResDTO resDTO =nbSO.publishQT(reqDTO);
+									if(resDTO.isSuccessful()){
+										log.info("Qt will be published as job was built successfully for QT : "+qt.getQtNo());
+									}
+								} catch (Exception e) {
+									log.error(e.getMessage(), e);
 								}
-							} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS)) {
-								new QTDocumentsBackingBean().reGenerateDocuments(qt.getQtId(),
-										QTFieldConst.FIELD_QT_BSVDETAILS);
 							}
-						}
-						// 28895-35500 Start
-						IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.AUDIT, IAuditTrailSO.class);
-						if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)
-								&& auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
-							prepareQtMaintenanceAuditTrail(qt, tenderResDTO.getGroupTabSection(), null);
-						}
-						// 28895-35500 End
+						} else*/ if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
+							new QTDocumentsBackingBean().reGenerateDocuments(
+									qt.getQtId(), 
+									QTFieldConst.FIELD_QT_PUBLISH_PERIOD);
+							/*Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+							if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
+								// To remove the existing QT closing job from scheduler if any
+								log.info("remove simple scheduler if QT is closing today.");
+								try{
+									IQTProposalSO proposalSO = BusinessDelegate.getInstance()
+											.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+													IQTProposalSO.class);
+									ProposalReqDTO reqDTO = new ProposalReqDTO();
+									reqDTO.setScQt(qt);
+									ProposalResDTO resDTO = proposalSO.deleteQtProposalCloseJob(reqDTO);
+									if(resDTO.isSuccessful()){
+										log.info("Simple job for propsoal close deleted successfully for QT : "+qt.getQtNo());
+									}
+								}catch(Exception e){
+									log.error(e.getMessage(), e);
+								}
+							}*/
+						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {
+							if (isFinalApproval) {
+								new QTDocumentsBackingBean().reGenerateDocuments(
+										qt.getQtId(), 
+										QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
+							}
+						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS)) {
+							new QTDocumentsBackingBean().reGenerateDocuments(
+									qt.getQtId(), 
+									QTFieldConst.FIELD_QT_BSVDETAILS);
+						}			
+					}	
+					//28895-35500 Start
+					IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+							IAuditTrailSO.class);
+					if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName) && auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+						prepareQtMaintenanceAuditTrail(qt, tenderResDTO.getGroupTabSection(), null);
 					}
-				} else if(userStatus.getStatus().equals("2") || userStatus.getStatus().equals("3")|| userStatus.getStatus().equals("4")){
-					throw new EpException(MessageConst.ERROR_761000, new String[] { ParameterHelper.getInstance()
-							.getParameterDesc(qtReqDTO.getDeskOfficer().getUserName(),
-									qt.getOwnerOrgProfile().getOrgName()) });				
-					
-				}  else if(userStatus.getStatus().equals("5")){
-					throw new EpException(MessageConst.ERROR_761000, new String[] { ParameterHelper.getInstance()
-							.getParameterDesc(qtReqDTO.getDeskOfficer().getUserName(),
-									qt.getOwnerOrgProfile().getOrgName()) });	
-					
-				} else {
-					throw new EpException(MessageConst.ERROR_761001, new String[] { ParameterHelper.getInstance()
-							.getParameterDesc(qtReqDTO.getDeskOfficer().getUserName(),
-									qt.getOwnerOrgProfile().getOrgName()) });	
+					//28895-35500 End
 				}
-				//#33222 - End
+			} else if(userStatus.getStatus().equals("2") || userStatus.getStatus().equals("3")|| userStatus.getStatus().equals("4")){
+				throw new EpException(MessageConst.ERROR_761000, new String[] { ParameterHelper.getInstance()
+						.getParameterDesc(qtReqDTO.getDeskOfficer().getUserName(),
+								qt.getOwnerOrgProfile().getOrgName()) });				
+				
+			} else if(userStatus.getStatus().equals("5")){
+				throw new EpException(MessageConst.ERROR_761000, new String[] { ParameterHelper.getInstance()
+						.getParameterDesc(qtReqDTO.getDeskOfficer().getUserName(),
+								qt.getOwnerOrgProfile().getOrgName()) });	
+				
+			} else {
+				throw new EpException(MessageConst.ERROR_761001, new String[] { ParameterHelper.getInstance()
+						.getParameterDesc(qtReqDTO.getDeskOfficer().getUserName(),
+								qt.getOwnerOrgProfile().getOrgName()) });	
 			}
+			//#33222 - End
 			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
-		} catch (EpException e) {//#25077 - Start
-		    throw e; 
+			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "updateBpmTask", this.getManagedBean().getQt().getQtNo(), "updateBpmTask",getUserIdSessionFromLoginId(), e);
 			throw new EpException(MessageConst.ERROR_722632);
-	    }//#25077 - End
+	    }
 		return tenderResDTO;
 	}
-	
-
 	// Bug #31759 - Start
 	public void checkApprovalAndRefreshDetails (Long qtId, String taskName, ScQtApproval approval){
 
@@ -4382,6 +4414,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End
+	
 	
 	/**
 	 * #33222 - Check Desk officer active or not after revise
