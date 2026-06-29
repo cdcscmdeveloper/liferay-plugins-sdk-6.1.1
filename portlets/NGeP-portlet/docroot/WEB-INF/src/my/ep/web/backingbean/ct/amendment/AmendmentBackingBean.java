@@ -9449,16 +9449,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date newAmtEffDate;
 		// new overall contract amount is different from overall contact amount
 		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+			
 			newAmtEffDate = ctAmendment.getNewAmtEffDate();
-			if (newAmtEffDate == null) {
+			
+			boolean isDisableNewCtAmountEffDate = contractManagedBean.isDisableNewCtAmountEffDate();
+			if(newAmtEffDate == null || isDisableNewCtAmountEffDate == true){
 				newAmtEffDate = new Date();
 			}
+			
 			// Enable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(false);
 		
 		// same as overall contract amount	
 		} else {
-			newAmtEffDate = ctContractVer.getCtContractAmount().getEffDate();
+			newAmtEffDate = retrieveNewEffDate();
+			
 			// Disable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(true);
 		}
