@@ -224,7 +224,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700005;
-				
+
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -238,7 +238,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 						messageId = MessageConst.INFO_745015;
 					}
 				} 
-				
 				// 31788 - acknowledgement message assign new user.
 				if (getManagedBean().isAssignNewUser()) {
 					messageId = MessageConst.INFO_700128;
@@ -259,7 +258,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_STOP_DELIVERY), resDTO.getFlStopInstr().getStopInstrNo()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-				
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -562,7 +560,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * @throws Exception the exception
 	 */
 	public String signingAction(String outcome) throws Exception{
-
+		
 		// #31788 - Supplier Stop Fulfilment -> Check FL Approver Status -> Reassigned new user if inactive -> no user available, block (alert message)
 		if (hasSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
 			FlStopInstr stopInstr = getManagedBean().getStopInstr();
@@ -594,6 +592,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}
 		
 		//#34443 change validation into method
+		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 			if(hasSupplierRole() || getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
 				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
