@@ -6935,7 +6935,7 @@ public class RuleCatalogueBackingBean extends
 				hasSelected = true;
 
 				if(isPTJAlreadyAdded(configRuleType, orgProfile)){
-					throw new EpException(MessageConst.ERROR_760830, new String[] {orgProfile.getOrgName(), this.getManagedBean().getSelectedRuleDescType().getRuleDesc()});
+					throw new EpException(MessageConst.ERROR_760833, new String[] {orgProfile.getOrgName(), this.getManagedBean().getSelectedRuleDescType().getRuleDesc()});
 				}
 				newRuleValue = new PmConfigRuleValue();
 				newRuleValue.setPtjId(orgProfile);
@@ -6949,7 +6949,7 @@ public class RuleCatalogueBackingBean extends
 		}
 
 		if (!hasSelected) {
-			throw new EpException(MessageConst.ERROR_760829);
+			throw new EpException(MessageConst.ERROR_760832);
 		}
 	}
 
