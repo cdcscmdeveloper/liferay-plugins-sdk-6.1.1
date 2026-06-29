@@ -22,6 +22,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+//Start Fix - #34367
 /**
  * @author bob
  * 
@@ -84,27 +85,22 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	}
 
 	/**
-	 * Retrieves the PTJ rule type for a given organization profile.
+	 * Retrieves the PTJ rule type associated with the specified organization profile.
 	 *
-	 * <p>This method invokes the {@code IRuleSO} service to obtain the rule
-	 * constant associated with the specified organization profile ID.
-	 * If a rule type is found, it is returned; otherwise, {@code null} is returned.</p>
+	 * <p>This method delegates to the {@code IRuleSO} service to obtain the
+	 * rule constant for the given organization profile ID and returns the
+	 * result directly.</p>
 	 *
 	 * @param orgProfileId the unique identifier of the organization profile
-	 * @return a {@code String} representing the PTJ rule type, or {@code null}
-	 *         if no rule type is found
+	 * @return the PTJ rule type for the specified organization profile, or
+	 *         {@code null} if no rule type is defined
 	 */
 	protected String getPTJRuleTypeByOrgProfile(Long orgProfileId) {
 		IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		String getPTJRuleType = ruleSO.getUserRulesConst(orgProfileId);
-		String ruleType = null;
-		if (getPTJRuleType != null) {
-			return ruleType = getPTJRuleType;
-		}
-		return ruleType;
+		return ruleSO.getUserRulesConst(orgProfileId);
 	}
-	
+	//End Fix - #34367
 	//34442 - start
 	/**
 	 * Retrieve confirmation message
@@ -155,7 +151,7 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	}
 	//34442 - end
 
-
+	//Start Fix - #34367
 	public PmOrgProfile getOwnerOrgProfile() {
 		return ownerOrgProfile;
 	}
@@ -163,4 +159,5 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	public void setOwnerOrgProfile(PmOrgProfile ownerOrgProfile) {
 		this.ownerOrgProfile = ownerOrgProfile;
 	}
+	//End Fix - #34367
 }
