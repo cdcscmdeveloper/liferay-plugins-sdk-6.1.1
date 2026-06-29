@@ -2719,12 +2719,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 		//#21692 - End
 		
-		// #39620 - start
-		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
-		if (isRecommendByAward() && recommendedSupplier != null) {
-			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
-		}// #39620 - End
-		
 		//#28777#29729 - Start
 		if(checkFlagForSupplierBranchDeleted()){
 		    checkNeedSupplierIfHaveBranchDeleted();
@@ -2995,12 +2989,6 @@ public class SupplierFinalizationBackingBean extends
 				  .getParameterCode();
 	log.info("decisionTypeCode"+decisionTypeCode);
 		this.checkIfLoggedinUserIsSecretary();
-		
-		// #39620 - start
-		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
-		if (isRecommendByAward() && recommendedSupplier != null) {
-			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
-		}// #39620 - End
 				
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
@@ -6171,7 +6159,9 @@ return	remarksNotFound;
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){// Bug #37969
+			//#40396 - Start
+			if(!getManagedBean().isHasSupplierQualified() && !isQTCancelledBidSchedule()){// Bug #37969
+			//#40396 - End
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -6640,7 +6630,10 @@ return	remarksNotFound;
 		boolean hasItemWithPriceTypeTier 
 						= getManagedBean().isHasItemWithPriceTypeTier();
 		
-		if (hasItemWithPriceTypeTier) {
+		// #40396 - Start
+		if (hasItemWithPriceTypeTier || isQTCancelledBidSchedule()) {
+		// #40396 - End
+
 			excludedList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
 		}
 		
@@ -6915,6 +6908,7 @@ return	remarksNotFound;
 				createShortlistedSuppliersDataModel();//35140
 			} 
 			
+			setDisableSFJustification();	//40314
 			//#28834 - Start
 			if(scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION)){
 				this.getManagedBean().setDisableJustifications(false);
@@ -9307,7 +9301,6 @@ return	remarksNotFound;
 							if (!disabledSupplier) {
 								if (recommendationBean.isAwarded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
-									getManagedBean().setTempRecommendedSupplier(qualSupplier);//#39620 
 								}
 							} else {
 								if (getManagedBean().getDisabledSupplierIds() == null) {
@@ -13395,6 +13388,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 	}
 	//#38151 End
+	
+	// #40396 - Start
+	/**
+	 * @return
+	 */
+	public boolean isQTCancelledBidSchedule() {
+		ScQt scQt = this.getManagedBean().getScQt();
+		return getQTSuppFinalizationSO().isQTCancelledBidSchedule(scQt.getQtId());
+	}
+	// #40396 - End
 
 	
 
