@@ -183,10 +183,9 @@
 				<ui:remove>#34449 - start</ui:remove>
 				<ui:remove>Connect the popup</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					update="@([id$=requestNoteId])" onclick="submitRNConfirmDlg.show(); return false;"
-					process="@this">
-					<f:setPropertyActionListener
-						target="#{requestNoteBackingBean.managedBean.action}" value="" />
+					onclick="submitRNConfirmDlg.show(); return false;"
+					process="@this"
+					partialSubmit="true" >
 				</p:commandButton>
 				
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
@@ -232,11 +231,12 @@
 					<ui:remove>#34449 - start</ui:remove>
 						<ui:param name="isApprove" value="#{bpmAction eq 'APPROVE'}" />
 						<ui:param name="isRevise" value="#{bpmAction eq 'REVISE'}" />
+						<ui:param name="isSubmit" value="#{bpmAction eq 'SUBMIT'}" />
 					<ui:remove>#34449 - end</ui:remove>
 						<!-- 20190417@asyrafhaziq_12095 - End -->
 					<ui:remove>#34449 - start</ui:remove>
 						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-							onclick="#{isRevise ? 'reviseRNConfirmDlg.show(); return false;' : ''}#{isApprove ? 'approveRNConfirmDlg.show(); return false;' : ''}"
+							onclick="#{isRevise ? 'reviseRNConfirmDlg.show(); return false;' : ''}#{isApprove ? 'approveRNConfirmDlg.show(); return false;' : ''}#{isSubmit ? 'submitRNConfirmDlg.show(); return false;' : ''}"
 							onstart="#{isCancelReject ? '' : 'blockWidget.show();'}"
 							oncomplete="#{isCancelReject ? '' : 'blockWidget.hide();'}"
 							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
