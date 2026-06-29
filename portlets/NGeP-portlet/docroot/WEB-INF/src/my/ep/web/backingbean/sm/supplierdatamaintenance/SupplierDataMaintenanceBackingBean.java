@@ -1607,7 +1607,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			} else {
 				List<SmSupplierCategory> categories = selectedCategories;
 				// 40404 - START
-				if (checkingMTO) {
+				if (checkingMTO) { 
 					for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
 
 						if (cat.getPmCategoryL3() != null
