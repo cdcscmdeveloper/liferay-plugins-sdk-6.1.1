@@ -2432,6 +2432,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setOtherDescChangeSupplier(false);
 		getManagedBean().setOtherDescChangeSupPO(false);
 		getManagedBean().setOtherDescChangeSupApprover(false);
+		getManagedBean().getEditVO().setPoEditCategory(false);
+		getManagedBean().getEditVO().setAppEditCategory(false);
 		
 		if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
 			initPmUserRole();
@@ -2460,14 +2462,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 						if (!getManagedBean().isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 							getManagedBean().setOtherDescChangePO(true);
+							getManagedBean().getEditVO().setPoEditCategory(true);
 						} else if (!getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 							getManagedBean().setOtherDescChangeApprover(true);
+							getManagedBean().setOtherDescChangeSupplier(true);
+							getManagedBean().getEditVO().setAppEditCategory(true);
 						} else if (!getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
 							getManagedBean().setOtherDescChangeSupApprover(true);
 							getManagedBean().setOtherDescChangeSupplier(true);
+							getManagedBean().getEditVO().setAppEditCategory(true);
 						} else if (!getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
 							getManagedBean().setOtherDescChangeSupPO(true);
 							getManagedBean().setOtherDescChangeSupplier(true);
+							getManagedBean().getEditVO().setPoEditCategory(true);
 						}
 					}
 				}

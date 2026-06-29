@@ -15340,12 +15340,14 @@ public void retrieveDemoQtDetails(Long qtId) {
 					pendingUpdateApprList.add(scQtBsvDtl);
 				}
 			}
+			
+			if (CollectionUtils.isNotEmpty(rejectList)) {
+				sortedList.addAll(rejectList);
+			}
             if(CollectionUtils.isNotEmpty(postponeList)){
             	sortedList.addAll(postponeList);
 	        }
-            if(CollectionUtils.isNotEmpty(rejectList)){
-            	sortedList.addAll(rejectList);
-	        }
+           
             if(CollectionUtils.isNotEmpty(pendingList)){
             	sortedList.addAll(pendingList);
 	        }
