@@ -2848,10 +2848,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 *             the exception
 	 */
 	public String confirmDialogueTrigger(String action) throws Exception {
-		
-		setTextBeforeSign(action);
-	    getManagedBean().setButtonAction(action);
-	    
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
 			return null;
