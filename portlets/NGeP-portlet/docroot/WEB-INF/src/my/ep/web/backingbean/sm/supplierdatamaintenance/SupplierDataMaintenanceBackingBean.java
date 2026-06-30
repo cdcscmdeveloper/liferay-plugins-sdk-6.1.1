@@ -1687,7 +1687,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()) {
 				throw new EpException(MessageConst.ERROR_722708); 
 			} else {
-				List<SmSupplierCategory> categories = selectedCategories;
+				List<SmSupplierCategory> categories = selectedCategories; 
 				// 40404 - START
 				if (checkingMTO) { 
 					for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
