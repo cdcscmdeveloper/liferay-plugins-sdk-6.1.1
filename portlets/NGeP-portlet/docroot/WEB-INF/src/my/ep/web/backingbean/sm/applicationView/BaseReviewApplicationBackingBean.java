@@ -827,20 +827,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().getEditVO().setPoEditCategory(false);
 		getManagedBean().getEditVO().setAppEditCategory(false);
 		
-		if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog() 
-				&& getManagedBean().isViewApplicationHistory() 
-				&& !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
-			SmFieldChangeUtil.initLatestAppl(getManagedBean());
-			SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
-		} else if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog() 
-				&& getManagedBean().isViewApplicationHistory() ) {
-			if (getManagedBean().isOtherDescChangePO() || getManagedBean().isOtherDescChangeSupPO()) {
-				this.getManagedBean().getEditVO().setPoEditCategory(true);
-			}
-			
-			if (getManagedBean().isOtherDescChangeApprover() || getManagedBean().isOtherDescChangeSupApprover()) {
-				this.getManagedBean().getEditVO().setAppEditCategory(true);
-			}
+		if (!getManagedBean().isPoApprUnClaimTask()
+		        && !getManagedBean().isRevisionDialog()
+		        && getManagedBean().isViewApplicationHistory()) {
+
+		    if (!ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(getManagedBean().getSmAppl().getApplType())) {
+		        SmFieldChangeUtil.initLatestAppl(getManagedBean());
+		        SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
+		    }
+
+		    if (getManagedBean().isOtherDescChangePO() || getManagedBean().isOtherDescChangeSupPO()) {
+		    	getManagedBean().getEditVO().setPoEditCategory(true);
+		    }
+
+		    if (getManagedBean().isOtherDescChangeApprover() || getManagedBean().isOtherDescChangeSupApprover()) {
+		    	getManagedBean().getEditVO().setAppEditCategory(true);
+		    }
 		}
 		// 36504 - END
 		//#32008 - end
@@ -1001,6 +1003,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		// officeFacilityTypeFormViewOnly
+		//#40368-start
 		getManagedBean().setBasicCompanyFacility(new SmFacility());
 		for (SmFacility smFac : getManagedBean().getSmAppl().getSmFacilities()) {
 			if ((smFac.getFacilityType().equalsIgnoreCase(
@@ -1008,10 +1011,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.getFacilityType()
 					.equalsIgnoreCase(
 							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
-					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& smFac.isHeadquarters()) {
 				this.getManagedBean().setBasicCompanyFacility(smFac);
+				break;
 			}
-		}
+		}//#40368-end
 
 		// certificateInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmSupplierCerts() == null) {
