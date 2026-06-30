@@ -27,6 +27,7 @@
 		<cc:attribute name="bean" type="java.lang.Object" />
 		<cc:attribute name="hasParam" default="false" />
 		<cc:attribute name="okParam" method-signature="java.lang.String action(java.lang.String)" />
+		<cc:attribute name="oncompleteOk" default="" />
 		<!-- #34445 - end -->
 	</cc:interface>
 
@@ -83,7 +84,7 @@
 						<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
 							action="#{cc.attrs.okParam}"
-							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="#{cc.attrs.loadingWidget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" />
 					</c:when>
 				    <!-- #34445 end -->
 					<c:when test="#{not empty cc.attrs.loadingWidget}">
@@ -92,21 +93,21 @@
 							partialSubmit="true" 
 							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="#{cc.attrs.loadingWidget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" />
 					</c:when>
 				    <c:when test="#{empty cc.attrs.resetInput}">
 				       <p:commandButton id="yesWithResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" />
 				    </c:when>
 				    <c:otherwise>
 				        <p:commandButton id="yesWithoutResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" >
+							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" >
 							<p:resetInput target="#{cc.attrs.resetInput}" />
 						</p:commandButton>
 				    </c:otherwise>

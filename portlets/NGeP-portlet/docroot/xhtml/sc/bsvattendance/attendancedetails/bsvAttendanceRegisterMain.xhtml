@@ -20,17 +20,26 @@
 		<div class="ppRightBtn">
 			<h:panelGroup id="bsvattandanceBtns">
 
-
+				<ui:remove>#34444 Start Ann</ui:remove>
 				<ui:repeat var="bpmAction"
 					value="#{bsvAttendanceBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel"
 						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						onclick = "confirmSubmit.show();"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-						
-					
-						
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"						
+						onstart="blockWidget.show();" 
+						actionListener="#{bsvAttendanceBackingBean.managedBean.prepareAction(bpmAction)}"
+						process="@form" update="@form" 
+						oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();" />
+										
+					<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+						widget="popupConfirmInfoDlg"
+						okAction=""
+						title="#{bsvAttendanceBackingBean.managedBean.confirmTitle}"
+						content="#{bsvAttendanceBackingBean.managedBean.confirmContent}"
+						update="@form"
+						oncompleteOk="confirmSubmit.show();" />
+			   	<ui:remove>#34444 End Ann</ui:remove>
+
 					<p:confirmDialog id="confirmSubmit"
 						header="#{lbl['lbl.sc.dialog.cofirm.header']}"
 						widgetVar="confirmSubmit" severity="alert"  >
@@ -174,7 +183,7 @@
 							
 							onclick="confirmSubmit.hide();" style="float:right;"/>
 						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
-						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
+						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"						
 						process="@form" update="@form"
 							onstart="confirmSubmit.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" style="float:right"/>
 					
@@ -183,8 +192,6 @@
 
 			</h:panelGroup>
 		</div>
-
-
 		<div align="left" class="header-info header-spacing">
 			<table style="width: 100%">
 				<tr>

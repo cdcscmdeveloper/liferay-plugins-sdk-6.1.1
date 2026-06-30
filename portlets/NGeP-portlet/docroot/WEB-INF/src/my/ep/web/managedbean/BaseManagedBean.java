@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.faces.model.SelectItem;
@@ -205,6 +206,13 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
 //	37925 END
+
+	// #34444 START
+	private String btnAction;
+	
+	@javax.faces.bean.ManagedProperty("#{lbl}")
+	private ResourceBundle lbl;
+	// #34444 END
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1269,4 +1277,40 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
 //	37925 END
+
+	// #34444 START
+	public String getBtnAction() {
+		return btnAction;
+	}
+
+	public void setBtnAction(String btnAction) {
+		this.btnAction = btnAction;
+	}
+
+	public ResourceBundle getLbl() {
+		return lbl;
+	}
+
+	public void setLbl(ResourceBundle lbl) {
+		this.lbl = lbl;
+	}
+
+	public String getConfirmTitle() {
+		if (lbl == null || btnAction == null) {
+			return "";
+		}
+		return my.ep.web.util.sc.ActionPopupMessageKeys.getTitleMessage(btnAction, lbl);
+	}
+
+	public String getConfirmContent() {
+		if (lbl == null || btnAction == null) {
+			return "";
+		}
+		return my.ep.web.util.sc.ActionPopupMessageKeys.getContentMessage(btnAction, lbl);
+	}
+
+	public void prepareAction(String action) {
+		this.btnAction = action;
+	}
+	// #34444 END
 }

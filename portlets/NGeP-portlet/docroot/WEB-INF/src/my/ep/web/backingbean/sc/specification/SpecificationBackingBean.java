@@ -9485,8 +9485,10 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760359);
 					}
 					if (null == Remark.getRemarkId()) {
-						RequestContext.getCurrentInstance().execute(
-								"reviceApprovalDlgs.show()");
+						/// 34444 *********
+						reviseSpecificationCommittee();
+//						RequestContext.getCurrentInstance().execute(
+//								"reviceApprovalDlgs.show()");
 					}
 				}
 				/*
@@ -12743,9 +12745,12 @@ if (null != checklist && !checklist.isEmpty()) {
 												    new FacesScopes().getUserLocale()) });
 						}
 					}
+					RequestContext.getCurrentInstance().execute("confirmationPopupQT.hide()");
 				}
 				
-				RequestContext.getCurrentInstance().execute("reviseSCDlgs.show()");
+//				RequestContext.getCurrentInstance().execute("reviseSCDlgs.hide()");
+				////34444 **********
+				reviseSpecificationCommittee();
 			} else {
 				getManagedBean().setAutoUpdate(false);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -12770,8 +12775,10 @@ if (null != checklist && !checklist.isEmpty()) {
 												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												    new FacesScopes().getUserLocale()) });
 						} else if (null == Remark.getRemarkId()) {
-							RequestContext.getCurrentInstance().execute(
-									"reviceApprovalDlgs.show()");
+							//34444 ***********
+							reviseSpecificationCommittee();
+//							RequestContext.getCurrentInstance().execute(
+//									"reviceApprovalDlgs.show()");
 						} else {
 							reviseSpecificationCommittee();
 						}

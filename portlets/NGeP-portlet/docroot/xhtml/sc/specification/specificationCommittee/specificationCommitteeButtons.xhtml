@@ -56,13 +56,16 @@
 								update="@([id$=#{submitConfirmId2}])" 
 								rendered="#{isClone}" />
 							<ui:remove><!-- Add Disable #29732 below--></ui:remove>
-							<ui:remove>#10141 Added disableButtonForInactiveChecklist Vinod</ui:remove>
-							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								styleClass="ui-button" style="float:right;" rendered="#{!isClone}"
-								disabled ="#{(specificationBackingBean.managedBean.disableButtonForInactiveChecklist or specificationBackingBean.managedBean.checkUserCanRevise) and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
-								action="#{specificationBackingBean.submitAction(bpmAction)}" />
-						</ui:fragment>
+								<ui:remove>#10141 Added disableButtonForInactiveChecklist Vinod / #34444 Endorsement Btn : Added popup Confirmation Message - Ann</ui:remove>
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									onstart="blockWidget.show();" styleClass="ui-button"
+									style="float:right;" rendered="#{!isClone}"
+									disabled="#{(specificationBackingBean.managedBean.disableButtonForInactiveChecklist or specificationBackingBean.managedBean.checkUserCanRevise) and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
+									oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();"
+									actionListener="#{specificationBackingBean.managedBean.prepareAction(bpmAction)}"
+									process="@form" update="@form">
+								</p:commandButton>
+							</ui:fragment>
 					</ui:repeat>
 					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
@@ -304,5 +307,14 @@
 		</p:dialog>
 		<ui:remove><!-- //1873 - note 52--></ui:remove>
 	</h:panelGroup>
+
+	<ui:remove>#34444 Start Ann</ui:remove>
+	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+		widget="popupConfirmInfoDlg"
+		okAction="#{specificationBackingBean.submitAction(specificationBackingBean.managedBean.btnAction)}"
+		title="#{specificationBackingBean.managedBean.confirmTitle}"
+		content="#{specificationBackingBean.managedBean.confirmContent}"
+		update="@form" />
+	<ui:remove>#34444 End Ann</ui:remove>
 
 </ui:composition>
