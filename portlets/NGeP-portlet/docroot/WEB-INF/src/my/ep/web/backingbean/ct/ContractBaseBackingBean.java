@@ -710,11 +710,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	    for (int i = 0; i < statuses.length; i++) {
   	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
   	        selectedUser.setUserName(users.get(i).getUserName());
-//  	    selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
   	        
   	        // FOR TESTING PURPOSE ONLY
 //  	        if (i == 0) {
-  	            selectedUser.setStatus(2L);
+//  	            selectedUser.setStatus(2L);
 //  	        } else {
 //  	           	selectedUser.setStatus(3L);
 //  	        }

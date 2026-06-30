@@ -102,6 +102,10 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
 	//#28854 - end	
+	
+	//30730 - start
+	private Long inactiveUserRevise;
+	//30730 - end
 
 private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
 //#29214
@@ -757,4 +761,14 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
 	/* #28854 end*/	
+	
+	//30730 - start
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
+	}
+
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
+	}
+	//30730 - end
 }
