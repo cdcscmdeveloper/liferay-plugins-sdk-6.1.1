@@ -183,6 +183,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	return ctBB.getManagedBean().getContractVer();
     }
     //#30737 - End
+	
+	private String confirmationContentMsg;//34442 
 	    
 	//#13847 start
 	/**
@@ -2262,6 +2264,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	
 	public String gpkiSignAction(String outcome) throws Exception {
+		String docType = ctBB.getManagedBean().getContractVer().getDocType();//34442
+		String statusId = String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId());
+		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome, new ArrayList<SelectedInactiveUserDTO>()); //#30737 (add empty list to inactiveUsersForRevise)
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -2291,7 +2296,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+			//#34442 - start
+			if(checkPerformanceBondCompleted(ctBB.getManagedBean().getCtContractAmount().isBondReq(),
+					ctBB.getManagedBean().getCtPerformanceBond())){
+				setConfirmationContentMsg(
+					    getConfirmationContent(statusId, ctBB.getManagedBean().getContractVer().getCtContract().getContractNo())
+					);
+			} else {
+				setConfirmationContentMsg(
+					    getConfirmationContent(statusId)
+					);
+			}
+			
+			RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+			RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			//#34442 - end
 			return null;
 		//#25406 - Start	
 		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
@@ -2305,6 +2325,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			return null;
 		//#25406 - End
 		} else {
+			//#34442 - start
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION) && 
+						checkPerformanceBondCompleted(ctBB.getManagedBean().getCtContractAmount().isBondReq(), 
+								ctBB.getManagedBean().getCtPerformanceBond())){
+					setConfirmationContentMsg(
+						    getConfirmationContent(statusId,ctBB.getManagedBean().getContractVer().getCtContract().getContractNo())
+						);
+					return null;
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION) || 
+						docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+					setConfirmationContentMsg(getConfirmationContent(statusId));
+				}
+				
+				RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+				return null;
+			}
+			//#34442 - end
 			return this.saveContract(outcome);
 		}
 	}
@@ -5050,4 +5089,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 	}
 	//#40197 end
+	
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

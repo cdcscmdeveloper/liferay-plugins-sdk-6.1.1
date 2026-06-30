@@ -55,13 +55,13 @@
 				</h:panelGroup>
 
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
 						onclick="assignCodeDialogConfirm.hide();"
 						action="#{requestNoteBackingBean.submitCodificationAction(requestNoteBackingBean.managedBean.selectedBpmAction)}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						update="#{requestNoteBackingBean.managedBean.selectedBpmAction == 'CANCEL' ? '@this,  @([id$= remark])' : '@form'}" 
 						process="#{requestNoteBackingBean.managedBean.selectedBpmAction == 'CANCEL' ? '@this, @([id$= remark])' : '@form'}" />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						onclick="assignCodeDialogConfirm.hide();" update="@form" />
 				</div>
 			</p:dialog>

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.agreement;
 
@@ -72,7 +72,7 @@ import my.ep.helper.EntityHelper; //#37620,#34367
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract; //#30737
-import my.ep.persistence.entity.ct.CtContractVer; //#30737
+import my.ep.persistence.entity.ct.CtContractVer; //#30737 #34442
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
@@ -164,6 +164,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
     }
     //#30737 - End
 	    
+	private String confirmationContentMsg;//34442 
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -1114,7 +1116,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if(signDate != null && expDate != null && signDate.after(expDate)){	
 				RequestContext.getCurrentInstance().execute("dateValidationExpGpki.show()");				
 			}else{
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				// 34442 - start
+				setConfirmationContentMsg(getConfirmationContent(String.valueOf(getManagedBean().getCtAgreement()
+						.getStatus().getStatusId()), getManagedBean().getCtContract().getContractNo()));
+				RequestContext.getCurrentInstance().update("submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+				// 34442 - end
 			}
 			//#29417 end
 			return null;
@@ -3062,4 +3069,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 	//#30737 - End
 	
+
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

@@ -76,6 +76,8 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	private static Logger log = Logger.getLogger(RequestCtAdminBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
+	private String confirmationContentMsg;//34442 
+
 	//#30737 - Start 
     @Override
     protected List<PmUser> getSelectedUsers() {
@@ -181,6 +183,22 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			return null;
 		}
 	}
+
+	//34442 - start
+	/**
+	 * The method used to prepare the confirmation dialog message content
+	 * by retrieving the contract status and contract number.
+	 */
+	private void prepareConfirmationContent() {
+		CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
+		setConfirmationContentMsg(
+			getConfirmationContent(
+				String.valueOf(contractVer.getStatus().getStatusId()),
+				contractVer.getCtContract().getContractNo()
+			)
+		);
+	}
+	//34442 - end
 	
 	/**
 	 * Method to authenticate user during submit of requestCtadmin
@@ -207,13 +225,24 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
 			}
 			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				//34442 - start
+				prepareConfirmationContent();
+				RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+				//34442 - end
 			}//21387 end
 			return null;
 		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
-		}   else {
+		} 
+		//34442 - start
+		else if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+			prepareConfirmationContent();
+			RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+			return null;
+		} 
+		//34442 - end
+		else {
 			return saveRequestCtAdmin(outcome);
 		}
 	}
@@ -799,4 +828,14 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		}
 	}
 	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
+
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }
