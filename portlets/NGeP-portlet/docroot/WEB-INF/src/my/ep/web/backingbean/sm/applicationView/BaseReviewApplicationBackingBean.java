@@ -826,6 +826,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		// 36504 - START
 		getManagedBean().getEditVO().setPoEditCategory(false);
 		getManagedBean().getEditVO().setAppEditCategory(false);
+		FacesScopes sc = new FacesScopes();
+		boolean roleAdmin =  false;
+			if (!sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+			&& !sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
+			&& !sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+			&& !sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
+			&& !sc.hasRoleUser(RoleCode.FL_USER.value())
+			&& !sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
+			&& !sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
+			&& !sc.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+			&& !sc.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+			&& !sc.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+				roleAdmin = true;
+		}
 		
 		if (!getManagedBean().isPoApprUnClaimTask()
 		        && !getManagedBean().isRevisionDialog()
@@ -836,11 +850,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		        SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
 		    }
 
-		    if (getManagedBean().isOtherDescChangePO() || getManagedBean().isOtherDescChangeSupPO()) {
+		    if (roleAdmin && (getManagedBean().isOtherDescChangePO() || getManagedBean().isOtherDescChangeSupPO())) {
 		    	getManagedBean().getEditVO().setPoEditCategory(true);
 		    }
 
-		    if (getManagedBean().isOtherDescChangeApprover() || getManagedBean().isOtherDescChangeSupApprover()) {
+		    if (roleAdmin && (getManagedBean().isOtherDescChangeApprover() || getManagedBean().isOtherDescChangeSupApprover())) {
 		    	getManagedBean().getEditVO().setAppEditCategory(true);
 		    }
 		}
