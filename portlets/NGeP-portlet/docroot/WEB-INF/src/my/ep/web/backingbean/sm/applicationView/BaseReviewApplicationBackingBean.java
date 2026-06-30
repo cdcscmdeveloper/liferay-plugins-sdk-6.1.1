@@ -1017,6 +1017,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		// officeFacilityTypeFormViewOnly
+		//#40368-start
 		getManagedBean().setBasicCompanyFacility(new SmFacility());
 		for (SmFacility smFac : getManagedBean().getSmAppl().getSmFacilities()) {
 			if ((smFac.getFacilityType().equalsIgnoreCase(
@@ -1024,10 +1025,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.getFacilityType()
 					.equalsIgnoreCase(
 							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
-					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& smFac.isHeadquarters()) {
 				this.getManagedBean().setBasicCompanyFacility(smFac);
+				break;
 			}
-		}
+		}//#40368-end
 
 		// certificateInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmSupplierCerts() == null) {

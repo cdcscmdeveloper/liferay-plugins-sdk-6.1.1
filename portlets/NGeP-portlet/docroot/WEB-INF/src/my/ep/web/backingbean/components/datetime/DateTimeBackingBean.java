@@ -321,7 +321,7 @@ public class DateTimeBackingBean {
 		// 28188 -start-
 
 		Date bsvNormalMaintain = (Date) composite.getAttributes().get(
-				"checkBsvNormalMain");
+				"checkBSVNormalMain");
 		// 28188 -end-
 	    
 	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
