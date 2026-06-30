@@ -73,6 +73,7 @@
 				    	or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}">
 					<!-- Enhancement 15851 - shaqimi -->
+					<!-- #24336 change 'update' attribute -->
 					<p:ajax event="change" update=":form" process="@form"
 						listener="#{amendmentBackingBean.onChangeValueChecked}" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" />
@@ -230,12 +231,16 @@
 				<f:convertDateTime
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
-
+			
+			<!-- #24336 - Start-->
 			<h:panelGrid columns="2" style="float:right;" rendered="#{amendmentBackingBean.showEffectiveDateInput}">
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" styleClass="required" />
 			</h:panelGrid>
+			<!-- #24336 - End-->
+			
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.showEffectiveDateInput}">
-				<p:calendar style="width:80px;" id="edateCal1" showOn="button" readonlyInput="true" navigator="true"
+				<!-- #24336 add styleClass-->
+				<p:calendar styleClass="calanderWidth110" id="edateCal1" showOn="button" readonlyInput="true" navigator="true"
 					required="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					label="#{lbl['lbl.ct.effective.date']}"
@@ -276,16 +281,16 @@
 	<p:panel id="approvingAuthority" header="#{lbl['lbl.ct.menu.approving.authority']}" toggleable="true" toggleSpeed="500">
 		<!-- END 24336 -->
 		<h:panelGrid id="approvingAuthorityPanel" columns="2" style="width:100%" columnClasses="columnWidth170">
-			<p:outputLabel value="#{lbl['lbl.ct.approving.authority']}" styleClass="required" />
-			<h:panelGrid columns="3">
+			<p:outputLabel value="#{lbl['lbl.ct.approving.authority']}" styleClass="required" /> <!-- #24336 remove rendered -->
+			<h:panelGrid columns="3"> <!-- #24336 remove rendered -->
 				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
 				</p:selectBooleanCheckbox><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.mof']}" style="text-align:left" />
 			</h:panelGrid>
-			<f:verbatim/>
-			<h:panelGrid columns="4">
+			<f:verbatim /> <!-- #24336 remove rendered-->
+			<h:panelGrid columns="4"> <!-- #24336 remove rendered-->
 				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
 					<p:ajax event="change" update=":form:secretryDropDownPanel" process="@all"
@@ -298,7 +303,7 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.committee.type']}" />
 				<!-- #24336 - End -->
 			</h:panelGrid>
-			<f:verbatim/>
+			<f:verbatim /> <!-- #24336 remove rendered-->
 
 			<!-- #24336 - Start -->
 			<h:panelGroup id="secretryDropDownPanel">
@@ -325,7 +330,7 @@
 			<f:verbatim/>
 			<!-- #24336 - End -->
 
-			<h:panelGrid columns="3">
+			<h:panelGrid columns="3"> <!-- #24336 remove rendered -->
 				<p:selectBooleanCheckbox id="approverAuthorityReq"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
 					disabled="#{!amendmentBackingBean.isContractAmountAmend() or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableAmendDetails}" />

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.suspension;
 
@@ -92,6 +92,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	private ContractBackingBean ctBB = null;
 	private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+
+	private String confirmationContentMsg;//34442 
 
 	/**
 	 * This constructor method used to initialize the variable on start up
@@ -808,7 +810,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		else 
 			return false;
 	}
-
+	
 	/**
 	 * Method to authenticate user during submit of suspension
 	 * Navigate confirmation dialog for authenticate of login user
@@ -817,19 +819,34 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 			validateSuspensionDetails(outcome);
-			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			// Temp setTextBeforeSign :
+			// ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
 			sb.append(ContractConst.SEPRATE_LINE);
 			sb.append(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(outcome);			
+			sb.append(outcome);
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());			
-			getManagedBean().setTextBeforeSign(sb.toString());	
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+			getManagedBean().setTextBeforeSign(sb.toString());
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			// 34442 - start
+			if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+				CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
+
+				setConfirmationContentMsg(getConfirmationContent(String.valueOf(contractVer.getStatus().getStatusId()),
+						contractVer.getCtContract().getContractNo()));
+				getManagedBean().setButtonAction(outcome);
+				RequestContext.getCurrentInstance().update("submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			// 34442 - end
+			
 			return null;
 		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
@@ -1079,4 +1096,14 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 	}
 	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
+
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

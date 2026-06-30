@@ -2,7 +2,6 @@
   <cc:interface>
     <cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.other.desc.history.header']}" />
     <cc:attribute name="categoryCodeList" type="java.util.List" required="true" />
-    <cc:attribute name="applNo" type="java.lang.String" required="true" />
     <cc:attribute name="otherDescChangePO" type="java.lang.Boolean" />
     <cc:attribute name="otherDescChangeApprover" type="java.lang.Boolean" />
     <cc:attribute name="otherDescChangeSupplier" type="java.lang.Boolean" />
@@ -35,7 +34,7 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.application.no']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText value="#{cc.attrs.applNo}" />
+							<h:outputText value="#{otherDescBean.applNoHistory}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}"
@@ -47,13 +46,13 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
+							<h:outputText style="white-space: pre-line;"
 								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
+							<h:outputText style="white-space: pre-line;"
 								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}" />
 						</p:column>
 						<p:column
@@ -65,7 +64,7 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
+							<h:outputText style="white-space: pre-line;"
 								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}" />
 						</p:column>
 						<p:column

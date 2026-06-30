@@ -210,8 +210,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		//initialized mandatory and non mandatory supporting documents
 		initNonMandatoryAndMandatoryDocs();
 		//#38890 - start
-		SmAIDocBackingBean aiBB = new SmAIDocBackingBean();
-		aiBB.validateBank(getManagedBean().getSmAppl());
+		//SmAIDocBackingBean aiBB = new SmAIDocBackingBean();
+		//aiBB.validateBank(getManagedBean().getSmAppl());
 		//#38890 - end
 	}
 
