@@ -1679,13 +1679,13 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void deleteSelectedPendingApprovalCategoryCodes(
 			List<SmSupplierCategory> selectedCategories) {
-
+		// 40404
 		boolean checkingMTO = checkingAllBasicMTO(selectedCategories);
 
 		if (selectedCategories != null && selectedCategories.size() > 0) {
 			// #34209 - START
-			if (selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()) {
-				throw new EpException(MessageConst.ERROR_722708);
+			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()) {
+				throw new EpException(MessageConst.ERROR_722708); 
 			} else {
 				List<SmSupplierCategory> categories = selectedCategories;
 				// 40404 - START
@@ -1709,11 +1709,14 @@ public class SupplierDataMaintenanceBackingBean extends
 			// setOverLappingCategories();
 
 		} else {
-			throw new EpException(MessageConst.ERROR_722534, new String[] { SmCommonUtil.getMessage(
-					"lbl.sm.catCodes.catcode", null) });
+			throw new EpException(MessageConst.ERROR_722534,
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.catCodes.catcode", null) });
 		}
-		getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
-		getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
+		getManagedBean().setSelectedApprovedCategories(
+				new ArrayList<SmSupplierCategory>());
+		getManagedBean().setSelectedPendingApprovedCategories(
+				new ArrayList<SmSupplierCategory>());
 	}
 
 	// 40404 - delete MTO based on Basic Code 04, 05, and 06
