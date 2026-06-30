@@ -16501,11 +16501,11 @@ public class SmApplicationUtil {
 					managedBean.setOtherDescChangeApprover(true);
 					managedBean.setOtherDescChangeSupplier(true);
 					managedBean.getEditVO().setAppEditCategory(true);
-				} else if (!managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+				} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
 					managedBean.setOtherDescChangeSupApprover(true);
 					managedBean.setOtherDescChangeSupplier(true);
 					managedBean.getEditVO().setAppEditCategory(true);
-				} else if (!managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+				} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
 					managedBean.setOtherDescChangeSupPO(true);
 					managedBean.setOtherDescChangeSupplier(true);
 					managedBean.getEditVO().setPoEditCategory(true);
