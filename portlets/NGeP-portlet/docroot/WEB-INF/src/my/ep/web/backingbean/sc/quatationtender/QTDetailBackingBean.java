@@ -15281,20 +15281,23 @@ public void retrieveDemoQtDetails(Long qtId) {
 	    }
 
 	    // STEP 1: Build id -> dtl map for lookup (only non-null IDs)
-	    Map<Long, ScQtBsvDtl> idMap = new LinkedHashMap<Long, ScQtBsvDtl>();
-	    for (ScQtBsvDtl dtl : inputList) {
-	        if (dtl.getQtBsvDtlId() != null) {
-	            idMap.put(dtl.getQtBsvDtlId(), dtl);
-	        }
-	    }
+		List<Long> parentIdList = new ArrayList<>();
+		for (ScQtBsvDtl dtl : inputList) {
+
+			if (dtl.getParentPostponeId() != null
+					&& !parentIdList.contains(dtl.getParentPostponeId())) {
+
+				parentIdList.add(dtl.getParentPostponeId());
+			}
+		}
 
 	    // STEP 2: Group by root ancestor key (walks up via getParentBsvId).
 	    Map<Long, List<ScQtBsvDtl>> grouped = new LinkedHashMap<Long, List<ScQtBsvDtl>>();
 	    long phantomKey = Long.MIN_VALUE;
 
 	    for (ScQtBsvDtl dtl : inputList) {
-	        Long rootKey = getRootParentBsvId(dtl, idMap);
-
+	        Long rootKey = getRootParentBsvId(dtl, parentIdList);
+	       
 	        if (rootKey == null) {
 	            rootKey = phantomKey--;
 	        }
@@ -15413,22 +15416,28 @@ public void retrieveDemoQtDetails(Long qtId) {
 	//#28188 - End
 
 	//#28188 - Start
-	private Long getRootParentBsvId(ScQtBsvDtl dtl,
-	                                Map<Long, ScQtBsvDtl> idMap) {
+	private Long getRootParentBsvId(ScQtBsvDtl dtl, List<Long> parentIdList) {
 	    if (dtl == null) return null;
-
+         
 	    if (dtl.getParentPostponeId() == null) {
-	        return dtl.getQtBsvDtlId(); // may be null for brand-new roots
+	    	  return dtl.getQtBsvDtlId(); // may be null for brand-new roots
 	    }
-
-	    Long parentId = dtl.getParentPostponeId();
-	    ScQtBsvDtl parent = idMap.get(parentId);
-
-	    while (parent != null && parent.getParentPostponeId() != null) {
-	        parentId = parent.getParentPostponeId();
-	        parent = idMap.get(parentId);
-	    }
-
+	    Long parentId=dtl.getQtBsvDtlId();
+	    
+        if(CollectionUtils.isNotEmpty(parentIdList)){
+        	
+        	if(null!=parentId && parentIdList.contains(parentId)){
+        		 
+        		return parentId;	
+        	}else if(null!=parentId && !parentIdList.contains(parentId)){
+        		
+        		 return dtl.getParentPostponeId();
+        	}else if(null==parentId){
+        		
+        		return dtl.getParentPostponeId();
+        	}
+        }
+	    
 	    return parentId;
 	}
 	//#28188 - End
