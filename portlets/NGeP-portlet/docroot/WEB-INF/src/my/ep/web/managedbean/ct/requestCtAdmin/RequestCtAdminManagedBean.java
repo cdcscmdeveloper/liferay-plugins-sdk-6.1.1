@@ -58,6 +58,10 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 	
+	//30737 - start
+	private Long inactiveUserRevise;
+	//30737 - end
+	
 	/**
 	 * @return the taskName
 	 */
@@ -379,5 +383,14 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 		this.docType = docType;
 	}
 	
+	//#30737 - start
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
+	}
+
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
+	}
+	//#30737 - end
 
 }

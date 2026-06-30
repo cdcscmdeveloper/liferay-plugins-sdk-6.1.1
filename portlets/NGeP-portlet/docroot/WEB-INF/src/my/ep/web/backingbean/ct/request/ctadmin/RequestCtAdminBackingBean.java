@@ -41,9 +41,11 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; // 30737
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.requestctadmin.CTContractReqadminDataType;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContract; // 30737
 import my.ep.persistence.entity.ct.CtContractVer; //35506
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -707,7 +709,11 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		//#30737 - Start
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
-			handleInactiveUserValidation(outcome);
+			String approverType = determineRoleCode();
+			
+	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+	        		getInactiveUsers(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
+	        handleInactiveUserValidation(outcome, selectedInactiveUsers, getUserRole());
 		}
 		//#30737 - End
 		
@@ -715,31 +721,20 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	
 	//#30737 - Start
 	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
+	 * Determines the role code based on the contract type.
+	 * 
+	 * @return the role code string, or null if no matching contract type is
+	 *         found
 	 */
-	public void handleInactiveUserValidation(String outcome) {
-
-		IRequestContractAdminSO contractReqAdminSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IRequestContractAdminSO.class);
-    	
-        try {
-        	
-        	Long inactiveUserCheckResult = 1L; //TEMP
-        	
-        	contractReqAdminSO.checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-            	getSelectedUsers(),
-            	inactiveUserCheckResult
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex);
-        }
-    }
+	private String determineRoleCode() {
+		CtContract ctContract = getContractVer().getCtContract();
+		if (ctContract.getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			return RoleCode.CT_APPROVER.value();
+		} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			return RoleCode.BPK_CC_APPROVER.value();
+		}
+		return null;
+	}
 	//#30737 - End
 	
 	/*
