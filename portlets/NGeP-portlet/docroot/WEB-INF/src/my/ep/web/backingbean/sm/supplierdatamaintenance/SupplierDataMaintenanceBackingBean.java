@@ -1701,7 +1701,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						}
 					}
 				}
-				// 40404 - END
+				// 40404 - END 
 				deleteCatCodes(categories);
 			}
 			//#34209 - END
