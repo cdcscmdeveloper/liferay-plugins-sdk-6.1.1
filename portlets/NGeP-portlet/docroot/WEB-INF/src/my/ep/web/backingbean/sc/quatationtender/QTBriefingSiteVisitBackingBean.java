@@ -2019,8 +2019,8 @@ public class QTBriefingSiteVisitBackingBean extends
             result.put(entry.getKey(), entry.getValue());
         }
         
-	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
-	    for (List<ScQtBsvDtl> bsvList : grouped.values()) {
+        List<ScQtBsvDtl> finalList = new ArrayList<>();
+	    for (List<ScQtBsvDtl> bsvList : result.values()) {
 	        finalList.addAll(bsvList);
 	    }
 
