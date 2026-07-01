@@ -1679,12 +1679,29 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void deleteSelectedPendingApprovalCategoryCodes(
 			List<SmSupplierCategory> selectedCategories) {
+		
+		// 40404    
+		boolean checkingMTO = checkingAllBasicMTO(selectedCategories);
+		
 		if (selectedCategories != null && selectedCategories.size() > 0) {
 			//#34209 - START
 			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()){
 				throw new EpException(MessageConst.ERROR_722708);
 			} else {
 				List<SmSupplierCategory> categories = selectedCategories;
+				// 40404 - START
+				if (checkingMTO) { 
+					for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+
+						if (cat.getPmCategoryL3() != null
+								&& SupplierManagementConst.CAT_L3_09.equals(cat.getPmCategoryL3().getCategoryL3Code())) {
+
+							categories.add(cat);
+							break;
+						}
+					}
+				}
+				// 40404 - END 
 				deleteCatCodes(categories);
 			}
 			//#34209 - END
@@ -1702,6 +1719,39 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedPendingApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 	}
+	
+	// 40404 - delete MTO based on Basic Code 04, 05, and 06
+	private boolean checkingAllBasicMTO(List<SmSupplierCategory> catList) {
+		if (EntityHelper.isCollectionEmpty(catList)) {
+			return false;
+		}
+
+		for (SmSupplierCategory cat : catList) {
+
+			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null
+					&& SupplierManagementConst.CAT_L1_22.equals(cat.getPmCategoryL1().getCategoryL1Code())
+					&& cat.getPmCategoryL2() != null
+					&& SupplierManagementConst.CAT_L2_17.equals(cat.getPmCategoryL2().getCategoryL2Code());
+
+			if (!isSubCategoryMTO || cat.getPmCategoryL3() == null) {
+				continue;
+			}
+
+			String codeL3 = cat.getPmCategoryL3().getCategoryL3Code();
+
+			if (SupplierManagementConst.MTO_CODE_04.equals(codeL3)
+					|| SupplierManagementConst.MTO_CODE_05.equals(codeL3)
+					|| SupplierManagementConst.MTO_CODE_06.equals(codeL3)) {
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// 40404 - end
+	
 	// #39760 - Start
 	/**
 	 * Delete selected category code(s) that are newly added in Supplier Data
