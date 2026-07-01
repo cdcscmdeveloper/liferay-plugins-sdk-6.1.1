@@ -1104,23 +1104,6 @@ public class BSVAttendanceBackingBean extends
 			//28895-35500
 			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
 			
-			// 28188 -start-
-			List<ScQtBsvRegistration> existBriefingList = null;
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getBriefingRegistrationList())) {
-				BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-				briefingReqDTO.setQtBriefingId(this.getManagedBean().getScQtBriefing()
-						.getQtBsvDtlId());
-				briefingReqDTO.setUpdateAll(Boolean.TRUE);
-
-				BriefingResDTO briefingResDTO = getQtBriefingSO()
-						.retrieveBriefingRegistrationList(briefingReqDTO);
-
-				existBriefingList = briefingResDTO.getBriefingRegResultBean()
-						.getResultList();
-
-			}
-			// 28188 -end-
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
 			boolean invokeBPM = false;
@@ -1138,13 +1121,7 @@ public class BSVAttendanceBackingBean extends
 									.toString() });
 				}
 				
-				// 28188 -start-
-				if (CollectionUtils.isNotEmpty(existBriefingList)
-						&& existBriefingList.contains(registration)) {
-
-					throw new EpException(MessageConst.ERROR_760186);
-				}
-				// 28188 -end-
+				
 				
 				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
 
