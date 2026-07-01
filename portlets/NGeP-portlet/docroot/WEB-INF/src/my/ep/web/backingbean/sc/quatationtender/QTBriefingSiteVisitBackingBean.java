@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Collections;//#28188
 import java.util.Comparator;//#28188
 import java.util.LinkedHashMap;//#28188
+import java.util.LinkedList;
 import java.util.Map;//#28188
 
 import javax.faces.application.FacesMessage;//#28188
@@ -2004,9 +2005,23 @@ public class QTBriefingSiteVisitBackingBean extends
         }
 
 	    // STEP 4: Flatten - each group kept together, ordered by root ID
+	    List<Map.Entry<Long, List<ScQtBsvDtl>>> list =
+                new LinkedList<Map.Entry<Long, List<ScQtBsvDtl>>>(grouped.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<Long, List<ScQtBsvDtl>>>() {
+            public int compare(Map.Entry<Long, List<ScQtBsvDtl>> o1, Map.Entry<Long, List<ScQtBsvDtl>> o2) {
+                return (o1.getKey()).compareTo(o2.getKey());
+            }
+        });
+
+        Map<Long, List<ScQtBsvDtl>> result = new LinkedHashMap<>();
+        for (Map.Entry<Long, List<ScQtBsvDtl>> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        
 	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
-	    for (List<ScQtBsvDtl> list : grouped.values()) {
-	        finalList.addAll(list);
+	    for (List<ScQtBsvDtl> bsvList : grouped.values()) {
+	        finalList.addAll(bsvList);
 	    }
 
 	    return finalList;
