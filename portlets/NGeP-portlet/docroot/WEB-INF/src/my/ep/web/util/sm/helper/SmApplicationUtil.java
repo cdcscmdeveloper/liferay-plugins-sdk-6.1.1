@@ -4695,9 +4695,10 @@ public class SmApplicationUtil {
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
 						|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0 || 
-						(cat.getRecordStatusFlg().compareTo(SupplierManagementConst.RECORD_STATUS_ACTIVE) == 0 && 
-								(managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) ||
-								 managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {
+						(!managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI) &&
+						cat.getRecordStatusFlg().compareTo(SupplierManagementConst.RECORD_STATUS_ACTIVE) == 0 && 
+						(managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) ||
+						 managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {
 					
 					// 36504 - START - Applied Application
 					String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
@@ -16501,11 +16502,11 @@ public class SmApplicationUtil {
 					managedBean.setOtherDescChangeApprover(true);
 					managedBean.setOtherDescChangeSupplier(true);
 					managedBean.getEditVO().setAppEditCategory(true);
-				} else if (!managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+				} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
 					managedBean.setOtherDescChangeSupApprover(true);
 					managedBean.setOtherDescChangeSupplier(true);
 					managedBean.getEditVO().setAppEditCategory(true);
-				} else if (!managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+				} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
 					managedBean.setOtherDescChangeSupPO(true);
 					managedBean.setOtherDescChangeSupplier(true);
 					managedBean.getEditVO().setPoEditCategory(true);
