@@ -536,7 +536,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				if (cardType != null) { 
 					if (cardType.equalsIgnoreCase("Credit")) {
 						cardType = "CC";
-					} else if (cardType.equalsIgnoreCase("Debit")) {
+					} else if (cardType.equalsIgnoreCase("Debit") || cardType.equalsIgnoreCase("Prepaid")) { //#39654 - add prepaid
 						cardType = "DC";
 					} 
 					ParameterReqDTO reqPmDTO = new ParameterReqDTO();
@@ -564,14 +564,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						pyPayment.setCardType(cards);	
 						channel = "debit";
 					} 
-				}
+				} 
 				
 				//START THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
 				if(cardType == null && channel != null && !"credit".equalsIgnoreCase(channel) && !"debit".equalsIgnoreCase(channel)){
 					channel = "FPX";
 				}
 				//END THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
-				
 				
 				// #26307 end 
 				//32422 START
