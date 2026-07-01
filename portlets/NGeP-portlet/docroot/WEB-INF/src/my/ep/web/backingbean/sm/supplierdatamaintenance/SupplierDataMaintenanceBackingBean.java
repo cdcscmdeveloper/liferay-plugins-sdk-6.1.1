@@ -1679,15 +1679,16 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void deleteSelectedPendingApprovalCategoryCodes(
 			List<SmSupplierCategory> selectedCategories) {
-		// 40404
+		
+		// 40404   
 		boolean checkingMTO = checkingAllBasicMTO(selectedCategories);
-
+		
 		if (selectedCategories != null && selectedCategories.size() > 0) {
-			// #34209 - START
-			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()) {
-				throw new EpException(MessageConst.ERROR_722708); 
+			//#34209 - START
+			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()){
+				throw new EpException(MessageConst.ERROR_722708);
 			} else {
-				List<SmSupplierCategory> categories = selectedCategories; 
+				List<SmSupplierCategory> categories = selectedCategories;
 				// 40404 - START
 				if (checkingMTO) { 
 					for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
@@ -1703,10 +1704,10 @@ public class SupplierDataMaintenanceBackingBean extends
 				// 40404 - END
 				deleteCatCodes(categories);
 			}
-			// #34209 - END
+			//#34209 - END
 			// API FOR LIST OF OVERLAPPING CATEGORIES
-			// Redmine #18959 - no need to check overlapping
-			// setOverLappingCategories();
+			//Redmine #18959 - no need to check overlapping
+			//setOverLappingCategories();
 
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
@@ -1718,7 +1719,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedPendingApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 	}
-
+	
 	// 40404 - delete MTO based on Basic Code 04, 05, and 06
 	private boolean checkingAllBasicMTO(List<SmSupplierCategory> catList) {
 		if (EntityHelper.isCollectionEmpty(catList)) {
