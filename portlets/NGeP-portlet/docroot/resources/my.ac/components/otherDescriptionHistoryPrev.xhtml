@@ -46,18 +46,16 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}"
 							style="width : 15% !important; vertical-align:top;">
-							<h:panelGroup layout="block" style="white-space: pre-line;">
-						        <h:outputText
-						            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}" />
-						    </h:panelGroup>
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}" 
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}"
 							style="width : 15% !important; vertical-align:top;">
-							 <h:panelGroup layout="block" style="white-space: pre-line;">
-						        <h:outputText
-						            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}" />
-						    </h:panelGroup>
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}" 
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}"
@@ -68,10 +66,9 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}"
 							style="width : 15% !important; vertical-align:top;">
-							<h:panelGroup layout="block" style="white-space: pre-line;">
-						        <h:outputText
-						            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}" />
-						    </h:panelGroup>
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}"
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}"

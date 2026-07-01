@@ -566,6 +566,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					} 
 				} 
 				
+				//START THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
+				if(cardType == null && channel != null && !"credit".equalsIgnoreCase(channel) && !"debit".equalsIgnoreCase(channel)){
+					channel = "FPX";
+				}
+				//END THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
 				
 				// #26307 end 
 				//32422 START
@@ -686,7 +691,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info("###############38377 isValidPayment:"+validPayment);
 				if (!"Y".equals(paymentGateway)) {
-					log.info("###############38377 update payment");
+					log.info("###############38377 update payment  paymentOrder.setChannelName:"+paymentOrder.getChannelName());
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				}
 
