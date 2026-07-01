@@ -1680,7 +1680,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void deleteSelectedPendingApprovalCategoryCodes(
 			List<SmSupplierCategory> selectedCategories) {
 		
-		// 40404   
+		// 40404    
 		boolean checkingMTO = checkingAllBasicMTO(selectedCategories);
 		
 		if (selectedCategories != null && selectedCategories.size() > 0) {
