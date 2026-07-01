@@ -61,6 +61,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -275,6 +276,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Date poRemarkAfterSiteVisitCreatedDate;
 	private String secondPoUserName = null;
 	// #29664 - start	
+	private SmSupplierOwner smSuppOwner; //26238
 	private boolean viewSupplierMaintenancePage; // #26639
 	
 	//#32008 - start
@@ -327,6 +329,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean poApprUnClaimTask;
 	private List<SmMachineDtl> allMachineDtls;
 	//#30766 & #34209 - END
+	//26238 -  Disciplonary action - 28146
+	private boolean flagBlacklistCancel;
 	
 	//#34099 - start
 	private SmApplInquiry selectedInquiryResponse;
@@ -344,6 +348,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmRevisit> smRevisitList;
 	private SmRevisit currentSmRevisit;
 	// #34031 End
+	private Long currRegStatusId; //#26238
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1748,6 +1753,15 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setRemarkOverlappedId(Long remarkOverlappedId) {
 		this.remarkOverlappedId = remarkOverlappedId;
 	}
+	//26238 - start
+	public SmSupplierOwner getSmSuppOwner() {
+		return smSuppOwner;
+	}
+
+	public void setSmSuppOwner(SmSupplierOwner smSuppOwner) {
+		this.smSuppOwner = smSuppOwner;
+	}
+	//26238 - end
 	
 	//25792 - start
 		private class SupplierItemPagingDataModel extends PagingDataModel<CmSupplierItem> {
@@ -2320,5 +2334,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.currentSmRevisit = currentSmRevisit;
 	}
 	// #34031 End
+	// #38856 End
+	public Long getCurrRegStatusId() {
+		return currRegStatusId;
+	}
+
+	public void setCurrRegStatusId(Long currRegStatusId) {
+		this.currRegStatusId = currRegStatusId;
+	}
+	// #38856 End
 		
 }
