@@ -20284,9 +20284,11 @@ private void retriveCommitteeRemarksList(){
 		if (!isWeightage) {
 			return newScoreValue;
 		} else {
-			BigDecimal roundedWeightage = weightage.setScale(2, RoundingMode.HALF_UP);
+			if (null != scoreValue && null != weightage) {
+				BigDecimal roundedWeightage = weightage.setScale(2, RoundingMode.HALF_UP);
 
-			newScoreValue = scoreValue.multiply(roundedWeightage).setScale(2, RoundingMode.HALF_UP);
+				newScoreValue = scoreValue.multiply(roundedWeightage).setScale(2, RoundingMode.HALF_UP);
+			}
 		}
 		return newScoreValue;
 	}
