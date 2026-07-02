@@ -10,9 +10,11 @@
 		<h:panelGrid columns="2">
 			<p:spacer width="50" />
 			<h:panelGrid style="width:500px;">
+
 				<p:pickList id="approverpickList" value="#{amendmentBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data.userName}" disabled="#{amendmentBackingBean.managedBean.viewOnly}"
-					showTargetControls="true" filterMatchMode="contains" converter="pmUserConverter">
+					var="data" itemValue="#{data}" itemLabel="#{data.userName}" 
+					showTargetControls="true" filterMatchMode="contains" converter="pmUserConverter"
+					disabled="#{amendmentBackingBean.managedBean.viewOnly or amendmentBackingBean.isCtApproverSetting()}"> <!-- #24336 add disabled conditions -->
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}
 						<p:graphicImage id="sourceList" value="/css/images/design/tooltips.png" /> 
@@ -29,6 +31,7 @@
 						</p:tooltip> 
         			</f:facet>
 				</p:pickList>
+
 			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>

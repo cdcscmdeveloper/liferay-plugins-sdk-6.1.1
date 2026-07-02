@@ -35,18 +35,19 @@
 			</f:facet>
 
 			<p:row>
-				<p:column>
+				<p:column style="text-align:center">
 					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.weightage}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column style="text-align:center">
 					<h:outputText value="#{tplSpecAnswer.autoScore}" rendered="#{isSpecTypeTechnical and tplSpecAnswer.autoScore ne null}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 					</h:outputText>
-					<h:outputText value="#{tplSpecAnswer.userScore * (tplSpecAnswer.tplSpecQuestion.weightage)}" rendered="#{isSpecTypeTechnical and tplSpecAnswer.autoScore eq null}">
+					<h:outputText value="#{evaluationBackingBean.scorePopUpRounding(tplSpecAnswer.userScore, tplSpecAnswer.tplSpecQuestion.weightage, templateSpecBackingBean.hasWeightage(templateSpecBean))}" 
+					rendered="#{isSpecTypeTechnical and tplSpecAnswer.autoScore eq null}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 					</h:outputText>
