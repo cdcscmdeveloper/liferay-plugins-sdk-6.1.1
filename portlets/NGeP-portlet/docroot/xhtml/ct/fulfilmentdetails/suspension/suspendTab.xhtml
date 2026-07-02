@@ -136,5 +136,18 @@
 					onclick="cancelConfirmDlg.hide()" type="button" />
 			</div>
 		</p:confirmDialog>
+		<!-- #34442 - start -->
+		<p:confirmDialog id="submitConfirmDlgId"
+			message="#{suspensionBackingBean.confirmationContentMsg}"
+			severity="alert" widgetVar="submitConfirmDlg" closable="true"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="submitConfirmDlg.hide(); gpki_dlg.show();" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="submitConfirmDlg.hide()" type="button" />
+			</div>
+		</p:confirmDialog>
+		<!-- #34442 - end -->
 	</ui:define>
 </ui:composition>

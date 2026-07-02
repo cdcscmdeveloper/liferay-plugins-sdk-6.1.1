@@ -132,6 +132,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;//Fix - #34367
 
 
 /**
@@ -142,13 +143,15 @@ import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
  */
 @ManagedBean (name = "centralContractBackingBean") 
 @ViewScoped
-public class CentralContractBackingBean extends BaseBackingBean<CentralContractManagedBean>{
+public class CentralContractBackingBean extends CircularBaseBackingBean<CentralContractManagedBean>{ //Fix - #34367
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private IPagingDataModel<PmOrgProfile> exemptedOrgDataModel = new ExemptedOrgDataModel();	
+	
+	private String confirmationContentMsg;//34442
 
 	/**
 	 * This constructor method used to initialize the variable on start up
@@ -176,13 +179,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			initializeApproverList();
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		}
-	}
-
-	/**
-	 * This method used to retrieve user login  information
-	 */
-	private FacesScopes getFacesScopes() {
-		return new FacesScopes();
 	}
 
 	/**
@@ -600,10 +596,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
 			}
-
+			getPTJOwner();//Fix - #34367
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
 				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
 			}
 			
 			// #39594 - Start
@@ -1458,7 +1455,20 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			// set action
 			getManagedBean().setAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			//#34442 - start
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				setConfirmationContentMsg(
+					    getConfirmationContent(
+					        String.valueOf(getManagedBean().getCircularVer().getStatus().getStatusId())
+					    )
+					);
+				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#34442 - end
 			return null;
 		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
@@ -2461,5 +2471,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		commonDownload(attachment.getFilePath(), attachment.getFileName());
 	}
 	//#28713-end
+	
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 
 }

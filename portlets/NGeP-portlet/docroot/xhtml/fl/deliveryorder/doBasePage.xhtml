@@ -108,7 +108,8 @@
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								action="#{createDOBackingBean.signingAction(bpmAction)}" />
+								action="#{createDOBackingBean.confirmDialogueTrigger(bpmAction)}" />
+								<ui:remove>#34443 change to confirmDialogueTrigger</ui:remove>
 						</ui:repeat></td>
 				</h:panelGroup>
 				
@@ -190,6 +191,36 @@
 				</h:panelGroup>
 			</tr>
 		</table>
+		<ui:remove>#34443 start</ui:remove>
+		<p:confirmDialog
+			message="#{lbl['lbl.fl.confirmation.approve.dialogue.do']}"
+			severity="alert" widgetVar="approveConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmApprove)}"
+					onstart="approveConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="approveConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog
+			message="#{lbl['lbl.fl.confirmation.reject.dialogue.do']}"
+			severity="alert" widgetVar="rejectConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmReject)}"
+					onstart="rejectConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="rejectConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<ui:remove>#34443 end</ui:remove>
 		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
 			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
 			<table style="width: 100%">
@@ -208,16 +239,16 @@
 			severity="alert" widgetVar="limitConfirmDlg" closable="true"
 			header="#{lbl['lbl.do.amount.exceeded.threshold']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@form"
 					update="@form"
 					action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmSubmit)}"
 					onstart="limitConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 					onclick="limitConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<ui:remove>#30753 start</ui:remove>
+		<ui:remove>#30753 end</ui:remove>
 		<!--#26279 Start-->
 		<ac:disciplinaryActionHistory voList="#{createDOBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />

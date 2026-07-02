@@ -39,7 +39,7 @@
 		<p:panel id="UserProfile" toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sm.userprofile.add.new']}" rendered="#{!smPersonnelBackingBean.managedBean.editMode}"/>
-				<h:outputText value="#{lbl['lbl.sm.userprofile.edit']}" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
+				<h:outputText value="#{lbl['lbl.sm.person.info.hdr']}" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
 			</f:facet>
 			<table style="width: 100%">
 				<tr>
@@ -241,9 +241,9 @@
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}" 
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}" 
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}" 
-							isMobile="true" required="true"
-							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" />
+							isMobile="true" hideTelco="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" />
+							<!-- telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" /> --> <!-- 40200 -->
 					</td>
 				</tr>
 				
