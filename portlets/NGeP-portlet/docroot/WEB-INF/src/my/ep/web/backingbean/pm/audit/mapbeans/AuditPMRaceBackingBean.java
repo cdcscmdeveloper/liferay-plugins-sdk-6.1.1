@@ -69,6 +69,8 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 					managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 		}
+
+		managedBeans.setOldPmRace(null);
 		auditPMReqDTO.setObjList(objList);
 		return auditPMReqDTO;
 	}

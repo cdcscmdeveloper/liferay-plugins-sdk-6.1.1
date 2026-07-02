@@ -1980,6 +1980,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
 	}
 	
+	//#39693_40086 - Start
+	public boolean isRoleAuditorInternal(){
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
+	}
+	//#39693_40086 - End
+
 	/**
 	 * Login user has planner role
 	 * @return boolean
@@ -3736,35 +3742,26 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if(epItem.getPmGlAccount().getGlAccountId()==null){
 							throw new EpException(MessageConst.ERROR_730003);
 						}
-						if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
+						//#39764 - Start
+						if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().compareTo(BigDecimal.ZERO)<=0){
 							throw new EpException(MessageConst.ERROR_730004);
 						}
-						if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
+						if(epItem.getPlanAmt()==null || epItem.getPlanAmt().compareTo(BigDecimal.ZERO)<=0){
 							throw new EpException(MessageConst.ERROR_730005);
 						}
 						//01032021@Bug #30476 - start
-						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0
+						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().compareTo(BigDecimal.ZERO)<0
 								|| epItem.getNonEpAmt().doubleValue()<-epItem.getNonEpAmt().doubleValue()){
 							throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
 						}	//01032021@Bug #30476 - end
-						
-						if(epItem.getNonEpAmt().intValue()>0){
-							if(epItem.getJustifications()==null 
-									|| (epItem.getJustifications()!=null && epItem.getJustifications().isEmpty())
-									|| (epItem.getJustifications()!=null 
-										&& epItem.getJustifications().isEmpty() 
-										&& epItem.getJustifications().get(0)==null)  
-									|| (epItem.getJustifications()!=null &&(
-										 epItem.getJustifications().isEmpty() 
-										|| epItem.getJustifications().get(0)==null
-										|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())))){
-								//03122020@24975 - Start
-								epItem.setNotUsingEp(true);
-								ppItemNotUsingEp.add(epItem);
-								indicatorIndex++;
-								//03122020@24975 - End
-							}
+						if(epItem.getNonEpAmt().compareTo(BigDecimal.ZERO) > 0 && isJustificationInvalid(epItem)) {
+							//03122020@24975 - Start
+							epItem.setNotUsingEp(true);
+							ppItemNotUsingEp.add(epItem);
+							indicatorIndex++;
+							//03122020@24975 - End
 						}
+						//#39764 - End
 						//#25549@24022021 - remove 
 						soIds.add(epItem.getPmGlAccount().getGlAccountId());
 					}
@@ -4500,18 +4497,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedJustifications(null);
 		this.getManagedBean().setSelectedJustificationDesc("");
 		boolean newRemark = false;
-		
-		
+	    this.getManagedBean().setDimmedJustification(false); //#35502, Fix as-is bug: #38652
+
 		if(epItem.getJustifications()==null){
 			epItem.setJustifications(new ArrayList<PpRemark>());
 		}
-		/* enable for phase 2
-		//if first remark is not new
-		if (!epItem.getJustifications().isEmpty()){
-			if(!epItem.getJustifications().get(0).isBrandNew()){
-				newRemark = true;
-			}
-		}*/
 
 		// if reason is empty
 		if (epItem.getJustifications().isEmpty() || epItem.getJustifications().size() == 0) {
@@ -4522,31 +4512,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(!this.getManagedBean().isModeEditable() || !epItem.isEditable()){
 			newRemark = false;
 		}
-	
-		
-		/* enable for phase 2
-		// for user to edit draft remark
-		if(newRemark){
-			if(!epItem.getJustifications().isEmpty() && compareUserNameInsensitive(epItem.getJustifications().get(0).getUserId())){
-				//if both statuses are null
-				if(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
-						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
-					epItem.getJustifications().get(0).setEditable(true);
-					newRemark = false;
-				//if both plan status!=null && justification status == null
-				}else if(this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()!=null && 
-						(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
-							|| (epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
-									epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId()==null))){
-				// if remark status == plan status
-				}else if(epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
-						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
-					epItem.getJustifications().get(0).setEditable(true);
-					newRemark = false;
-				}
-			}
-		} */
 		
 		if(newRemark){
 			log.info("new justification added");
@@ -4566,14 +4531,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epItem.getJustifications().add(0, remark);
 
 		}
-	
+
+		//#35502, Fix as-is bug: #38652 Start
+		if (epItem.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+			this.getManagedBean().setDimmedJustification(true);
+		}
+		//#35502, Fix as-is bug: #38652 End
+
 		this.getManagedBean().setSelectedJustifications(epItem.getJustifications());
 		this.getManagedBean().setSelectedJustificationDesc(epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark());
-		
-		
-		
+
 		log.info("loadJustification - End");
-		
 	}
 	
 	/**
@@ -4813,7 +4781,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if(ppItem.getInvitationDate()==null){
 						throw new EpException(MessageConst.ERROR_730012);
 					}
-					if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().intValue()<=0){
+					if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().compareTo(BigDecimal.ZERO)<=0){ //#39764
 						throw new EpException(MessageConst.ERROR_730014);
 					}
 					// Set Reason For Update to be mandatory
@@ -6117,76 +6085,31 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		resetPtjGroupOrgProfile(); //[Bug#27032]
 	}
 	
+	//#39693_40086 - Start
 	/**
 	 * To setup org profile details (ministry, kumpulan ptj and ptj)
 	 */
-	private void setupOrgProfile(){
-		if(getManagedBean().getCurrentActiveOrg() !=null){
-			Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
-			if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
-					&&(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
-							|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
-				if(isRolePlanner() || isRoleVerifier()){
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
-					getManagedBean().setDisabledMinistryLov(true);
-					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
-					getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
-					getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getCurrentActiveOrg());
-					getManagedBean().setDisabledKumpulanPTJLov(true);
-					getManagedBean().setDisabledPTJLov(true);			
-	
-				}else{
-					 // group org hierarchy
-					if(ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
-						//Bug#29887@07012021 - Start 
-						getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); 
-						getManagedBean().setDisabledMinistryLov(true);
-						getManagedBean().getPlanSearchBean().setMinistry(getManagedBean().getCurrentActiveOrg());
-						//Bug#29887@07012021 - End
-					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
-//						List<PmOrgProfile> orgProfileList = PpCommonUtil.retrieveOrgProfileListFromGroupOrgType(orgProfileId,
-//								OrganizationType.MINISTRY.value(), ParameterConst.ORG_AUTH_TYPE_MINISTRY);
-//						if(orgProfileList != null && !orgProfileList.isEmpty()){
-//							getManagedBean().setSelectedMinistry(orgProfileList.get(0));
-//							getManagedBean().getPlanSearchBean().setMinistry(orgProfileList.get(0));
-//						}		
-						getManagedBean().getPlanSearchBean().setMinistry(retrieveMinistryOrgProfile(orgProfileId));
-						getManagedBean().getPlanSearchBean().setKptj(retrieveJabatanOrgProfile(orgProfileId));
-						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
-						getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
-						getManagedBean().setDisabledMinistryLov(true);
-						getManagedBean().setDisabledKumpulanPTJLov(true);
-					}
-				}
-				
-			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null 
-					|| (getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
-					&& ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
-				// usual org hierarchy 
-				if(isRolePlanner() || isRoleVerifier()){
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
-					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
-					getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
-					getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getCurrentActiveOrg());
-					getManagedBean().setDisabledMinistryLov(true);
-					getManagedBean().setDisabledKumpulanPTJLov(true);
-					getManagedBean().setDisabledPTJLov(true);
+	private void setupOrgProfile() {
+		if (getManagedBean().getCurrentActiveOrg() == null) {
+			return;
+		}
 
-				}else if(isRoleApprover()){
-						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
-						getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
-						getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
-						getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getCurrentActiveOrg());
-						getManagedBean().setDisabledMinistryLov(true);
-						getManagedBean().setDisabledKumpulanPTJLov(true);
-						getManagedBean().setDisabledPTJLov(true);
-						
-				}
-			}
-			
-			
+		Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
+		String groupOrgType = getManagedBean().getCurrentActiveOrg().getGroupOrgType();
+
+		if (isGroupOrgTypeKumpPtjAndMinistryHierarchy(groupOrgType)) {
+			setupGroupOrgTypeKumpPtjAndMinistryHierarchy(orgProfileId, groupOrgType);
+		} else if (isGroupOrgTypeHierarchy(groupOrgType)) {
+			setupApproveOtherPtjProcOrgHierarchy(orgProfileId);
+		}
+
+		if (isRoleAuditorInternal()){
+			getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); 
+			getManagedBean().setDisabledMinistryLov(true);
+			getManagedBean().getPlanSearchBean().setMinistry(getManagedBean().getCurrentActiveOrg());
 		}
 	}
+	//#39693_40086 - End
 	
 	/**
 	 * To Retrieve Plan Type List
@@ -9167,4 +9090,107 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	// #25549@24022021 - end
+	
+	//#39764 - Start
+	private boolean isJustificationInvalid(PpExpenditureItem epItem) {
+	    List<PpRemark> justifications = epItem.getJustifications();
+
+	    if (justifications == null || justifications.isEmpty()) {
+	        return true;
+	    }
+	    PpRemark remark = justifications.get(0);
+	    if (remark == null) {
+	        return true;
+	    }
+	    return StringUtils.isBlank(remark.getRemark());
+	}
+	//#39764 - End
+
+	//#39693_40086 - Start
+	private boolean isGroupOrgTypeKumpPtjAndMinistryHierarchy(String groupOrgType) {
+		return groupOrgType != null
+				&& (ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(groupOrgType)
+				|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(groupOrgType));
+	}
+
+	private boolean isGroupOrgTypeHierarchy(String groupOrgType) {
+		return groupOrgType == null || ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(groupOrgType);
+	}
+
+	private void setupGroupOrgTypeKumpPtjAndMinistryHierarchy(Long orgProfileId, String groupOrgType) {
+		if (isRolePlanner() || isRoleVerifier()) {
+			setupPlannerVerifierOrg(orgProfileId);
+		} else {
+			setupGroupOrgHierarchyByType(orgProfileId, groupOrgType);
+		}
+	}
+
+	private void setupGroupOrgHierarchyByType(Long orgProfileId, String groupOrgType) {
+		//group org hierarchy
+		if (ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(groupOrgType)) {
+			setupMinistryGroupOrg(orgProfileId);
+		} else if (ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(groupOrgType)) {
+			setupKumpulanPtjGroupOrg(orgProfileId);
+		}
+	}
+
+	private void setupApproveOtherPtjProcOrgHierarchy(Long orgProfileId) {
+		//usual org hierarchy
+		if (isRolePlanner() || isRoleVerifier() || isRoleApprover() ) {
+			setupGroupOrgTypeN(orgProfileId);
+		}
+	}
+
+	private void setupPlannerVerifierOrg(Long orgProfileId) {
+		PmOrgProfile ministry = retrieveMinistryOrgProfile(orgProfileId);
+		PmOrgProfile jabatan = retrieveJabatanOrgProfile(orgProfileId);
+
+		getManagedBean().setSelectedMinistry(ministry);
+		getManagedBean().setDisabledMinistryLov(true);
+		getManagedBean().setSelectedKumpulanPTJ(jabatan);
+		getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
+		getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getCurrentActiveOrg());
+		getManagedBean().setDisabledKumpulanPTJLov(true);
+		getManagedBean().setDisabledPTJLov(true);
+	}
+
+	private void setupMinistryGroupOrg(Long orgProfileId) {
+		//Bug#29887@07012021 - Start
+		if (isRoleApprover()) {
+			PmOrgProfile ministry = retrieveMinistryOrgProfile(orgProfileId);
+
+			getManagedBean().setSelectedMinistry(ministry);
+			getManagedBean().setDisabledMinistryLov(true);
+			getManagedBean().getPlanSearchBean().setMinistry(ministry);
+		}
+		//Bug#29887@07012021 - End
+	}
+
+	private void setupKumpulanPtjGroupOrg(Long orgProfileId) {
+		if (isRoleApprover()) {
+			PmOrgProfile ministry = retrieveMinistryOrgProfile(orgProfileId);
+			PmOrgProfile jabatan = retrieveJabatanOrgProfile(orgProfileId);
+
+			getManagedBean().getPlanSearchBean().setMinistry(ministry);
+			getManagedBean().getPlanSearchBean().setKptj(jabatan);
+			getManagedBean().setSelectedMinistry(ministry);
+			getManagedBean().setSelectedKumpulanPTJ(jabatan);
+			getManagedBean().setDisabledMinistryLov(true);
+			getManagedBean().setDisabledKumpulanPTJLov(true);
+		}
+	}
+
+	private void setupGroupOrgTypeN(Long orgProfileId) {
+		PmOrgProfile ministry = retrieveMinistryOrgProfile(orgProfileId);
+		PmOrgProfile jabatan = retrieveJabatanOrgProfile(orgProfileId);
+
+		getManagedBean().setSelectedMinistry(ministry);
+		getManagedBean().setSelectedKumpulanPTJ(jabatan);
+		getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
+		getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getCurrentActiveOrg());
+		getManagedBean().setDisabledMinistryLov(true);
+		getManagedBean().setDisabledKumpulanPTJLov(true);
+		getManagedBean().setDisabledPTJLov(true);
+	}
+	//#39693_40086 - End
 }

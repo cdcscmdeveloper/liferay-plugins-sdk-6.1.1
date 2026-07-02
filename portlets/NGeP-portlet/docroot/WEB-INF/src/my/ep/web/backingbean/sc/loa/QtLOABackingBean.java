@@ -8,16 +8,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.MapKeyEnum;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -35,7 +32,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -487,11 +483,6 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
 	
-	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-	}
-	
 	/**
 	 * Page navigation from qt loa screen to qtLoaManagedBean.backToPreviousPage
 	 */
@@ -504,11 +495,34 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 						getManagedBean().getBackToPreviousPage());
 	}
 	
+	// 29661 -start-
+	/**
+	 * check portlet is from qtMaintenace/Audit/Support/proposal/Evaluation
+	 * screens.
+	 * 
+	 * @return boolean.
+	 */
 	private boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		// 29661 -start-
+		boolean compExp = QTConstants.PORTLET_NAME_SUPPLIER_PROPOSAL
+				.equals(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PROPOSAL_EVALUATION_PORTLET
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		// 29661 -end-
+
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
+				|| QTConstants.PORTLET_NAME_QT_TECHSUPP
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+
+				// 29661 -start-
+				|| compExp;
+		// 29661 -end-
 	}
+
+	// 29661 -end-
 	
 	//#21692 - Start
 	/**

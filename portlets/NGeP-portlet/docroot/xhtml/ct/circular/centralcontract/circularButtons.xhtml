@@ -26,7 +26,7 @@
 				</ui:repeat></td>
 			<!--#35506 start-->
 			<td style="float: right;">
-			<c:if test="#{centralContractBackingBean.managedBean.action eq 'view' and circularBackingBean.isAuditCheck()}">
+			<c:if test="#{centralContractBackingBean.managedBean.action eq 'view' and circularBackingBean.isAuditRoleCheck()}">
 			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
 						action="#{auditContractBackingBean.redirectToAudittrailView(
                 centralContractBackingBean.managedBean.circular.circularType,

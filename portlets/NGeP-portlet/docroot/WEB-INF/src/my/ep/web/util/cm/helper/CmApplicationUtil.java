@@ -74,28 +74,31 @@ public class CmApplicationUtil {
 	}
 	
 	//[#26282] and SonarLint Issues Fixing...
-	public static List<SmDisciplinaryAction> checkForDisciplinaryAction(
-			Long supplierId) {
+	/**
+	 * 
+	 * @param supplierId
+	 * @return disciplinaryActList
+	 */
+	public static List<SmDisciplinaryAction> checkForDisciplinaryAction(Long supplierId) {
 		SmSupplier smSupplier;
-
-		if (supplierId == null) {
-			// get supplier details base on user login
+		
+		if(supplierId == null) {
+			//get supplier details base on user login	
 			SmApplicationUtil.getInstance();
 			smSupplier = SmApplicationUtil.getCurrentSupplier();
 		} else {
 			smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(supplierId);
 		}
-
+		
 		log.info("[#26282] - Supplier ID is: " + smSupplier.getSupplierId());
-
+		
 		List<SmDisciplinaryAction> disciplinaryActList = null;
-
-		if (smSupplier.getSupplierId() != null) {
-			disciplinaryActList = SmApplicationUtil
-					.retrieveActiveSmDisciplinaryActionBySupplier(smSupplier);
+		
+		if(smSupplier.getSupplierId() != null) {
+			disciplinaryActList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForCMCD(smSupplier);
 		}
-
+		
 		return disciplinaryActList;
 	}
 }

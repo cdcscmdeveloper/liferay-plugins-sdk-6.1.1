@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -83,6 +84,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
+	private Boolean sampleExistCache; // Bug_39486 - Bug_39877
 
 	/**
 	 * Debug logger.
@@ -430,8 +432,9 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
 		//#28895 - 35500 start
-		List<ScQtContactPerson> deletedContactList = new ArrayList<ScQtContactPerson>();
+		List<ScQtContactPerson> deletedContactList = new ArrayList<>();
 		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
+		HashMap<ScQtContactPerson, PmUser> modifiedDoaList = this.getManagedBean().getModifiedDoaList();//#35500 fix issue 5
 		//#28895 - 35500 end		
 
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
@@ -440,10 +443,21 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
 				//#28895-35500 start
-				deletedContactList.add(contactPerson);				
+				if (CollectionUtils.isNotEmpty(deletedContactList) && !deletedContactList.contains(contactPerson)){//#35500 Fix Reopen 27th Nov
+					deletedContactList.add(contactPerson);
+				} else if (CollectionUtils.isEmpty(deletedContactList)) {
+					deletedContactList.add(contactPerson);
+				}
+				
 				if (newDoaList != null && newDoaList.contains(contactPerson)){
 					newDoaList.remove(contactPerson);
+					deletedContactList.remove(contactPerson);//#35500 fix issue 2
 				}
+				//#35500 fix issue 5 Start
+				if (modifiedDoaList != null && modifiedDoaList.containsKey(contactPerson)){
+					modifiedDoaList.remove(contactPerson);
+				}
+				//#35500 fix issue 5 End
 			}
 			this.getManagedBean().setPmUserDeletedContactPersonList(deletedContactList);
 			//#28895 - 35500 end
@@ -481,6 +495,10 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		Map<Object, Object> map = CustomUtils.listToMap(list, "getUserId");
 		Map<Object, Object> map2 = CustomUtils.listToMap(list2, "getUser.getUserId");
 		
+		// #35500 fix issue 7
+		ScQtContactPerson originalDOACP = contactPerson;
+		PmUser originalDOA = originalDOACP.getUser();
+		
 		if(previousId!=null){
 			ScQtContactPerson person = (ScQtContactPerson)map2.get(previousId);
 			person.setUser(new PmUser());
@@ -501,9 +519,24 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		
 		//28895 - 35500 start
 		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
+		HashMap<ScQtContactPerson, PmUser>  modifiedDoaList = this.getManagedBean().getModifiedDoaList();//#35500 fix issue 5
 		newDoaList = newDoaList == null ? new ArrayList<ScQtContactPerson>() : newDoaList;
-		newDoaList.add(contactPerson);
+		modifiedDoaList = modifiedDoaList == null ? new HashMap<ScQtContactPerson, PmUser>() : modifiedDoaList;
+		//#35500 fix issue 5
+		if (originalDOA.getUserName() == null) {
+			newDoaList.add(contactPerson);
+		} else {
+			if (modifiedDoaList.containsKey(originalDOACP)) {
+				originalDOA = modifiedDoaList.get(originalDOACP);
+				modifiedDoaList.remove(contactPerson);
+				modifiedDoaList.put(contactPerson, originalDOA);
+			} else {
+				modifiedDoaList.put(contactPerson, originalDOA);
+			}
+		}
+
 		this.getManagedBean().setNewDoaList(newDoaList);
+		this.getManagedBean().setModifiedDoaList(modifiedDoaList);
 		//#28895-35500 end
 
 //		if (list != null) {
@@ -953,5 +986,21 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		//this.getManagedBean().setZoneLocation(Boolean.FALSE);
 		this.getManagedBean().setAutoUpdate(true);
 	}
+	
+	/**
+	 * Get value for sample, Bug #39486 - #39877.
+	 * 
+	 * @param scQt the quotation tender object
+	 * 
+	 * @return true if sample exists, false otherwise
+	 */
+	public boolean sampleExist(ScQt scQt) {
+		
+        if (sampleExistCache == null) {
+            sampleExistCache = checkISSampleExistWIPChecklist(scQt);
+        }
+
+        return Boolean.TRUE.equals(sampleExistCache);
+    }
 
 }

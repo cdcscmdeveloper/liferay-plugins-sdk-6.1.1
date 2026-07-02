@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;	// Bug #40087@Syazani 06/04/2026
 import java.util.List;
 import java.util.Locale;
 
@@ -211,9 +212,10 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setCircularExpDate(circular.getEndDate());
 			this.getManagedBean().setCircularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
-			
-			if(null!=scQt.getItemGroup() && null!=scQt.getItemGroup().getPanelItemGroupId()){
-			deleteTemplateSpecs(getManagedBean().getQt());
+			this.getManagedBean().setCircularVer(circular);// #29661
+
+			if (null != scQt.getItemGroup() && null != scQt.getItemGroup().getPanelItemGroupId()) {
+				deleteTemplateSpecs(getManagedBean().getQt());
 			}
 			
 		}
@@ -1459,8 +1461,7 @@ public class CreateQtBackingBean extends
 								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			} else if ((ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN
-							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()))) {
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()))) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
@@ -1468,8 +1469,7 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setTotalProgressivePayment(0);
 
 			} else if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())))) {
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()))) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
@@ -1567,10 +1567,8 @@ public class CreateQtBackingBean extends
 	 */
 	private boolean updatefullfillmentDetails(PmParameter newFulfilmentType,PmParameter previousFulfilmentType ) {
 		
-		if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()) || 
-			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()))&&
-			(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()) || 
-			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()))){
+		if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode())&&
+			ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode())){
 			
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
@@ -3020,7 +3018,28 @@ public class CreateQtBackingBean extends
 	 * 		the scQt
 	 */
 	public void setFileNo(ScQt scQt) {
-		scQt.getFileNo();
+		//#29661 start
+		if (scQt != null){
+		String fileNo = scQt.getFileNo();
+		fileNo = trimFileNo(fileNo);
+		scQt.setFileNo(fileNo);		
+		}
+		//#29961 end
+	}
+	
+	/**
+	 * #29661
+	 * trim file no from quotation tender's general details
+	 * @param fileNo
+	 * @return
+	 */
+	private String trimFileNo(String fileNo) {
+		if (!(fileNo == null || fileNo.isEmpty())){
+			fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");//first character condition
+			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");//last character condition
+			fileNo = fileNo.trim().replaceAll(" +", " ");//one white space only condition
+		}
+		return fileNo;
 		
 	}
 	
@@ -4109,15 +4128,7 @@ public class CreateQtBackingBean extends
 				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
 			}//11104-End
 			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
-				for(ScQtCheckList checklist:st2technicalproposalList){
-					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
-							.getDefinationType().getParameterCode())) {
-						deltechnicalproposalList.add(checklist);
-						getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
-						st2technicalproposalList.remove(checklist);
-						break;
-					}
-				}
+				removeSampleChecklist(st2technicalproposalList, deltechnicalproposalList);	// Bug #40087@Syazani 06/04/2026
 			}
 		}
 	}
@@ -4308,6 +4319,23 @@ public class CreateQtBackingBean extends
 		}
 	}
 	// Bug #36730@Syazani 07/01/2025 -- End
+	
+	// Bug #40087@Syazani 06/04/2026 -- Start
+	private void removeSampleChecklist(List<ScQtCheckList> st2technicalproposalList,
+			List<ScQtCheckList> deltechnicalproposalList) {
+		Iterator<ScQtCheckList> itScQtChecklist = st2technicalproposalList.iterator();
+		while (itScQtChecklist.hasNext()) {
+			ScQtCheckList checklist = itScQtChecklist.next();
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
+					.getParameterCode())) {
+				deltechnicalproposalList.add(checklist);
+				getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
+				itScQtChecklist.remove();
+				break;
+			}
+		}
+	}
+	// Bug #40087@Syazani 06/04/2026 -- End
 }
 
 

@@ -9,8 +9,14 @@
 	<p:panel id="committMaintenanceFcSelectionpanel" header="#{committeBackingBean.managedBean.headerTitle}"
 		toggleable="true" styleClass="committeMemberDtls">
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.view.history']}" styleClass="BtnSpacing"
-				action="#{committeBackingBean.viewHistoryAction(committeBackingBean.managedBean.qtCommittee)}" />
+		
+			<!-- #35320 - start : add condition -->
+			<p:commandButton value="#{lbl['lbl.btn.view.history']}"
+				styleClass="BtnSpacing"
+				action="#{committeBackingBean.viewHistoryAction(committeBackingBean.managedBean.qtCommittee)}"
+				rendered="#{!committeBackingBean.managedBean.viewCommitteePage}" />
+			<!-- #35320 - end : add condition -->
+			
 		</div>
 		<p:dataTable id="fcMembersId" rowKey="#{committeemember}"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -22,7 +28,7 @@
 				update="@([id$=memberListTbl])" /> -->
 
 			<p:column style="width:2%"
-				rendered="#{isCommitteeRecordStatusActive}">
+				rendered="#{isCommitteeRecordStatusActive and !committeBackingBean.managedBean.viewCommitteePage}"><!-- #35320 - add condition -->
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllMemChk" disabled="true"
 						value="#{committeBackingBean.managedBean.selectAllMembers}">
@@ -69,13 +75,22 @@
 			</p:column>
 			<p:column style="width: 15%">
 				<f:facet name="header">
+
+					<!-- #35320 - start -->
 					<h:outputText value="* " styleClass="mandatory"
-						rendered="#{isCommitteeRecordStatusActive}" />
+						rendered="#{isCommitteeRecordStatusActive and !committeBackingBean.managedBean.viewCommitteePage}" />
+					<!-- #35320 - end -->
+
 					<h:outputText value="#{lbl['lbl.sc.representative.type']}" />
 				</f:facet>
 				<ui:fragment rendered="#{committeemember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 					<c:choose>
-						<c:when test="#{isCommitteeRecordStatusActive}">
+					
+						<!-- #35320 - start : add condition -->
+						<c:when
+							test="#{isCommitteeRecordStatusActive and !committeBackingBean.managedBean.viewCommitteePage}">
+						<!-- #35320 - end : add condition -->
+						
 							<p:selectOneMenu required="#{!committeemember.selected}"
 								id="representativeType" value="#{committeemember.representativeTypeId}"
 								label="#{lbl['lbl.sc.please.select.representative.type']}" style="width: 150px;margin-bottom: 5px;">
@@ -93,17 +108,21 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
+
+			<!-- #35320 - start : add condition -->
 			<p:commandButton id="quotationcommitteeadd" styleClass="BtnSpacing"
 				value="#{lbl['lbl.btn.add']}" process="@this"
 				action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 				oncomplete="screen3.show();" update="@(.addQCMember)"
-				rendered="#{isCommitteeRecordStatusActive}" />
+				rendered="#{isCommitteeRecordStatusActive and !committeBackingBean.managedBean.viewCommitteePage}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			disabled="#{committeBackingBean.deleteselectedList(committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers)}"
+				disabled="#{committeBackingBean.deleteselectedList(committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers)}"
 				styleClass="BtnSpacing" process="@this, fcMembersId"
 				partialSubmit="true" oncomplete="fcCommitteeDeletePopUp.show();"
 				update="@([id$=#{fcCommitteeDeleteId}])"
-				rendered="#{isCommitteeRecordStatusActive}" />
+				rendered="#{isCommitteeRecordStatusActive and !committeBackingBean.managedBean.viewCommitteePage}" />
+			<!-- #35320 - end : add condition -->
+
 		</div>
 		<ui:param name="fcCommitteeDeleteId" value="fcCommitteeDeleteId" />
 		<ac:confirmationPopup id="#{fcCommitteeDeleteId}"

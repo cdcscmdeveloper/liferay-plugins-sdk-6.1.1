@@ -213,6 +213,21 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 		return items;
 	}
 	
+	//#30918 -start
+	
+	public SelectItem[] getFulfilmentTypeDropdownValues() {
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.FULFILMENT_TYPE, null);
+		
+		if (items != null && items.length > 0) {
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
+		}	
+		return items;
+	}
+	//#30918 - end
+
 	// Start - #29416
 	public void checkValue() {
 		// Get the bean instance
@@ -287,7 +302,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 													new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
-		} else if (contractNumber.length() != ContractConst.CONTRACT_LENGTH) {
+		} else if (contractNumber.length() < ContractConst.CONTRACT_LENGTH) {
 			isError = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,

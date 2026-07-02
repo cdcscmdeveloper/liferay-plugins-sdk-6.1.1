@@ -21,6 +21,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+//#28720
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "smPersonnelRequestActivationBackingBean")
 @ViewScoped
@@ -36,9 +38,11 @@ public class SmPersonnelRequestActivationBackingBean extends
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		if (currSupp != null){
 			List<SmDisciplinaryAction> activeDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-			if (!EntityHelper.isCollectionEmpty(activeDA) && SmApplicationUtil.hasCannotLoginDA(activeDA)){
-			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+			//26238 - 39217
+			getManagedBean().setDisciplinaryAction(SmApplicationUtil.hasCannotLoginDA(activeDA));
+			if (getManagedBean().isDisciplinaryAction()){
+				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
 								new String[] { "" })));
 			}
 		}
@@ -100,5 +104,15 @@ public class SmPersonnelRequestActivationBackingBean extends
 				.getExpiredActivationPersonnels());
 
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		// managedBean.selectedAdmin.email
+		String email = this.getManagedBean().getSelectedExpiredActivationPersonnel().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			this.getManagedBean().getSelectedExpiredActivationPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 
 }

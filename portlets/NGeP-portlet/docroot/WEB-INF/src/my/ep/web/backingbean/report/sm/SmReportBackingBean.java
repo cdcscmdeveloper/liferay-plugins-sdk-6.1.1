@@ -367,6 +367,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			catStatRpt.resetSearch();
 		}
 		//#38227 - END
+		//34031#note-71 : Issue 4 - Start
+		else if(SmReportConst.SM_REVISIT_RPT_VAL.equals(getManagedBean().getReportCode())){
+			SmRevisitRptBackingBean revisitRpt = new SmRevisitRptBackingBean();
+			revisitRpt.resetSearch();
+			revisitRpt.getConditionFieldsSVO();
+		}
+		//34031#note-71 : Issue 4 - End
 	}
 
 	public void addCompanyNameParam(LinkedHashMap<String, String> params) {
@@ -749,6 +756,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		if (getManagedBean().getCategoryLs() != null
 				&& getManagedBean().getCategoryLs().size() > 0) {
 			for (CategoryRptVO catVO : getManagedBean().getCategoryLs()) {
+			    log.info("32521: Enter For1");
 				if (catVO.getCatLvl1() == null) {
 					throw new EpException(MessageConst.ERROR_REPORT_780047);
 				}
@@ -758,6 +766,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						.getCatLvl2().toString());
 				lvl3Ls.add(catVO.getCatLvl3() == null ? "null" : catVO
 						.getCatLvl3().toString());
+				log.info("lvl1Ls.size="+lvl1Ls.size()+"---"+lvl1Ls);
+				log.info("lvl2Ls.size="+lvl2Ls.size()+"---"+lvl2Ls);
+				log.info("lvl3Ls.size="+lvl3Ls.size()+"---"+lvl3Ls);
+				log.info("32521: END For1");
 			}
 
 			params.put(SmReportConst.PARAM_CAT_L1,
@@ -766,6 +778,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					StringUtils.join(lvl2Ls, ","));
 			params.put(SmReportConst.PARAM_CAT_L3,
 					StringUtils.join(lvl3Ls, ","));
+		    log.info("Print Param 1="+lvl1Ls);
+			log.info("Print Param 2="+lvl2Ls);
+			log.info("Print Param 3="+lvl3Ls);
+			log.info("Print Param="+params);
 		}else{
 			throw new EpException(MessageConst.ERROR_REPORT_780052);
 		}

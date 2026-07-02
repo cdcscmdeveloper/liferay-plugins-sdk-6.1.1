@@ -69,13 +69,13 @@
             	          <div align="left">
 				           <h:outputText value="#{data.memberName}" /></div>
 				     </p:column> 
-				 
+				 	<!-- #35238 start -->
 				     <p:column style="width:20%;white-space:normal;" 
 				         styleClass="column-align-center"  headerText="#{lbl['lbl.ct.role']}">
 				         <div align="left">
-				         <h:outputText value="#{amendmentBackingBean.getParameterDesc(index,data.memberRole)}"  /></div>
+				         <h:outputText value="#{amendmentBackingBean.getParameterDesc(data.memberRole)}"  /></div>
 				     </p:column> 	
-				     
+				     <!-- #35238 end -->
 				     <p:column style="width:20%;white-space:normal;" 
 				          styleClass="column-align-center"  headerText="#{lbl['lbl.ct.represent.type']}">
 				       <div align="left">

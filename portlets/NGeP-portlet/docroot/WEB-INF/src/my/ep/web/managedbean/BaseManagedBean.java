@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 
@@ -181,8 +182,27 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean newVersion;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
-
-
+	
+//	37925 START
+	private String strLabelCountryOrigin;
+	private boolean displayCheckboxChangeCurrentStatus;
+	private boolean displayLabelRegistrationStatus;
+	private boolean displayDropdownRegStatus;
+//	37925 END
+	
+	// 12471 - start
+	private SelectItem[] ministryDDList;
+	private SelectItem[] ptjGroupDDList;
+	private SelectItem[] ptjDDList;
+	private SelectItem[] orgTypeDDList;
+	private SelectItem[] orgNameDDList;
+	private String memberName;
+	private String memberMinOrg;
+	private String memberPtjOrgCode;
+	private String memberPtjOrgName;
+	private UserCommitteeSearchBean committeeSearchBean;
+	// 12471 - end
+	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1120,4 +1140,120 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
+
+//	37925 START
+	public String getStrLabelCountryOrigin() {
+		return strLabelCountryOrigin;
+	}
+
+	public void setStrLabelCountryOrigin(String strLabelCountryOrigin) {
+		this.strLabelCountryOrigin = strLabelCountryOrigin;
+	}
+
+	public boolean isDisplayCheckboxChangeCurrentStatus() {
+		return displayCheckboxChangeCurrentStatus;
+	}
+
+	public void setDisplayCheckboxChangeCurrentStatus(boolean displayCheckboxChangeCurrentStatus) {
+		this.displayCheckboxChangeCurrentStatus = displayCheckboxChangeCurrentStatus;
+	}
+
+	public boolean isDisplayLabelRegistrationStatus() {
+		return displayLabelRegistrationStatus;
+	}
+
+	public void setDisplayLabelRegistrationStatus(boolean displayLabelRegistrationStatus) {
+		this.displayLabelRegistrationStatus = displayLabelRegistrationStatus;
+	}
+
+	public boolean isDisplayDropdownRegStatus() {
+		return displayDropdownRegStatus;
+	}
+
+	public void setDisplayDropdownRegStatus(boolean displayDropdownRegStatus) {
+		this.displayDropdownRegStatus = displayDropdownRegStatus;
+	}
+//	37925 END
+	
+	// 12471 - start
+	public SelectItem[] getMinistryDDList() {
+		return ministryDDList;
+	}
+
+	public void setMinistryDDList(SelectItem[] ministryDDList) {
+		this.ministryDDList = ministryDDList;
+	}
+
+	public SelectItem[] getPtjGroupDDList() {
+		return ptjGroupDDList;
+	}
+
+	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
+		this.ptjGroupDDList = ptjGroupDDList;
+	}
+
+	public SelectItem[] getPtjDDList() {
+		return ptjDDList;
+	}
+
+	public void setPtjDDList(SelectItem[] ptjDDList) {
+		this.ptjDDList = ptjDDList;
+	}
+
+	public SelectItem[] getOrgTypeDDList() {
+		return orgTypeDDList;
+	}
+
+	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
+		this.orgTypeDDList = orgTypeDDList;
+	}
+
+	public SelectItem[] getOrgNameDDList() {
+		return orgNameDDList;
+	}
+
+	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
+		this.orgNameDDList = orgNameDDList;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	public String getMemberMinOrg() {
+		return memberMinOrg;
+	}
+
+	public void setMemberMinOrg(String memberMinOrg) {
+		this.memberMinOrg = memberMinOrg;
+	}
+
+	public String getMemberPtjOrgCode() {
+		return memberPtjOrgCode;
+	}
+
+	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
+		this.memberPtjOrgCode = memberPtjOrgCode;
+	}
+
+	public String getMemberPtjOrgName() {
+		return memberPtjOrgName;
+	}
+
+	public void setMemberPtjOrgName(String memberPtjOrgName) {
+		this.memberPtjOrgName = memberPtjOrgName;
+	}
+
+	public UserCommitteeSearchBean getCommitteeSearchBean() {
+		return committeeSearchBean;
+	}
+
+	public void setCommitteeSearchBean(UserCommitteeSearchBean committeeSearchBean) {
+		this.committeeSearchBean = committeeSearchBean;
+	}
+	// 12471 - end
 }

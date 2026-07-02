@@ -15,8 +15,11 @@
 
 	<cc:implementation>
 		<p:remoteCommand name="updateForm" update=":form:#{loopId}"></p:remoteCommand>
-		<h:panelGroup layout="block"  styleClass="ui-paginator ui-paginator-bottom ui-widget-header ui-corner-bottom" 
-			rendered="#{cc.attrs.paginatorObject.recordsTotal>cc.attrs.paginatorObject.records}">
+			
+		<!-- #35320 - start -->
+		<h:panelGroup layout="block"  styleClass="ui-paginator ui-paginator-bottom ui-widget-header ui-corner-bottom" >
+		<!-- #35320 - end -->
+		
 			<h:outputText value="#{lbl['lbl.datatable.paginator.page']} #{cc.attrs.paginatorObject.pageIndex} / #{cc.attrs.paginatorObject.pages}" style="font-weight: bold !important;" />
 				&#160;&#160;&#160;
 				<p:commandLink rendered="#{!cc.attrs.minimal}"

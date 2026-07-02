@@ -3,8 +3,10 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import my.ep.constant.pm.AuditConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.constant.DbValueConst;
@@ -13,6 +15,7 @@ import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMQTChecklistBackingBean
@@ -22,6 +25,7 @@ import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
  */
 public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 	private static final long serialVersionUID = 1L;
+	private static final String dashes = " - ";
 	boolean updated = false;
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
@@ -63,27 +67,33 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
 			this.docId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
 			this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
+			
+			Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);			
 
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DISPLAY_PRIORITY_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
 					.getDisplaySeq(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_NAME_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
 					.getDocName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
-
-			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_DEFINITION_FIELDLABELID, null, managedBeans.getSelectedDocument()
-					.getDocDefinitionTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeName(),
+			
+			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_DEFINITION_FIELDLABELID, null, ParameterHelper.getInstance().getParameterDesc(managedBeans.getSelectedDocument()
+					.getDocDefinitionTypeCode().getParameterType(), managedBeans.getSelectedDocument()
+					.getDocDefinitionTypeCode().getParameterCode(), locale),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
+			
+			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SUPPLIER_ACTION_FIELDLABELID, null, ParameterHelper.getInstance().getParameterDesc(managedBeans.getSelectedDocument()
+					.getChecklistActionCode().getParameterType(), managedBeans.getSelectedDocument()
+					.getChecklistActionCode().getParameterCode(), locale),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SUPPLIER_ACTION_FIELDLABELID, null, managedBeans.getSelectedDocument()
-					.getChecklistActionCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(),
-					AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
+					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_STATUS_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
 					.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
-					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, AuditConst.PM_AUD_ACTION_TYPE_INS);
+
 
 			updateList(managedBeans);
 		}
@@ -108,6 +118,18 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DISPLAY_PRIORITY_FIELDLABELID, managedBeans.getSelectedDocumentOld()
 					.getDisplaySeq(), managedBeans.getResDTO().getDocument().getDisplaySeq(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
+
+		/* detailObjScoringRequired */
+		if (managedBeans.getSelectedDocumentOld().isScoringReq() != managedBeans.getResDTO().getDocument().isScoringReq()) {
+			this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
+			this.docId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
+			this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
+
+			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, managedBeans.getSelectedDocumentOld()
+					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, managedBeans.getResDTO().getDocument()
+					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		}
+
 		/* detailObjStatus */
 		if (managedBeans.getSelectedDocumentOld().getRecordStatusFlg() != managedBeans.getResDTO().getDocument()
 				.getRecordStatusFlg()) {
@@ -120,31 +142,33 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 					.getDocument().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
-		/* detailObjScoringRequired */
-		if (managedBeans.getSelectedDocumentOld().isScoringReq() != managedBeans.getResDTO().getDocument().isScoringReq()) {
-			this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
-			this.docId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
-			this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
-
-			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, managedBeans.getSelectedDocumentOld()
-					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, managedBeans.getResDTO()
-					.getDocument().isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO,
-					AuditConst.PM_AUD_ACTION_TYPE_UPD);
-		}
 
 		updateList(managedBeans);
 	}
 
 	private void updateList(SupportDocumentManagedBean managedBeans) {
-		if (null != managedBeans.getResDTO().getUpdatedPmDocumentRestrList()
-				&& !managedBeans.getResDTO().getUpdatedPmDocumentRestrList().isEmpty()) {
-			for (PmDocumentRestr pmDocumentRestr : managedBeans.getUpdatedPmDocumentRestrList()) {
-				for (PmDocumentRestr checkList : managedBeans.getCheckListRestrictions()) {
-					pmDocumentRestr.setDocumentRestrId(checkList.getDocumentRestrId());
+		List<PmDocumentRestr> newItemsBeforeSave = new ArrayList<>();
+
+		// Step 1: Collect items that had no ID before saving
+		for (PmDocumentRestr item : managedBeans.getReqDTO().getPmDocument().getPmDocumentRestrs()) {
+			if (item.getDocumentRestrId() == null && item.isBrandNew()) {
+				newItemsBeforeSave.add(item);
+			}
+		}
+
+		// Step 2: Match those items in the afterSaveList
+		List<PmDocumentRestr> newlyCreatedItems = new ArrayList<>();
+		for (PmDocumentRestr savedItem : managedBeans.getResDTO().getDocument().getPmDocumentRestrs()) {
+			for (PmDocumentRestr originalItem : newItemsBeforeSave) {
+				if (isSameWithoutId(originalItem, savedItem)) {
+					newlyCreatedItems.add(savedItem);
+					break;
 				}
 			}
-			updatedPmDocumentRestrList(managedBeans);
+			managedBeans.setUpdatedPmDocumentRestrList(newlyCreatedItems);
 		}
+
+		updatedPmDocumentRestrList(managedBeans);
 
 		if (null != managedBeans.getResDTO().getDeletedProcurementCatCodeList()
 				&& !managedBeans.getResDTO().getDeletedProcurementCatCodeList().isEmpty()) {
@@ -162,63 +186,82 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 		managedBeans.getResDTO().setDeletedProcurementCatCodeList(null);
 	}
 
+	// Helper method to compare objects without considering ID
+	private boolean isSameWithoutId(PmDocumentRestr a, PmDocumentRestr b) {
+		// Compare fields that uniquely identify the object (excluding ID)
+		return a.getProcurementCatCode().getParameterId().equals(b.getProcurementCatCode().getParameterId());
+	}
+
 	private void updateMandatoryList(SupportDocumentManagedBean managedBeans,
 			List<PmDocumentRestr> checklistRestrictionMandatoryNew, List<PmDocumentRestr> checklistRestrictionMandatoryOld) {
 		for (PmDocumentRestr res : checklistRestrictionMandatoryNew) {
 			for (PmDocumentRestr oldValue : checklistRestrictionMandatoryOld) {
-				if (res.getDocumentRestrId() != null && res.getDocumentRestrId().equals(oldValue.getDocumentRestrId()) 
+				if (res.getDocumentRestrId() != null && res.getDocumentRestrId().equals(oldValue.getDocumentRestrId())
 						&& res.isMandatory() != oldValue.isMandatory()) {
 					this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
 					this.docId = BigInteger.valueOf(res.getDocumentRestrId());
 					this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
+					
+					Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+					
+					String oldProcCategory = ParameterHelper.getInstance().getParameterDesc(oldValue.getProcurementCatCode().getParameterType(), oldValue.getProcurementCatCode().getParameterCode(), locale);
+					
+					String newProcCategory = ParameterHelper.getInstance().getParameterDesc(res.getProcurementCatCode().getParameterType(), res.getProcurementCatCode().getParameterCode(), locale);
 
 					detailObj(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID,
-							oldValue.isMandatory() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO,
-							res.isMandatory() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, isUpdated(managedBeans.isUpdated()));
+							oldValue.isMandatory() ? oldProcCategory.concat(dashes).concat(AuditConst.PM_AUD_YES) : 
+								oldProcCategory.concat(dashes).concat(AuditConst.PM_AUD_NO),
+							res.isMandatory() ? newProcCategory.concat(dashes).concat(AuditConst.PM_AUD_YES) : 
+								newProcCategory.concat(dashes).concat(AuditConst.PM_AUD_NO), isUpdated(managedBeans.isUpdated()));
 				}
 			}
 		}
 	}
 
 	private void updatedPmDocumentRestrList(SupportDocumentManagedBean managedBeans) {
+		this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
+		this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getUpdatedPmDocumentRestrList()) {
+			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
+			
+			Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+			String procCategory = ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr.getProcurementCatCode().getParameterType(), pmDocumentRestr.getProcurementCatCode().getParameterCode(), locale);
+			
 			if (pmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
-				this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
-				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-				this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
-
-				detailObj(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID, null, pmDocumentRestr
-						.getProcurementCatCode().getPmParameterDescsSpecCallOnly().get(1).getCodeName(),
-						isUpdated(managedBeans.getSelectedDocument().getPmDocumentRestrs().contains(pmDocumentRestr)));
+				detailObj(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID, null, procCategory, isUpdated(managedBeans
+						.getSelectedDocument().getPmDocumentRestrs().contains(pmDocumentRestr)));
 			}
 			if (pmDocumentRestr.isMandatory() || !pmDocumentRestr.isMandatory()) {
-				this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
-				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-				this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
-
 				detailObj(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID, null,
-						pmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO,
-						isUpdated(managedBeans.getSelectedDocument().getPmDocumentRestrs().contains(pmDocumentRestr)));
+						pmDocumentRestr.isMandatory() ? procCategory.concat(dashes).concat(AuditConst.PM_AUD_YES) : 
+							procCategory.concat(dashes).concat(AuditConst.PM_AUD_NO), 
+							isUpdated(managedBeans.getSelectedDocument().getPmDocumentRestrs().contains(pmDocumentRestr)));
 			}
 		}
 	}
 
 	private void deletedProcurementCatCodeList(SupportDocumentManagedBean managedBeans) {
-		for (PmDocumentRestr deletepmDocumentRestr : managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {
+		for (PmDocumentRestr deletepmDocumentRestr : managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {			
+			Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+			String procCategory = ParameterHelper.getInstance().getParameterDesc(deletepmDocumentRestr.getProcurementCatCode().getParameterType(), deletepmDocumentRestr.getProcurementCatCode().getParameterCode(), locale);
+			
 			if (deletepmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
 				this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
 				this.docId = BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId());
 				this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
 
-				detailObj(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID,deletepmDocumentRestr.getProcurementCatCode()
-						.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null, AuditConst.PM_AUD_ACTION_TYPE_DEL);
+				detailObj(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID, procCategory, null,
+						AuditConst.PM_AUD_ACTION_TYPE_DEL);
 			}
 			if (deletepmDocumentRestr.isMandatory() || !deletepmDocumentRestr.isMandatory()) {
 				this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
 				this.docId = BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId());
 				this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
-				detailObj(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID, deletepmDocumentRestr.isMandatory() ? 
-						AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, null, AuditConst.PM_AUD_ACTION_TYPE_DEL);
+				detailObj(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID,
+						deletepmDocumentRestr.isMandatory() ? 
+								procCategory.concat(dashes).concat(AuditConst.PM_AUD_YES) : 
+								procCategory.concat(dashes).concat(AuditConst.PM_AUD_NO), 
+						null, AuditConst.PM_AUD_ACTION_TYPE_DEL);
 			}
 		}
 	}

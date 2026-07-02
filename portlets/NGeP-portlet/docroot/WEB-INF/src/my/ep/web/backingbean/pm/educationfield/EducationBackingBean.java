@@ -437,7 +437,11 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 				}
 				/************ AUDIT #28895-35509 *************/
 			}
-
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			throw (e);
 		} finally {
