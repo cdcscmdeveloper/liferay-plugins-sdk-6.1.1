@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -44,6 +45,9 @@ public class SmSideMenuIconUtil {
 
 	public static void setSectionEditorVO(SmApplicationManagedBean bean, String sectionType) {
 		SmApplicationUtil.checkOverLappingCategories(bean); //#31018
+		if (bean.isSupplierUser()) {
+			SmApplicationUtil.enableBankSectionOnly(bean, null); //#26238 (39061)
+		}
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditCompBasic(false);
@@ -56,6 +60,7 @@ public class SmSideMenuIconUtil {
 					bean.getSupplierEditVO().setSuppEditCompBasic(true);
 				}
 			} else if (bean.isPoUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
 				
@@ -63,6 +68,7 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
 			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
 				bean.getEditVO().setAppEditCompBasic(false);
@@ -83,6 +89,7 @@ public class SmSideMenuIconUtil {
 					bean.getSupplierEditVO().setSuppEditAssocProj(true);
 				}
 			} else if (bean.isPoUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditAssocProj(false);
 				bean.getEditVO().setPoEditAssocProj(false);
 
@@ -90,6 +97,7 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
 			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditAssocProj(false);
 				bean.getEditVO().setPoEditAssocProj(false);
 				bean.getEditVO().setAppEditAssocProj(false);
@@ -111,6 +119,7 @@ public class SmSideMenuIconUtil {
 					bean.getSupplierEditVO().setHasForeign(SmApplicationUtil.isCompanyHasForeignPersonnel(bean.getSmAppl().getSmPersonnels()));
 				}
 			} else if (bean.isPoUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
 				
@@ -121,6 +130,7 @@ public class SmSideMenuIconUtil {
 				log.info("31230 Check if PO edit personnel");
 
 			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
 				bean.getEditVO().setAppEditPersonnel(false);
@@ -141,6 +151,7 @@ public class SmSideMenuIconUtil {
 					bean.getSupplierEditVO().setSuppEditEquity(true);
 				}
 			} else if (bean.isPoUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
 				
@@ -148,6 +159,7 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
 			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
 				bean.getEditVO().setAppEditEquity(false);
@@ -191,9 +203,32 @@ public class SmSideMenuIconUtil {
 			}
 		} else if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 			if (bean.isSupplierUser()) {
+                // #27883 - Define param
+				boolean flagSmDisciplinaryActionIsCancelCategory = false;
+				
+				//27641, 27736 : Disciplinary Action - #26238 - start 
+				if(bean.getSmSupplier() != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+					
+					if(activeDisc != null && activeDisc.size() > 0){
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								bean.getEditVO().setDisciplinary(true);
+							}
+							// #27883 - check DA isCancelCategory
+							if(disc.isCancelCategory()){
+								flagSmDisciplinaryActionIsCancelCategory = true;
+							}
+						}						
+					} else {
+						bean.getEditVO().setDisciplinary(false);
+					}
+				}				
+				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditCategory(false);
 				
-				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(), bean.getSmAppl())) {
+				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl()) 
+						&& !flagSmDisciplinaryActionIsCancelCategory) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 				// used to check got changes to display supporting doc
@@ -202,6 +237,7 @@ public class SmSideMenuIconUtil {
 				}
 
 			} else if (bean.isPoUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
 				
@@ -209,6 +245,7 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
 				bean.getEditVO().setAppEditCategory(false);
@@ -236,6 +273,7 @@ public class SmSideMenuIconUtil {
 					bean.getSupplierEditVO().setSuppEditFacility(true);
 				}
 			} else if (bean.isPoUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
 				
@@ -243,6 +281,7 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
 			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
 				bean.getEditVO().setAppEditFacility(false);
@@ -263,6 +302,7 @@ public class SmSideMenuIconUtil {
 					bean.getSupplierEditVO().setSuppEditEquipment(true);
 				}
 			} else if (bean.isPoUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
 				
@@ -270,6 +310,7 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
 			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
 				bean.getEditVO().setAppEditEquipment(false);
