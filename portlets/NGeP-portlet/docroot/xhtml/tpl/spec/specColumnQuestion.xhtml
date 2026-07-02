@@ -5,6 +5,40 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+<!-- #25726/25725 - Check and display Italic value - Start -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
+
+	
+<h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{templateSpecBackingBean.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+</h:outputScript>
+<!-- #25726/25725 - Check and display Italic value - End  -->
+
 	<ui:param name="isFulfilmentTypeOneOff"
 		value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
 	<ui:param name="isFulfilmentTypeAsAndWhen"
@@ -98,18 +132,21 @@
 	<p:column style="width:98px;"
 		rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 
-		<h:selectOneMenu id="fulfilType"
+		<p:selectOneMenu id="fulfilType"
 			value="#{question.clFulfilmentTypeCode.parameterId}"
 			required="#{isValidationReq}" style="width:98px;"
 			rendered="#{isQuestionTypeItem}"
-			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}">
+			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}"
+			styleClass="#{templateSpecBackingBean.checkItalicCodeNameForMy(question.clFulfilmentTypeCode.parameterId) ? 'italic-item' : ''}"
+            panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 			<f:selectItems
 				value="#{templateSpecBackingBean.getFulfilmentTypeDropdownList(templateSpecBean.specMaster)}" />
 			<p:ajax event="change"
 				listener="#{templateSpecBackingBean.fulfilmentTypeChange(question)}"
 				partialSubmit="true" process="@this"
-				update="fulfilTypeMsg, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" />
-		</h:selectOneMenu>
+				oncomplete="styleFulfilmentDropdown();"
+				update="@this, fulfilTypeMsg, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" /><!-- #25726/25725 - Check and display Italic value -->
+		</p:selectOneMenu>
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
 	<p:column style="width:120px;">

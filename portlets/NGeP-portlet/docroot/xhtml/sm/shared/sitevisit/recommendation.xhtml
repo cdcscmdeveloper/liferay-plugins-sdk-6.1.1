@@ -25,7 +25,7 @@
 			</tr>
 			
 			<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
-			<ui:remove>
+			<c:if test="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" /></td>
 				<td>
@@ -41,7 +41,7 @@
 				<!-- #34166 - End -->
 				</td>
 			</tr>
-			</ui:remove>
+			</c:if>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -56,18 +56,19 @@
 			</tr>
 			
 			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
-			<ui:remove>
+			<c:if test="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.bumirecommend']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
-					<p:selectOneRadio id="bumiRecommendId" label="#{lbl['lbl.sm.sitevisit.bumirecommend']}" required="#{!empty param['disableValidation']}"
-					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.bumiRecommended}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}">
+					<p:selectOneRadio id="bumiRecommendId" label="#{lbl['lbl.sm.sitevisit.bumirecommend']}"
+					required="#{!empty param['disableValidation']}" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.bumiRecommended}"
+					disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}">
 			            <f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
 			            <f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
 			        </p:selectOneRadio>
 				</td>
 			</tr>
-			</ui:remove>
+			</c:if>
 			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 		</table>
 	</p:panel>

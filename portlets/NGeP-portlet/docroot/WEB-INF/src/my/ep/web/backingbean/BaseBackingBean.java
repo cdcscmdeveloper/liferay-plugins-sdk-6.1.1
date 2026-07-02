@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection; //#29253 #25037
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -3861,6 +3862,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			return null;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return getCategoryName(catL3, false);
+		}
 		String categoryName = getCategoryName(catL3, isFullName);
 
 		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
@@ -3929,6 +3933,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return latest or old category code description
 	 */
 	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return cat.getPmCategoryL3().getCategoryName();
+		}
 		String catName1 = cat.getPmCategoryL1().getCategoryName();
 		String catName2 = cat.getPmCategoryL2().getCategoryName();
 		String catName3 = cat.getPmCategoryL3().getCategoryName();
@@ -4247,24 +4254,93 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	} 
 	//26238 - END
 	
-	//#35238 start
+	// #35238 start
 	/**
 	 * Common utility method to check if user has any role from the given set.
 	 * 
-	 * @param roles Array of roles
+	 * @param roles
+	 *            Array of roles
 	 * @return true if user has any role in the given set.
 	 */
 	public boolean hasAnyRoleUser(Set<String> roles) {
 		FacesScopes facesScopes = new FacesScopes();
-	    if (roles == null || roles.isEmpty()) {
-	        return false;
-	    }
-	    for (String role : roles) {
-	        if (facesScopes.hasRoleUser(role)) {
-	            return true;
-	        }
-	    }
-	    return false;
+		if (roles == null || roles.isEmpty()) {
+			return false;
+		}
+		for (String role : roles) {
+			if (facesScopes.hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
 	}
-	//#35238 end
+
+	// #35238 end
+	
+	// new #25725/25726 - Start
+	/**
+	 * Check for italic if language code = "ms" and parameter code in the list
+	 * 
+	 * @param parameterId
+	 * @return
+	 */
+	public boolean checkItalicCodeNameForMy(Long parameterId) {
+
+		PmParameter newPmParameter = new PmParameter();
+
+		if (parameterId != null) {
+			newPmParameter = ParameterHelper.getInstance().getPmParameterById(parameterId);
+		}
+
+		if (newPmParameter == null) {
+			return false;
+		}
+
+		String paramType = newPmParameter.getParameterType();
+		String paramCode = newPmParameter.getParameterCode();
+
+		Map<String, List<String>> listParameter = new HashMap<>();
+
+		// Store multiple FULFILMENT_TYPE values in a list
+		List<String> fulfilmentTypes = new ArrayList<>();
+		fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		listParameter.put(ParameterTypeConst.FULFILMENT_TYPE, fulfilmentTypes);
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParameter.containsKey(paramType)) {
+			List<String> validTypes = listParameter.get(paramType);
+
+			if (validTypes.contains(paramCode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get list code names is italic
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public List<String> getItalicCodeNames(String type) {
+		List<String> codeNames = new ArrayList<>();
+
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(type,
+				null);
+		for (PmParameterDesc p : parameterDescs) {
+			Long id = p.getPmParameter().getParameterId();
+
+			if (checkItalicCodeNameForMy(id)) {
+				codeNames.add(p.getCodeName());
+			}
+		}
+		return codeNames;
+	}
+
+	// new #25725/25726 - End
 }
