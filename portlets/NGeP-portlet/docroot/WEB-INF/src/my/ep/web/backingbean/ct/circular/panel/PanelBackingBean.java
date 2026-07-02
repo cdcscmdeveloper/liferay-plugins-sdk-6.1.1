@@ -2554,59 +2554,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	//35506 - End
 
 	/**
-	 * Update basic information of selected panel item such as coverage and
-	 * category based on managed bean values.
-	 * 
-	 * @param item
-	 *            the selected panel item to be updated
-	 */
-	private void updateItemBasicInfo(CtPanelItem item) {
-
-		getManagedBean().setSelectedPanelItems(item);
-
-		if (getManagedBean().getPanelCoverageId() != null) {
-			item.setZoneAllParamterId(getManagedBean().getPanelCoverageId());
-		}
-
-		if (getManagedBean().getItemCategoryId() != null) {
-			item.setCategoryParameterId(getManagedBean().getItemCategoryId());
-		}
-	}
-
-	/**
-	 * Handle panel coverage logic and adjust related zone, supplier and
-	 * location settings based on coverage type.
-	 * 
-	 * @param item
-	 *            the selected panel item to process
-	 */
-	private void handleCoverage(CtPanelItem item) {
-
-		String panelCoverageICode = getItemGeneralCode(item.getZoneAllParamterId());
-
-		if (ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE.equalsIgnoreCase(panelCoverageICode)) {
-
-			getManagedBean().setSelectedPanelZone(null);
-			item.setCtPanelSuppliers(null);
-			item.setCtPanelZones(null);
-			getManagedBean().setSelectionOfZone(true);
-
-			if (item.getLocationLevelId() == null) {
-				item.setLocationLevelId(new PmParameter());
-			}
-
-			item.getLocationLevelId().setParameterId(retrieveParameterByTypeAndCode());
-
-		} else if (ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL.equalsIgnoreCase(panelCoverageICode)) {
-
-			item.setCtPanelZones(null);
-			item.setCtPanelSuppliers(null);
-			getManagedBean().setSelectionOfZone(false);
-		}
-	}
-	//35506 - End
-
-	/**
 	 * Method used to set new effective  and end date 
 	 *  for panel circular during update 
 	 */
