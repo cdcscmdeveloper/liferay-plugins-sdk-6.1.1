@@ -21,6 +21,7 @@
 		<ui:include src="committeeaddscreen.xhtml" />
 	</c:if>
 
+	<ui:remove>#35320 - Start</ui:remove>
 	<c:if
 		test="#{committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeB or 
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeA or
@@ -28,7 +29,9 @@
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardA or
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoard or 
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSbh or 
-			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSwk}">
+			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSwk or
+			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommittee}">
+	<ui:remove>#35320 - End</ui:remove>
 		<ui:include src="committeeButtons.xhtml" />
 	
 		<ui:include src="committeeHeader.xhtml" />

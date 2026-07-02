@@ -44,6 +44,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
@@ -91,11 +92,13 @@ import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -179,6 +182,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
+
 			if(!getManagedBean().isValidated()){
 				validateFulfilmentNote(action);
 			}
@@ -190,7 +194,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				
 				// 36247-Start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					validatePOCOCurrentStatus(action, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());// 36361
+					validatePOCOCurrentStatus(action, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());// 36361/40227
 				}
 				// 36247-End
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
@@ -766,12 +770,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
-		// 36361 - start
+		// 36361/40227 - start
 		if (outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
 			validatePOCOCurrentStatus(outcome, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+
 		}
-		// 36361 - end
+		// 36361/40227 - end
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
@@ -930,12 +935,17 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
 		}
 		
-		if(getManagedBean().getFulfilmentNote().isBrandNew() && getManagedBean().getFulfilmentNote().getFlDeliveryOrder()!=null) { // validate to avoid duplicate FRN under one DO inserted
-			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
-			if(receivedNoteSO.retrieveActiveReceivedNoteByDeliveryOrderId(reqDTO).getFulfilmentNote()!=null) {
-				throw new EpException(MessageConst.ERROR_100048);
-			}
+		//#34443 remove checking DO to confirmDialogueTrigger
+		// 39692-Start
+		if ((outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SAVE)
+				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT) || outcome
+					.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE))
+				&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentNote().getFlRequest()
+						.getFulfilmentReqId())) {
+
+			throw new EpException(MessageConst.ERROR_760823);
 		}
+		// 39692-End
 		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {		
 			validateFulfilmentNote(outcome);
@@ -957,12 +967,19 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 				return null;
 			}
-			if(getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT) ||
-					getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)){
+			if (getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)) {
 				getManagedBean().setValidated(Boolean.TRUE);
 				getManagedBean().setAutoUpdate(Boolean.TRUE);
-				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+				//#34443 update confirm dialog start
+				if (getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT)) {
+					RequestContext.getCurrentInstance().execute("rejectDOConfirmDlg.show()");
+				}
+				if (getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)) {
+					RequestContext.getCurrentInstance().execute("rejectFRNReviseConfirmDlg.show()");
+				}
 				return null;
+				//#34443 update confirm dialog end
 			}
 			getManagedBean().setValidated(Boolean.TRUE);
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
@@ -1944,18 +1961,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	//30468-end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if(this.getManagedBean().getFulfilmentRequest() != null){
-			if(this.getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;
-				
-	}
-	//#21416 end
 	
 	// 36247-start
 	/**
@@ -1965,7 +1970,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @throws EpException if not allow to proceed
 	 * 
 	 */
-	private void validatePOCOCurrentStatus(String action, Long deliveryOrderId) {// 36361
+	private void validatePOCOCurrentStatus(String action, Long deliveryOrderId) {// 36361/40227
 		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1974,8 +1979,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				.getFulfilmentOrderId());
 		reqDTO.setDocType(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType());
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-		reqDTO.setActionCode(action);// 36361
-		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361
+		reqDTO.setActionCode(action);// 36361/40227
+		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361/40227
 		// 38104-Start
 		if (getManagedBean().getFulfilmentNote() != null
 				&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
@@ -1990,4 +1995,355 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	// 36247-end
+	
+	// 30753-Start
+	/**
+	 * Validates the PO/FRN amount limit before performing workflow actions.
+	 * 
+	 * If the total amount exceeds the configured limit, a confirmation dialog
+	 * is displayed to the user. Otherwise, it proceeds directly with the GPKI signing action.
+	 *
+	 * @param outcome 
+	 * @return Navigation outcome string returned by gpkiSignAction, or null when the confirmation dialog is shown.
+	 */
+	public String checkLimitBeforeSubmit(String outcome) {
+
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+
+			getManagedBean().setButtonAction(outcome);
+			validateReceivedNoteAgainstLimit();
+
+			if (getManagedBean().isShowLimitExceededDialog()) {
+				RequestContext.getCurrentInstance().update(":form:limitConfirmDlg");
+				RequestContext.getCurrentInstance().execute("limitConfirmDlg.show();");
+				return null;
+			} else {
+				return confirmDialogueTrigger(outcome);
+			}
+		}
+
+		return confirmDialogueTrigger(outcome);
+	}
+	
+	/**
+	 * Validates the received note amount based on document type.
+	 * 
+	 * CO (Contract Order): throws an exception if the limit is exceeded.  
+	 * PO (Purchase Order): sets a flag/message for UI popup if the limit is exceeded.
+	 * 
+	 */
+	private void validateReceivedNoteAgainstLimit() {
+		FlFulfilmentOrder order = null;
+
+		if (getManagedBean().getFulfilmentNote() != null && getManagedBean().getFulfilmentNote().getFlRequest() != null) {
+			order = getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder();
+		}
+
+		if (order != null && order.getDocType() != null
+				&& order.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+			validateContractOrderLimit();
+		} else {
+			validatePurchaseOrderLimit();
+		}
+	}
+	
+	/**
+	 * Checks if a Contract Order delivery amount exceeds its limit and shows a
+	 * warning message if the threshold is breached.
+	 */
+	private void validateContractOrderLimit() {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		getManagedBean().setShowLimitExceededDialog(false);
+
+		FlFulfilmentNote flNote = getManagedBean().getFulfilmentNote();
+		if (flNote == null || flNote.getFlRequest() == null || flNote.getFlRequest().getPreparedOrgProfile() == null) {
+			return;
+		}
+
+		FlFulfilmentRequest flRequest = flNote.getFlRequest();
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
+		reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setCtContract(flRequest.getCtContract());
+
+		FulfilmentResDTO resDTOLimit = fulfilmentSO.retrieveCOLimitAmount(reqDTO);
+
+		if (resDTOLimit != null && resDTOLimit.getLimitAmount() != null) {
+			BigDecimal limitAmount = resDTOLimit.getLimitAmount();
+			boolean isContractSharing = resDTOLimit.isContractSharing();
+
+			Long contractId = flRequest.getCtContract() != null ? flRequest.getCtContract().getContractId() : null;
+
+			FulfilmentReqDTO reqDTOFrn = new FulfilmentReqDTO();
+			reqDTOFrn.setContractId(contractId);
+
+			if (getManagedBean().getFulfilmentNote() != null
+					&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
+				reqDTOFrn.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+			} else {
+				reqDTOFrn.setRequestNoteId(null);
+			}
+			reqDTOFrn.setActionCode(getManagedBean().getButtonAction());
+			BigDecimal totalReceivedAmount = getTotalReceivedAmount(reqDTOFrn);
+
+			checkLimitExceeded(isContractSharing, flRequest, limitAmount, totalReceivedAmount);
+		}
+	}
+
+	/**
+	 * Validates whether the total delivery amount exceeds the defined contract
+	 * limit.
+	 * 
+	 * @param isContractSharing
+	 * @param flNote
+	 * @param limitAmount
+	 * @param totalReceivedAmount
+	 * @throws EpException
+	 *             if the total delivery exceeds the allowed limit
+	 */
+	private void checkLimitExceeded(Boolean isContractSharing, FlFulfilmentRequest flRequest, BigDecimal limitAmount,
+			BigDecimal totalReceivedAmount) {
+
+		if (isContractSharing && limitAmount.compareTo(BigDecimal.ZERO) > 0
+				&& totalReceivedAmount.compareTo(limitAmount) > 0) {
+			throw new EpException(MessageConst.ERROR_745099, new String[] { flRequest.getPreparedOrgProfile()
+					.getOrgName() });
+		} else if (limitAmount.compareTo(BigDecimal.ZERO) > 0 && totalReceivedAmount.compareTo(limitAmount) > 0) {
+			throw new EpException(MessageConst.ERROR_745098);
+		}
+	}
+
+	/**
+	 * Checks if a Purchase Order delivery amount exceeds its limit and shows a
+	 * warning message if the threshold is breached.
+	 */
+	private void validatePurchaseOrderLimit() {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+		getManagedBean().setShowLimitExceededDialog(false);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		Long fulfilmentReqId = getManagedBean().getFulfilmentRequest().getFulfilmentReqId();
+		reqDTO.setFlRequestId(fulfilmentReqId);
+
+		if (getManagedBean().getFulfilmentNote() != null
+				&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
+			reqDTO.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+		} else {
+			reqDTO.setRequestNoteId(null);
+		}
+
+		reqDTO.setActionCode(getManagedBean().getButtonAction());
+		BigDecimal totalReceivedAmount = getTotalReceivedAmount(reqDTO);
+
+		FulfilmentResDTO resDTOPanel = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
+		boolean isPanel = resDTOPanel.isPanel();
+		PmParameter procurementType = getManagedBean().getFulfilmentRequest().getProcurementType();
+
+		reqDTO.setPanel(isPanel);
+		reqDTO.setValidationAmt(totalReceivedAmount);
+		reqDTO.setProcurementType(procurementType);
+		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		FulfilmentResDTO resDTO = fulfilmentSO.validatePOThresholdAmount(reqDTO);
+		if (resDTO != null) {
+			BigDecimal limitAmount = resDTO.getLimitAmount();
+			String supplierTypeId = resDTO.getSupplierTypeId();
+			boolean isExceedLimit = resDTO.isExceedLimit();
+			boolean isHasThreshold = resDTO.isHasThreshold();
+
+			if (!isHasThreshold) {
+				String msg = MessageUtils.getMessage(MessageConst.INFO_745100,
+						new String[] { totalReceivedAmount.toPlainString() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale());
+				getManagedBean().setLimitExceededMessage(msg);
+				getManagedBean().setShowLimitExceededDialog(true);
+
+			} else {
+				if (isExceedLimit) {
+					setMessageForPOExceedLimit(isPanel, supplierTypeId, limitAmount, procurementType);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Sets the limit exceeded message based on supplier and procurement attributes.
+	 *
+	 * @param isPanel         
+	 * @param supplierTypeId  
+	 * @param limitAmount     
+	 * @param procurementType 
+	 */
+	private void setMessageForPOExceedLimit(boolean isPanel, String supplierTypeId, BigDecimal limitAmount,
+			PmParameter procurementType) {
+
+		String procurementTypeDesc = this.getParameterDesc(procurementType);
+
+		if (procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+			procurementTypeDesc = procurementTypeDesc + " ("
+					+ (isPanel ? ParameterConst.PANEL : ParameterConst.NON_PANEL) + ")";
+		}
+
+		String msg;
+		if (!isPanel && supplierTypeId != null) {
+			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, supplierTypeId);
+			msg = MessageUtils.getMessage(MessageConst.INFO_745097, new String[] { limitAmount.toString(),
+					procurementTypeDesc, suppAccTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		} else {
+			msg = MessageUtils.getMessage(MessageConst.INFO_745096, new String[] { limitAmount.toString(),
+					procurementTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+		}
+
+		getManagedBean().setLimitExceededMessage(msg);
+		getManagedBean().setShowLimitExceededDialog(true);
+	}
+	
+	
+	/**
+	 * Retrieves the total Received amount
+	 * 
+	 * @param reqDTO
+	 * @return sumReceivedAmt
+	 */
+	private BigDecimal getTotalReceivedAmount(FulfilmentReqDTO reqDTO) {
+		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+
+		BigDecimal frnReceivedAmt = BigDecimal.ZERO;
+		BigDecimal sumReceivedAmt = BigDecimal.ZERO;
+
+		// get accumulative FRN exclude this FRN amount
+		FulfilmentResDTO resDTOsum = receivedNoteSO.retrieveAccumulatedReceivedAmt(reqDTO);
+		if (resDTOsum != null && resDTOsum.getAccumulativeProcuValue() != null) {
+			sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
+		}
+
+		// get current FRN amount
+		FlFulfilmentNote flNote = getManagedBean().getFulfilmentNote();
+		if (flNote != null && flNote.getFlFulfilmentNoteItem() != null) {
+			for (FlFulfilmentNoteItem noteItem : flNote.getFlFulfilmentNoteItem()) {
+				if (noteItem != null && noteItem.getReceivedAmt() != null) {
+					frnReceivedAmt = frnReceivedAmt.add(noteItem.getReceivedAmt());
+				}
+			}
+		}
+		sumReceivedAmt = sumReceivedAmt.add(frnReceivedAmt);
+
+		return sumReceivedAmt;
+
+	}
+	//30753-End
+	
+	/**
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
+	 * @param fulfilmentReqId
+	 * @return true if invalid FRN data is detected
+	 */
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
+	}
+	
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 */
+	public String confirmDialogueTrigger(String action) {
+		Long status = getManagedBean().getFulfilmentNote().getStatus().getStatusId();
+
+		validateDeliveryOrderForFulfilmentNote();
+
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+				&& (status.equals(FulfilmentStatusConst.FN_PENDING_APPROVAL) || status
+						.equals(FulfilmentStatusConst.FN_PENDING_REV_APPROVAL))) {
+			RequestContext.getCurrentInstance().execute("approveFRNConfirmDlg.show()");
+			return null;
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				&& (status.equals(FulfilmentStatusConst.FN_PENDING_APPROVAL) || status
+						.equals(FulfilmentStatusConst.FN_PENDING_REV_APPROVAL))) {
+			validateFulfilmentNoteReject();
+			RequestContext.getCurrentInstance().execute("rejectFRNConfirmDlg.show()");
+			return null;
+		} else {
+			return gpkiSignAction(action);
+		}
+	}
+
+	/**
+	 * remark compulsory for reject action
+	 * 
+	 */
+	private void validateFulfilmentNoteReject() {
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null
+				|| flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+			getManagedBean().setSelectedTabIndex(0);
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.txt.remarks", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	/**
+	 * validate delivery order in order to proceed fulfilment note
+	 * 
+	 */
+	private void validateDeliveryOrderForFulfilmentNote() {
+		IDeliveryOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IDeliveryOrderSO.class);
+		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+		PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
+		if (status == null || statusDeliveryOrderBlock(status.getStatusId())) {
+			throw new EpException(MessageConst.ERROR_745068, new String[] { getManagedBean().getFulfilmentNote()
+					.getFlDeliveryOrder().getDeliveryOrderNo() });
+		}
+		// validate to avoid duplicate FRN under one DO inserted
+		if (getManagedBean().getFulfilmentNote().isBrandNew()
+				&& getManagedBean().getFulfilmentNote().getFlDeliveryOrder() != null) {
+			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			if (receivedNoteSO.retrieveActiveReceivedNoteByDeliveryOrderId(reqDTO).getFulfilmentNote() != null) {
+				throw new EpException(MessageConst.ERROR_100048);
+			}
+		}
+	}
+
+	/**
+	 * check DO status to disable FRN action
+	 * 
+	 * @param doStatus
+	 *            status id DO
+	 * @return boolean based on DO status blocking
+	 * 
+	 */
+	private boolean statusDeliveryOrderBlock(Long doStatus) {
+		Set<Long> doStatusBlocking = new HashSet<>();
+		doStatusBlocking.add(FulfilmentStatusConst.DO_CLOSED_DUE_TO_AP59);
+		doStatusBlocking.add(FulfilmentStatusConst.DO_CANCELLED);
+		doStatusBlocking.add(FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL);
+		doStatusBlocking.add(FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL);
+
+		if (doStatus != null) {
+			return doStatusBlocking.contains(doStatus);
+		}
+
+		return true;
+	}
+	// #34443 end
 }

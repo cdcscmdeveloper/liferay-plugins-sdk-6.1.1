@@ -2694,18 +2694,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	}
 
 	// 26279 - end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if(this.getManagedBean().getInvoice() != null){
-			if(this.getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;
-				
-	}
-	//#21416 end
 	
 	// #35508 fl audit trail - insert method
 	/**
@@ -2848,5 +2836,36 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}	
 	}
 	//36754 -End
+	
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTrigger(String action) throws Exception {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+			return null;
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null
+					|| flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage("lbl.txt.remarks",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			}
+			RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
+			return null;
+		} else {
+			return signingAction(action);
+		}
+	}
+	// #34443 end
 	
 }

@@ -13,7 +13,9 @@
 					<p:commandButton id="resendBtnId" value="#{lbl['lbl.btn.next']}" 
 						action="#{bb.navigateToPage('2')}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form" 
-						style="float:right;" disabled="#{empty bb.managedBean.selectedExpiredActivationPersonnel}"/>
+						style="float:right;" 
+						disabled="#{empty bb.managedBean.selectedExpiredActivationPersonnel
+								or bb.managedBean.disciplinaryAction}"/> <!-- #26238 - 39217 -->
 				</td>
 			</tr>
 		</table>

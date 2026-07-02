@@ -55,14 +55,14 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId());
 			this.docId = BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId());
 
-			detailObj(AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID, null, managedBeans.getZoneResDTO().getPmZone()
-					.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
-					AuditConst.PM_AUD_ACTION_TYPE_INS);
-
 			detailObj(AuditConst.PM_AUD_SPZ_ZONECODE_FIELDLABELID, null, managedBeans.getZoneResDTO().getPmZone().getZoneCode(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_SPZ_ZONENAME_FIELDLABELID, null, managedBeans.getZoneResDTO().getPmZone().getZoneName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
+
+			detailObj(AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID, null, managedBeans.getZoneResDTO().getPmZone()
+					.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			if (null != managedBeans.getZoneResDTO().getPmZone().getPmZoneStates()

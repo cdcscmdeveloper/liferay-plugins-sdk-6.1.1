@@ -26,12 +26,12 @@
 						immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				<!-- #34159 - START - add param disablevalidation, #34400 -->
-					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
-						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" >
+				<!-- #34159 - START - add param disablevalidation, #34400, #36718 - add update @form -->
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" update="@form">
 						<f:param name="disableValidation" value="true" />
-					</p:commandButton>
-				<!-- #34159 - END -->
+					</p:commandButton> 
+				<!-- #34159 & #36718 - END -->
 				</td>
 			</tr>
 		</table>
@@ -39,7 +39,7 @@
 		<p:panel id="UserProfile" toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sm.userprofile.add.new']}" rendered="#{!smPersonnelBackingBean.managedBean.editMode}"/>
-				<h:outputText value="#{lbl['lbl.sm.userprofile.edit']}" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
+				<h:outputText value="#{lbl['lbl.sm.person.info.hdr']}" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
 			</f:facet>
 			<table style="width: 100%">
 				<tr>
@@ -241,9 +241,9 @@
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}" 
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}" 
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}" 
-							isMobile="true" required="true"
-							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" />
+							isMobile="true" hideTelco="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" />
+							<!-- telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" /> --> <!-- 40200 -->
 					</td>
 				</tr>
 				
@@ -511,8 +511,10 @@
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}"
 													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 													size="35">
-													<f:validator validatorId="postcodeValidator" />
-													<p:ajax process="@this" partialSubmit="true" update="@this,basicPermAddPostCodeMyMsg" />
+													<!-- #36718 - Start  -->
+													<p:ajax process="@this" partialSubmit="true" update="@this,basicPermAddPostCodeMyMsg"
+														listener="#{smPersonnelBackingBean.checkPostcode(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode)}" />
+													<!-- #36718 - End  -->
 												</p:inputText>
 												<p:message id="basicPermAddPostCodeMyMsg" for="basicPermAddPostCodeMy"
 													showSummary="true" showDetail="false" display="icon" />
@@ -549,11 +551,11 @@
 									<td style="float: left;"><p:selectBooleanCheckbox
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											id="addrSame">
-											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process, #36718 - adding @([id$=MailingAddressInfo]) at process -->
 											<p:ajax
 												event="change"
 												partialSubmit="true"
-												process="@this"
+												process="@this @([id$=MailingAddressInfo])"
 												update="@([id$=MailingAddressInfo])"
 												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}"
 												onstart="blockWidget.show()"
@@ -770,11 +772,9 @@
 													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 													size="35">
 													<!-- #36718 - Start  -->
-													<p:ajax
-														process="@this"
-														update="@this basicMailAddPostCodeMyMsg" />
+													<p:ajax process="@this" partialSubmit="true" update="@this basicMailAddPostCodeMyMsg"
+														listener="#{smPersonnelBackingBean.checkPostcode(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode)}" />
 													<!-- #36718 - End  -->
-													<f:validator validatorId="postcodeValidator" />
 												</p:inputText>
 												<p:message id="basicMailAddPostCodeMyMsg" for="basicMailAddPostCodeMy"
 													showSummary="true" showDetail="false" display="icon" />

@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -18,24 +17,31 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
-import javax.el.MethodExpression;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.portlet.PortletRequest;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
 import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.helper.EntityHelper;
-import my.ep.persistence.entity.pm.common.PmSalutation;
+import my.ep.persistence.entity.ai.AIApiResponse;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -43,10 +49,12 @@ import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmFieldChangeUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 
 /**
@@ -57,125 +65,274 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 @ViewScoped
 public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
+	public static Logger log = Logger.getLogger(SmAIDocBackingBean.class);
 	private static final long serialVersionUID = 1L;
-	public static final Logger log = Logger.getLogger(SmAIDocBackingBean.class);
 
-	private static List<SmApplDocFile> docs = new ArrayList<>();
-	private static String folderAI = Calendar.getInstance().get(Calendar.YEAR) + "/SM/APPLICATION/AI/";
-	private static String valueStr = "value";
-	private static String confidence = "confidence";
-	private static String fieldsStr = "fields";
-	private static String resultsStr = "results";
+	private Map<String, List<SmApplDocFile>> docsMap = new HashMap<>();
+	private Map<String, Boolean> postAIMap = new HashMap<>();
+	private List<SmApplDocFile> docs;
+	
+	private static final String VALUE = "value";
+	private static final String CONFIDENCE = "confidence";
+	private static final String FIELDS = "fields";
+	private static final String RESULTS = "results";
+	private static final String PROPERTIES = "properties";
+	private static final String NORM_VALUE = "normalizedValue";
+	private static final double MIN_CONFIDENCE = 0.95;
+	private static final double MIN_FUZZY_SCORE = 0.8;
+	private static final String TYPE_EPF = "epf";
+	private static final String TYPE_TENANCY = "tenancy";
+	private static final String TYPE_BANK = "bank";
+
 	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
-	private static double minConfidence = 0.95;
-	private static double minScoreFuzzyMatch = 0.8;
-	
-	private static EPFEntity epf = null;
-	private static TenancyEntity tenancy = null;
+	private static String googleApiKey = EpPropertiesUtils.getInstance().getProperty("google.doc.key");
+	private static String googleTenantId = EpPropertiesUtils.getInstance().getProperty("google.doc.tenant.id");
+	private static String googleConsent = EpPropertiesUtils.getInstance().getProperty("google.doc.consent");
+
+	private List<EPFEntity> epfs;
+	private TenancyEntity tenancy;
 	private List<EPFEntity.EmployeeInfo> selectedEmployees;
-	
-	private static String tempGoogleUrl = "http://192.168.62.17:5000/process";
-	//172.23.114.72, 192.168.62.17 (dev), 192.168.120.238 (jenkins)"
-	
-	
+	private boolean postAI = false;
+	private String docType;
+	private SmAppl smAppl;
+
+	private SmAppl testAppl;
 	/**
-	 * 
-	 * @param appl
+	 * temp test
 	 * @return
 	 */
-	public boolean showButton(SmAppl appl) {
-		//check pg 3 for full scope
-		if (appl == null || !SupplierManagementConst.APPL_TYPE_MOF.equals(appl.getApplType())) {
-			return false;
+	public SmAppl test(){
+		if (testAppl == null){
+			MofRegistrationReqDTO dto = new MofRegistrationReqDTO();
+			dto.setPoSdoUser(false);
+			dto.setApplId(1895956l); //KU-12092025-0001
+			dto.setCurrentPage("");
+			testAppl = SmServiceLookup.getMofRegistrationSO().retrieveCurrentDraftApplication(dto).getSmAppl();
 		}
-		return false;
+		return testAppl;
 	}
 
 
 	/**
+	 * Set context for auto-processing
+	 * @param docType
+	 * @param smAppl
+	 */
+	public void initContext(String docType, SmAppl smAppl) {
+		this.docType = docType;
+		this.smAppl = smAppl;
+
+		if (!docsMap.containsKey(docType)) {
+			docsMap.put(docType, new ArrayList<SmApplDocFile>());
+		}
+		
+		if (!postAIMap.containsKey(docType)) {
+			postAIMap.put(docType, Boolean.FALSE);
+		}
+		
+		docs = docsMap.get(docType);
+		postAI = postAIMap.get(docType);
+		if (docs.isEmpty()){
+			epfs = null;
+			tenancy = null;
+			postAI = false;
+		}
+	}
+
+	/**
+	 * Based on SmApplicationBackingBean
 	 * @param event
 	 */
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() == null) {
 			return;
 		}
+		
+		String filePath = Calendar.getInstance().get(Calendar.YEAR)
+				+ "/SM/APPLICATION/" + smAppl.getApplNo() + "/SD/";
+		
 		SmApplDocFile doc = new SmApplDocFile();
 		doc.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
-		doc.setFilePath(folderAI);
-		log.info("...file:\t"+doc.getFilePath()+doc.getFileName());
-		docs.add(doc);
+		doc.setFilePath(filePath);
+		
 		commonUploadFile(event, doc.getFilePath());
+		SmApplSupportDoc suppDoc = getSmApplSupportDoc(docType, smAppl);
+		if (suppDoc != null){
+			if (suppDoc.getSmApplDocFiles() == null){
+				suppDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+			}
+			for(int i=0; i<suppDoc.getSmApplDocFiles().size(); i++){
+				String filename = suppDoc.getSmApplDocFiles().get(i).getFileName();
+				if(filename==null || " ".equalsIgnoreCase(filename)){
+					suppDoc.getSmApplDocFiles().remove(i);
+				}
+			}
+			doc.setSmApplSupportDoc(suppDoc);
+			suppDoc.getSmApplDocFiles().add(doc);
+		}
+		
+		docs.add(doc);
+		if (docType != null) {
+			processDoc(docType, smAppl);
+			postAI = true;
+			postAIMap.put(docType, Boolean.TRUE);
+		}
+	}
+	
+	
+	private SmApplSupportDoc getSmApplSupportDoc(String docType, SmAppl appl){
+		SmApplSupportDoc newDoc = new SmApplSupportDoc();
+		newDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+		if(appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
+			return newDoc;
+		}
+		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
+			Long docId = suppDoc.getPmDocument().getDocumentId();
+			boolean isEpfDoc = docId == 494l || docId == 768l || docId == 864l;
+			if (TYPE_EPF.equals(docType) && isEpfDoc){
+				return suppDoc;
+			}
+			boolean isTenancyDoc = docId == 679l || docId == 662l || docId == 654l;
+			if (TYPE_TENANCY.equals(docType) && isTenancyDoc){
+				return suppDoc;
+			}
+		}
+		return newDoc;
 	}
 
-
 	/**
-	 * @param docType
+	 * Test
+	 * @param type
+	 * @param appl
 	 */
-	public static void processDoc(String docType){
-		log.info("...wip\t"+docs.size() +"\t_" + docType);
+	public void processDoc(String type, SmAppl appl){
+		if (StringUtils.isEmpty(type)){
+			return;
+		}
+		docType = type.trim();
+		docs = docsMap.get(docType);
 		if (EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
-		//process multiple docs
-		List<JsonWrapper> entities = new ArrayList<>();
+		log.info("...wip\t"+docs.size() +"\t_" + docType);
+		
+		List<JsonWrapper> jsonWrappers = new ArrayList<>();
 		for (SmApplDocFile doc : docs){
-			JsonWrapper result = sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName());
+			// Skip already processed files
+			if (doc.getAiApiResponseId() != null) {
+				AIApiResponse res = SmServiceLookup.getAIApiProcessSO()
+						.getAIApiResponse(doc.getAiApiResponseId());
+				jsonWrappers.add(new JsonWrapper(res));
+				continue;
+			}
+			
+			JsonWrapper result = sendDocumentOCR(docType, doc.getFilePath(), doc.getFileName(), appl.getApplNo());
 			if (result != null){
-				entities.add(result);
+				long apiId = saveResponse(appl, result);
+				doc.setAiApiResponseId(apiId);
+				result.apiId = apiId;
+				jsonWrappers.add(result);
 			}
 		}
-		
-		if ("EPF".equals(docType)){
-			processEPF(entities);
-			
-		} else if ("TNC".equals(docType)){
-			processTenancyAgreement(entities);
-			
-		} else {
-			processBank(entities);
+		boolean hasError = showErrorMessage(docType, jsonWrappers);
+		try {
+			if (TYPE_EPF.equals(docType)){
+				processEPF(jsonWrappers, appl);
+				
+			} else if (TYPE_TENANCY.equals(docType) && !hasError){
+				processTenancyAgreement(jsonWrappers, appl);
+				
+			} else {
+				processBank(jsonWrappers);
+			}
+			RequestContext.getCurrentInstance().addCallbackParam("success", true);
+		} catch(NullPointerException e){
+			if (!hasError){
+				String err = "Please upload a valid EPF Contribution Statement for AI data extraction";
+				if (TYPE_TENANCY.equals(docType)){
+					err = "Please upload a valid Stamped Premise Rental Agreement for AI data extraction";
+				}
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
+				FacesContext.getCurrentInstance().addMessage("ai", msg);
+			}
 		}
 	}
 	
-	private static JsonWrapper sendDocumentOCR(String docType, String filepath, String filename){
+	//do parallel request using ExecutorService
+	private static JsonWrapper sendDocumentOCR(String docType, String filepath, String filename, String clientRequestId){
+		///temporary demo filter - start
 		if (filename.endsWith(".json")){
 			log.info("skip AI");
-			return getFakeData(filepath, filename);
-			
-		} else if (filename.endsWith("ai_demo.pdf")){
-			InputStream is;
-			try {
-				is = sendDocumentToExternalService(docType, filepath, filename);
-				JSONArray entities = getJsonEntitiesFromStream(is);
-				return new JsonWrapper(entities, filename);
-			} catch (IOException e) {
-				log.error(" ", e);
-			}
+			String content = getFakeData(filepath, filename);
+			return new JsonWrapper(System.currentTimeMillis(), content, docType);
 		}
+		if (!filename.contains("ai_demo")){
+			return null;
+		}
+		///temporary demo filter - end
+		
+		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest()).getRequestedSessionId(); 
+		long startTime = System.currentTimeMillis();
+		
+		try {
+			InputStream is = sendDocumentToExternalService(docType, filepath, filename, clientRequestId);
+			SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
+					"SmAIDocbackingBean.sendDocumentOCR", "1:"+filename, startTime);
+			String content = getRawContent(is);
+			return new JsonWrapper(startTime, content, docType);
+		} catch (IOException e) {
+			log.error(" ", e);
+			
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"AI processing is temporarily unavailable. Your document has been uploaded successfully," +
+							" and you can still proceed with your application as usual.");
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+		}
+		
 		return null;
 	}
 	
+	private static long saveResponse(SmAppl smAppl, JsonWrapper jsonWrapper){
+		AIApiResponse apiResp = new AIApiResponse();
+		
+		apiResp.setSupplierId(smAppl.getSmSupplier().getSupplierId());
+		apiResp.setDocType("SM");
+		apiResp.setDocId(smAppl.getApplId());
+		apiResp.setDocNo(smAppl.getApplNo());
+		
+		apiResp.setJsonResponse(jsonWrapper.rawContent);
+		apiResp.setTimeTakenMs(jsonWrapper.timeTakenMs);
+		apiResp.setOcrType(jsonWrapper.ocrType);
+		apiResp.setApiName("test");		//temp
+		apiResp.setResponseStatus(getErrorCode(jsonWrapper.rawContent));
+		
+		return SmServiceLookup.getAIApiProcessSO().saveAIApiResponse(apiResp).getApiResponseId();
+	}
+	
+	private static int getErrorCode(String rawContent){
+		try {
+			return new JSONObject(rawContent).getJSONObject("error").getInt("code");
+		} catch (JSONException e){
+			return 200;
+		}
+	}
+	
 	/**
-	 * 
+	 * Submit
 	 * @param docType
 	 * @param appl
-	 * @param methodActionStr
 	 */
-	public void submit(String docType, SmAppl appl, String methodActionStr){
+	public void submit(String docType, SmAppl appl){
 		if (StringUtils.isEmpty(docType) || appl == null){
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
-		if ("EPF".equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
+		if (TYPE_EPF.equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
 			submitEPF(appl);
 			
-		} else if ("TNC".equals(docType)){
-			submitTenancy(appl);
-		}
-		//save smAppl
-		if (StringUtils.isNotBlank(methodActionStr)) {
-			MethodExpression methodExp = FacesScopes.createMethodExpression(
-					FacesContext.getCurrentInstance(), methodActionStr, null, new Class[] {});
-			methodExp.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] {});
+		} else if (TYPE_TENANCY.equals(docType)){
+			submitTenancy();
 		}
 	}
 	
@@ -183,11 +340,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (appl.getSmPersonnels() == null){
 			appl.setSmPersonnels(new ArrayList<SmPersonnel>());
 		}
+		Map<String, SmPersonnel> personnels = new HashMap<>();
+		for (SmPersonnel per : appl.getSmPersonnels()){
+			personnels.put(per.getIdentificationNo(), per);
+		}
+		
+		//check for dupe IC
 		for (EPFEntity.EmployeeInfo employee : selectedEmployees) {
-			SmPersonnel per = new SmPersonnel();
-			per.setName(employee.getNama());
-			per.setIdentificationNo(employee.getNoPengenalanDiri());
-			per.setEpfNo(employee.getNoAhliKWSP());
+			SmPersonnel per = personnels.get(employee.getNricNumber());
+			if (per != null){
+				per.setEpfNo(employee.getKwspNumber());
+				continue;
+			}
+			per = new SmPersonnel();
+			per.setName(employee.getEmployeeName());
+			per.setIdentificationNo(employee.getNricNumber());
+			per.setEpfNo(employee.getKwspNumber());
 			
 			//SmApplicationUtil - setDefaultPersonnelValues()
 			// or check SssmSO on how to save SmPersonnels
@@ -195,7 +363,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			per.setEpRole("");
 			per.setShareAmt(new BigDecimal(0));
 			per.setSharePercentage(new BigDecimal(0));
-			per.setTitle(new PmSalutation());
 			per.setRevNo(1);
 			per.setSmAppl(appl);
 			per.setBumiFlg(1);
@@ -203,29 +370,32 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			
 			appl.getSmPersonnels().add(per);
 		}
+		
+		//save smAppl
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc, 
+				"#{backingBean}", SmApplicationBackingBean.class);
+		if (bb != null){
+			bb.saveOrUpdateAppl();
+		}
 	}
 	
-	//wip
-	private void submitTenancy(SmAppl appl){
-		SmFacility basicCompany = new SmFacility();
-		if (!StringUtils.isEmpty(tenancy.namaPemilikPremis)){
-			basicCompany.setOwnerName(tenancy.namaPemilikPremis);
-		}
-		if (!StringUtils.isEmpty(tenancy.sewaanBulanan)){
-			try {
-				BigDecimal rent = new BigDecimal(tenancy.sewaanBulanan);
-				basicCompany.setRentalRate(rent);
-			} catch (NumberFormatException e) {
-				log.error("Invalid Rent", e);
-			}
+	
+	private void submitTenancy(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc, 
+				"#{backingBean}", SmApplicationBackingBean.class);
+		if (bb != null){
+			bb.updateTenancyAI(tenancy);
 		}
 	}
 	
 
 	/**
+	 * @param appl
 	 * @param suppDoc
 	 */
-	public static void processBankStatement(SmAppl appl, SmApplSupportDoc suppDoc){
+	public void processBankStatement(SmAppl appl, SmApplSupportDoc suppDoc){
 		if (suppDoc == null || suppDoc.getPmDocument() == null || appl == null || appl.getSmSupplier() == null){
 			return;
 		}
@@ -238,107 +408,288 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			log.info("...not bank statement");
 			return;
 		}
-		List<JsonWrapper> entities = new ArrayList<>();
+		List<JsonWrapper> jsonWrappers = new ArrayList<>();
 		for (SmApplDocFile doc : suppDoc.getSmApplDocFiles()){
-			JsonWrapper result = sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName());
+			if (doc.getAiApiResponseId() != null){
+				continue;
+			}
+			JsonWrapper result = sendDocumentOCR(TYPE_BANK, doc.getFilePath(), doc.getFileName(), appl.getApplNo());
 			if (result != null){
-				entities.add(result);
+				long apiId = saveResponse(appl, result);
+				doc.setAiApiResponseId(apiId);
+				result.apiId = apiId;
+				jsonWrappers.add(result);
 			}
 		}
-		List<BankStatementEntity> banks = processBank(entities);
-		validateBankEntity(appl, suppDoc, banks);
-	}
-	
-	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<BankStatementEntity> banks){
-		String companyNameSupp = appl.getSmSupplier().getCompanyName();
-		log.info("...processBankStatement1\t..." + companyNameSupp);
-		Map<String, String> supplierAccounts = new HashMap<>();
-		for (SmSupplierBank suppBank : appl.getSmSupplierBanks()){
-			supplierAccounts.put(suppBank.getAccountNo(), suppBank.getPmFinancialOrg().getFinOrgName());
-		}
-		List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
+		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest()).getRequestedSessionId(); 
+		long startTime = System.currentTimeMillis();
+		boolean hasError = showErrorMessage(TYPE_BANK, jsonWrappers);
 		
-		boolean hasWrongCompanyName = false;
-		StringBuilder errMsg = new StringBuilder();
-		for (BankStatementEntity bank : banks){
-			String companyNameJson = bank.accountHolderName;
-			int validatedAI = 1;  //1-ok, 2-err
-			
-			log.info("...processBankStatement\t..." + companyNameJson);
-			String bankName = supplierAccounts.get(bank.accountNo);
-			if (bankName == null){
-				validatedAI = 2;
-				errMsg.append("\nAccount No.: " + bank.accountNo);
-				
-				bankName = fuzzyMatchList(bank.bankName, supplierBanks);
-				if (StringUtils.isEmpty(bankName)){
-					errMsg.append("\nBank Name: " + bank.bankName);
-				}
-				
-			} else {
-				double score =  fuzzyMatchJaroWinkler(bankName, bank.bankName);
-				log.info("Score: "+score+"\tBank1: "+bankName+"\tBank2:"+bank.bankName);
-				if (score < minScoreFuzzyMatch){
-					validatedAI = 2;
-					errMsg.append("\nBank Name: " + bank.bankName);
-				}
-			}
-			log.info("account no:"+bank.accountNo);
-			log.info("match with bank:"+bankName);
-			if (!StringUtils.equals(companyNameJson, companyNameSupp)){
-				hasWrongCompanyName = true;
-				validatedAI = 2;
-			}
-			setMappedFieldAI(suppDoc, bank.filename, bank.toString().replace("\n", "<br/>"), validatedAI);
+		if (!hasError){
+			List<DocEntity> docEntities = processBank(jsonWrappers);
+			validateBankEntity(appl, suppDoc, docEntities);
+			showErrorMessageBank(docEntities);
 		}
 		
-		if (hasWrongCompanyName){
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.ai.bank.verify", new String[] { "" }));
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
-		}
-		if (!StringUtils.isEmpty(errMsg.toString())){
-			errMsg.insert(0, "The information in your bank statement(s) does not match with" +
-					" any existing Bank Account Details in Bank Information section:");
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, errMsg.toString());
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
-		}
+		SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
+				"SmAIDocbackingBean.sendDocumentOCR", "2", startTime);
 	}
 	
-	private static void setMappedFieldAI(SmApplSupportDoc suppDoc, String filename, String field, int validatedAI){
-		if (StringUtils.isEmpty(field) || EntityHelper.isCollectionEmpty(suppDoc.getSmApplDocFiles())){
+	//better to put this in SO, when initializing the docs for supplier/SDO/PO etc
+	/**
+	 * @param appl
+	 */
+	public void validateBank(SmAppl appl){
+		if (appl == null || appl.getSmSupplier() == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
 			return;
 		}
-		for (SmApplDocFile file : suppDoc.getSmApplDocFiles()){
-			if (file.getFileName().equals(filename)){
-				file.setMappedFieldAI(field);
-				file.setValidatedAI(validatedAI);
+		//PENYATA AKAUN SEMASA YANG TERKINI ATAS NAMA SYARIKAT / SLIP DEPOSIT (all zones)
+		List<Long> bankStatementIds = Arrays.asList(529L, 633L, 676L);
+		SmApplSupportDoc bankStatementDoc = null;
+		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
+			if (bankStatementIds.contains(suppDoc.getPmDocument().getDocumentId())){
+				bankStatementDoc = suppDoc;
 				break;
 			}
 		}
+		if (bankStatementDoc == null || EntityHelper.isCollectionEmpty(bankStatementDoc.getSmApplDocFiles())){
+			log.info("x jumpa bank statement?");
+			return;
+		}
+		
+		List<DocEntity> entities = new ArrayList<>();
+		for (SmApplDocFile docFile : bankStatementDoc.getSmApplDocFiles()){
+			if (docFile.getFileName() == null ||docFile.getFileName().trim().isEmpty()){
+				continue;
+			}
+			AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
+					.getAIApiResponse(docFile.getAiApiResponseId());
+			if (response != null){
+				DocEntity entity = new DocEntity(response.getApiResponseId(), response.getJsonResponse());
+				entities.add(entity);
+			}
+		}
+		SmFieldChangeUtil.setBankFieldChangeStatus(appl);
+		validateBankEntity(appl, bankStatementDoc, entities);
 	}
 	
 	/**
-	 * @param entities
+	 * 
+	 * @param appl
+	 */
+	public void validateTenancy(SmAppl appl){
+		if (appl == null || appl.getSmSupplier() == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
+			return;
+		}
+		
+		SmApplSupportDoc tenancyDoc = null;
+		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
+			Long docId = suppDoc.getPmDocument().getDocumentId();
+			if(docId == 679l || docId == 662l || docId == 654l){
+				tenancyDoc = suppDoc;
+				break;
+			}
+		}
+		if (tenancyDoc == null || EntityHelper.isCollectionEmpty(tenancyDoc.getSmApplDocFiles())){
+			return;
+		}
+		
+		String landlordsNameSupp = "";
+		String companyName = appl.getSmSupplier().getCompanyName();
+		BigDecimal rentalRate = new BigDecimal(0);
+		SmAddress addr = null;
+		if(!EntityHelper.isCollectionEmpty(appl.getSmFacilities())){
+			for(SmFacility fac : appl.getSmFacilities()){
+				if("H".equalsIgnoreCase(fac.getFacilityType())){
+					landlordsNameSupp = fac.getOwnerName();
+					rentalRate = fac.getRentalRate().setScale(2);
+					addr = fac.getSmAddress();
+				}
+			}
+		}
+		
+		for (SmApplDocFile docFile : tenancyDoc.getSmApplDocFiles()){
+			if (docFile.getFileName() == null ||docFile.getFileName().trim().isEmpty()){
+				continue;
+			}
+			AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
+					.getAIApiResponse(docFile.getAiApiResponseId());
+			if (response != null){
+				TenancyEntity te = new TenancyEntity(parseJsonEntities(response.getJsonResponse()));
+				
+				double score = fuzzyMatchJaroWinkler(landlordsNameSupp, te.landlordsName);
+				te.validLandlordsName = score >= MIN_FUZZY_SCORE;
+				
+				score = fuzzyMatchJaroWinkler(companyName, te.tenantsName);
+				te.validTenantsName = score >= MIN_FUZZY_SCORE;
+				
+				te.validMonthlyRental = rentalRate.compareTo(te.monthlyRental.setScale(2)) != 0;
+				te.compareAddress(addr);
+				
+				docFile.setMappedFieldAI(te.getLabel());
+				docFile.setValidatedAI(te.hasError() ? 2 : 1); //1-ok, 2-err
+			}
+		}
+	}
+	
+	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<DocEntity> docEntities){
+		if (EntityHelper.isCollectionEmpty(docEntities)){
+			return;
+		}
+		//init bank statements
+		List<BankStatementEntity> bankEntities = new ArrayList<>();
+		for (DocEntity entity : docEntities){
+			bankEntities.addAll(entity.bankStatements);
+		}
+		
+		//compare with new/modified banks only
+		Map<String, String> supplierAccounts = new HashMap<>();	
+		for (SmSupplierBank suppBank : appl.getSmSupplierBanks()){
+			if (!StringUtils.isEmpty(suppBank.getChangedFieldStatus())){
+				supplierAccounts.put(suppBank.getAccountNo(), suppBank.getPmFinancialOrg().getFinOrgName());	
+			}
+		}
+		List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
+		String companyNameSupp = appl.getSmSupplier().getCompanyName();
+		
+		for (BankStatementEntity bank : bankEntities){
+			String companyNameJson = bank.accountHolderName;
+			String bankName = supplierAccounts.get(bank.accountNo);
+			log.info("account no:"+bank.accountNo);
+			log.info("match with bank:"+bankName);
+			if (bankName == null){
+				bank.validAccountNo = false;
+				
+				bankName = fuzzyMatchList(bank.bankName, supplierBanks);
+				if (StringUtils.isEmpty(bankName)){
+					bank.validBankName = false;
+				}
+			
+			//account no. exists
+			} else {
+				double score = fuzzyMatchJaroWinkler(bankName, bank.bankName);
+				log.info("Score: "+score+"\tBank1: "+bankName+"\tBank2:"+bank.bankName);
+				if (score < MIN_FUZZY_SCORE){
+					bank.validBankName = false;
+				}
+			}
+			if (!StringUtils.equals(companyNameJson, companyNameSupp)){
+				bank.validAccountHolderName = false;
+			}
+		}
+		
+		for (SmApplDocFile file : suppDoc.getSmApplDocFiles()){
+			for (DocEntity entity : docEntities){
+				if (entity.apiId.equals(file.getAiApiResponseId())){
+					file.setMappedFieldAI(entity.getLabel());
+					file.setValidatedAI(entity.hasError() ? 2 : 1); //1-ok, 2-err
+				}
+			}
+		}
+	}
+	
+	private static void showErrorMessageBank(List<DocEntity> docEntities){
+		boolean hasWrongCompanyName = false;
+		StringBuilder sb = new StringBuilder();
+		
+		for (DocEntity doc : docEntities){
+			if (EntityHelper.isCollectionEmpty(doc.bankStatements)){
+				continue;
+			}
+			for (BankStatementEntity bank : doc.bankStatements){
+				if (!bank.validAccountHolderName){
+					hasWrongCompanyName = true;
+				}
+				if (!bank.validBankName){
+					sb.append("\nBank Name: ").append(bank.bankName);
+				}
+				if (!bank.validAccountNo){
+					sb.append("\nAccount No.: ").append(bank.accountNo);
+				}
+				if (!bank.validBankName || ! bank.validAccountNo){
+					sb.append("\n");
+				}
+			}
+		}
+		
+		if (hasWrongCompanyName){
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"The company name in your bank statement(s) does not match with the registered Business/Company Name" +
+					" in Company Information section. Your application can still be submitted as-is, " +
+					"or you may update the Business/Company Name before proceeding.");
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+		}
+		if (!StringUtils.isEmpty(sb.toString())){
+			sb.insert(0, "Your bank statement(s) does not match with any newly added/updated bank in" +
+					" Bank Information section. Your application can still be submitted as-is, " +
+					"or you may update the Bank Information section before proceeding:");
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString().replace("\n", "<br/>"));
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+		}
+	}
+	
+	private static boolean showErrorMessage(String docType, List<JsonWrapper> jsonWrappers){
+		if (EntityHelper.isCollectionEmpty(jsonWrappers)){
+			return false;
+		}
+		String err = null;
+		for (JsonWrapper json : jsonWrappers){
+			int statusCode = getErrorCode(json.rawContent);
+			if (statusCode == 415 || statusCode == 422){
+				switch(docType){
+				case TYPE_EPF:
+					err = "Please upload a valid EPF Contribution Statement for AI data extraction";
+					break;
+				case TYPE_TENANCY:
+					err = "Please upload a valid Stamped Premise Rental Agreement for AI data extraction";
+					break;
+				case TYPE_BANK:
+				default:
+					err = "Please upload a valid Bank Statement for AI data extraction";
+					break;
+				}
+			} else if (statusCode == 500){
+				err = "Please verify you have uploaded the correct document type.";
+				
+			} else if (statusCode >= 400){
+				err = "AI processing is temporarily unavailable. Your document has been uploaded successfully, " +
+						"and you can still proceed with your application as usual.";
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, err);
+				FacesContext.getCurrentInstance().addMessage("ai", msg);
+				return true;
+			}
+		}
+		if (err != null){
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+			return true;
+			
+		}
+		return false;
+	}
+		
+	/**
+	 * @param jsonWrappers
 	 * @return
 	 */
-	public static List<BankStatementEntity> processBank(List<JsonWrapper> entities){
-		if (EntityHelper.isCollectionEmpty(entities)){
+	public List<DocEntity> processBank(List<JsonWrapper> jsonWrappers){
+		if (EntityHelper.isCollectionEmpty(jsonWrappers)){
 			return new ArrayList<>();
 		}
-		List<BankStatementEntity> banks = new ArrayList<>();
-		for (JsonWrapper entityWrapper : entities){
-			BankStatementEntity bank = new BankStatementEntity(entityWrapper.entities, entityWrapper.filename);
-			banks.add(bank);
-			log.info("COMPANY NAME: "+bank.accountHolderName);
+		List<DocEntity> docEnts = new ArrayList<>();
+		for (JsonWrapper json : jsonWrappers){
+			DocEntity doc = new DocEntity(json.apiId, json.entities);
+			docEnts.add(doc);
 		}
-		return banks;
+		return docEnts;
 	}
 
 	/**
 	 * @param entities
+	 * @param appl
 	 */
-	public static void processTenancyAgreement(List<JsonWrapper> entities){
+	public void processTenancyAgreement(List<JsonWrapper> entities, SmAppl appl){
 		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
@@ -346,36 +697,70 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (JsonWrapper entityWrapper : entities){
 			TenancyEntity te = new TenancyEntity(entityWrapper.entities);
 			tes.add(te);
-			if (tenancy == null){
-				tenancy = te;
-			}
+			tenancy = te;
 		}
-		log.info(tenancy);
+		if (tenancy == null){
+			return;
+		}
+		String companyName = "";
+		if (appl != null && appl.getSmSupplier() != null){
+			companyName = appl.getSmSupplier().getCompanyName();
+		}
+		double score = fuzzyMatchJaroWinkler(companyName, tenancy.tenantsName);
+		if (score < MIN_FUZZY_SCORE){
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"The company name in your Tenancy Agreement(s) does not match with the registered Business/Company Name" +
+					" in Company Information section.");
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+		}
 	}
 
 	/**
 	 * @param entities
+	 * @param appl
+	 * @param docType
 	 */
-	public static void processEPF(List<JsonWrapper> entities){
+	public void processEPF(List<JsonWrapper> entities, SmAppl appl){
+		if (epfs == null){
+			epfs = new ArrayList<>();
+		}
 		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
-		List<EPFEntity> ees = new ArrayList<>();
+		
+		String companyName = "";
+		if (appl != null && appl.getSmSupplier() != null){
+			companyName = appl.getSmSupplier().getCompanyName();
+		}
+		boolean hasWrongCompanyName = false;
+		
 		for (JsonWrapper entityWrapper : entities){
 			EPFEntity ee = new EPFEntity(entityWrapper.entities);
-			ees.add(ee);
-			if (epf == null){
-				epf = ee;
+			epfs.add(ee);
+			
+			double score=0;
+			if (ee.employer != null){
+				score = fuzzyMatchJaroWinkler(companyName, ee.employer.employerName);
+			}
+			if (score < MIN_FUZZY_SCORE){
+				hasWrongCompanyName = true;
 			}
 		}
-		log.info(epf);
+		if(hasWrongCompanyName){
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"The company name in your EPF(s) does not match with the registered Business/Company Name" +
+					" in Company Information section.");
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+		}
+		// wip: need to save the doc to SmApplDocFile with PmDocument ID: 768, 864
+		//PENYATA CARUMAN KWSP (BORANG A) IAITU SENARAI NAMA PEKERJA YANG DICARUM SERTA RESIT
 	}
 	
 	/**
 	 * Clear uploaded documents
 	 */
-	public void clearDocs() {
-		docs.clear();
+	public void resetDoc() {
+		log.info("test");
 	}
 	
 	public List<SmApplDocFile> getDocs() {
@@ -387,35 +772,49 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param doc
 	 */
 	public void deleteDoc(SmApplDocFile doc) {
-		log.info(docs.size());
 		docs.remove(doc);
-		log.info(docs.size());
+		if(docs.isEmpty()){
+			epfs = null;
+			tenancy = null;
+			postAI = false;
+		}
 	}
 	
 	public List<EPFEntity.EmployeeInfo> getEmployees() {
-		return epf != null ? epf.getEmployees() : new ArrayList<EPFEntity.EmployeeInfo>();
+		if (epfs == null){
+			return new ArrayList<>();
+		}
+		List <EPFEntity.EmployeeInfo> employees = new ArrayList<>();
+		for (EPFEntity epf : epfs){
+			employees.addAll(epf.getEmployees());
+		}
+		return employees;
+	}
+	
+	public TenancyEntity getTenancy() {
+		return tenancy;
 	}
 
-
-	private static JsonWrapper getFakeData(String filepath, String filename) {
+	private static String getFakeData(String filepath, String filename) {
 		if (!filename.endsWith(".json")){
 			return null;
 		}
 		try {
+			Thread.sleep(2500);
 			//based on commonUploadFile()
 			String tempDir = EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/";
 			tempDir += filepath + filename;
 			File file = new File(tempDir);
-			String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-			JSONArray entities = parseJsonEntities(content);
-			return new JsonWrapper(entities, filename);
+			return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			log.error(" Error reading JSON file", e);
+		} catch (InterruptedException e){
+			Thread.currentThread().interrupt();
 		}
 		return null;
 	}
-
+	
 	private static JSONArray parseJsonEntities(String jsonContent) {
 		if (StringUtils.isEmpty(jsonContent)) {
 			return null;
@@ -427,16 +826,16 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				return null;
 			}
 			JSONObject data = root.getJSONObject("data");
-			if (!data.has(resultsStr)) {
+			if (!data.has(RESULTS)) {
 				log.warn("  No results found in data");
 				return null;
 			}
-			JSONObject results = data.getJSONObject(resultsStr);
-			if (!results.has(fieldsStr)) {
+			JSONObject results = data.getJSONObject(RESULTS);
+			if (!results.has(FIELDS)) {
 				log.warn("  No fields found in results");
 				return null;
 			}
-			JSONArray fields = results.getJSONArray(fieldsStr);
+			JSONArray fields = results.getJSONArray(FIELDS);
 			if (fields.length() == 0) {
 				log.warn("  No fields found");
 				return null;
@@ -448,7 +847,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return null;
 	}
 
-	private static JSONArray getJsonEntitiesFromStream(InputStream inputStream) {
+	private static String getRawContent(InputStream inputStream) {
 		if (inputStream == null) {
 			return null;
 		}
@@ -458,7 +857,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			while ((line = reader.readLine()) != null) {
 				content.append(line);
 			}
-			return parseJsonEntities(content.toString());
+			return content.toString();
 		} catch (IOException e) {
 			log.error(" Error reading InputStream", e);
 		}
@@ -474,63 +873,106 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		this.selectedEmployees = selectedEmployees;
 	}
 
+	public boolean isPostAI() {
+		return postAI;
+	}
 
-	private static InputStream sendDocumentToExternalService(String docType, String filepath, String filename) 
+	public void setPostAI(boolean postAI) {
+		this.postAI = postAI;
+	}
+
+
+	private static InputStream sendDocumentToExternalService(String docType, String filepath, String filename, String clientRequestId)
 			throws IOException {
-		
+
 		if (StringUtils.isEmpty(googleUrl)) {
-			googleUrl = tempGoogleUrl;
+			throw new IOException("ngep.properties missing property: google.doc.url");
+		}
+		if (StringUtils.isEmpty(googleApiKey)) {
+			throw new IOException("ngep.properties missing property: google.doc.key");
 		}
 		log.info("use google url: " + googleUrl);
-		
+
 		String tempDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR) + "/" + filepath + filename;
 		File file = new File(tempDir);
+
+		if (!file.exists()) {
+			String errorMsg = "File not found: " + tempDir;
+			log.error(errorMsg);
+			throw new IOException(errorMsg);
+		}
+		if (file.length() == 0) {
+			String errorMsg = "File is empty (0 bytes): " + tempDir;
+			log.error(errorMsg);
+			throw new IOException(errorMsg);
+		}
+
+		log.info("Uploading file: " + filename + " (" + file.length() + " bytes from " + tempDir + ")");
+
+		// Read file and convert to base64
 		byte[] fileBytes = Files.readAllBytes(file.toPath());
+		String base64Content = DatatypeConverter.printBase64Binary(fileBytes);
+		log.info("Encoded " + fileBytes.length + " bytes to base64 for file: " + filename);
+
+		// Build JSON payload
+		String consent = StringUtils.isEmpty(googleConsent) ? "true" : googleConsent;
+		JSONObject jsonPayload = new JSONObject();
+		try {
+			jsonPayload.put("base64Content", base64Content);
+			jsonPayload.put("consent", consent);
+			jsonPayload.put("documentType", docType);
+			jsonPayload.put("fileName", filename);
+			jsonPayload.put("mimeType", "application/pdf");
+			jsonPayload.put("clientRequestId", clientRequestId);
+			
+		} catch (JSONException e){
+			log.error(e);
+			throw new IOException("Error building JSON payload");
+		}
 		
-		// Create boundary for multipart
-		String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
-		String crlf = "\r\n";
+		String jsonBody = jsonPayload.toString();
 		
 		URL url = new URL(googleUrl);
+		// Force TLS 1.2 for Java 7
+		if (url.getProtocol().equals("https")) {
+			try {
+				SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+				sslContext.init(null, null, null);
+				HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+			} catch (Exception e) {
+				log.error("Failed to initialize TLS 1.2", e);
+				throw new IOException("TLS 1.2 initialization failed", e);
+			}
+		}
+
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Accept", "application/json");
+		conn.setRequestProperty("X-API-Key", googleApiKey);
+		if (!StringUtils.isEmpty(googleTenantId)) {
+			conn.setRequestProperty("puncakai-tenant-id", googleTenantId);
+		}
 		conn.setDoOutput(true);
 		conn.setConnectTimeout(30 * 1000); // 30 sec
 		conn.setReadTimeout(120 * 1000); // 2 min
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("--").append(boundary).append(crlf);
-		sb.append("Content-Disposition: form-data; name=\"documentType\"").append(crlf);
-		sb.append(crlf);
-		sb.append(docType).append(crlf);
-		
-		sb.append("--").append(boundary).append(crlf);
-		sb.append("Content-Disposition: form-data; name=\"file\"; filename=\"")
-			.append(filename).append("\"").append(crlf);
-		sb.append("Content-Type: application/pdf").append(crlf);
-		sb.append(crlf);
-		
-		OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-		out.write(sb.toString());
-		out.flush();
-		
-		conn.getOutputStream().write(fileBytes);
-		
-		out.write(crlf + "--" + boundary + "--" + crlf);
-		out.flush();
-		out.close();
 
-		int statusCode = conn.getResponseCode();
-		log.info("API Response Code: " + statusCode);
+		// Write JSON body
+		byte[] jsonBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
+		conn.setFixedLengthStreamingMode(jsonBytes.length);
+		conn.getOutputStream().write(jsonBytes);
+		conn.getOutputStream().flush();
+		conn.getOutputStream().close();
 
-		if (statusCode >= 200 && statusCode < 300) {
+		try {
+			log.info("sendDocumentToExternalService-status: " + conn.getResponseCode() + " "
+					+ conn.getResponseMessage());
 			return conn.getInputStream();
+		} catch (IOException e){
+			log.error("Response error", e);
+			return conn.getErrorStream();
 		}
-
-		throw new IOException("HTTP Error " + statusCode + ": " + conn.getResponseMessage());
 	}
 	
 	private static String fuzzyMatchList(String target, List<String> list){
@@ -541,7 +983,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		String bestResult = "";
 		for (String s : list){
 			double score = fuzzyMatchJaroWinkler(target, s);
-			if (score > bestScore && score > minScoreFuzzyMatch){
+			if (score > bestScore && score > MIN_FUZZY_SCORE){
 				bestScore = score;
 				bestResult = s;
 			}
@@ -549,33 +991,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return bestResult;
 	}
 	
-
-	/**
-	 * Fuzzy match using Levenshtein, case-insensitive. Higher score == better match. 
-	 * Jaro-Winkler is prob better for bank name matching use-case.
-	 * @deprecated fuzzyMatchJaroWinkler more accurate
-	 * @param st1
-	 * @param st2
-	 * @return score
-	 */
-	@Deprecated
-	private static double fuzzyMatch(String st1, String st2) {
-		if (StringUtils.isEmpty(st1) || StringUtils.isEmpty(st2)){
-			return 0.0;
-		}
-		String s1 = st1.toLowerCase().trim();
-		String s2 = st2.toLowerCase().trim();
-		
-		if (s1.equals(s2)){
-			return 1.0;
-		}
-		int maxLen = Math.max(s1.length(), s2.length());
-		if (maxLen == 0){
-			return 1.0;
-		}
-		int distance = StringUtils.getLevenshteinDistance(s1, s2);
-		return 1.0 - ((double) distance / maxLen);
-	}
 	
 	/**
 	 * Fuzzy match using Jaro-Winkler, better matching for "maybank" and "maybank investment banking"
@@ -686,11 +1101,92 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static class JsonWrapper {
 		private JSONArray entities;
-		private String filename;
+		private long timeTakenMs;
+		private String rawContent;
+		private String ocrType;
+		private long apiId;
 		
-		private JsonWrapper(JSONArray entities, String filename) {
-			this.entities = entities;
-			this.filename = filename;
+		private JsonWrapper(long startTime, String rawContent, String ocrType) {
+			this.entities = parseJsonEntities(rawContent);
+			this.timeTakenMs = System.currentTimeMillis() - startTime;
+			this.rawContent = rawContent;
+			this.ocrType = ocrType;
+		}
+		
+		private JsonWrapper(AIApiResponse res){
+			this(res.getTimeTakenMs(), res.getJsonResponse(), res.getOcrType());
+		}
+	}
+	
+	private static class DocEntity {
+		private Long apiId;
+		private List<BankStatementEntity> bankStatements;
+		private boolean error;
+		
+		private DocEntity(Long apiId, String rawContent){
+			this(apiId, parseJsonEntities(rawContent));
+		}
+		
+		private DocEntity(Long apiId, JSONArray entities){
+			this.apiId = apiId;
+			this.bankStatements = new ArrayList<>();
+			if (entities == null || entities.length() == 0){
+				this.error = true;
+				return;
+			}
+			try {
+				for (int i=0; i < entities.length(); i++){
+					JSONObject bankEntity = entities.getJSONObject(i);
+					String entityId = bankEntity.getString("entity");
+					JSONArray properties = bankEntity.getJSONArray(PROPERTIES);
+					BankStatementEntity bankStatement = new BankStatementEntity(
+							properties, entityId);
+					this.bankStatements.add(bankStatement);
+				}
+			} catch (JSONException e){
+				log.error("Error DocEntity", e);
+				this.error = true;
+			}
+		}
+		
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			for (BankStatementEntity bank : this.bankStatements){
+				sb.append(bank.entityId).append(":\n");
+				sb.append(bank.toString()).append("\n");
+			}
+			return sb.toString();
+		}
+		
+		private String getLabel() {
+			StringBuilder sb = new StringBuilder();
+			if (this.error){
+				return "Please upload valid document.";
+			}
+			if (this.bankStatements.size() == 1){
+				return bankStatements.get(0).getLabel();
+			}
+			for (BankStatementEntity bank : this.bankStatements){
+				sb.append("Bank " + bank.entityId.substring(5)).append(":<br/>");
+				sb.append(bank.getLabel()).append("<br/>");
+			}
+			return sb.toString();
+		}
+		
+		private boolean hasError() {
+			if (this.error){
+				return true;
+			}
+			if (EntityHelper.isCollectionEmpty(bankStatements)){
+				return false;
+			}
+			for (BankStatementEntity bank : bankStatements){
+				if (!bank.validAccountHolderName || !bank.validAccountNo || !bank.validBankName){
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 
@@ -698,41 +1194,38 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		private String bankName;
 		private String accountNo;
 		private String accountHolderName;
-		private String bankBranch;
-		private String filename;
+		private String entityId;
+		private boolean validBankName = true;
+		private boolean validAccountNo = true;
+		private boolean validAccountHolderName = true;
 
-		private BankStatementEntity(JSONArray entities, String filename) {
-			this.filename = filename;
-			try {
-				for (int i = 0; i < entities.length(); i++) {
-					JSONObject entity = entities.getJSONObject(i);
-					String type = entity.optString("type", "");
-					String text = entity.optString(valueStr, "");
-					double conf = entity.optDouble(confidence, 0.0);
-					if (conf < minConfidence){
-						log.info("Patut skip la kan? " + conf);
-					}
-					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
-						continue;
-					}
-					switch (type) {
-					case "Bank_Name":
-						this.bankName = text.trim();
-						break;
-					case "Account_Number":
-						this.accountNo = text.trim();
-						break;
-					case "Account_Holder_Name":
-						this.accountHolderName = text.trim();
-						break;
-					case "Bank_Branch":
-						this.bankBranch = text.trim();
-						break;
-					default:
-					}	
+		private BankStatementEntity(JSONArray properties, String entityId) throws JSONException {
+			this.entityId = entityId;
+			
+			for (int i = 0; i < properties.length(); i++) {
+				JSONObject property = properties.getJSONObject(i);
+				String type = property.optString("type", "");
+				String text = property.optString(VALUE, "");
+				String value = property.optString(NORM_VALUE, text);
+				double conf = property.optDouble(CONFIDENCE, 0.0);
+				if (conf < MIN_CONFIDENCE){
+					log.info("Patut skip la kan? " + conf);
 				}
-			} catch (JSONException e) {
-				log.error("Error BankStatementEntity", e);
+				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
+					continue;
+				}
+				switch (type) {
+				case "Bank_Name":
+					this.bankName = value.trim();
+					break;
+				case "Account_Number":
+					this.accountNo = value.trim();
+					break;
+				case "Account_Holder_Name":
+					this.accountHolderName = value.trim();
+					break;
+				default:
+				}	
 			}
 		}
 
@@ -748,8 +1241,38 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (accountNo != null) {
 				sb.append("Account No.: ").append(accountNo).append("\n");
 			}
-			if (bankBranch != null) {
-				sb.append("Branch: ").append(bankBranch).append("\n");
+			return sb.toString();
+		}
+		
+		public String getLabel() {
+			StringBuilder sb = new StringBuilder();
+			String err1 = "<span style='color: red;'>";
+			String err2 = "</span>";
+			String yes = "&#x2713; ";
+			String no = "&#x2717; ";
+			if (accountHolderName != null) {
+				String s = "Company: " + accountHolderName + "<br/>";
+				if (!validAccountHolderName){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (bankName != null) {
+				String s = "Bank name: " + bankName + "<br/>";
+				if (!validBankName){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (accountNo != null) {
+				String s = "Account No.: " + accountNo + "<br/>";
+				if (!validAccountNo){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
 			}
 			return sb.toString();
 		}
@@ -759,34 +1282,31 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * JSON mapping for EPF document
 	 * @author AI
 	 */
-	public static class EPFEntity {		//outdated format
+	public static class EPFEntity {
 		private EmployerInfo employer;
 		private List<EmployeeInfo> employees;
 
-		private static class EmployerInfo {
-			private String noRujukan;
-			private String nama;
-			private String alamat;
+		private class EmployerInfo {
+			private String employerName;
 
-			public EmployerInfo(String noRujukan, String nama, String alamat) {
-				this.noRujukan = noRujukan;
-				this.nama = nama;
-				this.alamat = alamat;
-			}
+			private EmployerInfo(JSONArray properties) throws JSONException {
 
-			@Override
-			public String toString() {
-				StringBuilder sb = new StringBuilder();
-				if (nama != null) {
-					sb.append("employer: ").append(nama).append("\n");
+				for (int i = 0; i < properties.length(); i++) {
+					JSONObject property = properties.getJSONObject(i);
+					String type = property.optString("type", "");
+					String text = property.optString(VALUE, "");
+					String value = property.optString(NORM_VALUE, text);
+					double conf = property.optDouble(CONFIDENCE, 0.0);
+					if (conf < MIN_CONFIDENCE) {
+						log.info("Low confidence for employer field: " + conf);
+					}
+					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)) {
+						continue;
+					}
+					if ("employer_name".equals(type)){
+						this.employerName = value.trim();
+					}
 				}
-				if (noRujukan != null) {
-					sb.append("employer reference: ").append(noRujukan).append("\n");
-				}
-				if (alamat != null) {
-					sb.append("employer address: ").append(alamat).append("\n");
-				}
-				return sb.toString();
 			}
 		}
 
@@ -795,40 +1315,52 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		 * @author AI
 		 */
 		public static class EmployeeInfo implements Serializable {
-			
+
 			private static final long serialVersionUID = 1L;
-			private String noAhliKWSP;
-			private String noPengenalanDiri;
-			private String nama;
-			private String carumanMajikan;
-			private String carumanPekerja;
-			
-			/**
-			 * @param noAhliKWSP
-			 * @param noPengenalanDiri
-			 * @param nama
-			 * @param carumanMajikan
-			 * @param carumanPekerja
-			 */
-			public EmployeeInfo(String noAhliKWSP, String noPengenalanDiri, String nama, 
-					String carumanMajikan, String carumanPekerja) {
-				this.noAhliKWSP = noAhliKWSP;
-				this.noPengenalanDiri = noPengenalanDiri;
-				this.nama = nama;
-				this.carumanMajikan = carumanMajikan;
-				this.carumanPekerja = carumanPekerja;
+			private String kwspNumber;
+			private String nricNumber;
+			private String employeeName;
+
+			private EmployeeInfo(JSONArray properties) throws JSONException {
+
+				for (int i = 0; i < properties.length(); i++) {
+					JSONObject property = properties.getJSONObject(i);
+					String type = property.optString("type", "");
+					String text = property.optString(VALUE, "");
+					String value = property.optString(NORM_VALUE, text);
+					double conf = property.optDouble(CONFIDENCE, 0.0);
+					if (conf < MIN_CONFIDENCE) {
+						log.info("Low confidence for employee field: " + conf);
+					}
+					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)) {
+						continue;
+					}
+					value = value.trim();
+					switch (type) {
+					case "KWSP_number":
+						this.kwspNumber = value;
+						break;
+					case "NRIC_number":
+						this.nricNumber = value;
+						break;
+					case "employee_name":
+						this.employeeName = value;
+						break;
+					default:
+					}
+				}
 			}
 
-			public String getNoAhliKWSP() {
-				return this.noAhliKWSP;
+			public String getKwspNumber() {
+				return this.kwspNumber;
 			}
 
-			public String getNoPengenalanDiri() {
-				return this.noPengenalanDiri;
+			public String getNricNumber() {
+				return this.nricNumber;
 			}
 
-			public String getNama() {
-				return this.nama;
+			public String getEmployeeName() {
+				return this.employeeName;
 			}
 		}
 
@@ -836,16 +1368,15 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			this.employees = new ArrayList<>();
 			try {
 				for (int i = 0; i < entities.length(); i++) {
-					JSONObject entity = entities.getJSONObject(i);
-					String type = entity.optString("type", "");
-					String text = entity.optString(valueStr, "");
-					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
-						continue;
-					}
-					if ("employer".equals(type)){
-						parseEmployer(entity, text);
-					} else if ("employee".equals(type)){
-						parseEmployee(entity);
+					JSONObject entityObj = entities.getJSONObject(i);
+					String entityId = entityObj.getString("entity");
+					JSONArray properties = entityObj.getJSONArray(PROPERTIES);
+
+					if (entityId.startsWith("employee-")) {
+						EmployeeInfo employee = new EmployeeInfo(properties);
+						this.employees.add(employee);
+					} else if (entityId.startsWith("employer-")) {
+						this.employer = new EmployerInfo(properties);
 					}
 				}
 
@@ -853,122 +1384,226 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				log.error("Error EPFEntity", e);
 			}
 		}
-		
+
 		public List<EmployeeInfo> getEmployees() {
 			return employees != null ? employees : new ArrayList<EmployeeInfo>();
 		}
-
-		private void parseEmployer(JSONObject entity, String text) throws JSONException{
-			String empNoRujukan = null;
-			String empNama = null;
-			String empAlamat = null;
-			
-			JSONArray properties = entity.optJSONArray("properties");
-			if (properties != null) {
-				for (int j = 0; j < properties.length(); j++) {
-					JSONObject prop = properties.getJSONObject(j);
-					String propType = prop.optString("type", "");
-					String propText = prop.optString(valueStr, "");
-
-					if ("Alamat_Majikan".equals(propType)) {
-						empAlamat = propText.trim();
-					}
-				}
-			} else {
-				// Fallback to mentionText if no properties
-				empAlamat = text.trim();
-			}
-			this.employer = new EmployerInfo(empNoRujukan, empNama, empAlamat);
-		}
-		
-		private void parseEmployee(JSONObject entity) throws JSONException{
-			String noAhli = null;
-			String noPengenalan = null;
-			String nama = null;
-			String carumanMaj = null;
-			String carumanPek = null;
-
-			JSONArray empProperties = entity.optJSONArray("properties");
-			if (empProperties == null){
-				return;
-			}
-			for (int j = 0; j < empProperties.length(); j++) {
-				JSONObject prop = empProperties.getJSONObject(j);
-				String propType = prop.optString("type", "");
-				String propText = prop.optString(valueStr, "");
-
-				switch (propType) {
-				case "No_Ahli_KWSP":
-					noAhli = propText.trim();
-					break;
-				case "No_Pengenalan_Diri":
-					noPengenalan = propText.trim();
-					break;
-				case "Nama_Pekerja":
-					nama = propText.trim();
-					break;
-				case "Caruman_Majikan":
-					carumanMaj = propText.trim();
-					break;
-				case "Caruman_Pekerja":
-					carumanPek = propText.trim();
-					break;
-				default:
-				}
-			}
-			this.employees.add(new EmployeeInfo(noAhli, noPengenalan, nama, carumanMaj, carumanPek));
-		}
 	}
 
-	private static class TenancyEntity {	//outdated format
-		private String alamatSewaanPremis;
-		private String namaPemilikPremis;
-		private String sewaanBulanan;
+	/**
+	 * JSON Mapping for Tenancy Agreement
+	 * @author AI
+	 */
+	public static class TenancyEntity {
+		private String landlordsName;
+		private String tenantsName;
+		private BigDecimal monthlyRental;
+		private String premisesAddress;
 		private String postcode;
-		private String country;
-		private String state;
-		private String district;
-		private String city;
-		private String normalizedAddress;
+		private String addr1;
+		private String addr2;
+		private String addr3;
+		private String codeCity;
+		private PmCity pmCity;
+		private boolean validLandlordsName;
+		private boolean validTenantsName;
+		private boolean validMonthlyRental;
+		private boolean validAddress;
+		private boolean error;
 
+		/**
+		 * 
+		 * @param entities
+		 */
 		public TenancyEntity(JSONArray entities) {
 			try {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(valueStr, "");
+					String text = entity.optString(VALUE, "");
+					String value = entity.optString(NORM_VALUE, text);
+					double conf = entity.optDouble(CONFIDENCE, 0.0);
+
+					if (conf < MIN_CONFIDENCE) {
+						log.info("Low confidence for tenancy field: " + conf);
+					}
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
 						continue;
 					}
+					value = value.trim();
 					switch (type) {
-					case "Alamat_Sewaan-Premis":
-						this.alamatSewaanPremis = text.trim();
-						setAddress(entity);
+					case "landlords_name":
+						this.landlordsName = value;
 						break;
-					case "Nama_Pemilik-Premis":
-						this.namaPemilikPremis = text.trim();
+					case "tenants_name":
+						this.tenantsName = value;
 						break;
-					case "Sewaan_Bulanan":
-						this.sewaanBulanan = text.trim();
+					case "monthly_rental":
+						this.monthlyRental = new BigDecimal(value);
+						break;
+					case "premises_address":
+						this.premisesAddress = value;
+						setAddress(entity.optJSONObject("addressComponents"));
 						break;
 					default:
 					}
 				}
-			} catch (JSONException e) {
+			} catch (JSONException | NumberFormatException e) {
 				log.error("Error TenancyEntity", e);
+				this.error = true;
 			}
 		}
 		
-		private void setAddress(JSONObject entity){
-			JSONObject addressComponents = entity.optJSONObject("addressComponents");
-			if (addressComponents != null) {
-				this.postcode = addressComponents.optString("postcode", "").trim();
-				this.country = addressComponents.optString("country", "").trim();
-				this.state = addressComponents.optString("state", "").trim();
-				this.district = addressComponents.optString("district", "").trim();
-				this.city = addressComponents.optString("city", "").trim();
-				this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
+		public void setAddress(JSONObject addr){
+			if (addr != null) {
+				this.postcode = addr.optString("postcode", "").trim();
+				String fullAddr = addr.optString("normalized_Address", "").trim();
+				truncateAddressAtPostcode(fullAddr, this.postcode);
+				this.codeCity = addr.optString("city_code", "").trim();
 			}
+			if (!StringUtils.isEmpty(codeCity)){
+				this.pmCity = SmServiceLookup.getCitySO().getCityByCode(codeCity).getPmCity();
+			}
+			
+		}
+		
+        /**
+         * Truncates the address at the postcode
+         * @param addr
+         * @param postcode the postcode
+         * @return the truncated address
+         */
+		private String truncateAddressAtPostcode(String addr, String postcode) {
+			this.addr1 = addr;
+			this.addr2 = "";
+			this.addr3 = "";
+			if (StringUtils.isEmpty(addr) || StringUtils.isEmpty(postcode)) {
+				return addr;
+    		}
+			int postcodeIndex = addr.indexOf(postcode);
+			if (postcodeIndex == -1) {
+				return addr;
+			}
+			String truncated = addr.substring(0, postcodeIndex).trim();
+			String result = truncated.replaceAll(",\\s*$", "").trim();
+
+			Pattern pattern = Pattern.compile(",|\\s+(?=(?:jalan|jln|taman|tmn|blok|seksyen)\\b)", 
+					Pattern.CASE_INSENSITIVE);
+			String[] parts = pattern.split(result, 3);
+
+			if (parts.length > 0) {
+				this.addr1 = parts[0].trim();
+			}
+			if (parts.length > 1) {
+				this.addr2 = parts[1].trim();
+			}
+			if (parts.length > 2) {
+				this.addr3 = parts[2].trim();
+			}
+			return result;
+        }
+
+		public String getLabel(){
+			StringBuilder sb = new StringBuilder();
+			String err1 = "<span style='color: red;'>";
+			String err2 = "</span>";
+			String yes = "&#x2713; ";
+			String no = "&#x2717; ";
+			if (tenantsName != null) {
+				String s = "Company: " + tenantsName + "<br/>";
+				if (!validTenantsName){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (landlordsName != null) {
+				String s = "Landlord's Name: " + landlordsName + "<br/>";
+				if (!validLandlordsName){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (monthlyRental != null) {
+				String s = "Monthly Rental (RM): " + monthlyRental + "<br/>";
+				if (!validMonthlyRental){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (premisesAddress != null) {
+				String s = "Address: " + premisesAddress + "<br/>";
+				if (!validAddress){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			return sb.toString();
+		}
+		
+		private boolean compareAddress(SmAddress addr){
+			this.validAddress = false;
+			if (addr == null || addr.getPmCity() == null || premisesAddress == null || this.pmCity == null){
+				return false;
+			}
+			if (!this.pmCity.getCityId().equals(addr.getPmCity().getCityId())){
+				return false;
+			}
+			if (!this.postcode.equals(addr.getPostcode())){
+				return false;
+			}
+			String suppAddr = addr.getAddress1() + addr.getAddress2() + addr.getAddress3();
+			String jsonAddr = this.addr1 + this.addr2 + this.addr3;
+			double score = fuzzyMatchJaroWinkler(suppAddr, jsonAddr);
+			if (score < MIN_FUZZY_SCORE){
+				return false;
+			}
+			this.validAddress = true;
+			return true;
+		}
+		
+		private boolean hasError(){
+			return this.error || !this.validLandlordsName || !this.validMonthlyRental
+					|| !this.validTenantsName || !this.validAddress;
+		}
+		
+		public String getLandlordsName(){
+			return this.landlordsName;
+		}
+		
+		public String getTenantsName(){
+			return this.tenantsName;
+		}
+		
+		public BigDecimal getMonthlyRental(){
+			return this.monthlyRental;
+		}
+		
+		public String getPremisesAddress(){
+			return this.premisesAddress;
+		}
+		
+		public String getPostcode(){
+			return this.postcode;
+		}
+		
+		public String getAddr1(){
+			return this.addr1;
+		}
+
+		public String getAddr2(){
+			return this.addr2;
+		}
+		
+		public String getAddr3(){
+			return this.addr3;
+		}
+
+		public PmCity getPmCity(){
+			return this.pmCity;
 		}
 	}
 }

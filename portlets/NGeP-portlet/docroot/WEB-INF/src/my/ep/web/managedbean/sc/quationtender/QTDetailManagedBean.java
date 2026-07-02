@@ -33,6 +33,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtContract;//25791
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -221,6 +222,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The circular exp date. */
 	private Date circularExpDate;
+	
+	//#29661 start
+	/** The circular exp date. */
+	private List<CtPanelCategory> ctPanelCategoryCode;
+	
+	/** The boolean determine ct panel category */
+	private boolean ctPanelCategory;
+	
+	/** The boolean determining to show the category code panel **/
+	private boolean showCategoryCodePanel;//#29661 #40094
+	//#29661 end
 	
 	// Drop down Listing for Approver
 	private List<PmUser> ministrySpecApprovers; 
@@ -1706,6 +1718,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
 	
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	private IPagingDataModel<ScLoi> searchLoiDataModel;
@@ -1904,10 +1919,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<String, String> committeeMembersTypeMap; 
 	//12471 - end
 
-	//#29732
+	//#29732 start
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
-
+	private boolean updateCatDesc; 
+	private boolean updateCatInPm; 
+	private boolean resetHistoryCatCode;
+	//#29732 end
 	private boolean isSampleShowHide;// 11104wip
 
 	// 25791-start
@@ -1932,11 +1950,27 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
 	/** The deleted sc qt committee */
 	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
+	/** The modified role of sc qt committee */
+	private HashMap<PmUser,List<String>> mapModifiedRole;	
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	/** The pmuser contactperson list that had been modified with the original pm user's name */
+	private HashMap<ScQtContactPerson, PmUser> modifiedDoaList;
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
+	private boolean zoneQtyHasZeroVal;//#38679
+	
+	//#35320 - Start
+	private boolean afterSF;
+	//#35320 - End
+	
+	//#28188 - Start
+	/** The Briefing/Site Visit postpone date. */
+	private Date briefingSiteVisitPostponeDate;
+	//#28188 - End
+	
+	private List<TplSpecZoneDtl> deleteZonesTreeNodes;	//37851
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12359,6 +12393,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setAuditViewRole(boolean auditViewRole) {
 		this.auditViewRole = auditViewRole;
 	}
+	
+	public HashMap<ScQtContactPerson, PmUser> getModifiedDoaList() {
+		return modifiedDoaList;
+	}
+
+	public void setModifiedDoaList(HashMap<ScQtContactPerson, PmUser> modifiedDoaList) {
+		this.modifiedDoaList = modifiedDoaList;
+	}
+	
+	public HashMap<PmUser,List<String>> getMapModifiedRole() {
+		return mapModifiedRole;
+	}
+
+	public void setMapModifiedRole(HashMap<PmUser,List<String>> mapModifiedRole) {
+		this.mapModifiedRole = mapModifiedRole;
+	}
 	//#28895 - 35500 end
 	
 	//37813,35384 -start
@@ -12377,6 +12427,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//37813,35384 -end
 
+	//#29661 start
+	public List<CtPanelCategory> getCtPanelCategoryCode() {
+		return ctPanelCategoryCode;
+	}
+
+	public void setCtPanelCategoryCode(List<CtPanelCategory> ctPanelCategoryCode) {
+		this.ctPanelCategoryCode = ctPanelCategoryCode;
+	}
+
+	public boolean isCtPanelCategory() {
+		return ctPanelCategory;
+	}
+
+	public void setCtPanelCategory(boolean ctPanelCategory) {
+		this.ctPanelCategory = ctPanelCategory;
+	}
+	
+	public boolean isShowCategoryCodePanel() {
+		return showCategoryCodePanel;
+	}
+
+	public void setShowCategoryCodePanel(boolean showCategoryCodePanel) {
+		this.showCategoryCodePanel = showCategoryCodePanel;
+	}
+	//#29661 end
 	//#21692 - End
 	public boolean isUserAbleToChangePBSecretary() {
 		return userAbleToChangePBSecretary;
@@ -12386,4 +12461,87 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
+
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	//#29732
+	
+	//#29732
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+	
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
+	}
+	//#29732
+	
+	//#38679
+	public boolean isZoneQtyHasZeroVal() {
+		return zoneQtyHasZeroVal;
+	}
+	
+	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
+		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
+	}
+	//#38679
+
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
+
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
+	
+	//#28188 - Start
+	/**
+	 * @return the briefingSiteVisitPostponeDate
+	 */
+	public Date getBriefingSiteVisitPostponeDate() {
+		return briefingSiteVisitPostponeDate;
+	}
+
+	/**
+	 * @param briefingSiteVisitPostponeDate the briefingSiteVisitPostponeDate to set
+	 */
+	public void setBriefingSiteVisitPostponeDate(Date briefingSiteVisitPostponeDate) {
+		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
+	}
+	//#28188 - End
+
+	//37851 -- Start
+	public List<TplSpecZoneDtl> getDeleteZonesTreeNodes() {
+		return deleteZonesTreeNodes;
+	}
+
+	public void setDeleteZonesTreeNodes(List<TplSpecZoneDtl> deleteZonesTreeNodes) {
+		this.deleteZonesTreeNodes = deleteZonesTreeNodes;
+	}
+	//37851 --  End
 }

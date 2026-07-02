@@ -42,6 +42,7 @@
 				</h:outputText>
 
 				<ui:param name="closingChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentClosingDateMap[scqt[0]]}" />
+				<ui:param name="bsvChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentBSVDateMap[scqt[0]]}" /> <ui:remove>#28188 </ui:remove>
 				<h:outputText
 					value="&#60;br/&#62;&#60;br/&#62;#{lbl['lbl.sc.updated.on']} "
 					styleClass="lastUpdated" escape="false"
@@ -68,6 +69,15 @@
 					title="#{lbl['lbl.sc.notice.board.self.registration.tooltip']}">
 					<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/register.png" />
 				</p:commandLink>
+				<ui:remove>#28188 - Start </ui:remove>
+				<h:outputText
+					value="&#60;br/&#62;&#60;br/&#62;#{lbl['lbl.sc.updated.on']} "
+					styleClass="lastUpdated" escape="false"
+					rendered="#{isChangesTab and !empty bsvChangeDate}" />
+				<h:outputText value="#{bsvChangeDate}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty bsvChangeDate}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+				</h:outputText>
+				<ui:remove>#28188 - End </ui:remove>
 			</p:column>
 
 		<ui:remove>#36709 - Start </ui:remove>

@@ -24,7 +24,7 @@
 					</c:when>
 					<c:otherwise>
 						<p:commandButton id="btnCriteriaUpdate" value="#{lbl['lbl.btn.update']}"
-							oncomplete="updateInfoDlg.show()" style="float:right;"/>
+							oncomplete="if (!args.validationFailed) updateInfoDlg.show()" style="float:right;"/> <!-- #34445, Fix as-is bug: #39087 -->
 					</c:otherwise>
 				</c:choose>
 				<!-- 34445 end -->
@@ -35,7 +35,8 @@
 	
 	<!-- 34445 start -->
 	<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
-		okAction="criteriaBackingBean.saveSupplierCriteriaDtls()"
+		okParam="#{criteriaBackingBean.saveSupplierCriteriaDtls()}"
+		hasParam="true"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.pm.btn.save.msg']}"/>

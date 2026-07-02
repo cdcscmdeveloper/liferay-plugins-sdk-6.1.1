@@ -778,6 +778,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void showConfirmDialog() {
 		validateRequestSoftcert();
+		getManagedBean().setAgreeDeclare(false);	//#34400
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
 
@@ -1748,5 +1749,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		return SmCommonUtil.getMessage("lbl.sm.softcert.revoke.instruction",
 				new String[] { url });
 	}
+	// #10729 Start
+	public boolean isTempSupplierRole() {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean temp;
+		temp = facesScopes.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) ? true : false;
+		return temp;
+	}
+	// #10729 End
 	
 }

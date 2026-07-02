@@ -90,6 +90,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private String pLvl5OldVal;
 	private String pLvl6OldVal;
 	private String pLvl7OldVal;
+	private String pLvl8OldVal;
 	private Long selectedOrgType;
 	private PmParameterDesc pmParameterDescOrgType;
 
@@ -644,6 +645,14 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public void setpUserOrgProfileId(BigDecimal pUserOrgProfileId) {
 		this.pUserOrgProfileId = pUserOrgProfileId;
+	}
+
+	public String getpLvl8OldVal() {
+		return pLvl8OldVal;
+	}
+
+	public void setpLvl8OldVal(String pLvl8OldVal) {
+		this.pLvl8OldVal = pLvl8OldVal;
 	}
 
 }

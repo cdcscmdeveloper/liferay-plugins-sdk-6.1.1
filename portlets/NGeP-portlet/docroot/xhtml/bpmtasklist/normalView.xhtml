@@ -185,6 +185,8 @@
 				<!-- 26238 - Disciplinary Action 28111 -->
 				<f:param name="docNo" value="#{tasks.docNumber}" />
 			</p:commandLink>
+			<!-- #38890 -->
+			<p:graphicImage value="/css/images/ai/icon.png" rendered="#{tasks.docType eq 'SR'}"/> 
 		</p:column>
 		<p:column width="10%">
 			<f:facet name="header" >

@@ -9,6 +9,9 @@
 	<ui:remove>#29187 Start Vinod</ui:remove>
 	<ui:param name="isManSpecAndCompliance" value="#{evaluationBackingBean.displayMandatorySpecAndComplianceColumn(templateSpecBean)}" /> 
 	<ui:param name="isRenderZone" value="#{evaluationBackingBean.renderZoneForFinancial()}" /> 
+	<ui:param name="isWeightageWipP2" value="#{templateSpecBackingBean.managedBean.weightage35384WIP}" /> 
+	<ui:param name="isHasWeightage" value="#{templateSpecBackingBean.hasWeightage(templateSpecBean)}" /> 
+	
 	<ui:remove>#29187 End Vinod</ui:remove>
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
@@ -47,16 +50,22 @@
 	</p:column>
 	<ui:remove>#29187 End Vinod</ui:remove>
 	<!-- #33859 - end -->
+	<!-- #38151 add isWeightageWipP2-->
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:60px; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" 
-		rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean)}">
+		rendered="#{isHasWeightage and isWeightageWipP2}">
 		</p:column>
 		<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}" rendered="#{isScoringReq}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.system.score']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}"  rendered="#{isSpecTypeTechnical and isHasWeightage and !isWeightageWipP2}"/> <!-- #38151 -->				
+		</f:facet>
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}" rendered="#{isScoringReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}"  rendered="#{isSpecTypeTechnical and isHasWeightage and !isWeightageWipP2}"/> <!-- #38151 -->				
 		</f:facet>
 		</p:column>
 		<ui:remove>#29187 Start Vinod</ui:remove>

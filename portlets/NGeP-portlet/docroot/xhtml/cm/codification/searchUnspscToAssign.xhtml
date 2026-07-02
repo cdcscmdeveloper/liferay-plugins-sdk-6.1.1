@@ -125,33 +125,46 @@
 						<p:commandLink
 							action="#{codificationBackingBean.assignCodeConfirmation(unspscObj)}"
 							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}"
-							update="@([id$=asignCodeDialogConfirm])">
+							update="@([id$=assignCodeDialogConfirm])">
 							<!-- #31503 End -->
 							#{unspscObj.unspscCode}
 						
 						</p:commandLink>
 
 						<!-- #31503 Start -->
-						<p:confirmDialog id="asignCodeDialogConfirm"
-							widgetVar="asignCodeDialogConfirm"
-							message="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}"
-							header="#{lbl['lbl.sc.item.details']}" resizable="true"
+						<ui:remove>#26059 - Start</ui:remove>
+						<p:dialog id="assignCodeDialogConfirm"
+							widgetVar="assignCodeDialogConfirm"
+							header="#{lbl['lbl.sc.item.details']}" modal="true" width="500"
 							closable="true">
-							<p:outputLabel
-								value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
-							<br />
-							<br />
 
-							<div align="right">
-								<p:commandButton value="#{lbl['lbl.btn.ok']}"
-									onclick="asignCodeDialogConfirm.hide();"
-									action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									update="@form" />
-								<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-									onclick="asignCodeDialogConfirm.hide();" update="@form" />
-							</div>
-						</p:confirmDialog>
+							<p:outputPanel id="assignCodeContentPanel" style="padding: 10px;">
+
+								<div style="margin-bottom: 15px;">
+									<h:outputText
+										value="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}" />
+								</div>
+								<div
+									style="margin-bottom: 30px; word-wrap: break-word; line-height: 1.5;">
+									<h:outputText
+										value="#{codificationBackingBean.managedBean.itemCodeDesc}"
+										style="font-weight: bold;" />
+								</div>
+
+								<div style="text-align: right; margin-top: 20px; clear: both;">
+									<p:commandButton value="#{lbl['lbl.btn.yes']}"
+										onclick="assignCodeDialogConfirm.hide();"
+										action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										update="@form" style="margin-right: 5px;"/>
+									<p:commandButton value="#{lbl['lbl.btn.no']}"
+										onclick="assignCodeDialogConfirm.hide();" update="@form" />
+								</div>
+
+							</p:outputPanel>
+						</p:dialog>
+
+						<ui:remove>#26059 - End</ui:remove>
 						<!-- #31503 End -->
 
 						<p:commandLink

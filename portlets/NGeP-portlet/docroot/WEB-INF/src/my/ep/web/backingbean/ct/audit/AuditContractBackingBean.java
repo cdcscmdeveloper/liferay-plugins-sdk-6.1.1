@@ -59,14 +59,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContractManagedBean> {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AuditContractBackingBean.class);
+	private static final String FILE_NAME = "AuditContractBackingBean";
+	private static final String METHOD_NAME = "saveAuditData";
 	private transient IPagingDataModel<AuditContractResDTO> searchCT;
     private transient IPagingDataModel<AuditContractResDTO> searchCircular;
 	private String requestNoneView = "/xhtml/ct/audittrail/auditContractView.xhtml";
-
-	private static final String FILE_NAME = "AuditContractDAO";
-	private static final String METHOD_NAME = "insertAudit";
-	private static final long DEFAULT_DOC_ID = 0L;
-	private static final String BEAN_LOG_CONTEXT = "AuditContractBackingBean.AuditPagingDataModel";
 
 	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
 	
@@ -101,7 +98,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	    FacesContext fc = FacesContext.getCurrentInstance();
 	    String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
-	    getManagedBean().setDocId(docId != null ? docId : DEFAULT_DOC_ID);
+	    getManagedBean().setDocId(docId != null ? docId : AuditContractConst.DEFAULT_DOC_ID);
 	    getManagedBean().setDocType(docType);
 	    getManagedBean().setLanguage(languageCode);
 	    getManagedBean().setBackURL(fc.getViewRoot().getViewId());
@@ -175,11 +172,11 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		    } catch (RuntimeException e) {
 		        String docIdStr = getManagedBean().getDocId() != null 
 		                ? getManagedBean().getDocId().toString() 
-		                : "N/A";
+		                : AuditContractConst.CT_NULL;
 
 		        SLAUtils.getInstance().logSLAError(
 		                ModuleCodeConst.CONTRACT_MANAGEMENT, "AU", docIdStr,
-		                BEAN_LOG_CONTEXT, getUserId(), e);
+		                AuditContractConst.BEAN_LOG_CONTEXT, getUserId(), e);
 
 		        throw new EpException(MessageConst.ERROR_000001);
 		    }
@@ -278,7 +275,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		IAuditContractSO auditContractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
 				IAuditContractSO.class);
 
-		if (!groupSecId.equals(0L)) {
+		if (!groupSecId.equals(AuditContractConst.DEFAULT_DOC_ID)) {
 			newGroupSecId = groupSecId;
 		}
 		List<AuditContractResDTO> auditCTList = auditContractSO.getCTAuditTrailsRptViewResultList(docId, newGroupSecId, ctType);
@@ -455,7 +452,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		if (tabHeaderPair == null) {
 			return null;
 		}
-		return tabHeaderPair.tab.replaceAll("[\\\\/*?:\\[\\]]", "_");
+		return tabHeaderPair.tab.replaceAll(AuditContractConst.SPECIAL_CHAR, "_");
 	}
 
 	/**
@@ -476,7 +473,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 */
 	private String getValidSheetName(String sheetName) {
 		if (sheetName == null) {
-			return "Sheet1";
+			return AuditContractConst.DEFAULT_SHEET;
 		}
 		String sanitizedSheetName = sheetName.replaceAll("[\\\\/*?:\\[\\]]", "_");
 		return sanitizedSheetName.length() > 31 ? sanitizedSheetName.substring(0, 31) : sanitizedSheetName;

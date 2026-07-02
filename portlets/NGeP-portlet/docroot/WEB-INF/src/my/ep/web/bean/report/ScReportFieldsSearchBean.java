@@ -46,11 +46,11 @@ public class ScReportFieldsSearchBean implements Serializable {
 	private String scPtjName;
 	private PmOrgProfile ptjProfile;
 	private SelectItem doSelectItem;
-	private List<String> scStatusManyMenu;//#29580
 	private String scPropSubmitFromMonth;//#14306
 	private String scPropSubmitFromYear;//#14306
 	private String scPropSubmitToMonth;//#14306
 	private String scPropSubmitToYear;//#14306
+	private List<String> scStatusManyMenu;//#29580
 
 	/**
 	 * @return the allCheckboxValue
@@ -301,10 +301,10 @@ public class ScReportFieldsSearchBean implements Serializable {
 	public void setDoSelectItem(SelectItem doSelectItem) {
 		this.doSelectItem = doSelectItem;
 	}
+	//#29580 - Start
 	/**
 	 * @return the scStatusManyMenu
 	 */
-	//#29580 - Start
 	public List<String> getScStatusManyMenu() {
 		return scStatusManyMenu;
 	}
@@ -366,6 +366,5 @@ public class ScReportFieldsSearchBean implements Serializable {
 		this.scPropSubmitToYear = scPropSubmitToYear;
 	}
 	//#14306 - End
-	
 
 }

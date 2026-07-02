@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.ai.IAIApiProcessSO;
 import my.ep.biz.service.sm.address.ISmAddressSO;
 import my.ep.biz.service.sm.application.ISupplierApplicationSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
@@ -693,5 +694,11 @@ public class SmServiceLookup {
 	public static ISpkiSO getSpkiSO() {
 		return (ISpkiSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISpkiSO.class);
+	}
+	
+	//#38890
+	public static IAIApiProcessSO getAIApiProcessSO() {
+		return (IAIApiProcessSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IAIApiProcessSO.class);
 	}
 }

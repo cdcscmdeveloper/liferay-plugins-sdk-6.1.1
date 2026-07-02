@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.agreement;
 
@@ -66,8 +66,10 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //#37620,#34367
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContractVer; //34442
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
@@ -146,6 +148,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	private String gstAmtChange = null;
 	private String sTaxAmtChange = null;	
 	//26686 end
+
+	private String confirmationContentMsg;//34442 
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -578,6 +582,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			}
 		}
 		// #24333 - End
+		
+		// #37620,#34367 - Start
+		// Retrieve LOA and update contract panel state (flag, circular data, and attachment)
+		// based on validation logic in retrieveItemPanelDetails.
+		ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(getManagedBean(), "ctContract.loa");
+		ctBB.retrieveItemPanelDetails(loa);
+		// #37620,#34367 - End
 
 		// Check for migrated contract
 		if (getManagedBean().getCtAgreement().getCtAmendment() == null
@@ -932,7 +943,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		//#28715
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
-						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME))) {
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME))) { //#24333
 
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
@@ -949,7 +961,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				throw new EpException(MessageConst.ERROR_750043, 
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			} else if (getManagedBean().isBondReq() && getManagedBean().getCtAgreement().getCtAmendment() != null
+			} else if (isPerformanceBond() && getManagedBean().getCtAgreement().getCtAmendment() != null
 					&& getManagedBean().getCtAgreement().getCtAmendment().isContractExtend() && !getManagedBean().isBondAttachmentCompleted()) { // #24333,//#bug_38138																																																																										// Start
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_750043, new String[] { ResourceBundleUtils.getMessage(getManagedBean().getCtContract()
@@ -1044,7 +1056,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if(signDate != null && expDate != null && signDate.after(expDate)){	
 				RequestContext.getCurrentInstance().execute("dateValidationExpGpki.show()");				
 			}else{
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				// 34442 - start
+				setConfirmationContentMsg(getConfirmationContent(String.valueOf(getManagedBean().getCtAgreement()
+						.getStatus().getStatusId()), getManagedBean().getCtContract().getContractNo()));
+				RequestContext.getCurrentInstance().update("submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+				// 34442 - end
 			}
 			//#29417 end
 			return null;
@@ -2957,4 +2974,30 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}
 	}
 	//#26686 - end
+	
+	//#24333 - Start
+	/**
+	 * Function to check if bond required for contract
+	 * 
+	 * @return true, if performance bond is required
+	 *         false, if performance bond is not required
+	 * */
+	public boolean isPerformanceBond(){
+		if ((getManagedBean().isBondReq() || getManagedBean().getContractVer().getCtContractAmount().isBondReq())
+				&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
+			return true;
+		}
+		return false;
+	}
+	//#24333 - End
+
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

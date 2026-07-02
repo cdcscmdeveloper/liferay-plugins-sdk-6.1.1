@@ -59,9 +59,13 @@
 					value="#{(scqt[5] eq '1')?lbl['lbl.btn.yes']:lbl['lbl.btn.no']}" />
 					&#160;
 			</p:column>
-
+			
+			<ui:remove>#39094 - Start </ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:10%; white-space:normal; text-align:center;" rendered="#{noticeBoardBackingBean.managedBean.selectedTab ne ParameterConst.noticeBoardStatusCancelled ?'true':'false'}">
+				style="width:10%; white-space:normal; text-align:center;" 
+				rendered="#{noticeBoardBackingBean.managedBean.selectedTab ne ParameterConst.noticeBoardStatusCancelled  and 
+					noticeBoardBackingBean.managedBean.selectedTab ne ParameterConst.noticeBoardStatusClosed}">
+				<ui:remove>#39094 - End </ui:remove>
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 					<p:commandLink id="chkQualIcon"

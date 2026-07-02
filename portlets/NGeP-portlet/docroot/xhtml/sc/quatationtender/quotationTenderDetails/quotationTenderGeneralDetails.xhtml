@@ -6,6 +6,36 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+  <!-- Start #25725/25726 -->
+  <style>
+     .italic-item {
+	font-style: italic !important;
+    }
+  </style>
+	
+ <h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{qTDetailBB.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+  </h:outputScript>
+ <!-- End #25725/25726 -->
 
 	<ui:param name="scQt" value="#{createQtBB.managedBean.qt}" />
 	<ui:param name="qtStatusAfterChecklistScoring"
@@ -269,8 +299,8 @@
 						label="#{lbl['lbl.sc.qt.fileno']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isFileNoMandatory(scQt) or not empty param['skipmenuvalidation'] or not empty param['skipsaveclonevalidation']}"
 						value="#{scQt.fileNo}" style="width:653px;" maxlength="50"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FILE_NO) or isReadOnly}">
-						<p:ajax event="blur" partialSubmit="true" update="@this"
-							listener="#{createQtBB.setFileNo(scQt)}"></p:ajax>
+						<!-- 29661 start --><p:ajax event="blur" partialSubmit="true" update="@this"
+							listener="#{createQtBB.setFileNo(scQt)}"></p:ajax> <!-- 29661 end -->
 					</p:inputText> <p:message id="filenoMsg" for="fileno" display="icon" /></td>
 			</tr>
 			<tr>
@@ -880,11 +910,14 @@
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FULFILMENT_TYPE) and !isReadOnly or isGenInfo}">
 							<ui:remove>9019 Reopen #note-289 - change required validation</ui:remove>
+							<!-- #25726/25725 - Check and display Italic value -->
 							<p:selectOneMenu required="#{not empty param['skipsubmitvalidation']}" id="fulfilId"
 								disabled="#{isContractTypeAsCentral}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
@@ -894,9 +927,11 @@
 						</c:when>
 						<c:otherwise>
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>														
+							<!-- #25726/25725 - Check and display Italic value -->
 							<p:inputText id="fulfilTypeTxt"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
-								style="width:195px;" disabled="true" />
+								style="width:195px;" disabled="true" 
+								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/>
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
 							<ui:remove>9019 Reopen #note-289 - change required validation</ui:remove>							
 						</c:otherwise>

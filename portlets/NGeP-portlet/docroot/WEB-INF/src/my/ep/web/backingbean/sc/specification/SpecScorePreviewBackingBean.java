@@ -8,6 +8,9 @@ import java.util.Calendar;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
@@ -24,6 +27,8 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.StreamedContent;
+
+import com.liferay.portal.util.PortalUtil;
 
 
 /**
@@ -56,8 +61,13 @@ public class SpecScorePreviewBackingBean extends SourcingBaseBackingBean<QTDetai
 		if (currentStream == null) {
 			try {
 				ScAttachment newAttachment = new ScQtCheckListAttachment();
+				PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance()
+						.getExternalContext().getResponse();
+				HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
 
 				generateFileDetails(newAttachment);
+				res.setHeader("Content-Disposition", "inline; filename=" + newAttachment.getFileName());
+				
 				currentStream = getAttachmentStreamContent(newAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 			} catch (IOException e) {
 				ScQt scQt = getManagedBean().getQt();
