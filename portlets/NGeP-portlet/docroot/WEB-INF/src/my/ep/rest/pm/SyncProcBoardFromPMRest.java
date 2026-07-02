@@ -308,6 +308,7 @@ public class SyncProcBoardFromPMRest {
 			log.info("#Start Sync By Login Id");
 			reqDTO = new UserReqDTO();
 			reqDTO.setLoginId(loginId);
+			reqDTO.setDefaultPassword(true);
 			resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginId(reqDTO);
 			if(resDTO.getPmUser() == null){
 				resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginIdInactive(reqDTO);
@@ -318,6 +319,7 @@ public class SyncProcBoardFromPMRest {
 				reqDTO = new UserReqDTO();
 				reqDTO.setLoginId(loginId);
 				reqDTO.setUserId(userId);
+				reqDTO.setDefaultPassword(true);
 				reqDTO.setSupplierUser(false);
 				resDTO = SmServiceLookup.getUserSO().createnSyncLiferayAndOimRoleFromPm(reqDTO);
 				log.info("End Sync user by login Id: " + resDTO.isSuccessful());

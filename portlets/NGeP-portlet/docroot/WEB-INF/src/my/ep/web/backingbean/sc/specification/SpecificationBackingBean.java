@@ -10073,7 +10073,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		} // #40140
 		// #29732 @idham 25/07/2023 - End
-		
+
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
 		fc.getApplication()
@@ -12579,7 +12579,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		this.getManagedBean().setFinacialItemScoreSetting(null);
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
-		//this.getManagedBean().setQtCategoryList(null); // #29732 remove
 		this.getManagedBean().setQtSupplierList(null);
 
 	}
@@ -16133,7 +16132,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
-						//ScQtSpecificationRemark Remark = remarks.get(0); // #29732 remove
 						String userRemark = remarks.get(i).getRemark();
 						
 						if (null == userRemark || "".equals(userRemark)) {
@@ -17096,7 +17094,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 
 	// #29732 End
-	
+
 	// Bug #33661@Syazani 06/10/2022 -- Start
 	private void retrieveStatusByTypeAndId(ScQt scQt) {
 		retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId());
