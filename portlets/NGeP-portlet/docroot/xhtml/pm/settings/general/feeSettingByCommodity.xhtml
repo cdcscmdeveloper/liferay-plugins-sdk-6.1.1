@@ -11,14 +11,27 @@
 		<tr>
 			<td>
 				<div align="right" style="width: 100%">
+					<!-- 34445 start -->
 					<p:commandButton value="#{lbl['lbl.btn.save']}" id="commodityFeeSaveBtn"
 						partialSubmit="true" process=":form:settingTabId:feeSettingId"
-						update=":form:settingTabId:feeSettingId"
-						action="#{ruleCatalogueBackingBean.saveFeeExemptionForComodity}"></p:commandButton>
+						oncomplete="saveCommodityInfoDlg.show();"/>
+					<!-- 34445 end -->
 				</div>
 			</td>
 		</tr>
 	</table>
+	
+	<!-- 34445 start -->
+	<ac:confirmationPopupSM id="saveCommodityInfoDlg" widget="saveCommodityInfoDlg"
+		okAction="ruleCatalogueBackingBean.saveFeeExemptionForComodity"
+		okProcess=":form:settingTabId:feeSettingId"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.save.msg']}" 
+		update=":form:settingTabId:feeSettingId"
+		loadingWidget="blockWidget" />
+	<!-- 34445 end -->
+	
 	<p:dataTable id="feeByComodityTableID" var="feeObj" rows="10"
 		widgetVar="feeByComodityTableWidVar"
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity}"

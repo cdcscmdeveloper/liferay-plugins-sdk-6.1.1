@@ -1702,7 +1702,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #15391 - start
 	private boolean isChecklist;
-	private boolean isGenInfo;
+	private boolean isGenInfo = Boolean.FALSE; //#25726
 	private boolean specUpdateInProgress;
 	// #15391 - end
 	
@@ -1829,10 +1829,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
 	private String catCodeList;
-	private boolean currentInSpecMaint;//#29732 first time spec maint
-	private boolean categoryDescriptionChange;//#29732 flag to check category has change
+	private boolean currentInSpecMaint; // first time spec maint
+	private boolean categoryDescriptionChange; // flag to check category has change
+	private boolean updateCatDesc; //#29732
+	private boolean updateCatInPm; //#29732
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
+	private boolean resetHistoryCatCode;
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
@@ -1860,6 +1863,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
+	
+	// #35320 - Start
+	private boolean afterSF;
+	// #35320 - End
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -11717,4 +11724,40 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	//#29732
+	
+	//#29732
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+	
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
+	}
+	//#29732
+	
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
 }

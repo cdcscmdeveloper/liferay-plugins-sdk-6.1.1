@@ -44,40 +44,55 @@
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-				<!-- #34166 - Start  -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtSignBoardRmk" readonly="#{viewFlag}"
-					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" validator="#{svoSiteVisitBackingBean.validateText}" >
+				<!-- 9583 - Site Visit Grouping Enhancement - 28775 -->
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" label="#{lbl['lbl.sm.officeloc.sign.board']}"
+				id="txtSignBoardRmk" readonly="#{viewFlag}"
+					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" validator="#{svoSiteVisitBackingBean.validateText}">
 					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.sign.board']}" />
 					<f:ajax event="blur" execute="@this" />
+					<f:validateLength maximum="4000" />
 					</p:inputTextarea>
 				</td>
-				<!-- #34166 - End -->	
+					
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-				<!-- #34166 - Start  -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtShareWithRmk" readonly="#{viewFlag}"
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" label="#{lbl['lbl.sm.officeloc.share.with']}"
+				id="txtShareWithRmk" disabled="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" validator="#{svoSiteVisitBackingBean.validateText}" >
-					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.share.with']}" />
+					<f:attribute name="param" value="#{lbl['lbl.txt.remarks']}" />
 					<f:ajax event="blur" execute="@this" />
+					<f:validateLength maximum="4000" />
 					</p:inputTextarea>
 				</td>
-				<!-- #34166 - End  -->
 			</tr>
 			
 			<tr><td>&#160;</td></tr>
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
-				<td>
-				<!-- #34166 - Start  -->
-				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
-				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" validator="#{svoSiteVisitBackingBean.validateText}">
+				<td><!-- 9583 - Site Visit Grouping Enhancement - 28775 -->
+				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" disabled="#{viewFlag}" validator="#{svoSiteVisitBackingBean.validateText}">
 					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" />
 					<f:ajax event="blur" execute="@this" />
-					<f:validateLength maximum="255" />
+					<f:validateLength maximum="4000" />
 				</p:inputTextarea>
-				<!-- #34166 - End  -->
 				</td>
 			</tr>
 		</table>
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
+			<ui:param name="param" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}" />
+			<c:if test="#{param == SupplierManagementConst.CAT_TYPE_WORKSHOP
+						or param == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
+				<ui:include src="/xhtml/sm/shared/sitevisit/group/premiseLocation.xhtml" />
+			</c:if>
+			<c:if test="#{param == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+				<ui:include src="/xhtml/sm/shared/sitevisit/manufacturingComment.xhtml" />
+			</c:if>
+			<c:if test="#{param == SupplierManagementConst.CAT_TYPE_PRINTING}">
+				<ui:include src="/xhtml/sm/shared/sitevisit/group/printing_premiseLocation.xhtml" />
+			</c:if>
+		</c:if>
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 	</p:panel>
 </ui:composition>

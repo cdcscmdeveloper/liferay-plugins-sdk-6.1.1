@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:blockUI widgetVar="blkPanelSearchTable"  block=":form" trigger="panelSearchId">  
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
+	</p:blockUI> 
+	<p:panel header="#{lbl['lbl.audit.patch.search.result']}" toggleable="true">
+		<p:dataTable id="searchPatchMaster" var="master" rows="10"
+			value="#{auditPatchBackingBean.searchMaster}"
+			rowIndexVar="index" lazy="true">
+			<ac:paginator for="searchPatchMaster"></ac:paginator>	
+			<p:column headerText="#{lbl['lbl.audit.patch.change.type']}" style="width :8%">
+				<h:outputText value="#{master.changeType}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.audit.patch.eaduan.no']}" style="width :10%"> 
+				<h:outputText value="#{master.eAduanNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.audit.header.docType']}" style="width :15%"> 
+				<h:outputText value="#{master.docType}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.audit.header.docNo']}" style="width :12%">
+				<h:outputText value="#{master.docNo}" />
+			</p:column>
+			<!-- START:#35740,#40459 -->
+			<p:column width="5%" style="text-align: center;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.audit.patch.action']}" />
+				</f:facet>
+				<p:menuButton value="#{lbl['lbl.btn.option']}">
+					<p:menuitem id="panelSearchId" value="#{lbl['lbl.audit.patch.view']}"
+						icon="ui-icon-view"
+						action="#{auditPatchBackingBean.redirectToDetails(master.auPatchChangeTypeID,master.eAduanNo,master.auPatchDocumentTypeID,master.docNo)}" />
+				</p:menuButton>
+			</p:column>
+			<!-- END:#35740,#40459 -->
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
+
+

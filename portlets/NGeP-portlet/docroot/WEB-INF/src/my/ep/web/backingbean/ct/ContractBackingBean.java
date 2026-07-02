@@ -66,6 +66,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25002
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -141,6 +142,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus; //#24333
+import my.ep.persistence.entity.sc.common.ScAttachment; //#25002
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -402,11 +404,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		} else if (event.getComponent().getId().equalsIgnoreCase("mofDecisionLetterId")){
 			getManagedBean().getContractVer().setMofDecisionLetterAttachment(attachment);
 		} 
-		//26186 start
-		else if (event.getComponent().getId().equalsIgnoreCase("disciplinaryAttachmentId")){
-			getManagedBean().getContractVer().getDisciplinaryActionAttachments().add(attachment);
-		} 
-		//26186 end
 		else {
 			getManagedBean().getAttachmentList().add(attachment);
 		}
@@ -429,15 +426,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
 		}
-		//#26186 start
-		else if(event.getComponent().getId().equalsIgnoreCase("delDisciplinaryAttachmentId")){
-			attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(this.getManagedBean().getAttachFileIndex());
-			if(attachment.getAttachmentId() != null){
-				getManagedBean().getDeleteAttachmentList().add(attachment);
-			}
-			getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(this.getManagedBean().getAttachFileIndex());
-		}
-		//#26186 end
 		//#13847 start
 		//Latest 
 		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.DEL_LATEST_WAIVER)){
@@ -688,7 +676,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 		} catch (Exception e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 		}	
 		return false;
 	}
@@ -705,7 +693,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				return true;
 			}
 		} catch (Exception e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 		}
 		return false;
 	}
@@ -724,7 +712,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setServiceTaxAlertFlg(true);				
 			}
 		} catch (Exception e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -1260,34 +1248,101 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return items;
 	}
-
+	
+	// #35506,#39632 (Resetting and validation) - Start
 	/**
-	 * The method used to validate deduction type.
-	 * User can not selected same type of deduction again.
-	 */	
-	public void validateDeductionType(CtDeduction deduction)  {
+	 * Validates the selected deduction type to prevent unsupported duplicates.
+	 * 
+	 * @param selectedDeduction
+	 *            the deduction row currently being edited
+	 * @param action
+	 *            optional context (e.g., from bulk operations); unused in
+	 *            current implementation
+	 */
+	public void validateDeductionType(CtDeduction selectedDeduction, String action) {
 
-		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+		if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 			int count = 0;
-			String parameterCode;
-			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
+			for (CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()) {
 				PmParameter deductionTypeById = deId.getDeductionType();
-				PmParameter deductionType = deduction.getDeductionType();
+				PmParameter deductionType = selectedDeduction.getDeductionType();
 				if (deductionTypeById == null || deductionType == null)
 					break;
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					parameterCode =  getParameterCode(deductionTypeById);
-					if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
-						throw new EpException(MessageConst.ERROR_100046,
-								new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId()))});
+					resetAndValidateDeduction(selectedDeduction, deductionTypeById, count, action);
 				}
 			}
 		}
 	}
+
+	
+	/**
+	 * Overloaded method used for Ajax listener calls. Delegates to the main
+	 * method with action = null.
+	 * 
+	 * @param deduction
+	 *            the deduction row being validated during user selection
+	 */
+	public void validateDeductionType(CtDeduction deduction) {
+		validateDeductionType(deduction, null);
+	}
+
+	/**
+	 * Processes validation and reset rules for deduction types.
+	 */
+	private void resetAndValidateDeduction(CtDeduction selectedDeduction, PmParameter deductionTypeById, int count,
+			String action) { // #39632
+
+		String parameterCode = getParameterCode(deductionTypeById);
+		if (parameterCode == null) {
+			return;
+		}
+
+		resetDeductionIfNew(selectedDeduction, action);
+		validateDuplicateDeductionType(selectedDeduction, parameterCode, count);
+	}
+
+	/**
+	 * Resets amount and description for a new deduction row when no action
+	 * context is provided.
+	 */
+	private void resetDeductionIfNew(CtDeduction selectedDeduction, String action) {
+		if (action == null) {
+			final double zeroAmount = BigDecimal.ZERO.doubleValue();
+			selectedDeduction.setAmount(zeroAmount);
+			selectedDeduction.setDeductionDesc(null);
+
+			// Safely clear deduction clauses if the list is not null
+			List<CtDeductionClause> clauses = selectedDeduction.getCtDeductionClauses();
+			if (clauses != null) {
+				clauses.clear();
+			}
+		}
+	}
+
+	/**
+	 * Validates that duplicate deduction types are not used (except for allowed
+	 * types).
+	 */
+	private void validateDuplicateDeductionType(CtDeduction selectedDeduction, String parameterCode, int count) {
+		boolean isAllowedDuplicate = parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+				|| parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+				|| parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED);
+
+		if (!isAllowedDuplicate && count == 2) {
+			// Capture the description BEFORE clearing the selection
+			String deductionTypeName = getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+					selectedDeduction.getDeductionType().getParameterId()));
+
+			selectedDeduction.setDeductionType(new PmParameter());
+
+			// Now safely throw the error with the saved name
+			throw new EpException(MessageConst.ERROR_100046, new String[] { deductionTypeName });
+		}
+	}
+	// #35506,#39632 (Resetting and validation) - End
 
 	/**
 	 * The method used to add new deduction.
@@ -2455,6 +2510,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(defermentLatest);
 			bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 			bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			bondWaiver.setPrevId(null); //#35506
+			bondWaiver.setCreatedDate(new Timestamp(new Date().getTime())); //#35506
 
 			defermentHistory.add(bondWaiver);
 			Collections.reverse(defermentHistory);
@@ -2728,7 +2785,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment latest
 	 */
-	private void removeDefermentLatest(){
+	public void removeDefermentLatest(){ //#40114
 		CtBondWaiverDetail latestDeferment = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
 		if (latestDeferment != null && latestDeferment.getCtAttachment() != null
 				&& latestDeferment.getCtAttachment().getAttachmentId() != null) {
@@ -2740,7 +2797,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment history
 	 */
-	private void removeInactiveDefermentHistory(){
+	public void removeInactiveDefermentHistory(){ //#40114
 		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
 		// remove bond waiver that hasn't been approved
 		if (CollectionUtils.isNotEmpty(historyDeferment)) {
@@ -3403,27 +3460,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
-	//#34961 start
+	// #34961 start
 	/**
 	 * The method used to indicate the label flag for new price of contract item.  
 	 */
 	@SuppressWarnings("unchecked")
 	private void itemPriceZoneLabelList(CtContractItem ctContractItem, CtContractItem preCtContractItem) {
 		
-		try{			
+		try {
 			if (CollectionUtils.isNotEmpty(ctContractItem.getCtItemPrices())) {
-				if(preCtContractItem.getScRequestItem()!=null 
-						&& preCtContractItem.getScRequestItem().getRequestNoteItemId()!=null
-						&& preCtContractItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())){						
+				if (preCtContractItem.getScRequestItem() != null
+						&& preCtContractItem.getScRequestItem().getRequestNoteItemId() != null
+						&& preCtContractItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())) {
 					
 					Predicate conditionPredicate;
-					for(final CtItemPrice currentCtItemPrice : ctContractItem.getCtItemPrices()){
+					for (final CtItemPrice currentCtItemPrice : ctContractItem.getCtItemPrices()) {
 						List<CtItemPrice> itemPriceSelect;
 						currentCtItemPrice.setChangeZoneLabel(false);
-						if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+						if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
 								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
 								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)){
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
 							conditionPredicate = new Predicate() {
 								@Override
 								public boolean evaluate(Object object) {
@@ -3437,8 +3494,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 											.equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName().trim());
 								}
 							};
-						}
-						else{
+						} else {
 							conditionPredicate = new Predicate() {
 								@Override
 								public boolean evaluate(Object object) {
@@ -3446,20 +3502,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 									return itemPricePredicate.getUnitPrice().equals(currentCtItemPrice.getUnitPrice())
 											&& itemPricePredicate.getEffDate().equals(currentCtItemPrice.getEffDate())
 											&& itemPricePredicate.getCtContractZone().getZoneName() != null
-											&& itemPricePredicate.getCtContractZone().getZoneName()
-											.equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName());
+											&& itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName());
 								}
 							};
 						}
 						 
 						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(preCtContractItem.getCtItemPrices(), conditionPredicate);
-						if(CollectionUtils.isEmpty(itemPriceSelect) && itemPriceSelect.isEmpty()){
+						if (CollectionUtils.isEmpty(itemPriceSelect) && itemPriceSelect.isEmpty()) {
 							currentCtItemPrice.setChangeZoneLabel(true);
 						}
 					}
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			log.info(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
@@ -3470,10 +3525,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	@SuppressWarnings("unchecked")
 	private void itemMaxQtyZoneLabelList(CtContractItem ctContractItem, CtContractItem preCtContractItem) {
-		try{			
+		try {
 			if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
 				Predicate conditionPredicate;
-				for(final CtItemMaxQty currentCtItemMaxQty : ctContractItem.getCtItemMaxQties()){
+				for (final CtItemMaxQty currentCtItemMaxQty : ctContractItem.getCtItemMaxQties()) {
 					List<CtItemMaxQty> itemMaxQtySelect;
 					currentCtItemMaxQty.setChangeZoneLabel(false);
 					conditionPredicate = new Predicate() {
@@ -3486,16 +3541,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 									.equalsIgnoreCase(currentCtItemMaxQty.getCtContractZone().getZoneName());
 						}
 					};
-					 
-					itemMaxQtySelect = (List<CtItemMaxQty>) CollectionUtils.select(preCtContractItem.getCtItemMaxQties(), conditionPredicate);
-					if(CollectionUtils.isEmpty(itemMaxQtySelect) && itemMaxQtySelect.isEmpty()){
+
+					itemMaxQtySelect = (List<CtItemMaxQty>) CollectionUtils.select(preCtContractItem.getCtItemMaxQties(),conditionPredicate);
+					if (CollectionUtils.isEmpty(itemMaxQtySelect) && itemMaxQtySelect.isEmpty()) {
 						currentCtItemMaxQty.setChangeZoneLabel(true);
 					}
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			log.info(e);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),e.getMessage()));
 		}
 	}
 	//#34961 end
@@ -4102,7 +4157,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_RELIEF_DUE_DATE);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -4205,7 +4260,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
 		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
-		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+		
+		//#38491,#28854 - Start
+		Long loaId = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpecByLoaIdAndRequestItemId(loaId, requestItemId);
+		//#38491,#28854 - End
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			handleDirectPurchaseMode(itemSpecOfferList);
@@ -4280,7 +4339,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return newCtAgreementList
 	 */
 	public List<CtAgreement> filterAgreementList() {
-		List<CtAgreement> newCtAgreementList = new ArrayList<>();
+		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 		CtAgreement tempCtAgreement = null;
 		int index = 0;
@@ -4428,7 +4487,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333 - Start
-		if ((getManagedBean().getCtContractAmount().isBondReq() && getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
+		if (getManagedBean().getCtContractAmount().isBondReq()
 				&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 				&& !getManagedBean().getCtContractAmount().isBondExempted()
 				&& (!getManagedBean().isCommonView() || getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
@@ -4564,6 +4623,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
+		//resets the contract days period to 0 because days are not applicable in the LOA process
+		getManagedBean().setContractDaysPeriod(ContractConst.VALUE_OF_0); //#32418
 		return String.valueOf(getManagedBean().getCtContractAmount().getContractPeriodBond());
 	}
 	
@@ -4582,18 +4643,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    getManagedBean().setExtendContract(false);
 	    getManagedBean().setDisableOriginalBond(false);
 
-	    // Retrieve currentPeriod and extendPeriod
-	    String currentPeriod = (loa.getContractDuration() != null) 
-	            ? BigDecimal.valueOf(loa.getContractDuration().longValue()).toString() 
-	            : null;
-
-	    String extendPeriod = (contractVer.getCtContractValue().getContractPeriod() > 0) 
-	            ? Integer.toString(contractVer.getCtContractValue().getContractPeriod()) 
-	            : null;
+	    //#32418 - Start
+	    // Retrieve currentExpDate and newExpDate
+	    Date currentExpDate = loa.getContractExpDate();
+	    Date newExpDate = contractVer.getCtContractValue().getExpDate();
+	    
+	    // Check if contract is extended
+	    boolean isExtended = currentExpDate != null
+	            && newExpDate != null
+	            && newExpDate.after(currentExpDate);
+	    //#32418 - End
 
 	    // Check if the contract needs an extension or requires a bond
 	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
-	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
+	            && isExtended) { //#32418
 
 	        isContractExtendOrIsBond = true;
 	        getManagedBean().setExtendContract(true);
@@ -4622,6 +4685,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    String docType = contractVer.getDocType();
 	    return docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)
 	            || getManagedBean().isViewContract();
 	}	
 	
@@ -4653,37 +4717,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to retreive the factoring attachment from the list.
 	 */
-	public List<CtAttachment> retrieveAttachmentList()
-	{	
-		/*#28868 - basri start*/
-		if(!getManagedBean().getContractVer().getCtContract().isFactoringExpired()){
+	public List<CtAttachment> retrieveAttachmentList() {
+		/* #28868 - basri start */
+		if (!getManagedBean().getContractVer().getCtContract().isFactoringExpired()) {
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
 				if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
 					return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
-				}
-				else{
+				} else {
 					return null;
 				}
-			}
-
-			else {
+			} else {
 				return null;
 			}
-		}else{
+		} else {
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null) {
 				if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement() != null) {
 					return getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement();
-				}
-				else{
+				} else {
 					return null;
 				}
-			}
-
-			else {
+			} else {
 				return null;
 			}
 		}
-		/*#28868 - basri end*/
+		/* #28868 - basri end */
 	}
 	
 	/*#21387 - basri start*/
@@ -4901,7 +4958,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    }
 
 	    // Skip bond calculation if direct purchase or bond exempted
-	    if (getManagedBean().isDirectPurchase() || getManagedBean().getCtContractAmount().isBondExempted()) {
+	    if ((getManagedBean().isDirectPurchase() && !isPk7FromDp()) || getManagedBean().getCtContractAmount().isBondExempted()) {
 	        return total;
 	    }
 
@@ -4941,6 +4998,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    return filteredList.isEmpty() ? originalList : filteredList;
 	}
 	// 24333 - End
+	
+	//#25002 - start
+	public List<ScAttachment> getApprovalLetter(){
+		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+		return awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
+	}
+	
+	/**
+	 * Downloads the selected SC attachment file.
+	 * This method is invoked from the UI via a command link in the XHTML page.
+	 *
+	 * @param scAttachment The attachment to download.
+	 */
+	public void downloadScAttachmentFile(ScAttachment scAttachment){
+		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+		try {
+			loaDetailBackingBean.downloadFile(scAttachment);
+		} catch (IOException e) {
+			//Sonarqube #G29 - start
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
+			//Sonarqube #G29 - end
+		}
+	}
+	//#25002 - end
 			
 	//Enhancement 29418 - shaqimi start
 	
@@ -5054,18 +5136,79 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	//Enhancement 15851 - End
 	
+	//#24333 - Start
 	/**
 	 * Method to check if PK7 is from DP.
 	 * 
 	 * @return true if PK7 is from DP, false otherwise
 	 */
 	public boolean isPk7FromDp() {
-	    String procType = EntityHelper.getNestedProperty(
-	        getManagedBean().getContractVer(),
-	        "ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType"
-	    );
-	    boolean hasValidProcType = ParameterTypeConst.PROCUREMENT_TYPE.equals(procType); // case-sensitive
-	    boolean hasJustification = newJustification() != null;
-	    return hasValidProcType && hasJustification;
+
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+		    String procType = EntityHelper.getNestedProperty(
+			        getManagedBean().getContractVer(),
+			        "ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType"
+			    );
+			    boolean hasValidProcType = ParameterTypeConst.PROCUREMENT_TYPE.equals(procType); // case-sensitive
+			    boolean hasJustification = newJustification() != null;
+			    return hasValidProcType && hasJustification;
+		}
+		return false;
 	}
+	
+	/**
+	 * Determines if the bond panel should be rendered based on contract
+	 * conditions.
+	 * 
+	 * @return true if the panel should be rendered, false otherwise
+	 */
+	public boolean isBondPanelRendered() {
+		if (getManagedBean().getContractVer() == null || getManagedBean().getContractVer().getStatus() == null) {
+			return false;
+		}
+
+		if (!isAlreadyAmendment() || !isContractExtendOrIsBond()) {
+			return false;
+		}
+
+		return isRenderConditionSatisfied();
+	}
+
+	/**
+	 * Checks if any condition that triggers bond panel rendering is satisfied.
+	 */
+	private boolean isRenderConditionSatisfied() {
+
+		if (getManagedBean().isViewContract()) {
+			return true;
+		}
+
+		// View contract with FA_LOA_COMPLETED status
+		boolean isFaLoaCompleted = getManagedBean().getContractVer().getStatus() != null
+				&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_LOA_COMPLETED;
+		if (getManagedBean().isViewContract() && isFaLoaCompleted) {
+			return true;
+		}
+
+		// Check Specific by docType
+		return isContractUpdateOrView(getManagedBean().getContractVer());
+	}
+	// #24333 - End
+	
+	// #35506 - Start
+	/**
+	 * Determines if the user has a specific role for audit CT Trail access.
+	 * Only users with designated roles (Auditor General, Auditor Internal, BPK
+	 * Auditor, or System Admin) are allowed.
+	 * 
+	 * @return true if the user has one of the specified roles, false otherwise
+	 */
+	public boolean isAuditRoleCheck() {
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+	// #35506 - End
 }  

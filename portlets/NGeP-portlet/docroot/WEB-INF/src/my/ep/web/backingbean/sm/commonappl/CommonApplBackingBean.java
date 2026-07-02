@@ -263,6 +263,9 @@ public class CommonApplBackingBean extends
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
+				// #39771 & 40081 START
+				appl.setProcessingOfficerProcess(smObj.getProcessingOfficerProcess());
+				// #39771 & 40081 END
 
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// smSupplier , smAppl of the managedBean
@@ -508,14 +511,17 @@ public class CommonApplBackingBean extends
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
 					// #29664 - end
-					if (appl.getApplType().equals(
-							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-						setSiteVisitView(smApplBB.getManagedBean(), appl);
-					} else {
-						if (appl.getApplCategoryType().equals("S")) {
-							setSiteVisitView(smApplBB.getManagedBean(), appl);
-						}
+					// #28778 - Site Visit Grouping Enhancement -28775 - Start
+					if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+							&& SmApplicationUtil.hasSpecialCategory(appl)){
+						smApplBB.getManagedBean().setSpecialCategoryRechecked(true);
 					}
+					if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+							|| appl.getApplCategoryType().equals(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL)
+							|| smApplBB.getManagedBean().isSpecialCategoryRechecked()) {
+						setSiteVisitView(smApplBB.getManagedBean(), appl);
+					}
+					// #28778 - Site Visit Grouping Enhancement -28775 - End
 				}
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.VERIFY_APPL)
@@ -592,23 +598,7 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			smApplBB.getManagedBean().setDraftedAppl(true);
-			
-			//27641,27736 : Disciplinary Action - 26238 - start
-			SmSupplier currentSupplier = SmApplicationUtil.getCurrentSupplier();
-			List<SmDisciplinaryAction> activeDisc = new ArrayList<SmDisciplinaryAction>();
-			if(currentSupplier != null){
-				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier);
-			}
-			
-			if(activeDisc != null && activeDisc.size() > 0){
-				log.info("***Navigate to bank info***");
-				for(SmDisciplinaryAction disc : activeDisc){
-					if(disc.isSuspendRegistration()){
-						smApplBB.getManagedBean().getEditVO().setDisciplinary(true);
-					}
-				}				
-			}			
-			//27641,27736 : Disciplinary Action - 26238 - end
+			//#26238 -- 27641,27736,27876
 			setNavigationForDraftAppl(appl.getApplType());
 			SmApplicationUtil.checkAndRedirectIfInvalid(appl);//#37784
 		} else if (resDTO.getTaskName().equalsIgnoreCase(

@@ -181,6 +181,17 @@ public abstract class BaseManagedBean implements Serializable {
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
 
+//	37925 START
+	private String strLabelCountryOrigin;
+	private boolean displayCheckboxChangeCurrentStatus;
+	private boolean displayLabelRegistrationStatus;
+	private boolean displayDropdownRegStatus;
+//	37925 END
+
+	// #25726 start
+	private BigDecimal lowerLimit = new BigDecimal(200000);
+	// #25726 end
+
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1084,4 +1095,49 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
+
+//	37925 START
+	public String getStrLabelCountryOrigin() {
+		return strLabelCountryOrigin;
+	}
+
+	public void setStrLabelCountryOrigin(String strLabelCountryOrigin) {
+		this.strLabelCountryOrigin = strLabelCountryOrigin;
+	}
+
+	public boolean isDisplayCheckboxChangeCurrentStatus() {
+		return displayCheckboxChangeCurrentStatus;
+	}
+
+	public void setDisplayCheckboxChangeCurrentStatus(boolean displayCheckboxChangeCurrentStatus) {
+		this.displayCheckboxChangeCurrentStatus = displayCheckboxChangeCurrentStatus;
+	}
+
+	public boolean isDisplayLabelRegistrationStatus() {
+		return displayLabelRegistrationStatus;
+	}
+
+	public void setDisplayLabelRegistrationStatus(boolean displayLabelRegistrationStatus) {
+		this.displayLabelRegistrationStatus = displayLabelRegistrationStatus;
+	}
+
+	public boolean isDisplayDropdownRegStatus() {
+		return displayDropdownRegStatus;
+	}
+
+	public void setDisplayDropdownRegStatus(boolean displayDropdownRegStatus) {
+		this.displayDropdownRegStatus = displayDropdownRegStatus;
+	}
+//	37925 END
+	
+	// #25726 start
+	public BigDecimal getLowerLimit() {
+		return lowerLimit;
+	}
+
+	public void setLowerLimit(BigDecimal lowerLimit) {
+		this.lowerLimit = lowerLimit;
+	}
+	// #25726 end
+
 }

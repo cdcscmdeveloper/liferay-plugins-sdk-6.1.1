@@ -30,10 +30,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection; //#29253 #25037
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set; //#35238
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -91,6 +93,8 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -122,6 +126,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmPersonBlacklist;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -138,6 +143,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -161,6 +167,8 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -3836,30 +3844,104 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//#21387 - End
 	
-	//#28175 - start
+	//#28175 - start, 29380 - Site Visit Grouping Enhancement -28775
+	//28175 Refactor start
 	/**
+	 * Returns the supplier category name based on the provided parameters.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
 	 * @param isSupplierProfile
-	 * @return latest or old category code description
+	 *            whether it's a supplier profile
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the supplier category name
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile) {
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName) {
 		if (catL3 == null) {
 			return null;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
-		if (appl == null || isLatestCatCodeDesc(isSupplierProfile) || EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
-			return catL3.getCategoryName();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return getCategoryName(catL3, false);
 		}
-		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
-		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();
+		String categoryName = getCategoryName(catL3, isFullName);
+
+		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			return categoryName;
+		}
+
+		SmSupplierCategory supplierCategory = getSupplierCategory(appl, catL3);
+		if (supplierCategory == null) {
+			return categoryName;
+		}
+
+		return isFullName ? getFullSupplierCategoryName(supplierCategory) : supplierCategory.getCategoryL3Name();
 	}
-	
+
 	/**
+	 * Returns the category name based on the provided PmCategoryL3 object and
+	 * whether to return the full name.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the category name
+	 */
+	private String getCategoryName(PmCategoryL3 catL3, boolean isFullName) {
+		String categoryName = catL3.getCategoryName();
+		if (isFullName) {
+			categoryName = String.format("%s / %s / %s", catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName(),
+					catL3.getPmCategoryL2().getCategoryName(), categoryName);
+		}
+		return categoryName;
+	}
+
+	/**
+	 * Returns the SmSupplierCategory object based on the provided SmAppl object
+	 * and PmCategoryL3 object.
+	 * 
+	 * @param appl
+	 *            the SmAppl object
+	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @return the SmSupplierCategory object
+	 */
+	private SmSupplierCategory getSupplierCategory(SmAppl appl, PmCategoryL3 catL3) {
+		return (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(),
+				appl.getSmSupplierCategories(), "pmCategoryL3");
+	}
+
+	/**
+	 * Returns the full supplier category name based on the provided
+	 * SmSupplierCategory object.
+	 * 
+	 * @param supplierCategory
+	 *            the SmSupplierCategory object
+	 * @return the full supplier category name
+	 */
+	private String getFullSupplierCategoryName(SmSupplierCategory supplierCategory) {
+		return String.format("%s / %s / %s", supplierCategory.getCategoryL1Name(),
+				supplierCategory.getCategoryL2Name(), supplierCategory.getCategoryL3Name());
+	}
+	//28175 Refactor end
+	/**
+	 * @param cat
+	 * @param appl
 	 * @return latest or old category code description
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3){
-		return getSupplierCategoryName(catL3, false);
+	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return cat.getPmCategoryL3().getCategoryName();
+		}
+		String catName1 = cat.getPmCategoryL1().getCategoryName();
+		String catName2 = cat.getPmCategoryL2().getCategoryName();
+		String catName3 = cat.getPmCategoryL3().getCategoryName();
+		return isLatestCatCodeDesc(false, appl) ?  
+				String.format("%s / %s / %s",catName1,catName2,catName3)
+				: getFullSupplierCategoryName(cat);
 	}
 	
 	/**
@@ -3876,15 +3958,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
-		if(appl == null || appl.getPmStatus() == null){
+		if(appl == null){
 			return false;
+		}
+		if (appl.getPmStatus() == null) {
+			return isSupplierProfile || appl.isActiveAppl();
 		}
 		Long status = appl.getPmStatus().getStatusId();
 		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
 		return isSupplierProfile || appl.isActiveAppl() && !isRegFee;
 	}
-	//#28175 - end
+	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//start #29956
 	/**
@@ -4093,4 +4178,169 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #28854 - End
 	
+	@Deprecated
+	/**
+	 * Retrieves a list of personnel blacklisted under a specific supplier.
+	 *
+	 * @param supplierId
+	 * @param isActive
+	 * @return A list of {@code SmPersonBlacklist} objects representing blacklisted personnel associated with the supplier.
+	 */
+	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId, boolean isActive) {
+		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO().retrieveSupplierHasPersonnelBlacklist(supplierId, isActive);
+		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
+		if (blacklistPersonnel.isEmpty()) {
+			return blacklist;
+		}
+		for (SmPersonBlacklist per : blacklistPersonnel) {
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+			reqDTO.setDirectorIdNo(per.getIdentificationNo());
+			reqDTO.setBlacklist(isActive);
+			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
+				blacklistOwner.setIcNo(per.getIdentificationNo());
+				blacklist.add(blacklistOwner);
+			}
+		}
+		return blacklist;
+	}
+
+	/**
+	 * Retrieve all blacklist owners/directors
+	 * 
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	public static List<BlacklistOwnerDirectorVO> getPersonnelBlacklist(Long disciplinaryActionId) {
+		List<BlacklistOwnerDirectorVO> blacklistVO = new ArrayList<>();
+		List<SmPersonBlacklist> pblList = SmServiceLookup.getBlacklistDirectorSO().retrieveAllBlacklist(disciplinaryActionId);
+		if (EntityHelper.isCollectionEmpty(pblList)) {
+			return blacklistVO;
+		}
+		for (SmPersonBlacklist pbl : pblList) {
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			blacklistOwner.setIcNo(pbl.getIdentificationNo());
+			blacklistVO.add(blacklistOwner);
+		}
+		return blacklistVO;
+	}
+
+	// 26238 - START
+	/**
+	 * Retrieves the list of active disciplinary actions for the given supplier.
+	 * 
+	 * @param smSupplier
+	 *            The supplier for whom disciplinary actions are being
+	 *            retrieved.
+	 * @return A list of {@link DisciplinaryActionVO} representing the active
+	 *         disciplinary actions associated with the given supplier. If an
+	 *         error occurs, an {@link EpException} is thrown.
+	 * @throws EpException
+	 *             If there is an issue retrieving disciplinary actions.
+	 */
+	public static List<DisciplinaryActionVO> onDisplayActiveDisciplinaryAction(SmSupplier smSupplier) {
+		try {
+			// #30756 start
+			smSupplier.setFlagSupplier(true);
+			smSupplier.setFlagDASuppProfile(true);
+			// #30756 end
+
+			return ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+		} catch (Exception e) {
+			log.error("An error occurred while handling disciplinary actions for supplier: ", e);
+			throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
+		}
+	} 
+	//26238 - END
+	
+	// #35238 start
+	/**
+	 * Common utility method to check if user has any role from the given set.
+	 * 
+	 * @param roles
+	 *            Array of roles
+	 * @return true if user has any role in the given set.
+	 */
+	public boolean hasAnyRoleUser(Set<String> roles) {
+		FacesScopes facesScopes = new FacesScopes();
+		if (roles == null || roles.isEmpty()) {
+			return false;
+		}
+		for (String role : roles) {
+			if (facesScopes.hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// #35238 end
+	
+	// new #25725/25726 - Start
+	/**
+	 * Check for italic if language code = "ms" and parameter code in the list
+	 * 
+	 * @param parameterId
+	 * @return
+	 */
+	public boolean checkItalicCodeNameForMy(Long parameterId) {
+
+		PmParameter newPmParameter = new PmParameter();
+
+		if (parameterId != null) {
+			newPmParameter = ParameterHelper.getInstance().getPmParameterById(parameterId);
+		}
+
+		if (newPmParameter == null) {
+			return false;
+		}
+
+		String paramType = newPmParameter.getParameterType();
+		String paramCode = newPmParameter.getParameterCode();
+
+		Map<String, List<String>> listParameter = new HashMap<>();
+
+		// Store multiple FULFILMENT_TYPE values in a list
+		List<String> fulfilmentTypes = new ArrayList<>();
+		fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		listParameter.put(ParameterTypeConst.FULFILMENT_TYPE, fulfilmentTypes);
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParameter.containsKey(paramType)) {
+			List<String> validTypes = listParameter.get(paramType);
+
+			if (validTypes.contains(paramCode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get list code names is italic
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public List<String> getItalicCodeNames(String type) {
+		List<String> codeNames = new ArrayList<>();
+
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(type,
+				null);
+		for (PmParameterDesc p : parameterDescs) {
+			Long id = p.getPmParameter().getParameterId();
+
+			if (checkItalicCodeNameForMy(id)) {
+				codeNames.add(p.getCodeName());
+			}
+		}
+		return codeNames;
+	}
+
+	// new #25725/25726 - End
 }

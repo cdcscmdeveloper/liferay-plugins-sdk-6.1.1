@@ -143,8 +143,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		debugLogger("IsRead[" + selectedNotify.isRead() + "]");
 		
 		if (!selectedNotify.isRead()) {
-		
-			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+			//TEMPORARY for UAT test 30735 - bug 39256
+			/*INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", INotifySO.class);
 			
 			NotifyReqDTO reqDTO = new NotifyReqDTO();
@@ -156,7 +156,9 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			
 			if (resDTO.isSuccessful()) {
 				selectedNotify.setRead(true);
-			}
+			}*/
+			
+			selectedNotify.setRead(true);//TEMPORARY for UAT test
 		}
 	}
 	

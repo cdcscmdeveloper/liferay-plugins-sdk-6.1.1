@@ -72,7 +72,8 @@
 												test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
 												<c:choose>
 													<c:when
-														test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+														test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
+														<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
 														<div align="left" style="width: 100%">
 															<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 																onstart="blockWidget.show()"

@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
-//#26307 start 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -61,9 +60,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
-//#26307 start 
 
 import com.liferay.portal.util.PortalUtil;
+//#26307 start 
+//#26307 start 
 
 @ManagedBean(name = "paymentResponseBB")
 @RequestScoped
@@ -75,6 +75,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
+	
+	//#38377
+	private String paymentGateway = "Y";
 
 	public PaymentResponseBackingBean(){
 		
@@ -98,6 +101,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		session.removeAttribute("paymentBpmTaskId");
 		session.removeAttribute("paymentBpmPojo");
 		
+		//#38377
+		String payload = httpServletRequest.getParameter("payload");
+		paymentGateway = (payload!=null && !payload.isEmpty())?"Y":"N";
+		log.info("##38377####################@PostConstruct isPaymentGateway:" + paymentGateway);
+		log.info("##38377####################@PostConstruct payload:" + payload);
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
@@ -229,8 +237,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 					String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
 
+					log.info("######38377#####@PostConstruct vKey>>>>" + vKey);
 					log.info("SKey>>>>" + skey);
 					log.info("Key1>>>>" + key1);
+					log.info("######38377#####@PostConstruct skipChecking>>>>" + skipChecking);
 					//26307
 					if (key1.equals(skey) || skipChecking) {
 						log.info("Enter 1");
@@ -281,8 +291,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-
-
+		
+		//#38377
+		String payload = httpServletRequest.getParameter("payload");
+		paymentGateway = (payload!=null && !payload.isEmpty())?"Y":"N";
+		log.info("##38377####################responsePreRender isPaymentGateway:" + paymentGateway);
+		log.info("##38377####################responsePreRender payload:" + payload);
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
@@ -449,8 +463,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 			String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
 
+			log.info("######38377#####responsePreRender vKey>>>>" + vKey);
 			log.info("SKey>>>>" + skey);
 			log.info("Key1>>>>" + key1);
+			log.info("######38377#####responsePreRender skipChecking>>>>" + skipChecking);
 			//26307
 			if (key1.equals(skey) || skipChecking) {
 				//if(paymentTaskId != null && paymentBpmPojo != null){
@@ -520,7 +536,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				if (cardType != null) { 
 					if (cardType.equalsIgnoreCase("Credit")) {
 						cardType = "CC";
-					} else if (cardType.equalsIgnoreCase("Debit")) {
+					} else if (cardType.equalsIgnoreCase("Debit") || cardType.equalsIgnoreCase("Prepaid")) { //#39654 - add prepaid
 						cardType = "DC";
 					} 
 					ParameterReqDTO reqPmDTO = new ParameterReqDTO();
@@ -673,7 +689,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
-				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				log.info("###############38377 isValidPayment:"+validPayment);
+				if (!"Y".equals(paymentGateway)) {
+					log.info("###############38377 update payment  paymentOrder.setChannelName:"+paymentOrder.getChannelName());
+				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				}
 
 				log.info("******ResponsePreRender - After Update******");
 				if(pymtResDTO != null && pymtResDTO.isSuccessful()){
@@ -1023,7 +1043,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
+			//#40340 : Remove personnel.getPmUser().getUserId().equals(currentUserId)
+			if(personnel != null){
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
 			}

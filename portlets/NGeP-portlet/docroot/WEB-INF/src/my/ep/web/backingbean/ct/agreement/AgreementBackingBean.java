@@ -905,7 +905,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		//#28715
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
-						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME))) {
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME))) { //#24333
 
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
@@ -922,7 +923,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				throw new EpException(MessageConst.ERROR_750043, 
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			} else if (getManagedBean().isBondReq() && getManagedBean().getCtAgreement().getCtAmendment() != null
+			} else if (isPerformanceBond() && getManagedBean().getCtAgreement().getCtAmendment() != null
 					&& getManagedBean().getCtAgreement().getCtAmendment().isContractExtend() && !getManagedBean().isBondAttachmentCompleted()) { // #24333,//#bug_38138																																																																										// Start
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_750043, new String[] { ResourceBundleUtils.getMessage(getManagedBean().getCtContract()
@@ -2888,4 +2889,20 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}
 	}
 	//#26686 - end
+	
+	//#24333 - Start
+	/**
+	 * Function to check if bond required for contract
+	 * 
+	 * @return true, if performance bond is required
+	 *         false, if performance bond is not required
+	 * */
+	public boolean isPerformanceBond(){
+		if ((getManagedBean().isBondReq() || getManagedBean().getContractVer().getCtContractAmount().isBondReq())
+				&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
+			return true;
+		}
+		return false;
+	}
+	//#24333 - End
 }

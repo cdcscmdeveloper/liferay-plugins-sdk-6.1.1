@@ -298,13 +298,18 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	// 12177 - End	
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//#28718 - start
 	private boolean triggerPRErrorMsg = false;
 	private boolean isGrouped;
 	//#28718 - end
+	
+	//29728 - start
+	private boolean isBranchNeedToBeChanged;
+	private Long branchCode;
+	//29728 - end
 	
 	private String backToNtf; //35357
 	
@@ -3330,12 +3335,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 	
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 	
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -3388,6 +3393,35 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.isGrouped = isGrouped;
 	}
 	//#28718 - end
+	
+	//29728 - start
+	/**
+	 * @return the isBranchNeedToChange
+	 */
+	public boolean isBranchNeedToBeChanged() {
+		return isBranchNeedToBeChanged;
+	}
+
+	/**
+	 * @param isBranchNeedToBeChanged the isBranchNeedToChange to set
+	 */
+	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
+		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
+	}
+	/**
+	 * @return the branchCode
+	 */
+	public Long getBranchCode() {
+		return branchCode;
+	}
+
+	/**
+	 * @param branchCode the branchCode to set
+	 */
+	public void setBranchCode(Long branchCode) {
+		this.branchCode = branchCode;
+	}
+	//29728 - end
 
 	//35357-Start
 	/**

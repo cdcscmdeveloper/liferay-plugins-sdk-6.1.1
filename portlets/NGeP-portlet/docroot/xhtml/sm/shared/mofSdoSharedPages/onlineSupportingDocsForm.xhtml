@@ -48,14 +48,18 @@
 			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="500" width="1400">
 				<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryId">
 					<table>
-					<tr>
-						<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
-					</tr>
-					<tr>
-						<td><p:inputText size="50" id="resInquirySubId" disabled="true" 
+					<!-- #34392 Start -->
+					<c:if
+						test="#{backingBean.managedBean.selectedInquiryResponse.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+						<tr>
+							<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
+						</tr>
+						<tr>
+							<td><p:inputText size="50" id="resInquirySubId" disabled="true" 
 								value="#{backingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
-					</tr>
-					
+						</tr>
+					</c:if>
+					<!-- #34392 End -->
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>
 					</tr>
@@ -100,8 +104,9 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;" rendered="#{inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
+								<!-- #34392 Start -->
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{inquirytbl.pmDocument.mandatory and backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFile" value="#{backingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
 						            			action="#{backingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
@@ -109,14 +114,29 @@
 						        			</p:commandLink>
 						        		</ui:remove>
 						        		<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-						        			<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{backingBean.getShortFileName(applDocsFile.fileName)}</a>
-						        		</h:panelGroup>
+												<!-- #39316 - Start -->
+												<h:commandLink id="Inquiryfile" value="#{backingBean.getShortFileName(applDocsFile.fileName)}"
+													rendered="#{not empty applDocsFile and !inquirytbl.pmDocument.hardCopyReq}">
+													<p:fileDownload
+														value="#{backingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+												</h:commandLink>
+												<!-- #39316 - End -->
+											</h:panelGroup>
 										<br />
 									</ui:repeat>
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory}">
+								<!-- #34392 End -->
+								<!-- #34392 Start -->
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.sdoRemarks != null}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.poRemarks != null}">
+									<h:inputTextarea value="#{inquirytbl.poRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.poRemarks == null and inquirytbl.poRemarks == null}">
+									<h:inputTextarea value="#{inquirytbl.poRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
+								</p:column>
+								<!-- #34392 End -->
 							</p:dataTable>
 							<!-- datatable for mandatory support doc with no record to display(fix primeface version bug when no record found) -->
 							<p:dataTable var="emptyMandatory" value="" id="mandatoryEmpty" rendered="#{backingBean.managedBean.emptyMandatoryDocHistory}"
@@ -160,8 +180,9 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
+								<!-- #34392 Start -->
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{!inquirytbl.pmDocument.mandatory and backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFile" value="#{backingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
 							            		action="#{backingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
@@ -169,14 +190,29 @@
 							        		</p:commandLink>
 							        	</ui:remove>
 							        	<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{backingBean.getShortFileName(applDocsFile.fileName)}</a>
-							        	</h:panelGroup>
+												<!-- #39316 - Start -->
+												<h:commandLink id="InquiryfileNonMand" value="#{backingBean.getShortFileName(applDocsFile.fileName)}"
+													rendered="#{not empty applDocsFile and !inquirytbl.pmDocument.hardCopyReq}">
+													<p:fileDownload
+														value="#{backingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+												</h:commandLink>
+												<!-- #39316 - End -->
+											</h:panelGroup>
 										<br />
 									</ui:repeat>
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
+								<!-- #34392 End -->
+								<!-- #34392 Start -->
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.sdoRemarks != null}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.poRemarks != null}">
+									<h:inputTextarea value="#{inquirytbl.poRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.poRemarks == null and inquirytbl.poRemarks == null}">
+									<h:inputTextarea value="#{inquirytbl.poRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
+								</p:column>
+								<!-- #34392 End -->
 							</p:dataTable>
 							<!-- datatable for non-mandatory support doc with no record to display(fix primeface version bug when no record found) -->
 							<p:dataTable var="emptyNonMandatory" value="" id="nonMandatoryEmpty" rendered="#{backingBean.managedBean.emptyNonMandatoryDocHistory}"

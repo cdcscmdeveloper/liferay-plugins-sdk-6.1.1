@@ -70,9 +70,7 @@
 	  <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
-
 		  <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
-
 		<h:panelGroup id="panelHeaderException">
 		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
 			 <ui:include src="amendmentButtons.xhtml" />
@@ -85,7 +83,7 @@
 			 </ui:fragment>
 		     <!-- Enhancement 15851 - shaqimi end -->
 		  </h:panelGroup>
-		 
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
@@ -162,7 +160,7 @@
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{(amendmentBackingBean.managedBean.ackFA eq null or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa or ctBackingBean.managedBean.viewSCL)
-			 and (ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
+			 and (ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
 			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
 			 and (ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
 			 || ctBackingBean.isPk7FromDp())}"
@@ -174,7 +172,6 @@
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.declaration']))}" update=":form" /> <!-- #24333 -->
 				
-			<!--  Enhancemet 15851 - shaqimi start -->	
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.decision']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
@@ -254,9 +251,6 @@
 			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.content']}">
 					<ui:include src="supplier/instructionHeader.xhtml" />
 					<ui:include src="letterOfAcceptance.xhtml" />
-					<p:outputPanel rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg or amendmentBackingBean.managedBean.disciplinaryAction}">
-				    	<ui:include src="supplier/supplierDisciplinary.xhtml" />
-				    </p:outputPanel>
 			    </p:outputPanel>
 			    
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.view.loa']
@@ -366,10 +360,10 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
-		
+		<!-- #26186 start -->
 		<p:confirmDialog message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
 			severity="alert" widgetVar="supplierrejectConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
@@ -384,5 +378,6 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
+		<!-- #26186 end -->
 	</ui:define>  
 </ui:composition>

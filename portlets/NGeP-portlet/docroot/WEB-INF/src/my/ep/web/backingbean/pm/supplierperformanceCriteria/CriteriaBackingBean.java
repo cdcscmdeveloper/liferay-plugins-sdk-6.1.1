@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -17,9 +18,11 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
@@ -39,6 +42,8 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMCriteriaBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.CriteriaSearchBean;
@@ -246,23 +251,29 @@ public class CriteriaBackingBean extends
 		log.info("saveSupplierCriteriaDtls - Start");
 		String returnPage = null;
 
-		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
-			generateCriteriaCode();
+		//#34445 Start
+		try {
+			
+			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+				generateCriteriaCode();
 
-		}
+			}
 
-		if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean()
-				.getSelectedCriteria().getRecordStatusFlg().intValue()) {
-			validateCriteriaDesc();
-		}
+			if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean().getSelectedCriteria().getRecordStatusFlg()
+					.intValue()) {
+				validateCriteriaDesc();
+			}
 
-		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
-			returnPage = createCriteria(this.getManagedBean()
-					.getSelectedCriteria());
-		} else {
-			returnPage = updateCriteria(this.getManagedBean()
-					.getSelectedCriteria());
+			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+				returnPage = createCriteria(this.getManagedBean().getSelectedCriteria());
+			} else {
+				returnPage = updateCriteria(this.getManagedBean().getSelectedCriteria());
+			}
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
 		}
+		//#34445 End
 		log.info("saveSupplierCriteriaDtls - End");
 		return returnPage;
 	}
@@ -288,30 +299,61 @@ public class CriteriaBackingBean extends
 			}
 			baseObject.setChangedBy(1L);
 	}
-	 private String updateCriteria(PmCriteria newCriteria){
-			log.info("updateCriteria");
-			try{		
-				CriteriaReqDTO reqDTO = new CriteriaReqDTO();
-				reqDTO.setPmCriteria(newCriteria);
-				ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
-				CriteriaResDTO resDTO = reqSO.updateSupCriteria(reqDTO);
-				if(resDTO.isSuccessful()){
-					loadCriteria(resDTO.getPmCriteria().getCriteriaId());
-					log.info("updateCriteria - successful");
-					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,
-							MessageUtils.getMessage(MessageConst.INFO_779006, new String[]{newCriteria.getCriteriaCode()},
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
-				
-			}catch (Exception e){
-				log.info("updateCriteria - fail"); //TODO
-				e.printStackTrace();
-				throw new EpException(MessageConst.ERROR_770004);
+
+	private String updateCriteria(PmCriteria newCriteria) {
+		log.info("updateCriteria");
+		try {
+			CriteriaReqDTO reqDTO = new CriteriaReqDTO();
+			reqDTO.setPmCriteria(newCriteria);
+			ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICriteriaSO.class);
+
+			/************ START: AUDIT #28895_35509 *************/
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IAuditPMSO.class);
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
+			reqDTO.setCriteriaId(newCriteria.getCriteriaId());
+			if (pmauditSO
+					.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)
+					&& newCriteria.getCriteriaId() != null) {
+				getManagedBean().setPmCriteriaOld(
+						reqSO.retrieveCriteriaById(reqDTO).getPmCriteria());
 			}
-			return null;
+			/************ END: AUDIT #28895_35509 *************/
+
+			CriteriaResDTO resDTO = reqSO.updateSupCriteria(reqDTO);
+			if (resDTO.isSuccessful()) {
+				/************ AUDIT #28895_35509 *************/
+				if (pmauditSO
+						.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
+					getManagedBean()
+							.setSelectedCriteria(resDTO.getPmCriteria());
+					auTemplate.auditSaveData(getManagedBean(),
+							AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
+				}
+				/************ END AUDIT #28895_35509 *************/
+				loadCriteria(resDTO.getPmCriteria().getCriteriaId());
+				log.info("updateCriteria - successful");
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_779006,
+										new String[] { newCriteria
+												.getCriteriaCode() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+
+		} catch (Exception e) {
+			log.info("updateCriteria - fail"); // TODO
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770004);
 		}
+		return null;
+	}
 
 	 public PmCriteria retrieveCriteriaObjById(Long criteriaId) {
 			log.info("retrieveCriteriaObjById - Start");
@@ -333,39 +375,47 @@ public class CriteriaBackingBean extends
 		}
 	 
 
-	public void loadCriteria(Long id){
-			log.info("loadCriteria - Start");
-			try{
-                PmCriteria pmCriteria = retrieveCriteriaObjById(id);
-				List <PmLanguage> languagues = PmCommonUtil.retrieveLanguageObjs();
-				if(pmCriteria.getPmCriteriaDescs().size() != languagues.size()){
-					for(PmLanguage langauge:languagues){
-						boolean isRequired = true;
-						for(PmCriteriaDesc desc: pmCriteria.getPmCriteriaDescs()){
-							if(langauge.getLanguageCode().equals(desc.getLanguageCode())){
-								isRequired = false;
-								break;
-							}
+	public void loadCriteria(Long id) {
+		log.info("loadCriteria - Start");
+		try {
+			PmCriteria pmCriteria = retrieveCriteriaObjById(id);
+			List<PmLanguage> languagues = PmCommonUtil.retrieveLanguageObjs();
+			if (pmCriteria.getPmCriteriaDescs().size() != languagues.size()) {
+				for (PmLanguage langauge : languagues) {
+					boolean isRequired = true;
+					for (PmCriteriaDesc desc : pmCriteria.getPmCriteriaDescs()) {
+						if (langauge.getLanguageCode().equals(
+								desc.getLanguageCode())) {
+							isRequired = false;
+							break;
 						}
-						if(isRequired){
-							PmCriteriaDesc criteriaDesc = new PmCriteriaDesc();
-							criteriaDesc.setLanguageCode(langauge.getLanguageCode());
-							criteriaDesc.setPmLanguage(langauge);
-							pmCriteria.addPmCriteriaDescs(criteriaDesc);
+					}
+					if (isRequired) {
+						PmCriteriaDesc criteriaDesc = new PmCriteriaDesc();
+						criteriaDesc
+								.setLanguageCode(langauge.getLanguageCode());
+						criteriaDesc.setPmLanguage(langauge);
+						pmCriteria.addPmCriteriaDescs(criteriaDesc);
 					}
 				}
-				}
-				this.getManagedBean().setSelectedCriteria(pmCriteria);
-				
-				
-			
-			}catch (Exception e){
-				e.printStackTrace();
-				throw new EpException(MessageConst.ERROR_770004);
 			}
-			
-			log.info("loadCriteria - End");
+			// 39577 - shaqimi start
+			if (pmCriteria.getPmCriteriaDescs().get(0).getPmLanguage()
+					.getLanguageCode()
+					.equals(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
+				Collections.swap(pmCriteria.getPmCriteriaDescs(), 0, 1);
+			}
+			// 39577 - shaqimi end
+			this.getManagedBean().setSelectedCriteria(pmCriteria);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770004);
 		}
+
+		log.info("loadCriteria - End");
+	}
+	
 	private void generateCriteriaCode() {
 		ICriteriaSO criteriaSO = (ICriteriaSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
 		String criteriaCode = null;
@@ -376,88 +426,85 @@ public class CriteriaBackingBean extends
 		getManagedBean().getSelectedCriteria().setCriteriaCode(resDTO.getCriteriaCode());
 		
 	}
-	 private void validateCriteriaDesc(){
-			log.info("validateCriteriaDesc");
-			String enDesc = null;
-			String msDesc = null;
-			for(PmCriteriaDesc desc : getManagedBean().getSelectedCriteria().getPmCriteriaDescs()){
-				if(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(desc.getPmLanguage().getLanguageCode())){
-					enDesc = desc.getCriteria();
-				}
-				
-				if(CommonConstants.LANGUAGE_CODE_MALAY.equals(desc.getPmLanguage().getLanguageCode())){
-					msDesc = desc.getCriteria();
-				}
+
+	private void validateCriteriaDesc() {
+		log.info("validateCriteriaDesc");
+		String enDesc = null;
+		String msDesc = null;
+		for (PmCriteriaDesc desc : getManagedBean().getSelectedCriteria()
+				.getPmCriteriaDescs()) {
+			if (CommonConstants.DEFAULT_LANGUAGE_CODE.equals(desc
+					.getPmLanguage().getLanguageCode())) {
+				enDesc = desc.getCriteria();
 			}
-			
-			if(StringUtils.isBlank(enDesc) ||StringUtils.isBlank(msDesc) ){
-				throw new EpException("Error Desctiptions");
-			}
-			
-			//Create search bean
-			SearchBean<PmCriteriaDesc> searchBean = new SearchBean<PmCriteriaDesc>();
-			searchBean.getDataFilterBeans().add(
-					new SearchMultiFilterBean(
-							new SearchFilterBean(
-									"criteria", 
-									SearchOperator.OPERATOR_EQUALS.value(), 
-									enDesc.toLowerCase().trim(),
-									true),
-							new SearchFilterBean(
-									"pmLanguage.languageCode", 
-									SearchOperator.OPERATOR_EQUALS.value(), 
-									CommonConstants.DEFAULT_LANGUAGE_CODE, 
-									SearchCondition.CONDITION_AND.value())));
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchMultiFilterBean(
-							new SearchFilterBean(
-									"criteria", 
-									SearchOperator.OPERATOR_EQUALS.value(), 
-									msDesc.toLowerCase().trim(),
-									true),
-							SearchCondition.CONDITION_OR.value(),
-							new SearchFilterBean(
-									"pmLanguage.languageCode", 
-									SearchOperator.OPERATOR_EQUALS.value(), 
-									CommonConstants.LANGUAGE_CODE_MALAY, 
-									SearchCondition.CONDITION_AND.value())));
-			
-			
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"recordStatusFlg", 
-					SearchOperator.OPERATOR_EQUALS.value(), 
-					DbValueConst.RECORD_STATUS_ACTIVE
-					));
-			
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"pmCriteria.recordStatusFlg", 
-					SearchOperator.OPERATOR_EQUALS.value(), 
-					DbValueConst.RECORD_STATUS_ACTIVE
-					));
-			
-			if(!getManagedBean().getSelectedCriteria().isBrandNew()){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"pmCriteria.criteriaId", 
-						SearchOperator.OPERATOR_NOT_EQUALS.value(), 
-						getManagedBean().getSelectedCriteria().getCriteriaId()
-						));
-			}
-			
-			//Filter by search bean
-			CriteriaReqDTO reqDTO = new CriteriaReqDTO();
-			reqDTO.setCriteriaDescSearchBean(searchBean);
-			reqDTO.setValidation(true);
-			ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);	
-			CriteriaResDTO resDTO = reqSO.retrieveCriteriaDescBySearchBean(reqDTO);
-			if(resDTO.isSuccessful()&& resDTO.getCriteriaDescList()!=null && !resDTO.getCriteriaDescList().isEmpty()){ 
-			{
-					throw new EpException(MessageConst.ERROR_770220, new String[] {
-							PmCommonUtil.getResourceBundleLabels("lbl.pm.criteria.name")
-					});	
-				}
+
+			if (CommonConstants.LANGUAGE_CODE_MALAY.equals(desc.getPmLanguage()
+					.getLanguageCode())) {
+				msDesc = desc.getCriteria();
 			}
 		}
+
+		if (StringUtils.isBlank(enDesc) || StringUtils.isBlank(msDesc)) {
+			throw new EpException("Error Desctiptions");
+		}
+
+		// Create search bean
+		SearchBean<PmCriteriaDesc> searchBean = new SearchBean<PmCriteriaDesc>();
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(new SearchFilterBean("criteria",
+						SearchOperator.OPERATOR_EQUALS.value(), enDesc
+								.toLowerCase().trim(), true),
+						new SearchFilterBean("pmLanguage.languageCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								CommonConstants.DEFAULT_LANGUAGE_CODE,
+								SearchCondition.CONDITION_AND.value())));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(new SearchFilterBean("criteria",
+						SearchOperator.OPERATOR_EQUALS.value(), msDesc
+								.toLowerCase().trim(), true),
+						SearchCondition.CONDITION_OR.value(),
+						new SearchFilterBean("pmLanguage.languageCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								CommonConstants.LANGUAGE_CODE_MALAY,
+								SearchCondition.CONDITION_AND.value())));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmCriteria.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));
+
+		if (!getManagedBean().getSelectedCriteria().isBrandNew()) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmCriteria.criteriaId",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							getManagedBean().getSelectedCriteria()
+									.getCriteriaId()));
+		}
+
+		// Filter by search bean
+		CriteriaReqDTO reqDTO = new CriteriaReqDTO();
+		reqDTO.setCriteriaDescSearchBean(searchBean);
+		reqDTO.setValidation(true);
+		ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICriteriaSO.class);
+		CriteriaResDTO resDTO = reqSO.retrieveCriteriaDescBySearchBean(reqDTO);
+		if (resDTO.isSuccessful() && resDTO.getCriteriaDescList() != null
+				&& !resDTO.getCriteriaDescList().isEmpty()) {
+			{
+				throw new EpException(
+						MessageConst.ERROR_770220,
+						new String[] { PmCommonUtil
+								.getResourceBundleLabels("lbl.pm.criteria.name") });
+			}
+		}
+	}
 
 	private String createCriteria(PmCriteria newCriteria) {
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -483,6 +530,16 @@ public class CriteriaBackingBean extends
 												.getCriteriaCode() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				
+				/************ START: AUDIT #28895_35509 *************/
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
+					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
+				}
+				/************ END: AUDIT #28895_35509 *************/
 
 				return redirectSupCriteriaSearch();
 			}
@@ -494,28 +551,33 @@ public class CriteriaBackingBean extends
 		return null;
 	}
 
-	 public void intitailCriteria(){
-			log.info("intitailCriteria- Start");
-	 PmCriteria pmCriteria = new PmCriteria();
-				
-	 
-				List <PmLanguage> languagues = PmCommonUtil.retrieveLanguageObjs();
-				pmCriteria.setPmCriteriaDescs(new ArrayList<PmCriteriaDesc>());
-					for(PmLanguage language:languagues){
-						
-								PmCriteriaDesc criteriaDesc = new PmCriteriaDesc();
-								criteriaDesc.setLanguageCode(language.getLanguageCode());
-								criteriaDesc.setPmLanguage(language);
-								pmCriteria.addPmCriteriaDescs(criteriaDesc);
-			
-						}
-	
-				this.getManagedBean().setSelectedCriteria(pmCriteria);
-				
-				
-				log.info("intitailCriteria - End");
-					
+	public void intitailCriteria() {
+		log.info("intitailCriteria- Start");
+		PmCriteria pmCriteria = new PmCriteria();
 
+		List<PmLanguage> languagues = PmCommonUtil.retrieveLanguageObjs();
+		pmCriteria.setPmCriteriaDescs(new ArrayList<PmCriteriaDesc>());
+		for (PmLanguage language : languagues) {
+
+			PmCriteriaDesc criteriaDesc = new PmCriteriaDesc();
+			criteriaDesc.setLanguageCode(language.getLanguageCode());
+			criteriaDesc.setPmLanguage(language);
+			pmCriteria.addPmCriteriaDescs(criteriaDesc);
+
+		}
+
+		// 39577 - shaqimi start
+		if (pmCriteria.getPmCriteriaDescs().get(0).getPmLanguage()
+				.getLanguageCode()
+				.equals(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
+			Collections.swap(pmCriteria.getPmCriteriaDescs(), 0, 1);
+		}
+		// 39577 - shaqimi end
+
+		this.getManagedBean().setSelectedCriteria(pmCriteria);
+
+		log.info("intitailCriteria - End");
+
+	}
 }
-	 }
 

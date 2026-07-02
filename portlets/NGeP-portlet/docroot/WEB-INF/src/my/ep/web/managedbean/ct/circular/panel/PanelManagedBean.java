@@ -80,6 +80,7 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode rootZoanlTree;
+	private boolean hasExistingLocations; //#35506,#39762
 
 	private CtCircular circular;
 	private CtCircularVer circularVer;
@@ -117,6 +118,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelSupplier ctPanelSupplier;
 	private SmMofAccount smMofAccount;
 	private List<CtCircularPidReason> ctCircularPidReasons;
+	private List<CtCircularPidReason> selectedPidReason; //#35506,#39594
 	
 	private int attachFileIndex;
 	
@@ -876,6 +878,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	 * @return the ctCircularPidReasons
 	 */
 	public List<CtCircularPidReason> getCtCircularPidReasons() {
+		if (ctCircularPidReasons == null) {
+			ctCircularPidReasons = new ArrayList<>(); //#35506,#39594
+		}
 		return ctCircularPidReasons;
 	}
 
@@ -1040,4 +1045,36 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.sqEditableMode = sqEditableMode;
 	}
 	// #25790 - end	
+	
+	// #35506,#39762 - Start
+	/**
+	 * Returns {@code true} if the zone has existing location data,
+	 * {@code false} otherwise.
+	 * 
+	 * @return {@code true} if locations exist, {@code false} otherwise
+	 */
+	public boolean isHasExistingLocations() {
+		return hasExistingLocations;
+	}
+
+	/**
+	 * Sets whether the zone has existing location data.
+	 * 
+	 * @param hasExistingLocations
+	 *            {@code true} if locations exist, {@code false} otherwise
+	 */
+	public void setHasExistingLocations(boolean hasExistingLocations) {
+		this.hasExistingLocations = hasExistingLocations;
+	}
+	// #35506,#39762 - End
+	
+	// #35506,#39594 - Start
+	public List<CtCircularPidReason> getSelectedPidReason() {
+		return selectedPidReason;
+	}
+
+	public void setSelectedPidReason(List<CtCircularPidReason> selectedPidReason) {
+		this.selectedPidReason = selectedPidReason;
+	}
+	// #35506,#39594 - End
 }

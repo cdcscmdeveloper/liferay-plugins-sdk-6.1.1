@@ -1,0 +1,35 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<h:outputText value="#{lbl['lbl.sm.sitevisit.licenseinsurance']}"  styleClass="screen-title"/> <br/>
+	<ui:param name="code" 
+		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}"/>
+	<c:choose>
+		<c:when test="#{!viewFlag}">
+			<ui:include src="/xhtml/sm/shared/sitevisit/addressRepresentatives.xhtml" />
+		</c:when>
+		<c:otherwise>
+			<ui:include src="/xhtml/sm/shared/sitevisit/view_addressRepresentatives.xhtml" />
+		</c:otherwise>
+	</c:choose>
+
+	<c:if test="#{code == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+		<ui:include src="/xhtml/sm/shared/sitevisit/financialDoc.xhtml" />
+	</c:if>
+	
+	<c:if test="#{code == SupplierManagementConst.CAT_TYPE_WORKSHOP
+				or code == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
+		<ui:include src="/xhtml/sm/shared/sitevisit/licenseInsurance.xhtml" />
+	</c:if>
+	
+	<c:if test="#{code == SupplierManagementConst.CAT_TYPE_PRINTING}">
+		<ui:include src="/xhtml/sm/shared/sitevisit/printing_licenseInsurance.xhtml" />
+	</c:if>
+	
+	<ui:include src="/xhtml/sm/shared/sitevisit/additional_License.xhtml" />
+</ui:composition>

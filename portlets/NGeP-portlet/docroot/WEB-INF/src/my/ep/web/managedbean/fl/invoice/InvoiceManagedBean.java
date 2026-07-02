@@ -149,9 +149,16 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean reviseInvoice = false;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
+	
+	private boolean isSupplementContractComplete = true; //28719
+	
+	//24956 start
+    private boolean ctTypeMinistry;
+    //24956 end
+    
 
 	//#35508 start
   	private String originalSupplierInvRef;
@@ -1249,12 +1256,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -1265,6 +1272,25 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+	
+	//28719-start
+	public boolean isSupplementContractComplete() {
+		return isSupplementContractComplete;
+	}
+
+	public void setSupplementContractComplete(boolean isSupplementContractComplete) {
+		this.isSupplementContractComplete = isSupplementContractComplete;
+	}
+	//28719-end	
+	
+	// 24956 start
+	public boolean isCtTypeMinistry() {
+		return ctTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		this.ctTypeMinistry = ctTypeMinistry;
+	}
 
 	/**
 	 * @return the originalSupplierInvRef
