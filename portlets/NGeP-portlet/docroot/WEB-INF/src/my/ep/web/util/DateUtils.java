@@ -618,4 +618,52 @@ public class DateUtils {
 
 		return retVal;
 	}
+	
+	// #40279 - Start
+	/**
+	 * Calculate the total full months and remaining days between two dates.
+	 * 
+	 * @param startDate
+	 *            Start date
+	 * @param endDate
+	 *            End date
+	 * @return int[] where [0] = total months, [1] = remaining days
+	 */
+	public static int[] getMonthsAndDaysDifference(Date startDate, Date endDate) {
+		if (startDate == null || endDate == null) {
+			return new int[] { 0, 0 };
+		}
+
+		Calendar start = Calendar.getInstance();
+		start.setTime(startDate);
+
+		Calendar end = Calendar.getInstance();
+		end.setTime(endDate);
+
+		// Include the last day in the calculation
+		end.add(Calendar.DAY_OF_MONTH, 1);
+
+		// ---- Hitung total bulan penuh ----
+		int yearDiff = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);
+		int monthDiff = end.get(Calendar.MONTH) - start.get(Calendar.MONTH);
+		int totalMonths = (yearDiff * 12) + monthDiff;
+
+		if (end.get(Calendar.DAY_OF_MONTH) < start.get(Calendar.DAY_OF_MONTH)) {
+			totalMonths--;
+		}
+
+		// ---- Hitung sisa hari setelah bulan penuh ----
+		Calendar temp = (Calendar) start.clone();
+		temp.add(Calendar.MONTH, totalMonths);
+
+		long millisDiff = end.getTimeInMillis() - temp.getTimeInMillis();
+		int remainingDays = (int) (millisDiff / (24L * 60L * 60L * 1000L));
+
+		if (remainingDays < 0) {
+			remainingDays = 0;
+		}
+
+		return new int[] { totalMonths, remainingDays };
+	}
+	// #40279 - End
 }

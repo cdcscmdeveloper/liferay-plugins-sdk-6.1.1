@@ -75,9 +75,8 @@
 					</p:panel><br />
 
 					<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
-					<ui:remove>
-					<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}"
-						toggleable="true" rendered="false">
+					<c:if test="#{!cc.attrs.backingBean.managedBean.smAppl.siteVisitGroup}">
+					<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true">
 
 						<p:dataTable var="assocVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -107,8 +106,7 @@
 					</p:panel><br />
 
 					<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
-					<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" 
-						rendered="false" toggleable="true">
+					<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true">
 
 						<p:dataTable var="brVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -135,7 +133,7 @@
 
 						</p:dataTable>
 
-					</p:panel><br /></ui:remove><!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
+					</p:panel><br /></c:if><!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 
 					<p:panel header="#{lbl['lbl.sm.facility.information']}"
 						rendered="#{!cc.attrs.isBusinessOffice}" toggleable="true"> <!-- #28775 -->
