@@ -8,9 +8,7 @@
 
 	<p:panel id="onerTierTechnicalOrTecSummarySuppliersQualifiedIdsEvaluation" toggleable="true">
 	<ui:remove>#29187 Start Vinod</ui:remove>
-	<!-- need to un comment with 4serangkai
 	<ui:param name="isDisqualified" value="#{evaluationBackingBean.renderDisqualified()}" />
-	-->
 	<ui:remove>#29187 End Vinod</ui:remove>
 		<f:facet name="header">
 			<h:outputText
@@ -112,13 +110,12 @@
 
 			</p:column>
 			<ui:remove>#29187 Start Vinod</ui:remove>
-			<!--need to un comment with 4serangkai
 			<p:column style="width:25%;white-space: normal;text-align:center;" rendered="#{isDisqualified}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.disqualified']}" />
 				</f:facet>
-				<h:outputText value="#{evaluationBackingBean.isDisqialifiedByCompliance(disQualifiedSupplier) ? lbl['lbl.sc.eva.disqualified.supplier.disqualified.message'] : ''}"/>
-			</p:column>-->
+				<h:outputText value="#{evaluationBackingBean.isDisqualifiedByCompliance(disQualifiedSupplier) ? lbl['lbl.sc.eva.disqualified.supplier.disqualified.message'] : ''}"/>
+			</p:column>
 			<ui:remove>#29187 End Vinod</ui:remove>
 		</p:dataTable>
 
