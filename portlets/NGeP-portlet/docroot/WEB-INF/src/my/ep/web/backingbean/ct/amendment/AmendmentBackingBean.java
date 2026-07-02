@@ -3740,7 +3740,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#24336 - Start
 			// Calculate the current contract amount with additions or reductions.
-			BigDecimal baseAmt = ctContractVer.getCtContractAmount().getContractAmount();
+			BigDecimal baseAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());//ctContractVer.getCtContractAmount().getContractAmount();
 			BigDecimal addAmt = ctContractVer.getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctContractVer.getCtAmendment().getReductionAmt();
 			
@@ -9498,16 +9498,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date newAmtEffDate;
 		// new overall contract amount is different from overall contact amount
 		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+			
 			newAmtEffDate = ctAmendment.getNewAmtEffDate();
-			if (newAmtEffDate == null) {
+			
+			boolean isDisableNewCtAmountEffDate = contractManagedBean.isDisableNewCtAmountEffDate();
+			if(newAmtEffDate == null || isDisableNewCtAmountEffDate == true){
 				newAmtEffDate = new Date();
 			}
+			
 			// Enable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(false);
 		
 		// same as overall contract amount	
 		} else {
-			newAmtEffDate = ctContractVer.getCtContractAmount().getEffDate();
+			newAmtEffDate = retrieveNewEffDate();
+			
 			// Disable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(true);
 		}
