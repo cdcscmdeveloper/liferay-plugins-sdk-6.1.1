@@ -2248,13 +2248,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 			//#34442 - start
 			boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
-			
-			if (isFD && shouldShowPerformanceBondConfirmation()) {
+			boolean isFU = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+
+			if ((isFD || isFU) && shouldShowPerformanceBondConfirmation()) {
 				setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
-				
+
 				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
 				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
-				
+
 				return null;
 			}
 			//#34442 - end
@@ -2280,7 +2281,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 				if (isFD && shouldShowPerformanceBondConfirmation()) {
 					setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
-					
+
 					RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
 					RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
 
