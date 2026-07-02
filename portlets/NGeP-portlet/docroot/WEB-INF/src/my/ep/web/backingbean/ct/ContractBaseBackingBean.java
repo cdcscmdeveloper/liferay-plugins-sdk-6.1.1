@@ -294,13 +294,6 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		
 		return message.replace("<br/>", System.lineSeparator());
 	}
-
-	/**
-	 * @return
-	 */
-	public boolean checkPerformanceBondCompleted(Boolean isBondReq, CtPerformanceBond perFormanceBond) {
-		return isBondReq && perFormanceBond == null;
-	}
 	
 	public String getConfirmationMsgs(Long key){
 		final Map<Long, String> confirmationMsgs = new HashMap<Long, String>();
