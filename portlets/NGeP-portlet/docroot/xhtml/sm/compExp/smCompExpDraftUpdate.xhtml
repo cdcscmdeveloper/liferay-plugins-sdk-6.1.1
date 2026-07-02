@@ -358,10 +358,13 @@
 		</div>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
+			<!-- 9299 - 40479 -->
 			<h:outputText styleClass="instruction"
+				escape="false"
 				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
 				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.sm']}" />
 			<h:outputText styleClass="instruction"
+				escape="false"
 				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
 				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.ct.qt']}" />
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
