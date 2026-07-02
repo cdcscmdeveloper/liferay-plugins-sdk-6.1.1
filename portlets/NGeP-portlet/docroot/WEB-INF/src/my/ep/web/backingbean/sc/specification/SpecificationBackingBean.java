@@ -17599,7 +17599,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		scoringPopUpAction(null);
 		//#29187 Start Vinod
-		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);
+		this.retriveSampleSpecMasterForMandatorySpecChecking(templateChecklist);
 		//#29187 End Vinod
 
 		return TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW;
@@ -17658,7 +17658,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 
 		this.getManagedBean().setExistingSampleSpecQuestions(existingSampleSpecQuestion);// 11104-ReEndorseEnd
-		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
+		this.retriveSampleSpecMasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 
 	}
 	// 11104 -end-
@@ -18460,7 +18460,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @param tplSpecQuestions
 	 * @return boolean
 	 */
-	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
+	public boolean renderMandatorySpec(List<TplSpecQuestion> tplSpecQuestions) {
 
 		for (TplSpecQuestion question : tplSpecQuestions) {
 			boolean isMandatorySpecForSample = question.isMandatorySpecForSample();
@@ -18481,7 +18481,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 *            .
 	 * @return
 	 */
-	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
+	public void retriveSampleSpecMasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();

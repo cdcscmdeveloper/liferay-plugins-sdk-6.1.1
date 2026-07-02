@@ -4085,7 +4085,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						.getQtProposalChecklist()
 						.setProposalScore(
 								this.getManagedBean().getTechGovProposalScore());
-				this.retriveSampleSpecmasterForMandatorySpecChecking(this.getManagedBean().getSampleItemList());//#29187 Added Vinod
+				this.retriveSampleSpecMasterForMandatorySpecChecking(this.getManagedBean().getSampleItemList());//#29187 Added Vinod
 				return "/xhtml/sc/evaluation/evaluationStage/technical/techSampleEvaluation.xhtml";
 			} else {
 				String docDefinationKey = proposalCheckList.getScQtCheckList()
@@ -14082,7 +14082,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param
 	 * @return boolean
 	 */
-	public boolean renderDisqialified() {
+	public boolean renderDisqualified() {
 		List<ScQtEvaluationResultDtl> disqualifiedList = null != this
 				.getManagedBean().getDisqualifiedSuppliersDM()
 				&& null != this.getManagedBean().getDisqualifiedSuppliersDM()
@@ -14103,12 +14103,12 @@ private void retriveCommitteeRemarksList(){
 	// #29187 End Vinod
 	// #29187 Start Vinod
 	/**
-	 * This method is to check whether to render diswualified column.
+	 * This method is to check whether to render disqualified column.
 	 * 
 	 * @param evalResultDtl
 	 * @return boolean
 	 */
-	public boolean isDisqialifiedByCompliance(
+	public boolean isDisqualifiedByCompliance(
 			ScQtEvaluationResultDtl evalResultDtl) {
 		boolean isDisqualified = null != evalResultDtl.isCompliance()
 				&& !evalResultDtl.isCompliance();
@@ -14150,7 +14150,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param templateChecklist
 	 * @return
 	 */
-	public void retriveSampleSpecmasterForMandatorySpecChecking(
+	public void retriveSampleSpecMasterForMandatorySpecChecking(
 			List<ScQtSampleItem> templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
@@ -14275,8 +14275,6 @@ private void retriveCommitteeRemarksList(){
 	 * @return
 	 */
 	public void itemComplianceChangeControl(ValueChangeEvent event) {
-		log.info("New: " + event.getNewValue() + ", Old: "
-				+ event.getOldValue());
 		if (event.getOldValue() == null) {
 			getManagedBean().setComplianceOldNull(true);
 		} else {
@@ -14341,8 +14339,8 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 
-		boolean complaincePopup = checkTechnicalSpecCompliance();
-		if (complaincePopup && !getManagedBean().isComplianceCnfrm()) {
+		boolean compliancePopup = checkTechnicalSpecCompliance();
+		if (compliancePopup && !getManagedBean().isComplianceCnfrm()) {
 			RequestContext.getCurrentInstance().execute(
 					QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
 			getManagedBean().setComplianceCnfrm(true);
