@@ -1261,24 +1261,16 @@ public class CommonApplBackingBean extends
 	// //this.getManagedBean().setTaskId(taskId);
 	// }
 	
-	//10724 START
+	//#10724-START
 	public void preRenderCommonSmOverviewInfo() {
-		//10724 START
 		renewSesionObject();
 		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
-		if (null != supp) {
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
-		}
-		if (supp != null && null != supp.getSupplierId() && supp.getSupplierId() > 0) {
+		
+		if (supp != null && supp.getSupplierId() > 0) {
 			log.info("10724 to TB issue liferay "+supp.getSupplierId());
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl(): " + supp.getSmAppl());
-			if (null != supp.getSmAppl()) {
-				log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl().getSupplierType(): " + supp.getSmAppl().getSupplierType());
-			}
+
 			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
 					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
-			int msInADay = 24 * 60 * 60 * 1000;
 			if (acc != null
 					&& acc.getExpDate() != null) {
 				Date currDate = new Date();
@@ -1292,9 +1284,8 @@ public class CommonApplBackingBean extends
 				
 				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) 
 						&& acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					long expiringDays = (getManagedBean().getExpDate().getTime() - currDate.getTime()) / msInADay;
-					//add 1 day to ignore the time from currDate
-					expiringDays++;
+					long expiringDays = daysBetween(currDate, expDate) + 1;
+
 					getManagedBean().setDays(expiringDays + "");
 					if(expiringDays <= 90){
 					getManagedBean().setMofBeforeExpiryMsg(
@@ -1308,7 +1299,7 @@ public class CommonApplBackingBean extends
 						supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 				
 				Date currDate = new Date();
-				if (supp.getCompanyName().contains("Leap Year Company")){
+				if (supp.getCompanyName().contains("Leap Year")){
 					Calendar leapYear = Calendar.getInstance();
 					leapYear.set(2027, Calendar.MAY, 10, 0, 0, 0);
 					currDate = leapYear.getTime();
@@ -1321,16 +1312,17 @@ public class CommonApplBackingBean extends
 				dateAfterOneYear.setTime(expDate);
 				dateAfterOneYear.add(Calendar.MONTH, 12);
 				
-				long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate.getTime()) / msInADay;
-				//add 1 day to ignore the time from currDate
-				togo++;
-				getManagedBean().setDays(togo + "");
-				
-				if (togo > 0 && togo <= 366 && expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+				Date renewalEnd = dateAfterOneYear.getTime();
+
+				long togo = daysBetween(currDate, renewalEnd) + 1;
+				 
+				if (togo >= 1 && togo <= 366
+						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+					getManagedBean().setDays(String.valueOf(togo));
 					
 					dateAfterOneYear.setTime(expDate);
 					dateAfterOneYear.add(Calendar.DATE, 1);
-					Date dayAfterExp = dateAfterOneYear.getTime();
+					Date dayAfterExp = dateAfterOneYear.getTime(); 
 					
 					getManagedBean().setMofAfterExpiryMsg(
 							SmCommonUtil.getMessage(
@@ -1338,12 +1330,26 @@ public class CommonApplBackingBean extends
 				}
 			}
 		}else{
-			log.info("No Supplier");
+			log.info("No Supplier"); 
 		}
-		//10724 END
 		log.info(getManagedBean().getMofBeforeExpiryMsg());
 		log.info(getManagedBean().getMofAfterExpiryMsg());
 		SmCommonUtil.redirectToPage("commonSmOverviewInfo.xhtml", "", null, null);
 	}
-	//10724 END
+	
+	private static long daysBetween(Date from, Date to) {
+		long msInADay = 24L * 60 * 60 * 1000;
+		return (atMidnight(to) - atMidnight(from)) / msInADay;
+	}
+
+	private static long atMidnight(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTimeInMillis();
+	}
+	//#10724-END
 }

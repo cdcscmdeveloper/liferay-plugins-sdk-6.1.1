@@ -4508,6 +4508,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 
 		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return getCategoryName(catL3, false);
+		}
 		String categoryName = getCategoryName(catL3, isFullName);
 
 		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
@@ -4576,6 +4579,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return latest or old category code description
 	 */
 	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return cat.getPmCategoryL3().getCategoryName();
+		}
 		String catName1 = cat.getPmCategoryL1().getCategoryName();
 		String catName2 = cat.getPmCategoryL2().getCategoryName();
 		String catName3 = cat.getPmCategoryL3().getCategoryName();
@@ -4899,10 +4905,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			CmColor color = cmitem.getCmColor();
 			CmUnspsc unspsc = cmitem.getCmUnspsc();
 			// segment title
-			String itemName = common.removeItemNameNA(type.getTypeName()) + " "
+			String itemName = (common.removeItemNameNA(type.getTypeName()) + " "
 					+ common.removeItemNameNA(brand.getBrandName()) + " "
 					+ common.removeItemNameNA(measurement.getMeasurementName()) + " "
-					+ common.removeItemNameNA(color.getColorName());
+					+ common.removeItemNameNA(color.getColorName())).trim().replaceAll("\\s+", " ");
 			// segment code
 			String extCode = type.getTypeCode() + brand.getBrandCode() + measurement.getMeasurementCode()
 					+ color.getColorCode();
