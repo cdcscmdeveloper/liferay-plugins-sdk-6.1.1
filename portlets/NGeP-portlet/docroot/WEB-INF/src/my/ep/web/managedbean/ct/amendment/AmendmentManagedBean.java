@@ -189,6 +189,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private boolean committeeQCBSecretaryWIP; //#35238
 	
+	//30737 - start
+	private Long inactiveUserRevise;
+	//30737 - end
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -1704,4 +1708,14 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.committeeQCBSecretaryWIP = committeeQCBSecretaryWIP;
 	}
 	//#35238 end
+	
+	//30737 - start
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
+	}
+
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
+	}
+	//30737 - end
 }

@@ -739,49 +739,45 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 		
 		//#30737 - Start
-		CtContract ctContract = ctBB.getManagedBean().getContractVer().getCtContract();
+		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+		CtContract ctContract = ctContractVer.getCtContract();
+		
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			log.info("xoxoxoxoxooxoxo action : SUBMIT");
-			
-			String approverType;
-			if (ctContract.getContractType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				approverType = RoleCode.CT_APPROVER.value();
-			} else {
-				approverType = RoleCode.BPK_CC_APPROVER.value();
-			}
-	        
-	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+
+		    log.info("xoxoxoxoxooxoxo action : SUBMIT");
+
+		    String approverType = determineRoleCode();
+
+		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 	        		getInactiveUsers(approverType, getSelectedUsers(), getManagedBean().getContractVer().getDocType());
 	        handleInactiveUserValidation(outcome, selectedInactiveUsers, getUserRole());
 		}
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-	        log.info("xoxoxoxoxooxoxo action : REVISE");
-	        
-	        CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-	        List<SelectedInactiveUserDTO> inactiveUsersForRevise = getInactiveUsersForRevise(
-	        		ctContractVer.getContractVerId(),
-	        		ctContractVer.getCtContract().getContractType().getParameterCode(), 
-	        		ctContractVer.getDocType());
-	        
-	        log.info("xoxoxoxoxo inactiveUsersForRevise : "+inactiveUsersForRevise);
-	         
-	        if (!inactiveUsersForRevise.isEmpty()) {
-				 Long userStatus = null;
-				 
-				 for(SelectedInactiveUserDTO inactiveActor : inactiveUsersForRevise){
-					 userStatus = inactiveActor.getStatus();
-					 this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
-					 break;
-					}
-				 
-				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
+
+		    log.info("xoxoxoxoxooxoxo action : REVISE");
+
+		    List<SelectedInactiveUserDTO> inactiveUsersForRevise =
+		    		getInactiveUsersForRevise(
+		    				ctContractVer.getContractVerId(),
+		    				ctContract.getContractType().getParameterCode(),
+		    				ctContractVer.getDocType());
+
+		    log.info("xoxoxoxoxo inactiveUsersForRevise : " + inactiveUsersForRevise);
+
+		    if (inactiveUsersForRevise != null && !inactiveUsersForRevise.isEmpty()) {
+
+		        SelectedInactiveUserDTO inactiveUser = inactiveUsersForRevise.get(0);
+
+	            Long userStatus = inactiveUser.getStatus();
+	            getManagedBean().setInactiveUserRevise(userStatus);
+
+	            if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+	                log.info("xoxoxoxoxooxoxo REVISE + return 5");
 	                handleInactiveUserValidation(outcome, inactiveUsersForRevise, getUserRole());
-				 }
-           }
-	    }
+	            }
+		    }
+		}
 		//#30737 - End
 		
 	}
@@ -1173,4 +1169,18 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	    this.confirmationContentMsg = confirmationContentMsg;
 	}
 	//34442 - end
+	
+	// #30737 - start
+	private String determineRoleCode() {
+		String parameterCode = getContractVer().getCtContract().getContractType().getParameterCode();
+	    if (ParameterConst.CONTRACT_TYPE_MINISTRY.equalsIgnoreCase(parameterCode)) {
+	        return RoleCode.CT_APPROVER.value();
+	        
+	    } else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(parameterCode)) {
+	        return RoleCode.BPK_CC_APPROVER.value();
+	    }
+	    return null;
+	}
+	// #30737 - end
+	
 }

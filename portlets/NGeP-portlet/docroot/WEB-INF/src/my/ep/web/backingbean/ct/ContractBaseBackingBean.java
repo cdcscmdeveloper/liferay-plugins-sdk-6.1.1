@@ -569,6 +569,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 
     	log.info("xoxoxoxoxoxoxo checkInactiveUserOnAction....");
     	log.info("xoxoxoxoxoxoxo selectedInactiveUsers size : "+selectedInactiveUsers.size());
+    	log.info("xoxoxoxoxoxoxo outcome/action : "+reqDTO.getOutcome());
     	
         List<SelectedInactiveUserDTO> invalidUsers = new ArrayList<SelectedInactiveUserDTO>();
 

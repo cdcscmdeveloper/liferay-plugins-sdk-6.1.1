@@ -62,6 +62,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO; //#26186
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.InactiveUserConst; //#30737
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -82,6 +83,7 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -670,7 +672,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// #25956 - Start (view Contract Amendment url from notification)
 			if (contractVerId != null) {
-
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
@@ -2006,6 +2007,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// Start Fix - #30022
 			contractadminstatuschecking();
 			// End Fix - #30022
+			
+			//#30737 - start - for revise purpose
+			log.info("xoxoxoxoxo getLoa : "+getContractVer().getCtContract().getLoa().getLoaId());
+			log.info("xoxoxoxoxo getInactiveUserRevise : "+getManagedBean().getInactiveUserRevise());
+			reqDTO.setScLoa(getContractVer().getCtContract().getLoa());
+			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveUserRevise());
+	        //#30737 - end 
+			
 			ContractResDTO resDTO = contractAmendmentSO.saveContractAmendmentVerDtls(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
@@ -3231,44 +3240,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
 				|| BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action) 
 				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
-			log.info("xoxoxoxoxooxoxo action : "+action);
-			handleInactiveUserValidation(action);
+
+		    log.info("xoxoxoxoxooxoxo action : "+action);
+
+		    String approverType = determineRoleCode();
+
+		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+	        		getInactiveUsers(approverType, getSelectedUsers(), getContractVer().getDocType());
+	        handleInactiveUserValidation(action, selectedInactiveUsers, getUserRole());
 		}
 		//#30737 - End
 		
 	}
 	//24333 - End, Refactor code for Validate Amendment because tab menu changes
 	
-	//#30737 - Start
-	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
-	 */
-	private void handleInactiveUserValidation(String outcome) {
-
-		IContractAmendmentSO contractAmendmentSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
-    	
-        try {
-        	
-        	Long inactiveUserCheckResult = 1L; //TEMP
-        	
-        	contractAmendmentSO.checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-            	getSelectedUsers(),
-            	inactiveUserCheckResult,
-            	getManagedBean().getTaskName()
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex);
-        }
-    }
-	//#30737 - End
-		
 	/**
 	 * The method used to authenticate user during submit the contract amendment.
 	 * This method will invoke a confirmation dialog for user authentication.
@@ -8287,38 +8272,56 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// #26688 end
 		
-		
 		//#30737 - Start
-//		CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
-//		ContractReqDTO reqDTO = new ContractReqDTO();
-//		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-//		reqDTO.setUserRole(getUserRole());
-//		reqDTO.setOutcome(action);
-//		reqDTO.setCtContractVer(ctContractVer);
-//		
-//		log.info("xoxoxoxoxooxoxo action : "+action);
-//		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-//			log.info("xoxoxoxoxooxoxo REVISE AMENDMENT - ERROR_100069");
-//            handleInactiveUserCheck(
-//            	reqDTO,
-//                null,
-//                null
-//            );
-//        }
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+
+		    log.info("xoxoxoxoxooxoxo action : REVISE");
+
+		    List<SelectedInactiveUserDTO> inactiveUsersForRevise =
+		    		getInactiveUsersForRevise(
+		    				getContractVer().getContractVerId(),
+		    				getContractVer().getCtContract().getContractType().getParameterCode(),
+		    				getContractVer().getDocType());
+
+		    log.info("xoxoxoxoxo inactiveUsersForRevise : " + inactiveUsersForRevise);
+
+		    if (inactiveUsersForRevise != null && !inactiveUsersForRevise.isEmpty()) {
+
+		        SelectedInactiveUserDTO inactiveUser = inactiveUsersForRevise.get(0);
+
+	            Long userStatus = inactiveUser.getStatus();
+	            getManagedBean().setInactiveUserRevise(userStatus);
+
+	            if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+	                log.info("xoxoxoxoxooxoxo REVISE + return 5");
+	                handleInactiveUserValidation(action, inactiveUsersForRevise, getUserRole());
+	            }
+		    }
+		}
 		
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-			//# amendment with
-			/// for cancel, not sure display error or not. ?
-			log.info("xoxoxoxoxooxoxox CANCEL AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
+		if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)
+				|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
+
+		    log.info("xoxoxoxoxooxoxo action : "+action);
+
+		    String approverType = determineRoleCode();
+
+		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+	        		getInactiveUsers(approverType, getSelectedUsers(), getContractVer().getDocType());
+	        handleInactiveUserValidation(action, selectedInactiveUsers, getUserRole());
+		}
+		
+//		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+//			log.info("xoxoxoxoxooxoxox CANCEL AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
 //			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_CANCEL, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "SUPARJO");
 			// send group task
 			//..
-		}
+//		}
 		
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-			log.info("xoxoxoxoxooxoxox REJECT AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
+//		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+//			log.info("xoxoxoxoxooxoxox REJECT AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
 //			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_REJECT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
-		}
+//		}
 		//#30737 - End
 
 	}
@@ -10280,4 +10283,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		this.confirmationContentMsg = confirmationContentMsg;
 	}
 	// 34442 - end
+	
+	// #30737 - start
+	private String determineRoleCode() {
+		String parameterCode = getContractVer().getCtContract().getContractType().getParameterCode();
+	    if (ParameterConst.CONTRACT_TYPE_MINISTRY.equalsIgnoreCase(parameterCode)) {
+	        return RoleCode.CT_APPROVER.value();
+	        
+	    } else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(parameterCode)) {
+	        return RoleCode.BPK_CC_APPROVER.value();
+	    }
+	    return null;
+	}
+	// #30737 - end
 }
