@@ -3991,6 +3991,9 @@ public class SmApplicationUtil {
 			reqDTO.setLangCode(CommonConstants.LANGUAGE_CODE_MALAY);
 			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+			
+			log.info("40444 - result count from query - " + resultList.size()); //#40444 - debug
+			
 			if (!EntityHelper.isCollectionEmpty(resultList)
 					&& !resultList.isEmpty()) {
 				retVal = new SmOverlapCategoryVO();
@@ -4250,6 +4253,7 @@ public class SmApplicationUtil {
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
+				//applStatus = StringUtils.EMPTY; //#40444
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
@@ -4291,6 +4295,7 @@ public class SmApplicationUtil {
 				if (voSubTmp == null) {
 					isSubAdd = true;
 				} else {
+					log.info("40444 - voSubTmp not null"); //#40444
 					if (isActiveAppl.equals("1") && !voSubTmp.isActiveAppl()) {
 						voSubRemove = voSubTmp;
 						isSubAdd = true;
@@ -4328,6 +4333,9 @@ public class SmApplicationUtil {
 
 				if (voSubRemove != null) {
 					voTmp.getOverlapInfoList().remove(voSubRemove);
+					//#40444 - START DEBUG
+					log.info("remove - " + voSubRemove.getPersonnelName() + " - " + voSubRemove.getApplNo() + " - " + voSubRemove.getCompanyName());
+					//#40444 - END DEBUG
 				}
 
 				if (isAdd) {
@@ -4337,6 +4345,11 @@ public class SmApplicationUtil {
 
 			}
 		}
+		//#40444 - START - DEBUG
+		for(SmBulkApplOverlapCatVO ovl : retVal) {
+			log.info("40444 - Category Code " + ovl.getCategoryCode() + " : " + ovl.getOverlapInfoList().size());
+		}
+		//#40444 - END - DEBUG
 		return retVal;
 	}
 
