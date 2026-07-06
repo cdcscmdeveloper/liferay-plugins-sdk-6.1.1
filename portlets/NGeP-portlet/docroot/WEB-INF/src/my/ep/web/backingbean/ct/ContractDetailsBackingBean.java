@@ -2249,8 +2249,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			//#34442 - start
 			boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
 			boolean isFU = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			boolean isFulfilmentDocument = isFD || isFU;
 
-			if ((isFD || isFU) && shouldShowPerformanceBondConfirmation()) {
+			if ((isFulfilmentDocument && shouldShowPerformanceBondConfirmation()) || !isFulfilmentDocument) {
 				setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
 
 				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
