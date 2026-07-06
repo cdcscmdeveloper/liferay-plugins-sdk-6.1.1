@@ -750,6 +750,11 @@ public class SupplierManagementConst {
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
 	
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
+	
+	// bug #29156 -START
+	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	// bug #29156 -END
 		
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
@@ -1448,4 +1453,14 @@ public class SupplierManagementConst {
 		return SUPPLIER_APPL_SEARCH_URL;
 	}
 	// #28895_35501 End
+	
+	// #29156 -START
+	public String getSM_MOF_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	// #29156 -START
 }
