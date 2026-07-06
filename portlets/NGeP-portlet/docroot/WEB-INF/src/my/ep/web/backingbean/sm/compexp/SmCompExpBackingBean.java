@@ -901,7 +901,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		String agencyName = this.getManagedBean().getSelectedDraft().getAgencyName();
 		String fileReferenceNo = this.getManagedBean().getSelectedDraft().getFileReferenceNo();
 		String fileExtensionNo = this.getManagedBean().getSelectedDraft().getFileExtensionNo();
-		Date contractEffDate = this.getManagedBean().getSelectedDraft().getContractExpDate();
+		Date contractEffDate = this.getManagedBean().getSelectedDraft().getContractEffDate();
 		Date contractExpDate = this.getManagedBean().getSelectedDraft().getContractExpDate();
 		Long sourceType = this.getManagedBean().getSelectedDraft().getSourceType().getParameterId();
 		List<SmCompExpMasterDoc> smCompExpDocList = this.getManagedBean().getSmCompExpDocList();
@@ -1302,7 +1302,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			error = validateNewConsultant(error, projectLoc, workServDesc, consultantFee);
 		}
 
-		Date contractEffDate = master.getContractExpDate();
+		Date contractEffDate = master.getContractEffDate();
 		Date contractExpDate = master.getContractExpDate();
 		error = validateDate(error, contractEffDate, contractExpDate);
 
