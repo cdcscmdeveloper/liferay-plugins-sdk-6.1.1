@@ -109,15 +109,20 @@
 			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptMcVal}">
 				<ui:include src="/xhtml/reports/ct/mc/CT_037_ContractManagementReport.xhtml"></ui:include>
 			</c:if>	
-			<!-- #30918 - end -->					
+			<!-- #30918 - end -->
+			<!-- #34889 Start -->
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringDtlsRptCcVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT_038_ContractItemUsageMonitoringDtlsCC.xhtml"></ui:include>
+			</c:if>
+			<!-- #34889 End -->						
 		</p:panel>
 		<!-- Start - #29416 || #34889 -->
 		<c:choose>
 			<c:when
-				test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal || ctReportBB.managedBean.reportCode == 
-				CtReportConst.ctContractItemUsageMonitoringRptCcVal 
-				|| ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringDtlsRptMcVal || ctReportBB.managedBean.reportCode == 
-				CtReportConst.ctContractItemUsageMonitoringDtlsRptCcVal}">
+				test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal || 
+				ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptCcVal ||
+				ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringDtlsRptMcVal || 
+				ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringDtlsRptCcVal}">
 				<ac:lovPopupItemName />
 			</c:when>
 			<c:otherwise>
