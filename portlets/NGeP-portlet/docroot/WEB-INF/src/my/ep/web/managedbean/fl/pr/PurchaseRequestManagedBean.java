@@ -15,6 +15,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -327,6 +329,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
     private boolean isExceedItemPanelThreshold;
     private List<ScRequestItem> itemExceedBpkThreshold;
     private List<ScRequestItem> itemExceedItemPanelThreshold;
+    
+    // 36503 - start
+    private CtCircularVer ctCircularVer;
+    private CtCircularVer ctCircularPanel;
+    private CtContractVer contractVer;
+    private String circularNo; 
+    // 36503 - end
 
 /**
  * Gets the charge line item root.
@@ -3551,6 +3560,64 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setItemExceedItemPanelThreshold(List<ScRequestItem> itemExceedItemPanelThreshold) {
 		this.itemExceedItemPanelThreshold = itemExceedItemPanelThreshold;
 	}
+
+	// #36503 - start
+	/**
+	 * @return the ctCircularPanel
+	 */
+	public CtCircularVer getCtCircularPanel() {
+		return ctCircularPanel;
+	}
+
+	/**
+	 * @param ctCircularPanel the ctCircularPanel to set
+	 */
+	public void setCtCircularPanel(CtCircularVer ctCircularPanel) {
+		this.ctCircularPanel = ctCircularPanel;
+	}
+
+	/**
+	 * @return the contractVer
+	 */
+	public CtContractVer getContractVer() {
+		return contractVer;
+	}
+
+	/**
+	 * @param contractVer the contractVer to set
+	 */
+	public void setContractVer(CtContractVer contractVer) {
+		this.contractVer = contractVer;
+	}
+
+	/**
+	 * @return the ctCircularVer
+	 */
+	public CtCircularVer getCtCircularVer() {
+		return ctCircularVer;
+	}
+
+	/**
+	 * @param ctCircularVer the ctCircularVer to set
+	 */
+	public void setCtCircularVer(CtCircularVer ctCircularVer) {
+		this.ctCircularVer = ctCircularVer;
+	}
+
+	/**
+	 * @return the circularNo
+	 */
+	public String getCircularNo() {
+		return circularNo;
+	}
+
+	/**
+	 * @param circularNo the circularNo to set
+	 */
+	public void setCircularNo(String circularNo) {
+		this.circularNo = circularNo;
+	}
+	// #36503 - end
 
 	
 }
