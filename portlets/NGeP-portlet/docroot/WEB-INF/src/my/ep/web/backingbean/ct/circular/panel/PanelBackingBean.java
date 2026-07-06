@@ -2825,6 +2825,23 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		setPanelCircularVar(reqDTO);
 		return "/xhtml/ct/circular/portal/panelCircularTab.xhtml?faces-redirect=true";
 	}
+	
+	// start - 36503
+	/**
+	 * Determines whether the Category Code tab should be displayed.
+	 * The tab is hidden when the panel circular is accessed
+	 * from the Purchase Request (PR) or Purchase Order (PO) modules.
+	 *
+	 * @return true if the Category Code tab should be shown,
+	 *         false otherwise.
+	 */
+	public boolean isShowCategoryCodeTab() {
+		String gotoPreviewPage = getManagedBean().getGotoPreviewPage();
+
+		return !"/xhtml/fl/purchaserequest/prBasePage.xhtml".equals(gotoPreviewPage)
+				&& !"/xhtml/fl/purchaseorder/poBasePage.xhtml".equals(gotoPreviewPage);
+	}
+	// end - 36503
 
 	/**
 	 * Method used to set new effective date  for panel circular

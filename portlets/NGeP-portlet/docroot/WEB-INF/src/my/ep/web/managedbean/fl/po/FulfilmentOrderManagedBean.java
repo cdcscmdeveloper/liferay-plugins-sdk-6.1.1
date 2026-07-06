@@ -201,6 +201,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	private boolean isDpContinuityView = false;//#26790 note 266
 	
+	private String circularNo; // #36503
+	
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -1638,4 +1640,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.isDpContinuityView = isDpContinuityView;
 	}
 	// #25790 - end
+
+	// #36503 - start
+	/**
+	 * @return the circularNo
+	 */
+	public String getCircularNo() {
+		return circularNo;
+	}
+
+	/**
+	 * @param circularNo the circularNo to set
+	 */
+	public void setCircularNo(String circularNo) {
+		this.circularNo = circularNo;
+	}
+	// #36503 - end
 }

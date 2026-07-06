@@ -88,6 +88,26 @@
 							partialSubmit="true" />
 					</p:selectOneRadio></td>
 			</tr>
+			<ui:remove>#36503 start</ui:remove>
+			<tr>
+				<h:panelGroup rendered="#{flOrderBB.isCircularPanel()}">
+					<td></td>
+	    			<td></td>
+				    <td>
+				        <p:outputLabel id="poSysGenCirNo" value="#{lbl['lbl.ct.circular.no']}" />
+				    </td>
+				
+				    <td>
+				        <h:commandLink for="poSysGenCirNo" 
+				        	style="color:#009ae5 !important;
+				        	text-decoration:underline;"
+				        	title="#{flOrderBB.managedBean.circularNo}"
+							value="#{flOrderBB.managedBean.circularNo}"
+							action="#{flOrderBB.gotoCicularPanel()}" />
+				    </td>
+			    </h:panelGroup>
+			</tr>
+			<ui:remove>#36503 end</ui:remove>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
 				<td><p:inputText size="30" disabled="true"
@@ -403,4 +423,3 @@
 	</p:dialog>
 
 </ui:composition>
-
