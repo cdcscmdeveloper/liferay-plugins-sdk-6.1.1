@@ -425,5 +425,22 @@ public class ViewSuppProfileBackingBean extends
 		return isExpired;
 	}
 	//35336 END
+	
+	/**
+	 * 32560 - Added Checking to Get Active DA from the list
+	 * CHECKING TO SET START / END DATE FOR DISCIPLINARY ACTION POPUP
+	 * @param listDA
+	 */
+	public void findActiveDA(List<DisciplinaryActionVO> listDA) {
+			    Iterator<DisciplinaryActionVO> iterator = listDA.iterator();
+			    while (iterator.hasNext()) {
+			    	DisciplinaryActionVO daVO = iterator.next();
+			        if (daVO.isActiveRecordStatus()) {
+			            this.getManagedBean().setStartDate(daVO.getStartDate());
+			            this.getManagedBean().setEndDate(daVO.getEndDate());
+			            this.getManagedBean().setWarning(daVO.isWarning());
+			        }
+			    }
+	}
 
 }

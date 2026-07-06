@@ -755,7 +755,17 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
 	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	// bug #29156 -END
-		
+	
+	// bug #28278 -START
+	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
+	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
+	// bug #28278 -END
+	
+	// bug #29156 -START
+	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
+	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
+	// bug #29156 -END
+	
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;

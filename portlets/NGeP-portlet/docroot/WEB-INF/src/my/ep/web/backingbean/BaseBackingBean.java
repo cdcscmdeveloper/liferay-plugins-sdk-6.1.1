@@ -119,6 +119,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmPersonBlacklist;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -158,6 +159,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -3977,4 +3979,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return formatted.replaceAll("(\r\n|\n)", "<br/>");
 	}
 	// #28854 - End
+	
+	/**
+	 * Retrieve all blacklist owners/directors
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	public static List<BlacklistOwnerDirectorVO> getPersonnelBlacklist(Long disciplinaryActionId){
+		List<BlacklistOwnerDirectorVO> blacklistVO = new ArrayList<>();
+		List<SmPersonBlacklist> pblList = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveAllBlacklist(disciplinaryActionId);
+		if(EntityHelper.isCollectionEmpty(pblList)){
+			return blacklistVO;
+		}
+		for(SmPersonBlacklist pbl : pblList){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			blacklistOwner.setIcNo(pbl.getIdentificationNo());
+			blacklistVO.add(blacklistOwner);
+		}
+		return blacklistVO;
+	}
 }
