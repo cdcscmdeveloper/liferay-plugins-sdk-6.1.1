@@ -4612,7 +4612,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return userRoleMap;
 	}
 	//#33867 - END
-	
+
 	//#33867 - START
 	/**
 	 * Method to validate the user's status is inactive
