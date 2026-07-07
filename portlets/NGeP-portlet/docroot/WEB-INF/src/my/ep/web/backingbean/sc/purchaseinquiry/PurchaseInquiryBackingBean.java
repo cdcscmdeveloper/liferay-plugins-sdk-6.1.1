@@ -4642,10 +4642,11 @@ public class PurchaseInquiryBackingBean extends
 			appendedCount = suppAccTypeSb.split(",").length;
 		}
 
-		if (validateProcurementTypeisRPT(rnDtl.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
-			throwJustificationTypeError(rnDtl, suppAccTypeSb, appendedCount);
-		} else {
+		Date createdDate = rnDtl.getCreatedDate() != null ? rnDtl.getCreatedDate() : new Date();
+		if (validateProcurementTypeisRPT(createdDate).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
 			throwSupplierAccountTypeError(rnDtl, suppAccTypeSb, appendedCount);
+		} else {
+			throwJustificationTypeError(rnDtl, suppAccTypeSb, appendedCount);
 		}
 	}
 
