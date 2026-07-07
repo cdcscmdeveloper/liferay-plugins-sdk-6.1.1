@@ -10,9 +10,10 @@
 			@-moz-keyframes blinker{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
 			@-webkit-keyframes blinker{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
 			@keyframes blinker{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
-			.text{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:blue;}
+			.text{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#0070C0;}/* 9299 - 40475 */
 			a .text,.ui-commandlink .text{text-decoration: underline;} /* 9299 - 40474 */
 		</style>
+		<div style="display:flex; align-items:center; gap:5px; padding:8px 10px; margin-bottom:8px"><!-- 9299 - 40475 START -->
 		<span class='blink'> <p:graphicImage
 				value="/css/images/priority.png" />
 		</span>
@@ -23,5 +24,6 @@
 				value="#{lbl['lbl.sm.comp.exp.alert.part.two']}" /> </a>
 		<h:outputText class='text'
 			value="#{lbl['lbl.sm.comp.exp.alert.part.three']}" />
+			</div> <!-- 9299 - 40475 END -->
 	</ui:define>
 </ui:composition>
