@@ -45,15 +45,17 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText style="white-space: pre-line;"
-								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}" />
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}" 
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText style="white-space: pre-line;"
-								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}" />
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}" 
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}"
@@ -63,9 +65,10 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText style="white-space: pre-line;"
-								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}" />
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}"
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}"
