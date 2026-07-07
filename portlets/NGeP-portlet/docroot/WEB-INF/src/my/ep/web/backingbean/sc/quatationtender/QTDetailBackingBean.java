@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;//#28188
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -4265,7 +4266,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			// #30435 - End.
 		} //#28644-End
-
+		// 33222 - start
+		validateInactiveCommitteeMemberUpdate();
+		// 33222 - end
 		// Code will be called if user didn't visit the supplier qualification
 		// tab.
 		if (null == this.getManagedBean().getSupplierCriteria()) {
@@ -15447,5 +15450,52 @@ public void retrieveDemoQtDetails(Long qtId) {
 	    return finalList;
 	}
 	//#28188 - End
+	
+	// 33222 - start
+	private void validateInactiveCommitteeMemberUpdate() {
+		List<TabBean> tabBeans = this.getManagedBean().getScCommitteeMemberTabList();
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+		ScQt scQt = this.getManagedBean().getQt();
+		reqDTO.setDocNo(scQt.getQtNo());
+		reqDTO.setOrgProfileId(scQt.getOrgProfileId());
+		Locale locale = this.getFacesScopesGen().getUserLocale();
+		for (TabBean tabBean : tabBeans) {
+			List<String> inactiveUsers = new ArrayList<>();
+			Set<String> roles = new HashSet<>();
 
+			String committeeType = tabBean.getTabType();
+			if (!Arrays.asList(ParameterConst.QT_EVALUATION_COMMITTEES).contains(committeeType)) {
+				continue;
+			}
+			ScQtCommittee qtCommittee = tabBean.getScQtCommittee();
+			List<ScCommitteeMember> committeeMembers = qtCommittee.getScCommittee().getScCommitteeMembers();
+
+			for (ScCommitteeMember committeeMember : committeeMembers) {
+				reqDTO.setUserIds(String.valueOf(committeeMember.getPmUser().getUserId()));
+				String roleExt = SourcingConstants.ROLE_EXT_MAP.get(committeeMember.getMemberRole().getParameterCode());
+				reqDTO.setUserRoleCode(committeeType.concat(roleExt));
+				committeeMember.setUserInactive(!InactiveUserValidator.getInstance().validateUsers(reqDTO));
+				if (committeeMember.isUserInactive()) {
+					String roleDesc = this.getParameterDesc(committeeMember.getMemberRole(), locale);
+					if ("Ahli".equals(roleDesc)) {
+						roleDesc = roleDesc + " Jawatankuasa";
+					}
+					roles.add(roleDesc);
+					inactiveUsers.add(roleDesc + " " + committeeMember.getPmUser().getUserName());
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(inactiveUsers)) {
+				String inactiveUserStrs = StringUtils.join(inactiveUsers, ", ");
+				String committeeDesc = this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType(), locale);
+				String roleDescs = StringUtils.join(roles, ", ");
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.ERROR_761002, new String[] { inactiveUserStrs, committeeDesc, roleDescs },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, locale)));
+			}
+		}
+	}
+	// 33222 - end
 }
