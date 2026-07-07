@@ -95,6 +95,11 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	//#35489 - End
 	private boolean suppGovSellerUser = false; // #36489
 
+	//#33867 - START
+	private Map<String, Integer> currentPmUserRoles  = new HashMap<String, Integer>();
+	private String attentionMsg;
+	//#33867 - END
+
 	/************ AUDIT #28895-35509 *************/
 	private Long brandNewUserOrgId;
 	private PmUser oldAuditPmUser;
@@ -852,6 +857,24 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 		this.suppGovSellerUser = suppGovSellerUser;
 	}
 	//#36489 - End
+
+	//#33867 - START
+	public void setCurrentPmUserRoles(Map<String, Integer> currentPmUserRoles) {
+		this.currentPmUserRoles = currentPmUserRoles;
+	}
+
+	public Map<String, Integer> getCurrentPmUserRoles() {
+		return currentPmUserRoles;
+	}
+
+	public String getAttentionMsg() {
+		return attentionMsg;
+	}
+
+	public void setAttentionMsg(String attentionMsg) {
+		this.attentionMsg = attentionMsg;
+	}
+	//#33867 - END
 
 	/************ START: AUDIT #35509 *************/
 	public PmUser getOldAuditPmUser() {

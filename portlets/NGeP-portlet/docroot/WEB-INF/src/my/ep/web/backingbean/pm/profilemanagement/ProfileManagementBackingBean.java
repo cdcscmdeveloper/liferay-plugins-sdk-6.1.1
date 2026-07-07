@@ -564,6 +564,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					.contains(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
 				getManagedBean().setOrgCategory(OTHERS);
 			}
+
+			//#33867 - START
+			Map<String, Integer> userRoleMap = getCurrentUserRole(pmUserOrg.getPmUserRoles());
+			this.getManagedBean().setCurrentPmUserRoles(userRoleMap);
+			//#33867 - END
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
@@ -4634,4 +4639,120 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	//#36489 and SonarLint Fixing - End
+
+	//#33867 - START
+	private Map<String, Integer> getCurrentUserRole(List<PmUserRole> userRoleList){
+		Map<String, Integer> userRoleMap = new HashMap<>();
+		if(CollectionUtils.isNotEmpty(userRoleList)){
+			for(PmUserRole role : userRoleList){
+				userRoleMap.put(role.getPmRole().getRoleCode(), role.getRecordStatusFlg());
+			}
+		}
+		return userRoleMap;
+	}
+	//#33867 - END
+
+	//#33867 - START
+	/**
+	 * Method to validate the user's status is inactive
+	 * and check if there is any inactive role(s)
+	 */
+	public void validateStatusAndRole(){
+		int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
+
+		Boolean inactiveStatus = false;
+		if(status == DbValueConst.RECORD_STATUS_SUSPENDED){
+			inactiveStatus = true;
+		}
+
+		List<PmUserRole> userRoleList = this.getManagedBean().getSelectedUserOrg().getPmUserRoles();
+		List<String> roleList = new ArrayList<>();
+		Map<String, Integer> existingUserRole = this.getManagedBean().getCurrentPmUserRoles();
+
+		if(CollectionUtils.isNotEmpty(userRoleList)){
+			for(PmUserRole role : userRoleList){
+				Integer newRoleStatus = role.getRecordStatusFlg();
+
+				Integer existingStatus = existingUserRole.get(role.getPmRole().getRoleCode());
+				if(newRoleStatus == DbValueConst.RECORD_STATUS_SUSPENDED && existingStatus != null && existingStatus != newRoleStatus){
+					inactiveStatus = true;
+					roleList.add(role.getPmRole().getRoleCode());
+				}
+			}
+		}
+
+		try{
+			if(inactiveStatus){
+				String roles = checkActiveUser(roleList);
+
+				if(StringUtils.isNotBlank(roles)){
+					String message = ResourceBundleUtils.getMessage("lbl.pm.profiles.userdetails.attention.msg",
+							new String[] {roles}, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					getManagedBean().setAttentionMsg(message);
+					RequestContext.getCurrentInstance().execute("attentionInfoDlg.show()");
+				} else {
+					RequestContext.getCurrentInstance().execute("updateInfoDlg.show()");
+				}
+			} else {
+				RequestContext.getCurrentInstance().execute("updateInfoDlg.show()");
+			}
+		} catch(Exception ex){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+					"ProfileManagementBackingBean.validateStatusAndRole", null, ex);
+		}
+	}
+	//#33867 - END
+
+	//#33867 - START
+	/**
+	 * Method to validate the user's status is inactive
+	 * and check if there is any inactive role(s)
+	 * @param roleList
+	 * @return String
+	 */
+	public String checkActiveUser(List<String> roleList){
+		PmUser user = this.getManagedBean().getSelectedUser();
+		PmUserOrg userOrg = this.getManagedBean().getSelectedUserOrg();
+
+		String[] roleArray = roleList.toArray(new String[0]);
+
+		RoleReqDTO roleReqDTO = new RoleReqDTO();
+		roleReqDTO.setUserId(user.getUserId());
+		roleReqDTO.setUserOrgId(userOrg.getUserOrgId());
+		roleReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
+		roleReqDTO.setRoleArray(roleArray);
+
+		FacesScopes facesScopes = new FacesScopes();
+		roleReqDTO.setUserLocale(facesScopes.getUserLocale());
+
+		IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+		RoleResDTO roleResDTO = roleSO.retrieveRoleWithoutActiveUser(roleReqDTO);
+
+		String roles = "";
+		try{
+			if(!roleResDTO.getRolesWithoutActiveUsers().isEmpty()){
+				roles = getRoles(roleResDTO.getRolesWithoutActiveUsers());
+			}
+		} catch(Exception ex){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+					"ProfileManagementBackingBean.checkActiveUser", null, ex);
+		}
+		return roles;
+	}
+	//#33867 - END
+
+	//#33867 - START
+	private String getRoles(List<String> roleList){
+		StringBuilder roles = new StringBuilder();
+
+	    for (String role : roleList) {
+	        if (roles.length() > 0) {
+	            roles.append(", ");
+	        }
+	        roles.append(role);
+	    }
+	    return roles.toString();
+	}
+	//#33867 - END
 }
