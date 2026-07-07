@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.faces.model.SelectItem;
 
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
@@ -205,6 +206,11 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
 //	37925 END
+	
+	// 31788 - start
+    private boolean assignNewUser = false;
+    private PmUser newUser;
+    // 31788 - end
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1269,4 +1275,22 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
 //	37925 END
+
+	//31788 - start
+	public boolean isAssignNewUser() {
+		return assignNewUser;
+	}
+
+	public void setAssignNewUser(boolean assignNewUser) {
+		this.assignNewUser = assignNewUser;
+	}
+
+	public PmUser getNewUser() {
+		return newUser;
+	}
+
+	public void setNewUser(PmUser newUser) {
+		this.newUser = newUser;
+	}
+	//31788 end
 }
