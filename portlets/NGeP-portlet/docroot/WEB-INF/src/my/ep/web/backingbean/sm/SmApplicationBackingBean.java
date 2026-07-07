@@ -18984,8 +18984,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void otherDescriptionHistory() {
 		if (getManagedBean().getApprovedCategoryList() != null) {
 			List<SmSupplierCategory> updatedList = new ArrayList<>();
-
-			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+			getManagedBean().setOtherDescChangePO(false);
+			getManagedBean().setOtherDescChangeApprover(false);
+			getManagedBean().setOtherDescChangeSupplier(false);
+			getManagedBean().setOtherDescChangeSupPO(false);
+			getManagedBean().setOtherDescChangeSupApprover(false);
+			
+			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
 				
 				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
@@ -18994,10 +18999,31 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					
 					cat.setSmSuppCatOtherDescHistory(SmApplicationUtil.retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+					
+					for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
+						
+						history.setApplNoHistory(history.getSmAppl().getApplNo());
+
+						if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !getManagedBean().isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+							getManagedBean().setOtherDescChangePO(true);
+						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+							getManagedBean().setOtherDescChangeApprover(true);
+						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+							getManagedBean().setOtherDescChangeSupApprover(true);
+							getManagedBean().setOtherDescChangeSupplier(true);
+						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+							getManagedBean().setOtherDescChangeSupPO(true);
+							getManagedBean().setOtherDescChangeSupplier(true);
+						}
+					}
 				}
 				updatedList.add(cat);
 			}
-			getManagedBean().setApprovedCategoryList(updatedList);
+			getManagedBean().setActiveCategoryList(updatedList);
 		}
 		
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
@@ -19025,7 +19051,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	/**
 	 * To reset data
-	 * 
+	 *  
 	 */
 	public void resetOtherDescriptionEdit() {
 		getManagedBean().setOtherDescEdited(getManagedBean().getSelectedCategory().getOtherDesc());
@@ -19077,7 +19103,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 				MessageUtils.getMessage(MessageConst.INFO_721228, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
