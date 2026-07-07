@@ -39,7 +39,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
@@ -75,7 +74,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
-import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -105,6 +103,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -2608,12 +2607,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 		//#21692 - End
 		
-		//#39620 - start
-		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
-		if (isRecommendByAward() && recommendedSupplier != null) {			
-			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
-		}//#39620 - End
-		
 		//#28777#29729 - Start
 		if(checkFlagForSupplierBranchDeleted()){
 		    checkNeedSupplierIfHaveBranchDeleted();
@@ -2881,12 +2874,6 @@ public class SupplierFinalizationBackingBean extends
 				  .getParameterCode();
 		log.info("decisionTypeCode" + decisionTypeCode);
 		this.checkIfLoggedinUserIsSecretary();
-		
-		// #39620 - start
-		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
-		if (isRecommendByAward() && recommendedSupplier != null) {
-			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
-		}// #39620 - End
 		
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
@@ -6004,7 +5991,9 @@ public class SupplierFinalizationBackingBean extends
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){// Bug #37969
+			//#40396 - Start
+			if(!getManagedBean().isHasSupplierQualified() && !isQTCancelledBidSchedule()){// Bug #37969
+			//#40396 - End
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -6471,7 +6460,9 @@ public class SupplierFinalizationBackingBean extends
 		boolean hasItemWithPriceTypeTier 
 						= getManagedBean().isHasItemWithPriceTypeTier();
 		
-		if (hasItemWithPriceTypeTier) {
+		// #40396 - Start
+		if (hasItemWithPriceTypeTier || isQTCancelledBidSchedule()) {
+		// #40396 - End	
 			excludedList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
 		}
 		
@@ -9109,7 +9100,6 @@ public class SupplierFinalizationBackingBean extends
 							if (!disabledSupplier) {
 								if (recommendationBean.isAwarded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
-									getManagedBean().setTempRecommendedSupplier(qualSupplier);//#39620 
 								}
 							} else {
 								if (getManagedBean().getDisabledSupplierIds() == null) {
@@ -13181,4 +13171,14 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	//#38151 End
+	// #40396 - Start
+	/**
+	 * @return
+	 */
+	public boolean isQTCancelledBidSchedule() {
+		ScQt scQt = this.getManagedBean().getScQt();
+		return getQTSuppFinalizationSO().isQTCancelledBidSchedule(scQt.getQtId());
+	}
+	// #40396 - End
+
 }
