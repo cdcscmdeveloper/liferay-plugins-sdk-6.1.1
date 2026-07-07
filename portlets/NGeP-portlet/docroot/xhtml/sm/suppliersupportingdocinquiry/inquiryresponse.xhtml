@@ -151,7 +151,7 @@
 						style="float:left; white-space:normal; width:97%;" />
 				</p:column>
 				<p:column style="width : 10%;text-align: center  !important; " rendered="#{table.pmDocument.mandatory and !table.received}">
-					<p:commandLink rendered="#{not empty table.pmDocument.docDefinitionKey}"
+					<p:commandLink rendered="#{not empty table.pmDocument.docDefinitionKey and table.pmDocument.download}"
 						action="#{supportingDocInquiryBackingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
 						update=":form" ajax="false">
 						<p:fileDownload value="#{backingBean.file}" />

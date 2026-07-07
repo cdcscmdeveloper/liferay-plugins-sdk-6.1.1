@@ -1435,6 +1435,51 @@ public class SmApplicationUtil {
 		appl = null;
 		return validSave;
 	}
+	
+	//#39860 --START
+	/**
+	 * Validate cheque signatory based on Bumi status.
+	 * 
+	 * @param appl - getSmAppl
+	 * @param bank - List of SmSupplierBank
+	 * 
+	 * @param boolean validSignatoryBumi- check signatory Bumi status
+	 * @param int signatoryNotBumiCount- count signatory not Bumi 
+	 * @return true, if successful
+	 */
+	public static boolean validateChequeSignatoryBumi(SmApplicationManagedBean managedBean) {
+		SmAppl appl = managedBean.getSmAppl();
+		boolean validSignatoryBumi = true;
+		int signatoryNotBumiCount = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		
+		Set<Long> processedPersonnelIds = new HashSet<Long>();
+		
+		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
+					
+					SmPersonnel personnel = smChequeSignatory.getSmPersonnel();
+					
+					if (personnel.getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						if (processedPersonnelIds.add(personnel.getPersonnelId())) {
+							sb.append(++signatoryNotBumiCount + ". ");
+							sb.append(personnel.getName());
+							sb.append("<br/>");
+							validSignatoryBumi = false;
+						}
+					}	
+				}	
+			}
+		}
+		if (!validSignatoryBumi && signatoryNotBumiCount > 0 && managedBean.isSupplierUser()) {
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
+		} 
+		return validSignatoryBumi;
+	}
+	//#39860 --END	
 
 	/**
 	 * Check if each registered branch already assigned to bank account type
@@ -14523,7 +14568,7 @@ public class SmApplicationUtil {
 		}
 	}
 	
-	//#30747 - Start
+	// #30747 - Start
 	/**
 	 * @param startDate
 	 * @param numDays
@@ -14531,8 +14576,7 @@ public class SmApplicationUtil {
 	 * @param stateId
 	 * @return days left and date
 	 */
-	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate,
-			int numDays, int pauseDays, Long stateId) {
+	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate, int numDays, int pauseDays, Long stateId) {
 		int daysLeft;
 		int totalDays = numDays + pauseDays;
 		Map<Integer, Date> mapDate = new HashMap<>();
@@ -14549,15 +14593,13 @@ public class SmApplicationUtil {
 			daysLeft = 0;
 		} else {
 			daysLeft = SmCommonUtil.getInstance()
-					.getDaysDiffMinusHolidayByState(new Date(),
-							dateCal.getTime(), stateId);
+					.getDaysDiffMinusHolidayByState(new Date(), dateCal.getTime(), stateId);
 
 			Calendar endCal = Calendar.getInstance();
 			endCal.setTime(dateCal.getTime());
 			endCal.add(Calendar.DATE, 1);
 
-			boolean isNextDayHoliday = SmCommonUtil.getInstance()
-					.isDateHoliday(endCal, stateId);
+			boolean isNextDayHoliday = SmCommonUtil.getInstance().isDateHoliday(endCal, stateId);
 
 			if (!isNextDayHoliday) {
 				mapDate.put(daysLeft, dateCal.getTime());
@@ -14572,8 +14614,7 @@ public class SmApplicationUtil {
 
 				calcEndDate(daysLeft, newEndCal, stateId);
 
-				if (DateUtils.isDateGreater(dateCal.getTime(),
-						newEndCal.getTime())) {
+				if (DateUtils.isDateGreater(dateCal.getTime(), newEndCal.getTime())) {
 					daysLeft++;
 				}
 				// if (newEndCal.getTime().before(dateCal.getTime())) {
@@ -14581,8 +14622,8 @@ public class SmApplicationUtil {
 				// }
 			}
 		}
-		log.info("30747 : daysLeft :" + daysLeft + " / time : "
-				+ dateCal.getTime());
+		log.info("30747 : daysLeft :" + daysLeft + " / time : " + dateCal.getTime());
+		
 		mapDate.put(daysLeft, dateCal.getTime());
 		return mapDate;
 	}
@@ -14608,7 +14649,7 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	//#30747 - End
+	// #30747 - End
 	
 	public void calcCapitalDistribution(SmPersonnel per,SmCompanyBasic basic){
 		if (per.getShareAmt() == null) {
@@ -15185,9 +15226,19 @@ public class SmApplicationUtil {
         for (char character : input.toCharArray()) {
             int asciiValue = (int) character; 
             log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
-            if(asciiValue > 127){
+            //#40165 - START
+            // Allow:
+            // 0   = NUL
+            // 10  = LF \n
+            // 13  = CR \r
+            // 32-127 = printable ASCII
+            if(!(asciiValue == 0 ||
+            	 asciiValue == 10 ||
+            	 asciiValue == 13 ||
+            	 (asciiValue >= 32 && asciiValue < 128))){
             	isValid = false;
             }
+            //#40165 - END
         }
         return isValid;
     }
@@ -15335,5 +15386,20 @@ public class SmApplicationUtil {
 		appl = null;
 		return validSave;
 		}
-	//#38991 -END	
+	//#38991 -END
+	
+	//#40165 - START
+	public static void CheckAsciiValidation(Map<String, String> fields) throws EpException {
+	    for (Map.Entry<String, String> entry : fields.entrySet()) {
+	        String fieldName = entry.getKey();
+	        String value = entry.getValue();
+	        
+	        if (value != null && !value.isEmpty()) {
+	            if (!convertToAscii(value)) {
+	                throw new EpException(MessageConst.ERROR_760543, new String[] { fieldName });
+	            }
+	        }
+	    }
+	}
+	//#40165 - END
 }

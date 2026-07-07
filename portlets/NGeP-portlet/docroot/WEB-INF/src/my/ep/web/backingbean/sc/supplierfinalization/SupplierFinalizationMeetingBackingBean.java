@@ -52,8 +52,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -92,7 +90,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -122,9 +119,12 @@ import org.primefaces.event.SelectEvent;
 
 @ManagedBean(name = "suppFinalMeetingBackingBean")
 @RequestScoped
-public class SupplierFinalizationMeetingBackingBean extends 
-						SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
+public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = EpLogger.getLogger(SupplierFinalizationMeetingBackingBean.class);
 
 	private void debugLogger(Object message) {
@@ -215,11 +215,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 		IParameterSO parameterSO; //#26189
 		
 		try {
-			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			//#26189 -start-
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					            ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);
 			//#26189 -end-
 			
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
@@ -244,31 +242,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				List<ScCommitteeMember> membersList = 
 							scCommittee.getScCommitteeMembers();
 				
-				// Start #26189:PK2.1 
-				if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
-						committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					
-					for (ScCommitteeMember member : membersList) {
-						if(!ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
-								.equals(member.getMemberRole().getParameterCode())) {
-							
-							if(member.getRepresentativeType() == null && !ParameterConst.COMMITTEE_ROLE_SECRETARY
-									.equals(member.getMemberRole().getParameterCode())) {
-								ParameterReqDTO roleReqDTO = new ParameterReqDTO();
-								roleReqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-								roleReqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-								
-								ParameterResDTO roleResDTO = parameterSO.retrieveParameterByTypeAndCode(roleReqDTO);
-								member.setMemberRole(roleResDTO.getPmParameter());
-								
-								long memberRoleId = 378;
-								
-								member.setMemberRoleId(memberRoleId);
-							}
-						}
-					}
-				}
-				// End #26189:PK2.1
+				//Bug #38067 remove code #26189:PK2.1
 				
 				if (CollectionUtils.isNotEmpty(membersList)) {
 					// #25426 - Start
@@ -2184,4 +2158,72 @@ if (CollectionUtils.isNotEmpty(
 		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
 	}
 	// 25037 - end
+	
+	//#38067 start
+	/**
+	 * Gets the role type dropdown values.
+	 * @param pmUser
+	 * @return list
+	 */
+	public List<PmParameterDesc> getSFRoleDesc(PmUser pmUser) {
+		String committeeType = getManagedBean().getCommitteeType();
+
+		ICommitteSO committeeSO = null;
+		IOrgProfileSO orgProfileSO = null;
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
+		List<String> recommendList = new ArrayList<>();
+		List<PmParameterDesc> list = new ArrayList<>();
+
+		try {
+			committeeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					ICommitteSO.class);
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IOrgProfileSO.class);
+
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			List<PmUserOrg> userOrgs = userOrgDetails(pmUser);
+			pmUser.setPmUserOrgs(userOrgs);
+
+			reqDTO.setPmUser(pmUser);
+			reqDTO.setCommitteeType(committeeType);
+
+			PmOrgProfile pmOrgProfile = getManagedBean().getScQt().getPmOrgProfile();
+
+			// Bug #25021 Task Reassignment Sabah & Sarawak - Finalization Comm
+			if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+					|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { // FSB/FSW
+				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
+				mofReqDTO.setOrgCode("103"); // KEMENTERIAN KEWANGAN MALAYSIA
+
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				pmOrgProfile = mofResDTO.getPmOrgProfile();
+			}
+			// end Bug #25021
+
+			reqDTO.setPmOrgProfile(pmOrgProfile);
+
+			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
+			
+			if (resDTO.isSuccessful() && resDTO.isHasRequiredCommitteeRole()) {
+				recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+								recommendList));
+			}
+						
+			recommendList.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+							recommendList));
+
+			list = retrieveParametersBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+
+		} catch (Exception ex) {
+			log.error("Error getting role for FC User", ex);
+		}
+		
+		return list;
+	}
+	//#38067 end
 }

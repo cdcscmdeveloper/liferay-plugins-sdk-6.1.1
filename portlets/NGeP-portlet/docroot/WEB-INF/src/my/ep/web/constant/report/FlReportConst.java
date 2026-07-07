@@ -71,7 +71,7 @@ public class FlReportConst implements Serializable {
 	
 	//28379 Year End Report Const
 	public static final String FL_067_YEAR_END_REPORT = "FL_067";
-
+	
 	/*29554 - Beginning - Logan*/
 	// Service Report Const
 	public static final String FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE = "FL_071";
