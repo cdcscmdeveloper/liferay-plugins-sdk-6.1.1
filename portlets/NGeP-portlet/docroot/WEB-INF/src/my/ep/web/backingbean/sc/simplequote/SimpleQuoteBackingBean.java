@@ -3285,11 +3285,12 @@ public class SimpleQuoteBackingBean extends
 		if (locationLevel == null) {
 			locationLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
 		}
+		// #5426 - start use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootZoneTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
-						getManagedBean().getDefaultCountryId(), null, null,
-						null, null, locationLevel, TplSpecZoneLoc.class,
-						false));
+				LocationSingleton.getInstance().buildLocationPopupTree2(getManagedBean().getDefaultCountryId(), null,
+						null, null, null, locationLevel, TplSpecZoneLoc.class, false));
+		// 5426 - end
 		// zone required validation
 		getManagedBean().setRequired(Boolean.TRUE);
 		getManagedBean().setZoneName("");
@@ -3321,12 +3322,12 @@ public class SimpleQuoteBackingBean extends
 		List<PmDistrict> districts = SourcingLocationHelper
 				.getDistrictFromLocationDTO(locationDTOs);
 
+		// #5426 - start use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
-						getManagedBean().getDefaultCountryId(), states,
-						districts, divisions, null, locationLevel,
-						TplSpecZoneLoc.class,
-						false));
+				LocationSingleton.getInstance().buildLocationPopupTree2(getManagedBean().getDefaultCountryId(), states,
+						districts, divisions, null, locationLevel, TplSpecZoneLoc.class, false));
+		// 5426 - end
 	}
 
 	/**
@@ -3618,12 +3619,12 @@ public class SimpleQuoteBackingBean extends
 		List<PmCity> cities = SourcingLocationHelper
 				.getCityFromLocationDTO(locationDTOs);
 
+		// #5426 - start use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootZoneTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
-						getManagedBean().getDefaultCountryId(), states,
-						districts, divisions, cities, locationLevel,
-						TplSpecZoneLoc.class,
-						false));
+				LocationSingleton.getInstance().buildLocationPopupTree2(getManagedBean().getDefaultCountryId(), states,
+						districts, divisions, cities, locationLevel, TplSpecZoneLoc.class, false));
+		// 5426 - end
 		int i = zoneIndex;
 		this.getManagedBean().setZoneIndex(i);
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -3655,12 +3656,12 @@ public class SimpleQuoteBackingBean extends
 		List<PmDistrict> districts = SourcingLocationHelper
 				.getDistrictFromLocationDTO(locationDTOs);
 
+		// #5426 - start use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
-						getManagedBean().getDefaultCountryId(), states,
-						districts, divisions, null, locationLevel,
-						TplSpecZoneLoc.class,
-						false));
+				LocationSingleton.getInstance().buildLocationPopupTree2(getManagedBean().getDefaultCountryId(), states,
+						districts, divisions, null, locationLevel, TplSpecZoneLoc.class, false));
+		// 5426 - end
 	}
 
 	/**
@@ -4407,6 +4408,12 @@ public class SimpleQuoteBackingBean extends
 		double time = (double)diffHours + (double)diffMinutes / 60;
         getManagedBean().setDays(diffDays);
         getManagedBean().setHours(time);
+		// #5426 - start
+		getManagedBean().setRemainingInterval(diff);
+		getManagedBean().setRemainingDay(diffDays);
+		getManagedBean().setRemainingHour(diffHours);
+		getManagedBean().setRemainingMinute(diffMinutes);
+		// #5426 - end
 	}
 
 	
@@ -5543,7 +5550,7 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setRemarks(cloneScQuote.getRemarks());
 		}
 		// #29800 - end
-
+		initCountdown();// #5426
 		// 27868 - start
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
@@ -5743,6 +5750,9 @@ public class SimpleQuoteBackingBean extends
 					// in supplier view
 					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					//#5426 start
+					getManagedBean().setRemainingTimeMsg(MessageConst.ERROR_760034);
+					//#5426 end
 				} else if (MessageConst.ERROR_760033.equals(message)) {
 					// hide the save & submit button when Quote has been
 					// submitted previously. You are not allowed to submit twice
@@ -5954,6 +5964,9 @@ public class SimpleQuoteBackingBean extends
 					// in supplier view
 					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					//#5426 start
+					getManagedBean().setRemainingTimeMsg(MessageConst.ERROR_760034);
+					//#5426 end
 				} else if (MessageConst.ERROR_760033.equals(message)) {
 					// hide the save & submit button when Quote has been
 					// submitted previously. You are not allowed to submit twice
@@ -9966,4 +9979,100 @@ public class SimpleQuoteBackingBean extends
 		suppliers.removeAll(suppliersToRemove);
 	}
 	// 40234 - end
+	// #5426 - start
+
+	/**
+	 * Formats the number with a leading zero when needed.
+	 *
+	 * @param number the number to format
+	 * @return the formatted number as a string
+	 */
+	public String addingZeroInfront(Long number) {
+		String newnumber = "";
+		if (number < 10 && number >= 0) { // Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+			newnumber = "0" + number;
+		} else if (number >= 10) {
+			return String.valueOf(number);
+		}
+		return newnumber;
+	}
+
+	/**
+	 * Returns the remaining time message for display.
+	 *
+	 * @return the formatted remaining time, or an empty string if unavailable
+	 */
+	public String displayRemainingTime() {
+		String message = "";
+		try {
+			getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+			boolean isStarted = new Date().after(getManagedBean().getScQuote().getStartDate());
+			if (isStarted) {
+				if (getManagedBean().getRemainingDay() > 0) {
+					message = getMessage(
+							"lbl.sc.sq.remaining.time.day",
+							new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingDay())),
+									String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),
+									String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				} else if (getManagedBean().getRemainingDay() == 0 && getManagedBean().getRemainingHour() > 0) {
+					message = getMessage("lbl.sc.sq.remaining.time.hour",
+							new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),
+									String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				} else if (getManagedBean().getRemainingInterval() >= 0) {
+					message = getMessage("lbl.sc.sq.remaining.time.minute",
+							new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				} else if (getManagedBean().getRemainingTimeMsg() != null
+						&& !getManagedBean().getRemainingTimeMsg().equalsIgnoreCase("")) {
+					if (getManagedBean().getRemainingTimeMsg().equalsIgnoreCase(MessageConst.ERROR_760034)) {
+						message = "";
+					}
+				} else if (getManagedBean().getRemainingInterval() < 0) { // if time after the end date display 00minute
+					getManagedBean().setRemainingMinute(0L);
+					message = getMessage("lbl.sc.sq.remaining.time.minute",
+							new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAErrorMesg(ModuleCodeConst.DIRECT_PURCHASE, "displayRemainingTime", getManagedBean().getScQuote().getQuoteNo(), "displayRemainingTime", getUserIdSessionFromLoginId(), e.getMessage(), e);
+		}
+		return message;
+	}
+
+	/**
+	 * Initializes the countdown and stops polling when the remaining time has expired.
+	 */
+	public void initCountdown() {
+		try {
+			getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+			if (getManagedBean().getRemainingInterval() < 0) {
+				RequestContext reqCtx = RequestContext.getCurrentInstance();
+				reqCtx.execute("poll.stop();");
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAErrorMesg(ModuleCodeConst.DIRECT_PURCHASE, "initCountdown", getManagedBean().getScQuote().getQuoteNo(), "initCountdown", getUserIdSessionFromLoginId(), e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Returns the remaining time label when the quote has started and the message should be shown.
+	 *
+	 * @return the remaining time message, or an empty string if it should not be displayed
+	 */
+	public String displayRemainingTimeMsg() {
+		String remainingMsg = "";
+		boolean isStarted = new Date().after(getManagedBean().getScQuote().getStartDate());
+		getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+		if (isStarted) {
+			if (getManagedBean().getRemainingTimeMsg() != null
+					&& !getManagedBean().getRemainingTimeMsg().equalsIgnoreCase("")) {
+				if (getManagedBean().getRemainingTimeMsg().equalsIgnoreCase(MessageConst.ERROR_760034)) {
+					remainingMsg = "";
+				}
+			} else {
+				remainingMsg = getMessageCommon("lbl.sc.sq.remaining.time");
+			}
+		}
+		return remainingMsg;
+	}
+	// #5426 - end
 }
