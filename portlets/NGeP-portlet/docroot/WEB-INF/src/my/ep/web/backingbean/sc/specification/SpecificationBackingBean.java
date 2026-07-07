@@ -23288,10 +23288,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	/* #29187 End Vinod */
 	/* #29187 Start Vinod */
 	/**
-	 * retrives the specification details to check mandatory specification.
+	 * retrieves the specification details to check mandatory specification.
 	 * 
 	 * @param templateChecklist
-	 *            .
+	 * 
 	 * @return
 	 */
 	public void retriveSampleSpecMasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
