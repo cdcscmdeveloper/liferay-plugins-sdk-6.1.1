@@ -3179,7 +3179,7 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-//		List<ScSupplierItemPrice> resultList = getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices);
 	}
 	
 	// ZonalTierStandardPrice -- start

@@ -1775,17 +1775,21 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					//28895-35500 Start
 					IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
 							IAuditTrailSO.class);
-					if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName) && auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+					if ((SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)
+							||SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE.equalsIgnoreCase(taskName))//#35500 reopen 24th June for #28188
+							&& auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 						prepareQtMaintenanceAuditTrail(qt, tenderResDTO.getGroupTabSection(), null);
 					}
 					//28895-35500 End
 				}
 			}
 			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
+		} catch (EpException e) {//#25077 - Start
+		    throw e; 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "updateBpmTask", this.getManagedBean().getQt().getQtNo(), "updateBpmTask",getUserIdSessionFromLoginId(), e);
 			throw new EpException(MessageConst.ERROR_722632);
-	    }
+	    }//#25077 - End
 		return tenderResDTO;
 	}
 	// Bug #31759 - Start

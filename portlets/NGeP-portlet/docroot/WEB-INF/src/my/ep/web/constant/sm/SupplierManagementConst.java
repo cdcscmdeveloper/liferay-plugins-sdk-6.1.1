@@ -240,6 +240,8 @@ public class SupplierManagementConst {
 	// 36504 - START
 	public static final String SUPPLIER_APPROVER = "SA";
 	public static final String SUPPLIER_PO = "SP";
+	public static final String APPLIED_CAT = "APPLIED";
+	public static final String PREVIOUS_CAT = "PREVIOUS";
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
