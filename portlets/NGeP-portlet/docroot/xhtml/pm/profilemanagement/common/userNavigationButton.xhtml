@@ -62,15 +62,15 @@
 			update=":form"/>
 		<!-- 34445 end -->
 
-		<ui:remove>#33867 - Start</ui:remove>	
-		<p:dialog id="attentionInfoDlg" header="#{lbl['lbl.btn.dialog.attention.header']}" modal="true" widgetVar="attentionInfoDlg" 
+		<ui:remove>#33867 - Start</ui:remove>
+		<p:dialog id="attentionInfoDlg" header="#{lbl['lbl.btn.dialog.attention.header']}" modal="true" widgetVar="attentionInfoDlg"
 			closable="false" width="700" resizable="false">
-			<h:outputText value="#{profileManagementBackingBean.managedBean.attentionMsg}" escape="false" 
+			<h:outputText value="#{profileManagementBackingBean.managedBean.attentionMsg}" escape="false"
 				style="display:block;width:500px;white-space:normal;word-break:break-word;overflow-wrap:anywhere;"/>
 			<div align="right">
 				<br/>
 				<!-- Proceed button -->
-				<p:commandButton value="#{lbl['lbl.btn.dialog.confirm.proceed']}" process="@this" update=":form" 
+				<p:commandButton value="#{lbl['lbl.btn.dialog.confirm.proceed']}" process="@this" update=":form"
 					action="#{profileManagementBackingBean.saveUserProfile}" onclick="blockWidget.show();attentionInfoDlg.hide();"
 					oncomplete="blockWidget.hide();" />
 				<!-- Cancel button -->

@@ -50,8 +50,9 @@
 					ParameterConst.orgTypePtj eq profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode )}" 
 					value="#{lbl['lbl.pm.ta.task.reassigment']}" update="@form" process="@this"
 					action="#{taskReassignmentBackingBean.redirectToTaskReassignment(profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile,profileManagementBackingBean.managedBean.selectedUser)}"
-					immediate="true" style="display:block; clear:both; margin-top:10px;"><ui:remove>#33867 - End</ui:remove>
+					immediate="true" style="display:block; clear:both; margin-top:10px;">
 				</p:commandLink>
+				<ui:remove>#33867 - End</ui:remove>
 			</td>
 			<td style="width:80%;vertical-align:top;">
 				<!-- User Profile -->
