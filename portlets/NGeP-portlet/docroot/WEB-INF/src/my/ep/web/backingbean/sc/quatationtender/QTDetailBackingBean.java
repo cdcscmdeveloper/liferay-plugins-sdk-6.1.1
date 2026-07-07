@@ -15314,6 +15314,15 @@ public void retrieveDemoQtDetails(Long qtId) {
 	        	grouped.get(rootKey).add(dtl);
 	        }
 	        
+			// 28188 -start-
+			if (null != dtl
+					&& null != dtl.getQtBsvDtlId()
+					&& dtl.getRecordStatusFlg().equals(
+							DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+				dtl.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
+			}
+			// 28188 -end-
+	        
 	    }
 	    // STEP 3: sort grouped list based on status
 	    for (Map.Entry<Long, List<ScQtBsvDtl>> entry : grouped.entrySet()) {
