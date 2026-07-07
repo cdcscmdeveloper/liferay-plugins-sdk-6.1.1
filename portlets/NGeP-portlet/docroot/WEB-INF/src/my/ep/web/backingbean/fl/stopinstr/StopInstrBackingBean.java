@@ -561,36 +561,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String signingAction(String outcome) throws Exception{
 		
-		// #31788 - Supplier Stop Fulfilment -> Check FL Approver Status -> Reassigned new user if inactive -> no user available, block (alert message)
-		if (hasSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
-			FlStopInstr stopInstr = getManagedBean().getStopInstr();
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IUserSO.class);
-			IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-			FlActor flApprover = fulfilmentSO.retrieveFlActors(stopInstr.getFlRequest().getDocType(), stopInstr
-					.getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(stopInstr.getFlRequest()
-					.getFulfilmentReqId());
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(flApprover.getUser().getUserId());
-			userReqDTO.setOrgProfileId(stopInstr.getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-			userReqDTO.setGroupId(stopInstr.getFlRequest().getPmUserGroup().getUserGroupId());
-			userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
-			userReqDTO.setApprovalLimit(sumItemAmt);
-			UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
-			if (resDTO.getUserStatus().equals(2)) {
-				getManagedBean().setAssignNewUser(Boolean.TRUE);
-				UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
-				getManagedBean().setNewUser(availableUser.getPmUser());
-			} else if (resDTO.getUserStatus().equals(0)) {
-				PmOrgProfile orgProfile = stopInstr.getFlRequest().getPreparedOrgProfile();
-				throw new EpException(MessageConst.ERROR_740130,
-						new String[] { orgProfile.getOrgValidity().getOrgName(),
-								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()) });
-			}
-		}
-		
 		//#34443 change validation into method
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
@@ -1175,6 +1145,36 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 						|| getManagedBean().getStopInstr().getReasonDesc().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_740026);
 				}
+			}
+		}
+		
+		// #31788 - Supplier Stop Fulfilment -> Check FL Approver Status -> Reassigned new user if inactive -> no user available, block (alert message)
+		if (hasSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
+			FlStopInstr stopInstr = getManagedBean().getStopInstr();
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			FlActor flApprover = fulfilmentSO.retrieveFlActors(stopInstr.getFlRequest().getDocType(), stopInstr
+					.getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(stopInstr.getFlRequest()
+					.getFulfilmentReqId());
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(flApprover.getUser().getUserId());
+			userReqDTO.setOrgProfileId(stopInstr.getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			userReqDTO.setGroupId(stopInstr.getFlRequest().getPmUserGroup().getUserGroupId());
+			userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+			userReqDTO.setApprovalLimit(sumItemAmt);
+			UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
+			if (resDTO.getUserStatus().equals(2)) {
+				getManagedBean().setAssignNewUser(Boolean.TRUE);
+				UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
+				getManagedBean().setNewUser(availableUser.getPmUser());
+			} else if (resDTO.getUserStatus().equals(0)) {
+				PmOrgProfile orgProfile = stopInstr.getFlRequest().getPreparedOrgProfile();
+				throw new EpException(MessageConst.ERROR_740130,
+						new String[] { orgProfile.getOrgValidity().getOrgName(),
+								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()) });
 			}
 		}
 	}
