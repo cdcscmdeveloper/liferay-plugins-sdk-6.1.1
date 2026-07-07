@@ -115,6 +115,7 @@ import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -167,6 +168,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.InactiveUserValidator;
 import my.ep.helper.Paginator;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
@@ -3733,31 +3735,49 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 		}
 		//Bug 32277 - end
-		for (TabBean tabBean : committeTabs) {
-			if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean
-					.getTabType()) && tabBean.getScQtCommittee()
-					.getScCommittee().getCommitteStatus().getStatusId()
-					.equals(QTStatusConst.CMT_COMPLETED))
-					|| (SourcingConstants.COMMITTE_TYPE_FINALIZATION
-							.equals(tabBean.getTabType())
-							&& scQt.getFinalizationCommitte() != null
-							&& scQt.getFinalizationCommitte().getParameterId() != null
-							&& scQt.getFinalizationSecratery() != null && scQt
-							.getFinalizationSecratery().getUserId() != null) || 
-							SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE.equals(tabBean.getTabType())) {//27502
-				tabBean.setIcon("ui-icon-endorse");
+
+		// 33222 - start
+		if (CollectionUtils.isNotEmpty(committeTabs)) {
+			for (TabBean tabBean : committeTabs) {
+				ScQtCommittee qtCommittee = tabBean.getScQtCommittee();
+				String tabType = tabBean.getTabType();
+				boolean isFinalizationCommittee = SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabType);
+				boolean isMOFCommittee = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE.equals(tabType);
+				boolean completedNonFinalizationCommittee = !isFinalizationCommittee
+						&& QTStatusConst.CMT_COMPLETED.equals(qtCommittee.getScCommittee().getCommitteStatus()
+								.getStatusId());
+				boolean preparedFinancialCommittee = isFinalizationCommittee && scQt.getFinalizationCommitte() != null
+						&& scQt.getFinalizationCommitte().getParameterId() != null
+						&& scQt.getFinalizationSecratery() != null
+						&& scQt.getFinalizationSecratery().getUserId() != null;
+
+				if (completedNonFinalizationCommittee || preparedFinancialCommittee || isMOFCommittee) {
+					tabBean.setIcon("ui-icon-endorse");
+				}
+				if (null == qtCommittee || null == qtCommittee.getScCommittee()
+						|| null == qtCommittee.getScCommittee().getScCommitteeMembers()) {
+					continue;
+				}
+				List<ScCommitteeMember> committeeMembers = qtCommittee.getScCommittee().getScCommitteeMembers();
+
+				for (ScCommitteeMember committeeMember : committeeMembers) {
+					InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+					reqDTO.setDocNo(scQt.getQtNo());
+					reqDTO.setOrgProfileId(scQt.getOrgProfileId());
+					reqDTO.setUserIds(String.valueOf(committeeMember.getPmUser().getUserId()));
+					String roleExt = SourcingConstants.ROLE_EXT_MAP.get(committeeMember.getMemberRole()
+							.getParameterCode());
+					reqDTO.setUserRoleCode(tabType.concat(roleExt));
+					committeeMember.setUserInactive(!InactiveUserValidator.getInstance().validateUsers(reqDTO));
+				}
 			}
-		}
-		if (!committeTabs.isEmpty()) {
-			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 			this.getManagedBean().setSelectedTabBean(
-					committeTabs.get(this.getManagedBean()
-							.getSelectedCommitteeTabIndex()));
-			// 25037 - start
+					committeTabs.get(this.getManagedBean().getSelectedCommitteeTabIndex()));
 			String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
-			this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
-			// 25037 - end
+			this.getManagedBean().setRoleFilterList(
+					getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 		}
+		// 33222 - end
 
 	}
 	
