@@ -153,9 +153,11 @@
 			or tplSpecAnswer.notOfferSingle}"
 			onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 			<!-- 20220127@syazani - Enhancement #3657 - specific error message - End -->
+			<ui:remove> #3657 - note #64 - Start </ui:remove>
 			<p:ajax event="change" partialSubmit="true" process="@this"
-				update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)"
+				update="@this, ratePerUomMsg, errorIcon, ansYearPG, ansPG, @(.calcAmount)"
 				listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
+			<ui:remove> #3657 - note #64 - End </ui:remove>
 			<!-- FARID START -->
 			<c:if test="#{!isSqSpec and tplSpecAnswer.ratePerUom eq null}">
 				<ui:remove>Bug #34780 07/06/2023 @idham - Start</ui:remove>
@@ -167,8 +169,10 @@
 			<!-- FARID END -->
 		</p:inputText>
 		<!-- Enhancement #3657@Syazani 04/10/2023 - Start -->
-		<h:panelGroup
-			rendered="#{editable and (tplSpecAnswer.componentEmpty) and (!facesContext.validationFailed)}">
+		<ui:remove> #3657 - note #64 - Start </ui:remove>
+		<h:panelGroup id="errorIcon"
+			rendered="#{editable and tplSpecAnswer.ratePerUom eq null and (facesContext.validationFailed)}">
+		<ui:remove> #3657 - note #64 - End </ui:remove>
 			<ui:remove> 28777,29729,35592 </ui:remove>
 			<ui:remove>#34363 added rendered for note #91</ui:remove>
 			<h:panelGroup
