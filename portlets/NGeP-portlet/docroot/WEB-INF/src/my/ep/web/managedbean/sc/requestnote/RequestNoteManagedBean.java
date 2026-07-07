@@ -432,6 +432,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private Integer counter = 0;
 	private boolean existInAssignItemDetail = Boolean.FALSE;
 	private ScQuote scQuote;
+	private String selectedBpmAction;
 	// #26059 - End
 
     /**
@@ -2694,6 +2695,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setScQuote(ScQuote scQuote) {
 		this.scQuote = scQuote;
+	}
+	
+	/**
+	 * @return the selectedBpmAction
+	 */
+	public String getSelectedBpmAction() {
+		return selectedBpmAction;
+	}
+
+	/**
+	 * @param selectedBpmAction the selectedBpmAction to set
+	 */
+	public void setSelectedBpmAction(String selectedBpmAction) {
+		this.selectedBpmAction = selectedBpmAction;
 	}
 
 	// #26059 - end

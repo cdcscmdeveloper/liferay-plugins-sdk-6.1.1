@@ -152,9 +152,9 @@
 						countryCode="#{complaintBackingBean.managedBean.smComplainant.mobileCountry}" 
 						areaCode="#{complaintBackingBean.managedBean.smComplainant.mobileArea}" 
 						number="#{complaintBackingBean.managedBean.smComplainant.mobileNo}" 
-						isMobile="true" required="#{!empty param['disableValidation']}"
-						validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}"
-						telcoId="#{complaintBackingBean.managedBean.smComplainant.mobileTelcoId}" /></td>
+						isMobile="true" hideTelco="true" required="#{!empty param['disableValidation']}"
+						validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}" /></td>
+						<!-- telcoId="#{complaintBackingBean.managedBean.smComplainant.mobileTelcoId}" /></td> --> <!-- 40200 -->
 						
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.complainant.designation']}" />

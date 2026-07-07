@@ -34,7 +34,7 @@ public class ContractManagementReportBackingBean extends CtReportBaseBackingBean
 	public void resetSearch() {
 		// Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 		
-		log.debug("resetSearch: ccContractItemMonitoringRptBB");
+		log.debug("resetSearch: ctManagementReportBB");
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
 		getManagedBean().setDisableMinistryField(false);
@@ -54,6 +54,7 @@ public class ContractManagementReportBackingBean extends CtReportBaseBackingBean
 		getManagedBean().setCircularEffToDate(null);
 		getManagedBean().setFulfilmentType(null);
 		getManagedBean().setSelectedSupplier(null); //#30918
+		getManagedBean().setSelectedPTJ(null); // Fix #40102, #40398, #30918
 		// Start Fix - #40102
 		CtReportBackingBean ctReportBBean = new CtReportBackingBean();
 		if (ctReportBBean.getManagedBean().getReportCode() != null) {

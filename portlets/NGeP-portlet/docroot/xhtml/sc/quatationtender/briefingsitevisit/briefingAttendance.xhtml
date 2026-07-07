@@ -22,9 +22,11 @@
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@form"
+			<ui:remove>#28188 - Start - Change Submit to Save </ui:remove>
+			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
 				action="#{bsvAttendanceBackingBean.saveBsvRegistarionFromMaintanceFlow}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+			<ui:remove>#28188 - End </ui:remove>
 		</div>
 
 		<table style="width: 100%">

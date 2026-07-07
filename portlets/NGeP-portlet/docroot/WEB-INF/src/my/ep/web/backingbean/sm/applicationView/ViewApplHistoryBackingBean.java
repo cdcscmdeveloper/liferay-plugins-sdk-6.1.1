@@ -1511,6 +1511,7 @@ public class ViewApplHistoryBackingBean extends
 				: new BigDecimal(0);
 		String applType = appl[1] != null ? (String) appl[1] : "";
 		String suppType = appl[2] != null ? (String) appl[2] : "";
+		String deletedStatus = appl[6] != null ? (String) appl[6] : "";
 		// 40110, 26238 - START
 		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
 		String applId = appl[10] != null ? String.valueOf(appl[10]) : "";
@@ -1525,8 +1526,11 @@ public class ViewApplHistoryBackingBean extends
 		Locale locale = new FacesScopes().getUserLocale();
 		 String notAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-
-		if (recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED)) && latestAppl.equals(applId)){
+		 String deletedStatusLbl = ResourceBundleUtils.getMessage("lbl.sm.deleted.by.disciplinary.action",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		 
+		if (recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED)) && latestAppl.equals(applId) &&
+				!deletedStatusLbl.equalsIgnoreCase(deletedStatus)){
 			return notAvailable;
 		} else if (suppStatDec.toString().equals("5") && applType.equals("O")
 				&& suppType.equals("B")) {

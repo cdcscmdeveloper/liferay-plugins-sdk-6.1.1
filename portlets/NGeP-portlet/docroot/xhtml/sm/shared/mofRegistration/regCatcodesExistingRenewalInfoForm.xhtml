@@ -28,7 +28,7 @@
 								escape="false" />
 							<p:commandLink onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
-								action="#{backingBean.otherDescriptionHistory}" process="@this"
+								action="#{backingBean.otherDescriptionHistoryPrev}" process="@this"
 								partialSubmit="true" update="@form">
 								<u><h:outputText
 										value="#{lbl['lbl.sm.other.desc.history.here']}"
@@ -521,8 +521,8 @@
 	</p:confirmDialog>
 
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory
-		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
+	<ac:otherDescriptionHistoryPrev
+		categoryCodeList="#{backingBean.managedBean.previousCategoryList}"
 		applNo="#{backingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
 		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"

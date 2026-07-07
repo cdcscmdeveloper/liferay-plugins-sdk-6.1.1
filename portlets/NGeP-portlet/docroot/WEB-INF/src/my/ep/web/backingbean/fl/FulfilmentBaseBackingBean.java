@@ -483,6 +483,12 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 */
 	protected void convertCtAddressToFlAddress(CtContractValue ctSupplierDtl,FlSupplierDtl supplierDtl){//33917
 		//CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue(); //33917
+		// 40227-Start
+		if (ctSupplierDtl == null) {
+			return;
+		}
+		// 40227-end
+		
 		if(ctSupplierDtl.getSupplierBranch() != null){
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(ctSupplierDtl.getSupplierBranch());
@@ -492,6 +498,14 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		FlAddress flAddress = new FlAddress();
 		CtAddress ctAddress = ctSupplierDtl.getSupplierAddress();
+		
+		//40227-Start
+		if (ctAddress == null) {
+	        supplierDtl.setFlAddress(flAddress);
+	        return;
+	    }
+		//40227-end
+		
 		flAddress.setAddress1(ctAddress.getAddress1());
 		flAddress.setAddress2(ctAddress.getAddress2());
 		flAddress.setAddress3(ctAddress.getAddress3());
