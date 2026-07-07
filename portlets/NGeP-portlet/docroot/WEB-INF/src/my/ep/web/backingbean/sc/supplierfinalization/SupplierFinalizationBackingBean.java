@@ -92,6 +92,8 @@ import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;//#38151
 import my.ep.dto.sc.quationtender.SpecificationResDTO;//#38151
+import my.ep.dto.sc.quationtender.SuppFinalJustificationReqDTO;
+import my.ep.dto.sc.quationtender.SuppFinalJustificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -133,6 +135,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalJustification;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRecommendationRemarks;
@@ -749,6 +752,15 @@ public class SupplierFinalizationBackingBean extends
 		}
 		this.getManagedBean().setJustification(
 				scQtFinalization.getJustification());
+		//#34860 start adli
+		List<String> justificationReasonList = new ArrayList<>();
+		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
+				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
+		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList){
+			justificationReasonList.add(finalJustification.getJustification().getReasonCode());
+		}
+		this.getManagedBean().setJustificationReasonList(justificationReasonList);
+		//#34860 end
 		decisionEvent(null);
 		//#26169 #38 - START Added by Haidah
 		validateFCByDataTypeRule();
@@ -5223,7 +5235,20 @@ return	remarksNotFound;
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveSupplierFinalizationDtls(reqDTO);
 			ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
-
+			
+			//#34860 start adli
+			SuppFinalJustificationReqDTO justificationReqDTO = new SuppFinalJustificationReqDTO();
+			SuppFinalJustificationResDTO justificationResDTO = new SuppFinalJustificationResDTO();
+			
+			justificationReqDTO.setScQt(scQt);
+			justificationResDTO = qtSuppFinalizationSO.retrieveSupplierFinalJustification(justificationReqDTO);
+			
+			List<ScQtFinalJustification> finalJustificationList = justificationResDTO.getFinalJustificationList();
+			if (CollectionUtils.isNotEmpty(finalJustificationList)){
+				this.getManagedBean().setFinalJustificationList(finalJustificationList);
+			}
+			//#34860 end			
+			
 			if (CollectionUtils.isNotEmpty(zoneDetails)
 					&& this.getManagedBean().getCurrentZone() == null) {
 				this.getManagedBean().setCurrentZone(zoneDetails.get(0));
