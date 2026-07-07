@@ -568,7 +568,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 			//#33867 - START
 			Map<String, Integer> userRoleMap = getCurrentUserRole(pmUserOrg.getPmUserRoles());
-			this.getManagedBean().setCurrentPmUserRoles(userRoleMap); 
+			this.getManagedBean().setCurrentPmUserRoles(userRoleMap);
 			//#33867 - END
 		} catch (Exception e) {
 			e.printStackTrace();

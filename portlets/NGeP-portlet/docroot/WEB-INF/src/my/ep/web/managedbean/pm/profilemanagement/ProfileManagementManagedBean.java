@@ -862,11 +862,11 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setCurrentPmUserRoles(Map<String, Integer> currentPmUserRoles) {
 		this.currentPmUserRoles = currentPmUserRoles;
 	}
-	
+
 	public Map<String, Integer> getCurrentPmUserRoles() {
 		return currentPmUserRoles;
 	}
-	
+
 	public String getAttentionMsg() {
 		return attentionMsg;
 	}
