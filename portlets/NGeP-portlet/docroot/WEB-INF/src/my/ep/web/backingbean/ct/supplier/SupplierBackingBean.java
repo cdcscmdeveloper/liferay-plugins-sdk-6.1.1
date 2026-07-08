@@ -124,6 +124,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
     protected CtContractVer getContractVer() {
     	return getManagedBean().getContractVer();
     }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
     //#30737 - End
 	    
 	/**
@@ -599,43 +604,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 		
 		//#30737 - Start
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-			log.info("xoxoxoxoxooxoxo action : "+action);
-			log.info("xoxoxoxoxooxoxo insert tracking diary & group task");
-			handleInactiveUserValidation(action);
-		}
+//		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+//			log.info("xoxoxoxoxooxoxo action : "+action);
+//			log.info("xoxoxoxoxooxoxo insert tracking diary & group task");
+//			handleInactiveUserValidation(action);
+//		}
 		//#30737 - End
 		
 	}
-	
-	//#30737 - Start
-	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
-	 */
-	public void handleInactiveUserValidation(String outcome) {
-
-		IContractSupplierSO supplierSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-    	
-        try {
-
-        	Long inactiveUserCheckResult = 1L; //TEMP
-        	
-        	supplierSO.checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-            	getSelectedUsers(),
-            	inactiveUserCheckResult
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex);
-        }
-    }
-	//#30737 - End
 
 	/**
 	 * The method used to save the factoring request
@@ -846,16 +822,16 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			
 			//#30737 - Start
-			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-				log.info("xoxoxoxoxooxoxo action : "+action);
-				log.info("insert tracking diary record....");
-				handleInactiveUserValidation(action);
-			}
-			
-			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)) {
-				log.info("xoxoxoxoxooxoxo action : "+action);
-				handleInactiveUserValidation(action);
-			}
+//			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+//				log.info("xoxoxoxoxooxoxo action : "+action);
+//				log.info("insert tracking diary record....");
+//				handleInactiveUserValidation(action);
+//			}
+//			
+//			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)) {
+//				log.info("xoxoxoxoxooxoxo action : "+action);
+//				handleInactiveUserValidation(action);
+//			}
 			//#30737 - End
 			
 		}

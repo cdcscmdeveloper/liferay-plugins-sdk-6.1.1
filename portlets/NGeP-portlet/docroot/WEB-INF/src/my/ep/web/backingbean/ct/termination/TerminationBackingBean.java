@@ -132,6 +132,11 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
     protected CtContractVer getContractVer() {
     	return getManagedBean().getContractVer();
     }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
     //#30737 - End
 	    
 	
@@ -631,7 +636,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	        
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 	        		getInactiveUsers(approverType, getSelectedUsers(), docType);
-	        handleInactiveUserValidation(outcome, selectedInactiveUsers, getUserRole());
+	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 	        
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
 		}
@@ -659,7 +664,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
-	                handleInactiveUserValidation(outcome, inactiveUsersForRevise, getUserRole());
+	                handleInactiveUserValidation(outcome, inactiveUsersForRevise);
 				 }
             }
 				

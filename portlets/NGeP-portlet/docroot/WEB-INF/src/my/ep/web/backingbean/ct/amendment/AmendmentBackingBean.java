@@ -256,6 +256,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     protected CtContractVer getContractVer() {
     	return ctBackingBean.getManagedBean().getContractVer();
     }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
     //#30737 - End
 	    
 	/**
@@ -2008,9 +2013,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractadminstatuschecking();
 			// End Fix - #30022
 			
-			//#30737 - start - for revise purpose
+			//#30737 - start - for revise or cancel purpose
 			log.info("xoxoxoxoxo getLoa : "+getContractVer().getCtContract().getLoa().getLoaId());
-			log.info("xoxoxoxoxo getInactiveUserRevise : "+getManagedBean().getInactiveUserRevise());
+			log.info("xoxoxoxoxo getInactiveUserReviseOrCancel : "+getManagedBean().getInactiveUserRevise());
 			reqDTO.setScLoa(getContractVer().getCtContract().getLoa());
 			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveUserRevise());
 	        //#30737 - end 
@@ -3236,18 +3241,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		//#25890 - End
 		
+		log.info("xoxoxoxoxo getTaskName() : "+getManagedBean().getTaskName());
+		log.info("xoxoxoxoxo getUserRole() "+getUserRole());
+		
 		//#30737 - Start
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+		if (!CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME.equalsIgnoreCase(getTaskName())
+				&& (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
 				|| BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action) 
-				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))) {
 
 		    log.info("xoxoxoxoxooxoxo action : "+action);
 
-		    String approverType = determineRoleCode();
-
+		    String roleCode = determineRoleCode(action);
+		    log.info("xoxoxoxoxooxoxo roleCode : "+roleCode);
+		    
+		    List<PmUser> selectedUsers = determineUsers(action);
+		    log.info("xoxoxoxoxooxoxo selectedUsers : "+selectedUsers);
+		    
 		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(approverType, getSelectedUsers(), getContractVer().getDocType());
-	        handleInactiveUserValidation(action, selectedInactiveUsers, getUserRole());
+	        		getInactiveUsers(roleCode, selectedUsers, getContractVer().getDocType());
+	        handleInactiveUserValidation(action, selectedInactiveUsers);
 		}
 		//#30737 - End
 		
@@ -8273,50 +8286,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// #26688 end
 		
 		//#30737 - Start
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+		log.info("xoxoxoxoxo getTaskName() : "+getManagedBean().getTaskName());
+		log.info("xoxoxoxoxo getUserRole() : "+getUserRole());
+		log.info("xoxoxoxoxooxoxo action : "+action);
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)
+				|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
 
-		    log.info("xoxoxoxoxooxoxo action : REVISE");
+		    log.info("xoxoxoxoxooxoxo action : REVISE / CANCEL");
 
-		    List<SelectedInactiveUserDTO> inactiveUsersForRevise =
+		    List<SelectedInactiveUserDTO> inactiveUsersForReviseOrCancel =
 		    		getInactiveUsersForRevise(
 		    				getContractVer().getContractVerId(),
 		    				getContractVer().getCtContract().getContractType().getParameterCode(),
 		    				getContractVer().getDocType());
 
-		    log.info("xoxoxoxoxo inactiveUsersForRevise : " + inactiveUsersForRevise);
+		    if (inactiveUsersForReviseOrCancel != null && !inactiveUsersForReviseOrCancel.isEmpty()) {
 
-		    if (inactiveUsersForRevise != null && !inactiveUsersForRevise.isEmpty()) {
-
-		        SelectedInactiveUserDTO inactiveUser = inactiveUsersForRevise.get(0);
+		        SelectedInactiveUserDTO inactiveUser = inactiveUsersForReviseOrCancel.get(0);
 
 	            Long userStatus = inactiveUser.getStatus();
 	            getManagedBean().setInactiveUserRevise(userStatus);
 
 	            if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
-	                log.info("xoxoxoxoxooxoxo REVISE + return 5");
-	                handleInactiveUserValidation(action, inactiveUsersForRevise, getUserRole());
+	                log.info("xoxoxoxoxooxoxo REVISE / CANCEL + return 5");
+	                handleInactiveUserValidation(action, inactiveUsersForReviseOrCancel);
 	            }
 		    }
 		}
-		
-		if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)
-				|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
-
-		    log.info("xoxoxoxoxooxoxo action : "+action);
-
-		    String approverType = determineRoleCode();
-
-		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(approverType, getSelectedUsers(), getContractVer().getDocType());
-	        handleInactiveUserValidation(action, selectedInactiveUsers, getUserRole());
-		}
-		
-//		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-//			log.info("xoxoxoxoxooxoxox CANCEL AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
-//			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_CANCEL, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "SUPARJO");
-			// send group task
-			//..
-//		}
 		
 //		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 //			log.info("xoxoxoxoxooxoxox REJECT AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
@@ -10285,15 +10282,48 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	// 34442 - end
 	
 	// #30737 - start
-	private String determineRoleCode() {
-		String parameterCode = getContractVer().getCtContract().getContractType().getParameterCode();
-	    if (ParameterConst.CONTRACT_TYPE_MINISTRY.equalsIgnoreCase(parameterCode)) {
-	        return RoleCode.CT_APPROVER.value();
-	        
-	    } else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(parameterCode)) {
-	        return RoleCode.BPK_CC_APPROVER.value();
-	    }
+	private String determineRoleCode(String action) {
+		
+		// CA -> DO (pendind meeting confirmation)
+		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+			
+			log.info("role do : "+getManagedBean().getCommitteeType()+"_SECRETARY");
+			
+			return getManagedBean().getCommitteeType()+"_SECRETARY"; //RoleCode.DESK_OFFICER.value();
+		}
+		
+		// MA -> CA (approval)
+		else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			String parameterCode = getContractVer().getCtContract().getContractType().getParameterCode();
+		    if (ParameterConst.CONTRACT_TYPE_MINISTRY.equalsIgnoreCase(parameterCode)) {
+		        return RoleCode.CT_APPROVER.value();
+		        
+		    } else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(parameterCode)) {
+		        return RoleCode.BPK_CC_APPROVER.value();
+		    }
+		}
 	    return null;
+	}
+	
+	private List<PmUser> determineUsers(String action) {
+		
+		// MA -> CA (approval)
+		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			return getSelectedUsers();
+		}
+		
+		// CA -> DO (pendind meeting confirmation)
+		else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+			List<PmUser> users = new ArrayList<PmUser>();
+			PmUser secretary = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary();
+			if (secretary != null) {
+				log.info("xoxoxoxoxo secretary : "+secretary.getUserName());
+				users.add(secretary);
+			}
+			return users;
+		}
+		
+		return null;
 	}
 	// #30737 - end
 }

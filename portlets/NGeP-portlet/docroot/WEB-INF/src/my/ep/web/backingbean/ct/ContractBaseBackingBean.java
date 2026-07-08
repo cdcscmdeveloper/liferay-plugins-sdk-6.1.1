@@ -25,7 +25,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;//34442
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.ct.ContractReqDTO; //#30737
+import my.ep.constants.CTProcessNameConst; //#30737
 import my.ep.dto.ct.actor.CtActorReqDTO;
 import my.ep.dto.ct.actor.CtActorResDTO;
 import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; // #30737
@@ -36,6 +36,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContract; //#30737
 import my.ep.persistence.entity.ct.CtContractVer; //#30737
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;//34442
@@ -53,6 +54,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.RoleHelper; //#30737
 
 /**
  * ContractBaseBackingBean is the Base class for contract
@@ -448,24 +450,6 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	}
 	
     //#30737 - Start
-	/**
-	 * Builds and returns a {@link ContractReqDTO} containing the
-	 * required contract and user information for inactive user
-	 * validation processing.
-	 *
-	 * @param outcome -action outcome such as SUBMIT, REVISE, etc
-	 * @param userRole -current user role used
-	 * @return populated {@link ContractReqDTO} for inactive user validation
-	*/
-    protected ContractReqDTO buildContractReqDTO(String outcome, String userRole) {
-        ContractReqDTO reqDTO = new ContractReqDTO();
-        reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-        reqDTO.setUserRole(userRole);
-        reqDTO.setOutcome(outcome);
-        reqDTO.setCtContractVer(getContractVer());
-        return reqDTO;
-    }
-    
     /**
      * Builds and returns a localized {@link EpException} based on the
      * inactive user validation error code.
@@ -515,6 +499,12 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     */
     private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserName, String[] parameters) {
 
+    	CtContract ctContract = getContractVer().getCtContract();
+    	if (ctContract == null) {
+    		return null;
+    	}
+    	String contractNo = ctContract.getContractNo();
+    	
         if (MessageConst.ERROR_100068.equals(errorCode)
         		|| MessageConst.ERROR_100070.equals(errorCode)) {
         	if(parameters != null){
@@ -524,10 +514,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         }
 
         if (MessageConst.ERROR_100069.equals(errorCode)) {
-            return new String[]{
-                "MOF/CDC/2000192",
-                selectedUserName
-            };
+            if (parameters != null) {
+            	List<String> result = new ArrayList<String>();
+            	result.add(contractNo);
+            	Collections.addAll(result, parameters);
+            	return result.toArray(new String[result.size()]);
+            }
+            return new String[] {contractNo, selectedUserName};
         }
 
         if (MessageConst.ERROR_100071.equals(errorCode)) {
@@ -541,17 +534,16 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 
         if (MessageConst.ERROR_100072.equals(errorCode)) {
             return new String[]{
-                "MOF/ABC/20002",
+            	contractNo,
                 selectedUserName,
                 "RAMLEEE"
             };
         }
 
         if (MessageConst.ERROR_100073.equals(errorCode)) {
-            return new String[]{
-                "Requisitioner",
-                "Pejabat Pengarah Hospital Kuala Lumpur Unit Pentadbiran"
-            };
+        	if(parameters != null){
+        		return parameters;
+        	}
         }
         
         return new String[0];
@@ -565,14 +557,16 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         return buildUserNames(userNames);
     }
     
-    public void checkInactiveUserOnAction(ContractReqDTO reqDTO, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+    public void checkInactiveUserOnAction(List<SelectedInactiveUserDTO> selectedInactiveUsers) {
 
     	log.info("xoxoxoxoxoxoxo checkInactiveUserOnAction....");
     	log.info("xoxoxoxoxoxoxo selectedInactiveUsers size : "+selectedInactiveUsers.size());
-    	log.info("xoxoxoxoxoxoxo outcome/action : "+reqDTO.getOutcome());
+    	log.info("xoxoxoxoxoxoxo getTaskName : "+getTaskName());
     	
         List<SelectedInactiveUserDTO> invalidUsers = new ArrayList<SelectedInactiveUserDTO>();
 
+        CtContract ctContract = getContractVer().getCtContract();
+        
         int activeCount = 0;
 
         for (SelectedInactiveUserDTO user : selectedInactiveUsers) {
@@ -594,7 +588,18 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         // Single selected user and inactive
         if (selectedInactiveUsers.size() == 1 && !invalidUsers.isEmpty()) {
         	log.info("Single selected user and inactive");
-            throw new EpException(MessageConst.ERROR_100068);
+        	log.info("invalidUsers name : "+invalidUsers.get(0).getUserName());
+        	String message = MessageConst.ERROR_100068;
+        	String[] parameters = null;
+            if (CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
+            	message = MessageConst.ERROR_100070;
+            	parameters = new String[] { invalidUsers.get(0).getUserName() };
+            }
+            else if (CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
+            	message = MessageConst.ERROR_100069;
+            	parameters = new String[] { invalidUsers.get(0).getUserName() };
+            }
+        	throw new EpException(message, parameters);
         }
 
         // Mixed active and inactive
@@ -613,12 +618,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         // All status = 5
         if (Long.valueOf(5L).equals(selectedInactiveUsers.get(0).getStatus())) {
         	log.info("All status = 5");
-            throw new EpException(MessageConst.ERROR_100073);
+        	String[] parameters = new String[] { selectedInactiveUsers.get(0).getUserRoleDesc() , ctContract.getOwnerOrgProfile().getOrgValidity().getOrgName()};
+            throw new EpException(MessageConst.ERROR_100073, parameters);
         }
 
         // Single active or all active
         log.info("PASSED!");
-        //throw new EpException(MessageConst.ERROR_100068); //TEMP
+//      throw new EpException(MessageConst.ERROR_100068); //TEMP
         return;
     }
     
@@ -647,6 +653,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     
     protected abstract List<PmUser> getSelectedUsers();
     protected abstract CtContractVer getContractVer();
+    protected abstract String getTaskName();
     
     //#30737 - Start
   	protected List<SelectedInactiveUserDTO> getInactiveUsersForRevise(Long docId, String parameterCode, String docType){
@@ -662,13 +669,16 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
           	userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
           }
           
+          log.info("xoxoxoxoxo org name : "+getContractVer().getCtContract().getOwnerOrgProfile().getOrgValidity().getOrgName());
+          
           CtActor ctActor = retrieveContractActor(docId, docType, userRole);
-          log.info("xoxoxoxoxooxoxo ctActor : "+ctActor);
           if (ctActor != null) {
         	  log.info("xoxoxoxoxooxoxo ctActor name : "+ctActor.getUserName());
+              log.info("xoxoxoxoxooxoxo ctActor.getRoleCode() : "+ctActor.getRoleCode());
+              
               List<PmUser> users = new ArrayList<PmUser>();
               users.add(ctActor.getUser());
-              return getInactiveUsers(RoleCode.MIN_CONTRACT_ADMIN.value(), users, docType);
+              return getInactiveUsers(userRole, users, docType);
           }
           
           return new ArrayList<>();
@@ -689,9 +699,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	    log.info("xoxoxoxoxo getInactiveUsers docType : "+docType);
   	    
   	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+  	    resDto.setRoleCode(roleCode);
   	    
   	    log.info("xoxoxo getStatus "+resDto.getStatus());
   	    log.info("xoxoxo getMessage "+resDto.getMessage());
+  	    log.info("xoxoxo roleCode "+roleCode);
 
   	    return resolveInactiveUserStatus(users, resDto);
   	}
@@ -699,21 +711,26 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(List<PmUser> users, InactiveUserResDTO resDto) {
 
   	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
-
-  	    String[] statuses = resDto.getStatus().split(",");
-  	    for (int i = 0; i < statuses.length; i++) {
-  	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
-  	        selectedUser.setUserName(users.get(i).getUserName());
-  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
-  	        
-  	        // FOR TESTING PURPOSE ONLY
-//  	        if (i == 0) {
-//  	            selectedUser.setStatus(2L);
-//  	        } else {
-//  	           	selectedUser.setStatus(3L);
-//  	        }
-  	        
-  	        selectedUsers.add(selectedUser);
+  	    if (!users.isEmpty()) {
+  	    	String[] statuses = resDto.getStatus().split(",");
+  	  	    for (int i = 0; i < statuses.length; i++) {
+  	  	    	
+  	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(resDto.getRoleCode()).getRoleName();
+  	  	    	
+  	  	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
+  	  	        selectedUser.setUserName(users.get(i).getUserName());
+  	  	        selectedUser.setUserRoleDesc(userRoleDesc);
+  	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+  	  	        
+  	  	        // FOR TESTING PURPOSE ONLY
+//  	  	        if (i == 0) {
+//  	  	            selectedUser.setStatus(2L);
+//  	  	        } else {
+//  	  	           	selectedUser.setStatus(3L);
+//  	  	        }
+  	  	        
+  	  	        selectedUsers.add(selectedUser);
+  	  	    }
   	    }
   	    return selectedUsers;
   	}
@@ -738,12 +755,15 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	 * @throws EpException if inactive user conditions are met during validation. 
   	 * Different error messages will be generated based on the returned error code.
   	 */
-  	protected void handleInactiveUserValidation(String outcome, List<SelectedInactiveUserDTO> selectedInactiveUsers, String userRole) {
+  	protected void handleInactiveUserValidation(String outcome, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
   		try {
-	      	checkInactiveUserOnAction(
-	      		buildContractReqDTO(outcome, userRole),
-	      		selectedInactiveUsers
-	      	);
+  			
+  			if (selectedInactiveUsers.isEmpty()){
+  				throw new EpException(MessageConst.ERROR_722505);
+  			}
+  			
+	      	checkInactiveUserOnAction(selectedInactiveUsers);
+	      	
   		} catch (EpException ex) {
   			throw buildInactiveUserException(ex);
   		}
