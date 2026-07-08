@@ -4717,6 +4717,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #28854 - End
 	
+	// #25000 - Start
+	/**
+	 * A utility method to format a date.
+	 * 
+	 * @param date
+	 *            the Date object to format
+	 * @return the formatted date string, or an empty string if the date is null
+	 */
+	public String formatDate(Date date) {
+		SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		return date != null ? dateformat.format(date) : "";
+	}
+	// #25000 - End
+	
 	@Deprecated
 	/**
 	 * Retrieves a list of personnel blacklisted under a specific supplier.
