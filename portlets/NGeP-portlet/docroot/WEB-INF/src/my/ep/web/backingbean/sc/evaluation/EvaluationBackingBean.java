@@ -5214,7 +5214,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						.getQtProposalChecklist()
 						.setProposalScore(
 								this.getManagedBean().getTechGovProposalScore());
-				this.retriveSampleSpecMasterForMandatorySpecChecking(this
+				this.retrieveSampleSpecMasterForMandatorySpecChecking(this
 						.getManagedBean().getSampleItemList());// #29187 Added
 																// Vinod
 				return "/xhtml/sc/evaluation/evaluationStage/technical/techSampleEvaluation.xhtml";
@@ -19050,7 +19050,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param templateChecklist
 	 * @return
 	 */
-	public void retriveSampleSpecMasterForMandatorySpecChecking(
+	public void retrieveSampleSpecMasterForMandatorySpecChecking(
 			List<ScQtSampleItem> templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
