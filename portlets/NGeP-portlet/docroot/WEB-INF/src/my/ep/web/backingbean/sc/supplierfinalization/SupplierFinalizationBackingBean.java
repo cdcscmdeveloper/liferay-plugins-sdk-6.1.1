@@ -1786,9 +1786,14 @@ public class SupplierFinalizationBackingBean extends
 								&& !getManagedBean().isDisableJustifications()
 								// #28834 - End.
 								) {
-					if ((this.getManagedBean().getJustification() == null
-							|| this.getManagedBean().getJustification()
-									.getReasonId() == null) && this.getManagedBean().isSubmit()) {//#35205 & #28834
+					//#34860 start adli
+//					if ((this.getManagedBean().getJustification() == null
+//							|| this.getManagedBean().getJustification()
+//									.getReasonId() == null) && this.getManagedBean().isSubmit()) {//#35205 & #28834
+					
+					if (CollectionUtils.isEmpty(this.getManagedBean().getJustificationReasonList())
+							 && this.getManagedBean().isSubmit()){	//#34860 end					
+					
 						navigateToEndorsementReportTab();
 						throw new EpException(MessageConst.ERROR_100061,
 								new String[] { ResourceBundleUtils.getMessage(
@@ -1849,6 +1854,7 @@ public class SupplierFinalizationBackingBean extends
 //			}
 			
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
+			
 			prepareUpdateCommitteeMember();// 25037
 			// #28834 - Start.
 			checkDisableBfButtonAfterValidation();
@@ -1875,11 +1881,12 @@ public class SupplierFinalizationBackingBean extends
 	 * Allow save data for justification dropdown is empty to null value       
 	 */
 	public void setNullSelectionForJustification(SuppFinalizationReqDTO reqDTO){
-		if(this.getManagedBean().getJustification() != null
-				&& this.getManagedBean().getJustification().getReasonId() == null 
-				&& !this.getManagedBean().isSubmit()){
+		//#34860 commented to make null for justification_id in SC_QT_FINALIZATION
+//		if(this.getManagedBean().getJustification() != null 
+//				&& this.getManagedBean().getJustification().getReasonId() == null 
+//				&& !this.getManagedBean().isSubmit()){
 			reqDTO.getScQtFinalization().setJustification(null);
-		}
+//		}
 	}
 	//#35205 & #28834 - End
 	
@@ -3917,8 +3924,16 @@ return	remarksNotFound;
 						
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.saveSupplierFinalization(reqDTO);
+			//#34860 start adli
+			SuppFinalJustificationReqDTO finalJustificationReqDTO = new SuppFinalJustificationReqDTO();
+			finalJustificationReqDTO.setScQt(this.getManagedBean().getScQt());
+			finalJustificationReqDTO.setFinalJustificationList(this.getManagedBean().getFinalJustificationList());
+			qtSuppFinalizationSO.saveJustificationList(finalJustificationReqDTO);
+			//#34860 end
+			
 			reloadData(resDTO);				
-			this.evaluateDecisionList();//6906 note 117
+			this.evaluateDecisionList();//6906 note 117			
+			
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
