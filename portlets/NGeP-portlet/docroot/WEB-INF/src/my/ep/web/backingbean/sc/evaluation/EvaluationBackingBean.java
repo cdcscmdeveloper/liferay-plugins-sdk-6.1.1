@@ -5306,7 +5306,7 @@ public class EvaluationBackingBean extends
 						.getQtProposalChecklist()
 						.setProposalScore(
 								this.getManagedBean().getTechGovProposalScore());
-				this.retriveSampleSpecMasterForMandatorySpecChecking(this.getManagedBean().getSampleItemList()); // #29187
+				this.retrieveSampleSpecMasterForMandatorySpecChecking(this.getManagedBean().getSampleItemList()); // #29187
 
 				return "/xhtml/sc/evaluation/evaluationStage/technical/techSampleEvaluation.xhtml";
 			} else {
@@ -19088,7 +19088,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param templateChecklist
 	 * @return
 	 */
-	public void retriveSampleSpecMasterForMandatorySpecChecking(List<ScQtSampleItem> templateChecklist) {
+	public void retrieveSampleSpecMasterForMandatorySpecChecking(List<ScQtSampleItem> templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
