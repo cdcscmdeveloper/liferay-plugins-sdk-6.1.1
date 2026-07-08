@@ -172,6 +172,8 @@ public abstract class BaseManagedBean implements Serializable {
 	// #29007 End
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
+	
+	private boolean disciplinaryAction;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1052,4 +1054,18 @@ public abstract class BaseManagedBean implements Serializable {
 		this.newVersion = newVersion;
 	}
 	//#28784 - End
+
+	/**
+	 * @return the disciplinaryAction
+	 */
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	/**
+	 * @param disciplinaryAction the disciplinaryAction to set
+	 */
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
 }

@@ -208,6 +208,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmLicenseInfoVO;
@@ -15705,4 +15706,46 @@ public class SmApplicationUtil {
 	    }
 	}
 	//#40165 - END
+	
+	//#26282 - Start
+	/**
+	 * 
+	 * @param supplier
+	 * @return resDTO
+	 */
+	public static List<SmDisciplinaryAction> retrieveActiveSmDisciplinaryActionBySupplierForCMCD(SmSupplier supplier) {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveActiveDisciplinaryActionBySupplierForCMCD(reqDTO);
+
+		return resDTO.getSmDisciplinaryActions();
+	}
+	//#26282 - End
+	
+	//#33303 - START
+	/**
+	 * Sort SmSupplierCategory by category type and category level code
+	 * 
+	 * @param List DisciplinaryActionCategoryVO
+	 */
+	public static void sortSupplierCategoryDA(List<DisciplinaryActionCategoryVO> apprvList) {
+		// sort by code
+		Collections.sort(apprvList, new Comparator<DisciplinaryActionCategoryVO>() {
+			@Override
+			public int compare(final DisciplinaryActionCategoryVO s1,
+					final DisciplinaryActionCategoryVO s2) {
+				return (s1.getCategoryL1Code()
+						+ s1.getCategoryL2Code() + s1
+						.getCategoryL3Code()).compareTo(s2
+						.getCategoryL1Code()
+						+ s2.getCategoryL2Code()
+						+ s2.getCategoryL3Code());
+			}
+		});
+		
+		
+	}
+	//#33303 - END
 }

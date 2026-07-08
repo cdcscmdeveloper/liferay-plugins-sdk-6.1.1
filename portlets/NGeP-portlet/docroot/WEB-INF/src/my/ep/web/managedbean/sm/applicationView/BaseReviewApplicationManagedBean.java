@@ -380,8 +380,17 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	// 26238 - START
 	private boolean flagShowButtonSubmit;
-
+	private boolean basicAccountMaintenance; //27437
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	// 26238 - END
 	
+	// 28342 : Disciplinary Action - start
+	private boolean disableDownloadButtonDAHistory;
+	// 28342 : Disciplinary Action - end
+	
+	//28637
+	private boolean viewCatCode;
+		
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -2571,6 +2580,65 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setCategoryCodeList(
 			List<DisciplinaryActionCategoryVO> categoryCodeList) {
 		this.categoryCodeList = categoryCodeList;
+	}
+
+	public boolean isFlagShowButtonSubmit() {
+		return flagShowButtonSubmit;
+	}
+
+	public void setFlagShowButtonSubmit(boolean flagShowButtonSubmit) {
+		this.flagShowButtonSubmit = flagShowButtonSubmit;
+	}
+
+	public boolean isBasicAccountMaintenance() {
+		return basicAccountMaintenance;
+	}
+
+	public void setBasicAccountMaintenance(boolean basicAccountMaintenance) {
+		this.basicAccountMaintenance = basicAccountMaintenance;
+	}
+
+	/**
+	 * @return the disciplineVOs
+	 */
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	/**
+	 * @param disciplineVOs the disciplineVOs to set
+	 */
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	/**
+	 * @return the disableDownloadButtonDAHistory
+	 */
+	public boolean isDisableDownloadButtonDAHistory() {
+		return disableDownloadButtonDAHistory;
+	}
+
+	/**
+	 * @param disableDownloadButtonDAHistory the disableDownloadButtonDAHistory to set
+	 */
+	public void setDisableDownloadButtonDAHistory(
+			boolean disableDownloadButtonDAHistory) {
+		this.disableDownloadButtonDAHistory = disableDownloadButtonDAHistory;
+	}
+
+	/**
+	 * @return the viewCatCode
+	 */
+	public boolean isViewCatCode() {
+		return viewCatCode;
+	}
+
+	/**
+	 * @param viewCatCode the viewCatCode to set
+	 */
+	public void setViewCatCode(boolean viewCatCode) {
+		this.viewCatCode = viewCatCode;
 	}
 		
 }
