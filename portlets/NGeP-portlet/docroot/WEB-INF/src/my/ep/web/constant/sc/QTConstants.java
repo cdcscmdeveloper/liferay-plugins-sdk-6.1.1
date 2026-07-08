@@ -39,6 +39,7 @@ public interface QTConstants {
 	public static final String MAINT_EPV_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovalEpv.xhtml";//#21692 add new page for history
 	public static final String EXTEND_PROPOSAL_VALIDITY_SUPPLIER_ACCEPTANCE = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";//#21692 supplier screen
 	public static final String EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";//#21692 approval screen
+	public static final String MAINT_EGPA_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovaleGPA.xhtml";//#38107
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";

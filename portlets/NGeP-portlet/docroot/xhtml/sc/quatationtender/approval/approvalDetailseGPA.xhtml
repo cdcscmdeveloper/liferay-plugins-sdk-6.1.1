@@ -30,7 +30,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.publishing.period.request.decision']}">
 				<c:if test="#{requestdetails.approverId ne null}">
-					<h:outputText value="#{requestdetails.approverId.userName}" />
+					<h:outputText value="#{requestdetails.approverName}" />
 				</c:if>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.publishing.period.decision.date']}">
@@ -45,7 +45,7 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}"
 		attachmentList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}"
-		readonly="#{!isEGPAApprovalDtlsEditable}"
+		readonly="#{!isEGPAApprovalDtlsEditable and qTDetailBB.currentStatuseGPAReview()}"
 		fileUploadListener="approvalBackingBean.handleFileUpload" />
 
 </ui:composition>
