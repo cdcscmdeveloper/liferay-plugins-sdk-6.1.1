@@ -20744,7 +20744,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		}//11104-End
 		scoringPopUpAction(null);
 		//#29187 Start Vinod
-		this.retriveSampleSpecMasterForMandatorySpecChecking(templateChecklist);
+		this.retrieveSampleSpecMasterForMandatorySpecChecking(templateChecklist);
 		//#29187 End Vinod
 		return 	TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW;		
 	}
@@ -20790,7 +20790,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			existingSampleSpecQuestion.put(sampleSpecQuestion.getSpecQuestionId(),questionBean);
 		}
 		this.getManagedBean().setExistingSampleSpecQuestions(existingSampleSpecQuestion);//11104-ReEndoseEnd
-		this.retriveSampleSpecMasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
+		this.retrieveSampleSpecMasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 	}
 /***11104-start
  * display samplequantityerror in sample checkbox selected for sample item.
@@ -23294,7 +23294,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 * @return
 	 */
-	public void retriveSampleSpecMasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
+	public void retrieveSampleSpecMasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
