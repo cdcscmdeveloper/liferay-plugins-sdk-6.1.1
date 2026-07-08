@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -101,6 +102,9 @@ public class ViewSuppProfileManagedBean extends
 	private SmRvDocFile smRvDocFile;
 	private List<SmRvAssistOfficer> emptyRvAssistOfficers;
 	// #34031 End
+	
+	private List<PmFinancialOrg> financialOrgLs;
+
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -538,4 +542,12 @@ public class ViewSuppProfileManagedBean extends
 		this.emptyRvAssistOfficers = emptyRvAssistOfficers;
 	}
 	// #34031 End
+
+	public List<PmFinancialOrg> getFinancialOrgLs() {
+		return financialOrgLs;
+	}
+
+	public void setFinancialOrgLs(List<PmFinancialOrg> financialOrgLs) {
+		this.financialOrgLs = financialOrgLs;
+	}
 }

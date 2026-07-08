@@ -766,6 +766,20 @@ public class SupplierManagementConst {
 	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
 	// bug #29156 -END
 	
+	//26238 - START
+	public static final String MTO_CODE_04 = "04";
+	public static final String MTO_CODE_05 = "05";
+	public static final String MTO_CODE_06 = "06";
+	public static final String CAT_L1_22 = "22";
+	public static final String CAT_L2_17 = "17";
+	public static final String CAT_L3_09 = "09";
+	public static final int CAT_L3_347 = 347;
+	public static final String BUSINESS_TYPE_CODE_N = "N";
+	public static final String BUSINESS_TYPE_CODE_H = "H";
+	public static final int BUMI_PERCENTAGE = 50;
+	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
+	//26238 - END
+	
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
