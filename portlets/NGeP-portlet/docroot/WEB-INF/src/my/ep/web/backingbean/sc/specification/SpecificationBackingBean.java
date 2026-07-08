@@ -17599,7 +17599,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		scoringPopUpAction(null);
 		//#29187 Start Vinod
-		this.retriveSampleSpecMasterForMandatorySpecChecking(templateChecklist);
+		this.retrieveSampleSpecMasterForMandatorySpecChecking(templateChecklist);
 		//#29187 End Vinod
 
 		return TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW;
@@ -17658,7 +17658,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 
 		this.getManagedBean().setExistingSampleSpecQuestions(existingSampleSpecQuestion);// 11104-ReEndorseEnd
-		this.retriveSampleSpecMasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
+		this.retrieveSampleSpecMasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 
 	}
 	// 11104 -end-
@@ -18475,13 +18475,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	/* #29187 End Vinod */
 	/* #29187 Start Vinod */
 	/**
-	 * retrives the specification details to check mandatory specification.
+	 * retrieves the specification details to check mandatory specification.
 	 * 
 	 * @param templateChecklist
-	 *            .
+	 *            
 	 * @return
 	 */
-	public void retriveSampleSpecMasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
+	public void retrieveSampleSpecMasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
