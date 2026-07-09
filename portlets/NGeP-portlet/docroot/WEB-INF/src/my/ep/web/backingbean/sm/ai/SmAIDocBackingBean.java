@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -221,6 +222,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			appl.setAiProcessed(0);
 			return;
 		}
+		appl.setAiProcessed(1);
 		recomputeAiProcessed(appl);
 		validateBank(appl);
 		validateTenancy(appl);
@@ -385,9 +387,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			RequestContext.getCurrentInstance().addCallbackParam("success", true);
 		} catch(NullPointerException e){
 			if (!hasError){
-				String err = getLabel(TYPE_TENANCY.equals(docType) ? "lbl.sm.ai.tnc.invalid" : "lbl.sm.ai.epf.invalid");
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
-				FacesContext.getCurrentInstance().addMessage("ai", msg);
+				addMessageOnce(FacesMessage.SEVERITY_ERROR,
+						TYPE_TENANCY.equals(docType) ? "lbl.sm.ai.tnc.invalid" : "lbl.sm.ai.epf.invalid");
 			}
 		}
 	}
@@ -415,18 +416,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 					"SmAIDocbackingBean.sendDocumentOCR", "1:"+filename, startTime);
 			if (result == null) {
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-						getLabel("lbl.sm.ai.unavailable"));
-				FacesContext.getCurrentInstance().addMessage("ai", msg);
+				addMessageOnce(FacesMessage.SEVERITY_WARN, "lbl.sm.ai.unavailable");
 				return null;
 			}
 			return new JsonWrapper(startTime, result, docType);
 		} catch (IOException e) {
 			log.error("OCR call failed for " + filename, e);
 
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-					getLabel("lbl.sm.ai.unavailable"));
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
+			addMessageOnce(FacesMessage.SEVERITY_WARN, "lbl.sm.ai.unavailable");
 		}
 
 		return null;
@@ -448,9 +445,18 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		return SmServiceLookup.getAIApiProcessSO().saveAIApiResponse(apiResp).getApiResponseId();
 	}
-	
-	private static String getLabel(String key){
-		return AiDocParser.label(key);
+
+	private static void addMessageOnce(FacesMessage.Severity severity, String key){
+		String detail = AiDocParser.label(key);
+		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
+		while (it.hasNext()){
+			FacesMessage existing = it.next();
+			if (existing.getSeverity() == severity
+					&& StringUtils.equals(existing.getDetail(), detail)){
+				return;
+			}
+		}
+		FacesContext.getCurrentInstance().addMessage("ai", new FacesMessage(severity, null, detail));
 	}
 	
 	/**
@@ -465,8 +471,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		// Hard block: a company-name mismatch prevents using the extracted data.
 		if (blockSubmit){
 			String key = TYPE_EPF.equals(docType) ? "lbl.sm.ai.epf.mismatch" : "lbl.sm.ai.tnc.mismatch";
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getLabel(key));
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
+			addMessageOnce(FacesMessage.SEVERITY_ERROR, key);
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
@@ -822,10 +827,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					hasWrongCompanyName = true;
 				}
 				if (!bank.isValidBankName()){
-					sb.append("\n").append(getLabel("lbl.gfmas.bank.desc")).append(": ").append(bank.getBankName());
+					sb.append("\n").append(AiDocParser.label("lbl.gfmas.bank.desc")).append(": ")
+						.append(bank.getBankName());
 				}
 				if (!bank.isValidAccountNo()){
-					sb.append("\n").append(getLabel("lbl.fl.bank.acc.no")).append(": ").append(bank.getAccountNo());
+					sb.append("\n").append(AiDocParser.label("lbl.fl.bank.acc.no")).append(": ")
+						.append(bank.getAccountNo());
 				}
 				if (!bank.isValidBankName() || ! bank.isValidAccountNo()){
 					sb.append("\n");
@@ -836,12 +843,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (hasWrongCompanyName){
 			// hard block: mismatch disables Declare.
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					getLabel("lbl.sm.ai.bank.company.mismatch"));
+					AiDocParser.label("lbl.sm.ai.bank.company.mismatch"));
 			FacesContext.getCurrentInstance().addMessage(clientId, msg);
 		}
 		if (!StringUtils.isEmpty(sb.toString())){
 			// static prefix from the bundle, then per-bank rows (shown only if wrong).
-			sb.insert(0, getLabel("lbl.sm.ai.bank.account.mismatch"));
+			sb.insert(0, AiDocParser.label("lbl.sm.ai.bank.account.mismatch"));
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, sb.toString().replace("\n", "<br/>"));
 			FacesContext.getCurrentInstance().addMessage(clientId, msg);
 		}
@@ -938,31 +945,29 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (statusCode == 415 || statusCode == 422){
 				switch(docType){
 				case TYPE_EPF:
-					err = getLabel("lbl.sm.ai.epf.invalid");
+					err = "lbl.sm.ai.epf.invalid";
 					break;
 				case TYPE_TENANCY:
-					err = getLabel("lbl.sm.ai.tnc.invalid");
+					err = "lbl.sm.ai.tnc.invalid";
 					break;
 				case TYPE_BANK:
 				default:
-					err = getLabel("lbl.sm.ai.bank.invalid");
+					err = "lbl.sm.ai.bank.invalid";
 					break;
 				}
 			} else if (statusCode == 500){
-				err = getLabel("lbl.sm.ai.doctype.invalid");
+				err = "lbl.sm.ai.doctype.invalid";
 
 			} else if (statusCode >= 400){
-				err = getLabel("lbl.sm.ai.unavailable");
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, err);
-				FacesContext.getCurrentInstance().addMessage("ai", msg);
+				err = "lbl.sm.ai.unavailable";
+				addMessageOnce(FacesMessage.SEVERITY_WARN, err);
 				return true;
 			}
 		}
 		if (err != null){
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
+			addMessageOnce(FacesMessage.SEVERITY_ERROR, err);
 			return true;
-			
+
 		}
 		return false;
 	}
@@ -1004,9 +1009,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (!StringUtils.isEmpty(tenancy.getTenantsName()) 
 				&& !AiDocValidator.compareCompany(companyName, tenancy.getTenantsName())){
 			blockSubmit = true;
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					getLabel("lbl.sm.ai.tnc.mismatch"));
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
+			addMessageOnce(FacesMessage.SEVERITY_ERROR, "lbl.sm.ai.tnc.mismatch");
 		}
 	}
 
@@ -1042,9 +1045,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		if(hasWrongCompanyName){
 			blockSubmit = true;
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					getLabel("lbl.sm.ai.epf.mismatch"));
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
+			addMessageOnce(FacesMessage.SEVERITY_ERROR, "lbl.sm.ai.epf.mismatch");
 		}
 	}
 	
