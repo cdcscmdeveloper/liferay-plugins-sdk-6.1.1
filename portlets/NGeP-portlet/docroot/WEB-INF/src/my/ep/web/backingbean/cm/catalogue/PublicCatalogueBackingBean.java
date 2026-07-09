@@ -8,6 +8,7 @@
  * 
  ****************************************************
  */
+
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.io.Serializable;
@@ -39,15 +40,15 @@ import org.primefaces.component.datagrid.DataGrid;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
-
 /**
  * Class PublicCatalogueBackingBean.
+ * 
  * @author hketan
  */
 @ManagedBean(name = "pCatalogueBackingBean")
 @RequestScoped
 public class PublicCatalogueBackingBean extends
-BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
+		BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 	/**
 	 * 
@@ -61,23 +62,24 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 * Auto complete item name.
 	 * 
 	 * @param query
-	 *           (String query(mandatory))
+	 *            (String query(mandatory))
 	 * @return List<String>
 	 */
+	// SonarLint Issues Fixing..
 	public List<String> autoCompleteItemName(String query) {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
+				ICodificationSO.class);
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		reqDTO.setItemName(query);
 
 		CodificationResDTO resDTO = codificationSO.searchItemNameByAuto(reqDTO);
 
-		List<String> itemNames = new ArrayList<String>();
-		if (resDTO.getItemList() != null && resDTO.getItemList().size() > 0) {
+		List<String> itemNames = new ArrayList<>();
+		if (resDTO.getItemList() != null && !resDTO.getItemList().isEmpty()) {
 			for (CmItem item : resDTO.getItemList()) {
 				itemNames.add(item.getItemName());
 			}
@@ -89,34 +91,32 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	/**
 	 * Find popular commodity.
 	 */
+	// SonarLint Issues Fixing
 	public void findPopularCommodity() {
 
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-		ICodificationSO codeSO = (ICodificationSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		ICatalogueSO catalogueSO = BusinessDelegate.getInstance().getServiceObject("cm",
+				ICatalogueSO.class);
+		ICodificationSO codeSO = BusinessDelegate.getInstance().getServiceObject("cm",
+				ICodificationSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 
 		this.getManagedBean().setPopularCommodityList(null);
 		CatalogueResDTO resDTO = catalogueSO.findPopularCommodity(reqDTO);
 
-		if (resDTO.getList() != null && resDTO.getList().size() > 0) {
+		if (resDTO.getList() != null && !resDTO.getList().isEmpty()) {
 			for (int i = 0; i < resDTO.getList().size(); i++) {
 
 				Object[] obj = (Object[]) resDTO.getList().get(i);
 
 				String commodityCode = (String) obj[0];
 
-				log.info("*********commodityCode**********"	+ commodityCode);
+				log.info("*********commodityCode**********" + commodityCode);
 				codeReqDTO.setUnspscCode(commodityCode);
 
-				CodificationResDTO codeResDTO = codeSO
-						.searchUnspscObj(codeReqDTO);
+				CodificationResDTO codeResDTO = codeSO.searchUnspscObj(codeReqDTO);
 
-				this.getManagedBean().getPopularCommodityList()
-				.add(codeResDTO.getUnspscObj());// .set Popular
-				// commodityCode
+				this.getManagedBean().getPopularCommodityList().add(codeResDTO.getUnspscObj());//set Popular commodityCode
 			}
 		}
 
@@ -203,15 +203,12 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 */
 	public void searchCatalogueByPrice() {
 
-	
 		this.getManagedBean().setFrontPage(false);
 		this.getManagedBean().setCatalogueList(null);
 		this.getManagedBean().setCloneNameFlag(false);
 		this.getManagedBean().setBrandCriteria(null);
-	
 
 		this.getManagedBean().getSearchDataModel().reloadData();
-
 
 	}
 
@@ -237,8 +234,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().setKeyWord(false);
 		this.getManagedBean().setUnspscTitle(commodity.getUnspscTitle());
 
-		if (commodity.getUnspscCode() != null
-				&& commodity.getUnspscCode().trim().length() > 0) {
+		if (commodity.getUnspscCode() != null && commodity.getUnspscCode().trim().length() > 0) {
 
 			this.getManagedBean().setSelectedUnspscObj(commodity);
 		}
@@ -310,7 +306,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().getSearchDataModel().reloadData();
 		// #10747- End
 	}
-	
+
 	// #10747 - Soo - Start
 	// #10747 and SonarLint fixing- Start
 	/**
@@ -358,7 +354,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		itemPerPage(this.getManagedBean().getItemPerPage());
 	}
 	// #10747 - Soo - End
-
+	
 	/**
 	 * Back to list.
 	 */
@@ -424,14 +420,12 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		if (commodityCode.getUnspscCode() != null
 				&& commodityCode.getUnspscCode().trim().length() > 0) {
 
-			this.getManagedBean().setCommodityCode(commodityCode.getUnspscCode());
+			this.getManagedBean().setCommodityCode(
+					commodityCode.getUnspscCode());
 			this.getManagedBean().setSelectedUnspscObj(commodityCode);
 		}
+
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
-
-
-
-
 
 }
