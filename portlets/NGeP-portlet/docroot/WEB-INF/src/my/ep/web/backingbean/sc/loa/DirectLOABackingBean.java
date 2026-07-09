@@ -440,6 +440,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getSupplierDeatilsByLoaId(scLoa.getLoaId());
 
 				}
+				//#29661 #40511 Start
+				List<SmSupplierCategory> procurementSmCategory = this.getManagedBean().getProcurementRelatedCategoryList();
+				List<SmSupplierCategory> deletedSmCategory = this.getManagedBean().getDeletedCategoryList();
+				List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();
+				validateSupplierCategory(scLoa,outcome);
+				
+				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
+					deleteScQtCategory(addedCategoryList, deletedSmCategory);
+					insertSupplierCategoryCodeToScQtCategory(procurementSmCategory);
+				} else {
+					deleteScQtCategory(addedCategoryList, deletedSmCategory);
+					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
+				}
+				//#29661 #40511 End
 
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
@@ -5179,6 +5194,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getManagedBean().setIconForDL(true);//29007
 				}
 			//}
+			getSmSupplierCategory(this.getManagedBean().getScLoa());//#29611 #40511	
 			//#29164 CR 26474: Static Code Analysis End
 			fc.getApplication()
 					.getNavigationHandler()
@@ -14254,7 +14270,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	    List<ScQtCategory> scQtCategoriesList = specSO.retrieveScQtCategorytByQtID(getManagedBean().getScQt().getQtId());
 	    this.getManagedBean().setQtCategoryList(scQtCategoriesList);
 	    convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList,categoryCodeSO);
-	    }
+	    }	    
 	    
 	    CustomUtils.sort(filteredSmSupplierCategoryList, new Comparator<SmSupplierCategory>() {//#29661 #40403
 			@Override
@@ -14268,7 +14284,44 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		});
 	    
-	    this.getManagedBean().setSupplierCategoryList(filteredSmSupplierCategoryList);//#29661 #40093
+	    //#29661 #40511 Start
+		List<SmSupplierCategory> supplierList = new ArrayList<SmSupplierCategory>(filteredSmSupplierCategoryList);
+		List<SmSupplierCategory> originalList = new ArrayList<SmSupplierCategory>(filteredSmSupplierCategoryList);
+	    this.getManagedBean().setSupplierCategoryList(supplierList);//#29661 #40093
+	    this.getManagedBean().setOriginalSupplierCategoryList(originalList);
+	    
+	    removeAddedCategoryCode();
+	    //#29661 #40511 end
+	}
+	
+	/**
+	 * #29661 #40511
+	 * remove existing Sm Supplier Category code that had been added into Procurement Category Code
+	 */
+	public void removeAddedCategoryCode(){
+		List<SmSupplierCategory> supplierCategoryList = this.getManagedBean().getSupplierCategoryList();
+		List<SmSupplierCategory> procurementSmCategoryList = this.getManagedBean().getProcurementRelatedCategoryList();
+		if (CollectionUtils.isNotEmpty(procurementSmCategoryList)) {
+			for (SmSupplierCategory procurementSmCategory : procurementSmCategoryList) {
+				Iterator<SmSupplierCategory> iterator = supplierCategoryList.iterator();
+				String catCode01 = procurementSmCategory.getPmCategoryL1().getCategoryL1Code()
+						+procurementSmCategory.getPmCategoryL2().getCategoryL2Code()
+						+procurementSmCategory.getPmCategoryL3().getCategoryL3Code();
+				
+
+				while (iterator.hasNext()) {
+					SmSupplierCategory category = iterator.next();
+					String catCode02 = category.getPmCategoryL1().getCategoryL1Code()
+							+category.getPmCategoryL2().getCategoryL2Code()
+							+category.getPmCategoryL3().getCategoryL3Code();
+					if (catCode01.equals(catCode02)) {
+						iterator.remove();
+						break; 
+					}
+				}
+			}
+			this.getManagedBean().setSupplierCategoryList(supplierCategoryList);
+		}
 	}
 
 	/**
@@ -14386,6 +14439,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				currentCategoryList.add(supplierCategory);
 			}
 		}
+		
+		CustomUtils.sort(procurementRelatedCategoryList, new Comparator<SmSupplierCategory>() {//#29661 #40403
+			@Override
+			public int compare(SmSupplierCategory cat01, SmSupplierCategory cat02) {
+				String catCode01 = cat01.getPmCategoryL1().getCategoryL1Code()+cat01.getPmCategoryL2().getCategoryL2Code()+cat01.getPmCategoryL3().getCategoryL3Code();
+				String catCode02 = cat02.getPmCategoryL1().getCategoryL1Code()+cat02.getPmCategoryL2().getCategoryL2Code()+cat02.getPmCategoryL3().getCategoryL3Code();
+				Long catCodeLong01 = Long.valueOf(catCode01);
+				Long catCodeLong02 = Long.valueOf(catCode02);
+				
+				return catCodeLong01.compareTo(catCodeLong02);
+			}
+		});	
 		this.getManagedBean().setAddedCategoryList(addedCategoryList);
 		this.getManagedBean().setProcurementRelatedCategoryList(procurementRelatedCategoryList);
 		this.getManagedBean().setSupplierCategoryList(currentCategoryList);
