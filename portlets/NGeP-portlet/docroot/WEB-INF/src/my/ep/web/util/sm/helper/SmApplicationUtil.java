@@ -4678,6 +4678,8 @@ public class SmApplicationUtil {
 		managedBean.setOtherDescChangeSupplier(false);
 		managedBean.setOtherDescChangeSupPO(false);
 		managedBean.setOtherDescChangeSupApprover(false);
+		managedBean.getEditVO().setPoEditCategory(false);
+		managedBean.getEditVO().setAppEditCategory(false);
 		// 36504 - END
 		
 		if (managedBean.getSmAppl().getApplType()
@@ -4693,9 +4695,10 @@ public class SmApplicationUtil {
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
 						|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0 || 
-						(cat.getRecordStatusFlg().compareTo(SupplierManagementConst.RECORD_STATUS_ACTIVE) == 0 && 
-								(managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) ||
-								 managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {
+						(!managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI) &&
+						cat.getRecordStatusFlg().compareTo(SupplierManagementConst.RECORD_STATUS_ACTIVE) == 0 && 
+						(managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) ||
+						 managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {
 					
 					// 36504 - START - Applied Application
 					String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
@@ -4741,6 +4744,48 @@ public class SmApplicationUtil {
 					catList.add(cat);
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+					
+					// 36504 - START - Applied Application
+					String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+					cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+
+					if ((catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
+							!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
+						
+						setApplNoHistory(cat, managedBean, SupplierManagementConst.APPLIED_CAT);
+						
+						// Merge category code
+						String mainCatcode = cat
+								.getPmCategoryL1()
+								.getCategoryL1Code()
+								.concat(cat.getPmCategoryL2()
+										.getCategoryL2Code())
+								.concat(cat.getPmCategoryL3()
+										.getCategoryL3Code());
+						
+						if (otherDescSet.contains(mainCatcode)) {
+							for (SmSupplierCategory catObj : catList) {
+								String existingCatcode = catObj
+										.getPmCategoryL1()
+										.getCategoryL1Code()
+										.concat(catObj.getPmCategoryL2()
+												.getCategoryL2Code())
+										.concat(catObj.getPmCategoryL3()
+												.getCategoryL3Code());
+								
+								if (cat.getSmSuppCatOtherDescHistory() != null &&
+										mainCatcode.equals(existingCatcode)) {
+									catObj.getSmSuppCatOtherDescHistory().addAll(cat.getSmSuppCatOtherDescHistory());
+								}
+							}
+						} else {
+							otherDescSet.add(mainCatcode);
+						}
+					}
+					// 36504 - END - Applied Application
+					
 					//29823 - start
 					//#34098 - START 
 					if(managedBean.getCurrentStatus() != null 
@@ -4848,6 +4893,8 @@ public class SmApplicationUtil {
 		managedBean.setOtherDescChangeSupplier(false);
 		managedBean.setOtherDescChangeSupPO(false);
 		managedBean.setOtherDescChangeSupApprover(false);
+		managedBean.getEditVO().setPoEditCategory(false);
+		managedBean.getEditVO().setAppEditCategory(false);
 		// 36504 - END
 		
 		for(SmSupplierCategory filtCat : managedBean.getSmAppl().getSmSupplier()
@@ -4864,6 +4911,42 @@ public class SmApplicationUtil {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			
+			// 36504 - START
+			String catType = cat.getPmCategoryL3().getCategoryTypeCode()
+					.getParameterCode();
+			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+				
+				for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
+					
+					history.setApplNoHistory(history.getSmAppl().getApplNo());
+
+					if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						managedBean.setOtherDescChangePO(true);
+						managedBean.getEditVO().setPoEditCategory(true);
+					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+						managedBean.setOtherDescChangeApprover(true);
+						managedBean.setOtherDescChangeSupplier(true);
+						managedBean.getEditVO().setAppEditCategory(true);
+					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+						managedBean.setOtherDescChangeSupApprover(true);
+						managedBean.setOtherDescChangeSupplier(true);
+						managedBean.getEditVO().setAppEditCategory(true);
+					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+						managedBean.setOtherDescChangeSupPO(true);
+						managedBean.setOtherDescChangeSupplier(true);
+						managedBean.getEditVO().setPoEditCategory(true);
+					}
+				}
+			}
+			// 36504 - END
+
 			if (validStatus.contains(cat.getRecordStatusFlg()) && cat.getPmCategoryL3() != null) {
 
 				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
@@ -16103,7 +16186,8 @@ public class SmApplicationUtil {
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 
-					if (previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && 
+					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
+							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) && 
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
 							!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
@@ -16145,7 +16229,53 @@ public class SmApplicationUtil {
 		
 		sortSupplierCategory(prevList);
 		managedBean.setPreviousCategoryList(prevList);
-	}	
+	}
+	
+	/**
+	 * Sets the application number history for each supplier category description history
+	 * record associated with the given supplier category.
+	 *
+	 * @param scat
+	 */
+	private static void setApplNoHistory(SmSupplierCategory cat, SmApplicationManagedBean managedBean, String sectionType) {
+		for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
+			
+			history.setApplNoHistory(history.getSmAppl().getApplNo());
+			
+			if (sectionType.equalsIgnoreCase(SupplierManagementConst.PREVIOUS_CAT)) {
+				if (!managedBean.isOtherDescChangePOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+					managedBean.setOtherDescChangePOPrev(true);
+				} else if (!managedBean.isOtherDescChangeApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+					managedBean.setOtherDescChangeApproverPrev(true);
+				} else if (!managedBean.isOtherDescChangeSupApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+					managedBean.setOtherDescChangeSupApproverPrev(true);
+					managedBean.setOtherDescChangeSupplierPrev(true);
+				} else if (!managedBean.isOtherDescChangeSupPOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+					managedBean.setOtherDescChangeSupPOPrev(true);
+					managedBean.setOtherDescChangeSupplierPrev(true);
+				}
+			}
+			
+			if (sectionType.equalsIgnoreCase(SupplierManagementConst.APPLIED_CAT)) {
+				if (!managedBean.isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+					managedBean.setOtherDescChangePO(true);
+					managedBean.getEditVO().setPoEditCategory(true);
+				} else if (!managedBean.isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+					managedBean.setOtherDescChangeApprover(true);
+					managedBean.setOtherDescChangeSupplier(true);
+					managedBean.getEditVO().setAppEditCategory(true);
+				} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+					managedBean.setOtherDescChangeSupApprover(true);
+					managedBean.setOtherDescChangeSupplier(true);
+					managedBean.getEditVO().setAppEditCategory(true);
+				} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+					managedBean.setOtherDescChangeSupPO(true);
+					managedBean.setOtherDescChangeSupplier(true);
+					managedBean.getEditVO().setPoEditCategory(true);
+				}
+			}
+		}
+	}
 	// 36504 - END
 
 //	#37925 START
@@ -16341,6 +16471,11 @@ public class SmApplicationUtil {
 	// 39392 - END
 	// #9299 - Start
 	public static boolean getAppVersionDetailsWithRedmineNo(SmAppl smAppl, Long redmineNo, int phase) {
+		PmAppVersion appVerDtls = SmServiceLookup.getMofRegistrationSO().getAppVersionDetails(redmineNo, ParameterConst.DOCTYPE_SUPPLIER_MANAGEMENT,
+				phase);
+		if (smAppl.getCreatedDate().before(appVerDtls.getEffDate())) {
+			return true;
+		}
 
 		return false;
 	}
@@ -16425,47 +16560,6 @@ public class SmApplicationUtil {
 	            }
 	        }
 	    }
-	}
-	
-	/**
-	 * Sets the application number history for each supplier category description history
-	 * record associated with the given supplier category.
-	 *
-	 * @param scat
-	 */
-	private static void setApplNoHistory(SmSupplierCategory cat, SmApplicationManagedBean managedBean, String sectionType) {
-		for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
-			
-			history.setApplNoHistory(history.getSmAppl().getApplNo());
-			
-			if (sectionType.equalsIgnoreCase(SupplierManagementConst.PREVIOUS_CAT)) {
-				if (!managedBean.isOtherDescChangePOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-					managedBean.setOtherDescChangePOPrev(true);
-				} else if (!managedBean.isOtherDescChangeApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
-					managedBean.setOtherDescChangeApproverPrev(true);
-				} else if (!managedBean.isOtherDescChangeSupApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
-					managedBean.setOtherDescChangeSupApproverPrev(true);
-					managedBean.setOtherDescChangeSupplierPrev(true);
-				} else if (!managedBean.isOtherDescChangeSupPOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
-					managedBean.setOtherDescChangeSupPOPrev(true);
-					managedBean.setOtherDescChangeSupplierPrev(true);
-				}
-			}
-			
-			if (sectionType.equalsIgnoreCase(SupplierManagementConst.APPLIED_CAT)) {
-				if (!managedBean.isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-					managedBean.setOtherDescChangePO(true);
-				} else if (!managedBean.isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
-					managedBean.setOtherDescChangeApprover(true);
-				} else if (!managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
-					managedBean.setOtherDescChangeSupApprover(true);
-					managedBean.setOtherDescChangeSupplier(true);
-				} else if (!managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
-					managedBean.setOtherDescChangeSupPO(true);
-					managedBean.setOtherDescChangeSupplier(true);
-				}
-			}
-		}
 	}
 	//#40165 - END
 

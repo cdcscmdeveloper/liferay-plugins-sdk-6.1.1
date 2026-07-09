@@ -16487,7 +16487,13 @@ public class SmApplicationBackingBean extends
 		simpleDateFormat.setLenient(false);
 
 		List<String> allDateOccurences = new ArrayList<String>();
-		Pattern pattern = Pattern.compile("\\((.*?)\\)");
+		
+		// 36504 - START 
+		// Development-only fix for supplier names containing bracket.
+		// Do not deploy to production.
+		Pattern pattern = Pattern.compile(
+			    "\\((\\d{2}-[A-Za-z]{3}-\\d{4}\\s\\d{2}:\\d{2}\\s(?:AM|PM))\\)");
+		// 36504 - END 
 
 		for (String date : dateList) {
 			Matcher matcher = pattern.matcher(date);
