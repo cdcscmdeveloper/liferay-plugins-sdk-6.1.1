@@ -270,6 +270,7 @@
 										rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
 										style="font-weight:bold;float:left;font-size:18px;"
 										value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
+										
 									<!-- #10747, #35739 - Start -->
 								    <h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.keyWord and pCatalogueBackingBean.managedBean.unspscTitle.length() > 12 || pCatalogueBackingBean.managedBean.itemName.length() > 12}">
 								    <br />
@@ -407,7 +408,7 @@
 										</div>
 									</p:dataGrid>
 									</h:panelGroup>
-
+									
 								   	<h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.visible}">	<!-- #10747 - Soo -->
 									<p:dataTable id="catalogueListingTable"
 										rowIndexVar="index" value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
@@ -473,7 +474,7 @@
 									</h:panelGroup>
 									</td>
 							</h:panelGroup>
-
+							
 							<!-- #10747 - Shafie - End  -->
 						</tr>
 
