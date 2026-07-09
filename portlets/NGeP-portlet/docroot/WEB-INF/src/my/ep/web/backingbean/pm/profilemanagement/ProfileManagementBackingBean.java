@@ -1583,7 +1583,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 				}
 
-				if (getManagedBean().getSelectedReceivingAddrTypes() != null
+				if (RoleCode.RECEIVING_OFFICER.value().equals(pmUserRole.getPmRole().getRoleCode()) //#34445, Fix as-is bug: #39638
+						&& getManagedBean().getSelectedReceivingAddrTypes() != null
 						&& !getManagedBean().getSelectedReceivingAddrTypes().isEmpty()) {
 					//Bug #32656 - start
 					List<PmAddressType> removeNewAddressTypes = new ArrayList<PmAddressType>();
@@ -2879,7 +2880,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		user.setMobileNo(userOrg.getMobileNo());
 		user.setMobileArea(userOrg.getMobileArea());
 		user.setMobileCountry(userOrg.getMobileCountry());
-		user.setMobileTelcoId(userOrg.getMobileTelcoId());
+		//user.setMobileTelcoId(userOrg.getMobileTelcoId()); //#40246
 	}
 
 	private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, UserReqDTO reqDTO) {
@@ -4039,11 +4040,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770090);
 		}
-		if (getManagedBean().getSelectedUser().isNotifyBySms()
+		//#40246 Start
+		/*if (getManagedBean().getSelectedUser().isNotifyBySms()
 				&& getManagedBean().getSelectedUserOrg().getMobileTelcoId() == null) {
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770250);
-		}
+		}*/
+		//#40246 End
 		this.getManagedBean().getSelectedUser().setModified(true);
 	}
 
@@ -4346,6 +4349,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return null;
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		// selectedUserOrg.email
+		String email = this.getManagedBean().getSelectedUserOrg().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			this.getManagedBean().getSelectedUserOrg().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	//#29594 - START
 	public String retrieveMinistryName() {
@@ -4522,9 +4535,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
 				throw new EpException(MessageConst.ERROR_770090);
 			}
-			if (pmUserOrg.getMobileTelcoId() == null) {
+			//#40246 Start
+			/*if (pmUserOrg.getMobileTelcoId() == null) {
 				throw new EpException(MessageConst.ERROR_770250);
-			}
+			}*/
+			//#40246 End
 		}
 	}
 

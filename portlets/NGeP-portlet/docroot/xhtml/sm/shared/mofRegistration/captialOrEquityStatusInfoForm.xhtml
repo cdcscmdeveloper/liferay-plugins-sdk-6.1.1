@@ -6,6 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- #33783 -->
+	<h:outputText value="#{lbl['lbl.sm.equistatus.clbg.note']}" 
+		rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM == SupplierManagementConst.COMPANY_TYPE_CLBG}" />
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sm.equiStatus.panHdr']}" />

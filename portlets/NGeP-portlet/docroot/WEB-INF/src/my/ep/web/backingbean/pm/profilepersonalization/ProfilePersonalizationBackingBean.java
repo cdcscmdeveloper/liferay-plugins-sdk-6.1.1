@@ -96,6 +96,8 @@ import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 //#28895_35501 End
+//#28720
+import org.primefaces.context.RequestContext;
 
 
 /**
@@ -404,11 +406,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770090);
 		}
-		if (getManagedBean().getSelectedUser().isNotifyBySms()
+		//#40246 Start
+		/*if (getManagedBean().getSelectedUser().isNotifyBySms()
 				&& getManagedBean().getSelectedUser().getMobileTelcoId() == null) {
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770250);
-		}
+		}*/
+		//#40246 End
 		this.getManagedBean().getSelectedUser().setModified(true);
 	}
 
@@ -841,11 +845,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			if (pmUser.isNotifyBySms() && StringUtils.isBlank(pmUser.getMobileNo())) {
 				throw new EpException(MessageConst.ERROR_770090);
 			}
-
-			if (pmUser.isNotifyBySms() && (pmUser.getMobileTelcoId() == null)) {
+			//#40246 Start
+			/*if (pmUser.isNotifyBySms() && (pmUser.getMobileTelcoId() == null)) {
 				throw new EpException(MessageConst.ERROR_770250);
-			}
-
+			}*/
+			//#40246 End
 			// if (pmUser.getNotifyRemovalDay() == null
 			// || pmUser.getNotifyRemovalDay() <= 0) {
 			// throw new EpException(MessageConst.ERROR_770047);
@@ -1349,7 +1353,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				activeOrg.setMobileNo(user.getMobileNo());
 				activeOrg.setMobileArea(user.getMobileArea());
 				activeOrg.setMobileCountry(user.getMobileCountry());
-				activeOrg.setMobileTelcoId(user.getMobileTelcoId());
+				//activeOrg.setMobileTelcoId(user.getMobileTelcoId()); //#40246
 				break;
 			}
 		}
@@ -1789,6 +1793,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		return checkFactUser;
 	}
 	//28838 - end
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getSelectedUser().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getSelectedUser().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	// #28895_35501 Start - AUDIT TRAIL SM
 	private boolean isSmAuditUser() {
 		String[] roles = { RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(), RoleCode.G2G_SUPPLIER_USER.value(),
@@ -1960,11 +1973,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		if (StringUtils.isNotBlank(sb.toString())) {
 			sb.append(", ");
 		}
-		sb.append(supCat.getCategoryL1Name().trim());
-		sb.append(", ");
-		sb.append(supCat.getCategoryL2Name().trim());
-		sb.append(", ");
-		sb.append(supCat.getCategoryL3Name().trim());
+		if(supCat.getPmCategoryL1()!=null){
+			sb.append(supCat.getPmCategoryL1().getCategoryL1Code());
+		}
+		if(supCat.getPmCategoryL2()!=null){
+			sb.append(supCat.getPmCategoryL2().getCategoryL2Code());
+		}
+		if(supCat.getPmCategoryL3()!=null){
+			sb.append(supCat.getPmCategoryL3().getCategoryL3Code());
+		}
 	}
 	
 	/**
