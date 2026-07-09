@@ -14323,6 +14323,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setSupplierCategoryList(supplierCategoryList);
 		}
 	}
+	//#29661 #40511 end
 
 	/**
 	 * #29661
