@@ -2754,7 +2754,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			}
 			// 35311 - end
-			SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());	//#40112
+			//#40112 - start
+			if (getManagedBean().isSupplierUser()){
+				SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+			}
+			//#40112 - end
 			subStartTime = System.currentTimeMillis();
 			// set Personnel List Count
 			calcPersonnelListCount();
@@ -3888,7 +3892,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if (getManagedBean().getCurrentPageType() != null) {
 				switch (getManagedBean().getCurrentPageType()) {
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
-					SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());	//#40112
+					//#40112 - start
+					if (getManagedBean().isSupplierUser()){
+						SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+					}
+					//#40112 - end
 					if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
 						SmApplicationUtil
 								.assignNonPersonnelProfBodyList(getManagedBean());
@@ -3916,7 +3924,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					displayBumiRecommendNote();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
-					SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());	//#40112
+					//#40112 - start
+					if (getManagedBean().isSupplierUser()){
+						SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
+					}
+					//#40112 - end
 					calcPersonnelListCount();
 					SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 							getManagedBean().getSmAppl(), getManagedBean()

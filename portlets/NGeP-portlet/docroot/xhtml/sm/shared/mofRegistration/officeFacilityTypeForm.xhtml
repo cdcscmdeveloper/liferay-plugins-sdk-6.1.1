@@ -213,9 +213,10 @@
 									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
 
 								<!-- #40112 -->
-								<p:outputPanel layout="inline" rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'
+								<p:outputPanel layout="inline" style="width: 150px;" styleClass="ai-assistant-btn" onclick="tenancyAI.show()" immediate="true"
+									rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' and backingBean.managedbean.supplierUser
 									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B' and backingBean.managedBean.smAppl.aiProcessed gt 0}">
-									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" style="width: 150px;" styleClass="ai-assistant-btn" onclick="tenancyAI.show()" immediate="true">
+									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" >
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:commandButton>
 									<p:graphicImage id="tttenancyAI" value="/css/images/design/tooltips.png" style="margin-left: 5px; vertical-align: middle;" />
@@ -273,7 +274,10 @@
 								
 								<p:ajax event="blur" partialSubmit="true" process="@this" update="rentalAiIcon" /></p:inputText>
 							<!-- #40112 -->
-							<p:outputPanel id="rentalAiIcon" layout="inline"><p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" rendered="#{backingBean.managedBean.basicCompanyFacility.rentalRateFromAI}" /></p:outputPanel> 
+							<p:outputPanel id="rentalAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.rentalRateFromAI}" />
+							</p:outputPanel> 
 								
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -504,7 +508,10 @@
 								<!-- #39097 & #36718 - End  -->
 							</p:selectOneMenu>
 							<!-- #40112 -->
-							<p:outputPanel id="basicOffFacDistAiIcon" layout="inline"><p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.districtFromAI}" /></p:outputPanel> 
+							<p:outputPanel id="basicOffFacDistAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.districtFromAI}" />
+							</p:outputPanel> 
 							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -538,7 +545,10 @@
 								<!-- #39097 & #36718 -->
 							</p:selectOneMenu>
 							<!-- #40112 -->
-							<p:outputPanel id="basicOffFacCityAiIcon" layout="inline"><p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.cityFromAI}" /></p:outputPanel> 
+							<p:outputPanel id="basicOffFacCityAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.cityFromAI}" />
+							</p:outputPanel> 
 							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -567,8 +577,11 @@
 										<p:ajax partialSubmit="true" process="@this" />
 									
 								<p:ajax event="blur" partialSubmit="true" process="@this" update="companyPostMyCodeAiIcon" /></p:inputText>
-							<!-- #40112 -->
-							<p:outputPanel id="companyPostMyCodeAiIcon" layout="inline"><p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcodeFromAI}" /></p:outputPanel>
+								<!-- #40112 -->
+								<p:outputPanel id="companyPostMyCodeAiIcon" layout="inline">
+									<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcodeFromAI}" />
+								</p:outputPanel>
 									<!-- #39097 & #36718 - End  -->
 									
 									<ac:smFieldChangeAlert 
