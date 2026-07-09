@@ -143,6 +143,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.helper.InactiveUserValidator;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -8585,4 +8586,54 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return userResDto;
 	}
+	// 33222 - start
+	/**
+	 * Validate committee member for profile and role status
+	 * @param scQt
+	 * @param qtCommittee
+	 */
+	public void validateCommitteeUsers(ScQt scQt, ScQtCommittee qtCommittee) {
+		ScCommittee committee = qtCommittee.getScCommittee();
+		List<ScCommitteeMember> committeeMembers = committee.getScCommitteeMembers();
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+		reqDTO.setDocNo(scQt.getQtNo());
+		reqDTO.setOrgProfileId(scQt.getOrgProfileId());
+		Locale locale = this.getFacesScopesGen().getUserLocale();
+		List<String> inactiveUsers = new ArrayList<>();
+		Set<String> roles = new HashSet<>();
+		List<String> roleToSkip = new ArrayList<>();
+		String taskName = this.getManagedBean().getTaskName();
+		if (Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP).contains(taskName)) {
+			roleToSkip.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+		}
+		for (ScCommitteeMember committeeMember : committeeMembers) {
+			PmParameter committeeRole = committeeMember.getMemberRole();
+			if (CollectionUtils.isNotEmpty(roleToSkip) && roleToSkip.contains(committeeRole.getParameterCode())) {
+				continue;
+			}
+			reqDTO.setUserIds(String.valueOf(committeeMember.getPmUser().getUserId()));
+			String roleExt = SourcingConstants.ROLE_EXT_MAP.get(committeeMember.getMemberRole().getParameterCode());
+			reqDTO.setUserRoleCode(committee.getCommitteeType().getParameterCode().concat(roleExt));
+			committeeMember.setUserInactive(!InactiveUserValidator.getInstance().validateUsers(reqDTO));
+			if (committeeMember.isUserInactive()) {
+				String roleDesc = this.getParameterDesc(committeeRole, locale);
+				String normalizedString = SourcingConstants.STRING_DICTIONARY.get(roleDesc);
+				if (null != normalizedString) {
+					roleDesc = normalizedString;
+				}
+				roles.add(roleDesc);
+				inactiveUsers.add(roleDesc + " " + committeeMember.getPmUser().getUserName());
+			}
+		}
+ 
+		if (CollectionUtils.isNotEmpty(inactiveUsers)) {
+			String inactiveUserStrs = StringUtils.join(inactiveUsers, ", ");
+			String committeeDesc = this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType(), locale);
+			String roleDescs = StringUtils.join(roles, ", ");
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_761002, new String[] { inactiveUserStrs,
+					committeeDesc, roleDescs }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+
+		}
+	}
+	// 33222 - end
 }
