@@ -16088,7 +16088,8 @@ private void retriveCommitteeRemarksList(){
 	public String retrieveTotalSpecScoreBySupplier(Long proposalId, 
 			String checkListType){
 	
-		int totalScore = 0; int total = 0; 
+		BigDecimal totalScore = BigDecimal.ZERO; //#40506
+		BigDecimal total = BigDecimal.ZERO; //#40506
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
@@ -16110,11 +16111,12 @@ private void retriveCommitteeRemarksList(){
 			List<ScQtProposalChecklist> list = new ArrayList<ScQtProposalChecklist>();
 			for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
 				list.add(specscore);
-				totalScore = specscore.getTotalScore().intValue();
-				total = total + totalScore;
+				totalScore = specscore.getTotalScore().setScale(2,  RoundingMode.HALF_UP);//#40506
+				total = total.add(totalScore); //#40506
 				
 			}
-			this.getManagedBean().setTotalScore(Integer.toString(total));
+			this.getManagedBean().setTotalScore(
+				    total.setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString());//#40506
 			this.getManagedBean().setEvaluationStgPkgTechnicalCheckList(
 					 localCheckList);
 			this.getManagedBean().setEvaluationStgPkgPropCheckList(list);
