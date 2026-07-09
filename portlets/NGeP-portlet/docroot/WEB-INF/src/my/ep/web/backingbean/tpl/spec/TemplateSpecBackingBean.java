@@ -3902,7 +3902,7 @@ public class TemplateSpecBackingBean extends
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
-		boolean manSpec = false;
+		boolean mandatorySpec = false;
 		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
@@ -3926,12 +3926,12 @@ public class TemplateSpecBackingBean extends
 				if (questionType
 						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
 						&& isMandatorySpec) {
-					manSpec = true;
+					mandatorySpec = true;
 					break;
 				}
 			}
 		}
-		return manSpec;
+		return mandatorySpec;
 	}
 
 	// #29187 End Vinod
@@ -3997,8 +3997,6 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void itemComplianceChangeControl(ValueChangeEvent event) {
-		log.info("New: " + event.getNewValue() + ", Old: "
-				+ event.getOldValue());
 		if (event.getOldValue() == null) {
 			getManagedBean().setComplianceOldNull(true);
 		} else {

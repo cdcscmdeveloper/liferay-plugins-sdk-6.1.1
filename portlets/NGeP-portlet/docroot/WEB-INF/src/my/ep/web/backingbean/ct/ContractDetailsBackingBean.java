@@ -3627,14 +3627,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
 				userRole = RoleCode.BPK_CCA.value();
 				//#25406 - Start
-			}else if ((ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_CENTRAL)
-					|| ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-							ParameterConst.CONTRACT_TYPE_MINISTRY))
-					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				//Fixing #35506 - Start
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
 				userRole = RoleCode.CT_APPROVER.value();
 				//#25406 - End
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL) && getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
 			}
+			//Fixing #35506 - End 
 		} else if (getManagedBean().getTaskName() != null
 				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME)
 						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME))) {
@@ -4502,7 +4504,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    target.setFinancialOrg(source.getFinancialOrg()); // Copy financial organization
 	    target.setFinancialOrgName(source.getFinancialOrgName()); // Copy financial organization Name
 	    target.setBondNew(source.isBondNew()); // Copy bond new status
-	    //target.setPrevId(source.getPrevId());
+	    target.setPrevId(source.getPrevId()); // Copy PrevId #35506
 	    return target;
 	}
 		
@@ -4536,7 +4538,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	        clone.setFinancialOrg(newOrg); // Copy financial organization
 	        clone.setFinancialOrgName(src.getFinancialOrgName()); // Copy financial organization Name
 	        clone.setBondNew(src.isBondNew()); // Copy bond new status
-	        //clone.setPrevId(src.getPrevId()); // Copy prevId bond
+	        clone.setPrevId(src.getPrevId()); // Copy prevId bond #35506
 	        clone.setCtContractAmount(parent); // Set the new parent contract amount
 	    }
 	    return clone;
@@ -4569,7 +4571,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    newBond.setExpDate(getExtendedExpDate(contractValue));
 	    newBond.setFileName(null);
 	    newBond.setFilePath(null);
-	    //newBond.setPrevId(existingBond.getPrevId());
+	    newBond.setPrevId(existingBond.getPrevId()); //#35506
 	    return newBond;
 	}
 
