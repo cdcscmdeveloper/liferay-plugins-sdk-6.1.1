@@ -5321,7 +5321,7 @@ public void saveComplianceSample() {
 						.getQtProposalChecklist()
 						.setProposalScore(
 								this.getManagedBean().getTechGovProposalScore());
-				this.retriveSampleSpecmasterForMandatorySpecChecking(this.getManagedBean().getSampleItemList());//#29187 Added Vinod
+				this.retrieveSampleSpecMasterForMandatorySpecChecking(this.getManagedBean().getSampleItemList());//#29187 Added Vinod
 				return "/xhtml/sc/evaluation/evaluationStage/technical/techSampleEvaluation.xhtml";
 			} else {
 				String docDefinationKey = proposalCheckList.getScQtCheckList()
@@ -19015,7 +19015,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param
 	 * @return boolean
 	 */
-	public boolean renderDisqialified() {
+	public boolean renderDisqualified() {
 		List<ScQtEvaluationResultDtl> disqualifiedList = null != this.getManagedBean().getDisqualifiedSuppliersDM()
 				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList() ? this.getManagedBean()
 				.getDisqualifiedSuppliersDM().getList() : null;
@@ -19033,12 +19033,12 @@ private void retriveCommitteeRemarksList(){
 	// #29187 End Vinod
 	// #29187 Start Vinod
 	/**
-	 * This method is to check whether to render diswualified column.
+	 * This method is to check whether to render disqualified column.
 	 * 
 	 * @param evalResultDtl
 	 * @return boolean
 	 */
-	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl) {
+	public boolean isDisqualifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl) {
 		boolean isDisqualified = null != evalResultDtl.isCompliance() && !evalResultDtl.isCompliance();
 		if (isDisqualified) {
 			return true;
@@ -19076,7 +19076,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param templateChecklist
 	 * @return
 	 */
-	public void retriveSampleSpecmasterForMandatorySpecChecking(List<ScQtSampleItem> templateChecklist) {
+	public void retrieveSampleSpecMasterForMandatorySpecChecking(List<ScQtSampleItem> templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
@@ -19187,7 +19187,6 @@ private void retriveCommitteeRemarksList(){
 	 * @return
 	 */
 	public void itemComplianceChangeControl(ValueChangeEvent event) {
-		log.info("New: " + event.getNewValue() + ", Old: " + event.getOldValue());
 		if (event.getOldValue() == null) {
 			getManagedBean().setComplianceOldNull(true);
 		} else {
@@ -19242,8 +19241,8 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 
-		boolean complaincePopup = checkTechnicalSpecCompliance();
-		if (complaincePopup && !getManagedBean().isComplianceCnfrm()) {
+		boolean compliancePopup = checkTechnicalSpecCompliance();
+		if (compliancePopup && !getManagedBean().isComplianceCnfrm()) {
 			RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
 			getManagedBean().setComplianceCnfrm(true);
 			return;
@@ -19300,8 +19299,8 @@ private void retriveCommitteeRemarksList(){
 			validateMandatorySpecAndRemarkForSample(item);
 		}
 
-		boolean complaincePopup = checkSampleCompliance();
-		if (complaincePopup && !getManagedBean().isComplianceCnfrm()) {
+		boolean compliancePopup = checkSampleCompliance();
+		if (compliancePopup && !getManagedBean().isComplianceCnfrm()) {
 			RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_SAMPLE_CONFIRMATION_POPUP);
 			getManagedBean().setComplianceCnfrm(true);
 			return;
