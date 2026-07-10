@@ -368,9 +368,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#35320 - Start
 	private String selectedSupplierOfferedPrice;
 	//#35320 - End
-	
-	private ScQtEvaluationResultDtl tempRecommendedSupplier;//#39620 
-	
+		
 	/**
 	 * @return the activeIndex
 	 */
@@ -2797,17 +2795,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
-	}//#35320 - End
-
-	//#39620 - Start
-	public ScQtEvaluationResultDtl getTempRecommendedSupplier() {
-		return tempRecommendedSupplier;
-	}
-
-	public void setTempRecommendedSupplier(ScQtEvaluationResultDtl tempRecommendedSupplier) {
-		this.tempRecommendedSupplier = tempRecommendedSupplier;
-	}//#39620 - End
-	
-	
+	}//#35320 - End	
 }
 // ***25201

@@ -92,6 +92,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote; //Fix - #30045
+import my.ep.persistence.entity.sc.loaloi.ScLoa; //#37620,#34367
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -165,6 +166,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
 	private CtAgency selectedRecommendedAgency;
+	
+	private String confirmationContentMsg;//34442 
 	
 	//#13847 start
 	/**
@@ -853,6 +856,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 			
+			// #37620,#34367 - Start
+			// Retrieve LOA and update contract panel state (flag, circular data, and attachment)
+			// based on validation logic in retrieveItemPanelDetails.
+			ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(ctBB.getManagedBean(), "contractVer.ctContract.loa");
+			ctBB.retrieveItemPanelDetails(loa);
+			// #37620,#34367 - End
+			
 			chkBondWaivedAttachment();
 			sortDeductions();
 			
@@ -1300,10 +1310,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		            syncBondsToTarget(contractAmt, allBondsFromUI, isEffectiveContract);
 
 		            // Set the attachment flag with more readable logic.
-		            boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
-		            boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
-		            int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
-		            contractAmt.setIsBondAttachment(flag);
+		            //#40283 - Start ( Set the bond attachment flag for FD/FU only)
+				if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+						|| ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+					
+					boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
+					boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
+					int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
+					contractAmt.setIsBondAttachment(flag);
+				}
+				//#40283 - End
 		        }
 		    }
 		// 24333 - End
@@ -1519,6 +1535,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
+		String docType = ctBB.getManagedBean().getContractVer().getDocType(); //#40283
 
 		/*Validation for delivery term main page*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
@@ -1976,7 +1993,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    log.info("validateCtContractVer method test : End Checking ");
 		  //#24333 - End
 		}
-		validationPerformanceBond(action); //#13847
+		
+		//#40283 start
+		if (docType != null
+				&& (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION) 
+						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
+			validationPerformanceBond(action); // #13847
+		}
+		//#40283 end
 		
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
@@ -2156,6 +2181,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	//#13847 - end
 	
+	//#34442 - start
+	/**
+	 * Checks whether the Performance Bond confirmation dialog should be displayed.
+	 *
+	 * @return {@code true} if the Performance Bond is required, not waived, not exempted,
+	 *         and the Performance Bond details are incomplete; {@code false} otherwise.
+	 */
+	private boolean shouldShowPerformanceBondConfirmation() {
+	    CtContractAmount amount = ctBB.getManagedBean().getCtContractAmount();
+
+	    return amount.isBondReq()
+	            && !amount.isBondWaived()
+	            && !amount.isBondExempted()
+	            && ctBB.getManagedBean().getCtPerformanceBond() == null;
+	}
+	//#34442 - end
+	
 	/**
 	 * The method used to authenticate user during submit the contract.
 	 * This method will invoke a confirmation dialog for user authentication.
@@ -2168,6 +2210,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	
 	public String gpkiSignAction(String outcome) throws Exception {
+		//#34442 - start
+		String docType = ctBB.getManagedBean().getContractVer().getDocType();
+		String statusId = String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId());
+		String contractNo = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
+		//#34442 - end
+		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -2197,6 +2245,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
+
+			//#34442 - start
+			boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+			boolean isFU = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			boolean isFulfilmentDocument = isFD || isFU;
+
+			if ((isFulfilmentDocument && shouldShowPerformanceBondConfirmation()) || !isFulfilmentDocument) {
+				setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
+
+				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+
+				return null;
+			}
+			//#34442 - end
+			
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		//#25406 - Start	
@@ -2211,6 +2275,28 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			return null;
 		//#25406 - End
 		} else {
+			//#34442 - start
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+				boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+				boolean isCOM = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
+
+				if (isFD && shouldShowPerformanceBondConfirmation()) {
+					setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
+
+					RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
+					RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+
+					return null;
+				} else if (isCOM) {
+					setConfirmationContentMsg(getConfirmationContent(statusId));
+
+					RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
+					RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+
+					return null;
+				}
+			}
+			//#34442 - end
 			return this.saveContract(outcome);
 		}
 	}
@@ -3733,15 +3819,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ParameterConst.CONTRACT_TYPE_CENTRAL)
 					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
 				userRole = RoleCode.BPK_CCA.value();
-				//#25406 - Start
-			}else if ((ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_CENTRAL)
-					|| ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-							ParameterConst.CONTRACT_TYPE_MINISTRY))
-					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				//#25406 - Start (Fixing #35506)
+				//Fixing #35506 - Start
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
 				userRole = RoleCode.CT_APPROVER.value();
 				//#25406 - End
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL) && getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
 			}
+			//Fixing #35506 - End 
 		} else if (getManagedBean().getTaskName() != null
 				&& ((getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME) || getManagedBean()
 						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME.replaceAll("\\s", ""))) || (getManagedBean()
@@ -4956,4 +5044,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 	}
 	//#40197 end
+	
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

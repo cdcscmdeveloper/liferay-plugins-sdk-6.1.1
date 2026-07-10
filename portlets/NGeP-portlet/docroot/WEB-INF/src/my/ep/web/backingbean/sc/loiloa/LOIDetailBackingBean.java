@@ -3278,7 +3278,7 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				renewSessionWithPreviousValues();
-
+				populateMeetingPreparationTab(); // 34491
 				retrieveMultipleLoiDtls(scQtFinalization.getScQt().getQtId(),
 						getManagedBean().getCommitteeType(), getManagedBean()
 								.getRecommendDtlIds());
@@ -4640,7 +4640,6 @@ public class LOIDetailBackingBean extends
 		}
 		// 34491 - start
 		getManagedBean().setScQtCommittee(scQtCommittee);
-		this.populateMeetingPreparationTab(); 
 		// 34491 - end
 	}
 

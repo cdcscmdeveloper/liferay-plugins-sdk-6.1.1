@@ -3179,7 +3179,7 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-//		List<ScSupplierItemPrice> resultList = getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices);
 	}
 	
 	// ZonalTierStandardPrice -- start
@@ -4292,13 +4292,15 @@ public class PurchaseInquiryBackingBean extends
 	 *             if the reason code is inactive for any request note detail
 	 */
 	public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
-		PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-				.getReasonId());
-		if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
-			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
-				throw new EpException(MessageConst.ERROR_760716, new String[] {
-						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
-								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
+		if (null != getManagedBean().getRequestNoteDtl().getJustificationType()) {	
+			PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
+					.getReasonId());
+			if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
+				for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
+					throw new EpException(MessageConst.ERROR_760716, new String[] {
+							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+									.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
+				}
 			}
 		}
 	}
@@ -4578,10 +4580,11 @@ public class PurchaseInquiryBackingBean extends
 			appendedCount = suppAccTypeSb.split(",").length;
 		}
 
-		if (validateProcurementTypeisRPT(rnDtl.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
-			throwJustificationTypeError(rnDtl, suppAccTypeSb, appendedCount);
-		} else {
+		Date createdDate = rnDtl.getCreatedDate() != null ? rnDtl.getCreatedDate() : new Date();
+		if (validateProcurementTypeisRPT(createdDate).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
 			throwSupplierAccountTypeError(rnDtl, suppAccTypeSb, appendedCount);
+		} else {
+			throwJustificationTypeError(rnDtl, suppAccTypeSb, appendedCount);
 		}
 	}
 

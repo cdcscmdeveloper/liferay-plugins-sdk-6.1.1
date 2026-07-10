@@ -689,6 +689,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> previousCategoryList;
 	private SmSupplierCategory historySuppCategory;
 	// 36504 - END
+	
+	// #40031 - Start
+	private String prevRole;
+	private String removedRoleMsg;
+	private boolean latestApplHasPrevRole;
+	// #40031 - End
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4900,4 +4906,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.historySuppCategory = historySuppCategory;
 	}
 	// 36504 - END
+	
+	// #40031 - Start
+	public String getPrevRole() {
+		return prevRole;
+	}
+
+	public void setPrevRole(String prevRole) {
+		this.prevRole = prevRole;
+	}
+
+	public String getRemovedRoleMsg() {
+		return removedRoleMsg;
+	}
+
+	public void setRemovedRoleMsg(String removedRoleMsg) {
+		this.removedRoleMsg = removedRoleMsg;
+	}
+
+	public boolean isLatestApplHasPrevRole() {
+		return latestApplHasPrevRole;
+	}
+
+	public void setLatestApplHasPrevRole(boolean latestApplHasPrevRole) {
+		this.latestApplHasPrevRole = latestApplHasPrevRole;
+	}
+	// #40031 - End
 }

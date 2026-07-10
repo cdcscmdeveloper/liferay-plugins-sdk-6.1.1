@@ -18,7 +18,8 @@
 			<h:outputText escape="false"
 				value="#{lbl['lbl.sm.comp.exp.tnc.msg']}" />
 		</p:panel>
-		<table>
+		<!-- 9299 - 40476  -->
+		<table  style="margin-top:12px">
 			<tr>
 				<td><p:selectBooleanCheckbox value="#{smCompExpMB.agreeTnC}">
 						<p:ajax oncomplete="blockWidget.hide()"
