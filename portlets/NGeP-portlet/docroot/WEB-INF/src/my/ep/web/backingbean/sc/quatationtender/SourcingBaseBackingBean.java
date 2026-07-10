@@ -250,6 +250,7 @@ import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -8679,11 +8680,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		ScActor deskofficerActor = getActorByQtIdAndRoleCode(scQt.getQtId(), deskofficerRoleCode);
 		reqDTO.setUserIds(deskofficerActor.getUserId().toString());
 		reqDTO.setUserRoleCode(deskofficerRoleCode);
-		if (!InactiveUserValidator.getInstance().validateUsers(reqDTO)) {
+		Locale locale = this.getFacesScopesGen().getUserLocale();
+		String status = InactiveUserValidator.getInstance().evaluateUsers(reqDTO).getStatus();
+		if ("5".equals(status)) {
+			String roleDesc = RoleHelper.getInstance().getRoleDescByCode(deskofficerRoleCode).getRoleName();
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_700128, new String[] { roleDesc,
+					scQt.getOwnerOrgProfile().getOrgName() }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		} else if (!"1".equals(status)) {
 			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_761000,
 					new String[] { deskofficerActor.getUserName(), scQt.getOwnerOrgProfile().getOrgName() },
-					MessageUtils.BUNDLE_COMMON_MESSAGES, this.getFacesScopesGen().getUserLocale()));
-		} 
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		}
 	}
 	// 33222 - end
 }

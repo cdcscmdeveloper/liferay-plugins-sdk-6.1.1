@@ -10809,8 +10809,13 @@ private void retriveCommitteeRemarksList(){
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else {
 				// 33222 - start
-				getManagedBean().setAutoUpdate(true);
-				validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt());
+				String taskName = this.getManagedBean().getTaskName();
+				if (Arrays
+						.asList(SCProcessNameConst.FINALISE_EC_EVALUATION, SCProcessNameConst.FINALISE_FEC_EVALUATION)
+						.contains(taskName)) {
+					getManagedBean().setAutoUpdate(true);
+					validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt());
+				}
 				// 33222 - end
 				getManagedBean().setAutoUpdate(false);
 				
