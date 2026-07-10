@@ -1188,17 +1188,17 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
 
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
-		SelectItem clientTypeFederalOrNonItem = new SelectItem();
-
-		if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
-			clientTypeFederalOrNonItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
-			clientTypeFederalOrNonItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
-		} else if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
-			clientTypeFederalOrNonItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
-			clientTypeFederalOrNonItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
-		}
-
-		this.getManagedBean().getClientTypeItems().add(clientTypeFederalOrNonItem);
+		// #9299 - #40468 Start
+		SelectItem clientTypeFedItem = new SelectItem();
+		clientTypeFedItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
+		clientTypeFedItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+		this.getManagedBean().getClientTypeItems().add(clientTypeFedItem);
+		
+		SelectItem clientTypeNonFedItem = new SelectItem();
+		clientTypeNonFedItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
+		clientTypeNonFedItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
+		this.getManagedBean().getClientTypeItems().add(clientTypeNonFedItem);
+		// #9299 - #40468 End
 	}
 
 	/**
