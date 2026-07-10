@@ -64,9 +64,9 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 	
-	//30730 - start
+	//30737 - start
 	private Long inactiveUserRevise;
-	//30730 - end
+	//30737 - end
 
 	/**
 	 * @return the taskName
@@ -413,7 +413,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 		this.disableField = disableField;
 	}
 
-	//30730 - start
+	//30737 - start
 	public Long getInactiveUserRevise() {
 		return inactiveUserRevise;
 	}
@@ -421,6 +421,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	public void setInactiveUserRevise(Long inactiveUserRevise) {
 		this.inactiveUserRevise = inactiveUserRevise;
 	}
-	//30730 - end
+	//307307- end
 	
 }

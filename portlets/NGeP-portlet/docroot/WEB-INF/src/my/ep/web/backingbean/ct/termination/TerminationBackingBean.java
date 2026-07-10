@@ -615,7 +615,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		}
 		
 		//#30737 - Start
-		// CtContract ctContract = ctBB.getManagedBean().getContractVer().getCtContract();
 		String docType = ctBB.getManagedBean().getContractVer().getDocType();
 		
 		//TODO - SUBMIT in validation + save/submit
@@ -642,6 +641,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			
 			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
 			List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
+			
+			// utk approved check for MCA
 			
 			inactiveUsersForRevise = getInactiveUsersForRevise(
 					ctContractVer.getContractVerId(),
