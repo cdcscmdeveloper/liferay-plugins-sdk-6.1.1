@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -41,6 +42,7 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -600,43 +602,36 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		
 		//#30737 - Start
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			CtContractVer ctContractVer = getManagedBean().getContractVer();
+			List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
+			
+			inactiveUsersForRevise = getInactiveUsersForRevise(
+					ctContractVer.getContractVerId(),
+					ctContractVer.getCtContract().getContractType().getParameterCode(), 
+					ctContractVer.getDocType());
+			
+			 if (!inactiveUsersForRevise.isEmpty()) {
+				 Long userStatus = null;
+				 
+				 for(SelectedInactiveUserDTO inactiveActor : inactiveUsersForRevise){
+					 userStatus = inactiveActor.getStatus();
+					 this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
+					 break;
+					}
+				 
+				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
+		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
+	                handleInactiveUserValidation(action, inactiveUsersForRevise, getUserRole());
+				 }
+            }
+				
 			log.info("xoxoxoxoxooxoxo action : "+action);
 			log.info("xoxoxoxoxooxoxo insert tracking diary & group task");
-			handleInactiveUserValidation(action);
 		}
 		//#30737 - End
 		
 	}
 	
-	//#30737 - Start
-	/**
-	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
-	 * Different error messages will be generated based on the returned error code.
-	 */
-	public void handleInactiveUserValidation(String outcome) {
-
-		IContractSupplierSO supplierSO 
-			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-    	
-        try {
-
-        	Long inactiveUserCheckResult = 1L; //TEMP
-        	
-        	supplierSO.checkInactiveUserOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-            	getSelectedUsers(),
-            	inactiveUserCheckResult
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex);
-        }
-    }
-	//#30737 - End
-
 	/**
 	 * The method used to save the factoring request
 	 * This method will navigate to acknowledgment page with a 
@@ -846,15 +841,47 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			
 			//#30737 - Start
-			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-				log.info("xoxoxoxoxooxoxo action : "+action);
-				log.info("insert tracking diary record....");
-				handleInactiveUserValidation(action);
-			}
+			String docType = getManagedBean().getDocType();
 			
 			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)) {
+				
+				String approverType = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();
+				List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+		        		getInactiveUsers(approverType, getSelectedUsers(), docType);
+		        handleInactiveUserValidation(action, selectedInactiveUsers, getUserRole());
+		        
 				log.info("xoxoxoxoxooxoxo action : "+action);
-				handleInactiveUserValidation(action);
+			}
+			
+			// if supplier submit to MCA, 
+			// when selected MCA is inactive, please send group task
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+				
+				CtFactoring ctFactoring = getManagedBean().getFactoring();
+				List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
+				
+				inactiveUsersForRevise = getInactiveUsersForRevise(
+						ctFactoring.getFactoringId(),
+						ctFactoring.getCtContract().getContractType().getParameterCode(), 
+						docType);
+				
+				 if (!inactiveUsersForRevise.isEmpty()) {
+					 Long userStatus = null;
+					 
+					 for(SelectedInactiveUserDTO inactiveActor : inactiveUsersForRevise){
+						 userStatus = inactiveActor.getStatus();
+						 this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
+						 break;
+						}
+					 
+					 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
+			        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
+		                handleInactiveUserValidation(action, inactiveUsersForRevise, getUserRole());
+					 }
+	            }
+					
+				log.info("xoxoxoxoxooxoxo action : "+action);
 			}
 			//#30737 - End
 			
