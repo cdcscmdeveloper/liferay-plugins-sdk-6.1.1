@@ -4832,7 +4832,11 @@ public class SmApplicationUtil {
 		}
 		
 		// 36504 - START - Previous Application
-		findPreviousApplication(managedBean);
+		if (managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
+			findPreviousAndNewSupplierApplication(managedBean);
+		} else {
+			findPreviousApplication(managedBean);
+		}
 		// 36504 - END - Previous Application
 		
 	}
@@ -4881,7 +4885,7 @@ public class SmApplicationUtil {
 		}
 	}
 
-	private static void assignExistingAndAdditionalCategoryList(
+	public static void assignExistingAndAdditionalCategoryList(
 			SmApplicationManagedBean managedBean) {
 		List<SmSupplierCategory> addtnlList = new ArrayList<>();
 		List<SmSupplierCategory> existingList = new ArrayList<>();
@@ -4893,8 +4897,6 @@ public class SmApplicationUtil {
 		managedBean.setOtherDescChangeSupplier(false);
 		managedBean.setOtherDescChangeSupPO(false);
 		managedBean.setOtherDescChangeSupApprover(false);
-		managedBean.getEditVO().setPoEditCategory(false);
-		managedBean.getEditVO().setAppEditCategory(false);
 		// 36504 - END
 		
 		for(SmSupplierCategory filtCat : managedBean.getSmAppl().getSmSupplier()
@@ -4942,6 +4944,9 @@ public class SmApplicationUtil {
 						managedBean.setOtherDescChangeSupPO(true);
 						managedBean.setOtherDescChangeSupplier(true);
 						managedBean.getEditVO().setPoEditCategory(true);
+					} else if (managedBean.isSupplierUser() && managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
+						managedBean.setOtherDescChangeSupplier(true);
+						managedBean.getEditVO().setSuppEditCategory(true);
 					}
 				}
 			}
@@ -4993,7 +4998,11 @@ public class SmApplicationUtil {
 		managedBean.setApprovedCategoryList(existingList);
 		
 		// 36504 - START - Previous Application
-		findPreviousApplication(managedBean);
+		if (managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
+			findPreviousAndNewSupplierApplication(managedBean);
+		} else {
+			findPreviousApplication(managedBean);
+		}
 		// 36504 - END - Previous Application
 	}
 	
@@ -16158,10 +16167,10 @@ public class SmApplicationUtil {
 				.retrieveActiveOtherDescHistory(supplierCategoryId);
 	}
 	
-	public static List<SmAppl> findNewRegHistoryOtherDesc(Long supplierId) {
+	public static List<SmAppl> findHistoryOtherDesc(Long supplierId) {
 		
 		List<SmAppl> applNewReg = new ArrayList<>();
-		applNewReg = SmServiceLookup.getMofRegistrationSO().findNewRegistered(supplierId);
+		applNewReg = SmServiceLookup.getMofRegistrationSO().findHistoryOtherDesc(supplierId);
 		
 		if (applNewReg == null) {
 			return null;
@@ -16170,13 +16179,19 @@ public class SmApplicationUtil {
 		return applNewReg;
 	}
 	
+	/**
+	 * Retrieves and prepares the list of supplier category applications
+	 * that are previous application for display.
+	 *
+	 * @param managedBean
+	 */
 	public static void findPreviousApplication(SmApplicationManagedBean managedBean) {
 		
 		List<SmSupplierCategory> prevList = new ArrayList<>();
 		Set<String> otherDescSet = new HashSet<>();
 		Long supplierId = managedBean.getSmAppl().getSmSupplier().getSupplierId();
 		List<SmAppl> applNewReg = new ArrayList<>(); 
-		applNewReg = findNewRegHistoryOtherDesc(supplierId);
+		applNewReg = findHistoryOtherDesc(supplierId);
 		
 		if (applNewReg != null) {
 			for (SmAppl appl : applNewReg) {
@@ -16232,6 +16247,67 @@ public class SmApplicationUtil {
 	}
 	
 	/**
+	 * Retrieves and prepares the list of supplier category applications
+	 * that are pending re-approval(Renewal Application) for display.
+	 *
+	 * @param managedBean
+	 */
+	public static void findPreviousAndNewSupplierApplication(SmApplicationManagedBean managedBean) {
+		
+		List<SmSupplierCategory> prevList = new ArrayList<>();
+		Set<String> otherDescSet = new HashSet<>();
+		
+		if (managedBean.getSmAppl() != null) {
+			for (SmSupplierCategory previousKN : managedBean.getSmAppl().getSmSupplierCategories()) {
+				
+				String catType = previousKN.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
+
+				if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) && 
+						(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
+						!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
+					
+					setApplNoHistory(previousKN, managedBean, SupplierManagementConst.PREVIOUS_CAT);
+					
+					// Merge category code
+					String mainCatcode = previousKN
+							.getPmCategoryL1()
+							.getCategoryL1Code()
+							.concat(previousKN.getPmCategoryL2()
+									.getCategoryL2Code())
+							.concat(previousKN.getPmCategoryL3()
+									.getCategoryL3Code());
+					
+					if (otherDescSet.contains(mainCatcode)) {
+						for (SmSupplierCategory catObj : prevList) {
+							String existingCatcode = catObj
+									.getPmCategoryL1()
+									.getCategoryL1Code()
+									.concat(catObj.getPmCategoryL2()
+											.getCategoryL2Code())
+									.concat(catObj.getPmCategoryL3()
+											.getCategoryL3Code());
+							
+							if (previousKN.getSmSuppCatOtherDescHistory() != null &&
+									mainCatcode.equals(existingCatcode)) {
+								catObj.getSmSuppCatOtherDescHistory().addAll(previousKN.getSmSuppCatOtherDescHistory());
+							}
+						}
+					} else {
+						otherDescSet.add(mainCatcode);
+						prevList.add(previousKN);
+					}
+				}
+			}
+		}
+		
+		sortSupplierCategory(prevList);
+		managedBean.setPreviousCategoryList(prevList);
+	}
+	
+	/**
 	 * Sets the application number history for each supplier category description history
 	 * record associated with the given supplier category.
 	 *
@@ -16253,6 +16329,9 @@ public class SmApplicationUtil {
 				} else if (!managedBean.isOtherDescChangeSupPOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
 					managedBean.setOtherDescChangeSupPOPrev(true);
 					managedBean.setOtherDescChangeSupplierPrev(true);
+				} else if (managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
+					managedBean.setOtherDescChangeSupplier(true);
+					managedBean.getEditVO().setSuppEditCategory(true);
 				}
 			}
 			
