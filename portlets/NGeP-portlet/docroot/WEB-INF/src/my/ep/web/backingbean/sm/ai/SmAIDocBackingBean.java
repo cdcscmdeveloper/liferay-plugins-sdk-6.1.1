@@ -24,7 +24,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONArray;
 
-import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ai.AIApiResponse;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -74,23 +73,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private boolean blockSubmit = false;
 	private String docType;
 	private SmAppl smAppl;
-
-	private SmAppl testAppl;
-	/**
-	 * temp test
-	 * @return
-	 */
-	public SmAppl test(){
-		if (testAppl == null){
-			MofRegistrationReqDTO dto = new MofRegistrationReqDTO();
-			dto.setPoSdoUser(false);
-			dto.setApplId(1895956l); //KU-12092025-0001
-			dto.setCurrentPage("");
-			testAppl = SmServiceLookup.getMofRegistrationSO().retrieveCurrentDraftApplication(dto).getSmAppl();
-		}
-		return testAppl;
-	}
-
 
 	/**
 	 * Set context for auto-processing
@@ -187,24 +169,48 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		postAIMap.put(docType, Boolean.TRUE);
 	}
 	
+	/**
+	 * EPF
+	 * @param id
+	 * @return
+	 */
 	public static boolean isEpfDoc(Long id)     { 
 		return id == 494L || id == 768L || id == 864L; 
 	}
 	
+	/**
+	 * Tenancy
+	 * @param id
+	 * @return
+	 */
 	public static boolean isTenancyDoc(Long id) { 
 		return id == 679L || id == 662L || id == 654L || id == 1124L;
 	}
 	
+	/**
+	 * Bank Statement
+	 * @param id
+	 * @return
+	 */
 	public static boolean isBankDoc(Long id)    {
 		return id == 529L || id == 633L || id == 676L;
 	}
-
-	// AI WIP gate (flag seeded in initNonMandatoryAndMandatoryDocs).
+	
+	/**
+	 * Check AI gate
+	 * @param appl
+	 * @return
+	 */
 	public static boolean isAIApplicable(SmAppl appl) {
 		return appl != null && appl.getAiProcessed() >= 1;
 	}
-
-	// Supporting-doc rows that get the AI upload icon: bank / tenancy docs, when AI applies.
+	
+	/**
+	 * Display AI upload for Supporting Documents
+	 * @param appl
+	 * @param documentId
+	 * @return
+	 */
 	public static boolean isAiUploadDocRow(SmAppl appl, Long documentId) {
 		return isAIApplicable(appl) && (isBankDoc(documentId) || isTenancyDoc(documentId));
 	}
@@ -412,7 +418,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		try {
 			String requestBody = AiDocParser.buildOcrRequestBody(docType, filepath, filename, clientRequestId);
-			String result = SmServiceLookup.getAIApiProcessSO().callDocumentOcr(requestBody, docType);
+			String result = AiOcrClient.callDocumentOcr(requestBody, docType);
 			SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 					"SmAIDocbackingBean.sendDocumentOCR", "1:"+filename, startTime);
 			if (result == null) {
