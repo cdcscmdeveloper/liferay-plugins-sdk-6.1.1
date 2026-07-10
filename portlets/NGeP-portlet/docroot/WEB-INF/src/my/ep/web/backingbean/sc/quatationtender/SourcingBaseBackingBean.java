@@ -67,6 +67,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
@@ -123,6 +124,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
@@ -162,6 +164,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
@@ -970,6 +973,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 	}
 	// 12471 - end
+	
+	// 33222 - start
+	protected IScActorSO getScActorSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScActorSO.class);
+	}
+	// 33222 - end
+	
 	/**
 	 * To initialize remarks.
 	 * 
@@ -8634,6 +8645,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					committeeDesc, roleDescs }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 
 		}
+	}
+	// 33222 - end
+	
+	// 33222 - start
+	/**
+	 * Find sc actor using qtid and rolecodes.
+	 * @param qtId
+	 * @param roleCode
+	 * @return
+	 */
+	public ScActor getActorByQtIdAndRoleCode(Long qtId, String roleCode) {
+		ScActorReqDTO reqDTO = new ScActorReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		reqDTO.setDocId(qtId);
+		reqDTO.setRoleCode(roleCode);
+
+		return getScActorSO().retrieveActorByTypeIdAndRoleCode(reqDTO).getScActor();
+	}
+	// 33222 - end
+	
+	// 33222 - start
+	/**
+	 * Validate profile status for deskofficer
+	 * 
+	 * @param scQt
+	 */
+	public void validateDeskofficerProfileRoleStatus(ScQt scQt) {
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+		String deskofficerRoleCode = RoleCode.DESK_OFFICER.value();
+		reqDTO.setDocNo(scQt.getQtNo());
+		reqDTO.setOrgProfileId(scQt.getOrgProfileId());
+		ScActor deskofficerActor = getActorByQtIdAndRoleCode(scQt.getQtId(), deskofficerRoleCode);
+		reqDTO.setUserIds(deskofficerActor.getUserId().toString());
+		reqDTO.setUserRoleCode(deskofficerRoleCode);
+		if (!InactiveUserValidator.getInstance().validateUsers(reqDTO)) {
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_761000,
+					new String[] { deskofficerActor.getUserName(), scQt.getOwnerOrgProfile().getOrgName() },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, this.getFacesScopesGen().getUserLocale()));
+		} 
 	}
 	// 33222 - end
 }

@@ -45,7 +45,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -217,7 +216,6 @@ import com.liferay.portal.util.PortalUtil;
 
 //29661 -start-
 import java.util.Locale;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 
 //29661 -end-
 
@@ -10778,7 +10776,7 @@ private void retriveCommitteeRemarksList(){
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
 	public void submitPrepareEvaluationDetails(String outCome) {
-
+		
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -10810,6 +10808,10 @@ private void retriveCommitteeRemarksList(){
 				}//#28784 - end
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else {
+				// 33222 - start
+				getManagedBean().setAutoUpdate(true);
+				validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt());
+				// 33222 - end
 				getManagedBean().setAutoUpdate(false);
 				
 				// #10542 - start
