@@ -236,8 +236,13 @@ public class SupplierManagementConst {
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
+	
+	// 36504 - START
 	public static final String SUPPLIER_APPROVER = "SA";
 	public static final String SUPPLIER_PO = "SP";
+	public static final String SUPPLIER_RENEWAL = "S";
+	// 36504 - END
+	
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
