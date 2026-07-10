@@ -162,6 +162,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
     protected CtContractVer getContractVer() {
     	return getManagedBean().getContractVer();
     }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
     //#30737 - End
 	    
 	private String confirmationContentMsg;//34442 
@@ -1008,7 +1013,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 	        		getInactiveUsers(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
-	        handleInactiveUserValidation(outcome, selectedInactiveUsers, getUserRole());
+	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 		}
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
@@ -1034,7 +1039,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
-	                handleInactiveUserValidation(outcome, inactiveUsersForRevise, getUserRole());
+	                handleInactiveUserValidation(outcome, inactiveUsersForRevise);
 				 }
             }
 	    }

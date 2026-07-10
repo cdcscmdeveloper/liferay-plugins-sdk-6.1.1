@@ -126,6 +126,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
     protected CtContractVer getContractVer() {
     	return getManagedBean().getContractVer();
     }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
     //#30737 - End
 	    
 	/**
@@ -621,7 +626,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
-	                handleInactiveUserValidation(action, inactiveUsersForRevise, getUserRole());
+	                handleInactiveUserValidation(action, inactiveUsersForRevise);
 				 }
             }
 				
@@ -631,7 +636,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		//#30737 - End
 		
 	}
-	
+
 	/**
 	 * The method used to save the factoring request
 	 * This method will navigate to acknowledgment page with a 
@@ -849,7 +854,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();
 				List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 		        		getInactiveUsers(approverType, getSelectedUsers(), docType);
-		        handleInactiveUserValidation(action, selectedInactiveUsers, getUserRole());
+		        handleInactiveUserValidation(action, selectedInactiveUsers);
 		        
 				log.info("xoxoxoxoxooxoxo action : "+action);
 			}
@@ -877,7 +882,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					 
 					 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 			        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
-		                handleInactiveUserValidation(action, inactiveUsersForRevise, getUserRole());
+		                handleInactiveUserValidation(action, inactiveUsersForRevise);
 					 }
 	            }
 					

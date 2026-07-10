@@ -84,6 +84,10 @@ public class SupplierManagedBean extends BaseManagedBean {
 	// Start Fix - #33856
 	private Long applID;
 	// End Fix - #33856
+	
+	//30737 - start
+	private Long inactiveUserRevise;
+	//30737 - end
 
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -680,7 +684,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 	// End Fix - #33856
 
+	//30737 - start
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
+	}
 
-
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
+	}
+	//30737 - end
 
 }

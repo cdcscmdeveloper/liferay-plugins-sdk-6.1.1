@@ -182,6 +182,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     protected CtContractVer getContractVer() {
     	return ctBB.getManagedBean().getContractVer();
     }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
     //#30737 - End
 	
 	private String confirmationContentMsg;//34442 
@@ -2109,14 +2114,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	        
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 	        		getInactiveUsers(approverType, getSelectedUsers(), docType);
-	        handleInactiveUserValidation(action, selectedInactiveUsers, getUserRole());
+	        handleInactiveUserValidation(action, selectedInactiveUsers);
 	    }
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 	        log.info("xoxoxoxoxooxoxo action : REVISE");
 	        if (!inactiveUsersForRevise.isEmpty() && inactiveUsersForRevise.get(0).getStatus() == 5L) {
 	        	log.info("xoxoxoxoxooxoxo REVISE + return 5L");
-                handleInactiveUserValidation(action, inactiveUsersForRevise, getUserRole());
+                handleInactiveUserValidation(action, inactiveUsersForRevise);
             }
 	    }
 		//#30737 - End
@@ -2320,8 +2325,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			//#34442 - start
 			boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
 			boolean isFU = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			boolean isFulfilmentDocument = isFD || isFU;
 
-			if ((isFD || isFU) && shouldShowPerformanceBondConfirmation()) {
+			if ((isFulfilmentDocument && shouldShowPerformanceBondConfirmation()) || !isFulfilmentDocument) {
 				setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
 
 				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");

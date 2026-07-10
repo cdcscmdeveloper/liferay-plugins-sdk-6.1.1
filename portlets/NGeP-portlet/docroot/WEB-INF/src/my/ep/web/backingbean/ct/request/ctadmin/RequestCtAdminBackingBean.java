@@ -90,6 +90,11 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
     protected CtContractVer getContractVer() {
     	return getManagedBean().getContractVer();
     }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
     //#30737 - End
 	
 	/**
@@ -713,7 +718,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 	        		getInactiveUsers(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
-	        handleInactiveUserValidation(outcome, selectedInactiveUsers, getUserRole());
+	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 		}
 		//#30737 - End
 		
