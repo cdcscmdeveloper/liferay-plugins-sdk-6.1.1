@@ -918,7 +918,7 @@ public class PurchaseInquiryBackingBean extends
 	}
 	// 27868 - end
 
-	public String supplierSave() {
+	public String supplierSave() {//to update the content on UAT #29557
 		debugLogger("supplierSave");
 		//#29557 - start
 		if (getManagedBean().getStockAvailable() == ParameterConst.PI_STOCK_AVAILABILITY) 
@@ -934,7 +934,7 @@ public class PurchaseInquiryBackingBean extends
 		finalizeRemarks(prInquiry.getRemarks());
 
 		ScRequestSupplierItem scRequestSupplierItem = getManagedBean().getScRequestSupplierItem();
-		updatePricing(scRequestSupplierItem);
+		//updatePricing(scRequestSupplierItem); -- to remove on UAT #29557
 		//#29236 CR 26129: Static Code Analysis Start A "NullPointerException" could be thrown; "scRequestSupplierItem" is nullable here.
 		if (scRequestSupplierItem != null) {
 			scRequestSupplierItem.getSupplierItemPrices().clear(); //#29557
@@ -957,27 +957,121 @@ public class PurchaseInquiryBackingBean extends
 				ScPrInquiry resPrInquiry = resDTO.getPrInquiryDetail();
 				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_PURCHASE_INQUIRY, resPrInquiry.getPrInquiryNo(), Boolean.FALSE);
-				getManagedBean().setSupplierItemPrices(resDTO.getSupplierItemPrices());
-
-				ScRequestSupplierItem resRequestSupplierItem = resDTO.getScRequestSupplierItem();
-				scRequestSupplierItem.setSupplierItemPrices(resDTO.getSupplierItemPrices());
-				scRequestSupplierItem.setRequestNoteItem(resDTO.getScRequestItem());
-				scRequestSupplierItem.setChangedDate(resRequestSupplierItem.getChangedDate());
-
-				scRequestNoteDtl.setRequestItem(resDTO.getScRequestItem());
-				scRequestNote.setRequestNoteItems(Arrays.asList(resDTO.getScRequestItem()));
-				scRequestNote.setRequestNoteDtls(Arrays.asList(scRequestNoteDtl));
-
-				getManagedBean().setRequestNote(scRequestNote);
-				getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
-				getManagedBean().setScPrInquiry(resPrInquiry);
-				getManagedBean().setScRequestSupplierItem(scRequestSupplierItem);
+				
+				loadPricesDetail(scRequestNote, scRequestNoteDtl, prInquiry, scRequestSupplierItem, resDTO,
+						resPrInquiry);
 			}
 			//#29236 CR 26129: Static Code Analysis End 
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
 		}
 		return null;
+	}
+
+	/**
+	 * Loads purchase inquiry price details.
+	 */
+	private void loadPricesDetail(ScRequestNote scRequestNote, ScRequestNoteDtl scRequestNoteDtl,
+			ScPrInquiry prInquiry, ScRequestSupplierItem scRequestSupplierItem, PrInquiryResDTO resDTO,
+			ScPrInquiry resPrInquiry) {
+		ScRequestSupplierItem resRequestSupplierItem = resDTO.getScRequestSupplierItem();
+		scRequestSupplierItem.setSupplierItemPrices(resDTO.getSupplierItemPrices());
+		scRequestSupplierItem.setRequestNoteItem(resDTO.getScRequestItem());
+		scRequestSupplierItem.setChangedDate(resRequestSupplierItem.getChangedDate());
+
+		scRequestNoteDtl.setRequestItem(resDTO.getScRequestItem());
+		scRequestNote.setRequestNoteItems(Arrays.asList(resDTO.getScRequestItem()));
+		scRequestNote.setRequestNoteDtls(Arrays.asList(scRequestNoteDtl));
+
+		getManagedBean().setRequestNote(scRequestNote);
+		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+		getManagedBean().setScPrInquiry(resPrInquiry);
+		getManagedBean().setScRequestSupplierItem(scRequestSupplierItem);
+
+		// Purchase Inquiry
+		PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
+		prInquiryReqDTO.setPrInquiryId(prInquiry.getPrInquiryId());
+		prInquiryReqDTO.setFetchSubEntity(true);
+
+		IPrInquirySO iPrInquirySO = getPrInquirySO();
+		PrInquiryResDTO prInquiryResDTO = iPrInquirySO.getPrInquiry(prInquiryReqDTO);
+		ScPrInquiry inquiry = prInquiryResDTO.getPrInquiryDetail();
+
+		if (inquiry.getScRequestSupplierItems() != null && inquiry.getScRequestSupplierItems().size() > 0) {
+			// get selected supplier
+			ScRequestSupplierItem requestSupplierItem = inquiry.getScRequestSupplierItems().get(0);
+			getManagedBean().setSupplierItemPrices(inquiry.getScRequestSupplierItems().get(0).getSupplierItemPrices());
+
+			if (requestSupplierItem.getScRequestNoteDtl() != null
+					&& requestSupplierItem.getScRequestNoteDtl().size() > 0) {
+				getManagedBean().getSupplierItemNormalPrices().clear();
+				getManagedBean().getSupplierItemPromoPrices().clear();
+				getManagedBean().getSupplierItemTierStandardPrices().clear();
+				getManagedBean().getSupplierItemTierPromotionPrices().clear();
+				getManagedBean().getSupplierItemZonalStandardPrices().clear();
+				getManagedBean().getSupplierItemZonalPromotionPrices().clear();
+				getManagedBean().getSupplierItemZonalTierStandardPrices().clear();
+				getManagedBean().getSupplierItemZonalTierPromotionPrices().clear();
+
+				for (ScSupplierItemPrice scSupplierItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+					if (scSupplierItemPrice.getPriceType().getParameterId()
+							.equals(PriceTypeConstants.NORMAL_STANDARD_PRICE)
+							&& scSupplierItemPrice.isRecordStatus()) {
+						getManagedBean().setSupplierItemStandardPrice(scSupplierItemPrice);
+						getManagedBean().getSupplierItemNormalPrices().add(scSupplierItemPrice);
+					} else if (scSupplierItemPrice.getPriceType().getParameterId()
+							.equals(PriceTypeConstants.NORMAL_PROMOTION_PRICE)
+							&& scSupplierItemPrice.isRecordStatus()) {
+						getManagedBean().setSupplierItemPromotionPrice(scSupplierItemPrice);
+						getManagedBean().getSupplierItemPromoPrices().add(scSupplierItemPrice);
+					} else if (scSupplierItemPrice.getPriceType().getParameterId()
+							.equals(PriceTypeConstants.TIER_STANDARD_PRICE)
+							&& scSupplierItemPrice.isRecordStatus()) {
+						if (scSupplierItemPrice.getPricing() == null)
+							scSupplierItemPrice.setPricing(new CmPricing());
+						getManagedBean().getSupplierItemTierStandardPrices().add(scSupplierItemPrice);
+					} else if (scSupplierItemPrice.getPriceType().getParameterId()
+							.equals(PriceTypeConstants.TIER_PROMOTION_PRICE)
+							&& scSupplierItemPrice.isRecordStatus()) {
+						if (scSupplierItemPrice.getPricing() == null)
+							scSupplierItemPrice.setPricing(new CmPricing());
+						getManagedBean().getSupplierItemTierPromotionPrices().add(scSupplierItemPrice);
+					} else if (scSupplierItemPrice.getPriceType().getParameterId()
+							.equals(PriceTypeConstants.ZONAL_STANDARD_PRICE)
+							&& scSupplierItemPrice.isRecordStatus()) {
+						if (scSupplierItemPrice.getPricing() == null)
+							scSupplierItemPrice.setPricing(new CmPricing());
+						if (scSupplierItemPrice.getTplSpecZone() == null)
+							scSupplierItemPrice.setTplSpecZone(new TplSpecZoneDtl());
+						getManagedBean().getSupplierItemZonalStandardPrices().add(scSupplierItemPrice);
+					} else if (scSupplierItemPrice.getPriceType().getParameterId()
+							.equals(PriceTypeConstants.ZONAL_PROMOTION_PRICE)
+							&& scSupplierItemPrice.isRecordStatus()) {
+						if (scSupplierItemPrice.getPricing() == null)
+							scSupplierItemPrice.setPricing(new CmPricing());
+						if (scSupplierItemPrice.getTplSpecZone() == null)
+							scSupplierItemPrice.setTplSpecZone(new TplSpecZoneDtl());
+						getManagedBean().getSupplierItemZonalPromotionPrices().add(scSupplierItemPrice);
+					} else if (scSupplierItemPrice.getPriceType().getParameterId()
+							.equals(PriceTypeConstants.ZONAL_TIER_STANDARD_PRICE)
+							&& scSupplierItemPrice.isRecordStatus()) {
+						if (scSupplierItemPrice.getPricing() == null)
+							scSupplierItemPrice.setPricing(new CmPricing());
+						if (scSupplierItemPrice.getTplSpecZone() == null)
+							scSupplierItemPrice.setTplSpecZone(new TplSpecZoneDtl());
+						getManagedBean().getSupplierItemZonalTierStandardPrices().add(scSupplierItemPrice);
+					} else if (scSupplierItemPrice.getPriceType().getParameterId()
+							.equals(PriceTypeConstants.ZONAL_TIER_PROMOTION_PRICE)
+							&& scSupplierItemPrice.isRecordStatus()) {
+						if (scSupplierItemPrice.getPricing() == null)
+							scSupplierItemPrice.setPricing(new CmPricing());
+						if (scSupplierItemPrice.getTplSpecZone() == null)
+							scSupplierItemPrice.setTplSpecZone(new TplSpecZoneDtl());
+						getManagedBean().getSupplierItemZonalTierPromotionPrices().add(scSupplierItemPrice);
+					}
+				}
+			}
+		}
 	}
 
 	public void validateSupplierSave(Integer stockAvailable) {
@@ -2973,18 +3067,46 @@ public class PurchaseInquiryBackingBean extends
 	private void validateTierRowCount(){
 		
 		Boolean throwError = false;
-		if (this.getManagedBean().getSupplierItemTierStandardPrices().size() == 1)
+		if (this.getManagedBean().getSupplierItemTierStandardPrices().size() == 1){
 			throwError = true;
-		if (this.getManagedBean().getSupplierItemTierPromotionPrices().size() == 1)
+			resetPricesDetail(this.getManagedBean().getSupplierItemTierStandardPrices());
+		}
+		if (this.getManagedBean().getSupplierItemTierPromotionPrices().size() == 1){
 			throwError = true;
-		if (this.getManagedBean().getSupplierItemZonalTierStandardPrices().size() == 1)
+			resetPricesDetail(this.getManagedBean().getSupplierItemTierPromotionPrices());
+		}
+		if (this.getManagedBean().getSupplierItemZonalTierStandardPrices().size() == 1){
 			throwError = true;
-		if (this.getManagedBean().getSupplierItemZonalTierPromotionPrices().size() == 1)
+			resetPricesDetail(this.getManagedBean().getSupplierItemZonalTierStandardPrices());
+		}
+		if (this.getManagedBean().getSupplierItemZonalTierPromotionPrices().size() == 1){
 			throwError = true;
-		
+			resetPricesDetail(this.getManagedBean().getSupplierItemZonalTierPromotionPrices());
+		}
+			
 		if(throwError){
 			throw new EpException(MessageConst.ERROR_760537);
 		}
+	}
+	
+	/**
+	 * Resets price details.
+	 */
+	private void resetPricesDetail(List<ScSupplierItemPrice> scSupplierItemPriceList) {
+		List<ScSupplierItemPrice> deleteScSupplierItemPrices = new ArrayList<>();
+
+		deleteScSupplierItemPrices = scSupplierItemPriceList;
+		
+		for (ScSupplierItemPrice deleteScSupplierItemPrice : deleteScSupplierItemPrices){
+			if(deleteScSupplierItemPrice.getPricing()== null){
+				deleteScSupplierItemPrice.setPricing(null);
+			}
+			else if(deleteScSupplierItemPrice.getPricing().getPrice() == null){
+				deleteScSupplierItemPrice.setPricing(null);
+			}
+		}
+		
+		getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices);
 	}
 
 	/**
