@@ -213,10 +213,10 @@
 									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
 
 								<!-- #40112 -->
-								<p:outputPanel layout="inline" style="width: 150px;" styleClass="ai-assistant-btn" onclick="tenancyAI.show()" immediate="true"
-									rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' and backingBean.managedbean.supplierUser
+								<p:outputPanel layout="inline"
+									rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' and backingBean.managedBean.supplierUser
 									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B' and backingBean.managedBean.smAppl.aiProcessed gt 0}">
-									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" >
+									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" style="width: 150px;" onclick="tenancyAI.show()" immediate="true">
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:commandButton>
 									<p:graphicImage id="tttenancyAI" value="/css/images/design/tooltips.png" style="margin-left: 5px; vertical-align: middle;" />
