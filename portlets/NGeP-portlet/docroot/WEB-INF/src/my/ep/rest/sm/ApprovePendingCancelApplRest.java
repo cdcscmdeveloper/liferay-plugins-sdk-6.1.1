@@ -93,22 +93,4 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 		log.info("Terminated " + appls.size() +" applications");
 		return "DONE";
 	}
-	
-	//#38750
-	/**
-	 * Test PaymentGate
-	 * @param id
-	 * @param token
-	 * @return
-	 * @throws IOException
-	 */
-	@GET
-	@Path("/pay")
-	public String callPaymentGatewayAPI(@QueryParam("id") Long id, @QueryParam("tok") String token) throws IOException{
-		log.info("START");
-		log.info("id="+id);
-		log.info("tok="+token);
-		String body = SmServiceLookup.getSmSchedulerSO().callResyncApi(id, token);
-		return "START\n\n"+body+"\n\nEND";
-	}
 }
