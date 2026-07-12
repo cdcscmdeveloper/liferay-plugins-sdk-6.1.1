@@ -6384,16 +6384,48 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.equals(getManagedBean().getSelectedCategory()
 									.getPmCategoryL3().getCategoryL3Id())) {
 				validCat = false;
+				Date currentDate = new Date();
+				
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.DELETED_RECORD_STATUS) == 0 || cat.getCancelledDate() != null) {
 					if (cat.getCancelledDate() != null
 							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
-						throw new EpException(MessageConst.ERROR_722563);
+						// 29952 - Start
+						if (cat.isCancelCategory() && currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
+							validCat = true;
+						} else {
+							throw new EpException(MessageConst.ERROR_722563);
+						}
+						// 29952 - End		
 					} else {
 						validCat = true;
 					}
 				} else {
-					throw new EpException(MessageConst.ERROR_722533);
+					// 29952, 39421 - START
+					int status = cat.getRecordStatusFlg();
+
+					SmSupplier supplier = getManagedBean().getSmAppl().getSmSupplier();
+					List<SmDisciplinaryAction> disciplinaryActions = supplier.getSmDisciplinaryActions();
+
+					Date endDate = (disciplinaryActions != null && !disciplinaryActions.isEmpty())
+					        ? disciplinaryActions.get(0).getEndDate()
+					        : null;
+
+					boolean isNotPending = !(SupplierManagementConst.PENDING_ACTIVATION_RECORD_STATUS == status);
+
+					boolean isCancelledOrSuspended = cat.isCancelCategory()
+					        || (SupplierManagementConst.CANCEL_RECORD_STATUS == status)
+					        || ((SupplierManagementConst.RECORD_STATUS_SUSPENDED == status)
+					            && cat.getDisciplinaryActionId() != null);
+
+					boolean isAfterEndDate = (endDate != null && currentDate.after(endDate));
+
+					if (isNotPending && isCancelledOrSuspended && isAfterEndDate) {
+					    validCat = true;
+					} else {
+					    throw new EpException(MessageConst.ERROR_722533);
+					}
+					// 29952, 39421 - END
 				}
 			}
 		}
@@ -6418,11 +6450,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.getSelectedCategory().getPmCategoryL3()
 							.getCategoryL3Id(), getManagedBean().getSmAppl()
 							.getSmSupplierCategories(), "pmCategoryL3");
-			if (cat != null) {
+			
+			//29399 - Start add category with expired DA category
+			if (cat != null  && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED) {
 				// #25794 & #26031 - start
-				// update applRefId to NULL if previous data is deleted (9)
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+				// update applRefId to NULL if previous data is deleted (9) or canceled(2)
+				if ((cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) || 
+						(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED)) {
 					cat.setApplRefId(null);
+					//#30864 Start
+					cat.setDisciplinaryActionId(null);
+					//#30864 End
 				}
 				// #25794 & #26031 - end
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
@@ -6434,6 +6473,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				cat.setPoRemarks(null);
 				cat.setPrevApproverRemarks(null);
 				cat.setApproverRemarks(null);
+				cat.setActiveDA(false);
 				cat.setCancelledDate(null);
 			} else {
 				getManagedBean().getSmAppl().getSmSupplierCategories()
