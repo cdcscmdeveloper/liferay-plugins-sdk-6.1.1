@@ -1084,7 +1084,7 @@ public class PurchaseInquiryBackingBean extends
 
 			if (scSupplierItemPrices != null) {
 				for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
-					if (scSupplierItemPrice.getItemPrice() == null) {
+					if (scSupplierItemPrice.getItemPrice() == null && scSupplierItemPrice.isRecordStatus()){
 						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 								"lbl.sc.price.inquiry.price.offered", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()) });
@@ -3062,51 +3062,82 @@ public class PurchaseInquiryBackingBean extends
 	}
 	
 	/**
-	 * To validate tier row count.
+	 * To validate tier row count and reset tier price details if only one row
+	 * exists
 	 */
-	private void validateTierRowCount(){
-		
-		Boolean throwError = false;
-		if (this.getManagedBean().getSupplierItemTierStandardPrices().size() == 1){
+	private void validateTierRowCount() {
+
+		boolean throwError = false;
+
+		if (resetTierRowIfSingle(this.getManagedBean().getSupplierItemTierStandardPrices())) {
 			throwError = true;
-			resetPricesDetail(this.getManagedBean().getSupplierItemTierStandardPrices());
 		}
-		if (this.getManagedBean().getSupplierItemTierPromotionPrices().size() == 1){
+
+		if (resetTierRowIfSingle(this.getManagedBean().getSupplierItemTierPromotionPrices())) {
 			throwError = true;
-			resetPricesDetail(this.getManagedBean().getSupplierItemTierPromotionPrices());
 		}
-		if (this.getManagedBean().getSupplierItemZonalTierStandardPrices().size() == 1){
+
+		if (resetTierRowIfSingle(this.getManagedBean().getSupplierItemZonalTierStandardPrices())) {
 			throwError = true;
-			resetPricesDetail(this.getManagedBean().getSupplierItemZonalTierStandardPrices());
 		}
-		if (this.getManagedBean().getSupplierItemZonalTierPromotionPrices().size() == 1){
+
+		if (resetTierRowIfSingle(this.getManagedBean().getSupplierItemZonalTierPromotionPrices())) {
 			throwError = true;
-			resetPricesDetail(this.getManagedBean().getSupplierItemZonalTierPromotionPrices());
 		}
-			
-		if(throwError){
+
+		if (throwError) {
 			throw new EpException(MessageConst.ERROR_760537);
 		}
 	}
-	
+
 	/**
-	 * Resets price details.
+	 * To reset tier price details when price list contains only one row
+	 * 
+	 * @param List<ScSupplierItemPrice> priceList - supplier item price list
+	 * @return boolean
+	 */
+	private boolean resetTierRowIfSingle(List<ScSupplierItemPrice> priceList) {
+
+		if (priceList.size() == 1) {
+
+			ScSupplierItemPrice tempScSupplierItemPrice = getPrInquirySO().retrieveSupplierItemPrice(
+					priceList.get(0).getSupplierItemPriceId());
+
+			tempScSupplierItemPrice.setSupplierItemPriceId(null);
+
+			resetPricesDetail(priceList);
+
+			priceList.clear();
+			priceList.add(tempScSupplierItemPrice);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Resets price details and deletes supplier item prices.
+	 *
+	 * @param
+	 *      List<ScSupplierItemPrice> scSupplierItemPriceList - supplier item price list
 	 */
 	private void resetPricesDetail(List<ScSupplierItemPrice> scSupplierItemPriceList) {
-		List<ScSupplierItemPrice> deleteScSupplierItemPrices = new ArrayList<>();
 
-		deleteScSupplierItemPrices = scSupplierItemPriceList;
-		
-		for (ScSupplierItemPrice deleteScSupplierItemPrice : deleteScSupplierItemPrices){
-			if(deleteScSupplierItemPrice.getPricing()== null){
-				deleteScSupplierItemPrice.setPricing(null);
-			}
-			else if(deleteScSupplierItemPrice.getPricing().getPrice() == null){
-				deleteScSupplierItemPrice.setPricing(null);
-			}
-		}
-		
-		getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices);
+	    for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPriceList) {
+	        if (scSupplierItemPrice.getPricing() != null
+	                && scSupplierItemPrice.getPricing().getPrice() == null) {
+	            scSupplierItemPrice.setPricing(null);
+	        }
+	    }
+
+	    getPrInquirySO().deleteSupplierItemPrices(scSupplierItemPriceList);
+
+	    FacesContext fc = FacesContext.getCurrentInstance();
+	    getManagedBean().setNavToPreviousPage(fc.getViewRoot().getViewId());
+
+	    fc.getApplication().getNavigationHandler()
+	            .handleNavigation(fc, null, PURCHASE_INQUIRY_PAGE);
 	}
 
 	/**
