@@ -145,4 +145,18 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 		}
 	}
 	
+	/**
+	 * Check payment API
+	 * @param paymentId
+	 * @return
+	 */
+	@GET
+	@Path("/checkpay")
+	public String checkPayment(@QueryParam("id") Long paymentId){
+		log.info("START "+paymentId);
+		String token = SmServiceLookup.getSmSchedulerSO().loginOps();
+		log.info("tok:"+token);
+		String body = SmServiceLookup.getSmSchedulerSO().callResyncApi(paymentId, token);
+		return "BODY: "+body;
+	}
 }
