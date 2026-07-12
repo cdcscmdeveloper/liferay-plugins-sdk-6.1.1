@@ -247,7 +247,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		setMaxEffDate(expDate);
 		setMinExpDate(effDate);
 
-		if (null != contractStatus && !contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED)) {
+		// #9299 - #40477
+		if ((null != contractStatus && !contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED)) || null == contractStatus) {
 			if (this.getManagedBean().isDraftUpdate()) {
 				this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 			} else if (this.getManagedBean().isMasterUpdate()) {
