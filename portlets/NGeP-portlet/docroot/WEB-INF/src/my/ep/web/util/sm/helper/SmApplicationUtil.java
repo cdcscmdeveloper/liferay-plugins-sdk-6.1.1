@@ -4832,11 +4832,7 @@ public class SmApplicationUtil {
 		}
 		
 		// 36504 - START - Previous Application
-		if (managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
-			findPreviousAndNewSupplierApplication(managedBean);
-		} else {
-			findPreviousApplication(managedBean);
-		}
+		findPreviousAndNewSupplierApplication(managedBean);
 		// 36504 - END - Previous Application
 		
 	}
@@ -4998,11 +4994,7 @@ public class SmApplicationUtil {
 		managedBean.setApprovedCategoryList(existingList);
 		
 		// 36504 - START - Previous Application
-		if (managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
-			findPreviousAndNewSupplierApplication(managedBean);
-		} else {
-			findPreviousApplication(managedBean);
-		}
+		findPreviousAndNewSupplierApplication(managedBean);
 		// 36504 - END - Previous Application
 	}
 	
@@ -16185,7 +16177,7 @@ public class SmApplicationUtil {
 	 *
 	 * @param managedBean
 	 */
-	public static void findPreviousApplication(SmApplicationManagedBean managedBean) {
+	public static void findPreviousAndNewSupplierApplication(SmApplicationManagedBean managedBean) {
 		
 		List<SmSupplierCategory> prevList = new ArrayList<>();
 		Set<String> otherDescSet = new HashSet<>();
@@ -16201,7 +16193,8 @@ public class SmApplicationUtil {
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 
-					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
+					// Supplier - Renewal Application allow edit and view.
+					if (((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && !managedBean.isPoUser()) || 
 							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) && 
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
@@ -16237,67 +16230,6 @@ public class SmApplicationUtil {
 							otherDescSet.add(mainCatcode);
 							prevList.add(previousKN);
 						}
-					}
-				}
-			}
-		}
-		
-		sortSupplierCategory(prevList);
-		managedBean.setPreviousCategoryList(prevList);
-	}
-	
-	/**
-	 * Retrieves and prepares the list of supplier category applications
-	 * that are pending re-approval(Renewal Application) for display.
-	 *
-	 * @param managedBean
-	 */
-	public static void findPreviousAndNewSupplierApplication(SmApplicationManagedBean managedBean) {
-		
-		List<SmSupplierCategory> prevList = new ArrayList<>();
-		Set<String> otherDescSet = new HashSet<>();
-		
-		if (managedBean.getSmAppl() != null) {
-			for (SmSupplierCategory previousKN : managedBean.getSmAppl().getSmSupplierCategories()) {
-				
-				String catType = previousKN.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
-				previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
-				previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
-
-				if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) && 
-						(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
-						!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
-					
-					setApplNoHistory(previousKN, managedBean, SupplierManagementConst.PREVIOUS_CAT);
-					
-					// Merge category code
-					String mainCatcode = previousKN
-							.getPmCategoryL1()
-							.getCategoryL1Code()
-							.concat(previousKN.getPmCategoryL2()
-									.getCategoryL2Code())
-							.concat(previousKN.getPmCategoryL3()
-									.getCategoryL3Code());
-					
-					if (otherDescSet.contains(mainCatcode)) {
-						for (SmSupplierCategory catObj : prevList) {
-							String existingCatcode = catObj
-									.getPmCategoryL1()
-									.getCategoryL1Code()
-									.concat(catObj.getPmCategoryL2()
-											.getCategoryL2Code())
-									.concat(catObj.getPmCategoryL3()
-											.getCategoryL3Code());
-							
-							if (previousKN.getSmSuppCatOtherDescHistory() != null &&
-									mainCatcode.equals(existingCatcode)) {
-								catObj.getSmSuppCatOtherDescHistory().addAll(previousKN.getSmSuppCatOtherDescHistory());
-							}
-						}
-					} else {
-						otherDescSet.add(mainCatcode);
-						prevList.add(previousKN);
 					}
 				}
 			}
