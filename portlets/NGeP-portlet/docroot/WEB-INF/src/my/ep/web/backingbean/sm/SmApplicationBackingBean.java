@@ -6328,7 +6328,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 			initPhysicalConsultingCatcode();
 		} else {
-			throw new EpException(MessageConst.ERROR_722534, new String[] { "Category Code" });
+			throw new EpException(MessageConst.INFO_776044);
 		}
 	}
 
