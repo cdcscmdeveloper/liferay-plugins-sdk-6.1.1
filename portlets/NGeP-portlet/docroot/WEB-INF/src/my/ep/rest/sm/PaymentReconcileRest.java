@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -162,32 +163,32 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 	 */
 	@GET
 	@Path("/checkpay")
-	public String checkPayment(@QueryParam("id") Long paymentId){
+	public String checkPayment(@QueryParam("id") Long paymentId, @QueryParam("key") String key){
 		log.info("START "+paymentId);
-		String token = SmServiceLookup.getSmSchedulerSO().loginOps();
+		String token = loginOps();
 		log.info("tok:"+token);
-		String body = SmServiceLookup.getSmSchedulerSO().callResyncApi(paymentId, token);
+		String body = callResyncApi(paymentId, token, key);
 		return "BODY: "+body;
 	}
-
-	//38750 - TEMP
+	
 	@GET
 	@Path("/opslogin")
-	public String opslogin() {
+	public String opslogin(@QueryParam("key") String key) {
 		log.info("[API #38750] opslogin (web tier direct)");
+		if (key == null || key.trim().isEmpty()) {
+			log.warn("[API #38750] opslogin rejected: missing key");
+			return "";
+		}
 		return loginOps();
 	}
-
-	//38750 - TEMP
+	
 	@GET
-	@Path("/poke-opslogin")
-	public String pokeOpslogin() {
-		log.info("[API #38750] poke-opslogin -> biz-sm loginOpsViaPortal");
-		String token = SmServiceLookup.getSmSchedulerSO().loginOpsViaPortal();
-		return "biz-sm got token via portal: " + token;
+	@Path("/resync")
+	public String resync(@QueryParam("id") Long id, @QueryParam("token") String token, @QueryParam("apikey") String apikey) {
+		log.info("[API #38750] resync id=" + id);
+		return callResyncApi(id, token, apikey);
 	}
-
-	//38750 - TEMP
+	
 	private String loginOps() {
 		String loginUrl = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.login.url");
 		String username = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.username");
@@ -240,8 +241,51 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 			}
 		}
 	}
-
-	//38750 - TEMP
+	
+	private String callResyncApi(Long paymentId, String token, String apikey) {
+		if (paymentId == null) {
+			return "";
+		}
+		String resyncUrl = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.url");
+		if (resyncUrl == null || resyncUrl.trim().isEmpty()) {
+			log.warn("[API #38750] reconcile.payment.url not configured; skipping paymentId=" + paymentId);
+			return "";
+		}
+		HttpURLConnection conn = null;
+		try {
+			URL url = new URL(resyncUrl);
+			conn = (HttpURLConnection) url.openConnection();
+			if (conn instanceof HttpsURLConnection) {
+				SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+				sslContext.init(null, null, null);
+				((HttpsURLConnection) conn).setSSLSocketFactory(sslContext.getSocketFactory());
+			}
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("X-API-KEY-OPS", apikey);
+			conn.setRequestProperty("X-TOKEN-OPS", token);
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			conn.setDoOutput(true);
+			conn.setConnectTimeout(30 * 1000);
+			conn.setReadTimeout(200 * 1000);
+			String reqBody = "orderId=" + URLEncoder.encode(String.valueOf(paymentId), "UTF-8");
+			OutputStream os = conn.getOutputStream();
+			os.write(reqBody.getBytes(StandardCharsets.UTF_8));
+			os.flush();
+			os.close();
+			int responseCode = conn.getResponseCode();
+			String responseBody = readResponseBody(conn, responseCode);
+			log.info("[API #38750] paymentId=" + paymentId + " responseCode=" + responseCode + " body=" + responseBody);
+			return responseBody;
+		} catch (Exception e) {
+			log.error("[API #38750] resync failed for paymentId=" + paymentId + " : " + e.getMessage(), e);
+			return "";
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
+		}
+	}
+	
 	private String readResponseBody(HttpURLConnection conn, int responseCode) {
 		boolean ok = responseCode >= 200 && responseCode < 300;
 		InputStream is = null;
