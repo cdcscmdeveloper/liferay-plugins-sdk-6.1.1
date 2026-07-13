@@ -1145,7 +1145,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){ //#34449
 			constructConfirmationMessageSubmit(false); //#34449
 		}else {
-			submitAction(outcome);
+			constructReviseConfirmationMessage(outcome);
 		}
 	}
 
@@ -8639,5 +8639,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+	}
+	
+	public void constructReviseConfirmationMessage (String outcome) {
+		getManagedBean().setReviseMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		RequestContext.getCurrentInstance().execute("reviseDlg.show()");
 	}
 }

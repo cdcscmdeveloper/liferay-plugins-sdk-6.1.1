@@ -435,6 +435,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     //34449 - start
     private String assignMethod; 
+    private String reviseMethod;
     //34449 - end
     
     /**
@@ -2710,5 +2711,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setAssignMethod(String assignMethod) {
 		this.assignMethod = assignMethod;
 	}
+
+	/**
+	 * @return the reviseMethod
+	 */
+	public String getReviseMethod() {
+		return reviseMethod;
+	}
+
+	/**
+	 * @param reviseMethod the reviseMethod to set
+	 */
+	public void setReviseMethod(String reviseMethod) {
+		this.reviseMethod = reviseMethod;
+	}
+
 	//34449 - end
 }
