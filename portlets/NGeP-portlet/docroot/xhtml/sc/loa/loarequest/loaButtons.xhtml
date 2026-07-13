@@ -31,7 +31,6 @@
 	<div class="ppRightBtn">
 		<h:panelGroup rendered="#{!isTrackingDairyView}">
 			<c:if test="#{empty lOADetailBackingBean.managedBean.taskId}">
-				MASUK TASK ID EMPTY
 				<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 					rendered="#{lOADetailBackingBean.managedBean.editFlag}"
 					style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
@@ -113,7 +112,6 @@
 			</c:if>
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
-			MASUK TASK ID not EMPTY
 			<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
 			
 			   <p:commandButton value="#{lbl['lbl.btn.save']}"
