@@ -14496,7 +14496,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		while(it.hasNext()) {
 			deleteCategory = it.next();
 			if (deleteCategory.isSelected()) {
-				deletedCategoryList.add(deleteCategory);				
+//				if (!QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {//commented for #40511
+					deletedCategoryList.add(deleteCategory);
+//				}				
 				it.remove();			
 			}
 		}
