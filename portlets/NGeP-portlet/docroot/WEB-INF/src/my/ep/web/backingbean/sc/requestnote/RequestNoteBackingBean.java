@@ -8624,6 +8624,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	//34449 - start
 	
+	/**
+	 * Prepares the submit action based on whether the task ID is empty
+	 * and opens the submit confirmation dialog.
+	 *
+	 * @param isTaskIdEmpty true if the task ID is empty; false otherwise
+	 */
 	public void constructConfirmationMessageSubmit(boolean isTaskIdEmpty ){
 		
 		if (isTaskIdEmpty){
