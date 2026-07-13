@@ -44,6 +44,7 @@ import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -76,6 +77,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
+import my.ep.dto.sc.actor.ScActorResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.AuditTrailReqDTO;
@@ -202,18 +205,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.setApprovalCategory(new PmParameter());
 		}
 
-	}
-	
-	/**
-	 * Use in #33222
-	 * Gets the user so.
-	 *
-	 * @return the user so
-	 */
-	private IUserSO getUserSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	}
+	}	
 
 	/**
 	 * Gets the approval categories list.
@@ -1521,6 +1513,29 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			CommitteResDTO committeResDto = null;
 			// QuationTenderResDTO qtResDTO = null;
+			
+			IScActorSO actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScActorSO.class);
+			
+			InactiveUserResDTO userStatus = new InactiveUserResDTO(); 
+			QuationTenderReqDTO qttReqDTO = new QuationTenderReqDTO();
+			ScActorReqDTO reqDTO = new ScActorReqDTO();
+			UserReqDTO userReqDTO = new UserReqDTO();			
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {				
+				FacesScopes facesScope = new FacesScopes();
+				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+				reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				ScActorResDTO resActorDto = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO);			
+				userReqDTO.setUserId(resActorDto.getScActor().getUserId());
+				UserResDTO resDTO = this.getUserSOGlobal().retrieveUserByUserId(userReqDTO);
+				qttReqDTO.setQtdetail(qt);
+				qttReqDTO.setPmUser(resDTO.getPmUser());
+				qttReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				qttReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
+				userStatus = checkActiveUser(qttReqDTO);
+			}//#33222 - End
+			
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
@@ -1606,9 +1621,25 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getDeletedScCommitteeMemberAuditTrailList());
 				//#28895 - 35500 end
 				committeReqDTO.setCommitteeTypes(committeeTypes);
-				committeResDto = committeSO.updateBPMAction(committeReqDTO);
-				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
-				tenderResDTO.setQtDetail(qt);
+				
+				// #33222 - Start
+				if (userStatus.getStatus().equals("1")) {
+					committeResDto = committeSO.updateBPMAction(committeReqDTO);
+					tenderResDTO.setSuccessful(committeResDto.isSuccessful());
+					tenderResDTO.setQtDetail(qt);
+					
+				} else if (userStatus.getStatus().equals("2") || userStatus.getStatus().equals("3")
+						|| userStatus.getStatus().equals("4")) {
+					throw new EpException(MessageConst.ERROR_761000, new String[] { ParameterHelper.getInstance()
+							.getParameterDesc(qttReqDTO.getDeskOfficer().getUserName(),
+									qt.getOwnerOrgProfile().getOrgName()) });
+
+				} else if (userStatus.getStatus().equals("5")) {
+					throw new EpException(MessageConst.ERROR_761001, new String[] { ParameterHelper.getInstance()
+							.getParameterDesc(qttReqDTO.getDeskOfficer().getUserName(),
+									qt.getOwnerOrgProfile().getOrgName()) });
+				} 
+				// #33222 - End
 			
 			} else if(SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)){ //#28784
 				DemoResDTO resDTO = new DemoResDTO();
@@ -1627,8 +1658,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
 				List<String> approvalTypes = null;
-				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-				InactiveUserResDTO userStatus = new InactiveUserResDTO(); //#33222
+				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();				
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
 				
 				qtReqDTO.setApprovalFlow(true);
@@ -1730,57 +1760,18 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				qtReqDTO.setDigiSignData(digiSign);
 				
-				//#33222 - Start
-				if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-					userStatus = checkActiveUser(qtReqDTO);
-				}
-				
+				//#33222 - Start				
 				if (userStatus.getStatus().equals("1")) {
 				tenderResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
 				// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
 				
 				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					if (CollectionUtils.isNotEmpty(approvalTypes)) {
-						/*if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
-							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-							if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
-								try {
-									log.info("call simple scheduler if QT is publishing today.");
-									IQTNoticeBoardSO nbSO = BusinessDelegate.getInstance()
-											.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-													IQTNoticeBoardSO.class);
-									NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-									reqDTO.setScQt(qt);
-									NoticeBoardResDTO resDTO =nbSO.publishQT(reqDTO);
-									if(resDTO.isSuccessful()){
-										log.info("Qt will be published as job was built successfully for QT : "+qt.getQtNo());
-									}
-								} catch (Exception e) {
-									log.error(e.getMessage(), e);
-								}
-							}
-						} else*/ if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
+						 if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
 							new QTDocumentsBackingBean().reGenerateDocuments(
 									qt.getQtId(), 
 									QTFieldConst.FIELD_QT_PUBLISH_PERIOD);
-							/*Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-							if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
-								// To remove the existing QT closing job from scheduler if any
-								log.info("remove simple scheduler if QT is closing today.");
-								try{
-									IQTProposalSO proposalSO = BusinessDelegate.getInstance()
-											.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-													IQTProposalSO.class);
-									ProposalReqDTO reqDTO = new ProposalReqDTO();
-									reqDTO.setScQt(qt);
-									ProposalResDTO resDTO = proposalSO.deleteQtProposalCloseJob(reqDTO);
-									if(resDTO.isSuccessful()){
-										log.info("Simple job for propsoal close deleted successfully for QT : "+qt.getQtNo());
-									}
-								}catch(Exception e){
-									log.error(e.getMessage(), e);
-								}
-							}*/
+							
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {
 							if (isFinalApproval) {
 								new QTDocumentsBackingBean().reGenerateDocuments(
@@ -4414,5 +4405,28 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End	
+	
+	public InactiveUserResDTO checkActiveUser(QuationTenderReqDTO qtReq) {
+
+		/* SP Return Status
+		 * P_STATUS - User is active/not active
+		 * P_NEXT_ACTIVE_USER_LOGINID - Login ID of the next available active user identified 
+		 * P_NEXT_ACTIVE_USER_USERID - User ID of the next available active user identified
+		 * P_MSG - Message returned by the procedure indicating the verification or processing result
+		 */
+		
+		InactiveUserReqDTO userReqDto = new InactiveUserReqDTO();
+		ScQt qt = qtReq.getQtdetail();
+		PmUser user = qtReq.getPmUser();
+		userReqDto.setDocNo(qt.getQtNo());
+		userReqDto.setDocType(qt.getQtType());
+		userReqDto.setUserIds(user.getUserId().toString());
+		userReqDto.setUserRoleCode(qtReq.getRoleCode());
+		userReqDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+		userReqDto.setOrgProfileId(qt.getOrgProfileId());
+		InactiveUserResDTO userResDto = getUserSOGlobal().checkInactiveUserBySP(userReqDto);
+		
+		return userResDto;
+	}
 	
 }

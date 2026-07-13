@@ -8559,9 +8559,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	//#28784 - End
 	
 	/**
-	 * #33222 - Check Desk officer active or not after revise
-	 * @param qt
-	 * @return
+	 * #33222 - Check Availability of user status, role code and group
+	 * @param QuationTenderReqDTO
+	 * @return InactiveUserResDTO
 	 */
 	public InactiveUserResDTO checkActiveUser(QuationTenderReqDTO qtReq) {
 
