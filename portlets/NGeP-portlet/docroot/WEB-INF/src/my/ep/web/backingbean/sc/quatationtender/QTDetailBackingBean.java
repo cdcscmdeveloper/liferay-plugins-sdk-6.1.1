@@ -15458,43 +15458,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 		ScQt scQt = this.getManagedBean().getQt();
 		reqDTO.setDocNo(scQt.getQtNo());
 		reqDTO.setOrgProfileId(scQt.getOrgProfileId());
-		Locale locale = this.getFacesScopesGen().getUserLocale();
 		for (TabBean tabBean : tabBeans) {
-			List<String> inactiveUsers = new ArrayList<>();
-			Set<String> roles = new HashSet<>();
-
 			String committeeType = tabBean.getTabType();
 			if (!Arrays.asList(ParameterConst.QT_EVALUATION_COMMITTEES).contains(committeeType)) {
 				continue;
 			}
 			ScQtCommittee qtCommittee = tabBean.getScQtCommittee();
-			List<ScCommitteeMember> committeeMembers = qtCommittee.getScCommittee().getScCommitteeMembers();
-
-			for (ScCommitteeMember committeeMember : committeeMembers) {
-				reqDTO.setUserIds(String.valueOf(committeeMember.getPmUser().getUserId()));
-				String roleExt = SourcingConstants.ROLE_EXT_MAP.get(committeeMember.getMemberRole().getParameterCode());
-				reqDTO.setUserRoleCode(committeeType.concat(roleExt));
-				committeeMember.setUserInactive(!InactiveUserValidator.getInstance().validateUsers(reqDTO));
-				if (committeeMember.isUserInactive()) {
-					String roleDesc = this.getParameterDesc(committeeMember.getMemberRole(), locale);
-					if ("Ahli".equals(roleDesc)) {
-						roleDesc = roleDesc + " Jawatankuasa";
-					}
-					roles.add(roleDesc);
-					inactiveUsers.add(roleDesc + " " + committeeMember.getPmUser().getUserName());
-				}
-			}
-
-			if (CollectionUtils.isNotEmpty(inactiveUsers)) {
-				String inactiveUserStrs = StringUtils.join(inactiveUsers, ", ");
-				String committeeDesc = this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType(), locale);
-				String roleDescs = StringUtils.join(roles, ", ");
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.ERROR_761002, new String[] { inactiveUserStrs, committeeDesc, roleDescs },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, locale)));
-			}
+			validateCommitteeUsers(scQt, qtCommittee);
 		}
 	}
 	// 33222 - end

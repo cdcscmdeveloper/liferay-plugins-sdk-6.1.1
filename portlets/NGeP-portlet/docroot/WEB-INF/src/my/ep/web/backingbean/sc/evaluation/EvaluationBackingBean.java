@@ -45,7 +45,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -217,7 +216,6 @@ import com.liferay.portal.util.PortalUtil;
 
 //29661 -start-
 import java.util.Locale;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 
 //29661 -end-
 
@@ -10778,7 +10776,7 @@ private void retriveCommitteeRemarksList(){
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
 	public void submitPrepareEvaluationDetails(String outCome) {
-
+		
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -10810,6 +10808,15 @@ private void retriveCommitteeRemarksList(){
 				}//#28784 - end
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else {
+				// 33222 - start
+				String taskName = this.getManagedBean().getTaskName();
+				if (Arrays
+						.asList(SCProcessNameConst.FINALISE_EC_EVALUATION, SCProcessNameConst.FINALISE_FEC_EVALUATION)
+						.contains(taskName)) {
+					getManagedBean().setAutoUpdate(true);
+					validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt());
+				}
+				// 33222 - end
 				getManagedBean().setAutoUpdate(false);
 				
 				// #10542 - start
@@ -16068,7 +16075,8 @@ private void retriveCommitteeRemarksList(){
 	public String retrieveTotalSpecScoreBySupplier(Long proposalId, 
 			String checkListType){
 	
-		int totalScore = 0; int total = 0; 
+		BigDecimal totalScore = BigDecimal.ZERO; //#40506
+		BigDecimal total = BigDecimal.ZERO; //#40506
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
@@ -16090,11 +16098,12 @@ private void retriveCommitteeRemarksList(){
 			List<ScQtProposalChecklist> list = new ArrayList<ScQtProposalChecklist>();
 			for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
 				list.add(specscore);
-				totalScore = specscore.getTotalScore().intValue();
-				total = total + totalScore;
+				totalScore = specscore.getTotalScore().setScale(2,  RoundingMode.HALF_UP);//#40506
+				total = total.add(totalScore); //#40506
 				
 			}
-			this.getManagedBean().setTotalScore(Integer.toString(total));
+			this.getManagedBean().setTotalScore(
+				    total.setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString());//#40506
 			this.getManagedBean().setEvaluationStgPkgTechnicalCheckList(
 					 localCheckList);
 			this.getManagedBean().setEvaluationStgPkgPropCheckList(list);
