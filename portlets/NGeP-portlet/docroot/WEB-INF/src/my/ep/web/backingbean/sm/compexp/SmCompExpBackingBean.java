@@ -247,8 +247,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		setMaxEffDate(expDate);
 		setMinExpDate(effDate);
 
-		// #9299 - #40477
-		if ((null != contractStatus && !contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED)) || null == contractStatus) {
+		// #9299 - #40477 Start
+		if ((null != contractStatus && !contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED))
+				|| (null == contractStatus && !this.getManagedBean().isMasterNew())) {
+		// #9299 - #40477 End
 			if (this.getManagedBean().isDraftUpdate()) {
 				this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 			} else if (this.getManagedBean().isMasterUpdate()) {
@@ -873,8 +875,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (catList.isEmpty()) {
 			addSmCompExpCatMaster();
 
-		} else {
-			this.getManagedBean().getSelectedMaster().setCompExpMasterCats(catList);
+		// #9299 - #40661 Start
+		} else if (this.getManagedBean().isMasterUpdate()) {
+			this.getManagedBean().getSelectedMaster().setCompExpMasterCats(catList); 
+		} else if (this.getManagedBean().isMasterNew()) {
+			this.getManagedBean().getNewMaster().setCompExpMasterCats(catList);
+		// #9299 - #40661 End
 		}
 		this.getManagedBean().setSelectedSmCompExpCatMaster(null);
 	}
@@ -964,10 +970,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		boolean error = err;
 		if (this.getManagedBean().isDraftUpdate()) {
 			error = validateDraftUpdateList(error, sourceType, smCompExpDocList);
-		}
-		if (this.getManagedBean().isMasterUpdate()) {
-			error = validateMasterUpdateList(error, sourceType);
-		}
+		// #9299 - #40661 Start
+		} else if (this.getManagedBean().isMasterUpdate()) {
+			error = validateMasterUpdateList(error, sourceType); 
+		} else if (this.getManagedBean().isMasterNew()) {
+			error = validateMasterNewList(error);
+		} 
+		// #9299 - #40661 End
 		return error;
 	}
 
@@ -1016,6 +1025,30 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 		return error;
 	}
+	// #9299 - #40661 Start
+	private boolean validateMasterNewList(boolean err) {
+		boolean error = err;
+		if (null == this.getManagedBean().getNewMaster().getCompExpMasterDocs()
+				|| this.getManagedBean().getNewMaster().getCompExpMasterDocs().isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		// Expected Max Size in loop (30) based on NGEP_PDS database
+		for (SmCompExpCatMaster cat : this.getManagedBean().getNewMaster().getCompExpMasterCats()) {
+			if (null == cat.getCategoryL3().getCategoryL3Id()) {
+				error = true;
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		}
+		return error;
+	}
+	// #9299 - #40661 End
 
 	/**
 	 * Delete selected Draft
