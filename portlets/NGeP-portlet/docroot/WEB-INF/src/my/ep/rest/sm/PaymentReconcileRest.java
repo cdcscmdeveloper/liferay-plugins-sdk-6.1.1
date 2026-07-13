@@ -188,7 +188,16 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 		log.info("[API #38750] resync id=" + id);
 		return callResyncApi(id, token, apikey);
 	}
-	
+
+	//38750 - TEMP
+	@GET
+	@Path("/poke-opslogin")
+	public String pokeOpslogin() {
+		log.info("[API #38750] poke-opslogin -> biz-sm loginOpsViaPortal");
+		String token = SmServiceLookup.getSmSchedulerSO().loginOpsViaPortal();
+		return "biz-sm got token via portal: " + token;
+	}
+
 	private String loginOps() {
 		String loginUrl = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.login.url");
 		String username = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.username");
