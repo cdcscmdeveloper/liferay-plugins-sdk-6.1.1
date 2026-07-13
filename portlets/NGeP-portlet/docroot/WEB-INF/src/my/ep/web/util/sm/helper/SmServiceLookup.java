@@ -696,7 +696,7 @@ public class SmServiceLookup {
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISpkiSO.class);
 	}
 	
-	//#38890
+	//#40112
 	public static IAIApiProcessSO getAIApiProcessSO() {
 		return (IAIApiProcessSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IAIApiProcessSO.class);
