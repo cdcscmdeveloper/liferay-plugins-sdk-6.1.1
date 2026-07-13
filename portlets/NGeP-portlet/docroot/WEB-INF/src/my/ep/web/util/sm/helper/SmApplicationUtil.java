@@ -1435,6 +1435,51 @@ public class SmApplicationUtil {
 		appl = null;
 		return validSave;
 	}
+	
+	//#39860 --START
+	/**
+	 * Validate cheque signatory based on Bumi status.
+	 * 
+	 * @param appl - getSmAppl
+	 * @param bank - List of SmSupplierBank
+	 * 
+	 * @param boolean validSignatoryBumi- check signatory Bumi status
+	 * @param int signatoryNotBumiCount- count signatory not Bumi 
+	 * @return true, if successful
+	 */
+	public static boolean validateChequeSignatoryBumi(SmApplicationManagedBean managedBean) {
+		SmAppl appl = managedBean.getSmAppl();
+		boolean validSignatoryBumi = true;
+		int signatoryNotBumiCount = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		
+		Set<Long> processedPersonnelIds = new HashSet<Long>();
+		
+		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
+					
+					SmPersonnel personnel = smChequeSignatory.getSmPersonnel();
+					
+					if (personnel.getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						if (processedPersonnelIds.add(personnel.getPersonnelId())) {
+							sb.append(++signatoryNotBumiCount + ". ");
+							sb.append(personnel.getName());
+							sb.append("<br/>");
+							validSignatoryBumi = false;
+						}
+					}	
+				}	
+			}
+		}
+		if (!validSignatoryBumi && signatoryNotBumiCount > 0 && managedBean.isSupplierUser()) {
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
+		} 
+		return validSignatoryBumi;
+	}
+	//#39860 --END	
 
 	/**
 	 * Check if each registered branch already assigned to bank account type
@@ -14422,7 +14467,10 @@ public class SmApplicationUtil {
 			Map.Entry<Integer, Date> startDateMap = getPoKpiStartDate(
 					new Long(docId), stateId).entrySet().iterator().next();
 			Date startDate = startDateMap.getValue();
-			Integer pauseDays = startDateMap.getKey();
+			// #30747 - Start - Set pause day to 0
+			// Integer pauseDays = startDateMap.getKey();
+			Integer pauseDays = 0;
+			// #30747 - End -
 			Map.Entry<Integer, Date> entry = getPoKpiEndDateByCompanyState(
 					startDate, numDays, pauseDays, stateId).entrySet()
 					.iterator().next();
@@ -14520,10 +14568,18 @@ public class SmApplicationUtil {
 		}
 	}
 	
-	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate,
-			int numDays, int pauseDays, Long stateId) {
-		int daysLeft = numDays;
-		Map<Integer, Date> mapDate = new HashMap();
+	// #30747 - Start
+	/**
+	 * @param startDate
+	 * @param numDays
+	 * @param pauseDays
+	 * @param stateId
+	 * @return days left and date
+	 */
+	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate, int numDays, int pauseDays, Long stateId) {
+		int daysLeft;
+		int totalDays = numDays + pauseDays;
+		Map<Integer, Date> mapDate = new HashMap<>();
 		Calendar dateCal = Calendar.getInstance();
 		dateCal.setTime(startDate);
 
@@ -14533,21 +14589,68 @@ public class SmApplicationUtil {
 			calcEndDate(pauseDays, dateCal, stateId);
 		}
 
-		daysLeft = SmCommonUtil.getInstance().getDaysDiffMinusHolidayByState(
-				new Date(), dateCal.getTime(), stateId);
+		if (dateCal.getTime().before(new Date())) {
+			daysLeft = 0;
+		} else {
+			daysLeft = SmCommonUtil.getInstance()
+					.getDaysDiffMinusHolidayByState(new Date(), dateCal.getTime(), stateId);
 
+			Calendar endCal = Calendar.getInstance();
+			endCal.setTime(dateCal.getTime());
+			endCal.add(Calendar.DATE, 1);
+
+			boolean isNextDayHoliday = SmCommonUtil.getInstance().isDateHoliday(endCal, stateId);
+
+			if (!isNextDayHoliday) {
+				mapDate.put(daysLeft, dateCal.getTime());
+				return mapDate;
+			}
+
+			if (daysLeft == 0) {
+				compareDateForKpi(new Date(), dateCal.getTime(), daysLeft);
+			} else if (daysLeft < totalDays) {
+				Calendar newEndCal = Calendar.getInstance();
+				newEndCal.setTime(new Date());
+
+				calcEndDate(daysLeft, newEndCal, stateId);
+
+				if (DateUtils.isDateGreater(dateCal.getTime(), newEndCal.getTime())) {
+					daysLeft++;
+				}
+				// if (newEndCal.getTime().before(dateCal.getTime())) {
+				// daysLeft++;
+				// }
+			}
+		}
+		log.info("30747 : daysLeft :" + daysLeft + " / time : " + dateCal.getTime());
+		
 		mapDate.put(daysLeft, dateCal.getTime());
 		return mapDate;
 	}
 
+	private int compareDateForKpi(Date start, Date end, int daysLeft) {
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(start);
+		int result = daysLeft; // new local variable instead of mutating the
+								// parameter
+		while (startCal.getTime().before(end)) {
+			result++;
+			startCal.add(Calendar.DATE, 1);
+		}
+		return result;
+	}
+
 	private void calcEndDate(int numDays, Calendar dateCal, Long stateId) {
-		for (int i = numDays - 1; i >= 0; i--) {
-			dateCal.add(dateCal.DATE, 1);
-			if (SmCommonUtil.getInstance().isDateHoliday(dateCal, stateId)) {
-				i = i + 1;
+		int actualDays = 0;
+		while (actualDays < numDays) { // #30747 change for loop to while
+			dateCal.add(Calendar.DATE, 1);
+			if (!SmCommonUtil.getInstance().isDateHoliday(dateCal, stateId)) {
+				actualDays++;
 			}
 		}
 	}
+	// #30747 - End
+	
 	public void calcCapitalDistribution(SmPersonnel per,SmCompanyBasic basic){
 		if (per.getShareAmt() == null) {
 			per.setShareAmt(new BigDecimal(0));
@@ -15123,9 +15226,19 @@ public class SmApplicationUtil {
         for (char character : input.toCharArray()) {
             int asciiValue = (int) character; 
             log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
-            if(asciiValue > 127){
+            //#40165 - START
+            // Allow:
+            // 0   = NUL
+            // 10  = LF \n
+            // 13  = CR \r
+            // 32-127 = printable ASCII
+            if(!(asciiValue == 0 ||
+            	 asciiValue == 10 ||
+            	 asciiValue == 13 ||
+            	 (asciiValue >= 32 && asciiValue < 128))){
             	isValid = false;
             }
+            //#40165 - END
         }
         return isValid;
     }
@@ -15233,6 +15346,141 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37784- END
+//	#37925 START
+	/**
+	 * Retrieves the registration status list based on supplier type and application type.
+	 *
+	 * @param suppType Supplier type (e.g., contractor, consultant)
+	 * @param applType Application type (e.g., new, update, renewal)
+	 * @return List of PmStatusDesc objects matching the criteria
+	 */
+	public List<PmStatusDesc> retrieveRegistrationStatusListBySupplierTypeApplType(String suppType, String applType) {
+	    StatusReqDTO reqDTO = new StatusReqDTO();
+	    reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+
+	    if (!StringUtils.isBlank(applType) && ParameterConst.NEW_SM_APPLN_FOR_BUMI.equals(applType)) {
+	        return SmServiceLookup.getStatusSO().retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
+	    }
+
+	    List<PmStatusDesc> descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+	    if (EntityHelper.isCollectionEmpty(descList) || StringUtils.isBlank(suppType)) {
+	        return descList;
+	    }
+
+	    List<String> validStatusIds = getValidStatusIds(suppType, applType);
+	    return filterStatusDescList(descList, validStatusIds);
+	}
+
+	/**
+	 * Filters the status description list based on valid status IDs.
+	 *
+	 * @param descList       Original list of status descriptions
+	 * @param validStatusIds List of valid status ID strings
+	 * @return Filtered list of PmStatusDesc
+	 */
+	private List<PmStatusDesc> filterStatusDescList(List<PmStatusDesc> descList, List<String> validStatusIds) {
+	    List<PmStatusDesc> filteredList = new ArrayList<>();
+	    for (PmStatusDesc statDesc : descList) {
+	        if (statDesc != null && statDesc.getPmStatus() != null && statDesc.getPmStatus().getStatusId() != null) {
+	            String statusIdStr = statDesc.getPmStatus().getStatusId().toString();
+	            if (validStatusIds.contains(statusIdStr)) {
+	                filteredList.add(statDesc);
+	            }
+	        }
+	    }
+	    return filteredList;
+	}
+
+	/**
+	 * Determines valid status IDs based on supplier and application type.
+	 *
+	 * @param suppType Supplier type
+	 * @param applType Application type
+	 * @return List of valid status ID strings
+	 */
+	private List<String> getValidStatusIds(String suppType, String applType) {
+	    if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType)) {
+	        return getConsultantStatusIds();
+	    }
+
+	    if (!SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType)) {
+	        return new ArrayList<>();
+	    }
+
+	    if (SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(applType)) {
+	        return getContractorStatusIdsForMOF();
+	    }
+
+	    if (isUpdateCategoryOrRenewal(applType)) {
+	        return getContractorStatusIdsForUpdateCategoryRenewal();
+	    }
+
+	    return getDefaultContractorStatusIds();
+	}
+
+	/**
+	 * Checks if the application type is update, category, or renewal.
+	 *
+	 * @param applType Application type
+	 * @return true if it matches update, category, or renewal
+	 */
+	private boolean isUpdateCategoryOrRenewal(String applType) {
+	    return SupplierManagementConst.APPL_TYPE_UPDATE.equalsIgnoreCase(applType)
+	        || SupplierManagementConst.APPL_TYPE_CATEGORY.equalsIgnoreCase(applType)
+	        || SupplierManagementConst.APPL_TYPE_RENEWAL.equalsIgnoreCase(applType);
+	}
+
+	/**
+	 * Returns valid status IDs for consultant supplier type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getConsultantStatusIds() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN)
+	    );
+	}
+
+	/**
+	 * Returns valid status IDs for contractor with MOF application type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getContractorStatusIdsForMOF() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN)
+	    );
+	}
+
+	/**
+	 * Returns valid status IDs for contractor with update, category, or renewal application type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getContractorStatusIdsForUpdateCategoryRenewal() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME)
+	    );
+	}
+
+	/**
+	 * Returns default valid status IDs for contractor.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getDefaultContractorStatusIds() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME)
+	    );
+	}
+
+//	#37925 END
 	//#38991 -START
 	/**
 	* Validate sm company experience info before saving the application.
@@ -15273,5 +15521,20 @@ public class SmApplicationUtil {
 		appl = null;
 		return validSave;
 		}
-	//#38991 -END	
+	//#38991 -END
+	
+	//#40165 - START
+	public static void CheckAsciiValidation(Map<String, String> fields) throws EpException {
+	    for (Map.Entry<String, String> entry : fields.entrySet()) {
+	        String fieldName = entry.getKey();
+	        String value = entry.getValue();
+	        
+	        if (value != null && !value.isEmpty()) {
+	            if (!convertToAscii(value)) {
+	                throw new EpException(MessageConst.ERROR_760543, new String[] { fieldName });
+	            }
+	        }
+	    }
+	}
+	//#40165 - END
 }

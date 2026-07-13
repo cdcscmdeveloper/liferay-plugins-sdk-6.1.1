@@ -615,7 +615,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.finalizationItemizedRemarks = finalizationItemizedRemarks;
 	}
 	// #18685 - End
-
+	
 	// #28784 -start-
 	public boolean isDemoReq() {
 		return isDemoReq;
@@ -627,7 +627,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.isDemoReq = isDemoReq;
 	}
 	// #28784 -end-
-
+	
 	//#21692 - Start
 	public boolean isAllSupplierDisagreeEPV() {
 		return allSupplierDisagreeEPV;

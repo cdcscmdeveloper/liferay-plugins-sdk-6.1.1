@@ -2287,7 +2287,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	// 6906 note 202 - end
-	
+
 	// 35157, #26247 - start
 	public ScQtRecommend getLastSelectedItem() {
 		return lastSelectedItem;

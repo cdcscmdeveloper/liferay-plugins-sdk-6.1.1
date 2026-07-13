@@ -147,8 +147,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTDetailManagedBean.class);
+	private static final Logger log = EpLogger.getLogger(QTDetailManagedBean.class);
 	
 	/** The qt. */
 	private ScQt qt;
@@ -10999,13 +10998,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	// 37813,35384 -end	
-
+	
 	//#28784 - Start
 	public boolean isDemoType() {
 		return demoType;
 	}
 	//#28784 - End
-
+	
 	//#28784 - Start
 	public void setDemoType(boolean demoType) {
 		this.demoType = demoType;
@@ -11107,7 +11106,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
 	}
 	//#28784 - End
-
+	
 	//#21692 - Start
 	public boolean isChmnFinalizationRejectEPV() {
 		return chmnFinalizationRejectEPV;

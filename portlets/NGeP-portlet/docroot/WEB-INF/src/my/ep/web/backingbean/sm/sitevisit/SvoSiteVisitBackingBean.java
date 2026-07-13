@@ -33,31 +33,14 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
-
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 //#30504 start
 import my.ep.biz.service.pm.common.zone.IZoneSO;
-import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
-import my.ep.dto.pm.common.zone.ZoneReqDTO;
 //#30504 end
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
-import my.ep.biz.service.sm.trackingdiary.ISmTrackingDiarySO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -66,6 +49,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -75,12 +59,13 @@ import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.dto.sm.trackingdiary.SmTrackingDiaryReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -89,6 +74,7 @@ import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmPoRoleTask;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -144,7 +130,20 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
+
 import com.liferay.portal.util.PortalUtil;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
 public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManagedBean> {
@@ -961,24 +960,25 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		int cheqNonMalaysian = 0;
 		
 		// #14055 - start
-		LinkedHashSet<String> totalCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> totalCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet<String>();
 		
 		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
 			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
-				if (!svBankInfo.getSmSupplierBank().getSmChequeSignatories().isEmpty()) {	
+				if (!svBankInfo.getSmSupplierBank().getSmChequeSignatories().isEmpty()) {
 					for (SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()) {
 						totalCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
-						if (chequeSignatory.getSmPersonnel().isBumi()) {
+						if (chequeSignatory.getSmPersonnel().isBumi() != null) { // #39860
+							if (chequeSignatory.getSmPersonnel().isBumi()) {
 								bumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
-						} else {
-							if (chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode()
-									.equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)) {
-								nonBumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 							} else {
-								nonMyCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+								if (chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)) {
+									nonBumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+								} else {
+									nonMyCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+								}
 							}
 						}
 					}
@@ -2258,12 +2258,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				// #30504 start
+				// #30504 #34795 start
 				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
-				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
-				log.info("---Curent PO: "+currPo.getUserName());
+				PmUser currPo = PmCommonUtil.retrieveUserWithPoRoleTaskByLoginId(currPoLoginId);
+				log.info("---Curent PO: " + currPo.getUserName());
 
-				if (currPo.getPmUserOrgs().get(0).getRecordStatusFlg() == 0) {
+				if (currPo.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						|| currPo.getPmUserOrgs().get(0).getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						|| isExistInPoRoleTask(svTask.getSmAppl().getApplType(), currPo)
+						|| isExistInUserRole(currPo.getPmUserOrgs())) {
 					IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 					ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
@@ -2272,17 +2275,23 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
 							svTask.getSmAppl().getSupplierType(), svTask.getSmAppl().getApplType(),
 							svTask.getSmAppl().getApplCategoryType(),
-							zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());  
-					//#30504 Re-open start
+							zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
+					// #30504 Re-open start
 					currPo = newPo;
+					svTask.getSmAppl().setPoUserId(newPo.getUserId());
 					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
-					smObj.setPoUsers(newPo.getLoginId());
+					smObj.setPoUsers(currPo.getLoginId());
 					this.getManagedBean().setBpmPojo(smObj);
 
+				} else {
+					svTask.getSmAppl().setPoUserId(currPo.getUserId());
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(currPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
 				}
-				log.info("---Curent PO Latest: "+currPo.getUserName());
-				
-				// #30504 end
+				log.info("---Curent PO Latest: " + currPo.getUserName());
+				// 34795 end
+
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				reqDTO.setAppId(this.getManagedBean().getAppId());
 				reqDTO.setToken(token);
@@ -2290,9 +2299,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 				reqDTO.setPoName(currPo.getUserName());
-				//#30504 Re-open end
+				// #30504 Re-open end #34795 end
 			}
-
+			
 			reqDTO.setSmSvTask(svTask);
 			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 			ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
@@ -3086,4 +3095,43 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	// #34166 - End
+	
+	// #34795 start
+	private boolean isExistInPoRoleTask(String applType, PmUser user) {
+		boolean retVal = false;
+		if (user.getPmPoRoleTasks() != null) {
+			for (PmPoRoleTask roleTask : user.getPmPoRoleTasks()) {
+				if (roleTask.getApplType().equals(applType)
+						&& roleTask.getPmUser().getUserId().compareTo(user.getUserId()) == 0
+						&& roleTask.getRecordStatusFlg() == 0) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	// 33955 -start
+	public boolean isExistInUserRole(List<PmUserOrg> userlist) {
+		boolean retVal = false;
+		if (userlist != null) {
+			for (PmUserOrg userOrg : userlist) {
+				if (userOrg.getPmUserRoles() != null) {
+					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+						if (userRole.getPmRole().getRoleCode().equals(SupplierManagementConst.PO_HQ)
+								&& userRole.getRecordStatusFlg() == 0) {
+							retVal = true;
+							break;
+						}
+					}
+				}
+				if (retVal) {
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+	// #34795,33955 - end
 }
