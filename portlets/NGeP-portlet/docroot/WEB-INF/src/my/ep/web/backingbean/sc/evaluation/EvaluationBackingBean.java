@@ -43,6 +43,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -168,6 +169,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -8626,7 +8628,7 @@ private void retriveCommitteeRemarksList(){
 				// #29187 Start Vinod
 				if (QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
 						&& (CollectionUtils.isEmpty(questionIds) || !questionIds.contains(tplSpecAnswer
-								.getTplSpecQuestion().getSpecQuestionId())) && !rejectEPV) {//#21692
+								.getTplSpecQuestion().getSpecQuestionId()))) {
 					questionIds.add(tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId());
 					validateUserScoreForTemplate(tplSpecAnswer, false);
 				}
