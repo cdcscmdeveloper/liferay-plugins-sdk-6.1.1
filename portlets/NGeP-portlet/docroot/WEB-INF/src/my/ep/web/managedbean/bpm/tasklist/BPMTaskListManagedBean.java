@@ -1587,7 +1587,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			//#40112
 			worklistItemVO.setAiProcessed(mofResDto.getSmAppl() != null && mofResDto.getSmAppl().getAiProcessed() == 2);
 			StringBuilder sb = new StringBuilder();
-			log.info("POC RPA Label Value1 --"+worklistItemVO.getTitle());
+			logger.info("POC RPA Label Value1 --"+worklistItemVO.getTitle());
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			if (mofResDto.getCompanyName() != null) {
