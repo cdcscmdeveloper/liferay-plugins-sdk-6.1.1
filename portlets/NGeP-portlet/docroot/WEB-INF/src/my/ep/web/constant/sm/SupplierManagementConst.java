@@ -236,8 +236,13 @@ public class SupplierManagementConst {
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
+	
+	// 36504 - START
 	public static final String SUPPLIER_APPROVER = "SA";
 	public static final String SUPPLIER_PO = "SP";
+	public static final String SUPPLIER_RENEWAL = "S";
+	// 36504 - END
+	
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
@@ -796,6 +801,20 @@ public class SupplierManagementConst {
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
 //	#37925 END
+	
+	// #38001 START
+	public static final String PO_RECOMMENDATION_APPROVE_MY = "Lulus";
+	public static final String PO_RECOMMENDATION_REJECT_MY = "Tolak";
+	public static final String PO_RECOMMENDATION_APPROVE_EN = "Approve";
+	public static final String PO_RECOMMENDATION_REJECT_EN = "Reject";
+	// #38001 END
+	
+	// 36504 - START
+	public static final String APPLIED_CAT = "APPLIED";
+	public static final String PREVIOUS_CAT = "PREVIOUS";
+	// 36504 - END
+
+	
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
 	public String getCOMPANY_TYPE_CLBG() {

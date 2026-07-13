@@ -266,9 +266,12 @@
 				  	</c:if>
 				  	<!-- 26095@hatta - end -->
 			  	 
-			  	 	<ui:remove>9019 update condition to disable cancel button for QT status was pending</ui:remove>
-					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission}">
-					<ui:remove>9019 -end- </ui:remove>
+			  	 	<ui:remove>9019 update condition to disable cancel button for QT status was pending, 12471 - add renderCancelButton </ui:remove>
+			  	 	<!--12471 add checking if QT has been approved for publication and current committee status is Pending Submission / Revision -->
+					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission 
+					and !qTDetailBB.renderCancelButton()}">
+					<!-- 9019 & 12471 -end- -->
+					<ui:remove>9019, 12471 - end</ui:remove>
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
 							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />
