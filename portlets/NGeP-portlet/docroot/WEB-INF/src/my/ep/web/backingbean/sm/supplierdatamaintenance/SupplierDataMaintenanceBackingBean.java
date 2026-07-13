@@ -1525,7 +1525,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		// 36504 - START 
 		List<SmAppl> applNewReg = new ArrayList<>(); 
-		applNewReg = SmApplicationUtil.findNewRegHistoryOtherDesc(getManagedBean().getSmSupplier().getSupplierId());
+		applNewReg = SmApplicationUtil.findHistoryOtherDesc(getManagedBean().getSmSupplier().getSupplierId());
 		
 		if (applNewReg != null) {
 			for (SmAppl appl : applNewReg) {
@@ -1534,7 +1534,8 @@ public class SupplierDataMaintenanceBackingBean extends
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 	
-					if (previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && 
+					if (previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
+							(appl.getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) && 
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
 							!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
@@ -3458,8 +3459,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	        case "ONE":
 	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
 	            		SupplierManagementConst.SUPPLIER_APPROVER) &&
-	                    otherDescBean.getOtherDescOld() != null) {
-	                return otherDescBean.getOtherDescOld();
+                    otherDescBean.getOtherDescOld() != null) {
+	                	return otherDescBean.getOtherDescOld();
+	            } else if (isRole(roleType, SupplierManagementConst.SUPPLIER_RENEWAL) &&
+                    otherDescBean.getOtherDesc() != null)  {
+	            		return otherDescBean.getOtherDesc();
 	            }
 	            break;
 
