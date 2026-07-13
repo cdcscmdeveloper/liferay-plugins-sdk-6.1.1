@@ -403,11 +403,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Long currentstatusID = this.getManagedBean().getCurrentStatusId();//33310
 				SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) this
 						.getManagedBean().getPayLoad();
-				//#29661 Start
+				//#29661 Start				
 				List<SmSupplierCategory> supplierCategoryList = this.getManagedBean().getSupplierCategoryList() != null ?
 						this.getManagedBean().getSupplierCategoryList() : new ArrayList<SmSupplierCategory>();
 				List<SmSupplierCategory> procurementRelatedCategoryList = this.getManagedBean().getProcurementRelatedCategoryList() != null ?
 						this.getManagedBean().getProcurementRelatedCategoryList() : new ArrayList<SmSupplierCategory>();
+				//#29661 #40511 Start		
+				List<SmSupplierCategory> originalSupplierCategoryList = this.getManagedBean().getOriginalSupplierCategoryList() != null ?
+						this.getManagedBean().getOriginalSupplierCategoryList() : new ArrayList<SmSupplierCategory>();		
+				List<SmSupplierCategory> deletedSmCategory = this.getManagedBean().getDeletedCategoryList();
+				List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();	
+				//#29661 #40511 End
 				//#29661 End
 				renewSesionObject();
 				this.getManagedBean().setTaskId(taskId);
@@ -420,6 +426,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				//#29661 Start
 				this.getManagedBean().setSupplierCategoryList(supplierCategoryList);
 				this.getManagedBean().setProcurementRelatedCategoryList(procurementRelatedCategoryList);
+				this.getManagedBean().setOriginalSupplierCategoryList(originalSupplierCategoryList);//#29661 #40511
 				//#29661 End
 				// Bug #38049@Syazani 29/04/2025 -- Start
 				if (null != selectedOrgType) {
@@ -441,15 +448,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				}
 				//#29661 #40511 Start
-				List<SmSupplierCategory> procurementSmCategory = this.getManagedBean().getProcurementRelatedCategoryList();
-				List<SmSupplierCategory> deletedSmCategory = this.getManagedBean().getDeletedCategoryList();
-				List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();
 				validateSupplierCategory(scLoa,outcome);
 				
 				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
 					deleteScQtCategory(addedCategoryList, deletedSmCategory);
-					insertSupplierCategoryCodeToScQtCategory(procurementSmCategory);
+					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
 				} else {
 					deleteScQtCategory(addedCategoryList, deletedSmCategory);
 					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
@@ -664,7 +668,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//#29661 Start
 			if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 				this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
-				insertSupplierCategoryCodeToScQtCategory(procurementSmCategory);
+				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);//#29661 #40511
 			} else {
 				deleteScQtCategory(addedCategoryList, deletedSmCategory);
 				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
@@ -14426,6 +14430,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)
 						&& (CollectionUtils.isEmpty(procurementRelatedCategoryList) || !procurementRelatedCategoryList.contains(supplierCategory))) {
 					procurementRelatedCategoryList.add(supplierCategory);
+					addedCategoryList.add(supplierCategory);//#29661 #40511
 					supplierCategory.setSelected(false);
 				} else if (CollectionUtils.isNotEmpty(deletedCategoryList) && deletedCategoryList.contains(supplierCategory)) {
 					procurementRelatedCategoryList.add(supplierCategory);
@@ -14491,9 +14496,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		while(it.hasNext()) {
 			deleteCategory = it.next();
 			if (deleteCategory.isSelected()) {
-				if (!QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
-					deletedCategoryList.add(deleteCategory);
-				}
+				deletedCategoryList.add(deleteCategory);				
 				it.remove();			
 			}
 		}
