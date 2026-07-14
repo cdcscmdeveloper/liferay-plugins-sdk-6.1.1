@@ -1037,16 +1037,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		SmCompExpMaster nm = this.getManagedBean().getNewMaster();
 
-		if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT)
-				&& (null == nm.getCompExpMasterDocs() || nm.getCompExpMasterDocs().isEmpty())) {
-
-			error = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_775228, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-		}
 		for (SmCompExpCatMaster cat : nm.getCompExpMasterCats()) {
 			if (null == cat.getCategoryL3().getCategoryL3Id()) {
 				error = true;
@@ -1056,6 +1046,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 								MessageConst.ERROR_775229, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 			}
+		}
+		if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT)
+				&& (null == nm.getCompExpMasterDocs() || nm.getCompExpMasterDocs().isEmpty())) {
+
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_775228, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 		}
 		return error;
 	}
@@ -1432,13 +1432,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775230,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
-		if (null == contractValue) {
-			error = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775232,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
+		//9299 - 40664 START
 		if (null == procumentMode.getParameterId()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
@@ -1446,6 +1440,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775231,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
+		if (null == contractValue) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775232,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		//9299 -40664 END
 		return error;
 	}
 
