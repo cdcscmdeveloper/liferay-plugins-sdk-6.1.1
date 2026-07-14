@@ -177,6 +177,9 @@
 						rendered="#{not empty aprvdCatBean.otherDesc and
 						    (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 						     aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}" />
+				     <p:graphicImage value="/css/images/design/icon_alert.png"
+						style="float:right;"
+						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
 				</p:outputPanel>
 			</p:column>
 			<!-- 36504 - END -->
