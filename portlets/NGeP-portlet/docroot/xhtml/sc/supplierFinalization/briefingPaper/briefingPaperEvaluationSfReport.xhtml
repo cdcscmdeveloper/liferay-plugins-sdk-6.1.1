@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-		<style type="text/css">
+	<ui:remove> 25651 - Start </ui:remove>
+	<style type="text/css">
 	
 		.center-column {
 		    text-align: center;
@@ -49,6 +50,7 @@
 	    el.classList.toggle("rotated");
 	}
     </script>
+    <ui:remove> 25651 - End </ui:remove>
 
 	<p:panel id="evaluationReportsFilesDownloadIds"
 		header="#{lbl['lbl.sc.content']}" toggleable="true">
@@ -137,10 +139,9 @@
 				</ui:fragment>
 			</p:column>
 		</p:dataTable>
-
-
 	</p:panel>
 	
+	<ui:remove> 25651 - Start </ui:remove>
 	<p:panel id="evaluationReportsDetailFilesDownloadIds"
 		header="#{lbl['lbl.sc.report.section']}" toggleable="true">
 	   	<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.briefing.paper.reports.detail.instructions']}" escape="false" />
@@ -236,8 +237,8 @@
 				update="@([id$=#{evaluationReportListDeleteId}])"/>
 				
 		</div>
-		
     </p:panel>
+    <ui:remove> 25651 - End </ui:remove>
 	
 	<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
 				  modal="true" resizable="false" width="875" height="400" styleClass="pop_up_top" 
