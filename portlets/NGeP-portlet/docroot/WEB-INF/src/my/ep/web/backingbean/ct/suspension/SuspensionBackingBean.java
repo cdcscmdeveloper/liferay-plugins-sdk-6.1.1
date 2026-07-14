@@ -754,7 +754,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    String approverType = determineRoleCode();
 
 		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(approverType, getSelectedUsers(), getManagedBean().getContractVer().getDocType());
+	        		getInactiveUsers(approverType, getSelectedUsers(), getManagedBean().getContractVer().getDocType(), null);
 	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 		}
 		

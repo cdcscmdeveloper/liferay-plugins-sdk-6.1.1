@@ -2113,7 +2113,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	        }
 	        
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(approverType, getSelectedUsers(), docType);
+	        		getInactiveUsers(approverType, getSelectedUsers(), docType, null);
 	        handleInactiveUserValidation(action, selectedInactiveUsers);
 	    }
 		

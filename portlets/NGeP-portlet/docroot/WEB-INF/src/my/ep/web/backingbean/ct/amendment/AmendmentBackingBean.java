@@ -3243,24 +3243,79 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		log.info("xoxoxoxoxo getTaskName() : "+getManagedBean().getTaskName());
 		log.info("xoxoxoxoxo getUserRole() "+getUserRole());
+		log.info("xoxoxoxoxooxoxo action : "+action);
 		
 		//#30737 - Start
+		// No need to check inactive user for Confirm Fa Meeting + Submit
 		if (!CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME.equalsIgnoreCase(getTaskName())
 				&& (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
 				|| BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action) 
 				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))) {
 
-		    log.info("xoxoxoxoxooxoxo action : "+action);
-
-		    String roleCode = determineRoleCode(action);
-		    log.info("xoxoxoxoxooxoxo roleCode : "+roleCode);
+		    List<SelectedInactiveUserDTO> selectedInactiveUsers = new ArrayList<>();
 		    
-		    List<PmUser> selectedUsers = determineUsers(action);
-		    log.info("xoxoxoxoxooxoxo selectedUsers : "+selectedUsers);
+		    if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())) {
+		    	
+		    	log.info("xoxoxoxo UPDATE_FA_RESULT_HT_NAME...");
+		    	
+		    	List<PmUser> committeeMembers = new ArrayList<PmUser>();
+		    	List<PmUser> committeeChairpersons = new ArrayList<PmUser>();
+		    	
+				List<CtCommitteeMember> ctCommitteeMembers = null;
+				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
+						|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+					log.info("xoxoxoxoxo getFilteredCommitteeMembers()");
+					ctCommitteeMembers = getFilteredCommitteeMembers();
+					log.info("xoxoxoxo total filteredMembers : "+ctCommitteeMembers.size());
+				} else {
+					log.info("xoxoxoxoxo getCtCommitteeMembers()");
+					ctCommitteeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
+					log.info("xoxoxoxo total members : "+ctCommitteeMembers.size());
+				}
+				
+				for(CtCommitteeMember member : ctCommitteeMembers){
+					log.info("xoxoxoxoxo list of member : "+member.getMemberName());
+					log.info("xoxoxoxoxo member role code : "+member.getMemberRole().getParameterCode());
+					
+					if(member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+						log.info("xoxoxoxoxo "+member.getMemberName()+" as a chairperson");
+						committeeChairpersons.add(member.getPmUser());
+					} else if(member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+						log.info("xoxoxoxoxo "+member.getMemberName()+" as a member");
+						committeeMembers.add(member.getPmUser());
+					}
+				}
+				
+				if(!committeeChairpersons.isEmpty()) {
+					log.info("xoxoxoxoxo committeeChairpersons is not empty");
+					selectedInactiveUsers.addAll(getInactiveUsers(
+							getManagedBean().getCommitteeType()+ "_CHAIRPERSON", 
+							committeeChairpersons,
+							getContractVer().getDocType(),
+							ParameterConst.COMMITTEE_ROLE_CHAIRPERSON));
+				}
+				
+				if(!committeeMembers.isEmpty()) {
+					log.info("xoxoxoxoxo committeeMembers is not empty");
+					selectedInactiveUsers.addAll(getInactiveUsers(
+							getManagedBean().getCommitteeType()+"_MEMBER", 
+							committeeMembers, 
+							getContractVer().getDocType(),
+							ParameterConst.COMMITTEE_ROLE_MEMBER));
+				}
+		    	
+		    } else {
+		    	
+		    	String roleCode = determineRoleCode(action, getTaskName());
+			    log.info("xoxoxoxoxooxoxo roleCode : "+roleCode);
+		    	
+		    	List<PmUser> selectedUsers = determineUsers(action, getTaskName());
+			    log.info("xoxoxoxoxooxoxo selectedUsers : "+selectedUsers);
+			    
+		    	selectedInactiveUsers = getInactiveUsers(roleCode, selectedUsers, getContractVer().getDocType(), null);
+		    }
 		    
-		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(roleCode, selectedUsers, getContractVer().getDocType());
-	        handleInactiveUserValidation(action, selectedInactiveUsers);
+		    handleInactiveUserValidation(action, selectedInactiveUsers);
 		}
 		//#30737 - End
 		
@@ -10290,14 +10345,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	// 34442 - end
 	
 	// #30737 - start
-	private String determineRoleCode(String action) {
+	private String determineRoleCode(String action, String taskName) {
 		
 		// CA -> DO (pendind meeting confirmation)
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
-			
 			log.info("role do : "+getManagedBean().getCommitteeType()+"_SECRETARY");
-			
-			return getManagedBean().getCommitteeType()+"_SECRETARY"; //RoleCode.DESK_OFFICER.value();
+			return getManagedBean().getCommitteeType()+"_SECRETARY";
 		}
 		
 		// MA -> CA (approval)
@@ -10313,10 +10366,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return null;
 	}
 	
-	private List<PmUser> determineUsers(String action) {
+	private List<PmUser> determineUsers(String action, String taskName) {
 		
 		// MA -> CA (approval)
 		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+//			if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)) {
+//				log.info("xoxoxoxoxoxo Return ???");
+//				MessageConst.ERROR_100072
+//			}
 			return getSelectedUsers();
 		}
 		
