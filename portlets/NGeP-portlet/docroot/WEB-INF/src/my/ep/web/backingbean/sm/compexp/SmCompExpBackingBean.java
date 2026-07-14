@@ -62,6 +62,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 import com.liferay.portal.util.PortalUtil;
+//#9299 - #40660
+import my.ep.util.CustomUtils;
 
 /**
  * BackingBean for Sm Company Experience
@@ -875,12 +877,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (catList.isEmpty()) {
 			addSmCompExpCatMaster();
 
-		// #9299 - #40661 Start
+		// #9299 - #40661,#40659 Start
 		} else if (this.getManagedBean().isMasterUpdate()) {
 			this.getManagedBean().getSelectedMaster().setCompExpMasterCats(catList); 
 		} else if (this.getManagedBean().isMasterNew()) {
 			this.getManagedBean().getNewMaster().setCompExpMasterCats(catList);
-		// #9299 - #40661 End
+		// #9299 - #40661,#40659 End
 		}
 		this.getManagedBean().setSelectedSmCompExpCatMaster(null);
 	}
@@ -970,13 +972,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		boolean error = err;
 		if (this.getManagedBean().isDraftUpdate()) {
 			error = validateDraftUpdateList(error, sourceType, smCompExpDocList);
-		// #9299 - #40661 Start
+		// #9299 - #40661,#40659 Start
 		} else if (this.getManagedBean().isMasterUpdate()) {
 			error = validateMasterUpdateList(error, sourceType); 
 		} else if (this.getManagedBean().isMasterNew()) {
 			error = validateMasterNewList(error);
 		} 
-		// #9299 - #40661 End
+		// #9299 - #40661,#40659 End
 		return error;
 	}
 
@@ -1025,17 +1027,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 		return error;
 	}
-	// #9299 - #40661 Start
+	// #9299 - #40661,#40659,#40664 Start
 	private boolean validateMasterNewList(boolean err) {
 		boolean error = err;
-		if (null == this.getManagedBean().getNewMaster().getCompExpMasterDocs()
-				|| this.getManagedBean().getNewMaster().getCompExpMasterDocs().isEmpty()) {
-			error = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatMaster cat : this.getManagedBean().getNewMaster().getCompExpMasterCats()) {
 			if (null == cat.getCategoryL3().getCategoryL3Id()) {
@@ -1046,9 +1040,17 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		}
+		if (null == this.getManagedBean().getNewMaster().getCompExpMasterDocs()
+				|| this.getManagedBean().getNewMaster().getCompExpMasterDocs().isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
 		return error;
 	}
-	// #9299 - #40661 End
+	// #9299 - #40661,#40659,#40664 End
 
 	/**
 	 * Delete selected Draft
@@ -1448,7 +1450,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
-		SmCompExpMaster master = resDTO.getMaster();
+		// #9299 - #40660
+		SmCompExpMaster master = (SmCompExpMaster) CustomUtils.getInstance().deepCopy(resDTO.getMaster());
 		SmCompExpMasterHistory history = new SmCompExpMasterHistory();
 
 		history.setCompExpMaster(master);
