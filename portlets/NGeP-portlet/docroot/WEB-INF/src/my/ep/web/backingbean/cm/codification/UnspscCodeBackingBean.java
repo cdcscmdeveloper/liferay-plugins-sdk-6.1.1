@@ -1168,7 +1168,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		return "unspscSingleUpload?faces-redirect=true";
 	}
-
+	
 	public String savetempCode(String outcome) {
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
@@ -4356,4 +4356,70 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 	}
 	//[#26282] check for Disciplinary Action - End
+	
+	//34447 Start
+	/**
+	 * Validate reject remark before displaying popup
+	 *
+	 *
+	 */
+	public void validateRejectBeforePopup(String popupWidget) {
+	    if (this.getManagedBean().getSelectedRemarks().get(0).getRemark() == null ||
+	        this.getManagedBean().getSelectedRemarks().get(0).getRemark().trim().length() <= 0) {
+	        FacesContext facesContext = FacesContext.getCurrentInstance();
+	        facesContext.addMessage(null,
+	            new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                null,
+	                MessageUtils.getMessage(
+	                    MessageConst.ERROR_716024,
+	                    MessageUtils.BUNDLE_COMMON_MESSAGES,
+	                    new FacesScopes().getUserLocale())
+	            )
+	        );
+	        return;
+	    }
+	    RequestContext.getCurrentInstance().execute(popupWidget + ".show();");
+	}
+	
+	/**
+	 * Validate Unspsc code field before displaying popup
+	 *
+	 *
+	 */
+	public void validateSubmitBeforePopup() {
+	    if (!isUnspscSelectionComplete()) {
+	        FacesContext.getCurrentInstance().addMessage(null,
+	            new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                null,
+	                MessageUtils.getMessage(
+	                    MessageConst.ERROR_715002,
+	                    MessageUtils.BUNDLE_COMMON_MESSAGES,
+	                    new FacesScopes().getUserLocale())
+	            )
+	        );
+	        return;
+	    }
+	    RequestContext.getCurrentInstance().execute("pendItemCodeCreate_endorsePublishPopup.show();");
+	}
+
+	private boolean isUnspscSelectionComplete() {
+	    CmUnspsc segment = this.getManagedBean().getSelectedLovUnspscSegment();
+	    CmUnspsc family  = this.getManagedBean().getSelectedLovUnspscfamily();
+	    CmUnspsc cls     = this.getManagedBean().getSelectedLovUnspscClass();
+	    CmUnspsc item    = this.getManagedBean().getSelectedLovUnspsc();
+
+	    return !isAnyFieldEmpty(segment)
+	        && !isAnyFieldEmpty(family)
+	        && !isAnyFieldEmpty(cls)
+	        && !isAnyFieldEmpty(item);
+	}
+
+	private boolean isAnyFieldEmpty(CmUnspsc lov) {
+	    return lov.getUnspscCode().isEmpty()
+	        || lov.getUnspscTitle().isEmpty()
+	        || lov.getUnspscTitleEng().isEmpty();
+	}
+	//34447 End
 }

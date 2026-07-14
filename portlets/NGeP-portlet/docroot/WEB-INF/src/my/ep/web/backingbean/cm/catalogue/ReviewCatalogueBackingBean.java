@@ -300,7 +300,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	 * @return String(addCatalogView or /xhtml/cm/catalogue/catalogueTaskList.xhtml )
 	 */
 	public String rejectCatalogueItem() {
-
+		
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
 
@@ -401,7 +401,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 
 
 	}
-
+	
 	/**
 	 * Cancel to pending approval item.
 	 * 
@@ -660,4 +660,44 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 				.getExternalContext();
 		externalContext.redirect(commonUrl + "/catalogue-maintenance-file");
 	}
+
+	//34447 Start
+	/**
+	 * Validate reject remark before displaying popup
+	 *
+	 *
+	 */
+	public void validateRejectBeforePopup() {
+	    CatalogueBackingBean cbb = new CatalogueBackingBean();
+
+	    if (cbb.getManagedBean().getRejectReasonIds().isEmpty()) {
+	        FacesContext.getCurrentInstance().addMessage(null,
+	            new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+	                    MessageConst.ERROR_715057,
+	                    MessageUtils.BUNDLE_COMMON_MESSAGES,
+	                    new FacesScopes().getUserLocale())
+	            )
+	        );
+	        return;
+	    }
+
+	    for (Object obj : cbb.getManagedBean().getRejectReasonIds()) {
+	        Long id = Long.valueOf(String.valueOf(obj));
+
+	        if (id == 10010 && (cbb.getManagedBean().getRejectReason() == null ||
+	                cbb.getManagedBean().getRejectReason().isEmpty())) {
+	            FacesContext.getCurrentInstance().addMessage(null,
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+	                        MessageConst.ERROR_715056,
+	                        MessageUtils.BUNDLE_COMMON_MESSAGES,
+	                        new FacesScopes().getUserLocale())
+	                )
+	            );
+	            return;
+	        }
+	    }
+
+	    RequestContext.getCurrentInstance().execute("rejectCatConfirmPopup.show();");
+	}
+	//34447 End
 }
