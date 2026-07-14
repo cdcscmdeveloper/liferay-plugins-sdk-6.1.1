@@ -1972,13 +1972,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private boolean isAuditor(){
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
 	}
-	
+
 	//#39693_40086 - Start
 	public boolean isRoleAuditorInternal(){
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
 	}
 	//#39693_40086 - End
-	
+
 	/**
 	 * Login user has planner role
 	 * @return boolean

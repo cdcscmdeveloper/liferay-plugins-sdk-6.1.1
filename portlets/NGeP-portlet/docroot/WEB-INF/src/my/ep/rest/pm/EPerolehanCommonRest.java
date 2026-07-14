@@ -42,7 +42,7 @@ public class EPerolehanCommonRest {
     
     // Security configuration - should be externalized to properties file
     private static final String API_KEY_HEADER = "X-API-Key";
-    private static final String VALID_API_KEY = "nGeP_H34lth_Ch3ck_K3y_2026_Pr0d_S3cur3!"; // TODO: Move to properties
+    private static final String VALID_API_KEY = "nGeP_H34lth_Ch3ck_K3y_2026_Pr0d_S3cur3!"; 
     
     // Property name in properties file that contains the whitelist
     // Format: whitelist.prop=prop1,prop2,prop3
@@ -267,7 +267,6 @@ public class EPerolehanCommonRest {
                 }
             }
             
-            // Search only within whitelisted properties from EJB
             Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllPropertiesValue();
             for (String key : whitelist) {
                 if (key.matches(regex)) {
@@ -307,7 +306,6 @@ public class EPerolehanCommonRest {
      * Validate API key
      */
     private boolean isValidApiKey(String apiKey) {
-        // TODO: Implement more sophisticated validation
         // - Check against database
         // - Validate expiry
         // - Check rate limits

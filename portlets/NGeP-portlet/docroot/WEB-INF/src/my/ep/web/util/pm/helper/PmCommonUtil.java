@@ -140,7 +140,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.constant.SPKIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
@@ -2907,6 +2906,7 @@ public class PmCommonUtil implements Serializable{
 		return certIssuer;
 	}
 	//#32705 - End
+	
 	// 34795 -start
 	public static PmUser retrieveUserWithPoRoleTaskByLoginId(String loginId) {
 		PmUser pmUser = new PmUser();
@@ -2916,8 +2916,7 @@ public class PmCommonUtil implements Serializable{
 			UserResDTO resDTO = null;
 			reqDTO.setLoginId(loginId);
 			reqDTO.setLoadPmPoRoleTask(true);
-			userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			resDTO = userSO.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
 
@@ -2925,8 +2924,7 @@ public class PmCommonUtil implements Serializable{
 				pmUser = resDTO.getPmUser();
 			}
 		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770053, new String[] {
-					loginId.toString(), e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770053, new String[] { loginId.toString(), e.getMessage() });
 		} finally {
 			userSO = null;
 		}

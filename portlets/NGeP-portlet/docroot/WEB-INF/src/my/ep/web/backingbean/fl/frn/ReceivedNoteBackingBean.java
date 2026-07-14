@@ -897,6 +897,17 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 		// 39692-End
 		
+		// 39692-Start
+		if ((outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SAVE)
+				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT) || outcome
+					.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE))
+				&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentNote().getFlRequest()
+						.getFulfilmentReqId())) {
+
+			throw new EpException(MessageConst.ERROR_760823);
+		}
+		// 39692-End
+		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {		
 			validateFulfilmentNote(outcome);
 			setTextBeforeSign(outcome);
@@ -1856,6 +1867,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 		// 38104-Start
 		if (getManagedBean().getFulfilmentNote() != null && getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
+
 			reqDTO.setFulfilmentNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
 		}
 		// 38104-End

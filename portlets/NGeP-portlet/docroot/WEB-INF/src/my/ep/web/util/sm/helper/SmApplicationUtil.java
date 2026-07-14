@@ -1471,7 +1471,8 @@ public class SmApplicationUtil {
 		} 
 		return validSignatoryBumi;
 	}
-	//#39860 --END
+	//#39860 --END	
+
 	/**
 	 * Check if each registered branch already assigned to bank account type
 	 * payment
@@ -3857,7 +3858,7 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
 		//13362
-		
+
 		// #39422 - Start - Add checking
 		if (managedBean.getApplnOverLapRemarks() == null || managedBean.getApplnOverLapRemarks().isEmpty()) {
 			managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
@@ -3991,9 +3992,6 @@ public class SmApplicationUtil {
 			reqDTO.setLangCode(CommonConstants.LANGUAGE_CODE_MALAY);
 			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-			
-			log.info("40444 - result count from query - " + resultList.size()); //#40444 - debug
-			
 			if (!EntityHelper.isCollectionEmpty(resultList)
 					&& !resultList.isEmpty()) {
 				retVal = new SmOverlapCategoryVO();
@@ -4049,7 +4047,7 @@ public class SmApplicationUtil {
 					if("".equalsIgnoreCase(companyName)){
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
-						
+
 						// #39422 - Start - Change null to N/A
 						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
 						// #39422 - End -

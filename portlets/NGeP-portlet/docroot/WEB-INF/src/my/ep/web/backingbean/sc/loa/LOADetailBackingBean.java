@@ -12028,6 +12028,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				&& statusEnabled && isQTValid && !isQTMaintenanceScreen();
 	}
 	//#21692 - End
+	
 	// 40234 - start
 	/**
 	 * To differentiate source method either from DP or QT Returns true if the
