@@ -7,10 +7,15 @@
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
 		<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<ui:param name="isRenderUOMandQuantity" value="#{evaluationBackingBean.checkUOMandQuantityRender()}" />
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<p:columnGroup type="header">
 		<p:row>
-			<p:column colspan="1" style="white-space: normal;word-break:normal;"
+			<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+			<p:column colspan="1" style="#{isManSpecAndCompliance ? 'width: 30%;' : ''} white-space: normal;word-break:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.item']}"><!-- #29006 add CSS property -->
+			<ui:remove>#29187 End Vinod</ui:remove>
 				
 
 			</p:column>
@@ -20,6 +25,9 @@
 				rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 
 			</p:column>
+			<ui:remove>#29187 Start Vinod</ui:remove>
+			<c:if test="#{!isContentTypeScore or isRenderUOMandQuantity}"> 
+			<ui:remove>#29187 End Vinod</ui:remove>
 			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:8%;white-space:normal;word-break:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.uom']}"><!-- #29006 add CSS property -->
 
@@ -61,6 +69,14 @@
 				headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
 
 			</p:column>
+			<ui:remove>#29187 Start Vinod</ui:remove>
+			</c:if>
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:4%;text-align:right;"
+				headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" 
+				rendered="#{templateSpecBackingBean.displayMandatorySpecColumn(templateSpecBean)}">
+
+			</p:column>
+			<ui:remove>#29187 End Vinod</ui:remove>
 
 			<!-- 31134 #11104 Farid start -->
 			<p:column rowspan="#{specificationRequired ? 2 : 1}"

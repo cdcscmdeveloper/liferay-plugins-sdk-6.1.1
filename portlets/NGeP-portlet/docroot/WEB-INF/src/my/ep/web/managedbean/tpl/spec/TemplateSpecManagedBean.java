@@ -89,6 +89,13 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private boolean updateSpecByAnswers;
 	private List<TplSpecAnswer> specAnswersToDelete;
 	/** from specification bean */
+	// #29187 Start Vinod
+	private List<SelectItem> mandatorySpecList;
+	private boolean zoneForItemHlink;
+	private TplSpecQuestion questionForItemHlink;
+	private List<TplSpecZoneQty> zoneQtyForItemHlink;
+	private boolean isComplianceOldNull;
+	// #29187 End Vinod
 
 	/** for specification Zonal ****************************/
 	/** The total suppliers spec loc. */
@@ -150,6 +157,14 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	/** The qt. */
 	private ScQt qt;
 
+	// #29187 Start Vinod
+	List<SelectItem> mandatorySpecList;
+	private boolean zoneForItemHlink;
+	private TplSpecQuestion questionForItemHlink;
+	private List<TplSpecZoneQty> zoneQtyForItemHlink;
+	private boolean isComplianceOldNull;
+	// #29187 End Vinod
+	
 	/**
 	 * @return the beans
 	 */
@@ -971,4 +986,47 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
 	}
 	/* #21695, #25138 END */
+	
+	//#29187 Start Vinod
+	public List<SelectItem> getMandatorySpecList() {
+		return mandatorySpecList;
+	}
+
+	public void setMandatorySpecList(List<SelectItem> mandatorySpecList) {
+		this.mandatorySpecList = mandatorySpecList;
+	}
+
+	public boolean isZoneForItemHlink() {
+		return zoneForItemHlink;
+	}
+
+	public void setZoneForItemHlink(boolean zoneForItemHlink) {
+		this.zoneForItemHlink = zoneForItemHlink;
+	}
+
+	public TplSpecQuestion getQuestionForItemHlink() {
+		return questionForItemHlink;
+	}
+	
+	public void setQuestionForItemHlink(TplSpecQuestion questionForItemHlink) {
+		this.questionForItemHlink = questionForItemHlink;
+	}
+
+	public List<TplSpecZoneQty> getZoneQtyForItemHlink() {
+		return zoneQtyForItemHlink;
+	}
+
+	public void setZoneQtyForItemHlink(List<TplSpecZoneQty> zoneQtyForItemHlink) {
+		this.zoneQtyForItemHlink = zoneQtyForItemHlink;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+	
+	//#29187 End Vinod
 }

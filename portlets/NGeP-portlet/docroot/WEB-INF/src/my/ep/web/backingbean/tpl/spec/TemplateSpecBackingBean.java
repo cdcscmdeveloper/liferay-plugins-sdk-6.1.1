@@ -16,8 +16,8 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator; //#25138
 import java.util.List;
+import java.util.Iterator; //#25138
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -46,7 +46,11 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+<<<<<<< HEAD
 import my.ep.constant.sc.SourcingConstants;//#21695
+=======
+import my.ep.constant.sc.QTStatusConst;
+>>>>>>> refs/remotes/origin/release-pre-prd
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
