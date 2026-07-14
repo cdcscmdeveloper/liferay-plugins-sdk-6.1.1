@@ -14,11 +14,16 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+//#28175
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.persistence.entity.sm.SmRvAssistOfficer;
+import my.ep.persistence.entity.sm.SmRvDocFile;
+import my.ep.persistence.entity.sm.SmRvSuppDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -26,8 +31,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
-//#28175
-import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -84,6 +87,17 @@ public class ViewSuppProfileManagedBean extends
 	private String oldPoApprOverlappedRemark;
 	private String oldApproverRemark;
 	// #28895_35501 End
+	// #34031 Start
+	private SmRevisit smRevisit;
+	private String svoRoleCode;
+	private SmRvAssistOfficer selectedRvAssistOfficer;
+	private boolean disableAddSmRvAssistOfficerBtn;
+	private int smRvAttachedFileIndex;
+	private String smRvFilePath;
+	private SmRvSuppDoc smRvSuppDoc;
+	private SmRvDocFile smRvDocFile;
+	private List<SmRvAssistOfficer> emptyRvAssistOfficers;
+	// #34031 End
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -449,4 +463,77 @@ public class ViewSuppProfileManagedBean extends
 		this.oldApproverRemark = oldApproverRemark;
 	}
 	// #28895_35501 End
+	// #34031 Start
+	public SmRevisit getSmRevisit() {
+		return smRevisit;
+	}
+
+	public void setSmRevisit(SmRevisit smRevisit) {
+		this.smRevisit = smRevisit;
+	}
+
+	public String getSvoRoleCode() {
+		return svoRoleCode;
+	}
+
+	public void setSvoRoleCode(String svoRoleCode) {
+		this.svoRoleCode = svoRoleCode;
+	}
+
+	public SmRvAssistOfficer getSelectedRvAssistOfficer() {
+		return selectedRvAssistOfficer;
+	}
+
+	public void setSelectedRvAssistOfficer(SmRvAssistOfficer selectedRvAssistOfficer) {
+		this.selectedRvAssistOfficer = selectedRvAssistOfficer;
+	}
+
+	public boolean isDisableAddSmRvAssistOfficerBtn() {
+		return disableAddSmRvAssistOfficerBtn;
+	}
+
+	public void setDisableAddSmRvAssistOfficerBtn(boolean disableAddSmRvAssistOfficerBtn) {
+		this.disableAddSmRvAssistOfficerBtn = disableAddSmRvAssistOfficerBtn;
+	}
+
+	public int getSmRvAttachedFileIndex() {
+		return smRvAttachedFileIndex;
+	}
+
+	public void setSmRvAttachedFileIndex(int smRvAttachedFileIndex) {
+		this.smRvAttachedFileIndex = smRvAttachedFileIndex;
+	}
+
+	public String getSmRvFilePath() {
+		return smRvFilePath;
+	}
+
+	public void setSmRvFilePath(String smRvFilePath) {
+		this.smRvFilePath = smRvFilePath;
+	}
+
+	public SmRvSuppDoc getSmRvSuppDoc() {
+		return smRvSuppDoc;
+	}
+
+	public void setSmRvSuppDoc(SmRvSuppDoc smRvSuppDoc) {
+		this.smRvSuppDoc = smRvSuppDoc;
+	}
+
+	public SmRvDocFile getSmRvDocFile() {
+		return smRvDocFile;
+	}
+
+	public void setSmRvDocFile(SmRvDocFile smRvDocFile) {
+		this.smRvDocFile = smRvDocFile;
+	}
+
+	public List<SmRvAssistOfficer> getEmptyRvAssistOfficers() {
+		return emptyRvAssistOfficers;
+	}
+
+	public void setEmptyRvAssistOfficers(List<SmRvAssistOfficer> emptyRvAssistOfficers) {
+		this.emptyRvAssistOfficers = emptyRvAssistOfficers;
+	}
+	// #34031 End
 }

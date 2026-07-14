@@ -2706,9 +2706,9 @@ public class SimpleQuoteBackingBean extends
 			//40234 - start
 			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
 				removeGovtSellerFromSupplierList(getManagedBean().getSupplierList());
-		    } else if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
-		    	removeGovtSellerFromSupplierList(getManagedBean().getGovtSellers());
-		    }
+			} else if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
+				removeGovtSellerFromSupplierList(getManagedBean().getGovtSellers());
+			}
 			//40234 - end
 			getSupplierListCriteria();
 		}
