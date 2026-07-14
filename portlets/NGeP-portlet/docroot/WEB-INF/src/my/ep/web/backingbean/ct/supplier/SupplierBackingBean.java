@@ -606,9 +606,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 		
 		//#30737 - Start
+		// change bank request
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-			CtContractVer ctContractVer = getManagedBean().getContractVer();
-			List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
+			
+			if (getManagedBean().getContractAdminlist() == null 
+					|| getManagedBean().getContractAdminlist().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_750037);
+			}
+			
+			/**List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
 			
 			inactiveUsersForRevise = getInactiveUsersForRevise(
 					ctContractVer.getContractVerId(),
@@ -632,6 +638,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				
 			log.info("xoxoxoxoxooxoxo action : "+action);
 			log.info("xoxoxoxoxooxoxo insert tracking diary & group task");
+			*/
 		}
 		//#30737 - End
 		
@@ -696,6 +703,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			/*25139-basri*/
 			reqDTO.setReqType(getManagedBean().getFcRequestType());
 			/*25139-end*/
+			
+			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveUserRevise()); // 30737 // x pakai dlm payload
 			
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
@@ -862,6 +871,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			// if supplier submit to MCA, 
 			// when selected MCA is inactive, please send group task
 			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+				
+				/**getContractAdminlist();
+				if (getManagedBean().getContractAdminlist() == null 
+						|| getManagedBean().getContractAdminlist().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_750037);
+					//throw new EpException(MessageConst.ERROR_100073, parameters);
+				}*/
 				
 				CtFactoring ctFactoring = getManagedBean().getFactoring();
 				List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
