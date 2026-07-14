@@ -7406,7 +7406,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null)));
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
-		//getManagedBean().getSmAppl().setSiteVisitGroup(true);  //TEMP hide workers
+		getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -10092,9 +10092,9 @@ public class SmApplicationBackingBean extends
 
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
-		//#28775 - Site Grouping Enhancement (TEMP hide workers)
-		//validateAllWorkshops();
-		//getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		//#28775 - Site Grouping Enhancement
+		validateAllWorkshops();
+		getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		//#28775 end
 
 		// try {
@@ -19135,6 +19135,8 @@ public class SmApplicationBackingBean extends
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
 			} else if (getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			} else if (getManagedBean().getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
+				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_RENEWAL);
 			}
 			
 			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(reqDTO);
@@ -19153,7 +19155,11 @@ public class SmApplicationBackingBean extends
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
 		} finally {
-			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
+			if (getManagedBean().getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
+				SmApplicationUtil.assignExistingAndAdditionalCategoryList(getManagedBean());
+			} else {
+				SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
+			}
 		}
 	}
 	
