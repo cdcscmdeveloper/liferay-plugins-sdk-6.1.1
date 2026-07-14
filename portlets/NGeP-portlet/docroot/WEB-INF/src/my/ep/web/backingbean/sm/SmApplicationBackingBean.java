@@ -17041,9 +17041,6 @@ public class SmApplicationBackingBean extends
 //	#37925 START
 	private void showRegistrationDecisionUI() {
 	    clearRegistrationStatusDisplay();
-	    log.info("DEBUG 37925: Before showRegistrationDecisionUI:: applNo -> " + getManagedBean().getSmAppl().getApplNo());
-	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
-	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	    
 	    SmAppl smAppl = getManagedBean().getSmAppl();
 	    if(smAppl == null) {
@@ -17066,9 +17063,6 @@ public class SmApplicationBackingBean extends
 	    
 	    setCountryOriginUI(applType, businessType, ssmCompanyCountry);
 	    setRegistrationStatusUI(businessType, smAppl, isForeignCompany);
-	    log.info("DEBUG 37925: After showRegistrationDecisionUI :: applNo -> " + getManagedBean().getSmAppl().getApplNo());
-	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
-	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	}
 
 	private String getCompanyCountry(SmAppl smAppl) {
@@ -17144,10 +17138,6 @@ public class SmApplicationBackingBean extends
 	 * @param isForeignCompany  indicates whether the company is foreign
 	 */
 	private void setRegistrationStatusUI(String businessType, SmAppl smAppl, boolean isForeignCompany) {
-		log.info("DEBUG 37925: Before setRegistrationStatusUI:: applNo -> " + getManagedBean().getSmAppl().getApplNo());
-	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
-	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
-
 	    if (smAppl == null || smAppl.getSupplierType() == null) {
 	        return;
 	    }
@@ -17167,10 +17157,6 @@ public class SmApplicationBackingBean extends
 	    } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
 	        localConsultantRegistrationUI(false);
 	    }
-	    log.info("DEBUG 37925: After setRegistrationStatusUI :: applNo -> " + getManagedBean().getSmAppl().getApplNo());
-	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
-	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
-	    // No other cases to process
 	}
 
 	/**
@@ -17192,9 +17178,6 @@ public class SmApplicationBackingBean extends
 	* @param isForeignCompany  true if the company is foreign; false otherwise
 	*/
 	public void localContractorRegistrationUI(String applType, boolean isForeignCompany) {
-		log.info("DEBUG 37925: Before localContractorRegistrationUI :: applNo -> " + getManagedBean().getSmAppl().getApplNo());
-	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
-	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
 	    
 	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType)) {
@@ -17218,9 +17201,6 @@ public class SmApplicationBackingBean extends
             getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
             getManagedBean().setDisplayDropdownRegStatus(true);
 	    }
-	    log.info("DEBUG 37925: After localContractorRegistrationUI :: applNo -> " + getManagedBean().getSmAppl().getApplNo());
-	    log.info("DEBUG 37925: getCurrRegStatus value -> " + getManagedBean().getCurrRegStatus());
-	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	    // Default case - no action needed
 	}
 
