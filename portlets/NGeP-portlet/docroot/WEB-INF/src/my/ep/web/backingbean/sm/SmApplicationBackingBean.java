@@ -7094,7 +7094,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				StringUtils.upperCase(SmCommonUtil.getMessage(
 						"lbl.sm.facility.type.workshop", null)));
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
-		//getManagedBean().getSmAppl().setSiteVisitGroup(true);  //TEMP hide workers
+		getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -9738,9 +9738,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
-		//#28775 - Site Grouping Enhancement (TEMP hide workers)
-		//validateAllWorkshops();
-		//getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		//#28775 - Site Grouping Enhancement
+		validateAllWorkshops();
+		getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		//#28775 end
 
 		// try {
