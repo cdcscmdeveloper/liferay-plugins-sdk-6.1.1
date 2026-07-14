@@ -1035,17 +1035,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 		return error;
 	}
-	// #9299 - #40661,#40659 Start
+	// #9299 - #40661,#40659,#40664 Start
 	private boolean validateMasterNewList(boolean err) {
 		boolean error = err; 
-		if (null == this.getManagedBean().getNewMaster().getCompExpMasterDocs()
-				|| this.getManagedBean().getNewMaster().getCompExpMasterDocs().isEmpty()) {
-			error = true; 
-			FacesContext.getCurrentInstance().addMessage( 
-					null, 
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		} 
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatMaster cat : this.getManagedBean().getNewMaster().getCompExpMasterCats()) {
 			if (null == cat.getCategoryL3().getCategoryL3Id()) { 
@@ -1056,10 +1048,18 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
 			} 
 		} 
+		if (null == this.getManagedBean().getNewMaster().getCompExpMasterDocs()
+				|| this.getManagedBean().getNewMaster().getCompExpMasterDocs().isEmpty()) {
+			error = true; 
+			FacesContext.getCurrentInstance().addMessage( 
+					null, 
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		} 
 		return error; 
 	} 
  
-	// #9299 - #40661,#40659 End
+	// #9299 - #40661,#40659,#40664 End
 
 	/**
 	 * Delete selected Draft
@@ -1531,28 +1531,31 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpReqDTO reqDTO3 = new SmCompExpReqDTO();
 		reqDTO3.setHistory(history);
 
-		SmCompExpResDTO resDTO1;
-		resDTO1 = getSmCompExpSo().addHistory(reqDTO3);
-		if (resDTO1.isSuccessful()) {
-			SmCompExpMaster selectedMaster = this.getManagedBean().getSelectedMaster();
-			addHistoryDoc(selectedMaster);
-			SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO();
-			reqDTO4.setUpdateMaster(selectedMaster);
-			SmCompExpResDTO resDTO2;
-			resDTO2 = getSmCompExpSo().updateMaster(reqDTO4);
-			if (resDTO2.isSuccessful()) {
-				if (delete) {
-					delSmCompExpMaster();
-				} else {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775238,
-									new String[] { selectedMaster.getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-					proceedAfterTnC();
-				}
-			}
-		}
+		// #9299 - #40660 Start
+		SmCompExpMaster selectedMaster = this.getManagedBean().getSelectedMaster();
+		SmCompExpResDTO resDTO1 = new SmCompExpResDTO();
+		if (delete) {
+			delSmCompExpMaster(resDTO1);
+		} else {
+			addHistoryDoc(selectedMaster); 
+			SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
+			reqDTO4.setUpdateMaster(selectedMaster); 
+			resDTO1 = getSmCompExpSo().updateMaster(reqDTO4);
+			if (resDTO1.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775238,
+								new String[] { selectedMaster.getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} 
+		} 
+		if (resDTO1.isSuccessful()) { 
+			SmCompExpResDTO resDTO2; 
+			resDTO2 = getSmCompExpSo().addHistory(reqDTO3);
+			if (resDTO2.isSuccessful()) { 
+				proceedAfterTnC();
+			} 
+		} 
+		// #9299 - #40660 End
 	}
 
 	private void addHistoryDoc(SmCompExpMaster selectedMaster) {
@@ -1599,10 +1602,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	/**
 	 * Delete selected Master
+	 * #9299 - #40660
+	 * @param resDTO1 
 	 * 
 	 * @throws IOException
 	 */
-	public void delSmCompExpMaster() throws IOException {
+	// #9299 - #40660
+	public void delSmCompExpMaster(SmCompExpResDTO resDTO1) throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
 		SmCompExpResDTO resDTO;
@@ -1613,7 +1619,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775239, new String[] { this
 							.getManagedBean().getSelectedMaster().getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-			proceedAfterTnC();
+			// #9299 - #40660
+			resDTO1.setSuccessful(true);
 		}
 	}
 
