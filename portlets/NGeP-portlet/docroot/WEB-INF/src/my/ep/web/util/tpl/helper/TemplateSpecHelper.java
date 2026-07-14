@@ -453,6 +453,7 @@ public class TemplateSpecHelper {
 							newSpecZoneQty.setSpecZoneQtyId(null);
 							newSpecZoneQty.setBrandNew(true);
 							newSpecZoneQty.setTplSpecQuestion(newSpecQuestion);
+							newSpecZoneQty.setTplSpecZoneOffer(null);
 							setUserDetails(newSpecZoneQty);
 							newSpecZoneQties.add(newSpecZoneQty);
 
