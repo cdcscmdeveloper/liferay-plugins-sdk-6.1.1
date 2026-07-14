@@ -757,7 +757,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
 		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList){
-			justificationReasonList.add(finalJustification.getJustification().getReasonCode());
+			justificationReasonList.add(finalJustification.getJustification(). getReasonCode());
 		}
 		this.getManagedBean().setJustificationReasonList(justificationReasonList);
 		//#34860 end
@@ -1029,6 +1029,16 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().setRenderjustificationTextbox(true);
 			}
 		}
+		//#34860 Start adli
+		List<ScQtFinalJustification> finalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
+				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
+		for (ScQtFinalJustification finalJustification: finalJustificationList){
+			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(finalJustification.getJustification().getReasonCode())){
+				this.getManagedBean().setRenderjustificationTextbox(true);
+			}
+		}
+		//#34860 End
+		
 		
 		// #28834 - Start.
 		setDisableSFJustification();
@@ -2267,7 +2277,7 @@ public class SupplierFinalizationBackingBean extends
 		Boolean isInitialSelectionItemized = 
 				this.getManagedBean().isInitialSelectionItemized();
 		boolean isRenderjustificationTextbox = this.getManagedBean().isRenderjustificationTextbox();
-		
+		String justificationText = this.getManagedBean().getJustificationText(); //#34860
 		renewSesionObject();
 
 		getManagedBean().setCommitteeType(committeeType);
@@ -2282,6 +2292,7 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setInitialSelectionItemized(
 						   isInitialSelectionItemized);
 		getManagedBean().setRenderjustificationTextbox(isRenderjustificationTextbox);
+		getManagedBean().setJustificationText(justificationText); //#34860
 		
 		loadInitialData(qtId);
 		// #18685 - Start.
@@ -2944,6 +2955,14 @@ public class SupplierFinalizationBackingBean extends
 			if (createNewBP) {
 				addBriefingPaper(scQtFinalization);
 			}
+			//34860 start
+			if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
+				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				saveQtFinalJustification(qtSuppFinalizationSO);
+			}				
+			//34860 end
 			updateBPMTask(outcome, null, reqDTO);
 			// 38523 - refactor code - end
 			// 38523 - indenting codes - end
@@ -3925,10 +3944,7 @@ return	remarksNotFound;
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.saveSupplierFinalization(reqDTO);
 			//#34860 start adli
-			SuppFinalJustificationReqDTO finalJustificationReqDTO = new SuppFinalJustificationReqDTO();
-			finalJustificationReqDTO.setScQt(this.getManagedBean().getScQt());
-			finalJustificationReqDTO.setFinalJustificationList(this.getManagedBean().getFinalJustificationList());
-			qtSuppFinalizationSO.saveJustificationList(finalJustificationReqDTO);
+			saveQtFinalJustification(qtSuppFinalizationSO);			
 			//#34860 end
 			
 			reloadData(resDTO);				
@@ -3937,6 +3953,35 @@ return	remarksNotFound;
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
+	}
+	
+	public void saveQtFinalJustification(IQTSuppFinalizationSO qtSuppFinalizationSO){
+		List<String> reasonIdList = this.getManagedBean().getJustificationReasonList();
+		List<ScQtFinalJustification> finalJustificationList = new ArrayList<ScQtFinalJustification>();
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		Long qtFinalizationId = this.getManagedBean().getFinalJustificationList().get(0).getQtFinalizationId();
+		
+		for(String reasonCode : reasonIdList){
+			PmReason pmReason = getReasonByCategoryAndCode(
+					ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(), reasonCode);
+			
+			ScQtFinalJustification finalJustification = new ScQtFinalJustification();
+		    finalJustification.setScQt(this.getManagedBean().getScQt());                 
+		    finalJustification.setQtFinalizationId(qtFinalizationId);
+		    finalJustification.setJustification(pmReason);    
+		    if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reasonCode)){
+		    	finalJustification.setJustificationText(this.getManagedBean().getJustificationText());
+		    }	    
+		    
+		    finalJustificationList.add(finalJustification);
+		}	
+		this.getManagedBean().setFinalJustificationList(finalJustificationList);
+		SuppFinalJustificationReqDTO finalJustificationReqDTO = new SuppFinalJustificationReqDTO();
+		finalJustificationReqDTO.setScQt(this.getManagedBean().getScQt());
+		finalJustificationReqDTO.setFinalJustificationList(this.getManagedBean().getFinalJustificationList());
+		qtSuppFinalizationSO.saveJustificationList(finalJustificationReqDTO);
 	}
 
 	private void updateBPMTask(String outcome, PmDigiSign digiSign, SuppFinalizationReqDTO reqDTO) {

@@ -367,6 +367,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#34860 Start adli
 	private List<String> justificationReasonList;
 	private List<ScQtFinalJustification> finalJustificationList;
+	private String justificationText;
 	//#34860 end
 	
 	/**
@@ -2779,6 +2780,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.justificationReasonList = justificationReasonList;
 	}
 	
+	public String getJustificationText() {
+		return justificationText;
+	}
+
+	public void setJustificationText(String justificationText) {
+		this.justificationText = justificationText;
+	}
+	
 	public List<ScQtFinalJustification> getFinalJustificationList() {
 		return finalJustificationList;
 	}
@@ -2787,6 +2796,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.finalJustificationList = finalJustificationList;
 	}
 	//#34860 End
+
 
 	
 	

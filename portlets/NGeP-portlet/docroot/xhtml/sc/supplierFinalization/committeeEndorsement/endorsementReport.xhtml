@@ -130,9 +130,10 @@
 					test="#{suppFinalizationBackingBean.managedBean.renderjustificationTextbox}">
 					<table>
 						<tr>
+							<!-- #34860 -->
 							<td style="float: right; margin-left: 55px;"><p:inputTextarea
 									id="justificationTxtId" required="#{!readOnly}"
-									value="#{finalization.justificationText}" cols="80" rows="3"
+									value="#{suppFinalizationBackingBean.managedBean.justificationText}" cols="80" rows="3"
 									onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 									disabled="#{readOnly}"
 									label="#{lbl['lbl.sc.sf.justification']}" /> <p:message
