@@ -259,6 +259,42 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	// 25037 - end
 	
+	// 35320 - START
+	private PmUser userLoggedIn;
+
+	/** Selected tab to be displayed */
+	private String selectedTab;
+
+	private int activeIndex;
+
+	/** Flag to indicate to display committee view page */
+	private boolean viewCommitteePage = Boolean.FALSE;
+
+	private Map<String, TplCommittee> committeMap;
+
+	/** The final committee */
+	private List<TplCommMember> latestMembers;
+
+	private Paginator memberPaginator;
+
+	private boolean refreshFCMaintenancePage = Boolean.FALSE;
+
+	/** The tpl committe member. */
+	private TplCommMember tplCommMember = new TplCommMember();
+
+	/** The tpl committee. */
+	private TplCommittee tplCommittee;
+
+	/** The tpl comm member history. */
+	private TplCommMemberHistory selectedTplCommHistory;
+
+	/** The tpl committe members. */
+	private List<TplCommMember> tplCommMembers;
+
+	/** The to be del tpl committe members. */
+	private List<TplCommMember> toBeDelTplCommitteMembers;
+	// 35320 - END
+	
 	/**
 	 * Instantiates a new committe managed bean.
 	 */
@@ -1451,4 +1487,112 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.currentCommitteeType = currentCommitteeType;
 	}
 	// 25037 - end
+	
+	// #35320 - START
+	public PmUser getUserLoggedIn() {
+		return userLoggedIn;
+	}
+
+	public void setUserLoggedIn(PmUser userLoggedIn) {
+		this.userLoggedIn = userLoggedIn;
+	}
+
+	public String getSelectedTab() {
+		return selectedTab;
+	}
+
+	public void setSelectedTab(String selectedTab) {
+		this.selectedTab = selectedTab;
+	}
+
+	public boolean isViewCommitteePage() {
+		return viewCommitteePage;
+	}
+
+	public void setViewCommitteePage(boolean viewCommitteePage) {
+		this.viewCommitteePage = viewCommitteePage;
+	}
+
+	public Map<String, TplCommittee> getCommitteMap() {
+		return committeMap;
+	}
+
+	public void setCommitteMap(Map<String, TplCommittee> committeMap) {
+		this.committeMap = committeMap;
+	}
+
+	public List<TplCommMember> getLatestMembers() {
+		return latestMembers;
+	}
+
+	public void setLatestMembers(List<TplCommMember> latestMembers) {
+		this.latestMembers = latestMembers;
+	}
+
+	public int getActiveIndex() {
+		return activeIndex;
+	}
+
+	public void setActiveIndex(int activeIndex) {
+		this.activeIndex = activeIndex;
+	}
+
+	public Paginator getMemberPaginator() {
+		return memberPaginator;
+	}
+
+	public void setMemberPaginator(Paginator memberPaginator) {
+		this.memberPaginator = memberPaginator;
+	}
+
+	public boolean isRefreshFCMaintenancePage() {
+		return refreshFCMaintenancePage;
+	}
+
+	public void setRefreshFCMaintenancePage(boolean refreshFCMaintenancePage) {
+		this.refreshFCMaintenancePage = refreshFCMaintenancePage;
+	}
+
+	public TplCommMember getTplCommMember() {
+		return tplCommMember;
+	}
+
+	public void setTplCommMember(TplCommMember tplCommMember) {
+		this.tplCommMember = tplCommMember;
+	}
+
+	public TplCommittee getTplCommittee() {
+		return tplCommittee;
+	}
+
+	public void setTplCommittee(TplCommittee tplCommittee) {
+		this.tplCommittee = tplCommittee;
+	}
+
+	public TplCommMemberHistory getSelectedTplCommHistory() {
+		return selectedTplCommHistory;
+	}
+
+	public void setSelectedTplCommHistory(
+			TplCommMemberHistory selectedTplCommHistory) {
+		this.selectedTplCommHistory = selectedTplCommHistory;
+	}
+
+	public List<TplCommMember> getTplCommMembers() {
+		return tplCommMembers;
+	}
+
+	public void setTplCommMembers(List<TplCommMember> tplCommMembers) {
+		this.tplCommMembers = tplCommMembers;
+	}
+
+	public List<TplCommMember> getToBeDelTplCommitteMembers() {
+		return toBeDelTplCommitteMembers;
+	}
+
+	public void setToBeDelTplCommitteMembers(
+			List<TplCommMember> toBeDelTplCommitteMembers) {
+		this.toBeDelTplCommitteMembers = toBeDelTplCommitteMembers;
+	}
+	// #35320 - END
 }

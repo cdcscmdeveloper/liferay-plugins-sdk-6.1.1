@@ -92,8 +92,9 @@
 							</h:outputText>
 						</p:column>
 					</p:dataTable>
-					<ac:detachablePaginator minimal="true" loopId="historyPanelId"
-						paginatorObject="#{historyPaginator}" />
+					<ui:remove>#35320 - Start</ui:remove>
+					<ac:detachablePaginator minimal="true" loopId="@([id$=historyPanelId])"	paginatorObject="#{historyPaginator}" />
+					<ui:remove>#35320 - End</ui:remove>
 				</p:panel>
 				<p:panel id="historyMemberPanelId" header="#{committeeName}">
 					<p:dataTable id="historyMemberTableId"
@@ -143,8 +144,9 @@
 							</ui:remove>
 						</p:column>
 					</p:dataTable>
-					<ac:detachablePaginator loopId="historyMemberTableId"
-						paginatorObject="#{memberHistoryPaginator}" />
+				<ui:remove>#35320 - Start</ui:remove>
+					<ac:detachablePaginator loopId="@([id$=historyMemberTableId])" paginatorObject="#{memberHistoryPaginator}" />
+				<ui:remove>#35320 - End</ui:remove>
 				</p:panel>
 			</h:panelGrid>
 			<h:panelGrid columns="1" styleClass="gridContainer"
