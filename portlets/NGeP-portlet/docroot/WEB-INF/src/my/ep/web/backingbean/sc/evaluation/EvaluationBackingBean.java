@@ -10814,7 +10814,7 @@ private void retriveCommitteeRemarksList(){
 						.asList(SCProcessNameConst.FINALISE_EC_EVALUATION, SCProcessNameConst.FINALISE_FEC_EVALUATION)
 						.contains(taskName)) {
 					getManagedBean().setAutoUpdate(true);
-					validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt());
+					validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(), false);// 33222
 				}
 				// 33222 - end
 				getManagedBean().setAutoUpdate(false);

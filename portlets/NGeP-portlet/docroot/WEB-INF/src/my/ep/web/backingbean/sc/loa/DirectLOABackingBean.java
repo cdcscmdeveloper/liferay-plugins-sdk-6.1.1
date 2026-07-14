@@ -76,6 +76,7 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -5997,6 +5998,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 //			reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
 //			}
 			//#26474 -end-
+			
+			// 33222 - start
+			String taskName = this.getManagedBean().getTaskName();
+			if (Arrays.asList(SCProcessNameConst.APPROVE_MANUAL_LOA, SCProcessNameConst.ACCEPT_MANUAL_LOA).contains(
+					taskName)
+					&& Arrays.asList(BpmOutcomeConst.BPM_ACCEPT, BpmOutcomeConst.BPM_REVISE).contains(outcome)) {
+				String deskofficerUserId = validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(), true);
+				reqDTO.setReplacementDeskofficer(deskofficerUserId);
+			}
+			// 33222 - end
 			
 			// remove empty remark - start
 			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();

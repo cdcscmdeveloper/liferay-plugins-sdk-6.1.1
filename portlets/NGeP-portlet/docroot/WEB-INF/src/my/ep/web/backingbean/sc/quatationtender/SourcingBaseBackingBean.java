@@ -8668,11 +8668,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	// 33222 - start
 	/**
-	 * Validate profile status for deskofficer
+	 * Validate profile and role status for deskofficer
 	 * 
 	 * @param scQt
 	 */
-	public void validateDeskofficerProfileRoleStatus(ScQt scQt) {
+	public String validateDeskofficerProfileRoleStatus(ScQt scQt, boolean rerouteWhenAvailable) {
 		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
 		String deskofficerRoleCode = RoleCode.DESK_OFFICER.value();
 		reqDTO.setDocNo(scQt.getQtNo());
@@ -8681,16 +8681,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		reqDTO.setUserIds(deskofficerActor.getUserId().toString());
 		reqDTO.setUserRoleCode(deskofficerRoleCode);
 		Locale locale = this.getFacesScopesGen().getUserLocale();
-		String status = InactiveUserValidator.getInstance().evaluateUsers(reqDTO).getStatus();
+		InactiveUserResDTO resDTO = InactiveUserValidator.getInstance().evaluateUsers(reqDTO);
+		String status = resDTO.getStatus();
 		if ("5".equals(status)) {
 			String roleDesc = RoleHelper.getInstance().getRoleDescByCode(deskofficerRoleCode).getRoleName();
 			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_700128, new String[] { roleDesc,
 					scQt.getOwnerOrgProfile().getOrgName() }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 		} else if (!"1".equals(status)) {
-			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_761000,
-					new String[] { deskofficerActor.getUserName(), scQt.getOwnerOrgProfile().getOrgName() },
-					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			if (!rerouteWhenAvailable) {
+				throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_761000, new String[] {
+						deskofficerActor.getUserName(), scQt.getOwnerOrgProfile().getOrgName() },
+						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			}
+
+			return resDTO.getUserIds().split(",")[0];
 		}
+		return null;
 	}
 	// 33222 - end
 }
