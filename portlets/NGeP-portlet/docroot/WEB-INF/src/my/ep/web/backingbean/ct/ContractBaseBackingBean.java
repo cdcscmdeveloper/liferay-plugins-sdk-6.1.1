@@ -524,12 +524,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         }
 
         if (MessageConst.ERROR_100071.equals(errorCode)) {
-            return new String[]{
-                "KADIR",
-                "Chairperson",
-                "KADUK",
-                "Member"
-            };
+            return parameters;
         }
 
         if (MessageConst.ERROR_100072.equals(errorCode)) {
@@ -569,9 +564,22 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         
         int activeCount = 0;
 
+//      int i = 0; // TEST PURPOSE
         for (SelectedInactiveUserDTO user : selectedInactiveUsers) {
+        	
+        	
+        	// TEMP HARDCODED STATUS
+        	// FOR TESTING PURPOSE ONLY
+//  	        if (i == 0) {
+//  	        	log.info("xoxoxoxoxoxo set status : 2L");
+//  	        	user.setStatus(2L);
+//  	        } else {
+//  	        	log.info("xoxoxoxoxoxo set status : 3L");
+//  	        	user.setStatus(3L);
+//  	        }
 
             Long status = user.getStatus();
+            log.info("xoxoxoxo status : "+status);
 
             if (Long.valueOf(1L).equals(status)) {
                 activeCount++;
@@ -583,8 +591,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 
                 invalidUsers.add(user);
             }
+            
+//          i++; //FOR TESTING PURPOSE ONLY
         }
-
+        
+        log.info("xoxoxoxoxoxo activeCount : "+activeCount);
+        log.info("xoxoxoxoxoxo invalidUsers size : "+invalidUsers.size());
+        
         // Single selected user and inactive
         if (selectedInactiveUsers.size() == 1 && !invalidUsers.isEmpty()) {
         	log.info("Single selected user and inactive");
@@ -605,14 +618,23 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         // Mixed active and inactive
         if (activeCount > 0 && !invalidUsers.isEmpty()) {
         	log.info("Mixed active and inactive");
-            String userNames = getSelectedInactiveUserNames(invalidUsers);
-            throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
+        	String userNames = getSelectedInactiveUserNames(invalidUsers);
+        	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
+        		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(invalidUsers) });
+        	} else {
+                throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
+        	}
         }
 
         // All inactive (2,3,4)
         if (activeCount == 0 && !invalidUsers.isEmpty()) {
         	log.info("All inactive (2,3,4)");
-            throw new EpException(MessageConst.ERROR_100068);
+        	String userNames = getSelectedInactiveUserNames(invalidUsers);
+        	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
+        		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(invalidUsers) });
+        	} else {
+                throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
+        	}
         }
 
         // All status = 5
@@ -626,6 +648,23 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         log.info("PASSED!");
 //      throw new EpException(MessageConst.ERROR_100068); //TEMP
         return;
+    }
+    
+    private String buildInactiveCommitteeUserParameters(List<SelectedInactiveUserDTO> inactiveUsers) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < inactiveUsers.size(); i++) {
+            SelectedInactiveUserDTO user = inactiveUsers.get(i);
+
+            if (i > 0) {
+                sb.append("<br />");
+            }
+
+            sb.append(user.getMemberRole())
+              .append(" ")
+              .append(user.getUserName());
+        }
+        return sb.toString();
     }
     
     private String getSelectedInactiveUserNames(List<SelectedInactiveUserDTO> inactiveUsers) {
@@ -655,7 +694,6 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     protected abstract CtContractVer getContractVer();
     protected abstract String getTaskName();
     
-    //#30737 - Start
   	protected List<SelectedInactiveUserDTO> getInactiveUsersForRevise(Long docId, String parameterCode, String docType){
   		
   		log.info("xoxoxoxoxooxoxo docId : "+ docId);
@@ -678,13 +716,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
               
               List<PmUser> users = new ArrayList<PmUser>();
               users.add(ctActor.getUser());
-              return getInactiveUsers(userRole, users, docType);
+              return getInactiveUsers(userRole, users, docType, null);
           }
           
           return new ArrayList<>();
   	}
   	
-  	protected List<SelectedInactiveUserDTO> getInactiveUsers(String roleCode, List<PmUser> users, String docType) {
+  	protected List<SelectedInactiveUserDTO> getInactiveUsers(String roleCode, List<PmUser> users, String docType, String memberRoleCode) {
   		
   	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
@@ -700,10 +738,12 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	    
   	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
   	    resDto.setRoleCode(roleCode);
+  	    resDto.setMemberRoleCode(memberRoleCode);
   	    
   	    log.info("xoxoxo getStatus "+resDto.getStatus());
   	    log.info("xoxoxo getMessage "+resDto.getMessage());
   	    log.info("xoxoxo roleCode "+roleCode);
+  	    log.info("xoxoxo memberRoleCode "+memberRoleCode);
 
   	    return resolveInactiveUserStatus(users, resDto);
   	}
@@ -722,13 +762,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	  	        selectedUser.setUserRoleDesc(userRoleDesc);
   	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
   	  	        
-  	  	        // FOR TESTING PURPOSE ONLY
-//  	  	        if (i == 0) {
-//  	  	            selectedUser.setStatus(2L);
-//  	  	        } else {
-//  	  	           	selectedUser.setStatus(3L);
-//  	  	        }
-  	  	        
+  	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(resDto.getMemberRoleCode())) {
+  	  	        	log.info("xoxoxoxoxoxo add as chairperson");
+  	  	        	selectedUser.setMemberRole("Chairperson");
+  	  	        } else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(resDto.getMemberRoleCode())) {
+  	  	        	log.info("xoxoxoxoxoxo add as member");
+  	  	        	selectedUser.setMemberRole("Member");
+  	  	        }
   	  	        selectedUsers.add(selectedUser);
   	  	    }
   	    }

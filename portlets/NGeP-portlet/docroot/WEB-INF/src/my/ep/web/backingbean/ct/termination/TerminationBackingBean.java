@@ -634,7 +634,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	        }*/
 	        
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(approverType, getSelectedUsers(), docType);
+	        		getInactiveUsers(approverType, getSelectedUsers(), docType, null);
 	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 	        
 			log.info("xoxoxoxoxooxoxo action : "+outcome);

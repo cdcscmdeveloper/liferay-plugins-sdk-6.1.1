@@ -862,7 +862,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				String approverType = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 						ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();
 				List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-		        		getInactiveUsers(approverType, getSelectedUsers(), docType);
+		        		getInactiveUsers(approverType, getSelectedUsers(), docType, null);
 		        handleInactiveUserValidation(action, selectedInactiveUsers);
 		        
 				log.info("xoxoxoxoxooxoxo action : "+action);
