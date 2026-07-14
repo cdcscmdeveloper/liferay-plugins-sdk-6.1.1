@@ -3283,6 +3283,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// 34442 - start
 		else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()
 				&& statusId.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+			validateContractAmendment(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			
 			setConfirmationContentMsg(getConfirmationContent(String.valueOf(contractVer.getStatus().getStatusId()),
 					contractVer.getCtContract().getContractNo()));
 			RequestContext.getCurrentInstance().execute("acknowledgeConfirmDlg.show()");
