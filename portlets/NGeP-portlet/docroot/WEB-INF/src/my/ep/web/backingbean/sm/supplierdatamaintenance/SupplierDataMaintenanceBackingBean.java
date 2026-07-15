@@ -3459,22 +3459,39 @@ public class SupplierDataMaintenanceBackingBean extends
 	    switch (param.toUpperCase()) {
 
 	        case "ONE":
-	            if (isRole(roleType, SupplierManagementConst.APPROVER_SDM) &&
+	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
+	            		SupplierManagementConst.SUPPLIER_APPROVER, SupplierManagementConst.APPROVER_SDM) &&
                     otherDescBean.getOtherDescOld() != null) {
 	                	return otherDescBean.getOtherDescOld();
 	            }
 	            break;
+	        
+	        case "TWO":
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
+	            		SupplierManagementConst.SUPPLIER_PO)) {
+	                return otherDescBean.getOtherDesc();
+	            }
+	            break;
 
+	        case "THREE":
+	        	if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
+                        SupplierManagementConst.SUPPLIER_PO)) {
+	                return getUserNameByUserId(otherDescBean.getCreatedBy());
+	            }
+	            break;
+	        
 	        case "FOUR":
-	            if (isRole(roleType, 
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
+	            		SupplierManagementConst.SUPPLIER_APPROVER,
 	            		SupplierManagementConst.SECTION_ROLE_APP_SDM, SupplierManagementConst.APPROVER_SDM)) {
 	                return otherDescBean.getOtherDesc();
 	            }
 	            break;
 
 	        case "FIVE":
-	            if (isRole(roleType, 
-	            		SupplierManagementConst.SECTION_ROLE_APP_SDM, SupplierManagementConst.APPROVER_SDM)) {
+	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
+	                                SupplierManagementConst.SUPPLIER_APPROVER,
+	                                SupplierManagementConst.SECTION_ROLE_APP_SDM, SupplierManagementConst.APPROVER_SDM)) {
 	                return getUserNameByUserId(otherDescBean.getCreatedBy());
 	            }
 	            break;
