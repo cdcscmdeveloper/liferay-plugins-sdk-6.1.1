@@ -111,7 +111,8 @@
 			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" action="#{smPersonnelBackingBean.confirmDeactivateAdmin}" update="@form" 
-					disabled="#{not empty smPersonnelBackingBean.managedBean.noSupplierUserMsg}" />
+					disabled="#{not empty smPersonnelBackingBean.managedBean.noSupplierUserMsg
+								or smPersonnelBackingBean.managedBean.disciplinaryAction}" /> <!-- #26238 - 39217 -->
 			</div>
 		</p:panel>
 		
