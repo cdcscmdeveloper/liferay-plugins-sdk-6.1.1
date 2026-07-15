@@ -8322,6 +8322,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			}
 
+			//#40112 - start
+			SmAIDocBackingBean.validateManualPersonnelAgainstEpf(
+					getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder());
+			//#40112 - end
 			SmCommonUtil.getInstance().setUserDetails(
 					getManagedBean().getSelectedShareHolder());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -13268,9 +13272,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	// harris
 	public void deleteSupDocFileAttachment() {
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
-		//#40112
+		//#40112 - start
 		getManagedBean().getSmApplDocFile().setValidatedAI(0);
 		getManagedBean().getSmApplDocFile().setAiApiResponseId(null);
+		//#40112 - end
 		// #37775 - Start
 		if (this.getManagedBean().getSmApplDocFile() != null) {
 			if (mainDoc.getSmApplDocFiles().size() == 1) {
@@ -13288,7 +13293,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		// #37775 - End
 		this.getManagedBean().setSmApplDocFile(null);
-		SmAIDocBackingBean.revalidateAfterDelete(getManagedBean().getSmAppl()); //#40112
+		SmAIDocBackingBean.revalidateAfterDelete(getManagedBean().getSmAppl());	//#40112
 	}
 	//#28807 - End
 
@@ -13483,6 +13488,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	//#34159 - START - Refactor this method
 	public void onChangeState(SmAddress addr, String panelName) {
+		//#40112 - start
+		addr.clearStateAI();
+		addr.clearDistrictAI();
+		addr.clearCityAI();
+		//#40112 - end
 		Long stateId = addr.getStateId();
 		if (stateId != null) {
 			addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
@@ -13570,6 +13580,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeDistrict(SmAddress addr, String panelName) {
+		//#40112 - start
+		addr.clearDistrictAI();
+		addr.clearCityAI();
+		//#40112 - end
 		//#34799
 		addr.setPmCity(null);
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
@@ -13607,6 +13621,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            addr
 	 */
 	public void onChangeCity(SmAddress addr, String panelName) {
+		//#40112 - start
+		addr.clearCityAI();
+		//#40112 - end
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
 		//#36483 - START
@@ -15090,7 +15107,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			
 		}
-		SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());	//#40112
+		//#40112 - start
+		SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
+		//#40112 - end
 	}
 	
 	//3460 - Start
@@ -17336,6 +17355,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//13320-Start
 	
 	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
+		//#40112 - start
+		addr.clearDistrictAI();
+		addr.clearCityAI();
+		//#40112 - end
 		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
@@ -18305,10 +18328,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	//#31407 - START
 	public void checkBeforeSubmit() {
-		//#40112
+		//#40112 - start
 		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl())) {
 			return;
 		}
+		//#40112 - end
 		//check category code start
 		StringBuilder msg = new StringBuilder();
 		msg.append("<br />");
@@ -19787,6 +19811,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	public void processAI(){
 		SmAIDocBackingBean.processUploadedSupportDoc(getManagedBean().getSmAppl(), getManagedBean().getSupportDoc());
+	}
+	
+	public boolean isAiSuppDocDeleteLocked(SmApplSupportDoc doc, SmApplDocFile file) {
+		return SmAIDocBackingBean.isAiSuppDocDeleteLocked(doc, file);
 	}
 	//40112 - end
 	
