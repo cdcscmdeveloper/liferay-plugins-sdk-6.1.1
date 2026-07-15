@@ -3228,6 +3228,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception {
+		// 34442 - start
+		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
+		CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+		// 34442 - end
+		
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && !isSupplierRole()) {
 			
 			setSecretary();
@@ -3268,7 +3273,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			
 			// 34442 - start
-			CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
 			setConfirmationContentMsg(getConfirmationContent(String.valueOf(contractVer.getStatus().getStatusId()),
 					contractVer.getCtContract().getContractNo()));
 			RequestContext.getCurrentInstance().execute("acknowledgeConfirmDlg.show()");
@@ -3277,8 +3281,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return null;
 		}
 		// 34442 - start
-		else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()) {
-			CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+		else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()
+				&& statusId.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+			validateContractAmendment(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			
 			setConfirmationContentMsg(getConfirmationContent(String.valueOf(contractVer.getStatus().getStatusId()),
 					contractVer.getCtContract().getContractNo()));
 			RequestContext.getCurrentInstance().execute("acknowledgeConfirmDlg.show()");
@@ -9498,16 +9506,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date newAmtEffDate;
 		// new overall contract amount is different from overall contact amount
 		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+			
 			newAmtEffDate = ctAmendment.getNewAmtEffDate();
-			if (newAmtEffDate == null) {
+			
+			boolean isDisableNewCtAmountEffDate = contractManagedBean.isDisableNewCtAmountEffDate();
+			if(newAmtEffDate == null || isDisableNewCtAmountEffDate == true){
 				newAmtEffDate = new Date();
 			}
+			
 			// Enable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(false);
 		
 		// same as overall contract amount	
 		} else {
-			newAmtEffDate = ctContractVer.getCtContractAmount().getEffDate();
+			newAmtEffDate = retrieveNewEffDate();
+			
 			// Disable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(true);
 		}
