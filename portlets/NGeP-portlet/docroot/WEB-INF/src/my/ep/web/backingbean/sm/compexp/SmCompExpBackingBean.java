@@ -1324,6 +1324,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		String title = master.getTitle();
 		BigDecimal contractValue = master.getContractValue();
+		// #9299 - #40717 Start
+		if (null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
+			master.setPaymentMethod(null);
+		}
+		// #9299 - #40717 Start
 		PmParameter procumentMode = master.getProcumentMode();
 		error = validateNewDetail(error, title, contractValue, procumentMode);
 
