@@ -173,6 +173,8 @@ public abstract class BaseManagedBean implements Serializable {
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
 	
+	private boolean disciplinaryAction;
+
 //	37925 START
 	private String strLabelCountryOrigin;
 	private boolean displayCheckboxChangeCurrentStatus;
@@ -1093,4 +1095,18 @@ public abstract class BaseManagedBean implements Serializable {
 		this.newVersion = newVersion;
 	}
 	//#28784 - End
+
+	/**
+	 * @return the disciplinaryAction
+	 */
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	/**
+	 * @param disciplinaryAction the disciplinaryAction to set
+	 */
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
 }
