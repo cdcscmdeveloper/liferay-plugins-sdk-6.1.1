@@ -2808,6 +2808,20 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 			List<SmSupplierCategory> historyOtherDescList) {
 		this.historyOtherDescList = historyOtherDescList;
 	}
+	
+	/**
+	 * @return the otherDescOld
+	 */
+	public String getOtherDescOld() {
+		return otherDescOld;
+	}
+
+	/**
+	 * @param otherDescOld the otherDescOld to set
+	 */
+	public void setOtherDescOld(String otherDescOld) {
+		this.otherDescOld = otherDescOld;
+	}
 	// 36504 - END
 	
 	// 9299 - Start
@@ -2845,19 +2859,5 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.masterAllDataModel = masterAllDataModel;
 	}
 	// 9299 - END
-
-	/**
-	 * @return the otherDescOld
-	 */
-	public String getOtherDescOld() {
-		return otherDescOld;
-	}
-
-	/**
-	 * @param otherDescOld the otherDescOld to set
-	 */
-	public void setOtherDescOld(String otherDescOld) {
-		this.otherDescOld = otherDescOld;
-	}
 
 }
