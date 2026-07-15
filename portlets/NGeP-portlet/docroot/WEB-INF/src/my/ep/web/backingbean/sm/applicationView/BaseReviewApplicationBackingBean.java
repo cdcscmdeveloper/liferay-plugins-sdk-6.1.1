@@ -5623,6 +5623,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	
 	/**
+	 * To show history dialog
+	 * 
+	 */
+	public void otherDescriptionHistoryMaintenance() {
+		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryMaintenanceDlg.show();");
+	}
+	
+	/**
 	 * To set data for managed bean and show dialog edit
 	 *  
 	 *  * @param smSupCat

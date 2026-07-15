@@ -8,9 +8,9 @@
     <cc:attribute name="otherDescChangeSupplier" type="java.lang.Boolean" />
   </cc:interface>
   <cc:implementation>
-	<p:dialog id="otherDescriptionHistoryDlgId"
+	<p:dialog id="otherDescriptionHistoryMaintenanceDlgId"
 		header="#{cc.attrs.dialogHeader}" closable="true"
-		widgetVar="otherDescriptionHistoryDlg" modal="true" resizable="false" width="90%"
+		widgetVar="otherDescriptionHistoryMaintenanceDlg" modal="true" resizable="false" width="90%"
          height="700px">
       <p:outputPanel id="otherDescriptionMsg"
 		style="max-height:700px; overflow-y:auto; display:block;">
@@ -55,21 +55,21 @@
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}"
 							style="width : 15% !important; vertical-align:top;">
 					        <h:outputText
-					            value="#{lbl['lbl.sm.no.available']}" 
-					             style="white-space: pre-wrap;"/>
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescValMaintenance(otherDescBean, 'TWO')}" 
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 							<h:outputText
-								value="#{lbl['lbl.sm.no.available']}" />
+								value="#{supplierDataMaintenanceBackingBean.getOtherDescValMaintenance(otherDescBean, 'THREE')}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}"
 							style="width : 15% !important; vertical-align:top;">
 					        <h:outputText
-					            value="#{supplierDataMaintenanceBackingBean.getOtherDescValMaintenance(otherDescBean, 'FOUR')}" 
-					             style="white-space: pre-wrap;"/>
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescValMaintenance(otherDescBean, 'FOUR')}"
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}"
