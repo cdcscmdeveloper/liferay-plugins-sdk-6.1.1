@@ -4317,16 +4317,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-
-		if (user.isNotifyBySms()) {
-			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
+		
+		//#40623 Start
+		if (user.isNotifyBySms() && StringUtils.isBlank(pmUserOrg.getMobileNo())) {
 				throw new EpException(MessageConst.ERROR_770090);
 			}
-			if (pmUserOrg.getMobileTelcoId() == null) {
+		//#40623 End
+			//#40246 Start
+			/*if (pmUserOrg.getMobileTelcoId() == null) {
 				throw new EpException(MessageConst.ERROR_770250);
-			}
+			}*/
+			//#40246 End
 		}
-	}
 
 	private void validateOrgProfile(PmUserOrg pmUserOrg) {
 		if (pmUserOrg.getPmOrgProfile() == null
