@@ -785,6 +785,15 @@ public class SupplierManagementConst {
 	public static final int BUMI_PERCENTAGE = 50;
 	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
 	//26238 - END
+
+//	#37925 START
+	public static final String APPL_TYPE_UPDATE = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE;
+	public static final String APPL_TYPE_MOF = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF;
+	public static final String APPL_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BASIC;
+	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
+	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
+	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
+//	#37925 END
 	
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
@@ -931,10 +940,11 @@ public class SupplierManagementConst {
 	public String getSTYPE_CONTRACTOR() {
 		return STYPE_CONTRACTOR;
 	}
+
 	public String getSTYPE_BASIC() {
 		return STYPE_BASIC;
 	}
-	
+
 	public String getCOUNTRY_MALAYSIA_CODE() {
 		return COUNTRY_MALAYSIA_CODE;
 	}
@@ -1072,6 +1082,7 @@ public class SupplierManagementConst {
 	public String getACC_GOVT_SELLER() {
 		return ACC_GOVT_SELLER;
 	}
+
 	public String getSTYPE_GOVT_SELLER() {
 		return STYPE_GOVT_SELLER;
 	}
@@ -1493,4 +1504,37 @@ public class SupplierManagementConst {
 		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	}
 	// #29156 -START
+//	#37925 START
+	public String getApplTypeBumi() {
+		return APPL_TYPE_BUMI;
+	}
+
+	public String getApplTypeCategory() {
+		return APPL_TYPE_CATEGORY;
+	}
+
+	public String getApplTypeUpdate() {
+		return APPL_TYPE_UPDATE;
+	}
+
+	public String getApplTypeMof() {
+		return APPL_TYPE_MOF;
+	}
+
+	public String getApplTypeBasic() {
+		return APPL_TYPE_BASIC;
+	}
+
+	public String getApplTypeRenewal() {
+		return APPL_TYPE_RENEWAL;
+	}
+
+	public String getSsmCompanyCountryDefault() {
+		return SSM_COMPANY_COUNTRY_DEFAULT;
+	}
+
+	public String getSsmCompanyCountryMalaysia() {
+		return SSM_COMPANY_COUNTRY_MALAYSIA;
+	}
+//	#37925 END
 }
