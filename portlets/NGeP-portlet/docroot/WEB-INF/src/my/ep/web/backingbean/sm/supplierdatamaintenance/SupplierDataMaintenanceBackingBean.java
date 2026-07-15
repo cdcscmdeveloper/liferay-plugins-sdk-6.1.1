@@ -3602,10 +3602,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			history.setApplNoHistory(history.getSmAppl().getApplNo());
 			
-			if (!getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
+			if (!getManagedBean().isOtherDescChangeApprover()) {
 				getManagedBean().setOtherDescChangeApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
-			} else if (!getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_ROLE_APP_SDM)) {
+			} else if (!getManagedBean().isOtherDescChangeSupplier()) {
 				getManagedBean().setOtherDescChangeSupApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
