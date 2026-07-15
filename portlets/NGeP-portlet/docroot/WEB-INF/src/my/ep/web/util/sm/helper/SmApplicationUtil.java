@@ -4692,11 +4692,7 @@ public class SmApplicationUtil {
 				
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
-						|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0 || 
-						(!managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI) &&
-						cat.getRecordStatusFlg().compareTo(SupplierManagementConst.RECORD_STATUS_ACTIVE) == 0 && 
-						(managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) ||
-						 managedBean.getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {
+						|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 					
 					// 36504 - START - Applied Application
 					String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
@@ -4743,7 +4739,7 @@ public class SmApplicationUtil {
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 					
-					// 36504 - START - Applied Application
+					// 36504 - START - Approved Application
 					String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 					cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
@@ -4782,7 +4778,7 @@ public class SmApplicationUtil {
 							otherDescSet.add(mainCatcode);
 						}
 					}
-					// 36504 - END - Applied Application
+					// 36504 - END - Approved Application
 					
 					//29823 - start
 					//#34098 - START 
