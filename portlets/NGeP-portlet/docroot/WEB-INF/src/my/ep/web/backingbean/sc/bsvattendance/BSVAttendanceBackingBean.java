@@ -1103,6 +1103,7 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setLanguageCode(languageCode);
 			//28895-35500
 			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
+			
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
 			boolean invokeBPM = false;
@@ -1119,6 +1120,9 @@ public class BSVAttendanceBackingBean extends
 									scQtBrief.getMaxNoOfAttendance())
 									.toString() });
 				}
+				
+				
+				
 				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
 
 				if (flag) {
