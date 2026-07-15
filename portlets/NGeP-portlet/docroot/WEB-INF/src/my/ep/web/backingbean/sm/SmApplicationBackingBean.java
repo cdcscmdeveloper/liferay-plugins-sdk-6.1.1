@@ -3017,6 +3017,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// #37779 - Start
 			if (getManagedBean().isSupplierUser()) {
 				SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+				// #39860 - START
+				if(currentTab < outputTab){
+					validateChequeSignatoryBumi();
+				}// #39860 - END
 			}
 			// #37779 - End
 		}
@@ -4479,6 +4483,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// validate branch
 		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
 				currentTab, true);
+		
+		// validate cheque signatory bumi 
+		SmApplicationUtil.validateChequeSignatoryBumi(getManagedBean()); //#39860
 
 		// validate facility
 		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
@@ -6914,7 +6921,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
 		final int minEmployee = 2;
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
-		
+		/*
 		if(smFac.getSmSvWorkers().size() < minEmployee){
 			throw new EpException(
 					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
@@ -6935,6 +6942,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			worker1.setOldName(worker1.getName());
 			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
+		*/
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
 		SmCommonUtil.getInstance().setUserDetails(smFac);
@@ -6951,7 +6959,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		assignValReqdToFalse();
 		// 29379 - Site Visit Grouping Enhancement -28775
-		validateWorkshopWorkers();
+		//validateWorkshopWorkers();
 		
 		saveOrUpdateAppl();
 		getManagedBean().setWorkshopFacilitiesVOList(
@@ -7086,6 +7094,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				StringUtils.upperCase(SmCommonUtil.getMessage(
 						"lbl.sm.facility.type.workshop", null)));
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -9731,6 +9740,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		validateNoChangesBeenMadeToApplication();
 		//#28775 - Site Grouping Enhancement
 		validateAllWorkshops();
+		getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		//#28775 end
 
 		// try {
 		//#28776 - start
@@ -11447,9 +11458,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
-			getManagedBean().getSmAppl().setSiteVisitGroup(true);
 			getManagedBean().getSmAppl().setSmSvTasks(getManagedBean().getSvTaskList());
-			//reqDTO.setSvTask(getManagedBean().getSvTask());
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
 			actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
@@ -13507,9 +13516,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						}
 					}
 					//31210-start
-					if (rev.getRecommendation() !=null) {
-						getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
-					}//31210-end
+					if (rev.getRecommendation() != null) {
+
+						String language = new FacesScopes().getUserLocale().getLanguage();
+						String recommendationDesc = SmApplicationUtil.getRecommendationDescription(
+								rev.getRecommendation(), language);
+
+						getManagedBean().setPoRecommendationDesc(recommendationDesc);
+					}
+					//31210-end
 				}
 			} else if (getManagedBean().isPoUser()
 					|| (getManagedBean().isSupplierUser() && getManagedBean()
@@ -13888,6 +13903,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return SmApplicationUtil.validateSupportingDocs(getManagedBean()
 				.getSmAppl().getSmApplSupportDocs());
 	}
+	
+	//#39860 - START
+	/**
+	 * Validate cheque signatory.
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean validateChequeSignatoryBumi() {
+		return SmApplicationUtil.validateChequeSignatoryBumi(getManagedBean());
+	}//#39860 - END
 	
 	//#34392 - Start
 	/**
@@ -17517,8 +17542,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return other description for category code
 	 */
 	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return null;
+		}
 		return SmApplicationUtil.getCategoryCodeOtherDesc(
-				getManagedBean().getSmAppl().getSmSupplierCategories(), catL3);
+				appl.getSmSupplierCategories(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
 	//#31043 START
