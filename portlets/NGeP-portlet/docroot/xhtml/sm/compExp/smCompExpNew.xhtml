@@ -257,8 +257,9 @@
 		</div>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
+			<!-- 9299 - 40715 -->
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sm.comp.exp.add.new.cat.code.instruction']}" />
+				value="#{lbl['lbl.sm.comp.exp.add.new.cat.code.instruction']}" escape="false"/>
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
 				value="#{smCompExpMB.newMaster.compExpMasterCats}"
 				var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
