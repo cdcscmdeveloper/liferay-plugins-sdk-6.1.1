@@ -4525,23 +4525,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 
-	private void validateEmailAndNotificationPreferences(PmUser user,
-			PmUserOrg pmUserOrg) {
+	private void validateEmailAndNotificationPreferences(PmUser user, PmUserOrg pmUserOrg) {
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-
-		if (user.isNotifyBySms()) {
-			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
-				throw new EpException(MessageConst.ERROR_770090);
-			}
+		//#40623 Start
+		if (user.isNotifyBySms() && StringUtils.isBlank(pmUserOrg.getMobileNo())) {
+			throw new EpException(MessageConst.ERROR_770090);
+		}
 			//#40246 Start
 			/*if (pmUserOrg.getMobileTelcoId() == null) {
 				throw new EpException(MessageConst.ERROR_770250);
 			}*/
 			//#40246 End
-		}
-	}
+	}	//#40623 End
 
 	private void validateOrgProfile(PmUserOrg pmUserOrg) {
 		if (pmUserOrg.getPmOrgProfile() == null
