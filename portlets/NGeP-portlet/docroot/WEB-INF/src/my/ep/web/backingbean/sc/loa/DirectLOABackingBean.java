@@ -383,6 +383,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.saveDirectAwardDetails(reqDTO);
 			scLoa = resDTO.getLoa();
+			//#29661 #40511 Start				
+			List<SmSupplierCategory> supplierCategoryList = this.getManagedBean().getSupplierCategoryList() != null ?
+					this.getManagedBean().getSupplierCategoryList() : new ArrayList<SmSupplierCategory>();
+			List<SmSupplierCategory> procurementRelatedCategoryList = this.getManagedBean().getProcurementRelatedCategoryList() != null ?
+					this.getManagedBean().getProcurementRelatedCategoryList() : new ArrayList<SmSupplierCategory>();
+			List<SmSupplierCategory> originalSupplierCategoryList = this.getManagedBean().getOriginalSupplierCategoryList() != null ?
+					this.getManagedBean().getOriginalSupplierCategoryList() : new ArrayList<SmSupplierCategory>();		
+			List<SmSupplierCategory> deletedSmCategory = this.getManagedBean().getDeletedCategoryList();
+			List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();	
+			//#29661 #40511 End			
 
 			if (resDTO.isSuccessful()
 					&& null == this.getManagedBean().getTaskId()) {
@@ -390,7 +400,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.equals(statusId)) {
 					// rename temporary Loa No folder name in docRepo
 					RenameTempLoaNoRepoDirByLoaNo(scLoa);
+					//#29611 #40511 Start
+					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
 				}
+				deleteScQtCategory(addedCategoryList, deletedSmCategory);
+				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
+				//#29611 #40511 End
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
@@ -403,17 +418,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Long currentstatusID = this.getManagedBean().getCurrentStatusId();//33310
 				SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) this
 						.getManagedBean().getPayLoad();
-				//#29661 Start				
-				List<SmSupplierCategory> supplierCategoryList = this.getManagedBean().getSupplierCategoryList() != null ?
-						this.getManagedBean().getSupplierCategoryList() : new ArrayList<SmSupplierCategory>();
-				List<SmSupplierCategory> procurementRelatedCategoryList = this.getManagedBean().getProcurementRelatedCategoryList() != null ?
-						this.getManagedBean().getProcurementRelatedCategoryList() : new ArrayList<SmSupplierCategory>();
-				//#29661 #40511 Start		
-				List<SmSupplierCategory> originalSupplierCategoryList = this.getManagedBean().getOriginalSupplierCategoryList() != null ?
-						this.getManagedBean().getOriginalSupplierCategoryList() : new ArrayList<SmSupplierCategory>();		
-				List<SmSupplierCategory> deletedSmCategory = this.getManagedBean().getDeletedCategoryList();
-				List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();	
-				//#29661 #40511 End
+				
 				//#29661 End
 				renewSesionObject();
 				this.getManagedBean().setTaskId(taskId);
@@ -451,13 +456,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				validateSupplierCategory(scLoa,outcome);
 				
 				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
-					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
-					deleteScQtCategory(addedCategoryList, deletedSmCategory);
-					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
-				} else {
-					deleteScQtCategory(addedCategoryList, deletedSmCategory);
-					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
-				}
+					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());					
+				} 
+				deleteScQtCategory(addedCategoryList, deletedSmCategory);
+				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
 				//#29661 #40511 End
 
 				successMessage(MessageConst.INFO_700025,
