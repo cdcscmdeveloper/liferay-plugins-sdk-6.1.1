@@ -13,8 +13,8 @@
 		<cc:attribute name="bBean" required="true" />
 	</cc:interface>
 	<cc:implementation>
-		<p:dialog id="compExpViewPopup"
-			header="#{lbl['lbl.sm.comp.exp.master.popup.header.ct.qt']}"
+		<ui:remove>#9299 - #40713</ui:remove>
+		<p:dialog id="compExpViewPopup" header="#{cc.attrs.mBean.popUpHeader}"
 			widgetVar="compExpViewPopupWV" modal="true" styleClass="pop_up_top"
 			position="top" width="700px">
 			<div align="center">
@@ -66,9 +66,13 @@
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
-						<td style="width: 66%"><h:outputText
-								styleClass="outputLabel-view"
-								value="#{cc.attrs.mBean.selectedMaster.contractValue}" /></td>
+						<ui:remove>#9299 - #40713 Start</ui:remove>
+						<td style="width: 66%"><h:outputText styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedMaster.contractValue}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</h:outputText></td>
+						<ui:remove>#9299 - #40713 Start</ui:remove>
 					</tr>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -138,15 +142,18 @@
 						var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
 						<ac:paginator for="smCompExpCatCodes" />
 						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL1Name}"
+							<ui:remove>#9299 - #40713</ui:remove>
+							<h:outputText value="#{smCompExpCatCode.categoryL1.categoryL1Code} - #{smCompExpCatCode.categoryL1Name}"
 								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL2Name}"
+							<ui:remove>#9299 - #40713</ui:remove>
+							<h:outputText value="#{smCompExpCatCode.categoryL2.categoryL2Code} - #{smCompExpCatCode.categoryL2Name}"
 								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL3Name}"
+							<ui:remove>#9299 - #40713</ui:remove>
+							<h:outputText value="#{smCompExpCatCode.categoryL3.categoryL3Code} - #{smCompExpCatCode.categoryL3Name}"
 								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 					</p:dataTable>
