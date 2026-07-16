@@ -4542,7 +4542,7 @@ return	remarksNotFound;
 			if (entry.getKey().equals(docDefinitionKey)
 					&& SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM.equals(docDefinitionKey)) {
 				reportDetailList.add(entry.getValue());
-				this.getManagedBean().setReportDownloadFileName("Kertas Taklimat Untuk Pertimbangan (Maklumat Umum)");
+				this.getManagedBean().setReportDownloadFileName(SourcingConstants.FILE_NAME_LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_UMUM);
 				
 			}  else if (entry.getKey().equals(docDefinitionKey)
 					&& SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM.equals(docDefinitionKey)) {
@@ -4553,7 +4553,7 @@ return	remarksNotFound;
 				} else {
 					reportDetailList.add(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ITEM);
 				}
-				this.getManagedBean().setReportDownloadFileName("Kertas Taklimat Untuk Pertimbangan (Keputusan Penilaian Dan Penyatuan Secara Item)");
+				this.getManagedBean().setReportDownloadFileName(SourcingConstants.FILE_NAME_LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ITEM);
 
 			} else if (entry.getKey().equals(docDefinitionKey)
 					&& SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ.equals(docDefinitionKey)) {
@@ -4564,7 +4564,7 @@ return	remarksNotFound;
 				} else {
 					reportDetailList.add(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_PAKEJ);
 				}
-				this.getManagedBean().setReportDownloadFileName("Kertas Taklimat Untuk Pertimbangan (Keputusan Penilaian Dan Penyatuan Secara Pakej)");
+				this.getManagedBean().setReportDownloadFileName(SourcingConstants.FILE_NAME_LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_PAKEJ);
 
 			}
 		}
