@@ -1070,7 +1070,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void delSmCompExpDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		// #9299 - #40714
+		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
@@ -1168,6 +1169,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void deactivateDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		// #9299 - #40714
+		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
 		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
@@ -1204,6 +1207,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private void deactivateMaster(Long compExpMasterId) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(compExpMasterId);
+		// #9299 - #40714 Start
+		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+		reqDTO.setSelectedMaster(resDTO.getMaster());
+		// #9299 - #40714 End
 		getSmCompExpSo().deleteMaster(reqDTO);
 	}
 
@@ -1628,7 +1635,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	// #9299 - #40660
 	public void delSmCompExpMaster(SmCompExpResDTO resDTO1) throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
+		// #9299 - #40714
+		reqDTO.setSelectedMaster(this.getManagedBean().getSelectedMaster());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteMaster(reqDTO);
 		if (resDTO.isSuccessful()) {
