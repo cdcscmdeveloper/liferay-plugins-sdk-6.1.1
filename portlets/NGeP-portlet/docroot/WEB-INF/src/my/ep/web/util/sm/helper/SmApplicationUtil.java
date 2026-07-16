@@ -16186,8 +16186,21 @@ public class SmApplicationUtil {
 		Set<String> otherDescSet = new HashSet<>();
 		Long supplierId = managedBean.getSmAppl().getSmSupplier().getSupplierId();
 		List<SmAppl> applNewReg = new ArrayList<>(); 
-		applNewReg = findHistoryOtherDesc(supplierId);
-		
+		 
+		// allow supplier to view history in Declare appl.
+		if (managedBean.getSmAppl().getApplType()
+				.equals(SupplierManagementConst.APPL_TYPE_RENEWAL)
+				&& managedBean.isSupplierUser()
+				&& managedBean
+						.getSmAppl()
+						.getPmStatus()
+						.getStatusId()
+						.equals(SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION)) {
+			applNewReg.add(managedBean.getSmAppl());
+		} else {
+			applNewReg = findHistoryOtherDesc(supplierId);
+		}
+			
 		if (applNewReg != null) {
 			for (SmAppl appl : applNewReg) {
 				for (SmSupplierCategory previousKN : appl.getSmSupplierCategories()) {
@@ -16196,14 +16209,8 @@ public class SmApplicationUtil {
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 					
-					
 					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) || 
-							(previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) &&
-							previousKN.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL) && // Renewal Application 
-							managedBean.isSupplierUser())  || 														  // allow supplier to view history in Declare appl.
-							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) &&
-							(!appl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) &&
-							 previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) && // not display for status SVC after approval.
+							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) &&													
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
 							!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
