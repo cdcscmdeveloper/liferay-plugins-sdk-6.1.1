@@ -1171,7 +1171,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		// #9299 - #40714
 		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
-		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
