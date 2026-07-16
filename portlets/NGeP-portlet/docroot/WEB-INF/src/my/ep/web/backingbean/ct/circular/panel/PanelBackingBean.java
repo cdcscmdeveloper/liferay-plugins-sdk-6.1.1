@@ -166,6 +166,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	private static final String PROCESS_PANEL_PAGE = "/xhtml/ct/circular/panel/circularBase.xhtml?faces-redirect=true"; //#33533
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	
+	private String confirmationContentMsg;//34442 
+	
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -391,7 +393,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			}
 			
 			if(taskId==null) {
-				if((isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
+				if(getManagedBean().getCancelCircularReq()==null && // 34442
+						(isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
 					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
 				}
 				return;
@@ -762,6 +765,49 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		}
 		return "circularBase.xhtml";
 	}
+	
+	// 34442 - start
+	/**
+	 * Handles the action button click - shows the confirmation dialog for
+	 * approve actions, or proceeds directly for other actions.
+	 *
+	 * @param action the BPM outcome action being performed
+	 * @return {@code null} if the confirmation dialog was shown; otherwise
+	 *         the navigation outcome from {@link #saveCancelCircularReq(String)}
+	 */
+	public String showConfirmationDialog(String action) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			String docType = getManagedBean().getCircularDocType();
+
+			boolean isPanelCircular = ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(docType)
+					|| ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY.equalsIgnoreCase(docType);
+
+			if (isPanelCircular) {
+				setConfirmationContentMsg(ResourceBundleUtils.getMessage("lbl.ct.pq.cancel.rev.app.confirm",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			} else {
+				setConfirmationContentMsg(ResourceBundleUtils.getMessage("lbl.ct.cq.cancel.rev.app.confirm",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			}
+			getManagedBean().setAction(action);
+			RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			return null;
+		} else {
+			return saveCancelCircularReq(action);
+		}
+	}
+	
+	/**
+	 * Saves the cancel circular request using the action currently set on
+	 * the managed bean.
+	 *
+	 * @return the navigation outcome from {@link #saveCancelCircularReq(String)}
+	 */
+	public String saveCancelCircularReq() {
+		String action = getManagedBean().getAction();
+		return saveCancelCircularReq(action);
+	}
+	// 34442 - end
 
 	/**
 	 *Method used to save cancel  circular details into database
@@ -2729,7 +2775,20 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			// set action
 			getManagedBean().setAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			//#34442 - start
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				setConfirmationContentMsg(
+					    getConfirmationContent(
+					        String.valueOf(getManagedBean().getCircularVer().getStatus().getStatusId())
+					    )
+					);
+				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#34442 - end
 			return null;
 		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
@@ -3769,5 +3828,15 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
 	}
 	//#35506 - End
+	
+	// 34442 - start
+	public String getConfirmationContentMsg() {
+		return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+		this.confirmationContentMsg = confirmationContentMsg;
+	}
+	// 34442 - end
 
 }
