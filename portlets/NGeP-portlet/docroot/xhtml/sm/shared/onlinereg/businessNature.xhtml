@@ -17,7 +17,7 @@
 			id="suppBizNatureId" rowKey="#{suppBizNature}" rows="10">
 			<ac:paginator for="suppBizNatureId" />
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{not empty registrationBackingBean.managedBean.smSupp.smSupplierBusinesses}" 
-				disabledSelection="#{(!registrationBackingBean.managedBean.smSupp.brandNew and registrationBackingBean.managedBean.smSupp.smSupplierBusinesses.size() le 1) or suppBizNature.ssmData}" />
+				disabledSelection="#{(!registrationBackingBean.managedBean.smSupp.brandNew and registrationBackingBean.managedBean.smSupp.smSupplierBusinesses.size() le 1) or suppBizNature.ssmData or registrationBackingBean.managedBean.activeDisicplinaryAction}" />
 			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnRemove')}" />
 			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnRemove')}" />
 			<p:ajax event="rowSelect" update=":#{p:component('btnRemove')}" />   
@@ -77,14 +77,14 @@
 		    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"  
 				postUpdateListener="registrationBackingBean.postUpdateBizNature"
 				headerText="#{lbl['lbl.sm.natureofbusiness']}" buttonLabel="#{lbl['lbl.btn.add']}"
-			    selectionMode="multiple" disabled="#{registrationBackingBean.managedBean.viewMode}"
+			    selectionMode="multiple" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.activeDisicplinaryAction}"
 				saveObject="registrationBackingBean.managedBean.bizNatures"
 				conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
 				update=":form:suppBizNatureId :form:bnmsg" />
 
 			<p:commandButton id="btnRemove" update="natureBusinessId"  partialSubmit="true" process="@this,suppBizNatureId"
 				value="#{lbl['lbl.btn.delete']}" 
-				disabled="#{registrationBackingBean.managedBean.viewMode or empty registrationBackingBean.managedBean.selectedBusinessNatureLs}"
+				disabled="#{registrationBackingBean.managedBean.viewMode or empty registrationBackingBean.managedBean.selectedBusinessNatureLs or registrationBackingBean.managedBean.activeDisicplinaryAction}"
 				oncomplete="businessNatureDeletePopUp.show();" />
 		</div>
 	</p:panel>
