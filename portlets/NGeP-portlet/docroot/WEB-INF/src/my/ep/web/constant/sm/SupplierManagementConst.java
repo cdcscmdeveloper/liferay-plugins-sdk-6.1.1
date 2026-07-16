@@ -236,8 +236,17 @@ public class SupplierManagementConst {
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
+	
+	// 36504 - START
 	public static final String SUPPLIER_APPROVER = "SA";
 	public static final String SUPPLIER_PO = "SP";
+	public static final String APPROVER_SDM = "SDMA";
+	public static final String SECTION_ROLE_APP_SDM = "SDM";
+	public static final String SUPPLIER_RENEWAL = "S";
+	public static final String APPLIED_CAT = "APPLIED";
+	public static final String PREVIOUS_CAT = "PREVIOUS";
+	// 36504 - END
+	
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
@@ -803,6 +812,7 @@ public class SupplierManagementConst {
 	public static final String PO_RECOMMENDATION_APPROVE_EN = "Approve";
 	public static final String PO_RECOMMENDATION_REJECT_EN = "Reject";
 	// #38001 END
+	
 	
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
@@ -1586,6 +1596,18 @@ public class SupplierManagementConst {
 
 	public String getSUPPLIER_PO() {
 		return SUPPLIER_PO;
+	}
+	
+	public String getAPPROVER_SDM() {
+		return APPROVER_SDM;
+	}
+	
+	public String getSECTION_ROLE_APP_SDM() {
+		return SECTION_ROLE_APP_SDM;
+	}
+	
+	public long getPM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED() {
+		return PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED;
 	}
 	// 36504 - END
 	

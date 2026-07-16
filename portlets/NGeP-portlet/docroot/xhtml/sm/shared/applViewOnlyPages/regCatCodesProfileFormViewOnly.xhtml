@@ -21,7 +21,7 @@
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
 							action="#{backingBean.otherDescriptionHistory}" process="@this"
-							partialSubmit="true" update=":form">
+							partialSubmit="true" update="@form">
 							<u><h:outputText
 									value="#{lbl['lbl.sm.other.desc.history.here']}"
 									style="color:blue;" escape="false" /></u>
@@ -177,6 +177,9 @@
 						rendered="#{not empty aprvdCatBean.otherDesc and
 						    (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 						     aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}" />
+				     <p:graphicImage value="/css/images/design/icon_alert.png"
+						style="float:right;"
+						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
 				</p:outputPanel>
 			</p:column>
 			<!-- 36504 - END -->
