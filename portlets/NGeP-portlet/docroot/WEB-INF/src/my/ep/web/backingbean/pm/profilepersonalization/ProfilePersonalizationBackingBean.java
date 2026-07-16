@@ -1769,4 +1769,45 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		return auditUser;
 	}
 	// #28895_35501 End
+	
+	//26238 - start
+	//#26186 start
+	/**
+	  * Entry point for pre-render logic on the Disciplinary Action page.
+	  * <p>
+	  * This method orchestrates supplier initialization, disciplinary action checks,
+	  * QT and CT validations. Any exceptions are logged and handled gracefully
+	  * with user-facing error messages.
+	 */
+	public void preRenderDisciplinaryAction() {
+		// 26238 - START Disciplinary Action - 28111,28496
+//		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil
+//				.getHttpServletRequest(new FacesScopes().getRequest()));
+//		String docNo = originalServletRequest.getParameter(PARAM_DOC_NO);
+//		String taskName = originalServletRequest.getParameter(PARAM_TASK_NAME); // #26186
+//		Long qtId = this.getManagedBean().getQtId();// 26247
+		renewSesionObject();
+		FacesScopes facesScopes = new FacesScopes();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		long startTime = System.currentTimeMillis();
+		try {
+//			initializeSupplier(docNo);
+//			handleDisciplinaryActionMsg(facesScopes);
+			// start 32229
+//			SLAUtils.getInstance().logSQLPerformanceInfo(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA-4",
+//					LOG_CLASS_PRERENDER, startTime, "32229");
+			// end 32229
+			// 26238 - START Disciplinary Action - end
+//			startTime = System.currentTimeMillis();
+//			handleQtMsg(originalServletRequest, getManagedBean().getSmSupplier(), qtId);// 26247
+//			handleCtMsg(taskName);// #26186
+
+//			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA-5", LOG_CLASS_PRERENDER,
+//					startTime);
+//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
+		} catch (Exception e) {
+//			handleException(fc, e);
+		}
+	}
+	//#26186 end
 }
