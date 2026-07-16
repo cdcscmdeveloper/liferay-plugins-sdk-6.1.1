@@ -89,7 +89,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private static String lblPopUpHeaderCT = "lbl.sm.comp.exp.master.popup.header.ct";
 	// #9299 - #40713 End
 
-
 	/**
 	 * Prerender for Company Experience Alert
 	 */
