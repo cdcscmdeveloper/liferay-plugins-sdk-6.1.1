@@ -1324,20 +1324,27 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		String title = master.getTitle();
 		BigDecimal contractValue = master.getContractValue();
+		// #9299 - #40717 Start
+		if (null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
+			master.setPaymentMethod(null);
+		}
+		// #9299 - #40717 Start
 		PmParameter procumentMode = master.getProcumentMode();
 		error = validateNewDetail(error, title, contractValue, procumentMode);
 
+
+		// 9299 - 40478
+		Date contractEffDate = master.getContractEffDate();
+		Date contractExpDate = master.getContractExpDate();
+		error = validateDate(error, contractEffDate, contractExpDate);
+		// 9299 - 40664 Start
 		if (this.getManagedBean().isConsultant()) {
 			String projectLoc = master.getProjectLoc();
 			String workServDesc = master.getWorkServDesc();
 			BigDecimal consultantFee = master.getConsultantFee();
 			error = validateNewConsultant(error, projectLoc, workServDesc, consultantFee);
 		}
-		// 9299 - 40478
-		Date contractEffDate = master.getContractEffDate();
-		Date contractExpDate = master.getContractExpDate();
-		error = validateDate(error, contractEffDate, contractExpDate);
-
+		// 9299 - 40664 End
 		Long sourceType = master.getSourceType().getParameterId();
 		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
