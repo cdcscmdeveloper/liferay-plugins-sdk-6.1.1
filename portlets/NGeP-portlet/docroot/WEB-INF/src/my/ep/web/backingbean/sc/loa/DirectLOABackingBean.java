@@ -402,12 +402,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					RenameTempLoaNoRepoDirByLoaNo(scLoa);
 					//#29611 #40511 Start
 					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
-					deleteScQtCategory(addedCategoryList, deletedSmCategory);
-					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
-				}else {
-					deleteScQtCategory(addedCategoryList, deletedSmCategory);
-					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
 				}
+				deleteScQtCategory(addedCategoryList, deletedSmCategory);
+				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
 				//#29611 #40511 End
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
@@ -459,13 +456,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				validateSupplierCategory(scLoa,outcome);
 				
 				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
-					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
-					deleteScQtCategory(addedCategoryList, deletedSmCategory);
-					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
-				} else {
-					deleteScQtCategory(addedCategoryList, deletedSmCategory);
-					insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
-				}
+					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());					
+				} 
+				deleteScQtCategory(addedCategoryList, deletedSmCategory);
+				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
 				//#29661 #40511 End
 
 				successMessage(MessageConst.INFO_700025,
