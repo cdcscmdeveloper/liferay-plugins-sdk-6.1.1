@@ -84,6 +84,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private static String lblClientTypeFed = "lbl.sm.comp.exp.update.client.type.federal";
 	private static String lblClientTypeNonFed = "lbl.sm.comp.exp.update.client.type.other";
 	private static String smCompExpNewXhtml = "smCompExpNew.xhtml";
+	// #9299 - #40713 Start
+	private static String lblPopUpHeaderQT = "lbl.sm.comp.exp.master.popup.header.qt";
+	private static String lblPopUpHeaderCT = "lbl.sm.comp.exp.master.popup.header.ct";
+	// #9299 - #40713 End
 
 	/**
 	 * Prerender for Company Experience Alert
@@ -1219,6 +1223,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
 		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
+		// #9299 - #40713 Start
+		if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_QT)) {
+			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderQT, null));
+		} else if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderCT, null));
+		}
+		// #9299 - #40713 End
 	}
 
 	/**
