@@ -8659,12 +8659,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return loaGenerated;
 	}
 	
+	//#34449 - start
+	/**
+	 * Prepares the LOA cancellation by setting the current action,
+	 * configuring the wrapped BPM update as the cancel handler,
+	 * and opening the cancel confirmation dialog.
+	 *
+	 * @param outcome the BPM outcome to use for the cancellation
+	 */
 	public void cancelLoa(String outcome) {
 		debugLogger("cancelLoa");
 		this.getManagedBean().setAction(outcome);
-		
-		updateBPMTask(outcome,null);
-	}	
+		getManagedBean().setCancelMethod("lOADetailBackingBean.wrappedUpdateBpmTask('"+outcome+"')");
+		RequestContext.getCurrentInstance().execute("cancelDlg.show()");
+	}
+	//#34449 - end
 	
 	
 	/**
@@ -13532,6 +13541,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// #29007 End Vinod
 			updateBpmTaskAction(outcome);
 		}
+	}
+	
+	/**
+	 * Convenience wrapper that updates the BPM task using the given outcome
+	 * and a null extended outcome value.
+	 *
+	 * @param outcome the BPM outcome to apply to the task
+	 */
+	public void wrappedUpdateBpmTask(String outcome){
+		updateBPMTask(outcome,null);
 	}
 	//#34449 - end
 }

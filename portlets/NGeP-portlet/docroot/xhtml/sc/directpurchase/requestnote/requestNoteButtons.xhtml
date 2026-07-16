@@ -208,7 +208,12 @@
 			widget="reviseDlg" width="400" height="100"
 			okAction="#{requestNoteBackingBean.managedBean.reviseMethod}"
 			title="#{lbl['lbl.sc.header.message.revise']}"
-			content="#{lbl['lbl.sc.confirmation.message.revise']}" update="@form" />		
+			content="#{lbl['lbl.sc.confirmation.message.revise']}" update="@form" />
+		<ac:confirmationPopup id="approveDlgRn"
+			widget="approveDlg" width="400" height="100"
+			okAction="#{requestNoteBackingBean.managedBean.approveMethod}"
+			title="#{lbl['lbl.sc.header.message.approve']}"
+			content="#{lbl['lbl.sc.confirmation.message.approve']}" update="@form" />			
 		<ui:remove>34449 - end</ui:remove>
 	</h:panelGroup>
 </ui:composition>

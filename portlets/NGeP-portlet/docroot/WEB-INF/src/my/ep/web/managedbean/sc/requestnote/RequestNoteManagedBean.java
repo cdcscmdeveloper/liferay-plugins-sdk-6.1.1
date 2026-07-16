@@ -436,6 +436,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     //34449 - start
     private String assignMethod; 
     private String reviseMethod;
+    private String approveMethod;
     //34449 - end
     
     /**
@@ -2724,6 +2725,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setReviseMethod(String reviseMethod) {
 		this.reviseMethod = reviseMethod;
+	}
+
+	/**
+	 * @return the approveMethod
+	 */
+	public String getApproveMethod() {
+		return approveMethod;
+	}
+
+	/**
+	 * @param approveMethod the approveMethod to set
+	 */
+	public void setApproveMethod(String approveMethod) {
+		this.approveMethod = approveMethod;
 	}
 
 	//34449 - end

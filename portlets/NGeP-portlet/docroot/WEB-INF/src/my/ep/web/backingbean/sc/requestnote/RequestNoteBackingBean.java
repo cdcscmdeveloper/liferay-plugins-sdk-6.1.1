@@ -8641,8 +8641,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
 	}
 	
+	/**
+	 * Construct Revise and Approve dialog message
+	 * @param outcome
+	 */
 	public void constructReviseConfirmationMessage (String outcome) {
-		getManagedBean().setReviseMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
-		RequestContext.getCurrentInstance().execute("reviseDlg.show()");
+		
+		if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+			RequestContext.getCurrentInstance().execute("approveDlg.show()");
+			getManagedBean().setApproveMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		} else {
+			RequestContext.getCurrentInstance().execute("reviseDlg.show()");
+			getManagedBean().setReviseMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		}
+		
 	}
+	//34449 - end
 }

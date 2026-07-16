@@ -69,22 +69,6 @@
 	<ui:remove>#34449 - end</ui:remove>
 <!-- 20190417@asyrafhaziq_12095 - End -->
 	<ui:remove>#34449 - start (New Submit popup)</ui:remove>
-	<ac:confirmationPopup id="submitSQConfirmDlgId"
-			widget="submitSQConfirmDlg"
-			width="400"
-			height="100"
-			okAction="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}"
-			title="#{lbl['lbl.sc.confirmation.submit']}"
-			content="#{lbl['lbl.sc.confirmation.submit.message']}"
-			update="@form" />
-	<ac:confirmationPopup id="submitSQConfirmNotNullDlg"
-			widget="submitSQConfirmNotNullDlg"
-			width="400"
-			height="100"
-			okAction="#{simpleQuoteBackingBean.submitPromptAction()}"
-			title="#{lbl['lbl.sc.confirmation.submit']}"
-			content="#{lbl['lbl.sc.confirmation.submit.message']}"
-			update="@form" />
 	<ui:remove> New cancel popup</ui:remove>
 	<ac:confirmationPopup id="cancelBackConfirmDlg"
 		    widget="cancelBackConfirmDlg"
@@ -127,11 +111,14 @@
 				process="@all" update="@form" rendered="#{isEditable}" />
 			<ui:remove>#34449 - start (Connect Popup to Button)</ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				process="@this" partialSubmit="true"
-				onclick="submitSQConfirmDlg.show(); return false;"
-				rendered="#{isEditable}" >
-			</p:commandButton>
-			
+				actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
+				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+				update="@form" process="@all" rendered="#{isEditable}">
+				<ui:param name="action" value=""></ui:param>
+				<f:setPropertyActionListener
+					target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
+					value="#{action}" />
+			</p:commandButton>		
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 			    type="button"
 			    onclick="cancelBackConfirmDlg.show();"
