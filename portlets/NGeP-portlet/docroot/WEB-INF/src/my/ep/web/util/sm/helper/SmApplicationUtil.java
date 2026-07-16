@@ -4739,7 +4739,7 @@ public class SmApplicationUtil {
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 					
-					// 36504 - START - Approved Application
+					// 36504 - START - Applied Application
 					String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 					cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
@@ -4778,7 +4778,7 @@ public class SmApplicationUtil {
 							otherDescSet.add(mainCatcode);
 						}
 					}
-					// 36504 - END - Approved Application
+					// 36504 - END - Applied Application
 					
 					//29823 - start
 					//#34098 - START 
@@ -4825,9 +4825,9 @@ public class SmApplicationUtil {
 			managedBean.setApprovedCategoryList(apprvList);
 		}
 		
-		// 36504 - START - Previous Application
+		// 36504 - START - Previous/Approved Application
 		findPreviousAndNewSupplierApplication(managedBean);
-		// 36504 - END - Previous Application
+		// 36504 - END - Previous/Approved Application
 		
 	}
 	
@@ -4989,9 +4989,9 @@ public class SmApplicationUtil {
 		managedBean.setActiveCategoryList(addtnlList);
 		managedBean.setApprovedCategoryList(existingList);
 		
-		// 36504 - START - Previous Application
+		// 36504 - START - Previous/Approved Application
 		findPreviousAndNewSupplierApplication(managedBean);
-		// 36504 - END - Previous Application
+		// 36504 - END - Previous/Approved Application
 	}
 	
 	//14150
@@ -16196,9 +16196,14 @@ public class SmApplicationUtil {
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 					
-					// Supplier - Renewal Application allow edit and view.
-					if (((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && !managedBean.isPoUser()) || 
-							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) && 
+					
+					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) || 
+							(previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) &&
+							previousKN.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL) && // Renewal Application 
+							managedBean.isSupplierUser())  || 														  // allow supplier to view history in Declare appl.
+							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) &&
+							(!appl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) &&
+							 previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) && // not display for status SVC after approval.
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
 							!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
@@ -16287,7 +16292,7 @@ public class SmApplicationUtil {
 					managedBean.setOtherDescChangeSupPOPrev(true);
 					managedBean.setOtherDescChangeSupplierPrev(true);
 				} else if (managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
-					managedBean.setOtherDescChangeSupplier(true);
+					managedBean.setOtherDescChangeSupplierPrev(true);
 					managedBean.getEditVO().setSuppEditCategory(true);
 				}
 			}
