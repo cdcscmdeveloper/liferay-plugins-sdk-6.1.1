@@ -22,7 +22,7 @@
             } catch (e) {}
         }
     </h:outputScript>
-
+<!-- #40500,#30014 //Remove StyleCSS -->
 	<h:outputStylesheet>
 	<style>
 		#catCodeCtPopup.ui-dialog {
@@ -161,7 +161,7 @@
 				</tr>
 				</table>
 			</p:panel>
-
+			<!-- #40500,#30014 //Remove Scrollbar function -->
 			<p:panel header="#{lbl['lbl.ct.category.result']}" toggleable="true">
 						<p:dataTable id="catCodeCtDescrTbl"
 							value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
