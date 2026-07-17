@@ -165,8 +165,7 @@
 		<h:outputText value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.valueReqd}"/>&#160;
 		<p:inputTextarea value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" 
 			label="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryTextId"
-			maxlength="2000" cols="140" rows="10" required="#{backingBean.managedBean.valueReqd and !(empty param['disableValidation'] or param['disableValidation'] == 'true')}"/>
-			<!-- #37925 -->
+			maxlength="2000" cols="140" rows="10" required="#{backingBean.managedBean.valueReqd}"/>
 		<p:message id="inquiryTextIdMsg" for="inquiryTextId" showSummary="true" showDetail="false" display="icon" />
 	</p:panel>
 	
