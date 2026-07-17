@@ -179,7 +179,8 @@
 						     aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}" />
 				     <p:graphicImage value="/css/images/design/icon_alert.png"
 						style="float:right;"
-						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
+						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory and 
+							(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser)}" />
 				</p:outputPanel>
 			</p:column>
 			<!-- 36504 - END -->
