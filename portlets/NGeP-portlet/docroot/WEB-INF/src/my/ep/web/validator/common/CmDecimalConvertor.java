@@ -1,107 +1,65 @@
 package my.ep.web.validator.common;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-import com.sun.faces.taglib.jsf_core.ConvertNumberTag;
+import my.ep.constant.MessageConst;
+import my.ep.util.MessageUtils;
+import my.ep.web.util.FacesScopes;
 
-
-@FacesConverter("bigDecimalConverter")
+/**
+ * Throw custom converter error for integer and decimal
+ */
+@FacesConverter("cmNumberConverter")
 public class CmDecimalConvertor extends javax.faces.convert.NumberConverter {
 
-/*	@Override
-	public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue) {
-		
-		
-		 if (submittedValue.trim().equals("")) {  
-	            return null;  
-	        } else {  
-	            try {  
-	            	System.out.println("submittedValue:"+submittedValue);
-	              
-	            	String completeAmt = "";
-	    			
-	    			if(submittedValue.contains(".")){
+    public static final String DECIMAL = "DECIMAL";
+    public static final String DECIMAL_PATTERN = "#,##0.00";
+    public static final String INTEGER_PATTERN = "#,##0";
 
-	    				String decimal= submittedValue.substring(submittedValue.indexOf(".")+1,submittedValue.trim().length());
+    @Override
+    public Object getAsObject(FacesContext ctx, UIComponent comp, String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
 
-	    				if(decimal.trim().length()==2){
-	    					String amout = submittedValue.substring(0, submittedValue.indexOf("."));
+        String numberType = (String) comp.getAttributes().get("numberType");
+        String submitValue = value.replace(",", "").trim();
 
-	    					completeAmt = amout+"."+ decimal;
+        try {
+            return DECIMAL.equals(numberType) ? new BigDecimal(submitValue) : Integer.valueOf(submitValue);
+        } catch (NumberFormatException e) {
+            throw createConverterException(numberType, submitValue);
+        }
+    }
 
-	    				}else if(decimal.trim().length()==1){
-	    					String amout = submittedValue.substring(0, submittedValue.indexOf("."));
+    private ConverterException createConverterException(String numberType, String value) {
+        String messageCode = DECIMAL.equals(numberType) ? MessageConst.ERROR_716027 : MessageConst.ERROR_716028;
 
-	    					completeAmt = amout+"."+ decimal+"0";   
+        return new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+        		messageCode, new String[] { value },
+        		MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+    }
 
-	    				}else{
-	    					String amout = submittedValue.substring(0,submittedValue.indexOf("."));
-	    					String subSrtingDecimal = decimal.substring(0, 2);
-	    					completeAmt = amout+"."+ subSrtingDecimal;
+    @Override
+    public String getAsString(FacesContext ctx, UIComponent comp, Object value) {
+        String numberType = (String) comp.getAttributes().get("numberType");
 
-	    				}
-	    			}else{
-	    				completeAmt = submittedValue +".00";
-	    			}
-	    			
-	    			
-	    			DecimalFormat df = new DecimalFormat("#,###.00");
-	    			
-	    			String formatAmt = df.format(new BigDecimal(completeAmt));
-	    			System.out.println("formatAmt:"+formatAmt);
-	    			return new BigDecimal(formatAmt);
-	    			
-	  
-	            } catch(Exception ex) {  
-	                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", ex.getMessage()));  
-	            }  
-	        }  
-	}*/
+        if (value == null) {
+            return "";
+        }
 
-	@Override
-	public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue) {
-		
-		System.out.println("submittedValue: " + submittedValue);
-		return super.getAsObject(arg0, arg1, submittedValue);
-	}
+        if (DECIMAL.equals(numberType)) {
+            setPattern(DECIMAL_PATTERN);
+        } else {
+            setPattern(INTEGER_PATTERN);
+        }
 
-	@Override
-	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
-
-		DecimalFormat df = new DecimalFormat("#,###.00");
-		 if (arg2 == null || arg2.equals("")) {  
-	            return "";  
-	        } else {  
-	        	String oriValue = String.valueOf(((BigDecimal) arg2));
-	        	
-	        	if(oriValue.contains(".")){
-
-    				String decimal= oriValue.substring(oriValue.indexOf(".")+1,oriValue.trim().length());
-
-    				if(decimal.trim().length() > 2){
-    					
-    					String amout = oriValue.substring(0,oriValue.indexOf("."));
-    					String subSrtingDecimal = decimal.substring(0, 2);
-    					String completeAmt = amout+"."+ subSrtingDecimal;
-    					
-    					
-    	    			
-    	    			String formatAmt = df.format(new BigDecimal(completeAmt));
-    					return formatAmt;					
-    				}
-	        	}
-	        	
-	        	return df.format(new BigDecimal(oriValue));  
-	        }  
-		
-		
-	}
+        return super.getAsString(ctx, comp, value);
+    }
 }
