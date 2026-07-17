@@ -268,6 +268,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	private ScQt checkCategoryCodeQt; // #29466
 	private boolean allSupplierDisagreeEPV;//#21692
+	
+	// #35320 - Start
+	private String selectedSupplierOfferedPrice;
+
+	// #35320 - End
 
 	/**
 	 * @return the activeIndex
@@ -2302,4 +2307,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
 	}
 	//#21692 - End
+	
+	// #35320 - Start
+	public String getSelectedSupplierOfferedPrice() {
+		return selectedSupplierOfferedPrice;
+	}
+
+	public void setSelectedSupplierOfferedPrice(
+			String selectedSupplierOfferedPrice) {
+		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
+	}// #35320 - End	
 }
