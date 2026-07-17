@@ -224,10 +224,10 @@
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}"
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}"
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}"
-							isMobile="true" required="true"
+							isMobile="true" hideTelco="true" required="true"
 							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}"
-							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /></td>
+							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /></td> 
+							<!-- telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" /></td> --> <!-- 40200 -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
