@@ -1767,7 +1767,11 @@ public class QTBriefingSiteVisitBackingBean extends
 	    PmStatus cloneStatus = new PmStatus();
 	    cloneStatus.setStatusId(statusId);
 	    clone.setBsvStatus(cloneStatus);
-
+	    
+	    //28188 -start-
+	    clone.setParentQtBsvDtlId(null);
+	    clone.setParentPostponeId(null);
+	    //28188 -end-
 	    return clone;
 	}
 	//#28188 - End
