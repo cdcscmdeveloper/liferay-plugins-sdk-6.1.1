@@ -3970,7 +3970,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						.getScQtCheckList().getScQtDoc().getTplSpecMaster());
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				//#29187 Start Vinod
-				for (TplSpecAnswer answer : templateSpecBean.getSpecAnswerList()) {
+				for (TplSpecAnswer answer : specBB.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
 					if (answer.getUserScore() != null && answer.getCompliance() != null
 							&& answer.getUserScore().intValue() != 0 && !answer.getCompliance()) {
 						answer.setUserScore(new BigDecimal(0));
