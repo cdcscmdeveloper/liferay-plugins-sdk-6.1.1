@@ -13535,11 +13535,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.getStatusId().longValue())) {
 			getManagedBean().setSubmitMethod("lOADetailBackingBean.submitActionTaskFromBpm('" + outcome + "')");
 			RequestContext.getCurrentInstance().execute("submitConformDlgRevise.show()");
+		}else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+			getManagedBean().setRejectMethod("lOADetailBackingBean.checkItemSpecOfferAndUpdateBpmTaskAction('"+outcome+"')");
+			RequestContext.getCurrentInstance().execute("rejectDlg.show()");
 		} else {
-			// #29007 Start Vinod
-			checkAndInsertItemSpecOffer();
-			// #29007 End Vinod
-			updateBpmTaskAction(outcome);
+			checkItemSpecOfferAndUpdateBpmTaskAction(outcome);
 		}
 	}
 	
@@ -13551,6 +13551,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void wrappedUpdateBpmTask(String outcome){
 		updateBPMTask(outcome,null);
+	}
+	
+	/**
+	 * Checks and inserts item specification offers before updating the BPM task action.
+	 *
+	 * @param outcome the BPM outcome to be applied
+	 */
+	public void checkItemSpecOfferAndUpdateBpmTaskAction(String outcome) {
+		// #29007 Start Vinod
+		checkAndInsertItemSpecOffer();
+		// #29007 End Vinod
+		updateBpmTaskAction(outcome);
 	}
 	//#34449 - end
 }

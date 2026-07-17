@@ -366,6 +366,11 @@
 		widget="verifyDlg" width="400" height="100"
 		okAction="#{lOADetailBackingBean.managedBean.verifyMethod}"
 		title="#{lbl['lbl.sc.header.message.verify']}"
-		content="#{lbl['lbl.sc.loa.confirmation.revise.message']}" update="@form" />			
+		content="#{lbl['lbl.sc.loa.confirmation.revise.message']}" update="@form" />
+	<ac:confirmationPopup id="rejectDlgLoa"
+		widget="rejectDlg" width="400" height="100"
+		okAction="#{lOADetailBackingBean.managedBean.rejectMethod}"
+		title="#{lbl['lbl.sc.header.message.reject']}"
+		content="#{lbl['lbl.sc.loa.cancel.dialog.confirm.reject.message']}" update="@form" />				
 	<ui:remove>34449 - end</ui:remove>
 </ui:composition>

@@ -405,6 +405,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private String reviseMethod;
 	private String verifyMethod;
 	private String resubmitMethod;
+	private String rejectMethod;
 	//#34449- end
 
     /**
@@ -2347,6 +2348,20 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	 */
 	public void setResubmitMethod(String resubmitMethod) {
 		this.resubmitMethod = resubmitMethod;
+	}
+
+	/**
+	 * @return the rejectMethod
+	 */
+	public String getRejectMethod() {
+		return rejectMethod;
+	}
+
+	/**
+	 * @param rejectMethod the rejectMethod to set
+	 */
+	public void setRejectMethod(String rejectMethod) {
+		this.rejectMethod = rejectMethod;
 	}
 	//34449 - end
 }
