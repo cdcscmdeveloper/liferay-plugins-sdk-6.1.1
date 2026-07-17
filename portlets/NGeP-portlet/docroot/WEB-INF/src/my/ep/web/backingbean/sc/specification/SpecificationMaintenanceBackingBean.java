@@ -30,6 +30,7 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -491,6 +492,12 @@ public void specCommitteeMaintenancereset() {
 			boolean renewSessionObject, boolean useTempManagedBean,
 			String previousPageId, boolean redirect/* 29464-overload arg */) {
 	/*** 25692#95 ** -end- */
+		//#28784 - Start
+		this.getManagedBean().setQtSpecMaintanance(true);
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+		//#28784 - End
 	
 		QtnTenderSearchBean qtTnderBean = this.getManagedBean().getQtnTenderSearchBean();
 		IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
@@ -882,5 +889,20 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
 	}
 	// 29732 -End
-
+	
+	//#28784 - Start
+	private boolean checkDemoRedirect() {
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
+				.getStatusId() : null;
+		boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+		if (null != status
+				&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
+							.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)))
+				&& this.getManagedBean().isMaintanceFlow() && demoRequired) {
+			return true;
+		}
+		return false;
+	}
+	//#28784 - End
 }
