@@ -10,17 +10,19 @@
 			@-moz-keyframes blinker{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
 			@-webkit-keyframes blinker{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
 			@keyframes blinker{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
-			.text{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:blue;}
+			.text{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#0000FF;}/* 9299 - 40475 */
+			a .text,.ui-commandlink .text{text-decoration: underline;} /* 9299 - 40474 */
 		</style>
+		<div style="display:flex; align-items:center; padding:3px; margin-left:10px; margin-botton:8px;"><!-- 9299 - 40475 START -->
 		<span class='blink'> <p:graphicImage
 				value="/css/images/priority.png" />
-		</span>
-		<p:spacer width="5" />
+		</span>&#160;
 		<h:outputText class='text'
-			value="#{lbl['lbl.sm.comp.exp.alert.part.one']}" />
+			value="#{lbl['lbl.sm.comp.exp.alert.part.one']}" />&#160;
 		<a href="comp-exp?redirect"><h:outputText class='text'
-				value="#{lbl['lbl.sm.comp.exp.alert.part.two']}" /> </a>
+				value="#{lbl['lbl.sm.comp.exp.alert.part.two']}" /> </a>&#160;
 		<h:outputText class='text'
 			value="#{lbl['lbl.sm.comp.exp.alert.part.three']}" />
+		</div> <!-- 9299 - 40475 END -->
 	</ui:define>
 </ui:composition>

@@ -81,8 +81,9 @@
 						countryCode="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileCountry}" 
 						areaCode="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileArea}" 
 						number="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileNo}" 
-						isMobile="true" required="true" validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-						telcoId="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileTelcoId}" />
+						isMobile="true" hideTelco="true" required="true" 
+						validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" />
+						<!-- telcoId="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileTelcoId}" />  --> <!-- 40200 -->
 				</td>
 			</tr>
 			<tr>

@@ -2236,4 +2236,33 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
 	
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTrigger(String action) throws Exception {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+			return null;
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null
+					|| flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage("lbl.txt.remarks",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			}
+			RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
+			return null;
+		} else {
+			return signingAction(action);
+		}
+	}
+	// #34443 end
 }

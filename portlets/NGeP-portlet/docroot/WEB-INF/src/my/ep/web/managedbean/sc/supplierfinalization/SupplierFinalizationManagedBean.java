@@ -2797,8 +2797,5 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#34860 End
 
-
-	
-	
 }
 // ***25201
