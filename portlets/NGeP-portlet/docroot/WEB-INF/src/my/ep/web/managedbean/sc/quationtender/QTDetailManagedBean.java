@@ -1756,6 +1756,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isCheckUserCanRevise;
 	private boolean resetHistoryCatCode;
 	// #29732 End
+	
+	// #35320 - Start
+	private boolean afterSF;
+	// #35320 - End
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -11300,4 +11304,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.resetHistoryCatCode = resetHistoryCatCode;
 	}
 	// #29732 -end-
+	
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
 }
