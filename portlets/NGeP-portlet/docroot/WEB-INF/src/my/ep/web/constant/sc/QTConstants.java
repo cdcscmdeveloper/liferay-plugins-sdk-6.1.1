@@ -414,4 +414,17 @@ public interface QTConstants {
 	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
 	public static final String SUPPLIER_CRITERIA = "SC";
 	// #29732 -End
+
+	// #29187 Start Vinod
+	public static final String LBL_TXT_SELECT = "lbl.txt.select";
+	public static final String LBL_TXT_YES = "lbl.txt.yes";
+	public static final String LBL_TXT_NO = "lbl.txt.no";
+	public static final String COMPLIANCE_CONFIRMATION_POPUP = "complianceConfirmPopUp.show()";
+	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
+	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
+	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
+	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
+	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
+	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
+	// #29187 End Vinod
 }
