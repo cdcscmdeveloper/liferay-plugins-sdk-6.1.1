@@ -84,6 +84,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private static String lblClientTypeFed = "lbl.sm.comp.exp.update.client.type.federal";
 	private static String lblClientTypeNonFed = "lbl.sm.comp.exp.update.client.type.other";
 	private static String smCompExpNewXhtml = "smCompExpNew.xhtml";
+	// #9299 - #40713 Start
+	private static String lblPopUpHeaderQT = "lbl.sm.comp.exp.master.popup.header.qt";
+	private static String lblPopUpHeaderCT = "lbl.sm.comp.exp.master.popup.header.ct";
+	// #9299 - #40713 End
 
 	/**
 	 * Prerender for Company Experience Alert
@@ -1066,7 +1070,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void delSmCompExpDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		// #9299 - #40714
+		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
@@ -1164,7 +1169,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void deactivateDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		// #9299 - #40714
+		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
@@ -1200,6 +1206,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private void deactivateMaster(Long compExpMasterId) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(compExpMasterId);
+		// #9299 - #40714 Start
+		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+		reqDTO.setSelectedMaster(resDTO.getMaster());
+		// #9299 - #40714 End
 		getSmCompExpSo().deleteMaster(reqDTO);
 	}
 
@@ -1219,6 +1229,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
 		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
+		// #9299 - #40713 Start
+		if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_QT)) {
+			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderQT, null));
+		} else if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderCT, null));
+		}
+		// #9299 - #40713 End
 	}
 
 	/**
@@ -1327,21 +1344,28 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		PmParameter procumentMode = master.getProcumentMode();
 		error = validateNewDetail(error, title, contractValue, procumentMode);
 
+
+		// 9299 - 40478
+		Date contractEffDate = master.getContractEffDate();
+		Date contractExpDate = master.getContractExpDate();
+		error = validateDate(error, contractEffDate, contractExpDate);
+		// 9299 - 40664 Start
 		if (this.getManagedBean().isConsultant()) {
 			String projectLoc = master.getProjectLoc();
 			String workServDesc = master.getWorkServDesc();
 			BigDecimal consultantFee = master.getConsultantFee();
 			error = validateNewConsultant(error, projectLoc, workServDesc, consultantFee);
 		}
-		// 9299 - 40478
-		Date contractEffDate = master.getContractEffDate();
-		Date contractExpDate = master.getContractExpDate();
-		error = validateDate(error, contractEffDate, contractExpDate);
-
+		// 9299 - 40664 End
 		Long sourceType = master.getSourceType().getParameterId();
 		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
 
+		// #9299 - #40717 Start
+		if (!error && null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
+			master.setPaymentMethod(null);
+		}
+		// #9299 - #40717 Start
 		if (!error && update) {
 			updateSmComExpMaster(false);
 		} else if (!error) {
@@ -1610,7 +1634,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	// #9299 - #40660
 	public void delSmCompExpMaster(SmCompExpResDTO resDTO1) throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
+		// #9299 - #40714
+		reqDTO.setSelectedMaster(this.getManagedBean().getSelectedMaster());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteMaster(reqDTO);
 		if (resDTO.isSuccessful()) {
