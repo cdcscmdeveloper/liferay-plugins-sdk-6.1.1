@@ -1070,7 +1070,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void delSmCompExpDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		// #9299 - #40714 Start
+		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
+		if (null != reqDTO.getSelectedDraft().getPaymentMethod() && null == reqDTO.getSelectedDraft().getPaymentMethod().getParameterId()) {
+			reqDTO.getSelectedDraft().setPaymentMethod(null);
+		}
+		// #9299 - #40714 End
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
@@ -1168,7 +1173,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void deactivateDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		// #9299 - #40714 Start
+		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
+		if (null != reqDTO.getSelectedDraft().getPaymentMethod() && null == reqDTO.getSelectedDraft().getPaymentMethod().getParameterId()) {
+			reqDTO.getSelectedDraft().setPaymentMethod(null);
+		}
+		// #9299 - #40714 End
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
@@ -1204,6 +1214,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private void deactivateMaster(Long compExpMasterId) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(compExpMasterId);
+		// #9299 - #40714 Start
+		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+		reqDTO.setSelectedMaster(resDTO.getMaster());
+		if (null != reqDTO.getSelectedMaster().getPaymentMethod() && null == reqDTO.getSelectedMaster().getPaymentMethod().getParameterId()) {
+			reqDTO.getSelectedMaster().setPaymentMethod(null);
+		}
+		// #9299 - #40714 End
 		getSmCompExpSo().deleteMaster(reqDTO);
 	}
 
@@ -1451,14 +1468,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		//9299 - 40664 START
-		if (null == procumentMode.getParameterId()) {
+		if (null == contractValue) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775231,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
-		if (null == contractValue) {
+		if (null == procumentMode.getParameterId()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1628,7 +1645,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	// #9299 - #40660
 	public void delSmCompExpMaster(SmCompExpResDTO resDTO1) throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
+		// #9299 - #40714
+		reqDTO.setSelectedMaster(this.getManagedBean().getSelectedMaster());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteMaster(reqDTO);
 		if (resDTO.isSuccessful()) {
