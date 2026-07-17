@@ -2760,77 +2760,76 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	// #34443 end
 	
 	// Start - #36503
-		/**
-		 * Route to Panel Circular Page from Purchase Order. 
-		 * 
-		 * @return page url
-		 */
-		public String gotoCicularPanel() {
-			PanelBackingBean panelBB = new PanelBackingBean();
-			panelBB.getManagedBean().setAction("view");
-			panelBB.getManagedBean().setViewContract(true);
-			panelBB.getManagedBean().setOutComes(new String[] {});
-			panelBB.getManagedBean().setFromCircularNotice(false);
-			panelBB.getManagedBean().setDifferentModule(false);
+	/**
+	 * Route to Panel Circular Page from Purchase Order.
+	 * 
+	 * @return page url
+	 */
+	public String gotoCicularPanel() {
+		PanelBackingBean panelBB = new PanelBackingBean();
+		panelBB.getManagedBean().setAction("view");
+		panelBB.getManagedBean().setViewContract(true);
+		panelBB.getManagedBean().setOutComes(new String[] {});
+		panelBB.getManagedBean().setFromCircularNotice(false);
+		panelBB.getManagedBean().setDifferentModule(false);
 
-			Long circularVerId = null;
+		Long circularVerId = null;
 
-			if (getManagedBean().getFlRequest() != null && getManagedBean().getFlRequest().getFulfilmentReqId() != null) {
-				IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-
-				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-				reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
-
-				FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveCircularVerByFlRequestId(reqDTO);
-
-				if (resDTO != null && resDTO.getCircularVer() != null && resDTO.getCircularVer().getCircularVerId() != null) {
-					circularVerId = resDTO.getCircularVer().getCircularVerId();
-				}
-			}
-
-			if (circularVerId == null || circularVerId.longValue() == 0) {
-				return null;
-			}
-
-			panelBB.getManagedBean().setGotoPreviewPage(NAV_PO);
-			return panelBB.gotoCommonViewPage(circularVerId);
-		}
-		
-		/**
-		 * The method used to find active circular 
-		 * record return boolean value in case record true
-		 *
-		 * @return true, if there is an active circular record
-		 *         false, if there isn't active circular record
-		 */
-		public boolean isCircularPanel() {
-
+		if (getManagedBean().getFlRequest() != null && getManagedBean().getFlRequest().getFulfilmentReqId() != null) {
 			IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-
 			reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
 
-			FulfilmentResDTO resDTO = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
+			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveCircularVerByFlRequestId(reqDTO);
 
-			boolean isPanel = resDTO.isPanel();
-
-			if (!isPanel) {
-				return false;
+			if (resDTO != null && resDTO.getCircularVer() != null && resDTO.getCircularVer().getCircularVerId() != null) {
+				circularVerId = resDTO.getCircularVer().getCircularVerId();
 			}
+		}
 
-			FulfilmentResDTO circularDTO = fulfilmentRequestSO.retrieveCircularNoByFlRequestId(reqDTO);
+		if (circularVerId != null && circularVerId.longValue() != 0) {
+			panelBB.getManagedBean().setGotoPreviewPage(NAV_PO);
+			return panelBB.gotoCommonViewPage(circularVerId);
+		}
 
-			if (circularDTO == null || circularDTO.getCircularNo() == null) {
-				return false;
-			}
+		return null;
+	}
 
+	/**
+	 * The method used to find active circular record return boolean value in
+	 * case record true
+	 * 
+	 * @return true, if there is an active circular record false, if there isn't
+	 *         active circular record
+	 */
+	public boolean isCircularPanel() {
+
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
+
+		FulfilmentResDTO resDTO = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
+
+		boolean isPanel = resDTO.isPanel();
+
+		if (!isPanel) {
+			return false;
+		}
+
+		FulfilmentResDTO circularDTO = fulfilmentRequestSO.retrieveCircularNoByFlRequestId(reqDTO);
+
+		if (circularDTO != null && circularDTO.getCircularNo() != null) {
 			getManagedBean().setCircularNo(circularDTO.getCircularNo());
-
 			return true;
 		}
-		
-		// End - #36503
+
+		return false;
+	}
+
+	// End - #36503
 }
