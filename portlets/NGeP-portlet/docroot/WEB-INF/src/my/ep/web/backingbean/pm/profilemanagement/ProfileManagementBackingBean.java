@@ -4600,6 +4600,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	//#36489 and SonarLint Fixing - End
 	
 	//#33867 - START
+	/**
+	 * Retrieves the current user roles and their record status.
+	 *
+	 * @param userRoleList the list of user roles
+	 * @return a map containing the role code as the key and record status flag as the value
+	 */
 	private Map<String, Integer> getCurrentUserRole(List<PmUserRole> userRoleList) {
 		Map<String, Integer> userRoleMap = new HashMap<>();
 		if (CollectionUtils.isNotEmpty(userRoleList)) {
@@ -4702,6 +4708,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	//#33867 - END
 	
 	//#33867 - START
+	/**
+	 * Returns a comma-separated string of roles.
+	 *
+	 * @param roleList the list of roles
+	 * @return the roles as a comma-separated string
+	 */
 	private String getRoles(List<String> roleList) {
 		StringBuilder roles = new StringBuilder();
 
