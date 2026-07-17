@@ -1569,7 +1569,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 */
 	public void gpkiSignAction(String outcome){
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH ) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			validatePaymentMatch(outcome);
+			// #34443 remove validate to confirmDialogueTrigger
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocNo()+"|");
 			if(getManagedBean().getPaymentAdvice().isBrandNew()) {
@@ -2836,5 +2836,26 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 	}
 	// 36754 -End
+	
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 */
+	public void confirmDialogueTrigger(String action) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			validatePaymentMatch(action);
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
+				RequestContext.getCurrentInstance().execute("matchConfirmDlg.show()");
+			} else {
+				gpkiSignAction(action);
+			}
+		} else {
+			gpkiSignAction(action);
+		}
+	}
+	// #34443 end
 	
 }
