@@ -824,8 +824,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setEditVO(new SmSectionEditorVO());
 		
 		// 36504 - START
-		getManagedBean().getEditVO().setPoEditCategory(false);
-		getManagedBean().getEditVO().setAppEditCategory(false);
 		FacesScopes sc = new FacesScopes();
 		boolean roleAdmin =  false;
 			if (!sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
@@ -2448,8 +2446,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setOtherDescChangeSupplier(false);
 		getManagedBean().setOtherDescChangeSupPO(false);
 		getManagedBean().setOtherDescChangeSupApprover(false);
-		getManagedBean().getEditVO().setPoEditCategory(false);
-		getManagedBean().getEditVO().setAppEditCategory(false);
 		
 		if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
 			initPmUserRole();
@@ -2474,23 +2470,30 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
 					for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 						
-						history.setApplNoHistory(history.getSmAppl().getApplNo());
-
-						if (!getManagedBean().isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-							getManagedBean().setOtherDescChangePO(true);
-							getManagedBean().getEditVO().setPoEditCategory(true);
-						} else if (!getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
-							getManagedBean().setOtherDescChangeApprover(true);
-							getManagedBean().setOtherDescChangeSupplier(true);
-							getManagedBean().getEditVO().setAppEditCategory(true);
-						} else if (!getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
-							getManagedBean().setOtherDescChangeSupApprover(true);
-							getManagedBean().setOtherDescChangeSupplier(true);
-							getManagedBean().getEditVO().setAppEditCategory(true);
-						} else if (!getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
-							getManagedBean().setOtherDescChangeSupPO(true);
-							getManagedBean().setOtherDescChangeSupplier(true);
-							getManagedBean().getEditVO().setPoEditCategory(true);
+						if (!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM) || 
+								!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_ROLE_APP_SDM)) {
+							
+							history.setApplNoHistory(history.getSmAppl().getApplNo());
+	
+							if (!getManagedBean().isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+								getManagedBean().setOtherDescChangePO(true);
+								getManagedBean().getEditVO().setPoEditCategory(true);
+							} else if (!getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+								getManagedBean().setOtherDescChangeApprover(true);
+								getManagedBean().setOtherDescChangeSupplier(true);
+								getManagedBean().getEditVO().setAppEditCategory(true);
+							} else if (!getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+								getManagedBean().setOtherDescChangeSupApprover(true);
+								getManagedBean().setOtherDescChangeSupplier(true);
+								getManagedBean().getEditVO().setAppEditCategory(true);
+							} else if (!getManagedBean().isOtherDescChangeSupPO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+								getManagedBean().setOtherDescChangeSupPO(true);
+								getManagedBean().setOtherDescChangeSupplier(true);
+								getManagedBean().getEditVO().setPoEditCategory(true);
+							} else if (getManagedBean().isPoUser() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL)) {
+								getManagedBean().setOtherDescChangeSupplier(true);
+								getManagedBean().getEditVO().setSuppEditCategory(true);
+							}
 						}
 					}
 				}
@@ -5580,8 +5583,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	// 36504 - START
 	/**
 	 * 
-	 * @param applId
-	 * @return supplierCategoryId
+	 * @param supplierCategoryId
+	 * @return SmSuppCatOtherDescHistory
 	 */
 	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(Long supplierCategoryId) {
 		if (supplierCategoryId == null) {
@@ -5589,7 +5592,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		
 		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
-	}  
+	}
+	
+	/**
+	 * Retrieve Other Active Description History for Supplier Data Maintenance
+	 * 
+	 * @param supplierCategoryId
+	 * @return SmSuppCatOtherDescHistory
+	 */
+	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistoryDataMaintenance(Long supplierCategoryId) {
+		if (supplierCategoryId == null) {
+			return null;
+		}
+		
+		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistoryDataMaintenance(supplierCategoryId);
+	} 
 	// 36504 - END
 	
 	// #9299 - Start
@@ -5606,6 +5623,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void otherDescriptionHistory() {
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
+	}
+	
+	/**
+	 * To show history dialog
+	 * 
+	 */
+	public void otherDescriptionHistoryMaintenance() {
+		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryMaintenanceDlg.show();");
 	}
 	
 	/**
