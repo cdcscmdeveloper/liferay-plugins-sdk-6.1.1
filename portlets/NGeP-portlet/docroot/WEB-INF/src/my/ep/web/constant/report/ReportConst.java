@@ -178,6 +178,12 @@ public class ReportConst implements Serializable{
 	public static final String SC_SUPPLIER_FINALIZATION_RPT_JSP = "SC_SUPP_FINAL.jsp";
 	public static final String SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP = "SC_SUPP_FINAL_WIP.jsp";
 	public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "SC_FC_ANALYSIS_EVAL_REP_8A.jsp";
+	// #25651 - Start
+	public static final String SC_SUPP_FINAL_GENERAL_RPT_JSP = "SC_SUPP_FINAL_GENERAL.jsp";
+	public static final String SC_SUPP_FINAL_ITEM_RPT_JSP = "SC_SUPP_FINAL_ITEM.jsp";
+	public static final String SC_SUPP_FINAL_PACKAGE_RPT_JSP = "SC_SUPP_FINAL_PACKAGE.jsp";
+	public static final String SC_SUPP_FINAL_ANALYSIS_RPT_JSP = "SC_SUPP_FINAL_ANALYSIS.jsp";
+	// #25651 - End
 
 	public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
 	public static final String SC_AKPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_first_stage_1d.jsp";
