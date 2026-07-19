@@ -245,6 +245,7 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_RENEWAL = "S";
 	public static final String APPLIED_CAT = "APPLIED";
 	public static final String PREVIOUS_CAT = "PREVIOUS";
+	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER = 20105;
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
@@ -1608,6 +1609,10 @@ public class SupplierManagementConst {
 	
 	public long getPM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED() {
 		return PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED;
+	}
+	
+	public long getPM_STATUS_PENDING_SITE_VISIT_AFTER() {
+		return PM_STATUS_PENDING_SITE_VISIT_AFTER;
 	}
 	// 36504 - END
 	
