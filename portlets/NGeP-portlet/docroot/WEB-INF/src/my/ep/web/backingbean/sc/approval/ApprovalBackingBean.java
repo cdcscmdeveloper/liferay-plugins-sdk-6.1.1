@@ -1543,8 +1543,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}	
 				}
 			}
-		} finally {
+		// #25077,#40333 - Start
+		} catch (EpException e) {
+			throw e;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "updateBpmTask", this.getManagedBean().getQt().getQtNo(),
+					"updateBpmTask", getUserIdSessionFromLoginId(), e);
+			throw new EpException(MessageConst.ERROR_722632);
+			// #25077,#40333 - End
 		}
+
 		return tenderResDTO;
 	}
 
