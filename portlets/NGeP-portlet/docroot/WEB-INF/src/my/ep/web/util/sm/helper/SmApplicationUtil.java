@@ -4914,7 +4914,7 @@ public class SmApplicationUtil {
 				for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 					
 					history.setApplNoHistory(history.getSmAppl().getApplNo());
-					if (!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM) || 
+					if (!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM) &&
 							!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_ROLE_APP_SDM)) {
 						if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
 								&& !managedBean.isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
@@ -16304,7 +16304,7 @@ public class SmApplicationUtil {
 				}
 			}
 			
-			if (sectionType.equalsIgnoreCase(SupplierManagementConst.APPLIED_CAT) && (!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM) || 
+			if (sectionType.equalsIgnoreCase(SupplierManagementConst.APPLIED_CAT) && (!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM) && 
 					!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_ROLE_APP_SDM))) {
 				if (!managedBean.isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 					managedBean.setOtherDescChangePO(true);
@@ -16520,11 +16520,6 @@ public class SmApplicationUtil {
 	// 39392 - END
 	// #9299 - Start
 	public static boolean getAppVersionDetailsWithRedmineNo(SmAppl smAppl, Long redmineNo, int phase) {
-		PmAppVersion appVerDtls = SmServiceLookup.getMofRegistrationSO().getAppVersionDetails(redmineNo, ParameterConst.DOCTYPE_SUPPLIER_MANAGEMENT,
-				phase);
-		if (smAppl.getCreatedDate().before(appVerDtls.getEffDate())) {
-			return true;
-		}
 
 		return false;
 	}
