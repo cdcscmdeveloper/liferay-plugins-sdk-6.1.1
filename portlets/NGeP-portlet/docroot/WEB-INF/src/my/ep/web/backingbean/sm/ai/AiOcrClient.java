@@ -33,6 +33,10 @@ public final class AiOcrClient {
 	 * @return
 	 */
 	public static String callDocumentOcr(String requestBody, String docType) {
+		if (!AiDocSupport.isAiEnabled()) {
+			log.info("AI doc extraction is off (google.doc.ai.onoff), skipping OCR call for docType: " + docType);
+			return null;
+		}
 		if (requestBody == null || requestBody.trim().isEmpty()) {
 			return null;
 		}
