@@ -7750,7 +7750,7 @@ public class LOIDetailBackingBean extends
 	//#21692, #38604 - End
 	
 	//#38151 - Start
-	public void qualifiedSupplierListPopupScore(Long supplierId, Long reqNoteItemId) {
+	public void qualifiedSupplierListPopupScore(Long supplierId, Long requestItemID) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -7823,7 +7823,7 @@ public class LOIDetailBackingBean extends
 
 			}
 		} else {
-			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null,reqNoteItemId);
+			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null,requestItemID);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				//BigDecimal supplierNo = (BigDecimal) row[1];
@@ -7832,7 +7832,7 @@ public class LOIDetailBackingBean extends
 				BigDecimal reqItemId = (BigDecimal) row[6];
 				// Handle each row
 				if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
-						&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || reqNoteItemId == reqItemId.longValue())) {
+						&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || requestItemID == reqItemId.longValue())) {
 					totalScoreTecEval = supplierTotalScore;
 					break;
 				}
@@ -7868,7 +7868,7 @@ public class LOIDetailBackingBean extends
 
 
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId,reqNoteItemId);
+				selectedZoneId,requestItemID);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
@@ -7880,7 +7880,7 @@ public class LOIDetailBackingBean extends
 			// Handle each row
 
 			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageF)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || reqNoteItemId == reqItemId.longValue() && selectedZone.longValue() == selectedZoneId)) {
+					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || requestItemID == reqItemId.longValue() && selectedZone.longValue() == selectedZoneId)) {
 				totalScoreFinEval = supplierTotalScore;
 				break;
 			}
