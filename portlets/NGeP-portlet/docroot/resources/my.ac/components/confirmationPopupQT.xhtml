@@ -20,6 +20,7 @@
 		<cc:attribute name="width" default="400" />
 		<cc:attribute name="height" default="100" />
 		<cc:attribute name="oncompleteOk" default="" />
+		<cc:attribute name="okProcess" default="@this" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -39,7 +40,7 @@
 				</table>
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}" partialSubmit="true"
 						onclick="blockWidget.show(); #{cc.attrs.widget}.hide(); "
 						action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 						update="#{cc.attrs.update}"

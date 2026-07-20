@@ -38,7 +38,8 @@
 						content="#{bsvAttendanceBackingBean.managedBean.confirmContent}"
 						update="@form"
 						oncompleteOk="confirmSubmit.show();" />
-			   	<ui:remove>#34444 End Ann</ui:remove>
+					<!-- action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}" -->
+			   <ui:remove>#34444 End Ann</ui:remove>
 
 					<p:confirmDialog id="confirmSubmit"
 						header="#{lbl['lbl.sc.dialog.cofirm.header']}"

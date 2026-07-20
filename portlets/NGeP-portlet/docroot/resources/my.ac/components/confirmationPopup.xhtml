@@ -102,7 +102,17 @@
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" />
 				    </c:when>
-				    <c:otherwise>
+						<!-- #34444 start -->
+						<c:when test="#{empty cc.attrs.okAction}">
+							<p:commandButton id="yesWithoutActionId"
+								value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+								partialSubmit="true"
+								onstart="confirmPopupBlockWidget.show(); #{cc.attrs.widget}.hide();"
+								oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide(); #{cc.attrs.oncompleteOk}"
+								update="#{cc.attrs.update}" />
+						</c:when>
+						<!-- #34444 end -->
+						<c:otherwise>
 				        <p:commandButton id="yesWithoutResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
