@@ -5221,7 +5221,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						.getQtProposalChecklist()
 						.setProposalScore(
 								this.getManagedBean().getTechGovProposalScore());
-				this.retriveSampleSpecmasterForMandatorySpecChecking(this
+				this.retrieveSampleSpecMasterForMandatorySpecChecking(this
 						.getManagedBean().getSampleItemList());// #29187 Added
 																// Vinod
 				return "/xhtml/sc/evaluation/evaluationStage/technical/techSampleEvaluation.xhtml";
@@ -15888,8 +15888,8 @@ private void retriveCommitteeRemarksList(){
 	// #25138-Ahmaa-Start
 	public String retrieveTotalSpecScoreBySupplier(Long proposalId, String checkListType) {
 
-		int totalScore = 0;
-		int total = 0;
+		BigDecimal totalScore = BigDecimal.ZERO; //#40506
+		BigDecimal total = BigDecimal.ZERO; //#40506
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		//ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
@@ -15913,12 +15913,13 @@ private void retriveCommitteeRemarksList(){
 			for (ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()) {
 				list.add(specscore);
 				
-				totalScore = specscore.getTotalScore().intValue();
-				total = total + totalScore;
+				totalScore = specscore.getTotalScore().setScale(2,  RoundingMode.HALF_UP);//#40506
+				total = total.add(totalScore);//#40506
 
 			}
 			
-			this.getManagedBean().setTotalScore(Integer.toString(total));
+			this.getManagedBean().setTotalScore(
+				    total.setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString());//#40506
 			this.getManagedBean().setEvaluationStgPkgTechnicalCheckList(localCheckList);
 			this.getManagedBean().setEvaluationStgPkgPropCheckList(list);
 
@@ -18992,7 +18993,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param
 	 * @return boolean
 	 */
-	public boolean renderDisqialified() {
+	public boolean renderDisqualified() {
 		List<ScQtEvaluationResultDtl> disqualifiedList = null != this
 				.getManagedBean().getDisqualifiedSuppliersDM()
 				&& null != this.getManagedBean().getDisqualifiedSuppliersDM()
@@ -19013,12 +19014,12 @@ private void retriveCommitteeRemarksList(){
 	// #29187 End Vinod
 	// #29187 Start Vinod
 	/**
-	 * This method is to check whether to render diswualified column.
+	 * This method is to check whether to render disqualified column.
 	 * 
 	 * @param evalResultDtl
 	 * @return boolean
 	 */
-	public boolean isDisqialifiedByCompliance(
+	public boolean isDisqualifiedByCompliance(
 			ScQtEvaluationResultDtl evalResultDtl) {
 		boolean isDisqualified = null != evalResultDtl.isCompliance()
 				&& !evalResultDtl.isCompliance();
@@ -19060,7 +19061,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param templateChecklist
 	 * @return
 	 */
-	public void retriveSampleSpecmasterForMandatorySpecChecking(
+	public void retrieveSampleSpecMasterForMandatorySpecChecking(
 			List<ScQtSampleItem> templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
@@ -19184,8 +19185,6 @@ private void retriveCommitteeRemarksList(){
 	 * @return
 	 */
 	public void itemComplianceChangeControl(ValueChangeEvent event) {
-		log.info("New: " + event.getNewValue() + ", Old: "
-				+ event.getOldValue());
 		if (event.getOldValue() == null) {
 			getManagedBean().setComplianceOldNull(true);
 		} else {
@@ -19246,8 +19245,8 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 
-		boolean complaincePopup = checkTechnicalSpecCompliance();
-		if (complaincePopup && !getManagedBean().isComplianceCnfrm()) {
+		boolean compliancePopup = checkTechnicalSpecCompliance();
+		if (compliancePopup && !getManagedBean().isComplianceCnfrm()) {
 			RequestContext.getCurrentInstance().execute(
 					QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
 			getManagedBean().setComplianceCnfrm(true);

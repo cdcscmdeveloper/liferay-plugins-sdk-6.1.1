@@ -362,9 +362,9 @@
 					countryCode="#{backingBean.managedBean.selectedShareHolder.mobileCountry}" 
 					areaCode="#{backingBean.managedBean.selectedShareHolder.mobileArea}" 
 					number="#{backingBean.managedBean.selectedShareHolder.mobileNo}" 
-					isMobile="true" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
-					validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-					telcoId="#{backingBean.managedBean.selectedShareHolder.mobileTelcoId}" />
+					isMobile="true" hideTelco="true" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
+					validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" />
+					<!-- telcoId="#{backingBean.managedBean.selectedShareHolder.mobileTelcoId}" /> --> <!-- 40200 -->
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.latestPersonnel}"
@@ -1455,7 +1455,4 @@
 			</table>
 		</p:scrollPanel>
 	</p:dialog>
-
-
-
 </ui:composition>

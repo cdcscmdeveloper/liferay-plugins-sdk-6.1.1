@@ -148,6 +148,12 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	// #35508 start
 	private String originalSupplierDoRef;
 	// #35508 end
+	
+	// 30753-Start
+	private boolean showLimitExceededDialog;
+	private String limitExceededMessage;
+
+	// 30753-end
 		
 	/**
 	 * Gets the item selected for cal.
@@ -1400,4 +1406,22 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setOriginalSupplierDoRef(String originalSupplierDoRef) {
 		this.originalSupplierDoRef = originalSupplierDoRef;
 	}
+	
+	// 30753-Start
+	public boolean isShowLimitExceededDialog() {
+		return showLimitExceededDialog;
+	}
+
+	public void setShowLimitExceededDialog(boolean showLimitExceededDialog) {
+		this.showLimitExceededDialog = showLimitExceededDialog;
+	}
+
+	public String getLimitExceededMessage() {
+		return limitExceededMessage;
+	}
+
+	public void setLimitExceededMessage(String limitExceededMessage) {
+		this.limitExceededMessage = limitExceededMessage;
+	}
+	// 30753-end
 }
