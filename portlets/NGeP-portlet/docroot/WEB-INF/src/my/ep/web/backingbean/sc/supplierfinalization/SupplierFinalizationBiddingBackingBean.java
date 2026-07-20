@@ -541,12 +541,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 				
 				if (MapUtils.isNotEmpty(
 						this.getManagedBean().getBidSchedulesByZone())) {
-					currentZoneBidSchedules 
-						= this.getManagedBean().getBidSchedulesByZone()
-							  .get(selectedZoneId);
-					currentZoneBidPackageBeans
-						= this.getManagedBean().getBidPackageBeansByZone()
-							  .get(selectedZoneId);
+					currentZoneBidSchedules = this.getManagedBean().getBidSchedulesByZone().get(selectedZoneId);
+					currentZoneBidPackageBeans = this.getManagedBean().getBidPackageBeansByZone().get(selectedZoneId);
 				}
 				if (pkgShortlistedSuppliersByZone == null) {
 					pkgShortlistedSuppliersByZone 
@@ -693,12 +689,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 		getManagedBean().setEstimatedCost(estimatedCost);
 
 		// #31101, #26247 -start-
-		 getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
-		
 		/*
 		 * 31101 - Shafful 
 		 */
 		settingDisciplinaryAction(biddingPackagePriceList, null, false);
+		getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
 		// #31101, #26247 -end-
 		
 		BigDecimal bumiSuppLowestOfferedPrice = null;
@@ -764,6 +759,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}		
 	}
 	
+	// 26247 - start
 	private void settingDisciplinaryAction(List<BidPackageBean> biddingPackagePriceList,
 			List<BidItemBean> biddingItemPriceList, boolean isDisqualified) {
 		ScQt scQt = this.getManagedBean().getScQt();
