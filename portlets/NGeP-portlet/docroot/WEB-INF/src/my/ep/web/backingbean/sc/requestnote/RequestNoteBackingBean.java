@@ -3190,7 +3190,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						Long existingReasonId = reasonMap.get(selectedItemUOMKey);
 						Long addedReasonId = scRequestNoteDtl.getJustificationType().getReasonId();
 
-						if (existingReasonId == addedReasonId) {
+						if (existingReasonId != null && existingReasonId.equals(addedReasonId)) {
 							throw new EpException(MessageConst.ERROR_700027, new String[] {
 									scRequestNoteDtl.getRequestItem().getCmItem().getItemName() + "("
 											+ selectedRequestItem.getUom().getUomName() + ")", "" });
