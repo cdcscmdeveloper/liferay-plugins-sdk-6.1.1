@@ -652,7 +652,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean<CmSupplierItem>();
+				return new SearchResultBean();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -736,7 +736,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean<CmSupplierItem>();
+				return new SearchResultBean();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -904,7 +904,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean<CmSupplierItem>();
+				return new SearchResultBean();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -988,7 +988,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean<CmSupplierItem>();
+				return new SearchResultBean();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -1108,7 +1108,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean<CmSupplierItem>();
+				return new SearchResultBean();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
