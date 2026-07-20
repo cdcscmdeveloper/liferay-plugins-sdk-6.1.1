@@ -580,7 +580,7 @@
 		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
 			<!-- #40112 - start -->
-			<p:outputPanel rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.aiProcessed gt 0}">
+			<p:outputPanel rendered="#{backingBean.aiAvailable}">
 				<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" style="width: 150px;" onclick="epfAI.show()" immediate="true">
 					<p:ajax partialSubmit="true" process="@this" />
 				</p:commandButton>
@@ -739,7 +739,7 @@
 		
 	</p:dialog>
 	<!-- #40112 -->
-	<p:outputPanel rendered="#{backingBean.managedBean.smAppl.aiProcessed gt 0}">
+	<p:outputPanel rendered="#{backingBean.aiAvailable}">
 		<ac:smAIAssistant aiDlg="epfAI" docType="epf" updateId="persInfoDtPanel"
 			smAppl="#{backingBean.managedBean.smAppl}" />
 	</p:outputPanel>

@@ -235,6 +235,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		appl.setAiProcessed(1);
 		recomputeAiProcessed(appl);
+		// Eligible but nothing extracted yet, and AI is switched off: drop to 0 so the AI Assistant
+		// column, upload icon and step icon all stay hidden. An already-extracted application (2)
+		// keeps its AI view regardless of the toggle.
+		if (appl.getAiProcessed() == 1 && !AiDocSupport.isAiEnabled()) {
+			appl.setAiProcessed(0);
+			return;
+		}
 		validateBank(appl);
 		validateTenancy(appl);
 		validateEPF(appl);
