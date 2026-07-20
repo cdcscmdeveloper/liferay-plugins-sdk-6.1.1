@@ -291,11 +291,12 @@
 			</div>
 		</p:confirmDialog>
 		<!-- #34442 - start -->
-		<p:confirmDialog id="submitConfirmDlgId"
-			message="#{contractDetailsBackingBean.confirmationContentMsg}"
-			severity="alert" widgetVar="submitConfirmDlg" closable="true" 
-			style="max-width:700px;white-space:pre-line;text-align:left;line-height:1.5;"
-			header="#{lbl['lbl.msg.confirm.cancel.header']}">
+		<p:dialog id="submitConfirmDlgId"  widgetVar="submitConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line;"
+				value="#{contractDetailsBackingBean.confirmationContentMsg}" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" update="@form"
 					partialSubmit="true" process="@this"
@@ -303,12 +304,13 @@
 					onstart="submitConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
 			</div>
-		</p:confirmDialog>
-		<p:confirmDialog id="approvalConfirmDlgId"
-			message="#{contractDetailsBackingBean.confirmationContentMsg}"
-			severity="alert" widgetVar="approvalConfirmDlg" closable="true" 
-			style="max-width:700px;white-space:pre-line;text-align:left;line-height:1.5;"
-			header="#{lbl['lbl.msg.confirm.cancel.header']}">
+		</p:dialog>
+		<p:dialog id="approvalConfirmDlgId" widgetVar="approvalConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line;"
+				value="#{contractDetailsBackingBean.confirmationContentMsg}" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" update="@form"
 					rendered="#{ctBackingBean.managedBean.contractVer.docType == ParameterConst.doctypeContractCreation
@@ -327,7 +329,7 @@
 						and ctBackingBean.managedBean.contractVer.docType ne ParameterConst.doctypeContractUpdate}"
 					onclick="approvalConfirmDlg.hide()" type="button" />
 			</div>
-		</p:confirmDialog>
+		</p:dialog>
 		<!-- #34442 - end -->
 		
 	</ui:define>
