@@ -40,7 +40,14 @@ public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
 
+	// AI doc extraction master switch from ngep.properties; absent or anything but "1" is off.
+	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
+
 	private AiDocSupport() {
+	}
+
+	public static boolean isAiEnabled() {
+		return AI_ONOFF != null && AI_ONOFF.trim().equalsIgnoreCase("1");
 	}
 
 	/**

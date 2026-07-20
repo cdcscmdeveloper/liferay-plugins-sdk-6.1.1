@@ -190,6 +190,7 @@ import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.backingbean.sm.ai.AiDocSupport;
 import my.ep.web.backingbean.sm.ai.AiDocSupport.AiTenancyDTO;
 import my.ep.web.backingbean.sm.ai.SmAIDocBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
@@ -19771,8 +19772,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	// #9299 - End
 	// #40112 - Start
+	// AI is supplier-only per FRS, and only once the toggle is on and this application has been extracted.
+	public boolean isAiAvailable(){
+		SmAppl appl = getManagedBean().getSmAppl();
+		return AiDocSupport.isAiEnabled() && getManagedBean().isSupplierUser()
+				&& appl != null && appl.getAiProcessed() > 0;
+	}
+
+	public boolean isShowTenancyAiBtn(){
+		SmFacility fac = getManagedBean().getBasicCompanyFacility();
+		return isAiAvailable() && fac != null
+				&& "R".equals(fac.getOwnershipType()) && "B".equals(fac.getFacilityType());
+	}
+
 	public boolean isAiUploadDocRow(Long documentId){
-		return SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), documentId);
+		return isAiAvailable()
+				&& SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), documentId);
 	}
 	
 	public void updateTenancyAI(AiTenancyDTO te){
