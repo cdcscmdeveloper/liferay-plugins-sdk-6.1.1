@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays; //#36738 #40071
+import java.util.Arrays; //#35323 #36738 #40071
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -69,7 +69,7 @@ import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;//#35323
+import my.ep.dto.pm.common.parameter.ParameterReqDTO; //#35323
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
@@ -178,7 +178,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 
 	private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
-
+	
 	//#35323 - Start
 	private static final List<Long> SUPPL_ACC_TYPE_ORDER =
 	        Arrays.asList(
@@ -1486,7 +1486,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 							// to value can not be less than from value
 							// or
 							// previous tier's TO value can not be changed to null if already add next tier
-					throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });				
+					throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
 				}
 				// 29669 - end
 				// 29650 - start
