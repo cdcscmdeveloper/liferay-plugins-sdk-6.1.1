@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style>
+	.disciplinaryNotifyCss {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+		font-weight: bold;
+		color: #0000FF;
+		vertical-align: middle;
+		background-color: #CCE6FF;
+  		border: 1px solid #BADDFF;
+		border-bottom-left-radius: 4px;
+		border-bottom-right-radius: 4px;
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+		height: auto;
+	}
+	
+	.disciplinaryNotifyCssAlign {
+		margin: 10px;
+	}
+	</style>
+
+	<!-- #34097 start-->
+	<div class="disciplinaryNotifyCss">
+		<div class="disciplinaryNotifyCssAlign">
+			<h:outputText
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
+				value="#{amendmentBackingBean.managedBean.disciplinaryActionMsg}" />
+
+			<p:commandLink onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
+				action="#{amendmentBackingBean.onViewDisciplinaryAction}"
+				process="@this" partialSubmit="true" update=":form">
+				<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}"
+						style="font-size: 12px; font-weight: bold; color: #0000FF;" /></u>
+			</p:commandLink>
+			<p:spacer width="2"
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}" />
+
+			<h:outputText
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
+				value="#{lbl['lbl.sm.supplier.to.view.disc.action.details']}" />
+			<h:outputText
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg and not empty amendmentBackingBean.managedBean.supplierMsg}"
+				value="&lt;br /&gt;" escape="false" />
+			<h:outputText
+				rendered="#{not empty amendmentBackingBean.managedBean.supplierMsg}"
+				value="#{amendmentBackingBean.managedBean.supplierMsg}" />
+		</div>
+	</div>
+	<br />
+	<!-- #34097 end-->
+
+	<ac:disciplinaryActionHistory
+		voList="#{amendmentBackingBean.managedBean.disciplineVOs}"
+		btnView="true" />
+</ui:composition>
