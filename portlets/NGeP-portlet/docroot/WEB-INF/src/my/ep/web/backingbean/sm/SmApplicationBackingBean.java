@@ -2756,7 +2756,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// 35311 - end
 			//#40112 - start
 			if (getManagedBean().isSupplierUser()){
-				SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+				SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
 			}
 			//#40112 - end
 			subStartTime = System.currentTimeMillis();
@@ -3922,6 +3922,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					//3460 - End
 					initNonMandatoryAndMandatoryDocs();
 					displayBumiRecommendNote();
+					//#40112 - start
+					if (getManagedBean().isSupplierUser()){
+						SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
+					}
+					//#40112 - end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 					//#40112 - start
@@ -15107,9 +15112,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			
 		}
-		//#40112 - start
-		SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
-		//#40112 - end
 	}
 	
 	//3460 - Start

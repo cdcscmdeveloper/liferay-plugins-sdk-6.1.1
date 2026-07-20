@@ -186,6 +186,9 @@
 					</p:outputPanel>
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 3}">
 						<p:graphicImage id="imgHasAI3" value="/css/images/ai/icon.png" />
+						<p:tooltip for="imgHasAI3" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
 					</p:outputPanel>
 					<br/>
 				</ui:repeat>

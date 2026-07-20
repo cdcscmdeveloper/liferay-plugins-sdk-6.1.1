@@ -135,11 +135,12 @@
 			</div>
 		</p:confirmDialog>
 		<!-- #34442 - start -->
-		<p:confirmDialog id="approvalConfirmDlgId"
-			message="#{terminationBackingBean.confirmationContentMsg}"
-			severity="alert" widgetVar="approvalConfirmDlg" closable="true" 
-			style="max-width:700px;white-space:pre-line;text-align:left;line-height:1.5;"
-			header="#{lbl['lbl.msg.confirm.cancel.header']}">
+		<p:dialog id="approvalConfirmDlgId" widgetVar="approvalConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line;"
+				value="#{terminationBackingBean.confirmationContentMsg}" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
@@ -148,7 +149,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="approvalConfirmDlg.hide()" type="button" />
 			</div>
-		</p:confirmDialog>
+		</p:dialog>
 		<!-- #34442 - end -->
 	</ui:define>
 </ui:composition>
