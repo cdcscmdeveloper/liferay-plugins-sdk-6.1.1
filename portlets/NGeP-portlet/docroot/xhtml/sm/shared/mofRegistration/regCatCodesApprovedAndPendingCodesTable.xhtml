@@ -138,8 +138,9 @@
 					action="#{backingBean.otherDescriptionEdit(catBean)}"
 					rendered="#{(catBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 					catBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or 
-					backingBean.managedBean.approverUser) and backingBean.managedBean.smAppl.pmStatus.statusId ne 
-					SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED}">
+					backingBean.managedBean.approverUser) and (backingBean.managedBean.smAppl.pmStatus.statusId ne 
+					SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED and
+					backingBean.managedBean.smAppl.pmStatus.statusId ne SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER)}">
 					<p:graphicImage
 						value="/css/images/design/edit.png"
 						title="#{lbl['lbl.sm.edit']}"
@@ -512,8 +513,9 @@
 					action="#{backingBean.otherDescriptionEdit(aprvdCatNBean)}"
 					rendered="#{(aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 					aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or 
-					backingBean.managedBean.approverUser) and backingBean.managedBean.smAppl.pmStatus.statusId ne 
-					SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED}">
+					backingBean.managedBean.approverUser) and (backingBean.managedBean.smAppl.pmStatus.statusId ne 
+					SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED and
+					backingBean.managedBean.smAppl.pmStatus.statusId ne SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER)}">
 					<p:graphicImage
 						value="/css/images/design/edit.png"
 						title="#{lbl['lbl.sm.edit']}"
