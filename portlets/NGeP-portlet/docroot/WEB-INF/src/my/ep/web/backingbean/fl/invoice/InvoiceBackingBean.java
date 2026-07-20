@@ -289,6 +289,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
+				
+				// 31788 - Check new user need to be assigned
+				// Noted: Payload use approverlist index, get the first index for new assign user.
+				if(getManagedBean().isAssignNewUser()){
+					reqDTO.setAssignNewUser(Boolean.TRUE);
+					reqDTO.setNewUser(listOfApprover.get(0));
+				}
 			}
 			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setOutcome(action);
@@ -307,12 +314,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 			if(null != getManagedBean().getPmDigiSign()){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
-			}
-			
-			// 31788 - Check new user need to be assigned
-			if(getManagedBean().isAssignNewUser()){
-				reqDTO.setAssignNewUser(Boolean.TRUE);
-				reqDTO.setNewUser(getManagedBean().getNewUser());
 			}
 			
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
@@ -346,6 +347,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),approver,getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(listOfApprover);
+				// 31788 - Check new user need to be assigned
+				// Noted: Payload use approverlist index, get the first index for new assign user.
+				if(getManagedBean().isAssignNewUser()){
+					reqDTO.setAssignNewUser(Boolean.TRUE);
+					reqDTO.setNewUser(listOfApprover.get(0));
+				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if(reqDTO.isDan()){
 						if(null !=getManagedBean().getInvoice().getFlAdjustments()){
@@ -419,20 +426,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					//end 21229
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(messageId, 
-									new String[]{resDTO.getSupplierInvoiceNo()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, 
-									new FacesScopes().getUserLocale())));
-				}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(messageId, 
-									new String[]{resDTO.getSupplierInvoiceNo()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, 
-									new FacesScopes().getUserLocale())));
-				}else{
 					//#31788 - acnowldegement page inactive user
-					if (getManagedBean().isAssignNewUser()) {
+					if (reqDTO.isAssignNewUser()) {
 						messageId = MessageConst.INFO_700128;
 						FacesContext.getCurrentInstance().addMessage(
 								null,
@@ -441,7 +436,33 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 										new String[] {
 												getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
 														ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo(),
-												getManagedBean().getNewUser().getUserName() },
+												reqDTO.getNewUser().getUserName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{resDTO.getSupplierInvoiceNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}
+				}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{resDTO.getSupplierInvoiceNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}else{
+					//#31788 - acnowldegement page inactive user
+					if (reqDTO.isAssignNewUser()) {
+						messageId = MessageConst.INFO_700128;
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										messageId,
+										new String[] {
+												getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+														ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo(),
+												reqDTO.getNewUser().getUserName() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					} else {
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
@@ -1942,11 +1963,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 		}
 		
-		// 31788 - Check FL Approver if DAN and Submit
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isDanExists()){
+		// 31788 - Check FL Approver if DAN and Submit / (Update & Cancel)
+		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isDanExists())
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
-			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(),
+					RoleCode.FL_APPROVER.value());
 			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(flRequest.getFulfilmentReqId());
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(flApprover.getUser().getUserId());
@@ -1957,8 +1981,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			UserResDTO userResDTO = userSO.validateUserAlt(userReqDTO);
 			if (userResDTO.getUserStatus().equals(2)) {
 				getManagedBean().setAssignNewUser(Boolean.TRUE);
-				UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
-				getManagedBean().setNewUser(availableUser.getPmUser());
+//				UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
+//				getManagedBean().setNewUser(availableUser.getPmUser());
 			} else if (userResDTO.getUserStatus().equals(0)) {
 				PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
 				throw new EpException(MessageConst.ERROR_740130,
