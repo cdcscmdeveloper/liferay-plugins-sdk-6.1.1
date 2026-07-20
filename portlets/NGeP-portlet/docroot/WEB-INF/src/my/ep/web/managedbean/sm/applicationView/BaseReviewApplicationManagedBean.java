@@ -374,6 +374,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupplier;
 	private boolean otherDescChangeSupPO;
 	private boolean otherDescChangeSupApprover;
+	private boolean otherDescChangeMaintenance;
 	private String otherDescEdited;
 	private String otherDescOld;
 	private SmSupplierCategory historySuppCategory;
@@ -2808,6 +2809,34 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 			List<SmSupplierCategory> historyOtherDescList) {
 		this.historyOtherDescList = historyOtherDescList;
 	}
+	
+	/**
+	 * @return the otherDescOld
+	 */
+	public String getOtherDescOld() {
+		return otherDescOld;
+	}
+
+	/**
+	 * @param otherDescOld the otherDescOld to set
+	 */
+	public void setOtherDescOld(String otherDescOld) {
+		this.otherDescOld = otherDescOld;
+	}
+	
+	/**
+	 * @return the otherDescChangeMaintenance
+	 */
+	public boolean isOtherDescChangeMaintenance() {
+		return otherDescChangeMaintenance;
+	}
+
+	/**
+	 * @param otherDescChangeMaintenance the otherDescChangeMaintenance to set
+	 */
+	public void setOtherDescChangeMaintenance(boolean otherDescChangeMaintenance) {
+		this.otherDescChangeMaintenance = otherDescChangeMaintenance;
+	}
 	// 36504 - END
 	
 	// 9299 - Start
@@ -2845,19 +2874,5 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.masterAllDataModel = masterAllDataModel;
 	}
 	// 9299 - END
-
-	/**
-	 * @return the otherDescOld
-	 */
-	public String getOtherDescOld() {
-		return otherDescOld;
-	}
-
-	/**
-	 * @param otherDescOld the otherDescOld to set
-	 */
-	public void setOtherDescOld(String otherDescOld) {
-		this.otherDescOld = otherDescOld;
-	}
 
 }

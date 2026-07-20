@@ -168,15 +168,18 @@
 						var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
 						<ac:paginator for="smCompExpCatCodes" />
 						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL1Name}"
+							<ui:remove>#9299 - #40468</ui:remove>
+							<h:outputText value="#{smCompExpCatCode.categoryL1.categoryL1Code} - #{smCompExpCatCode.categoryL1Name}"
 								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL2Name}"
+							<ui:remove>#9299 - #40468</ui:remove>
+							<h:outputText value="#{smCompExpCatCode.categoryL2.categoryL2Code} - #{smCompExpCatCode.categoryL2Name}"
 								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL3Name}"
+							<ui:remove>#9299 - #40468</ui:remove>
+							<h:outputText value="#{smCompExpCatCode.categoryL3.categoryL3Code} - #{smCompExpCatCode.categoryL3Name}"
 								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 					</p:dataTable>

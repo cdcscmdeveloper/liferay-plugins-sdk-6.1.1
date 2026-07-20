@@ -466,8 +466,14 @@ public class QTBriefingSiteVisitBackingBean extends
 			                        allBriefingList.add(temp);
 			                	}else if(dtl.getBsvDate() == null){
 			                		ScQtBsvDtl temp = getSafeTempDtl(dtl);
+			                		
+			                		//28188 -start-
+			                		if(null==dtl.getParentPostponeId()){
 			                		dtl.setParentQtBsvDtlId(temp.getQtBsvDtlId());//Add for tagging parent_qt_bsv_dtl_id(Notification purpose)
 			                		dtl.setParentPostponeId(temp.getQtBsvDtlId());//Add for tagging parentBsvId(QT Maintenance purpose)
+			                		}
+			                		//28188 -end
+			                		
 			                		dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
 			                        populateAddress(dtl);
 			                        allBriefingList.add(dtl);
@@ -562,8 +568,14 @@ public class QTBriefingSiteVisitBackingBean extends
 			                        allSVList.add(temp);
 			                	}else if(dtl.getBsvDate() == null){
 			                		ScQtBsvDtl temp = getSafeTempDtl(dtl);
+			                		
+			                		//28188 -start-
+			                		if(null==dtl.getParentPostponeId()){
 			                		dtl.setParentQtBsvDtlId(temp.getQtBsvDtlId());//Add for tagging parent_qt_bsv_dtl_id(Notification purpose) 
 			                	    dtl.setParentPostponeId(temp.getQtBsvDtlId());//Add for tagging parentBsvId(QT Maintenance purpose) 
+			                		}
+			                		//28188 -end-
+			                		
 			                		dtl.getBsvStatus().setStatusId(QTStatusConst.BSV_PENDING);
 			                        populateAddress(dtl);
 			                        allSVList.add(dtl);
@@ -1755,7 +1767,11 @@ public class QTBriefingSiteVisitBackingBean extends
 	    PmStatus cloneStatus = new PmStatus();
 	    cloneStatus.setStatusId(statusId);
 	    clone.setBsvStatus(cloneStatus);
-
+	    
+	    //28188 -start-
+	    clone.setParentQtBsvDtlId(null);
+	    clone.setParentPostponeId(null);
+	    //28188 -end-
 	    return clone;
 	}
 	//#28188 - End

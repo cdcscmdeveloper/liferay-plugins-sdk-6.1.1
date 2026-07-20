@@ -50,6 +50,8 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		this.getManagedBean().setPtjCodeNameValue(null);
 		this.getManagedBean().getOrgProfileDataModel().resetData();
 		this.getManagedBean().setDisabledSelect(true);
+		// #9299 - #40663
+		populateJabatanDD();
 	}
 
 	/**
@@ -65,10 +67,18 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	public void populateJabatanDD() {
 		if (null != this.getManagedBean().getMinistryProfileId()) {
 			this.getManagedBean().setDisabledPtjGroup(false);
+			// #9299 - #40663
+			this.getManagedBean().setJabatanDD(PmCommonUtil.getJabatanDropdown(this.getManagedBean().getMinistryProfileId()));
 		} else {
 			this.getManagedBean().setDisabledPtjGroup(true);
+			// #9299 - #40663 Start
+			SelectItem[] items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			this.getManagedBean().setJabatanDD(items);
+			// #9299 - #40663 End
 		}
-		this.getManagedBean().setJabatanDD(PmCommonUtil.getJabatanDropdown(this.getManagedBean().getMinistryProfileId()));
 	}
 
 	/**
