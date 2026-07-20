@@ -357,33 +357,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				userGroupReqDTO.setApprovalLimit(sumItemAmt);
 				UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-					/*if(userGroupResDTO.getUserGroupUserList() == null || userGroupResDTO.getUserGroupUserList().isEmpty()){
+					if(userGroupResDTO.getUserGroupUserList() == null || userGroupResDTO.getUserGroupUserList().isEmpty()){
 						//#24764
 						throw new EpException(MessageConst.ERROR_740058);
-					}*/
-					//#31788 - Check FL Approver active status
-					FlFulfilmentRequest flRequest = getManagedBean().getFulfilmentRequest();
-					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserSO.class);
-					FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(flApprover.getUser().getUserId());
-					userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
-					userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
-					userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
-					userReqDTO.setApprovalLimit(sumItemAmt);
-					UserResDTO userResDTO = userSO.validateUserAlt(userReqDTO);
-					if (userResDTO.getUserStatus().equals(2)) {
-						reqDTO.setAssignNewUser(Boolean.TRUE);
-//						UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
-//						getManagedBean().setNewUser(availableUser.getPmUser());
-					} else if (userResDTO.getUserStatus().equals(0)) {
-						PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
-						throw new EpException(MessageConst.ERROR_740130,
-								new String[] { orgProfile.getOrgValidity().getOrgName(),
-										getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()) });
 					}
-					
 				}
 				PmUser approver = null;
 				if(hasSupplierRole() && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
@@ -396,7 +373,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				
 				// 31788 - Check new user need to be assigned
 				// Noted: Payload use approverlist index, get the first index for new assign user.
-				if(reqDTO.isAssignNewUser()){
+				if(getManagedBean().isAssignNewUser()){
+					reqDTO.setAssignNewUser(Boolean.TRUE);
 					reqDTO.setNewUser(approverUserList.get(0));
 				}
 				
@@ -452,8 +430,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						}
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-						messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-						messageId = MessageConst.INFO_700018;
+						if (getManagedBean().isAssignNewUser()) { // #31788 - message id for new assign user
+							messageId = MessageConst.INFO_700128;
+						} else {
+							messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+							messageId = MessageConst.INFO_700018;
+						}
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else {	
 						messageId = MessageConst.INFO_700005;
@@ -1182,6 +1164,32 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				if(resDTO.isDuplicateSupplierDoNo()){
 					throw new EpException(MessageConst.ERROR_740042, new String[]{resDTO.getDuplicatedSupplierDoNoList().get(0),getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
 				}
+			}
+		}
+		//#31788 - Check FL Approver active status (modification/cancel)
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			FlFulfilmentRequest flRequest = getManagedBean().getFulfilmentRequest();
+			IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(flApprover.getUser().getUserId());
+			userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+			userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
+			userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+			userReqDTO.setApprovalLimit(sumItemAmt);
+			UserResDTO userResDTO = userSO.validateUserAlt(userReqDTO);
+			if (userResDTO.getUserStatus().equals(2)) {
+				getManagedBean().setAssignNewUser(Boolean.TRUE);
+//				UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
+//				getManagedBean().setNewUser(availableUser.getPmUser());
+			} else if (userResDTO.getUserStatus().equals(0)) {
+				PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
+				throw new EpException(MessageConst.ERROR_740130,
+						new String[] { orgProfile.getOrgValidity().getOrgName(),
+								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()) });
 			}
 		}
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || // DO Submission by Supplier
