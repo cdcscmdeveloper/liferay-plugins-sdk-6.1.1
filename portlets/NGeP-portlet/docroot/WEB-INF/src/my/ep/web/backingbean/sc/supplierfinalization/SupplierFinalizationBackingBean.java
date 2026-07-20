@@ -1041,6 +1041,7 @@ public class SupplierFinalizationBackingBean extends
 		for (ScQtFinalJustification finalJustification: finalJustificationList){
 			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(finalJustification.getJustification().getReasonCode())){
 				this.getManagedBean().setRenderjustificationTextbox(true);
+				this.getManagedBean().setJustificationText(finalJustification.getJustificationText());
 			}
 		}
 		//#34860 End
