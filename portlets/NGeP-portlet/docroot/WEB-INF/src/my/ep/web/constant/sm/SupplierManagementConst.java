@@ -245,8 +245,9 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_RENEWAL = "S";
 	public static final String APPLIED_CAT = "APPLIED";
 	public static final String PREVIOUS_CAT = "PREVIOUS";
-	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER = 20105;
-	public static final long PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE = 20105;
+	public static final long STATUS_PENDING_SITE_VISIT = 20105;
+	public static final long STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE = 20103;
+	
 	public static final String SECTION_MAIN = "MAIN";
 	public static final String SECTION_RENEWAL = "RENEWAL";
 	// 36504 - END
@@ -1614,12 +1615,12 @@ public class SupplierManagementConst {
 		return PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED;
 	}
 	
-	public long getPM_STATUS_PENDING_SITE_VISIT_AFTER() {
-		return PM_STATUS_PENDING_SITE_VISIT_AFTER;
+	public long getSTATUS_PENDING_SITE_VISIT() {
+		return STATUS_PENDING_SITE_VISIT;
 	}
 	
-	public long getPM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE() {
-		return PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
+	public long getSTATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE() {
+		return STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
 	}
 
 	public String getSECTION_MAIN() {
