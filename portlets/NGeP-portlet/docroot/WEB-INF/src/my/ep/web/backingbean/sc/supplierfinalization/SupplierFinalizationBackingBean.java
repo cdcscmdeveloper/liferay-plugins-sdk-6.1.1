@@ -140,6 +140,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRema
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
@@ -221,6 +223,10 @@ public class SupplierFinalizationBackingBean extends
 	 * Default serialization version ID
 	 */
 	private static final long serialVersionUID = 1L;
+	//#25651 - Start
+	private int countDownloadAllReports = 0;
+	private int countDownloadReports = 0;
+	//#25651 - End
 
 	private static final Logger log = EpLogger
 			.getLogger(SupplierFinalizationBackingBean.class);
@@ -4318,6 +4324,14 @@ return	remarksNotFound;
 				this.getManagedBean().setDemoReq(true);
 			}
 			//retrieveReportTabDtl(getManagedBean().getScQt(), "KT", SourcingConstants.SUPPLIER_FINALIZATION_TASK);
+			
+			// #25651 - Start
+			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
+			reqDTO.setExcludedDocNames(SupplierFinalizationManagedBean.getDirectdownloaddocdefkeys());
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
+			// #25651 - End
+			
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -4462,6 +4476,301 @@ return	remarksNotFound;
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
+	// #25651 - Start
+	/**
+	 * Download each report detail.
+	 * 
+	 * @param scQtEvaluationReportDetail
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void downloadReport(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+		generateDocumentAttachment(scQtFinalizationReportDetail);
+	}
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * Generate document attachment for all committee finalization reports detail.
+	 * 
+	 * @param scQtEvaluationReportDetail
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateDocumentAttachment(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+
+		ScQt scQt = getManagedBean().getScQt();
+		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument().getDocDefinitionKey();
+		String definitionType = scQtFinalizationReportDetail.getDefinationType().getParameterCode();
+		List<String> reportDetailList = reportDetailAttachmentType(docDefinitionKey);
+
+		if (definitionType.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)) {
+			List<ScAttachment> finalizationReportAttachments = new ArrayList<>();
+			for (String reportDetail : reportDetailList) {
+
+				ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
+				StringBuilder fileName = new StringBuilder(reportDetail);
+				fileName.append(".pdf");
+				reportAttachment.setFileName(fileName.toString());
+				reportAttachment.setDocNo(scQt.getQtNo());
+				generateBrefingPaperDetailPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, false);
+				finalizationReportAttachments.add(reportAttachment);
+
+			}
+			downloadAllFiles(this.getManagedBean().getReportDownloadFileName(), finalizationReportAttachments);
+		}
+
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * Generate file document for all committee finalization reports detail.
+	 * 
+	 * @param docDefinitionKey
+	 * @return List<String>
+	 * 
+	 */
+	private List<String> reportDetailAttachmentType(String docDefinitionKey) {
+		int countItemReport = 0;
+		int countPackageReport = 0;
+		List<String> reportDetailList = new ArrayList<>();
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM.equals(docDefinitionKey)) {
+				reportDetailList.add(entry.getValue());
+				this.getManagedBean().setReportDownloadFileName(SourcingConstants.FILE_NAME_LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_UMUM);
+				
+			}  else if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM.equals(docDefinitionKey)) {
+				
+				countItemReport++;
+				if (countItemReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_ITEM);
+				} else {
+					reportDetailList.add(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ITEM);
+				}
+				this.getManagedBean().setReportDownloadFileName(SourcingConstants.FILE_NAME_LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ITEM);
+
+			} else if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ.equals(docDefinitionKey)) {
+				
+				countPackageReport++;
+				if (countPackageReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PAKEJ);
+				} else {
+					reportDetailList.add(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_PAKEJ);
+				}
+				this.getManagedBean().setReportDownloadFileName(SourcingConstants.FILE_NAME_LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_PAKEJ);
+
+			}
+		}
+		return reportDetailList;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * Generate file document for all committee finalization reports detail.
+	 * 
+	 * @param docDefinitionKey
+	 * @return List<String>
+	 * 
+	 */
+	private String downloadReportDetail(String docDefinitionKey) {
+		countDownloadReports++;
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey)) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_GENERAL_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_ITEM_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_ANALYSIS_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_PACKAGE_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_ANALYSIS_RPT_JSP;
+
+			}
+			
+		}
+
+		return reportDetailCodeName;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * Generate file document for all committee finalization reports detail.
+	 * 
+	 * @param docDefinitionKey
+	 * @return List<String>
+	 * 
+	 */
+	private String downloadAllReportDetail(String docDefinitionKey) {
+		countDownloadAllReports++; 
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_GENERAL_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_ITEM_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 3) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_ANALYSIS_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 4) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_PACKAGE_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 5) {
+				reportDetailCodeName = ReportConst.SC_SUPP_FINAL_ANALYSIS_RPT_JSP;
+
+			}
+		}
+
+		return reportDetailCodeName;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * @param attachment
+	 * @param scQt
+	 * @param docDefinitionKey
+	 * @param isDownloadAll
+	 */
+	private void generateBrefingPaperDetailPdf(ScAttachment attachment, ScQt scQt, String docDefinitionKey, boolean isDownloadAll)
+			throws Exception {
+		debugLogger("generateBrefingPaperDetailPdf");
+		populateAttachmentDetails(attachment);
+		
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = scQt.getQtId();
+		//#35015 wip 4ser -Start
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTEvaluationSO.class);
+		
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qtId);
+		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		
+		String reportName = StringUtils.EMPTY;
+		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+			reportName = (isDownloadAll)? downloadAllReportDetail(docDefinitionKey): downloadReportDetail(docDefinitionKey);
+		} else {
+			reportName = (isDownloadAll)? downloadAllReportDetail(docDefinitionKey): downloadReportDetail(docDefinitionKey);
+		}
+	
+		//#35015 wip 4ser -End		
+		String estimatedAmountStr = null;
+		IQTDetailSO qtDetailSO = null;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
+			estimatedAmountStr = estimatedAmount.toPlainString();
+		} finally {
+			qtDetailSO = null;
+		}
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		
+		if (StringUtils.isNotBlank(reportName)) { 
+			generatePdfFromOracle(reportName, paramMap, attachment, false);  
+		} else {
+			log.info("ReportName is empty");
+		}
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * Generate list file documents name for all committee finalization reports detail.
+	 * @return List<Object[]>
+	 */
+		
+	private List<Object[]> reportDetailAttachmentType() {
+			
+		List<Object[]> reportDetailList = new ArrayList<>();
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		int countItemReport = 0;
+		int countPackageReport = 0;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM)) {
+				reportDetailList.add(new Object[] { entry.getKey(), entry.getValue() });
+
+			} else if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM)) {
+				countItemReport++;
+				if (countItemReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(new Object[] { entry.getKey(), SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_ITEM});
+				} else {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ITEM });
+				}
+			}  else if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ)) {
+				countPackageReport++;
+				if (countPackageReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(new Object[] { entry.getKey(), SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PAKEJ});
+				} else {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_PAKEJ });
+				}
+			} 
+		}
+		return reportDetailList;
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * @param docDefinitionKey
+	 * @param fileReportName
+	 * @return ScAttachment
+	 */
+	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
+		debugLogger("generateDocumentAttachment");
+		
+		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
+		ScQt scQt = getManagedBean().getScQt();
+		StringBuilder fileName = new StringBuilder(fileReportName);
+		fileName.append(".pdf");
+		reportAttachment.setFileName(fileName.toString());
+		reportAttachment.setDocNo(scQt.getQtNo());
+		generateBrefingPaperDetailPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, true);	
+		return reportAttachment;
+	}
+	// #25651 - End
+	
 	// #18685 - Start
 	/**
 	 * @throws Exception
@@ -4470,6 +4779,7 @@ return	remarksNotFound;
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
+		List<ScAttachment> attachments = new ArrayList<>(); //#25651
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getDocumentList());
@@ -4494,10 +4804,29 @@ return	remarksNotFound;
 				}
 			}
 		}
+		
+		//#25651 - Start
+		attachments.addAll(scAttachments);
+		List<Object[]> reportDetailList = reportDetailAttachmentType();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
+			for(ScQtFinalizationReportDetail finalizationreport:scQtFinalizationReportDetail){
+				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport.getDefinationType().getParameterCode())){
+					for (Object[] reportDetail : reportDetailList) {
+						String codeReportName = (String) reportDetail[0];
+						String fileReportName = (String) reportDetail[1];
+					    if(codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())){
+					    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
+					    }
+					}
+				}
+			}
+		}
+		//#25651 - Start
 
 		// Generate all the reports before submission
 		if (!skipDownload) { // 38523
-			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+			downloadAllFiles("LAPORAN KERTAS TAKLIMAT", scAttachments);
 		}
 		// #18685 - End.
 	}
@@ -13244,7 +13573,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		} else {
 			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId,
-					null);
+					null,null);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				// BigDecimal supplierNo = (BigDecimal) row[1];
@@ -13291,7 +13620,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		
 		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.FINANCIAL_DOCTYPE);
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
+				selectedZoneId,null);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
