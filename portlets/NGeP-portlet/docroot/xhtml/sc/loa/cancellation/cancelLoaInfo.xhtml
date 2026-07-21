@@ -14,13 +14,13 @@
 					<tr>
 						<td width="10%"><h:outputLabel
 								value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>						
-						<td style="width: 10%">
+						<td style="width: 10%"><ui:remove>#26284 - fix loa hyperlink</ui:remove>
 							<c:if test="#{lOACancelDetailBackingBean.managedBean.isDpMaintenanceSource()}">						
 					  			<p:commandLink value="#{lOACancelDetailBackingBean.managedBean.scLoa.brandNew ?
 								lbl['lbl.sc.system.generated'] :
 								lOACancelDetailBackingBean.managedBean.scLoa.loaNo}" 
 					       			process="@this" partialSubmit="true" styleClass="blue_font"
-					       			action="#{ctBackingBean.goToLoaView(lOACancelDetailBackingBean.managedBean.scLoa)}"/>
+					       			action="#{lOADetailBackingBean.viewLOA(lOACancelDetailBackingBean.managedBean.scLoa.loaId)}"/>
 				       		</c:if>
 				       		<c:if test="#{!lOACancelDetailBackingBean.managedBean.isDpMaintenanceSource()}">						
 					  			#{lOACancelDetailBackingBean.managedBean.scLoa.loaNo}
