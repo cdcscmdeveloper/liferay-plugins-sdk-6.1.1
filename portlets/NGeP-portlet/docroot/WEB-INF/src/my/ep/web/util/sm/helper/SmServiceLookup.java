@@ -29,6 +29,7 @@ import my.ep.biz.service.sm.address.ISmAddressSO;
 import my.ep.biz.service.sm.application.ISupplierApplicationSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.blacklistDirector.IBlacklistDirectorSO;
+import my.ep.biz.service.sm.bpmWorkflowCallback.IBpmWorkflowCallbackSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.common.spki.ISpkiSO;
@@ -701,4 +702,11 @@ public class SmServiceLookup {
 		return (IAIApiProcessSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IAIApiProcessSO.class);
 	}
+	
+	//#33694 - Start
+	public static IBpmWorkflowCallbackSO getBpmWorkflowCallbackSO() {
+		return (IBpmWorkflowCallbackSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IBpmWorkflowCallbackSO.class);
+	}
+	//#33694 - End
 }

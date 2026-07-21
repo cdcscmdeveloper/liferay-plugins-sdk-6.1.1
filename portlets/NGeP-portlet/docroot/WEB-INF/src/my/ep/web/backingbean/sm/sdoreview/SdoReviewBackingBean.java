@@ -318,6 +318,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				assignedPOName = setPOJobRoleWeigtage(reqDTO);
 			}
 			
+			// #33694 - Start
+			if (StringUtils.isEmpty(assignedPOName)) {
+				// sendNotificationToRA();
+			}
+			
 			// 29810 - start - add new data type in SMMOFRegDataType - saufi
 			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
 			if(this.getManagedBean().getSmAppl().getSdoReceivedDate() != null){

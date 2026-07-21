@@ -9817,6 +9817,52 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		// #40031 - End
 		
+		// #33694 - Start
+		String s = "";
+		MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
+				SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
+		if (getManagedBean().getSmAppl().getPmStatus().getStatusId()
+				.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
+
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(SmServiceLookup.getUserSO().retrieveLastPoOrApprover(
+					this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.PO_HQ));
+			PmUser po = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
+
+			boolean pmOrgStats = false;
+			if (po.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& !EntityHelper.isCollectionEmpty(po.getPmUserOrgs())) {
+				for (PmUserOrg userOrg : po.getPmUserOrgs()) {
+					if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						pmOrgStats = true;
+						break;
+					}
+				}
+			}
+
+			if (po.getRecordStatusFlg() == 1 && pmOrgStats) {
+				reqDTO.setPoLoginId(po.getLoginId());
+				reqDTO.setUserId(po.getUserId());
+			} else {
+				IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+				ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+				zoneReqDTO.setStateId(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()
+						.get(0).getSmAddress().getPmState().getStateId());
+
+				reqDTO.setCurrentPoUserId(po.getUserId());
+				reqDTO.setCurrentPoUserName(po.getUserName());
+				// getManagedBean().getAssignNewUser().add(po.getLoginId());
+				PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
+						getManagedBean().getSmAppl().getSupplierType(), getManagedBean().getSmAppl().getApplType(),
+						getManagedBean().getSmAppl().getApplCategoryType(),
+						zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
+				reqDTO.setPoLoginId(newPo.getLoginId());
+				reqDTO.setUserId(newPo.getUserId());
+			}
+		}
+		// #33694 - End
+		
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -9842,7 +9888,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (!bpmAppl.isActiveAppl()) {
 			bpmAppl.setActiveAppl(true);
 		}
-		String s = "";
+		
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 			s = SupplierManagementConst.SUPP_SUBMIT_CANCREG_APPL;
@@ -9855,9 +9901,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				br.setBranchCode(br.getSupplierBranchId());
 			}
 		}
-
-		MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
-				SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
 
 		if (getManagedBean().getTaskId() != null
 				&& !getManagedBean().getTaskId().equalsIgnoreCase("")) {
