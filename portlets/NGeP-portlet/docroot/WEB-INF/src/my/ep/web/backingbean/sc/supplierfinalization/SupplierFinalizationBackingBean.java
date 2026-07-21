@@ -4826,7 +4826,7 @@ return	remarksNotFound;
 
 		// Generate all the reports before submission
 		if (!skipDownload) { // 38523
-			downloadAllFiles("LAPORAN KERTAS TAKLIMAT", attachments);
+			downloadAllFiles("LAPORAN KERTAS TAKLIMAT", attachments); //#25651
 		}
 		// #18685 - End.
 	}
