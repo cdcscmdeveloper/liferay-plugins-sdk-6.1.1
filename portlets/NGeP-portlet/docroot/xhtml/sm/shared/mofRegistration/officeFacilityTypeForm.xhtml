@@ -215,8 +215,7 @@
 
 								<!-- #40112 -->
 								<p:outputPanel layout="inline"
-									rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' and backingBean.managedBean.supplierUser
-									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B' and backingBean.managedBean.smAppl.aiProcessed gt 0}">
+									rendered="#{backingBean.showTenancyAiBtn}">
 									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" 
 										styleClass="ai-assistant-btn" style="width: 150px;" onclick="tenancyAI.show()" immediate="true">
 										<p:ajax partialSubmit="true" process="@this" />
@@ -745,7 +744,7 @@
 		<!-- 29480 - Update: remove code for Re-endorsed CR -->
 	</p:panel>
 	<!-- #40112 -->
-	<p:outputPanel rendered="#{backingBean.managedBean.smAppl.aiProcessed gt 0}">
+	<p:outputPanel rendered="#{backingBean.aiAvailable}">
 		<ac:smAIAssistant aiDlg="tenancyAI" docType="tenancy" updateId="offInfPan"
 			smAppl="#{backingBean.managedBean.smAppl}"/>
 	</p:outputPanel>
