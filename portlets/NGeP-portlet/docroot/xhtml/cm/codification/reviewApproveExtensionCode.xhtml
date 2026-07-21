@@ -59,7 +59,7 @@
 				<ac:confirmationPopupCM
 					id="pendExtCodeApp_endorsePublishDlg" widget="pendExtCodeApp_endorsePublishDlg"
 					loadingWidget="pageBlockWidget"
-					okAction="unspscCodeBackingBean.submitToReviewExt('SUBMIT')" hasParam="false"
+					okParam="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}" hasParam="true"
 					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.endorse']}"
 					selectedExtItem="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0]}"
@@ -69,7 +69,7 @@
 				<ac:confirmationPopupCM
 					id="pendExtCodeApp_recommendToSupplierDlg" widget="pendExtCodeApp_recommendToSupplierDlg"
 					loadingWidget="pageBlockWidget"
-					okAction="unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')" hasParam="false"
+					okParam="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}" hasParam="true"
 					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.recommend']}"
 					itemList="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"

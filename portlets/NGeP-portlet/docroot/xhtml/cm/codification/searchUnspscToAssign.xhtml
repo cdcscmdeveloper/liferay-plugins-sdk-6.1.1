@@ -161,7 +161,7 @@
 							action="#{codificationBackingBean.assignCodeConfirmation(unspscObj)}"
 							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}"
 							update="@form"
-							oncomplete="asignCodeDialogConfirm.show();">
+							oncomplete="assignCodeDialogConfirm.show();">
 								#{unspscObj.unspscCode}
 						</p:commandLink>
 						<!-- #34447 End -->
@@ -267,7 +267,7 @@
 			</p:blockUI>
 
 			<ac:confirmationPopupCM
-				id="asignCodeDialogConfirm" widget="asignCodeDialogConfirm"
+				id="assignCodeDialogConfirm" widget="assignCodeDialogConfirm"
 				loadingWidget="pageBlockWidget"
 				okParam="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
 				hasParam="true"
