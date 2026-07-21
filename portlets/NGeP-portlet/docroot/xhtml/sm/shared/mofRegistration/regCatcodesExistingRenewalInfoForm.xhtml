@@ -118,10 +118,7 @@
 						<p:commandLink partialSubmit="true" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()" update=":form" process="@this"
 							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
-							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or 
-							backingBean.managedBean.approverUser) and backingBean.managedBean.smAppl.pmStatus.statusId ne 
-							SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED}">
+							rendered="#{backingBean.rulesEditOtherDescription(aprvdCatBean, SupplierManagementConst.SECTION_MAIN)}">
 							<p:graphicImage value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}" style="float:right;" />
 						</p:commandLink>
@@ -145,12 +142,8 @@
 							onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
 							update=":form" process="@this"
-							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
-							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and 
-							(backingBean.managedBean.poUser or backingBean.managedBean.approverUser or
-							(backingBean.managedBean.smAppl.applType eq 'R' and backingBean.managedBean.supplierUser)) and
-							backingBean.managedBean.smAppl.pmStatus.statusId ne SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED}">
+							action="#{backingBean.otherDescriptionEdit(aprvdCatBean, SupplierManagementConst.SECTION_RENEWAL)}"
+							rendered="#{backingBean.rulesEditOtherDescription(aprvdCatBean, SupplierManagementConst.SECTION_RENEWAL)}">
 							<p:graphicImage
 								value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"

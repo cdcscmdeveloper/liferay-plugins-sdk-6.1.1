@@ -2466,11 +2466,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
-				if (getManagedBean().isViewApplicationHistory()) {
-					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				} else {
-					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistoryDataMaintenance(cat.getSupplierCategoryId()));
-				}
+				cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
 				cat.setOtherDescChangeMaintenance(false);
 
 				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
@@ -2485,7 +2481,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							getManagedBean().setOtherDescChangeApprover(true);
 							getManagedBean().setOtherDescChangeSupplier(true);
 							getManagedBean().getEditVO().setAppEditCategory(true);
-						} else if (!getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+						} else if (!getManagedBean().isOtherDescChangeSupApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
 							getManagedBean().setOtherDescChangeSupApprover(true);
 							getManagedBean().setOtherDescChangeSupplier(true);
 							getManagedBean().getEditVO().setAppEditCategory(true);
@@ -2504,6 +2500,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							getManagedBean().setOtherDescChangeMaintenance(true);
 							getManagedBean().setOtherDescChangeApprover(true);
 							getManagedBean().setOtherDescChangeSupplier(true);
+							getManagedBean().getEditVO().setAppEditCategory(false);
 						}
 					}
 				}
