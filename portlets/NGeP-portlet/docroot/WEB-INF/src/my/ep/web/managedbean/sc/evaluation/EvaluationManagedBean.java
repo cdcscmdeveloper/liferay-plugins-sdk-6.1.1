@@ -725,6 +725,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean comingFromNextButton;//#38151
 	private boolean weightage35384WIP; //#38151
 	
+	// 33222 - start
+	private ScQtCommittee nextQtCommittee;
+	// 33222 - end 
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4839,4 +4843,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setTooltipDemo(String tooltipDemo) {
 		this.tooltipDemo = tooltipDemo;
 	}
+	
+	// 33222 - start
+	public ScQtCommittee getNextQtCommittee() {
+		return nextQtCommittee;
+	}
+
+	public void setNextQtCommittee(ScQtCommittee nextQtCommittee) {
+		this.nextQtCommittee = nextQtCommittee;
+	}
+	// 33222 - end
 }

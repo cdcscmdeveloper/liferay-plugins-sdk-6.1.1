@@ -1994,10 +1994,6 @@ if (CollectionUtils.isNotEmpty(
 
 	}
 	// 25037 - start
-	private ICommitteSO getCommitteeSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-	}
 	/**
 	 * Navigate between main screen and update committee member screen. Populate
 	 * data based on action type provided.

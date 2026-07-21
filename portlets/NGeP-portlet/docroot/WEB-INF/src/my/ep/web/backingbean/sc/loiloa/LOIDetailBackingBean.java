@@ -8656,13 +8656,6 @@ public class LOIDetailBackingBean extends
 	// 34491 - end
 
 	// 34491 - start
-	private ICommitteSO getCommitteeSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-	}
-
-	// 34491 - end
-
-	// 34491 - start
 	private void prepareMemberUpdate() {
 		ScQtCommittee fcQtCommittee = this.getManagedBean().getFinalizationQtCommittee();
 		List<ScCommitteeMemberHistory> histories = getCommitteeSO().getMergedHistory(fcQtCommittee, false);

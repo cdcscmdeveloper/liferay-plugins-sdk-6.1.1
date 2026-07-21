@@ -2315,11 +2315,6 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setMemberHistoryPaginator(selectedHistoryMember);
 	}
 	
-	private ICommitteSO getCommitteeSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-	}
-    
     private void restoreUnconfirmChanges(){
     	if(this.getManagedBean().getCommitteeMemberActivity() == null){
     		this.getManagedBean().setCommitteeMemberActivity(new ArrayList<ScCommitteeMember>());

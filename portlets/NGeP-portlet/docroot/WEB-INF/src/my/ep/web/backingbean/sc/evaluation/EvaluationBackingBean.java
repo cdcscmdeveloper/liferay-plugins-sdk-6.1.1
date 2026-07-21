@@ -10810,11 +10810,22 @@ private void retriveCommitteeRemarksList(){
 			} else {
 				// 33222 - start
 				String taskName = this.getManagedBean().getTaskName();
-				if (Arrays
-						.asList(SCProcessNameConst.FINALISE_EC_EVALUATION, SCProcessNameConst.FINALISE_FEC_EVALUATION)
+				if (Arrays.asList(SCProcessNameConst.SIGNOFF_EC_EVALUATION, SCProcessNameConst.SIGNOFF_FEC_EVALUATION)
 						.contains(taskName)) {
 					getManagedBean().setAutoUpdate(true);
-					validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(), false);// 33222
+					validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(), false);
+				} else if (Arrays.asList(SCProcessNameConst.SIGNOFF_OC_EVALUATION,
+						SCProcessNameConst.SIGNOFF_TEC_EVALUATION).contains(taskName)) {
+					boolean validateDeskofficer = false;
+					try {
+						validateCommitteeUsers(this.getManagedBean().getScQt(), this.getManagedBean()
+								.getNextQtCommittee());
+					} catch (Exception e) {
+						validateDeskofficer = true;
+					}
+					if (validateDeskofficer || null == this.getManagedBean().getNextQtCommittee()) {
+						validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(), false);
+					}
 				}
 				// 33222 - end
 				getManagedBean().setAutoUpdate(false);
@@ -11290,6 +11301,11 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 		//#10542 - end
+		
+		// 33322 - start
+		populateNextCommittee(this.getManagedBean().getScQt().getQtId());
+		// 33322 - end
+		
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_EC_EVALUATION
@@ -20301,4 +20317,33 @@ private void retriveCommitteeRemarksList(){
 		return newScoreValue;
 	}
 	//#38151 end
+	
+	// 33322 - start
+	private void populateNextCommittee(Long qtId) {
+		String taskName = this.getManagedBean().getTaskName();
+		String committeeType = "";
+		if (SCProcessNameConst.SIGNOFF_OC_EVALUATION.equals(taskName)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+		} else if (SCProcessNameConst.SIGNOFF_TEC_EVALUATION.equals(taskName)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
+		} else {
+			return;
+		}
+		ISearchBean<ScQtCommittee> commSearchBean = new SearchBean<ScQtCommittee>();
+		commSearchBean.getDataFilterBeans().add(
+				new SearchFilterBean("scQt.qtId", SearchOperator.OPERATOR_EQUALS.value(), qtId));
+		commSearchBean.getDataFilterBeans().add(
+				new SearchFilterBean("scCommittee.committeeType.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
+						committeeType));
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setCommSearchBean(commSearchBean);
+
+		CommitteResDTO resDTO = this.getCommitteeSO().retriveQtCommitteDtls(reqDTO);
+		List<ScQtCommittee> qtCommittees = resDTO.getQtCommitteResultBean().getResultList();
+		if (CollectionUtils.isNotEmpty(qtCommittees)) {
+			this.getManagedBean().setNextQtCommittee(qtCommittees.get(0));
+		}
+	}
+	// 33322 - end
+
 }
