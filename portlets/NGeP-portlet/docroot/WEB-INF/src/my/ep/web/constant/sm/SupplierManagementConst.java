@@ -249,7 +249,6 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE = 20105;
 	public static final String SECTION_MAIN = "MAIN";
 	public static final String SECTION_RENEWAL = "RENEWAL";
-	public static final String SECTION_SDM = "MAINTENANCE";
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
@@ -1629,10 +1628,6 @@ public class SupplierManagementConst {
 	
 	public String getSECTION_RENEWAL() {
 		return SECTION_RENEWAL;
-	}
-	
-	public String getSECTION_SDM() {
-		return SECTION_SDM;
 	}
 	// 36504 - END
 	
