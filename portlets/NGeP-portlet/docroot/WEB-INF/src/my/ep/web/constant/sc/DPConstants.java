@@ -162,6 +162,23 @@ public class DPConstants {
 	public static final int NUMBER_ZERO = 0;
 	
 	public static final int NUMBER_ONE = 1;
+	
+	// 33224 - start
+	public static final String ROLE_CODE_REQUISITIONER = "REQUISITIONER";
+	public static final String STATUS_COMPLETED = "COMPLETED";
+	public static final String STATUS_PENDING = "PENDING";
+	public static final String RESPONSE_ACTIVE_USER = "1";
+	public static final String RESPONSE_NO_ACTIVE_USER = "5";
+	public static final String[] RESPONSE_ANOTHER_ACTIVE_USER = new String[] { "2", "3", "4" };
+	public static final String COMPOSITE_SOURCING_DP = "SourcingDP";
+	public static final String PROCESS_PI_CREATION = "PurchaseInquiryCreation";
+	public static final String PROCESS_PID_CREATION = "PurchaseInDefaultCreation";
+	public static final String PROCESS_SQ_CREATION = "SimpleQuoteCreation";
+	public static final String PROCESS_SUPP_CODIFY = "SupplierCodification";
+	public static final String OPERATION_PI_ASSIGNED_RN_USERS = "assignedRNUsers";	
+	public static final Long VALUE_OF_ONE = 1L;
+	// 33224 - end
+
 	// 26059 - end
 	private DPConstants() {
 		// This constructor is intentionally left empty
