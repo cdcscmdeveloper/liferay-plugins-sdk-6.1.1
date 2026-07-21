@@ -1026,15 +1026,15 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getEndorsementReportActiveIndex());
 		
-		PmReason justificationParam = this.getManagedBean().getJustification();
-		if (justificationParam == null) {
-			this.getManagedBean().setJustification(new PmReason());
-		} else {
-			if (justificationParam.getReasonId() != null
-					&& JUSTIFICATION_OTHERS.equalsIgnoreCase(justificationParam.getReasonCode())) {
-				this.getManagedBean().setRenderjustificationTextbox(true);
-			}
-		}
+//		PmReason justificationParam = this.getManagedBean().getJustification();
+//		if (justificationParam == null) {
+//			this.getManagedBean().setJustification(new PmReason());
+//		} else {
+//			if (justificationParam.getReasonId() != null
+//					&& JUSTIFICATION_OTHERS.equalsIgnoreCase(justificationParam.getReasonCode())) {
+//				this.getManagedBean().setRenderjustificationTextbox(true);
+//			}
+//		}
 		//#34860 Start adli
 		List<ScQtFinalJustification> finalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
@@ -2782,6 +2782,14 @@ public class SupplierFinalizationBackingBean extends
 		log.info("submitSuppFinalization");
 		String outcome = this.getManagedBean().getOutcome();
 		this.getManagedBean().setAction(outcome);
+		//#34860 Start
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+			List<ScQtFinalJustification> finalJustificationList = this.getManagedBean().getFinalJustificationList();
+			if (CollectionUtils.isEmpty(finalJustificationList)) {
+				throw new EpException(MessageConst.ERR_760832);
+			}
+		}
+		//#34860 End
 		//#21692 - Start
 		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
 			checkSupplierAwardedRejectValidityExtension();
@@ -2956,6 +2964,7 @@ public class SupplierFinalizationBackingBean extends
 			if (createNewBP) {
 				addBriefingPaper(scQtFinalization);
 			}
+			updateBPMTask(outcome, null, reqDTO);
 			//34860 start
 			if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -2964,7 +2973,6 @@ public class SupplierFinalizationBackingBean extends
 				saveQtFinalJustification(qtSuppFinalizationSO);
 			}				
 			//34860 end
-			updateBPMTask(outcome, null, reqDTO);
 			// 38523 - refactor code - end
 			// 38523 - indenting codes - end
 		}
@@ -3939,7 +3947,10 @@ return	remarksNotFound;
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.saveSupplierFinalization(reqDTO);
 			//#34860 start adli
-			saveQtFinalJustification(qtSuppFinalizationSO);			
+			String outcome = this.getManagedBean().getOutcome();
+			if (BpmOutcomeConst.BPM_SAVE.equals(outcome)){
+				saveQtFinalJustification(qtSuppFinalizationSO);
+			}					
 			//#34860 end
 			
 			reloadData(resDTO);				
@@ -3956,7 +3967,7 @@ return	remarksNotFound;
 		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		Long qtFinalizationId = this.getManagedBean().getFinalJustificationList().get(0).getQtFinalizationId();
+		Long qtFinalizationId = this.getManagedBean().getScQtFinalization().getFinalizationId();
 		
 		for(String reasonCode : reasonIdList){
 			PmReason pmReason = getReasonByCategoryAndCode(
@@ -5148,7 +5159,7 @@ return	remarksNotFound;
 		// #18685 - Start
 		paramMap.put("flowType", "tasklist");
 		// #18685 - End
-		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
+		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);
 	}
 
 	private void generateEndorsementReportFromVelocityToPdf(
@@ -10609,6 +10620,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		log.info("justificationChange");
 		//#34860 adli start
 		List<String> values = this.getManagedBean().getJustificationReasonList();
+		boolean hasOthers = false;
 		for (String reasonCode : values){
 //			String reasonCode = (String) event.getComponent().getAttributes()
 //					.get("value");
@@ -10624,12 +10636,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				this.getManagedBean().setJustification(reason);
 				if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reasonCode)) {//#36840
 					this.getManagedBean().setRenderjustificationTextbox(true);
+					hasOthers = true;
 					break;
-				} else {
-					this.getManagedBean().getScQtFinalization().setJustificationText(null);
-				}
+				} 
 			}
 			//Bug #29707 - end
+		}
+		if (!hasOthers) {
+			this.getManagedBean().setRenderjustificationTextbox(false);
+		    this.getManagedBean().setJustificationText(null);
 		}
 		//#34860 End
 	}
