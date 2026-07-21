@@ -19193,43 +19193,62 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	
-	public boolean rulesEditOtherDescription(SmSupplierCategory catBean, String section) {
+	/**
+	 * Determines whether the "Other Description" field can be edited for a
+	 * supplier category based on the category type, application section,
+	 * user role, application type, and current application status.
+	 *
+	 *
+	 * @param catBean
+	 * @param section
+	 * @return {@code true} if the "Other Description" field is editable based on
+	 *         the configured business rules; {@code false} otherwise.
+	 */
+	public boolean rulesEditOtherDescription(SmSupplierCategory catBean,
+			String section) {
+		
+		log.info("36504 SUPPLIER CATEGORY ID: -> "
+				+ catBean.getSupplierCategoryId());
+		log.info("36504 CategoryName: -> "
+				+ catBean.getPmCategoryL3().getCategoryName());
+		log.info("36504 ParameterCode: -> "
+				+ catBean.getPmCategoryL3().getCategoryTypeCode()
+						.getParameterCode());
 
-	    String type = catBean.getPmCategoryL3()
-	                         .getCategoryTypeCode()
-	                         .getParameterCode();
+		String type = "";
 
-	    Long status = getManagedBean().getSmAppl()
-	                             .getPmStatus()
-	                             .getStatusId();
-	    
+		if (catBean != null && catBean.getPmCategoryL3() != null) {
+			type = catBean.getPmCategoryL3().getCategoryTypeCode()
+					.getParameterCode();
+		}
+
+		Long status = getManagedBean().getSmAppl().getPmStatus().getStatusId();
+
 		boolean applTypeRenewal = getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_RENEWAL);
-	    boolean filter = false;
-	    
-	    if(section.equalsIgnoreCase(SupplierManagementConst.SECTION_MAIN)) {
-	    	filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type)
-		            || SupplierManagementConst.CAT_TYPE_MANUFACTURING.equals(type))
-		        && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())
-		        && status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
-		        && status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER
-		        && status != SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
-	    } else if(section.equalsIgnoreCase(SupplierManagementConst.SECTION_RENEWAL)) {
-	    	filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type)
-		            || SupplierManagementConst.CAT_TYPE_MANUFACTURING.equals(type))
-		        && (getManagedBean().isPoUser() || getManagedBean().isApproverUser() ||
-		        	(applTypeRenewal && getManagedBean().isSupplierUser()))
-		        && status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
-		        && status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER
-		        && status != SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
-	    } else if(section.equalsIgnoreCase(SupplierManagementConst.SECTION_SDM)) {
-	    	filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type)
-		            || SupplierManagementConst.CAT_TYPE_MANUFACTURING.equals(type))
-		        && getManagedBean().isApproverUser();
-	    }
-	    	
-	    
-	    return filter;
+		boolean filter = false;
+
+		if (section.equalsIgnoreCase(SupplierManagementConst.SECTION_MAIN)) {
+			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
+					.equals(type))
+					&& (getManagedBean().isPoUser() || getManagedBean()
+							.isApproverUser())
+					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
+					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER
+					&& status != SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
+		} else if (section
+				.equalsIgnoreCase(SupplierManagementConst.SECTION_RENEWAL)) {
+			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
+					.equals(type))
+					&& (getManagedBean().isPoUser()
+							|| getManagedBean().isApproverUser() || (applTypeRenewal && getManagedBean()
+							.isSupplierUser()))
+					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
+					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER
+					&& status != SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
+		}
+
+		return filter;
 	}
 	// 36504 - END
 		
