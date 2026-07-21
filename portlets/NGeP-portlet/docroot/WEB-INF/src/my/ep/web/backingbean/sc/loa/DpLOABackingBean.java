@@ -16,6 +16,7 @@ import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -26,22 +27,29 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
+import org.apache.commons.lang.StringUtils;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -254,4 +262,60 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		}							
 		return validDate;	
 	}
+	
+	// 26284 - Start
+	/**
+	 * Retrieves and sets the disciplinary action history for the given
+	 * supplier. This method fetches the disciplinary action details for the
+	 * specified {@link SmSupplier} and updates the managed bean with the
+	 * retrieved data. If no disciplinary actions are found, an empty list is
+	 * set. Finally, it triggers the display of the disciplinary action history
+	 * dialog.
+	 * 
+	 * @param smSupplier
+	 *            the supplier whose disciplinary action history needs to be
+	 *            retrieved.
+	 */
+	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {
+		SmSupplier currSupp = smSupplier;
+		if (currSupp != null) {
+			List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
+			if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
+				getManagedBean().setDisciplineVOs(voList);
+			} else {
+				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+			}
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		// #32643,32642 - Start
+		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		// #32643,32642 - End
+	}
+
+	/**
+	 * Checks if the given supplier has an active disciplinary action.
+	 * 
+	 * @param supplier
+	 *            the {@link SmSupplier} whose disciplinary action status needs
+	 *            to be checked.
+	 * @return {@code true} if the supplier has an active disciplinary action,
+	 *         {@code false} otherwise.
+	 */
+	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
+		try {
+			ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+
+			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+			reqDTO.setSupplier(supplier);
+			return supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO)
+					.isDisciplinaryActionActiveDp();
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "getDisciplinaryActionActive",
+					StringUtils.EMPTY, "getDisciplinaryActionActive", getUserIdSessionFromLoginId(), e);
+		}
+		return false;
+	}
+	// 26284 - End
 }
