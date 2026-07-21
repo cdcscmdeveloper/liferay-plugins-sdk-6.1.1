@@ -2784,8 +2784,8 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setAction(outcome);
 		//#34860 Start
 		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
-			List<ScQtFinalJustification> finalJustificationList = this.getManagedBean().getFinalJustificationList();
-			if (CollectionUtils.isEmpty(finalJustificationList)) {
+			List<String> selectedJustificationList = this.getManagedBean().getJustificationReasonList();
+			if (CollectionUtils.isEmpty(selectedJustificationList)) {
 				throw new EpException(MessageConst.ERR_760832);
 			}
 		}
