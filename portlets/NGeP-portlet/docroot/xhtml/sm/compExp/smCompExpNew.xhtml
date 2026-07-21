@@ -257,8 +257,9 @@
 		</div>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
+			<!-- 9299 - 40715 -->
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sm.comp.exp.add.new.cat.code.instruction']}" />
+				value="#{lbl['lbl.sm.comp.exp.add.new.cat.code.instruction']}" escape="false"/>
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
 				value="#{smCompExpMB.newMaster.compExpMasterCats}"
 				var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
@@ -395,10 +396,11 @@
 				value="#{lbl['lbl.sm.comp.exp.add.new.cancel']}" />
 		</div>
 		<ac:smPtjPopup okAction="smCompExpBB.selectAgencyAction" />
+		<!-- 9299 - 40711 -->
 		<p:confirmDialog closable="true"
 			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
 			id="confirmDelSelectedCatId"
-			message="#{lbl['lbl.sm.comp.exp.update.project.cat.code.delete.msg']}" severity="alert"
+			message="#{lbl['lbl.sm.comp.exp.delete.cat.codes.confirm.msg']}" severity="alert"
 			widgetVar="confirmDelSelectedCatDialogWV">
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpCatMaster}"

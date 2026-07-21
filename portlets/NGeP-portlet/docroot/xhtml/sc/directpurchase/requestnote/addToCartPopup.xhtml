@@ -144,6 +144,7 @@
 					<td><h:panelGroup id="justValue">
 							<ui:remove>27868 - start </ui:remove>
 							<p:selectOneMenu style="margin-bottom: 5px; width: 225px;"
+							    panelStyle="overflow-y: scroll; width:400px; height:100px;"
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 								id="justificationId" label="#{lbl['lbl.sc.reason']}"
 								required="#{requestNoteBackingBean.managedBean.justRequired}"
