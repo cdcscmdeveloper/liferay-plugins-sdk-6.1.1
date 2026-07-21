@@ -70,7 +70,6 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	
 	// #28895_35501 - AUDIT TRAIL SM
 	private PmUser oldSelectedUser;
-	
 	private String ctSupplierMsgNonDA; //#26186
 	
 	public ProfilePersonalizationManagedBean(){}
