@@ -240,6 +240,8 @@ public class SupplierManagementConst {
 	// 36504 - START
 	public static final String SUPPLIER_APPROVER = "SA";
 	public static final String SUPPLIER_PO = "SP";
+	public static final String APPLIED_CAT = "APPLIED";
+	public static final String PREVIOUS_CAT = "PREVIOUS";
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
@@ -783,6 +785,7 @@ public class SupplierManagementConst {
 	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
 	public static final int PHASE_1 = 1;
 	// #9299 End
+	public static final Long APP_VERSION_REDMINE_NO_40112 = 40112L;		//#40112
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
@@ -807,6 +810,14 @@ public class SupplierManagementConst {
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
 //	#37925 END
+	
+	// #38001 START
+	public static final String PO_RECOMMENDATION_APPROVE_MY = "Lulus";
+	public static final String PO_RECOMMENDATION_REJECT_MY = "Tolak";
+	public static final String PO_RECOMMENDATION_APPROVE_EN = "Approve";
+	public static final String PO_RECOMMENDATION_REJECT_EN = "Reject"; 
+	// #38001 END
+	
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;

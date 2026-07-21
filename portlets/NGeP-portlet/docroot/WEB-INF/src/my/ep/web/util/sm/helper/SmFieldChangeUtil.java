@@ -209,7 +209,7 @@ public class SmFieldChangeUtil {
 				} else if (currentPage
 						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)
 						|| currentPage
-						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) { //#38890
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) { //#40112
 					// smSupplierBanks
 					setBankFieldChangeStatus(latestAppl, currAppl);
 				}
@@ -221,7 +221,7 @@ public class SmFieldChangeUtil {
 		}
 	}
 	
-	//#38890
+	//#40112
 	public static void setBankFieldChangeStatus(SmAppl currAppl){
 		if (currAppl == null){
 			return;

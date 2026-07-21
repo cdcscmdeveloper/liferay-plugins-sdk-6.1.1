@@ -97,7 +97,7 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private List <PmReasonRestr> auditDeleteAgency;
 	// #28962 - End
 	
-	private boolean isReasonApplicabilityDuplicate = false;
+	private boolean isReasonApplicabilityDuplicate = false; //39618
 
 	public RejectionReasonManagedBean(){}
 
