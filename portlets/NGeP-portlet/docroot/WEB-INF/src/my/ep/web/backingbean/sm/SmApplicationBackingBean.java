@@ -19227,8 +19227,8 @@ public class SmApplicationBackingBean extends
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())
 					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
-					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER
-					&& status != SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
+					&& status != SupplierManagementConst.STATUS_PENDING_SITE_VISIT
+					&& status != SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
 		} else if (SupplierManagementConst.SECTION_RENEWAL.equalsIgnoreCase(section)) {
 			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
 					.equals(type))
@@ -19236,8 +19236,8 @@ public class SmApplicationBackingBean extends
 							|| getManagedBean().isApproverUser() || (applTypeRenewal && getManagedBean()
 							.isSupplierUser()))
 					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
-					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER
-					&& status != SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
+					&& status != SupplierManagementConst.STATUS_PENDING_SITE_VISIT
+					&& status != SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
 		}
 
 		return filter;
