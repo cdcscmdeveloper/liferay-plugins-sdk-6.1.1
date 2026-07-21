@@ -19198,7 +19198,6 @@ public class SmApplicationBackingBean extends
 	 * supplier category based on the category type, application section,
 	 * user role, application type, and current application status.
 	 *
-	 *
 	 * @param catBean
 	 * @param section
 	 * @return {@code true} if the "Other Description" field is editable based on
