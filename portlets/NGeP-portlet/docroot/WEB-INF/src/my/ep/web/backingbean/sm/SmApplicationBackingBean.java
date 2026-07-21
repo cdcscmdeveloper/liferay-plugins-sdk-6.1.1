@@ -19204,31 +19204,24 @@ public class SmApplicationBackingBean extends
 	 * @return {@code true} if the "Other Description" field is editable based on
 	 *         the configured business rules; {@code false} otherwise.
 	 */
-	public boolean rulesEditOtherDescription(SmSupplierCategory catBean,
-			String section) {
+	public boolean rulesEditOtherDescription(SmSupplierCategory catBean, String section) {
 		
-		log.info("36504 SUPPLIER CATEGORY ID: -> "
-				+ catBean.getSupplierCategoryId());
-		log.info("36504 CategoryName: -> "
-				+ catBean.getPmCategoryL3().getCategoryName());
-		log.info("36504 ParameterCode: -> "
-				+ catBean.getPmCategoryL3().getCategoryTypeCode()
-						.getParameterCode());
-
 		String type = "";
 
-		if (catBean != null && catBean.getPmCategoryL3() != null) {
-			type = catBean.getPmCategoryL3().getCategoryTypeCode()
-					.getParameterCode();
+		if (catBean != null
+		        && catBean.getPmCategoryL3() != null
+		        && catBean.getPmCategoryL3().getCategoryTypeCode() != null
+		        && catBean.getPmCategoryL3().getCategoryTypeCode().getParameterCode() != null) {
+			type = catBean.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 		}
 
 		Long status = getManagedBean().getSmAppl().getPmStatus().getStatusId();
 
-		boolean applTypeRenewal = getManagedBean().getSmAppl().getApplType()
-				.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_RENEWAL);
+		boolean applTypeRenewal =  SupplierManagementConst.APPL_TYPE_RENEWAL.equalsIgnoreCase(
+		        getManagedBean().getSmAppl().getApplType());
 		boolean filter = false;
 
-		if (section.equalsIgnoreCase(SupplierManagementConst.SECTION_MAIN)) {
+		if (SupplierManagementConst.SECTION_MAIN.equalsIgnoreCase(section)) {
 			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
 					.equals(type))
 					&& (getManagedBean().isPoUser() || getManagedBean()
@@ -19236,8 +19229,7 @@ public class SmApplicationBackingBean extends
 					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
 					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER
 					&& status != SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
-		} else if (section
-				.equalsIgnoreCase(SupplierManagementConst.SECTION_RENEWAL)) {
+		} else if (SupplierManagementConst.SECTION_RENEWAL.equalsIgnoreCase(section)) {
 			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
 					.equals(type))
 					&& (getManagedBean().isPoUser()
