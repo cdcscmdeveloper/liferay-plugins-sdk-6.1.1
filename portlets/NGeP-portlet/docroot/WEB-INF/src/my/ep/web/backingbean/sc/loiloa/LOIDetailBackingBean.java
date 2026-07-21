@@ -8137,7 +8137,7 @@ public class LOIDetailBackingBean extends
 		} else {
 
 			for (ScQtRecommend recommendList : this.getManagedBean().getRecommendList()) {
-				if (recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
+				if (null == selectedZoneId || recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
 					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
 
 				}
@@ -8223,7 +8223,10 @@ public class LOIDetailBackingBean extends
 			// Handle each row
 
 			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageF)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || requestItemID == reqItemId.longValue() && selectedZone.longValue() == selectedZoneId)) {
+					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() 
+					|| requestItemID == reqItemId.longValue() && (null != selectedZoneId && selectedZone.longValue() == selectedZoneId)
+					|| null == selectedZoneId)) {
+
 				totalScoreFinEval = supplierTotalScore;
 				break;
 			}
