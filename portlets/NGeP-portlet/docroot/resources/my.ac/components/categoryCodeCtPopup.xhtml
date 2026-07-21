@@ -22,71 +22,27 @@
             } catch (e) {}
         }
     </h:outputScript>
-
+<!-- #40500,#30014 //Remove StyleCSS -->
 	<h:outputStylesheet>
 	<style>
-		#catCodeCtPopup.ui-dialog {
-			max-height: 700px;
-			max-width: 70vw;
-			top: 50% !important;
-			left: 50% !important;
-			transform: translate(-50%, -50%) !important;
-			margin-top: 0 !important;
-			animation: fadeInPopup 0.4s ease-out;
-			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-			border-radius: 10px;
-		}
-
-		/* Scroll hanya untuk isi tabel */
-		#catCodeCtDescrTbl .ui-datatable-scrollable-body {
-			overflow-y: auto !important;
-			max-height: 350px !important;
-		}
-
-		/* Header tetap di atas */
-		#catCodeCtDescrTbl .ui-datatable-scrollable-header-box {
-			position: sticky !important;
-			top: 0 !important;
-			z-index: 10 !important;
-			background-color: white;
-		}
-
-		/* Paginator tetap di bawah */
-		#catCodeCtDescrTbl+.ui-paginator {
-			position: relative;
-			z-index: 11;
-		}
-		/* Sembunyikan seluruh wrapper scroll saat data kosong */
-		.hide-scroll-wrapper .ui-datatable-scrollable-header,
-		.hide-scroll-wrapper .ui-datatable-scrollable-body,
-		.hide-scroll-wrapper .ui-datatable-scrollable-footer {
-			display: none !important;
-		}
-
-		/* Scroll aktif hanya kalau data ada */
-		.ui-datatable-scrollable-body {
-			overflow-y: auto !important;
-			max-height: 350px !important;
-		}
-		@keyframes fadeInPopup {
-			from {
-				opacity: 0;
-				transform: translate(-50%, -50%) scale(0.95);
-			}
-			to {
-				opacity: 1;
-				transform: translate(-50%, -50%) scale(1);
-			}
-		}
+	@keyframes fadeInPopup {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
 	</style>
 	</h:outputStylesheet>
 
 
 		<p:dialog id="catCodeCtPopup"
 		header="#{lbl['lbl.ct.category.code.search']}"
-		widgetVar="catCodePopup" modal="true" width="720" 
+		widgetVar="catCodePopup" modal="true" width="680" 
 		position="top"
-        positionType="fixed"
         contentStyle="margin-top: 0;">
 
 		<p:messages id="catCodeCtPopupMsg" showDetail="true" autoUpdate="true"
@@ -192,13 +148,13 @@
 				</tr>
 				</table>
 			</p:panel>
-
+			<!-- #40500,#30014 //Remove Scrollbar function -->
 			<p:panel header="#{lbl['lbl.ct.category.result']}" toggleable="true">
 						<p:dataTable id="catCodeCtDescrTbl"
 							value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
 							selection="#{categoryCodeSearchBackingBean.managedBean.selectedCategoryL3}"
 							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}" var="pmCategoryL3"							
-							lazy="true" rows="10" scrollable="true"
+							lazy="true" rows="10"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
 							<ac:paginator for="catCodeCtDescrTbl" />
