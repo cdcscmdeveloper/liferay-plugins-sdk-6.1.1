@@ -40,7 +40,14 @@ public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
 
+	// AI doc extraction master switch from ngep.properties; absent or anything but "1" is off.
+	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
+
 	private AiDocSupport() {
+	}
+
+	public static boolean isAiEnabled() {
+		return AI_ONOFF != null && AI_ONOFF.trim().equalsIgnoreCase("1");
 	}
 
 	/**
@@ -466,6 +473,18 @@ public final class AiDocSupport {
 		}
 
 		/**
+		 * Verify an EPF extraction's employer name against the registered company name; sets the verdict flag
+		 * on the DTO. A blank employer name is excluded from the verdict (left valid), as with the other docs.
+		 */
+		public static void validateEpf(AiEpfResultDTO ee, String companyName) {
+			if (ee == null) {
+				return;
+			}
+			ee.setValidEmployerName(StringUtils.isBlank(ee.getEmployerName())
+					|| normalizedEquals(companyName, ee.getEmployerName()));
+		}
+
+		/**
 		 * Group extracted bank records by (bank name + account number), dedupe, then set each record's valid*
 		 * flags against the newly-added/modified supplier banks. Mutates the DTOs in place.
 		 * @param appl
@@ -745,8 +764,61 @@ public final class AiDocSupport {
 
 		private static final long serialVersionUID = 1L;
 
+		/** Employee rows rendered in full by {@link #getLabel()}; the rest are summarised as a count. */
+		private static final int MAX_LABEL_EMPLOYEES = 5;
+
 		private String employerName;
 		private List<AiEmployeeDTO> employees = new ArrayList<>();
+
+		private boolean validEmployerName = true;
+
+		/**
+		 * Tooltip rows: the employer name with a tick/cross verdict (set by {@link AiDocValidator}), then the
+		 * first {@value #MAX_LABEL_EMPLOYEES} employees' name / IC. Any remainder is summarised as a count.
+		 * Employees carry no verdict, so they render unmarked.
+		 */
+		public String getLabel() {
+			StringBuilder sb = new StringBuilder();
+			if (employerName != null) {
+				String s = AiDocParser.label("lbl.cm.company.name") + ": " + employerName + BR;
+				if (!validEmployerName) {
+					sb.append("<span style='color: red;'>").append("&#x2717; ").append(s).append("</span>");
+				} else {
+					sb.append("&#x2713; ").append(s);
+				}
+			}
+			List<AiEmployeeDTO> emps = getEmployees();
+			int shown = Math.min(emps.size(), MAX_LABEL_EMPLOYEES);
+			for (int i = 0; i < shown; i++) {
+				AiEmployeeDTO emp = emps.get(i);
+				appendEmployeeField(sb, "lbl.sm.person.name", emp.getEmployeeName());
+				appendEmployeeField(sb, "lbl.sm.person.icNo", emp.getNricNumber());
+				sb.append(BR);
+			}
+			int rest = emps.size() - shown;
+			if (rest > 0) {
+				sb.append(ResourceBundleUtils.getMessage("lbl.sm.ai.epf.more.employees",
+						new Object[] { rest }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())).append(BR);
+			}
+			return sb.toString();
+		}
+
+		// One unmarked labelled employee row; skips a field OCR left below the confidence threshold.
+		private void appendEmployeeField(StringBuilder sb, String labelKey, String value) {
+			if (value == null) {
+				return;
+			}
+			sb.append(AiDocParser.label(labelKey)).append(": ").append(value).append(BR);
+		}
+
+		public boolean isValidEmployerName() {
+			return validEmployerName;
+		}
+
+		public void setValidEmployerName(boolean validEmployerName) {
+			this.validEmployerName = validEmployerName;
+		}
 
 		public String getEmployerName() {
 			return employerName;
