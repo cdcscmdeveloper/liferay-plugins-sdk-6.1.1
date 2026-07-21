@@ -7838,7 +7838,7 @@ public class LOIDetailBackingBean extends
 
 
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId,reqNoteItemId);
+				selectedZoneId,requestItemID);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
@@ -7850,7 +7850,7 @@ public class LOIDetailBackingBean extends
 			// Handle each row
 
 			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageF)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || reqNoteItemId == reqItemId.longValue() && selectedZone.longValue() == selectedZoneId)) {
+					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || requestItemID == reqItemId.longValue() && selectedZone.longValue() == selectedZoneId)) {
 				totalScoreFinEval = supplierTotalScore;
 				break;
 			}
