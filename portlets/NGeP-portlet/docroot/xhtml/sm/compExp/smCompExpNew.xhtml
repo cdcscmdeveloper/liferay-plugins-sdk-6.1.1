@@ -149,6 +149,7 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
+				<!-- 9299- 40712 -->
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel
@@ -156,7 +157,7 @@
 					<td style="width: 66%"><p:selectOneMenu
 							value="#{smCompExpMB.newMaster.procumentMode.parameterId}">
 							<f:selectItems
-								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypeProcurementMode)}" />
+								value="#{smCompExpBB.getProcurementMethodDropdownValues((ParameterConst.paramTypeProcurementMethod)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
