@@ -283,10 +283,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if(resDTO.getApproverGroupUserList().isEmpty()){
-					//#24764
-					throw new EpException(MessageConst.ERROR_740058);
-				}
+				// Skip this checking to allow save (this checking ady done in signaction
+//				if(resDTO.getApproverGroupUserList().isEmpty()){
+//					//#24764
+//					throw new EpException(MessageConst.ERROR_740058);
+//				}
 				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				
