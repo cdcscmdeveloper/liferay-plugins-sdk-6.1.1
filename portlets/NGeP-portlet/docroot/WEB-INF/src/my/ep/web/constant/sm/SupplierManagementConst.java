@@ -246,6 +246,10 @@ public class SupplierManagementConst {
 	public static final String APPLIED_CAT = "APPLIED";
 	public static final String PREVIOUS_CAT = "PREVIOUS";
 	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER = 20105;
+	public static final long PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE = 20105;
+	public static final String SECTION_MAIN = "MAIN";
+	public static final String SECTION_RENEWAL = "RENEWAL";
+	public static final String SECTION_SDM = "MAINTENANCE";
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
@@ -1613,6 +1617,22 @@ public class SupplierManagementConst {
 	
 	public long getPM_STATUS_PENDING_SITE_VISIT_AFTER() {
 		return PM_STATUS_PENDING_SITE_VISIT_AFTER;
+	}
+	
+	public long getPM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE() {
+		return PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
+	}
+
+	public String getSECTION_MAIN() {
+		return SECTION_MAIN;
+	}
+	
+	public String getSECTION_RENEWAL() {
+		return SECTION_RENEWAL;
+	}
+	
+	public String getSECTION_SDM() {
+		return SECTION_SDM;
 	}
 	// 36504 - END
 	

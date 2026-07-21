@@ -85,6 +85,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private boolean masterNew;
 	// #9299 - #40713
 	private String popUpHeader;
+	// #9299 - #40660
+	private SmCompExpMaster histMaster;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -547,5 +549,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.popUpHeader = popUpHeader;
 	}
 	// #9299 - #40713 End
+	// #9299 - #40660 Start
+	public SmCompExpMaster getHistMaster() {
+		return histMaster;
+	}
+
+	public void setHistMaster(SmCompExpMaster histMaster) {
+		this.histMaster = histMaster;
+	}
+	// #9299 - #40660 End
 
 }
