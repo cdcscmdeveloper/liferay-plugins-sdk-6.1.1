@@ -53,6 +53,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.TreeNode;
@@ -428,6 +429,13 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	
 	/** The Do user Id for requote purpose */
 	private Long doUserId;
+	
+	//26284 - Start
+	private List<DisciplinaryActionVO> disciplineVOs;
+	private String disciplinaryActionstartDate;
+	private String disciplinaryActionEndDate;
+	private boolean disciplinaryActionWarning = false;
+	//26284 - End
 	
 	// #3761 - start
 	private ScQuote scQuoteSession;
@@ -2764,5 +2772,39 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.preRenderViewDirectPurchaseDataTypeSession = preRenderViewDirectPurchaseDataTypeSession;
 	}
 	// #29800 - end
+	
+	// 26284 - Start
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionstartDate;
+	}
+
+	public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
+		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
+	}
+
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	// 26284 - End
 
 }
