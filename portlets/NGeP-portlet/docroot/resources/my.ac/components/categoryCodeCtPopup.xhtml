@@ -13,15 +13,6 @@
 </cc:interface>
 
 <cc:implementation>
-    <h:outputScript target="body">
-        function hideCategoryCodePopup() {
-            try {
-                if (typeof PF === 'function' &amp;&amp; PF('catCodePopup')) {
-                    PF('catCodePopup').hide();
-                }
-            } catch (e) {}
-        }
-    </h:outputScript>
 <!-- #40500,#30014 //Remove StyleCSS -->
 	<h:outputStylesheet>
 	<style>
@@ -37,17 +28,13 @@
 }
 	</style>
 	</h:outputStylesheet>
-
-
-		<p:dialog id="catCodeCtPopup"
+		<!-- #40498,#30014 -->
+		<p:dialog id="categoryDialog"
 		header="#{lbl['lbl.ct.category.code.search']}"
 		widgetVar="catCodePopup" modal="true" width="680" 
 		position="top"
         contentStyle="margin-top: 0;">
-
-		<p:messages id="catCodeCtPopupMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />
-
+		<!-- #40498,#30014 Remove Meessage-->
 		<h:panelGroup id="catCodeCtPnl">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -193,10 +180,10 @@
 					<td style="text-align: right;">
 						<p:commandButton
 							value="#{lbl['lbl.btn.ok']}"
-							action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-							process="@form" update="#{cc.attrs.update}"
-							oncomplete="if (!args || !args.validationFailed) hideCategoryCodePopup();"
-							styleClass="BtnSpacing" id="catCodeCtOkBttn" name="catCodeCtOkBttn"/> 
+    						action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
+    						process="@form"
+    						update="#{cc.attrs.update} catCodeCtPnl"
+    						resetValues="true" /> <!-- #40498,#30014 -->
 						<p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 							process="@this" update="@this"

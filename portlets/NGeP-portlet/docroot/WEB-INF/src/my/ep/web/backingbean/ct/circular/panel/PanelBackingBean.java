@@ -3745,6 +3745,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if (existing.getPmCategoryL1().getCategoryL1Id().equals(l1Id) &&
 				existing.getPmCategoryL2().getCategoryL2Id().equals(l2Id) &&
 				existing.getPmCategoryL3().getCategoryL3Id().equals(l3Id)) {
+				
+				RequestContext.getCurrentInstance().execute("catCodePopup.hide()"); //#40498,#30014
 				throw new EpException(MessageConst.ERROR_750090, new String[] {categoryCode, categoryName}); // Duplicate message Error
 			}
 		}
