@@ -15,9 +15,13 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.InactiveUserValidator;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -27,6 +31,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -35,6 +40,7 @@ import my.ep.web.managedbean.sc.loa.LOABaseManagedBean;
 import my.ep.web.util.EpPortletUtil;	// Bug #35227@Syazani 20/10/2022
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.RoleHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
@@ -248,4 +254,28 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		return QTConstants.PORTLET_NAME_DL_CREATE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// Bug #35227@Syazani 20/10/2022 -- End
+	
+	// 33222 - start
+	/**
+	 * Validate profile and role status for contract_admin
+	 * 
+	 * @param scQt
+	 */
+	public void validateContractAdminProfileRoleStatus(ScLoa scLoa) {
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO(true);
+		String contractAdminRoleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
+		reqDTO.setDocNo(scLoa.getLoaNo());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		reqDTO.setOrgProfileId(scLoa.getContractAgency().getOrgProfileId());
+		reqDTO.setUserIds(SourcingConstants.EMPTY_USER_PLACEHOLDER);
+		reqDTO.setUserRoleCode(contractAdminRoleCode);
+		Locale locale = this.getFacesScopesGen().getUserLocale();
+		InactiveUserResDTO resDTO = InactiveUserValidator.getInstance().evaluateUsers(reqDTO);
+		if (StringUtils.isEmpty(resDTO.getLoginIds())) {
+			String roleDesc = RoleHelper.getInstance().getRoleDescByCode(contractAdminRoleCode).getRoleName();
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_700128, new String[] { roleDesc,
+					scLoa.getContractAgency().getOrgName() }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		}
+	}
+	// 33222 - end
 }

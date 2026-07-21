@@ -4395,6 +4395,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			//Enhancement #21694 END
 		}else {
+			// 33222 - start
+			if(BpmOutcomeConst.BPM_VERIFY.equals(outcome)){
+				validateContractAdminProfileRoleStatus(this.getManagedBean().getScLoa());
+			}
+			// 33222 - end
+			
 			// #29007 Start Vinod
 			checkAndInsertItemSpecOffer();
 			// #29007 End Vinod

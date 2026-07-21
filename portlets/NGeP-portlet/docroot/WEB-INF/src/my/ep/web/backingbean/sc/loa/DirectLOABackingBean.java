@@ -57,7 +57,6 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
-import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierCategorySO;
@@ -102,8 +101,6 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
-import my.ep.dto.sm.search.SupplierCategoryReqDTO;
-import my.ep.dto.sm.search.SupplierCategoryResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
@@ -114,8 +111,6 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -170,7 +165,6 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -210,7 +204,6 @@ import my.ep.web.constant.sc.CalendarConstants;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sc.TreeNodeConstants;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.DirectLOAManagedBean;
@@ -239,7 +232,6 @@ import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.velocity.VelocityContext;
-import org.primefaces.component.log.Log;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -248,8 +240,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
-
-import com.sun.faces.util.CollectionsUtils;
 
 /**
  * The Class directLOABackingBean.
@@ -6006,8 +5996,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (Arrays.asList(SCProcessNameConst.APPROVE_MANUAL_LOA, SCProcessNameConst.ACCEPT_MANUAL_LOA).contains(
 					taskName)
 					&& Arrays.asList(BpmOutcomeConst.BPM_ACCEPT, BpmOutcomeConst.BPM_REVISE).contains(outcome)) {
-				String deskofficerUserId = validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(), true);
-				reqDTO.setReplacementDeskofficer(deskofficerUserId);
+				try {
+					String deskofficerUserId = validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(),
+							true);
+					reqDTO.setReplacementDeskofficer(deskofficerUserId);
+				} catch (Exception e) {
+					if (!BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
+						throw e;
+					}
+				}
+
+			} else if (Arrays.asList(SCProcessNameConst.VERIFY_MANUAL_LOA, SCProcessNameConst.VERIFY_LOA).contains(
+					taskName)) {
+				validateContractAdminProfileRoleStatus(scLoa);
 			}
 			// 33222 - end
 			

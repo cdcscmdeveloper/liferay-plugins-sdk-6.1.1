@@ -8673,9 +8673,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scQt
 	 */
 	public String validateDeskofficerProfileRoleStatus(ScQt scQt, boolean rerouteWhenAvailable) {
-		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO(true);
 		String deskofficerRoleCode = RoleCode.DESK_OFFICER.value();
 		reqDTO.setDocNo(scQt.getQtNo());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		reqDTO.setOrgProfileId(scQt.getOrgProfileId());
 		ScActor deskofficerActor = getActorByQtIdAndRoleCode(scQt.getQtId(), deskofficerRoleCode);
 		reqDTO.setUserIds(deskofficerActor.getUserId().toString());
