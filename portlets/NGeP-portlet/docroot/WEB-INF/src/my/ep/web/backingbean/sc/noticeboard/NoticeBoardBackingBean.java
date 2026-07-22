@@ -90,6 +90,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -1716,15 +1717,16 @@ public class NoticeBoardBackingBean extends
 		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
 			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
 				if (amendMentBean.getValueMap() != null) {
+					BigDecimal qtId=BigDecimal.valueOf(amendMentBean.getQtId());//28188
 					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
 						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
 						Date approvalDate = valueBean.getApprovalDate();
 						if (approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
-							Date prevApprovalDate = amendmentClosingDateMap.get(amendMentBeanValue.getKey());
+							Date prevApprovalDate = amendmentClosingDateMap.get(qtId);//28188
 							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
 								continue;
 							}
-							amendmentClosingDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);	
+							amendmentClosingDateMap.put(qtId, approvalDate);//28188	
 						}
 					}
 					
@@ -2393,6 +2395,7 @@ public class NoticeBoardBackingBean extends
 
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 
+					// 28188 -start-
 					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 					briefingReqDTO.setQtId(scQt.getQtId());
 					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
@@ -2406,9 +2409,10 @@ public class NoticeBoardBackingBean extends
 							.retrieveSupplierBriefingSiteVisitDtls(briefingReqDTO);
 
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							specZoneDtl, briefingResDTO.getBriefingList(),
-							briefingResDTO.getSiteVisitList(),
+							specZoneDtl, checkRequestRejectBSVDtls(briefingResDTO.getBriefingList()),
+							checkRequestRejectBSVDtls(briefingResDTO.getSiteVisitList()),
 							briefingResDTO.getScQtBsv(),null);
+					// 28188 -end-
 					
 					// #28777 & #29729 - Start
 					briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES);
@@ -3711,6 +3715,33 @@ public class NoticeBoardBackingBean extends
 	}
 	// #29732 end
 	
+	// 28188 -start-
+	/**
+	 * check any bsvDetail Rejected after postpone.
+	 * 
+	 * @param bsvDtls
+	 * @return List<ScQtBsvDtl>
+	 */
+	private List<ScQtBsvDtl> checkRequestRejectBSVDtls(List<ScQtBsvDtl> bsvDtls) {
+		List<ScQtBsvDtl> noticeBoardBSVDtls = new ArrayList<>();
+		if (CollectionUtils.isNotEmpty(bsvDtls)) {
+
+			for (ScQtBsvDtl bsvDtl : bsvDtls) {
+				PmStatus bsvStatus = bsvDtl.getBsvStatus();
+				List<Long> statusList = Arrays.asList(
+						QTStatusConst.BSV_PENDING, QTStatusConst.BSV_COMPLETED);
+				if (null != bsvStatus
+						&& statusList.contains(bsvStatus.getStatusId())) {
+					// 28188 -end-
+					noticeBoardBSVDtls.add(bsvDtl);
+				}
+			}
+		}
+		return noticeBoardBSVDtls;
+	}
+
+	// 28188 -end-
+	
 	//#28188 - Start
 	private void populateBsvQtAmendIntoAmendmentBeanMap(List<QtAmendMentBean> qtAmendMentBeans) {
 		Map<BigDecimal, Date> amendmentBSVDateMap = new HashMap<BigDecimal, Date>();
@@ -3718,6 +3749,7 @@ public class NoticeBoardBackingBean extends
 		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
 			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
 				if (amendMentBean.getValueMap() != null) {
+					BigDecimal qtId=BigDecimal.valueOf(amendMentBean.getQtId());//28188
 					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
 						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
 					
@@ -3725,11 +3757,11 @@ public class NoticeBoardBackingBean extends
 						if (valueBean != null && amendMentBeanValue.getKey().contains(QTFieldConst.FIELD_QT_BSV)
 								&& approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
 							
-							Date prevApprovalDate = amendmentBSVDateMap.get(amendMentBeanValue.getKey());
+							Date prevApprovalDate = amendmentBSVDateMap.get(qtId);//28188
 							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
 								continue;
 							}
-							amendmentBSVDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);
+							amendmentBSVDateMap.put(qtId, approvalDate);//28188
 						}
 					}
 				}
