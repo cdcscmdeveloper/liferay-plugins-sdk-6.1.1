@@ -90,21 +90,6 @@
 							value="#{lbl['lbl.sc.sf.justification.selection']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" 
 							rendered="#{!suppFinalizationBackingBean.managedBean.disableJustifications}"/></td>
-
-					<!-- <td style="margin-left: 55px;"><p:selectOneMenu
-							id="justificationDDId"
-							value="#{suppFinalizationBackingBean.managedBean.justification.reasonCode}"
-							style="width: 300px;margin-bottom: 5px;"
-							label="#{lbl['lbl.sc.sf.justification.selection']}"
-							disabled="#{readOnly or suppFinalizationBackingBean.managedBean.disableJustifications}">
-							<f:selectItems
-								value="#{suppFinalizationBackingBean.managedBean.justDropdown}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="panelWithJustificationTxtId"
-								listener="#{suppFinalizationBackingBean.justificationChange}"
-								disabled="#{readOnly}" />
-						</p:selectOneMenu> <p:message id="justificationDDMsgId" for="justificationDDId"
-							display="icon" /></td> -->
 					
 					<!-- #34860 Start -->
 					<td style="margin-left: 55px;"><p:selectManyCheckbox
@@ -122,7 +107,7 @@
 								disabled="#{readOnly}" />
 						</p:selectManyCheckbox> <p:message id="justificationDDMsgId" for="justificationDDId"
 							display="icon" /></td>
-					<!-- #34680 End -->		
+					<!-- #34860 End -->		
 				</tr>
 			</table>
 			<h:panelGroup id="panelWithJustificationTxtId">
@@ -130,7 +115,7 @@
 					test="#{suppFinalizationBackingBean.managedBean.renderjustificationTextbox}">
 					<table>
 						<tr>
-							<!-- #34860 -->
+							<!-- #34860 Start -->
 							<td style="float: right; margin-left: 55px;"><p:inputTextarea
 									id="justificationTxtId" required="#{!readOnly}"
 									value="#{suppFinalizationBackingBean.managedBean.justificationText}" cols="80" rows="3"
@@ -138,7 +123,7 @@
 									disabled="#{readOnly}"
 									label="#{lbl['lbl.sc.sf.justification']}" /> <p:message
 									id="justificationTxtMsgId" for="justificationTxtId"
-									display="icon" /></td>
+									display="icon" /></td><!-- #34860 End -->
 							<td></td>
 						</tr>
 					</table>
