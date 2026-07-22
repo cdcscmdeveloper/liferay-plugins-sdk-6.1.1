@@ -71,10 +71,10 @@
 							update="@form" conditionField="#{bsvAttendanceBackingBean.constuctConditionFields()}"/>
 					</c:if> <p:commandButton id="regDelteBtn"
 						value="#{lbl['lbl.btn.delete']}"
-						disabled="#{(bsvAttendanceBackingBean.managedBean.maintanceFlow and !bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew) or null eq bsvAttendanceBackingBean.managedBean.selectedbriefRegistrationEnableDisable}"
+						disabled="#{(bsvAttendanceBackingBean.managedBean.maintanceFlow and !bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.recordStatusFlg ne DbValueConst.recordStatusInProgress) or null eq bsvAttendanceBackingBean.managedBean.selectedbriefRegistrationEnableDisable}"
 						process="@this,complisttbl" partialSubmit="true"
 						oncomplete="supplierListDeleteIdPopUp.show();"
-						update="@([id$=#{supplierListDeleteId}])" /></td>
+						update="@([id$=#{supplierListDeleteId}])" /> <ui:remove>#28188 -start-</ui:remove></td>
 			</tr>
 		</table>
 		<ui:param name="supplierListDeleteId" value="supplierListDeleteId"></ui:param>

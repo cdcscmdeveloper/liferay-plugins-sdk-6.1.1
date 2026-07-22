@@ -1716,15 +1716,16 @@ public class NoticeBoardBackingBean extends
 		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
 			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
 				if (amendMentBean.getValueMap() != null) {
+					BigDecimal qtId=BigDecimal.valueOf(amendMentBean.getQtId());//28188
 					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
 						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
 						Date approvalDate = valueBean.getApprovalDate();
 						if (approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
-							Date prevApprovalDate = amendmentClosingDateMap.get(amendMentBeanValue.getKey());
+							Date prevApprovalDate = amendmentClosingDateMap.get(qtId);//28188
 							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
 								continue;
 							}
-							amendmentClosingDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);	
+							amendmentClosingDateMap.put(qtId, approvalDate);//28188	
 						}
 					}
 					
@@ -2393,22 +2394,20 @@ public class NoticeBoardBackingBean extends
 
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 
-					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-					briefingReqDTO.setQtId(scQt.getQtId());
-					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-					briefingReqDTO.setSupplierId(this.getManagedBean()
-							.getSmSupplier().getSupplierId());
-					IQTBriefingSO briefingSO = EpEjbBusinessDelegate
-							.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION,
-									IQTBriefingSO.class);
-					BriefingResDTO briefingResDTO = briefingSO
-							.retrieveSupplierBriefingSiteVisitDtls(briefingReqDTO);
+					// 28188 -start-
+					NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
+					noticeBoardReqDTO.setQtId(scQt.getQtId());
+					noticeBoardReqDTO
+							.setZoneId(specZoneDtl.getSpecZoneId());
+					NoticeBoardResDTO noticeBoardResDTO = qtNoticeBoardSO
+							.retrieveBriefingSiteVisitZoneDtls(noticeBoardReqDTO);
+					
 
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							specZoneDtl, briefingResDTO.getBriefingList(),
-							briefingResDTO.getSiteVisitList(),
-							briefingResDTO.getScQtBsv(),null);
+							specZoneDtl, noticeBoardResDTO.getBriefingResultBean(),
+							noticeBoardResDTO.getSiteVisitResultBean(),
+							noticeBoardResDTO.getScQtBsv(),null);
+					// 28188 -end-
 					
 					// #28777 & #29729 - Start
 					briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES);
@@ -3718,6 +3717,7 @@ public class NoticeBoardBackingBean extends
 		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
 			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
 				if (amendMentBean.getValueMap() != null) {
+					BigDecimal qtId=BigDecimal.valueOf(amendMentBean.getQtId());//28188
 					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
 						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
 					
@@ -3725,11 +3725,11 @@ public class NoticeBoardBackingBean extends
 						if (valueBean != null && amendMentBeanValue.getKey().contains(QTFieldConst.FIELD_QT_BSV)
 								&& approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
 							
-							Date prevApprovalDate = amendmentBSVDateMap.get(amendMentBeanValue.getKey());
+							Date prevApprovalDate = amendmentBSVDateMap.get(qtId);//28188
 							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
 								continue;
 							}
-							amendmentBSVDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);
+							amendmentBSVDateMap.put(qtId, approvalDate);//28188
 						}
 					}
 				}
