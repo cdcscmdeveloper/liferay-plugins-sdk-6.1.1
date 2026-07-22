@@ -205,6 +205,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.revise.reason']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!-- 40150 START -->
 					<td>
 						<p:inputTextarea cols="90"
 							style="height:200px; width:450px;" rows="10"
@@ -212,11 +213,13 @@
 							id="apprReviseReason"
 							maxlength="2500"
 							required="#{backingBean.managedBean.reviseMandatory}"
+							validatorMessage="#{lbl['lbl.sm.revise.reason.max.length']}"
 							requiredMessage="#{lbl['lbl.sm.revise.reason.required']}">
 							<f:validateLength maximum="2500" />
 							<p:ajax process="@this" update="@this"/>
 						</p:inputTextarea>
 					</td>
+					<!-- 40150 END -->
 				</tr>
 			</table>
 			<div align="right">
