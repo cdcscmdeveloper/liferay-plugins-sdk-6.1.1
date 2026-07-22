@@ -90,6 +90,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -2395,18 +2396,22 @@ public class NoticeBoardBackingBean extends
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 
 					// 28188 -start-
-					NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
-					noticeBoardReqDTO.setQtId(scQt.getQtId());
-					noticeBoardReqDTO
-							.setZoneId(specZoneDtl.getSpecZoneId());
-					NoticeBoardResDTO noticeBoardResDTO = qtNoticeBoardSO
-							.retrieveBriefingSiteVisitZoneDtls(noticeBoardReqDTO);
-					
+					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+					briefingReqDTO.setQtId(scQt.getQtId());
+					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+					briefingReqDTO.setSupplierId(this.getManagedBean()
+							.getSmSupplier().getSupplierId());
+					IQTBriefingSO briefingSO = EpEjbBusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTBriefingSO.class);
+					BriefingResDTO briefingResDTO = briefingSO
+							.retrieveSupplierBriefingSiteVisitDtls(briefingReqDTO);
 
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							specZoneDtl, noticeBoardResDTO.getBriefingResultBean(),
-							noticeBoardResDTO.getSiteVisitResultBean(),
-							noticeBoardResDTO.getScQtBsv(),null);
+							specZoneDtl, checkRequestRejectBSVDtls(briefingResDTO.getBriefingList()),
+							checkRequestRejectBSVDtls(briefingResDTO.getSiteVisitList()),
+							briefingResDTO.getScQtBsv(),null);
 					// 28188 -end-
 					
 					// #28777 & #29729 - Start
@@ -3709,6 +3714,33 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 	// #29732 end
+	
+	// 28188 -start-
+	/**
+	 * check any bsvDetail Rejected after postpone.
+	 * 
+	 * @param bsvDtls
+	 * @return List<ScQtBsvDtl>
+	 */
+	private List<ScQtBsvDtl> checkRequestRejectBSVDtls(List<ScQtBsvDtl> bsvDtls) {
+		List<ScQtBsvDtl> noticeBoardBSVDtls = new ArrayList<>();
+		if (CollectionUtils.isNotEmpty(bsvDtls)) {
+
+			for (ScQtBsvDtl bsvDtl : bsvDtls) {
+				PmStatus bsvStatus = bsvDtl.getBsvStatus();
+				List<Long> statusList = Arrays.asList(
+						QTStatusConst.BSV_PENDING, QTStatusConst.BSV_COMPLETED);
+				if (null != bsvStatus
+						&& statusList.contains(bsvStatus.getStatusId())) {
+					// 28188 -end-
+					noticeBoardBSVDtls.add(bsvDtl);
+				}
+			}
+		}
+		return noticeBoardBSVDtls;
+	}
+
+	// 28188 -end-
 	
 	//#28188 - Start
 	private void populateBsvQtAmendIntoAmendmentBeanMap(List<QtAmendMentBean> qtAmendMentBeans) {
