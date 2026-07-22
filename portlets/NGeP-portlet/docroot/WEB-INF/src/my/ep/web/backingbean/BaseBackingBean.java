@@ -777,7 +777,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(categoryCode);
 
 			items = new SelectItem[reasonDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));//#38640 commented due to change to checkbox adli
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmReasonDesc reasonDesc : reasonDescs) {
 				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
