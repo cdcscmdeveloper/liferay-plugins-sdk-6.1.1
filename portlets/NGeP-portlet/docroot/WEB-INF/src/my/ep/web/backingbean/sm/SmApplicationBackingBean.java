@@ -19214,29 +19214,39 @@ public class SmApplicationBackingBean extends
 			type = catBean.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 		}
 
-		Long status = getManagedBean().getSmAppl().getPmStatus().getStatusId();
-
 		boolean applTypeRenewal =  SupplierManagementConst.APPL_TYPE_RENEWAL.equalsIgnoreCase(
 		        getManagedBean().getSmAppl().getApplType());
 		boolean filter = false;
+		boolean svBeforeAfter = false;
+		Long status = getManagedBean().getSmAppl().getPmStatus().getStatusId();
+	    List<SmWorkflowStatus> smws = new ArrayList<>(); 
 
+		if (getManagedBean().getSmAppl().getSmWorkflowStatuses() != null) {
+			smws = getManagedBean().getSmAppl().getSmWorkflowStatuses();
+			
+			for (SmWorkflowStatus obj : smws) {
+				if (status.equals(SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE) ||
+						obj.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) ||
+						obj.getPmStatus().getStatusId().equals(SupplierManagementConst.STATUS_PENDING_SITE_VISIT)) {
+					svBeforeAfter = true;
+					break;
+				}
+			}
+		}
+		
 		if (SupplierManagementConst.SECTION_MAIN.equalsIgnoreCase(section)) {
 			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
 					.equals(type))
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())
-					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
-					&& status != SupplierManagementConst.STATUS_PENDING_SITE_VISIT
-					&& status != SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
+					&& !svBeforeAfter;
 		} else if (SupplierManagementConst.SECTION_RENEWAL.equalsIgnoreCase(section)) {
 			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
 					.equals(type))
 					&& (getManagedBean().isPoUser()
 							|| getManagedBean().isApproverUser() || (applTypeRenewal && getManagedBean()
 							.isSupplierUser()))
-					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
-					&& status != SupplierManagementConst.STATUS_PENDING_SITE_VISIT
-					&& status != SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
+					&& !svBeforeAfter;
 		}
 
 		return filter;
