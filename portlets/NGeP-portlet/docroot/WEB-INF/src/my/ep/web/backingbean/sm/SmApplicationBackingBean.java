@@ -19049,20 +19049,21 @@ public class SmApplicationBackingBean extends
 						
 						history.setApplNoHistory(history.getSmAppl().getApplNo());
 
-						if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-								&& !getManagedBean().isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						if (!getManagedBean().isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 							getManagedBean().setOtherDescChangePO(true);
-						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-								&& !getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+							getManagedBean().getEditVO().setPoEditCategory(true);
+						} else if (!getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 							getManagedBean().setOtherDescChangeApprover(true);
-						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-								&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+							getManagedBean().setOtherDescChangeSupplier(true);
+							getManagedBean().getEditVO().setAppEditCategory(true);
+						} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
 							getManagedBean().setOtherDescChangeSupApprover(true);
 							getManagedBean().setOtherDescChangeSupplier(true);
-						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-								&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+							getManagedBean().getEditVO().setAppEditCategory(true);
+						} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
 							getManagedBean().setOtherDescChangeSupPO(true);
 							getManagedBean().setOtherDescChangeSupplier(true);
+							getManagedBean().getEditVO().setPoEditCategory(true);
 						}
 					}
 				}
@@ -19190,6 +19191,55 @@ public class SmApplicationBackingBean extends
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "OtherDescHistory",
 					this.getManagedBean().getSmAppl().getApplId().toString(), "PmUserRole", userId, e);
 		}
+	}
+	
+	/**
+	 * Determines whether the "Other Description" field can be edited for a
+	 * supplier category based on the category type, application section,
+	 * user role, application type, and current application status.
+	 *
+	 * @param catBean
+	 * @param section
+	 * @return {@code true} if the "Other Description" field is editable based on
+	 *         the configured business rules; {@code false} otherwise.
+	 */
+	public boolean rulesEditOtherDescription(SmSupplierCategory catBean, String section) {
+		
+		String type = "";
+
+		if (catBean != null
+		        && catBean.getPmCategoryL3() != null
+		        && catBean.getPmCategoryL3().getCategoryTypeCode() != null
+		        && catBean.getPmCategoryL3().getCategoryTypeCode().getParameterCode() != null) {
+			type = catBean.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+		}
+
+		Long status = getManagedBean().getSmAppl().getPmStatus().getStatusId();
+
+		boolean applTypeRenewal =  SupplierManagementConst.APPL_TYPE_RENEWAL.equalsIgnoreCase(
+		        getManagedBean().getSmAppl().getApplType());
+		boolean filter = false;
+
+		if (SupplierManagementConst.SECTION_MAIN.equalsIgnoreCase(section)) {
+			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
+					.equals(type))
+					&& (getManagedBean().isPoUser() || getManagedBean()
+							.isApproverUser())
+					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
+					&& status != SupplierManagementConst.STATUS_PENDING_SITE_VISIT
+					&& status != SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
+		} else if (SupplierManagementConst.SECTION_RENEWAL.equalsIgnoreCase(section)) {
+			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
+					.equals(type))
+					&& (getManagedBean().isPoUser()
+							|| getManagedBean().isApproverUser() || (applTypeRenewal && getManagedBean()
+							.isSupplierUser()))
+					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
+					&& status != SupplierManagementConst.STATUS_PENDING_SITE_VISIT
+					&& status != SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
+		}
+
+		return filter;
 	}
 	// 36504 - END
 		

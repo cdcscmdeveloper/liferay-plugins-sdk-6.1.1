@@ -97,8 +97,7 @@
 				oncomplete="blockWidget.hide()" update=":form" process="@this"
 				action="#{supplierDataMaintenanceBackingBean.otherDescriptionEdit(aprvdCatBean)}"
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.approverUser and (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-				aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and 
-				supplierDataMaintenanceBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED}">
+				aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}">
 				<p:graphicImage value="/css/images/design/edit.png"
 					title="#{lbl['lbl.sm.edit']}" style="float:right;" />
 			</p:commandLink>
