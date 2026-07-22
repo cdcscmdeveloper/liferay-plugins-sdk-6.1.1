@@ -4942,7 +4942,7 @@ return	remarksNotFound;
 
 		// Generate all the reports before submission
 		if (!skipDownload) { // 38523
-			downloadAllFiles("LAPORAN KERTAS TAKLIMAT", scAttachments);
+			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
 		}
 		// #18685 - End.
 	}
@@ -13711,7 +13711,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		} else {
 			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId,
-					null);
+					null,null);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				// BigDecimal supplierNo = (BigDecimal) row[1];
@@ -13758,7 +13758,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		
 		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.FINANCIAL_DOCTYPE);
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
+				selectedZoneId,null);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
