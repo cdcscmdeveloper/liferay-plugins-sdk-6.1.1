@@ -38,9 +38,23 @@
 			
 			<tr>
 				<td><p:outputLabel style="font-weight: bold;white-space:normal;" value="#{lbl['lbl.sm.companyaddress']}" /></td>
-				<td class="header-info-text" style="word-break: break-word;" colspan="3">
+				<td class="header-info-text" style="word-break: break-word;">
 					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.companyAddress}" />
 				</td>
+				<!-- #33783 - start -->
+				<c:choose>
+					<c:when
+						test="#{applInfo.smSupplier.businessType == 'I' or applInfo.smSupplier.businessType == 'J'}">
+						<td style="white-space: nowrap;"><h:outputLabel style="font-weight:bold"
+								value="#{lbl['lbl.sm.clbg']} :" /></td>
+						<td><h:outputText
+								value="#{applInfo.smCompanyBasic.companyTypeSSM == SupplierManagementConst.COMPANY_TYPE_CLBG ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no']}" /></td>
+					</c:when>
+					<c:otherwise>
+						<td colspan="2"></td>
+					</c:otherwise>
+				</c:choose>
+				<!-- #33783 - end -->
 			</tr>
 			
 			<tr>

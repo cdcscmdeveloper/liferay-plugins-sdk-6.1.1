@@ -217,8 +217,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//6906 note 117 - end
 	private ScQtRecommend lastSelectedItem;//35157
 	
-	private ScQtEvaluationResultDtl tempRecommendedSupplier;//#39620 
-
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
@@ -2688,14 +2686,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
 	}// #35320 - End
 
-	public ScQtEvaluationResultDtl getTempRecommendedSupplier() {
-		return tempRecommendedSupplier;
-	}
-
-	public void setTempRecommendedSupplier(ScQtEvaluationResultDtl tempRecommendedSupplier) {
-		this.tempRecommendedSupplier = tempRecommendedSupplier;
-	}
-	
 	//#38151 - Start
 	public List<WeightageScoreBean> getWeightageScoreBeans() {
 		return weightageScoreBeans;

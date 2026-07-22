@@ -3360,6 +3360,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.getSpecMaster().setTotalEstAmount(totalEstAmount);
 			}
 		}
+		templateSpecBean.setSelectedSpecQuestion(null); //#40402
 	}
 	// #25039 End - version zonal
 /** #21695 FARID START */
@@ -3922,7 +3923,7 @@ public class TemplateSpecBackingBean extends
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
-		boolean manSpec = false;
+		boolean mandatorySpec = false;
 		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
@@ -3946,12 +3947,12 @@ public class TemplateSpecBackingBean extends
 				if (questionType
 						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
 						&& isMandatorySpec) {
-					manSpec = true;
+					mandatorySpec = true;
 					break;
 				}
 			}
 		}
-		return manSpec;
+		return mandatorySpec;
 	}
 
 	// #29187 End Vinod
@@ -4017,7 +4018,6 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void itemComplianceChangeControl(ValueChangeEvent event) {
-		log.info("New: " + event.getNewValue() + ", Old: " + event.getOldValue());
 		if (event.getOldValue() == null) {
 			getManagedBean().setComplianceOldNull(true);
 		} else {
@@ -4174,6 +4174,12 @@ public class TemplateSpecBackingBean extends
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
+		//#38151 - Start
+		//Fix return null during Template Specification Maintenance.
+		if (this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc() == null){
+			return;
+		}
+		//#38151 - End
 		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();
 		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();

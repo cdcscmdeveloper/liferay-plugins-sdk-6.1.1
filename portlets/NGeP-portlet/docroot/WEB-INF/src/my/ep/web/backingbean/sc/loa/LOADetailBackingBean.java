@@ -181,6 +181,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory; //#27868
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -12438,7 +12439,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			PmReason reason = reqSO.retrieveReasonDtlById(reqDTO).getPmReason();
 			if (reason != null && !reason.isRecordStatus()) {
-				throw new EpException(MessageConst.ERROR_760718, new String[] {
+				throw new EpException(MessageConst.ERROR_760715, new String[] {
 						getParameterDesc(getManagedBean().getScLoa().getProcurementType().getParameterType(),
 								getManagedBean().getScLoa().getProcurementType().getParameterCode()),
 						getReasonDesc(getManagedBean().getScLoa().getScQuote().getJustificationType()) });
@@ -13258,6 +13259,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	    convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList,categoryCodeSO);
 	    }
 	    
+	    CustomUtils.sort(filteredSmSupplierCategoryList, new Comparator<SmSupplierCategory>() {//#29661 #40403
+			@Override
+			public int compare(SmSupplierCategory cat01, SmSupplierCategory cat02) {
+				String catCode01 = cat01.getPmCategoryL1().getCategoryL1Code()+cat01.getPmCategoryL2().getCategoryL2Code()+cat01.getPmCategoryL3().getCategoryL3Code();
+				String catCode02 = cat02.getPmCategoryL1().getCategoryL1Code()+cat02.getPmCategoryL2().getCategoryL2Code()+cat02.getPmCategoryL3().getCategoryL3Code();
+				Long catCodeLong01 = Long.valueOf(catCode01);
+				Long catCodeLong02 = Long.valueOf(catCode02);
+				
+				return catCodeLong01.compareTo(catCodeLong02);
+			}
+		});
+	    
 		this.getManagedBean().setSupplierCategoryList(filteredSmSupplierCategoryList);//#29661 #40093
 	}
 
@@ -13448,17 +13461,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			newItem.setCmBrand(brandObj);
 			newItem.setCmMeasurement(meaObj);
 			newItem.setCmColor(colorObj);
-			newItem.setItemName(common.removeItemNameNA(typeObj.getTypeName()) + " "
-					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
-					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
-					+ common.removeItemNameNA(colorObj.getColorName()));
+			// #26059 -start- to prevent unwanted spacing
 
-			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle() + " "
-					+ common.removeItemNameNA(typeObj.getTypeName()) + " "
-					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
-					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
-					+ common.removeItemNameNA(colorObj.getColorName());
+			newItem.setItemName(common.removeItemNameNA(typeObj.getTypeName() + " " + brandObj.getBrandName() + " "
+					+ meaObj.getMeasurementName() + " " + colorObj.getColorName()));
 
+			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle()
+					+ " "
+					+ common.removeItemNameNA(typeObj.getTypeName() + " " + brandObj.getBrandName() + " "
+							+ meaObj.getMeasurementName() + " " + colorObj.getColorName());
+			// #26059 -end-
+			
 			newItem.setExtensionCode(typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
 					+ colorObj.getColorCode());
 

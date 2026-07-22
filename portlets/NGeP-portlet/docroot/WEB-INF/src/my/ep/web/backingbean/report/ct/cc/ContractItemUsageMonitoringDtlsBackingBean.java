@@ -52,7 +52,7 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 	
 	@Override
 	public void resetSearch() {		
-		log.debug("resetSearch: ccContractItemMonitoringRptBB");
+		log.debug("resetSearch: ccContractItemUsageMonitoringDtlsReportBB");
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
 		getManagedBean().setDisableMinistryField(false);
@@ -77,7 +77,8 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 		}
 		getManagedBean().setFormattedSelectedItems(null);
 		getManagedBean().setLovSelectedItemList(null);
-		getManagedBean().setSelectedSupplier(null);	
+		getManagedBean().setSelectedSupplier(null);
+		getManagedBean().setSelectedPTJ(null); // Fix #40102, #40398, #30918
 		// End fix- #29416
 		// Start Fix - #40102
 		CtReportBackingBean ctReportBBean = new CtReportBackingBean();
@@ -174,19 +175,14 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 			if (!isReportError) {
 
 				RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
-
-				// R5 #14076 start
-
 				restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
-
 				getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 				RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 				log.debug("Report URL: " + resDTO.getReportUrl());
 				getManagedBean().setMinistryFlag(null);
+				commonReportValidation(params, restDtlDTO);
+				
 			}
-			commonReportValidation(params, restDtlDTO);
-			// R5 #14076 end
-
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
 					"ccContractItemUsageMonitoringDtlsReportBB", null,

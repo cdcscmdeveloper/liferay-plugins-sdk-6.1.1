@@ -1681,6 +1681,13 @@ public class SimpleQuoteBackingBean extends
 					if (ParameterConst.PROC_TYPE_G2G.equals(quote
 							.getProcurementType().getParameterCode())) {
 						// govt sellers
+						//40234 - start
+						if ((getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty())
+						        && getManagedBean().getSupplierList() != null
+						        && !getManagedBean().getSupplierList().isEmpty()) {
+						    quote.getScQuoteSuppliers().clear();
+						}
+						//40234 - end
 						if (getManagedBean().getGovtSellers() != null) {
 							suppliers.addAll(getManagedBean().getGovtSellers());
 						}
@@ -1699,6 +1706,14 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - end
 					else {
 						// by supplier
+						//40234 - start
+						if ((getManagedBean().getSupplierList() == null || getManagedBean().getSupplierList().isEmpty())
+						        && getManagedBean().getGovtSellers() != null
+						        && !getManagedBean().getGovtSellers().isEmpty()) {
+						    quote.getScQuoteSuppliers().clear();
+						    getManagedBean().getSupplierList().clear();
+						}
+						//40234 - end
 						if (getManagedBean().getSupplierList() != null) {
 							suppliers
 									.addAll(getManagedBean().getSupplierList());
@@ -2503,9 +2518,12 @@ public class SimpleQuoteBackingBean extends
 					if (quote.getProcurementType().getParameterCode()
 							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 						// govt sellers
-						if (getManagedBean().getGovtSellers() != null) {
-							suppliers.addAll(getManagedBean().getGovtSellers());
+						//40234 - start
+						if (getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()) {
+							throw new EpException(MessageConst.ERROR_760109);
 						}
+						suppliers.addAll(getManagedBean().getGovtSellers());
+						//40234 - end
 					} 
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
@@ -2902,42 +2920,24 @@ public class SimpleQuoteBackingBean extends
 		//27868 - start
 		getSpecialItemAndPK7InfoMessage(getManagedBean().getScQuote().getProcurementType());
 		//27868 - end
-		// when procurement type as pk7 selected 
-		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
-			// Temp(#34274 - Start)
-			// MaxProcurementAmt
-			// BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			// DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			// .getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_760440, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-			// Temp(#34274 - End)
-		}
+		//27868 - start - remove #34274 code, remove info 760440
+		//27868 - end - remove #34274 code
 		// #28536 - start
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			//40234 - start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
+		    }
+			//40234 - end
 			getGovtSellerCriteria();
 		} else {
+			//40234 - start
 			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
-				List<ScQuoteSupplier> supplierRemoveList = new ArrayList<>();
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				for (ScQuoteSupplier supplier : getManagedBean().getSupplierList()) {
-					if (supplier.getSmSupplier() != null) {
-						OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-						profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
-						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
-						PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
-						if (pmOrgProfile.isGovtSeller()) {
-							supplierRemoveList.add(supplier);
-						}
-					}
-				}
-				getManagedBean().getSupplierList().removeAll(supplierRemoveList);
-			}
+				removeGovtSellerFromSupplierList(getManagedBean().getSupplierList());
+		    } else if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
+		    	removeGovtSellerFromSupplierList(getManagedBean().getGovtSellers());
+		    }
+			//40234 - end
 			getSupplierListCriteria();
 		}
 		// #28536 - end
@@ -3285,11 +3285,12 @@ public class SimpleQuoteBackingBean extends
 		if (locationLevel == null) {
 			locationLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
 		}
+		// #5426 - start use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootZoneTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
-						getManagedBean().getDefaultCountryId(), null, null,
-						null, null, locationLevel, TplSpecZoneLoc.class,
-						false));
+				LocationSingleton.getInstance().buildLocationPopupTree2(getManagedBean().getDefaultCountryId(), null,
+						null, null, null, locationLevel, TplSpecZoneLoc.class, false));
+		// 5426 - end
 		// zone required validation
 		getManagedBean().setRequired(Boolean.TRUE);
 		getManagedBean().setZoneName("");
@@ -3321,12 +3322,12 @@ public class SimpleQuoteBackingBean extends
 		List<PmDistrict> districts = SourcingLocationHelper
 				.getDistrictFromLocationDTO(locationDTOs);
 
+		// #5426 - start use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
-						getManagedBean().getDefaultCountryId(), states,
-						districts, divisions, null, locationLevel,
-						TplSpecZoneLoc.class,
-						false));
+				LocationSingleton.getInstance().buildLocationPopupTree2(getManagedBean().getDefaultCountryId(), states,
+						districts, divisions, null, locationLevel, TplSpecZoneLoc.class, false));
+		// 5426 - end
 	}
 
 	/**
@@ -3618,12 +3619,12 @@ public class SimpleQuoteBackingBean extends
 		List<PmCity> cities = SourcingLocationHelper
 				.getCityFromLocationDTO(locationDTOs);
 
+		// #5426 - start use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootZoneTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
-						getManagedBean().getDefaultCountryId(), states,
-						districts, divisions, cities, locationLevel,
-						TplSpecZoneLoc.class,
-						false));
+				LocationSingleton.getInstance().buildLocationPopupTree2(getManagedBean().getDefaultCountryId(), states,
+						districts, divisions, cities, locationLevel, TplSpecZoneLoc.class, false));
+		// 5426 - end
 		int i = zoneIndex;
 		this.getManagedBean().setZoneIndex(i);
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -3655,12 +3656,12 @@ public class SimpleQuoteBackingBean extends
 		List<PmDistrict> districts = SourcingLocationHelper
 				.getDistrictFromLocationDTO(locationDTOs);
 
+		// #5426 - start use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
-						getManagedBean().getDefaultCountryId(), states,
-						districts, divisions, null, locationLevel,
-						TplSpecZoneLoc.class,
-						false));
+				LocationSingleton.getInstance().buildLocationPopupTree2(getManagedBean().getDefaultCountryId(), states,
+						districts, divisions, null, locationLevel, TplSpecZoneLoc.class, false));
+		// 5426 - end
 	}
 
 	/**
@@ -4297,6 +4298,7 @@ public class SimpleQuoteBackingBean extends
 			CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 			
 			catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
+			catalogueBackingBean.resetCatalogueSearch(); //26059
 
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "catalogueSearch");
@@ -4406,6 +4408,12 @@ public class SimpleQuoteBackingBean extends
 		double time = (double)diffHours + (double)diffMinutes / 60;
         getManagedBean().setDays(diffDays);
         getManagedBean().setHours(time);
+		// #5426 - start
+		getManagedBean().setRemainingInterval(diff);
+		getManagedBean().setRemainingDay(diffDays);
+		getManagedBean().setRemainingHour(diffHours);
+		getManagedBean().setRemainingMinute(diffMinutes);
+		// #5426 - end
 	}
 
 	
@@ -5510,6 +5518,8 @@ public class SimpleQuoteBackingBean extends
 				if ((resDTO != null) && (resDTO.getCtPanelItem() != null)) {
 					getManagedBean().setPanelItems(new ArrayList<CtPanelItem>());
 					getManagedBean().getPanelItems().add(resDTO.getCtPanelItem());
+
+					assignPanelSupplierPid(scQuote, resDTO);//#27868
 				}
 			}
 		}
@@ -5540,7 +5550,7 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setRemarks(cloneScQuote.getRemarks());
 		}
 		// #29800 - end
-
+		initCountdown();// #5426
 		// 27868 - start
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
@@ -5554,6 +5564,18 @@ public class SimpleQuoteBackingBean extends
 		.handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 	}
 
+	//start - 27868
+	/**
+	 * Assigns panel supplier details for Simple Quote created from PID.
+	 */
+	private void assignPanelSupplierPid(ScQuote scQuote, PanelSupplierResDTO resDTO) {
+		if (scQuote.getPurchaseInDefault() != null && resDTO.getCtPanelItem().getCtPanelSuppliers() != null
+				&& !resDTO.getCtPanelItem().getCtPanelSuppliers().isEmpty()) {
+			panelItemListener(resDTO.getCtPanelItem().getCtPanelSuppliers(), scQuote);
+		}
+	}
+	//end - 27868
+	
 	/**
 	 * render the supplier view based on the task id from notification.
 	 */
@@ -5728,6 +5750,9 @@ public class SimpleQuoteBackingBean extends
 					// in supplier view
 					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					//#5426 start
+					getManagedBean().setRemainingTimeMsg(MessageConst.ERROR_760034);
+					//#5426 end
 				} else if (MessageConst.ERROR_760033.equals(message)) {
 					// hide the save & submit button when Quote has been
 					// submitted previously. You are not allowed to submit twice
@@ -5939,6 +5964,9 @@ public class SimpleQuoteBackingBean extends
 					// in supplier view
 					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					//#5426 start
+					getManagedBean().setRemainingTimeMsg(MessageConst.ERROR_760034);
+					//#5426 end
 				} else if (MessageConst.ERROR_760033.equals(message)) {
 					// hide the save & submit button when Quote has been
 					// submitted previously. You are not allowed to submit twice
@@ -8824,6 +8852,11 @@ public class SimpleQuoteBackingBean extends
 
 			if (pmPK7Mapping != null) {
 				defaultToPK7W(pmPK7Mapping);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem();
+				}
 			} else {
 				defaultToSpecialtem();
 			}
@@ -9188,8 +9221,6 @@ public class SimpleQuoteBackingBean extends
 		for (PmReasonRestr restr : listReasonRestr) {
 			if (restr.getAgencyId() != null
 					&& userAgency.getOrgProfileId().equals(restr.getAgencyId().getOrgProfileId())) {
-				return true;
-			} else if (restr.getAgencyId() == null) {
 				return true;
 			}
 		}
@@ -9890,4 +9921,158 @@ public class SimpleQuoteBackingBean extends
 				&& getManagedBean().getScQuote().isPanel();
 	}
 	// #26059 - End
+	// 40234 - start
+	/**
+	 * To remove govt seller from supplier list when change procurement type
+	 * from G2G -> Normal
+	 * 
+	 * @param suppliers
+	 */
+	private void removeGovtSellerFromSupplierList(List<ScQuoteSupplier> suppliers) {
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+
+		for (ScQuoteSupplier supplier : suppliers) {
+			if (isGovtSeller(supplier, orgProfileSO)) {
+				suppliersToRemove.add(supplier);
+			}
+		}
+
+		suppliers.removeAll(suppliersToRemove);
+	}
+
+	/**
+	 * To identify supplier is Goverment Seller
+	 * 
+	 * @param supplier
+	 * @param orgProfileSO
+	 * @return
+	 */
+	private boolean isGovtSeller(ScQuoteSupplier supplier, IOrgProfileSO orgProfileSO) {
+		if (supplier == null || supplier.getSmSupplier() == null) {
+			return false;
+		}
+
+		OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+		profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
+
+		OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
+		PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
+
+		return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
+	}
+	/**
+	 * To remove non g2g supplier from govt list when change procurement type
+	 * 
+	 * 
+	 * @param suppliers
+	 */
+	private void removeSupplierListFromGovtSeller(List<ScQuoteSupplier> suppliers) {
+		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+
+		for (ScQuoteSupplier supplier : suppliers) {
+				suppliersToRemove.add(supplier);
+		}
+
+		suppliers.removeAll(suppliersToRemove);
+	}
+	// 40234 - end
+	// #5426 - start
+
+	/**
+	 * Formats the number with a leading zero when needed.
+	 *
+	 * @param number the number to format
+	 * @return the formatted number as a string
+	 */
+	public String addingZeroInfront(Long number) {
+		String newnumber = "";
+		if (number < 10 && number >= 0) { // Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+			newnumber = "0" + number;
+		} else if (number >= 10) {
+			return String.valueOf(number);
+		}
+		return newnumber;
+	}
+
+	/**
+	 * Returns the remaining time message for display.
+	 *
+	 * @return the formatted remaining time, or an empty string if unavailable
+	 */
+	public String displayRemainingTime() {
+		String message = "";
+		try {
+			getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+			boolean isStarted = new Date().after(getManagedBean().getScQuote().getStartDate());
+			if (isStarted) {
+				if (getManagedBean().getRemainingDay() > 0) {
+					message = getMessage(
+							"lbl.sc.sq.remaining.time.day",
+							new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingDay())),
+									String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),
+									String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				} else if (getManagedBean().getRemainingDay() == 0 && getManagedBean().getRemainingHour() > 0) {
+					message = getMessage("lbl.sc.sq.remaining.time.hour",
+							new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),
+									String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				} else if (getManagedBean().getRemainingInterval() >= 0) {
+					message = getMessage("lbl.sc.sq.remaining.time.minute",
+							new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				} else if (getManagedBean().getRemainingTimeMsg() != null
+						&& !getManagedBean().getRemainingTimeMsg().equalsIgnoreCase("")) {
+					if (getManagedBean().getRemainingTimeMsg().equalsIgnoreCase(MessageConst.ERROR_760034)) {
+						message = "";
+					}
+				} else if (getManagedBean().getRemainingInterval() < 0) { // if time after the end date display 00minute
+					getManagedBean().setRemainingMinute(0L);
+					message = getMessage("lbl.sc.sq.remaining.time.minute",
+							new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAErrorMesg(ModuleCodeConst.DIRECT_PURCHASE, "displayRemainingTime", getManagedBean().getScQuote().getQuoteNo(), "displayRemainingTime", getUserIdSessionFromLoginId(), e.getMessage(), e);
+		}
+		return message;
+	}
+
+	/**
+	 * Initializes the countdown and stops polling when the remaining time has expired.
+	 */
+	public void initCountdown() {
+		try {
+			getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+			if (getManagedBean().getRemainingInterval() < 0) {
+				RequestContext reqCtx = RequestContext.getCurrentInstance();
+				reqCtx.execute("poll.stop();");
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAErrorMesg(ModuleCodeConst.DIRECT_PURCHASE, "initCountdown", getManagedBean().getScQuote().getQuoteNo(), "initCountdown", getUserIdSessionFromLoginId(), e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Returns the remaining time label when the quote has started and the message should be shown.
+	 *
+	 * @return the remaining time message, or an empty string if it should not be displayed
+	 */
+	public String displayRemainingTimeMsg() {
+		String remainingMsg = "";
+		boolean isStarted = new Date().after(getManagedBean().getScQuote().getStartDate());
+		getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+		if (isStarted) {
+			if (getManagedBean().getRemainingTimeMsg() != null
+					&& !getManagedBean().getRemainingTimeMsg().equalsIgnoreCase("")) {
+				if (getManagedBean().getRemainingTimeMsg().equalsIgnoreCase(MessageConst.ERROR_760034)) {
+					remainingMsg = "";
+				}
+			} else {
+				remainingMsg = getMessageCommon("lbl.sc.sq.remaining.time");
+			}
+		}
+		return remainingMsg;
+	}
+	// #5426 - end
 }

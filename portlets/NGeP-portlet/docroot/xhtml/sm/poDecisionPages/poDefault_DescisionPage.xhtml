@@ -411,18 +411,24 @@
 		closable="false" id="rejectDialogId" widgetVar="rejectDialog"
 		height="400px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		<ac:smSearchRejectReasons>
-			<!-- #34400 -->
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectBlockPanelWidget.show()"
-					oncomplete="rejectBlockPanelWidget.hide(); confirmRejectDlg.show();"
-					partialSubmit="true" process="@([id$=rejectDialogId])"
-					action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
-					action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
-					partialSubmit="true" process="@this" />
-
-		</ac:smSearchRejectReasons>
+		<!-- #40367 - START -->
+		<p:outputPanel layout="block" id="poRejectBlockPanel">
+			<ac:smSearchRejectReasons>
+				<!-- #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectBlockPanelWidget.show()"
+						oncomplete="rejectBlockPanelWidget.hide(); confirmRejectDlg.show();"
+						partialSubmit="true" process="@([id$=rejectDialogId])"
+						action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
+					<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+						onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+						action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
+						partialSubmit="true" process="@this" />
+			</ac:smSearchRejectReasons>
+			<p:blockUI block="poRejectBlockPanel" widgetVar="poRejectBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
+		<!-- #40367 - END -->
 	</p:dialog>
 	<!-- 13362 START -->
 	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
@@ -440,14 +446,14 @@
 		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.approve']}" 
 		update="@([id$=Msg])"
-		loadingWidget="poApprovedBlockWidget" /><!-- #37925 -->
+		loadingWidget="poApprovedBlockWidget" /><!-- #37925 --> <!-- #40367 -->
 		
 	<ac:confirmationPopupSM id="confirmRejectDlg" widget="confirmRejectDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}"
 		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.reject']}" 
 		update="@([id$=Msg])"
-		loadingWidget="blockWidget" />
+		loadingWidget="poRejectBlockWidget" /> <!-- #40367 -->
 
 	<ac:confirmationPopupSM id="confirmInquiryDlg" widget="confirmInquiryDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}"
