@@ -758,7 +758,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		this.getManagedBean().setJustification(
 				scQtFinalization.getJustification());
-		//#34860 start adli
+		//#34860 start
 		List<String> justificationReasonList = new ArrayList<>();
 		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
@@ -1035,7 +1035,7 @@ public class SupplierFinalizationBackingBean extends
 //				this.getManagedBean().setRenderjustificationTextbox(true);
 //			}
 //		}
-		//#34860 Start adli
+		//#34860 Start
 		List<ScQtFinalJustification> finalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
 		for (ScQtFinalJustification finalJustification: finalJustificationList){
@@ -1052,7 +1052,7 @@ public class SupplierFinalizationBackingBean extends
 		// #28834 - End.
 		
 		try {
-			//#34860 Start adli
+			//#34860 Start
 //			this.getManagedBean()
 //					.setJustDropdown(
 //							getReasonCodeDropdownValues(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION
@@ -1803,7 +1803,7 @@ public class SupplierFinalizationBackingBean extends
 								&& !getManagedBean().isDisableJustifications()
 								// #28834 - End.
 								) {
-					//#34860 start adli
+					//#34860 start
 //					if ((this.getManagedBean().getJustification() == null
 //							|| this.getManagedBean().getJustification()
 //									.getReasonId() == null) && this.getManagedBean().isSubmit()) {//#35205 & #28834
@@ -3946,7 +3946,7 @@ return	remarksNotFound;
 						
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.saveSupplierFinalization(reqDTO);
-			//#34860 start adli
+			//#34860 start
 			String outcome = this.getManagedBean().getOutcome();
 			if (BpmOutcomeConst.BPM_SAVE.equals(outcome)){
 				saveQtFinalJustification(qtSuppFinalizationSO);
@@ -5625,12 +5625,11 @@ return	remarksNotFound;
 					.retrieveSupplierFinalizationDtls(reqDTO);
 			ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 			
-			//#34860 start adli
+			//#34860 start
 			SuppFinalJustificationReqDTO justificationReqDTO = new SuppFinalJustificationReqDTO();
-			SuppFinalJustificationResDTO justificationResDTO = new SuppFinalJustificationResDTO();
 			
 			justificationReqDTO.setScQt(scQt);
-			justificationResDTO = qtSuppFinalizationSO.retrieveSupplierFinalJustification(justificationReqDTO);
+			SuppFinalJustificationResDTO justificationResDTO = qtSuppFinalizationSO.retrieveSupplierFinalJustification(justificationReqDTO);
 			
 			List<ScQtFinalJustification> finalJustificationList = justificationResDTO.getFinalJustificationList();
 			if (CollectionUtils.isNotEmpty(finalJustificationList)){
@@ -10618,7 +10617,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 */
 	public void justificationChange(AjaxBehaviorEvent event) {
 		log.info("justificationChange");
-		//#34860 adli start
+		//#34860 start
 		List<String> values = this.getManagedBean().getJustificationReasonList();
 		boolean hasOthers = false;
 		for (String reasonCode : values){

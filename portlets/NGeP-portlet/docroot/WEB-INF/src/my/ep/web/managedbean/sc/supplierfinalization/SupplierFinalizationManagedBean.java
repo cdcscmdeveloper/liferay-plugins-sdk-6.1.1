@@ -364,7 +364,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#35320 - End
 	
 	private ScQtEvaluationResultDtl tempRecommendedSupplier;//#39620 
-	//#34860 Start adli
+	//#34860 Start
 	private List<String> justificationReasonList;
 	private List<ScQtFinalJustification> finalJustificationList;
 	private String justificationText;
