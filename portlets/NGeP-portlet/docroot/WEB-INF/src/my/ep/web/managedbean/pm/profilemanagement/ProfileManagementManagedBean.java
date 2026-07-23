@@ -969,5 +969,4 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 		this.brandNewUserOrgId = brandNewUserOrgId;
 	}
 	/************ END: AUDIT #35509 *************/
-
 }
