@@ -1538,7 +1538,7 @@ public class SupplierManagementConst {
 	}
 //	#37925 END
 	
-	// 28278 -START
+	// 28278(26238) - START
 	public String getMOF_STATUS_DELETED() {
 		return MOF_STATUS_DELETED;
 	}
@@ -1546,5 +1546,5 @@ public class SupplierManagementConst {
 	public String getMOF_STATUS_CANCELLED() {
 		return MOF_STATUS_CANCELLED;
 	}
-	// 28278 -END
+	// 28278(26238) - END
 }
