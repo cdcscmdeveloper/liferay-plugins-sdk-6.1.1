@@ -19128,9 +19128,22 @@ public class SmApplicationBackingBean extends
 				initPmUserRole();
 			}
 			
-			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
+		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
+			history = getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory();
+			boolean firstDataPO = true;
+			boolean firstDataApprover = true;
+
+			for (SmSuppCatOtherDescHistory obj : history) {
+				if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+					firstDataPO = false;
+				} else if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+					firstDataApprover = false;
+				}
+			}
+			
+			if (firstDataPO && getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_PO);
-			} else if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isApproverUser()) {
+			} else if (firstDataApprover && getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_APPROVER);
 			} else if (getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
