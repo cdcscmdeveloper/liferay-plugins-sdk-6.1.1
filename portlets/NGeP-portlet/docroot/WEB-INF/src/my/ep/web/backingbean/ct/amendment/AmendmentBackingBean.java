@@ -8960,7 +8960,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 
 	/**
-	 * Method to check supplier for Cancelled Bumiputera Status
+	 * Method to check supplier for Cancelled Bumiputera Status, check the
+	 * bumiputera status from supplier module and check the contract is not
+	 * direct loa or direct nego.
 	 * 
 	 * @param supplier the supplier for the current contract
 	 */
@@ -8970,23 +8972,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IQTDetailSO iQtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		try {
-			boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
-			boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
-					.getContractNo());
+			if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+					.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+				boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
+				boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+						.getContractNo());
 
-			if (!suppBumiputera && openFor) {
-				this.getManagedBean().setSupplierBumiCancel(true);
-				if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
-					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+				if (!suppBumiputera && openFor) {
+					setSupplierBumiputeraCancel();
 				}
-				handleMessageSupplierMaintenance();
 			}
-
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierBumiputera",
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
 					"checkSupplierBumiputera", getUserIdSessionFromLoginId(), e);
 		}
+	}
+	
+	/**
+	 * Method to set cancel bumiputera if the condition are met
+	 */
+	public void setSupplierBumiputeraCancel() {
+		this.getManagedBean().setSupplierBumiCancel(true);
+		if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
+			this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+		}
+		handleMessageSupplierMaintenance();
 	}
 	
 	/**
