@@ -4,11 +4,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;//Fix - #34367
+import javax.servlet.http.HttpSession;//Fix - #34367
+
+import my.ep.biz.service.pm.authorization.user.IUserSO;//Fix - #34367
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;//Fix - #34367
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -41,6 +50,9 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	public static final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
 	
 	public static final String USER_ROLE_SESSION_KEY = "USER_ROLE_SESSION_KEY";
+	
+	public static final String PANEL_CIRCULAR_ADMIN = "BPK_PCA";
+	private static final String SESSION_CONSTANT_RULE ="CT_PANEL_CIRCULAR_CONSTANT_RULE";
 	
 	public ExtLayoutLocalServiceWrapper(LayoutLocalService layoutLocalService) {
 		super(layoutLocalService);
@@ -129,8 +141,10 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 					//#35580 - End
 				}
 			}
+		} else if (getLoggedInUserId() > 0 && (isPanelCircular(getLoggedInUserId()) && !hasValidConstantRuleCached())) { //Start Fix - #34367
+			layouts = CtPanelCircularLayoutFilter.filterLayouts(layouts);
 		}
-		
+		//End Fix - #34367
 		return layouts;
 	}
 	
@@ -186,7 +200,6 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	public long getLoggedInUserId() {
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		if(serviceContext != null) {
-			log.info(" #34367 serviceContext.getUserId() :::::::::::  "+serviceContext.getUserId());//#34367
 			return serviceContext.getUserId();
 		}
 		return 0L;
@@ -204,5 +217,120 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		}
 		return isBasic;
 	}
+	// Start - #34367
+	/**
+	 * Determines whether the logged-in user belongs to at least one active
+	 * organization profile that is associated with a constant rule.
+	 *
+	 * <p>The user's organization profiles are retrieved and evaluated against
+	 * the configured constant rules. This method returns {@code true} as soon
+	 * as a matching rule is found. If no applicable rule exists or an error
+	 * occurs during processing, {@code false} is returned.</p>
+	 *
+	 * @return {@code true} if the logged-in user has at least one applicable
+	 *         constant rule; otherwise {@code false}
+	 */
+	public boolean hasValidConstantRule() {
+		long userId = getPmUserId();
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IRuleSO.class);
+		try {
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(userId);
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			for (PmUserOrg orgProfile : userResDTO.getUserOrgList()) {
+				if (orgProfile == null || orgProfile.getPmOrgProfile() == null) {
+					continue;
+				}
+				Long orgProfileId = orgProfile.getPmOrgProfile().getOrgProfileId();
+				log.info("Checking constant rule for organization profile ID: " + orgProfileId);
+				if (ruleSO.getUserRulesConst(orgProfileId) != null) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			log.error("Error while checking the user's constant rule validity.", e);
+		}
+		return false;
+	}
+	
+	
+	
+	/**
+	 * Retrieves the application user ID associated with the currently logged-in
+	 * Liferay user.
+	 *
+	 * <p>The current Liferay user ID is retrieved from the portal context and
+	 * converted to the application's user ID by using the user's screen name
+	 * to query the Profile Management service.</p>
+	 *
+	 * <p>If the logged-in user cannot be found or no corresponding application
+	 * user exists, this method returns {@code 0}.</p>
+	 *
+	 * @return the application user ID if found; otherwise {@code 0}
+	 */
+	public long getPmUserId() {
+
+	    try {
+	        long loggedInUserId = getLoggedInUserId();
+	        User user = UserLocalServiceUtil.getUser(loggedInUserId);
+	        UserReqDTO reqDTO = new UserReqDTO();
+	        reqDTO.setLoginId(user.getScreenName());
+	        IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	        UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+	        if (resDTO != null && resDTO.getPmUser() != null) {
+	            return resDTO.getPmUser().getUserId();
+	        }
+	    } catch (Exception e) {
+	        log.error("Error while retrieving PM user ID for logged-in user.", e);
+	    }
+	    return 0L;
+	}
+	
+	
+	public boolean isPanelCircular(long userId) {
+		boolean isPanel = false;
+		try {
+			isPanel = UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, Long.valueOf(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_SITE_ID)).longValue(),
+					PANEL_CIRCULAR_ADMIN, true);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		return isPanel;
+	}
+	
+	
+	/**
+	 * Retrieves the cached constant rule validity status from the current user
+	 * session.
+	 *
+	 * <p>If the validation result is not available in the session, this method
+	 * executes {@link #hasValidConstantRule()} once and stores the result for
+	 * subsequent requests during the same session.</p>
+	 *
+	 * <p>The cached value will be removed automatically when the user session
+	 * expires or the user logs out.</p>
+	 *
+	 * @return {@code true} if the logged-in user has a valid constant rule;
+	 *         otherwise {@code false}
+	 */
+	public boolean hasValidConstantRuleCached() {
+
+	    ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+	    if (serviceContext == null || serviceContext.getRequest() == null) {
+	        return hasValidConstantRule();
+	    }
+	    HttpServletRequest request = serviceContext.getRequest();
+	    HttpSession session = request.getSession();
+	    Boolean hasConstantRule = (Boolean) session.getAttribute(SESSION_CONSTANT_RULE);
+	    if (hasConstantRule == null) {
+	        hasConstantRule = hasValidConstantRule();
+	        session.setAttribute(SESSION_CONSTANT_RULE, hasConstantRule);
+	    }
+	    return hasConstantRule;
+	}
+	// End - #34367
 	
 }
