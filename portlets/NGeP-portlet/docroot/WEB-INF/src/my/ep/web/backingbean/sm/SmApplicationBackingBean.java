@@ -19214,29 +19214,39 @@ public class SmApplicationBackingBean extends
 			type = catBean.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 		}
 
-		Long status = getManagedBean().getSmAppl().getPmStatus().getStatusId();
-
 		boolean applTypeRenewal =  SupplierManagementConst.APPL_TYPE_RENEWAL.equalsIgnoreCase(
 		        getManagedBean().getSmAppl().getApplType());
 		boolean filter = false;
+		boolean svBeforeAfter = false;
+		Long status = getManagedBean().getSmAppl().getPmStatus().getStatusId();
+	    List<SmWorkflowStatus> smws = new ArrayList<>(); 
 
+		if (getManagedBean().getSmAppl().getSmWorkflowStatuses() != null) {
+			smws = getManagedBean().getSmAppl().getSmWorkflowStatuses();
+			
+			for (SmWorkflowStatus obj : smws) {
+				if (status.equals(SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE) ||
+						obj.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) ||
+						obj.getPmStatus().getStatusId().equals(SupplierManagementConst.STATUS_PENDING_SITE_VISIT)) {
+					svBeforeAfter = true;
+					break;
+				}
+			}
+		}
+		
 		if (SupplierManagementConst.SECTION_MAIN.equalsIgnoreCase(section)) {
 			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
 					.equals(type))
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())
-					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
-					&& status != SupplierManagementConst.STATUS_PENDING_SITE_VISIT
-					&& status != SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
+					&& !svBeforeAfter;
 		} else if (SupplierManagementConst.SECTION_RENEWAL.equalsIgnoreCase(section)) {
 			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
 					.equals(type))
 					&& (getManagedBean().isPoUser()
 							|| getManagedBean().isApproverUser() || (applTypeRenewal && getManagedBean()
 							.isSupplierUser()))
-					&& status != SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
-					&& status != SupplierManagementConst.STATUS_PENDING_SITE_VISIT
-					&& status != SupplierManagementConst.STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
+					&& !svBeforeAfter;
 		}
 
 		return filter;
@@ -19276,9 +19286,41 @@ public class SmApplicationBackingBean extends
 	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	}
 
+	/**
+     * Determines and updates the company country based on application details.
+     *
+     * @param smAppl the supplier application details, must not be null
+     * @return the resolved country string
+     */
 	private String getCompanyCountry(SmAppl smAppl) {
-	    String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
-	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
+        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
+
+        if (country != null && !country.isEmpty()) {
+            return country;
+        }
+
+        boolean isRoc = isRocBusinessType(smAppl.getSmSupplier().getBusinessType());
+        boolean isForeign = isValidForeignRegNo(smAppl.getSmSupplier().getRegNo());
+
+        if (isRoc && !isForeign) {
+            String localCompany = SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA;
+            smAppl.getSmCompanyBasic().setSsmCompanyCountry(localCompany);
+            return localCompany;
+        }
+
+        return SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
+	}
+	
+	/**
+	 * Validate FOREIGN supplier reg no.
+	 * Format: 99 + 4 digits (total 6 digits) + hyphen + 1 uppercase letter
+	 * Example: 991234-A
+	 */
+	public boolean isValidForeignRegNo(String regNo) {
+	    if (regNo == null) {
+	        return false;
+	    }
+	    return SupplierManagementConst.FOREIGN_REG_NO_PATTERN.matcher(regNo.trim()).matches();
 	}
 
 	/**
