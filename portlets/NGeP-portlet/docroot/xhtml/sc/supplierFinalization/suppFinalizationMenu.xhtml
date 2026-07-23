@@ -97,11 +97,11 @@
                     	<h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
                     	<!-- ***28834 ends -->
 							<ui:remove>21692 - Start</ui:remove>
-							<ui:remove>26247 remove update form</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								action="#{suppFinalizationBackingBean.submitAction}"
-								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}" process="@form"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								partialSubmit="true" process="@form" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen() and (bpmAction == 'SUBMIT')}" />
 							<p:commandButton value="#{lbl[buttonLabel]}"
@@ -306,12 +306,11 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<!-- ***28834 start  new -->
-				<ui:remove>26247 remove update form</ui:remove>
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					onclick="blockWidget.show();"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
-					oncomplete="blockWidget.hide();submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "
-					process="@form">
+					oncomplete="submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "
+					update="@form">
 					<!-- ***28834 end new -->
 				</p:commandButton>
 

@@ -183,8 +183,7 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 		 * @param userCommitteeSearchBean
 		 *            the user committee search bean
 		 */
-		public UserCommitteePagingDataModel(String componentId,
-				UserCommitteeSearchBean userCommitteeSearchBean) {
+		public UserCommitteePagingDataModel(String componentId, UserCommitteeSearchBean userCommitteeSearchBean) {
 			super(componentId, false);
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
 		}
@@ -225,32 +224,20 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 	 * @param userSearchBean
 	 *            the user search bean
 	 */
-	private void populateUserSearchCriteria(
-			UserCommitteeSearchBean userCommitteeSearchBean,
-			ISearchBean<PmUser> userSearchBean) {
+	private void populateUserSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean, ISearchBean<PmUser> userSearchBean) {
 		if (userCommitteeSearchBean != null) {
 
 			String name = userCommitteeSearchBean.getName();
 			if (!StringUtils.isBlank(name)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.USER_NAME,
-								SearchOperator.OPERATOR_LIKE.value(), name,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.USER_NAME, SearchOperator.OPERATOR_LIKE.value(), name, true));
 			}
 			String idno = userCommitteeSearchBean.getIdentificationNo();
 			if (!StringUtils.isBlank(idno)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.IDENTIFICATION_NO,
-								SearchOperator.OPERATOR_LIKE.value(), idno,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.IDENTIFICATION_NO, SearchOperator.OPERATOR_LIKE.value(), idno, true));
 			}
 			String idtype = userCommitteeSearchBean.getIdentificationType();
 			if (!StringUtils.isBlank(idtype)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"identificationCode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(), idtype,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), idtype, true));
 			}
 		}
 	}
@@ -1019,20 +1006,17 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 
 	// 25037 - start
 	/**
-	 * Adds the committe member.
+	 * Adds the committee member.
 	 * 
 	 * @param committee
-	 *            the committee
 	 * @param titleName
-	 *            the title name
 	 */
-	// 25037 - start
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
 		addCommitteMember(committee, titleName, null);
 	}
 
 	/**
-	 * Adds the committe member.
+	 * Adds the committee member.
 	 * 
 	 * @param committee
 	 * @param titleName
@@ -1928,8 +1912,9 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 							ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE).contains(commType);
 				} else if (SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equalsIgnoreCase(taskName)) {
 					return ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType);
-				} 
+				}
 				// 40061 - end
+
 				// 25037 - start
 				else if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
 						|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
@@ -2528,49 +2513,44 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 	 * @param list the list
 	 * @return true, if successful
 	 */
-	public <ENTITY_CLASS extends BaseEntity> boolean enableSelectedNewCommitteeList(
-			IPagingDataModel<PmUser> dataModel) {
-		if(null!=dataModel){
-		List<PmUser> modelList=dataModel.getList();
-		if (modelList != null) {
-			for (PmUser entity : modelList) {
-				if (entity.isSelected()) {
-					return false;
-				}
+	public <ENTITY_CLASS extends BaseEntity> boolean enableSelectedNewCommitteeList(IPagingDataModel<PmUser> dataModel) {
+		if (null != dataModel) {
+			List<PmUser> modelList = dataModel.getList();
+			if (modelList != null) {
+				for (PmUser entity : modelList) {
+					if (entity.isSelected()) {
+						return false;
+					}
 
+				}
 			}
-		}
 		}
 		return true;
 	}
 	
-	public void addNewCommiteteUsers(IPagingDataModel<PmUser> dataModel){
-		if(null!=dataModel){
-			List<PmUser> modelList=dataModel.getList();
+	public void addNewCommiteteUsers(IPagingDataModel<PmUser> dataModel) {
+		if (null != dataModel) {
+			List<PmUser> modelList = dataModel.getList();
 			log.debug("start addNewCommiteteUsers");
-			List<PmUser> userList=this.getManagedBean().getSelectedPmUser();
-			
-			if(null==userList){
+			List<PmUser> userList = this.getManagedBean().getSelectedPmUser();
+			if (null == userList) {
 				log.debug("nullList addNewCommiteteUsers");
-				userList=new ArrayList<PmUser>();
+				userList = new ArrayList<PmUser>();
 			}
-			
 			if (modelList != null) {
-				List<PmUser> user=new ArrayList<PmUser>();
-				
-				for (PmUser entity : modelList) {	
+				List<PmUser> user = new ArrayList<PmUser>();
+				for (PmUser entity : modelList) {
 					if (entity.isSelected()) {
 						user.add(entity);
 					}
-			}
-			
-			userList.addAll(user);
-			this.getManagedBean().setSelectedPmUser(userList);
-			//log.info("end addNewCommiteteUsers"+this.getManagedBean().getSelectedPmUser().size());
+				}
+				userList.addAll(user);
+				this.getManagedBean().setSelectedPmUser(userList);
+				// log.info("end addNewCommiteteUsers"+this.getManagedBean().getSelectedPmUser().size());
 			}
 		}
 	}
-	
+
 	// 25037 - start
 	private Long getCurrentQtStatusId() {
 		ScQt scQt = getManagedBean().getQt();
@@ -2715,5 +2695,4 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 		return this.getManagedBean().getCurrentCMTStatus();
 	}
 	// 36695 - end
-
 }
