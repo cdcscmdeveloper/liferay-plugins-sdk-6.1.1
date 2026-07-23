@@ -1026,15 +1026,6 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getEndorsementReportActiveIndex());
 		
-//		PmReason justificationParam = this.getManagedBean().getJustification();
-//		if (justificationParam == null) {
-//			this.getManagedBean().setJustification(new PmReason());
-//		} else {
-//			if (justificationParam.getReasonId() != null
-//					&& JUSTIFICATION_OTHERS.equalsIgnoreCase(justificationParam.getReasonCode())) {
-//				this.getManagedBean().setRenderjustificationTextbox(true);
-//			}
-//		}
 		//#34860 Start
 		List<ScQtFinalJustification> finalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
@@ -1053,10 +1044,6 @@ public class SupplierFinalizationBackingBean extends
 		
 		try {
 			//#34860 Start
-//			this.getManagedBean()
-//					.setJustDropdown(
-//							getReasonCodeDropdownValues(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION
-//									.value()));
 			this.getManagedBean()
 			.setJustDropdown(
 					getReasonCodeCheckboxValues(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION
@@ -1068,6 +1055,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
+	//#34860 Start
 	/**
 	 * #34860
 	 * Populate values for Reason Check Box base on reason category code
@@ -1092,6 +1080,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		return items;
 	}
+	//#34860 End
 	
 	// #28834 - Start.
 	private void setDisableSFJustification() {
@@ -1803,11 +1792,7 @@ public class SupplierFinalizationBackingBean extends
 								&& !getManagedBean().isDisableJustifications()
 								// #28834 - End.
 								) {
-					//#34860 start
-//					if ((this.getManagedBean().getJustification() == null
-//							|| this.getManagedBean().getJustification()
-//									.getReasonId() == null) && this.getManagedBean().isSubmit()) {//#35205 & #28834
-					
+					//#34860 start					
 					if (CollectionUtils.isEmpty(this.getManagedBean().getJustificationReasonList())
 							 && this.getManagedBean().isSubmit()){	//#34860 end					
 					
@@ -1903,7 +1888,7 @@ public class SupplierFinalizationBackingBean extends
 //				&& this.getManagedBean().getJustification().getReasonId() == null 
 //				&& !this.getManagedBean().isSubmit()){
 			reqDTO.getScQtFinalization().setJustification(null);
-//		}
+//		}//#34860 commented to make null for justification_id in SC_QT_FINALIZATION
 	}
 	//#35205 & #28834 - End
 	
@@ -3960,7 +3945,13 @@ return	remarksNotFound;
 			qtSuppFinalizationSO = null;
 		}
 	}
-	
+
+	//#34860 Start
+	/**
+	 * #34860
+	 * save into ScQtFinalJustification
+	 * @param qtSuppFinalizationSO
+	 */
 	public void saveQtFinalJustification(IQTSuppFinalizationSO qtSuppFinalizationSO){
 		List<String> reasonIdList = this.getManagedBean().getJustificationReasonList();
 		List<ScQtFinalJustification> finalJustificationList = new ArrayList<ScQtFinalJustification>();;
@@ -10618,13 +10609,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		//#34860 start
 		List<String> values = this.getManagedBean().getJustificationReasonList();
 		boolean hasOthers = false;
+		//#34860 End
 		for (String reasonCode : values){
-//			String reasonCode = (String) event.getComponent().getAttributes()
-//					.get("value");
 			this.getManagedBean().setRenderjustificationTextbox(false);
 			PmReason reason = getReasonByCategoryAndCode(
 					ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(), reasonCode);
 			//Bug #29707 - start
+			//#34860 Start
 			if (reason == null) {
 				this.getManagedBean().getScQtFinalization().setJustification(new PmReason());
 				this.getManagedBean().setJustification(new PmReason());
@@ -10633,12 +10624,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				this.getManagedBean().setJustification(reason);
 				if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reasonCode)) {//#36840
 					this.getManagedBean().setRenderjustificationTextbox(true);
+					// #36840 -start-
 					hasOthers = true;
 					break;
-				} 
+					// #36840 -end-
+				} //#34860 End
 			}
 			//Bug #29707 - end
 		}
+		//#34860 Start
 		if (!hasOthers) {
 			this.getManagedBean().setRenderjustificationTextbox(false);
 		    this.getManagedBean().setJustificationText(null);
@@ -13864,6 +13858,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	}
 	// #40396 - End
 
+	//#34860 Start
+	/**
+	 * #34860
+	 * Get the justification list
+	 * @param categoryCode
+	 * @return
+	 */
 	public List<PmReasonDesc> getJustificationList(String categoryCode) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
@@ -13876,6 +13877,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		return reasonDescs;
 	}
+	//#34860 End
 
 }
 // ***19336
