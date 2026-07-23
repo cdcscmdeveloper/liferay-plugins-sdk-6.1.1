@@ -1373,13 +1373,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		populateItemsForSelectedAddress();
 		// #27476 start
-		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
-			validateThresholdPK7AndSpecialItem();
-		} else {
-			checkPRThresholdPerItem();
+		String procType = getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode();
+		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+		        || procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+		    validateThresholdPK7AndSpecialItem();
+		} else if (!procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) { //#31344 - Exclude check threshold item for G2G
+		    checkPRThresholdPerItem();
 		}
 		// #27476 end
 	}
