@@ -381,8 +381,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 							scQtFinalization.getOnlineBiddingEndorse())) {
 				retrieveOnlineEndorsement();
 			} else {
-				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION
-						.equals(getManagedBean().getCurrentStatusId())) {
+				//#27502 - New DO MOF Role and Process
+				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION.equals(getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.SF_MOF_COMMITTEE_BIDDING.equals(getManagedBean().getCurrentStatusId())) {
 					getManagedBean().setBpkUser(true);
 				}
 				retrieveOfflineEndorsement();
