@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.ct.actor.ICtActorSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO; //#30737
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;//34442
@@ -520,19 +521,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
             return new String[] {contractNo, selectedUserName};
         }
 
-        if (MessageConst.ERROR_100071.equals(errorCode)) {
-            return parameters;
-        }
-
-        if (MessageConst.ERROR_100072.equals(errorCode)) {
-            return new String[]{
-            	contractNo,
-                selectedUserName,
-                "RAMLEEE"
-            };
-        }
-
-        if (MessageConst.ERROR_100073.equals(errorCode)) {
+        if (MessageConst.ERROR_100071.equals(errorCode)
+        		|| MessageConst.ERROR_100073.equals(errorCode)) {
         	if(parameters != null){
         		return parameters;
         	}
@@ -560,20 +550,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         CtContract ctContract = getContractVer().getCtContract();
         
         int activeCount = 0;
-
-//      int i = 0; // TEST PURPOSE
         for (SelectedInactiveUserDTO user : selectedInactiveUsers) {
-        	
-        	
-        	// TEMP HARDCODED STATUS
-        	// FOR TESTING PURPOSE ONLY
-//  	        if (i == 0) {
-//  	        	log.info("xoxoxoxoxoxo set status : 2L");
-//  	        	user.setStatus(2L);
-//  	        } else {
-//  	        	log.info("xoxoxoxoxoxo set status : 3L");
-//  	        	user.setStatus(3L);
-//  	        }
 
             Long status = user.getStatus();
             log.info("xoxoxoxo status : "+status);
@@ -588,26 +565,26 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 
                 invalidUsers.add(user);
             }
-            
-//          i++; //FOR TESTING PURPOSE ONLY
         }
         
         log.info("xoxoxoxoxoxo activeCount : "+activeCount);
         log.info("xoxoxoxoxoxo invalidUsers size : "+invalidUsers.size());
         
+        String userNames = getSelectedInactiveUserNames(invalidUsers);
+        
         // Single selected user and inactive
         if (selectedInactiveUsers.size() == 1 && !invalidUsers.isEmpty()) {
         	log.info("Single selected user and inactive");
-        	log.info("invalidUsers name : "+invalidUsers.get(0).getUserName());
+        	log.info("invalidUsers name : "+userNames);
         	String message = MessageConst.ERROR_100068;
         	String[] parameters = null;
             if (CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
             	message = MessageConst.ERROR_100070;
-            	parameters = new String[] { invalidUsers.get(0).getUserName() };
+            	parameters = new String[] { userNames };
             }
             else if (CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
             	message = MessageConst.ERROR_100069;
-            	parameters = new String[] { invalidUsers.get(0).getUserName() };
+            	parameters = new String[] { userNames };
             }
         	throw new EpException(message, parameters);
         }
@@ -615,7 +592,6 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         // Mixed active and inactive
         if (activeCount > 0 && !invalidUsers.isEmpty()) {
         	log.info("Mixed active and inactive");
-        	String userNames = getSelectedInactiveUserNames(invalidUsers);
         	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
         		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(invalidUsers) });
         	} else {
@@ -626,7 +602,6 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         // All inactive (2,3,4)
         if (activeCount == 0 && !invalidUsers.isEmpty()) {
         	log.info("All inactive (2,3,4)");
-        	String userNames = getSelectedInactiveUserNames(invalidUsers);
         	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
         		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(invalidUsers) });
         	} else {
@@ -697,26 +672,21 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   		log.info("xoxoxoxoxooxoxo parameterCode : "+ parameterCode);
   		log.info("xoxoxoxoxooxoxo docType : "+ docType);
           
-  		String userRole;
-          if(parameterCode.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-          	userRole = RoleCode.BPK_CCA.value();
-          } else{
-          	userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
-          }
+  		String userRole = determineContractAdminRole();
+	      
+  		//log.info("xoxoxoxoxo org name : "+getContractVer().getCtContract().getOwnerOrgProfile().getOrgValidity().getOrgName());
+	      
+  		CtActor ctActor = retrieveContractActor(docId, docType, userRole);
+  		if (ctActor != null) {
+  			log.info("xoxoxoxoxooxoxo ctActor name : "+ctActor.getUserName());
+  			log.info("xoxoxoxoxooxoxo ctActor.getRoleCode() : "+ctActor.getRoleCode());
           
-          log.info("xoxoxoxoxo org name : "+getContractVer().getCtContract().getOwnerOrgProfile().getOrgValidity().getOrgName());
-          
-          CtActor ctActor = retrieveContractActor(docId, docType, userRole);
-          if (ctActor != null) {
-        	  log.info("xoxoxoxoxooxoxo ctActor name : "+ctActor.getUserName());
-              log.info("xoxoxoxoxooxoxo ctActor.getRoleCode() : "+ctActor.getRoleCode());
-              
-              List<PmUser> users = new ArrayList<PmUser>();
-              users.add(ctActor.getUser());
-              return getInactiveUsers(userRole, users, docType, null);
-          }
-          
-          return new ArrayList<>();
+	        List<PmUser> users = new ArrayList<PmUser>();
+	        users.add(ctActor.getUser());
+	        return getInactiveUsers(userRole, users, docType, null);
+  		}
+	      
+	    return new ArrayList<>();
   	}
   	
   	protected List<SelectedInactiveUserDTO> getInactiveUsers(String roleCode, List<PmUser> users, String docType, String memberRoleCode) {
@@ -755,9 +725,18 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(resDto.getRoleCode()).getRoleName();
   	  	    	
   	  	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
+  	  	        selectedUser.setUserId(users.get(i).getUserId());
   	  	        selectedUser.setUserName(users.get(i).getUserName());
   	  	        selectedUser.setUserRoleDesc(userRoleDesc);
   	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+  	  	        
+//	  	  	    if (i == 0) {
+//	  	        	selectedUser.setStatus(3L);
+//	  	        	log.info("xoxoxoxoxoxo set status : "+selectedUser.getStatus());
+//	  	        } else {
+//	  	        	log.info("xoxoxoxoxoxo set status : 3L");
+//	  	        	selectedUser.setStatus(3L);
+//	  	        }
   	  	        
   	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(resDto.getMemberRoleCode())) {
   	  	        	log.info("xoxoxoxoxoxo add as chairperson");
@@ -805,6 +784,27 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   			throw buildInactiveUserException(ex);
   		}
     }
+  	
+  	protected String determineContractAdminRole() {
+  		String userRole;
+  		if(ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(getContractVer().getCtContract().getContractType().getParameterCode())){
+  			userRole = RoleCode.BPK_CCA.value();
+  		} else {
+  			userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+  		}
+  		return userRole;
+  	}
+  	
+  	protected String determineContractApproverRole() {
+  		String parameterCode = getContractVer().getCtContract().getContractType().getParameterCode();
+	    if (ParameterConst.CONTRACT_TYPE_MINISTRY.equalsIgnoreCase(parameterCode)) {
+	        return RoleCode.CT_APPROVER.value();
+	        
+	    } else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(parameterCode)) {
+	        return RoleCode.BPK_CC_APPROVER.value();
+	    }
+	    return null;
+  	}
     //#30737 - End
     
 }

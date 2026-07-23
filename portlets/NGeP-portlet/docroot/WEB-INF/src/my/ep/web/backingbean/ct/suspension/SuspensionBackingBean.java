@@ -751,10 +751,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 
 		    log.info("xoxoxoxoxooxoxo action : SUBMIT");
 
-		    String approverType = determineRoleCode();
-
 		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(approverType, getSelectedUsers(), getManagedBean().getContractVer().getDocType(), null);
+	        		getInactiveUsers(determineContractApproverRole(), getSelectedUsers(), getManagedBean().getContractVer().getDocType(), null);
 	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 		}
 		
@@ -1174,18 +1172,5 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	    this.confirmationContentMsg = confirmationContentMsg;
 	}
 	//34442 - end
-	
-	// #30737 - start
-	private String determineRoleCode() {
-		String parameterCode = getContractVer().getCtContract().getContractType().getParameterCode();
-	    if (ParameterConst.CONTRACT_TYPE_MINISTRY.equalsIgnoreCase(parameterCode)) {
-	        return RoleCode.CT_APPROVER.value();
-	        
-	    } else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(parameterCode)) {
-	        return RoleCode.BPK_CC_APPROVER.value();
-	    }
-	    return null;
-	}
-	// #30737 - end
 	
 }

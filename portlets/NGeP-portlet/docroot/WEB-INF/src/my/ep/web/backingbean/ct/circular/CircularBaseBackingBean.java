@@ -351,14 +351,6 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
             };
         }
 
-        if (MessageConst.ERROR_100072.equals(errorCode)) {
-            return new String[]{
-                "MOF/ABC/20002",
-                selectedUserName,
-                "RAMLEEE"
-            };
-        }
-
         if (MessageConst.ERROR_100073.equals(errorCode)) {
             return new String[]{
                 "Requisitioner",
