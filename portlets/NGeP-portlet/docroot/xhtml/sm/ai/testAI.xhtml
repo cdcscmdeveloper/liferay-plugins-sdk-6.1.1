@@ -12,18 +12,6 @@
 	<ui:define name="content">
 	
 	<br/>
-	EPF
-	<p:commandButton value="AI Assistant" onclick="epfAI.show()" immediate="true"> 
-		<p:ajax partialSubmit="true" process="@this" />
-	</p:commandButton>
-	<ac:smAIAssistant aiDlg="epfAI" docType="epf" smAppl="#{smAIDocBackingBean.test()}" />
 	
-	<br/>
-	<br/>
-	TENANCY
-	<p:commandButton value="AI Assistant" onclick="tenancyAI.show()" immediate="true">
-		<p:ajax partialSubmit="true" process="@this" />
-	</p:commandButton>
-	<ac:smAIAssistant aiDlg="tenancyAI" docType="tenancy" smAppl="#{smAIDocBackingBean.test()}" />
 	</ui:define>
 </ui:composition>

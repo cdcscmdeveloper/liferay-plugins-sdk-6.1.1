@@ -2775,7 +2775,20 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			// set action
 			getManagedBean().setAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			//#34442 - start
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				setConfirmationContentMsg(
+					    getConfirmationContent(
+					        String.valueOf(getManagedBean().getCircularVer().getStatus().getStatusId())
+					    )
+					);
+				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#34442 - end
 			return null;
 		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
@@ -2812,6 +2825,23 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		setPanelCircularVar(reqDTO);
 		return "/xhtml/ct/circular/portal/panelCircularTab.xhtml?faces-redirect=true";
 	}
+	
+	// start - 36503
+	/**
+	 * Determines whether the Category Code tab should be displayed.
+	 * The tab is hidden when the panel circular is accessed
+	 * from the Purchase Request (PR) or Purchase Order (PO) modules.
+	 *
+	 * @return true if the Category Code tab should be shown,
+	 *         false otherwise.
+	 */
+	public boolean isShowCategoryCodeTab() {
+		String gotoPreviewPage = getManagedBean().getGotoPreviewPage();
+
+		return !"/xhtml/fl/purchaserequest/prBasePage.xhtml".equals(gotoPreviewPage)
+				&& !"/xhtml/fl/purchaseorder/poBasePage.xhtml".equals(gotoPreviewPage);
+	}
+	// end - 36503
 
 	/**
 	 * Method used to set new effective date  for panel circular
@@ -3715,6 +3745,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if (existing.getPmCategoryL1().getCategoryL1Id().equals(l1Id) &&
 				existing.getPmCategoryL2().getCategoryL2Id().equals(l2Id) &&
 				existing.getPmCategoryL3().getCategoryL3Id().equals(l3Id)) {
+				
+				RequestContext.getCurrentInstance().execute("catCodePopup.hide()"); //#40498,#30014
 				throw new EpException(MessageConst.ERROR_750090, new String[] {categoryCode, categoryName}); // Duplicate message Error
 			}
 		}
