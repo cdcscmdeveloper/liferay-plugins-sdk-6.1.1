@@ -235,6 +235,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		appl.setAiProcessed(1);
 		recomputeAiProcessed(appl);
+		// Eligible but nothing extracted yet, and AI is switched off: drop to 0 so the AI Assistant
+		// column, upload icon and step icon all stay hidden. An already-extracted application (2)
+		// keeps its AI view regardless of the toggle.
+		if (appl.getAiProcessed() == 1 && !AiDocSupport.isAiEnabled()) {
+			appl.setAiProcessed(0);
+			return;
+		}
 		validateBank(appl);
 		validateTenancy(appl);
 		validateEPF(appl);
@@ -470,7 +477,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		FacesContext.getCurrentInstance().addMessage("ai", new FacesMessage(severity, null, detail));
 	}
-	
+
+	private static boolean hasErrorMessage(){
+		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
+		while (it.hasNext()){
+			if (it.next().getSeverity() == FacesMessage.SEVERITY_ERROR){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Submit
 	 * @param docType
@@ -484,6 +501,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (blockSubmit){
 			String key = TYPE_EPF.equals(docType) ? "lbl.sm.ai.epf.mismatch" : "lbl.sm.ai.tnc.mismatch";
 			addMessageOnce(FacesMessage.SEVERITY_ERROR, key);
+			return;
+		}
+		if (hasErrorMessage()){
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
@@ -834,22 +854,27 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return names;
 		}
 		for (SmApplDocFile docFile : epfDoc.getSmApplDocFiles()){
-			if (docFile.getFileName() == null || docFile.getFileName().trim().isEmpty()){
-				continue;
-			}
-			AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
-					.getAIApiResponse(docFile.getAiApiResponseId());
-			if (response == null){
-				continue;
-			}
-			AiEpfResultDTO ee = AiDocParser.toEpf(AiDocParser.parseFields(response.getJsonResponse()));
-			for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
-				if (emp.getEmployeeName() != null && !emp.getEmployeeName().trim().isEmpty()){
-					names.add(emp.getEmployeeName().trim());
-				}
-			}
+			collectEpfEmployeeNames(docFile, names);
 		}
 		return names;
+	}
+
+	// collect trimmed AI-extracted employee names from one EPF doc file into names
+	private static void collectEpfEmployeeNames(SmApplDocFile docFile, Set<String> names){
+		if (docFile.getFileName() == null || docFile.getFileName().trim().isEmpty()){
+			return;
+		}
+		AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
+				.getAIApiResponse(docFile.getAiApiResponseId());
+		if (response == null){
+			return;
+		}
+		AiEpfResultDTO ee = AiDocParser.toEpf(AiDocParser.parseFields(response.getJsonResponse()));
+		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
+			if (emp.getEmployeeName() != null && !emp.getEmployeeName().trim().isEmpty()){
+				names.add(emp.getEmployeeName().trim());
+			}
+		}
 	}
 
 	/**
@@ -906,7 +931,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * EPF display AI icon only, with no tooltip
+	 * EPF displays the neutral AI icon (validatedAI 3)
 	 * @param appl
 	 */
 	public static void markEpfAiDocs(SmAppl appl){
@@ -921,9 +946,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			for (SmApplDocFile docFile : suppDoc.getSmApplDocFiles()){
 				if (docFile.getAiApiResponseId() != null){
 					docFile.setValidatedAI(3);
+					docFile.setMappedFieldAI(buildEpfLabel(appl, docFile));
 				}
 			}
 		}
+	}
+
+	// EPF tooltip for one doc file; null when the response is gone, so the icon renders without a tooltip.
+	private static String buildEpfLabel(SmAppl appl, SmApplDocFile docFile){
+		AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
+				.getAIApiResponse(docFile.getAiApiResponseId());
+		if (response == null){
+			return null;
+		}
+		AiEpfResultDTO ee = AiDocParser.toEpf(AiDocParser.parseFields(response.getJsonResponse()));
+		AiDocValidator.validateEpf(ee, appl.getSmSupplier().getCompanyName());
+		return ee.getLabel();
 	}
 
 	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<AiBankDocDTO> docEntities){
@@ -1197,7 +1235,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public void deleteDoc(SmApplDocFile doc) {
 		docs.remove(doc);
 		detachFromSupportDoc(doc);
-		clearAiFields(docType, smAppl);
+		selectedEmployees = null;
+		if (TYPE_TENANCY.equals(docType)){
+			validateTenancy(smAppl);
+		} else if (TYPE_EPF.equals(docType)){
+			validateEPF(smAppl);
+		}
 		if (EntityHelper.isCollectionEmpty(docs)){
 			epfs = null;
 			tenancy = null;
@@ -1208,26 +1251,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			processDoc(docType, smAppl);
 		}
 		recomputeAiProcessed(smAppl);
-	}
-
-	/**
-	 * Clear AI fields after deleting document
-	 * @param docType
-	 * @param appl
-	 */
-	private void clearAiFields(String docType, SmAppl appl){
-		if (appl == null){
-			return;
-		}
-		if (TYPE_TENANCY.equals(docType)){
-			AiDocValidator.clearTenancyAiFields(AiDocValidator.getHeadquartersFacility(appl));
-		} else if (TYPE_EPF.equals(docType) && !EntityHelper.isCollectionEmpty(appl.getSmPersonnels())){
-			for (SmPersonnel per : appl.getSmPersonnels()){
-				per.setEpfNoAI(null);
-				per.setNameAI(null);
-				per.setIcAI(null);
-			}
-		}
 	}
 
 	private void detachFromSupportDoc(SmApplDocFile doc){
@@ -1291,7 +1314,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	public boolean isBlockSubmit() {
-		return blockSubmit;
+		return blockSubmit || hasErrorMessage();
 	}
 
 	private static class JsonWrapper {

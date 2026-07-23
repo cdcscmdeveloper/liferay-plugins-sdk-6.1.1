@@ -140,6 +140,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRema
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
@@ -4318,6 +4320,14 @@ return	remarksNotFound;
 				this.getManagedBean().setDemoReq(true);
 			}
 			//retrieveReportTabDtl(getManagedBean().getScQt(), "KT", SourcingConstants.SUPPLIER_FINALIZATION_TASK);
+			
+			// #25651 - Start
+			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
+			reqDTO.setExcludedDocNames(SupplierFinalizationManagedBean.getDirectdownloaddocdefkeys());
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
+			// #25651 - End
+			
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -4462,6 +4472,74 @@ return	remarksNotFound;
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
+	// #25651 - Start
+	/**
+	 * Download each report detail.
+	 * 
+	 * @param scQtEvaluationReportDetail
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void downloadReport(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+		generateDocumentAttachment(scQtFinalizationReportDetail);
+	}
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * Generate document attachment for all committee finalization reports detail.
+	 * 
+	 * @param scQtEvaluationReportDetail
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateDocumentAttachment(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+
+		ScQt scQt = getManagedBean().getScQt();
+		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument().getDocDefinitionKey();
+		String definitionType = scQtFinalizationReportDetail.getDefinationType().getParameterCode();
+		List<String> reportDetailList = reportDetailAttachmentType(docDefinitionKey);
+
+		if (definitionType.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)) {
+			List<ScAttachment> finalizationReportAttachments = new ArrayList<>();
+			for (String reportDetail : reportDetailList) {
+
+				ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
+				StringBuilder fileName = new StringBuilder(reportDetail);
+				fileName.append(".pdf");
+				reportAttachment.setFileName(fileName.toString());
+				reportAttachment.setDocNo(scQt.getQtNo());
+				generateBrefingPaperDetailPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, false);
+				finalizationReportAttachments.add(reportAttachment);
+
+			}
+			downloadAllFiles(this.getManagedBean().getReportDownloadFileName(), finalizationReportAttachments);
+		}
+
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * @param docDefinitionKey
+	 * @param fileReportName
+	 * @return ScAttachment
+	 */
+	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
+		debugLogger("generateDocumentAttachment");
+		
+		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
+		ScQt scQt = getManagedBean().getScQt();
+		StringBuilder fileName = new StringBuilder(fileReportName);
+		fileName.append(".pdf");
+		reportAttachment.setFileName(fileName.toString());
+		reportAttachment.setDocNo(scQt.getQtNo());
+		generateBrefingPaperDetailPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, true);	
+		return reportAttachment;
+	}
+	// #25651 - End
+	
 	// #18685 - Start
 	/**
 	 * @throws Exception
@@ -4470,6 +4548,7 @@ return	remarksNotFound;
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
+		List<ScAttachment> attachments = new ArrayList<>(); //#25651
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getDocumentList());
@@ -4494,10 +4573,29 @@ return	remarksNotFound;
 				}
 			}
 		}
+		
+		//#25651 - Start
+		attachments.addAll(scAttachments);
+		List<Object[]> reportDetailList = reportDetailAttachmentType();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
+			for(ScQtFinalizationReportDetail finalizationreport:scQtFinalizationReportDetail){
+				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport.getDefinationType().getParameterCode())){
+					for (Object[] reportDetail : reportDetailList) {
+						String codeReportName = (String) reportDetail[0];
+						String fileReportName = (String) reportDetail[1];
+					    if(codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())){
+					    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
+					    }
+					}
+				}
+			}
+		}
+		//#25651 - Start
 
 		// Generate all the reports before submission
 		if (!skipDownload) { // 38523
-			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
 		}
 		// #18685 - End.
 	}
@@ -13244,7 +13342,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		} else {
 			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId,
-					null);
+					null,null);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				// BigDecimal supplierNo = (BigDecimal) row[1];
@@ -13291,7 +13389,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		
 		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.FINANCIAL_DOCTYPE);
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
+				selectedZoneId,null);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
