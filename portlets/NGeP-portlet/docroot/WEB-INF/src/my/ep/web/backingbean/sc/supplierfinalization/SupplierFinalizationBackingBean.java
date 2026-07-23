@@ -4476,7 +4476,7 @@ return	remarksNotFound;
 	/**
 	 * Download each report detail.
 	 * 
-	 * @param scQtEvaluationReportDetail
+	 * @param scQtFinalizationReportDetail
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -4489,7 +4489,7 @@ return	remarksNotFound;
 	/**
 	 * Generate document attachment for all committee finalization reports detail.
 	 * 
-	 * @param scQtEvaluationReportDetail
+	 * @param scQtFinalizationReportDetail
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -4652,6 +4652,7 @@ return	remarksNotFound;
 	public void downloadAllReports() throws Exception {
 		log.info("downloadAllReports");
 
+		List<ScAttachment> attachments = new ArrayList<>(); //#25651
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getDocumentList();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
@@ -4672,9 +4673,28 @@ return	remarksNotFound;
 			scAttachments.add(attachment);
 		}
 		
+		//#25651 - Start
+		attachments.addAll(scAttachments);
+		List<Object[]> reportDetailList = reportDetailAttachmentType();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
+			for(ScQtFinalizationReportDetail finalizationreport:scQtFinalizationReportDetail){
+				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport.getDefinationType().getParameterCode())){
+					for (Object[] reportDetail : reportDetailList) {
+						String codeReportName = (String) reportDetail[0];
+						String fileReportName = (String) reportDetail[1];
+					    if(codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())){
+					    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
+					    }
+					}
+				}
+			}
+		}
+		//#25651 - Start
+		
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
 		}
 	}
 	
