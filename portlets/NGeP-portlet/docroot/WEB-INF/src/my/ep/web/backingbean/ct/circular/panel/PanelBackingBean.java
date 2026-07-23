@@ -3728,11 +3728,13 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if (existing.getPmCategoryL1().getCategoryL1Id().equals(l1Id) &&
 				existing.getPmCategoryL2().getCategoryL2Id().equals(l2Id) &&
 				existing.getPmCategoryL3().getCategoryL3Id().equals(l3Id)) {
+				
 				throw new EpException(MessageConst.ERROR_750090, new String[] {categoryCode, categoryName}); // Duplicate message Error
 			}
 		}
 		
 		ctCategoryList.add(createPanelCategory(pmCategoryL3, circularVer));
+		getManagedBean().setAutoUpdate(Boolean.TRUE); //#40498,#30014
 	}
 	
 	/**
@@ -3838,5 +3840,22 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		this.confirmationContentMsg = confirmationContentMsg;
 	}
 	// 34442 - end
-
+	
+	//#40498,#30014 - Start
+	/**
+	 * Disables auto-update for the main page messages before opening the
+	 * category code popup.
+	 */
+	public void beforeOpenCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+	}
+	
+	/**
+	 * Restores auto-update for the main page messages after the category code
+	 * popup is closed.
+	 */
+	public void afterCloseCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+	}
+	//#40498,#30014 - End
 }
