@@ -28,7 +28,7 @@
 								escape="false" />
 							<p:commandLink onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
-								action="#{backingBean.otherDescriptionHistory}" process="@this"
+								action="#{backingBean.otherDescriptionHistoryPrev}" process="@this"
 								partialSubmit="true" update="@form">
 								<u><h:outputText
 										value="#{lbl['lbl.sm.other.desc.history.here']}"
@@ -118,8 +118,7 @@
 						<p:commandLink partialSubmit="true" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()" update=":form" process="@this"
 							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
-							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+							rendered="#{backingBean.rulesEditOtherDescription(aprvdCatBean, SupplierManagementConst.SECTION_MAIN)}">
 							<p:graphicImage value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}" style="float:right;" />
 						</p:commandLink>
@@ -144,9 +143,7 @@
 							oncomplete="blockWidget.hide()"
 							update=":form" process="@this"
 							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
-							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or 
-							backingBean.managedBean.approverUser)}">
+							rendered="#{backingBean.rulesEditOtherDescription(aprvdCatBean, SupplierManagementConst.SECTION_RENEWAL)}">
 							<p:graphicImage
 								value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"
@@ -521,8 +518,8 @@
 	</p:confirmDialog>
 
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory
-		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
+	<ac:otherDescriptionHistoryPrev
+		categoryCodeList="#{backingBean.managedBean.previousCategoryList}"
 		applNo="#{backingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
 		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"

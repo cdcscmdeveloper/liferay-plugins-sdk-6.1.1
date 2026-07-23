@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl;
 
+import java.io.IOException;//29556
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
+import my.ep.constant.EpPropertiesConst;//29556
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -71,6 +73,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;//29556
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -480,6 +483,12 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 */
 	protected void convertCtAddressToFlAddress(CtContractValue ctSupplierDtl,FlSupplierDtl supplierDtl){//33917
 		//CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue(); //33917
+		// 40227-Start
+		if (ctSupplierDtl == null) {
+			return;
+		}
+		// 40227-end
+		
 		if(ctSupplierDtl.getSupplierBranch() != null){
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(ctSupplierDtl.getSupplierBranch());
@@ -489,6 +498,14 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		FlAddress flAddress = new FlAddress();
 		CtAddress ctAddress = ctSupplierDtl.getSupplierAddress();
+		
+		//40227-Start
+		if (ctAddress == null) {
+	        supplierDtl.setFlAddress(flAddress);
+	        return;
+	    }
+		//40227-end
+		
 		flAddress.setAddress1(ctAddress.getAddress1());
 		flAddress.setAddress2(ctAddress.getAddress2());
 		flAddress.setAddress3(ctAddress.getAddress3());
@@ -1000,4 +1017,21 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	}
 		
 	// #31344 -end-
+	
+	/** 
+	* #29556
+	* Download file GARIS_PANDUAN_PENGGUNAAN_SISTEM_ePEROLEHAN_BAGI_PENYEDIAAN_ITEM_DAN_SPESIFIKASI.pdf
+	*/
+	public void downloadItemSpecGuideline() throws IOException {
+		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
+
+		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.COMMON);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
+
+		commonDownload(filePath.toString(), CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
+	}
 }

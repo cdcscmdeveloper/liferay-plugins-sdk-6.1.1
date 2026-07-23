@@ -5072,10 +5072,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 		
 		catalogueReqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
-		catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
-		CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
-		skuDesc = catalogueResDTO.getSkuNumber();
+		//40227-Start
+		if(scRequestItem.getCmItem()!=null){
+			catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
+			catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
+			CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
+			skuDesc = catalogueResDTO.getSkuNumber();
+		}
+		//40227-End
+		
 		//29396-end
 		
 		return skuDesc;
