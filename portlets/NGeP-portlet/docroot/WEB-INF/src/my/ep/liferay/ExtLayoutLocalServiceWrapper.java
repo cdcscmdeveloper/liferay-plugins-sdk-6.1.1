@@ -11,13 +11,13 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;//Fix - #34367
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;//Fix - #34367
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ModuleCodeConst;//Fix - #34367
 import my.ep.constant.sm.SupplierManagementConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;//Fix - #34367
+import my.ep.dto.pm.authorization.user.UserResDTO;//Fix - #34367
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;//Fix - #34367
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -200,7 +200,6 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	public long getLoggedInUserId() {
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		if(serviceContext != null) {
-			log.info(" #34367 serviceContext.getUserId() :::::::::::  "+serviceContext.getUserId());//#34367
 			return serviceContext.getUserId();
 		}
 		return 0L;
