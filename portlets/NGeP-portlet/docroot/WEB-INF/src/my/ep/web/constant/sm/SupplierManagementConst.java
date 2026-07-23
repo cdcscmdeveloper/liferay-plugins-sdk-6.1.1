@@ -762,10 +762,10 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	// bug #29156 -END
 	
-	// bug #28278 -START
+	// bug #28278(26238) - START
 	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
 	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
-	// bug #28278 -END
+	// bug #28278(26238) - END
 	
 	// bug #29156 -START
 	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
@@ -1537,4 +1537,14 @@ public class SupplierManagementConst {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
 //	#37925 END
+	
+	// 28278(26238) - START
+	public String getMOF_STATUS_DELETED() {
+		return MOF_STATUS_DELETED;
+	}
+
+	public String getMOF_STATUS_CANCELLED() {
+		return MOF_STATUS_CANCELLED;
+	}
+	// 28278(26238) - END
 }
