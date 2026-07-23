@@ -3342,8 +3342,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							//#28188 - Start (for sorting) 
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
-									groupAndSortSiteVisitList(briefingResDTO.getBriefingList()),
-									groupAndSortSiteVisitList(briefingResDTO.getSiteVisitList()), scQtBsv);
+									groupAndSortBriefingSiteVisitDtls(briefingResDTO.getBriefingList()),
+									groupAndSortBriefingSiteVisitDtls(briefingResDTO.getSiteVisitList()), scQtBsv);
 							//#28188 - End
 							zoneBeans.add(briefingZoneBean);
 						}
@@ -3373,8 +3373,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 					//#28188 - Start (for sorting)
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							null, groupAndSortSiteVisitList(resDTO.getBriefingList()),
-							groupAndSortSiteVisitList(resDTO.getSiteVisitList()), qtBsv);
+							null, groupAndSortBriefingSiteVisitDtls(resDTO.getBriefingList()),
+							groupAndSortBriefingSiteVisitDtls(resDTO.getSiteVisitList()), qtBsv);
 					//#28188 - End
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
 				}
