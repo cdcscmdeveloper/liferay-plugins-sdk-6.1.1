@@ -232,7 +232,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	 *         constant rule; otherwise {@code false}
 	 */
 	public boolean hasValidConstantRule() {
-		long userId = getPmUserId();
+		long userId = getPmUserIdByLoginId();
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IUserSO.class);
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -272,7 +272,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	 *
 	 * @return the application user ID if found; otherwise {@code 0}
 	 */
-	public long getPmUserId() {
+	public long getPmUserIdByLoginId() {
 
 	    try {
 	        long loggedInUserId = getLoggedInUserId();
