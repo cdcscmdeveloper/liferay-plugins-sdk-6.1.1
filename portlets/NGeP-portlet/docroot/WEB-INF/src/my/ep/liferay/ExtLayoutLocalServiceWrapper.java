@@ -51,8 +51,8 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	public static final String USER_ROLE_SESSION_KEY = "USER_ROLE_SESSION_KEY";
 	
-	public static final String PANEL_CIRCULAR_ADMIN = "BPK_PCA";
-	private static final String SESSION_CONSTANT_RULE ="CT_PANEL_CIRCULAR_CONSTANT_RULE";
+	public static final String PANEL_CIRCULAR_ADMIN = "BPK_PCA";//Fix - #34367
+	private static final String SESSION_CONSTANT_RULE ="CT_PANEL_CIRCULAR_CONSTANT_RULE";//Fix - #34367
 	
 	public ExtLayoutLocalServiceWrapper(LayoutLocalService layoutLocalService) {
 		super(layoutLocalService);
