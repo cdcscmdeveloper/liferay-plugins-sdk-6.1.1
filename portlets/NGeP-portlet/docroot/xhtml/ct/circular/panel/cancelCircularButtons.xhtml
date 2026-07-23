@@ -11,11 +11,14 @@
 	    	<f:event listener="#{panelBackingBean.preRenderViewCancelReq}" type="preRenderView" />	
 		   	<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+				<!-- #34442 - start -->
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" 
+				update=":form:approvalConfirmDlgId" 
 				process="@form"
 				onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
-				action="#{panelBackingBean.saveCancelCircularReq(action)}" />
+				action="#{panelBackingBean.showConfirmationDialog(action)}" />
+				<!-- #34442 - end -->
 			</ui:repeat>	    			
 	    </td>
 	   </tr>

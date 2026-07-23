@@ -6138,6 +6138,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		} else if (isGroupOrgTypeHierarchy(groupOrgType)) {
 			setupApproveOtherPtjProcOrgHierarchy(orgProfileId);
 		}
+
+		if (isRoleAuditorInternal()){
+			getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); 
+			getManagedBean().setDisabledMinistryLov(true);
+			getManagedBean().getPlanSearchBean().setMinistry(getManagedBean().getCurrentActiveOrg());
+		}
 	}
 	//#39693_40086 - End
 	
@@ -9330,12 +9336,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//usual org hierarchy
 		if (isRolePlanner() || isRoleVerifier() || isRoleApprover() ) {
 			setupGroupOrgTypeN(orgProfileId);
-		} else if (isRoleAuditorInternal()) {
-			PmOrgProfile ministry = retrieveMinistryOrgProfile(orgProfileId);
-
-			getManagedBean().setSelectedMinistry(ministry);
-			getManagedBean().setDisabledMinistryLov(true);
-			getManagedBean().getPlanSearchBean().setMinistry(ministry);
 		}
 	}
 
@@ -9354,7 +9354,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 	private void setupMinistryGroupOrg(Long orgProfileId) {
 		//Bug#29887@07012021 - Start
-		if (isRoleApprover() || isRoleAuditorInternal()) {
+		if (isRoleApprover()) {
 			PmOrgProfile ministry = retrieveMinistryOrgProfile(orgProfileId);
 
 			getManagedBean().setSelectedMinistry(ministry);
