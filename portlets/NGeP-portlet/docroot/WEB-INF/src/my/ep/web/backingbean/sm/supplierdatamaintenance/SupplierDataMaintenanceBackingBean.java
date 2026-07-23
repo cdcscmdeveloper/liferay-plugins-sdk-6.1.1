@@ -3595,11 +3595,18 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			// Initialize for appl in progress.
 			if (getManagedBean().isHasActiveTransaction() && CollectionUtils.isNotEmpty(getManagedBean().getActiveApplList())) {
-				MofRegistrationReqDTO reqMofDTO = new MofRegistrationReqDTO();
-				String applNo = String.valueOf(getManagedBean().getActiveApplList().get(0)[0]);
-				reqMofDTO.setApplNo(applNo);
-				SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqMofDTO).getSmAppl();
-				smApplList.add(activeAppl);
+				for (Object[] appl : getManagedBean().getActiveApplList()) {
+					String applStatus = "";
+					applStatus = String.valueOf(appl[2]);
+					if (!applStatus.equalsIgnoreCase(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL) && 
+							!applStatus.equalsIgnoreCase(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)) {
+						MofRegistrationReqDTO reqMofDTO = new MofRegistrationReqDTO();
+						String applNo = String.valueOf(getManagedBean().getActiveApplList().get(0)[0]);
+						reqMofDTO.setApplNo(applNo);
+						SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqMofDTO).getSmAppl();
+						smApplList.add(activeAppl);
+					}
+				}
 			}
 			
 			// save edit category for Active and Registered application.
