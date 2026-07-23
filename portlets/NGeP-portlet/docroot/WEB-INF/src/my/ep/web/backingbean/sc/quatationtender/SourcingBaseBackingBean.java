@@ -2617,8 +2617,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (scqt != null) {
 			IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IRuleSO.class);
+			//#27502 - New DO MOF Role and Process
 			List<Object[]> bpkList = ruleSO
-					.getBpkByOrgProfileIdAndRuleType(scqt.getOrgProfileId(), RuleTypeConst.PTJCO);
+					.getBpkByOrgProfileIdAndRuleType(scqt.getOrgProfileId(), RuleTypeConst.PTJ_CODE);
 
 			if (bpkList != null) {
 				isRuleBpk = true;
@@ -6367,17 +6368,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			for (String s : stateCodeList) {
 				List<Object[]> pjtcode = addressSO.getSabahOrSrwkPtj(scQt.getOrgProfileId(), s);
-
-				if (pjtcode != null) {
+				
+				if (pjtcode != null && !pjtcode.isEmpty()) {
 					isSbhOrSrwk = true;
 					break;
 				}
 			}
+				
 
 			IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			//#27502 - New DO MOF Role and Process
 			List<Object[]> bpkList = ruleSO
-					.getBpkByOrgProfileIdAndRuleType(scQt.getOrgProfileId(), RuleTypeConst.PTJCO);
+					.getBpkByOrgProfileIdAndRuleType(scQt.getOrgProfileId(), RuleTypeConst.PTJ_CODE);
 
 			if (scQt.getContractType() == null) {
 				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
@@ -6390,6 +6393,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// #9019 Start #note-445 User unable to open side menu for Committee
 			// Appointment and Approval when ctType is null.
 			// Contract type is not selected while cancel QT
+			
 			if (ctType != null && bpkList != null && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
 				return true;
 			}
@@ -6398,6 +6402,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return false;
 	}
+	
 		
 		// #18685-Start.
         /**

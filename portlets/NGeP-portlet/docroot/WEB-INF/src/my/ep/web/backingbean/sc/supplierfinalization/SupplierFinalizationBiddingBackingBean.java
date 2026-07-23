@@ -3237,6 +3237,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_EVALUATION);
+			//27502 - New DO MOF Role and Process
+			statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);
 			tenderReqDTO.setStatusIds(statusIds);
 			
 			List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO

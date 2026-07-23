@@ -78,6 +78,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
+import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -549,7 +550,7 @@ public class SupplierFinalizationBackingBean extends
 			// #27502 -- Start
 		} else if (isBpkCentralContract) {
 			getManagedBean().setPreparationTabIndex(tabIndex++);//#27502 - New DO MOF Role and Process
-			getManagedBean().setEvaluationReportIndex(-1);
+			getManagedBean().setEvaluationReportIndex(tabIndex++);//#27502 - New DO MOF Role and Process
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setCommEndorsementTabIndex(-1);		
@@ -2848,11 +2849,13 @@ public class SupplierFinalizationBackingBean extends
 			// 6906 note 117 - end
 
 			// 38523 - refactor codes - start
+			//27502 - New DO MOF Role and Process
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			boolean submit = Arrays.asList(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION,
 					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK, QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION,
 					QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION,
-					QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION).contains(currentStatusId);
+					QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION,
+					QTStatusConst.SF_MOF_COMMITTEE).contains(currentStatusId);
 			this.getManagedBean().setSubmit(submit);
 			// 38523 - refactor codes - end
 
@@ -3723,12 +3726,14 @@ return	remarksNotFound;
 		//27502 - End.
 		
 		// #28834 - Start.
+		//27502 - New DO MOF Role and Process
 		if (null != getManagedBean().getCurrentStatusId() 
                 && (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()
                 || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
                 || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
                 || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.longValue()
-                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
+                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue()
+                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_MOF_COMMITTEE.longValue())) {
 			if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || ParameterConst.DECISION_RBP.equals(decisionTypeCode) ) {
 				boolean remarksNotFound = true;
 				if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
@@ -3764,9 +3769,11 @@ return	remarksNotFound;
 		
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 			//25638 - for 25037 note 284 no validation for committee during sf revision - start
+			//27502 - New DO MOF Role and Process
 			if (Arrays.asList(new Long[]{
 					QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION, 
-					QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION })
+					QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION,
+					QTStatusConst.SF_MOF_COMMITTEE,})
 					.contains(this.getManagedBean().getCurrentStatusId())) {
 			//25638 - for 25037 note 284 no validation for committee during sf revision - end
 				// #28834 - #31934 - starts.
@@ -7159,7 +7166,7 @@ return	remarksNotFound;
     	  //20230727@asyrafhaziq #27502 - New DO MOF Role and Process
     	  // Meeting Record 
     	  menuItem = new MenuItem();
-          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.preparation",
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.record",
                   ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
           menuItem.setStyle("width:15%;");
           menuItem.setTransient(true);
@@ -7168,7 +7175,20 @@ return	remarksNotFound;
           menuItem.setUpdate("@form");
           menuItem.setOncomplete(tabMenuChangeCommonAction + (0) + "}]); ");
           mainMenuModel.addMenuItem(menuItem);
-                
+          
+          // Evaluation Report
+          menuItem = new MenuItem();
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.evaluation.report",
+                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+          menuItem.setStyle("width:15%;");
+          menuItem.setTransient(true);
+          menuItem.setPartialSubmit(true);
+          menuItem.setProcess("@form");
+          menuItem.setUpdate("@form");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (1)) + "}]); ");
+          mainMenuModel.addMenuItem(menuItem);
+         
+          
           // Briefing Paper Menu Item
           menuItem = new MenuItem();
           menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
@@ -7178,7 +7198,7 @@ return	remarksNotFound;
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (2)) + "}]); ");//#27502 - New DO MOF Role and Process
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (2)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
           // Supplier Finalization Menu Item
@@ -7190,7 +7210,7 @@ return	remarksNotFound;
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (3)) + "}]); ");//#27502 - New DO MOF Role and Process
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 3 : (3)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
           menuItem = new MenuItem();
@@ -7201,10 +7221,10 @@ return	remarksNotFound;
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");        
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 3 : (5)) + "}]); ");//#27502 - New DO MOF Role and Process
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 4 : (5)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
-          
-          navigateToSupplierFinalizationTab();
+        //#27502 - New DO MOF Role and Process
+         // navigateToSupplierFinalizationTab();
 
           // #27502 -- End
 
@@ -12741,9 +12761,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		boolean isNotSameStatus = bpmStatusId != null && workFlowStat != null
 				&& bpmStatusId.longValue() != workFlowStatusId.longValue();
 		if (isCurrent && isNotSameStatus) {
+			//27502 - New DO MOF Role and Process
 			boolean isSecStatusRole = Arrays.asList(
 					new Long[] { QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION,
-							QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION }).contains(workFlowStatusId);
+							QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION, QTStatusConst.SF_MOF_COMMITTEE }).contains(workFlowStatusId);
 			if (this.getManagedBean().isSecretaryUser() && !isSecStatusRole) {
 				return false;
 			}

@@ -3735,6 +3735,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 		}
 		//Bug 32277 - end
+		//#27502 - New DO MOF Role and Process - Start
 		for (TabBean tabBean : committeTabs) {
 		    String tabType = tabBean.getTabType();
 		    Long statusId = tabBean.getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId();
@@ -3757,22 +3758,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		    if (isTabTypeNotFinalizationAndCompleted || isFinalizationWithRequiredFields || isMinistryOfFinance) {		        
 		        tabBean.setIcon("ui-icon-endorse");
 		    }
-		}
-		for (TabBean tabBean : committeTabs) {
-			if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean
-					.getTabType()) && tabBean.getScQtCommittee()
-					.getScCommittee().getCommitteStatus().getStatusId()
-					.equals(QTStatusConst.CMT_COMPLETED))
-					|| (SourcingConstants.COMMITTE_TYPE_FINALIZATION
-							.equals(tabBean.getTabType())
-							&& scQt.getFinalizationCommitte() != null
-							&& scQt.getFinalizationCommitte().getParameterId() != null
-							&& scQt.getFinalizationSecratery() != null && scQt
-							.getFinalizationSecratery().getUserId() != null) || 
-							SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE.equals(tabBean.getTabType())) {//27502
-				tabBean.setIcon("ui-icon-endorse");
-			}
-		}
+		}	
+		//#27502 - New DO MOF Role and Process - End
+		
 		if (!committeTabs.isEmpty()) {
 			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 			this.getManagedBean().setSelectedTabBean(
