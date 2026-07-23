@@ -163,55 +163,140 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 	 */
 	@GET
 	@Path("/checkpay")
-	public String checkPayment(@QueryParam("id") Long paymentId){
+	public String checkPayment(@QueryParam("id") Long paymentId, @QueryParam("key") String key){
 		log.info("START "+paymentId);
+		if (!isValidApiKey(key)) {
+			log.warn("[API #38750] checkpay rejected: invalid api key");
+			return "Error Key";
+		}
 		String token = loginOps();
 		log.info("tok:"+token);
-		String body = callResyncApi(paymentId, token);
+		String body = callResyncApi(paymentId, token, key);
 		return "BODY: "+body;
 	}
 	
-	private String callResyncApi(Long paymentId, String token) {
-		String paymentURL = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.url");
-		String paymentAPI = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.api");
-		if (paymentId == null) {
+	@GET
+	@Path("/opslogin")
+	public String opslogin(@QueryParam("key") String key) {
+		log.info("[API #38750] opslogin (web tier direct)");
+		if (!isValidApiKey(key)) {
+			log.warn("[API #38750] opslogin rejected: invalid api key");
 			return "";
 		}
-		if (paymentURL == null || paymentURL.trim().isEmpty()) {
-			log.warn("[API #38750] reconcile.payment.url not configured; skipping paymentId=" + paymentId);
+		return loginOps();
+	}
+	
+	@GET
+	@Path("/resync")
+	public String resync(@QueryParam("id") Long id, @QueryParam("token") String token, @QueryParam("apikey") String apikey) {
+		log.info("[API #38750] resync id=" + id);
+		if (!isValidApiKey(apikey)) {
+			log.warn("[API #38750] resync rejected: invalid api key");
 			return "";
 		}
+		return callResyncApi(id, token, apikey);
+	}
 
+	//38750 - TEMP
+	@GET
+	@Path("/poke-opslogin")
+	public String pokeOpslogin() {
+		log.info("[API #38750] poke-opslogin -> biz-sm loginOpsViaPortal");
+		String token = SmServiceLookup.getSmSchedulerSO().loginOpsViaPortal();
+		return "biz-sm got token via portal: " + token;
+	}
+
+	private boolean isValidApiKey(String apikey) {
+		String expected = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.api");
+		return expected != null && !expected.trim().isEmpty() && expected.equals(apikey);
+	}
+
+	private String loginOps() {
+		String loginUrl = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.login.url");
+		String username = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.username");
+		String password = EpPropertiesUtils.decrypt(EpPropertiesUtils.getInstance().getProperty("reconcile.payment.password"));
+		if (loginUrl == null || loginUrl.trim().isEmpty()) {
+			log.warn("[API #38750] reconcile.payment.login.url not configured");
+			return "";
+		}
+		if (username == null || password == null) {
+			log.warn("[API #38750] reconcile.payment.username/password not configured");
+			return "";
+		}
 		HttpURLConnection conn = null;
 		try {
-			URL url = new URL(paymentURL);
+			URL url = new URL(loginUrl);
 			conn = (HttpURLConnection) url.openConnection();
-
-			// JDK7 client defaults to TLS 1.0; the OPS endpoint requires TLS 1.2
 			if (conn instanceof HttpsURLConnection) {
 				SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
 				sslContext.init(null, null, null);
 				((HttpsURLConnection) conn).setSSLSocketFactory(sslContext.getSocketFactory());
 			}
-
+			String boundary = "----ngepOps" + System.currentTimeMillis();
 			conn.setRequestMethod("POST");
-			conn.setRequestProperty("X-API-KEY-OPS", paymentAPI);
+			conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+			conn.setDoOutput(true);
+			conn.setConnectTimeout(30 * 1000);
+			conn.setReadTimeout(30 * 1000);
+			StringBuilder form = new StringBuilder();
+			form.append("--").append(boundary).append("\r\n");
+			form.append("Content-Disposition: form-data; name=\"userName\"\r\n\r\n");
+			form.append(username).append("\r\n");
+			form.append("--").append(boundary).append("\r\n");
+			form.append("Content-Disposition: form-data; name=\"password\"\r\n\r\n");
+			form.append(password).append("\r\n");
+			form.append("--").append(boundary).append("--\r\n");
+			OutputStream os = conn.getOutputStream();
+			os.write(form.toString().getBytes(StandardCharsets.UTF_8));
+			os.flush();
+			os.close();
+			int responseCode = conn.getResponseCode();
+			String body = readResponseBody(conn, responseCode);
+			log.info("[API #38750] OPS login responseCode=" + responseCode + " body=" + body);
+			return body;
+		} catch (Exception e) {
+			log.error("[API #38750] OPS login failed: " + e.getMessage(), e);
+			return "";
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
+		}
+	}
+	
+	private String callResyncApi(Long paymentId, String token, String apikey) {
+		if (paymentId == null) {
+			return "";
+		}
+		String resyncUrl = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.url");
+		if (resyncUrl == null || resyncUrl.trim().isEmpty()) {
+			log.warn("[API #38750] reconcile.payment.url not configured; skipping paymentId=" + paymentId);
+			return "";
+		}
+		HttpURLConnection conn = null;
+		try {
+			URL url = new URL(resyncUrl);
+			conn = (HttpURLConnection) url.openConnection();
+			if (conn instanceof HttpsURLConnection) {
+				SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+				sslContext.init(null, null, null);
+				((HttpsURLConnection) conn).setSSLSocketFactory(sslContext.getSocketFactory());
+			}
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("X-API-KEY-OPS", apikey);
 			conn.setRequestProperty("X-TOKEN-OPS", token);
 			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			conn.setDoOutput(true);
-			conn.setConnectTimeout(30 * 1000); // 30 sec
-			conn.setReadTimeout(200 * 1000); // ~3.3 min
-
-			String body = "orderId=" + URLEncoder.encode(String.valueOf(paymentId), "UTF-8");
+			conn.setConnectTimeout(30 * 1000);
+			conn.setReadTimeout(200 * 1000);
+			String reqBody = "orderId=" + URLEncoder.encode(String.valueOf(paymentId), "UTF-8");
 			OutputStream os = conn.getOutputStream();
-			os.write(body.getBytes(StandardCharsets.UTF_8));
+			os.write(reqBody.getBytes(StandardCharsets.UTF_8));
 			os.flush();
 			os.close();
-
 			int responseCode = conn.getResponseCode();
 			String responseBody = readResponseBody(conn, responseCode);
-			log.info("[API #38750] paymentId=" + paymentId + " responseCode=" + responseCode
-					+ " body=" + responseBody);
+			log.info("[API #38750] paymentId=" + paymentId + " responseCode=" + responseCode + " body=" + responseBody);
 			return responseBody;
 		} catch (Exception e) {
 			log.error("[API #38750] resync failed for paymentId=" + paymentId + " : " + e.getMessage(), e);
@@ -222,11 +307,7 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 			}
 		}
 	}
-
-	/**
-	 * Reads the resyncfail API response body (plain text, e.g. "00"/"11"). Returns "" on any
-	 * problem so the caller treats it as a non-success ("00") response.
-	 */
+	
 	private String readResponseBody(HttpURLConnection conn, int responseCode) {
 		boolean ok = responseCode >= 200 && responseCode < 300;
 		InputStream is = null;
@@ -240,108 +321,14 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 		}
 		StringBuilder sb = new StringBuilder();
 		try (BufferedReader read = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-		    String line;
-		    while ((line = read.readLine()) != null) {
-		        sb.append(line);
-		    }
-		    return sb.toString().trim();
+			String line;
+			while ((line = read.readLine()) != null) {
+				sb.append(line);
+			}
+			return sb.toString().trim();
 		} catch (Exception e) {
-		    log.error("[API #38750] could not read response", e);
-		    return "";
+			log.error("[API #38750] could not read response", e);
+			return "";
 		}
 	}
-
-	/**
-	 * Logs in to the OPS payment service and returns a short-lived (~30 min) bearer token.
-	 */
-	private String loginOps() {
-		String loginURL = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.login.url");
-		String username = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.username");
-		String password = EpPropertiesUtils.decrypt(EpPropertiesUtils.getInstance().getProperty("reconcile.payment.password"));
-		if (loginURL == null || loginURL.trim().isEmpty()) {
-			log.warn("[API #38750] reconcile.payment.login.url not configured; cannot obtain OPS token");
-			return "";
-		}
-		if (username == null || password == null) {
-			log.warn("[API #38750] reconcile.payment.username/password not configured; cannot obtain OPS token");
-			return "";
-		}
-
-		HttpURLConnection conn = null;
-		try {
-			URL url = new URL(loginURL);
-			conn = (HttpURLConnection) url.openConnection();
-
-			// JDK7 client defaults to TLS 1.0; the OPS endpoint requires TLS 1.2
-			if (conn instanceof HttpsURLConnection) {
-				SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-				sslContext.init(null, null, null);
-				((HttpsURLConnection) conn).setSSLSocketFactory(sslContext.getSocketFactory());
-			}
-
-			// multipart/form-data, mirroring `curl -F userName=... -F password=...`
-			String boundary = "----ngepOps" + System.currentTimeMillis();
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-			conn.setDoOutput(true);
-			conn.setConnectTimeout(30 * 1000); // 30 sec
-			conn.setReadTimeout(30 * 1000); // 30 sec
-
-			StringBuilder form = new StringBuilder();
-			form.append("--").append(boundary).append("\r\n");
-			form.append("Content-Disposition: form-data; name=\"userName\"\r\n\r\n");
-			form.append(username).append("\r\n");
-			form.append("--").append(boundary).append("\r\n");
-			form.append("Content-Disposition: form-data; name=\"password\"\r\n\r\n");
-			form.append(password).append("\r\n");
-			form.append("--").append(boundary).append("--\r\n");
-
-			OutputStream os = conn.getOutputStream();
-			os.write(form.toString().getBytes(StandardCharsets.UTF_8));
-			os.flush();
-			os.close();
-
-			int responseCode = conn.getResponseCode();
-			String token = extractToken(readResponseBody(conn, responseCode));
-			if (token.isEmpty()) {
-				log.warn("[API #38750] OPS login responseCode=" + responseCode + " returned no token");
-			}
-			return token;
-		} catch (Exception e) {
-			log.error("[API #38750] OPS login failed: " + e.getMessage(), e);
-			return "";
-		} finally {
-			if (conn != null) {
-				conn.disconnect();
-			}
-		}
-	}
-
-	/**
-	 * #38750 - Extracts the token from the login JSON, e.g. {"token":"<value>","success":"Y"}
-	 */
-	private String extractToken(String json) {
-		if (json == null) {
-			return "";
-		}
-		String key = "\"token\"";
-		int k = json.indexOf(key);
-		if (k < 0) {
-			return "";
-		}
-		int colon = json.indexOf(':', k + key.length());
-		if (colon < 0) {
-			return "";
-		}
-		int firstQuote = json.indexOf('"', colon + 1);
-		if (firstQuote < 0) {
-			return "";
-		}
-		int endQuote = json.indexOf('"', firstQuote + 1);
-		if (endQuote < 0) {
-			return "";
-		}
-		return json.substring(firstQuote + 1, endQuote).trim();
-	}
-	
 }

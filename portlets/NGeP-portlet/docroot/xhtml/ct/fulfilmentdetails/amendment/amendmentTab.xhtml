@@ -435,10 +435,12 @@
 		</p:confirmDialog>
 		<!-- #26186 end -->
 		<!-- #34442 - start -->
-		<p:confirmDialog
-			message="#{amendmentBackingBean.confirmationContentMsg}"
-			severity="alert" widgetVar="acknowledgeConfirmDlg" closable="true"
-			header="#{lbl['lbl.msg.confirm.cancel.header']}">
+		<p:dialog widgetVar="acknowledgeConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line;"
+				value="#{amendmentBackingBean.confirmationContentMsg}" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					process="@this"
@@ -448,7 +450,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="acknowledgeConfirmDlg.hide()" type="button" />
 			</div>
-		</p:confirmDialog>
+		</p:dialog>
 		<!-- #34442 - end -->
 	</ui:define>  
 </ui:composition>
