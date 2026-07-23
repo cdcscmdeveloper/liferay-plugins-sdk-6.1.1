@@ -4,8 +4,11 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import my.ep.util.PasswordUtils;
+import my.ep.util.EpPropertiesUtils;
+import org.apache.commons.lang.StringUtils;
 
 import org.apache.log4j.Logger;
+import org.primefaces.json.JSONObject;
 
 public class PaymentUtil {
 	public static Logger log = Logger.getLogger(PaymentUtil.class);
@@ -24,9 +27,25 @@ public class PaymentUtil {
 			String amountStr = df.format(amount);
 			sb.append("\"billAmt\":\"").append(amountStr).append("\"").append("}");
 			payload = CryptoUtils.encryptAES(sb.toString(), PasswordUtils.decrypt(clientKey));
+			log.info("#38377 order id:"+orderId+"  payload:"+payload);
 		} catch (Exception e) {
 
 		}
 		return payload;
+	}
+	
+	public static JSONObject getPaymentGatewayJson(String payload) {
+		JSONObject jsonObject = null;
+		if (!StringUtils.isBlank(payload)) {
+			try {
+				payload = CryptoUtils.decryptAES(payload, PasswordUtils
+						.decrypt(EpPropertiesUtils.getInstance().getProperty(
+								"payment.gov.vkey")));
+				jsonObject = new JSONObject(payload);
+			} catch (Exception e1) {
+				log.info("#38377 error decrypted payload:" + e1.getMessage());
+			}
+		}
+		return jsonObject;
 	}
 }
