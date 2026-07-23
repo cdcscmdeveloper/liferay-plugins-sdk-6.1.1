@@ -198,6 +198,27 @@
 				</td>
 				<ui:remove>#27476 end</ui:remove>
 			</tr>
+			
+			<ui:remove>#36503 start</ui:remove>
+			<tr>
+				<h:panelGroup rendered="#{purchaseRequestBackingBean.isCircularPanel()}">
+				    <td></td>
+				    <td></td>
+				    <td colspan="2">
+				        <p:outputLabel id="sysGenCirNo" value="#{lbl['lbl.ct.circular.no']}" />
+				    </td>
+				    <td>
+						<h:commandLink for="sysGenCirNo"
+								style="color:#009ae5 !important;"
+								title="#{purchaseRequestBackingBean.managedBean.circularNo}"
+								value="#{purchaseRequestBackingBean.managedBean.circularNo}"
+								action="#{purchaseRequestBackingBean.gotoCicularPanel()}"/>
+						
+				    </td>
+			    </h:panelGroup>
+			</tr>
+			<ui:remove>#36503 end</ui:remove>
+			
 			<ui:remove>#27476 start</ui:remove>
 			<tr>
 				<td colspan="4"><p:outputLabel

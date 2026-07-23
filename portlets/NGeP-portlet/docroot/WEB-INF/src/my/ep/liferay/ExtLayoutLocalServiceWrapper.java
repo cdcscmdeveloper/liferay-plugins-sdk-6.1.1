@@ -186,6 +186,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	public long getLoggedInUserId() {
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		if(serviceContext != null) {
+			log.info(" #34367 serviceContext.getUserId() :::::::::::  "+serviceContext.getUserId());//#34367
 			return serviceContext.getUserId();
 		}
 		return 0L;
