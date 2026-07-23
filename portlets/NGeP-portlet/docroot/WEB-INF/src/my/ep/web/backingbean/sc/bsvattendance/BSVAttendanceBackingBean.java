@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;//#28188
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -17,9 +18,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.IAuditTrailSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;//#28188
 import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;//#28188
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -35,8 +36,6 @@ import my.ep.dto.sc.quationtender.AuditTrailReqDTO;
 import my.ep.dto.sc.quationtender.AuditTrailResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;//#28188
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;//#28188
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -161,7 +160,8 @@ public class BSVAttendanceBackingBean extends
 							for (ScQtBsvDtl scqtdtl : briefingResDTO.getBriefingList()){
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 								//#28188 - Start
-								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {	
+								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
 									newBriefingList.add(scqtdtl);
 									briefingZoneBean.setBriefingList(newBriefingList);
 								}
@@ -174,7 +174,8 @@ public class BSVAttendanceBackingBean extends
 							for (ScQtBsvDtl scqtdtl : briefingResDTO.getSiteVisitList()){
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 								//#28188 - Start
-								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {
+								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
 									newSiteVisitList.add(scqtdtl);
 									briefingZoneBean.setSitevisitList(newSiteVisitList);
 								}
@@ -209,7 +210,8 @@ public class BSVAttendanceBackingBean extends
 						for (ScQtBsvDtl scqtdtl : resDTO.getBriefingList()){
 							scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 							//#28188 - Start
-							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {	
+							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+									|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {	
 								newBriefingList.add(scqtdtl);
 								briefingZoneBean.setBriefingList(newBriefingList);
 							}
@@ -222,7 +224,8 @@ public class BSVAttendanceBackingBean extends
 						for (ScQtBsvDtl scqtdtl : resDTO.getSiteVisitList()){
 							scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 							//#28188 - Start
-							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {
+							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+									|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
 								newSiteVisitList.add(scqtdtl);
 								briefingZoneBean.setSitevisitList(newSiteVisitList);
 							}
@@ -1100,6 +1103,7 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setLanguageCode(languageCode);
 			//28895-35500
 			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
+			
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
 			boolean invokeBPM = false;
@@ -1116,6 +1120,9 @@ public class BSVAttendanceBackingBean extends
 									scQtBrief.getMaxNoOfAttendance())
 									.toString() });
 				}
+				
+				
+				
 				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
 
 				if (flag) {
@@ -1137,12 +1144,13 @@ public class BSVAttendanceBackingBean extends
 				throw new EpException(MessageConst.ERROR_760206);
 			}
 
-			// reqDTO.setQtBriefingList(briefingDetails);
-			// reqDTO.setBriefingDetail(scQtBrief);
+			// #28188 start
+			reqDTO.setBriefingDetail(scQtBrief);
 			reqDTO.setBriefingReqDtls(this.getManagedBean()
 					.getBriefingRegistrationList());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
-			
+			reqDTO.setBsvStatusId(QTStatusConst.BSV_COMPLETED);
+			// #28188 end
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
 			List<ScQtApprovalRemark> scQtApprovalRemarks = super.finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
 			List<ScQtApprovalRemark> newApprovalRemarks = super.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
@@ -1166,7 +1174,11 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
 					.getToBeDeletedRegistartions());
 			reqDTO.setInvokeBpm(invokeBPM);
-			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
+			//#28188 - Start
+			//Exclude BPM process as processing move to QTDetailBackingBean due to change to SAVE button
+			//BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO); 
+			BriefingResDTO resDTO = qTBriefingSO.saveQTDtlChangeBSV(reqDTO);
+			//#28188 - End
 
 			if (resDTO.isSuccessful()) {
 				ScQtBsvDtl bsv = resDTO.getScQtBriefing();
@@ -1180,32 +1192,25 @@ public class BSVAttendanceBackingBean extends
 
 				getregistrationDetails(bsv, true);
 				
-				Locale locate = new FacesScopes().getUserLocale();
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700005,
-														new String[] {
-																ResourceBundleUtils.getMessage(
-																		"lbl.sc.bsv.additional.attendance", 
-																		ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																		locate),
-																scQt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														locate)));
+				//#28188 - Start
+				putBriefingRegistrationListToSession(reqDTO.getBriefingReqDtls(), scQt.getQtId());
+				putApprovalRegistrationListToSession(reqDTO.getApproval());
+				//#28188 - End
 
 				//28895 - 35500 start
 				if (!newBriefingRegistrationList.isEmpty()){	
 					prepareBSVAttendanceAudit(scQt, newBriefingRegistrationList);					
 				}
 				//#28895-35500 end
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				//return CommonUIConst.ACKNOWLEDGE_PAGE;
+				
+				//#28188 - Start - Change to SAVE Acknowledge
+				this.getManagedBean().setMaintanceFlow(true);//28188
+				String[] param = new String[2];
+				
+				param[0] = this.getManagedBean().getScQt().getQtNo();
+				successMessage(MessageConst.INFO_700128,param);
+				//#28188 - End 
 
 			}
 		} finally {
@@ -1770,4 +1775,70 @@ public class BSVAttendanceBackingBean extends
 		}
 	}
 	
+	//#28188 - Start
+	@SuppressWarnings("unchecked")
+	private void putBriefingRegistrationListToSession(
+	        List<ScQtBsvRegistration> briefingReqDtls,
+	        Long qtId) {
+
+	    if (CollectionUtils.isEmpty(briefingReqDtls) || qtId == null) {
+	        return;
+	    }
+
+	    Map<String, Object> sessionMap = FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap();
+
+	    Long sessionQtId = (Long) sessionMap.get("briefingRegistrationQtId");
+
+	    List<ScQtBsvRegistration> briefingRegistrationList =
+	            (List<ScQtBsvRegistration>) sessionMap.get("briefingRegistrationList");
+
+	    // Different QT -> start a new list
+	    if (sessionQtId == null || !sessionQtId.equals(qtId)) {
+	        briefingRegistrationList = new ArrayList<ScQtBsvRegistration>();
+	        briefingRegistrationList.addAll(briefingReqDtls);
+
+	    }
+	    // Same QT -> append
+	    else {
+	        if (briefingRegistrationList == null) {
+	            briefingRegistrationList = new ArrayList<ScQtBsvRegistration>();
+	        }
+	        briefingRegistrationList.addAll(briefingReqDtls);
+	    }	   
+	    sessionMap.put("briefingRegistrationQtId", qtId);
+	    sessionMap.put("briefingRegistrationList", briefingRegistrationList);
+	}
+	
+	//#28188 - End
+	
+	//#28188 - Start
+	private void putApprovalRegistrationListToSession(ScQtApproval scQtApproval) {
+		if (scQtApproval == null) {
+			return;
+		}
+
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.put("scQtApprovalRegistration", scQtApproval);
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private String retrieveCommmitteeTypeDesc(Long qtId, String languageCode) {
+	 	ICommitteSO committeSO = null;
+	 	String commmitteeTypeDesc = null;
+		try{
+			committeSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							ICommitteSO.class);
+			
+			commmitteeTypeDesc = committeSO.retrieveCommitteeTypeDesc(qtId, languageCode);
+		}finally{
+			committeSO=null;	
+		}
+
+	    return commmitteeTypeDesc;
+	}
+	//#28188 - End
 }

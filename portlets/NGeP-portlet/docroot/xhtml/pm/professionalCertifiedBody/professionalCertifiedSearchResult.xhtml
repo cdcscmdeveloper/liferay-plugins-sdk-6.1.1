@@ -32,9 +32,11 @@
 				<h:outputText value="#{certBody.bodyCode}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.pc.acname']}" style="width:65%">
+			<!-- 12852 Start -->
+			<p:column headerText="#{lbl['lbl.pm.pc.acname']}" style="width:65%; white-space:normal">
 				<h:outputText value="#{certBody.bodyName}" />
 			</p:column>
+			<!-- 12852 End -->
 
 			<p:column headerText="#{lbl['lbl.pm.status']}" style="width:20%">  
 	            #{(certBody.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
