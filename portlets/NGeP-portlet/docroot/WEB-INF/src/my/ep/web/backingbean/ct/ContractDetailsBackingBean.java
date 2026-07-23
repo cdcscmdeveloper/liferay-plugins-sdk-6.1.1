@@ -1253,7 +1253,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
 			validateContractOwnerManagement(action);		
 		}else{
-			validateCtContractVer(action, inactiveUsersForRevise); //#30737 (add param list inactiveUsersForRevise)
+			validateCtContractVer(action);
 		}
 		//#25406 - End
 		ContractReqDTO reqDTO = new ContractReqDTO();
@@ -1576,7 +1576,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @param  outcome  the user action on this contract. The validation 
 	 * 					will invoke base on the action
 	 */
-	public void validateCtContractVer(String action, List<SelectedInactiveUserDTO> inactiveUsersForRevise) throws EpException { //#30737 (add param list inactiveUsersForRevise)
+	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
 		String docType = ctBB.getManagedBean().getContractVer().getDocType(); //#40283
 
@@ -2117,13 +2117,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	        handleInactiveUserValidation(action, selectedInactiveUsers);
 	    }
 		
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-	        log.info("xoxoxoxoxooxoxo action : REVISE");
-	        if (!inactiveUsersForRevise.isEmpty() && inactiveUsersForRevise.get(0).getStatus() == 5L) {
-	        	log.info("xoxoxoxoxooxoxo REVISE + return 5L");
-                handleInactiveUserValidation(action, inactiveUsersForRevise);
-            }
-	    }
+//		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+//	        log.info("xoxoxoxoxooxoxo action : REVISE");
+//	        if (!inactiveUsersForRevise.isEmpty() && inactiveUsersForRevise.get(0).getStatus() == 5L) {
+//	        	log.info("xoxoxoxoxooxoxo REVISE + return 5L");
+//                handleInactiveUserValidation(action, inactiveUsersForRevise);
+//            }
+//	    }
 		//#30737 - End
 		
 	}
@@ -2293,40 +2293,55 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#34442 - end
 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			validateCtContractVer(outcome, new ArrayList<SelectedInactiveUserDTO>()); //#30737 (add empty list to inactiveUsersForRevise)
-			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-			// Start - 25890 - Minh
-			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-				PmStatus pmStatus = ctBB.getManagedBean().getContractVer().getStatus();
-				if (pmStatus != null
-						&& ContractStatusConst.FD_PENDING_APPROVAL.longValue() == pmStatus.getStatusId().longValue()) {
-					validateFDDescAndAmount(outcome);
-				}
+		//#34442, #40555 - start
+			return handleApproveOrReject(outcome, docType, statusId, contractNo);
+		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+			return handleCancelOutcome(outcome);
+		} else {
+			return handleSubmitOrOther(outcome, docType, statusId, contractNo);
+		}
+		//#34442, #40555 - end
+	}
+
+	//#34442, #40555 - start
+	private String handleApproveOrReject(String outcome, String docType, String statusId, String contractNo) throws Exception {
+		validateCtContractVer(outcome);
+		//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+		boolean isApprove = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome); //34442
+		
+		// Start - 25890 - Minh
+		if (isApprove) { //34442
+			PmStatus pmStatus = ctBB.getManagedBean().getContractVer().getStatus();
+			if (pmStatus != null
+					&& ContractStatusConst.FD_PENDING_APPROVAL.longValue() == pmStatus.getStatusId().longValue()) {
+				validateFDDescAndAmount(outcome);
 			}
-			// End - 25890 - Minh
-			StringBuilder sb = new StringBuilder();
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ctBB.getManagedBean().getContractVer().getDocType());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ctBB.getManagedBean().getCtContractAmount().getContractAmount());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(outcome);		
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());		
-			getManagedBean().setTextBeforeSign(sb.toString());	
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
+		}
+		// End - 25890 - Minh
+		StringBuilder sb = new StringBuilder();
+		sb.append(ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ctBB.getManagedBean().getContractVer().getDocType());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ctBB.getManagedBean().getCtContractAmount().getContractAmount());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(outcome);		
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());		
+		getManagedBean().setTextBeforeSign(sb.toString());	
+		getManagedBean().setButtonAction(outcome);
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 
-			//#34442 - start
-			boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
-			boolean isFU = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-			boolean isFulfilmentDocument = isFD || isFU;
+		//#34442 - start
+		boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+		boolean isFU = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		boolean isFulfilmentDocument = isFD || isFU;
 
+		if (isApprove) {
 			if ((isFulfilmentDocument && shouldShowPerformanceBondConfirmation()) || !isFulfilmentDocument) {
 				setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
 
@@ -2335,47 +2350,56 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 				return null;
 			}
-			//#34442 - end
-			
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			return null;
-		//#25406 - Start	
-		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
-				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
-			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
-			return null;
-		}else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome) 
-				&& ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+		}
+		//#34442 - end
+
+		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		return null;
+	}
+	//#34442, #40555 - end
+
+	//#34442, #40555 - start
+	private String handleCancelOutcome(String outcome) throws Exception {
+		//#25406 - Start
+		boolean isCOM = ctBB.getManagedBean().getContractVer().getDocType()
+				.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
+
+		if (isCOM) {
 			validateRemarkCancel(outcome);
 			RequestContext.getCurrentInstance().execute("cancelComConfirmDlg.show()");
-			return null;
-		//#25406 - End
 		} else {
-			//#34442 - start
-			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-				boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
-				boolean isCOM = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
-
-				if (isFD && shouldShowPerformanceBondConfirmation()) {
-					setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
-
-					RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
-					RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
-
-					return null;
-				} else if (isCOM) {
-					setConfirmationContentMsg(getConfirmationContent(statusId));
-
-					RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
-					RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
-
-					return null;
-				}
-			}
-			//#34442 - end
-			return this.saveContract(outcome);
+			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 		}
+		return null;
+		//#25406 - End
 	}
+	//#34442, #40555 - end
+
+	//#34442, #40555 - start
+	private String handleSubmitOrOther(String outcome, String docType, String statusId, String contractNo) throws Exception {
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+			boolean isCOM = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
+
+			if (isFD && shouldShowPerformanceBondConfirmation()) {
+				setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
+
+				RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+
+				return null;
+			} else if (isCOM) {
+				setConfirmationContentMsg(getConfirmationContent(statusId));
+
+				RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+
+				return null;
+			}
+		}
+		return this.saveContract(outcome);
+	}
+	//#34442, #40555 - end
 
 	/**
 	 * The method used to set value for security check

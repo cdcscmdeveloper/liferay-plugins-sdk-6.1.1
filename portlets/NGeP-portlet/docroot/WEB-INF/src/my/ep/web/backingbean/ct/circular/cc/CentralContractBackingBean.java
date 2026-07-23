@@ -1462,6 +1462,44 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 		return ResourceBundleUtils.getMessage("lbl.ct.cc.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 
+	//#34442, #40558 - start
+	/**
+	 * Builds the text-before-sign payload: CircularNo+StartDate+EndDate+Type.
+	 *
+	 * @param  outcome  the user action on this contract
+	 * @return the composed text used for GPKI signing
+	 */
+	private String buildTextBeforeSign(String outcome) {
+		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getCircularVer().getCircularNo().trim()); // #33752
+		sb.append(ContractConst.SEPRATE_LINE);
+		if (getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null) {
+			sb.append(ContractConst.CIRCULAR_UPDATE);
+			sb.append(ContractConst.SEPRATE_LINE);
+			if (getManagedBean().getCircularVer().getExtendStartDate() != null)
+				sb.append(df.format(getManagedBean().getCircularVer().getExtendStartDate()));
+			else
+				sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
+			sb.append(ContractConst.SEPRATE_LINE);
+			if (getManagedBean().getCircularVer().getExtendEndDate() != null)
+				sb.append(df.format(getManagedBean().getCircularVer().getExtendEndDate()));
+			else
+				sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
+			sb.append(ContractConst.SEPRATE_LINE);
+		} else {
+			sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
+			sb.append(ContractConst.SEPRATE_LINE);
+		}
+		sb.append(outcome);
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo().trim()); // #33752
+		return sb.toString();
+	}
+	//#34442, #40558 - end
+
 	/**
 	 * The method used to authenticate user during submit the central circular.
 	 * This method will invoke a confirmation dialog for user authentication.
@@ -1475,34 +1513,8 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 			validateCircular(outcome);
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getCircularVer().getCircularNo().trim()); //#33752 
-			sb.append(ContractConst.SEPRATE_LINE);
-			if(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null){
-				sb.append(ContractConst.CIRCULAR_UPDATE);
-				sb.append(ContractConst.SEPRATE_LINE);
-				if(getManagedBean().getCircularVer().getExtendStartDate() != null)
-					sb.append(df.format(getManagedBean().getCircularVer().getExtendStartDate()));
-				else
-					sb.append(df.format(getManagedBean().getCircularVer().getStartDate())); 
-				sb.append(ContractConst.SEPRATE_LINE);
-				if(getManagedBean().getCircularVer().getExtendEndDate() != null)
-					sb.append(df.format(getManagedBean().getCircularVer().getExtendEndDate()));
-				else
-					sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
-				sb.append(ContractConst.SEPRATE_LINE);
-			} else {
-				sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
-				sb.append(ContractConst.SEPRATE_LINE);
-				sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
-				sb.append(ContractConst.SEPRATE_LINE);
-			}
-			sb.append(outcome);
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo().trim()); //#33752
-			getManagedBean().setTextBeforeSign(sb.toString());
+			getManagedBean().setTextBeforeSign(buildTextBeforeSign(outcome)); //34442, 40558
 			// set action
 			getManagedBean().setAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);

@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;//34442
 import my.ep.constant.pm.ParameterConst;
@@ -33,13 +32,11 @@ import my.ep.dto.pm.authorization.user.InactiveUserResDTO; // #30737
 import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtContract; //#30737
 import my.ep.persistence.entity.ct.CtContractVer; //#30737
 import my.ep.persistence.entity.ct.dtl.CtAgency;
-import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;//34442
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -303,7 +300,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	}
 	
 	public String getConfirmationMsgs(Long key){
-		final Map<Long, String> confirmationMsgs = new HashMap<Long, String>();
+		final Map<Long, String> confirmationMsgs = new HashMap<>(); //34442, 40554
 
 		confirmationMsgs.put(ContractStatusConst.FD_PENDING_CONTRACT_CREATION, "lbl.ct.fd.bond.confirm");
 		confirmationMsgs.put(ContractStatusConst.FD_PENDING_REVISION, "lbl.ct.fd.bond.confirm");

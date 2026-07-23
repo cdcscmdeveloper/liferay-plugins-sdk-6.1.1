@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -24,6 +26,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONArray;
 
+import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ai.AIApiResponse;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -65,6 +68,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final String TYPE_EPF = "epf";
 	private static final String TYPE_TENANCY = "tenancy";
 	private static final String TYPE_BANK = "bank";
+	private static final String LBL_AI_UNAVAILABLE = "lbl.sm.ai.unavailable";
+	private static final String AI_UPLOAD_MARKER = "_ai";
 
 	private List<AiEpfResultDTO> epfs;
 	private AiTenancyDTO tenancy;
@@ -113,7 +118,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (TYPE_EPF.equals(docType) && !EntityHelper.isCollectionEmpty(epfs)) {
 			for (AiEpfResultDTO ee : epfs) {
 				boolean employerMatches = ee.getEmployerName() != null
-						&& AiDocValidator.compareCompany(companyName, ee.getEmployerName());
+						&& AiDocValidator.normalizedEquals(companyName, ee.getEmployerName());
 				if (!employerMatches) {
 					blockSubmit = true;
 					log.info("EPF block on reopen: company='" + companyName + "' vs employer='"
@@ -123,7 +128,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 		} else if (TYPE_TENANCY.equals(docType) && tenancy != null 
 				&& !StringUtils.isEmpty(tenancy.getTenantsName())
-				&& !AiDocValidator.compareCompany(companyName, tenancy.getTenantsName())) {
+				&& !AiDocValidator.normalizedEquals(companyName, tenancy.getTenantsName())) {
 			
 			blockSubmit = true;
 			log.info("Tenancy block on reopen: company='" + companyName + "' vs tenant='"
@@ -230,6 +235,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		appl.setAiProcessed(1);
 		recomputeAiProcessed(appl);
+		// Eligible but nothing extracted yet, and AI is switched off: drop to 0 so the AI Assistant
+		// column, upload icon and step icon all stay hidden. An already-extracted application (2)
+		// keeps its AI view regardless of the toggle.
+		if (appl.getAiProcessed() == 1 && !AiDocSupport.isAiEnabled()) {
+			appl.setAiProcessed(0);
+			return;
+		}
 		validateBank(appl);
 		validateTenancy(appl);
 		validateEPF(appl);
@@ -321,7 +333,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			extension = originalFilename.substring(dotIndex);
 			oriFilename = originalFilename.substring(0, dotIndex);
 		}
-		return oriFilename + "_" + timestamp + extension;
+		// keep marker last before the extension so delete-lock can find it
+		return oriFilename + "_" + timestamp + AI_UPLOAD_MARKER + extension;
 	}
 
 	private SmApplSupportDoc getSmApplSupportDoc(String docType, SmAppl appl){
@@ -422,14 +435,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 					"SmAIDocbackingBean.sendDocumentOCR", "1:"+filename, startTime);
 			if (result == null) {
-				addMessageOnce(FacesMessage.SEVERITY_WARN, "lbl.sm.ai.unavailable");
+				addMessageOnce(FacesMessage.SEVERITY_WARN, LBL_AI_UNAVAILABLE);
 				return null;
 			}
 			return new JsonWrapper(startTime, result, docType);
 		} catch (IOException e) {
 			log.error("OCR call failed for " + filename, e);
 
-			addMessageOnce(FacesMessage.SEVERITY_WARN, "lbl.sm.ai.unavailable");
+			addMessageOnce(FacesMessage.SEVERITY_WARN, LBL_AI_UNAVAILABLE);
 		}
 
 		return null;
@@ -464,7 +477,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		FacesContext.getCurrentInstance().addMessage("ai", new FacesMessage(severity, null, detail));
 	}
-	
+
+	private static boolean hasErrorMessage(){
+		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
+		while (it.hasNext()){
+			if (it.next().getSeverity() == FacesMessage.SEVERITY_ERROR){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Submit
 	 * @param docType
@@ -478,6 +501,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (blockSubmit){
 			String key = TYPE_EPF.equals(docType) ? "lbl.sm.ai.epf.mismatch" : "lbl.sm.ai.tnc.mismatch";
 			addMessageOnce(FacesMessage.SEVERITY_ERROR, key);
+			return;
+		}
+		if (hasErrorMessage()){
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
@@ -676,21 +702,28 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		SmFacility hqFacility = AiDocValidator.getHeadquartersFacility(appl);
 		AiDocValidator.clearTenancyAiFields(hqFacility);
 
-		SmApplSupportDoc tenancyDoc = null;
-		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
-			if(isTenancyDoc(suppDoc.getPmDocument().getDocumentId())){
-				tenancyDoc = suppDoc;
-				break;
-			}
-		}
-		if (tenancyDoc == null || EntityHelper.isCollectionEmpty(tenancyDoc.getSmApplDocFiles()) 
+		SmApplSupportDoc tenancyDoc = findTenancyDoc(appl);
+		if (tenancyDoc == null || EntityHelper.isCollectionEmpty(tenancyDoc.getSmApplDocFiles())
 				|| EntityHelper.isCollectionEmpty(appl.getSmFacilities())){
 			return;
 		}
-		
+		validateTenancyFiles(appl, tenancyDoc, hqFacility);
+	}
+
+	private static SmApplSupportDoc findTenancyDoc(SmAppl appl){
+		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
+			if(isTenancyDoc(suppDoc.getPmDocument().getDocumentId())){
+				return suppDoc;
+			}
+		}
+		return null;
+	}
+
+	// Header facility supplies the supplier-side landlord/rental/address; each tenancy file is verified against it.
+	private static void validateTenancyFiles(SmAppl appl, SmApplSupportDoc tenancyDoc, SmFacility hqFacility){
 		String landlordsNameSupp = "";
 		String companyName = appl.getSmSupplier().getCompanyName();
-		
+
 		BigDecimal rentalRate = null;
 		SmAddress addr = null;
 		for(SmFacility fac : appl.getSmFacilities()){
@@ -702,7 +735,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				addr = fac.getSmAddress();
 			}
 		}
-		
+
 		for (SmApplDocFile docFile : tenancyDoc.getSmApplDocFiles()){
 			if (docFile.getFileName() == null ||docFile.getFileName().trim().isEmpty()){
 				continue;
@@ -731,21 +764,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
 			return;
 		}
-		if (!EntityHelper.isCollectionEmpty(appl.getSmPersonnels())){
-			for (SmPersonnel per : appl.getSmPersonnels()){
-				per.setEpfNoAI(null);
-				per.setNameAI(null);
-				per.setIcAI(null);
-			}
-		}
+		clearPersonnelAiFields(appl);
 
-		SmApplSupportDoc epfDoc = null;
-		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
-			if (isEpfDoc(suppDoc.getPmDocument().getDocumentId())){
-				epfDoc = suppDoc;
-				break;
-			}
-		}
+		SmApplSupportDoc epfDoc = findEpfDoc(appl);
 		if (epfDoc == null || EntityHelper.isCollectionEmpty(epfDoc.getSmApplDocFiles())
 				|| EntityHelper.isCollectionEmpty(appl.getSmPersonnels())){
 			return;
@@ -757,34 +778,160 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 
 		for (SmApplDocFile docFile : epfDoc.getSmApplDocFiles()){
-			if (docFile.getFileName() == null || docFile.getFileName().trim().isEmpty()){
+			applyEpfValidation(docFile, byNric);
+		}
+	}
+
+	// Reset the AI transients on every personnel before re-deriving from the EPF statement.
+	private static void clearPersonnelAiFields(SmAppl appl){
+		if (EntityHelper.isCollectionEmpty(appl.getSmPersonnels())){
+			return;
+		}
+		for (SmPersonnel per : appl.getSmPersonnels()){
+			per.setEpfNoAI(null);
+			per.setNameAI(null);
+			per.setIcAI(null);
+		}
+	}
+
+	private static SmApplSupportDoc findEpfDoc(SmAppl appl){
+		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
+			if (isEpfDoc(suppDoc.getPmDocument().getDocumentId())){
+				return suppDoc;
+			}
+		}
+		return null;
+	}
+
+	// One EPF file: match extracted employees to personnel by NRIC and light the EPF No./name AI icons.
+	private static void applyEpfValidation(SmApplDocFile docFile, Map<String, SmPersonnel> byNric){
+		if (docFile.getFileName() == null || docFile.getFileName().trim().isEmpty()){
+			return;
+		}
+		AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
+				.getAIApiResponse(docFile.getAiApiResponseId());
+		if (response == null){
+			return;
+		}
+		AiEpfResultDTO ee = AiDocParser.toEpf(AiDocParser.parseFields(response.getJsonResponse()));
+		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
+			SmPersonnel per = byNric.get(emp.getNricNumber());
+			if (per == null){
 				continue;
 			}
-			AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
-					.getAIApiResponse(docFile.getAiApiResponseId());
-			if (response == null){
-				continue;
-			}
-			AiEpfResultDTO ee = AiDocParser.toEpf(AiDocParser.parseFields(response.getJsonResponse()));
-			for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
-				SmPersonnel per = byNric.get(emp.getNricNumber());
-				if (per == null){
-					continue;
-				}
-				per.setEpfNoAI(emp.getKwspNumber());
-				
-				String aiName = emp.getEmployeeName();
-				if (aiName != null && per.getName() != null
-						&& per.getName().trim().equalsIgnoreCase(aiName.trim())){
-					per.setNameAI(aiName);
-					per.setIcAI(emp.getNricNumber());
-				}
+			per.setEpfNoAI(emp.getKwspNumber());
+
+			String aiName = emp.getEmployeeName();
+			if (aiName != null && per.getName() != null
+					&& per.getName().trim().equalsIgnoreCase(aiName.trim())){
+				per.setNameAI(aiName);
+				per.setIcAI(emp.getNricNumber());
 			}
 		}
 	}
 	
 	/**
-	 * EPF display AI icon only, with no tooltip
+	 * Get Employee Names from EPF thru AIApiResponse.
+	 * Returns an empty set when AI does not apply / no EPF doc / no response, so the caller skips the
+	 * check and manual adds stay unrestricted (as-is behaviour).
+	 * @param appl
+	 * @return trimmed extracted employee names
+	 */
+	public static Set<String> getAiEpfEmployeeNames(SmAppl appl){
+		Set<String> names = new HashSet<>();
+		if (!isAIApplicable(appl) || appl == null
+				|| EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
+			return names;
+		}
+		SmApplSupportDoc epfDoc = null;
+		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
+			if (suppDoc.getPmDocument() != null && isEpfDoc(suppDoc.getPmDocument().getDocumentId())){
+				epfDoc = suppDoc;
+				break;
+			}
+		}
+		if (epfDoc == null || EntityHelper.isCollectionEmpty(epfDoc.getSmApplDocFiles())){
+			return names;
+		}
+		for (SmApplDocFile docFile : epfDoc.getSmApplDocFiles()){
+			collectEpfEmployeeNames(docFile, names);
+		}
+		return names;
+	}
+
+	// collect trimmed AI-extracted employee names from one EPF doc file into names
+	private static void collectEpfEmployeeNames(SmApplDocFile docFile, Set<String> names){
+		if (docFile.getFileName() == null || docFile.getFileName().trim().isEmpty()){
+			return;
+		}
+		AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
+				.getAIApiResponse(docFile.getAiApiResponseId());
+		if (response == null){
+			return;
+		}
+		AiEpfResultDTO ee = AiDocParser.toEpf(AiDocParser.parseFields(response.getJsonResponse()));
+		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
+			if (emp.getEmployeeName() != null && !emp.getEmployeeName().trim().isEmpty()){
+				names.add(emp.getEmployeeName().trim());
+			}
+		}
+	}
+
+	/**
+	 * Manually-added NEW personnel (personnelId == null) must exist by name in the
+	 * uploaded EPF statement when AI applies. Existing/saved personnel (non-null id) and name edits on
+	 * them are untouched; no EPF uploaded => no restriction. Throws to abort the add before it saves.
+	 * @param appl
+	 * @param personnel the row being added
+	 */
+	public static void validateManualPersonnelAgainstEpf(SmAppl appl, SmPersonnel personnel){
+		if (!isAIApplicable(appl) || personnel == null || personnel.getPersonnelId() != null){
+			return;
+		}
+		Set<String> aiNames = getAiEpfEmployeeNames(appl);
+		if (aiNames.isEmpty()){
+			return;
+		}
+		for (String name : aiNames){
+			if (AiDocValidator.normalizedEquals(name, personnel.getName())){
+				return;
+			}
+		}
+		throw new EpException(SmCommonUtil.getMessage("lbl.sm.ai.epf.personnel.notexist", null));
+	}
+
+	/**
+	 * E4 - an EPF or Tenancy doc uploaded via the AI Assistant dialog cannot be deleted from the
+	 * Supporting Documents listing (replace it in the AI Assistant). Docs uploaded directly there carry
+	 * no marker and stay deletable. Bank stays deletable.
+	 * @param doc the support-doc group
+	 * @param file the uploaded file row
+	 * @return true when the trash control must be hidden
+	 */
+	public static boolean isAiSuppDocDeleteLocked(SmApplSupportDoc doc, SmApplDocFile file){
+		if (file == null || !isAiAssistantUpload(file.getFileName())
+				|| doc == null || doc.getPmDocument() == null){
+			return false;
+		}
+		Long docId = doc.getPmDocument().getDocumentId();
+		return isEpfDoc(docId) || isTenancyDoc(docId);
+	}
+
+	// true when the filename carries the AI Assistant marker (last token before the extension)
+	private static boolean isAiAssistantUpload(String fileName){
+		if (fileName == null){
+			return false;
+		}
+		String name = fileName.trim();
+		int dot = name.lastIndexOf('.');
+		if (dot > 0){
+			name = name.substring(0, dot);
+		}
+		return name.endsWith(AI_UPLOAD_MARKER);
+	}
+
+	/**
+	 * EPF displays the neutral AI icon (validatedAI 3)
 	 * @param appl
 	 */
 	public static void markEpfAiDocs(SmAppl appl){
@@ -799,9 +946,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			for (SmApplDocFile docFile : suppDoc.getSmApplDocFiles()){
 				if (docFile.getAiApiResponseId() != null){
 					docFile.setValidatedAI(3);
+					docFile.setMappedFieldAI(buildEpfLabel(appl, docFile));
 				}
 			}
 		}
+	}
+
+	// EPF tooltip for one doc file; null when the response is gone, so the icon renders without a tooltip.
+	private static String buildEpfLabel(SmAppl appl, SmApplDocFile docFile){
+		AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
+				.getAIApiResponse(docFile.getAiApiResponseId());
+		if (response == null){
+			return null;
+		}
+		AiEpfResultDTO ee = AiDocParser.toEpf(AiDocParser.parseFields(response.getJsonResponse()));
+		AiDocValidator.validateEpf(ee, appl.getSmSupplier().getCompanyName());
+		return ee.getLabel();
 	}
 
 	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<AiBankDocDTO> docEntities){
@@ -828,24 +988,11 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				continue;
 			}
 			// per-bank mismatch rows, labels from the bundle
-			for (AiBankDocDTO.AiBankStatementDTO bank : doc.getBankStatements()){
-				if (!bank.isValidAccountHolderName()){
-					hasWrongCompanyName = true;
-				}
-				if (!bank.isValidBankName()){
-					sb.append("\n").append(AiDocParser.label("lbl.gfmas.bank.desc")).append(": ")
-						.append(bank.getBankName());
-				}
-				if (!bank.isValidAccountNo()){
-					sb.append("\n").append(AiDocParser.label("lbl.fl.bank.acc.no")).append(": ")
-						.append(bank.getAccountNo());
-				}
-				if (!bank.isValidBankName() || ! bank.isValidAccountNo()){
-					sb.append("\n");
-				}
+			if (appendBankMismatchRows(doc.getBankStatements(), sb)){
+				hasWrongCompanyName = true;
 			}
 		}
-		
+
 		if (hasWrongCompanyName){
 			// hard block: mismatch disables Declare.
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -858,6 +1005,28 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, sb.toString().replace("\n", "<br/>"));
 			FacesContext.getCurrentInstance().addMessage(clientId, msg);
 		}
+	}
+
+	// Append a mismatch row per invalid bank field; returns true if any account-holder name mismatched.
+	private static boolean appendBankMismatchRows(List<AiBankDocDTO.AiBankStatementDTO> banks, StringBuilder sb){
+		boolean hasWrongCompanyName = false;
+		for (AiBankDocDTO.AiBankStatementDTO bank : banks){
+			if (!bank.isValidAccountHolderName()){
+				hasWrongCompanyName = true;
+			}
+			if (!bank.isValidBankName()){
+				sb.append("\n").append(AiDocParser.label("lbl.gfmas.bank.desc")).append(": ")
+					.append(bank.getBankName());
+			}
+			if (!bank.isValidAccountNo()){
+				sb.append("\n").append(AiDocParser.label("lbl.fl.bank.acc.no")).append(": ")
+					.append(bank.getAccountNo());
+			}
+			if (!bank.isValidBankName() || !bank.isValidAccountNo()){
+				sb.append("\n");
+			}
+		}
+		return hasWrongCompanyName;
 	}
 	
 	/**
@@ -965,7 +1134,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				err = "lbl.sm.ai.doctype.invalid";
 
 			} else if (statusCode >= 400){
-				err = "lbl.sm.ai.unavailable";
+				err = LBL_AI_UNAVAILABLE;
 				addMessageOnce(FacesMessage.SEVERITY_WARN, err);
 				return true;
 			}
@@ -1013,7 +1182,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		
 		if (!StringUtils.isEmpty(tenancy.getTenantsName()) 
-				&& !AiDocValidator.compareCompany(companyName, tenancy.getTenantsName())){
+				&& !AiDocValidator.normalizedEquals(companyName, tenancy.getTenantsName())){
 			blockSubmit = true;
 			addMessageOnce(FacesMessage.SEVERITY_ERROR, "lbl.sm.ai.tnc.mismatch");
 		}
@@ -1044,7 +1213,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 			// employer name matches exactly, case-insensitive; no employer name extracted still hard-blocks.
 			boolean employerMatches = ee.getEmployerName() != null
-					&& AiDocValidator.compareCompany(companyName, ee.getEmployerName());
+					&& AiDocValidator.normalizedEquals(companyName, ee.getEmployerName());
 			if (!employerMatches){
 				hasWrongCompanyName = true;
 			}
@@ -1066,7 +1235,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public void deleteDoc(SmApplDocFile doc) {
 		docs.remove(doc);
 		detachFromSupportDoc(doc);
-		clearAiFields(docType, smAppl);
+		selectedEmployees = null;
+		if (TYPE_TENANCY.equals(docType)){
+			validateTenancy(smAppl);
+		} else if (TYPE_EPF.equals(docType)){
+			validateEPF(smAppl);
+		}
 		if (EntityHelper.isCollectionEmpty(docs)){
 			epfs = null;
 			tenancy = null;
@@ -1077,26 +1251,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			processDoc(docType, smAppl);
 		}
 		recomputeAiProcessed(smAppl);
-	}
-
-	/**
-	 * Clear AI fields after deleting document
-	 * @param docType
-	 * @param appl
-	 */
-	private void clearAiFields(String docType, SmAppl appl){
-		if (appl == null){
-			return;
-		}
-		if (TYPE_TENANCY.equals(docType)){
-			AiDocValidator.clearTenancyAiFields(AiDocValidator.getHeadquartersFacility(appl));
-		} else if (TYPE_EPF.equals(docType) && !EntityHelper.isCollectionEmpty(appl.getSmPersonnels())){
-			for (SmPersonnel per : appl.getSmPersonnels()){
-				per.setEpfNoAI(null);
-				per.setNameAI(null);
-				per.setIcAI(null);
-			}
-		}
 	}
 
 	private void detachFromSupportDoc(SmApplDocFile doc){
@@ -1160,7 +1314,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	public boolean isBlockSubmit() {
-		return blockSubmit;
+		return blockSubmit || hasErrorMessage();
 	}
 
 	private static class JsonWrapper {

@@ -5,9 +5,61 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:remove> 25651 - Start </ui:remove>
+	<style type="text/css">
+	
+		.center-column {
+		    text-align: center;
+		    vertical-align: middle;
+		}
+ 
+        .arrow-img {
+            width: 15px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+		.rotated {
+		    transform: rotate(90deg);
+		    transition: 0.3s ease;
+		}
+		
+	    .ul-report-detail {
+		    list-style: none;
+		    margin: 0;
+		    padding-left: 0;
+		}
+
+		.li-report-detail {
+		    position: relative;
+		    padding-left: 18px;
+		    margin: 6px 0;
+		}
+
+		.li-report-detail::before {
+		    position: absolute;
+		    left: 0;
+		}
+        
+	</style>
+	
+	<script type="text/javascript">
+	function toggleRow(el) {
+	    var row = el.closest("tr");
+	    var content = row.querySelector(".content");
+
+	    content.style.display =
+	        content.style.display === "block" ? "none" : "block";
+
+	    el.classList.toggle("rotated");
+	}
+    </script>
+    <ui:remove> 25651 - End </ui:remove>
 
 	<p:panel id="evaluationReportsFilesDownloadIds"
 		header="#{lbl['lbl.sc.content']}" toggleable="true">
+		<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.sf.briefing.paper.reports.instructions']}" />
 		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
 			widgetVar="documentWidget" style="width:100%;" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -92,7 +144,83 @@
 				</ui:fragment>
 			</p:column>
 		</p:dataTable>
+	</p:panel>
+	
+	<ui:remove> 25651 - Start </ui:remove>
+	<p:panel id="evaluationReportsDetailFilesDownloadIds"
+		header="#{lbl['lbl.sc.report.section']}" toggleable="true">
+	   	<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.briefing.paper.reports.detail.instructions.two']}" escape="false" />
+		<p:dataTable var="scQtFinalizationReportDetail" id="evaluationreportdetail"
+			widgetVar="documentWidget" style="width:100%;" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{suppFinalizationBackingBean.managedBean.scQtFinalizationReportDetail}"
+			rowKey="#{scQtFinalizationReportDetail}" rowIndexVar="rowIndex" rows="10">
 
+			<ac:paginator for="evaluationreportdetail" />
+			
+			<p:column style="width:2%" >
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
+						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.selectAll(suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll, suppFinalizationBackingBean.managedBean.newBriefingPaperReportList)}"/>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				
+				<p:selectBooleanCheckbox value="#{scQtFinalizationReportDetail.selected}"
+					disabled="true"
+					rendered="#{scQtFinalizationReportDetail.definationType.parameterCode ne 'UP'}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+				
+				<p:selectBooleanCheckbox value="#{scQtFinalizationReportDetail.selected}"
+				disabled="#{suppFinalizationBackingBean.managedBean.readOnly}"
+					rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'UP'}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationReportsDetailFilesDownloadIds])" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+			
+			<p:column style="width:5%;white-space: normal;" styleClass="center-column">
+			   <h:graphicImage value="/css/images/icon-expand.png" rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'SD' and scQtFinalizationReportDetail.pmDocument.docDefinitionKey ne 'KTU'}" styleClass="arrow-img" onclick="toggleRow(this)" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.report']}"
+				style="width:58%;white-space: normal;">
+				<h:inputText  value="#{scQtFinalizationReportDetail.title}" required="true" style="width:500px;"
+				disabled="#{suppFinalizationBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.content']}"
+					rendered="#{empty scQtFinalizationReportDetail.pmDocument}" >
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</h:inputText>
+				<h:outputText value="#{scQtFinalizationReportDetail.title}" rendered="#{!empty scQtFinalizationReportDetail.pmDocument}" />
+					
+			    <!-- Content -->
+			    <div class="content" style="display:none;">
+			   
+					<ul class="ul-report-detail">
+					   <ui:repeat value="#{suppFinalizationBackingBean.managedBean.reportDetail}" var="entry">
+					        <ui:fragment rendered="#{entry.key eq scQtFinalizationReportDetail.pmDocument.docDefinitionKey and entry.value ne SourcingConstants.laporanKertasTaklimatPertimbangan}">
+					            <li class="li-report-detail"> #{entry.value} </li>
+					        </ui:fragment>
+					   </ui:repeat>   
+					</ul>
+					
+			    </div>
+			    
+			</p:column>
+
+			<p:column style="width:20%;text-align: center;"
+				headerText="#{lbl['lbl.sc.action']}">
+					<ui:fragment
+						rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'SD'}">
+                     		
+                     		<p:commandButton id="download" icon="ui-icon-download"
+					style="background-color:transparent !important; border:0px none;"
+					ajax="false"
+					action="#{suppFinalizationBackingBean.downloadReport(scQtFinalizationReportDetail)}" />
+		
+				</ui:fragment>
+			
+			</p:column>
+		</p:dataTable>
+		
 		<div class="ppRightBtn">
 			<ui:remove>38523 - start </ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
@@ -114,7 +242,8 @@
 				update="@([id$=#{evaluationReportListDeleteId}])"/>
 				
 		</div>
-	</p:panel>
+    </p:panel>
+    <ui:remove> 25651 - End </ui:remove>
 	
 	<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
 				  modal="true" resizable="false" width="875" height="400" styleClass="pop_up_top" 
