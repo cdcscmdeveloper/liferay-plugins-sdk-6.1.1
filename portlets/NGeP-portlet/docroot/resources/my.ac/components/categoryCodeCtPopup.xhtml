@@ -13,148 +13,197 @@
 </cc:interface>
 
 <cc:implementation>
-    <h:outputScript target="body">
-        function hideCategoryCodePopup() {
-            try {
-                if (typeof PF === 'function' &amp;&amp; PF('catCodePopup')) {
-                    PF('catCodePopup').hide();
-                }
-            } catch (e) {}
-        }
-    </h:outputScript>
-<!-- #40500,#30014 //Remove StyleCSS -->
-	<h:outputStylesheet>
-	<style>
-	@keyframes fadeInPopup {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
+<!-- #40500,#30014 -->
+<h:outputStylesheet>
+    <style>
+.category-search-dialog .ui-dialog-content {
+    overflow: visible;
 }
-	</style>
-	</h:outputStylesheet>
 
+.category-search-dialog .ui-datatable-scrollable-header table,.category-search-dialog .ui-datatable-scrollable-body table {
+    table-layout: fixed;
+}
 
-		<p:dialog id="catCodeCtPopup"
-		header="#{lbl['lbl.ct.category.code.search']}"
-		widgetVar="catCodePopup" modal="true" width="680" 
-		position="top"
-        contentStyle="margin-top: 0;">
+.category-search-dialog .ui-datatable-empty-message td {
+    text-align: center;
+}
 
-		<p:messages id="catCodeCtPopupMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />
+/* Paginator tetap di bawah */
+#catCodeCtDescrTbl+.ui-paginator {
+    position: relative;
+    z-index: 11;
+}
 
-		<h:panelGroup id="catCodeCtPnl">
-			<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-				<td width="25%" style="text-align: right; padding-right: 15px;">
-					<h:outputText value="#{lbl['lbl.ct.category.code.search.by']}"/>
-				</td>
-				<td width="75%">
-				<p:selectOneRadio id="catCodeCtSearchBy" label="#{lbl['lbl.ct.category.code.search.by']}"
-    				value="#{categoryCodeSearchBackingBean.managedBean.searchBy}"
-    				layout="custom"
-    				styleClass="commonLabel">
-    				<f:selectItems 
-        			value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeSearchBy)}" />
-    				<p:ajax event="change" process="@this" update="catCodeCtPnl"/>
-				</p:selectOneRadio>
-				<!-- Layout manual, horizontal -->
-				<h:panelGrid columns="4" cellpadding="5" style="vertical-align: middle;">
-    				<!-- itemIndex 0 = By Category Code -->
-    			 <p:radioButton for="catCodeCtSearchBy" itemIndex="0" />
-   				 <h:outputText value="#{lbl['lbl.ct.menu.category.code']}" style="margin-right:25px;" />
+/* Sembunyikan seluruh wrapper scroll saat data kosong */
+.hide-scroll-wrapper .ui-datatable-scrollable-header,
+.hide-scroll-wrapper .ui-datatable-scrollable-body,
+.hide-scroll-wrapper .ui-datatable-scrollable-footer {
+    display: none !important;
+}
 
-    				<!-- itemIndex 1 = By Category Description -->
-    			 <p:radioButton for="catCodeCtSearchBy" itemIndex="1" />
-    			 <h:outputText value="#{lbl['lbl.ct.category.description']}" />
-				</h:panelGrid>
-				</td>
-			</tr>
-			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByCode}">
-			<tr>
-				<td style="text-align: right; padding-right: 15px;">
-					<h:outputText value="#{lbl['lbl.ct.tbl.category']}"/>
-				</td>
-				<td>
-					<h:selectOneMenu id="catCodeCtLvl1" label="#{lbl['lbl.ct.tbl.category']}"
-						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl1}"
-						style="width: 500px;">
-						<f:selectItems value="#{categoryCodeSearchBackingBean.level1CategoryCodes}" />
-						<p:ajax event="change" partialSubmit="true" process="@this" update="catCodeCtLvl2,catCodeCtLvl3" />
-					</h:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-				<td style="text-align: right; padding-right: 15px;">
-					<h:outputText value="#{lbl['lbl.ct.tbl.sub.category']}"/>
-				</td>
-				<td>
-					<h:selectOneMenu id="catCodeCtLvl2" label="#{lbl['lbl.ct.tbl.sub.category']}"
-						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2}"
-						style="width: 500px;">
-						<f:selectItems value="#{categoryCodeSearchBackingBean.level2CategoryCodes}" />
-						<p:ajax event="change" partialSubmit="true" process="@this" update="catCodeCtLvl3" />
-					</h:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-				<td style="text-align: right; padding-right: 15px;">
-					<h:outputText value="#{lbl['lbl.ct.tbl.sub.category.div']}"/>
-				</td>
-				<td>
-					<h:selectOneMenu id="catCodeCtLvl3" label="#{lbl['lbl.ct.tbl.sub.category.div']}"
-						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
-						style="width: 500px;">
-						<f:selectItems value="#{categoryCodeSearchBackingBean.level3CategoryCodes}" />
-						<p:ajax event="change" partialSubmit="true" process="@this" />
-					</h:selectOneMenu>
-				</td>
-			</tr>
-			</c:if>
-			</table>
-			
-			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByDescription}">
-			<p:panel header="#{lbl['lbl.ct.search.category']}" toggleable="true">
+/* Scroll aktif hanya kalau data ada */
+.ui-datatable-scrollable-body {
+    overflow-y: auto !important;
+    max-height: 300px !important;
+}
+
+/* HILANGKAN RESIZE HANDLE */
+.category-search-dialog .ui-column-resizer {
+    display: none !important;
+}
+
+.category-search-dialog .ui-datatable th.ui-state-default {
+    background-image: none !important;
+    background-color: #f5f5f5 !important; /* atau sesuaikan dengan tema Anda */
+}
+/* Hilangkan kotak abu-abu di header scrollable PrimeFaces 3.5 */
+.category-search-dialog .ui-datatable-scrollable-header {
+    background: transparent !important;
+}
+
+.category-search-dialog .ui-datatable-scrollable-header .ui-datatable-tablewrapper {
+    background: transparent !important;
+}
+
+.category-search-dialog .ui-datatable-scrollable-header th:last-child {
+    background: transparent !important;
+    border-right: none !important;
+}
+
+/* Pastikan header kolom tidak ada background aneh */
+.category-search-dialog .ui-datatable th.ui-state-default {
+    background: #f5f5f5 !important; 
+    background-image: none !important;
+}
+
+/* Hilangkan kotak abu-abu di sudut kanan atas header */
+.category-search-dialog .ui-datatable-scrollable-header::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Target spesifik untuk area */
+.category-search-dialog .ui-datatable-scrollable-header table {
+    background: transparent !important;
+}
+</style>
+</h:outputStylesheet>
+	<p:remoteCommand
+    name="afterCloseCategoryPopupRC"
+    action="#{panelBackingBean.afterCloseCategoryPopup}" /> <!-- #40498,#30014 -->
+
+		<p:dialog id="categoryDialog" widgetVar="catCodePopup" modal="true"
+			width="850" resizable="false" position="top"
+			styleClass="category-search-dialog"
+			onHide="afterCloseCategoryPopupRC();"> <!-- #40500,#30014 -->
+			<p:messages id="catCodeCtPopupMsg" showDetail="true"
+				autoUpdate="true" closable="true" showSummary="false"
+				severity="error, info" />
+			<h:panelGroup id="catCodeCtPnl">
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr>
-					<td width="25%" style="text-align: right; padding-right: 15px;">
-						<h:outputText value="#{lbl['lbl.ct.category.description']}"/>
-					</td>
-					<td width="75%">
-						<p:inputText id="catCodeCtDecsr" value="#{categoryCodeSearchBackingBean.managedBean.categoryDesciption}" 
-							onkeypress="if (event.keyCode == 13) { categoryCodeCtSearch.jq.click(); return false; }"
-							maxlength="100" label="#{lbl['lbl.ct.category.description']}"
-							style="width:475px;" />
-						<p:message id="catCodeCtDecsrMsg" for="catCodeCtDecsr" display="icon" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="ppRightBtn">
-						<p:commandButton
-							value="#{lbl['lbl.btn.search']}"
-							widgetVar="categoryCodeCtSearch"
-							action="#{categoryCodeSearchBackingBean.searchAction}" 
-							process="catCodeCtPnl" update="catCodeCtDescrTbl" />
-						<p:commandButton value="#{lbl['lbl.ct.btn.reset']}"
-							action="#{categoryCodeSearchBackingBean.resetAction}" 
-							resetValues="true" 
-							process="@this" update="catCodeCtPnl" />
-					</td>
-				</tr>
+					<tr>
+						<td width="25%" style="text-align: right; padding-right: 15px;">
+							<h:outputText value="#{lbl['lbl.ct.category.code.search.by']}" />
+						</td>
+						<td width="75%"><p:selectOneRadio id="catCodeCtSearchBy"
+								label="#{lbl['lbl.ct.category.code.search.by']}"
+								value="#{categoryCodeSearchBackingBean.managedBean.searchBy}"
+								layout="custom" styleClass="commonLabel">
+								<f:selectItems
+									value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeSearchBy)}" />
+								<p:ajax event="change" process="@this" update="catCodeCtPnl" />
+							</p:selectOneRadio> <!-- Layout manual, horizontal --> <h:panelGrid columns="4"
+								cellpadding="5" style="vertical-align: middle;">
+								<!-- itemIndex 0 = By Category Code -->
+								<p:radioButton for="catCodeCtSearchBy" itemIndex="0" />
+								<h:outputText value="#{lbl['lbl.ct.menu.category.code']}"
+									style="margin-right:25px;" />
+
+								<!-- itemIndex 1 = By Category Description -->
+								<p:radioButton for="catCodeCtSearchBy" itemIndex="1" />
+								<h:outputText value="#{lbl['lbl.ct.category.description']}" />
+							</h:panelGrid></td>
+					</tr>
+					<ui:fragment
+						rendered="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByCode}"> <!-- #40500,#30014 -->
+						<tr>
+							<td style="text-align: right; padding-right: 15px;"><h:outputText
+									value="#{lbl['lbl.ct.tbl.category']}" /></td>
+							<td><h:selectOneMenu id="catCodeCtLvl1"
+									label="#{lbl['lbl.ct.tbl.category']}"
+									value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl1}"
+									style="width: 500px;">
+									<f:selectItems
+										value="#{categoryCodeSearchBackingBean.level1CategoryCodes}" />
+									<p:ajax event="change" partialSubmit="true" process="@this"
+										update="catCodeCtLvl2,catCodeCtLvl3" />
+								</h:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td style="text-align: right; padding-right: 15px;"><h:outputText
+									value="#{lbl['lbl.ct.tbl.sub.category']}" /></td>
+							<td><h:selectOneMenu id="catCodeCtLvl2"
+									label="#{lbl['lbl.ct.tbl.sub.category']}"
+									value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2}"
+									style="width: 500px;">
+									<f:selectItems
+										value="#{categoryCodeSearchBackingBean.level2CategoryCodes}" />
+									<p:ajax event="change" partialSubmit="true" process="@this"
+										update="catCodeCtLvl3" />
+								</h:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td style="text-align: right; padding-right: 15px;"><h:outputText
+									value="#{lbl['lbl.ct.tbl.sub.category.div']}" /></td>
+							<td><h:selectOneMenu id="catCodeCtLvl3"
+									label="#{lbl['lbl.ct.tbl.sub.category.div']}"
+									value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
+									style="width: 500px;">
+									<f:selectItems
+										value="#{categoryCodeSearchBackingBean.level3CategoryCodes}" />
+									<p:ajax event="change" partialSubmit="true" process="@this" />
+								</h:selectOneMenu></td>
+						</tr>
+					</ui:fragment>
 				</table>
-			</p:panel>
-			<!-- #40500,#30014 //Remove Scrollbar function -->
-			<p:panel header="#{lbl['lbl.ct.category.result']}" toggleable="true">
+
+				<ui:fragment
+					rendered="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByDescription}"> <!-- #40500,#30014 -->
+					<p:panel header="#{lbl['lbl.ct.search.category']}"
+						toggleable="true">
+						<table border="0" cellspacing="0" cellpadding="0" width="100%">
+							<tr>
+								<td width="25%" style="text-align: right; padding-right: 15px;">
+									<h:outputText value="#{lbl['lbl.ct.category.description']}" />
+								</td>
+								<td width="75%"><p:inputText id="catCodeCtDecsr"
+										value="#{categoryCodeSearchBackingBean.managedBean.categoryDesciption}"
+										onkeypress="if (event.keyCode == 13) { categoryCodeCtSearch.jq.click(); return false; }"
+										maxlength="100" label="#{lbl['lbl.ct.category.description']}"
+										style="width:475px;" /> <p:message id="catCodeCtDecsrMsg"
+										for="catCodeCtDecsr" display="icon" /></td>
+							</tr>
+							<tr>
+								<td colspan="2" class="ppRightBtn"><p:commandButton
+										value="#{lbl['lbl.btn.search']}"
+										widgetVar="categoryCodeCtSearch"
+										action="#{categoryCodeSearchBackingBean.searchAction}"
+										process="catCodeCtPnl" update="catCodeCtDescrTbl" /> <p:commandButton
+										value="#{lbl['lbl.ct.btn.reset']}"
+										action="#{categoryCodeSearchBackingBean.resetAction}"
+										resetValues="true" process="@this" update="catCodeCtPnl" /></td>
+							</tr>
+						</table>
+					</p:panel>
+					<!-- #40500,#30014 //Refinement Scrollbar function -->
+					<p:panel header="#{lbl['lbl.ct.category.result']}"
+						toggleable="true">
+
 						<p:dataTable id="catCodeCtDescrTbl"
 							value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
 							selection="#{categoryCodeSearchBackingBean.managedBean.selectedCategoryL3}"
-							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}" var="pmCategoryL3"							
-							lazy="true" rows="10"
+							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}"
+							var="pmCategoryL3" lazy="true" rows="10" scrollable="true" resizableColumns="false"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
 							<ac:paginator for="catCodeCtDescrTbl" />
@@ -185,27 +234,23 @@
 							</p:column>
 						</p:dataTable>
 					</p:panel>
-			</c:if>
-		</h:panelGroup>
+				</ui:fragment>
+			</h:panelGroup>
 
 			<table style="width: 100%;">
 				<tr>
-					<td style="text-align: right;">
-						<p:commandButton
+					<td style="text-align: right;"><p:commandButton
 							value="#{lbl['lbl.btn.ok']}"
 							action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-							process="@form" update="#{cc.attrs.update}"
-							oncomplete="if (!args || !args.validationFailed) hideCategoryCodePopup();"
-							styleClass="BtnSpacing" id="catCodeCtOkBttn" name="catCodeCtOkBttn"/> 
-						<p:commandButton
+							process="@form" update="#{cc.attrs.update} catCodeCtPnl"
+							resetValues="true" /> <!-- #40498,#30014 --> <p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 							process="@this" update="@this"
 							action="#{categoryCodeSearchBackingBean.cancelAction}"
-							oncomplete="catCodePopup.hide()"
-							styleClass="BtnSpacing" id="catCodeCtCnclBttn" name="catCodeCtCnclBttn" />
-					</td>
+							oncomplete="catCodePopup.hide()" styleClass="BtnSpacing"
+							id="catCodeCtCnclBttn" name="catCodeCtCnclBttn" /></td>
 				</tr>
 			</table>
 		</p:dialog>
-</cc:implementation>
+	</cc:implementation>
 </ui:composition>
