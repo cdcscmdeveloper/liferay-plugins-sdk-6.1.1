@@ -3584,7 +3584,17 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
 			
-			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
+		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
+			history = getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory();
+			boolean firstDataApprover = true;
+
+			for (SmSuppCatOtherDescHistory obj : history) {
+				if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
+					firstDataApprover = false;
+				}
+			}
+			
+			if (firstDataApprover){
 				reqDTO.setOtherDescOld(getManagedBean().getOtherDescOld());
 				reqDTO.setRoleType(SupplierManagementConst.APPROVER_SDM);
 			} else {
