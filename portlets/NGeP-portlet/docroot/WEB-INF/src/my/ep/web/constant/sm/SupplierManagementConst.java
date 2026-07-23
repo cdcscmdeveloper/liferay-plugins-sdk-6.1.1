@@ -1537,4 +1537,14 @@ public class SupplierManagementConst {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
 //	#37925 END
+	
+	// 28278 -START
+	public String getMOF_STATUS_DELETED() {
+		return MOF_STATUS_DELETED;
+	}
+
+	public String getMOF_STATUS_CANCELLED() {
+		return MOF_STATUS_CANCELLED;
+	}
+	// 28278 -END
 }
