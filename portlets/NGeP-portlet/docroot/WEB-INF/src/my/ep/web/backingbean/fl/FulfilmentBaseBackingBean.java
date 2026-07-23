@@ -23,6 +23,8 @@ import org.apache.log4j.Logger;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
@@ -40,6 +42,10 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -64,6 +70,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
@@ -479,6 +486,12 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 */
 	protected void convertCtAddressToFlAddress(CtContractValue ctSupplierDtl,FlSupplierDtl supplierDtl){//33917
 		//CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue(); //33917
+		//40227-Start
+		if (ctSupplierDtl == null) {
+			return;
+		}
+		//40227-end
+		
 		if(ctSupplierDtl.getSupplierBranch() != null){
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(ctSupplierDtl.getSupplierBranch());
@@ -488,6 +501,14 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		FlAddress flAddress = new FlAddress();
 		CtAddress ctAddress = ctSupplierDtl.getSupplierAddress();
+		
+		//40227-Start
+		if (ctAddress == null) {
+	        supplierDtl.setFlAddress(flAddress);
+	        return;
+	    }
+		//40227-end
+		
 		flAddress.setAddress1(ctAddress.getAddress1());
 		flAddress.setAddress2(ctAddress.getAddress2());
 		flAddress.setAddress3(ctAddress.getAddress3());
@@ -1024,4 +1045,124 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 
 		commonDownload(filePath.toString(), CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
 	}
+	
+	// 35571 - Start
+	/**
+	 * Retrieves PTJ name based on logged-in user.
+	 * 
+	 * If accessed via task, where task ID is not null, and the logged-in user
+	 * has either FL_APPROVER or RECEIVING_OFFICER role, the PTJ name will be
+	 * retrieved from the user's organization profile.
+	 * 
+	 * @param ptjName
+	 * @return PTJ name from user's organization profile if available; 
+	 * otherwise the original PTJ name
+	 */
+	public String retrievePtjNameByUserLogin(String ptjName) {
+		String taskId = getManagedBean().getTaskId();
+		Long userId = getUserIdSessionFromLoginId();
+
+		boolean isApprover = getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+		boolean isReceivingOfficer = getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
+
+		log.info("User ID : " + userId);
+		log.info("Task ID ManagedBean : " + taskId);
+		log.info("Has Role FL_APPROVER : " + isApprover);
+		log.info("Has Role RECEIVING_OFFICER : " + isReceivingOfficer);
+
+		if (isAllowedToRetrievePtjFromUserOrg(taskId, isApprover, isReceivingOfficer)) {
+			String orgName = retrieveOrgNameByUserId(userId);
+			
+			if (orgName != null) {
+				return orgName;
+			}
+		}
+
+		return ptjName;
+	}
+
+	/**
+	 * Checks whether the logged-in user is allowed to retrieve PTJ name from
+	 * the user's organization profile.
+	 * 
+	 * @param taskIdManagedBean
+	 * @param isApprover
+	 * @param isReceivingOfficer
+	 * @return
+	 */
+	private boolean isAllowedToRetrievePtjFromUserOrg(String taskId, boolean isApprover,
+			boolean isReceivingOfficer) {
+		return taskId != null && (isApprover || isReceivingOfficer);
+	}
+
+	/**
+	 * Retrieves organization name based on the logged-in user's ID.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private String retrieveOrgNameByUserId(Long userId) {
+		Long orgProfileId = retrieveOrgProfileIdByUserId(userId);
+
+		if (orgProfileId != null) {
+			return retrieveOrgNameByOrgProfileId(orgProfileId);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieves organization profile ID based on the logged-in user's ID.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private Long retrieveOrgProfileIdByUserId(Long userId) {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		
+		if (userId != null){
+			userReqDTO.setUserId(userId);
+
+			UserResDTO userOrgResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+
+			if (userOrgResDTO != null && userOrgResDTO.getUserOrgList() != null && !userOrgResDTO.getUserOrgList().isEmpty()) {
+				PmUserOrg userOrg = userOrgResDTO.getUserOrgList().get(0);
+				
+				if (userOrg.getPmOrgProfile() != null) {
+					return userOrg.getPmOrgProfile().getOrgProfileId();
+				}
+			} 
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieves organization name based on organization profile ID.
+	 * 
+	 * @param orgProfileId
+	 * @return
+	 */
+	private String retrieveOrgNameByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+
+		OrgProfileResDTO resDTO = orgProfileSO.getActivePmOrgValidityByOrgProfileId(reqDTO);
+
+		if (resDTO != null && resDTO.getPmOrgProfile() != null) {
+			return resDTO.getPmOrgProfile().getOrgName();
+		}
+
+		return null;
+		
+	}
+	
+	// 35571 - End
+	
 }

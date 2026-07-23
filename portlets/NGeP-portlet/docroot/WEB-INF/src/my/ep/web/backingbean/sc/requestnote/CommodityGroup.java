@@ -17,6 +17,7 @@ public class CommodityGroup implements Serializable {
     private String itemCodeName;
     private BigDecimal currentItemTotalAmount;
     private BigDecimal accumulativeAmountPerItemGroup;
+    private BigDecimal itemThreshold;
     private String decision;
 
     private List<ScRequestNoteDtl> items;
@@ -29,6 +30,7 @@ public class CommodityGroup implements Serializable {
         this.items = new ArrayList<>();
         this.currentItemTotalAmount = BigDecimal.ZERO;
         this.accumulativeAmountPerItemGroup = BigDecimal.ZERO;
+        this.itemThreshold = BigDecimal.ZERO;
         this.itemCode = ""; 
         this.itemName = ""; 
         this.itemCodeName = "";
@@ -42,15 +44,17 @@ public class CommodityGroup implements Serializable {
      * @param itemCodeName the item code name
      * @param currentItemTotalAmount the current item total amount
      * @param accumulativeAmountPerItemGroup the accumulative amount per item group
+     * @param itemThreshold the item threshold
      * @param decision the decision
      */
     public CommodityGroup(String itemCode, String itemName, String itemCodeName, BigDecimal currentItemTotalAmount,
-                          BigDecimal accumulativeAmountPerItemGroup, String decision) {
+                          BigDecimal accumulativeAmountPerItemGroup, BigDecimal itemThreshold, String decision) {
     	this.itemCode = itemCode;
     	this.itemName = itemName;
     	this.itemCodeName = itemCodeName;
         this.currentItemTotalAmount = currentItemTotalAmount;
         this.accumulativeAmountPerItemGroup = accumulativeAmountPerItemGroup;
+        this.itemThreshold = itemThreshold;
         this.decision = decision;
         this.items = new ArrayList<>();
     }
@@ -143,6 +147,24 @@ public class CommodityGroup implements Serializable {
      */
     public void setAccumulativeAmountPerItemGroup(BigDecimal accumulativeAmountPerItemGroup) {
         this.accumulativeAmountPerItemGroup = accumulativeAmountPerItemGroup;
+    }
+    
+    /**
+     * Retrieves the item threshold.
+     *
+     * @return The item threshold.
+     */
+    public BigDecimal getItemThreshold() {
+        return itemThreshold;
+    }
+
+    /**
+     * Sets the item threshold.
+     *
+     * @param itemThreshold The item threshold to set.
+     */
+    public void setItemThreshold(BigDecimal itemThreshold) {
+        this.itemThreshold = itemThreshold;
     }
     
     /**

@@ -1797,12 +1797,10 @@ public class RuleCatalogueBackingBean extends
 
 			}
 
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
-								getActionDesc(messageId, msgParam), fee
-										.getRecordStatusFlg().longValue()));
+				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForFeeExemption(
+						fee, getActionDesc(messageId, msgParam), fee.getRecordStatusFlg().longValue()));
 			}
 			/************ AUDIT #28895_35509 *************/
 			// Audit Get deleted value for orgType
@@ -1822,18 +1820,13 @@ public class RuleCatalogueBackingBean extends
 			/************ END AUDIT #28895_35509 *************/
 		}
 		statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(Long
-				.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		reqDTO.setStatus(statusResDTO.getPmStatus() != null ? statusResDTO
-				.getPmStatus() : new PmStatus());
+		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
+		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+		reqDTO.setStatus(statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus());
 		reqDTO.setUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
 		try {
-			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IFeeExemptionSO.class);
+			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
 			/************ AUDIT #28895_35509 *************/
@@ -1987,7 +1980,7 @@ public class RuleCatalogueBackingBean extends
 							fee.getItemId().getItemName() };
 				}
 			}
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -2304,7 +2297,7 @@ public class RuleCatalogueBackingBean extends
 							fee.getRequestItemId().getItemName() };
 				}
 			}
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -2495,7 +2488,7 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -3839,7 +3832,7 @@ public class RuleCatalogueBackingBean extends
 							.getLocationName() };
 				}
 
-				if (messageId != null & msgParam != null) {
+				if (messageId != null && msgParam != null) {
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyForDesignatedArea(

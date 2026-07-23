@@ -135,28 +135,35 @@
 						<ui:remove>#26059 - Start</ui:remove>
 						<p:dialog id="assignCodeDialogConfirm"
 							widgetVar="assignCodeDialogConfirm"
-							header="#{lbl['lbl.sc.item.details']}" modal="true"
+							header="#{lbl['lbl.sc.item.details']}" modal="true" width="500"
 							closable="true">
 
-							<h:panelGroup style="display:block; margin-bottom:20px;">
-								<p:outputLabel
-									value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
-							</h:panelGroup>
-							<h:panelGroup style="display:block; margin-bottom:15px;">
-								<h:outputText
-									value="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}" />
-							</h:panelGroup>
+							<p:outputPanel id="assignCodeContentPanel" style="padding: 10px;">
 
-							<div align="right">
-								<p:commandButton value="#{lbl['lbl.btn.ok']}"
-									onclick="assignCodeDialogConfirm.hide();"
-									action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									update="@form" />
-								<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-									onclick="assignCodeDialogConfirm.hide();" update="@form" />
-							</div>
+								<div style="margin-bottom: 15px;">
+									<h:outputText
+										value="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}" />
+								</div>
+								<div
+									style="margin-bottom: 30px; word-wrap: break-word; line-height: 1.5;">
+									<h:outputText
+										value="#{codificationBackingBean.managedBean.itemCodeDesc}"
+										style="font-weight: bold;" />
+								</div>
+
+								<div style="text-align: right; margin-top: 20px; clear: both;">
+									<p:commandButton value="#{lbl['lbl.btn.yes']}"
+										onclick="assignCodeDialogConfirm.hide();"
+										action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										update="@form" style="margin-right: 5px;"/>
+									<p:commandButton value="#{lbl['lbl.btn.no']}"
+										onclick="assignCodeDialogConfirm.hide();" update="@form" />
+								</div>
+
+							</p:outputPanel>
 						</p:dialog>
+
 						<ui:remove>#26059 - End</ui:remove>
 						<!-- #31503 End -->
 

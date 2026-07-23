@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct;
 
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;//34442
 import java.util.List;
 import java.util.Map;
 
@@ -19,15 +20,14 @@ import org.apache.log4j.Logger;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractStatusConst;//34442
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.actor.CtActorReqDTO;
 import my.ep.dto.ct.actor.CtActorResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -37,6 +37,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;//34442
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
@@ -242,7 +243,91 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	public String getCancelConfirmationContent(String docType) {
 		return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
+	
+	//34442 - start
+	/**
+	 * Retrieve fulfilment with bond confirmation message by passing in contractNo
+	 * 
+	 * @param key the statusId to find label values for use
+	 * @param value the Contract Number
+	 * @return Fulfiment with Bond Confirmation message
+	 */
+	public String getConfirmationContent(String key, String value) {
+		String message = "";
+		try{
+			message = ResourceBundleUtils.getMessage(
+				getConfirmationMsgs(Long.parseLong(key)),
+		        new String[]{value},
+		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		        new FacesScopes().getUserLocale()
+		    );
+		}catch(Exception e){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getConfirmationContent(String key, String value)", 
+					key, "ContractBaseBackingBean", getUserIdSessionFromLoginId(), e);
+		}
+		
+		return message.replace("<br/>", System.lineSeparator());
+	}
+	
+	/**
+	 * Retrieve confirmation message
+	 * 
+	 * @param key the statusId to find label values for use
+	 * @return Fulfiment with Bond Confirmation message
+	 */
+	public String getConfirmationContent(String key) {
+		String message = "";
+		
+		try{
+			message = ResourceBundleUtils.getMessage(
+					getConfirmationMsgs(Long.parseLong(key)),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()
+				);
+		}catch(Exception e){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getConfirmationContent(String key)", 
+					key, "ContractBaseBackingBean", getUserIdSessionFromLoginId(), e);
+		}
+		
+		return message.replace("<br/>", System.lineSeparator());
+	}
+	
+	public String getConfirmationMsgs(Long key){
+		final Map<Long, String> confirmationMsgs = new HashMap<>(); //34442, 40554
 
+		confirmationMsgs.put(ContractStatusConst.FD_PENDING_CONTRACT_CREATION, "lbl.ct.fd.bond.confirm");
+		confirmationMsgs.put(ContractStatusConst.FD_PENDING_REVISION, "lbl.ct.fd.bond.confirm");
+		confirmationMsgs.put(ContractStatusConst.FD_PENDING_APPROVAL, "lbl.ct.fd.rev.bond.confirm");
+		confirmationMsgs.put(ContractStatusConst.FD_PENDING_REVISION_APPROVAL, "lbl.ct.fd.rev.bond.confirm");
+		confirmationMsgs.put(ContractStatusConst.FU_PENDING_APPROVAL, "lbl.ct.fu.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FU_PENDING_REVISION_APPROVAL, "lbl.ct.fu.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.NT_PENDING_APPROVAL, "lbl.ct.nt.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.NT_PENDING_REVISION_APPROVAL, "lbl.ct.nt.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FW_PENDING_APPROVAL, "lbl.ct.fw.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FW_PENDING_REVISION_APPROVAL, "lbl.ct.fw.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.AC_PENDING_AGREEMENT_APPROVAL, "lbl.ct.ac.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.AC_PENDING_AGREEMENT_REVISION_APPROVAL, "lbl.ct.ac.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FS_PENDING_APPROVAL, "lbl.ct.fs.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FS_PENDING_REVISION_APPROVAL, "lbl.ct.fs.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FT_PENDING_APPROVAL, "lbl.ct.ft.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FT_PENDING_REVISION_APPROVAL, "lbl.ct.ft.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.RA_PENDING_SUBMISSION, "lbl.ct.ra.submit.confirm");
+		confirmationMsgs.put(ContractStatusConst.RA_PENDING_APPROVAL, "lbl.ct.ra.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.XA_PENDING_SUBMISSION, "lbl.ct.xa.submit.confirm");
+		confirmationMsgs.put(ContractStatusConst.XA_PENDING_APPROVAL, "lbl.ct.xa.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.COM_PENDING_SUBMISSION, "lbl.ct.com.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.RF_PENDING_ENDORSEMENT, "lbl.ct.rf.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.XF_PENDING_ENDORSEMENT, "lbl.ct.xf.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.UF_PENDING_ENDORSEMENT, "lbl.ct.uf.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT, "lbl.ct.fa.scl.ack.confirm");
+		confirmationMsgs.put(ContractStatusConst.FA_PENDING_VERIFICATION, "lbl.ct.fa.scl.verify.ack.confirm");
+		confirmationMsgs.put(ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_APPROVAL, "lbl.ct.sa.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_REVISION_APPROVAL, "lbl.ct.sa.app.confirm");
+		
+		return confirmationMsgs.get(key);
+	}
+	//34442 - end
+	
 	/*#21387 - basri 13/4/22*/
 	/**
 	 * Retrieve cancel confirmation message for contract request administrator by passing in document type
