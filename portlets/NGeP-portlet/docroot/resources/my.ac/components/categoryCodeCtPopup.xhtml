@@ -13,87 +13,104 @@
 </cc:interface>
 
 <cc:implementation>
-<!-- #40500,#30014 -->
+<!-- #40500,#30014 fixing css-->
 <h:outputStylesheet>
     <style>
-.category-search-dialog .ui-dialog-content {
-    overflow: visible;
-}
+        /* 1. Fix overflow dialog */
+        .category-search-dialog .ui-dialog-content {
+            overflow: visible;
+        }
 
-.category-search-dialog .ui-datatable-scrollable-header table,.category-search-dialog .ui-datatable-scrollable-body table {
-    table-layout: fixed;
-}
+        /* 2. Lebar 100% untuk semua elemen */
+        .category-search-dialog .ui-datatable,
+        .category-search-dialog .ui-datatable-tablewrapper,
+        .category-search-dialog .ui-datatable-scrollable-header,
+        .category-search-dialog .ui-datatable-scrollable-header .ui-datatable-tablewrapper,
+        .category-search-dialog .ui-datatable-scrollable-header table,
+        .category-search-dialog .ui-datatable-scrollable-body table {
+            width: 100% !important;
+        }
 
-.category-search-dialog .ui-datatable-empty-message td {
-    text-align: center;
-}
+        /* 3. Layout tabel */
+        .category-search-dialog .ui-datatable-scrollable-header table,
+        .category-search-dialog .ui-datatable-scrollable-body table {
+            table-layout: fixed;
+        }
 
-/* Paginator tetap di bawah */
-#catCodeCtDescrTbl+.ui-paginator {
-    position: relative;
-    z-index: 11;
-}
+        /* 4. Styling Header */
+        .category-search-dialog .ui-datatable th.ui-state-default,
+        .category-search-dialog .ui-datatable-scrollable-header,
+        .category-search-dialog .ui-datatable-scrollable-header .ui-datatable-tablewrapper,
+        .category-search-dialog .ui-datatable-scrollable-header table,
+        .category-search-dialog .ui-datatable-scrollable-header th:last-child {
+            background: #295066 !important;
+            background-image: none !important;
+        }
 
-/* Sembunyikan seluruh wrapper scroll saat data kosong */
-.hide-scroll-wrapper .ui-datatable-scrollable-header,
-.hide-scroll-wrapper .ui-datatable-scrollable-body,
-.hide-scroll-wrapper .ui-datatable-scrollable-footer {
-    display: none !important;
-}
+        .category-search-dialog .ui-datatable th.ui-state-default {
+            color: #ffffff !important;
+            text-align: center !important;
+            font-weight: bold !important;
+            border: 1px solid #1e3d6f !important;
+        }
 
-/* Scroll aktif hanya kalau data ada */
-.ui-datatable-scrollable-body {
-    overflow-y: auto !important;
-    max-height: 300px !important;
-}
+        .category-search-dialog .ui-datatable-scrollable-header th:last-child {
+            border-right: none !important;
+        }
 
-/* HILANGKAN RESIZE HANDLE */
-.category-search-dialog .ui-column-resizer {
-    display: none !important;
-}
+        /* 5. Hilangkan extra space */
+        .category-search-dialog .ui-datatable-scrollable-header::after {
+            content: none !important;
+            display: none !important;
+        }
 
-.category-search-dialog .ui-datatable th.ui-state-default {
-    background-image: none !important;
-    background-color: #f5f5f5 !important; /* atau sesuaikan dengan tema Anda */
-}
-/* Hilangkan kotak abu-abu di header scrollable PrimeFaces 3.5 */
-.category-search-dialog .ui-datatable-scrollable-header {
-    background: transparent !important;
-}
+        /* 6. HILANGKAN RESIZE HANDLE */
+        .category-search-dialog .ui-column-resizer {
+            display: none !important;
+        }
 
-.category-search-dialog .ui-datatable-scrollable-header .ui-datatable-tablewrapper {
-    background: transparent !important;
-}
+        /* 7. Scroll Body */
+        .category-search-dialog .ui-datatable-scrollable-body {
+            overflow-y: auto !important;
+            max-height: 300px !important;
+        }
 
-.category-search-dialog .ui-datatable-scrollable-header th:last-child {
-    background: transparent !important;
-    border-right: none !important;
-}
+        /* 8. Alignment header dan body */
+        .category-search-dialog .ui-datatable-scrollable-header {
+            padding-right: 0 !important;
+            margin-right: 0 !important;
+        }
 
-/* Pastikan header kolom tidak ada background aneh */
-.category-search-dialog .ui-datatable th.ui-state-default {
-    background: #f5f5f5 !important; 
-    background-image: none !important;
-}
+        /* Pastikan body juga tidak ada space ekstra */
+        .category-search-dialog .ui-datatable-scrollable-body {
+            padding-right: 0 !important;
+            margin-right: 0 !important;
+        }
 
-/* Hilangkan kotak abu-abu di sudut kanan atas header */
-.category-search-dialog .ui-datatable-scrollable-header::after {
-    content: none !important;
-    display: none !important;
-}
+        /* Hilangkan border kanan pada kolom terakhir */
+        .category-search-dialog .ui-datatable-scrollable-body td:last-child,
+        .category-search-dialog .ui-datatable-scrollable-header th:last-child {
+            border-right: none !important;
+        }
 
-/* Target spesifik untuk area */
-.category-search-dialog .ui-datatable-scrollable-header table {
-    background: transparent !important;
-}
-</style>
+        /* 9. Border untuk isi tabel */
+        .category-search-dialog .ui-datatable td {
+            border: 1px solid #d3d3d3 !important;
+        }
+
+        /* 10. Paginator */
+        #catCodeCtDescrTbl + .ui-paginator {
+            position: relative;
+            z-index: 11;
+        }
+    </style>
 </h:outputStylesheet>
 	<p:remoteCommand
     name="afterCloseCategoryPopupRC"
     action="#{panelBackingBean.afterCloseCategoryPopup}" /> <!-- #40498,#30014 -->
 
-		<p:dialog id="categoryDialog" widgetVar="catCodePopup" modal="true"
-			width="850" resizable="false" position="top"
+		<p:dialog id="categoryDialog"  header="#{lbl['lbl.ct.category.code.search']}" 
+			width="850" resizable="false" position="top" widgetVar="catCodePopup" modal="true"
 			styleClass="category-search-dialog"
 			onHide="afterCloseCategoryPopupRC();"> <!-- #40500,#30014 -->
 			<p:messages id="catCodeCtPopupMsg" showDetail="true"
