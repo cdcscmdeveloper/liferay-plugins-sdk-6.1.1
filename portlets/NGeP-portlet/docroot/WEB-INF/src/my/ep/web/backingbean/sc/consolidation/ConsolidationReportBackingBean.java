@@ -569,7 +569,7 @@ public class ConsolidationReportBackingBean extends
 	/**
 	 * Download each report detail.
 	 * 
-	 * @param scQtEvaluationReportDetail
+	 * @param scQtFinalizationReportDetail
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -582,7 +582,7 @@ public class ConsolidationReportBackingBean extends
 	/**
 	 * Generate document attachment for all committee finalization reports detail.
 	 * 
-	 * @param scQtEvaluationReportDetail
+	 * @param scQtFinalizationReportDetail
 	 * @throws Exception
 	 *             the exception
 	 */
