@@ -108,6 +108,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		List<Layout> layouts = new ArrayList<Layout>();
 		layouts.addAll(super.getLayouts( groupId,  privateLayout, parentLayoutId));
 		
+		long loginIdValue = getLoggedInUserId();//Fix - #34367
 		if(getLoggedInUserId() > 0 && isBasicSupplier(getLoggedInUserId()) ) {
 			Iterator<Layout> iter = layouts.iterator();
 			
@@ -141,7 +142,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 					//#35580 - End
 				}
 			}
-		} else if (getLoggedInUserId() > 0 && (isPanelCircular(getLoggedInUserId()) && !hasValidConstantRuleCached())) { //Start Fix - #34367
+		} else if (loginIdValue > 0 && (isPanelCircular(loginIdValue) && !hasValidConstantRuleCached())) { //Start Fix - #34367
 			layouts = CtPanelCircularLayoutFilter.filterLayouts(layouts);
 		}
 		//End Fix - #34367
