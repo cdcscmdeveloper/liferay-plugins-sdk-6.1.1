@@ -54,7 +54,7 @@
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
 							<td>
 								<h:outputText value="#{cc.attrs.currRegStatus}"/>
 							</td>
@@ -74,7 +74,8 @@
 								<td></td>
 								<td>
 									<div class="ui-messages ui-widget"  
-										aria-live="polite">
+										aria-live="polite"
+										style="max-width: 90ch;">
 										<div class="ui-messages-warn ui-corner-all">
 											<h:outputText value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}" escape="false" />
 										</div>
