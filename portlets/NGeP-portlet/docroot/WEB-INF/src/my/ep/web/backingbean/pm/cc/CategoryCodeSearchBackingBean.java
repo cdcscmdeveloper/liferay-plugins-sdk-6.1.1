@@ -717,7 +717,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
 			SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(currSupp);
 			if (activeAppl != null){
-			currSupp.setSmAppl(activeAppl);
+				currSupp.setSmAppl(activeAppl);
 			}
 			reqDTO1.setApplNo(currSupp.getSmAppl().getApplNo());
 			SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
@@ -726,8 +726,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			
 			List<SmDisciplinaryAction> activeDAs = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
 			List<SmSupplierCategory> apprvList = getApprovedCategories(currSupp, activeDAs);
-						getManagedBean().setApprovedCategoryList(apprvList); 
-						
+			getManagedBean().setApprovedCategoryList(apprvList);
+			
 			selectItems = getSelectItems(resDTO.getCategoryL3List(), activeDAs, currSupp.getSupplierId());
 			//27738 end 
 		} else { 
@@ -736,14 +736,14 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			if (activeCategoryList != null) {
 				SmApplicationUtil.sortSupplierCategory(activeCategoryList);
 				getManagedBean().setApprovedCategoryList(activeCategoryList);
-						} 
+			}
 			List<SmDisciplinaryAction> activeDAs = SmServiceLookup.getSupplierDataMaintenanceSO()
 						.retrieveActiveDisciplinaryActionBySupplierId(supplierId).getSmDisciplinaryActions();
-							
+
 			selectItems = getSelectItems(resDTO.getCategoryL3List(), activeDAs, supplierId);
 			//27859,30720 end - 3rd level category didnot appear
 			//#33387, #38864 - END
-								}
+		}
 		//27438, 27613, 27673: Disciplinary Action - end
 
 		return selectItems;
