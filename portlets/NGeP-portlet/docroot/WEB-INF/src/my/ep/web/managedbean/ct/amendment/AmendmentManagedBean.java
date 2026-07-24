@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -23,12 +22,16 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.biz.service.sc.committe.ICommitteSO; //#37808
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst; //#37808
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO; //#37808
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContract; //#37808
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
@@ -42,7 +45,10 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode; //#37808
+import my.ep.util.SLAUtils; //#37808
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean; //#37808
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -189,11 +195,15 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private boolean committeeQCBSecretaryWIP; //#35238
 	
-	//#37808 start 
+	//#37808 start
+	private transient IPagingDataModel<PmUser> secretaryDataModel = new SecretaryPagingDataModel();
 	private List<PmUser> secretaryListSearch;
+	private PmUser selectedSecretary;
 	private Long ministryProfileId;
 	private Long jabatanProfileId;
 	private Long ptjProfileId;
+	private String secretaryIcNameSearchValues;
+	private String secretaryIcName;
 	//#37808 end
 	
 	public void reassignValue(boolean value) 
@@ -519,6 +529,73 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 }
 
+	//#37808 start
+	private class SecretaryPagingDataModel extends PagingDataModel<PmUser> {
+		private static final long serialVersionUID = 1L;
+
+		public SecretaryPagingDataModel() {
+			super("searchSecretaryTable");
+		}
+
+		public SecretaryPagingDataModel(String table) {
+			super(table, false);
+		}
+
+		@Override
+		public ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
+			try {
+				ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				ContractBackingBean ctBackingBean = new ContractBackingBean();
+				AmendmentBackingBean amendmentBackingBean = new AmendmentBackingBean();
+				CtContract ctContract = ctBackingBean.getManagedBean().getContractVer().getCtContract();
+
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				committeReqDTO.setDocId(ctContract.getLatestContractVer().getContractVerId());
+				committeReqDTO.setDocType(ctContract.getContractType().getParameterCode());
+				committeReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+						.getOwnerOrgProfile().getOrgProfileId());
+				committeReqDTO.setRoleCode(getCommitteeType() + ContractConst._SECRETARY);
+
+				CommitteReqDTO commReqDO = new CommitteReqDTO();
+				commReqDO.setDocId(ctContract.getLatestContractVer().getContractVerId());
+				commReqDO.setDocType(ctContract.getContractType().getParameterCode());
+
+				ISearchResultBean<PmUser> userDOBean = null;
+				committeReqDTO.setUserSearchBean(amendmentBackingBean.getAmendmentCommitteeHelper()
+						.getSecretarySearchBean(searchBean));
+
+				if (amendmentBackingBean.getAmendmentCommitteeHelper().getCommitteeTypeSearch()) {
+					committeReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+					commReqDO.setRoleCode(RoleCode.PPB_SECRETARY.value());
+					userDOBean = committeSO.retrieveUserListByCommType(commReqDO).getUserResultBean();
+				}
+
+				ISearchResultBean<PmUser> userResultBean = committeSO.retrieveUserListByCommType(committeReqDTO)
+						.getUserResultBean();
+
+				if (userResultBean != null && userResultBean.getResultList() != null) {
+					List<PmUser> userList = new ArrayList<>(userResultBean.getResultList());
+					if (userDOBean != null && userDOBean.getResultList() != null) {
+						userList.addAll(userDOBean.getResultList());
+					}
+					amendmentBackingBean.getAmendmentCommitteeHelper().checkForQCBCommitteeDeskOfficerWIP(userList);
+					userResultBean.setResultList(userList);
+				}
+
+				return userResultBean;
+
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+						ContractConst.SLA_AMENDMENTMANAGEDBEAN, null, ContractConst.SLA_SECRETARY_PAGING_DATA_MODEL,
+						null, e);
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			}
+			return null;
+		}
+	}
+	//#37808 end
 
 	/**
 	 * @return the taskName
@@ -1713,6 +1790,18 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	//#35238 end
 	//#37808 start 
 	/**
+	 * @return the secretaryDataModel
+	 */
+	public IPagingDataModel<PmUser> getSecretaryDataModel() {
+		return secretaryDataModel;
+	}
+	/**
+	 * @param secretaryDataModel the secretaryDataModel to set
+	 */
+	public void setSecretaryDataModel(IPagingDataModel<PmUser> secretaryDataModel) {
+		this.secretaryDataModel = secretaryDataModel;
+	}
+	/**
 	 * @return the secretaryListSearch
 	 */
 	public List<PmUser> getSecretaryListSearch() {
@@ -1723,6 +1812,18 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	 */
 	public void setSecretaryListSearch(List<PmUser> secretaryListSearch) {
 		this.secretaryListSearch = secretaryListSearch;
+	}
+	/**
+	 * @return the selectedSecretary
+	 */
+	public PmUser getSelectedSecretary() {
+		return selectedSecretary;
+	}
+	/**
+	 * @param selectedSecretary the selectedSecretary to set
+	 */
+	public void setSelectedSecretary(PmUser selectedSecretary) {
+		this.selectedSecretary = selectedSecretary;
 	}
 	/**
 	 * @return the ministryProfileId
@@ -1759,6 +1860,30 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	 */
 	public void setPtjProfileId(Long ptjProfileId) {
 		this.ptjProfileId = ptjProfileId;
+	}
+	/**
+	 * @return the secretaryIcNameSearchValues
+	 */
+	public String getSecretaryIcNameSearchValues() {
+		return secretaryIcNameSearchValues;
+	}
+	/**
+	 * @param secretaryIcNameSearchValues the secretaryIcNameSearchValues to set
+	 */
+	public void setSecretaryIcNameSearchValues(String secretaryIcNameSearchValues) {
+		this.secretaryIcNameSearchValues = secretaryIcNameSearchValues;
+	}
+	/**
+	 * @return the secretaryIcName
+	 */
+	public String getSecretaryIcName() {
+		return secretaryIcName;
+	}
+	/**
+	 * @param secretaryIcName the secretaryIcName to set
+	 */
+	public void setSecretaryIcName(String secretaryIcName) {
+		this.secretaryIcName = secretaryIcName;
 	}
 	//#37808 end
 }

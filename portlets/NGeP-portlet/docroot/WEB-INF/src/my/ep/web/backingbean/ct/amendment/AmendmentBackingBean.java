@@ -147,6 +147,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.OrganizationType; //#37808
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
 import my.ep.util.CustomUtils;
@@ -1291,6 +1292,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			updateProcModeFlag();//Fix - #30045
 
+			searchSecretaryApprovingAuthorityReset(); //#37808
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
 				getManagedBean().setSecretaryId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
@@ -9357,7 +9359,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return an initialized AmendmentCommitteeHelper instance.
 	 */
-	private AmendmentCommitteeHelper getAmendmentCommitteeHelper() {
+	public AmendmentCommitteeHelper getAmendmentCommitteeHelper() { //#37808
 		AmendmentManagedBean currentManagedBean = getManagedBean();
 		FacesScopes currentFacesScopes = getFacesScopes();
 
@@ -10215,26 +10217,80 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		this.confirmationContentMsg = confirmationContentMsg;
 	}
 	// 34442 - end
-
-	
 	//#37808 start
+	/**
+	 * 
+	 * @param dropdown
+	 * @return list of dropdown selection according to the organisation type, default return null list.
+	 */
 	public SelectItem[] getDropdownCommittee(String dropdown){
 		switch(dropdown.toUpperCase()){
 		case ContractConst.DROPDOWN_MINISTRY_COMMITTEE:
 			return getAmendmentCommitteeHelper().getMinistryDropdown();
 		case ContractConst.DROPDOWN_JABATAN_COMMITTEE:
-			return getAmendmentCommitteeHelper().getJabatanDropdown();
+			return getAmendmentCommitteeHelper().getJabatanOrPtjDropdown(OrganizationType.DEPARTMENT.value());
 		case ContractConst.DROPDOWN_PTJ_COMMITTEE:
-			return getAmendmentCommitteeHelper().getPTJDropdown();
+			return getAmendmentCommitteeHelper().getJabatanOrPtjDropdown(OrganizationType.DIVISION.value());
 		default:
-			return null;
+			return new SelectItem[]{};
 		}
 	}
 	
-	public void searchMinistryReset(){
-		getManagedBean().setMinistryProfileId(null);
-		getManagedBean().setJabatanProfileId(null);
-		getManagedBean().setPtjProfileId(null);
+	/**
+	 * 
+	 * @param dropdown
+	 */
+	public void resetSecretaryDropdown(String dropdown){
+		getAmendmentCommitteeHelper().resetSecretaryDropdown(dropdown);
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getSecretaryName() {
+		PmUser secretary = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary();
+		return (secretary != null) ? secretary.getUserName() + " - " + secretary.getIdentificationNo() : "";
+	}
+	
+	/**
+	 * 
+	 */
+	public void setSelectedSecretarySearch() {
+		PmUser secretary = getManagedBean().getSelectedSecretary();
+		if (secretary != null) {
+			getManagedBean().setSecretaryId(secretary.getUserId());
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setSecretary(secretary);
+		}
+	}
+	
+	/**
+	 * The method used to reset the search criteria for secretary search.
+	 */
+	public void searchSecretaryApprovingAuthorityReset() {
+		Long profileId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile()
+				.getOrgProfileId();
+		getManagedBean().setMinistryProfileId(ctBackingBean.retrieveMinistryOrgProfile(profileId).getOrgProfileId());
+		getManagedBean().setJabatanProfileId(retrieveJabatanOrgProfile(profileId).getOrgProfileId());
+		getManagedBean().setPtjProfileId(profileId);
+		getManagedBean().setSecretaryIcNameSearchValues(null);
+		getManagedBean().setSecretaryIcName(null);
+		getManagedBean().getSecretaryDataModel().resetData();
+	}
+	
+	/**
+	 * The method used for searching the available secretary search.
+	 */
+	public void searchSecretaryApprovingAuthority() {
+		try {
+			getManagedBean().getSecretaryDataModel().reloadData();
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_AMENDMENTBACKINGBEAN, null, ContractConst.SLA_SEARCH_SECRETARY, null, e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+	}
+
 	//#37808 end
 }

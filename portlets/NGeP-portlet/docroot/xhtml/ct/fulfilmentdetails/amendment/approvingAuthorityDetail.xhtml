@@ -4,7 +4,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
 	<!-- START 24336 -->
 	<p:panel id="approvingAuthority"
 		header="#{lbl['lbl.ct.menu.approving.authority']}" toggleable="true"
@@ -58,8 +60,9 @@
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
 					<f:selectItems
 						value="#{amendmentBackingBean.getCommitteeTypeSelectItems()}" />
-					<p:ajax event="change" update="secretaryId" process="@this"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					<p:ajax event="change" update=":form:approvingAuthoritySecretary"
+						process="@this" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
 				</p:selectOneRadio>
 			</h:panelGrid>
 			<f:verbatim />
@@ -68,13 +71,12 @@
 		<h:panelGrid id="approvingAuthoritySecretary" columns="2"
 			style="width:100%" columnClasses="columnWidth60">
 			<h:outputText />
-			<h:panelGrid columns="4"
+			<h:panelGrid columns="5"
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
 				<p:spacer width="2" />
 				<p:inputText id="secretaryId" style="width:300px;"
-					value="#{amendmentBackingBean.managedBean.secretaryId}"
-					disabled="true" />
+					value="#{amendmentBackingBean.getSecretaryName()}" disabled="true" />
 				<!-- <p:selectOneMenu id="secretaryId"
 					value="#{amendmentBackingBean.managedBean.secretaryId}"
 					label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;"
@@ -83,12 +85,15 @@
 					<f:selectItems
 						value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
 				</p:selectOneMenu> -->
+				<p:spacer width="2" />
 				<p:commandLink
-					action="#{amendmentBackingBean.getSecretaryDropdownList()}"
+					action="#{amendmentBackingBean.searchSecretaryApprovingAuthorityReset()}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails 
 					or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.managedBean.committeeType eq null}"
-					process="@this" update=":form:searchAgencyPanel"
-					oncomplete="dialogSecretaryApprovingAuthorityVar.show();">
+					process="@this"
+					update=":form:dialogSecretaryApprovingAuthority, :form:searchPanelSecretary, :form:searchResultSecretary"
+					onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide(); dialogSecretaryApprovingAuthorityVar.show();">
 					<p:graphicImage value="/css/images/design/ico-search.png" />
 				</p:commandLink>
 			</h:panelGrid>
@@ -148,25 +153,24 @@
 
 	<!-- #37808 start -->
 	<p:dialog id="dialogSecretaryApprovingAuthority"
-		header="#{lbl['lbl.ct.new.committee.member']}"
+		header="#{lbl['lbl.ct.secretary.desk.officer']}"
 		widgetVar="dialogSecretaryApprovingAuthorityVar" resizable="false"
-		styleClass="pop_up_top" modal="true" width="950" height="550">
+		styleClass="pop_up_top" modal="true" width="500" fitViewport="true">
 
-		<p:panel id="searchPanelSecretary" header="#{lbl['lbl.btn.search']}"
+		<p:panel id="searchPanelSecretary" header="#{lbl['lbl.ct.secretary.search']}"
 			toggleable="true" toggleSpeed="500">
 			<h:panelGrid columns="4">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel for="ministrySecretary"
 					value="#{lbl['lbl.ct.ministry']}" />
 				<p:spacer height="1" />
-
 				<p:selectOneMenu id="ministrySecretary" style="width:300px"
 					value="#{amendmentBackingBean.managedBean.ministryProfileId}">
 					<f:selectItems
 						value="#{amendmentBackingBean.getDropdownCommittee(CtConst.dropdownMinistryCommittee)}" />
 					<p:ajax process="@this" partialSubmit="true" event="change"
-						update=":form:jabatanSecretary,:form:ptjSecretary,:form:searchResult"
-						listener="#{amendmentBackingBean.resetMinistryDetails}" />
+						update=":form:searchPanelSecretary, :form:jabatanSecretary,:form:ptjSecretary,:form:searchResultSecretary"
+						listener="#{amendmentBackingBean.resetSecretaryDropdown(CtConst.dropdownMinistryCommittee)}"/>
 				</p:selectOneMenu>
 				<p:spacer height="1" />
 
@@ -178,84 +182,71 @@
 					<f:selectItems
 						value="#{amendmentBackingBean.getDropdownCommittee(CtConst.dropdownJabatanCommittee)}" />
 					<p:ajax event="change" process="@this" partialSubmit="true"
-						update=":form:ptjSecretary,:form:searchResult"
-						listener="#{amendmentBackingBean.resetJabatanDetails}" />
+						update=":form:searchPanelSecretary,:form:ptjSecretary,:form:searchResultSecretary"
+						listener="#{amendmentBackingBean.resetSecretaryDropdown(CtConst.dropdownJabatanCommittee)}"/>
 				</p:selectOneMenu>
 				<p:spacer height="1" />
 
 				<p:outputLabel for="ptjSecretary" value="#{lbl['lbl.ct.ptj.code']}" />
 				<p:spacer height="1" />
 				<p:selectOneMenu id="ptjSecretary" style="width:300px"
-					value="#{amendmentBackingBean.managedBean.ptjCodeName}">
+					value="#{amendmentBackingBean.managedBean.ptjProfileId}">
 					<f:selectItems
 						value="#{amendmentBackingBean.getDropdownCommittee(CtConst.dropdownPtjCommittee)}" />
 					<p:ajax event="change" process="@this" partialSubmit="true"
-						update=":form:ptjCodeVaue,:form:searchResult"
-						listener="#{amendmentBackingBean.resetJabatanDetails}" />
+						update=":form:searchPanelSecretary,:form:searchResultSecretary"
+						listener="#{amendmentBackingBean.resetSecretaryDropdown(CtConst.dropdownPtjCommittee)}"/>
 				</p:selectOneMenu>
 				<p:spacer height="1" />
 
 				<p:selectOneMenu for="secretarySearchOption"
 					value="#{amendmentBackingBean.managedBean.secretaryIcName}"
 					style="width:150px;">
-					<f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}"
-						itemValue="#{CtConst.ptjCode}" />
-					<f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}"
-						itemValue="#{CtConst.ptjName}" />
-					<p:ajax process="@this" />
+					<f:selectItem itemLabel="#{lbl['lbl.ct.secretary.name']}"
+						itemValue="#{CtConst.secretaryName}" />
+					<f:selectItem itemLabel="#{lbl['lbl.ct.secretary.ic']}"
+						itemValue="#{CtConst.secretaryIc}" />
 				</p:selectOneMenu>
 				<p:spacer height="1" />
 
 				<p:inputText id="secretaryIcNameSearchValues" style="width:300px;"
-					value="#{amendmentBackingBean.managedBean.secretaryIcNameSearchValues}">
-					<p:ajax process="@this" />
-				</p:inputText>
+					value="#{amendmentBackingBean.managedBean.secretaryIcNameSearchValues}" />
 			</h:panelGrid>
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}" process="@form"
-					action="#{amendmentBackingBean.searchExistingCommitteMember}"
-					update=":form:searchSecretaryTable" />
+				<p:commandButton value="#{lbl['lbl.btn.search']}" process="@this"
+					partialSubmit="true"
+					action="#{amendmentBackingBean.searchSecretaryApprovingAuthority}"
+					update=":form:searchResultSecretary" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
 					partialSubmit="true"
-					action="#{amendmentBackingBean.searchMinistryReset}"
-					update=":form:changeSecretary, :form:searchResult" />
+					action="#{amendmentBackingBean.searchSecretaryApprovingAuthorityReset}"
+					update=":form:searchPanelSecretary, :form:searchResultSecretary" />
 			</div>
 		</p:panel>
 
-		<p:panel id="searchResult" header="#{lbl['lbl.ct.search.result']}"
-			toggleable="true" toggleSpeed="500">
+		<p:panel id="searchResultSecretary"
+			header="#{lbl['lbl.ct.search.result']}" toggleable="true"
+			toggleSpeed="500">
 
 			<p:dataTable id="searchSecretaryTable" var="data"
-				value="#{amendmentBackingBean.committeDataModel}" lazy="true"
-				rowKey="#{data}" rowIndexVar="index">
+				value="#{amendmentBackingBean.managedBean.secretaryDataModel}"
+				rowKey="#{data}" selectionMode="single"
+				selection="#{amendmentBackingBean.managedBean.selectedSecretary}"
+				rows="10" lazy="true" rowIndexVar="index">
 				<ac:paginator for="searchSecretaryTable" />
-				<p:column style="width:2%;">
-					<f:facet name="header">
-						<p:selectBooleanCheckbox
-							value="#{amendmentBackingBean.managedBean.selectAll}">
-							<p:ajax partialSubmit="true" process="@this"
-								update=":form:searchSecretaryTable, :form:cmtOkBtnId"
-								listener="#{amendmentBackingBean.selectAllComitMem}" />
-						</p:selectBooleanCheckbox>
-					</f:facet>
-					<p:selectBooleanCheckbox value="#{data.selectedCheckBox}"
-						styleClass="myCustomChekBox">
-						<p:ajax event="change"
-							update=":form:searchSecretaryTable, :form:cmtOkBtnId"
-							listener="#{amendmentBackingBean.selectAllComitMemCheckBox}"></p:ajax>
-					</p:selectBooleanCheckbox>
-				</p:column>
+				<p:ajax event="rowSelect" process="@this"
+					update=":form:selectButtonSecretary" />
 
 				<p:column style="width:20%;white-space:normal;"
-					headerText="#{lbl['lbl.ct.name']}">
+					headerText="#{lbl['lbl.ct.secretary.name']}">
 					<div align="left">
 						<h:outputText value="#{data.userName}" />
 					</div>
 				</p:column>
 
 				<p:column style="width:10%;"
-					headerText="#{lbl['lbl.ct.identification.no']}">
+					headerText="#{lbl['lbl.ct.secretary.ic']}">
 					<div align="left">
 						<h:outputText value="#{data.identificationNo}" />
 					</div>
@@ -266,12 +257,12 @@
 				<h:panelGrid columns="2"
 					style="float:right;height:50px;vertical-align: middle;">
 					<p:commandButton value="#{lbl['lbl.btn.select']}"
-						process="@this,dialogSecretaryApprovingAuthority" id="cmtOkBtnId"
-						disabled="#{ctBackingBean.managedBean.buttonHideActive}"
-						action="#{amendmentBackingBean.addSelectedCommitteMembers}"
-						update="committeTable,dialogSecretaryApprovingAuthority"
-						onclick="dialogSecretaryApprovingAuthorityVar.hide();"
-						oncomplete="committeTableWidget.paginator.endLink.click();" />
+						process="@this,dialogSecretaryApprovingAuthority"
+						id="selectButtonSecretary"
+						disabled="#{amendmentBackingBean.managedBean.selectedSecretary eq null}"
+						action="#{amendmentBackingBean.setSelectedSecretarySearch()}"
+						update="approvingAuthoritySecretary,dialogSecretaryApprovingAuthority"
+						oncomplete="dialogSecretaryApprovingAuthorityVar.hide();" />
 					<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
 						ajax="false"
 						onclick="dialogSecretaryApprovingAuthorityVar.hide();" />

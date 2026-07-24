@@ -13,10 +13,14 @@ import javax.faces.application.FacesMessage; //#37808
 import javax.faces.context.FacesContext; //#37808
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.collections.CollectionUtils; //#37808
+import org.apache.commons.lang.StringUtils; //#37808
 import org.primefaces.context.RequestContext;
 
+import my.ep.biz.bean.search.ISearchBean; //#37808
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean; //#37808
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO; //#37808
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -25,7 +29,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO; //#37808
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO; //#37808
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -43,6 +47,7 @@ import my.ep.type.pm.OrganizationType; //#37808
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils; //#37808
 import my.ep.util.SLAUtils;
+import my.ep.util.pm.OrgProfileUtil; //#37808
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.ct.ContractHashSetConst;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
@@ -967,8 +972,8 @@ public class AmendmentCommitteeHelper {
 	            .getParameterCode();
 	}
 	//#29549 end
-	
-	//#37808 start
+
+	// #37808 start
 	/**
 	 * The method used for generating a list of available ministry for searching
 	 * secretary as selection.
@@ -977,6 +982,9 @@ public class AmendmentCommitteeHelper {
 	 */
 	public SelectItem[] getMinistryDropdown() {
 		SelectItem[] items = null;
+		Long profileId = ctBackingBean.retrieveMinistryOrgProfile(
+				ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId())
+				.getOrgProfileId();
 		try {
 			int i = 0;
 			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
@@ -986,19 +994,25 @@ public class AmendmentCommitteeHelper {
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size()];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			
 			for (PmOrgProfile orgProfile : list) {
 				// Start - #30045
 				// Checking if default/user ministry is exist in the list
-				if (orgProfile.getOrgProfileId().equals(ctBackingBean.getManagedBean().getMinistryProfileId())) {
-					ctBackingBean.getManagedBean().setDefaultMinistryExist(true);
-				}
+//				if (orgProfile.getOrgProfileId().equals(profileId)) {
+//					ctBackingBean.getManagedBean().setDefaultMinistryExist(true);
+//					getManagedBean().setMinistryProfileId(profileId);
+//				}
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
 			// Start - #30045
-			// To set the first record from the list as a default ministry for getJabatanDropdown()
-			if (!ctBackingBean.getManagedBean().isDefaultMinistryExist()) {
-				ctBackingBean.getManagedBean().setMinistryProfileId(list.get(0).getOrgProfileId());
-			}
+			// To set the first record from the list as a default ministry for
+			// getJabatanDropdown()
+//			if (!ctBackingBean.getManagedBean().isDefaultMinistryExist()) {
+//				ctBackingBean.getManagedBean().setMinistryProfileId(list.get(0).getOrgProfileId());
+//				getManagedBean().setMinistryProfileId(profileId);
+//			}
 			// End - #30045
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
@@ -1014,69 +1028,118 @@ public class AmendmentCommitteeHelper {
 	 * The method used for generating a list of available jabatan for searching
 	 * secretary as selection.
 	 * 
-	 * @return the selection list of jabatan
+	 * @param orgType
+	 *            Organization Type (DEPARTMENT for Jabatan / DIVISION for PTJ)
+	 * @return the selection list of jabatan or PTJ accroding to the parameter
 	 */
-	public SelectItem[] getJabatanDropdown() {
+	public SelectItem[] getJabatanOrPtjDropdown(String orgType) {
 		SelectItem[] items = null;
+		Long profileId = orgType.equalsIgnoreCase(OrganizationType.DEPARTMENT.value()) ? getManagedBean()
+				.getMinistryProfileId() : getManagedBean().getJabatanProfileId();
 		try {
 			int i = 1;
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
-			reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+			List<Object[]> list = new ArrayList<>();
+			if (profileId != null) {
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(profileId);
+				reqDTO.setOrgCode(orgType);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
 
-			List<Object[]> list = resDTO.getOrgProfileDDList();
-			items = new SelectItem[list.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
-			for (Object[] object : list) {
-				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+				list = resDTO.getOrgProfileDDList();
+				items = new SelectItem[(resDTO.getOrgProfileDDList() != null ? resDTO.getOrgProfileDDList().size() : 0) + 1];
+			} else {
+				items = new SelectItem[1];
 			}
-		} catch (Exception e) {
-			SLAUtils.getInstance()
-					.logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_AMENDMENTBACKINGBEAN, null,
-							ContractConst.SLA_DROPDOWN_COMMITTEE_JABATAN, null, e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-		return items;
-	}
 
-	/**
-	 * The method used for generating a list of available PTJ for searching
-	 * secretary as selection.
-	 * 
-	 * @return the selection list of PTJ
-	 */
-	public SelectItem[] getPTJDropdown() {
-		SelectItem[] items = null;
-		try {
-			int i = 1;
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setParentOrgProfileId(getManagedBean().getJabatanProfileId());
-			reqDTO.setOrgCode(OrganizationType.DIVISION.value());
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
-
-			List<Object[]> list = resDTO.getOrgProfileDDList();
-			items = new SelectItem[list.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
-			for (Object[] object : list) {
-				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			if (list != null && CollectionUtils.isNotEmpty(list)) {
+				for (Object[] object : list) {
+					items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+				}
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
-					ContractConst.SLA_AMENDMENTBACKINGBEAN, null, ContractConst.SLA_DROPDOWN_COMMITTEE_PTJ, null, e);
+					ContractConst.SLA_AMENDMENTBACKINGBEAN, null, ContractConst.SLA_DROPDOWN_COMMITTEE_PTJ_JABATAN,
+					null, e);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
 	}
-	//#37808 end
+	
+	/**
+	 * 
+	 * @param orgType
+	 */
+	public void resetSecretaryDropdown(String orgType){
+		if(orgType.equalsIgnoreCase(ContractConst.DROPDOWN_MINISTRY_COMMITTEE)){
+			getManagedBean().setPtjProfileId(null);
+		}
+		getManagedBean().setSelectedSecretary(null);
+		getManagedBean().setSecretaryIcNameSearchValues(null);
+		getManagedBean().setSecretaryIcName(ContractConst.SECRETARY_NAME);
+//		getManagedBean().getSecretaryDataModel().resetData();
+	}
+	
+	/**
+	 * 
+	 * @param searchBean
+	 * @return searchBean
+	 */
+	public ISearchBean<PmUser> getSecretarySearchBean(ISearchBean<PmUser> searchBean) {
+
+		setSearchProfileId(searchBean);
+
+		if (StringUtils.isNotEmpty(getManagedBean().getSecretaryIcNameSearchValues())) {
+			if (getManagedBean().getSecretaryIcName().equalsIgnoreCase(ContractConst.SECRETARY_NAME)) {
+				SearchFilterBean filterBean = new SearchFilterBean("userName", SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getSecretaryIcNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			} else if (getManagedBean().getSecretaryIcName().equalsIgnoreCase(ContractConst.SECRETARY_IC)) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("identificationNo", SearchOperator.OPERATOR_LIKE.value(), getManagedBean()
+								.getSecretaryIcNameSearchValues()));
+			}
+		}
+		searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+		return searchBean;
+	}
+	
+	/**
+	 * 
+	 * @param searchBean
+	 */
+	public void setSearchProfileId(ISearchBean<PmUser> searchBean){
+		String pmOrgProfile = "pmUserOrgs.pmOrgProfile.";
+		if (getManagedBean().getMinistryProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(pmOrgProfile + OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getMinistryProfileId()));
+		}
+		if (getManagedBean().getJabatanProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(pmOrgProfile + OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getJabatanProfileId()));
+		}
+		if (getManagedBean().getPtjProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(pmOrgProfile + OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getPtjProfileId()));
+		}
+	}
+	
+	/**
+	 * 
+	 * @return true if committee type is Sabah or Sarawak
+	 */
+	public boolean getCommitteeTypeSearch() {
+		String committeeType = getManagedBean().getCommitteeType();
+		return StringUtils.isNotEmpty(committeeType) && (committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+				|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK));
+	}
+	// #37808 end
 }
