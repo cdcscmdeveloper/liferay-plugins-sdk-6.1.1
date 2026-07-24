@@ -15,6 +15,8 @@ import javax.faces.model.SelectItem;
 
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.persistence.entity.pm.common.PmAuthority;
+import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -330,6 +332,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private ScQt checkCategoryCodeQt;//#29466
 	
+	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+	private PmAuthority approvalAuthority;
+	private PmAuthorityCommittee approvalAuthCommittee;
+	private List<PmAuthority> listApprovalAuthority;
+	private List<PmAuthorityCommittee> listApprovalAuthCommittee;
+	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
 	//#30008 - start
 	private boolean notReachAgrm;
 	
@@ -2644,11 +2652,47 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public ScQtRecommend getLastSelectedItem() {
 		return lastSelectedItem;
 	}
-	
+
 	public void setLastSelectedItem(ScQtRecommend lastSelectedItem) {
 		this.lastSelectedItem = lastSelectedItem;
 	}
 	//35157 - end
+		
+	//#27502 - New DO MOF Role and Process - Start
+	
+	public List<PmAuthority> getListApprovalAuthority() {
+		return listApprovalAuthority;
+	}
+
+	public void setListApprovalAuthority(List<PmAuthority> listApprovalAuthority) {
+		this.listApprovalAuthority = listApprovalAuthority;
+	}
+
+	public PmAuthority getApprovalAuthority() {
+		return approvalAuthority;
+	}
+
+	public void setApprovalAuthority(PmAuthority approvalAuthority) {
+		this.approvalAuthority = approvalAuthority;
+	}
+
+	public List<PmAuthorityCommittee> getListApprovalAuthCommittee() {
+		return listApprovalAuthCommittee;
+	}
+
+	public void setListApprovalAuthCommittee(List<PmAuthorityCommittee> listApprovalAuthCommittee) {
+		this.listApprovalAuthCommittee = listApprovalAuthCommittee;
+	}
+
+	public PmAuthorityCommittee getApprovalAuthCommittee() {
+		return approvalAuthCommittee;
+	}
+
+	public void setApprovalAuthCommittee(PmAuthorityCommittee approvalAuthCommittee) {
+		this.approvalAuthCommittee = approvalAuthCommittee;
+	}
+	
+	//#27502 - New DO MOF Role and Process - End
 
 	public boolean isNotReachAgrm() {
 		return notReachAgrm;
