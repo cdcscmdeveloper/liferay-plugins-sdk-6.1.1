@@ -5,6 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<!-- #25726/25725 - Check and display Italic value -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
 
 	<p:panel id="requestNoteItemDetails" toggleable="true"
 		toggleSpeed="500">
@@ -59,7 +65,8 @@
 				<p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"
 					style="white-space: normal;">
 					<h:outputText
-							value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.fulfilmentType)}" />
+							value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.fulfilmentType)}" 
+							styleClass="#{requestNoteBackingBean.checkItalicCodeNameForMy(requestNoteDtl.fulfilmentType.parameterId) ? 'italic-item' : ''}"/>
 					<p:spacer width="2px;" />
 				</p:column>
 				

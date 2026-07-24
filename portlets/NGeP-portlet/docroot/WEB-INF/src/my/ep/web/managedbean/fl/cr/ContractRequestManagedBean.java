@@ -339,6 +339,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<ScRequestItemSpecOffer> specificationList;
 	private List<ScRequestItemSpecOffer> itemSpecList;
     	// 28855 - End
+	
+	//24956 start
+    private boolean ctTypeMinistry;
+    //24956 end
+	
 	//11076 - start
 	private int totalExistingItem;
 	private int totalNewItemsAdded;
@@ -3289,6 +3294,16 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 	
 	//29728 - end
+	
+	// 24956 - start
+	public boolean isCtTypeMinistry() {
+		return ctTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		this.ctTypeMinistry = ctTypeMinistry;
+	}
+	// 24956 - end
 		
 	//11076 -start
 	public int getTotalExistingItem() {

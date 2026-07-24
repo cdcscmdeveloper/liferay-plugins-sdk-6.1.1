@@ -1443,6 +1443,51 @@ public class SmApplicationUtil {
 		appl = null;
 		return validSave;
 	}
+	
+	//#39860 --START
+	/**
+	 * Validate cheque signatory based on Bumi status.
+	 * 
+	 * @param appl - getSmAppl
+	 * @param bank - List of SmSupplierBank
+	 * 
+	 * @param boolean validSignatoryBumi- check signatory Bumi status
+	 * @param int signatoryNotBumiCount- count signatory not Bumi 
+	 * @return true, if successful
+	 */
+	public static boolean validateChequeSignatoryBumi(SmApplicationManagedBean managedBean) {
+		SmAppl appl = managedBean.getSmAppl();
+		boolean validSignatoryBumi = true;
+		int signatoryNotBumiCount = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		
+		Set<Long> processedPersonnelIds = new HashSet<Long>();
+		
+		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+			for(SmChequeSignatory smChequeSignatory : bank.getSmChequeSignatories()){
+				if (smChequeSignatory != null && smChequeSignatory.getSmPersonnel() != null){
+					
+					SmPersonnel personnel = smChequeSignatory.getSmPersonnel();
+					
+					if (personnel.getBumiFlg() == null && !managedBean.isDisAllowOwnerEdit()) {
+						if (processedPersonnelIds.add(personnel.getPersonnelId())) {
+							sb.append(++signatoryNotBumiCount + ". ");
+							sb.append(personnel.getName());
+							sb.append("<br/>");
+							validSignatoryBumi = false;
+						}
+					}	
+				}	
+			}
+		}
+		if (!validSignatoryBumi && signatoryNotBumiCount > 0 && managedBean.isSupplierUser()) {
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
+		} 
+		return validSignatoryBumi;
+	}
+	//#39860 --END	
 
 	/**
 	 * Check if each registered branch already assigned to bank account type
@@ -2265,7 +2310,7 @@ public class SmApplicationUtil {
 					|| per.getIdentificationTypeId() == null || per.getBirthDate() == null 
 					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)) 
-					|| ((per.getMobileArea() == null || per.getMobileNo() == null|| per.getMobileTelcoId() == null)
+					|| ((per.getMobileArea() == null || per.getMobileNo() == null)/*|| per.getMobileTelcoId() == null)*/ //#40200
 							&& per.isAuthorized() == true)
 					|| per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
@@ -2564,7 +2609,7 @@ public class SmApplicationUtil {
 		appl = null;
 		return validSave;
 	}
-	
+
 	/**
 	 * Sets the navigation back to current page.
 	 * 
@@ -2811,23 +2856,26 @@ public class SmApplicationUtil {
 			List<PmCategoryL3> categoryList) {
 		if (!bean.getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-
-			if (!EntityHelper.isCollectionEmpty(categoryList)) {
-				for (PmCategoryL3 l3 : categoryList) {
-					if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
-						valid = false;
-						if (currentTab != -1) {
-							setNavigationBackToCurrentPage(currentTab, bean);
+			//#40144 - start 
+			if(bean.isSupplierUser()){
+				if (!EntityHelper.isCollectionEmpty(categoryList)) {
+					for (PmCategoryL3 l3 : categoryList) {
+						if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
+							valid = false;
+							if (currentTab != -1) {
+								setNavigationBackToCurrentPage(currentTab, bean);
+							}
+							throw new EpException(MessageConst.ERROR_722621,
+									new String[] {
+											SmCommonUtil.getMessage(facTypeLabel,
+													null),
+											l3.getFullCatcode() + " ("
+													+ l3.getCategoryName() + ")" });
 						}
-						throw new EpException(MessageConst.ERROR_722621,
-								new String[] {
-										SmCommonUtil.getMessage(facTypeLabel,
-												null),
-										l3.getFullCatcode() + " ("
-												+ l3.getCategoryName() + ")" });
 					}
 				}
-			}
+			} //#40144 - end
+			
 		}
 		return valid;
 	}
@@ -7351,6 +7399,7 @@ public class SmApplicationUtil {
 		
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
 		if(!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				&& bean.getSmAppl().isSiteVisitGroup()
 				&& checkAddressAndParamSvTask(bean.getSvTaskList(), facVO, addr, siteType)){
 			return;
 		}
@@ -15510,9 +15559,19 @@ public class SmApplicationUtil {
         for (char character : input.toCharArray()) {
             int asciiValue = (int) character; 
             log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
-            if(asciiValue > 127){
+            //#40165 - START
+            // Allow:
+            // 0   = NUL
+            // 10  = LF \n
+            // 13  = CR \r
+            // 32-127 = printable ASCII
+            if(!(asciiValue == 0 ||
+            	 asciiValue == 10 ||
+            	 asciiValue == 13 ||
+            	 (asciiValue >= 32 && asciiValue < 128))){
             	isValid = false;
             }
+            //#40165 - END
         }
         return isValid;
     }
@@ -15829,4 +15888,45 @@ public class SmApplicationUtil {
 		return resDTO.getSmDisciplinaryActions();
 	}
 	//#26282 - End
+	
+	//#40165 - START
+	public static void CheckAsciiValidation(Map<String, String> fields) throws EpException {
+	    for (Map.Entry<String, String> entry : fields.entrySet()) {
+	        String fieldName = entry.getKey();
+	        String value = entry.getValue();
+	        
+	        if (value != null && !value.isEmpty()) {
+	            if (!convertToAscii(value)) {
+	                throw new EpException(MessageConst.ERROR_760543, new String[] { fieldName });
+	            }
+	        }
+	    }
+	}
+	//#40165 - END
+	
+	// #38001
+	public static String getRecommendationDescription(String recommendation, String language) {
+
+		if (recommendation == null) {
+			return null;
+		}
+
+		if (language.equals(CommonConstants.LANGUAGE_CODE_MALAY)) {
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_MY;
+			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_MY;
+			}
+		} else if (language.equals(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
+			if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_APPROVE_EN;
+			} else if (recommendation.equalsIgnoreCase(SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN)) {
+				return SupplierManagementConst.PO_RECOMMENDATION_REJECT_EN;
+			}
+		}
+
+		return recommendation;
+	}
+
+		
 }

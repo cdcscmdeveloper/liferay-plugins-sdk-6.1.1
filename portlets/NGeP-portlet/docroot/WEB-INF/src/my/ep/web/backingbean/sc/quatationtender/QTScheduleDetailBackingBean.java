@@ -49,11 +49,11 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
-import my.ep.persistence.entity.pm.common.PmParameter; // #31919 & 21692
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest; // #31919 & 21692
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
@@ -64,7 +64,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-import org.apache.commons.collections.CollectionUtils; // #31919 & 21692
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -83,6 +83,7 @@ public class QTScheduleDetailBackingBean extends
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
+	private Boolean sampleExistCache; // Bug_39486 - Bug_39877
 
 	/**
 	 * Debug logger.
@@ -429,7 +430,6 @@ public class QTScheduleDetailBackingBean extends
 				.getPmuserContactpersonList();
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
-
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760098);
 		} else {
@@ -437,7 +437,7 @@ public class QTScheduleDetailBackingBean extends
 				contactList.remove(contactPerson);
 			}
 		}
-		this.getManagedBean().setSelectedpmuserContactpersonList(null);//25037
+		this.getManagedBean().setSelectedpmuserContactpersonList(null);// 25037
 	}
 
 	/**
@@ -457,38 +457,39 @@ public class QTScheduleDetailBackingBean extends
 		 * doa.getUser()&& null != doa.getUser().getUserId()) {
 		 * doaaIdList.add(doa.getUser().getUserId()); } } }
 		 */
-		//25037-start
+		
+		// 25037 - start
 		Long previousId = null;
-		if(contactPerson.getUserId()==null){
+		if (contactPerson.getUserId() == null) {
 			previousId = contactPerson.getUser().getUserId();
 		}
 		List<PmUser> list = this.getManagedBean().getDeskOfficerAdmin();
-		list = list == null ? new ArrayList<PmUser>(): list;
-		
+		list = list == null ? new ArrayList<PmUser>() : list;
+
 		List<ScQtContactPerson> list2 = this.getManagedBean().getPmuserContactpersonList();
-		list2 = list2 == null ? new ArrayList<ScQtContactPerson>(): list2;
-		
+		list2 = list2 == null ? new ArrayList<ScQtContactPerson>() : list2;
+
 		Map<Object, Object> map = CustomUtils.listToMap(list, "getUserId");
 		Map<Object, Object> map2 = CustomUtils.listToMap(list2, "getUser.getUserId");
-		
-		if(previousId!=null){
-			ScQtContactPerson person = (ScQtContactPerson)map2.get(previousId);
+
+		if (previousId != null) {
+			ScQtContactPerson person = (ScQtContactPerson) map2.get(previousId);
 			person.setUser(new PmUser());
 		}
-		
-		if(map2.get(contactPerson.getUserId()) != null){
+
+		if (map2.get(contactPerson.getUserId()) != null) {
 			contactPerson.setUserId(null);
-			throw new EpException(getMessage("lbl.sc.alreadyExisted", new String[]{}));
+			throw new EpException(getMessage("lbl.sc.alreadyExisted", new String[] {}));
 		}
-		PmUser newUser = (PmUser)map.get(contactPerson.getUserId());
-		if(newUser!=null){
+		PmUser newUser = (PmUser) map.get(contactPerson.getUserId());
+		if (newUser != null) {
 			contactPerson.setName(newUser.getUserName());
 			contactPerson.setEmail(newUser.getEmail());
 			contactPerson.setPhoneNo(newUser.getPhoneNo());
 			contactPerson.setFaxNo(newUser.getFaxNo());
 			contactPerson.setUser(newUser);
 		}
-		//25037-end
+		// 25037 - end
 	}
 
 	/**
@@ -534,21 +535,19 @@ public class QTScheduleDetailBackingBean extends
 	 * Will be call if clicks OK action on sample dailog screen..
 	 */
 	public void okSubmission() {
-		debugLogger("okSubmission");
-		
 		// 11104-start
-		List<BriefingZoneBean> zoneBean = this.getManagedBean()
-				.getSampleAddressBean();
+		List<BriefingZoneBean> zoneBean = this.getManagedBean().getSampleAddressBean();
 
 		if (null == zoneBean) {
 			zoneBean = new ArrayList<BriefingZoneBean>();
+
 			this.getManagedBean().setSampleAddressBean(zoneBean);
 		}
 		// 11104-End
 
 		List<ScQtSampleSubmission> submissionList = null;
-		
-		if (SourcingConstants.ACTION_EDIT.equalsIgnoreCase(this.getManagedBean().getActionType())) {
+		if (SourcingConstants.ACTION_EDIT.equalsIgnoreCase(this
+				.getManagedBean().getActionType())) {
 			submissionList = this.getManagedBean()
 					.getScQtSampleSubmissionList();
 			submissionList
@@ -556,19 +555,14 @@ public class QTScheduleDetailBackingBean extends
 			submissionList.add(this.getManagedBean().getSampleAddressIndex(),
 					this.getManagedBean().getScQtSampleSubmission());
 			this.getManagedBean().setScQtSampleSubmissionList(submissionList);
-			
+
 			// 11104-start
-			ScAddress address = this.getManagedBean().getScQtSampleSubmission()
-					.getScAddress();
+			ScAddress address = this.getManagedBean().getScQtSampleSubmission().getScAddress();
 
 			if (CollectionUtils.isEmpty(zoneBean)) {
-				BriefingZoneBean briefBean = new BriefingZoneBean(this
-						.getManagedBean().getScQtSampleSubmission()
-						.getTplSpecZoneDtl(),
-						address.getPmState().getStateId(), address
-								.getPmDivision().getDivisionId(), address
-								.getPmDistrict().getDistrictId(), address
-								.getPmCity().getCityId());
+				BriefingZoneBean briefBean = new BriefingZoneBean(this.getManagedBean().getScQtSampleSubmission()
+						.getTplSpecZoneDtl(), address.getPmState().getStateId(), address.getPmDivision()
+						.getDivisionId(), address.getPmDistrict().getDistrictId(), address.getPmCity().getCityId());
 				zoneBean.add(briefBean);
 			} else {
 				int index = 0;
@@ -579,62 +573,49 @@ public class QTScheduleDetailBackingBean extends
 					if (mainBean
 							.getTplSpecZoneDtl()
 							.getSpecZoneId()
-							.equals(this.getManagedBean()
-									.getScQtSampleSubmission()
-									.getTplSpecZoneDtl().getSpecZoneId())
-							|| mainBean.getTplSpecZoneDtl().getSpecZoneId() == this
-									.getManagedBean().getScQtSampleSubmission()
-									.getTplSpecZoneDtl().getSpecZoneId()) {
+							.equals(this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl().getSpecZoneId())
+							|| mainBean.getTplSpecZoneDtl().getSpecZoneId() == this.getManagedBean()
+									.getScQtSampleSubmission().getTplSpecZoneDtl().getSpecZoneId()) {
 						equalindex = index;
-
-						bean = new BriefingZoneBean(this.getManagedBean()
-								.getScQtSampleSubmission().getTplSpecZoneDtl(),
-								address.getPmState().getStateId(), address
-										.getPmDivision().getDivisionId(),
-								address.getPmDistrict().getDistrictId(),
-								address.getPmCity().getCityId());
+						bean = new BriefingZoneBean(
+								this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl(), address
+										.getPmState().getStateId(), address.getPmDivision().getDivisionId(), address
+										.getPmDistrict().getDistrictId(), address.getPmCity().getCityId());
 					}
-
 					index++;
 				}
 
 				if (null != bean) {
 					zoneBean.remove(equalindex);
 					zoneBean.add(equalindex, bean);
+
 				} else {
-					bean = new BriefingZoneBean(this.getManagedBean()
-							.getScQtSampleSubmission().getTplSpecZoneDtl(),
-							address.getPmState().getStateId(), address
-									.getPmDivision().getDivisionId(), address
-									.getPmDistrict().getDistrictId(), address
-									.getPmCity().getCityId());
+					bean = new BriefingZoneBean(this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl(),
+							address.getPmState().getStateId(), address.getPmDivision().getDivisionId(), address
+									.getPmDistrict().getDistrictId(), address.getPmCity().getCityId());
 					zoneBean.add(bean);
 				}
 			}
 
 			this.getManagedBean().setSampleAddressBean(zoneBean);
 			// 11104-End
+
 		} else {
 			submissionList = this.getManagedBean().getSelectedSubmissionList();
-			
 			if (null == submissionList || submissionList.isEmpty()) {
 				throw new EpException(MessageConst.ERROR_760100);
 			}
-			
 			for (ScQtSampleSubmission sampleSubmission : submissionList) {
-				sampleSubmission.setScAddress(this.getManagedBean().getScQtSampleSubmission().getScAddress());
-				
+				sampleSubmission.setScAddress(this.getManagedBean()
+						.getScQtSampleSubmission().getScAddress());
+
 				// 11104-start
-				ScAddress address = this.getManagedBean()
-						.getScQtSampleSubmission().getScAddress();
+				ScAddress address = this.getManagedBean().getScQtSampleSubmission().getScAddress();
 
 				if (CollectionUtils.isEmpty(zoneBean)) {
-					BriefingZoneBean briefBean = new BriefingZoneBean(
-							sampleSubmission.getTplSpecZoneDtl(), address
-									.getPmState().getStateId(), address
-									.getPmDivision().getDivisionId(), address
-									.getPmDistrict().getDistrictId(), address
-									.getPmCity().getCityId());
+					BriefingZoneBean briefBean = new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(), address
+							.getPmState().getStateId(), address.getPmDivision().getDivisionId(), address
+							.getPmDistrict().getDistrictId(), address.getPmCity().getCityId());
 					zoneBean.add(briefBean);
 				} else {
 					int index = 0;
@@ -642,43 +623,33 @@ public class QTScheduleDetailBackingBean extends
 					BriefingZoneBean bean = null;
 
 					for (BriefingZoneBean mainBean : zoneBean) {
-						if (mainBean
-								.getTplSpecZoneDtl()
-								.getSpecZoneId()
-								.equals(sampleSubmission.getTplSpecZoneDtl()
-										.getSpecZoneId())
-								|| mainBean.getTplSpecZoneDtl().getSpecZoneId() == sampleSubmission
-										.getTplSpecZoneDtl().getSpecZoneId()) {
+						if (mainBean.getTplSpecZoneDtl().getSpecZoneId()
+								.equals(sampleSubmission.getTplSpecZoneDtl().getSpecZoneId())
+								|| mainBean.getTplSpecZoneDtl().getSpecZoneId() == sampleSubmission.getTplSpecZoneDtl()
+										.getSpecZoneId()) {
 							equalindex = index;
-
-							bean = new BriefingZoneBean(
-									sampleSubmission.getTplSpecZoneDtl(),
-									address.getPmState().getStateId(), address
-											.getPmDivision().getDivisionId(),
-									address.getPmDistrict().getDistrictId(),
-									address.getPmCity().getCityId());
+							bean = new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(), address.getPmState()
+									.getStateId(), address.getPmDivision().getDivisionId(), address.getPmDistrict()
+									.getDistrictId(), address.getPmCity().getCityId());
 						}
-
 						index++;
 					}
 
 					if (null != bean) {
 						zoneBean.remove(equalindex);
 						zoneBean.add(equalindex, bean);
+
 					} else {
-						bean = new BriefingZoneBean(
-								sampleSubmission.getTplSpecZoneDtl(), address
-										.getPmState().getStateId(), address
-										.getPmDivision().getDivisionId(),
-								address.getPmDistrict().getDistrictId(),
-								address.getPmCity().getCityId());
+						bean = new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(), address.getPmState()
+								.getStateId(), address.getPmDivision().getDivisionId(), address.getPmDistrict()
+								.getDistrictId(), address.getPmCity().getCityId());
 						zoneBean.add(bean);
 					}
 				}
-				// 11104-End
 			}
 
-			this.getManagedBean().setSampleAddressBean(zoneBean); // 11104
+			this.getManagedBean().setSampleAddressBean(zoneBean);
+			// 11104 -end-
 			this.getManagedBean().setSelectedSubmissionList(null);
 		}
 
@@ -994,4 +965,21 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 	//#21692 - End
+	
+	/**
+	 * Get value for sample, Bug #39486 - #39877.
+	 * 
+	 * @param scQt the quotation tender object
+	 * 
+	 * @return true if sample exists, false otherwise
+	 */
+	public boolean sampleExist(ScQt scQt) {
+		
+        if (sampleExistCache == null) {
+            sampleExistCache = checkISSampleExistWIPChecklist(scQt);
+        }
+
+        return Boolean.TRUE.equals(sampleExistCache);
+    }
+	
 }

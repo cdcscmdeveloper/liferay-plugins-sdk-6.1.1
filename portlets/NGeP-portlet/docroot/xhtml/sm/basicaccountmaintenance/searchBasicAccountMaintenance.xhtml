@@ -204,14 +204,17 @@
 							action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}" update="@form" process="@this"/>
 					</td>
 					<td style="white-space: nowrap; float: right;">
+					<!-- #26238 40219 - start -->
 					    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
 					    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{supplierDataMaintenanceBackingBean.showConfirmDialog}" 
-					    	rendered="#{supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"/>
+					    	rendered="#{supplierDataMaintenanceBackingBean.managedBean.flagShowButtonSubmit}"
+					    	disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"/>
 					    <!-- 38417 -->
-					    <p:commandButton value="#{lbl['lbl.btn.close']}" rendered="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+					    <p:commandButton value="#{lbl['lbl.btn.close']}" rendered="#{!supplierDataMaintenanceBackingBean.managedBean.flagShowButtonSubmit}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}"
 								update="@form" process="@this" />
+					<!-- #26238 40219 - end -->
 					</td>
 				</tr>
 			</table>

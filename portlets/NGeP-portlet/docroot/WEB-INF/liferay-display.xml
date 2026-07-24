@@ -4,6 +4,9 @@
 	<category name="NGeP">
 		<category name="category.ep.au">
 			<portlet id="auSearch" />
+ 			<!-- 35740 - shaqimi start -->
+			<portlet id="auPatchSearch" />
+			<!-- 35740 - shaqimi end -->
 		</category>
 		
 		<category name="category.ep.ct">
@@ -193,6 +196,7 @@
 			<portlet id="maintenanceRequestRevision"/>
 			<!-- Enhancement 25037-end- -->	
 			<portlet id="demoInvitation"/><!-- #28784 -->
+			<portlet id="disciplinaryActionDp"/><!-- #26284 -->
 			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->	
 		</category>
 

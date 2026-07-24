@@ -790,6 +790,14 @@ public class SupplierManagementConst {
 	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
+	
+	// #38001 START
+	public static final String PO_RECOMMENDATION_APPROVE_MY = "Lulus";
+	public static final String PO_RECOMMENDATION_REJECT_MY = "Tolak";
+	public static final String PO_RECOMMENDATION_APPROVE_EN = "Approve";
+	public static final String PO_RECOMMENDATION_REJECT_EN = "Reject";
+	// #38001 END
+	
 //	#37925 END
 
 	// Getters for panel info

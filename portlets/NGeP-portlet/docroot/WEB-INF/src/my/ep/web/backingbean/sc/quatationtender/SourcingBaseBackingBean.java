@@ -61,6 +61,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -341,10 +342,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	protected void populateAttachmentDetails(ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		//#21692 - Start
-		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
-		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
-		//#21692 - End
+		PmUser createdUser = new FacesScopes().getUserSessionBean();
 
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		if (attachment.getAttachmentId() == null
@@ -847,6 +845,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
 	}
 	//38343 - end
+	
+	// 38523, #35320 - start
+	protected IReasonSO getReasonSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+	}
+
+	// 38523, #35320 - end
 
 	/**
 	 * To initialize remarks.
@@ -1115,17 +1120,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		//21692 - Start
-		HttpServletResponse res;
-		if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
-			res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		} else {
-			PortletResponse portletResponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			res = com.liferay.portal.util.PortalUtil
-					.getHttpServletResponse(portletResponse);
-		}
-		//21692 - End
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try{
@@ -2163,20 +2161,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		if(isDirectLoa) {
 			//#24540 - start -
 			boolean setBondReq = true;
-			//#25726 commit under #39080 - Start
-			//remove contract type condition.
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
-					||scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
-			//#25726 commit under #39080 - End
+			//#25726 - Start
+				
+			boolean isQTtypePK7 = null != scLoa.getQtType() && null != scLoa.getQtType().getParameterId()
+					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode());
+		
+			if (isQTtypePK7 ) {
+		
+			//#25726 - End
+
 				setBondReq = false;
 			}
 			
@@ -3094,23 +3087,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return memberRole;
 	}
 	
+	//40107,35321 - start
 	/**
 	 * Gets the procurement type tool tip.
 	 *
 	 * @return the procurement type tool tip
 	 */
-	public String getProcurementTypeToolTip(){
-		// MaxProcurementAmt
-		BigDecimal maxProcurementAmt = getPRThresholdAmount();
-		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-		String message = ResourceBundleUtils.getMessage(
-				"lbl.sc.procurementtype.tooltip", new String[] {amountDF.format(maxProcurementAmt)}, 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
-		return message;
+	public String getProcurementTypeToolTip() {
+		return ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
+	//40107,35321 - end
 	
 	/**
 	 * Set PTJ Org Profile of user for committee member.

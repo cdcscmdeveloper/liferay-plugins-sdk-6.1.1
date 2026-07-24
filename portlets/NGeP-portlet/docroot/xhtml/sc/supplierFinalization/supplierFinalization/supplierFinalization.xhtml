@@ -139,9 +139,9 @@
 							<td>
 								<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
 									value="#{suppFinalizationBackingBean.managedBean.finalizationMethod}"
-									disabled="#{!(isSecretaryUser or 
+									disabled="#{(!(isSecretaryUser or 
 													isBPKTaskAndClaimed) or isQTStatusReFinalized or suppFinalizationBackingBean.isQTMaintenanceScreen()
-													or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
+													or supplierFinalizationReadOnly) and !suppFinalizationBackingBean.isQTCancelledBidSchedule()}"><!-- 6906 note 117 /#40396-->
 									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel])" 
 										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" 

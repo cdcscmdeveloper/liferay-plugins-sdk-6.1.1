@@ -263,7 +263,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			     </p:selectOneMenu>
 			  </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton id="btnIdBulkUpdate" value="#{lbl['lbl.btn.yes']}"  update="@([id$=panelItemDt])"
+		     <!-- #35506 -->
+		     <p:commandButton id="btnIdBulkUpdate" value="#{lbl['lbl.btn.yes']}"  update="@([id$=panelItemDt],[id$=itemZone],[id$=itemSupplier])"
 		       process="@all" actionListener="#{panelBackingBean.bulkUpdateRow()}" onclick="bulkUpdateDlg.hide();"
 		       disabled="#{panelBackingBean.managedBean.panelCoverageId == null and panelBackingBean.managedBean.itemCategoryId == null }"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="bulkUpdateDlg.hide();" type="button" />
@@ -345,12 +346,24 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			            <table style="width: 100%">
 				            <tr>
 								<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
-								<td><p:selectOneMenu id="locationLevels" style="width:200px;" disabled="#{panelBackingBean.managedBean.viewContract}"
-										value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
-										<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-										<p:ajax event="change" listener="#{panelBackingBean.selectLocation}" process="@this" update=":form:zoneGeneralDataTable"/>
-									</p:selectOneMenu>
+								<td>
+								<!-- #35506,#39594 Start -->
+								<p:selectOneMenu id="locationLevels" 
+                  								 style="width:200px;" 
+                  								 disabled="#{panelBackingBean.managedBean.viewContract}"
+                  								 value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
+    
+    							<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" 
+                   							   var="p" itemLabel="#{p.codeName}" itemValue="#{p.parameterId}" />
+
+    							<p:ajax event="change" 
+            							listener="#{panelBackingBean.selectLocation}" 
+            							process="@this" 
+            							immediate="true"
+            							update=":form:zoneGeneralDataTable :form:itemSupplierDt" />
+								</p:selectOneMenu>
 								</td>
+								<!-- #35506,#39594 End -->
 							</tr>
 						</table>
 		  
@@ -443,7 +456,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							value="#{panelBackingBean.managedBean.zoneName}"  
 							label="#{lbl['lbl.ct.zone.name']}"
 						    maxlength="20">
-						    <p:ajax event="change" process="@this" update=":form:okBtnId"></p:ajax>
+	<!-- #35506,#39762 --> <p:ajax event="keyup" listener="#{panelBackingBean.refreshOkButtonState}"  process="@this" update=":form:okBtnId"></p:ajax>
 						    </p:inputText> 
 					</td>
 				</tr>
