@@ -1103,12 +1103,13 @@ public class SupplierFinalizationBackingBean extends
 	}
 	// #27502 -end-
 
+	// #27502 -start-
 	public void changeCommApprovalAuth() {
 		log.info("start changeCommApprovalAuth");
-		
 	}
+	// #27502 -end-
 
-	// #27502 -start-			
+	// #27502 -start-
 	private void getListApprovalAuthority() {
 		// to retrieve Approval Authority
 		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
