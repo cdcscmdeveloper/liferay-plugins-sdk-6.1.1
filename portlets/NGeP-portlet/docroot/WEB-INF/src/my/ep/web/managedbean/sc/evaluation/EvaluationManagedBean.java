@@ -523,6 +523,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	// 6906 - end
 	private boolean allSupplierRejectEpv;//#21692
+	/*#29187 Start Vinod*/
+	private TplSpecZoneDtl tplSpecZoneDtl;
+	private boolean isComplianceCnfrm;
+	private boolean isComplianceOldNull;
+	private boolean isComplianceOldNo;
+	/*#29187 End Vinod*/
 
 	/**
 	 * Gets the today.
@@ -3559,4 +3565,38 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.allSupplierRejectEpv = allSupplierRejectEpv;
 	}
 	//#21692 - End
+	/* #29187 Start Vinod */
+	public TplSpecZoneDtl getTplSpecZoneDtl() {
+		return tplSpecZoneDtl;
+	}
+
+	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	}
+
+	public boolean isComplianceCnfrm() {
+		return isComplianceCnfrm;
+	}
+
+	public void setComplianceCnfrm(boolean isComplianceCnfrm) {
+		this.isComplianceCnfrm = isComplianceCnfrm;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+
+	public boolean isComplianceOldNo() {
+		return isComplianceOldNo;
+	}
+
+	public void setComplianceOldNo(boolean isComplianceOldNo) {
+		this.isComplianceOldNo = isComplianceOldNo;
+	}
+	
+	/* #29187 End Vinod */
 }
