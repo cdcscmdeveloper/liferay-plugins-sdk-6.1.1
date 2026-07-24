@@ -1550,7 +1550,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
 										.getUserLocale())));
 
-			} else {
+			} else if (!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){ //#31344 - Exclude check threshold item for G2G
 				checkPRThresholdPerItem();
 			}
 		}
