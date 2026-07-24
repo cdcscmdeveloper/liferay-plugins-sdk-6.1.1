@@ -23,6 +23,8 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.ai.IAIApiProcessSO;
+import my.ep.biz.service.sm.address.ISmAddressSO;
 import my.ep.biz.service.sm.application.ISupplierApplicationSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.blacklistDirector.IBlacklistDirectorSO;
@@ -680,4 +682,15 @@ public class SmServiceLookup {
 						ISupplierCategorySO.class);
 	}
 	//#34209 - END
+	//#34159 - START
+	public static ISmAddressSO getSmAddressSO() {
+		return (ISmAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmAddressSO.class);
+	}
+	//#34159 - END
+
+	//#40112
+	public static IAIApiProcessSO getAIApiProcessSO() {
+		return (IAIApiProcessSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IAIApiProcessSO.class);
+	}
 }

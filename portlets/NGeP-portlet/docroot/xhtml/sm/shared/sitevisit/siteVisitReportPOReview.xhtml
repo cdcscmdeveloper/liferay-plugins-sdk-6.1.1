@@ -7,6 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:param name="viewFlag" value="true" />
 	
+	<!-- #34166 - Start -->
+	<p:messages id="ErrMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>	
+	<!-- #34166 - End  -->
 	<p:tabMenu activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex" update="outPnlSiteVisitReport">
 				<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,null)}" />	

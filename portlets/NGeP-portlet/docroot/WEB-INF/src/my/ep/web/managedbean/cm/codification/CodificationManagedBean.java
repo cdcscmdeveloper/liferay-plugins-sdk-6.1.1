@@ -12,7 +12,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -201,6 +200,20 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private boolean assignCodeFlg = false;
 	
+	// #31503 - Start
+	private String itemCodeDesc;
+	private Object[] objSelected;
+	private boolean renderButtonAssignCode;
+	private boolean isHideExtension;
+	// #31503 - End
+	
+	//35503 Start
+	private String segmentTitleEng;
+	private String familyTitleEng;
+	private String classTitleEng;
+	private String commodityTitleEng;
+	//35503 End
+	
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -211,6 +224,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
 
+	// #26059 - Start
+	private String cmItemCode;
+	// #26059 - End
 	
 	public void initRefreshPageNoFlag(){
 		
@@ -1501,7 +1517,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setTempBrandName(String tempBrandName) {
 		this.tempBrandName = tempBrandName;
 	}
-
+   
+	//[#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
@@ -1533,6 +1550,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
+	//[#26282] disciplinary action - End
 
 	/*[#27625] begin*/
 	public String getTypeName() {
@@ -1559,4 +1577,96 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
+
+	//35503 Start
+	public String getSegmentTitleEng() {
+		return segmentTitleEng;
+	}
+
+	public void setSegmentTitleEng(String segmentTitleEng) {
+		this.segmentTitleEng = segmentTitleEng;
+	}
+
+	public String getFamilyTitleEng() {
+		return familyTitleEng;
+	}
+
+	public void setFamilyTitleEng(String familyTitleEng) {
+		this.familyTitleEng = familyTitleEng;
+	}
+
+	public String getClassTitleEng() {
+		return classTitleEng;
+	}
+
+	public void setClassTitleEng(String classTitleEng) {
+		this.classTitleEng = classTitleEng;
+	}
+
+	public String getCommodityTitleEng() {
+		return commodityTitleEng;
+	}
+
+	public void setCommodityTitleEng(String commodityTitleEng) {
+		this.commodityTitleEng = commodityTitleEng;
+	}
+	//35503 End
+	
+	// #31503 -start-
+	public String getItemCodeDesc() {
+		return itemCodeDesc;
+	}
+
+	public void setItemCodeDesc(String itemCodeDesc) {
+		this.itemCodeDesc = itemCodeDesc;
+	}
+
+	public Object[] getObjSelected() {
+		return objSelected;
+	}
+
+	public void setObjSelected(Object[] objSelected) {
+		this.objSelected = objSelected;
+	}
+
+	public boolean isRenderButtonAssignCode() {
+		return renderButtonAssignCode;
+	}
+
+	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
+		this.renderButtonAssignCode = renderButtonAssignCode;
+	}
+
+	/**
+	 * @return the isHideExtension
+	 */
+	public boolean isHideExtension() {
+		return isHideExtension;
+	}
+
+	/**
+	 * @param isHideExtension
+	 *            the isHideExtension to set
+	 */
+	public void setHideExtension(boolean isHideExtension) {
+		this.isHideExtension = isHideExtension;
+	}
+	// #31503 -end-
+	
+	//#26059 - Start
+	/**
+	 * @return the cmItemCode
+	 */
+	public String getCmItemCode() {
+		return cmItemCode;
+	}
+
+	/**
+	 * @param cmItemCode the cmItemCode to set
+	 */
+	public void setCmItemCode(String cmItemCode) {
+		this.cmItemCode = cmItemCode;
+	}
+	//#26059 - End
+	
 }

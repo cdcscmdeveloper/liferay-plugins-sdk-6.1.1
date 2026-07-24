@@ -50,8 +50,17 @@
 						label="#{lbl['lbl.sm.person.name']}" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
 						disabled="#{backingBean.managedBean.selectedShareHolder.ssmData}"
-						size="35" /> 
-						<ac:smFieldChangeAlert 
+						size="35">
+						<!-- #40112 - start -->
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearNameAI()}" update="shareHolderNameAiIcon" />
+						</p:inputText>
+						<p:outputPanel id="shareHolderNameAiIcon">
+							<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+							rendered="#{backingBean.managedBean.selectedShareHolder.nameFromAI}" />
+						</p:outputPanel>
+						<!-- #40112 - end -->
+						<ac:smFieldChangeAlert
 							isShow="#{backingBean.managedBean.showFieldChanges 
 								and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestPersonnel.name}" 
@@ -193,6 +202,9 @@
 							size="35" maxlength="12"
 							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							<!-- #40112 -->
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearIcAI()}" update="shareHolderIcAiIcon" />
 						</p:inputText>
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
@@ -203,7 +215,15 @@
 							size="35" maxlength="12">
 							<p:ajax process="@this" partialSubmit="true" update="@this"
 								listener="#{backingBean.trimPersonnelPassportValue}" />
+							<!-- #40112 -->
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearIcAI()}" update="shareHolderIcAiIcon" />
 						</p:inputText>
+						<!-- #40112 -->
+						<p:outputPanel id="shareHolderIcAiIcon">
+							<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+							rendered="#{backingBean.managedBean.selectedShareHolder.icFromAI}"/>
+						</p:outputPanel>
 						   &#160; <p:graphicImage id="tooltip1"
 							value="/css/images/design/tooltips.png" />
 						<p:tooltip id="toolinfo1" for="tooltip1">
@@ -286,7 +306,15 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epfNo}"
 						id="equiEpfNo" size="35">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+						<!-- #40112 - start -->
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{backingBean.managedBean.selectedShareHolder.clearEpfNoAI()}" update="shareHolderEpfNoAiIcon" />
+					</p:inputText>
+					<p:outputPanel id="shareHolderEpfNoAiIcon">
+						<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+						rendered="#{backingBean.managedBean.selectedShareHolder.epfNoFromAI}" />
+					</p:outputPanel>
+					<!-- #40112 - end -->
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 							and not empty backingBean.managedBean.latestPersonnel}"
@@ -333,15 +361,21 @@
 							disabled="#{backingBean.managedBean.disableIcEmail}" validator="#{backingBean.validateEmail}"
 							value="#{backingBean.managedBean.selectedShareHolder.email}" size="35">
 							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+							<ui:remove>#28720 Start</ui:remove>
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeEmail()}" update="equiEmail" />
+							<ui:remove>#28720 End</ui:remove>
 							<f:param name="disableValidate" value="true" />
 						</p:inputText> 
 					</p:outputPanel>
-					&#160; <p:graphicImage id="tooltip2"
-						value="/css/images/design/tooltips.png" /> <p:tooltip
-						id="toolinfo2" for="tooltip2">
-						<p:outputLabel escape="false"
-							value="#{lbl['tt.sm.registration.equity.owner.email']}" />
-					</p:tooltip>&#160; 
+					<ui:remove>#28720 Start</ui:remove>
+					&#160;&#160;
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" />
+					<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false"
+							value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip>
+					<ui:remove>#28720 End</ui:remove>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 							and not empty backingBean.managedBean.latestPersonnel}"
@@ -362,9 +396,9 @@
 					countryCode="#{backingBean.managedBean.selectedShareHolder.mobileCountry}" 
 					areaCode="#{backingBean.managedBean.selectedShareHolder.mobileArea}" 
 					number="#{backingBean.managedBean.selectedShareHolder.mobileNo}" 
-					isMobile="true" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
-					validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-					telcoId="#{backingBean.managedBean.selectedShareHolder.mobileTelcoId}" />
+					isMobile="true" hideTelco="true" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
+					validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" />
+					<!-- telcoId="#{backingBean.managedBean.selectedShareHolder.mobileTelcoId}" /> --> <!-- 40200 -->
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.latestPersonnel}"
@@ -523,11 +557,15 @@
 							value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 							disabled="#{backingBean.managedBean.disableRoleSelection}"
 							style="width: 207px;margin: 5px 0px 5px 0px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{backingBean.managedBean.ePRoleList}" />
-							<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}" 
-								process="@this" listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
+							<!-- #40031 - Start -->
+							<f:selectItem
+								itemLabel="#{backingBean.managedBean.isLatestApplHasPrevRole() ? lbl['lbl.sm.maintenance.delete.role'] : lbl['lbl.txt.select']}"
+								itemValue="" />
+							<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
+							<p:ajax event="change"
+								update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}, deleteRoleDlg"
+								process="@this" listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true" />
+							<!-- #40031 - End -->
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -665,9 +703,14 @@
 			<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderAddressInfoPopUpForm.xhtml" />
 		</p:outputPanel>
 	</p:panel>
-
+<!-- #31130 230425- START -->
 	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true"
 		id="equiShrHldrJbFnc">
+		<f:facet name="header">
+			<h:outputText value="*" styleClass="mandatory" 
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
+				<h:outputText value="#{lbl['lbl.sm.job.function']}" />
+		</f:facet> 
 		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffExperiences}"
 			var="jf" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -677,27 +720,18 @@
 			<p:column selectionMode="multiple" style="width:1%" rendered="#{not empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.companyname']}" />
 				</f:facet>
 				<h:outputText value="#{jf.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.designation']}" />
 				</f:facet>
 				<h:outputText value="#{jf.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
 				<h:outputText value="#{jf.fromYear}" maxlength="4"
@@ -705,9 +739,6 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
 				<h:outputText value="#{jf.toYear}" maxlength="4"
@@ -715,11 +746,9 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.label.action']}" />
 				</f:facet>
+<!-- #31130 230425- END --> 
 				<p:commandLink update=":#{p:component('equiJobFunctionInfo')}"
 					action="#{backingBean.assignSelShrHldrJobFunc(jf)}"
 					partialSubmit="true" process="@this" style="text-align: center  !important;">
@@ -742,6 +771,11 @@
 				process="equiShrHldrJbFnc" />
 		</div>
 	</p:panel>
+	<ui:remove>#28720 Start</ui:remove>
+	<ac:smEmailAlertPopup bBean="#{backingBean}"
+		title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	<ui:remove>#28720 End</ui:remove>
 	
 	<ac:confirmationPopup id="equiJobFunctionDeletePopUpId"
 		widget="equiJobFunctionDeletePopUp"
@@ -1464,4 +1498,20 @@
 			</table>
 		</p:scrollPanel>
 	</p:dialog>
+
+	<!-- #40031 - Start -->
+	<p:dialog header="#{lbl['lbl.btn.dialog.cofirm.header']}" widgetVar="confirmDeleteRoleDlg" id="deleteRoleDlg"
+		modal="true" closable="false" resizable="false" draggable="false">
+		<p:outputLabel value="#{backingBean.managedBean.removedRoleMsg}" />
+		<div align="right">
+			<!-- Yes button -->
+			<p:commandButton value="#{lbl['lbl.btn.dialog.cofirm.yes']}" process="@this" update="shrPrivPanel smPersnEpRole"
+				onclick="blockWidget.show();" oncomplete="blockWidget.hide(); confirmDeleteRoleDlg.hide()" />
+			<!-- No button -->
+			<p:commandButton value="#{lbl['lbl.btn.dialog.cofirm.no']}" process="@this" update="shrPrivPanel smPersnEpRole"
+				actionListener="#{backingBean.revertRole(backingBean.managedBean.prevRole)}" onclick="blockWidget.show();"
+				oncomplete="confirmDeleteRoleDlg.hide(); blockWidget.hide();" />
+		</div>
+	</p:dialog>
+	<!-- #40031 - End -->
 </ui:composition>

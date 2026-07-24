@@ -23,6 +23,7 @@ import org.primefaces.model.StreamedContent;
 
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -33,6 +34,7 @@ import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
+import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -56,6 +58,7 @@ import my.ep.util.BpmCommonUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.ai.SmAIDocBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sdoreview.SdoReviewManagedBean;
@@ -206,6 +209,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		
 		//initialized mandatory and non mandatory supporting documents
 		initNonMandatoryAndMandatoryDocs();
+		//#40112 - start
+		SmAIDocBackingBean.validateBank(getManagedBean().getSmAppl());
+		SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+		SmAIDocBackingBean.markEpfAiDocs(getManagedBean().getSmAppl());
+		//#40112 - end
 	}
 
 	/**
@@ -454,6 +462,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		//#11641 - START
 		this.getManagedBean().setEmptyMandatoryDocHistory(true);
 		this.getManagedBean().setEmptyNonMandatoryDocHistory(true);
+		// #34392 - start
+		resetSmApplSupportDocInquiries();
+		// #34392 - end
 		for(SmApplSupportDocInquiry historySupportDoc: this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries()){
 			if(historySupportDoc.getPmDocument().isMandatory()){
 				this.getManagedBean().setEmptyMandatoryDocHistory(false);
@@ -466,6 +477,26 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
+	
+	// #34392 - start
+	/**
+	 * re-select inquiry before opening popup
+	 */
+	public void resetSmApplSupportDocInquiries() {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+		SupportingDocInquiryResDTO resDTO = reqSO
+				.retrieveInquiryByApplInquiryId(this.getManagedBean()
+						.getSelectedInquiryResponse().getApplInquiryId());
+		this.getManagedBean()
+				.getSelectedInquiryResponse()
+				.setSmApplSupportDocInquiries(
+						resDTO.getSmApplInquiry()
+								.getSmApplSupportDocInquiries());
+	}
+
+	// #34392 - end
 	
 	/**
 	 * update unselectedSuppLs when user check/ uncheck the receive status
@@ -642,7 +673,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	private String setPOJobRoleWeigtage(SdoReviewReqDTO reqDTO){
-		String processingOfficer = null;
+		// #38054 - Start
+		String processingOfficer;
+		// #38054 - End
 		if(!getManagedBean().getSmAppl().isResubmit()) {
 			PmUser poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
 					.getSmAppl().getSupplierType(), getManagedBean()
@@ -654,9 +687,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			processingOfficer = poUser.getUserName();
 			reqDTO.setPmUser(poUser);
 			reqDTO.getSmAppl().setPoUserId(poUser.getUserId());
-			setPendingWeightage(reqDTO);
+			
 		}else{
-			PmUser poUser = null;
+			// #38054 - Start
+			PmUser poUser;
+			// #38054 - End
 			String payloadPO = ((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).getPoUsers();
 			String loginId = StringUtils.isNotBlank(payloadPO) ? payloadPO.trim() : null;
 			if(loginId == null){
@@ -677,7 +712,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			reqDTO.setPmUser(poUser);
 			reqDTO.getSmAppl().setPoUserId(poUser.getUserId());
 		}
-		
+		// #38054 - Start
+		setPendingWeightage(reqDTO);
+		// #38054 - End
 		
 		return processingOfficer;
 	}

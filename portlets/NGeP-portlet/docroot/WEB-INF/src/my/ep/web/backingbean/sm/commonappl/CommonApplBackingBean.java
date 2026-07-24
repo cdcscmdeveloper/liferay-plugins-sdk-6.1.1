@@ -292,6 +292,7 @@ public class CommonApplBackingBean extends
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
+				appl.setProcessingOfficerProcess(smObj.getProcessingOfficerProcess()); //#39771
 
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set
@@ -561,14 +562,17 @@ public class CommonApplBackingBean extends
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
 					// #29664 - end
-					if (appl.getApplType().equals(
-							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-						setSiteVisitView(smApplBB.getManagedBean(), appl);
-					} else {
-						if (appl.getApplCategoryType().equals("S")) {
-							setSiteVisitView(smApplBB.getManagedBean(), appl);
-						}
+					// #28778 - Site Visit Grouping Enhancement -28775 - Start
+					if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+							&& SmApplicationUtil.hasSpecialCategory(appl)){
+						smApplBB.getManagedBean().setSpecialCategoryRechecked(true);
 					}
+					if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+							|| appl.getApplCategoryType().equals(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL)
+							|| smApplBB.getManagedBean().isSpecialCategoryRechecked()) {
+						setSiteVisitView(smApplBB.getManagedBean(), appl);
+					}
+					// #28778 - Site Visit Grouping Enhancement -28775 - End
 				}
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.VERIFY_APPL)
@@ -646,28 +650,9 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			smApplBB.getManagedBean().setDraftedAppl(true);
-			
-			//27641,27736 : Disciplinary Action - 26238 - start
-			SmSupplier currentSupplier = SmApplicationUtil.getCurrentSupplier();
-			List<SmDisciplinaryAction> activeDisc = new ArrayList<SmDisciplinaryAction>();
-			if(currentSupplier != null){
-				//27876: Disciplinary Action - start - <27876>
-				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier);
-				//27876: Disciplinary Action - End- <27876>
-			}
-			
-			if(activeDisc != null && activeDisc.size() > 0){
-				log.info("***Navigate to bank info***");
-				for(SmDisciplinaryAction disc : activeDisc){
-					if(disc.isSuspendRegistration()){
-						smApplBB.getManagedBean().getEditVO().setDisciplinary(true);
-					}
-				}				
-			}			
-			//27641,27736 : Disciplinary Action - 26238 - end
+			//#26238 -- 27641,27736,27876
 			setNavigationForDraftAppl(appl.getApplType());
-			// }
-
+			SmApplicationUtil.checkAndRedirectIfInvalid(appl);//#37784
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT)) {
 			log.info(" ******* The selected process name is  Draft Maintain Account******"
@@ -788,6 +773,8 @@ public class CommonApplBackingBean extends
 						srcObj.getSupplierList());
 			}*/
 			smApplBB.getManagedBean().setPayLoad(srcObj);
+			smApplBB.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo()); //#38195
+			
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());
@@ -1274,21 +1261,14 @@ public class CommonApplBackingBean extends
 	// //this.getManagedBean().setTaskId(taskId);
 	// }
 	
-	//10724 START
+	//#10724-START
 	public void preRenderCommonSmOverviewInfo() {
-		//10724 START
 		renewSesionObject();
 		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
-		if (null != supp) {
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
-		}
-		if (supp != null && null != supp.getSupplierId() && supp.getSupplierId() > 0) {
+		
+		if (supp != null && supp.getSupplierId() > 0) {
 			log.info("10724 to TB issue liferay "+supp.getSupplierId());
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
-			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl(): " + supp.getSmAppl());
-			if (null != supp.getSmAppl()) {
-				log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl().getSupplierType(): " + supp.getSmAppl().getSupplierType());
-			}
+
 			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
 					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 			if (acc != null
@@ -1299,18 +1279,14 @@ public class CommonApplBackingBean extends
 				
 				Calendar currDateAfterThreeMonths = Calendar.getInstance();
 				currDateAfterThreeMonths.setTime(currDate);
-				currDateAfterThreeMonths.add(Calendar.MONTH, 3);
+				currDateAfterThreeMonths.add(Calendar.DATE, 90);
 				
 				
-				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					int secsInADay = 24 * 60 * 60;
-					long togo = (getManagedBean().getExpDate().getTime() - currDate
-							.getTime()) / 1000;
-					getManagedBean().setDays((togo / secsInADay) + "");
-					
-					//17024 - add condition
-					int expiringDays = Integer.parseInt(getManagedBean().getDays());
-					
+				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) 
+						&& acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					long expiringDays = daysBetween(currDate, expDate) + 1;
+
+					getManagedBean().setDays(expiringDays + "");
 					if(expiringDays <= 90){
 					getManagedBean().setMofBeforeExpiryMsg(
 							SmCommonUtil.getMessage(
@@ -1323,31 +1299,57 @@ public class CommonApplBackingBean extends
 						supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 				
 				Date currDate = new Date();
+				if (supp.getCompanyName().contains("Leap Year")){
+					Calendar leapYear = Calendar.getInstance();
+					leapYear.set(2027, Calendar.MAY, 10, 0, 0, 0);
+					currDate = leapYear.getTime();
+					log.info("Test Leap Year: Today is " + DateUtils.dateToString("dd/MM/yyyy", currDate));
+				}
 				getManagedBean().setExpDate(expiredAcc.getExpDate());
-				Date expDate = getManagedBean().getExpDate(); 
+				Date expDate = getManagedBean().getExpDate();
 				
-				if (currDate.after(expiredAcc.getExpDate()) && expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-					Calendar dateAfterOneYear = Calendar.getInstance();
-					dateAfterOneYear.setTime(expDate);
-					dateAfterOneYear.add(Calendar.MONTH, 12);
+				Calendar dateAfterOneYear = Calendar.getInstance();
+				dateAfterOneYear.setTime(expDate);
+				dateAfterOneYear.add(Calendar.MONTH, 12);
+				
+				Date renewalEnd = dateAfterOneYear.getTime();
+
+				long togo = daysBetween(currDate, renewalEnd) + 1;
+				 
+				if (togo >= 1 && togo <= 366
+						&& expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+					getManagedBean().setDays(String.valueOf(togo));
 					
-					int secsInADay = 24 * 60 * 60;
-					long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate
-							.getTime()) / 1000;
-					getManagedBean().setDays(((togo + secsInADay) / secsInADay) + "");
+					dateAfterOneYear.setTime(expDate);
+					dateAfterOneYear.add(Calendar.DATE, 1);
+					Date dayAfterExp = dateAfterOneYear.getTime(); 
 					
 					getManagedBean().setMofAfterExpiryMsg(
 							SmCommonUtil.getMessage(
-									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", expDate), getManagedBean().getDays()}));
+									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", dayAfterExp), getManagedBean().getDays()}));
 				}
 			}
 		}else{
-			log.info("No Supplier");
+			log.info("No Supplier"); 
 		}
-		//10724 END
 		log.info(getManagedBean().getMofBeforeExpiryMsg());
 		log.info(getManagedBean().getMofAfterExpiryMsg());
 		SmCommonUtil.redirectToPage("commonSmOverviewInfo.xhtml", "", null, null);
 	}
-	//10724 END
+	
+	private static long daysBetween(Date from, Date to) {
+		long msInADay = 24L * 60 * 60 * 1000;
+		return (atMidnight(to) - atMidnight(from)) / msInADay;
+	}
+
+	private static long atMidnight(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTimeInMillis();
+	}
+	//#10724-END
 }

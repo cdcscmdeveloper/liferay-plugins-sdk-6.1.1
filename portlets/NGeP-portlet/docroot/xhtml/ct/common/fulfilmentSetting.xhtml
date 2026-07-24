@@ -14,7 +14,7 @@
 		<h:panelGrid columns="3" style="width:100%;" columnClasses="columnWidth240">  
             
 	   		<p:outputLabel value="#{lbl['lbl.ct.contract.notify']}" styleClass="required"  />
-	 		<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
+	 		<p:inputText maxlength="3" disabled="#{ctBackingBean.managedBean.viewContract}"
 				value="#{ctBackingBean.managedBean.contractVer.ctSetting.ctNotifyDays}"
 		   		style="width:50px;" label="#{lbl['lbl.ct.contract.notify']}" required="true" />
 	      	<h:panelGrid columns="3">
@@ -23,18 +23,18 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.notification']}" />
 			</h:panelGrid>
 	             
-	     	<p:outputLabel value="#{lbl['lbl.ct.agreement.notify']}"  styleClass="required" />  
-	     	<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
+	     	<p:outputLabel value="#{lbl['lbl.ct.agreement.notify']}"  styleClass="required" style="padding-top: 15px"/>  
+	     	<p:inputText maxlength="3" disabled="#{ctBackingBean.managedBean.viewContract}"
 	        	value="#{ctBackingBean.managedBean.contractVer.ctSetting.agNotifyDaysB4Ag}"
 	         	style="width:50px;" label="#{lbl['lbl.ct.agreement.notify']}"   required="true" />  
-	     	<h:panelGrid columns="3">
-				<p:outputLabel value="#{lbl['lbl.ct.agreement.notify.desc']}" style="float:left;text-align:left;width:550px;"/>
+	     	<h:panelGrid columns="3" style="width:550px;">
+				<p:outputLabel value="#{lbl['lbl.ct.agreement.notify.desc']}" style="float:left;text-align:left;"/>
 		   		<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.notification']}" />
 			</h:panelGrid>
 				
 			<p:outputLabel value="#{lbl['lbl.ct.pb.notify']}"  styleClass="required"/>  
-	    	<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
+	    	<p:inputText maxlength="3" disabled="#{ctBackingBean.managedBean.viewContract}"
 	       		value="#{ctBackingBean.managedBean.contractVer.ctSetting.bondNotifyDays}"
 	        	style="width:50px;" label="#{lbl['lbl.ct.pb.notify']}"  required="true"  />  
 	      	<h:panelGrid columns="3">
@@ -44,7 +44,7 @@
 			</h:panelGrid>
 	          
 	      	<h:outputLabel value="#{lbl['lbl.ct.termination.notify']}"  styleClass="required" />  
-	    	<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
+	    	<p:inputText maxlength="3" disabled="#{ctBackingBean.managedBean.viewContract}"
 	         	value="#{ctBackingBean.managedBean.contractVer.ctSetting.terminationNotifyDays}"
 	      		style="width:50px;" label="#{lbl['lbl.ct.termination.notify']}"  required="true" />  
 	      	<h:panelGrid columns="3">
@@ -66,11 +66,11 @@
 		<h:panelGrid columns="3" style="width:100%;" columnClasses="columnWidth240">  
 				
 			<p:outputLabel value="#{lbl['lbl.ct.do.notify']}"  styleClass="required"/>  
-	     	<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
+	     	<p:inputText maxlength="3" disabled="#{ctBackingBean.managedBean.viewContract}"
 	     		value="#{ctBackingBean.managedBean.contractVer.ctSetting.supplierDoDays}"
 	        	style="width:50px;" label="#{lbl['lbl.ct.do.notify']}"  required="true" />  
-	    	<h:panelGrid columns="3">
-	       		<p:outputLabel value="#{lbl['lbl.ct.do.notify.desc']}" style="float:left;text-align:left;width:400px;"/>
+	    	<h:panelGrid columns="3" style="width:550px;">
+	       		<p:outputLabel value="#{lbl['lbl.ct.do.notify.desc']}" style="float:left;text-align:left;"/>
 	         	<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.order.notification']}" />
 			</h:panelGrid>	
@@ -79,14 +79,14 @@
 	     		and ParameterConst.contractTypeMinistry == ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode 
 	      		and ctBackingBean.managedBean.contractVer.ctContract.mto}">
 			   	<p:outputLabel value="#{lbl['lbl.ct.approver.notify']}"   styleClass="required"/>  
-			  	<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"             	
+			  	<p:inputText maxlength="3" disabled="#{ctBackingBean.managedBean.viewContract}"             	
 			  		value="#{ctBackingBean.managedBean.contractVer.ctSetting.approverMtoDays}"
 			      	style="width:50px;" label="#{lbl['lbl.ct.approver.notify']}" required="true" />              
 			   	<h:outputLabel value="#{lbl['lbl.ct.approver.notify.desc']}" style="float:left;text-align:left;"/>
 	    	</c:if>
 	    	
 	       	<p:outputLabel value="#{lbl['lbl.ct.last.co.notify']}"  styleClass="required" />  
-	     	<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
+	     	<p:inputText maxlength="3" disabled="#{ctBackingBean.managedBean.viewContract}"
 	      		value="#{ctBackingBean.managedBean.contractVer.ctSetting.lastCOBeforeExpiryDays}"
 	         	style="width:50px;" label="#{lbl['lbl.ct.last.co.notify']}"  required="true"/>  
 	      	<h:panelGrid columns="3">

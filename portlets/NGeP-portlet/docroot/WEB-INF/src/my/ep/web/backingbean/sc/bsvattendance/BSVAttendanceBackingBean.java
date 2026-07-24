@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;//#28188
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -16,6 +17,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;//#28188
+import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -23,10 +27,13 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTAuditConstant;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.sc.quationtender.AuditTrailReqDTO;
+import my.ep.dto.sc.quationtender.AuditTrailResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -54,8 +61,10 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -118,15 +127,17 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setLanguageCode(languageCode);
 
 			BriefingResDTO resDTO = qTBriefingSO.retrieveBriefingSiteVisitDtl(reqDTO);
-
+			
 			// getting Briefing Same As Site Visit value
 			ScQt scQt = resDTO.getScQt();
+			
 			this.getManagedBean().setScQt(scQt);
+			this.getManagedBean().setDaImposedSupplierIds(new ArrayList<Long>());// 26247(39088)
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
 				// Need to construct tab bean for zone
 				List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
-
+				
 				if (null != zoneDtls) {
 					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 						reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
@@ -148,8 +159,13 @@ public class BSVAttendanceBackingBean extends
 							List<ScQtBsvDtl> newBriefingList = new ArrayList<ScQtBsvDtl>();
 							for (ScQtBsvDtl scqtdtl : briefingResDTO.getBriefingList()){
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
-								newBriefingList.add(scqtdtl);
-								briefingZoneBean.setBriefingList(newBriefingList);
+								//#28188 - Start
+								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
+									newBriefingList.add(scqtdtl);
+									briefingZoneBean.setBriefingList(newBriefingList);
+								}
+								//#28188 - End
 							}
 						}
 						
@@ -157,8 +173,13 @@ public class BSVAttendanceBackingBean extends
 							List<ScQtBsvDtl> newSiteVisitList = new ArrayList<ScQtBsvDtl>();
 							for (ScQtBsvDtl scqtdtl : briefingResDTO.getSiteVisitList()){
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
-								newSiteVisitList.add(scqtdtl);
-								briefingZoneBean.setSitevisitList(newSiteVisitList);
+								//#28188 - Start
+								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
+									newSiteVisitList.add(scqtdtl);
+									briefingZoneBean.setSitevisitList(newSiteVisitList);
+								}
+								//#28188 - End
 							}
 						}
 						bsvZoneBeans.add(briefingZoneBean);
@@ -188,9 +209,13 @@ public class BSVAttendanceBackingBean extends
 						List<ScQtBsvDtl> newBriefingList = new ArrayList<ScQtBsvDtl>();
 						for (ScQtBsvDtl scqtdtl : resDTO.getBriefingList()){
 							scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
-							newBriefingList.add(scqtdtl);
-							briefingZoneBean.setBriefingList(newBriefingList);
-							
+							//#28188 - Start
+							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+									|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {	
+								newBriefingList.add(scqtdtl);
+								briefingZoneBean.setBriefingList(newBriefingList);
+							}
+							//#28188 - End
 						}
 					}
 					
@@ -198,15 +223,20 @@ public class BSVAttendanceBackingBean extends
 						List<ScQtBsvDtl> newSiteVisitList = new ArrayList<ScQtBsvDtl>();
 						for (ScQtBsvDtl scqtdtl : resDTO.getSiteVisitList()){
 							scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
-							newSiteVisitList.add(scqtdtl);
-							briefingZoneBean.setSitevisitList(newSiteVisitList);
-							
+							//#28188 - Start
+							if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
+									|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
+								newSiteVisitList.add(scqtdtl);
+								briefingZoneBean.setSitevisitList(newSiteVisitList);
+							}
+							//#28188 - End
 						}
 					}
 					//#31518 end
 				} else {
 					throw new EpException("No Bsv Details Avalible For this");
 				}
+				
 				this.getManagedBean().setNormalBsvBean(briefingZoneBean);
 			}
 		} finally {
@@ -331,9 +361,6 @@ public class BSVAttendanceBackingBean extends
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
-			// Bug 31475 - shaqimi start
-			List<String> zoneBsvList = new ArrayList<String>();
-			// Bug 31475 - shaqimi end
 			FacesScopes facesScopes = new FacesScopes();
 			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -344,16 +371,7 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setOutcome(outCome);
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
-			//Bug 31475 - shaqimi start
-			if(scQt.isZonal()){
-				for(BriefingZoneBean bzb : this.getManagedBean().getZoneBean()){
-					if(!bzb.getBriefingList().isEmpty()){
-						zoneBsvList.add(bzb.getTplSpecZoneDtl().getZoneName());
-					}
-				}
-				reqDTO.setZoneBsvList(zoneBsvList);
-			}
-			//Bug 31475 - shaqimi end
+			reqDTO.setDaImposedSupplierIds(this.getManagedBean().getDaImposedSupplierIds());// 26247(39088)
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
 				/*Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
@@ -689,6 +707,16 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(null);
 		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
+		//28895-35500 start
+	    //Bug #38635 - Start
+		List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList() != null ? this.getManagedBean()
+				.getNewBriefingRegistrationList() : new ArrayList<ScQtBsvRegistration>();
+		//Bug #38635 - End
+		if (newBriefingRegistrationList.contains(selectedReqistration)){
+			newBriefingRegistrationList.remove(selectedReqistration);
+			this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
+		}
+		//#28895-35500 end
 
 	}
 
@@ -736,39 +764,41 @@ public class BSVAttendanceBackingBean extends
 					new ArrayList<ScQtBsvRegistration>());
 		}
 
-		if (mofAccounts != null) {
-			//#29770 - #26247 - Start.
-			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTBriefingSO.class);
-			try {
-				for (int i = 0; i < mofAccounts.size(); i++) {
-					SmMofAccount mofAccount = mofAccounts.get(i);
-					ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
-					SmSupplier smSupplier = bsvSo.retrieveActiveDisciplinaryActionBySupplier(mofAccount.getSmSupplier());
-					bsvRegistration.setSupplier(smSupplier);
-					bsvRegistration.setBsvDtl(this.getManagedBean()
-							.getScQtBriefing());
-					if (getManagedBean().getBriefingRegistrationList().contains(
-							bsvRegistration)) {
-						throw new EpException(MessageConst.ERROR_760186);
-					}
-					getManagedBean().getBriefingRegistrationList().add(
-							bsvRegistration);
-					if (i == mofAccounts.size() - 1) {
-						this.getManagedBean().setSelectedbriefRegistration(
-								bsvRegistration);
-						getAttandanceDtlsBySelectedRegistartion(bsvRegistration);
-					}
-					setSlectedHeaderName(bsvRegistration.getSupplier()
-							.getCompanyName().concat("  ").concat(">"));
+		//#29770 - #26247 - Start.
+		if (CollectionUtils.isNotEmpty(mofAccounts)) {
+			// 28895-35500
+			List<ScQtBsvRegistration> newBriefingRegistrationList = getManagedBean().getNewBriefingRegistrationList() != null ? getManagedBean()
+					.getNewBriefingRegistrationList() : new ArrayList<ScQtBsvRegistration>();
+
+			for (int i = 0; i < mofAccounts.size(); i++) {
+				SmMofAccount mofAccount = mofAccounts.get(i);
+				ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
+				// 26247 - start
+				ScQt scQt = this.getManagedBean().getScQtBriefing().getScQtBsv().getScQt();
+				if (null != mofAccount.getSmSupplier()) {
+					mofAccount.getSmSupplier().setSmMofAccounts(mofAccounts);
 				}
-			} finally {
-				bsvSo = null;
+				SmSupplier smSupplier = getQtBriefingSO().evaluateDisciplinaryActions(mofAccount.getSmSupplier(),
+						scQt.getQtId());
+				// 26247 - end
+				bsvRegistration.setSupplier(smSupplier);
+				bsvRegistration.setBsvDtl(this.getManagedBean().getScQtBriefing());
+				if (getManagedBean().getBriefingRegistrationList().contains(bsvRegistration)) {
+					throw new EpException(MessageConst.ERROR_760186);
+				} 
+				getManagedBean().getBriefingRegistrationList().add(bsvRegistration);
+				if (i == mofAccounts.size() - 1) {
+					this.getManagedBean().setSelectedbriefRegistration(bsvRegistration);
+					getAttandanceDtlsBySelectedRegistartion(bsvRegistration);
+				} 
+				setSlectedHeaderName(bsvRegistration.getSupplier().getCompanyName().concat("  ").concat(">"));
+				newBriefingRegistrationList.add(bsvRegistration);
 			}
-			//#29770 - #26247 - End.
+			this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
+		// #29770 - #26247 - End.
 		}
 	}
+
 
 	/**
 	 * Method to delete the registrations- 
@@ -813,68 +843,39 @@ public class BSVAttendanceBackingBean extends
 	public void getregistrationDetails(ScQtBsvDtl briefing, boolean maintanceFlow) {
 
 		this.getManagedBean().setBriefingAttendanceList(null);
-		IQTBriefingSO qTBriefingSO = null;
-		this.getManagedBean().setSelectedbriefRegistration(null);
-		try {
-			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-			this.getManagedBean().setBriefingRegistrationList(null);
-
-			if (briefing != null) {
-				this.getManagedBean().setScQtBriefing(briefing);
-				BriefingReqDTO reqDTO = new BriefingReqDTO();
-				reqDTO.setQtBriefingId(briefing.getQtBsvDtlId());
-				reqDTO.setMaintanceFlow(maintanceFlow);
-
-				BriefingResDTO resDTO = qTBriefingSO
-						.retrieveBriefingRegistrationList(reqDTO);
-
-				List<ScQtBsvRegistration> briefRegList = resDTO
-						.getBriefingRegResultBean().getResultList();
-				
-				if(CollectionUtils.isNotEmpty(briefRegList)){
-					for (ScQtBsvRegistration briefReg :briefRegList){
-						if(briefReg.isRegisteredBySupplier()){
-							retrieveAuthriozesPersonalBySupplierId(briefReg);
-						}
-						
-					}
-				}
-				
-				
-				/*calculate attendance
-				 * 
-				 */
-				int count = 0;
-				
-				for (ScQtBsvRegistration registration : briefRegList) {
-
-					List<ScQtBsvAttendance> bsvAttandance = registration
-							.getBsvAttendance();	
-					
-					count = count + getAttandanceCount(bsvAttandance);
-					
-					// 26247 - Start
-					SmSupplier smSupplier = qTBriefingSO.retrieveActiveDisciplinaryActionBySupplier(registration.getSupplier());
-					registration.setSupplier(smSupplier);
-					// 26247 - End
-				}
-				/*
-				 * List<ScQtBsvRegistration> registrationList = new
-				 * ArrayList<ScQtBsvRegistration>(); for (ScQtBsvRegistration
-				 * scqtbriefReg : briefRegList) { //
-				 * scqtbriefReg.setSmMofAccount(new SmMofAccount());
-				 * registrationList.add(scqtbriefReg); }
-				 */
-				this.getManagedBean().setAttandance_count(count);
-				this.getManagedBean().setBriefingRegistrationList(briefRegList);
-				
-				log.info("attandanceCount = "+count);
-			}
-
-		} finally {
-			qTBriefingSO = null;
-		}
+		// 26247 - start
+		this.getManagedBean().setSelectedbriefRegistration(null); 
+		this.getManagedBean().setBriefingRegistrationList(null);
+		
+		if (null == briefing) {
+			return;
+		} 
+		
+		this.getManagedBean().setScQtBriefing(briefing);
+		BriefingReqDTO reqDTO = new BriefingReqDTO();
+		reqDTO.setQtBriefingId(briefing.getQtBsvDtlId());
+		reqDTO.setMaintanceFlow(maintanceFlow);
+		
+		BriefingResDTO resDTO = getQtBriefingSO().retrieveBriefingRegistrationList(reqDTO);
+		
+		List<ScQtBsvRegistration> briefRegList = resDTO.getBriefingRegResultBean().getResultList();
+		int count = 0;
+		if (CollectionUtils.isNotEmpty(briefRegList)) {
+			for (ScQtBsvRegistration registration : briefRegList) {
+				if (registration.isRegisteredBySupplier()) {
+					retrieveAuthriozesPersonalBySupplierId(registration);
+				} 
+				List<ScQtBsvAttendance> bsvAttandance = registration.getBsvAttendance();
+				count = count + getAttandanceCount(bsvAttandance);
+				ScQt scQt = registration.getBsvDtl().getScQtBsv().getScQt();
+				SmSupplier smSupplier = getQtBriefingSO().evaluateDisciplinaryActions(registration.getSupplier(),
+						scQt.getQtId());
+				registration.setSupplier(smSupplier);
+			} 
+		} 
+		this.getManagedBean().setAttandance_count(count);
+		this.getManagedBean().setBriefingRegistrationList(briefRegList);
+		// 26247 - end
 	}
 	
 	/**
@@ -884,80 +885,54 @@ public class BSVAttendanceBackingBean extends
 	 * 		the ScQtBsvDtl instance
 	 * @param maintanceFlow
 	 * 		the maintenance flow flag.
+	 * @return ScQtBsvDtl
 	 */
 	public ScQtBsvDtl getregistrationDetailsWithAttandance(ScQtBsvDtl briefing, boolean maintanceFlow) {
-		
-		
 		this.getManagedBean().setBriefingAttendanceList(null);
-		IQTBriefingSO qTBriefingSO = null;
-		this.getManagedBean().setSelectedbriefRegistration(null);
-		try {
-			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-			this.getManagedBean().setBriefingRegistrationList(null);
-
-			if (briefing != null) {
-				
-				this.getManagedBean().setScQtBriefing(briefing);
-				BriefingReqDTO reqDTO = new BriefingReqDTO();
-				reqDTO.setQtBriefingId(briefing.getQtBsvDtlId());
-				reqDTO.setMaintanceFlow(maintanceFlow);
-
-				BriefingResDTO resDTO = qTBriefingSO
-						.retrieveBriefingRegistrationList(reqDTO);
-
-				List<ScQtBsvRegistration> briefRegList = resDTO
-						.getBriefingRegResultBean().getResultList();
-				
-				if(CollectionUtils.isNotEmpty(briefRegList)){
-					for (ScQtBsvRegistration briefReg :briefRegList){
-						if(briefReg.isRegisteredBySupplier()){
-							retrieveAuthriozesPersonalBySupplierId(briefReg);
-						}
-						
-					}
-				}
-				
-				
-				/*calculate attendance
-				 * 
-				 */
-				int count = 0;
-				
-				for (ScQtBsvRegistration registration : briefRegList) {
-
-					List<ScQtBsvAttendance> bsvAttandance = registration
-							.getBsvAttendance();	
-					
-					count = count + getAttandanceCount(bsvAttandance);	
-					
-					// 26247 - Start
-					SmSupplier smSupplier = qTBriefingSO.retrieveActiveDisciplinaryActionBySupplier(registration.getSupplier());
-					registration.setSupplier(smSupplier);
-					// 26247 - End
-					
-				}
-				
-				briefing.setToBeattand(count);
-				/*
-				 * List<ScQtBsvRegistration> registrationList = new
-				 * ArrayList<ScQtBsvRegistration>(); for (ScQtBsvRegistration
-				 * scqtbriefReg : briefRegList) { //
-				 * scqtbriefReg.setSmMofAccount(new SmMofAccount());
-				 * registrationList.add(scqtbriefReg); }
-				 */
-				this.getManagedBean().setAttandance_count(count);
-				this.getManagedBean().setBriefingRegistrationList(briefRegList);
-				
-				log.info("attandanceCount = "+count);
-			}
-
-		} finally {
-			qTBriefingSO = null;
-			
+		// 26247 - start
+		this.getManagedBean().setSelectedbriefRegistration(null); 
+		this.getManagedBean().setBriefingRegistrationList(null);
+ 
+		if (null == briefing) {
+			return null;
 		}
+		
+		this.getManagedBean().setScQtBriefing(briefing);
+		BriefingReqDTO reqDTO = new BriefingReqDTO();
+		reqDTO.setQtBriefingId(briefing.getQtBsvDtlId());
+		reqDTO.setMaintanceFlow(maintanceFlow);
+		
+		BriefingResDTO resDTO = getQtBriefingSO().retrieveBriefingRegistrationList(reqDTO);
+		
+		List<ScQtBsvRegistration> briefRegList = resDTO.getBriefingRegResultBean().getResultList();
+		int count = 0;
+		if (CollectionUtils.isNotEmpty(briefRegList)) {
+			for (ScQtBsvRegistration registration : briefRegList) {
+				if (registration.isRegisteredBySupplier()) {
+					retrieveAuthriozesPersonalBySupplierId(registration);
+				}				
+				List<ScQtBsvAttendance> bsvAttandance = registration.getBsvAttendance();
+				count = count + getAttandanceCount(bsvAttandance);
+				ScQt scQt = registration.getBsvDtl().getScQtBsv().getScQt();
+				SmSupplier smSupplier = getQtBriefingSO().evaluateDisciplinaryActions(registration.getSupplier(),
+						scQt.getQtId());
+				registration.setSupplier(smSupplier);
+				// 26247(39088) - start
+				List<Long> daImposedList = this.getManagedBean().getDaImposedSupplierIds();
+				if (daImposedList != null && this.disabledQTProcess(smSupplier)
+						&& !daImposedList.contains(smSupplier.getSupplierId())) {
+					daImposedList.add(smSupplier.getSupplierId());
+				}
+				// 26247(39088) - end
+			}	
+		}	
+		briefing.setToBeattand(count);
+		this.getManagedBean().setAttandance_count(count);
+		this.getManagedBean().setBriefingRegistrationList(briefRegList);
+		// 26247 - end
 		return briefing;
 	}
+
 
 	/**
 	 * Method will be executed by Ajax call.
@@ -1126,6 +1101,9 @@ public class BSVAttendanceBackingBean extends
 			String languageCode = new FacesScopes().getUserLocale()
 					.getLanguage();
 			reqDTO.setLanguageCode(languageCode);
+			//28895-35500
+			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
+			
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
 			boolean invokeBPM = false;
@@ -1142,6 +1120,9 @@ public class BSVAttendanceBackingBean extends
 									scQtBrief.getMaxNoOfAttendance())
 									.toString() });
 				}
+				
+				
+				
 				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
 
 				if (flag) {
@@ -1163,12 +1144,13 @@ public class BSVAttendanceBackingBean extends
 				throw new EpException(MessageConst.ERROR_760206);
 			}
 
-			// reqDTO.setQtBriefingList(briefingDetails);
-			// reqDTO.setBriefingDetail(scQtBrief);
+			// #28188 start
+			reqDTO.setBriefingDetail(scQtBrief);
 			reqDTO.setBriefingReqDtls(this.getManagedBean()
 					.getBriefingRegistrationList());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
-			
+			reqDTO.setBsvStatusId(QTStatusConst.BSV_COMPLETED);
+			// #28188 end
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
 			List<ScQtApprovalRemark> scQtApprovalRemarks = super.finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
 			List<ScQtApprovalRemark> newApprovalRemarks = super.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
@@ -1192,7 +1174,11 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
 					.getToBeDeletedRegistartions());
 			reqDTO.setInvokeBpm(invokeBPM);
-			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
+			//#28188 - Start
+			//Exclude BPM process as processing move to QTDetailBackingBean due to change to SAVE button
+			//BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO); 
+			BriefingResDTO resDTO = qTBriefingSO.saveQTDtlChangeBSV(reqDTO);
+			//#28188 - End
 
 			if (resDTO.isSuccessful()) {
 				ScQtBsvDtl bsv = resDTO.getScQtBriefing();
@@ -1206,27 +1192,25 @@ public class BSVAttendanceBackingBean extends
 
 				getregistrationDetails(bsv, true);
 				
-				Locale locate = new FacesScopes().getUserLocale();
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700005,
-														new String[] {
-																ResourceBundleUtils.getMessage(
-																		"lbl.sc.bsv.additional.attendance", 
-																		ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																		locate),
-																scQt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														locate)));
+				//#28188 - Start
+				putBriefingRegistrationListToSession(reqDTO.getBriefingReqDtls(), scQt.getQtId());
+				putApprovalRegistrationListToSession(reqDTO.getApproval());
+				//#28188 - End
 
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				//28895 - 35500 start
+				if (!newBriefingRegistrationList.isEmpty()){	
+					prepareBSVAttendanceAudit(scQt, newBriefingRegistrationList);					
+				}
+				//#28895-35500 end
+				//return CommonUIConst.ACKNOWLEDGE_PAGE;
+				
+				//#28188 - Start - Change to SAVE Acknowledge
+				this.getManagedBean().setMaintanceFlow(true);//28188
+				String[] param = new String[2];
+				
+				param[0] = this.getManagedBean().getScQt().getQtNo();
+				successMessage(MessageConst.INFO_700128,param);
+				//#28188 - End 
 
 			}
 		} finally {
@@ -1291,9 +1275,6 @@ public class BSVAttendanceBackingBean extends
 				}
 			}
 			briefingRegistration.setBsvAttendance(attanedList);
-			
-			SmSupplier smSupplier = bsvSo.retrieveActiveDisciplinaryActionBySupplier(briefingRegistration.getSupplier());
-			briefingRegistration.setSupplier(smSupplier);
 		}
 	
 	/**
@@ -1690,6 +1671,12 @@ public class BSVAttendanceBackingBean extends
 			BriefingResDTO resDTO = briefingSO
 					.updateSupplierRegistionsNSendNotifications(briefingReqDTO);
 
+			//28895 - 35500 start
+			if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+				prepareBSVAttendanceAudit(scQt,null);
+			}
+			//#28895-35500 end
+			
 			if (resDTO.isSuccessful()) {
 
 				renewSesionObject();
@@ -1741,4 +1728,117 @@ public class BSVAttendanceBackingBean extends
 	public void enableAutoUpdate() {
 		getManagedBean().setAutoUpdate(Boolean.TRUE);		
 	}
+	
+	/**
+	 * prepare audit trails parameters for BSV Attendance
+	 * #28895-35500
+	 * @param scQt
+	 * @param newBriefingRegistrationList
+	 */
+	public void prepareBSVAttendanceAudit(ScQt scQt, List<ScQtBsvRegistration> newBriefingRegistrationList){
+		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
+		IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)){
+			List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+			
+			auditResDTO.setDocId(scQt.getQtId());
+			auditResDTO.setDocNo(scQt.getQtNo());			
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_SL);					
+			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_SUPPLIER);//#35500 Fix Reopen 27th Nov
+
+			if(!(newBriefingRegistrationList == null||newBriefingRegistrationList.isEmpty())){	
+				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SL_COMPANY_NAME);
+				auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);				
+				auditResDTO.setStatusId(QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_PENDING_APPROVAL);
+				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
+				for(ScQtBsvRegistration newBriefingRegistration : newBriefingRegistrationList){
+					auditResDTO.setNewValue(newBriefingRegistration.getSupplier().getCompanyName());
+					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+					auditReqList.add(auditReqDTO);
+				}
+			}else{
+				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+				auditResDTO.setStatusId(QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_APPROVED);
+				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
+				
+				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+				auditReqList.add(auditReqDTO);
+			}			
+										
+			qtAuditTrailSO.insertAuditTrail(auditReqList);			
+		}
+	}
+	
+	//#28188 - Start
+	@SuppressWarnings("unchecked")
+	private void putBriefingRegistrationListToSession(
+	        List<ScQtBsvRegistration> briefingReqDtls,
+	        Long qtId) {
+
+	    if (CollectionUtils.isEmpty(briefingReqDtls) || qtId == null) {
+	        return;
+	    }
+
+	    Map<String, Object> sessionMap = FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap();
+
+	    Long sessionQtId = (Long) sessionMap.get("briefingRegistrationQtId");
+
+	    List<ScQtBsvRegistration> briefingRegistrationList =
+	            (List<ScQtBsvRegistration>) sessionMap.get("briefingRegistrationList");
+
+	    // Different QT -> start a new list
+	    if (sessionQtId == null || !sessionQtId.equals(qtId)) {
+	        briefingRegistrationList = new ArrayList<ScQtBsvRegistration>();
+	        briefingRegistrationList.addAll(briefingReqDtls);
+
+	    }
+	    // Same QT -> append
+	    else {
+	        if (briefingRegistrationList == null) {
+	            briefingRegistrationList = new ArrayList<ScQtBsvRegistration>();
+	        }
+	        briefingRegistrationList.addAll(briefingReqDtls);
+	    }	   
+	    sessionMap.put("briefingRegistrationQtId", qtId);
+	    sessionMap.put("briefingRegistrationList", briefingRegistrationList);
+	}
+	
+	//#28188 - End
+	
+	//#28188 - Start
+	private void putApprovalRegistrationListToSession(ScQtApproval scQtApproval) {
+		if (scQtApproval == null) {
+			return;
+		}
+
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.put("scQtApprovalRegistration", scQtApproval);
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private String retrieveCommmitteeTypeDesc(Long qtId, String languageCode) {
+	 	ICommitteSO committeSO = null;
+	 	String commmitteeTypeDesc = null;
+		try{
+			committeSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							ICommitteSO.class);
+			
+			commmitteeTypeDesc = committeSO.retrieveCommitteeTypeDesc(qtId, languageCode);
+		}finally{
+			committeSO=null;	
+		}
+
+	    return commmitteeTypeDesc;
+	}
+	//#28188 - End
 }

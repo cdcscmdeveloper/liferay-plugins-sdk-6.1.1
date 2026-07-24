@@ -8,8 +8,10 @@
 
 	<ac:scRemarkAndAttachment
 		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
-		showAttachment="false"
+		showAttachment="#{approvalBackingBean.managedBean.qt.responsePeriod == null}"
+		attachmentList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachments}"
 		readonly="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
+		fileUploadListener="approvalBackingBean.handleFileUpload"
 		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
 		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
 		

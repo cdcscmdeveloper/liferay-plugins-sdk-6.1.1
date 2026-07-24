@@ -91,6 +91,11 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String buttonProcess;
 	//#29417 - End
 	private boolean fromViewSCL = false;//15851
+	
+	//#24333 - Start
+	private boolean isBondAttachmentCompleted;
+	//#24333 - End
+	
 	/**
 	 * @return the action
 	 */
@@ -818,4 +823,21 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.fromViewSCL = fromViewSCL;
 	}
 	// Enhancement 15851 - shaqimi end
+	
+	// 24333 - Start
+	/**
+	 * @return bondAttachmentCompleted the bondAttachmentCompleted
+	 */
+	public boolean isBondAttachmentCompleted() {
+		return isBondAttachmentCompleted;
+	}
+
+	/**
+	 * @param bondAttachmentCompleted
+	 *            the bondAttachmentCompleted to set
+	 */
+	public void setBondAttachmentCompleted(boolean isBondAttachmentCompleted) {
+		this.isBondAttachmentCompleted = isBondAttachmentCompleted;
+	}
+	// 24333 - End
 }

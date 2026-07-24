@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
+import my.ep.dto.sm.smSuppCatOtherDescHistory.SmSuppCatOtherDescHistoryReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -47,6 +48,7 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -68,6 +70,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -76,6 +79,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -571,8 +575,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
 	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();
 
-	// 26238
-	private Long disabledCategoryL3Id;
 
 	//#29315
 	private boolean flagMandatoryEpfNo;
@@ -606,6 +608,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmReasonDesc> selectedRejectReasonDescs;
 	private boolean showDifferenceRejection;
 	// #30974 - END
+
+	// 29379 - Site Visit Grouping Enhancement -28775 - start
+	private SmSvWorker[] selectedWorkers;
+	private List<SmSvWorker> deletedWorkers;
+	// 29379 - Site Visit Grouping Enhancement -28775 - end
+	
+	// #28778 -28775 - Start
+	private boolean specialCategoryRechecked;
+	// #28778 - End
 	
 	//29727
 	private String deleteBranchMsg;
@@ -614,12 +625,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showFacilityMachine;
 	// 31043 END
 	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
-	
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
+		
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
 	private boolean emptyMandatoryDocHistory;
@@ -651,7 +659,44 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#30762-Start 141123
 	private boolean poApproverPersonnelRoleMsg;
 	private String personnelRoleMsg; 
-	//#30762-end 	
+	//#30762-end
+	
+	// #34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	private List<SmApplSupportDoc> missinDocsMandatory;
+	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
+	//#34393 - end
+	//#31043 START
+	private boolean allowedToSiteVisit;
+	//#31043 END
+	// #34831 - Start
+	private boolean basicSupplier;
+	// #34831 - End
+
+	// 36504 - START
+	private boolean updateRecordTC;
+	private boolean otherDescChangePO;
+	private boolean otherDescChangeApprover;
+	private boolean otherDescChangeSupplier;
+	private boolean otherDescChangeSupPO;
+	private boolean otherDescChangeSupApprover;
+	private String otherDescEdited;
+	private boolean otherDescChangePOPrev;
+	private boolean otherDescChangeApproverPrev;
+	private boolean otherDescChangeSupplierPrev;
+	private boolean otherDescChangeSupPOPrev;
+	private boolean otherDescChangeSupApproverPrev;
+	private List<SmSupplierCategory> previousCategoryList;
+	private SmSupplierCategory historySuppCategory;
+	// 36504 - END
+	
+	// #40031 - Start
+	private String prevRole;
+	private String removedRoleMsg;
+	private boolean latestApplHasPrevRole;
+	// #40031 - End
 		
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -732,6 +777,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
+			
+			// #34831 - Start
+			if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)) {
+				setBasicSupplier(true);
+			}
+			// #34831 - End
 		}
 
 		defaultAddr = new SmAddress();
@@ -4078,15 +4130,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelsSsm = personnelsSsm;
 	}
 
-	//26238 - start 
-	public Long getDisabledCategoryL3Id() {
-		return disabledCategoryL3Id;
-	}
-
-	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
-		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} //26238 - end
-
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;
 	}
@@ -4382,7 +4425,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	// #15629 - END
-	
+
+	// 29379 - Site Visit Grouping Enhancement -28775 START
+	public SmSvWorker[] getSelectedWorkers() {
+		return selectedWorkers;
+	}
+
+	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
+		this.selectedWorkers = selectedWorkers;
+	}
+
+	public List<SmSvWorker> getDeletedWorkers() {
+		return deletedWorkers;
+	}
+
+	public void setDeletedWorkers(List<SmSvWorker> deletedWorkers) {
+		this.deletedWorkers = deletedWorkers;
+	}
+	// 29379 - Site Visit Grouping Enhancement -28775 END
 	//#34135 - START - Commit part from Redmine 29727
 	public List<SmSupplierBranch> getDisplayBranches() {
 		return displayBranches;
@@ -4400,16 +4460,25 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.deleteBranchMsg = deleteBranchMsg;
 	}
 
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
+	public boolean isSpecialCategoryRechecked() {
+		return specialCategoryRechecked;
 	}
 
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
+	public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
+		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
 	
+
+	//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
+
 	//30974 - start
 	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
 		return selectedRecommendRejectReasonDescs;
@@ -4428,31 +4497,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 	//30974 - end
 
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
 		return selectedInquiryResponse;
@@ -4593,5 +4637,291 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 		}
 	//30762-End 
+	//#34392 - start
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
 
+	public void setMandatoryDocsInquiry(List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
+	
+	public List<SmApplSupportDoc> getMissinDocsMandatory() {
+		return missinDocsMandatory;
+	}
+
+	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
+		this.missinDocsMandatory = missinDocsMandatory;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsNonMandatory() {
+		return missinDocsNonMandatory;
+	}
+
+	public void setMissinDocsNonMandatory(
+			List<SmApplSupportDoc> missinDocsNonMandatory) {
+		this.missinDocsNonMandatory = missinDocsNonMandatory;
+	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
+	}
+	//#34392 - end
+	//#31043 START
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
+
+	public boolean isBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(boolean basicSupplier) {
+		this.basicSupplier = basicSupplier;
+	}
+	
+	// 36504 - START
+	/**
+	 * @return the updateRecordTC
+	 */
+	public boolean isUpdateRecordTC() {
+		return updateRecordTC;
+	}
+
+	/**
+	 * @param updateRecordTC
+	 *            the updateRecordTC to set
+	 */
+	public void setUpdateRecordTC(boolean updateRecordTC) {
+		this.updateRecordTC = updateRecordTC;
+	}
+
+	/**
+	 * @return the otherDescEdited
+	 */
+	public String getOtherDescEdited() {
+		return otherDescEdited;
+	}
+
+	/**
+	 * @param otherDescEdited
+	 *            the otherDescEdited to set
+	 */
+	public void setOtherDescEdited(String otherDescEdited) {
+		this.otherDescEdited = otherDescEdited;
+	}
+
+	/**
+	 * @return the otherDescChangePO
+	 */
+	public boolean isOtherDescChangePO() {
+		return otherDescChangePO;
+	}
+
+	/**
+	 * @param otherDescChangePO the otherDescChangePO to set
+	 */
+	public void setOtherDescChangePO(boolean otherDescChangePO) {
+		this.otherDescChangePO = otherDescChangePO;
+	}
+
+	/**
+	 * @return the otherDescChangeApprover
+	 */
+	public boolean isOtherDescChangeApprover() {
+		return otherDescChangeApprover;
+	}
+
+	/**
+	 * @param otherDescChangeApprover the otherDescChangeApprover to set
+	 */
+	public void setOtherDescChangeApprover(boolean otherDescChangeApprover) {
+		this.otherDescChangeApprover = otherDescChangeApprover;
+	}
+
+	/**
+	 * @return the otherDescChangeSupplier
+	 */
+	public boolean isOtherDescChangeSupplier() {
+		return otherDescChangeSupplier;
+	}
+
+	/**
+	 * @param otherDescChangeSupplier the otherDescChangeSupplier to set
+	 */
+	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
+		this.otherDescChangeSupplier = otherDescChangeSupplier;
+	}
+
+	/**
+	 * @return the previousCategoryList
+	 */
+	public List<SmSupplierCategory> getPreviousCategoryList() {
+		return previousCategoryList;
+	}
+
+	/**
+	 * @param previousCategoryList the previousCategoryList to set
+	 */
+	public void setPreviousCategoryList(
+			List<SmSupplierCategory> previousCategoryList) {
+		this.previousCategoryList = previousCategoryList;
+	}
+
+	/**
+	 * @return the otherDescChangeSupPO
+	 */
+	public boolean isOtherDescChangeSupPO() {
+		return otherDescChangeSupPO;
+	}
+
+	/**
+	 * @param otherDescChangeSupPO the otherDescChangeSupPO to set
+	 */
+	public void setOtherDescChangeSupPO(boolean otherDescChangeSupPO) {
+		this.otherDescChangeSupPO = otherDescChangeSupPO;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApprover
+	 */
+	public boolean isOtherDescChangeSupApprover() {
+		return otherDescChangeSupApprover;
+	}
+
+	/**
+	 * @param otherDescChangeSupApprover the otherDescChangeSupApprover to set
+	 */
+	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
+		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
+	}
+
+	/**
+	 * @return the otherDescChangePOPrev
+	 */
+	public boolean isOtherDescChangePOPrev() {
+		return otherDescChangePOPrev;
+	}
+
+	/**
+	 * @param otherDescChangePOPrev the otherDescChangePOPrev to set
+	 */
+	public void setOtherDescChangePOPrev(boolean otherDescChangePOPrev) {
+		this.otherDescChangePOPrev = otherDescChangePOPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeApproverPrev
+	 */
+	public boolean isOtherDescChangeApproverPrev() {
+		return otherDescChangeApproverPrev;
+	}
+
+	/**
+	 * @param otherDescChangeApproverPrev the otherDescChangeApproverPrev to set
+	 */
+	public void setOtherDescChangeApproverPrev(boolean otherDescChangeApproverPrev) {
+		this.otherDescChangeApproverPrev = otherDescChangeApproverPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupplierPrev
+	 */
+	public boolean isOtherDescChangeSupplierPrev() {
+		return otherDescChangeSupplierPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupplierPrev the otherDescChangeSupplierPrev to set
+	 */
+	public void setOtherDescChangeSupplierPrev(boolean otherDescChangeSupplierPrev) {
+		this.otherDescChangeSupplierPrev = otherDescChangeSupplierPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupPOPrev
+	 */
+	public boolean isOtherDescChangeSupPOPrev() {
+		return otherDescChangeSupPOPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupPOPrev the otherDescChangeSupPOPrev to set
+	 */
+	public void setOtherDescChangeSupPOPrev(boolean otherDescChangeSupPOPrev) {
+		this.otherDescChangeSupPOPrev = otherDescChangeSupPOPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApproverPrev
+	 */
+	public boolean isOtherDescChangeSupApproverPrev() {
+		return otherDescChangeSupApproverPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupApproverPrev the otherDescChangeSupApproverPrev to set
+	 */
+	public void setOtherDescChangeSupApproverPrev(
+			boolean otherDescChangeSupApproverPrev) {
+		this.otherDescChangeSupApproverPrev = otherDescChangeSupApproverPrev;
+	}
+
+	/**
+	 * @return the historySuppCategory
+	 */
+	public SmSupplierCategory getHistorySuppCategory() {
+		return historySuppCategory;
+	}
+
+	/**
+	 * @param historySuppCategory the historySuppCategory to set
+	 */
+	public void setHistorySuppCategory(SmSupplierCategory historySuppCategory) {
+		this.historySuppCategory = historySuppCategory;
+	}
+	// 36504 - END
+	
+	// #40031 - Start
+	public String getPrevRole() {
+		return prevRole;
+	}
+
+	public void setPrevRole(String prevRole) {
+		this.prevRole = prevRole;
+	}
+
+	public String getRemovedRoleMsg() {
+		return removedRoleMsg;
+	}
+
+	public void setRemovedRoleMsg(String removedRoleMsg) {
+		this.removedRoleMsg = removedRoleMsg;
+	}
+
+	public boolean isLatestApplHasPrevRole() {
+		return latestApplHasPrevRole;
+	}
+
+	public void setLatestApplHasPrevRole(boolean latestApplHasPrevRole) {
+		this.latestApplHasPrevRole = latestApplHasPrevRole;
+	}
+	// #40031 - End
 }

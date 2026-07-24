@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.govtsellerregistration;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +28,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -68,6 +70,15 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 import org.apache.log4j.Logger;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBankInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+//#28895_35501 End
 
 @ManagedBean(name = "govtSellerBackingBean")
 @RequestScoped
@@ -141,9 +152,11 @@ public class GovtSellerRegistrationBackingBean extends
 						.setDefaultAddr(null)));
 		getManagedBean().setApplType(
 				SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
+		//#34159 - START
 		initCompanyAddressSelectItems(getManagedBean().getSmAppl()
 				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
-				.getSmAddress());
+				.getSmAddress(), "ACC_MAINTENANCE");
+		//#34159 - END
 		// init gst
 		getInstance().initGstInfo(getManagedBean().getSmSupp(),
 				getManagedBean(), true);
@@ -155,6 +168,10 @@ public class GovtSellerRegistrationBackingBean extends
 		initBankBranches();
 		//START 17906
 		if(this.getManagedBean().getSmSupp().getSmAppl() != null && this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks() != null){
+			// #28895_35501 Start - AUDIT TRAIL SM
+			this.getManagedBean().setOldBanks(
+					CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()));
+			// #28895_35501 End
 			StringBuilder sb = new StringBuilder();
 			for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
 				if(bank.getAccountNo() != null){
@@ -729,6 +746,11 @@ public class GovtSellerRegistrationBackingBean extends
 						new ArrayList<SelectItem>());
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			if (country != null) {
@@ -746,6 +768,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			if (country != null) {
@@ -763,14 +786,23 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			if (country != null) {
-				getManagedBean().setBranchCompanyStates(
-						SmCommonUtil.getStateList(country.getCountryId()));
-				getManagedBean().setBranchCompanyDistricts(
-						new ArrayList<SelectItem>());
-				getManagedBean().setBranchCompanyCities(
-						new ArrayList<SelectItem>());
+				//#34159 - START
+				if(country.getCountryId() != null){
+					getManagedBean().setBranchCompanyStates(SmCommonUtil.getStateList(country.getCountryId()));
+				} else {
+					getManagedBean().setBranchCompanyStates(new ArrayList<SelectItem>());
+				}
+				getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+				getManagedBean().setBranchCompanyDistricts(new ArrayList<SelectItem>());
+				getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());
+				getManagedBean().getSelectedBranch().getSmAddress().setPmState(new PmState());
+				getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(new PmDivision());
+				getManagedBean().getSelectedBranch().getSmAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getSelectedBranch().getSmAddress().setPmCity(new PmCity());
+				//#34159 - END
 			} else {
 				getManagedBean().setBranchCompanyStates(
 						new ArrayList<SelectItem>());
@@ -779,6 +811,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 
@@ -808,6 +841,11 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().setAdoptDivision(false);
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDivision(null);
+				//#34159 - START - Reset District when change state
+				if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId() !=null){
+					this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().setDistrictId(null);
+				}
+				//#34159 - END
 			} 
 			if(states !=null && states.getAdoptDivision()) {
 				getManagedBean().setDivisionBox(false);	
@@ -818,6 +856,11 @@ public class GovtSellerRegistrationBackingBean extends
 						districtLs);
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			//13320-Start
@@ -840,6 +883,11 @@ public class GovtSellerRegistrationBackingBean extends
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSmPermenantAdd().setPmDivision(null);
 				getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
+				//#34159 - START - Reset District when change state
+				if(getManagedBean().getSmPermenantAdd().getPmDistrict().getDistrictId() !=null){
+					getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
+				}
+				//#34159 - END
 
 			} if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
@@ -850,6 +898,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			//13320-Start
@@ -866,7 +915,14 @@ public class GovtSellerRegistrationBackingBean extends
 				
 				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(true);
 			}else{
+				//#34159 - remove division for non-Sarawak
+				this.getManagedBean().getSmResAdd().setPmDivision(null);
 				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
+				//#34159 - START - Reset District when change state
+				if(getManagedBean().getSmResAdd().getPmDistrict().getDistrictId() !=null){
+					getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
+				}
+				//#34159 - END
 
 			}if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
@@ -878,6 +934,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			//13320-Start
 			Long stateId = state.getStateId();
@@ -895,6 +952,11 @@ public class GovtSellerRegistrationBackingBean extends
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(null);
 				getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
+				//#34159 - START - Reset District when change state
+				if(this.getManagedBean().getSelectedBranch().getSmAddress().getPmDistrict().getDistrictId() !=null){
+					this.getManagedBean().getSelectedBranch().getSmAddress().setPmDistrict(new PmDistrict());
+				}
+				//#34159 - END
 
 			} if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
@@ -905,6 +967,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 
@@ -920,11 +983,22 @@ public class GovtSellerRegistrationBackingBean extends
 	public void onChangeDistrict(PmDistrict district, String addrType) {
 		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
 			if (district != null) {
-				getManagedBean().setBusinessCityLs(
-						SmCommonUtil.getCityList(district.getDistrictId()));
+				//#34159 - START
+				if(district.getDistrictId() != null){
+					getManagedBean().setBusinessCityLs(SmCommonUtil.getCityList(district.getDistrictId()));
+				} else {
+					this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+				}
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmCity(new PmCity());
+				//#34159 - END
 			} else {
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			if (district != null) {
@@ -934,6 +1008,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			if (district != null) {
@@ -943,16 +1018,50 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			if (district != null) {
-				getManagedBean().setBranchCompanyCities(
-						SmCommonUtil.getCityList(district.getDistrictId()));
+				//#34159 - START
+				if(district.getDistrictId() != null){
+					getManagedBean().setBranchCompanyCities(SmCommonUtil.getCityList(district.getDistrictId()));
+				} else {
+					this.getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());
+				}
+				this.getManagedBean().getSelectedBranch().getSmAddress().setPmCity(new PmCity());
+				//#34159 - END
 			} else {
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
+	//#36718 - START
+	/**
+	 * Reset postcode when change city DropDown
+	 * 
+	 * @param PmCity
+	 *            city
+	 * @param String
+	 *            addrType
+	 */
+	public void onChangeCity(PmCity city, String addrType) {
+		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+		}
+		else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode("");
+		}
+		else if (addrType != null && addrType.equals("USER_PERMANENT_ADDRESS")) {
+			this.getManagedBean().getSmPermenantAdd().setPostcode("");
+		}
+		else if (addrType != null && addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
+			this.getManagedBean().getSmResAdd().setPostcode("");
+		}
+	}
+	//#36718 - END
 
 	/**
 	 * Proceed to user registration
@@ -1067,6 +1176,13 @@ public class GovtSellerRegistrationBackingBean extends
 				//SmCommonUtil.redirectToPage(
 				//		"/xhtml/sm/onlinereg/outputMsg.xhtml",
 				//		MessageConst.INFO_721013, null, null);
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/onlinereg/outputMsg.xhtml",
 						MessageConst.INFO_721016, null, null);
@@ -1216,10 +1332,16 @@ public class GovtSellerRegistrationBackingBean extends
 	 *            address
 	 */
 	private void initBranchAddressSelectItems(SmAddress address) {
-		onChangeCountry(address.getPmCountry(), "BRANCH_ADDRESS");
-		onChangeState(address.getPmState(), "BRANCH_ADDRESS");
-		onChangeDivision(address.getPmDivision(), "BRANCH_ADDRESS");//13320
-		onChangeDistrict(address.getPmDistrict(), "BRANCH_ADDRESS");
+		//#34159 - START - refactor this method
+		getManagedBean().setBranchCompanyStates(SmCommonUtil.getStateList(address.getPmCountry().getCountryId()));
+		if(address.getPmDivision() != null && address.getPmDivision().getDivisionId() != null){
+			getManagedBean().setBranchCompanyDivisions(SmCommonUtil.getDivisionList(address.getPmState().getStateId()));
+			getManagedBean().setBranchCompanyDistricts(SmCommonUtil.getDistrictListByID(address.getPmDivision().getDivisionId()));
+		} else {
+			getManagedBean().setBranchCompanyDistricts(SmCommonUtil.getDistrictList(address.getPmState().getStateId()));
+		}
+		getManagedBean().setBranchCompanyCities(SmCommonUtil.getCityList(address.getPmDistrict().getDistrictId()));
+		//#34159 - END
 	}
 
 	/**
@@ -1323,7 +1445,7 @@ public class GovtSellerRegistrationBackingBean extends
 
 		getManagedBean().setSmSupp(sup);
 		getManagedBean().setSmAppl(appl);
-		initCompanyAddressSelectItems(addr);//change place(syazwan code)
+		initCompanyAddressSelectItems(addr, "ACC_REGISTRATION");//change place(syazwan code) //#34159
 
 	}
 
@@ -1372,13 +1494,26 @@ public class GovtSellerRegistrationBackingBean extends
 	 * @param SmAddress
 	 *            addr
 	 */
-	private void initCompanyAddressSelectItems(SmAddress addr) {
+	//#34159 - START - refactor this method
+	private void initCompanyAddressSelectItems(SmAddress addr, String  panelPortlet) {
 		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
-		onChangeCountry(addr.getPmCountry(), "COMPANY_ADDRESS");
-		onChangeState(addr.getPmState(), "COMPANY_ADDRESS");
-		onChangeDivision(addr.getPmDivision(), "COMPANY_ADDRESS");//13320
-		onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
+		if(panelPortlet.equals("ACC_MAINTENANCE")){
+			getManagedBean().setBusinessStateLs(SmCommonUtil.getStateList(addr.getPmCountry().getCountryId()));
+			if(addr.getPmDivision() != null && addr.getPmDivision().getDivisionId() != null){
+				getManagedBean().setBusinessDivisionLs(SmCommonUtil.getDivisionList(addr.getPmState().getStateId()));
+				getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictListByID(addr.getPmDivision().getDivisionId()));
+			} else {
+				getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(addr.getPmState().getStateId()));
+			}
+			getManagedBean().setBusinessCityLs(SmCommonUtil.getCityList(addr.getPmDistrict().getDistrictId()));
+		} else {
+			onChangeCountry(addr.getPmCountry(), "COMPANY_ADDRESS");
+			onChangeState(addr.getPmState(), "COMPANY_ADDRESS");
+			onChangeDivision(addr.getPmDivision(), "COMPANY_ADDRESS");//13320
+			onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
+		}
 	}
+	//#34159 - END
 
 	/**
 	 * Initialized user permanent address drop down values
@@ -1466,6 +1601,8 @@ public class GovtSellerRegistrationBackingBean extends
 		smPersonnel
 				.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		smPersonnel.setClerical(true);
+		smPersonnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
+		
 		if (smPersonnel.getTitle() != null
 				&& smPersonnel.getTitle().getSalutationId() == null) {
 			smPersonnel.setTitle(null);
@@ -1925,28 +2062,67 @@ public class GovtSellerRegistrationBackingBean extends
 	public void onChangeDivision(PmDivision division, String addrType) {
 		if ((addrType != null && addrType.equals("COMPANY_ADDRESS"))) {
 			if (division != null) {
-				List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(division.getDivisionId());
-				this.getManagedBean().setBusinessDistrictLs(divisionLs);
+				//#34159 - START
+				if(division.getDivisionId() != null){
+					List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(division.getDivisionId());
+					this.getManagedBean().setBusinessDistrictLs(divisionLs);
+				} else {
+					this.getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
+				}
 				this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmCity(new PmCity());
+				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+				//#34159 - END
 			}
 		} else if (addrType != null && addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			if (division != null) {
-				List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(division.getDivisionId());
-				this.getManagedBean().setResidentialDistrictLs(divisionLs);
+				//#34159 - START
+				if(division.getDivisionId() != null) {
+					List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(division.getDivisionId());
+					this.getManagedBean().setResidentialDistrictLs(divisionLs);
+				} else {
+					this.getManagedBean().setResidentialDistrictLs(new ArrayList<SelectItem>());
+				}
 				this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
+				this.getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
+				this.getManagedBean().getSmResAdd().setPmCity(new PmCity());
+				this.getManagedBean().getSmResAdd().setPostcode("");
+				//#34159 - END
 			}
 		} else if (addrType != null && addrType.equals("USER_PERMANENT_ADDRESS")) {
 			if (division != null) {
-				List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(division.getDivisionId());
-				this.getManagedBean().setPermenantDistrictLs(divisionLs);
+				//#34159 - START
+				if(division.getDivisionId() != null){
+					List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(division.getDivisionId());
+					this.getManagedBean().setPermenantDistrictLs(divisionLs);
+				} else {
+					this.getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
+				}
 				this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
+				this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
+				this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
+				this.getManagedBean().getSmPermenantAdd().setPostcode("");
+				//#34159 - END
+				
 			}
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			if (division != null) {
-				List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(division.getDivisionId());
-				this.getManagedBean().setBranchCompanyDistricts(divisionLs);
+				//#34159 - START
+				if(division.getDivisionId() != null){
+					List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(division.getDivisionId());
+					this.getManagedBean().setBranchCompanyDistricts(divisionLs);
+				} else {
+					this.getManagedBean().setBranchCompanyDistricts(new ArrayList<SelectItem>());
+				}
 				this.getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());
+				this.getManagedBean().getSelectedBranch().getSmAddress().setPmDistrict(new PmDistrict());
+				this.getManagedBean().getSelectedBranch().getSmAddress().setPmCity(new PmCity());
+				//#34159 - END
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 	//13320-End
@@ -1960,4 +2136,25 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 	//14685 - END
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getSmPersonnel().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getSmPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+
+	public void onChangeConfirmEmail() {
+		String email = this.getManagedBean().getConfirmEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().setConfirmEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
+	//#34400
+	public void onCallFirstUserTncDialog(){
+		getManagedBean().setAggreeDeclareAdmin(false);
+	}
 }

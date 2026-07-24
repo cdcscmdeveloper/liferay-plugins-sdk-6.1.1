@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.loa;
 
-import java.util.ArrayList; //#26475
 import java.util.List;
 import java.util.Locale;
 
@@ -161,7 +160,9 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		} else {
 			getManagedBean().getScLoa().setBondReq(false);
 		}
-		calcBondAmountWithSST(getManagedBean().getScLoa(), isDirectLOA()); //Bug #35227@Syazani 20/10/2022
+		// Reopen #25726 note 220 - issue 5	
+		//calcBondAmountWithSST(getManagedBean().getScLoa(), isDirectLOA()); //Bug #35227@Syazani 20/10/2022
+
 	}
 	
 	/**

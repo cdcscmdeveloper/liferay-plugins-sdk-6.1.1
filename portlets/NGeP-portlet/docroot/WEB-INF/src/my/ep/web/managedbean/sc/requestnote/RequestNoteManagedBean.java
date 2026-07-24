@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -29,10 +30,12 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;//#27868
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote; //#26059
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -43,6 +46,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.sc.requestnote.CommodityGroup;//#26059
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -340,12 +344,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	private	Object[] selectedPrDtls;
 	
-	//26284 - Start
+	// 26284 - Start
 	private List<DisciplinaryActionVO> disciplineVOs;
-	private String disciplinaryActionstartDate;
+	private List<DisciplinaryActionVO> disciplineVOListDp;
+	private String disciplinaryActionStartDate;
 	private String disciplinaryActionEndDate;
 	private boolean disciplinaryActionWarning = false;
-	//26284 - End
+	private boolean disciplinaryActionCancelRegistration = false;
+	private boolean disciplinaryActionBlacklist = false;
+	private boolean disciplinaryActionPendingTransaction = false;
+	private boolean disciplinaryActionDeletedDue = false;
+	private String popupMessage;
+	// 26284 - End
 	
 	//12183 - Start
 	private boolean pidValidityExpired = false;
@@ -377,6 +387,57 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean purchaseInquiryContinuity = Boolean.FALSE;
     //29557 - End
     
+    //#28895#35492 - Start
+    private PurchaseRequestResDTO purchaseRequestResDTO;
+    //#28895#35492 - End
+    
+	// #25790 - start
+	/** The continuity page session */
+	private String continuityPageSession = "";
+
+	/** The purchase request map list */
+	private List<Map<String, String>> purchaseRequestMapList;
+
+	/** The loa map list */
+	private List<Map<String, String>> loaMapList;
+
+	/** The pid flag */
+	private boolean showPurchaseInDefault = Boolean.FALSE;
+
+	/** The request note dtl. */
+	private ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
+
+	// #25790 - end
+	
+	//#36119 - start
+    /** The new sourcing dp bpm version flag */
+    private boolean sourcingDpNewBpmVer = Boolean.FALSE;
+    //#36119 - end
+	// 27868 & 35321 - start
+    private Date createdDate;
+    private PmParameter selectedOrgType;
+    private PmUserOrg selectedUserPtj;
+    private String supplierAccountTypeErrorMessage;
+	private PmOrgProfile selectedPtj;
+	private PmOrgProfile ministryOrgProfile;
+	private Integer saveIndex;
+	private Map<Long, Object> thresholdDataReasonGroupMap;	
+	private Integer currentGroupIndex = 0;
+	// 27868 & 35321 - end
+    
+	// #26059 - Start
+	private boolean bpkApproverMode = Boolean.FALSE;
+	private boolean rnExceedThreshold = Boolean.FALSE;
+	private boolean showAttachments = Boolean.TRUE;
+	private boolean containRejectDecision = Boolean.FALSE;
+	private List<CommodityGroup> commodityGroups = new ArrayList<>();
+	private Integer counter = 0;
+	private Integer counterReason = 0;
+	private boolean existInAssignItemDetail = Boolean.FALSE;
+	private ScQuote scQuote;
+	private String selectedBpmAction;
+	// #26059 - End
+
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2010,40 +2071,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.selectedCondition = selectedCondition;
 	}
 	
-	//26284 - Start
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
-	}
-
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
-	}
-
-	public String getDisciplinaryActionStartDate() {
-		return disciplinaryActionstartDate;
-	}
-
-	public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
-		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
-	}
-
-	public String getDisciplinaryActionEndDate() {
-		return disciplinaryActionEndDate;
-	}
-
-	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
-		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
-	}
-		
-	public boolean isDisciplinaryActionWarning() {
-		return disciplinaryActionWarning;
-	}
-
-	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
-		this.disciplinaryActionWarning = disciplinaryActionWarning;
-	}
-	//26284 - End
-	
 	//12183 - Start
 	public boolean isPidValidityExpired() {
 		return pidValidityExpired;
@@ -2178,4 +2205,556 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.purchaseInquiryContinuity = purchaseInquiryContinuity;
 	}
 	// 29557 - End
+	
+	// #28895#35492 - Start
+	public PurchaseRequestResDTO getPurchaseRequestResDTO() {
+		return purchaseRequestResDTO;
+	}
+
+	public void setPurchaseRequestResDTO(PurchaseRequestResDTO purchaseRequestResDTO) {
+		this.purchaseRequestResDTO = purchaseRequestResDTO;
+	}
+	// #28895#35492 - End
+	
+	// #25790 - start
+	/**
+	 * @return the continuityPageSession
+	 */
+	public String getContinuityPageSession() {
+		return continuityPageSession;
+	}
+
+	/**
+	 * Sets the continuity Page Session.
+	 * 
+	 * @param continuityPageSession
+	 *            the continuity Page Session
+	 */
+	public void setContinuityPageSession(String continuityPageSession) {
+		this.continuityPageSession = continuityPageSession;
+	}
+
+	/**
+	 * @return the purchaseRequestMapList
+	 */
+	public List<Map<String, String>> getPurchaseRequestMapList() {
+		if (purchaseRequestMapList == null) {
+			purchaseRequestMapList = new ArrayList<>();
+		}
+		return purchaseRequestMapList;
+	}
+
+	/**
+	 * Sets the purchase Request Map List.
+	 * 
+	 * @param purchaseRequestMapList
+	 *            the purchase Request Map List
+	 */
+	public void setPurchaseRequestMapList(List<Map<String, String>> purchaseRequestMapList) {
+		this.purchaseRequestMapList = purchaseRequestMapList;
+	}
+
+	/**
+	 * @return the loaMapList
+	 */
+	public List<Map<String, String>> getLoaMapList() {
+		if (loaMapList == null) {
+			loaMapList = new ArrayList<>();
+		}
+		return loaMapList;
+	}
+
+	/**
+	 * Sets the loa Map List.
+	 * 
+	 * @param loaMapList
+	 *            the loa Map List
+	 */
+	public void setLoaMapList(List<Map<String, String>> loaMapList) {
+		this.loaMapList = loaMapList;
+	}
+
+	/**
+	 * @return the showPurchaseInDefault
+	 */
+	public boolean isShowPurchaseInDefault() {
+		return showPurchaseInDefault;
+	}
+
+	/**
+	 * Sets the purchase in default flag.
+	 * 
+	 * @param showPurchaseInDefault
+	 *            the purchase in default flag
+	 */
+	public void setShowPurchaseInDefault(boolean showPurchaseInDefault) {
+		this.showPurchaseInDefault = showPurchaseInDefault;
+	}
+
+	/**
+	 * @return the scRequestNoteDtl
+	 */
+	public ScRequestNoteDtl getScRequestNoteDtl() {
+		return scRequestNoteDtl;
+	}
+
+	/**
+	 * Sets the scRequestNoteDtl.
+	 * 
+	 * @param scRequestNoteDtl
+	 *            the scRequestNoteDtl to set
+	 */
+	public void setScRequestNoteDtl(ScRequestNoteDtl scRequestNoteDtl) {
+		this.scRequestNoteDtl = scRequestNoteDtl;
+	}
+	// #25790 - end
+	
+	// #36119 - start
+	/**
+	 * @return the sourcingDpNewVerBpm
+	 */
+	public boolean isSourcingDpNewBpmVer() {
+		return sourcingDpNewBpmVer;
+	}
+
+	/**
+	 * Sets the new sourcingdp bpm version flag.
+	 * 
+	 * @param sourcingDpNewVerBpm
+	 *            the purchase in default flag
+	 */
+	public void setSourcingDpNewBpmVer(boolean sourcingDpNewBpmVer) {
+		this.sourcingDpNewBpmVer = sourcingDpNewBpmVer;
+	}
+	// #36119 - end
+	
+	//#26284 - Start
+	/**
+	 * @return the disciplinaryActionCancelRegistration
+	 */
+	public boolean isDisciplinaryActionCancelRegistration() {
+		return disciplinaryActionCancelRegistration;
+	}
+
+	/**
+	 * @param disciplinaryActionCancelRegistration
+	 *            the disciplinaryActionCancelRegistration to set
+	 */
+	public void setDisciplinaryActionCancelRegistration(boolean disciplinaryActionCancelRegistration) {
+		this.disciplinaryActionCancelRegistration = disciplinaryActionCancelRegistration;
+	}
+
+	/**
+	 * @return the disciplinaryActionBlacklist
+	 */
+	public boolean isDisciplinaryActionBlacklist() {
+		return disciplinaryActionBlacklist;
+	}
+
+	/**
+	 * @param disciplinaryActionBlacklist
+	 *            the disciplinaryActionBlacklist to set
+	 */
+	public void setDisciplinaryActionBlacklist(boolean disciplinaryActionBlacklist) {
+		this.disciplinaryActionBlacklist = disciplinaryActionBlacklist;
+	}
+
+	/**
+	 * @return the disciplineVOListDp
+	 */
+	public List<DisciplinaryActionVO> getDisciplineVOListDp() {
+		return disciplineVOListDp;
+	}
+
+	/**
+	 * @param disciplineVOListDp
+	 *            the disciplineVOListDp to set
+	 */
+	public void setDisciplineVOListDp(List<DisciplinaryActionVO> disciplineVOListDp) {
+		this.disciplineVOListDp = disciplineVOListDp;
+	}
+
+	/**
+	 * @return the popupMessage
+	 */
+	public String getPopupMessage() {
+		return popupMessage;
+	}
+
+	/**
+	 * @param popupMessage
+	 *            the popupMessage to set
+	 */
+	public void setPopupMessage(String popupMessage) {
+		this.popupMessage = popupMessage;
+	}
+
+	/**
+	 * @return the disciplineVOs
+	 */
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	/**
+	 * @param disciplineVOs
+	 *            the disciplineVOs to set
+	 */
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	/**
+	 * @return the disciplinaryActionStartDate
+	 */
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionStartDate;
+	}
+
+	/**
+	 * @param disciplinaryActionStartDate
+	 *            the disciplinaryActionStartDate to set
+	 */
+	public void setDisciplinaryActionStartDate(String disciplinaryActionStartDate) {
+		this.disciplinaryActionStartDate = disciplinaryActionStartDate;
+	}
+
+	/**
+	 * @return the disciplinaryActionEndDate
+	 */
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	/**
+	 * @param disciplinaryActionEndDate
+	 *            the disciplinaryActionEndDate to set
+	 */
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+
+	/**
+	 * @return the disciplinaryActionWarning
+	 */
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+
+	/**
+	 * @param disciplinaryActionWarning
+	 *            the disciplinaryActionWarning to set
+	 */
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	
+	/**
+	 * @return the disciplinaryActionPendingTransaction
+	 */
+	public boolean isDisciplinaryActionPendingTransaction() {
+		return disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @return the disciplinaryActionDeletedDue
+	 */
+	public boolean isDisciplinaryActionDeletedDue() {
+		return disciplinaryActionDeletedDue;
+	}
+
+	/**
+	 * @param disciplinaryActionPendingTransaction the disciplinaryActionPendingTransaction to set
+	 */
+	public void setDisciplinaryActionPendingTransaction(boolean disciplinaryActionPendingTransaction) {
+		this.disciplinaryActionPendingTransaction = disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @param disciplinaryActionDeletedDue the disciplinaryActionDeletedDue to set
+	 */
+	public void setDisciplinaryActionDeletedDue(boolean disciplinaryActionDeletedDue) {
+		this.disciplinaryActionDeletedDue = disciplinaryActionDeletedDue;
+	}
+	// #26284 - End
+	
+	// 27868 & 35321 - start
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public PmParameter getSelectedOrgType() {
+		if (this.selectedOrgType == null) {
+			this.selectedOrgType = new PmParameter();
+		}
+		return selectedOrgType;
+	}
+
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
+	}
+	
+	public PmUserOrg getSelectedUserPtj() {
+		return selectedUserPtj;
+	}
+
+	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
+		this.selectedUserPtj = selectedUserPtj;
+	}
+	
+
+	public PmOrgProfile getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	public void setSelectedPtj(PmOrgProfile selectedPtj) {
+		this.selectedPtj = selectedPtj;
+	}
+	
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
+
+	/**
+	 * @return the getSupplierAccountTypeErrorMessage
+	 */
+	public String getSupplierAccountTypeErrorMessage() {
+		return supplierAccountTypeErrorMessage;
+	}
+
+	/**
+	 * @param getSupplierAccountTypeErrorMessage the getSupplierAccountTypeErrorMessage to set
+	 */
+	public void setSupplierAccountTypeErrorMessage(String getSupplierAccountTypeErrorMessage) {
+		this.supplierAccountTypeErrorMessage = getSupplierAccountTypeErrorMessage;
+	}
+
+	public Integer getSaveIndex() {
+		return saveIndex;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setSaveIndex(Integer saveIndex) {
+		this.saveIndex = saveIndex;
+	}
+	
+	/**
+	 * @return the thresholdDataReasonGroupMap
+	 */
+	public Map<Long, Object> getThresholdDataReasonGroupMap() {
+	    return thresholdDataReasonGroupMap;
+	}
+
+	/**
+	 * @param thresholdDataReasonGroupMap the thresholdDataReasonGroupMap to set
+	 */
+	public void setThresholdDataReasonGroupMap(Map<Long, Object> thresholdDataReasonGroupMap) {
+	    this.thresholdDataReasonGroupMap = thresholdDataReasonGroupMap;
+	}
+	
+	public Integer getCurrentGroupIndex() {
+		return currentGroupIndex;
+	}
+
+	public void setCurrentGroupIndex(Integer currentGroupIndex) {
+		this.currentGroupIndex = currentGroupIndex;
+	}
+	// 27868 & 35321 - end
+	// #26059 - start
+	/**
+	 * Checks if the current mode is BPK Approver mode.
+	 * 
+	 * @return {@code true} if in BPK Approver mode, {@code false} otherwise.
+	 */
+	public boolean isBpkApproverMode() {
+		return bpkApproverMode;
+	}
+
+	/**
+	 * Sets the BPK Approver mode.
+	 * 
+	 * @param bpkApproverMode
+	 *            {@code true} to enable BPK Approver mode, {@code false} to
+	 *            disable.
+	 */
+	public void setBpkApproverMode(boolean bpkApproverMode) {
+		this.bpkApproverMode = bpkApproverMode;
+	}
+
+	/**
+	 * Retrieves the list of commodity groups.
+	 * 
+	 * @return A list of {@link CommodityGroup} objects.
+	 */
+	public List<CommodityGroup> getCommodityGroups() {
+		return commodityGroups;
+	}
+
+	/**
+	 * Sets the list of commodity groups.
+	 * 
+	 * @param commodityGroups
+	 *            The list of {@link CommodityGroup} objects to set.
+	 */
+	public void setCommodityGroups(List<CommodityGroup> commodityGroups) {
+		this.commodityGroups = commodityGroups;
+	}
+
+	/**
+	 * Checks if the Request Note (RN) exceeds the threshold.
+	 * 
+	 * @return {@code true} if the RN exceeds the threshold, {@code false}
+	 *         otherwise.
+	 */
+	public boolean isRnExceedThreshold() {
+		return rnExceedThreshold;
+	}
+
+	/**
+	 * Sets whether the Request Note (RN) exceeds the threshold.
+	 * 
+	 * @param rnExceedThreshold
+	 *            {@code true} if the RN exceeds the threshold, {@code false}
+	 *            otherwise.
+	 */
+	public void setRnExceedThreshold(boolean rnExceedThreshold) {
+		this.rnExceedThreshold = rnExceedThreshold;
+	}
+
+	/**
+	 * Checks if attachments should be shown.
+	 * 
+	 * @return {@code true} if attachments should be shown, {@code false}
+	 *         otherwise.
+	 */
+	public boolean isShowAttachments() {
+		return showAttachments;
+	}
+
+	/**
+	 * Sets whether attachments should be shown.
+	 * 
+	 * @param showAttachments
+	 *            {@code true} to show attachments, {@code false} to hide them.
+	 */
+	public void setShowAttachments(boolean showAttachments) {
+		this.showAttachments = showAttachments;
+	}
+
+	/**
+	 * Retrieves the current counter value.
+	 * 
+	 * @return The counter value as an {@link Integer}.
+	 */
+	public Integer getCounter() {
+		return counter;
+	}
+
+	/**
+	 * Sets the counter value.
+	 * 
+	 * @param counter
+	 *            The counter value to set.
+	 */
+	public void setCounter(Integer counter) {
+		this.counter = counter;
+	}
+
+	
+	/**
+	 * Retrieves the current counter reason value.
+	 * 
+	 * @return The counter reason value as an {@link Integer}.
+	 */
+	public Integer getCounterReason() {
+		return counterReason;
+	}
+
+	/**
+	 * Sets the counter reason value.
+	 * 
+	 * @param counter
+	 *            The counter reason value to set.
+	 */
+	public void setCounterReason(Integer counterReason) {
+		this.counterReason = counterReason;
+	}
+
+	/**
+	 * Checks if any item has a reject decision.
+	 */
+	public boolean isContainRejectDecision() {
+		return containRejectDecision;
+	}
+
+	/**
+	 * Sets the reject decision status.
+	 */
+	public void setContainRejectDecision(boolean containRejectDecision) {
+		this.containRejectDecision = containRejectDecision;
+	}
+
+	/**
+	 * @return the existInAssignItemDetail
+	 */
+	public boolean isExistInAssignItemDetail() {
+		return existInAssignItemDetail;
+	}
+
+	/**
+	 * @param existInAssignItemDetail
+	 *            the existInAssignItemDetail to set
+	 */
+	public void setExistInAssignItemDetail(boolean existInAssignItemDetail) {
+		this.existInAssignItemDetail = existInAssignItemDetail;
+	}
+
+	/**
+	 * @return the scQuote
+	 */
+	public ScQuote getScQuote() {
+		return scQuote;
+	}
+
+	/**
+	 * @param scQuote
+	 *            the scQuote to set
+	 */
+	public void setScQuote(ScQuote scQuote) {
+		this.scQuote = scQuote;
+	}
+	
+	/**
+	 * @return the selectedBpmAction
+	 */
+	public String getSelectedBpmAction() {
+		return selectedBpmAction;
+	}
+
+	/**
+	 * @param selectedBpmAction the selectedBpmAction to set
+	 */
+	public void setSelectedBpmAction(String selectedBpmAction) {
+		this.selectedBpmAction = selectedBpmAction;
+	}
+
+	// #26059 - end
 }

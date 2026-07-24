@@ -31,20 +31,11 @@
 			
 			<p:column headerText="#{lbl['lbl.sm.virtual.cert.download']}">
 				<div align="center">
-				<!-- 28175 - START -->
 				<p:commandButton
 					value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
-					onclick="blockWidget.show(); PrimeFaces.monitorDownload(start, null)"
 					ajax="false">
 					<p:fileDownload value="#{viewSmApplBackingBean.printVirtualCert(mofCert)}" />
 				</p:commandButton>
-				
-				<script type="text/javascript">  
-				    function start() {  
-				        blockWidget.hide();
-				    }  
-				</script>  
-				<!-- 28175 - END -->
 				</div>
 			</p:column>
 		</p:dataTable>

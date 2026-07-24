@@ -109,7 +109,14 @@
 
 				<p:column headerText="#{lbl['lbl.sc.name']}"
 					style="white-space:normal;">
-					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					<ui:remove>12471 start</ui:remove>
+					<p:commandLink
+						actionListener="#{suppFinalMeetingBackingBean.onClickMemberInfo(committeeMember.pmUser)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						process="@this" update="@([id$=memberInfoPopup])">
+						<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					</p:commandLink>
+					<ui:remove>12471 end</ui:remove>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
@@ -142,18 +149,28 @@
 				<ui:fragment	rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
 					<h:outputText value="#{meetingBB.getFCMemberRole(committeeMember.memberRole)}" />
 				</ui:fragment>
-				<ui:fragment rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
-				<p:selectOneMenu id="meetingRoleId" required="true"
+				<ui:fragment
+					rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
+					<ui:param name="filteredRoles" value="#{fn:split('S',',')}" />
+					<p:selectOneMenu id="meetingRoleId" required="true"
 						label="#{lbl['lbl.sc.role']}"
 						value="#{committeeMember.memberRoleId}"
-						style="width: 110px;margin-bottom: 5px;" 
+						style="width: 110px;margin-bottom: 5px;"
 						disabled="#{!isCommitteeUpdatable}">
-						<f:selectItems
-							value="#{meetingBB.getRoleTypeDropdownValues(committeeMember.PNP,meetingBB.managedBean.scQt,committeeMember.pmUser)}" />
-						<p:ajax event="change" update="memberListTbl" process="@this" partialSubmit="true" listener="#{meetingBB.changeMemberRole(index,meetingBB.managedBean.committeeMembersList)}"></p:ajax>
+						<p:ajax event="change" partialSubmit="true" process="@this" update="memberListTbl"
+								listener="#{meetingBB.onChangeRole(committeeMember)}" /><!-- #35500 issue fix 4-9 -->
+						<!-- 38067 start -->
+						<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+							value="#{meetingBB.getSFRoleDesc(committeeMember.pmUser)}"
+							itemLabel="#{role.codeName}"
+							itemValue="#{role.pmParameter.parameterId}" />
+						<!-- 38067 end -->
+						<!-- <p:ajax event="change" update="memberListTbl" process="@this"
+							partialSubmit="true"
+							listener="#{meetingBB.changeMemberRole(index,meetingBB.managedBean.committeeMembersList)}"></p:ajax> --><!-- #35500 -->
 					</p:selectOneMenu>
 					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
-				</ui:fragment>					
+				</ui:fragment>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.representative.type']}">
@@ -170,6 +187,10 @@
 					</p:selectOneMenu>
 				</p:column>
 			</p:dataTable>
+			<ui:remove>12471 start</ui:remove>
+			<ac:qtCommitteMemberInfoPopup bBean="#{suppFinalMeetingBackingBean}"
+				widget="memberInfoPopUp" />
+			<ui:remove>12471 end</ui:remove>
 			<ui:fragment rendered="#{isCommitteeUpdatable}">
 				<div align="right" class="BtnSpacing">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"

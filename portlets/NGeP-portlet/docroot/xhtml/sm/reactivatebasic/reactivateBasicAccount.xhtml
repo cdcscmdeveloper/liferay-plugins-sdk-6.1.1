@@ -73,17 +73,42 @@
 					size="40" required="true" >
 					<f:validateRegex
 				pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					<ui:remove>#28720 Start</ui:remove>
+					<p:ajax event="change" process="@this"
+							listener="#{reactivateBasicBackingBean.onChangeEmail()}"
+							update="email" />
+					<ui:remove>#28720 End</ui:remove>
 					</p:inputText>
+					<ui:remove>#28720 Start</ui:remove>
+					<p:graphicImage id="toolTipIcon"
+						value="/css/images/design/tooltips.png" /> <p:tooltip
+						id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false"
+							value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip>
+					<ui:remove>#28720 End</ui:remove>
 				<p:message id="emailMsg" for="email"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 	</table>
 	
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}"  update=":form"
-					action="#{reactivateBasicBackingBean.reactivateBasic}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+		<!-- #34400 - start -->
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@form" 
+			oncomplete="if (!args.validationFailed) confirmDlg.show();" />
 	</div>
-
+	<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
+			bean="#{reactivateBasicBackingBean}"
+			okAction="reactivateBasic"
+			content="#{lbl['lbl.sm.confirm.reactivate']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
+	<!-- #34400 - end -->
+	<ui:remove>#28720 Start</ui:remove>
+	<ac:smEmailAlertPopup bBean="#{backingBean}"
+		title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	<ui:remove>#28720 End</ui:remove>
 	</ui:define>
 
 
