@@ -80,7 +80,9 @@
 		}
 	</style>
 	</h:outputStylesheet>
-
+	<p:remoteCommand
+    	name="afterCloseCategoryPopupRC"
+    	action="#{panelBackingBean.afterCloseCategoryPopup}" /> <!-- #40498,#30014 -->
 
 		<p:dialog id="catCodeCtPopup"
 		header="#{lbl['lbl.ct.category.code.search']}"
@@ -238,15 +240,14 @@
 						<p:commandButton
 							value="#{lbl['lbl.btn.ok']}"
 							action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-							process="@form" update="#{cc.attrs.update}"
-							oncomplete="if (!args || !args.validationFailed) hideCategoryCodePopup();"
-							styleClass="BtnSpacing" id="catCodeCtOkBttn" name="catCodeCtOkBttn"/> 
+							process="@form" update="#{cc.attrs.update} catCodeCtPnl"
+							resetValues="true" /> <!-- #40498,#30014 --> 
 						<p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 							process="@this" update="@this"
 							action="#{categoryCodeSearchBackingBean.cancelAction}"
-							oncomplete="catCodePopup.hide()"
-							styleClass="BtnSpacing" id="catCodeCtCnclBttn" name="catCodeCtCnclBttn" />
+							oncomplete="catCodePopup.hide()" styleClass="BtnSpacing"
+							id="catCodeCtCnclBttn" name="catCodeCtCnclBttn" /> <!-- #40498,#30014 --> 
 					</td>
 				</tr>
 			</table>
