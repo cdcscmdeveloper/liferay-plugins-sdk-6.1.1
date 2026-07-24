@@ -25,9 +25,11 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.TaxInvoiceVO;
 
 import org.primefaces.model.TreeNode;
@@ -145,6 +147,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private Map<String, PmFinancialOrg> factoringAccountMap;
 	
 	private boolean reviseInvoice = false;
+	//26279 - start
+	private String disciplinaryActionMessage;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
+	private SmDisciplinaryAction smDisciplinaryAction;
+	//26279 - end
 
 	//#35508 start
   	private String originalSupplierInvRef;
@@ -1232,6 +1239,32 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.accountNo = accountNo;
 	}
 	//32967-end
+	
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
+
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
+	}
+
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
+	}
+
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 	
 	//#35508 start
 	/**

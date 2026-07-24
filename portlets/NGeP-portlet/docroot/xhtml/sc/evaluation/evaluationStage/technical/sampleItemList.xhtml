@@ -67,8 +67,7 @@
 						<p:inputText id="sampleaddressmanualScoreEvaluation"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
-							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-								or evaluationBackingBean.managedBean.tabTechnicalIndex eq SourcingConstants.TECHNICAL_TAB_ACTIVE_INDEX}"
+							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 							size="15" value="#{sampleItem.userScore}" maxlength="3"
 							style="text-align:right">
 							<ui:remove>#29187 Vinod Added Compliance checking</ui:remove>
@@ -102,8 +101,7 @@
 										 label="#{lbl['lbl.sc.tec.compliance']}"
 										 rendered="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample}"
 										 disabled="#{evaluationBackingBean.managedBean.readOnly 
-										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 										 valueChangeListener="#{evaluationBackingBean.itemComplianceChangeControl}"
 										 value="#{sampleItem.compliance}">
 							<p:ajax event="change" process="@this" partialSubmit="true" update="@all" listener="#{evaluationBackingBean.onchangeCompliance(sampleItem)}" />
@@ -114,8 +112,7 @@
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.comment']}"
 						style="width:15%;" rendered="#{isManSpecAndCompliance}">
 						<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly 
-													or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}" 
+													or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}" 
 			  							 style="width:calc(100% - 15px);" 
 										 value="#{sampleItem.remarkMandatorySpec}" 
 										 rows="1" 
