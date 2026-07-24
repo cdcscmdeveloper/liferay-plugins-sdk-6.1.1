@@ -1274,12 +1274,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setDraftUpdate(false);
 		this.getManagedBean().setMasterUpdate(true);
 		this.getManagedBean().setMasterNew(false);
-		// #9299 - #40660 Start
-		SmCompExpReqDTO reqDTO1 = new SmCompExpReqDTO();
-		reqDTO1.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
-		SmCompExpResDTO resDTO2 = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO1);
-		this.getManagedBean().setHistMaster((SmCompExpMaster) CustomUtils.getInstance().deepCopy(resDTO2.getMaster()));
-		// #9299 - #40660 End
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
 			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.master.update.fed.header.self.declared", null));
@@ -1299,6 +1293,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
+		// #9299 - #40660
+		this.getManagedBean().setHistMaster((SmCompExpMaster) CustomUtils.getInstance().deepCopy(resDTO.getMaster()));
 		if (null != this.getManagedBean().getSelectedMaster().getPaymentMethod()) {
 			this.getManagedBean().getSelectedMaster().getPaymentMethod().getParameterId();
 		} else {

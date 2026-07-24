@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import my.ep.constants.SMProcessNameConst;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -245,11 +246,11 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_RENEWAL = "S";
 	public static final String APPLIED_CAT = "APPLIED";
 	public static final String PREVIOUS_CAT = "PREVIOUS";
-	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER = 20105;
-	public static final long PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE = 20105;
+	public static final long STATUS_PENDING_SITE_VISIT = 20105;
+	public static final long STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE = 20103;
+	
 	public static final String SECTION_MAIN = "MAIN";
 	public static final String SECTION_RENEWAL = "RENEWAL";
-	public static final String SECTION_SDM = "MAINTENANCE";
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
@@ -786,6 +787,7 @@ public class SupplierManagementConst {
 	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
 	public static final int PHASE_1 = 1;
 	// #9299 End
+	public static final Long APP_VERSION_REDMINE_NO_40112 = 40112L;		//#40112
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
@@ -809,6 +811,7 @@ public class SupplierManagementConst {
 	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
+	public static final Pattern FOREIGN_REG_NO_PATTERN = Pattern.compile("^99[0-9]{4}-[A-Z]$");
 //	#37925 END
 	
 	// #38001 START
@@ -1615,12 +1618,12 @@ public class SupplierManagementConst {
 		return PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED;
 	}
 	
-	public long getPM_STATUS_PENDING_SITE_VISIT_AFTER() {
-		return PM_STATUS_PENDING_SITE_VISIT_AFTER;
+	public long getSTATUS_PENDING_SITE_VISIT() {
+		return STATUS_PENDING_SITE_VISIT;
 	}
 	
-	public long getPM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE() {
-		return PM_STATUS_PENDING_REVIEW_SITE_VISIT_BEFORE;
+	public long getSTATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE() {
+		return STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
 	}
 
 	public String getSECTION_MAIN() {
@@ -1629,10 +1632,6 @@ public class SupplierManagementConst {
 	
 	public String getSECTION_RENEWAL() {
 		return SECTION_RENEWAL;
-	}
-	
-	public String getSECTION_SDM() {
-		return SECTION_SDM;
 	}
 	// 36504 - END
 	
@@ -1668,5 +1667,10 @@ public class SupplierManagementConst {
 	public String getSsmCompanyCountryMalaysia() {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
+
+	public static Pattern getForeignRegNoPattern() {
+		return FOREIGN_REG_NO_PATTERN;
+	}
+	
 //	#37925 END
 }

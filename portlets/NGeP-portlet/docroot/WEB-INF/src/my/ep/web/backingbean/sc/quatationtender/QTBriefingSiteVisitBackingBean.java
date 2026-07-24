@@ -492,8 +492,10 @@ public class QTBriefingSiteVisitBackingBean extends
 			        	
 			        }
 			        
-			        List<ScQtBsvDtl> finalList = groupAndSortSiteVisitList(allBriefingList);
-			        briefingBean.setBriefingList(finalList);
+					// 28188 -start-
+					briefingBean
+							.setBriefingList(groupAndSortBriefingSiteVisitDtls(allBriefingList));
+					// 28188 -end-
 			        
 					/*
 					 *28188 removed this code if site visit details changed and
@@ -594,8 +596,11 @@ public class QTBriefingSiteVisitBackingBean extends
 			        	
 			        }
 			        
-			        List<ScQtBsvDtl> finalList = groupAndSortSiteVisitList(allSVList);
-			        briefingBean.setSitevisitList(finalList);
+					// 28188 -start-
+					briefingBean
+							.setSitevisitList(groupAndSortBriefingSiteVisitDtls(allSVList));
+
+					// 28188 -end-
 			        
 			        /*
 					 *28188 removed this code if Briefing details  changed and

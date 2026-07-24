@@ -1205,6 +1205,7 @@ public class BSVAttendanceBackingBean extends
 				//return CommonUIConst.ACKNOWLEDGE_PAGE;
 				
 				//#28188 - Start - Change to SAVE Acknowledge
+				this.getManagedBean().setMaintanceFlow(true);//28188
 				String[] param = new String[2];
 				
 				param[0] = this.getManagedBean().getScQt().getQtNo();
