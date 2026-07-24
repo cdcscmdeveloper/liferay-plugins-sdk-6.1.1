@@ -631,7 +631,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			return 1;
 		}
 		return last;
-	}; 
+	} 
 	
 	public String codificationSearch() {
 
@@ -761,12 +761,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			checkForDisciplinaryAction();
 		}
 		log.info("[#26282] check for Disciplinary Action - End");		
-
+		
 		log.info("NAV_TO_EXTENSION_SEARCH");
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
 	//#26282 and SonarLint Fixing - End
-
+	
 	// 35503 Start
 	public String goToServiceSearch(CmUnspsc unspscObj) {
 
@@ -3716,7 +3716,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		return itemType;
 	}
-
+	
 	//[#26282] check for Disciplinary Action - Start
 	/**
 	 * To check what DA the supplier involve

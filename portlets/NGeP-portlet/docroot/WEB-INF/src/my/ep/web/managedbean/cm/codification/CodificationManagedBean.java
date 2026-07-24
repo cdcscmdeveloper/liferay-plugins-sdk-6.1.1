@@ -156,7 +156,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	/** The back to previous page. */
 	private String backToPreviousPage;
-
+	
 	//[#26282] disciplinary action - start
 	private boolean daWarning;
 	private boolean daSuspendReg;
@@ -200,7 +200,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
-
+	
 	// 35503 Start
 	private String segmentTitleEng;
 	private String familyTitleEng;

@@ -3303,7 +3303,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setDocStatus(
 				resStatusDTO.getPmStatusDesc() != null ? resStatusDTO
 						.getPmStatusDesc().getStatusName() : "Review");
-
+		
 		log.info("[#26282] Task Id: " + this.getManagedBean().getTaskId());
 		log.info("[#26282] Task name: " + this.getManagedBean().getTaskName());
 		log.info("[#26282] Task action: " + StringUtils.join(this.getManagedBean().getAction(), "-"));
@@ -3313,7 +3313,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			checkForDisciplinaryAction();
 		}
 		log.info("[#26282] check for Disciplinary Action - End");
-				assertView("Review Extension Code", obj);
+		
+		assertView("Review Extension Code", obj);
 	}
 	//#26282 and SonarLint Fixing - End
 
@@ -3659,7 +3660,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			checkForDisciplinaryAction();
 		}
 		log.info("[#26282] check for Disciplinary Action - End");
-
+		
 		assertView("Review UNSPSC Code",obj);
 	}
 	//#26282 and SonarLint Fixing - End
