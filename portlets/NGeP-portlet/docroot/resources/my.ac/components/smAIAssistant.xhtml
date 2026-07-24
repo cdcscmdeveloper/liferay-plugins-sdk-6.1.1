@@ -25,6 +25,7 @@
 		</style>
 		
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
+		<ui:param name="pnlId" value="pnl#{cc.attrs.aiDlg}" />
 		
 		<p:dialog id="block#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}"
 			modal="true" resizable="false" closable="false" showHeader="false">
@@ -59,7 +60,7 @@
         			</h:commandLink>
 				</p:column>
 				<p:column style="width:5%;text-align:center;">
-					<p:commandLink action="#{ai.deleteDoc(doc)}" update="docs#{cc.attrs.aiDlg}">
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>
@@ -146,6 +147,7 @@
 				<p:commandButton id="submitBtnAI"
 					value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
+					process="@this dt#{cc.attrs.aiDlg}"
 					update=":#{p:component(cc.attrs.updateId)}"
 					rendered="#{not empty cc.attrs.updateId}"
 					onclick="#{cc.attrs.aiDlg}.hide();"

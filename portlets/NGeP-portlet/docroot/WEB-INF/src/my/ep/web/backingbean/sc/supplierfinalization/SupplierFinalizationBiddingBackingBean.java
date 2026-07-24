@@ -75,6 +75,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -90,6 +91,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRema
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
@@ -3221,6 +3224,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 			if (finalizationReports != null) {
 				getManagedBean().setDocumentList(finalizationReports);
 			}
+			
+			// #25651 - Start
+			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
+			reqDTO.setExcludedDocNames(SupplierFinalizationBiddingManagedBean.getDirectdownloaddocdefkeys());
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
+			// #25651 - End
+			
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -3331,6 +3342,74 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 	// 30567 - end
 	
+	// #25651 - Start
+	/**
+	 * Download each report detail.
+	 * 
+	 * @param scQtFinalizationReportDetail
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void downloadReport(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+		generateDocumentAttachment(scQtFinalizationReportDetail);
+	}
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * Generate document attachment for all committee finalization reports detail.
+	 * 
+	 * @param scQtFinalizationReportDetail
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateDocumentAttachment(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+
+		ScQt scQt = getManagedBean().getScQt();
+		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument().getDocDefinitionKey();
+		String definitionType = scQtFinalizationReportDetail.getDefinationType().getParameterCode();
+		List<String> reportDetailList = reportDetailAttachmentType(docDefinitionKey);
+
+		if (definitionType.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)) {
+			List<ScAttachment> finalizationReportAttachments = new ArrayList<>();
+			for (String reportDetail : reportDetailList) {
+
+				ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
+				StringBuilder fileName = new StringBuilder(reportDetail);
+				fileName.append(".pdf");
+				reportAttachment.setFileName(fileName.toString());
+				reportAttachment.setDocNo(scQt.getQtNo());
+				generateBrefingPaperDetailPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, false);
+				finalizationReportAttachments.add(reportAttachment);
+
+			}
+			downloadAllFiles(this.getManagedBean().getReportDownloadFileName(), finalizationReportAttachments);
+		}
+
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * @param docDefinitionKey
+	 * @param fileReportName
+	 * @return ScAttachment
+	 */
+	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
+		debugLogger("generateDocumentAttachment");
+		
+		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
+		ScQt scQt = getManagedBean().getScQt();
+		StringBuilder fileName = new StringBuilder(fileReportName);
+		fileName.append(".pdf");
+		reportAttachment.setFileName(fileName.toString());
+		reportAttachment.setDocNo(scQt.getQtNo());
+		generateBrefingPaperDetailPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, true);	
+		return reportAttachment;
+	}
+	// #25651 - End
+	
 	/**
 	 * To download all reports under Briefing Paper/Kertas Taklimat tab
 	 * 
@@ -3341,6 +3420,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void downloadAllReports() throws Exception {
 		debugLogger("downloadAllReports");
 
+		List<ScAttachment> attachments = new ArrayList<>(); //#25651
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports();
 		// 37623 - start
@@ -3356,7 +3436,27 @@ public class SupplierFinalizationBiddingBackingBean extends
 			scAttachments.add(attachment);
 		}
 		// 37623 - end
-		downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+		
+		//#25651 - Start
+		attachments.addAll(scAttachments);
+		List<Object[]> reportDetailList = reportDetailAttachmentType();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
+			for(ScQtFinalizationReportDetail finalizationreport:scQtFinalizationReportDetail){
+				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport.getDefinationType().getParameterCode())){
+					for (Object[] reportDetail : reportDetailList) {
+						String codeReportName = (String) reportDetail[0];
+						String fileReportName = (String) reportDetail[1];
+					    if(codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())){
+					    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
+					    }
+					}
+				}
+			}
+		}
+		//#25651 - Start
+		
+		downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
 
 	}
 	
