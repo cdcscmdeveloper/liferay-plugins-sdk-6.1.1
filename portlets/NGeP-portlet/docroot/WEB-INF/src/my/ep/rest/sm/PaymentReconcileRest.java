@@ -348,4 +348,60 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 			return "";
 		}
 	}
+
+	//TEMP
+	@GET
+	@Path("/poke-opslogin2")
+	public String pokeOpslogin2() {
+		String loginUrl = "https://frontend-dot-ep-service-payment.as.r.appspot.com/payment/ops/api/v1/auth/login";
+		String username = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.username");
+		String password = EpPropertiesUtils.decrypt(EpPropertiesUtils.getInstance().getProperty("reconcile.payment.password"));
+		log.info("[API #38750] poke-opslogin2 hardcoded loginUrl=" + loginUrl
+				+ " reconcile.payment.username=" + mask3(username)
+				+ " reconcile.payment.password=" + (password == null ? "null" : "set"));
+		if (username == null || password == null) {
+			log.warn("[API #38750] reconcile.payment.username/password not configured");
+			return "poke-opslogin2 END: username/password not configured";
+		}
+		HttpURLConnection conn = null;
+		try {
+			URL url = new URL(loginUrl);
+			conn = (HttpURLConnection) url.openConnection();
+			if (conn instanceof HttpsURLConnection) {
+				SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+				sslContext.init(null, null, null);
+				((HttpsURLConnection) conn).setSSLSocketFactory(sslContext.getSocketFactory());
+			}
+			String boundary = "----ngepOps" + System.currentTimeMillis();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+			conn.setDoOutput(true);
+			conn.setConnectTimeout(30 * 1000);
+			conn.setReadTimeout(30 * 1000);
+			StringBuilder form = new StringBuilder();
+			form.append("--").append(boundary).append("\r\n");
+			form.append("Content-Disposition: form-data; name=\"userName\"\r\n\r\n");
+			form.append(username).append("\r\n");
+			form.append("--").append(boundary).append("\r\n");
+			form.append("Content-Disposition: form-data; name=\"password\"\r\n\r\n");
+			form.append(password).append("\r\n");
+			form.append("--").append(boundary).append("--\r\n");
+			OutputStream os = conn.getOutputStream();
+			os.write(form.toString().getBytes(StandardCharsets.UTF_8));
+			os.flush();
+			os.close();
+			int responseCode = conn.getResponseCode();
+			String body = readResponseBody(conn, responseCode);
+			log.info("[API #38750] poke-opslogin2 responseCode=" + responseCode + " body=" + body);
+			return "poke-opslogin2 END: url=" + loginUrl + " responseCode=" + responseCode
+					+ " bodyLength=" + (body == null ? -1 : body.length()) + " body=[" + body + "]";
+		} catch (Exception e) {
+			log.error("[API #38750] poke-opslogin2 failed: " + e.getMessage(), e);
+			return "poke-opslogin2 END: EXCEPTION " + e.getClass().getName() + ": " + e.getMessage();
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
+		}
+	}
 }
