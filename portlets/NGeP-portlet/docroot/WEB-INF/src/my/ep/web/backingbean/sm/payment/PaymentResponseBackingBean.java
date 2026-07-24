@@ -669,7 +669,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
-				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				if (SupplierManagementConst.SOFTCERT_PAYMENT.equals(paymentType)) {
+					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				}
 
 				log.info("******ResponsePreRender - After Update******");
 				if(pymtResDTO != null && pymtResDTO.isSuccessful()){
@@ -1019,7 +1021,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
+			//#40340 : Remove personnel.getPmUser().getUserId().equals(currentUserId)
+			if(personnel != null){
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
 			}
