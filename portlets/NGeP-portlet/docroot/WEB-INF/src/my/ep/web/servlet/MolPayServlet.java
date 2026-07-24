@@ -291,7 +291,7 @@ public class MolPayServlet extends HttpServlet {
 					//#33137 - start
 					if(channel.equalsIgnoreCase("FPX")){
 						smPaymentRes.setTransactionId(tranID);
-						smPaymentRes.setFpxTranId(tranID);
+						smPaymentRes.setFpxTranId("Y".equals(paymentGateway)?null:tranID);
 						log.info("SET TRANSACTION ID--------------------33137"+tranID);
 					}else{
 						//#38377
@@ -547,7 +547,13 @@ public class MolPayServlet extends HttpServlet {
 		reqMap.put("customerEmail", customerEmail);
 		reqMap.put("customerContactNo", customerContactNo);
 		
-		log.info("######38377#####orderId: " + reqMap.get("orderid")+"  tranID:" + reqMap.get("tranID")+"  date1:"+reqMap.put("date1", date1));
+		log.info("######38377#####orderId: " + reqMap.get("orderid"));
+		log.info("######38377#####tranID: " + reqMap.get("tranID"));
+		log.info("######38377#####status:" + reqMap.get("status"));
+		log.info("######38377#####error_code:" + reqMap.get("error_code"));
+		log.info("######38377#####error_desc:" + reqMap.get("error_desc"));
+		log.info("######38377#####channel:" + reqMap.get("channel"));
+		log.info("######38377#####date1:" + reqMap.get("date1"));
 		
 		return reqMap;
 	}
