@@ -9857,7 +9857,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			sb.append("^4");
 		}
 		
-		//@asyrafhaziq #27502 - New DO MOF Role and Process
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - Start
 		if (scLoa.getContractType().getParameterType().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 			
 			sb.append("|pmUserOrgs.pmOrgProfile.bpk^");
@@ -9871,6 +9871,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				sb.append(zone.getZoneId()); 
 			}
 		 }
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		return sb.toString();
 	}
 

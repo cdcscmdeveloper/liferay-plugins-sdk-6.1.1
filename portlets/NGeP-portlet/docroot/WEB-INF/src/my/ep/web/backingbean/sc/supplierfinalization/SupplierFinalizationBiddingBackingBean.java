@@ -381,9 +381,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 							scQtFinalization.getOnlineBiddingEndorse())) {
 				retrieveOnlineEndorsement();
 			} else {
-				//#27502 - New DO MOF Role and Process
+				
 				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION.equals(getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.SF_MOF_COMMITTEE_BIDDING.equals(getManagedBean().getCurrentStatusId())) {
+						|| QTStatusConst.SF_MOF_COMMITTEE_BIDDING.equals(getManagedBean().getCurrentStatusId())) {//#27502 - New DO MOF Role and Process
 					getManagedBean().setBpkUser(true);
 				}
 				retrieveOfflineEndorsement();
@@ -3238,8 +3238,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_EVALUATION);
-			//27502 - New DO MOF Role and Process
-			statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);
+			statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27502 - New DO MOF Role and Process
 			tenderReqDTO.setStatusIds(statusIds);
 			
 			List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO

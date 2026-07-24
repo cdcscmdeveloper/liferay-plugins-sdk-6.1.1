@@ -8206,7 +8206,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt())); 
 			sb.append("^4");
 		}
-			//@asyrafhaziq #27502 - New DO MOF Role and Process
+			//@asyrafhaziq #27502 - New DO MOF Role and Process - Start
 			if (scLoa.getContractType().getParameterType().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 				
 				sb.append("|pmUserOrgs.pmOrgProfile.bpk^");
@@ -8220,6 +8220,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					sb.append(zone.getZoneId()); 
 				}
 			 }
+			//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		return sb.toString();
 	}
 

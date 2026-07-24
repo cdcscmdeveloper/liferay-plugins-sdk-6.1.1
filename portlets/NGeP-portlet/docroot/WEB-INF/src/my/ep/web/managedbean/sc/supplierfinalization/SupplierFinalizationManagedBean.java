@@ -332,12 +332,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private ScQt checkCategoryCodeQt;//#29466
 	
-	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process
+	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
 	private PmAuthority approvalAuthority;
 	private PmAuthorityCommittee approvalAuthCommittee;
 	private List<PmAuthority> listApprovalAuthority;
 	private List<PmAuthorityCommittee> listApprovalAuthCommittee;
-	
+	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
 	//#30008 - start
 	private boolean notReachAgrm;
 	
@@ -2649,13 +2649,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//6906 note 202 - end
 	//35157 - start
-		public ScQtRecommend getLastSelectedItem() {
-			return lastSelectedItem;
-		}
-		
-		public void setLastSelectedItem(ScQtRecommend lastSelectedItem) {
-			this.lastSelectedItem = lastSelectedItem;
-		}
+	public ScQtRecommend getLastSelectedItem() {
+		return lastSelectedItem;
+	}
+
+	public void setLastSelectedItem(ScQtRecommend lastSelectedItem) {
+		this.lastSelectedItem = lastSelectedItem;
+	}
 	//35157 - end
 		
 	//#27502 - New DO MOF Role and Process - Start
