@@ -12,17 +12,16 @@
 		postSignAction="#{purchaseInquiryBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 		enableAutoUpdate="#{purchaseInquiryBackingBean.enableAutoUpdate()}" />
 		
-		
+	<ui:remove>#34449 - start (Change Label)</ui:remove>	
 		<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancelPI" value="cancelPI" />
 	<ac:cancelRejectPopup id="#{cancelPI}" widget="cancelPI" width="30%"
 		height="100"
 		okAction="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+		title="#{lbl['lbl.sc.confirmation.cancel']}"
+		content="#{lbl['lbl.sc.confirmation.cancel.message']}" update="@this" />
 		
      <!-- 20190417@asyrafhaziq_12095 - End -->
-     <ui:remove>#34449 - start (Change Label)</ui:remove>
      <!-- 26129 - Start -->
      <ui:param name="cancelPiPendingSubmission" value="cancelPiPendingSubmission" />
 	 <ac:cancelRejectPopup id="#{cancelPiPendingSubmission}" widget="cancelPiPendingSubmission" width="30%"
