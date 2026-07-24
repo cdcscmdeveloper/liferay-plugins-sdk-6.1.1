@@ -58,9 +58,12 @@
 					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}" update="@form">
 						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.category.code']}" update="@form">
-						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="2" />
-					</p:menuitem>
+					<ui:remove>#36503 start</ui:remove>
+						<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.category.code']}" update="@form"
+							rendered="#{panelBackingBean.showCategoryCodeTab}">
+							<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="2" />
+						</p:menuitem>
+					<ui:remove>#36503 end</ui:remove>
 				</p:tabMenu>
 			</td>
 			<td width="80%">
@@ -70,9 +73,11 @@
 				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 1}">
 					<ui:include src="/xhtml/ct/circular/panel/item.xhtml" />
 				</p:outputPanel>
-				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 2}">
-					<ui:include src="/xhtml/ct/circular/panel/categoryCode.xhtml" />
-				</p:outputPanel>
+				<ui:remove>#36503 start</ui:remove>
+					<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 2 and panelBackingBean.showCategoryCodeTab}">
+						<ui:include src="/xhtml/ct/circular/panel/categoryCode.xhtml" />
+					</p:outputPanel>
+				<ui:remove>#36503 start</ui:remove>
 			</td>
 		</tr>
 		</table>
