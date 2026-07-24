@@ -3101,7 +3101,7 @@ public class LOIDetailBackingBean extends
 					if (report.getScLoiReportAttachment() == null && 
 							ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 								.equals(report.getDefinationType().getParameterCode())) {
-						tabMenuListener(3);
+						tabMenuListener(3); // Recommend tab
 						throw new EpException(MessageConst.ERROR_760415, 
 											  new String[] { report.getTitle() });
 					}

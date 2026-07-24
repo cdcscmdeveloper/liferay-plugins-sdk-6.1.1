@@ -1919,15 +1919,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			this.getManagedBean().setQtId(qtId);
 			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-//			supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), qtId);
+			supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), qtId);
 
 			ViewSuppProfileBackingBean viewSuppProfileBB = new ViewSuppProfileBackingBean();
-//			String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
+			String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
 			String message = getManagedBean().getDisciplinaryActionMsg();
-//			if (StringUtils.isNotEmpty(message) && StringUtils.isNotEmpty(qtWarningMessage)) {
-//				qtWarningMessage = "<br/>" + qtWarningMessage;
-//			}
-//			getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
+			if (StringUtils.isNotEmpty(message) && StringUtils.isNotEmpty(qtWarningMessage)) {
+				qtWarningMessage = "<br/>" + qtWarningMessage;
+			}
+			getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
 		}
 	}
 	//26247 - end

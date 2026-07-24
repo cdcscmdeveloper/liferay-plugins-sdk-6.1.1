@@ -2997,7 +2997,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		
 		// #30567, #26247 - Start.
 		ScQtFinalizationReportAttachment reportAttachment = null;
-		if (scQtFinalizationReport.getTitle().contains("Kertas Taklimat")) {
+		if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
 			SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
 			supplierFinalizationBackingBean.renewSesionObject();
 			supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
