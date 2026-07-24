@@ -2994,23 +2994,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		debugLogger("downloadReport");
-		
-		// #30567, #26247 - Start.
-		ScQtFinalizationReportAttachment reportAttachment = null;
-		if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
-			SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
-			supplierFinalizationBackingBean.renewSesionObject();
-			supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
-			supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(this.getManagedBean().getScQtFinalization());
-			supplierFinalizationBackingBean.getManagedBean().setScQt(this.getManagedBean().getScQt());
-			
-			reportAttachment = supplierFinalizationBackingBean.downloadBriefingPaperReportForBidding(scQtFinalizationReport);
-			
+
+		// #30567 - Start.
+		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
+				.getScQtFinalizationReportAttachment();
+		if (null == reportAttachment
+				&& scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
+			reportAttachment = generateBriefingPaperAttachment(scQtFinalizationReport);
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-		} else {
-			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 		}
-		// #30567, #26247 - End.
+		// #30567 - End.
 
 		downloadFile(reportAttachment);
 	}
