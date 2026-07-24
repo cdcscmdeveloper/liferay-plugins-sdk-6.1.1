@@ -180,23 +180,24 @@
 								value="#{lbl['lbl.sm.remarks.overLap.note3']}" escape="false" /></td>
 					</tr>
 					<!-- 13362 END -->
+					<!-- 40150 START -->
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
 						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 								style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
-								maxlength="2500"
+								maxlength="4000"
 								value="#{cc.attrs.overLapRemarks}"
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
-								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.ola']}"
 								required="false">
 								<!-- 39422 START -->
 								<p:ajax event="blur" process="@this" update="@this"/>
 								<!-- 39422 End -->
-								<f:validateLength maximum="2500" />
+								<f:validateLength maximum="4000" />
 							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
 								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"
 								display="icon" /></td>
-					</tr>
+					</tr><!-- 40150 END -->
 					<tr>
 					<td></td>
 						<td align="left"><p:outputLabel style="float:left;"

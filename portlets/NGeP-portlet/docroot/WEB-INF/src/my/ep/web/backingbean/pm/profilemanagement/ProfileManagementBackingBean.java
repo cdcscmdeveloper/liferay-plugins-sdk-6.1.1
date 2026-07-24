@@ -2819,7 +2819,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		user.setMobileNo(userOrg.getMobileNo());
 		user.setMobileArea(userOrg.getMobileArea());
 		user.setMobileCountry(userOrg.getMobileCountry());
-		user.setMobileTelcoId(userOrg.getMobileTelcoId());
+		//user.setMobileTelcoId(userOrg.getMobileTelcoId()); //#40246
 	}
 
 	private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, UserReqDTO reqDTO) {
@@ -3879,11 +3879,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770090);
 		}
-		if (getManagedBean().getSelectedUser().isNotifyBySms()
+		//#40246 Start
+		/*if (getManagedBean().getSelectedUser().isNotifyBySms()
 				&& getManagedBean().getSelectedUserOrg().getMobileTelcoId() == null) {
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770250);
-		}
+		}*/
+		//#40246 End
 		this.getManagedBean().getSelectedUser().setModified(true);
 	}
 
@@ -4312,21 +4314,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 
-	private void validateEmailAndNotificationPreferences(PmUser user,
-			PmUserOrg pmUserOrg) {
+	private void validateEmailAndNotificationPreferences(PmUser user, PmUserOrg pmUserOrg) {
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-
-		if (user.isNotifyBySms()) {
-			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
-				throw new EpException(MessageConst.ERROR_770090);
-			}
-			if (pmUserOrg.getMobileTelcoId() == null) {
-				throw new EpException(MessageConst.ERROR_770250);
-			}
+		//#40623 Start
+		if (user.isNotifyBySms() && StringUtils.isBlank(pmUserOrg.getMobileNo())) {
+			throw new EpException(MessageConst.ERROR_770090);
 		}
-	}
+			//#40246 Start
+			/*if (pmUserOrg.getMobileTelcoId() == null) {
+				throw new EpException(MessageConst.ERROR_770250);
+			}*/
+			//#40246 End
+	}	//#40623 End
 
 	private void validateOrgProfile(PmUserOrg pmUserOrg) {
 		if (pmUserOrg.getPmOrgProfile() == null
