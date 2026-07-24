@@ -135,4 +135,5 @@ public class CtReportConst implements Serializable {
 		return CT_CONTRACT_MANAGEMENT_RPT_MC_VAL;
 	}
 	// #30918 - End
+
 }

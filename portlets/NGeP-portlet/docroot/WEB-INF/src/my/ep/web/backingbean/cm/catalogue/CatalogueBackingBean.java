@@ -74,6 +74,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 //29961, #30457 - end
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -118,6 +119,7 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.helper.Paginator;
@@ -164,6 +166,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -11857,4 +11860,60 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.declareChecked = declareChecked;
 	}
 	//#30457 - farid - end
+	
+	// 26284 - Start
+	/**
+	 * Retrieves and sets the disciplinary action history for the given
+	 * supplier. This method fetches the disciplinary action details for the
+	 * specified {@link SmSupplier} and updates the managed bean with the
+	 * retrieved data. If no disciplinary actions are found, an empty list is
+	 * set. Finally, it triggers the display of the disciplinary action history
+	 * dialog.
+	 * 
+	 * @param smSupplier
+	 *            the supplier whose disciplinary action history needs to be
+	 *            retrieved.
+	 */
+	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {
+		SmSupplier currSupp = smSupplier;
+		if (currSupp != null) {
+			List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
+			if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
+				getManagedBean().setDisciplineVOs(voList);
+			} else {
+				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+			}
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		// #32643,32642 - Start
+		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		// #32643,32642 - End
+	}
+
+	/**
+	 * Checks if the given supplier has an active disciplinary action.
+	 * 
+	 * @param supplier
+	 *            the {@link SmSupplier} whose disciplinary action status needs
+	 *            to be checked.
+	 * @return {@code true} if the supplier has an active disciplinary action,
+	 *         {@code false} otherwise.
+	 */
+	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
+		try {
+			ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+
+			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+			reqDTO.setSupplier(supplier);
+			return supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO)
+					.isDisciplinaryActionActiveDp();
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "getDisciplinaryActionActive",
+					StringUtils.EMPTY, "getDisciplinaryActionActive", getUserIdSessionFromLoginId(), e);
+		}
+		return false;
+	}
+	// 26284 - End
 }

@@ -45,6 +45,17 @@ public class PaymentAcknowledgeBackingBean extends BaseBackingBean<PaymentAcknow
 		String billType = StringUtils.EMPTY;
 		billType = resDTO.getPyPayment().getPyBill().getBillType(); //billtype = R/P/S
 		log.info(":::printReceipt() paymentId: "+ this.getManagedBean().getPaymentId() +". billType: "+ billType);
+
+		// #38977 - Start
+		if (!resDTO.getPyPayment().getReprintReceipt()) {
+			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT, ReportConst.PARAM_PAYMENT_PREPRINT_ASAL);
+			resDTO.getPyPayment().setReprintReceipt(true);
+			reqDTO.setPyPayment(resDTO.getPyPayment());
+			reqSO.updatePaymentReceipt(reqDTO);
+		} else if (resDTO.getPyPayment().getReprintReceipt()) {
+			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT, ReportConst.PARAM_PAYMENT_PREPRINT_SALINAN);
+		}
+		// #38977 - End
 		
 		// #38977 - Start
 		if (!resDTO.getPyPayment().getReprintReceipt()) {

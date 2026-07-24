@@ -9,16 +9,23 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -27,8 +34,16 @@ import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
@@ -45,17 +60,24 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Base Backing Bean for Fulfilment.
@@ -728,4 +750,97 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return Boolean.TRUE;
 	}
 	// 36386 -End
+	
+	// 26279 - start
+	/**
+	 * Retrieve Imposed Disciplinary Action By Supplier
+	 * 
+	 * @param smSupplier
+	 * @return SupplierDataMaintenanceResDTO SmDisciplinaryActions info
+	 */
+	protected SmDisciplinaryAction getImposedDisciplinaryAction(SmSupplier smSupplier) {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(smSupplier);
+
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+
+		SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO
+				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always return single result
+
+		if (resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
+			return resDTO.getSmDisciplinaryActions().get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * Get Disciplinary Action Message
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @param langCode
+	 * @return msg
+	 */
+	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, boolean isWarningOnly) {
+		StringBuilder msg = new StringBuilder();
+		if (startDate != null && endDate != null) {
+			msg.append(" ");
+			String messagePrefix;
+			if (isWarningOnly) {
+				messagePrefix = "lbl.sm.supplier.warning.disc.action";
+			} else {
+				messagePrefix = "lbl.sm.supplier.imposed.disc.action";
+			}
+			
+			msg.append(ResourceBundleUtils.getMessage(
+					messagePrefix,
+					new String[] { DateUtils.dateToString(CommonConstants.DATE_FORMAT_DASH, startDate),
+							DateUtils.dateToString(CommonConstants.DATE_FORMAT_DASH, endDate) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
+		}
+		return msg.toString();
+	}
+
+	// 26279 - Remove the retrieveDisciplinaryActions method because the method
+	// from the SM module is used for displaying the Disciplinary Action info in
+	// the pop-up
+	
+	// 26279 - remove getMessageByKey and use ResourceBundleUtils.getMessage
+
+	/**
+	 * Check if the disciplinary action is a warning-only action.
+	 * 
+	 * @param smDisciplinaryAction
+	 *            the action to check
+	 * @return true if the action is only a warning, false if otherwise actions
+	 */
+	public boolean isWarningOnly(SmDisciplinaryAction smDisciplinaryAction) {
+		Set<Boolean> actionSet = new HashSet<>();
+		actionSet.add(smDisciplinaryAction.isCancelCategory());
+		actionSet.add(smDisciplinaryAction.isSuspendRegistration());
+		actionSet.add(smDisciplinaryAction.isCancelRegistration());
+		actionSet.add(smDisciplinaryAction.isBlacklistOwner());
+		actionSet.add(smDisciplinaryAction.isBumiputeraCancel());
+		actionSet.add(smDisciplinaryAction.isManufacturerCancel());
+
+		boolean isImposedAction  = actionSet.contains(true);
+		return !isImposedAction && smDisciplinaryAction.isWarning();
+	}
+	
+	/**
+	 * Sets the disciplinary action message
+	 * 
+	 * @param smDisciplinaryAction
+	 * @return warningOrDisciplinaryActionMsg
+	 */
+	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
+		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
+
+		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
+				isWarningOnly);
+	}
+
+	// 26279 - end
 }

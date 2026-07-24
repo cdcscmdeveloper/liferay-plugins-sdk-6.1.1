@@ -497,8 +497,6 @@ public void specCommitteeMaintenancereset() {
 	
 		QtnTenderSearchBean qtTnderBean = this.getManagedBean().getQtnTenderSearchBean();
 		IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
-	
-		//#29732 fix null pointer currentstatus id for 1st time enter
 		QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean(); // #29732
 
 		/* ***25692#95 - start */
@@ -869,6 +867,13 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 	}
 	//#28784 - End
 	
+	// #29732 start
+	public boolean isSpecEndorsmentScreen() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
+				.getDisplayPortletId());
+	}
+	// #29732 -end-
+
 	// #29732 -start-
 	private boolean isSpecRoleMaintenanceValidation() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -896,11 +901,4 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
 	}
 	// 29732 -End
-
-	// #29732 start
-	public boolean isSpecEndorsmentScreen() {
-		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
-				.getDisplayPortletId());
-	}
-	// #29732 -end-
 }

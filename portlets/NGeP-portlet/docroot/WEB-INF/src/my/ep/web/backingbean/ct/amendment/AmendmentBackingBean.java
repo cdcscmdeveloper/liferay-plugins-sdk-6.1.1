@@ -54,8 +54,11 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO; //#26186
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;//#15851
+import my.ep.biz.service.sc.quationtender.IQTDetailSO; //26186
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO; //#26186
 import my.ep.comparator.ct.CtContractZoneComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -86,9 +89,12 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO; //26186
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;//#15851
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;//#15851
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO; //#26186
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO; //#26186
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper; //Fix - #36708
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
@@ -102,6 +108,7 @@ import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
+import my.ep.persistence.entity.ct.dtl.CtContractValue; //#32418
 import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtPidReason;
@@ -128,8 +135,11 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction; //#26186
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier; //#26186
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierCategory; //#26186
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
@@ -149,10 +159,12 @@ import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;//#26186
 import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.ct.ContractHashSetConst; //#35238 / #26186
 import my.ep.web.constant.report.ReportConst; //#24333
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -166,7 +178,9 @@ import my.ep.web.util.NumberWordUtilEn; //#24333
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil; //#26186
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.DisciplinaryActionVO; //#26186
 
 import org.apache.commons.collections.CollectionUtils; //#13847
 import org.apache.commons.lang.SerializationUtils;
@@ -666,6 +680,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				/*Retrieve bpm details*/
 				getManagedBean().setSelectedTabIndex(0);
 				CTContractAmendmentDataType dataType =  super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);
+				
+				//#34097/#26186 start
+				/* check bpm version*/
+				checkBPMVersion(getManagedBean().getBpmVersionNo());
+				//#34097/#26186 end
 				
 				//#25956 - Start
 				/* re-Setting Cancel button*/
@@ -1645,6 +1664,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			chkBondWaivedAttachment();
 			//#13847 end
 			
+			//Enhancement #26186/#29793/#32860/#34097 start  start - retrieve disciplinary info
+			if (checkContractConditionForSupplier()) {
+				if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+						.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+					checkAndSetDA();
+				}
+				checkSupplierDataMaintenance(); // #34097
+			}
+			// Enhancement #26186/#29793/#32860/#34097 start end - retrieve
+			// disciplinary info
+			
 		} finally {
 			contractAmendmentSO = null;
 			reqDTO = null;
@@ -1923,6 +1953,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setUpdateZoneMap(ctBackingBean.getManagedBean().getUpdateZoneMap());
 			reqDTO.setUpdateItemMap(ctBackingBean.getManagedBean().getUpdateItemMap());
 			reqDTO.setContractAdminlist(getManagedBean().getContractAdminlist()); //#25956
+			
+			//26186/#32860/#34097 start
+			this.getManagedBean().setValidationDA(false);
+			if(checkValidationDA()){
+				this.getManagedBean().setValidationDA(true);
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			}
+			if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
+					outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))
+					&& getManagedBean().isOldBPMVersion()
+					&& getManagedBean().isWipButtonCancelReject()) {
+				reqDTO.setCancelOldProcess(true);
+			}
+			reqDTO.setCancelType(getContractCancelType());
+			//26186/#32860/#34097 end
 
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -2105,6 +2150,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 					// #25956 - End
 				}
+				
+				//#26186, #34097 start
+				if (this.getManagedBean().isDisciplinaryActionCancel()
+						|| this.getManagedBean().isSupplierBumiCancel()) {
+					messageId = handleAcknowledgeMessageDAandBumiCancel(outcome);
+					params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract()
+							.getContractNo() };
+
+				}
+				//#26186, #34097 end
 
 				//SIR#14189: Replace the doc type in acknowledge message for Supplemental Contract Letter process
 				if (getManagedBean().getTaskName() != null && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)//#25956
@@ -2116,8 +2171,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				successMessage(messageId, params);
 
-				if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
-						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
+				//#26186/#32860 start
+				if ((!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null))
+						&& (!getManagedBean().isValidationDA())) {
+
+					if(getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+						RequestContext.getCurrentInstance().execute("sendParamToSupplierDA();");
+					}
+					//#26186/#32860 end
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
@@ -2675,8 +2737,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			// Start Fix - #33952, #25956
 			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
-					&& ctBackingBean.getManagedBean().isContractExpired()){
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)
+					&& ctBackingBean.getManagedBean().isContractExpired()){ //#32418
 	
 					if ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
 						|| (ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
@@ -2728,16 +2791,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			// End Fix - #33952, #25956
-
-			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
-			// Validation for amendment when extension period - 0 
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
+			
+			//32418 Start
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= ContractConst.VALUE_OF_28){ 
 
 				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
-				throw new EpException(MessageConst.ERROR_750048);
+			   throw new EpException(MessageConst.ERROR_750074);
+			  }
+			//32418 End
+
+			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
+			// Validation for amendment when extension period - 0 
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == ContractConst.VALUE_OF_0 && ctBackingBean
+							.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == ContractConst.VALUE_OF_0)) { // 32418
+
+				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				throw new EpException(MessageConst.ERROR_750073); // 32418
 			}
 			//End Fix - #38613, #33287
 
@@ -2993,6 +3068,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+					//Enhancement #26186 - start
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() == null) {
+						//24333 - Start
+						getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+						
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage(ContractConst.PBM_DECISION_DATE_MENU_LABEL, 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						//24333 - End
+					}
+					//Enhancement #26186 - end
+					
 					if (getManagedBean().getPbQcApproved() == null || getManagedBean().getPbQcApproved().equalsIgnoreCase("")) {
 						//24333 - Start
 						getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
@@ -3029,6 +3117,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			if (getManagedBean().getTaskName() != null
 					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
+				//Enhancement #26186 - start
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() == null) {
+					//24333 - Start
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage(ContractConst.MOF_DECISION_DATE_MENU_LABEL, 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					//24333 - End
+				}
+				//Enhancement #26186 - end
+				
 				if (getManagedBean().getMofApproved() == null || getManagedBean().getMofApproved().equalsIgnoreCase("")) {
 					//24333 - Start
 					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
@@ -3647,21 +3748,175 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return contractAmount;
 	}
 
+	// #32418,#40279 - Start
 	/**
-	 * The method used to retrieve the new contract period
-	 * with addition of old contract period and extended period.
+	 * Calculates contract period including ongoing amendment extension.
+	 * Supplemental Performance Bond Section
 	 * 
-	 * @return new contract period
+	 * @return an array containing: [0] = total months, [1] = remaining days
 	 */
-	public String calculateNewContractPeriod(boolean isCalculateNew) {
-		if (isCalculateNew) {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().intValue()
-					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()); //#24333
-		} else {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
-					.getLatestContractVer().getCtContractValue().getContractPeriod());
+	private int[] calculateNewContractPeriod() {
+
+		CtContractVer current = ctBackingBean.getManagedBean().getContractVer();
+
+		CtContractValue contractValue = current.getCtContractValue();
+
+		Date effectiveDate = contractValue.getEffDate();
+
+		Date expiredDate = contractValue.getExpDate();
+
+		CtAmendment amendment = current.getCtAmendment();
+
+		// Use amendment extend end date during ongoing amendment
+		if (isOngoingAmendment(current) && amendment != null && amendment.isContractExtend()
+				&& amendment.getExtendEndDate() != null) {
+
+			expiredDate = amendment.getExtendEndDate();
 		}
+
+		return DateUtils.getMonthsAndDaysDifference(effectiveDate, expiredDate);
 	}
+
+	/**
+	 * Returns total contract months for Performance Bond Section display.
+	 * 
+	 * @return total contract months
+	 */
+	public String getDisplayContractPeriod() {
+
+		int[] result = calculateNewContractPeriod();
+
+		return String.valueOf(result[0]);
+	}
+
+	/**
+	 * Returns total contract days for Performance Bond Section display
+	 * 
+	 * @return remaining contract days
+	 */
+	public String getDisplayContractDays() {
+
+		int[] result = calculateNewContractPeriod();
+
+		return String.valueOf(result[1]);
+	}
+
+	/**
+	 * Calculates contract period for Supplemental Letter display.
+	 * 
+	 * @return an array containing: [0] = contract months, [1] = contract days
+	 */
+	private int[] calculateSupplementalContractPeriod() {
+
+		CtContractVer current = ctBackingBean.getManagedBean().getContractVer();
+
+		CtContractValue contractValue;
+
+		// ONGOING
+		if (isOngoingAmendment(current)) {
+
+			contractValue = current.getCtContractValue();
+
+		} else {
+
+			List<CtContractVer> history = getManagedBean().getAmendHistoryList();
+
+			// COMPLETED WITH AMENDMENT HISTORY
+			if (history != null && !history.isEmpty()) {
+
+				contractValue = history.get(history.size() - 1).getCtContractValue();
+
+			} else {
+
+				// FIRST AMENDMENT COMPLETED
+				// fallback to previous contract version
+				CtContractVer previousContractVer = getPreviousContractVersion(current);
+
+				if (previousContractVer != null) {
+
+					contractValue = previousContractVer.getCtContractValue();
+
+				} else {
+
+					// fallback safety
+					contractValue = current.getCtContractValue();
+				}
+			}
+		}
+
+		return DateUtils.getMonthsAndDaysDifference(contractValue.getEffDate(), contractValue.getExpDate());
+	}
+
+	/**
+	 * Retrieves previous contract version before current version.
+	 * 
+	 * @param current
+	 *            current contract version
+	 * @return previous contract version
+	 */
+	private CtContractVer getPreviousContractVersion(CtContractVer current) {
+
+		List<CtContractVer> contractVersions = current.getCtContract().getCtContractVers();
+
+		if (contractVersions == null || contractVersions.isEmpty()) {
+			return null;
+		}
+
+		CtContractVer previous = null;
+
+		for (CtContractVer contractVer : contractVersions) {
+
+			if (contractVer.getContractVerId().compareTo(current.getContractVerId()) < 0) {
+
+				if (previous == null || contractVer.getContractVerId().compareTo(previous.getContractVerId()) > 0) {
+
+					previous = contractVer;
+				}
+			}
+		}
+
+		return previous;
+	}
+
+	/**
+	 * Returns contract months for Supplemental Letter Section display.
+	 * 
+	 * @return contract months
+	 */
+	public String getSupplementalDisplayContractPeriod() {
+
+		int[] result = calculateSupplementalContractPeriod();
+
+		return String.valueOf(result[0]);
+	}
+
+	/**
+	 * Returns contract days for Supplemental Letter Section display.
+	 * 
+	 * @return contract days
+	 */
+	public String getSupplementalDisplayContractDays() {
+
+		int[] result = calculateSupplementalContractPeriod();
+
+		return String.valueOf(result[1]);
+	}
+
+	/**
+	 * Checks whether the contract amendment is still ongoing.
+	 * 
+	 * @param contractVer
+	 *            contract version data
+	 * @return true if the amendment is ongoing, otherwise false
+	 */
+	private boolean isOngoingAmendment(CtContractVer contractVer) {
+
+		Long statusId = contractVer.getStatus() != null ? contractVer.getStatus().getStatusId() : null;
+
+		return !ContractStatusConst.FA_LOA_COMPLETED.equals(statusId);
+	}
+
+	// #32418,#40279 - End
 
 	//#24333 - Start
 	/**
@@ -4602,16 +4857,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onContractExtensionChecked() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(1); // default to 1 month
+			//#32418 - start
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(ContractConst.VALUE_OF_0); // default to 0 month
+			//#32418 - end
 			Calendar c = Calendar.getInstance();
 			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			c.add(Calendar.DATE, 1);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
 
 			//#26076 - start
 			//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			c.add(Calendar.MONTH, 1);
-			c.add(Calendar.DATE, -1);
 			//#26076 - end
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
@@ -4828,18 +5082,46 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user extended the contract period.
 	 */
 	public void onExtensionPeriodChanged() {
-		Calendar c = Calendar.getInstance();
-		c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		c.add(Calendar.DATE, 1);
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
+		// 32418 Start
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		CtContractValue contractValue = ctBackingBean.getManagedBean().getContractVer().getCtContractValue();
 
-		//#26076 - start
-		//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		c.add(Calendar.MONTH, ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
-		c.add(Calendar.DATE, -1);
-		//#26076 - end
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+		Integer extendPeriod = amendment.getExtendPeriod();
+		if (extendPeriod <= ContractConst.VALUE_OF_0) {
+			amendment.setExtendPeriod(ContractConst.VALUE_OF_0);
+		}
+
+		Integer extendDaysPeriod = amendment.getExtendDaysPeriod();
+		if (extendDaysPeriod <= ContractConst.VALUE_OF_0) {
+			amendment.setExtendDaysPeriod(ContractConst.VALUE_OF_0);
+		}
+		// Validate max days (must be < 28)
+		if (extendDaysPeriod >= ContractConst.VALUE_OF_28) {
+			amendment.setExtendDaysPeriod(ContractConst.VALUE_OF_0);
+			throw new EpException(MessageConst.ERROR_750074);
+		}
+
+		Date expDate = contractValue.getExpDate();
+		if (extendPeriod > 0 || extendDaysPeriod > 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(expDate);
+			c.add(Calendar.DATE, 1);
+			amendment.setExtendStartDate(c.getTime());
+
+			// #26076 - start
+			c.add(Calendar.MONTH, extendPeriod);
+			// #32418 - start
+			c.add(Calendar.DAY_OF_MONTH, extendDaysPeriod);
+			// #32418 - end
+			c.add(Calendar.DATE, -1);
+			// #26076 - end
+			amendment.setExtendEndDate(c.getTime());
+			amendment.setAmendmentEffDate(amendment.getExtendStartDate());
+		} else {
+			amendment.setExtendStartDate(expDate);
+			amendment.setExtendEndDate(expDate);
+		}
+		// 32418 End
 		changeAmendmentEffDate();
 	}
 
@@ -6925,6 +7207,352 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//#26520 - end
 	
+	//#26186 start 
+	/**
+	 * Checks the contract conditions for the supplier.
+	 * 
+	 * This method evaluates several conditions related to the contract status and task name.
+	 * It ensures that:
+	 * - The task name is not null.
+	 * - The viewSCL is not being viewed.
+	 * - The contract status is not loa completed and rejection acknowledgement.
+	 * 
+	 * @return true if all conditions are met; false otherwise.
+	 */
+	public boolean checkContractConditionForSupplier() {
+		this.getManagedBean().setDisciplinaryActionCancel(false);
+		this.getManagedBean().setSupplierBumiCancel(false);
+		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
+
+		boolean contractStatus = !statusId.equals(ContractStatusConst.FA_LOA_COMPLETED)
+				&& !statusId.equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)
+				&& !statusId.equals(ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT);
+
+		return getManagedBean().getTaskName() != null && !ctBackingBean.getManagedBean().isViewSCL() && contractStatus;
+	}
+	
+	/**
+	 * checkAndSetDA - function to retrieve (get) DA, set DA and set button cancel
+	 * isDisciplinaryAction - Variable for the contract got DA or not
+	 * isDisciplinaryActionNotification - Variable for type of punishment either small or big (true - small || false - big)  
+	 * isDisciplinaryActionCancel - Variable for DA to be cancel (to set button cancel for the DA that need to be cancel)
+	 * 
+	 * @exception SLAUtils
+	**/
+	// #29793 #26186 start
+	public void checkAndSetDA() { // #32860 start
+		try {
+			Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
+				// #32860 start
+			if (!this.getManagedBean().isValidationDA()) {
+				checkDA();
+			}
+			setDACancel(statusId);
+			// #32860 end
+
+			if (getManagedBean().isDisciplinaryActionCancel()) {
+				handleMessageDACancel(statusId);
+			}
+			this.getManagedBean().setValidationDA(false);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkAndSetDA",
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "checkAndSetDA",
+					getUserIdSessionFromLoginId(), e);
+			throw new EpException(MessageConst.ERROR_750053, new String[] { e.getMessage() });
+		}
+	}
+	
+	/**
+	 * Method to handle message display and button when disciplinary action cancel is true
+	 * 
+	 * @param statusId The status of the current contract
+	 */
+	public void handleMessageDACancel(Long statusId) {
+		String msgThrowDisc = null;
+		String[] outcome = new String[getManagedBean().getOutComes().length];
+		String[] strArray = handleWIPTransactionButton(statusId);
+		List<String> listButton = new ArrayList<>(Arrays.asList(strArray));
+
+		if (statusId.equals(ContractStatusConst.FA_PENDING_SIGN_OFF)
+				|| statusId.equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF)) {
+			if (listButton.contains(BpmOutcomeConst.BPM_REVISE)) {
+				outcome = new String[] { BpmOutcomeConst.BPM_REVISE };
+				msgThrowDisc = MessageConst.ERROR_750069;
+			}
+		} else if (listButton.contains(BpmOutcomeConst.BPM_CANCEL)
+				|| statusId.equals(ContractStatusConst.FA_PENDING_REVISION)) {
+			outcome = new String[] { BpmOutcomeConst.BPM_CANCEL };
+			msgThrowDisc = MessageConst.ERROR_750052;
+		} else if (listButton.contains(BpmOutcomeConst.BPM_REJECT)) {
+			outcome = new String[] { BpmOutcomeConst.BPM_REJECT };
+			msgThrowDisc = MessageConst.ERROR_750068;
+		}
+
+		if (msgThrowDisc != null) {
+			getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+			getManagedBean().setOutComes(outcome);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(msgThrowDisc,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+	}
+	
+	/**
+	 * The method will set the DA for every status. 
+	 * isDisciplinaryActionCancel to be set so that the cancel button can be set
+	 * 
+	 * @param statusId The status of the current contract
+	 **/
+	public void setDACancel(Long statusId) {
+		if (getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionNotification()) {
+			if (ContractStatusConst.FA_DA.contains(statusId)) {
+				// #32652 start
+				checkPbqcMofAuthorityDA();
+				// #32652 end
+			} else if (ContractStatusConst.FA_DA_LOA.contains(statusId)) {
+				// contract approver authority
+				// #32652 start
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq()) {
+					checkApproverAuthorityDA();
+				}
+				checkPbqcMofAuthorityDA();
+				// #32652 end
+			} else {
+				getManagedBean().setDisciplinaryActionCancel(true);
+			}
+		}
+	}
+	
+	/**
+	 * Method to check and set DA for approver authority.
+	 */
+	private void checkApproverAuthorityDA(){
+		CtActor approverActor = retrieveContractActor(
+				ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+				ctBackingBean.getManagedBean().getContractVer().getDocType(),
+				getApproverRoleCode());
+		if (approverActor != null && 
+				(approverActor.getActionDate().equals(getManagedBean().getDisciplinaryActionStartDate()) 
+						|| approverActor.getActionDate().after(getManagedBean().getDisciplinaryActionStartDate()))) {
+			getManagedBean().setDisciplinaryActionCancel(true);
+		}
+	}
+	
+	/**
+	 * Method to get approver role code
+	 * @return RoleCode
+	 */
+	private String getApproverRoleCode() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			return RoleCode.CT_APPROVER.value();
+		} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			return RoleCode.BPK_CC_APPROVER.value();
+		}
+		return null;
+	}
+	
+	/**
+	 * Method to set DA cancel during PBQC and/or MOF authority
+	 */
+	private void checkPbqcMofAuthorityDA() {
+	    if (isPbqcAuthorityDA() || isMofAuthorityDA()) {
+	        getManagedBean().setDisciplinaryActionCancel(true);
+	    }
+	}
+	
+	/**
+	 * Method to check is in PBQC authority and DA date has been pass or not
+	 */
+	private boolean isPbqcAuthorityDA() {
+		Date pbqcDate = StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(ctBackingBean.getManagedBean(),
+				"contractVer.ctAmendment.pbqcDecisionDate")) ? ctBackingBean.getManagedBean().getContractVer()
+				.getCtAmendment().getPbqcDecisionDate() : null;
+		Boolean isDate = pbqcDate != null && getManagedBean().getDisciplinaryActionStartDate() != null;
+
+		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
+				&& isDate
+				&& (pbqcDate.equals(getManagedBean().getDisciplinaryActionStartDate()) 
+						|| pbqcDate.after(getManagedBean().getDisciplinaryActionStartDate()));
+	}
+	
+	/**
+	 * Method to check is in MOF authority and DA date has been pass or not
+	 */
+	private boolean isMofAuthorityDA() {
+		Date mofDate = StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(ctBackingBean.getManagedBean(),
+				"contractVer.ctAmendment.mofDecisionDate")) ? ctBackingBean.getManagedBean().getContractVer()
+				.getCtAmendment().getMofDecisionDate() : null;
+		Boolean isDate = mofDate != null && getManagedBean().getDisciplinaryActionStartDate() != null;
+		
+		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()
+				&& isDate
+				&& (mofDate.equals(getManagedBean().getDisciplinaryActionStartDate()) 
+						|| mofDate.after(getManagedBean().getDisciplinaryActionStartDate()));
+	}
+
+	
+	/**
+	 * The method will retrieve the disciplinary action from supplier and contract module.
+	 * 1. Retrieve the info from supplier, if supplier has disciplinary action, then will get message from supplier
+	 * 2. Will retrieve info from contract if the supplier has disciplinary action. 
+	 **/
+	public void checkDA() {
+		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		FacesScopes facesScopes = new FacesScopes();
+		try {
+			PmUser sUsers = facesScopes.getUserSessionBean();
+
+			retrieveDA();
+			this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+
+			if (this.getManagedBean().isDisciplinaryAction()) {
+				SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+
+				String language = facesScopes.getUserLocale().getLanguage() != null ? facesScopes.getUserLocale()
+						.getLanguage() : sUsers.getPreferredLanguage();
+				reqDTO.setLanguage(language);
+
+				SmSupplier currentSupplier = getSupplier(); // #34097
+				if (currentSupplier != null) {
+					reqDTO.setSupplier(currentSupplier);
+				}
+
+				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
+				if (resDTO.getErrorMessage() != null) {
+					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkDA",
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "checkDA",
+					getUserIdSessionFromLoginId(), e);
+			throw new EpException(MessageConst.ERROR_750053, new String[] { e.getMessage() });
+		}
+	}
+	
+	/**
+	 * the method will retrieve the disciplinary action info from supplier module.
+	 * If supplier type of punishment is Suspend Registration or Cancel Registration 
+	 * or Blacklist Owner / Director of Company or Cancellation of Bumiputera Status 
+	 * or Cancellation of Manufacturer Status, this Amendment With Supplemental process not able to proceed
+	**/
+	private void retrieveDA() { // #32712
+		SmSupplier currentSupplier = getSupplier(); // #34097
+		if (currentSupplier == null) {
+			return;
+		}
+
+		this.getManagedBean().setDisciplinaryAction(false);
+		// #28527 start
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil
+				.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier); // #34097
+		// 28527 end
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			for (SmDisciplinaryAction disciplinaryAction : resultList) {
+				if (isCurrentDateWithinAction(disciplinaryAction)
+						&& (!getManagedBean().isDisciplinaryAction() && !getManagedBean()
+								.isDisciplinaryActionNotification())) { // #32712
+					handleDASubject(disciplinaryAction);
+				}
+			}
+		}
+	}
+	//29793 end
+	
+	/**
+	 * Checks if the current date is within the start and end dates of the disciplinary action.
+	 *
+	 * @param disciplinaryAction the disciplinary action to check against
+	 * @return true if the current date is within the range, false otherwise
+	 */
+	private boolean isCurrentDateWithinAction(SmDisciplinaryAction disciplinaryAction) {
+		Date currentDate = DateUtils.getCurrentDateWithoutTime();
+	    Date startDate = disciplinaryAction.getStartDate();
+	    Date endDate = disciplinaryAction.getEndDate();
+	    
+	    return (currentDate.equals(startDate) || currentDate.after(startDate)) &&
+	           (currentDate.equals(endDate) || currentDate.before(endDate));
+	}
+	
+	/**
+	 * method to check which DA that has been applied to the supplier and set notification DA true/false
+	 * @param disciplinaryAction
+	 */
+	public void handleDASubject(SmDisciplinaryAction disciplinaryAction) {
+		if (disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration()
+				|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isBumiputeraCancel()) {
+			getManagedBean().setDisciplinaryActionNotification(false);
+			getManagedBean().setDisciplinaryAction(true);
+		} else if (disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory()
+				|| disciplinaryAction.isManufacturerCancel()) {
+			getManagedBean().setDisciplinaryActionNotification(true);
+			getManagedBean().setDisciplinaryAction(true);
+		}
+		getManagedBean().setDisciplinaryActionStartDate(disciplinaryAction.getStartDate());
+		getManagedBean().setDisciplinaryActionEndDate(disciplinaryAction.getEndDate());
+	}
+	
+	/**
+	 * Process to validate the DA again after the PBM/MOF Decision DATE has been
+	 * key in and being submit.
+	 * 
+	 * <p>
+	 * Once the DA has been validate, it will do the following 
+	 * 1. Set the BPM outcome to SAVE so that the contract will not undergo
+	 * Tracking Diary and BPM process in SO file. 
+	 * 2. Set the checkValidationDisciplinaryAction to true so that after the record has
+	 * been saved, it will skip checkDA process.
+	 * 
+	 * @return true if DA is true, PBQC and/or MOF decision is true.
+	 */
+	public boolean checkValidationDA() {
+		return checkSevereDA() && (isPbqcAuthorityDA() || isMofAuthorityDA());
+	}
+	
+	/**
+	 * Validates Disciplinary Action is applicable. 
+	 * 
+	 * @return true if has DA, severe DA (Hukuman Berat) and did not have cancel
+	 *         button
+	 */
+	public boolean checkSevereDA() {
+		return getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionNotification()
+				&& !getManagedBean().isDisciplinaryActionCancel();
+	}
+	
+	/**
+	 * Method to list out the history of DA on view page
+	 * @exception SLAUtils
+	 */
+	public void onViewDisciplinaryAction() {
+		try {
+			SmSupplier currSupp = getSupplier();
+
+			// #30756 start
+			currSupp.setFlagSupplier(true);
+			currSupp.setFlagDASuppProfile(true);
+			// #30756 end
+
+			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
+
+			getManagedBean().setDisciplineVOs(
+					CollectionUtils.isNotEmpty(voList) ? voList : new ArrayList<DisciplinaryActionVO>());
+
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "onViewDisciplinaryAction",
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					"onViewDisciplinaryAction", getUserIdSessionFromLoginId(), e);
+			throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
+		}
+	}
+	//#26186 end
+		
 	//#25890 - Start
 	private PmParameter retrieveParameterById(Long parameterId) {
 		if (parameterId == null) {
@@ -8186,6 +8814,322 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//#13847 end
+
+	// #34097/#26186 start
+	/**
+	 * Method to check supplier for Cancelled Category Code/ Cancelled Category Related to Manufacturing
+	 * and Cancelled Bumiputera Status
+	 */
+	public void checkSupplierDataMaintenance() {
+		try {
+			SmSupplier supplier = getSupplier();
+			
+			if(!this.getManagedBean().isDisciplinaryActionCancel()){
+				checkSupplierBumiputera(supplier);
+				if(!this.getManagedBean().isSupplierBumiCancel()){
+					checkSupplierCategory(supplier);
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierDataMaintenance",
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					"checkSupplierDataMaintenance", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	/**
+	 * Method to get current supplier
+	 * 
+	 * @return the supplier for the current contract 
+	 */
+	public SmSupplier getSupplier(){
+		return StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(
+				ctBackingBean.getManagedBean(), "contractVer.ctContract.smSupplier")) ? ctBackingBean
+				.getManagedBean().getContractVer().getCtContract().getSmSupplier() : SmApplicationUtil
+				.getCurrentSupplier();
+	}
+
+	/**
+	 * Method to check supplier for Cancelled Category Code/ Cancelled Category Related to Manufacturing
+	 * 
+	 * @param supplier the supplier for the current contract
+	 */
+	public void checkSupplierCategory(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		try {
+			this.getManagedBean().setSupplierMsg(StringUtils.EMPTY);
+			StringBuilder sb = new StringBuilder();
+
+			List<SmSupplierCategory> suppCategory = suppDataSO.nonDisciplinaryActionCancelCategoryCode(supplier
+					.getSupplierId());
+			if(CollectionUtils.isNotEmpty(suppCategory)){
+				for (SmSupplierCategory supCat : suppCategory) {
+					appendSupplierCategoryMsg(sb, supCat);
+				}
+			}
+
+			if (StringUtils.isNotBlank(sb.toString())) {
+				sb.insert(0, "(");
+			    sb.append(")");
+				String[] params = new String[] { sb.toString() };
+				this.getManagedBean().setSupplierMsg(
+						ResourceBundleUtils.getMessage("lbl.ct.amend.supplier.maintenance.cancel.category", params,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierCategory",
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "checkSupplierCategory",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	/**
+	 * Method to append message contain category code for supplier.
+	 * 
+	 * @param sb The stringbuilder of the message
+	 * @param supCat The list of the category code of the supplier
+	 */
+	private void appendSupplierCategoryMsg(StringBuilder sb, SmSupplierCategory supCat) {
+		if(StringUtils.isNotBlank(sb.toString())){
+			sb.append(", ");
+		}
+		if(supCat.getPmCategoryL1()!=null){
+			sb.append(supCat.getPmCategoryL1().getCategoryL1Code());
+		}
+		if(supCat.getPmCategoryL2()!=null){
+			sb.append(supCat.getPmCategoryL2().getCategoryL2Code());
+		}
+		if(supCat.getPmCategoryL3()!=null){
+			sb.append(supCat.getPmCategoryL3().getCategoryL3Code());
+		}
+	}
+
+	/**
+	 * Method to check supplier for Cancelled Bumiputera Status
+	 * 
+	 * @param supplier the supplier for the current contract
+	 */
+	public void checkSupplierBumiputera(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		IQTDetailSO iQtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		try {
+			boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
+			boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+					.getContractNo());
+
+			if (!suppBumiputera && openFor) {
+				this.getManagedBean().setSupplierBumiCancel(true);
+				if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
+					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+				}
+				handleMessageSupplierMaintenance();
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierBumiputera",
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					"checkSupplierBumiputera", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	/**
+	 * Method to handle warning message according to button/status due to cancelled Bumiputera
+	 */
+	public void handleMessageSupplierMaintenance() {
+
+		String msgThrow = null;
+		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
+		String[] outcome = new String[getManagedBean().getOutComes().length];
+
+		String[] strArray = handleWIPTransactionButton(statusId);
+		List<String> listButton = new ArrayList<>(Arrays.asList(strArray));
+
+		if ((statusId.equals(ContractStatusConst.FA_PENDING_SIGN_OFF) || 
+				statusId.equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF))
+				&& listButton.contains(BpmOutcomeConst.BPM_REVISE)) {
+			outcome = new String[] { BpmOutcomeConst.BPM_REVISE };
+			msgThrow = MessageConst.ERROR_750087;
+
+		} else if (listButton.contains(BpmOutcomeConst.BPM_CANCEL)
+				|| statusId.equals(ContractStatusConst.FA_PENDING_REVISION)) {
+			outcome = new String[] { BpmOutcomeConst.BPM_CANCEL };
+			msgThrow = MessageConst.ERROR_750085;
+		} else if (listButton.contains(BpmOutcomeConst.BPM_REJECT)) {
+			outcome = new String[] { BpmOutcomeConst.BPM_REJECT };
+			msgThrow = MessageConst.ERROR_750086;
+		}
+
+		if (msgThrow != null) {
+			getManagedBean().setOutComes(outcome);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(msgThrow,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+	}
+	
+	/**
+	 * This method to handle WIP transaction for DA and Supplier Bumi Cancelled 
+	 * that doesnt have button reject/cancel due to the old process.
+	 * And to include the reject/cancel button and submit to BPM API
+	 * 
+	 * @param statusId The status of the current contract
+	 * @return The outcomes that has been set contain the reject/cancel button based on the status
+	 */
+	public String[] handleWIPTransactionButton(Long statusId) {
+		String[] strButton = this.getManagedBean().getOutComes();
+		List<String> listButton = new ArrayList<>(Arrays.asList(strButton));
+		boolean condition = false;
+
+		if (!listButton.contains(BpmOutcomeConst.BPM_CANCEL) && ContractHashSetConst.CANCEL_STATUS_CONST.contains(statusId)) {
+			listButton.add(BpmOutcomeConst.BPM_CANCEL);
+			condition = true;
+		} else if (!listButton.contains(BpmOutcomeConst.BPM_REJECT) && ContractHashSetConst.REJECT_STATUS_CONST.contains(statusId)) {
+			listButton.add(BpmOutcomeConst.BPM_REJECT);
+			condition = true;
+		} else if (!listButton.contains(BpmOutcomeConst.BPM_REVISE) &&
+				(statusId.equals(ContractStatusConst.FA_PENDING_SIGN_OFF) 
+				|| statusId.equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF))){
+			listButton.add(BpmOutcomeConst.BPM_REVISE);
+			condition = true;
+		}
+
+		if(condition){
+			strButton = listButton.toArray(new String[0]);
+			this.getManagedBean().setOutComes(null);
+			this.getManagedBean().setOutComes(strButton);
+			this.getManagedBean().setWipButtonCancelReject(true);
+		}
+		return getManagedBean().getOutComes();
+	}
+
+	/**
+	 * Retrieves and handle the appropriate acknowledge message for the
+	 * acknowledge page based on the outcome and the state of the managed bean.
+	 * 
+	 * @param outcome
+	 *            The outcome string that determines the message to return.
+	 * @return The corresponding message constant based on the outcome and
+	 *         conditions, or null if no match is found.
+	 */
+	private String handleAcknowledgeMessageDAandBumiCancel(String outcome) {
+		if (this.getManagedBean().isDisciplinaryActionCancel()) {
+			return getDisciplinaryActionCancelAckMessage(outcome);
+		} else if (this.getManagedBean().isSupplierBumiCancel()) {
+			return getSupplierBumiCancelAckMessage(outcome);
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieves the acknowledge message for disciplinary action cancellation
+	 * based on the outcome.
+	 * 
+	 * @param outcome
+	 *            The outcome string that determines the message to return.
+	 * @return The corresponding message constant for disciplinary action
+	 *         cancellation, or null if no match is found.
+	 */
+	private String getDisciplinaryActionCancelAckMessage(String outcome) {
+		switch (outcome.toUpperCase()) {
+			case BpmOutcomeConst.BPM_ACKNOWLEDGE:
+				return MessageConst.INFO_700102;
+			case BpmOutcomeConst.BPM_REJECT:
+				return MessageConst.INFO_700103;
+			case BpmOutcomeConst.BPM_REVISE:
+				return MessageConst.INFO_700104;
+			case BpmOutcomeConst.BPM_CANCEL:
+				return MessageConst.INFO_700105;
+			default:
+				return null;
+		}
+	}
+
+	/**
+	 * Retrieves the acknowledge message for supplier Bumi cancellation based on the outcome.
+	 * 
+	 * @param outcome The outcome string that determines the message to return.
+	 * @return The corresponding message constant for supplier Bumi cancellation, or null if no match is found.
+	 */
+	private String getSupplierBumiCancelAckMessage(String outcome) {
+		switch (outcome.toUpperCase()) {
+			case BpmOutcomeConst.BPM_ACKNOWLEDGE:
+				return MessageConst.INFO_700122;
+			case BpmOutcomeConst.BPM_REJECT:
+				return MessageConst.INFO_700123;
+			case BpmOutcomeConst.BPM_REVISE:
+				return MessageConst.INFO_700124;
+			case BpmOutcomeConst.BPM_CANCEL:
+				return MessageConst.INFO_700125;
+			default:
+				return null;
+		}
+	}
+	
+	/**
+	 * Method to get constant for contract cancellation. Disciplinary Action
+	 * Cancel is much higher status compare to Supplier Bumiputera Cancel. If
+	 * contract have both DA Cancel and Bumi Cancel, will return DA Cancel.
+	 * 
+	 * @return The type of cancellation (e.g., BUMI or DA).
+	 */
+	public String getContractCancelType() {
+		acknowledgedValidation();
+		if (this.getManagedBean().isDisciplinaryActionCancel()) {
+			return ContractConst.CANCEL_DA;
+		} else if (this.getManagedBean().isSupplierBumiCancel()) {
+			return ContractConst.CANCEL_BUMI;
+		}
+		return null;
+	}
+	
+	/**
+	 * Method to check when no DA cancel and no Bumi Cancel during acknowledged
+	 * after has been cancel by DA/Bumi
+	 */
+	public void acknowledgedValidation() {
+		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
+		if (!this.getManagedBean().isDisciplinaryActionCancel() && !this.getManagedBean().isSupplierBumiCancel()) {
+			if (statusId.equals(ContractStatusConst.FA_DISCIPLINARY_PENDING_CANCELLATION_ACKNOWLEDGEMENT)) {
+				this.getManagedBean().setDisciplinaryActionCancel(true);
+			} else if (statusId.equals(ContractStatusConst.FA_BUMI_PENDING_CANCELLATION_ACKNOWLEDGEMENT)) {
+				this.getManagedBean().setSupplierBumiCancel(true);
+			}
+		}
+	}
+	
+	/**
+	 * Method to check BPM composite version. If the minimum version in DB is
+	 * much lower than current version, then it will set oldBPMVersion as true.
+	 * 
+	 * @param bpmCurrentVer
+	 */
+	public void checkBPMVersion(String bpmCurrentVer) {
+		getManagedBean().setOldBPMVersion(false);
+		try {
+			ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+
+			CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+			cReqDTO.setCompositeValidityId(ContractConst.COMPOSITE_VALIDITY_ID_CANCEL_BUTTON);
+
+			String minCompositeVer = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+					.getMinCompositeVersion();
+
+			if (bpmCurrentVer != null && CustomUtils.compositeVersionComparator(bpmCurrentVer, minCompositeVer) < 0) {
+				getManagedBean().setOldBPMVersion(true);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkBPMVersion", null,
+					"checkBPMVersion", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	// #34097/#26186 end
 	
 	// #25956 - Start
 	/**

@@ -68,6 +68,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	
 	private ScQt scQt;
 
+	// TODO: need to remove above fields...
+
 	// Properties Added by vidyasagar for new noticeboard...
 
 	private String title;
@@ -1311,7 +1313,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	public void setHisCatCode(String hisCatCode) {
 		this.hisCatCode = hisCatCode;
 	}
-	
+
 	public List<PmRemarkCategory> getHistoryList() {
 		return historyList;
 	}
@@ -1376,4 +1378,5 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.pmCatL3flag = pmCatL3flag;
 	}
 	// #29732 End
+
 }

@@ -5604,10 +5604,9 @@ public class RuleCatalogueBackingBean extends
 		Date searchEffDate = this.getManagedBean().getSearchRuleDataTypeEffectiveDate();
 		Date searchExpDate = this.getManagedBean().getSearchRuleDataTypeExpiryDate();
 		Long searchRuleZone = this.getManagedBean().getSearchRuleDataTypeZone();
-		String ruleDataType = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleDataTypeId()
-				.getParameterCode();
+		String ruleDataType = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleDataTypeId().getParameterCode();
 
-		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList() != null ? 
+		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList() != null ?
 				 this.getManagedBean().getOriginalConfigRuleValueList() : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 		List<PmConfigRuleValue> resultList = new ArrayList<>(originalList);
 		HashMap<Long, List<PmConfigRuleValue>> map = this.getManagedBean().getOriginalConfigRuleValueMap();
@@ -5648,8 +5647,7 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
-		// search via effective date and expiry date (exact date if only one,
-		// between if both)
+		// search via effective date and expiry date (exact date if only one, between if both)
 		if (searchEffDate != null || searchExpDate != null) {
 			List<PmConfigRuleValue> byDate = searchByDate(originalList, searchEffDate, searchExpDate, false);
 			if (CollectionUtils.isEmpty(byDate)) {
@@ -5662,8 +5660,7 @@ public class RuleCatalogueBackingBean extends
 		if (CollectionUtils.isNotEmpty(resultList)) {
 			this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(resultList);
 		} else {
-			this.getManagedBean().getSelectedRuleDescType().getRuleType()
-					.setConfigRuleValues(new ArrayList<PmConfigRuleValue>());
+			this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(new ArrayList<PmConfigRuleValue>());
 		}
 	}
 
@@ -5675,11 +5672,9 @@ public class RuleCatalogueBackingBean extends
 	 * @param searchRuleValues
 	 * @return
 	 */
-	private List<PmConfigRuleValue> searchByRuleValueCategoryCode(List<PmConfigRuleValue> searchRuleTypeValueList,
-			PmConfigRuleValue configRuleValue, String searchRuleValues) {
+	private List<PmConfigRuleValue> searchByRuleValueCategoryCode(List<PmConfigRuleValue> searchRuleTypeValueList, PmConfigRuleValue configRuleValue, String searchRuleValues){	
 		if (searchRuleValues != null && !searchRuleValues.isEmpty()) {
-			String ruleValue = configRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1()
-					.getCategoryL1Code()
+			String ruleValue = configRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ configRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ configRuleValue.getCategoryL3Id().getCategoryL3Code();
 			String searchRegex = searchRegex(searchRuleValues);
@@ -5699,8 +5694,7 @@ public class RuleCatalogueBackingBean extends
 	 * @param searchRuleValues
 	 * @return
 	 */
-	private List<PmConfigRuleValue> searchByRuleValuePTJ(List<PmConfigRuleValue> searchRuleTypeValueList,
-			PmConfigRuleValue configRuleValue, String searchRuleValues) {
+	private List<PmConfigRuleValue> searchByRuleValuePTJ(List<PmConfigRuleValue> searchRuleTypeValueList, PmConfigRuleValue configRuleValue, String searchRuleValues){
 		if (searchRuleValues != null && !searchRuleValues.isEmpty()) {
 			String searchRegex = searchRegex(searchRuleValues);
 
@@ -5719,8 +5713,7 @@ public class RuleCatalogueBackingBean extends
 	 * @param searchRuleValueDesc
 	 * @return
 	 */
-	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList,
-			String searchRuleValueDesc, Boolean multipleSearchFlag) {
+	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList, String searchRuleValueDesc, Boolean multipleSearchFlag){
 		List<PmConfigRuleValue> result = new ArrayList<>();
 
 		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {
@@ -5788,8 +5781,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	/**
-	 * #36738 Standardized the time up to milliseconds of the dates for
-	 * comparison
+	 * #36738 Standardized the time up to milliseconds of the dates for comparison
 	 * 
 	 * @param date
 	 * @return
@@ -5816,8 +5808,7 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeEffectiveDate(null);
 		this.getManagedBean().setSearchRuleDataTypeExpiryDate(null);
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
-		this.getManagedBean().getSelectedRuleDescType().getRuleType()
-				.setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
+		this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
 	}
 
 	/**
@@ -5891,8 +5882,7 @@ public class RuleCatalogueBackingBean extends
 	 * @param ptjValue
 	 * @return
 	 */
-	private List<PmPtjSpecialApproval> searchByPtj(List<PmPtjSpecialApproval> ptjApprovalList, String search,
-			boolean useName) {
+	private List<PmPtjSpecialApproval> searchByPtj(List<PmPtjSpecialApproval> ptjApprovalList, String search, boolean useName) {
 		List<PmPtjSpecialApproval> result = new ArrayList<>();
 
 		if (search == null || search.isEmpty()) {
@@ -5931,8 +5921,7 @@ public class RuleCatalogueBackingBean extends
 	 * @param searchLimitString
 	 * @return
 	 */
-	private List<PmPtjSpecialApproval> searchByLimit(List<PmPtjSpecialApproval> searchPtjApprovalList,
-			BigDecimal searchLimit) {
+	private List<PmPtjSpecialApproval> searchByLimit(List<PmPtjSpecialApproval> searchPtjApprovalList, BigDecimal searchLimit) {
 		List<PmPtjSpecialApproval> result = new ArrayList<>();
 
 		if (searchLimit != null) {

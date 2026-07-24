@@ -17,7 +17,6 @@ public class FlReportMainManagedBean extends FlReportManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	
-	//29554
 	private boolean showRptCategory;
 
 	/**

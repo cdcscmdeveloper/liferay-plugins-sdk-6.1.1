@@ -61,6 +61,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -71,11 +72,16 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmCancelMofRemarksVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang3.StringUtils;
+//#34031
+import my.ep.persistence.entity.sm.SmRevisit;
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -273,6 +279,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Date poRemarkAfterSiteVisitCreatedDate;
 	private String secondPoUserName = null;
 	// #29664 - start	
+	private SmSupplierOwner smSuppOwner; //26238
 	private boolean viewSupplierMaintenancePage; // #26639
 	
 	//#32008 - start
@@ -325,6 +332,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean poApprUnClaimTask;
 	private List<SmMachineDtl> allMachineDtls;
 	//#30766 & #34209 - END
+	//26238 -  Disciplonary action - 28146
+	private boolean flagBlacklistCancel;
 	
 	//#34099 - start
 	private SmApplInquiry selectedInquiryResponse;
@@ -332,13 +341,56 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//#34099 - end
 	private boolean isRevisionDialog; //#32008
 	
+	//28281 - start
+	private boolean warningExist;
+	private boolean warning;
+	private boolean cancelCategoryCode;
+	private boolean suspendRegistration;
+	private boolean cancelRegistration;
+	private boolean blacklistOwnerOrDirector;
+	private boolean bumiputeraStatusCancel;
+	private boolean manufacturerStatusCancel;
+	private List<DisciplinaryActionVO> disciplinaryActionVoList;
+	private List<SmPersonnel> ownerAndDirectorList; 
+	private List<SmPersonnel> selectedOwnerAndDirectorList; 
+	private String applType; 
+	private boolean viewFlag; 
+	private SmSupplier smSupp; 
+	private boolean viewMode; 
+	private boolean mofNoExist;
+	
+	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
+	private String startDate;
+	private String endDate;
+	private String remarks;
+	private boolean noDisciplinary;
+	private List<DisciplinaryActionCategoryVO> categoryCodeList;
+	
 	//14530
 		private SmApplInquiry poToSupplierInquiry;
 		private List<SmApplInquiry> poSupplierInquiryHistory;
 		private List<SmApplSupportDoc> missinDocs;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean auditAccess;
+	// #34031 Start
+	private List<SmRevisit> smRevisitList;
+	private SmRevisit currentSmRevisit;
+	// #34031 End
+	private Long currRegStatusId; //#26238
 	
+	// 26238 - START
+	private boolean flagShowButtonSubmit;
+	private boolean basicAccountMaintenance; //27437
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	// 26238 - END
+	
+	// 28342 : Disciplinary Action - start
+	private boolean disableDownloadButtonDAHistory;
+	// 28342 : Disciplinary Action - end
+	
+	//28637
+	private boolean viewCatCode;
+		
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -1742,6 +1794,15 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setRemarkOverlappedId(Long remarkOverlappedId) {
 		this.remarkOverlappedId = remarkOverlappedId;
 	}
+	//26238 - start
+	public SmSupplierOwner getSmSuppOwner() {
+		return smSuppOwner;
+	}
+
+	public void setSmSuppOwner(SmSupplierOwner smSuppOwner) {
+		this.smSuppOwner = smSuppOwner;
+	}
+	//26238 - end
 	
 	//25792 - start
 		private class SupplierItemPagingDataModel extends PagingDataModel<CmSupplierItem> {
@@ -2297,5 +2358,287 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.auditAccess = auditAccess;
 	}
 	// #28895_35501 End
+	// #34031 Start
+	public List<SmRevisit> getSmRevisitList() {
+		return smRevisitList;
+	}
+
+	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
+		this.smRevisitList = smRevisitList;
+	}
+
+	public SmRevisit getCurrentSmRevisit() {
+		return currentSmRevisit;
+	}
+
+	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
+		this.currentSmRevisit = currentSmRevisit;
+	}
+	// #34031 End
+	// #38856 End
+	public Long getCurrRegStatusId() {
+		return currRegStatusId;
+	}
+
+	public void setCurrRegStatusId(Long currRegStatusId) {
+		this.currRegStatusId = currRegStatusId;
+	}
+	// #38856 End
+
+	public boolean isFlagBlacklistCancel() {
+		return flagBlacklistCancel;
+	}
+
+	public void setFlagBlacklistCancel(boolean flagBlacklistCancel) {
+		this.flagBlacklistCancel = flagBlacklistCancel;
+	}
+
+	public boolean isWarningExist() {
+		return warningExist;
+	}
+
+	public void setWarningExist(boolean warningExist) {
+		this.warningExist = warningExist;
+	}
+
+	public boolean isWarning() {
+		return warning;
+	}
+
+	public void setWarning(boolean warning) {
+		this.warning = warning;
+	}
+
+	public boolean isCancelCategoryCode() {
+		return cancelCategoryCode;
+	}
+
+	public void setCancelCategoryCode(boolean cancelCategoryCode) {
+		this.cancelCategoryCode = cancelCategoryCode;
+	}
+
+	public boolean isSuspendRegistration() {
+		return suspendRegistration;
+	}
+
+	public void setSuspendRegistration(boolean suspendRegistration) {
+		this.suspendRegistration = suspendRegistration;
+	}
+
+	public boolean isCancelRegistration() {
+		return cancelRegistration;
+	}
+
+	public void setCancelRegistration(boolean cancelRegistration) {
+		this.cancelRegistration = cancelRegistration;
+	}
+
+	public boolean isBlacklistOwnerOrDirector() {
+		return blacklistOwnerOrDirector;
+	}
+
+	public void setBlacklistOwnerOrDirector(boolean blacklistOwnerOrDirector) {
+		this.blacklistOwnerOrDirector = blacklistOwnerOrDirector;
+	}
+
+	public boolean isBumiputeraStatusCancel() {
+		return bumiputeraStatusCancel;
+	}
+
+	public void setBumiputeraStatusCancel(boolean bumiputeraStatusCancel) {
+		this.bumiputeraStatusCancel = bumiputeraStatusCancel;
+	}
+
+	public boolean isManufacturerStatusCancel() {
+		return manufacturerStatusCancel;
+	}
+
+	public void setManufacturerStatusCancel(boolean manufacturerStatusCancel) {
+		this.manufacturerStatusCancel = manufacturerStatusCancel;
+	}
+
+	public List<DisciplinaryActionVO> getDisciplinaryActionVoList() {
+		return disciplinaryActionVoList;
+	}
+
+	public void setDisciplinaryActionVoList(
+			List<DisciplinaryActionVO> disciplinaryActionVoList) {
+		this.disciplinaryActionVoList = disciplinaryActionVoList;
+	}
+
+	public List<SmPersonnel> getOwnerAndDirectorList() {
+		return ownerAndDirectorList;
+	}
+
+	public void setOwnerAndDirectorList(List<SmPersonnel> ownerAndDirectorList) {
+		this.ownerAndDirectorList = ownerAndDirectorList;
+	}
+
+	public List<SmPersonnel> getSelectedOwnerAndDirectorList() {
+		return selectedOwnerAndDirectorList;
+	}
+
+	public void setSelectedOwnerAndDirectorList(
+			List<SmPersonnel> selectedOwnerAndDirectorList) {
+		this.selectedOwnerAndDirectorList = selectedOwnerAndDirectorList;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setSupplierItemSearchDataModel(
+			IPagingDataModel<CmSupplierItem> supplierItemSearchDataModel) {
+		this.supplierItemSearchDataModel = supplierItemSearchDataModel;
+	}
+
+	public String getApplType() {
+		return applType;
+	}
+
+	public void setApplType(String applType) {
+		this.applType = applType;
+	}
+
+	public boolean isViewFlag() {
+		return viewFlag;
+	}
+
+	public void setViewFlag(boolean viewFlag) {
+		this.viewFlag = viewFlag;
+	}
+
+	public SmSupplier getSmSupp() {
+		return smSupp;
+	}
+
+	public void setSmSupp(SmSupplier smSupp) {
+		this.smSupp = smSupp;
+	}
+
+	public boolean isViewMode() {
+		return viewMode;
+	}
+
+	public void setViewMode(boolean viewMode) {
+		this.viewMode = viewMode;
+	}
+
+	public boolean isMofNoExist() {
+		return mofNoExist;
+	}
+
+	public void setMofNoExist(boolean mofNoExist) {
+		this.mofNoExist = mofNoExist;
+	}
+
+	public List<BlacklistOwnerDirectorVO> getBlacklistownerDirectorList() {
+		return blacklistownerDirectorList;
+	}
+
+	public void setBlacklistownerDirectorList(
+			List<BlacklistOwnerDirectorVO> blacklistownerDirectorList) {
+		this.blacklistownerDirectorList = blacklistownerDirectorList;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public boolean isNoDisciplinary() {
+		return noDisciplinary;
+	}
+
+	public void setNoDisciplinary(boolean noDisciplinary) {
+		this.noDisciplinary = noDisciplinary;
+	}
+
+	public List<DisciplinaryActionCategoryVO> getCategoryCodeList() {
+		return categoryCodeList;
+	}
+
+	public void setCategoryCodeList(
+			List<DisciplinaryActionCategoryVO> categoryCodeList) {
+		this.categoryCodeList = categoryCodeList;
+	}
+
+	public boolean isFlagShowButtonSubmit() {
+		return flagShowButtonSubmit;
+	}
+
+	public void setFlagShowButtonSubmit(boolean flagShowButtonSubmit) {
+		this.flagShowButtonSubmit = flagShowButtonSubmit;
+	}
+
+	public boolean isBasicAccountMaintenance() {
+		return basicAccountMaintenance;
+	}
+
+	public void setBasicAccountMaintenance(boolean basicAccountMaintenance) {
+		this.basicAccountMaintenance = basicAccountMaintenance;
+	}
+
+	/**
+	 * @return the disciplineVOs
+	 */
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	/**
+	 * @param disciplineVOs the disciplineVOs to set
+	 */
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	/**
+	 * @return the disableDownloadButtonDAHistory
+	 */
+	public boolean isDisableDownloadButtonDAHistory() {
+		return disableDownloadButtonDAHistory;
+	}
+
+	/**
+	 * @param disableDownloadButtonDAHistory the disableDownloadButtonDAHistory to set
+	 */
+	public void setDisableDownloadButtonDAHistory(
+			boolean disableDownloadButtonDAHistory) {
+		this.disableDownloadButtonDAHistory = disableDownloadButtonDAHistory;
+	}
+
+	/**
+	 * @return the viewCatCode
+	 */
+	public boolean isViewCatCode() {
+		return viewCatCode;
+	}
+
+	/**
+	 * @param viewCatCode the viewCatCode to set
+	 */
+	public void setViewCatCode(boolean viewCatCode) {
+		this.viewCatCode = viewCatCode;
+	}
 		
 }

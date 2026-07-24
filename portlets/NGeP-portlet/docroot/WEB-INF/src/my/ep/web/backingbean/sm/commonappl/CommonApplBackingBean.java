@@ -90,9 +90,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 
 			subStartTime = System.currentTimeMillis();
 			Object token = new FacesScopes().getBPMAuthenticationCtxToken();
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null", "CommonApplBackingBean.preRenderView", "getBPMAuthenticationCtxToken", subStartTime); // 20211005@fadhli
-																																										// -
-																																										// #31754
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null", "CommonApplBackingBean.preRenderView", "getBPMAuthenticationCtxToken", subStartTime); // 20211005@fadhli - #31754
 
 			reqDTO.setTaskId(taskId);
 			reqDTO.setToken(token);
@@ -102,9 +100,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 
 			subStartTime = System.currentTimeMillis();
 			BpmResponseDTO resDTO = (BpmResponseDTO) reqSO.getBPMTaskDetails(reqDTO);
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null", "CommonApplBackingBean.preRenderView", "getBPMTaskDetails", subStartTime); // 20211005@fadhli
-																																							// -
-																																							// #31754
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null", "CommonApplBackingBean.preRenderView", "getBPMTaskDetails", subStartTime); // 20211005@fadhli - #31754
 
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 
@@ -131,8 +127,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					sdoBB.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
 				}
-				// sdoBB.getManagedBean().setAppId((long)
-				// bpmObj.getDocumentId());
+				// sdoBB.getManagedBean().setAppId((long) bpmObj.getDocumentId());
 				sdoBB.getManagedBean().setBpmAction(resDTO.getAction());
 				sdoBB.getManagedBean().setTaskId(taskId);
 				sdoBB.getManagedBean().setBpmPojo(bpmObj);
@@ -158,8 +153,8 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/payment/paymentSummary.xhtml");
 				// #12483 - START
-			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY.replaceAll("\\s", "")) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE)
-					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE.replaceAll("\\s", ""))) {
+			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY.replaceAll("\\s", ""))
+					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE.replaceAll("\\s", ""))) {
 				// #12483 - END
 				log.info("** Respond to PO Inquiry *********" + resDTO.getProcessName());
 				if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
@@ -180,8 +175,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					smApplBB.getManagedBean().setClaimTask(isClaim);
 					setNavigationForSmDecision("RS", smApplBB);
 					// #12483 - START
-					// #34178 Remove space for WIP process name to cater after
-					// upgrading to Oracle BPM 12C
+					// #34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
 				} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))
 						|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT.replaceAll("\\s", ""))) {
 					// #12483 - END
@@ -209,19 +203,13 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					setNavigationForSmDecision("RS", smApplBB);
 				}
 
-			} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) 
-					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))
-					|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
-					|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
-					|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
-					|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
+			} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))
+					|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+					|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+					|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+					|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
 				log.info(" ******* The selected process name is ******" + resDTO.getProcessName());
-				if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) 
-						|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
+				if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 					SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 
 					// TODO Remove this code and get the applicationType From DB
@@ -238,22 +226,17 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					String currentStatus = bpmBean.applicationStatus(resDTO.getDocStatus());
 					smApplBB.getManagedBean().setCurrentStatus(currentStatus);
 					//
-					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", ""))) 
-									|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE))
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
+					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
 						smApplBB.getManagedBean().setPoUser(true);
 						// #29664 - start
 						smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
 						// #29664 - end
 						smApplBB.getManagedBean().setSupplierUser(false);
 						smApplBB.getManagedBean().setApproverUser(false);
-					} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED)) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
+					} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED)) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 						smApplBB.getManagedBean().setPoUser(false);
 						smApplBB.getManagedBean().setSupplierUser(false);
 						smApplBB.getManagedBean().setApproverUser(true);
@@ -263,13 +246,11 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 						smApplBB.getManagedBean().setReviewSiteVisit(smObj.isSiteVisitComplete());
 
 					}
-					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", ""))) 
+					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
 							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 						log.info("*** This is po or approver action after site visit *** ");
 						smApplBB.getManagedBean().setReviewSiteVisit(true);
-					} else if (!resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) 
-							&& !resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
+					} else if (!resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) && !resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 						log.info("*** This is po or approver for normal review without site visit *** ");
 						smApplBB.getManagedBean().setReviewSiteVisit(false);
 					}
@@ -292,8 +273,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 					subStartTime = System.currentTimeMillis(); // 20211005@fadhli - #31754
 					mofResDto = retriveApplicationById(smObj.getDocumentId());
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null", "CommonApplBackingBean.preRenderView", 
-							"retriveApplicationById", subStartTime); // 20211005@fadhli -- #31754
+					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null", "CommonApplBackingBean.preRenderView", "retriveApplicationById", subStartTime); // 20211005@fadhli - #31754
 					SmAppl appl = mofResDto.getSmAppl();
 					String applNumber = "null";
 					if (null != appl) {
@@ -311,22 +291,17 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					String currentStatus = bpmBean.applicationStatus(resDTO.getDocStatus());
 					smApplBB.getManagedBean().setCurrentStatus(currentStatus);
 					log.info("[preRenderView] #31754 resDTO.getTaskName(): " + resDTO.getTaskName());
-					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", ""))) 
-									|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE))
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
+					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
 						smApplBB.getManagedBean().setPoUser(true);
 						// #29664 - start
 						smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
 						// #29664 - end
 						smApplBB.getManagedBean().setSupplierUser(false);
 						smApplBB.getManagedBean().setApproverUser(false);
-					} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED)) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
+					} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED)) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 						smApplBB.getManagedBean().setPoUser(false);
 						smApplBB.getManagedBean().setSupplierUser(false);
 						smApplBB.getManagedBean().setApproverUser(true);
@@ -335,20 +310,16 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 						// #29664 - end
 						smApplBB.getManagedBean().setReviewSiteVisit(smObj.isSiteVisitComplete());
 					}
-					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", ""))) 
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE))
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
+					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
 						log.info("*** This is po or approver action after site visit *** ");
 						smApplBB.getManagedBean().setReviewSiteVisit(true);
-					} else if (!resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) 
-							&& !resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
+					} else if (!resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) && !resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 						log.info("*** This is po or approver for normal review without site visit *** ");
 						smApplBB.getManagedBean().setReviewSiteVisit(false);
 					}
 					log.info("mofResDto.getSmSupplier()>>>" + mofResDto.getSmSupplier());
-					subStartTime = System.currentTimeMillis(); // 20211005@fadhli
-																// - #31754
+					subStartTime = System.currentTimeMillis(); // 20211005@fadhli - #31754
 					smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE, appl, mofResDto.getSmSupplier());
 					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, applNumber, "CommonApplBackingBean.preRenderView", "proceedToApplication", subStartTime); // 20211005@fadhli - #31754
 
@@ -363,8 +334,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					// LOG : 26549 : SLA Monitoring
 					SLAUtils.getInstance().logSLAInfo("SM", "VA", "CommonApplBackingBean.preRenderView", startTime);
 					setNavigationForSmDecision(appl.getApplType(), smApplBB);
-				} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT) 
-						|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT.replaceAll("\\s", ""))) {
+				} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT.replaceAll("\\s", ""))) {
 					// TODO: new added by andrew - temporary solve the new
 					// implementation
 					SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
@@ -374,16 +344,11 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					log.info(" *** DOCUMENT ID FROM THE BPM IS ******" + smObj.getDocumentId());
 					MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 					// SSM CHANGES 11012020
-					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))) {
+					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))) {
 						isPoSdoUser = true;
 					}
 					mofResDto = retriveApplicationById(smObj.getDocumentId());
@@ -407,8 +372,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 						// #29664 - end
 						smApplBB.getManagedBean().setSupplierUser(false);
 						smApplBB.getManagedBean().setApproverUser(false);
-					} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
+					} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 						smApplBB.getManagedBean().setPoUser(false);
 						smApplBB.getManagedBean().setSupplierUser(false);
 						smApplBB.getManagedBean().setApproverUser(true);
@@ -423,10 +387,8 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 							}
 						}
 					}
-					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) 
-							|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
-							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) 
-									|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
+					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
 						log.info("*** This is po or approver action after site visit *** ");
 						// #12483 - START
 						if (!appl.getSmApplRevises().isEmpty()) {
@@ -451,8 +413,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 							smApplBB.getManagedBean().setReviewSiteVisit(true);
 						}
 						// #12483 - END
-					} else if (!resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) 
-							&& !resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
+					} else if (!resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) && !resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 						log.info("*** This is po or approver for normal review without site visit *** ");
 						smApplBB.getManagedBean().setReviewSiteVisit(false);
 					}
@@ -468,8 +429,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 					setNavigationForSmDecision(appl.getApplType(), smApplBB);
 				}
 
-			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.DRAFT_REGISTER_ACCOUNT) 
-					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.DRAFT_REGISTER_ACCOUNT.replaceAll("\\s", ""))) {
+			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.DRAFT_REGISTER_ACCOUNT) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.DRAFT_REGISTER_ACCOUNT.replaceAll("\\s", ""))) {
 				log.info(" ******* The selected process name is  Draft Register Account ******" + resDTO.getProcessName());
 				// if (resDTO.getProcessName().equalsIgnoreCase(
 				// "Start MOF Supplier Registration")) {
@@ -481,7 +441,8 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
 
-				// applicationType = retriveApplicationById(smObj.getDocumentId());
+				// applicationType =
+				// retriveApplicationById(smObj.getDocumentId());
 				log.info("********Draft Register Account For New Mof********");
 				log.info("********getTaskId********" + taskId);
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
@@ -490,6 +451,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setDraftedAppl(true);
+				//#26238 -- 27641,27736,27876
 				setNavigationForDraftAppl(appl.getApplType());
 				SmApplicationUtil.checkAndRedirectIfInvalid(appl);// #37784
 			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT.replaceAll("\\s", ""))) {
@@ -502,7 +464,8 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
 
-				// applicationType = retriveApplicationById(smObj.getDocumentId());
+				// applicationType =
+				// retriveApplicationById(smObj.getDocumentId());
 				log.info("********Review Application Escalted for account maintain********" + appl.getSupplierType());
 				log.info("********getTaskId********" + taskId);
 				log.info("********getTaskName********" + this.getManagedBean().getTaskName());
@@ -510,7 +473,8 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
 
-				// applicationType =  retriveApplicationById(smObj.getDocumentId());
+				// applicationType =
+				// retriveApplicationById(smObj.getDocumentId());
 				log.info("********Draft Register Account For New Mof********");
 				log.info("********getTaskId********" + taskId);
 
@@ -521,10 +485,9 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				setNavigationForDraftAppl(appl.getApplType());
 				// }
 
-			} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION) 
-					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION.replaceAll("\\s", "")))
-					&& (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION) 
-							|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION.replaceAll("\\s", "")))) {
+			} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION.replaceAll("\\s", "")))
+					&& (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION.replaceAll("\\s", "")))) {
 				log.info("**********MOF Registration Cancellation***********" + taskId);
 				SMMOFRegCanDataType srcObj = (SMMOFRegCanDataType) resDTO.getPojo();
 				this.getManagedBean().setTaskName(resDTO.getTaskName());
@@ -560,10 +523,8 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				}
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/approverDecisionPages/approverCanRegistration_DescisionPage.xhtml");
-			} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION) 
-					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION.replaceAll("\\s", "")))
-					&& (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION) 
-					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION.replaceAll("\\s", "")))) {
+			} else if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION.replaceAll("\\s", "")))
+					&& (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION.replaceAll("\\s", "")))) {
 				log.info("**********MOF Application Cancellation***********" + taskId);
 				SMMOFAppCanDataType srcObj = (SMMOFAppCanDataType) resDTO.getPojo();
 				this.getManagedBean().setTaskName(resDTO.getTaskName());
@@ -601,18 +562,15 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				smApplBB.getManagedBean().setTaskId(taskId);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/deletePendingMofAppln/cancelPendingApplicationDescisionPage.xhtml");
-			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_SDO_INQUIRY) 
-					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_SDO_INQUIRY.replaceAll("\\s", ""))) {
+			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_SDO_INQUIRY) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_SDO_INQUIRY.replaceAll("\\s", ""))) {
 				Object bpmObj = new Object();
 				SupportingDocInquiryBackingBean suppDocIn = new SupportingDocInquiryBackingBean();
 
-				if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) 
-						|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
+				if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 					bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 					suppDocIn.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
-				} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) 
-						|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
+				} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 					bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 					suppDocIn.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
@@ -629,17 +587,14 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/suppliersupportingdocinquiry/inquiryresponse.xhtml");
 
-			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.PROCESSING_FEE) 
-					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.PROCESSING_FEE.replaceAll("\\s", ""))) {
+			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.PROCESSING_FEE) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.PROCESSING_FEE.replaceAll("\\s", ""))) {
 				Object bpmObj = new Object();
 				PaymentBackingBean paymentBB = new PaymentBackingBean();
-				if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) 
-						|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
+				if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 					bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 					paymentBB.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
-				} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) 
-						|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
+				} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 					bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 					paymentBB.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 				}
@@ -654,8 +609,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/payment/paymentSummary.xhtml");
-			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT) 
-					|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT.replaceAll("\\s", ""))) {
+			} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT.replaceAll("\\s", ""))) {
 				siteVisitTask(resDTO, taskId, isClaim);
 			}
 		} catch (Exception e) {
@@ -665,8 +619,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 	}
 
 	private void setSiteVisitView(SmApplicationManagedBean bean, SmAppl appl) {
-		SmWorkflowStatus workFlow = getWorkFlowStatusByMultipleStatusAndApplId(
-				appl.getApplId(),
+		SmWorkflowStatus workFlow = getWorkFlowStatusByMultipleStatusAndApplId(appl.getApplId(),
 				Arrays.asList(new Long[] { my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE_APPROVAL }));
 		bean.setReviewSiteVisit(false);
 		if (workFlow != null) {
@@ -674,37 +627,24 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 		}
 	}
 
-	private SmWorkflowStatus getWorkFlowStatusByMultipleStatusAndApplId(
-			Long applId, List<Long> statusIds) {
+	private SmWorkflowStatus getWorkFlowStatusByMultipleStatusAndApplId(Long applId, List<Long> statusIds) {
 		SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
 		swReqDTO.setStatusIds(statusIds);
 		swReqDTO.setApplId(applId);
-		SmWorkflowStatus workFlow = SmServiceLookup.getSmWorkFlowStatusSO()
-				.retrieveWorkflowByDocIdAndMultipleStatus(swReqDTO)
-				.getWorkflowStatus();
+		SmWorkflowStatus workFlow = SmServiceLookup.getSmWorkFlowStatusSO().retrieveWorkflowByDocIdAndMultipleStatus(swReqDTO).getWorkflowStatus();
 		return workFlow;
 	}
 
-	private boolean isRedirectToViewOnlyApplication(boolean isClaim,
-			BpmResponseDTO resDTO) {
-		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][isRedirectToViewOnlyApplication]");
+	private boolean isRedirectToViewOnlyApplication(boolean isClaim, BpmResponseDTO resDTO) {
+		log.info("added checking include process name without space to cater for Oracle 12C [" + this.getClass().getSimpleName() + "][isRedirectToViewOnlyApplication]");
 		boolean retVal = false;
 		if (!isClaim
-				&& ((resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))
-						|| (resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
-						|| (resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
-						|| (resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", ""))) 
-						|| (resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
+				&& ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) 
+						|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
 			retVal = true;
 		}
 		return retVal;
@@ -783,8 +723,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 	public void updateAmount() {
 
 		BigDecimal amount = BigDecimal.ZERO;
-		for (SmPersonnel personnel : this.getManagedBean()
-				.getSelectPersonnelList()) {
+		for (SmPersonnel personnel : this.getManagedBean().getSelectPersonnelList()) {
 			amount = amount.add(BigDecimal.valueOf(150));
 		}
 		amount = amount.subtract(BigDecimal.valueOf(150));
@@ -795,13 +734,9 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 	public String makePayment() {
 		log.info("****** Make Payment **********");
 
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_721059,
-								new String[] { "" + 1 },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721059, 
+						new String[] { "" + 1 }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
@@ -810,39 +745,24 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 		switch (appType) {
 
 		case "N":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 			break;
 		case "A":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// TODO changed to satisfy enhancement of adding the bank section
 			// "/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
 		case "B":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// PROCEED_BUMI_APPLN;
 			break;
 		case "U":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// PROCEED_UPDATE_MOF_APPLN;
 			break;
 		case "R":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// PROCEED_RENEW_MOF_APPLN;
 			break;
 		default:
@@ -851,90 +771,55 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 		}
 	}
 
-	private void setNavigationForSmDecision(String applType,
-			SmApplicationBackingBean smApplBB) {
+	private void setNavigationForSmDecision(String applType, SmApplicationBackingBean smApplBB) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		switch (applType) {
 		case "N":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
-			smApplBB.getManagedBean().setHeaderMsg(
-					"Review New Mof Registration Application - ");
+			smApplBB.getManagedBean().setHeaderMsg("Review New Mof Registration Application - ");
 			break;
 		case "C":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
-			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Cancel Mof Registration Application - ");
+			smApplBB.getManagedBean().setHeaderMsg("Review Cancel Mof Registration Application - ");
 			break;
 		case "A":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// TODO changed to satisfy enhancement of adding the bank section
 			// "/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/addAdditionalCategoryCodes/addAdditionalCategoryBasePage.xhtml");
-			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Additional Category Code(s) Application - ");
+			smApplBB.getManagedBean().setHeaderMsg("Review Additional Category Code(s) Application - ");
 			break;
 		case "B":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/bumiPuteraApplication/applyBumiStatusBasePage.xhtml");
-			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Bumi Status Application - ");
+			smApplBB.getManagedBean().setHeaderMsg("Review Bumi Status Application - ");
 			break;
 		case "U":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/updateMofDetails/updateMofDetailsBasePage.xhtml");
-			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Update Mof Details Application - ");
+			smApplBB.getManagedBean().setHeaderMsg("Review Update Mof Details Application - ");
 			break;
 		case "R":
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/renewMofApplication/renewMofBasePage.xhtml");
-			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Renew Mof Registration Application - ");
+			smApplBB.getManagedBean().setHeaderMsg("Review Renew Mof Registration Application - ");
 			break;
 		case "RS":
-			log.info(" *** DOC MODE ****"
-					+ smApplBB.getManagedBean().getSmAppl()
-							.getSupportingDocMode());
+			log.info(" *** DOC MODE ****" + smApplBB.getManagedBean().getSmAppl().getSupportingDocMode());
 			String out = "";
-			if (smApplBB
-					.getManagedBean()
-					.getSmAppl()
-					.getSupportingDocMode()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+			if (smApplBB.getManagedBean().getSmAppl().getSupportingDocMode().equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 				out = "/xhtml/sm/shared/respondToPoInquiry/onlineResendSupportingDocsForm.xhtml";
 			} else {
 				out = "/xhtml/sm/shared/respondToPoInquiry/offlineResendSupportingDocsForm.xhtml";
 			}
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, out);
-			smApplBB.getManagedBean().setHeaderMsg(
-					" Respond PO Inquiry For Application - ");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, out);
+			smApplBB.getManagedBean().setHeaderMsg(" Respond PO Inquiry For Application - ");
 			break;
 		default:
-			log.info("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---"
-					+ applType);
+			log.info("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---" + applType);
 			break;
 		}
 	}
@@ -943,8 +828,7 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
 		reqDTO.setDocId(docId);
 		reqDTO.setDocType(docType);
-		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", ISmRemarksSO.class);
+		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance().getServiceObject("sm", ISmRemarksSO.class);
 		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
 		return resDTO;
 	}
@@ -953,15 +837,12 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 
 		IMofRegistrationSO mofRegistrationSO = null;
 		try {
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			//SSM CHANGES 11012020
+			// SSM CHANGES 11012020
 			reqDto.setPoSdoUser(isPoSdoUser);
 			reqDto.setApplId(applId);
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrieveSmApplicationDetailsById(reqDto);
+			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSmApplicationDetailsById(reqDto);
 			return resDTO;
 
 		} catch (Exception e) {
@@ -975,84 +856,28 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 
 	}
 
-	private SmAttachmentResDTO retriveSmAttachmentByDocIdAndType(long applId,
-			String docType) {
+	private SmAttachmentResDTO retriveSmAttachmentByDocIdAndType(long applId, String docType) {
 
 		ISmAttachmentSO attchSO = null;
 
 		try {
-			attchSO = (ISmAttachmentSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", ISmAttachmentSO.class);
+			attchSO = (ISmAttachmentSO) BusinessDelegate.getInstance().getServiceObject("sm", ISmAttachmentSO.class);
 			SmAttachmentReqDTO reqDto = new SmAttachmentReqDTO();
 			reqDto.setDocId(applId);
 			reqDto.setDocType(docType);
-			SmAttachmentResDTO resDTO = attchSO
-					.retrieveSmAttachmentByDocIdAndType(reqDto);
-			if (resDTO == null
-					|| (resDTO != null && resDTO.getAttachment() == null)) {
-				throw new EpException(
-						"Invalid Application : No file uploaded for the application");
+			SmAttachmentResDTO resDTO = attchSO.retrieveSmAttachmentByDocIdAndType(reqDto);
+			if (resDTO == null || (resDTO != null && resDTO.getAttachment() == null)) {
+				throw new EpException("Invalid Application : No file uploaded for the application");
 			}
 			return resDTO;
 
 		} catch (Exception e) {
 			log.info("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
 			e.printStackTrace();
-			throw new EpException(
-					"Invalid Application : No file uploaded for the application");
+			throw new EpException("Invalid Application : No file uploaded for the application");
 		} finally {
 			attchSO = null;
 		}
 
 	}
-	
-	
-	// private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
-	// log.info("*** This is resubmit to get po ****** ");
-	// SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
-	// reqDTO.setApplId(applId);
-	// ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
-	// .getInstance()
-	// .getServiceObject("sm", ISmWorkFlowStatusSO.class);
-	// SmWorkFlowStatusResDTO resDTO = reqSO
-	// .retrieveCurrentWorkFlowStatusByDocId(reqDTO);
-	// if (resDTO != null && resDTO.getWorkflowStatus() != null) {
-	// return resDTO.getWorkflowStatus();
-	// } else {
-	// return null;
-	// }
-	// }
-
-	// private void setPmStatusDesc(String statusId,SmApplicationManagedBean
-	// managedBean) {
-	// log.info("****** Status Id ******" + statusId);
-	// StatusReqDTO reqDTO = new StatusReqDTO();
-	// reqDTO.setStatusId(Long.parseLong(statusId));
-	// reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-	// IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
-	// .getServiceObject("pm", IStatusSO.class);
-	// StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
-	// if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-	// managedBean.setCurrentStatus(
-	// resDTO.getPmStatusDesc().getStatusName());
-	// }
-	// }
-	// public void preRender(){
-	// log.info("------ preRender-------");
-	// HttpServletRequest servletRequest = PortalUtil
-	// .getHttpServletRequest(new FacesScopes().getRequest());
-	// HttpServletRequest originalServletRequest = PortalUtil
-	// .getOriginalServletRequest(servletRequest);
-	// String taskId = originalServletRequest.getParameter("taskId");
-	// String loginId = originalServletRequest.getParameter("loginId");
-	//
-	// //log.info("--------------------" + taskId);
-	// log.info("----------managedBean----------" +
-	// this.getManagedBean().getTaskId());
-	// if(taskId != null){
-	// this.getManagedBean().setTaskId(taskId);
-	// }
-	//
-	// //this.getManagedBean().setTaskId(taskId);
-	// }
 }

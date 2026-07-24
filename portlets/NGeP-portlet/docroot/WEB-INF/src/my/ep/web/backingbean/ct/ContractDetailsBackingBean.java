@@ -1276,10 +1276,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		            syncBondsToTarget(contractAmt, allBondsFromUI, isEffectiveContract);
 
 		            // Set the attachment flag with more readable logic.
-		            boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
-		            boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
-		            int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
-		            contractAmt.setIsBondAttachment(flag);
+					// #40283 - Start ( Set the bond attachment flag for FD/FU
+					// only)
+					if (ctBB.getManagedBean().getContractVer().getDocType()
+							.equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+							|| ctBB.getManagedBean()
+									.getContractVer()
+									.getDocType()
+									.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+
+						boolean isApproved = BpmOutcomeConst.BPM_APPROVE
+								.equalsIgnoreCase(action);
+						boolean hasBonds = !contractAmt.getCtPerformanceBonds()
+								.isEmpty();
+						int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES
+								: ParameterConst.FLAG_INT_NO;
+						contractAmt.setIsBondAttachment(flag);
+					}
+					// #40283 - End
 		        }
 		    }
 			// 24333 - End
@@ -1448,6 +1462,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
+		String docType = ctBB.getManagedBean().getContractVer().getDocType(); //#40283
 
 		/*Validation for delivery term main page*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
@@ -1884,7 +1899,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    //#24333 - End
 		}
 		
-		validationPerformanceBond(action); //#13847
+		//#40283 start
+		if (docType != null
+				&& (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION) 
+						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
+			validationPerformanceBond(action); // #13847
+		}
+		//#40283 end
 
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 

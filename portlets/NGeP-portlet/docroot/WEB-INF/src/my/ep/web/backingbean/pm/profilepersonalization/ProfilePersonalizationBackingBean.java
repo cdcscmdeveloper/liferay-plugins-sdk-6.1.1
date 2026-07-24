@@ -4,41 +4,44 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Iterator;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest; //#26238
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.pm.admin.adminmatrix.IAdminMatrixSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO; //#26247
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO; //#26186
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.role.AdminDetailsDTO;
 import my.ep.dto.pm.authorization.role.AdminReqDTO;
-import my.ep.dto.pm.authorization.role.AdminResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO; //#26238
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -59,15 +62,23 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmAppl; //#26238
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory; //#26186
+import my.ep.persistence.logging.LogKey; //#26186
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#26186
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
 import my.ep.web.util.DateUtils;
@@ -76,7 +87,10 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.collections.CollectionUtils; //#26186
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -85,8 +99,11 @@ import org.primefaces.model.UploadedFile;
 import com.liferay.portal.util.PortalUtil;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sc.SourcingConstants; //#26247
 import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.constants.CTProcessNameConst; //#26186
 import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean; //#26247
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 //#28895_35501 End
@@ -106,6 +123,17 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = EpLogger.getLogger(ProfilePersonalizationBackingBean.class);
+	//DA
+	//#26186 start
+	private static final String PARAM_DOC_NO = "docNo";
+	private static final String PARAM_TASK_NAME = "taskName";
+	private static final String PARAM_QT_ID = "qtId";
+	private static final String LBL_CT_CANCEL_CATEGORY = "lbl.ct.amend.supplier.maintenance.cancel.category";
+	private static final String LOG_CLASS = "ProfilePersonalizationBackingBean";
+	private static final String LOG_CLASS_PRERENDER = "ProfilePersonalizationBackingBean.preRenderDisciplinaryAction";
+	private static final String LOG_CLASS_CHECKSUPPLIER = "ProfilePersonalizationBackingBean.checkCtSupplierCategory";
+	private static final String LOG_CLASS_LOADSUPPLIER = "ProfilePersonalizationBackingBean.loadSupplierCommonDetails";
+	//#26186 end
 
 	public ProfilePersonalizationBackingBean() {
 
@@ -210,8 +238,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		adminUserRoleMap.put("COLLECTOR_GOV", Arrays.asList("BPK_ADMIN"));
 		adminUserRoleMap.put("PTJ_APPROVER", Arrays.asList("PTJ_ADMIN"));
 		adminUserRoleMap.put("SUPPORT_APPL", Arrays.asList("SUPPORT_ADMIN"));
+		//#35322 - START
+		adminUserRoleMap.put("QQC_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QQC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QQC_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		//#35322 - END
 
 	}
+	//26238
+	public static final String NAV_TO_INFO_DISC_ACTION = "/xhtml/pm/profilePersonalization/userDetails/infoActiveDisciplinaryAction.xhtml";
 
 	// Navigation Details
 	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml";
@@ -380,11 +415,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770090);
 		}
-		if (getManagedBean().getSelectedUser().isNotifyBySms()
+		//#40246 Start
+		/*if (getManagedBean().getSelectedUser().isNotifyBySms()
 				&& getManagedBean().getSelectedUser().getMobileTelcoId() == null) {
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770250);
-		}
+		}*/
+		//#40246 End
 		this.getManagedBean().getSelectedUser().setModified(true);
 	}
 
@@ -813,11 +850,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			if (pmUser.isNotifyBySms() && StringUtils.isBlank(pmUser.getMobileNo())) {
 				throw new EpException(MessageConst.ERROR_770090);
 			}
-
-			if (pmUser.isNotifyBySms() && (pmUser.getMobileTelcoId() == null)) {
+			//#40246 Start
+			/*if (pmUser.isNotifyBySms() && (pmUser.getMobileTelcoId() == null)) {
 				throw new EpException(MessageConst.ERROR_770250);
-			}
-
+			}*/
+			//#40246 End
 			// if (pmUser.getNotifyRemovalDay() == null
 			// || pmUser.getNotifyRemovalDay() <= 0) {
 			// throw new EpException(MessageConst.ERROR_770047);
@@ -1319,7 +1356,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				activeOrg.setMobileNo(user.getMobileNo());
 				activeOrg.setMobileArea(user.getMobileArea());
 				activeOrg.setMobileCountry(user.getMobileCountry());
-				activeOrg.setMobileTelcoId(user.getMobileTelcoId());
+				//activeOrg.setMobileTelcoId(user.getMobileTelcoId()); //#40246
 				break;
 			}
 		}
@@ -1660,6 +1697,75 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	// System.out.println("handleFileUploadTest - end");
 	// }
 
+	//26238 -  Start Disciplinary Action - 28111
+	private String getDisciplinaryActionMsg(SmSupplier supplier) {
+		if (supplier == null){
+			return null;
+		}
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		Locale locale = new FacesScopes().getUserLocale();
+		reqDTO.setLanguage(locale != null && locale.getLanguage() != null ? locale.getLanguage() : "en");
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveDisciplinaryActionMsg(reqDTO);
+		return resDTO.getErrorMessage();
+	}
+
+	private void retrieveDisciplinaryAction(SmSupplier currSupp) {
+		if(currSupp == null){
+			currSupp = SmApplicationUtil.getCurrentSupplier();
+		}
+		this.getManagedBean().setSmSupplier(currSupp);
+		if(currSupp != null){
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
+			//logger.info(resultList);
+			if(resultList != null && resultList.size() > 0){
+				for(SmDisciplinaryAction disciplinaryAction: resultList){
+					if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory()
+							|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration()
+							|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+							|| disciplinaryAction.isBumiputeraCancel()){
+						getManagedBean().setDisciplinaryAction(true);
+						new FacesScopes().getUserSessionBean().setDisciplinaryAction(true);
+						break;
+					}
+				}
+			} else {
+				getManagedBean().setDisciplinaryAction(false);
+				new FacesScopes().getUserSessionBean().setDisciplinaryAction(false);
+			}
+		}
+	}
+	//26238 -  END Disciplinary Action - 28111
+	private void loadSupplierCommonDetails(Long id) {
+		//logger.info("loadSupplierCommonDetails");
+		try {
+			if (id != null) {
+				long startTime = System.currentTimeMillis();
+				// load user
+				//PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
+				//this.getManagedBean().setSelectedUser(pmUser);
+				// retrieve current active org
+				List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(id);
+				this.getManagedBean().setCurrentProfile(pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
+				this.getManagedBean().setCurrentUserOrg(pmUserOrgs != null ? pmUserOrgs.get(0) : null);
+				this.getManagedBean().setUserActiveRoles(new ArrayList<PmUserRole>());
+				if (this.getManagedBean().getCurrentUserOrg() != null) {
+					for (PmUserRole userRole : this.getManagedBean().getCurrentUserOrg().getPmUserRoles()) {
+						if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+							this.getManagedBean().getUserActiveRoles().add(userRole);
+						}
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
+		}
+	}
+	//26238 - end
+
 	//28838 - start
 		public boolean isCheckFactUser() {
 			boolean checkFactUser = true;
@@ -1688,4 +1794,233 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		return auditUser;
 	}
 	// #28895_35501 End
+	
+	//26238 - start
+	//26238 - start
+	//#26186 start
+	/**
+	  * Entry point for pre-render logic on the Disciplinary Action page.
+	  * <p>
+	  * This method orchestrates supplier initialization, disciplinary action checks,
+	  * QT and CT validations. Any exceptions are logged and handled gracefully
+	  * with user-facing error messages.
+	 */
+	public void preRenderDisciplinaryAction() {
+		// 26238 - START Disciplinary Action - 28111,28496
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest()));
+		String docNo = originalServletRequest.getParameter(PARAM_DOC_NO);
+		String taskName = originalServletRequest.getParameter(PARAM_TASK_NAME); // #26186
+		Long qtId = this.getManagedBean().getQtId();// 26247
+		renewSesionObject();
+		FacesScopes facesScopes = new FacesScopes();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		long startTime = System.currentTimeMillis();
+		try {
+			initializeSupplier(docNo);
+			handleDisciplinaryActionMsg(facesScopes);
+			// start 32229
+			SLAUtils.getInstance().logSQLPerformanceInfo(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA-4",
+					LOG_CLASS_PRERENDER, startTime, "32229");
+			// end 32229
+			// 26238 - START Disciplinary Action - end
+			startTime = System.currentTimeMillis();
+			handleQtMsg(originalServletRequest, getManagedBean().getSmSupplier(), qtId);// 26247
+			handleCtMsg(taskName);// #26186
+
+			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA-5", LOG_CLASS_PRERENDER,
+					startTime);
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
+		} catch (Exception e) {
+			handleException(fc, e);
+		}
+	}
+	//#26186 end
+	//#26186 start
+	/**
+	 * Initializes the supplier in the managed bean.
+	 * <p>
+	 * Logic:
+	 * - Try retrieving supplier by application number (docNo).
+	 * - Fallback to current supplier from application util.
+	 * - Fallback to supplier from user profile.
+	 *
+	 * @param docNo application number parameter from request
+	 */
+	private void initializeSupplier(String docNo) {
+		// 26238 - START Disciplinary Action - 28111,28496
+		if (!StringUtils.isEmpty(docNo)) {
+			MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
+			reqDTO1.setApplNo(docNo);
+			SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmSupplierByApplNo(reqDTO1).getSmAppl();
+			// 26238 - START Disciplinary Action - end
+
+			this.getManagedBean().setSmSupplier(srcAppl != null ? srcAppl.getSmSupplier() : null);
+		}
+		if (getManagedBean().getSmSupplier() == null) {
+			getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
+		}
+		if (getManagedBean().getSmSupplier() == null) {
+			loadSupplierCommonDetails(getUserIdSessionFromLoginId());
+			if (getManagedBean().getCurrentProfile().getSmSupplier() != null) {
+				getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+			}
+		}
+	}
+	
+	/**
+	 * Checks if the supplier has an active disciplinary action and updates
+	 * the managed bean and user session accordingly.
+	 *
+	 * @param facesScopes context holder for user session
+	 * @param startTime   start timestamp for SLA logging
+	 */
+	private void handleDisciplinaryActionMsg(FacesScopes facesScopes) {
+		SmSupplier supplier = getManagedBean().getSmSupplier();
+		getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+		String msgDA = getDisciplinaryActionMsg(supplier);
+		if (msgDA != null) {
+			// 30842 Start
+			getManagedBean().setSmAppl(
+					SmApplicationUtil.getLatestApplBySupplierId(getManagedBean().getSmSupplier().getSupplierId()));
+			// 30842 End
+			getManagedBean().setDisciplinaryActionMsg(msgDA);
+			getManagedBean().setDisciplinaryAction(true);
+			facesScopes.getUserSessionBean().setDisciplinaryAction(true);
+		}
+	}
+	
+	//26247 - start
+	/**
+	 * Handles QT Message.
+	 * <p>
+	 * - Reads QT Id from request.
+	 * - Validates and parses it safely.
+	 * - Retrieves updated supplier details for disciplinary info.
+	 * - Updates managed bean with QT warning message if applicable.
+	 *
+	 * @param request  original servlet request
+	 * @param supplier previously retrieve supplier
+	 * @param qtId     previously available qtId (may be overridden)
+	 */
+	private void handleQtMsg(HttpServletRequest originalServletRequest, SmSupplier smSupplier, Long id) {
+		String currentUrl = PortalUtil.getCurrentURL(originalServletRequest);
+		if (null == currentUrl || !currentUrl.contains(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL.split("\\?")[0])) {
+			return;
+		}
+		String qtIdParam = originalServletRequest.getParameter(PARAM_QT_ID);
+		Long qtId = id; // keep original value unless overridden
+		SmSupplier supplier = smSupplier;
+		this.getManagedBean().setQtId(qtId);
+		if (qtIdParam != null) {
+			qtId = Long.valueOf(qtIdParam);
+		}
+		if (null != supplier && null != qtId) {
+			this.getManagedBean().setQtId(qtId);
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+//			supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), qtId);
+
+			ViewSuppProfileBackingBean viewSuppProfileBB = new ViewSuppProfileBackingBean();
+//			String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
+			String message = getManagedBean().getDisciplinaryActionMsg();
+//			if (StringUtils.isNotEmpty(message) && StringUtils.isNotEmpty(qtWarningMessage)) {
+//				qtWarningMessage = "<br/>" + qtWarningMessage;
+//			}
+//			getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
+		}
+	}
+	//26247 - end
+	
+	/**
+	 * Handles CT Message.
+	 * <p>
+	 * Currently validates supplier category when taskName matches
+	 * ACK_FA_HT_NAME constant.
+	 *
+	 * @param taskName task name parameter from request
+	 */
+	private void handleCtMsg(String taskName) {
+		if (taskName != null && CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(taskName)) {
+			checkCtSupplierCategory(getManagedBean().getSmSupplier());
+		}
+	}
+	
+	/**
+	 * Method to check supplier for Cancelled Category Code/ Cancelled Category Related to Manufacturing
+	 * Used for CT module.
+	 * 
+	 * @param supplier the supplier for the current contract
+	 */
+	public void checkCtSupplierCategory(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		try {
+			this.getManagedBean().setCtSupplierMsgNonDA(StringUtils.EMPTY);
+			StringBuilder sb = new StringBuilder();
+
+			List<SmSupplierCategory> suppCategory = suppDataSO.nonDisciplinaryActionCancelCategoryCode(supplier
+					.getSupplierId());
+			if (CollectionUtils.isNotEmpty(suppCategory)) {
+				for (SmSupplierCategory supCat : suppCategory) {
+					appendCtSupplierCategoryMsg(sb, supCat);
+				}
+			}
+
+			if (StringUtils.isNotBlank(sb.toString())) {
+				sb.insert(0, "(");
+				sb.append(")");
+				String[] params = new String[] { sb.toString() };
+				this.getManagedBean().setCtSupplierMsgNonDA(
+						ResourceBundleUtils.getMessage(LBL_CT_CANCEL_CATEGORY, params,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, LOG_CLASS, "",
+					LOG_CLASS_CHECKSUPPLIER, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	/**
+	 * Method to append message contain category code for supplier.
+	 * 
+	 * @param sb The stringbuilder of the message
+	 * @param supCat The list of the category code of the supplier
+	 */
+	private void appendCtSupplierCategoryMsg(StringBuilder sb, SmSupplierCategory supCat) {
+		if (StringUtils.isNotBlank(sb.toString())) {
+			sb.append(", ");
+		}
+		if(supCat.getPmCategoryL1()!=null){
+			sb.append(supCat.getPmCategoryL1().getCategoryL1Code());
+		}
+		if(supCat.getPmCategoryL2()!=null){
+			sb.append(supCat.getPmCategoryL2().getCategoryL2Code());
+		}
+		if(supCat.getPmCategoryL3()!=null){
+			sb.append(supCat.getPmCategoryL3().getCategoryL3Code());
+		}
+	}
+	
+	/**
+	 * Centralized exception handling for the pre-render process.
+	 * <p>
+	 * - Logs SLA error.
+	 * - Displays a user-friendly error message on UI.
+	 * - Redirects to error page.
+	 *
+	 * @param fc FacesContext to add messages
+	 * @param e  exception caught during pre-render logic
+	 */
+	private void handleException(FacesContext fc, Exception e) {
+		SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA", "", LOG_CLASS,
+				(new LogKey()).getUserId(), e);
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
+						.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+		PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
+	}
+	//#26186 end
 }

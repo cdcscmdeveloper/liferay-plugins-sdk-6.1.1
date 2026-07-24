@@ -17,6 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -57,6 +58,8 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -64,11 +67,13 @@ import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.dan.DebitAdjustmentNoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdjustmentItemNodeVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Managed Bean for Debit Adjustment Note.
@@ -211,6 +216,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 				getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
+			checkDisciplinaryAction();//26279
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -218,6 +224,28 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			}
 		}
 	}
+	
+	// 26279 - start
+	/**
+	 * Checks Disciplinary Action
+	 * 
+	 * if true will display Disciplinary Action
+	 * 
+	 */
+	private void checkDisciplinaryAction() {
+		if (getManagedBean().getAdjustment().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DN_PENDING_APPROVAL
+				.longValue()) {
+			SmSupplier smSupplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+	}
+	// 26279 - End
 	
 	/**
 	 * set adjustment note attribute into managedbean
@@ -657,6 +685,27 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		}
 		return null; 
 	}
+	
+	// 26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
+	public void viewDisciplinaryAction() {
+		SmSupplier supplier;
+
+		if (getManagedBean().getAdjustment().getFlRequest().getSmSupplier() != null) {
+			supplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		}
+	}
+
+	// 26279 - end
 	
 	//29599-start
 	private BigDecimal getTotalOrderedAmt(Long flReqId){
