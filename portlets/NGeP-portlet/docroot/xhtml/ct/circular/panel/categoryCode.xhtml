@@ -37,6 +37,12 @@
 		justify-content: center !important;
 		align-items: center !important;
 	}
+	.confirm-ui-dialog .ui-dialog-content .ui-outputlabel {
+    display: block !important;
+    width: 100%;
+    text-align: center !important;
+    padding-left: 0 !important;
+}<!-- #40498,#30014 -->
 	</style>
 
 	<p:panel id="categoriCodeId"
@@ -116,12 +122,13 @@
 		<h:panelGroup id="addButtonId">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this, panelCategoryCodeDt"
+					process="@this"
 					partialSubmit="true"
-					update="@([id$=catCodeCtPopup])"
 					oncomplete="catCodePopup.show();"
+					actionListener="#{panelBackingBean.beforeOpenCategoryPopup}"
+					update="@([id$=catCodeCtPnl])"
 					rendered="#{!panelBackingBean.managedBean.viewContract}"
-					action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
+					action="#{categoryCodeSearchBackingBean.renewSesionObject}" /> <!-- #40498,#30014 -->
 
 				<p:commandButton id="deleteButtonId"
 					value="#{lbl['lbl.ct.delete']}"

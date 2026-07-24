@@ -3572,28 +3572,100 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void saveOtherDescriptionEdit() {
 		try {
+			List<SmAppl> smApplList = new ArrayList<>();
+			smApplList.add(getManagedBean().getHistorySuppCategory().getSmAppl());
+			getManagedBean().setOtherDescOld(null);
 			getManagedBean().setOtherDescOld(getManagedBean().getHistorySuppCategory().getOtherDesc());
-
+			
 			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 			reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
+			
+		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
+			history = getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory();
+			boolean firstDataApprover = true;
 
-			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty() && 
-					getManagedBean().getOtherDescOld() != null){
+			for (SmSuppCatOtherDescHistory obj : history) {
+				if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
+					firstDataApprover = false;
+				}
+			}
+			
+			if (firstDataApprover){
 				reqDTO.setOtherDescOld(getManagedBean().getOtherDescOld());
+				reqDTO.setRoleType(SupplierManagementConst.APPROVER_SDM);
+			} else {
+				reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
+			}
+			
+			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(reqDTO);
+			
+			// Initialize for appl in progress.
+			if (getManagedBean().isHasActiveTransaction() && CollectionUtils.isNotEmpty(getManagedBean().getActiveApplList())) {
+				for (Object[] appl : getManagedBean().getActiveApplList()) {
+					String applStatus = "";
+					applStatus = String.valueOf(appl[2]);
+					if (!applStatus.equalsIgnoreCase(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL) && 
+							!applStatus.equalsIgnoreCase(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)) {
+						MofRegistrationReqDTO reqMofDTO = new MofRegistrationReqDTO();
+						String applNo = String.valueOf(getManagedBean().getActiveApplList().get(0)[0]);
+						reqMofDTO.setApplNo(applNo);
+						SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqMofDTO).getSmAppl();
+						smApplList.add(activeAppl);
+					}
+				}
+			}
+			
+			// save edit category for Active and Registered application.
+			for (SmAppl appl : smApplList) {
+				SmSupplierCategory smSuppCat = new SmSupplierCategory();
+
+				SmSupplierCategory catCode = getManagedBean().getHistorySuppCategory();
+				if (smApplList.size() > 1) {
+					String mainCatcode = catCode
+							.getPmCategoryL3()
+							.getPmCategoryL2()
+							.getPmCategoryL1()
+							.getCategoryL1Code()
+							.concat(catCode.getPmCategoryL3().getPmCategoryL2()
+									.getCategoryL2Code())
+							.concat(catCode.getPmCategoryL3()
+									.getCategoryL3Code());
+					getManagedBean().getHistorySuppCategory();
+					
+					for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+						String suppCatCode = cat
+								.getPmCategoryL3()
+								.getPmCategoryL2()
+								.getPmCategoryL1()
+								.getCategoryL1Code()
+								.concat(cat.getPmCategoryL3().getPmCategoryL2()
+										.getCategoryL2Code())
+								.concat(cat.getPmCategoryL3()
+										.getCategoryL3Code());
+						
+						if (suppCatCode.equalsIgnoreCase(mainCatcode)) {
+							smSuppCat = cat;
+						}
+					}
+				} else {
+					smSuppCat = catCode;
+				}
+				
+				if (getManagedBean().getSmAppl().getApplNo() == null) {
+					getManagedBean().setSmAppl(reqDTO.getSmAppl());
+				}
+				
+				smSuppCat.setOtherDesc(getManagedBean().getOtherDescEdited());
+				SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(smSuppCat);
 			}
 			
 			if (!getManagedBean().isOtherDescChangeSupplier()){
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
-			
-			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(reqDTO);
-			
-			reqDTO.getSmSupplierCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
-			SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(reqDTO.getSmSupplierCategory());
 			
 			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
 			

@@ -60,6 +60,7 @@
 							</td>
 						</tr>
 					</p:outputPanel>
+					
 					<!-- #37925 START -->
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi}">
 						<tr>
@@ -68,6 +69,22 @@
 								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
 							</td>
 						</tr>
+						<ui:fragment rendered="#{not empty cc.attrs.bean.strLabelCountryOrigin and cc.attrs.bean.strLabelCountryOrigin.toLowerCase() eq 'unknown'}">
+							<tr >
+								<td></td>
+								<td>
+									<div class="ui-messages ui-widget"  
+										aria-live="polite">
+										<div class="ui-messages-warn ui-corner-all">
+											<ul>
+												<li><span class="ui-messages-warn-summary"></span>
+													<span class="ui-messages-warn-detail"><h:outputText value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}" escape="false" /></span></li>
+											</ul>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</ui:fragment>
 					</p:outputPanel>
 					
 					<tr>
