@@ -3584,7 +3584,17 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
 			
-			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
+		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
+			history = getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory();
+			boolean firstDataApprover = true;
+
+			for (SmSuppCatOtherDescHistory obj : history) {
+				if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
+					firstDataApprover = false;
+				}
+			}
+			
+			if (firstDataApprover){
 				reqDTO.setOtherDescOld(getManagedBean().getOtherDescOld());
 				reqDTO.setRoleType(SupplierManagementConst.APPROVER_SDM);
 			} else {
@@ -3595,11 +3605,18 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			// Initialize for appl in progress.
 			if (getManagedBean().isHasActiveTransaction() && CollectionUtils.isNotEmpty(getManagedBean().getActiveApplList())) {
-				MofRegistrationReqDTO reqMofDTO = new MofRegistrationReqDTO();
-				String applNo = String.valueOf(getManagedBean().getActiveApplList().get(0)[0]);
-				reqMofDTO.setApplNo(applNo);
-				SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqMofDTO).getSmAppl();
-				smApplList.add(activeAppl);
+				for (Object[] appl : getManagedBean().getActiveApplList()) {
+					String applStatus = "";
+					applStatus = String.valueOf(appl[2]);
+					if (!applStatus.equalsIgnoreCase(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL) && 
+							!applStatus.equalsIgnoreCase(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)) {
+						MofRegistrationReqDTO reqMofDTO = new MofRegistrationReqDTO();
+						String applNo = String.valueOf(getManagedBean().getActiveApplList().get(0)[0]);
+						reqMofDTO.setApplNo(applNo);
+						SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqMofDTO).getSmAppl();
+						smApplList.add(activeAppl);
+					}
+				}
 			}
 			
 			// save edit category for Active and Registered application.
