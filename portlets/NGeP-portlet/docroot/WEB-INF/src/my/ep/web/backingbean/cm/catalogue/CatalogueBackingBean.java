@@ -22,9 +22,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-//#30457 import
 import java.text.DateFormat; //30457
 import java.text.DecimalFormat; //30457
 import java.text.SimpleDateFormat;
@@ -176,6 +173,7 @@ import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
@@ -190,8 +188,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
-//#30457 import
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
@@ -218,6 +214,12 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
+
+//#30457 import
+import org.apache.commons.collections.CollectionUtils;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+//#30457 import
 
 /**
  * 
@@ -284,7 +286,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	// Navigation Details
 	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml"; //#26282
-
+	
 	private boolean declareChecked; //#30457
 	
 	/**
@@ -6501,9 +6503,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.getResultBean().getResultList().get(0).getSupplierId(), null);
 
 			}
-
+			
 			//[#26282 - start]
-			String nextNavigation;			
+			String nextNavigation;
 			checkForDisciplinaryAction(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
 			if(this.getManagedBean().isDaCancelReg() || this.getManagedBean().isDaBlacklistOwner()) {

@@ -382,7 +382,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The display catalogue. */
 	private boolean displayCatalogue = false;
-
+	
 	//[#26282] disciplinary action - start
 	/** Supplier disciplinary action list */
 	private List<DisciplinaryActionVO> disciplineVOs;
@@ -1112,7 +1112,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			}
 		}
 	}
-
+    
+	//SonarLint Fixing - Start
 	/**
 	 * The Class SearchPagingDataModel.
 	 */
@@ -1178,14 +1179,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			
 			try {
 
-				viewSO = (IViewSupplierItemSO) BusinessDelegate.getInstance()
+				viewSO = BusinessDelegate.getInstance()
 						.getServiceObject("cm", IViewSupplierItemSO.class);
 				
 				StringBuilder sb = new StringBuilder();
 				if (catTypeFilterBean.getSearchValue() != null) {
 					catTypeFilterBean.setSearchField("CAT_TYPE");
-					// catTypeFilterBean.setSearchValue("XC");
-					//searchBean.getDataFilterBeans().add(catTypeFilterBean);
 					appendSearchCriteria(sb, catTypeFilterBean);		
 				}
 				
@@ -1200,7 +1199,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					itemNameFilterBean.setSearchField("ITEM_NAME");
 					itemNameFilterBean.setCaseInsensitive(true);
 					itemNameFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
-					//searchBean.getDataFilterBeans().add(itemNameFilterBean);
 					
 					keyWordFilterBean.setSearchField("KEYWORD");
 					keyWordFilterBean.setSearchValue((String) itemNameFilterBean.getSearchValue());
@@ -1338,7 +1336,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					districtLs.add(district);
 				}
 
-				if (districtLs != null && districtLs.size() > 0) {
+				if (districtLs != null && !districtLs.isEmpty()) {
 					districtFilterBean.setSearchField("DISTRICT_ID");
 					districtFilterBean.setSearchValue(districtLs);
 					searchBean.getDataFilterBeans().add(districtFilterBean);
@@ -1349,7 +1347,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				for (Long state : stateId) {
 					stateLs.add(state);
 				}
-
+				
 				//#26282 and SonarQube fixing - Start
 				if (districtLs.isEmpty() && stateLs != null && !stateLs.isEmpty()) {
 					stateFilterBean.setSearchField("STATE_ID");
@@ -1358,7 +1356,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					appendSearchCriteria(sb, stateFilterBean);
 				}
 				//#26282 and SonarQube fixing - End
-
+				
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
 				PmUserOrg userOrg = null;
@@ -1368,14 +1366,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				if (unspscCodeBackingBean.isRequisitioner()) {
 					UserReqDTO userReqDTO = new UserReqDTO();
 					userReqDTO.setUserId(userId);
-					IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+					IUserSO userSO = BusinessDelegate.getInstance()
 							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 									IUserSO.class);
 					UserResDTO userResDTO = userSO
 							.retrieveUserOrgListByUserId(userReqDTO);
 					userOrg = userResDTO.getUserOrgList().get(0);
 	
-					IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+					IOrgProfileSO orgProfileSO = BusinessDelegate
 							.getInstance().getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									IOrgProfileSO.class);
@@ -1385,17 +1383,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					OrgProfileResDTO orgProfileResDTO = orgProfileSO
 							.retrieveMinistryByOrgProfileId(orgProfileReqDTO);
 					if (orgProfileResDTO.getPmOrgProfile() != null) {
-						//String ministryId = "#" + orgProfileResDTO.getPmOrgProfile().getOrgProfileId() + "#";
 						ministryId = orgProfileResDTO.getPmOrgProfile().getOrgProfileId();
-//						SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(
-//								new SearchFilterBean("EXEMPTED_MINISTRY_LIST",
-//										SearchOperator.OPERATOR_IS_NULL.value(),
-//										null), new SearchFilterBean(
-//										"EXEMPTED_MINISTRY_LIST",
-//										SearchOperator.OPERATOR_NOT_LIKE.value(),
-//										ministryId,
-//										SearchCondition.CONDITION_OR.value()));
-//						searchBean.getDataFilterBeans().add(ministryFilterBean);
 					}
 					orgProfileResDTO = orgProfileSO.retrieveJabatanByOrgProfileId(orgProfileReqDTO);
 					if (orgProfileResDTO.getPmOrgProfile() != null) {	
@@ -1435,7 +1423,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 		
 				reqDTO.setUserId(userId);
-				//reqDTO.setG2gFlag(g2gFlag);
 				
 				appendSearchCriteria(sb, "REQ", String.valueOf(unspscCodeBackingBean.isRequisitioner()));
 				appendSearchCriteria(sb, "G2G", String.valueOf(reqDTO.isG2gFlag()));
@@ -1459,12 +1446,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					} else {
 						setSimpleQuoteFlag(Boolean.FALSE);
 					}
-
+				
 				if (resDTO.getViewSuppItemResultBean().getResultList() != null
 						&& !resDTO.getViewSuppItemResultBean().getResultList().isEmpty()) {
 					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+ Integer.toString(resDTO.getViewSuppItemResultBean().getTotalRecord())},
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-
+					
 					//[#26282] - start
 					if (unspscCodeBackingBean.isRequisitioner()) {
 						checkForDisciplinaryAction();
@@ -2005,10 +1992,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel.add(ResourceBundleUtils.getMessage(
 				"lbl.cm.basic.item.spec", //#30457 - change label
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-		// 26284 - Start
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.sc.discipline.action.taken",
+		//26284 - Start
+		compareLabel.add(ResourceBundleUtils.getMessage(
+				"lbl.sc.discipline.action.taken",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-		// 26284 - End
+		//26284 - End
 
 		return compareLabel;
 	}
@@ -4334,193 +4322,181 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//26284, #26282 - End
 	
 	//20200929@akmal - Enhancement27627 - Start
-		public boolean isSavedFirst() {
-			return isSavedFirst;
-		}
+	public boolean isSavedFirst() {
+		return isSavedFirst;
+	}
 
-		public void setSavedFirst(boolean isSavedFirst) {
-			this.isSavedFirst = isSavedFirst;
-		}
-		//20200929@akmal - Enhancement27627 - End
+	public void setSavedFirst(boolean isSavedFirst) {
+		this.isSavedFirst = isSavedFirst;
+	}
+	//20200929@akmal - Enhancement27627 - End
 
-		//201002@akmal - Bug29265 - Start
-		public boolean isPromoPriceExist() {
-			return isPromoPriceExist;
-		}
+	//201002@akmal - Bug29265 - Start
+	public boolean isPromoPriceExist() {
+		return isPromoPriceExist;
+	}
 
-		public void setPromoPriceExist(boolean isPromoPriceExist) {
-			this.isPromoPriceExist = isPromoPriceExist;
-		}
-		//201002@akmal - Bug29265 - End
-		
-		//#30457-start
-		public int getItemSelectedIndex() {
-			return itemSelectedIndex;
-		}
+	public void setPromoPriceExist(boolean isPromoPriceExist) {
+		this.isPromoPriceExist = isPromoPriceExist;
+	}
+	//201002@akmal - Bug29265 - End
+	
+	//#30457-start
+	public int getItemSelectedIndex() {
+		return itemSelectedIndex;
+	}
 
-		public void setItemSelectedIndex(int itemSelectedIndex) {
-			this.itemSelectedIndex = itemSelectedIndex;
-		}
+	public void setItemSelectedIndex(int itemSelectedIndex) {
+		this.itemSelectedIndex = itemSelectedIndex;
+	}
 
-		public boolean isViewOnlyBasicPopup() {
-			return viewOnlyBasicPopup;
-		}
+	public boolean isViewOnlyBasicPopup() {
+		return viewOnlyBasicPopup;
+	}
 
-		public void setViewOnlyBasicPopup(boolean viewOnlyBasicPopup) {
-			this.viewOnlyBasicPopup = viewOnlyBasicPopup;
-		}
-		
-		public boolean isYesEnable() {
-			return yesEnable;
-		}
+	public void setViewOnlyBasicPopup(boolean viewOnlyBasicPopup) {
+		this.viewOnlyBasicPopup = viewOnlyBasicPopup;
+	}
+	
+	public boolean isYesEnable() {
+		return yesEnable;
+	}
 
-		public void setYesEnable(boolean yesEnable) {
-			this.yesEnable = yesEnable;
+	public void setYesEnable(boolean yesEnable) {
+		this.yesEnable = yesEnable;
+	}
+	//#30457-end
+	
+	// #30457 - start
+	public List<CmImage> getDeleteImage() {
+		if (deleteImage == null) {
+			deleteImage = new ArrayList<CmImage>();
 		}
-		//#30457-end
-		
-		// #30457 - start
-		public List<CmImage> getDeleteImage() {
-			if (deleteImage == null) {
-				deleteImage = new ArrayList<CmImage>();
-			}
-			return deleteImage;
-		}
+		return deleteImage;
+	}
 
-		public void setDeleteImage(List<CmImage> deleteImage) {
-			this.deleteImage = deleteImage;
-		}
+	public void setDeleteImage(List<CmImage> deleteImage) {
+		this.deleteImage = deleteImage;
+	}
 
-		public String getItemStatus() {
-			return itemStatus;
-		}
+	public String getItemStatus() {
+		return itemStatus;
+	}
 
-		public void setItemStatus(String itemStatus) {
-			this.itemStatus = itemStatus;
-		}
-		// #30457 - end
+	public void setItemStatus(String itemStatus) {
+		this.itemStatus = itemStatus;
+	}
+	// #30457 - end
 
-		// #30457 - Start
-		public boolean isCatDPScreen() {
-			return catDPScreen;
-		}
+	// #30457 - Start
+	public boolean isCatDPScreen() {
+		return catDPScreen;
+	}
 
-		public void setCatDPScreen(boolean catDPScreen) {
-			this.catDPScreen = catDPScreen;
-		}
-		
-		public boolean isAddPromotion() {
-			return addPromotion;
-		}
+	public void setCatDPScreen(boolean catDPScreen) {
+		this.catDPScreen = catDPScreen;
+	}
+	
+	public boolean isAddPromotion() {
+		return addPromotion;
+	}
 
-		public void setAddPromotion(boolean addPromotion) {
-			this.addPromotion = addPromotion;
-		}
-		// #30457 - End
-		
-		//38255-Start
-		public List<ScheduleInfo> getSchInfo() {
-			if (schInfo == null)
-				schInfo = new ArrayList<>();
-			return schInfo;
-		}
+	public void setAddPromotion(boolean addPromotion) {
+		this.addPromotion = addPromotion;
+	}
+	// #30457 - End
+	
+	//38255-Start
+	public List<ScheduleInfo> getSchInfo() {
+		if (schInfo == null)
+			schInfo = new ArrayList<>();
+		return schInfo;
+	}
 
-		public void setSchInfo(List<ScheduleInfo> schInfo) {
-			this.schInfo = schInfo;
-		}
-		//38255-End
+	public void setSchInfo(List<ScheduleInfo> schInfo) {
+		this.schInfo = schInfo;
+	}
+	//38255-End
 
-		//#26282 and SonarQube fixing - Start
-		/**
-		 * To check what DA the supplier involve
-		 */
-		public void checkForDisciplinaryAction() {
+	//#26282 and SonarQube fixing - Start
+	/**
+	 * To check what DA the supplier involve
+	 */
+	public void checkForDisciplinaryAction() {
 
-			for (VCmSupplierItem supplierItem : getViewSupplierItemList()) {
+		for (VCmSupplierItem supplierItem : getViewSupplierItemList()) {
 
-				// check for disciplinary action
-				List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil
-						.checkForDisciplinaryAction(supplierItem.getSupplierId());
-				if (hasDisciplinaryActions(disciplinaryActList)) {
-					SmDisciplinaryAction disciplinaryAct = disciplinaryActList
-							.get(0);
+			// check for disciplinary action
+			List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(supplierItem.getSupplierId());
+			if (hasDisciplinaryActions(disciplinaryActList)) {
+				SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
 
-					log.info("[#26282] - ====== Disciplinary Action Status ======");
-					log.info("[#26282] - Supplier ID: "
-							+ supplierItem.getSupplierId());
-					log.info("[#26282] - Company name: "
-							+ supplierItem.getCompanyName());
-					log.info("[#26282] - DA - Warning: "
-							+ disciplinaryAct.isWarning());
-					log.info("[#26282] - DA - Suspend Registration: "
-							+ disciplinaryAct.isSuspendRegistration());
-					log.info("[#26282] - DA - Cancel Registration: "
-							+ disciplinaryAct.isCancelRegistration());
-					log.info("[#26282] - DA - Blacklist  Owner/Director of Company: "
-							+ disciplinaryAct.isBlacklistOwner());
-					log.info("[#26282] - ========================================");
+				log.info("[#26282] - ====== Disciplinary Action Status ======");
+				log.info("[#26282] - Supplier ID: " + supplierItem.getSupplierId());
+				log.info("[#26282] - Company name: " + supplierItem.getCompanyName());
+				log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
+				log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
+				log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
+				log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
+				log.info("[#26282] - ========================================");
 
-					applyDisciplinaryActions(supplierItem, disciplinaryAct);
-				} else {
-					log.info("[#26282] - Disciplinary action does not imposed on supplier");
-				}
+				applyDisciplinaryActions(supplierItem, disciplinaryAct);
+			} else {
+				log.info("[#26282] - Disciplinary action does not imposed on supplier");
 			}
 		}
+	}
 
-		private boolean hasDisciplinaryActions(
-				List<SmDisciplinaryAction> disciplinaryActList) {
-			return disciplinaryActList != null && !disciplinaryActList.isEmpty();
+	private boolean hasDisciplinaryActions(List<SmDisciplinaryAction> disciplinaryActList) {
+		return disciplinaryActList != null && !disciplinaryActList.isEmpty();
+	}
+
+	private void applyDisciplinaryActions(VCmSupplierItem supplierItem, SmDisciplinaryAction disciplinaryAct) {
+		// disciplinary action - Warning
+		if (disciplinaryAct.isWarning()) {
+			supplierItem.setDaWarning(disciplinaryAct.isWarning());
 		}
 
-		private void applyDisciplinaryActions(VCmSupplierItem supplierItem,
-				SmDisciplinaryAction disciplinaryAct) {
-			// disciplinary action - Warning
-			if (disciplinaryAct.isWarning()) {
-				supplierItem.setDaWarning(disciplinaryAct.isWarning());
-			}
-
-			// disciplinary action - Suspend Registration
-			if (disciplinaryAct.isSuspendRegistration()) {
-				supplierItem.setDaSuspendReg(disciplinaryAct
-						.isSuspendRegistration());
-			}
-
-			// disciplinary action - Cancel Registration
-			if (disciplinaryAct.isCancelRegistration()) {
-				supplierItem.setDaCancelReg(disciplinaryAct.isCancelRegistration());
-			}
-
-			// disciplinary action - Blacklist Owner/Director of Company
-			if (disciplinaryAct.isBlacklistOwner()) {
-				supplierItem
-						.setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
-			}
-		}
-		//#26282 and SonarQube fixing - End
-		
-		//26284 - Start
-		public String getDisciplinaryActionStartDate() {
-			return disciplinaryActionstartDate;
+		// disciplinary action - Suspend Registration
+		if (disciplinaryAct.isSuspendRegistration()) {
+			supplierItem.setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
 		}
 
-		public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
-			this.disciplinaryActionstartDate = disciplinaryActionstartDate;
+		// disciplinary action - Cancel Registration
+		if (disciplinaryAct.isCancelRegistration()) {
+			supplierItem.setDaCancelReg(disciplinaryAct.isCancelRegistration());
 		}
 
-		public String getDisciplinaryActionEndDate() {
-			return disciplinaryActionEndDate;
+		// disciplinary action - Blacklist Owner/Director of Company
+		if (disciplinaryAct.isBlacklistOwner()) {
+			supplierItem.setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 		}
+	}
+	//#26282 and SonarQube fixing - End
+	
+	//26284 - Start
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionstartDate;
+	}
 
-		public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
-			this.disciplinaryActionEndDate = disciplinaryActionEndDate;
-		}
-			
-		public boolean isDisciplinaryActionWarning() {
-			return disciplinaryActionWarning;
-		}
+	public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
+		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
+	}
 
-		public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
-			this.disciplinaryActionWarning = disciplinaryActionWarning;
-		}
-		//26284 - End
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	//26284 - End
 }
