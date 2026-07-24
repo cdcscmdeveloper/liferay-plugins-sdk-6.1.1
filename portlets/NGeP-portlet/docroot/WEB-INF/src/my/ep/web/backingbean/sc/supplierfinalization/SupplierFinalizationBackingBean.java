@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.supplierfinalization;
 
@@ -1063,8 +1063,7 @@ public class SupplierFinalizationBackingBean extends
 		
 	}
 
-	//#27502 - New DO MOF Role and Process - Start
-	
+	// #27502 - New DO MOF Role and Process - Start
 	/**
 	 * This loadCommitteeList method is to load data from pm_authority_committee
 	 * and display to user
@@ -1102,12 +1101,14 @@ public class SupplierFinalizationBackingBean extends
 		}
 		this.getManagedBean().setListApprovalAuthCommittee(newComList);
 	}
-	
+	// #27502 -end-
+
 	public void changeCommApprovalAuth() {
 		log.info("start changeCommApprovalAuth");
 		
 	}
-			
+
+	// #27502 -start-			
 	private void getListApprovalAuthority() {
 		// to retrieve Approval Authority
 		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
@@ -1122,8 +1123,8 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setListApprovalAuthority(resultComittee);
 
 	}
-	//#27502 - New DO MOF Role and Process - end
-	
+	// #27502 - New DO MOF Role and Process - end
+
 	private void retrievePreparationDtls(Long qtId, String committeeType) {
 		log.info("..In retrievePreparationDtls()..");
 		IQTMeetingSO meetingSO = null;
@@ -1455,20 +1456,19 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(
 				PREPARE_ACTIVE_INDEX_COMMITTEE);
 	}
-	
+
 	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
 	/**
 	 * To retrieve committee details
 	 */
 	public void retrieveCommitteeMOFDtls() {
-		log.info("..In retrieveCommitteeMOFDtls()..");
-		
 		this.getManagedBean().setPrepareActiveIndex(
 				PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE);
 		
 		getListApprovalAuthority();
 	}
 	 //20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
+
 	/**
 	 * To retrieve meeting attendance details corresponding to the selected
 	 * quotation/tender
@@ -4331,7 +4331,7 @@ return	remarksNotFound;
 			qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 			scQt = qtBackingBean.getManagedBean().getQt();
 			boolean isBpkCentralContract = isBpkCentralContract(scQt);
-			//27502 - Start.
+
 			// #28834 - Start.
 			getManagedBean().setBpkCentralContract(isBpkCentralContract);
 			// #28834 - End.
@@ -6961,15 +6961,18 @@ return	remarksNotFound;
 		scQtFinalization.setHigherAuthReq(false);
 		
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
-		//Bug #29707 - start
+		// # 27502,#29707 - start
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+	
 		scQt = qtBackingBean.getManagedBean().getQt();
 		boolean isBpkCentralContract = isBpkCentralContract(scQt);
-		if (isBpkCentralContract ){
-			getManagedBean().setFinalizationMethod(null);//#27502, null the 'Supplier Finalization Method' for re-evaluation 
+
+		if (isBpkCentralContract) {
+		    // null the 'Supplier Finalization Method' for re-evaluation 
+			getManagedBean().setFinalizationMethod(null);
 		}
-		//Bug #29707 - end
+		// # 27502,#29707 - end
 		
 		Map<String,String[]> higherAuthoritiesMap 
 					= getManagedBean().getHigherAuthoritiesMap();
@@ -13275,7 +13278,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	        for (ScQtEvaluationResultDtl supplier : qualifiedSuppliers) {
 	            updateSupplierRegistrationLabel(supplier);
 	            if (isOfferExceedingThreshold(item, supplier, committeeThreshold)) {
-	                return true; // early exit – one exceed is enough
+	                return true; // early exit  one exceed is enough
 	            }
 	        }
 	    }
