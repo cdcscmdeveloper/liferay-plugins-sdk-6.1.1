@@ -3693,7 +3693,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			if (!getManagedBean().isOtherDescChangeApprover()) {
 				getManagedBean().setOtherDescChangeApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
-			} else if (!getManagedBean().isOtherDescChangeSupplier()) {
+			} else if (!getManagedBean().isOtherDescChangeSupApprover()) {
 				getManagedBean().setOtherDescChangeSupApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
