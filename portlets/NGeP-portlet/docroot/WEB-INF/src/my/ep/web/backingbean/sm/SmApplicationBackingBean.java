@@ -19286,7 +19286,8 @@ public class SmApplicationBackingBean extends
 		Long status = getManagedBean().getSmAppl().getPmStatus().getStatusId();
 	    List<SmWorkflowStatus> smws = new ArrayList<>(); 
 
-		if (getManagedBean().getSmAppl().getSmWorkflowStatuses() != null) {
+		if (getManagedBean().getSmAppl().getSmWorkflowStatuses() != null && 
+				!status.equals(SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION)) {
 			smws = getManagedBean().getSmAppl().getSmWorkflowStatuses();
 			
 			for (SmWorkflowStatus obj : smws) {
@@ -19300,12 +19301,19 @@ public class SmApplicationBackingBean extends
 		}
 		
 		if (SupplierManagementConst.SECTION_MAIN.equalsIgnoreCase(section)) {
-			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
-					.equals(type))
-					&& (getManagedBean().isPoUser() || getManagedBean()
-							.isApproverUser())
-					&& !svBeforeAfter;
+			// For resubmit KR appication because rejected application(SV afer approval) has updated category code status = 1(Active).
+			if ((SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
+					.equals(type)) && (applTypeRenewal && getManagedBean().isSupplierUser())) { 
+				filter = true;
+			} else {
+				// For other than KR application.
+				filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
+						.equals(type))
+						&& (getManagedBean().isPoUser() || getManagedBean().isApproverUser())
+						&& !svBeforeAfter;
+			}
 		} else if (SupplierManagementConst.SECTION_RENEWAL.equalsIgnoreCase(section)) {
+			// KR application with category code status = 6(PENDING_RE_APPROVAL_STATUS).
 			filter = (SupplierManagementConst.CAT_TYPE_DOCKYARD.equals(type) || SupplierManagementConst.CAT_TYPE_MANUFACTURING
 					.equals(type))
 					&& (getManagedBean().isPoUser()
