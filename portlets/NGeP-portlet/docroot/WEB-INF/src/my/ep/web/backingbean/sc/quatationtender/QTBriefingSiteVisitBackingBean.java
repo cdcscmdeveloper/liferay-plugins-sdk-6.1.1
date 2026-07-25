@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import java.util.Calendar;
 import java.util.Collections;//#28188
 import java.util.Comparator;//#28188
+import java.util.HashMap;
 import java.util.LinkedHashMap;//#28188
 import java.util.LinkedList;
 import java.util.Map;//#28188
@@ -75,6 +76,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -714,6 +716,16 @@ public class QTBriefingSiteVisitBackingBean extends
 				attendanceBackingBean.getManagedBean().setScQtApproval(qtApproval);
 				attendanceBackingBean.getManagedBean().setScQtApprovalRemarks(scQtApprovalRemarks);
 				attendanceBackingBean.getManagedBean().setScQtApprovalAttachments(new ArrayList<ScQtApprovalAttachment>());
+				
+				// 28188 -start-
+				List<ScQtBsvRegistration> bsvRegistartion = attendanceBackingBean
+						.getManagedBean().getBriefingRegistrationList();
+				Long qtId = scQt.getQtId();
+				Long qtBsvdtlId = scQtBriefing.getQtBsvDtlId();
+				checkBsvRegistartionInprogress(bsvRegistartion, qtId,
+						qtBsvdtlId);
+				// 28188 -end-
+				
 				break;
 			}
 		}
@@ -2126,6 +2138,58 @@ public class QTBriefingSiteVisitBackingBean extends
 	    return cal.getTime();
 	}
 	//#28188 - End 
+	
+	//28188 -start-
+	/**
+	 * check any supplier data inprogess during bsvdetails edit.
+	 * @param bsvRegisterList
+	 * @param qtId
+	 * @param qtBsvDtlId
+	 */
+	private void checkBsvRegistartionInprogress(
+			List<ScQtBsvRegistration> bsvRegisterList, Long qtId,
+			Long qtBsvDtlId) {
+		if (CollectionUtils.isNotEmpty(bsvRegisterList)) {
+			for (ScQtBsvRegistration bsvRegistration : bsvRegisterList) {
+				ScQtApprovalRequest approvalRequest= bsvRegistration.getScQtApprovalRequest();
+				if (bsvRegistration.getRecordStatusFlg().equals(
+						DbValueConst.RECORD_STATUS_IN_PROGRESS) && null == approvalRequest) {
+					createRegistration(qtId, qtBsvDtlId);
+					break;
+				}
+			}
+		}
+	}
+
+	// #28188 - end-
+	
+	//28188 -start-
+	/**
+	 * create bsvRegistration Details.
+	 * @param qtId
+	 * @param qtBsvDtlId
+	 */
+	private void createRegistration(Long qtId, Long qtBsvDtlId) {
+		this.getManagedBean().setBsvRegisterDetails(
+				new HashMap<Long, List<Long>>());
+		Map<Long, List<Long>> bsvRegisterDetails = this.getManagedBean()
+				.getBsvRegisterDetails();
+		List<Long> bsvDetails = bsvRegisterDetails.get(qtId);
+		if (null == bsvDetails) {
+			bsvDetails = new ArrayList<>();
+			bsvDetails.add(qtBsvDtlId);
+			bsvRegisterDetails.put(qtId, bsvDetails);
+		}
+		if (CollectionUtils.isNotEmpty(bsvDetails)
+				&& !bsvDetails.contains(qtBsvDtlId)) {
+			bsvDetails.add(qtBsvDtlId);
+			bsvRegisterDetails.put(qtId, bsvDetails);
+		}
+		this.getManagedBean().setBsvRegisterDetails(bsvRegisterDetails);
+
+	}
+	
+	// #28188 - end-
 	
 	// #28188 - Start
 	/**
