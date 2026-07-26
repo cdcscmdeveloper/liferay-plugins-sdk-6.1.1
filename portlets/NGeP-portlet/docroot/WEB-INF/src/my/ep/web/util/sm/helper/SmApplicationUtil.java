@@ -16301,7 +16301,7 @@ public class SmApplicationUtil {
 				} else if (!managedBean.isOtherDescChangeSupPOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
 					managedBean.setOtherDescChangeSupPOPrev(true);
 					managedBean.setOtherDescChangeSupplierPrev(true);
-				} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+				} else if (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL)) {
 					managedBean.setOtherDescChangeSupplierPrev(true);
 					managedBean.getEditVO().setSuppEditCategory(true);
 				}
