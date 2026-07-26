@@ -7,6 +7,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -144,6 +146,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.menuitem.MenuItem;
@@ -2389,7 +2392,13 @@ public class NoticeBoardBackingBean extends
 			// Need to construct tab bean for zone
 			MenuModel zoneMenuModel = new DefaultMenuModel();
 			List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
-
+			
+			// 28188 -start-
+			if (CollectionUtils.isNotEmpty(zoneDtls)) {
+				zoneDtlsSorting(zoneDtls);
+			}
+			// 28188 -end-
+			
 			if (null != zoneDtls) {
 				int zoneTabIndex = 0;
 
@@ -3739,6 +3748,28 @@ public class NoticeBoardBackingBean extends
 		}
 		return noticeBoardBSVDtls;
 	}
+	
+	// 28188 -end-
+	
+	// 28188 -start-
+	/**
+	 * sorting zoneDetails duringBsv self register.
+	 * 
+	 * @param zoneDtls
+	 */
+	private void zoneDtlsSorting(List<TplSpecZoneDtl> zoneDtls) {
+		Collections.sort(zoneDtls, new Comparator<TplSpecZoneDtl>() {
+			public int compare(TplSpecZoneDtl zoneDtl1, TplSpecZoneDtl zoneDtl2) {
+
+				return new CompareToBuilder()
+
+				.append(zoneDtl1.getSpecZoneId(), zoneDtl2.getSpecZoneId())
+						.toComparison();
+			}
+		});
+	}
+
+	// 28188 -end-
 
 	// 28188 -end-
 	
