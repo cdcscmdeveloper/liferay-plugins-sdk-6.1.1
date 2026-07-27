@@ -15222,23 +15222,31 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 			for (BriefingZoneBean bsvDtlBean : beansList) {
 				ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+				//28188 -start-
+				if(null!=scQtBsv){
 				boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
 						.getScQtBsvDtls());
 				
 				if (isBsvdtlsChange) {
 					checkBsvRemarksMandatory(scQtBsv);
 				}
+				}
+				//28188 -end
 			}
 		} else {
 			
 			BriefingZoneBean bsvDtlBean = this.getManagedBean().getBsvDtlBean();
 			ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+			//28188 -start-
+			if(null!=scQtBsv){
 			boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
 					.getScQtBsvDtls());
 			
 			if (isBsvdtlsChange) {
 				checkBsvRemarksMandatory(scQtBsv);
 			}
+			}
+			//28188 -end-
 
 		}
 	}
