@@ -221,6 +221,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	
 	private boolean isFinancialAttchment;//#28792
 	
+	// #30609, #26247 - Start.
+	private boolean disableUpdateProposal;
+	// #30609, #26247 - End.
+	
 	/**
 	 * Default Consructor
 	 */
@@ -1936,5 +1940,21 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 	
 	//#28792-End	
+	
+	// #30609, #26247 - Start.
+	/**
+	 * @return the disableUpdateProposal
+	 */
+	public boolean isDisableUpdateProposal() {
+		return disableUpdateProposal;
+	}
+
+	/**
+	 * @param disableUpdateProposal the disableUpdateProposal to set
+	 */
+	public void setDisableUpdateProposal(boolean disableUpdateProposal) {
+		this.disableUpdateProposal = disableUpdateProposal;
+	}
+	// #30609, #26247 - End.
 
 }

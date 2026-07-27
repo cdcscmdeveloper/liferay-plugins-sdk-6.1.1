@@ -397,17 +397,8 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
 		this.disciplinaryActionMsg = disciplinaryActionMsg;
 	}
-	// #28895_35501 Start - AUDIT TRAIL SM
-	public PmUser getOldSelectedUser() {
-		return oldSelectedUser;
-	}
 
-	public void setOldSelectedUser(PmUser oldSelectedUser) {
-		this.oldSelectedUser = oldSelectedUser;
-	}
-	// #28895_35501 End
-
-	//26247 - start
+	// 26247 - start
 	public String getQtDisciplinaryActionMsg() {
 		return qtDisciplinaryActionMsg;
 	}
@@ -423,7 +414,18 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setQtId(Long qtId) {
 		this.qtId = qtId;
 	}
-	//26247 - end
+
+	// 26247 - end
+	
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public PmUser getOldSelectedUser() {
+		return oldSelectedUser;
+	}
+
+	public void setOldSelectedUser(PmUser oldSelectedUser) {
+		this.oldSelectedUser = oldSelectedUser;
+	}
+	// #28895_35501 End
 
 	//#26186 start
 	/**
