@@ -104,6 +104,7 @@ import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
@@ -2386,6 +2387,18 @@ public class LOIDetailBackingBean extends
 		userReqDTO.setMinisterOrgProfileId(retrieveMinistryOrgProfile(
 				scLoi != null ?scLoi.getScLoiLoa().getPmOrgProfile()
 						.getOrgProfileId():null).getOrgProfileId());
+		
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - start
+		Long contractType = resDTO.getScQt().getContractType().getParameterId();
+
+		if (contractType != null && contractType.equals(SourcingConstants.CENTRAL_CONTRACT)) {
+			PmZone zone = SmCommonUtil.getInstance().getUserZone();
+			if (zone != null) {
+				userReqDTO.setZoneCode(zone.getZoneCode());
+			}
+			userReqDTO.setBpk(true);
+		}
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
@@ -8137,7 +8150,7 @@ public class LOIDetailBackingBean extends
 		} else {
 
 			for (ScQtRecommend recommendList : this.getManagedBean().getRecommendList()) {
-				if (recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
+				if (null == selectedZoneId || recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
 					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
 
 				}
@@ -8223,7 +8236,10 @@ public class LOIDetailBackingBean extends
 			// Handle each row
 
 			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageF)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || requestItemID == reqItemId.longValue() && selectedZone.longValue() == selectedZoneId)) {
+					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() 
+					|| requestItemID == reqItemId.longValue() && (null != selectedZoneId && selectedZone.longValue() == selectedZoneId)
+					|| null == selectedZoneId)) {
+
 				totalScoreFinEval = supplierTotalScore;
 				break;
 			}

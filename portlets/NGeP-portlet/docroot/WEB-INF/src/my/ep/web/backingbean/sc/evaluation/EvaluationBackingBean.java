@@ -9968,26 +9968,20 @@ private void retriveCommitteeRemarksList(){
 			}
 			/* ***#25638#99 - end */
 			retriveMeetingDtls(qtId, committeeType, index);
-			// getStatusDropdownValues("SC", "MS");
-			if (save == true) {
+			if (save) {// 10542
 				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
 						Boolean.FALSE);
-				
-				//#10542 - start
-				EvaluationReqDTO qtReqDTO = new EvaluationReqDTO();
-				EvaluationResDTO qtResDTO = new EvaluationResDTO();
 
+				// 10542 - start
+				EvaluationReqDTO qtReqDTO = new EvaluationReqDTO();
 				qtReqDTO.setQtId(qtId);
-				qtResDTO = evaluationSO.retriveQtDtlsById(qtReqDTO);
+				EvaluationResDTO qtResDTO = evaluationSO.retriveQtDtlsById(qtReqDTO);
 				ScQt scQt = qtResDTO.getScQt();
 
 				if (scQt != null) {
-					if (scQt.getCurrentActiveTab() == null || scQt.getCurrentActiveTab() < tabindex) {
-						evaluationSO.updateScQtCurrentActiveTab(scQt, tabindex);
-					}
+					evaluationSO.updateScQtCurrentActiveTab(scQt, tabindex);
 				}
-				//#10542 - end
-				
+				// 10542 - end
 			}
 		} finally {
 			evaluationSO=null;
