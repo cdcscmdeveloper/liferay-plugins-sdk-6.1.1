@@ -4936,7 +4936,8 @@ public class SmApplicationUtil {
 							managedBean.setOtherDescChangeSupPO(true);
 							managedBean.setOtherDescChangeSupplier(true);
 							managedBean.getEditVO().setPoEditCategory(true);
-						} else if (managedBean.isSupplierUser() && managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
+						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory()) &&
+								history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL)) {
 							managedBean.setOtherDescChangeSupplier(true);
 							managedBean.getEditVO().setSuppEditCategory(true);
 						}
@@ -16210,7 +16211,8 @@ public class SmApplicationUtil {
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 					
-					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) || 
+					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
+							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) || 
 							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) &&													
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
