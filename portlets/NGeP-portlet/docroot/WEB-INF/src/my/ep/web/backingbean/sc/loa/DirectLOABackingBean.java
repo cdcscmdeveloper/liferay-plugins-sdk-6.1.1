@@ -9692,11 +9692,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			if (!getManagedBean().isDisableFields()) {
-		       //#40771 - Start
-				if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
+				String loaStatus = getStatusDescById(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
+				if (StringEscapeUtils.unescapeJava(SourcingConstants.LOA_PENDING_VERIFICATION_STATUS).equals(loaStatus)) {
 					getManagedBean().setDisableFields(true);
 				}
-			    //#40771 - End
 			}
 
 			return true;
