@@ -92,7 +92,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			docsMap.put(docType, new ArrayList<SmApplDocFile>());
 		}
 		docs = docsMap.get(docType);
-		docs.clear();
+		// fileUpload re-renders this panel: keep what was just extracted, do not re-seed over it
+		if (!docs.isEmpty()) {
+			return;
+		}
 		epfs = null;
 		tenancy = null;
 		postAI = false;
@@ -235,9 +238,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		appl.setAiProcessed(1);
 		recomputeAiProcessed(appl);
-		// Eligible but nothing extracted yet, and AI is switched off: drop to 0 so the AI Assistant
-		// column, upload icon and step icon all stay hidden. An already-extracted application (2)
-		// keeps its AI view regardless of the toggle.
+		// nothing extracted yet + AI off: hide everything. 2 = already extracted, ignores the toggle
 		if (appl.getAiProcessed() == 1 && !AiDocSupport.isAiEnabled()) {
 			appl.setAiProcessed(0);
 			return;
@@ -314,6 +315,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			doc.setSmApplSupportDoc(suppDoc);
 			suppDoc.getSmApplDocFiles().add(doc);
+		} else {
+			log.info("No supporting-document row for type=" + docType + " on appl="
+					+ smAppl.getApplNo() + ": AI file stays unattached");
 		}
 
 		docs.add(doc);
@@ -337,11 +341,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return oriFilename + "_" + timestamp + AI_UPLOAD_MARKER + extension;
 	}
 
+	// null when the application has no supporting-doc row of this type
 	private SmApplSupportDoc getSmApplSupportDoc(String docType, SmAppl appl){
-		SmApplSupportDoc newDoc = new SmApplSupportDoc();
-		newDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
 		if(appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
-			return newDoc;
+			return null;
 		}
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
 			Long docId = suppDoc.getPmDocument().getDocumentId();
@@ -352,7 +355,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				return suppDoc;
 			}
 		}
-		return newDoc;
+		return null;
 	}
 
 	/**
@@ -540,8 +543,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			per.setIdentificationNo(employee.getNricNumber());
 			per.setEpfNo(employee.getKwspNumber());
 
-			//SmApplicationUtil - setDefaultPersonnelValues()
-			// or check SssmSO on how to save SmPersonnels
+			//defaults as per SmApplicationUtil.setDefaultPersonnelValues() / SssmSO
 			per.setPersonnelId(null);
 			per.setEpRole("");
 			per.setShareAmt(new BigDecimal(0));
