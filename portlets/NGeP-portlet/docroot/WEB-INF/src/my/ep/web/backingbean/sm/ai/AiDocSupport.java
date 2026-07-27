@@ -731,8 +731,7 @@ public final class AiDocSupport {
 			}
 		}
 
-		// Set the tenancy AI transients so isXxxFromAI() lights the icon while the field still matches the
-		// extraction.
+		// display AI icons when values match
 		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te) {
 			if (fac == null || te == null) {
 				return;
