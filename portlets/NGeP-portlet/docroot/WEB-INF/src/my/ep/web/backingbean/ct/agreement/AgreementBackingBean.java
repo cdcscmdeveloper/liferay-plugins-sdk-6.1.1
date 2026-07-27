@@ -69,7 +69,6 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper; //#37620,#34367
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
-import my.ep.persistence.entity.ct.CtContractVer; //34442
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
