@@ -297,7 +297,7 @@ a:hover.blue_font {
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !isPendingRevApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod / #40772 added isPendingRevApprovalStatus -->
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -323,7 +323,7 @@ a:hover.blue_font {
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !isPendingRevApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod / #40772 added isPendingRevApprovalStatus -->
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
@@ -361,7 +361,7 @@ a:hover.blue_font {
 						value="*" styleClass="mandatory" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !isPendingRevApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod / #40772 added isPendingRevApprovalStatus -->
 							<p:selectOneMenu id="procTypeBoCategory" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -476,7 +476,7 @@ a:hover.blue_font {
 				<td colspan="3"><p:inputText style="text-align: right;" required="true" id="loaAmtId"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="35"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}"
-						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification}">
+						disabled="#{isPendingApprovalStatus or isPendingRevApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification}"> <!-- #40772 added isPendingRevApprovalStatus -->
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
 							update="@form"></p:ajax>
@@ -551,7 +551,7 @@ a:hover.blue_font {
 				<td>
 					<p:inputText size="35" style="text-align:right;"
 							value="#{directLOABackingBean.managedBean.scLoa.sstAmt}"
-							disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification}">
+							disabled="#{isPendingApprovalStatus or isPendingRevApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification}"> <!-- #40772 added isPendingRevApprovalStatus -->
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.sstAmt)}"
