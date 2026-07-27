@@ -3,6 +3,7 @@ package my.ep.web.backingbean.ct.circular;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.actor.ICtActorSO; //#30737 add import
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -29,12 +32,14 @@ import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
 import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
 import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; //#30737 add import
 import my.ep.constant.ct.ContractStatusConst;//34442
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtActor; //#30737 add import
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -48,6 +53,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.RoleHelper;
 
 //#30737
 
@@ -59,7 +65,7 @@ import org.apache.log4j.Logger;
  * @author bob
  * 
  */
-public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBackingBean<T>{
+public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBackingBean<T>{
 
 	private static final long serialVersionUID = 1L;
 	/**
@@ -195,6 +201,9 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	//End Fix - #34367
 	
 	//#30737 - Start
+	
+	protected abstract CtCircularVer getCircularVer();
+	
 	/**
 	 * Handles inactive user validation during actions.
 	 *
@@ -216,7 +225,7 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	
 	public void checkInactiveUserOnAction(CircularReqDTO reqDTO, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
 
-    	log.info("xoxoxoxoxoxoxo checkInactiveUserOnAction....");
+    	log.info("checkInactiveUserOnAction....");
     	
         List<SelectedInactiveUserDTO> invalidUsers = new ArrayList<SelectedInactiveUserDTO>();
 
@@ -275,8 +284,8 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
         reqDTO.setUserRole(userRole);
         reqDTO.setOutcome(outcome);
         
-        log.info("xoxoxoxoxooxoxo user role : "+reqDTO.getUserRole());
-		log.info("xoxoxoxoxooxoxo user : "+reqDTO.getPmUser());
+        log.info("buildContractReqDTO user role : "+reqDTO.getUserRole());
+		log.info("buildContractReqDTO user : "+reqDTO.getPmUser());
     	
         return reqDTO;
     }
@@ -291,10 +300,10 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
      * parameters
     */
     protected EpException buildInactiveUserException(EpException ex, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
-    	log.info("xoxoxoxoxoxoxo catch buildInactiveUserException");
+    	log.info("Catch buildInactiveUserException");
         
         String errorCode = ex.getMessage();
-        log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
+        log.info("BuildInactiveUserException errorCode : "+errorCode);
         
         String[] messageKeys =
                 getInactiveUserMessageKeys(
@@ -330,32 +339,36 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
     */
     private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserName, String[] parameters) {
 
+    	CtCircularVer circularVer = getCircularVer();
+    	CtCircular ctCircular = circularVer != null ? circularVer.getCtCircular() : null;
+    	if (ctCircular == null) {
+    		return null;
+    	}
+    	String circularNo = ctCircular.getCircularNo();
+    	
         if (MessageConst.ERROR_100068.equals(errorCode)
         		|| MessageConst.ERROR_100070.equals(errorCode)) {
+        	if(parameters != null){
+        		return parameters;
+        	}
             return new String[]{selectedUserName};
         }
 
         if (MessageConst.ERROR_100069.equals(errorCode)) {
-            return new String[]{
-                "MOF/CDC/2000192",
-                selectedUserName
-            };
+            if (parameters != null) {
+            	List<String> result = new ArrayList<String>();
+            	result.add(circularNo);
+            	Collections.addAll(result, parameters);
+            	return result.toArray(new String[result.size()]);
+            }
+            return new String[] {circularNo, selectedUserName};
         }
 
-        if (MessageConst.ERROR_100071.equals(errorCode)) {
-            return new String[]{
-                "KADIR",
-                "Chairperson",
-                "KADUK",
-                "Member"
-            };
-        }
-
-        if (MessageConst.ERROR_100073.equals(errorCode)) {
-            return new String[]{
-                "Requisitioner",
-                "Pejabat Pengarah Hospital Kuala Lumpur Unit Pentadbiran"
-            };
+        if (MessageConst.ERROR_100071.equals(errorCode)
+        		|| MessageConst.ERROR_100073.equals(errorCode)) {
+        	if(parameters != null){
+        		return parameters;
+        	}
         }
         
         return new String[0];
@@ -402,14 +415,30 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 		inactiveDto.setUserIds(userlist); 
 		inactiveDto.setUserRoleCode(roleCode); 
 		inactiveDto.setOrgProfileId(ctCircular.getOwnerOrgProfile().getOrgProfileId());
-		log.info("xoxoxoxoxooxoxo PROFILE ID : "+  ctCircular.getOwnerOrgProfile().getOrgProfileId());
 		inactiveDto.setDocType(ctCircularVer.getDocType());
 		inactiveDto.setDocNo(ctCircular.getCircularNo());
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
 		
 		InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
-		log.info("xoxoxoxoxooxoxo STATUSSS : "+  resDto.getStatus());
-		log.info("xoxoxoxoxooxoxo END ");
+		log.info("checkInactiveUserBySP STATUSSS : "+  resDto.getStatus());
+		
+		return resolveInactiveUserStatus(selectedUsers, resDto);
+	}
+	
+	public List<SelectedInactiveUserDTO> getLoginStatusForCancelCircularFromSP(String docType, String cancelDocNo, List<PmUser> selectedUsers, String roleCode) {
+		
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
+		String userlist = populateInactiveUserIdIntoString(selectedUsers);
+		inactiveDto.setUserIds(userlist); 
+		inactiveDto.setUserRoleCode(roleCode); 
+		inactiveDto.setOrgProfileId(getOwnerOrgProfile().getOrgProfileId());
+		inactiveDto.setDocType(docType);
+		inactiveDto.setDocNo(cancelDocNo);
+		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+		
+		InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+		log.info("getLoginStatusForCancelCircularFromSP STATUSSS : "+  resDto.getStatus());
 		
 		return resolveInactiveUserStatus(selectedUsers, resDto);
 	}
@@ -432,17 +461,31 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	
 	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(List<PmUser> users, InactiveUserResDTO resDto) {
 
-	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
-
-	    String[] statuses = resDto.getStatus().split(",");
-	    for (int i = 0; i < statuses.length; i++) {
-	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
-	        selectedUser.setUserName(users.get(i).getUserName());
-	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
-	        selectedUsers.add(selectedUser);
-	    }
-	    return selectedUsers;
-	}
+  	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
+  	    if (!users.isEmpty()) {
+  	    	String[] statuses = resDto.getStatus().split(",");
+  	  	    for (int i = 0; i < statuses.length; i++) {
+  	  	    	
+  	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(resDto.getRoleCode()).getRoleName();
+  	  	    	
+  	  	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
+  	  	        selectedUser.setUserId(users.get(i).getUserId());
+  	  	        selectedUser.setUserName(users.get(i).getUserName());
+  	  	        selectedUser.setUserRoleDesc(userRoleDesc);
+  	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+  	  	        
+  	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(resDto.getMemberRoleCode())) {
+  	  	        	log.info("xoxoxoxoxoxo add as chairperson");
+  	  	        	selectedUser.setMemberRole("Chairperson");
+  	  	        } else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(resDto.getMemberRoleCode())) {
+  	  	        	log.info("xoxoxoxoxoxo add as member");
+  	  	        	selectedUser.setMemberRole("Member");
+  	  	        }
+  	  	        selectedUsers.add(selectedUser);
+  	  	    }
+  	    }
+  	    return selectedUsers;
+  	}
 	
 	private String getSelectedInactiveUserNames(List<SelectedInactiveUserDTO> inactiveUsers) {
         List<String> userNames = new ArrayList<String>();

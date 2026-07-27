@@ -850,7 +850,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
-
+			
+			checkingInactiveUserViaProcess(action); // 30737
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCancelCircularReq(getManagedBean().getCancelCircularReq());
@@ -867,6 +868,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			reqDTO.setTaskName(getManagedBean().getTaskName());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
+			
+			reqDTO.setSelectedInactiveList(getManagedBean().getInactiveUserRevise()); //30737
 
 			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -1167,47 +1170,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		}
 		
 		//#30737 - Start
-		 List<SelectedInactiveUserDTO> userListStatus = new ArrayList<SelectedInactiveUserDTO>();
-		 
-		 CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
-		 
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			log.info("validateCircular action : "+outcome);
-           String userRole = null;
-           if(ctCircularVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)){
-           	userRole = RoleCode.BPK_CQ_APPROVER.value();
-           } else if(ctCircularVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
-           	userRole = RoleCode.BPK_PQ_APPROVER.value();
-           }
-           userListStatus = getLoginStatusFromSP(ctCircularVer.getCtCircular(), 
-           		ctCircularVer, 
-                   getManagedBean().getApproverModel                                                                           ().getTarget(), 
-                   userRole);
-			handleInactiveUserValidation(outcome, userListStatus);
-		}
-		
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-			log.info("validateCircular action : "+outcome);
-			
-			userListStatus = validateInactiveUserForRevise(ctCircularVer.getCtCircular(), 
-					ctCircularVer, 
-                   RoleCode.BPK_CCA.value());
-			
-			if (!userListStatus.isEmpty()) {
-				 Long userStatus = null;
-				 
-				 for(SelectedInactiveUserDTO inactiveActor : userListStatus){
-					 userStatus = inactiveActor.getStatus();
-					 this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
-					 break;
-					}
-				 
-				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
-	                handleInactiveUserValidation(outcome, userListStatus);
-				 }
-           }
-		}
+		validateUserToCheckStatus(outcome);
 		//#30737 - End
 		
 	}
@@ -3954,6 +3917,120 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		}
 		return new ArrayList<SelectedInactiveUserDTO>();
 	}
+	
+	public List<SelectedInactiveUserDTO> validateInactiveUserForReviseFromCancelCircular(String docType, String cancelDocNo, String userRole) {
+        
+        ICircularSO circularSO = null;
+        
+        try {
+            circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+            CtActor ctActor = circularSO.retrieveContractActor(
+                    getManagedBean().getCancelCircularReq().getCtCancelCircularList().get(0).getCircularVer().getCircularVerId(), 
+                    docType, userRole);
+            if (ctActor != null) {
+                List<PmUser> users = new ArrayList<PmUser>();
+                users.add(ctActor.getUser());
+
+                return getLoginStatusForCancelCircularFromSP(docType, 
+                        cancelDocNo,
+                        users,
+                        RoleCode.BPK_CCA.value());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+        } finally {
+            circularSO = null;
+        }
+        return new ArrayList<SelectedInactiveUserDTO>();
+    }
+	
+	public void checkingInactiveUserViaProcess(String action) {
+		List<SelectedInactiveUserDTO> userListStatus = new ArrayList<SelectedInactiveUserDTO>();
+        
+        if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+            log.info("saveCancelCircularReq inactive action : "+action);
+           String userRole = null;
+           if(getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)){
+               userRole = RoleCode.BPK_CQ_APPROVER.value();
+           } else if(getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
+               userRole = RoleCode.BPK_PQ_APPROVER.value();
+           }
+           userListStatus = getLoginStatusForCancelCircularFromSP(getManagedBean().getCircularDocType(), 
+                getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), 
+                   getManagedBean().getApproverModel().getTarget(), 
+                userRole);
+            handleInactiveUserValidation(action, userListStatus);
+        }
+        
+        if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+            log.info("saveCancelCircularReq inactive action : "+action);
+            
+            userListStatus = validateInactiveUserForReviseFromCancelCircular(getManagedBean().getCircularDocType(), 
+                getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), 
+                RoleCode.BPK_CCA.value());
+            
+            if (!userListStatus.isEmpty()) {
+                 Long userStatus = null;
+                 
+                 for(SelectedInactiveUserDTO inactiveActor : userListStatus){
+                     userStatus = inactiveActor.getStatus();
+                     this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
+                     break;
+                    }
+                 
+                 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
+                    log.info("xoxoxoxoxooxoxo REVISE + return 5");
+                    handleInactiveUserValidation(action, userListStatus);
+                 }
+            }
+        }
+	}
+	
+	public void validateUserToCheckStatus(String outcome) {
+		List<SelectedInactiveUserDTO> userListStatus = new ArrayList<SelectedInactiveUserDTO>();
+
+		CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			log.info("validateCircular action : " + outcome);
+			String userRole = RoleCode.BPK_PQ_APPROVER.value();
+			userListStatus = getLoginStatusFromSP(
+					ctCircularVer.getCtCircular(), ctCircularVer,
+					getManagedBean().getApproverModel().getTarget(), userRole);
+			handleInactiveUserValidation(outcome, userListStatus);
+		}
+
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			log.info("validateCircular action : " + outcome);
+
+			userListStatus = validateInactiveUserForRevise(
+					ctCircularVer.getCtCircular(), ctCircularVer,
+					RoleCode.BPK_CCA.value());
+
+			if (!userListStatus.isEmpty()) {
+				Long userStatus = null;
+
+				for (SelectedInactiveUserDTO inactiveActor : userListStatus) {
+					userStatus = inactiveActor.getStatus();
+					this.getManagedBean().setInactiveUserRevise(
+							inactiveActor.getStatus());
+					break;
+				}
+
+				if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+					log.info("xoxoxoxoxooxoxo REVISE + return 5");
+					handleInactiveUserValidation(outcome, userListStatus);
+				}
+			}
+		}
+	}
+	
+	@Override
+    protected CtCircularVer getCircularVer() {
+    	return getManagedBean().getCircularVer();
+    }
+	
 	//#30737 - end
 
 }
