@@ -3087,23 +3087,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return memberRole;
 	}
 	
+	//40107,35321 - start
 	/**
 	 * Gets the procurement type tool tip.
 	 *
 	 * @return the procurement type tool tip
 	 */
-	public String getProcurementTypeToolTip(){
-		// MaxProcurementAmt
-		BigDecimal maxProcurementAmt = getPRThresholdAmount();
-		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-		String message = ResourceBundleUtils.getMessage(
-				"lbl.sc.procurementtype.tooltip", new String[] {amountDF.format(maxProcurementAmt)}, 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
-		return message;
+	public String getProcurementTypeToolTip() {
+		return ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
+	//40107,35321 - end
 	
 	/**
 	 * Set PTJ Org Profile of user for committee member.

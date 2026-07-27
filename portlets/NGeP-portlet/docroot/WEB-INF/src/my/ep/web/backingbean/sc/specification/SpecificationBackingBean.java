@@ -21468,4 +21468,22 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	// #39062 End Vinod 23/09/2025
+	
+    // #40245 - start
+    public boolean isCreateSpecificationVisible() {        
+        return !getManagedBean().getQt().isPanel() &&
+               (getManagedBean().isChecklist()
+                || ((!getManagedBean().isReadOnly()
+                   || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())
+                   && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
+    }
+    
+    public boolean isAddPanelItemVisible() {
+        return getManagedBean().getQt().isPanel() &&
+                   (getManagedBean().isChecklist()
+                    || ((!getManagedBean().isReadOnly()
+                       || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())
+                       && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
+    }
+    // #40245 - end
 }
