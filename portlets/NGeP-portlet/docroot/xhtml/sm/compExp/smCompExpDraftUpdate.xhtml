@@ -358,10 +358,14 @@
 		</div>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
+			<!-- 9299 - 40479 -->
 			<h:outputText styleClass="instruction"
+				escape="false"
 				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
 				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.sm']}" />
+			<!-- 9299 - 40479 -->
 			<h:outputText styleClass="instruction"
+				escape="false"
 				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
 				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.ct.qt']}" />
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
@@ -521,10 +525,11 @@
 					onclick="confirmDelSuppDocDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
+		<!-- 9299 - 40480 -->
 		<p:confirmDialog closable="true"
 			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
 			id="confirmDelSelectedCatId"
-			message="#{lbl['lbl.sm.upload.delete.message']}" severity="alert"
+			message="#{lbl['lbl.sm.comp.exp.delete.cat.codes.confirm.msg']}" severity="alert"
 			widgetVar="confirmDelSelectedCatDialogWV">
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpCatDraft}"

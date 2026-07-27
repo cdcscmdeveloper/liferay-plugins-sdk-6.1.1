@@ -3680,7 +3680,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#24336 - Start
 			// Calculate the current contract amount with additions or reductions.
-			BigDecimal baseAmt = ctContractVer.getCtContractAmount().getContractAmount();
+			BigDecimal baseAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
 			BigDecimal addAmt = ctContractVer.getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctContractVer.getCtAmendment().getReductionAmt();
 			
@@ -5039,7 +5039,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#24336 - Start
 			// Handle changes when the contract value type (addition/reduction) is selected.
-			ctAmendment.setReduction(true);
+			ctAmendment.setReduction(false);
 			handleContractValueTypeChange();
 			//#24336 - End
 		}
@@ -8963,7 +8963,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 
 	/**
-	 * Method to check supplier for Cancelled Bumiputera Status
+	 * Method to check supplier for Cancelled Bumiputera Status, check the
+	 * bumiputera status from supplier module and check the contract is not
+	 * direct loa or direct nego.
 	 * 
 	 * @param supplier the supplier for the current contract
 	 */
@@ -8973,23 +8975,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IQTDetailSO iQtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		try {
-			boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
-			boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
-					.getContractNo());
+			if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+					.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+				boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
+				boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+						.getContractNo());
 
-			if (!suppBumiputera && openFor) {
-				this.getManagedBean().setSupplierBumiCancel(true);
-				if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
-					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+				if (!suppBumiputera && openFor) {
+					setSupplierBumiputeraCancel();
 				}
-				handleMessageSupplierMaintenance();
 			}
-
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierBumiputera",
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
 					"checkSupplierBumiputera", getUserIdSessionFromLoginId(), e);
 		}
+	}
+	
+	/**
+	 * Method to set cancel bumiputera if the condition are met
+	 */
+	public void setSupplierBumiputeraCancel() {
+		this.getManagedBean().setSupplierBumiCancel(true);
+		if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
+			this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+		}
+		handleMessageSupplierMaintenance();
 	}
 	
 	/**
@@ -9449,16 +9460,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date newAmtEffDate;
 		// new overall contract amount is different from overall contact amount
 		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+			
 			newAmtEffDate = ctAmendment.getNewAmtEffDate();
-			if (newAmtEffDate == null) {
+			
+			boolean isDisableNewCtAmountEffDate = contractManagedBean.isDisableNewCtAmountEffDate();
+			if(newAmtEffDate == null || isDisableNewCtAmountEffDate == true){
 				newAmtEffDate = new Date();
 			}
+			
 			// Enable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(false);
 		
 		// same as overall contract amount	
 		} else {
-			newAmtEffDate = ctContractVer.getCtContractAmount().getEffDate();
+			newAmtEffDate = retrieveNewEffDate();
+			
 			// Disable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(true);
 		}

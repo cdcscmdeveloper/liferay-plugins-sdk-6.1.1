@@ -1103,6 +1103,7 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setLanguageCode(languageCode);
 			//28895-35500
 			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
+			
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
 			boolean invokeBPM = false;
@@ -1119,6 +1120,9 @@ public class BSVAttendanceBackingBean extends
 									scQtBrief.getMaxNoOfAttendance())
 									.toString() });
 				}
+				
+				
+				
 				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
 
 				if (flag) {
@@ -1201,10 +1205,10 @@ public class BSVAttendanceBackingBean extends
 				//return CommonUIConst.ACKNOWLEDGE_PAGE;
 				
 				//#28188 - Start - Change to SAVE Acknowledge
-				String[] param = new String[3];
+				this.getManagedBean().setMaintanceFlow(true);//28188
+				String[] param = new String[2];
 				
 				param[0] = this.getManagedBean().getScQt().getQtNo();
-				param[1] = retrieveCommmitteeTypeDesc(this.getManagedBean().getScQt().getQtId(), languageCode);
 				successMessage(MessageConst.INFO_700128,param);
 				//#28188 - End 
 

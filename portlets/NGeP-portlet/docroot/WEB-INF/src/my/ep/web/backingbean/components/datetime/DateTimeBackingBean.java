@@ -318,6 +318,11 @@ public class DateTimeBackingBean {
 	    UIComponent composite =
 	            UIComponent.getCurrentCompositeComponent(context);
 
+		// 28188 -start-
+
+		Date bsvNormalMaintain = (Date) composite.getAttributes().get(
+				"checkBSVNormalMain");
+		// 28188 -end-
 	    
 	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
 
@@ -364,9 +369,14 @@ public class DateTimeBackingBean {
 
 	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
 	            int oldMinute = calMin.get(Calendar.MINUTE);
-
-	            int nextMinute = oldMinute + modValue;
-
+	            
+				// 28188 -start-
+				int nextMinute = oldMinute;
+				if (null == bsvNormalMaintain) {
+					nextMinute = oldMinute + modValue;
+				}
+				// 28188 -end-
+                
 	            if (nextMinute >= 60) {
 	                /*
 	                 * Old time is at last minute slot, example 07:45.
