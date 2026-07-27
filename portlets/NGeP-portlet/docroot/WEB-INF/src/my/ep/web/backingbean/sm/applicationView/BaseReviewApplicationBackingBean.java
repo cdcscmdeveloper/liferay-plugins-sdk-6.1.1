@@ -2489,7 +2489,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							getManagedBean().setOtherDescChangeSupPO(true);
 							getManagedBean().setOtherDescChangeSupplier(true);
 							getManagedBean().getEditVO().setPoEditCategory(true);
-						} else if (getManagedBean().isPoUser() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL)) {
+						} else if ((getManagedBean().isPoUser() || getManagedBean().isApproverUser()) && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL)) {
 							getManagedBean().setOtherDescChangeSupplier(true);
 							getManagedBean().getEditVO().setSuppEditCategory(true);
 						}
