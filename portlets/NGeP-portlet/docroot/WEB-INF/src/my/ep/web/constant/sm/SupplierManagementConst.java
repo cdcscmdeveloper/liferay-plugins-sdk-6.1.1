@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import my.ep.constants.SMProcessNameConst;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -785,6 +786,7 @@ public class SupplierManagementConst {
 	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
 	public static final int PHASE_1 = 1;
 	// #9299 End
+	public static final Long APP_VERSION_REDMINE_NO_40112 = 40112L;		//#40112
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
@@ -808,6 +810,7 @@ public class SupplierManagementConst {
 	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
+	public static final Pattern FOREIGN_REG_NO_PATTERN = Pattern.compile("^99[0-9]{4}-[A-Z]$");
 //	#37925 END
 	
 	// #38001 START
@@ -1635,5 +1638,10 @@ public class SupplierManagementConst {
 	public String getSsmCompanyCountryMalaysia() {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
+
+	public static Pattern getForeignRegNoPattern() {
+		return FOREIGN_REG_NO_PATTERN;
+	}
+	
 //	#37925 END
 }

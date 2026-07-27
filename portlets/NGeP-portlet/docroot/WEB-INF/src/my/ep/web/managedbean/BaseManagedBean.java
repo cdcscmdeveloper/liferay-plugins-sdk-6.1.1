@@ -5,6 +5,7 @@ package my.ep.web.managedbean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -15,11 +16,13 @@ import java.util.Set;
 
 import javax.faces.model.SelectItem;
 
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -211,6 +214,36 @@ public abstract class BaseManagedBean implements Serializable {
     private boolean assignNewUser = false;
     private PmUser newUser;
     // 31788 - end
+	
+	// #25651 - Start
+	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
+	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
+	
+	public BaseManagedBean(){
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM,
+				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_UMUM));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM,
+				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_ITEM,
+				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ANALISIS));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ,
+				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ,
+				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ANALISIS));
+	}
+	
+	public List<ScQtFinalizationReportDetail> getScQtFinalizationReportDetail() {
+		return scQtFinalizationReportDetail;
+	}
+
+	public void setScQtFinalizationReportDetail(List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail) {
+		this.scQtFinalizationReportDetail = scQtFinalizationReportDetail;
+	}
+	
+	public List<Map.Entry<String, String>> getReportDetail() {
+	    return reportDetail;
+	}
+	// #25651 - End
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;

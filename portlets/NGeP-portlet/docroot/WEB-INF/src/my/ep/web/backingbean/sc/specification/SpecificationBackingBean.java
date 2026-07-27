@@ -20744,7 +20744,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		}//11104-End
 		scoringPopUpAction(null);
 		//#29187 Start Vinod
-		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);
+		this.retrieveSampleSpecMasterForMandatorySpecChecking(templateChecklist);
 		//#29187 End Vinod
 		return 	TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW;		
 	}
@@ -20790,7 +20790,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			existingSampleSpecQuestion.put(sampleSpecQuestion.getSpecQuestionId(),questionBean);
 		}
 		this.getManagedBean().setExistingSampleSpecQuestions(existingSampleSpecQuestion);//11104-ReEndoseEnd
-		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
+		this.retrieveSampleSpecMasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 	}
 /***11104-start
  * display samplequantityerror in sample checkbox selected for sample item.
@@ -23273,7 +23273,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @param tplSpecQuestions
 	 * @return boolean
 	 */
-	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
+	public boolean renderMandatorySpec(List<TplSpecQuestion> tplSpecQuestions) {
 
 		for (TplSpecQuestion question : tplSpecQuestions) {
 			boolean isMandatorySpecForSample = question.isMandatorySpecForSample();
@@ -23288,13 +23288,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	/* #29187 End Vinod */
 	/* #29187 Start Vinod */
 	/**
-	 * retrives the specification details to check mandatory specification.
+	 * retrieves the specification details to check mandatory specification.
 	 * 
 	 * @param templateChecklist
-	 *            .
+	 * 
 	 * @return
 	 */
-	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
+	public void retrieveSampleSpecMasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
@@ -25164,4 +25164,22 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	// #40138 End Vinod
+	
+	// #40245 - start
+	public boolean isCreateSpecificationVisible() {		
+	    return !getManagedBean().getQt().isPanel() &&
+	           (getManagedBean().isChecklist()
+	            || ((!getManagedBean().isReadOnly()
+	               || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())
+	               && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
+	}
+	
+	public boolean isAddPanelItemVisible() {
+		return getManagedBean().getQt().isPanel() &&
+		           (getManagedBean().isChecklist()
+		            || ((!getManagedBean().isReadOnly()
+		               || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())
+		               && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
+	}
+	// #40245 - end
 }
