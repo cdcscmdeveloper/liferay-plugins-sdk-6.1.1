@@ -1534,8 +1534,8 @@ public class SupplierDataMaintenanceBackingBean extends
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistoryDataMaintenance(previousKN.getSupplierCategoryId()));
 	
-					if (previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
-							(appl.getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) && 
+					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
+							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) && 
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
 							!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
@@ -3463,7 +3463,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	            		SupplierManagementConst.SUPPLIER_APPROVER, SupplierManagementConst.APPROVER_SDM) &&
                     otherDescBean.getOtherDescOld() != null) {
 	                	return otherDescBean.getOtherDescOld();
-	            }
+	            } else if (isRole(roleType, SupplierManagementConst.SUPPLIER_RENEWAL) &&
+	                    otherDescBean.getOtherDesc() != null)  {
+		            		return otherDescBean.getOtherDesc();
+		        }
 	            break;
 	        
 	        case "TWO":
