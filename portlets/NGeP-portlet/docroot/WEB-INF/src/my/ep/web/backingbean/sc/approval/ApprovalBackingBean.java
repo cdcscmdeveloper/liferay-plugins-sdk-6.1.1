@@ -1522,7 +1522,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			ScActorReqDTO reqDTO = new ScActorReqDTO();
 			UserReqDTO userReqDTO = new UserReqDTO();			
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {				
-				FacesScopes facesScope = new FacesScopes();
+				//FacesScopes facesScope = new FacesScopes();
 				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
 				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
@@ -1532,7 +1532,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qttReqDTO.setQtdetail(qt);
 				qttReqDTO.setPmUser(resDTO.getPmUser());
 				qttReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-				qttReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
+				//qttReqDTO.setDeskOfficer(resDTO.getPmUser());
 				userStatus = checkActiveUser(qttReqDTO);
 			}//#33222 - End
 			
@@ -4405,28 +4405,5 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End	
-	
-	public InactiveUserResDTO checkActiveUser(QuationTenderReqDTO qtReq) {
-
-		/* SP Return Status
-		 * P_STATUS - User is active/not active
-		 * P_NEXT_ACTIVE_USER_LOGINID - Login ID of the next available active user identified 
-		 * P_NEXT_ACTIVE_USER_USERID - User ID of the next available active user identified
-		 * P_MSG - Message returned by the procedure indicating the verification or processing result
-		 */
-		
-		InactiveUserReqDTO userReqDto = new InactiveUserReqDTO();
-		ScQt qt = qtReq.getQtdetail();
-		PmUser user = qtReq.getPmUser();
-		userReqDto.setDocNo(qt.getQtNo());
-		userReqDto.setDocType(qt.getQtType());
-		userReqDto.setUserIds(user.getUserId().toString());
-		userReqDto.setUserRoleCode(qtReq.getRoleCode());
-		userReqDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
-		userReqDto.setOrgProfileId(qt.getOrgProfileId());
-		InactiveUserResDTO userResDto = getUserSOGlobal().checkInactiveUserBySP(userReqDto);
-		
-		return userResDto;
-	}
 	
 }
