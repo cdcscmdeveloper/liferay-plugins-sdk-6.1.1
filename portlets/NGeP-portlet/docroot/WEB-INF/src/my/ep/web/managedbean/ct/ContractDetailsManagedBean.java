@@ -133,6 +133,11 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private VCtContract contractDetailsAuditList;
 	private transient IPagingDataModel<VCtFl> contractDataModelForCtAuditViewFl = new contractDataModelForCtAuditViewSubFl();
 	// End - #30866
+	
+	//30737 - start
+	private Long inactiveUserRevise;
+	//30737 - end
+		
 	/**
 	 * @return the taskName
 	 */
@@ -1401,4 +1406,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.dpContinuitySession = dpContinuitySession;
 	}
 	//end - #25790
+	
+	//30737 - start
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
+	}
+
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
+	}
+	//30737 - end
 }
