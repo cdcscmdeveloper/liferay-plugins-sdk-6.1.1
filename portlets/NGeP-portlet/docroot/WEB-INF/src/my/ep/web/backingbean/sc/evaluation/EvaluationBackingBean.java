@@ -8484,6 +8484,7 @@ private void retriveCommitteeRemarksList(){
 					.getQtProposalChecklist());
 			evalReqDTO.setAnswersList(answers);
 			evalReqDTO.setChecklistType(getManagedBean().getCheckListType());
+			evalReqDTO.setScQt(this.getManagedBean().getScQt()); //#40791
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				evalReqDTO
