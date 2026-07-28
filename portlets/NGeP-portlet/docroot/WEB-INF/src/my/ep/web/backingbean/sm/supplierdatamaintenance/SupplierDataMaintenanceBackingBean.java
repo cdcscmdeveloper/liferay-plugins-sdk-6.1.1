@@ -3459,12 +3459,15 @@ public class SupplierDataMaintenanceBackingBean extends
 	    switch (param.toUpperCase()) {
 
 	        case "ONE":
+	        	boolean applTypeNoEdit = !otherDescBean.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_UPDATE_MOF) && 
+	        		!otherDescBean.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI);
+	        	
 	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
 	            		SupplierManagementConst.SUPPLIER_APPROVER, SupplierManagementConst.APPROVER_SDM) &&
-                    otherDescBean.getOtherDescOld() != null) {
+                    otherDescBean.getOtherDescOld() != null && applTypeNoEdit) {
 	                	return otherDescBean.getOtherDescOld();
 	            } else if (isRole(roleType, SupplierManagementConst.SUPPLIER_RENEWAL) &&
-	                    otherDescBean.getOtherDesc() != null)  {
+	                    otherDescBean.getOtherDesc() != null && applTypeNoEdit)  {
 		            		return otherDescBean.getOtherDesc();
 		        }
 	            break;
