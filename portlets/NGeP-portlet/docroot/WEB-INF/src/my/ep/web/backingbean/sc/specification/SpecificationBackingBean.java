@@ -21601,4 +21601,73 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 	// #39062 End Vinod 23/09/2025
 
+    // #40245 - start
+    public boolean isCreateSpecificationVisible() {        
+        return !getManagedBean().getQt().isPanel() &&
+               (getManagedBean().isChecklist()
+                || ((!getManagedBean().isReadOnly()
+                   || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())
+                   && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
+    }
+    
+    public boolean isAddPanelItemVisible() {
+        return getManagedBean().getQt().isPanel() &&
+                   (getManagedBean().isChecklist()
+                    || ((!getManagedBean().isReadOnly()
+                       || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())
+                       && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
+    }
+    // #40245 - end
+    
+	// #38151 start
+	public boolean checkWeightage35384WIPbyStatus() {
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(currentStatusId)
+				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId)
+				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	// #38151 end
+
+	// #38151 && 40044 Start
+	public void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getQt();
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+
+		if (null == publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+
+			if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		} else {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}
+	}
+	// #38151 End
 }
