@@ -13075,8 +13075,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						throw new EpException("Please choose the zones before proceed.");
 					}
 				}
-
-
+	
 				TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 						.cloneTplSpecMaster(
 								scQtCheckList.getScQtDoc().getTplSpecMaster(),
@@ -18512,6 +18511,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 
 	/* #29187 End Vinod */
+	
 	//#28784 - start
 	public void retriveDemoSpecdetails(Long qtId) {
 

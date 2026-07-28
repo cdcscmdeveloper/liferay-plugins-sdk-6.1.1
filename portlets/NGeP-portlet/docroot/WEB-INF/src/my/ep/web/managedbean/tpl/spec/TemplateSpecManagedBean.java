@@ -302,6 +302,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	public void setUomDropDownList(SelectItem[] uomDropDownList) {
 		this.uomDropDownList = uomDropDownList;
 	}
+	
 	//#29187 Start Vinod
 	public List<SelectItem> getMandatorySpecList() {
 		return mandatorySpecList;
@@ -344,6 +345,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	}
 	
 	//#29187 End Vinod
+	
 	//#28784 - Start
 	public boolean isSecretaryValidate() {
 		return secretaryValidate;
