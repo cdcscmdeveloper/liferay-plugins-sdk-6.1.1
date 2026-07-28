@@ -1415,7 +1415,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			masterId = getSmCompExpSo().checkDuplicate(reqDTO);
 		}
 		if (masterId != null) {
-			RequestContext.getCurrentInstance().execute("duplicateDialogWV.show();");
+			// 9299 - 40788 Start
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_775241, new String[] { master.getTitle() },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			// 9299 - 40788 End
 		} else {
 			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 			reqDTO.setDeclareMaster(master);
@@ -1572,17 +1578,49 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (delete) {
 			delSmCompExpMaster(resDTO1);
 		} else {
-			addHistoryDoc(selectedMaster); 
-			SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
-			reqDTO4.setUpdateMaster(selectedMaster); 
-			resDTO1 = getSmCompExpSo().updateMaster(reqDTO4);
-			if (resDTO1.isSuccessful()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
+			//9299 - 40788 Start
+			boolean duplicate = false;
+			
+			if (selectedMaster.getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)){
+				SmCompExpReqDTO duplicateReqDTO = new SmCompExpReqDTO();
+				duplicateReqDTO.setPtjId(selectedMaster.getOrgProfile().getOrgProfileId());
+				duplicateReqDTO.setFileReferenceNo(selectedMaster.getFileReferenceNo());
+				duplicateReqDTO.setFileExtensionNo(selectedMaster.getFileExtensionNo());
+				
+				Long duplicateMasterId = getSmCompExpSo().checkDuplicate(duplicateReqDTO);
+				
+				if(duplicateMasterId != null
+						&& !duplicateMasterId.equals(selectedMaster.getCompExpMasterId())){
+					duplicate = true;
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									null,
+									MessageUtils.getMessage(
+											MessageConst.ERROR_775241,
+											new String[] {selectedMaster.getTitle() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+			}
+			if (!duplicate){
+			//9299 - 40788 End
+				addHistoryDoc(selectedMaster); 
+		        SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
+		        reqDTO4.setUpdateMaster(selectedMaster); 
+		        resDTO1 = getSmCompExpSo().updateMaster(reqDTO4);
+		        if (resDTO1.isSuccessful()) {
+		            FacesContext.getCurrentInstance().addMessage(
+		                    null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775238,
 								new String[] { selectedMaster.getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			} 
+		            }
+			}
+			//9299 - 40788 Start
 		} 
+		//9299 - 40788 End
 		if (resDTO1.isSuccessful()) { 
 			SmCompExpResDTO resDTO2; 
 			resDTO2 = getSmCompExpSo().addHistory(reqDTO3);
