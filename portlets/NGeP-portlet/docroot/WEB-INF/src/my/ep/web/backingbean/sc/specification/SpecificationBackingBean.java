@@ -18403,7 +18403,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		scoringPopUpAction(null);
 		// #29187 Start Vinod
-		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);
+		this.retrieveSampleSpecMasterForMandatorySpecChecking(templateChecklist);
 		// #29187 End Vinod
 		return TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW;// 11104-Reendorse
 	}
@@ -18466,7 +18466,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		this.getManagedBean().setExistingSampleSpecQuestions(
 				existingSampleSpecQuestion);// 11104-ReEndoseEnd
-		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);// #29187 Added Vinod
+		this.retrieveSampleSpecMasterForMandatorySpecChecking(templateChecklist);// #29187 Added Vinod
 	}
 	// #11104 -end-
 
@@ -21462,7 +21462,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @param tplSpecQuestions
 	 * @return boolean
 	 */
-	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
+	public boolean renderMandatorySpec(List<TplSpecQuestion> tplSpecQuestions) {
 
 		for (TplSpecQuestion question : tplSpecQuestions) {
 			boolean isMandatorySpecForSample = question
@@ -21478,13 +21478,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	/* #29187 End Vinod */
 	/* #29187 Start Vinod */
 	/**
-	 * retrives the specification details to check mandatory specification.
+	 * retrieves the specification details to check mandatory specification.
 	 * 
 	 * @param templateChecklist
-	 *            .
+	 *            
 	 * @return
 	 */
-	public void retriveSampleSpecmasterForMandatorySpecChecking(
+	public void retrieveSampleSpecMasterForMandatorySpecChecking(
 			ScQtCheckList templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
@@ -21583,65 +21583,21 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 	// #39062 End Vinod 23/09/2025
 	
-	// #38679
-	public void checkhaszeroquantity() {
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
-		this.getManagedBean().setZoneQtyHasZeroVal(templateSpecSO.validateQuantityItem(this.getManagedBean().getQt().getQtId()));	
-	}
-	// #38679
-	
-	// #38151 start
-	public boolean checkWeightage35384WIPbyStatus() {
-		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(currentStatusId)
-				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId)
-				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
-
-	// #38151 end
-
-	// #38151 && 40044 Start
-	public void checkWeightage35384WIP() {
-		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		ScQt qt = this.getManagedBean().getQt();
-		Date publishDate = qt.getPublishDate();
-		Date createdDate = qt.getCreatedDate();
-
-		if (null == publishDate) {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-			Timestamp effTimestamp = new Timestamp(effDate.getTime());
-
-			if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
-		} else {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-
-			if (publishDate.before(effDate)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
-		}
-	}
-	// #38151 End
+    // #40245 - start
+    public boolean isCreateSpecificationVisible() {        
+        return !getManagedBean().getQt().isPanel() &&
+               (getManagedBean().isChecklist()
+                || ((!getManagedBean().isReadOnly()
+                   || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())
+                   && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
+    }
+    
+    public boolean isAddPanelItemVisible() {
+        return getManagedBean().getQt().isPanel() &&
+                   (getManagedBean().isChecklist()
+                    || ((!getManagedBean().isReadOnly()
+                       || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())
+                       && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
+    }
+    // #40245 - end
 }
