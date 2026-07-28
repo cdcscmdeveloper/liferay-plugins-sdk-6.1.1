@@ -16213,8 +16213,6 @@ public class SmApplicationUtil {
 					
 					// WIP Site Visit After cannot display on Approved Category code.
 					boolean applSiteVisitAfter = managedBean.getSmAppl().getApplId().equals(previousKN.getSmAppl().getApplId()) &&
-							previousKN.getSmAppl().getPmStatus().getStatusId().equals						
-							(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) &&
 							managedBean.getSmAppl().getPmStatus().getStatusId().equals
 							(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
 							
