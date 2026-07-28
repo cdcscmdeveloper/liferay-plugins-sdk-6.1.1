@@ -1314,30 +1314,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Date createdDate = requestNote.getPmOrgProfile().getCreatedDate();
 			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
 			// #27868, #26059  - start
-			if (thresholdData.count > 0) {
-				// #27868, #26059  - start
+			if (thresholdData.count > 0 || hasThresholdDataReasonMap()) {
 				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-				triggerAlert(outcome, thresholdData, ptjName);
-				// #27868, #26059  - end
-			}
-			if (hasThresholdDataReasonMap()) {				
-				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-				triggerAlertOnReason(outcome, ptjName);				
+
+				if (thresholdData.count > 0) {
+					triggerAlert(outcome, thresholdData, ptjName);
+				}
+
+				if (hasThresholdDataReasonMap()) {
+					triggerAlertOnReason(outcome, ptjName);
+				}
+
 			}
 			// #27868, #26059  - end
 			else if (getManagedBean().getRequestNote() != null
 					&& getManagedBean().getRequestNote().getRequestNoteId() != null) { // #27868
 				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
-
-				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+				for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNote().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(null);
 					scRequestNoteDtl.setBpkThresholdDecision(null);
 				}
-
-				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
 			}
 			// #26059 - end
 		}

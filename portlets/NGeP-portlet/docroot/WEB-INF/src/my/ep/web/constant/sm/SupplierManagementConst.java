@@ -787,6 +787,7 @@ public class SupplierManagementConst {
 	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
 	public static final int PHASE_1 = 1;
 	// #9299 End
+	public static final Long APP_VERSION_REDMINE_NO_40112 = 40112L;		//#40112
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
