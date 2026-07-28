@@ -125,6 +125,7 @@
 					process="@this"
 					partialSubmit="true"
 					oncomplete="catCodePopup.show();"
+					actionListener="#{panelBackingBean.beforeOpenCategoryPopup}"
 					update="@([id$=catCodeCtPnl])"
 					rendered="#{!panelBackingBean.managedBean.viewContract}"
 					action="#{categoryCodeSearchBackingBean.renewSesionObject}" /> <!-- #40498,#30014 -->
