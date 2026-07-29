@@ -32,7 +32,6 @@
 		        height: auto !important;
 		    }
 		</style>
-
 			<p:dialog styleClass="confirm-ui-dialog"
 				id="#{cc.attrs.id}"
 				widgetVar="#{cc.attrs.widget}"
@@ -66,7 +65,6 @@
 							<cc:insertChildren />
 						</ui:fragment>
 					</div>
-
 					<h:outputText value="#{cc.attrs.content}" escape="false"
 						style="display:block; text-align:left; padding: 0px 0px;"/>
 
@@ -87,7 +85,6 @@
 									oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
 							</c:otherwise>
 						</c:choose>
-
 						<p:commandButton id="noBtn" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 							immediate="true"
 							style="margin-left:10px;"
