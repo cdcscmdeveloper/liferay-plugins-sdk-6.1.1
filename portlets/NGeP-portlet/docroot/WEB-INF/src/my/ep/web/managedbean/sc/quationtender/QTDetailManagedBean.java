@@ -1866,6 +1866,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
 	
+	private boolean zoneQtyHasZeroVal;//#38679
+	
 	// #35320 - Start
 	private boolean afterSF;
 	// #35320 - End
@@ -11753,6 +11755,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.resetHistoryCatCode = resetHistoryCatCode;
 	}
 	//#29732
+	
+	//#38679
+	public boolean isZoneQtyHasZeroVal() {
+		return zoneQtyHasZeroVal;
+	}
+	
+	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
+		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
+	}
+	//#38679
 	
 	// #35320 - Start
 	public boolean isAfterSF() {

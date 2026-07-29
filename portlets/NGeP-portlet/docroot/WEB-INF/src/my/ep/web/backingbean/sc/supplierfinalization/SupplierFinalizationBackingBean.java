@@ -1398,7 +1398,7 @@ public class SupplierFinalizationBackingBean extends
 					 } else {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
 					 }
-					 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage";
+					evaluationHeader = "lbl.sc.eva.qualified.supplier.list.fec.consolidation.stage";//#38679
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
@@ -7964,13 +7964,27 @@ public class SupplierFinalizationBackingBean extends
 				
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setQtId(qtId);
-				
+				//#38679
+				IQTEvaluationSO evaluationSO=null;
+				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTEvaluationSO.class);
+				EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+				long qtId = reqDTO.getQtId();
+				req4SerDTO.setQtId(qtId);
+				int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+				//#38679
 				//#21695 tec by itemize result pop up farid - start
 				if (null != selectedZoneId && (SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage) || SourcingConstants.EVAL_STAGE_FINANCIAL_PKG.equalsIgnoreCase(evaluationStage)
 						|| SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM.equalsIgnoreCase(evaluationStage))) {
 				//#21695 tec by itemize result pop up farid - end
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
+				// #38679
+				if(wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && null != selectedZoneId && (SourcingConstants.EVAL_STAGE_TECHNICAL.equalsIgnoreCase(evaluationStage) ||  SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO.equalsIgnoreCase(evaluationStage))){
+					reqDTO.setTecSpecZoneId(selectedZoneId);
+				}
+				// #38679
 				reqDTO.setRequestItemId(selectedItemId);
 				reqDTO.setEvaluationStage(evaluationStage);
 				
@@ -12585,7 +12599,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 		} else {
 			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId,
-					null,null);
+					null);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				// BigDecimal supplierNo = (BigDecimal) row[1];
@@ -12633,7 +12647,7 @@ public class SupplierFinalizationBackingBean extends
 		
 		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.FINANCIAL_DOCTYPE);
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId,null);
+				selectedZoneId);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
@@ -12731,6 +12745,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 	//#38151 End
 	
+	
 	//#40396 - Start
 	/**
 	 * @return
@@ -12740,4 +12755,5 @@ public class SupplierFinalizationBackingBean extends
 		return getQTSuppFinalizationSO().isQTCancelledBidSchedule(scQt.getQtId());
 	}
 	//#40396 - End
+	
 }

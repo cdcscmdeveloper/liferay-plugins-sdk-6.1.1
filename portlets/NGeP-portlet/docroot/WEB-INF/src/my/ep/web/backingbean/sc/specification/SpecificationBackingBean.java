@@ -1773,9 +1773,9 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 				templateSpecBackingbean
 						.updateItemWeightageReq(templateSpecBean);
 
-			} else {
-				this.getManagedBean().setSpecItemWeightageRequired(false);
-			}
+			} 
+			// #38679 remove (no longer needed because requirement has changed)
+
 			templateSpecBean.setSpecMaster(specMaster);
 			if (this.getManagedBean().getQt().isZonal()
 					&& this.getManagedBean().getQt().getQtType()
@@ -2267,6 +2267,8 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 				// 37813,35384 remove coding.
 				techWeightageSum();
 				techScoreSum();
+				checkhaszeroquantity(); //#38679
+
 			}
 
 			if (null != this.getManagedBean().getTechnicalScoring()
@@ -11403,9 +11405,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 			
-			// #21695 farid, if partial set weightage to false -start-
-			if (this.getManagedBean().getQt().isPartial() == true) {
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
+			// #21695 farid, set weightage to true #38679			
+			if (this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
 			}
 			// #21695 -end-
 		}
@@ -14556,37 +14558,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				templateSpecBackingbean
 						.updateItemWeightageReq(templateSpecBean);
 
-			} else {
+			}else {
 				this.getManagedBean().setSpecItemWeightageRequired(false);
-			}
+			} 
+
 			templateSpecBean.setSpecMaster(specMaster);
 
 			this.getManagedBean().setScQtChecklist(qtCheckList);
 			this.getManagedBean().setIndex(-1);
 			this.getManagedBean().setAutoUpdate(true);
 			
-			// #21695 farid, if partial set weightage to false and disable,
-			// always set to direct scoring -start-
-			if (this.getManagedBean().getQt().isPartial() == true) {
-				this.getManagedBean().setSpecItemWeightageRequired(true);
-				
-				if (this.getManagedBean().getTemplateSpecBean() != null) {
-					if (this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null) {
-						this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
-						this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
-						
-						if (this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null) {
-							for (TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean()
-									.getSpecMaster().getTplSpecQuestions()) {
-								if (specQuestWeightage != null) {
-									specQuestWeightage.setWeightageReq(false);
-								}
-							}
-						}
-					}
-				}
-			}
-			// END #21695
+			// #38679 remove (no longer needed coz requirement has changed)
 			
 			templateSpecSO = null;
 			RequestContext.getCurrentInstance().execute(
@@ -21619,6 +21601,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
     }
     // #40245 - end
     
+
+	// #38679
+	public void checkhaszeroquantity() {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		this.getManagedBean().setZoneQtyHasZeroVal(templateSpecSO.validateQuantityItem(this.getManagedBean().getQt().getQtId()));	
+	}
+	// #38679
+	
 	// #38151 start
 	public boolean checkWeightage35384WIPbyStatus() {
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();

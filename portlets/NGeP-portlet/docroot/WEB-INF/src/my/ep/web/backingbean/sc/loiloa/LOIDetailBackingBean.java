@@ -7750,7 +7750,7 @@ public class LOIDetailBackingBean extends
 	//#21692, #38604 - End
 	
 	//#38151 - Start
-	public void qualifiedSupplierListPopupScore(Long supplierId, Long requestItemID) {
+	public void qualifiedSupplierListPopupScore(Long supplierId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -7794,7 +7794,7 @@ public class LOIDetailBackingBean extends
 		} else {
 
 			for (ScQtRecommend recommendList : this.getManagedBean().getRecommendList()) {
-				if (null == selectedZoneId || recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
+				if (recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
 					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
 
 				}
@@ -7823,7 +7823,7 @@ public class LOIDetailBackingBean extends
 
 			}
 		} else {
-			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null,requestItemID);
+			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				//BigDecimal supplierNo = (BigDecimal) row[1];
@@ -7832,7 +7832,7 @@ public class LOIDetailBackingBean extends
 				BigDecimal reqItemId = (BigDecimal) row[6];
 				// Handle each row
 				if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
-						&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || requestItemID == reqItemId.longValue())) {
+						&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue())) {
 					totalScoreTecEval = supplierTotalScore;
 					break;
 				}
@@ -7868,22 +7868,18 @@ public class LOIDetailBackingBean extends
 
 
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId,requestItemID);
+				selectedZoneId);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
 			//BigDecimal supplierNo = (BigDecimal) row[1];
 			BigDecimal supplierTotalScore = (BigDecimal) row[3];
 			String evalStage = row[4].toString();
-			BigDecimal selectedZone = (BigDecimal) row[5];
 			BigDecimal reqItemId = (BigDecimal) row[6];
 			// Handle each row
 
 			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageF)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() 
-					|| requestItemID == reqItemId.longValue() && (null != selectedZoneId && selectedZone.longValue() == selectedZoneId)
-					|| null == selectedZoneId)) {
-
+					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue())) {
 				totalScoreFinEval = supplierTotalScore;
 				break;
 			}

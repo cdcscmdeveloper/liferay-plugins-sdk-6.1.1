@@ -19782,35 +19782,4 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//#38151 End
-	
-	//#38151 start
-	/**
-	 * Calculates the popup score by applying the weightage with rounding.
-	 *
-	 *
-	 * <p>If weightage is not enabled, the original score value is returned
-	 * without any calculation.</p>
-	 *
-	 * @param scoreValue the original score value
-	 * @param weightage the weightage to be applied to the score
-	 * @param isWeightage {@code true} to apply weightage calculation;
-	 *                    {@code false} to return the original score value
-	 * @return the calculated score rounded to 2 decimal places when weightage is
-	 *         applied; otherwise, the original score value
-	 */
-	public BigDecimal scorePopUpRounding(BigDecimal scoreValue, BigDecimal weightage, boolean isWeightage) {
-		BigDecimal newScoreValue = scoreValue;
-
-		if (!isWeightage) {
-			return newScoreValue;
-		} else {
-			if (null != scoreValue && null != weightage) {
-				BigDecimal roundedWeightage = weightage.setScale(2, RoundingMode.HALF_UP);
-
-				newScoreValue = scoreValue.multiply(roundedWeightage).setScale(2, RoundingMode.HALF_UP);
-			}
-		}
-		return newScoreValue;
-	}
-	//#38151 end
 }
