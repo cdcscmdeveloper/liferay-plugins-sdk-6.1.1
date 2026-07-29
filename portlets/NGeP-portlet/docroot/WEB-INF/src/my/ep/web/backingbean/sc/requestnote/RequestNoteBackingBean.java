@@ -1695,6 +1695,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNoteDtls(updateScRequestNoteDtlList);
 		try {
 			requestNoteSO.updateRequestNoteDetail(requestNoteReqDTO);
+			
+			RequestNoteReqDTO scRequestNoteReqDTO = new RequestNoteReqDTO();
+			scRequestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(scRequestNoteReqDTO);		
+			
+			getManagedBean().getRequestNote().getRequestNoteDtls().clear();
+			getManagedBean().getRequestNote().getRequestNoteDtls().addAll(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
+			
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean", getManagedBean().getRequestNote().getRequestNoteNo(),
 					"updateScRequestNoteDtl", getUserIdSessionFromLoginId(), e);
