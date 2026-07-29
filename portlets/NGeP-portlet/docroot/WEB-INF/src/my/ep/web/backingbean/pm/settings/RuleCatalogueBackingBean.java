@@ -5446,6 +5446,7 @@ public class RuleCatalogueBackingBean extends
 				newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
 				newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
 				newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
+				newRuleValue.setPtjId(orgProfile); //#27827
 				index = configRuleType.getConfigRuleValues().size();
 				configRuleType.getConfigRuleValues().add(index, newRuleValue);
 			}

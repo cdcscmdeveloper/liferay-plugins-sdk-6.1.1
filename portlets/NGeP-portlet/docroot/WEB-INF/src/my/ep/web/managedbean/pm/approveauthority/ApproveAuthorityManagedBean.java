@@ -19,38 +19,36 @@ public class ApproveAuthorityManagedBean extends BaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long authId;
-	
+
 	private String authCodeDesc;
-	
+
 	private String committeeName;
-		
+
 	private PmAuthority authority;
-	
+
 	private PmAuthorityCommittee pmAuthCommittee;
-	
+
 	private PmAuthorityCommittee updateAuthCommittee;
-	
+
 	private PmAuthorityCommittee prevCommitteeDetail;
-	
+
 	private List<PmAuthority> listAuthCode;
 	
 	private List<PmAuthorityCommittee> listAuthCommittee;
-	
+
 	private boolean autoUpdate = Boolean.TRUE;
-	
+
 	private String remark;
-	
+
 	private int selectedTabIndex;
-	
+
 	private String authIdInString;
-	
+
 	private String comName;
-					
-	public ApproveAuthorityManagedBean() {
-		//ApproveAuthorityManagedBean constructor
-	}
+
+	public ApproveAuthorityManagedBean(){}
 
 	public String getAuthCodeDesc() {
 		return authCodeDesc;
