@@ -1279,7 +1279,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 				// #39502 - END
 				getManagedBean().setProfBodyItems(SmApplicationUtil.getProfBodyItems());
-
+				// 39502 - START
+				for (SelectItem shrProfBody : getManagedBean().getProfBodyItems()) {
+				    if (shrProfBody.getLabel() != null && shrProfBody.getLabel().length() > 71) {
+				        shrProfBody.setDescription(shrProfBody.getLabel());
+				        String truncName = shrProfBody.getLabel().substring(0, 70) + "...";
+				        shrProfBody.setLabel(truncName);
+				    }
+				}
+				// #39502 - END
 				getManagedBean().setEduFieldList(SmApplicationUtil.retrieveEduFieldList());
 				getManagedBean().setRacesList(SmApplicationUtil.retrievePmRaceList());
 				getManagedBean().setGlpCert(SmApplicationUtil.retrievePmParameterByTypeAndCode(SupplierManagementConst.SM_SUPPLIER_PARAM_TYPE_CRT, 
