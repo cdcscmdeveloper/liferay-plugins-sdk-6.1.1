@@ -67,6 +67,7 @@
 
         /* Scroll Body */
         .category-search-dialog .ui-datatable-scrollable-body {
+        	overflow-x: hidden !important;
             overflow-y: auto !important;
             max-height: 300px !important;
             border: 1px solid #d3d3d3 !important;
@@ -210,7 +211,7 @@
 						<p:dataTable id="catCodeCtDescrTbl"
 							value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
 							selection="#{categoryCodeSearchBackingBean.managedBean.selectedCategoryL3}"
-							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}"
+							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}" scrollWidth="100%"
 							var="pmCategoryL3" lazy="true" rows="10" scrollable="true" resizableColumns="false"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
