@@ -25,16 +25,21 @@
 		    transition: 0.3s ease;
 		}
 		
-		ul {
-		  list-style: none;
-		  list-style-position: outside !important;
-		  padding-left: 20px !important;
-		  margin-left: 0 !important;
+	    .ul-report-detail {
+		    list-style: none;
+		    margin: 0;
+		    padding-left: 0;
 		}
-		
-		li {
-		  display: list-item !important;
-		  margin: 5px 0 5px 10px; 
+
+		.li-report-detail {
+		    position: relative;
+		    padding-left: 18px;
+		    margin: 6px 0;
+		}
+
+		.li-report-detail::before {
+		    position: absolute;
+		    left: 0;
 		}
         
 	</style>
@@ -187,15 +192,15 @@
 				<h:outputText value="#{scQtFinalizationReportDetail.title}" rendered="#{!empty scQtFinalizationReportDetail.pmDocument}" />
 					
 			    <!-- Content -->
-			     <div class="content" style="display:none;">
+			    <div class="content" style="display:none;">
 			   
-				 <ul>
-				   <ui:repeat value="#{suppFinalizationBackingBean.managedBean.reportDetail}" var="entry">
-				        <ui:fragment rendered="#{entry.key eq scQtFinalizationReportDetail.pmDocument.docDefinitionKey}">
-				            <li>#{entry.value}</li>
-				        </ui:fragment>
-				   </ui:repeat>   
-				</ul>
+					<ul class="ul-report-detail">
+					   <ui:repeat value="#{suppFinalizationBackingBean.managedBean.reportDetail}" var="entry">
+					        <ui:fragment rendered="#{entry.key eq scQtFinalizationReportDetail.pmDocument.docDefinitionKey and entry.value ne SourcingConstants.laporanKertasTaklimatPertimbangan}">
+					            <li class="li-report-detail"> #{entry.value} </li>
+					        </ui:fragment>
+					   </ui:repeat>   
+					</ul>
 					
 			    </div>
 			    
