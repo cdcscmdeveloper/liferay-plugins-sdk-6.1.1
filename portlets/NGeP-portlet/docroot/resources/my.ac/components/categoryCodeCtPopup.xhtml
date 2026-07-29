@@ -67,6 +67,7 @@
 
         /* Scroll Body */
         .category-search-dialog .ui-datatable-scrollable-body {
+        	overflow-x: hidden !important;
             overflow-y: auto !important;
             max-height: 300px !important;
             border: 1px solid #d3d3d3 !important;
@@ -101,7 +102,7 @@
     action="#{panelBackingBean.afterCloseCategoryPopup}" /> <!-- #40498,#30014 -->
 
 		<p:dialog id="categoryDialog"  header="#{lbl['lbl.ct.category.code.search']}" 
-			width="850" resizable="false" position="top" widgetVar="catCodePopup" modal="true"
+			width="900" resizable="false" position="top" widgetVar="catCodePopup" modal="true"
 			styleClass="category-search-dialog"
 			onHide="afterCloseCategoryPopupRC();"> <!-- #40500,#30014 -->
 			<p:messages id="catCodeCtPopupMsg" showDetail="true"
@@ -210,7 +211,7 @@
 						<p:dataTable id="catCodeCtDescrTbl"
 							value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
 							selection="#{categoryCodeSearchBackingBean.managedBean.selectedCategoryL3}"
-							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}"
+							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}" scrollWidth="100%"
 							var="pmCategoryL3" lazy="true" rows="10" scrollable="true" resizableColumns="false"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
