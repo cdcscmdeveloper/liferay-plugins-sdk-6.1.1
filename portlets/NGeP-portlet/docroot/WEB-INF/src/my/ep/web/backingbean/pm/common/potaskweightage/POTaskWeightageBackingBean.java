@@ -12,9 +12,11 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.poroletask.IPoRoleTaskSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -32,6 +34,8 @@ import my.ep.persistence.entity.pm.common.PmPoWeightage;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMRoleTaskWeightageBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.common.potaskweightage.POTaskWeightageManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -237,6 +241,15 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		IPoRoleTaskSO reqSO = (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
 		PoRoleTaskResDTO resDTO = reqSO.updateRoleTask(reqDTO);
+		
+		/************ AUDIT START #28895-35509 *************/
+		AuditPMBackingBeanTemplate auTemplate = new AuditPMRoleTaskWeightageBackingBean();
+		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IAuditPMSO.class);
+		if (resDTO.isSuccessful() && pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_TASK_WEIGHTAGE)) {
+				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_TASK_WEIGHTAGE);
+		}
+		/************ AUDIT END #28895-35509 *************/
 		
 		if(resDTO.getUser() != null){
 			PmUser user = resDTO.getUser();
