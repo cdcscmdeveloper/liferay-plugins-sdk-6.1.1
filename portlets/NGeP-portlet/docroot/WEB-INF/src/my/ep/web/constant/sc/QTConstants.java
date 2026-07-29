@@ -564,6 +564,10 @@ public interface QTConstants {
 	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
 
 	// 29661- end-
+	
+	// 28188 -start-
+	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
+	// 28188 -end-
 
 	// #39113 Start Vinod 25/09/2025
 	public static final String LBL_SC_REMARK = "lbl.sc.remark";
