@@ -46,16 +46,21 @@
 				rendered="#{isBSVEnabled and !isQTStatusPublished}" />
 			<p:column headerText="#{lbl['lbl.sc.description']}"
 				style="white-space: normal;word-wrap: break-word;">
+				<ui:remove>#28188 -start </ui:remove>
 				<h:panelGroup
-					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_CANCELLED}">
-					<p:commandLink
+					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId }">
+					<p:commandLink rendered="#{briefingdtls.bsvStatus.statusId eq QTStatusConst.BSV_COMPLETED}"
 						action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
 						partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 						<h:outputText value="#{briefingdtls.bsvDesc}" />
 					</p:commandLink>
+					<h:outputText value="#{briefingdtls.bsvDesc}"
+						rendered="#{briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}" />
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId or briefingdtls.bsvStatus.statusId eq QTStatusConst.BSV_CANCELLED}">
+					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId}">
+					<ui:remove>#28188 -end </ui:remove>
+					
 					<h:outputText value="#{briefingdtls.bsvDesc}" />
 				</h:panelGroup>
 			</p:column>
@@ -162,17 +167,22 @@
 
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="white-space: normal;word-wrap: break-word;">
+							<ui:remove>#28188 -start </ui:remove>
 						<h:panelGroup
-							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_CANCELLED}">
-							<p:commandLink
+							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId }">
+							<p:commandLink rendered="#{sitevisitdtls.bsvStatus.statusId eq QTStatusConst.BSV_COMPLETED}"
 								action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
 								partialSubmit="true" process="@this"
 								update="@([id$=briefdlgId])">
 								<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 							</p:commandLink>
+							<h:outputText value="#{sitevisitdtls.bsvDesc}"
+						rendered="#{sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}" />
 						</h:panelGroup>
 						<h:panelGroup
-							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId or sitevisitdtls.bsvStatus.statusId eq QTStatusConst.BSV_CANCELLED}">
+							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId }">
+							<ui:remove>#28188 -end </ui:remove>
+							
 							<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 						</h:panelGroup>
 					</p:column>

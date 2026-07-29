@@ -476,9 +476,9 @@
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="@([id$=specCommitteeTechnicalChecklist])" />
+			<!-- #40245 : hide 'Create Specification' button for panel contract item (Maintenance Screen) -->            
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				rendered="#{specificationBackingBean.managedBean.isChecklist() or !specificationBackingBean.managedBean.qt.panel and 
-				!((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
+				rendered="#{specificationBackingBean.createSpecificationVisible}"
 				process="@this" styleClass="BtnSpacing"
 				update="@([id$=commiteeCreationSpec])"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
@@ -504,9 +504,9 @@
 					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
 			</p:commandButton>
-
+			<!-- #40245 : show 'Add Panel Item' button for panel contract item  (Maintenance Screen)-->
 			<p:commandButton styleClass="BtnSpacing" 
-				rendered="#{specificationBackingBean.managedBean.qt.panel and !((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
+				rendered="#{specificationBackingBean.addPanelItemVisible}"
 				value="#{lbl['lbl.sc.spec.btn.add.panel.item']}" process="@this"
 				actionListener="#{specificationBackingBean.circularListSelect(specificationBackingBean.managedBean.qt.circularVer)}"
 				oncomplete="addPanelItem.show();" update="@([id$=circularpanelItemsSelectionPopUp])" />
