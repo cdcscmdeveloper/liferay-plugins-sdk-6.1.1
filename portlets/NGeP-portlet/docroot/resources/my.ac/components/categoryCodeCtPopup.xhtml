@@ -16,12 +16,12 @@
 <!-- #40500,#30014 fixing css-->
 <h:outputStylesheet>
     <style>
-        /* 1. Fix overflow dialog */
+        /* Fix overflow dialog */
         .category-search-dialog .ui-dialog-content {
             overflow: visible;
         }
 
-        /* 2. Lebar 100% untuk semua elemen */
+        /* Lebar 100% untuk semua elemen */
         .category-search-dialog .ui-datatable,
         .category-search-dialog .ui-datatable-tablewrapper,
         .category-search-dialog .ui-datatable-scrollable-header,
@@ -31,13 +31,13 @@
             width: 100% !important;
         }
 
-        /* 3. Layout tabel */
+        /* Layout tabel */
         .category-search-dialog .ui-datatable-scrollable-header table,
         .category-search-dialog .ui-datatable-scrollable-body table {
             table-layout: fixed;
         }
 
-        /* 4. Styling Header */
+        /* Styling Header */
         .category-search-dialog .ui-datatable th.ui-state-default,
         .category-search-dialog .ui-datatable-scrollable-header,
         .category-search-dialog .ui-datatable-scrollable-header .ui-datatable-tablewrapper,
@@ -54,28 +54,25 @@
             border: 1px solid #1e3d6f !important;
         }
 
-        .category-search-dialog .ui-datatable-scrollable-header th:last-child {
-            border-right: none !important;
-        }
-
-        /* 5. Hilangkan extra space */
+        /* Hilangkan extra space */
         .category-search-dialog .ui-datatable-scrollable-header::after {
             content: none !important;
             display: none !important;
         }
 
-        /* 6. HILANGKAN RESIZE HANDLE */
+        /* HILANGKAN RESIZE HANDLE */
         .category-search-dialog .ui-column-resizer {
             display: none !important;
         }
 
-        /* 7. Scroll Body */
+        /* Scroll Body */
         .category-search-dialog .ui-datatable-scrollable-body {
             overflow-y: auto !important;
             max-height: 300px !important;
+            border: 1px solid #d3d3d3 !important;
         }
 
-        /* 8. Alignment header dan body */
+        /* Alignment header dan body */
         .category-search-dialog .ui-datatable-scrollable-header {
             padding-right: 0 !important;
             margin-right: 0 !important;
@@ -87,18 +84,12 @@
             margin-right: 0 !important;
         }
 
-        /* Hilangkan border kanan pada kolom terakhir */
-        .category-search-dialog .ui-datatable-scrollable-body td:last-child,
-        .category-search-dialog .ui-datatable-scrollable-header th:last-child {
-            border-right: none !important;
-        }
-
-        /* 9. Border untuk isi tabel */
+        /* Border untuk isi tabel */
         .category-search-dialog .ui-datatable td {
             border: 1px solid #d3d3d3 !important;
         }
 
-        /* 10. Paginator */
+        /* Paginator */
         #catCodeCtDescrTbl + .ui-paginator {
             position: relative;
             z-index: 11;
