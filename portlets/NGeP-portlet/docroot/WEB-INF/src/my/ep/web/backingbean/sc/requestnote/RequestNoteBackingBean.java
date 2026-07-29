@@ -1481,16 +1481,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			else if (getManagedBean().getRequestNote() != null
 					&& getManagedBean().getRequestNote().getRequestNoteId() != null) { // #27868
 				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
-
-				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+				for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNote().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(null);
 					scRequestNoteDtl.setBpkThresholdDecision(null);
 				}
-
-				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
 			}
 			// #26059 - end
 		}
@@ -1701,6 +1695,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNoteDtls(updateScRequestNoteDtlList);
 		try {
 			requestNoteSO.updateRequestNoteDetail(requestNoteReqDTO);
+			
+			RequestNoteReqDTO scRequestNoteReqDTO = new RequestNoteReqDTO();
+			scRequestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(scRequestNoteReqDTO);		
+			
+			getManagedBean().getRequestNote().getRequestNoteDtls().clear();
+			getManagedBean().getRequestNote().getRequestNoteDtls().addAll(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
+			
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean", getManagedBean().getRequestNote().getRequestNoteNo(),
 					"updateScRequestNoteDtl", getUserIdSessionFromLoginId(), e);
