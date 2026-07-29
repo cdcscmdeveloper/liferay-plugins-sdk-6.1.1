@@ -175,6 +175,7 @@ import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -8863,8 +8864,71 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return parentId;
 	}
+	
+	//28188 -start-
+	/**
+	 * 
+	 * @param bsvRegistrationList
+	 * @param qtBsvDtls
+	 */
+	@SuppressWarnings("unchecked")
+	protected void putBsvRegisterDetailsIntoMap(
+			List<ScQtBsvRegistration> bsvRegistrationList, ScQtBsvDtl qtBsvDtls) {
+		
+		if(CollectionUtils.isNotEmpty(bsvRegistrationList) && null!=qtBsvDtls && null!=qtBsvDtls.getQtBsvDtlId()){
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance()
+				.getExternalContext().getSessionMap();
+		Long bsvDtlId = qtBsvDtls.getQtBsvDtlId();
+		Map<Long, List<ScQtBsvRegistration>> briefingMap = (Map<Long, List<ScQtBsvRegistration>>) FacesContext
+				.getCurrentInstance().getExternalContext().getSessionMap()
+				.get(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);
+
+		if (briefingMap == null) {
+			briefingMap = new HashMap<>();
+
+			briefingMap.put(bsvDtlId, bsvRegistrationList);
+
+		} else {
+
+			briefingMap.put(bsvDtlId, bsvRegistrationList);
+
+		}
+		sessionMap.put("briefingRegistrationMap", briefingMap);
+		}
+		
+	}
 
 	// #28188 -end-
+	
+	//28188 -start-
+	/**
+	 * fetch BsvRegister Details from Session.
+	 * @return Map<Long, List<ScQtBsvRegistration>>.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Map<Long, List<ScQtBsvRegistration>> getBsvRegisterDetailsIntoMap(){
+		 Object obj = FacesContext.getCurrentInstance()
+		            .getExternalContext()
+		            .getSessionMap()
+		            .get(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);
+		  if (obj instanceof Map<?,?>) {
+			 return (Map<Long, List<ScQtBsvRegistration>>) obj;
+		  }
+		  return new HashMap<>();
+	}
+	//28188 -end-
+	
+	//28188 -start-
+	/**
+	 * remove BsvRegisterDetails from Session.
+	 */
+	protected void removeBsvRegisterDetailsIntoMap(){
+	    FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap()
+	            .remove(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);	
+	}
+	//28188 -end-
 
 	// 28188 -start-
 	/**

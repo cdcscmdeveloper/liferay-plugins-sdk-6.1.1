@@ -717,6 +717,13 @@ public class BSVAttendanceBackingBean extends
 			this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
 		}
 		//#28895-35500 end
+		
+		// 28188 -start-
+		putBsvRegisterDetailsIntoMap(this.getManagedBean()
+				.getBriefingRegistrationList(), this.getManagedBean()
+				.getScQtBriefing());
+		// 28188 -end-
+		 
 
 	}
 
@@ -796,6 +803,13 @@ public class BSVAttendanceBackingBean extends
 			}
 			this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
 		// #29770 - #26247 - End.
+			
+			// 28188 -start-
+			putBsvRegisterDetailsIntoMap(this.getManagedBean()
+					.getBriefingRegistrationList(), this.getManagedBean()
+					.getScQtBriefing());
+			// 28188 -end-
+			
 		}
 	}
 
@@ -1087,161 +1101,166 @@ public class BSVAttendanceBackingBean extends
 
 	}
 
-	//#28188 - Start (Disabled and use enhancement code)
-//	/**
-//	 * Method is used to save Bsv registration details from maintenance flow.
-//	 */
-//	public String saveBsvRegistarionFromMaintanceFlow() {
-//
-//		IQTBriefingSO qTBriefingSO = null;
-//
-//		try {
-//			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-//			BriefingReqDTO reqDTO = new BriefingReqDTO();
-//			String languageCode = new FacesScopes().getUserLocale()
-//					.getLanguage();
-//			reqDTO.setLanguageCode(languageCode);
-//			//28895-35500
-//			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
-//
-//			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
-//			
-//			boolean invokeBPM = false;
-//			List<ScQtBsvRegistration> scQtBsvRegistrationList = null;
-//			for (ScQtBsvRegistration registration : this.getManagedBean()
-//					.getBriefingRegistrationList()) {
-//
-//				List<ScQtBsvAttendance> bsvAttandance = registration
-//						.getBsvAttendance();
-//
-//				if (getAttandanceCount(bsvAttandance) > scQtBrief
-//						.getMaxNoOfAttendance()) {
-//					throw new EpException(MessageConst.ERROR_760230,
-//							new String[] { Integer.valueOf(
-//									scQtBrief.getMaxNoOfAttendance())
-//									.toString() }); 
-//				}
-//				
-//				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
-//		
-//				if (flag) {
-//					if (registration.isAttended()) {
-//						if (null == registration.getBsvRegistrationId() || registration.isModified()) {
-//							invokeBPM = true;
-//							registration.setPostRegistered(true);
-//							registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-//						}
-//					}
-//				} else {
-//					throw new EpException(MessageConst.ERROR_760043);
-//				}
-//				
-//				//#28188 - Start
-//				scQtBsvRegistrationList = qTBriefingSO.retrieveBsvRegistration(scQtBrief.getQtBsvDtlId());
-//				
-//				if(scQtBsvRegistrationList.size()==this.getManagedBean().getBriefingRegistrationList().size()){
-//					invokeBPM = false;
-//				}else{
-//					invokeBPM = true;
-//				}
-//				//#28188 - End
-//			}
-//			
-//			if (!invokeBPM) {
-//				throw new EpException(MessageConst.ERROR_760206); 
-//			}
-//
-//			// #28188 start
-//			reqDTO.setBriefingDetail(scQtBrief);
-//			reqDTO.setBriefingReqDtls(this.getManagedBean()
-//					.getBriefingRegistrationList());
-//			reqDTO.setScQt(this.getManagedBean().getScQt());
-//			reqDTO.setBsvStatusId(QTStatusConst.BSV_COMPLETED);
-//			// #28188 end
-//			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
-//			//#28188 - Start
-//			/*List<ScQtApprovalRemark> scQtApprovalRemarks = super.finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
-//			List<ScQtApprovalRemark> newApprovalRemarks = super.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());*/
-//			
-//			List<ScQtApprovalRemark> scQtApprovalRemarks =
-//			        scQtApproval == null
-//			                ? null
-//			                : super.finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
-//			
-//			List<ScQtApprovalRemark> newApprovalRemarks =
-//			        scQtApproval == null
-//			                ? null
-//			                : super.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
-//			//#28188 - End
-//			if (CollectionUtils.isNotEmpty(newApprovalRemarks)) {
-//				if (scQtApprovalRemarks == null) {
-//					scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
-//				}
-//				scQtApprovalRemarks.addAll(0, newApprovalRemarks);
-//			}
-//			scQtApproval.setScQtApprovalRemarks(scQtApprovalRemarks);
-//			List<ScQtApprovalAttachment> scQtApprovalAttachments = scQtApproval.getScQtApprovalAttachments();
-//			if (CollectionUtils.isNotEmpty(getManagedBean().getScQtApprovalAttachments())) {
-//				if (scQtApprovalAttachments == null) {
-//					scQtApprovalAttachments = new ArrayList<ScQtApprovalAttachment>();
-//				}
-//				scQtApprovalAttachments.addAll(getManagedBean().getScQtApprovalAttachments());
-//			}
-//			scQtApproval.setScQtApprovalAttachments(scQtApprovalAttachments);
-//			reqDTO.setApproval(scQtApproval);
-//			
-//			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
-//					.getToBeDeletedRegistartions());
-//			reqDTO.setInvokeBpm(invokeBPM);
-//			//#28188 - Start
-//			//Exclude BPM process as processing move to QTDetailBackingBean due to change to SAVE button
-//			//BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO); 
-//			BriefingResDTO resDTO = qTBriefingSO.saveQTDtlChangeBSV(reqDTO);
-//			//#28188 - End
-//
-//			if (resDTO.isSuccessful()) {
-//				ScQtBsvDtl bsv = resDTO.getScQtBriefing();
-//				String previousPage = this.getManagedBean().getPreviousPage();
-//				ScQt scQt = this.getManagedBean().getScQt();
-//
-//				renewSessionWithPreviousValues();
-//				// this.getManagedBean().setScQtBriefing(bsv);
-//				this.getManagedBean().setPreviousPage(previousPage);
-//				this.getManagedBean().setScQt(scQt);
-//
-//				getregistrationDetails(bsv, true);
-//				
-//				//#28188 - Start
-//				putBriefingRegistrationListToSession(reqDTO.getBriefingReqDtls(), scQt.getQtId());
-//				putApprovalRegistrationListToSession(reqDTO.getApproval());
-//				//#28188 - End
-//
-//				//28895 - 35500 start
-//				//if (!newBriefingRegistrationList.isEmpty()){
-//				if (CollectionUtils.isNotEmpty(newBriefingRegistrationList)) {//#28188
-//					prepareBSVAttendanceAudit(scQt, newBriefingRegistrationList);					
-//				}
-//				//#28895-35500 end
-//				//return CommonUIConst.ACKNOWLEDGE_PAGE;
-//				
-//				//#28188 - Start - Change to SAVE Acknowledge
-//				this.getManagedBean().setMaintanceFlow(true);//28188
-//				String[] param = new String[2];
-//				
-//				param[0] = this.getManagedBean().getScQt().getQtNo();
-//				successMessage(MessageConst.INFO_700128,param);
-//				//#28188 - End 
-//
-//			}
-//		} finally {
-//			qTBriefingSO = null;
-//		}
-//
-//		return "";
-//
-//	}
-	//#28188 - End (Disabled and use enhancement code)
+
+	
+	/**
+	 * Method is used to save Bsv registration details from maintenance flow.
+	 */
+	public String saveBsvRegistarionFromMaintanceFlow() {
+
+		IQTBriefingSO qTBriefingSO = null;
+
+		try {
+			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+			BriefingReqDTO reqDTO = new BriefingReqDTO();
+			String languageCode = new FacesScopes().getUserLocale()
+					.getLanguage();
+			reqDTO.setLanguageCode(languageCode);
+			//28895-35500
+			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
+			
+
+			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
+			boolean invokeBPM = false;
+			for (ScQtBsvRegistration registration : this.getManagedBean()
+					.getBriefingRegistrationList()) {
+
+				List<ScQtBsvAttendance> bsvAttandance = registration
+						.getBsvAttendance();
+
+				if (getAttandanceCount(bsvAttandance) > scQtBrief
+						.getMaxNoOfAttendance()) {
+					throw new EpException(MessageConst.ERROR_760230,
+							new String[] { Integer.valueOf(
+									scQtBrief.getMaxNoOfAttendance())
+									.toString() });
+				}
+				
+				boolean flag = isAttendedOrPreRegistered(registration, bsvAttandance);
+
+				if (flag) {
+					if (registration.isAttended()) {
+						if (null == registration.getBsvRegistrationId() || registration.isModified()) {
+							invokeBPM = true;
+							registration.setPostRegistered(true);
+							registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+						}
+					}
+				} else {
+					throw new EpException(MessageConst.ERROR_760043);
+				}
+			}
+			
+			if (!invokeBPM && CollectionUtils.isEmpty(this.getManagedBean()
+					.getToBeDeletedRegistartions())) {//28188
+				throw new EpException(MessageConst.ERROR_760206);
+			}
+
+			// #28188 start
+			reqDTO.setBriefingDetail(scQtBrief);
+			reqDTO.setBriefingReqDtls(this.getManagedBean()
+					.getBriefingRegistrationList());
+			reqDTO.setScQt(this.getManagedBean().getScQt());
+			reqDTO.setBsvStatusId(QTStatusConst.BSV_COMPLETED);
+			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
+					.getToBeDeletedRegistartions());//28188
+			// #28188 end
+			
+			//28188 -start-
+			List<ScQtApprovalRemark>  approvalRemarks=getManagedBean().getScQtApprovalRemarks();
+			List<ScQtApprovalAttachment> approvalAttachemnts=getManagedBean().getScQtApprovalAttachments();
+			//28188 -end-
+			
+			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
+			List<ScQtApprovalRemark> scQtApprovalRemarks = super.finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
+			List<ScQtApprovalRemark> newApprovalRemarks = super.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
+			if (CollectionUtils.isNotEmpty(newApprovalRemarks)) {
+				if (scQtApprovalRemarks == null) {
+					scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
+				}
+				scQtApprovalRemarks.addAll(0, newApprovalRemarks);
+			}
+			scQtApproval.setScQtApprovalRemarks(scQtApprovalRemarks);
+			List<ScQtApprovalAttachment> scQtApprovalAttachments = scQtApproval.getScQtApprovalAttachments();
+			if (CollectionUtils.isNotEmpty(getManagedBean().getScQtApprovalAttachments())) {
+				if (scQtApprovalAttachments == null) {
+					scQtApprovalAttachments = new ArrayList<ScQtApprovalAttachment>();
+				}
+				scQtApprovalAttachments.addAll(getManagedBean().getScQtApprovalAttachments());
+			}
+			scQtApproval.setScQtApprovalAttachments(scQtApprovalAttachments);
+			reqDTO.setApproval(scQtApproval);
+			
+			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
+					.getToBeDeletedRegistartions());
+			reqDTO.setInvokeBpm(invokeBPM);
+			//#28188 - Start
+			//Exclude BPM process as processing move to QTDetailBackingBean due to change to SAVE button
+			//BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO); 
+			BriefingResDTO resDTO = qTBriefingSO.saveQTDtlChangeBSV(reqDTO);
+			//#28188 - End
+
+			if (resDTO.isSuccessful()) {
+				ScQtBsvDtl bsv = resDTO.getScQtBriefing();
+				String previousPage = this.getManagedBean().getPreviousPage();
+				ScQt scQt = this.getManagedBean().getScQt();
+
+				renewSessionWithPreviousValues();
+				// this.getManagedBean().setScQtBriefing(bsv);
+				this.getManagedBean().setPreviousPage(previousPage);
+				this.getManagedBean().setScQt(scQt);
+
+				getregistrationDetails(bsv, true);
+				
+				//#28188 - Start
+				putBriefingRegistrationListToSession(this.getManagedBean().getBriefingRegistrationList(), scQt.getQtId());//28188 
+				putApprovalRegistrationListToSession(reqDTO.getApproval());
+				//#28188 - End
+
+				//28895 - 35500 start
+				if (CollectionUtils .isNotEmpty(newBriefingRegistrationList)){	//28188 
+					prepareBSVAttendanceAudit(scQt, newBriefingRegistrationList);					
+				}
+				//#28895-35500 end
+				//return CommonUIConst.ACKNOWLEDGE_PAGE;
+				
+				//#28188 - Start - Change to SAVE Acknowledge
+				this.getManagedBean().setMaintanceFlow(true);//28188
+				
+				//28188 -start-
+				if(CollectionUtils.isNotEmpty(approvalRemarks)){
+				getManagedBean().setScQtApprovalRemarks(approvalRemarks);
+				}else{
+					 approvalRemarks = initializeRemarks(
+							scQtApproval, scQt.getCurrentWorkFlowStatus(),
+							null,
+							ScQtApprovalRemark.class);
+					getManagedBean().setScQtApprovalRemarks(approvalRemarks);
+				}
+				
+				getManagedBean().setScQtApprovalAttachments(approvalAttachemnts);
+				 this.getManagedBean().setScQtApproval(scQtApproval);
+				 putBsvRegisterDetailsIntoMap(this.getManagedBean()
+							.getBriefingRegistrationList(), this.getManagedBean()
+							.getScQtBriefing());
+				//28188 -end-	
+					
+				String[] param = new String[2];
+				
+				param[0] = this.getManagedBean().getScQt().getQtNo();
+				successMessage(MessageConst.INFO_700128,param);
+				//#28188 - End 
+
+			}
+		} finally {
+			qTBriefingSO = null;
+		}
+
+		return "";
+
+	}
+	
 
 	/**
 	 * return SlectedHeadername.
@@ -1384,6 +1403,12 @@ public class BSVAttendanceBackingBean extends
 		if (mofAccounts != null&& !mofAccounts.isEmpty()) {
 			registerMofAccount(mofAccounts);
 		}
+		//28188 -start-
+		putBsvRegisterDetailsIntoMap(this.getManagedBean()
+				.getBriefingRegistrationList(), this.getManagedBean()
+				.getScQtBriefing());
+		//28188 -end-
+		
 	}
 	
 	/**
@@ -1411,6 +1436,11 @@ public class BSVAttendanceBackingBean extends
 		if (mofAccounts != null && !mofAccounts.isEmpty()) {
 			registerMofAccount(mofAccounts);
 		}
+		//#28188 - Start
+		putBsvRegisterDetailsIntoMap(this.getManagedBean()
+				.getBriefingRegistrationList(), this.getManagedBean()
+				.getScQtBriefing());
+		//#28188 - End
 	}
 	
 	private void registerMofAccount(List<SmMofAccount> mofAccounts){
@@ -1865,267 +1895,35 @@ public class BSVAttendanceBackingBean extends
 	//#28188 - End
 	
 	//#28188 - Start
-	/**
-	 * Method is used to save Bsv registration details from maintenance flow.Enhancement code for #28188
-	 */
-	public String saveBsvRegistarionFromMaintanceFlow() {
-		IQTBriefingSO qTBriefingSO = null;
-		try {
-			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTBriefingSO.class);
-
-			BriefingReqDTO reqDTO = new BriefingReqDTO();
-			String languageCode = new FacesScopes().getUserLocale().getLanguage();
-			reqDTO.setLanguageCode(languageCode);
-			// 28895-35500
-			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean()
-					.getNewBriefingRegistrationList();
-
-			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
-			
-			if (scQtBrief == null) {
-			    log.error("ScQtBsvDtl is null.");
-				SLAUtils.getInstance().logSLAErrorMesg(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE,
-						"saveBsvRegistarionFromMaintanceFlow", null,
-						"BSVAttendanceBackingBean.saveBsvRegistarionFromMaintanceFlow", null,
-						"Unable to save the registration because the Briefing/Site Visit information is unavailable.",
-						null);
-			    return "";
-			}
-
-			log.info("scQtBrief.qtBsvDtlId: " + scQtBrief.getQtBsvDtlId());
-
-			List<ScQtBsvRegistration> briefingRegistrationList = this.getManagedBean().getBriefingRegistrationList();
-			List<ScQtBsvRegistration> deletedRegistrationList = this.getManagedBean().getToBeDeletedRegistartions();
-
-			/*
-			 * A registration must not exist in both the save list and deletion
-			 * list. Otherwise, EclipseLink may remove the entity and
-			 * subsequently attempt to merge the same entity.
-			 */
-			List<ScQtBsvRegistration> registrationListToSave = excludeDeletedRegistrations(briefingRegistrationList,
-					deletedRegistrationList);
-
-			boolean invokeBPM = false;
-
-			if (CollectionUtils.isNotEmpty(registrationListToSave)) {
-				for (ScQtBsvRegistration registration : registrationListToSave) {
-					if (registration == null) {
-						continue;
-					}
-
-					List<ScQtBsvAttendance> bsvAttendance = registration.getBsvAttendance();
-					if (getAttandanceCount(bsvAttendance) > scQtBrief.getMaxNoOfAttendance()) {
-						throw new EpException(MessageConst.ERROR_760230, new String[] { Integer.valueOf(
-								scQtBrief.getMaxNoOfAttendance()).toString() });
-					}
-
-					boolean validRegistration = isAttendedOrPreRegistered(registration, bsvAttendance);
+	public boolean isRegistrationDeleteDisabled() {
+	    if (getManagedBean() == null) {
+	    	return true;
+	    }
 	
-					if (!validRegistration) {
-						throw new EpException(MessageConst.ERROR_760043);
-					}
+	    if (!getManagedBean().isMaintanceFlow()) {
+	    	if (getManagedBean().getSelectedbriefRegistrationEnableDisable() == null) {
+	 	        return true;
+	 	    }
+	        return false;
+	    }else{
+	    	ScQtBsvRegistration selectedRegistration =
+		            getManagedBean().getSelectedbriefRegistration();
 
-					if (registration.isAttended()) {
-						if (registration.getBsvRegistrationId() == null || registration.isModified()) {
-							invokeBPM = true;
-							registration.setPostRegistered(true);
-							registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-						}
-					}
-				}
-			}
-			/*
-			 * Compare the current database registration count with the current
-			 * registration list.
-			 */
-			List<ScQtBsvRegistration> databaseRegistrationList = qTBriefingSO.retrieveBsvRegistration(scQtBrief
-					.getQtBsvDtlId());
+		    if (selectedRegistration == null) {
+		        return true;
+		    }
+	    	
+	    	if (selectedRegistration.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+	 	            && !selectedRegistration.isBrandNew()) {
+	 	    	return true;
+	 	    }
 
-			int databaseRegistrationSize = getRegistrationListSize(databaseRegistrationList);
-			int currentRegistrationSize = getRegistrationListSize(registrationListToSave);
-
-			if (databaseRegistrationSize != currentRegistrationSize) {
-				invokeBPM = true;
-			}
-
-			/*
-			 * A modified existing registration or a new registration may result
-			 * in the same count. Therefore, do not reset invokeBPM to false
-			 * only because both list sizes are equal.
-			 */
-			if (!invokeBPM) {
-				throw new EpException(MessageConst.ERROR_760206);
-			}
-
-			// #28188 - Start
-			reqDTO.setBriefingDetail(scQtBrief);
-			reqDTO.setBriefingReqDtls(registrationListToSave);
-			reqDTO.setScQt(this.getManagedBean().getScQt());
-			reqDTO.setBsvStatusId(QTStatusConst.BSV_COMPLETED);
-			// #28188 - End
-
-			prepareApprovalDetails(reqDTO);
-			reqDTO.setToBeDeletedRegistations(deletedRegistrationList);
-			reqDTO.setInvokeBpm(invokeBPM);
-
-			/*
-			 * BPM is excluded here because the BPM process has been moved to
-			 * QTDetailBackingBean after changing the action to Save.
-			 */
-			//BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO); 
-			BriefingResDTO resDTO = qTBriefingSO.saveQTDtlChangeBSV(reqDTO);
-
-			if (resDTO != null && resDTO.isSuccessful()) {
-				ScQtBsvDtl savedBsv = resDTO.getScQtBriefing();
-				String previousPage = this.getManagedBean().getPreviousPage();
-				ScQt scQt = this.getManagedBean().getScQt();
-				renewSessionWithPreviousValues();
-				this.getManagedBean().setPreviousPage(previousPage);
-				this.getManagedBean().setScQt(scQt);
-
-				if (savedBsv != null) {
-					getregistrationDetails(savedBsv, true);
-				}
-
-				// #28188 - Start
-				if (scQt != null && scQt.getQtId() != null) {
-					putBriefingRegistrationListToSession(registrationListToSave, scQt.getQtId());
-				}
-
-				if (reqDTO.getApproval() != null) {
-					putApprovalRegistrationListToSession(reqDTO.getApproval());
-				}
-				// #28188 - End
-
-				// 28895-35500 Start
-				if (CollectionUtils.isNotEmpty(newBriefingRegistrationList) && scQt != null) {
-					prepareBSVAttendanceAudit(scQt, newBriefingRegistrationList);
-				}
-				// 28895-35500 End
-
-				// #28188 - Save acknowledgement
-				this.getManagedBean().setMaintanceFlow(true);
-				String[] param = new String[2];
-
-				if (scQt != null) {
-					param[0] = scQt.getQtNo();
-				}
-				successMessage(MessageConst.INFO_700128, param);
-			}
-
-		} finally {
-			qTBriefingSO = null;
-		}
-
-		return "";
-	}
-	//#28188 - End
-	
-	//#28188 - Start
-	private void prepareApprovalDetails(BriefingReqDTO reqDTO) {
-		ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
-
-		if (scQtApproval == null) {
-			log.info("ScQtApproval is null.");
-
-			reqDTO.setApproval(null);
-			return;
-		}
-		
-		List<ScQtApprovalRemark> scQtApprovalRemarks = scQtApproval == null ? null : super.finalizeRemarks(scQtApproval
-				.getScQtApprovalRemarks());
-		
-		List<ScQtApprovalRemark> newApprovalRemarks = scQtApproval == null ? null : super
-				.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
-
-		if (CollectionUtils.isNotEmpty(newApprovalRemarks)) {
-			if (scQtApprovalRemarks == null) {
-				scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
-			}
-			scQtApprovalRemarks.addAll(0, newApprovalRemarks);
-		}
-		scQtApproval.setScQtApprovalRemarks(scQtApprovalRemarks);
-
-		List<ScQtApprovalAttachment> scQtApprovalAttachments = scQtApproval.getScQtApprovalAttachments();
-		List<ScQtApprovalAttachment> newApprovalAttachments = this.getManagedBean().getScQtApprovalAttachments();
-
-		if (CollectionUtils.isNotEmpty(newApprovalAttachments)) {
-			if (scQtApprovalAttachments == null) {
-				scQtApprovalAttachments = new ArrayList<ScQtApprovalAttachment>();
-			}
-			scQtApprovalAttachments.addAll(newApprovalAttachments);
-		}
-		scQtApproval.setScQtApprovalAttachments(scQtApprovalAttachments);
-		reqDTO.setApproval(scQtApproval);
-	}
-	
-	//#28188 - End
-	
-	//#28188 - Start
-	private List<ScQtBsvRegistration> excludeDeletedRegistrations(List<ScQtBsvRegistration> registrationList,
-			List<ScQtBsvRegistration> deletedRegistrationList) {
-
-		List<ScQtBsvRegistration> result = new ArrayList<ScQtBsvRegistration>();
-		if (CollectionUtils.isEmpty(registrationList)) {
-			return result;
-		}
-
-		for (ScQtBsvRegistration registration : registrationList) {
-			if (registration == null) {
-				continue;
-			}
-			if (!isRegistrationMarkedForDeletion(registration, deletedRegistrationList)) {
-				result.add(registration);
-			} else {
-				log.info("Registration excluded from save list. ID: " + registration.getBsvRegistrationId());
-			}
-		}
-		return result;
-	}
-	//#28188 - End
-	
-	//#28188 - Start
-	private boolean isRegistrationMarkedForDeletion(ScQtBsvRegistration registration,
-			List<ScQtBsvRegistration> deletedRegistrationList) {
-
-		if (registration == null || CollectionUtils.isEmpty(deletedRegistrationList)) {
-			return false;
-		}
-
-		for (ScQtBsvRegistration deletedRegistration : deletedRegistrationList) {
-			if (deletedRegistration == null) {
-				continue;
-			}
-			/*
-			 * Check whether both collections contain the same Java object.
-			 */
-			if (registration == deletedRegistration) {
-				return true;
-			}
-
-			Long registrationId = registration.getBsvRegistrationId();
-			Long deletedRegistrationId = deletedRegistration.getBsvRegistrationId();
-
-			/*
-			 * Existing database registrations must be compared using their
-			 * primary keys.
-			 */
-			if (registrationId != null && deletedRegistrationId != null && registrationId.equals(deletedRegistrationId)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	//#28188 - End
-	
-	//#28188 - Start
-	private int getRegistrationListSize(
-	        List<ScQtBsvRegistration> registrationList) {
-
-	    return registrationList == null
-	            ? 0
-	            : registrationList.size();
+	 	    if (selectedRegistration.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS
+	 	            && selectedRegistration.getScQtApprovalRequest() != null) {
+	 	        return true;
+	 	    }
+	    }
+	    return false;
 	}
 	//#28188 - End
 }

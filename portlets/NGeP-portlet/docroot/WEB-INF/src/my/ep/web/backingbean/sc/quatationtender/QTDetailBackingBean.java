@@ -8182,6 +8182,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			            .getExternalContext()
 			            .getSessionMap()
 			            .remove("briefingRegistrationList");
+			    
+				// 28188 -start-
+			    quationTenderReqDTO.setStatusId(workflowStatusId);
+				Map<Long, List<ScQtBsvRegistration>> briefingRegistrationMap = getBsvRegisterDetailsIntoMap();
+				if (null != briefingRegistrationMap
+						&& !briefingRegistrationMap.isEmpty()) {
+					quationTenderReqDTO
+							.setBsvAttandanceRegister(briefingRegistrationMap);
+				}
+				removeBsvRegisterDetailsIntoMap();
+				// 28188 -end-
 			}
 			
 			// 28188 -start-
