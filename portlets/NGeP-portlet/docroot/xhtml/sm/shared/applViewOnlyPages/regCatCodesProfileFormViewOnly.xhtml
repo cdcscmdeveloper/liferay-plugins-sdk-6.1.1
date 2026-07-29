@@ -183,7 +183,8 @@
 				     <p:graphicImage value="/css/images/design/icon_alert.png"
 						style="float:right;"
 						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory and 
-							(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser) and
+							(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser or
+							viewSmApplBackingBean.managedBean.supplierUser) and
 							!aprvdCatBean.otherDescChangeMaintenance}" />
 				</p:outputPanel>
 			</p:column>
@@ -274,7 +275,7 @@
 	
 	<!-- 36504 - START -->
 	<ac:otherDescriptionHistoryMaintenance
-		categoryCodeList="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
+		categoryCodeList="#{viewSmApplBackingBean.managedBean.supProfileHistoryOtherDesc}"
 		applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{viewSmApplBackingBean.managedBean.otherDescChangePO}"
 		otherDescChangeApprover="#{viewSmApplBackingBean.managedBean.otherDescChangeApprover}"
