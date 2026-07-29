@@ -702,7 +702,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		BSVAttendanceBackingBean attendanceBackingBean= new BSVAttendanceBackingBean();
 		attendanceBackingBean.getregistrationDetails(scQtBriefing, true);
 		attendanceBackingBean.getManagedBean().setScQt(this.getManagedBean().getQt());
-		
+		attendanceBackingBean.getManagedBean().setToBeDeletedRegistartions(null);//#28188
 		new QTDetailBackingBean().retrieveApprovalTabDtl();
 		List<TabBean> tabList = this.getManagedBean().getTabList();
 		for (TabBean tabBean : tabList) {
