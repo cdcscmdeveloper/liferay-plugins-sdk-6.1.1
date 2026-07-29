@@ -333,8 +333,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.BPK_APPROVE_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_APPROVAL);
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.FC_APPROVE_QT_CHANGE,
-			//					SourcingConstants.NAV_PAGE_APPL_PROPOSAL_VALID_PERIOD_EXTENSION); // #31919 & 21692
-					SourcingConstants.NAV_PAGE_QT_APPROVAL);
+								SourcingConstants.NAV_PAGE_APPL_PROPOSAL_VALID_PERIOD_EXTENSION); // #31919 & 21692
+//					SourcingConstants.NAV_PAGE_QT_APPROVAL);//change from this to 21692
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_SUPPLIER_ACCEPTANCE);
@@ -636,7 +636,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.APPROVE_SUPPLIER_ADD, SourcingConstants.NAV_PAGE_ADDITIONAL_BSV_ATTANDANCE);
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.BPK_APPROVE_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_APPROVAL);
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.FC_APPROVE_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_APPROVAL);
+			//#21692 change to new path - Start
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.FC_APPROVE_QT_CHANGE, SourcingConstants.NAV_PAGE_APPL_PROPOSAL_VALID_PERIOD_EXTENSION);
+			//#21692 change to new path - End
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_SUPPLIER_ACCEPTANCE);
@@ -796,9 +798,16 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			/* #31422-basri 190821 */
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			//#26186 start
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				externalContext.redirect(commonUrl + "/" + url + "?taskId="
+						+ taskId +"&claim=" + claim+"&docNo="+docNo+"&taskName=" + taskName);
+			}else{
 			//26238 -  Disciplinary Action - 28111
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId=" + taskId + "&taskIdPair=" + strbuildtask + "&claim=" + claim + "&docNo=" + docNo);/* #31422-basri 190821 */
+			}
+			//#26186 end
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {

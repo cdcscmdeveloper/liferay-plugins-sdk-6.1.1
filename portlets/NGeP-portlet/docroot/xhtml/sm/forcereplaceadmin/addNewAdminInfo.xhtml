@@ -18,8 +18,10 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<!-- #34159 & #36718 & #36716 - START -->
 		<p:outputPanel id="verification2Panel">
-		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>
+		<!-- #34159 & #36718 & #36716 - END -->
 	
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -32,38 +34,34 @@
 						immediate="true" action="#{forceReplaceSuppAdminBackingBean.back}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				<!-- #28765 -->
+					<!-- #28765 -->
+					<!-- #34159 & #36718 & #36716 - START - add param disablevalidation -->
 					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="verification2Panel" 
-					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
-					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
-					<!-- #33129 - START --> 
-					<ac:confirmationPopup id="declareDeletePopUpId"
+						disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
+						update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+					<!-- #34159 & #36718 & #36716 - END -->
+					<!-- #33129 - START --><!-- #34400 -->
+					<ac:confirmationPopupSM id="declareDeletePopUpId"
 						widget="declareDeletePopUp"
 						okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
 						width="400" height="auto"
-						title="#{lbl['lbl.msg.confirm.declare.header']}"
 						content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
 						update=":form"/>
 					<!-- #33129 - END -->
-				 <p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
-			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
-			<div class="ppLeftBtn">
-			<f:facet name="message">
-                   <h:outputText value="TEST" styleClass=""  escape="false"/>
-          </f:facet>
-			</div>
-		<div class="ppRightBtn">		    
-		 	<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="declareAlertPopUp.hide();" type="button" />
-		</div>
-		</p:confirmDialog>
-		<!-- #28765 End -->
-				<!-- 
-					<p:commandButton value="#{lbl['lbl.sm.declare']}" id="declareBtnId" update=":form"
-							action="#{forceReplaceSuppAdminBackingBean.declare}" 
-							disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0]}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				 -->
+				 	<p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
+			 			closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
+						<div class="ppLeftBtn">
+							<f:facet name="message">
+                   				<h:outputText value="TEST" styleClass=""  escape="false"/>
+          					</f:facet>
+						</div>
+						<div class="ppRightBtn">		    
+		 					<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="declareAlertPopUp.hide();" type="button" />
+						</div>
+					</p:confirmDialog>
 				</td>
 			</tr>
 		</table><br />
@@ -237,9 +235,9 @@
 							countryCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileCountry}" 
 							areaCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileArea}" 
 							number="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileNo}" 
-							isMobile="true" required="true"
-							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" />
+							isMobile="true" hideTelco="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" /> 
+							<!-- telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" /> --> <!-- 40200 -->
 					</td>
 				</tr>
 				<h:panelGroup layout="block" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRolePanel}">

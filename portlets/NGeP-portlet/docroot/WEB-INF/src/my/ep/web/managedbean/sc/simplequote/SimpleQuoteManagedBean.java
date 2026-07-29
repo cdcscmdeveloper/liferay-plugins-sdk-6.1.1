@@ -2820,5 +2820,5 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.qtyNonEditable = qtyNonEditable;
 	}
 	// #28865 - end
-	
+
 }

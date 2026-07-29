@@ -146,6 +146,13 @@ public class BiddingManagedBean extends BaseManagedBean {
 	//#17376-144
 	private String previousPageUrl;	
 	
+	// #28777 & #29729 - Start
+	private List<BidItemBean> bidPriceItemsDisqualified;
+	private List<BidPackageBean> bidPackagesDisqualified;
+	private boolean disqualified = false;
+
+	// #28777 & #29729 - End
+	
 	/**
 	 * Default Constructor
 	 */
@@ -1329,4 +1336,30 @@ public class BiddingManagedBean extends BaseManagedBean {
 	}
 	
 	//#-17376-End
+	
+	// #28777 & #29729 - Start
+	public List<BidPackageBean> getBidPackagesDisqualified() {
+		return bidPackagesDisqualified;
+	}
+
+	public void setBidPackagesDisqualified(List<BidPackageBean> bidPackagesDisqualified) {
+		this.bidPackagesDisqualified = bidPackagesDisqualified;
+	}
+
+	public List<BidItemBean> getBidPriceItemsDisqualified() {
+		return bidPriceItemsDisqualified;
+	}
+
+	public void setBidPriceItemsDisqualified(List<BidItemBean> bidPriceItemsDisqualified) {
+		this.bidPriceItemsDisqualified = bidPriceItemsDisqualified;
+	}
+
+	public boolean isDisqualified() {
+		return disqualified;
+	}
+
+	public void setDisqualified(boolean disqualified) {
+		this.disqualified = disqualified;
+	}
+	// #28777 & #29729 - End
 }

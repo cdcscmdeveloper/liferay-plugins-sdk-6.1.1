@@ -848,7 +848,15 @@ a:hover.blue_font {
 	color: #95caee;
 	text-decoration: none;
 }
-
+/* #24333 - Start  */
+a.red_font {
+	font-family: Tahoma, Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #f2081b;
+	text-decoration: none;
+}
+/* #24333 - End  */
 .ui-datagrid-content {
 	border: 0px !important;
 }
@@ -3723,3 +3731,17 @@ table.rptTbl {
 	background-image: url('../images/design/rating.png') !important;
 }
 /*29021 end - fix cosmetic, rating star not hard to see*/
+
+/* 26247 - start */
+.red-background {
+	background-color:red; 
+	color:white; 
+	font-weight:bold;
+}
+/* 26247 - end */
+
+/* 30479 - start */
+.columnWidthSize16 {
+	width: 16%;
+}
+/* 30479 - end */

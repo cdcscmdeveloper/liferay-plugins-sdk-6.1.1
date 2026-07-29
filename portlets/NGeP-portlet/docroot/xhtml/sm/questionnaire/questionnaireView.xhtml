@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
@@ -103,10 +104,14 @@
 		 		value="#{lbl['lbl.btn.print']}" ajax="false" >
 				<p:fileDownload value="#{questionnaireBackingBean.downloadQuestionnaire()}"/>
 			</p:commandButton> --><!-- END #12768-->
-			<p:commandButton
-				action="#{questionnaireBackingBean.submitQuestionnaire}"
-				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
-				update="@form" value="#{lbl['lbl.btn.submit']}" />
+			<!-- #34400 - start -->
+			<p:commandButton oncomplete="if (!args.validationFailed) confirmDlg.show()" value="#{lbl['lbl.btn.submit']}" />
 		</div>
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
+			okAction="questionnaireBackingBean.submitQuestionnaire"
+			content="#{lbl['lbl.sm.confirm.questionnaire']}" 
+			update="@form"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 	</ui:define>
 </ui:composition>

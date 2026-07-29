@@ -257,6 +257,17 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_096_sme_supplier_rpt.xhtml"></ui:include>
 				</c:if>
 				<!-- #29617 end -->
+				<!-- 32521 - START -->
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationProcessedRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_097_appl_processed_rpt.xhtml"></ui:include>
+				</c:if>
+				<!-- 32521 - END -->
+				<ui:remove>#34031 Start</ui:remove>
+				<c:if
+					test="#{smReportBB.managedBean.reportCode eq SmReportConst.smRevisitRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_101_sm_revisit_rpt.xhtml"></ui:include>
+				</c:if>
+				<ui:remove>#34031 End</ui:remove>
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>

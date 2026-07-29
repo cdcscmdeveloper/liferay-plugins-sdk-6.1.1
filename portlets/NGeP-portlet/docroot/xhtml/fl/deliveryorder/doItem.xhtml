@@ -14,6 +14,17 @@
 					action="#{createDOBackingBean.resetMeasurementSearch}" process="@this"
 					update=":form:uomRefDlg"/>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address2']}" />
+		<ui:remove>#29556-Start</ui:remove>
+		<h:outputText styleClass="instruction"
+			rendered="#{createDOBackingBean.managedBean.contractFlag}" 
+			value="#{lbl['lbl.fl.instruction.items.spec.guideline']}"
+			escape="false" />
+		<p:commandLink
+			rendered="#{createDOBackingBean.managedBean.contractFlag}" 
+			value="#{lbl['lbl.fl.instruction.items.spec.click.here']}"
+			ajax="false" style="font-size:12px;font-style:italic" process="@this"
+			action="#{createDOBackingBean.downloadItemSpecGuideline()}"></p:commandLink>
+		<ui:remove>#29556-End</ui:remove>
 		<p:dataTable id="doDelAddress" var="doDelAddress"
 			styleClass="orderSummaryChange hide-column-names "
 			rowIndexVar="index" rowKey="#{doDelAddress}"
@@ -407,9 +418,10 @@
    		</f:facet>		
 	</p:dialog>
 	
+		<ui:remove>#26279 remove appendToBody</ui:remove>
 		<p:confirmDialog message="#{lbl['lbl.msg.confirm.delete']}"
 			severity="alert" widgetVar="delFileDlg" closable="true"
-			appendToBody="true" header="Delete Confirmation">
+			header="Delete Confirmation">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true" immediate="true"

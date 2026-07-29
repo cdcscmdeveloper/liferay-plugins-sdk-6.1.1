@@ -319,7 +319,7 @@
 									<p:ajax event="toggleSelect"
 										update="@(.ui-button[id$=compareButton])" />
 								</ui:remove>
-						<!-- # 2020/05/05 - 27626 - start -->
+								<!-- # 2020/05/05 - 27626 - start -->
 								<p:column headerText="#{lbl['lbl.cm.item.code']}" width="8%">
 									<h:panelGroup rendered="#{supplierItem.imagePath == null}">
 
@@ -377,11 +377,15 @@
 									#{supplierItem.circularNo}
 								</p:column>
 								<ui:remove>#31977 - end</ui:remove>
-								
+
 								<p:column headerText="#{lbl['lbl.cm.supplier.name']}"
 									style="white-space: normal">
 									<h:outputText value="#{supplierItem.companyName}" />
 									<!-- [#26282] - start -->
+									<!-- #38972 - Start -->
+							        <br/>
+							        <h:outputText value="#{supplierItem.mofNo}" />
+							        <!-- #38972 - End -->
 									<p:spacer width="5" />
 									<p:commandLink id="daSupplierAlertCL"
 										action="#{catalogueBackingBean.onViewDisciplinaryAction(supplierItem.supplierId, supplierItem.mofNo)}"
@@ -467,7 +471,7 @@
 											rendered="#{supplierItem.contractNo != null}"
 											onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();" />
-										<!-- #34579 - add new parameter on simpleQuoteAction-->		
+										<!-- #34579 - add new parameter on simpleQuoteAction-->
 										<p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}"
 											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.supplierId, supplierItem.docId, supplierItem.circularNo != null , null)}"
 											update="@form" icon="ui-icon-plus"
@@ -609,8 +613,9 @@
 		<!-- [#26282] - start -->
 		<ac:disciplinaryActionHistory 
 			voList="#{catalogueBackingBean.managedBean.disciplineVOs}" 
-			mofView="#{catalogueBackingBean.managedBean.mofSupplier}"
-			dialogMessage="#{catalogueBackingBean.managedBean.disciplinaryMsg}" />
+			dialogMessage="#{catalogueBackingBean.managedBean.disciplinaryMsg}"
+			btnView="true"
+			dialogHeader="" /> <ui:remove>set null value for title at popup DA history</ui:remove>
 		<!-- [#26282] - end -->
 		
 		<!-- #27654 start -->

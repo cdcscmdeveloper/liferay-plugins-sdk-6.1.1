@@ -594,6 +594,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip; // WIP @idham
+	private int retainPageNumber;
+	private String otherchecklistScore;
+	private BigDecimal maxPackageTsScore;
+	private BigDecimal maxPackageOtherElementsScore;
+	private BigDecimal maxItemAllOtherElementsScore;
+	private BigDecimal maxItemOtherElementsScore;
+	private String maxDemoScore;
+	private BigDecimal demoWeightage;
+	private BigDecimal maxItemTsPercentage;
+	private BigDecimal maxItemAllOtherElementsPercentage;
+	private BigDecimal itemTsPercentage;
+	private BigDecimal itemAllOtherElementsPercentage;
+	private BigDecimal maxItemTsScore;
+	private String totalScoreLabel;
+	private String maxItemAllOtherElementsScoreLabel;
+	private String tooltipDemo;
 	// #28784 - end
 
 	/** The total technical package max score. */
@@ -625,6 +641,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String mainDocumentTitle;
 	private boolean fecIndexPreRender; // #35286
 	// #10542 - end
+	private boolean allSupplierRejectEpv;//#21692
 	
 	//#6906 start
 	private boolean noProposalSubmitted;
@@ -633,6 +650,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
 
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
 	/**
 	 * Gets the today.
 	 * 
@@ -4378,4 +4398,229 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationContext(Map<String, Object> evaluationContext) {
 		this.evaluationContext = evaluationContext;
 	}
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
+
+	//#28784 - Start
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public String getOtherchecklistScore() {
+		return otherchecklistScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setOtherchecklistScore(String otherchecklistScore) {
+		this.otherchecklistScore = otherchecklistScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getMaxPackageTsScore() {
+		return maxPackageTsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxPackageTsScore(BigDecimal maxPackageTsScore) {
+		this.maxPackageTsScore = maxPackageTsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getMaxPackageOtherElementsScore() {
+		return maxPackageOtherElementsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxPackageOtherElementsScore(BigDecimal maxPackageOtherElementsScore) {
+		this.maxPackageOtherElementsScore = maxPackageOtherElementsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getMaxItemAllOtherElementsScore() {
+		return maxItemAllOtherElementsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxItemAllOtherElementsScore(BigDecimal maxItemAllOtherElementsScore) {
+		this.maxItemAllOtherElementsScore = maxItemAllOtherElementsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getMaxItemOtherElementsScore() {
+		return maxItemOtherElementsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxItemOtherElementsScore(BigDecimal maxItemOtherElementsScore) {
+		this.maxItemOtherElementsScore = maxItemOtherElementsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public String getMaxDemoScore() {
+		return maxDemoScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxDemoScore(String maxDemoScore) {
+		this.maxDemoScore = maxDemoScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getDemoWeightage() {
+		return demoWeightage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoWeightage(BigDecimal demoWeightage) {
+		this.demoWeightage = demoWeightage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getMaxItemTsPercentage() {
+		return maxItemTsPercentage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxItemTsPercentage(BigDecimal maxItemTsPercentage) {
+		this.maxItemTsPercentage = maxItemTsPercentage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getMaxItemAllOtherElementsPercentage() {
+		return maxItemAllOtherElementsPercentage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxItemAllOtherElementsPercentage(BigDecimal maxItemAllOtherElementsPercentage) {
+		this.maxItemAllOtherElementsPercentage = maxItemAllOtherElementsPercentage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getItemTsPercentage() {
+		return itemTsPercentage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setItemTsPercentage(BigDecimal itemTsPercentage) {
+		this.itemTsPercentage = itemTsPercentage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getItemAllOtherElementsPercentage() {
+		return itemAllOtherElementsPercentage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setItemAllOtherElementsPercentage(BigDecimal itemAllOtherElementsPercentage) {
+		this.itemAllOtherElementsPercentage = itemAllOtherElementsPercentage;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public BigDecimal getMaxItemTsScore() {
+		return maxItemTsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxItemTsScore(BigDecimal maxItemTsScore) {
+		this.maxItemTsScore = maxItemTsScore;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public String getTotalScoreLabel() {
+		return totalScoreLabel;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setTotalScoreLabel(String totalScoreLabel) {
+		this.totalScoreLabel = totalScoreLabel;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public String getMaxItemAllOtherElementsScoreLabel() {
+		return maxItemAllOtherElementsScoreLabel;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setMaxItemAllOtherElementsScoreLabel(String maxItemAllOtherElementsScoreLabel) {
+		this.maxItemAllOtherElementsScoreLabel = maxItemAllOtherElementsScoreLabel;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public String getTooltipDemo() {
+		return tooltipDemo;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setTooltipDemo(String tooltipDemo) {
+		this.tooltipDemo = tooltipDemo;
+	}
+	//#28784 - End
+	
+	//#38151 - start
+	/**
+	 * @return the flag from nextbutton
+	 */
+	public boolean isComingFromNextButton() {
+		return comingFromNextButton;
+	}
+
+	/**
+	 * @param set flag from nextbutton
+	 */
+	public void setComingFromNextButton(boolean comingFromNextButton) {
+		this.comingFromNextButton = comingFromNextButton;
+	}
+	
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - end
 }

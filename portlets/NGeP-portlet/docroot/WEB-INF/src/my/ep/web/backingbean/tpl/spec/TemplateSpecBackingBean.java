@@ -13,9 +13,10 @@ package my.ep.web.backingbean.tpl.spec;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Timestamp;
+import java.sql.Timestamp;//#38151
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date; //#38151
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO; //#38151
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -57,6 +59,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO; //#38151
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -66,9 +69,11 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.quationtender.ScQt; //#38151
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
@@ -233,7 +238,8 @@ public class TemplateSpecBackingBean extends
 			
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
 				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
-			
+				checkWeightage35384WIP(); //#38151
+
 				if (specMaster.getSpecTypeCode() != null
 						&& ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode()
 								.getParameterCode()) && resDTO.getSpecAnswerList() != null) {
@@ -404,6 +410,11 @@ public class TemplateSpecBackingBean extends
 					questionToDelete.setClPriceTypeCode(null);
 				}	
 			}
+			//34617 - start
+			if (questionToDelete.getClPriceTypeCode() != null && questionToDelete.getClPriceTypeCode().getParameterType() == null){
+				questionToDelete.setClPriceTypeCode(null);
+			}
+			//34617 - end
 			
 			techicalDeleteQuestionList.add(questionToDelete);
 		}
@@ -517,6 +528,16 @@ public class TemplateSpecBackingBean extends
 				.equals(tplSpecMaster.getSpecTypeCode().getParameterCode());
 		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 
+		// #25726 - Start
+		PmParameter fulfilmentType = null;
+		String docType = null;
+		if (null != tplSpecMaster.getFulfilmentType()) {
+			fulfilmentType = tplSpecMaster.getFulfilmentType();
+		}
+		if (null != tplSpecMaster.getDocType()) {
+			docType = tplSpecMaster.getDocType();
+		}
+		// #25726 - End
 		if (questionList == null) {
 			questionList = new ArrayList<TplSpecQuestion>();
 
@@ -531,7 +552,30 @@ public class TemplateSpecBackingBean extends
 					ParameterTypeConst.FULFILMENT_TYPE,
 					ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			newQuestion.setClFulfilmentTypeCode(pmParameter);
-
+			// #25726 - Start
+			if (null != docType) {
+				if (docType.equals(ParameterConst.DOCTYPE_DIRECT_NEGO)) {
+					if (null != fulfilmentType)
+						newQuestion.setClFulfilmentTypeCode(fulfilmentType);
+				} else if (docType.equals(ParameterConst.DOCTYPE_QUOTATION)) {
+					if (null != fulfilmentType)
+						newQuestion.setClFulfilmentTypeCode(fulfilmentType);
+				} else {
+					newQuestion.setClFulfilmentTypeCode(pmParameter);
+				}
+			} else {
+				if (null != tplSpecMaster.getScQtDoc()) {
+					if (null != tplSpecMaster.getScQtDoc().getScQt()) {
+						if (null != tplSpecMaster.getScQtDoc().getScQt().getFulfilmentType())
+							newQuestion.setClFulfilmentTypeCode(tplSpecMaster.getScQtDoc().getScQt()
+									.getFulfilmentType());
+					}
+				} else {
+					newQuestion.setClFulfilmentTypeCode(pmParameter);
+				}
+			}
+			// #25726 - End
+			
 			if (ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecMaster
 					.getItemTypeCode().getParameterCode())) {
 				if (tplSpecMaster.getTplSpecZone() != null) {
@@ -2863,9 +2907,9 @@ public class TemplateSpecBackingBean extends
 	
 	public String replaceWithBR(String specDetails) {
 		// 35521 @zaim - start
-		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); //36103 @zaim
+		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); // 36103 @zaim
 		spec = spec.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //36103 @zaim
+		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER); // 36103 @zaim
 		return spec;
 		// 35521 @zaim - end
 	}
@@ -3300,6 +3344,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.getSpecMaster().setTotalEstAmount(totalEstAmount);
 			}
 		}
+		templateSpecBean.setSelectedSpecQuestion(null); //#40402
 	}
 	// #25039 End - version zonal
 	
@@ -3641,36 +3686,12 @@ public class TemplateSpecBackingBean extends
 	}
 	// #31134 Farid end 25/6/2021
 
-	// #28784 - Start
-	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
-		ITemplateSpecSO templateSpecSO = null;
-
-		try {
-			TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
-			List<TplSpecScoring> specScorings = selectedSpecQuestion.getTplSpecScorings();
-			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-					ITemplateSpecSO.class);
-			BigDecimal demoScore = templateSpecSO.validateScoring(selectedSpecQuestion, specScorings,
-					new FacesScopes().getUserLocale());
-			
-			if (demoScore != null && demoScore.equals(new BigDecimal(0))) {
-				throw new EpException(MessageConst.ERROR_760476);
-			}
-			
-			if (demoScore != null) {
-				selectedSpecQuestion.setDemoScore(demoScore);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-		
-		templateSpecBean.setSelectedSpecQuestion(null);
-		
-		getManagedBean().setTemplateSpecBean(templateSpecBean);
-	}
-	// #28784 -end-
-
 	// #28784 -start-
+	/**
+	 * #28784 - Demo scoring cancle
+	 * 
+	 * @param templateSpecBean
+	 */
 	public void scoringCancelActionDemo(TemplateSpecBean templateSpecBean) {
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
@@ -3887,7 +3908,7 @@ public class TemplateSpecBackingBean extends
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
-		boolean manSpec = false;
+		boolean mandatorySpec = false;
 		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
@@ -3911,12 +3932,12 @@ public class TemplateSpecBackingBean extends
 				if (questionType
 						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
 						&& isMandatorySpec) {
-					manSpec = true;
+					mandatorySpec = true;
 					break;
 				}
 			}
 		}
-		return manSpec;
+		return mandatorySpec;
 	}
 
 	// #29187 End Vinod
@@ -3982,8 +4003,6 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void itemComplianceChangeControl(ValueChangeEvent event) {
-		log.info("New: " + event.getNewValue() + ", Old: "
-				+ event.getOldValue());
 		if (event.getOldValue() == null) {
 			getManagedBean().setComplianceOldNull(true);
 		} else {
@@ -3992,4 +4011,112 @@ public class TemplateSpecBackingBean extends
 	}
 
 	// #29187 End Vinod
+	
+	// #38151 Start
+	private void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+
+		if (null == publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+
+			if (createdDate.before(effTimestamp)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		} else {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}
+	}
+	
+	//#35293 - Start
+	/**
+	 * To validate Score input value
+	 * 
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateInputScore(FacesContext context, UIComponent component, Object value) {
+		if (value == null) {
+			return;
+		}
+
+		BigDecimal inputValue = new BigDecimal(value.toString());
+		TplSpecAnswer tplSpecAnswer = (TplSpecAnswer) component.getAttributes().get("tplSpecAnswer");
+
+		boolean hasWeightage = false;
+
+		if (tplSpecAnswer != null && tplSpecAnswer.getTplSpecQuestion() != null
+				&& Boolean.TRUE.equals(tplSpecAnswer.getTplSpecQuestion().isWeightageReq())) {
+			hasWeightage = true;
+		}
+		String label = (String) component.getAttributes().get("label");
+		if (label == null) {
+			label = component.getId();
+		}
+
+		if (hasWeightage) {
+
+			// check decimal places (max 2)
+			if (inputValue.stripTrailingZeros().scale() > 2) {
+
+				Object minAttr = component.getAttributes().get("min");
+				Object maxAttr = component.getAttributes().get("max");
+
+				String min = minAttr != null ? minAttr.toString() : "0";
+				String max = maxAttr != null ? maxAttr.toString() : "";
+
+				String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.decimal.validaton", new String[] {
+						label, inputValue.toString(), min, max }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+			}
+		}
+	}
+
+	/**
+	 * Get Max Score
+	 * @param answer
+	 * @param hasWeightage
+	 * @return
+	 */
+	public String getMaxScoreDisplay(TplSpecAnswer answer, boolean hasWeightage) {
+
+		BigDecimal maxScore = answer.getTplSpecQuestion().getMaxScore();
+
+		if (hasWeightage) {
+			if (this.getManagedBean().isWeightage35384WIP()) {
+				BigDecimal weightage = answer.getTplSpecQuestion().getWeightage();
+				maxScore = maxScore.multiply(weightage);
+			}
+			BigDecimal result = maxScore.setScale(2, RoundingMode.HALF_UP);
+			return result.toPlainString(); // returns 20.00
+		}
+		return maxScore.stripTrailingZeros().toPlainString(); // returns 20
+	}
+	//#35293 - End
+	// #38151 End
+	
+	
 }

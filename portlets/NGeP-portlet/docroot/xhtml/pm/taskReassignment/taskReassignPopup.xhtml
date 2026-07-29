@@ -96,20 +96,30 @@
 
 					<tr>
 						<td colspan="2" style="text-align: right;">
+							<!-- 34445 start -->
 							<p:commandButton
 								value="#{lbl['lbl.pm.ta.btn.assign']}"
-								action="#{taskReassignmentBackingBean.confirmReassignTask()}"
-								update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,messagesRole"
-								process=":form:pTaskReassignResultPnl"
-								onclick="taskReassignPopupBlockWidget.show()" oncomplete="taskReassignPopupBlockWidget.hide()" >
-									 <f:param name="disableValidation" value="true" />
+								oncomplete="if (!args.validationFailed) assignInfoDlg.show()" >
+								<f:param name="disableValidation" value="true" />
 							</p:commandButton>
-							 <p:commandButton id="cbCancel"
+							<!-- 34445 end -->
+							<p:commandButton id="cbCancel"
 								value="#{lbl['lbl.btn.cancel']}" process="@this"
-								oncomplete="dlTaskReassignment.hide()" immediate="true" /></td>
+								oncomplete="dlTaskReassignment.hide()" immediate="true" />
+						</td>
 					</tr>
 				</table>
 			</h:panelGroup>
 		</p:panel>
 	</p:dialog>
+	
+	<!-- 34445 start -->
+	<ac:confirmationPopupSM id="assignInfoDlg" widget="assignInfoDlg"
+		loadingWidget="taskReassignPopupBlockWidget"
+		okAction="taskReassignmentBackingBean.confirmReassignTask"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.assign.msg']}"
+		update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult"/>
+	<!-- 34445 end -->
 </ui:composition>

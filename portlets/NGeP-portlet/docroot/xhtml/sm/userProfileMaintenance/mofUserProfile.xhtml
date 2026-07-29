@@ -25,12 +25,20 @@
 						immediate="true"
 						action="#{smPersonnelBackingBean.cancelUserMOFUpdate}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
-				<td style="white-space: nowrap; float: right;"><p:commandButton
-						value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.saveUserMOFUpdate()}"
-						onclick="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
+				<!-- #34400 - start  -->		
+				<td style="white-space: nowrap; float: right;">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmDlg.show()" >
+					</p:commandButton>
+				</td>
 			</tr>
 		</table>
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
+			okAction="smPersonnelBackingBean.saveUserMOFUpdate()"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 
 
 		<p:panel id="UserProfile" toggleable="true">
@@ -216,10 +224,10 @@
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}"
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}"
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}"
-							isMobile="true" required="true"
+							isMobile="true" hideTelco="true" required="true"
 							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}"
-							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /></td>
+							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /></td> 
+							<!-- telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" /></td> --> <!-- 40200 -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

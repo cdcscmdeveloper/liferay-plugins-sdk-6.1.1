@@ -231,17 +231,22 @@
 					</ui:fragment></td>
 				<td>
 					<!-- #21695 FARID START DISABLE SCQT PARTIAL-->
-					<p:selectOneRadio required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly or 
-								specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial}"
-						label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
-						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
-						<!-- 21695 -end- -->
-						<f:selectItems
-							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="technicalWeigtage,addpoints"></p:ajax>
-					</p:selectOneRadio> <p:message id="techScoring" for="techWeightage" display="icon"></p:message></td>
+					<ui:remove><!-- #38679 adjust disable condition with new requirement --></ui:remove>
+							<p:selectOneRadio required="true"
+								disabled="#{specificationBackingBean.managedBean.readOnly or 
+								(specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial 
+								or specificationBackingBean.managedBean.qt.partial ne null and !specificationBackingBean.managedBean.qt.partial 
+								and specificationBackingBean.managedBean.zoneQtyHasZeroVal)}"
+								label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
+								value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
+								<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+								update="technicalWeigtage,addpoints"></p:ajax>
+							</p:selectOneRadio>
+
+						 <p:message id="techScoring" for="techWeightage" display="icon"></p:message>
+				</td>
 			</tr>
 
 		</table>
@@ -381,16 +386,8 @@
 
 			<tr>
 				<td style="width: 260px;">					
-				<c:choose>
-					<c:when	test="#{specificationBackingBean.managedBean.qt.demoRequired and specificationBackingBean.managedBean.demoType eq 'true'}">
-						<p:outputLabel value="#{lbl['lbl.sc.passing.score']}" /> 
-						<p:outputLabel value="*" styleClass="mandatory" />					
-					</c:when>
-					<c:otherwise>
-						<p:outputLabel value="#{lbl['lbl.sc.spec.technical']}" /> 
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</c:otherwise>
-				</c:choose>
+					<p:outputLabel value="#{lbl['lbl.sc.passing.score']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
 				<!-- #28784 End -->
 				</td>
 				<td><p:inputText style="text-align:right" maxlength="3"

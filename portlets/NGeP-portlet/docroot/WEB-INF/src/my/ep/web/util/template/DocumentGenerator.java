@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -68,6 +69,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont; //#25025 & #26770 
 
+import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
 
 /**

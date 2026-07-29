@@ -6,6 +6,36 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- Start #25725/25726 -->
+  <style>
+     .italic-item {
+	font-style: italic !important;
+    }
+  </style>
+	
+ <h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{qTDetailBB.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+  </h:outputScript>
+ <!-- End #25725/25726 -->
 
 	<ui:param name="scQt" value="#{createQtBB.managedBean.qt}" />
 	<ui:param name="qtStatusAfterChecklistScoring"
@@ -16,6 +46,12 @@
 		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter"
 		value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<ui:remove>21692 - Start</ui:remove>
+	<ui:param name="qtStatusIsProposalValidPeriodExtApproval"
+		value="#{qTDetailBB.isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(scQt.qtStatus.statusId)}" />
+	<ui:param name="qtExtensionResponseDueDate"
+		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" />
+	<ui:remove>21692 - End</ui:remove>
 	<ui:param name="zoneCoverageReadonly"
 		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_ZONE_COVERAGE)}" />
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
@@ -44,6 +80,11 @@
 	<ui:param name="isDemoSpecialCase"  
 		value="#{qTDetailBB.managedBean.demoSpecialCase ? qTDetailBB.managedBean.demoSpecialCase : specMaintenanceBB.managedBean.demoSpecialCase}" />			
 	<ac:lovPopup /><!-- END #28784 -->
+	
+	<!-- #40237/25726 - Start -->
+	<ui:param name="isGenInfo"
+		value="#{specificationBackingBean.managedBean.genInfo}" />
+	<!-- #40237/25726 - End -->
 	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -784,6 +825,11 @@
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+			<!-- #25726 Start -->	
+			<td>
+			 <table>
+			   <tr>
+			<!-- #25726 End -->
 				<td><c:choose>
 						<!-- 15391 -start- -->
 						<c:when
@@ -794,7 +840,9 @@
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 								<ui:remove>9019 -end</ui:remove>
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -807,14 +855,17 @@
 							<!-- 15391 -start- --><!-- 29464 -start- -->
 							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
-								style="width:195px;" disabled="true" />
+								style="width:195px;" disabled="true" 
+								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/><!-- #25726/25725 - Check and display Italic value -->
 							<ui:remove>9019 note-289 -start</ui:remove>
 							<p:selectOneMenu required="#{not empty param['skipsubmitvalidation']}"
 								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}}"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 							<ui:remove>9019 note-289 -end</ui:remove>		
 							<!-- 29464 -end- -->
 								<f:selectItems
@@ -826,6 +877,14 @@
 							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose></td>
+			<!-- #25726 start -->
+					 <td style="margin-top: -3px">
+						<ac:iconTooltip rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+					 </td>
+			   </tr>
+			 </table>
+			</td>
+			<!-- #25726 end -->			
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"
@@ -915,8 +974,8 @@
 										style="text-align:right; width:200px;">
 										<ui:remove>9019 -end</ui:remove>
 										<p:ajax event="blur" process="@this" partialSubmit="true"
-											update="@this, @(.amendButton)"
-											listener="#{createQtBB.handleProposalValidityDate}" />
+											update="@form, @(.amendButton)"
+											listener="#{createQtBB.handleProposalValidityDate}" /><ui:remove>21692 update field this to form</ui:remove>
 									</p:inputMask></td>
 								<td><p:message id="proposalvalidityMsg"
 										for="proposalvalidity" display="icon" /></td>
@@ -926,6 +985,53 @@
 						</table>
 					</td>
 				</tr>
+				<ui:remove>21692 - Start</ui:remove>
+				<ui:fragment id="responsePeriodId" rendered="#{qtStatusIsProposalValidPeriodExtApproval and (createQtBB.managedBean.isProposalValidityChangeValue()
+					or isReadOnly)}">
+				<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td>
+							<table>
+								<tr>
+									<td>
+									<p:inputMask id="responsePeriod" mask="9?9999"
+										maxlength="3" placeHolder=""
+										label="#{lbl['lbl.sc.qt.response.period']}" required="#{empty param['skipvalidation']}"
+										value="#{scQt.responsePeriod}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
+										style="text-align:right; width:200px;">
+<!-- 										<p:ajax event="blur" process="@this" partialSubmit="true" -->
+<!-- 											update="@this, @(.amendButton)" -->
+<!-- 											listener="#{createQtBB.handleProposalValidityDate}" /> -->
+									</p:inputMask></td>
+									<td><p:message id="responsePeriodMsg"
+										for="responsePeriod" display="icon" /></td>
+									<td colspan="2">
+										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
+						</td>
+						<td>
+						<c:if test="#{qtExtensionResponseDueDate != null}">
+							<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+							</p:inputText>
+						</c:if>
+						<c:if test="#{qtExtensionResponseDueDate == null}">
+							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
+							</p:inputText>
+						</c:if>
+						</td>
+					</tr>
+				</ui:fragment>
+				<ui:remove>21692 - End</ui:remove>
 			</c:if>
 			<tr>
 				<td style="width: 100%;"><p:outputLabel
@@ -1020,22 +1126,6 @@
 									</p:inputTextarea>
 									<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
 								</c:when>
-								<ui:remove><!-- #36678 related to #35061 Start(to enable field at spec preparation if user change below 50k)-->
-										   <!-- #36678 add disable estimated amount if has null value for first time enter -->
-								</ui:remove>
-								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING}">
-								<p:inputTextarea id="justificationProcValueId_1"
-										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
-										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" 
-										disabled="#{isReadOnly and scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.estimatedAmount eq null}" 
-										cols="110" rows="3"
-										onkeyup="limitTextArea(this,100);"
-										onkeydown="limitTextArea(this,100);"
-										onmouseout="limitTextArea(this,100);">
-										<f:ajax></f:ajax>
-								</p:inputTextarea>
-								</c:when>
-								<ui:remove> <!-- #36678 related to #35061 End--> </ui:remove> 
 								<c:otherwise>
 									<p:inputTextarea id="justificationProcValueId_2"
 										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 

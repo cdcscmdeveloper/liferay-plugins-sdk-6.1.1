@@ -149,10 +149,13 @@
 					action="#{backingBean.assignNewBranchBean}" partialSubmit="true"
 					process="@this" update=":form:tt:banchDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #27297, #28777 - START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
-					partialSubmit="true" process="brnInfPan"
+					action="#{backingBean.validateCompanyBranch(backingBean.managedBean)}"
+					partialSubmit="true" process="brnInfPan, pendingQTPopUpId"
 					id="delBranchBtnId" disabled="#{empty backingBean.managedBean.smAppl.smSupplierBranches}"
-					update=":form:tt:dt" oncomplete="branchDeletePopUp.show()" />
+					update=":form:tt:dt, pendingQTPopUpId" />
+				<!-- #27297, #28777 - END -->
 
 			</div>
 			<br />
@@ -199,6 +202,7 @@
 	<p:dialog width="550px" height="500px" style="z-index:-1;"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
 		id="banchDialog" resizable="false" modal="true" closable="true">
+		<p:ajax event="close" listener="#{backingBean.assignCancelBranchBean}" resetValues="true"/> <!-- #38991 -->
 		
 		<p:outputPanel layout="block" id="branchBlockPanel">
 			<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
@@ -254,4 +258,15 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
+		
+    <!-- #29727 -->
+	<ac:confirmationPopup id="pendingQTPopUpId"
+		widget="pendingQTPopUp"
+		okAction="backingBean.deleteSelectedBranches"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}" 
+		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')} @this"/>
+		
+	<!-- #29727 END -->
 </ui:composition>

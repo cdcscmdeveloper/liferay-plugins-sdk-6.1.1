@@ -44,28 +44,34 @@
 				<table width="100%">
 					<tr>
 						<td colspan="4">
-							<div class="ppRightBtn">
-								<p:commandButton id="jobWeightSaveBtn"
-									value="#{lbl['lbl.btn.save']}"
-									action="#{poJobWeightBackingBean.saveJobWeight()}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+							<!-- 34445 start -->
+							<div align="right" style="width: 100%">
+								<p:commandButton id="jobWeightSaveBtn" value="#{lbl['lbl.btn.save']}"
+									oncomplete="if (!args.validationFailed) saveInfoDlg.show()">
 									<f:param name="disableValidation" value="true" />
 								</p:commandButton>
-
-								<p:commandButton id="jobWeightResetBtn"
-									value="#{lbl['lbl.btn.reset']}" partialSubmit="true"
-									process="@this" update="jobWeightOpId"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									action="#{poJobWeightBackingBean.resetJobWeight()}" />
+								<p:commandButton id="jobWeightResetBtn" value="#{lbl['lbl.btn.reset']}"
+									partialSubmit="true" process="@this" oncomplete="resetInfoDlg.show();"/>
 							</div>
+							<!-- 34445 end -->
 						</td>
 					</tr>
 				</table>
-
-
+				<!-- 34445 start -->
+				<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+					okAction="poJobWeightBackingBean.saveJobWeight"
+					width="400" height="100"
+					title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+					content="#{lbl['lbl.pm.btn.save.msg']}"/>
+					
+				<ac:confirmationPopup id="resetInfoDlg" widget="resetInfoDlg"
+					okAction="poJobWeightBackingBean.resetJobWeight"
+					width="400" height="100"
+					title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+					content="#{lbl['lbl.pm.btn.reset.msg']}"
+					update="@([id$=jobWeightOpId])"/>
+				<!-- 34445 end -->
 			</p:outputPanel>
-
 		</p:panel>
-			
 	</ui:define>
 </ui:composition>

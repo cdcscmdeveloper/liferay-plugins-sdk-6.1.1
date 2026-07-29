@@ -37,6 +37,40 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+	<!-- 35740 - shaqimi start -->
+	<portlet>
+		<portlet-name>auPatchSearch</portlet-name>
+		<display-name>Audit Search</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/audit/patch/auditPatchPreRender.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Audit Search</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- 35740 - shaqimi end -->
 	<!-- Audit - END-->
 	<portlet>
 		<portlet-name>directPurchaseMaintenance</portlet-name>
@@ -1044,7 +1078,7 @@
 	
 	<portlet>
 		<portlet-name>scCommittee</portlet-name>
-		<display-name>Committee Maintenance</display-name>
+		<display-name>Quotation/Tender Finalization Committee</display-name> <!-- #35320 -->
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -8099,6 +8133,70 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>	
+	<!-- 35509 - start -->
+	<portlet>
+		<portlet-name>pmAuSearch</portlet-name>
+		<display-name>PM Audit Search</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/audit/pm/auditPreRenderPM.xhtml</value>			
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>PM Audit Search</title>
+			<short-title>PM Audit Search</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>pmAuUserOrgSearch</portlet-name>
+		<display-name>PM Audit User Organisation Search</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/audit/pm/userOrgAuditPreRender.xhtml</value>			
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>PM Audit User Organisation Search</title>
+			<short-title>PM Audit User Organisation Search</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- 35509 - end -->
 		<portlet>
 		<portlet-name>tempUserSearch</portlet-name>
 		<display-name>Temp User Search</display-name>
@@ -11101,4 +11199,38 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+
+	<!--#35320-start-->
+	<portlet>
+		<portlet-name>finalizationCommitteeMaintenance</portlet-name>
+		<display-name>Finalization Committee Maintenance</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/committe/prerenderFinalizationCommittee.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Finalization Committee Maintenance</title>
+			<short-title>Finalization Committee Maintenance</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!--#35320-end-->
 </portlet-app>
