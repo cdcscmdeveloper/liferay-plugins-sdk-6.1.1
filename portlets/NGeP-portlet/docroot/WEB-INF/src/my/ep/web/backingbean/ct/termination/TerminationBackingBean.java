@@ -41,7 +41,6 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
@@ -451,7 +450,10 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}   
 			
-			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveUserRevise()); // 30737
+			// 30737 - END
+			reqDTO.setScLoa(getContractVer().getCtContract().getLoa());
+			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveUserRevise());
+			// 30737 - END
 
 			resDTO = contractTerminationSO.saveContractTerminationDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -633,7 +635,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	        	approverType = RoleCode.BPK_CC_APPROVER.value();
 	        }*/
 	        
-	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+	        List<SelectedInactiveUserDTO> selectedInactiveUsers = // change name selectedInactiveUsers
 	        		getInactiveUsers(approverType, getSelectedUsers(), docType, null);
 	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 	        
@@ -646,8 +648,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			
 			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
 			List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
-			
-			// utk approved check for MCA
 			
 			inactiveUsersForRevise = getInactiveUsersForRevise(
 					ctContractVer.getContractVerId(),
@@ -664,22 +664,17 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					}
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
+		        	log.info("INACTIVE_USER_5 REVISE + return 5");
 	                handleInactiveUserValidation(outcome, inactiveUsersForRevise);
 				 }
             }
 				
-			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			log.info("INACTIVE_USER action : "+outcome);
 		}
 		//#30737 - End
 		
 	}
 	
-	//#30737 - Start
-
-		
-	//#30737 - End
-		
 	/**
 	 * This method is used to change the type of termination 
 	 * such as termination, mutual termination and termination remedy

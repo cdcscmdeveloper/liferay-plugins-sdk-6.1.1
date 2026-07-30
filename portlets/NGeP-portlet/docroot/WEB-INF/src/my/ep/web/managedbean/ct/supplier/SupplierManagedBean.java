@@ -86,7 +86,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	// End Fix - #33856
 	
 	//30737 - start
-	private Long inactiveUserRevise;
+	private boolean prepareGroupTask = false;
 	//30737 - end
 
 	@ManagedProperty(value="#{spkiBackingBean}")
@@ -685,13 +685,15 @@ public class SupplierManagedBean extends BaseManagedBean {
 	// End Fix - #33856
 
 	//30737 - start
-	public Long getInactiveUserRevise() {
-		return inactiveUserRevise;
+	public boolean isPrepareGroupTask() {
+		return prepareGroupTask;
 	}
 
-	public void setInactiveUserRevise(Long inactiveUserRevise) {
-		this.inactiveUserRevise = inactiveUserRevise;
+	public void setPrepareGroupTask(boolean prepareGroupTask) {
+		this.prepareGroupTask = prepareGroupTask;
 	}
 	//30737 - end
+
+	
 
 }
