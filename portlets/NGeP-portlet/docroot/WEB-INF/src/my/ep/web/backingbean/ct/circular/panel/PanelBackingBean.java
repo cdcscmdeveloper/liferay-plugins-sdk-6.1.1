@@ -118,7 +118,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils; // #39594
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
@@ -167,7 +166,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	
 	private String confirmationContentMsg;//34442 
-	
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -176,12 +174,24 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 
 		/*Execute first time retrieve from maintenance*/	
 		if(getManagedBean().getOutComes()==null) {
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			//Start Fix - #34367
+			getPTJOwner();
+			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId()); 
+			if (panelDoctype != null) {
+				getManagedBean().setOutComes(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_750095, new String[] { ResourceBundleUtils.getMessage(
+										getOwnerOrgProfile().getPmOrgValidity().getOrgName(), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+			//End Fix - #34367
 			getManagedBean().setCircularVer(new CtCircularVer());
 			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
 			//#37620,#34367 - Start
-			getPTJOwner();
-			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId()); 
 			PmStatus status = new PmStatus();
 			if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
 				status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
