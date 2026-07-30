@@ -197,16 +197,15 @@
 				<p:selectBooleanCheckbox value="#{scQtBriefAttendace.preRegisterd}"
 					disabled="true" />
 			</p:column>
+			<ui:remove>#28188 - Start - Change condition for disabled</ui:remove>
 			<p:column style="width:6%;white-space: normal; text-align:center;">
 				<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}"
-					disabled="#{(bsvAttendanceBackingBean.managedBean.maintanceFlow and 
-					!scQtBriefAttendace.brandNew and
-					DbValueConst.recordStatusActive eq bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.recordStatusFlg and  
-					bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.attended) or !scQtBriefAttendace.authorized}">
+				    disabled="#{bsvAttendanceBackingBean.isAttendanceTickUntick(scQtBriefAttendace.authorized)}">
 					<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
 						 listener="#{bsvAttendanceBackingBean.updateBriefingAttendance(scQtBriefAttendace,bsvAttendanceBackingBean.managedBean.selectedbriefRegistration,scQtBriefAttendace.attended)}"></p:ajax>
 				</p:selectBooleanCheckbox>
 			</p:column>
+			<ui:remove>#28188 - End - Change condition for disabled</ui:remove>
 		</p:dataTable>
 			
 	</p:panel>
