@@ -823,8 +823,8 @@ private class SpecMaintenanceSearchQtDataModel extends
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() || null != publishDate
-				&& publishDate.before(effDate) || createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) {
+		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() 
+				|| null != publishDate && publishDate.before(effDate)) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
