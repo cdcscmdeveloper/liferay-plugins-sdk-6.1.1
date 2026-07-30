@@ -1303,6 +1303,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ThresholdData thresholdData = new ThresholdData(); // #26059 , #27868
 		Map<Long, ThresholdDataReason> thresholdDataReasonMap = new HashMap<>();// #26059 , #27868
 		Map<String, BigDecimal> totalByExtensionCode = new HashMap<>();// ##27868
+		getManagedBean().setExceededAmountAlerted(Boolean.FALSE);// #26059 , #27868
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
