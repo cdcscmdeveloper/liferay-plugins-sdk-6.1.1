@@ -921,18 +921,15 @@ public boolean isSpecCommittee() {
 	// #38151 start
 	public boolean checkWeightage35384WIPbyStatus() {
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT
-						.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF
-						.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH
-						.equals(currentStatusId)
+		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(currentStatusId)
 				|| QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currentStatusId) 
-				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId) 
+				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId)
 				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
-			return  Boolean.TRUE;
+			return Boolean.TRUE;
 		}
-		return Boolean.FALSE;	
+		return Boolean.FALSE;
 	}
 	// #38151 end
 }
