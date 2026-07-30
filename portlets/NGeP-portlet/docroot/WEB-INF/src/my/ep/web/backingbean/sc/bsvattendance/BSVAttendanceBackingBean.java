@@ -1152,10 +1152,11 @@ public class BSVAttendanceBackingBean extends
 				}
 			}
 			
-			if (!invokeBPM && CollectionUtils.isEmpty(this.getManagedBean()
+			//As-is code disabled as new changes have change from Submit to Save button.Submit message should exclude  
+			/*if (!invokeBPM && CollectionUtils.isEmpty(this.getManagedBean()
 					.getToBeDeletedRegistartions())) {//28188
 				throw new EpException(MessageConst.ERROR_760206);
-			}
+			}*/
 
 			// #28188 start
 			reqDTO.setBriefingDetail(scQtBrief);
@@ -1895,6 +1896,11 @@ public class BSVAttendanceBackingBean extends
 	//#28188 - End
 	
 	//#28188 - Start
+	/**
+	 * Check Supplier Registration Delete button disabled
+	 * 
+	 * @return boolean
+	 */
 	public boolean isRegistrationDeleteDisabled() {
 	    if (getManagedBean() == null) {
 	    	return true;
@@ -1913,6 +1919,51 @@ public class BSVAttendanceBackingBean extends
 		        return true;
 		    }
 	    	
+	    	if (selectedRegistration.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+	 	            && !selectedRegistration.isBrandNew()) {
+	 	    	return true;
+	 	    }
+
+	 	    if (selectedRegistration.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS
+	 	            && selectedRegistration.getScQtApprovalRequest() != null) {
+	 	        return true;
+	 	    }
+	    }
+	    return false;
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	/**
+	 * Check Supplier Attendance Tick disabled
+	 * 
+	 * @param isAuthorized
+	 *            
+	 * @return boolean
+	 */
+	public boolean isAttendanceTickUntick(boolean isAuthorized) {
+		if (getManagedBean() == null) {
+	    	return true;
+	    }
+	
+	    if (!getManagedBean().isMaintanceFlow()) {
+	    	if (!isAuthorized) {
+	 	        return true;
+	 	    }
+	        return false;
+	    }else{
+	    	ScQtBsvRegistration selectedRegistration =
+		            getManagedBean().getSelectedbriefRegistration();
+
+		    if (selectedRegistration == null) {
+		        return true;
+		    }
+	    	
+		    //As-is code disabled as new changes still can add attendance after save
+		    /*if (selectedRegistration.isAttended()) {
+	 	        return true;
+	 	    }*/
+		    
 	    	if (selectedRegistration.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 	 	            && !selectedRegistration.isBrandNew()) {
 	 	    	return true;
