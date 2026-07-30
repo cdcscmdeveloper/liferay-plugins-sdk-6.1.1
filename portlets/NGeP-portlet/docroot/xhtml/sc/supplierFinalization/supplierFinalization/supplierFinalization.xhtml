@@ -116,7 +116,7 @@
 							<td>
 								<p:selectOneRadio id="recommendType" required="true" label="#{lbl['lbl.sc.recomend.type']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}" 
-									disabled="#{!(isSecretaryUser or
+									disabled="#{(!(isSecretaryUser or
 													isBPKTaskAndClaimed) or itemOnly or 
 														suppFinalizationBackingBean.managedBean.itemFwdToHighAuthority or 
 													( isQTStatusReFinalized and 
@@ -124,7 +124,7 @@
 															suppFinalizationBackingBean.managedBean.initialSelectionItemized or 
 																(suppFinalizationBackingBean.managedBean.finalizationMethod eq 
 																	ParameterConst.recommendByOnlineBidding)) ) or suppFinalizationBackingBean.isQTMaintenanceScreen()
-																	or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
+																	or supplierFinalizationReadOnly) and !suppFinalizationBackingBean.isQTCancelledBidSchedule()}"><!-- 6906 note 117/#40396 -->
 									<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 									<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=recommendSupplierPanel], [id$=remarksPanel])" 
 										listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" 
@@ -178,7 +178,7 @@
 				<h:column>
 					<p:selectOneRadio id="loiLoaPreparedBy" required="true" label="#{lbl['lbl.sc.loi.loa.prepared.by']}"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}" 
-						disabled="#{isMofFinalization or !isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen() or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
+						disabled="#{isMofFinalization or !isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen() or supplierFinalizationReadOnly or suppFinalizationBackingBean.managedBean.bpkCentralContract}"><!-- 6906 note 117 #27502 - New DO MOF Role and Process -->
 						<f:selectItems value="#{suppFinalizationBackingBean.getLoiLoaPreparedByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>

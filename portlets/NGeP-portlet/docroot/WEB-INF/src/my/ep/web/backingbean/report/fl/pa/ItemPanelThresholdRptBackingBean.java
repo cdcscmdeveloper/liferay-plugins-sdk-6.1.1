@@ -62,7 +62,7 @@ public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPa
 			
 			for (PmParameterDesc parameterDesc : parameterDescs) {
 				if (ParameterConst.PROC_TYPE_NORMAL.equalsIgnoreCase(parameterDesc.getPmParameter().getParameterCode())) {
-					itemList.add(new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc
+					itemList.add(new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc
 							.getCodeName()));
 				}
 			}
@@ -91,7 +91,7 @@ public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPa
 			getManagedBean().setPtj(null);
 		}
 		getManagedBean().setFinancialYear(null);
-		getManagedBean().setProcurementTypeCode(null);
+		getManagedBean().setProcurementTypeId(null);
 		resetSearchCriteriaValues();
 	}
 
@@ -127,14 +127,14 @@ public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPa
 		if (getManagedBean().getStatusDescId() != null) {
 			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
 		}
-		if (StringUtils.isNotBlank(getManagedBean().getProcurementTypeCode())) {
-			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeCode());
+		if (getManagedBean().getProcurementTypeId() != null) {
+			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeId().toString());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getGroup())) {
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
 		
 		generateFlReport(params);
-
+		
 	}
 }

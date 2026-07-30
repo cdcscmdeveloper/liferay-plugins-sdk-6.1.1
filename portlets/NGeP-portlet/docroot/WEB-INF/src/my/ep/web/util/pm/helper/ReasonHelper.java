@@ -153,7 +153,7 @@ public class ReasonHelper implements Serializable {
 
 				// Get reason description list from db.
 				ReasonResDTO resDTO = reasonSO
-						.retrieveReasonDescListByCategory(reqDTO);
+						.retrieveReasonDescriptionListByCategory(reqDTO);
 
 				list = resDTO.getReasonDescList();
 

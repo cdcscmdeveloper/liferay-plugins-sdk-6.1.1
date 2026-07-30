@@ -2886,7 +2886,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		user.setMobileNo(userOrg.getMobileNo());
 		user.setMobileArea(userOrg.getMobileArea());
 		user.setMobileCountry(userOrg.getMobileCountry());
-		user.setMobileTelcoId(userOrg.getMobileTelcoId());
+		//user.setMobileTelcoId(userOrg.getMobileTelcoId()); //#40246
 	}
 
 	private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, UserReqDTO reqDTO) {
@@ -3111,7 +3111,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			validateRoles(userOrg);
 						
 			/** AUDIT 28895_35509 START **/
-			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			//#40423 - Start
+			/*IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
 			
@@ -3120,7 +3121,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							 this.getManagedBean().getSelectedUserOrg().getUserOrgId()) : null;
 			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
 			List<PmUserRole> oldPmUserRoles = oldPmUserOrg != null ? oldPmUserOrg.getPmUserRoles() : null;
-			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;
+			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;*/
+			//#40423 - End
 			/** AUDIT 28895_35509 START END **/
 
 			reqDTO = new UserReqDTO();
@@ -3267,8 +3269,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
 				}
-				
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+				//#40423 - Start
+				/*if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
 					getManagedBean().setNewAuditPmUser(user);
 					getManagedBean().setNewAuditPmUserOrg(userOrg);
 					setNewAuditPmUserRoles(userOrg.getPmUserRoles());
@@ -3277,7 +3279,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
 					getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
 					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
-				}
+				}*/
+				//#40423 - End
 				/************ END AUDIT #28895_35509 shaqimi 24072025 *************/
 				
 				uploadAttachments();
@@ -3337,11 +3340,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
 					}
 				}
-				
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+				//#40423 - Start
+				/*if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
-				}
-				
+				}*/
+				//#40423 - End
 				getManagedBean().setNewAuditPmUserRoles(new ArrayList<PmUserRole>());
 				getManagedBean().setNewAuditPmAddressTypes(new ArrayList<PmAddressType>());
 				/************ END AUDIT #28895_35509 END *************/
@@ -4037,11 +4040,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770090);
 		}
-		if (getManagedBean().getSelectedUser().isNotifyBySms()
+		//#40246 Start
+		/*if (getManagedBean().getSelectedUser().isNotifyBySms()
 				&& getManagedBean().getSelectedUserOrg().getMobileTelcoId() == null) {
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770250);
-		}
+		}*/
+		//#40246 End
 		this.getManagedBean().getSelectedUser().setModified(true);
 	}
 
@@ -4507,16 +4512,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-
-		if (user.isNotifyBySms()) {
-			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
-				throw new EpException(MessageConst.ERROR_770090);
-			}
-			if (pmUserOrg.getMobileTelcoId() == null) {
-				throw new EpException(MessageConst.ERROR_770250);
-			}
+		//#40623 Start
+		if (user.isNotifyBySms() && StringUtils.isBlank(pmUserOrg.getMobileNo())) {
+			throw new EpException(MessageConst.ERROR_770090);
 		}
-	}
+			//#40246 Start
+			/*if (pmUserOrg.getMobileTelcoId() == null) {
+				throw new EpException(MessageConst.ERROR_770250);
+			}*/
+			//#40246 End
+	}	//#40623 End
 
 	private void validateOrgProfile(PmUserOrg pmUserOrg) {
 		if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null) {

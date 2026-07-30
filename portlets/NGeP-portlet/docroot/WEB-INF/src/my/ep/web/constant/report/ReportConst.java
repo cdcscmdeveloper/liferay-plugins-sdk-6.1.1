@@ -137,6 +137,9 @@ public class ReportConst implements Serializable{
 	public static final String SC_OC_RPT_WIP_JSP = "SC_OC_WIP.jsp";
 	public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "SC_OC_SHLIST_1A.jsp";
 	public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "SC_OC_METHOD_OF_ASSES_1B.jsp";
+	// #25651 - Start   
+	public static final String SC_OC_DOC_COMPLIANCE_RPT_JSP = "SC_OC_DOC_COMPLIANCE.jsp";
+	// #25651 - End
 	
 	// FEC
 	public static final String SC_FEC_RPT_JSP = "SC_FEC.jsp";
@@ -147,6 +150,11 @@ public class ReportConst implements Serializable{
 	public static final String SC_FEC_PRICEOFFER_3D = "SC_FEC_PRICEOFFER_3D.jsp";
 	public static final String SC_FEC_OTHER_CRITERIA = "SC_FEC_OTHER_CRITERIA.jsp";
 	public static final String SC_FEC_OVERALL_FIN_3E = "SC_FEC_OVERALL_FIN_3E.jsp";
+	// #25651 - Start   
+	public static final String SC_FEC_ITEM_RPT_JSP = "SC_FEC_ITEM.jsp";
+	public static final String SC_FEC_PACKAGE_RPT_JSP = "SC_FEC_PACKAGE.jsp";
+	public static final String SC_FEC_APPENDIX_RPT_JSP = "SC_FEC_APPENDIX.jsp";
+	// #25651 - End
 
 	// TEC
 	public static final String SC_TEC_RPT_JSP = "SC_TEC.jsp";
@@ -159,6 +167,12 @@ public class ReportConst implements Serializable{
 	public static final String SC_TEC_OVERALL_WITH_WEI_2F = "SC_TEC_OVERALL_WITH_WEI_2F.jsp";
 	public static final String SC_TEC_OTHER_CRITERIA = "SC_TEC_OTHER_CRITERIA.jsp";
 	public static final String SC_EC_OTHER_CRITERIA = "SC_EC_OTHER_CRITERIA.jsp";
+	// #25651 - Start   
+	public static final String SC_TEC_ITEM_RPT_JSP = "SC_TEC_ITEM.jsp";
+	public static final String SC_TEC_PACKAGE_RPT_JSP = "SC_TEC_PACKAGE.jsp";
+	public static final String SC_TEC_APPENDIX_RPT_JSP = "SC_TEC_APPENDIX.jsp";
+	public static final String SC_TEC_ITEM_SPEC_RPT_JSP = "SC_TEC_ITEM_SPEC.jsp";
+	// #25651 - End
 	
 	// EC
 	public static final String SC_EC_RPT_JSP = "SC_ONE_TIER.jsp";
@@ -173,11 +187,20 @@ public class ReportConst implements Serializable{
 	public static final String SC_EC_TECH_SPEC_WEI = "SC_EC_TECH_SPEC_WEI.jsp";
 	public static final String SC_EC_TECH_SPEC = "SC_EC_TECH_SPEC.jsp";
 	public static final String SC_EC_PRICEOFFER_4M = "SC_EC_PRICEOFFER_4M.jsp";
+	// #25651 - Start 
+	public static final String SC_EC_GENERAL_RPT_JSP = "SC_EC_GENERAL.jsp";
+	// #25651 - End
 
 	// FC
 	public static final String SC_SUPPLIER_FINALIZATION_RPT_JSP = "SC_SUPP_FINAL.jsp";
 	public static final String SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP = "SC_SUPP_FINAL_WIP.jsp";
 	public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "SC_FC_ANALYSIS_EVAL_REP_8A.jsp";
+	// #25651 - Start
+	public static final String SC_SUPP_FINAL_GENERAL_RPT_JSP = "SC_SUPP_FINAL_GENERAL.jsp";
+	public static final String SC_SUPP_FINAL_ITEM_RPT_JSP = "SC_SUPP_FINAL_ITEM.jsp";
+	public static final String SC_SUPP_FINAL_PACKAGE_RPT_JSP = "SC_SUPP_FINAL_PACKAGE.jsp";
+	public static final String SC_SUPP_FINAL_ANALYSIS_RPT_JSP = "SC_SUPP_FINAL_ANALYSIS.jsp";
+	// #25651 - End
 
 	public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
 	public static final String SC_AKPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_first_stage_1d.jsp";

@@ -1660,6 +1660,13 @@ public class SimpleQuoteBackingBean extends
 					if (ParameterConst.PROC_TYPE_G2G.equals(quote
 							.getProcurementType().getParameterCode())) {
 						// govt sellers
+						//40234 - start
+						if ((getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty())
+						        && getManagedBean().getSupplierList() != null
+						        && !getManagedBean().getSupplierList().isEmpty()) {
+						    quote.getScQuoteSuppliers().clear();
+						}
+						//40234 - end
 						if (getManagedBean().getGovtSellers() != null) {
 							suppliers.addAll(getManagedBean().getGovtSellers());
 						}
@@ -1678,6 +1685,14 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - end				
 					else {
 						// by supplier
+						//40234 - start
+						if ((getManagedBean().getSupplierList() == null || getManagedBean().getSupplierList().isEmpty())
+						        && getManagedBean().getGovtSellers() != null
+						        && !getManagedBean().getGovtSellers().isEmpty()) {
+						    quote.getScQuoteSuppliers().clear();
+						    getManagedBean().getSupplierList().clear();
+						}
+						//40234 - end
 						if (getManagedBean().getSupplierList() != null) {
 							suppliers
 									.addAll(getManagedBean().getSupplierList());
@@ -2478,9 +2493,12 @@ public class SimpleQuoteBackingBean extends
 					if (quote.getProcurementType().getParameterCode()
 							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 						// govt sellers
-						if (getManagedBean().getGovtSellers() != null) {
-							suppliers.addAll(getManagedBean().getGovtSellers());
-						}
+						//40234 - start
+						if (getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()) {
+							throw new EpException(MessageConst.ERROR_760109);
+						} 
+						suppliers.addAll(getManagedBean().getGovtSellers());
+						//40234 - end
 					}
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
@@ -2881,26 +2899,21 @@ public class SimpleQuoteBackingBean extends
 		//27868 - end
 		// #28536 - start
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			//40234 - start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
+		    }
+			//40234 - end
 			getGovtSellerCriteria();
 		} else {
+			//40234 - start
 			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
-				List<ScQuoteSupplier> supplierRemoveList = new ArrayList<>();
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				for (ScQuoteSupplier supplier : getManagedBean().getSupplierList()) {
-					if (supplier.getSmSupplier() != null) {
-						OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-						profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
-						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
-						PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
-						if (pmOrgProfile.isGovtSeller()) {
-							supplierRemoveList.add(supplier);
-						}
-					}
-				}
-				getManagedBean().getSupplierList().removeAll(supplierRemoveList);
-			}
-			getSupplierListCriteria();
+				removeGovtSellerFromSupplierList(getManagedBean().getSupplierList());
+		    } else if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
+		    	removeGovtSellerFromSupplierList(getManagedBean().getGovtSellers());
+		    }
+			//40234 - end
+		    getSupplierListCriteria();
 		}
 		// #28536 - end
 	}
@@ -4261,6 +4274,7 @@ public class SimpleQuoteBackingBean extends
 			CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 			
 			catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
+			catalogueBackingBean.resetCatalogueSearch(); //26059
 
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "catalogueSearch");
@@ -5519,6 +5533,8 @@ public class SimpleQuoteBackingBean extends
 				if ((resDTO != null) && (resDTO.getCtPanelItem() != null)) {
 					getManagedBean().setPanelItems(new ArrayList<CtPanelItem>());
 					getManagedBean().getPanelItems().add(resDTO.getCtPanelItem());
+
+					assignPanelSupplierPid(scQuote, resDTO);//#27868
 				}
 			}
 		}
@@ -5564,6 +5580,19 @@ public class SimpleQuoteBackingBean extends
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 	}
+
+	//start - 27868
+	/**
+	 * Assigns panel supplier details for Simple Quote created from PID.
+	 */
+	private void assignPanelSupplierPid(ScQuote scQuote, PanelSupplierResDTO resDTO) {
+		if (scQuote.getPurchaseInDefault() != null && resDTO.getCtPanelItem().getCtPanelSuppliers() != null
+				&& !resDTO.getCtPanelItem().getCtPanelSuppliers().isEmpty()) {
+			panelItemListener(resDTO.getCtPanelItem().getCtPanelSuppliers(), scQuote);
+		}
+	}
+	//end - 27868
+
 
 	/**
 	 * render the supplier view based on the task id from notification.
@@ -8492,7 +8521,8 @@ public class SimpleQuoteBackingBean extends
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			
-			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+					|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
 				PanelBackingBean ppBB = new PanelBackingBean();
 				ppBB.getManagedBean().setSelectionOfZone(false);
 				ppBB.getManagedBean().setSelectedPanelItems(null);
@@ -9925,4 +9955,62 @@ public class SimpleQuoteBackingBean extends
 	    return getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel();
 	}
 	// #26059 - End
+	//40234 - start
+	/**
+	 * To remove govt seller from supplier list 
+	 * when change procurement type from G2G -> Normal
+	 * 
+	 * @param suppliers
+	 */
+	private void removeGovtSellerFromSupplierList(List<ScQuoteSupplier> suppliers) {
+	    IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+	            .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+	    List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+
+	    for (ScQuoteSupplier supplier : suppliers) {
+	        if (isGovtSeller(supplier, orgProfileSO)) {
+	            suppliersToRemove.add(supplier);
+	        }
+	    }
+
+	    suppliers.removeAll(suppliersToRemove);
+	}
+	
+	/**
+	 * To identify supplier is Goverment Seller
+	 * 
+	 * @param supplier
+	 * @param orgProfileSO
+	 * @return
+	 */
+	private boolean isGovtSeller(ScQuoteSupplier supplier, IOrgProfileSO orgProfileSO) {
+	    if (supplier == null || supplier.getSmSupplier() == null) {
+	        return false;
+	    }
+
+	    OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+	    profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
+
+	    OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
+	    PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
+
+	    return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
+	}
+	/**
+	 * To remove non g2g supplier from govt list when change procurement type
+	 * 
+	 * 
+	 * @param suppliers
+	 */
+	private void removeSupplierListFromGovtSeller(List<ScQuoteSupplier> suppliers) {
+		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+
+		for (ScQuoteSupplier supplier : suppliers) {
+				suppliersToRemove.add(supplier);
+		}
+
+		suppliers.removeAll(suppliersToRemove);
+	}
+	//40234 - end
 }

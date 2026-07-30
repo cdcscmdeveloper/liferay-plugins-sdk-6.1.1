@@ -56,7 +56,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  */
 @ManagedBean
 @ViewScoped
-public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
+public class CircularBackingBean extends CircularBaseBackingBean<CircularManagedBean>{ //Fix - #34367
 	
 	private static final long serialVersionUID = 1L;
 	// Start - #30866
@@ -99,10 +99,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		}
 		if(isAuditor() || isPanelAdmin()) {
 			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY); //#37620,#34367
 		}
 		if(!isAuditor() && !isPanelAdmin() && !isCentralContractAdmin()) { // public view
 			circularDocTypes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY); //#37620,#34367
 		}
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterType", SearchOperator.OPERATOR_EQUALS.value(), ParameterTypeConst.DOCUMENT_TYPES));
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), circularDocTypes));
@@ -190,7 +192,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 
 		CircularReqDTO reqDTO = new CircularReqDTO();
 		reqDTO.setCircularVerId(circularVerId);
-		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR) 
+				|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
 			PanelBackingBean ppBB = new PanelBackingBean();
 			ppBB.getManagedBean().setSelectionOfZone(false);
 			ppBB.getManagedBean().setSelectedPanelItems(null);
@@ -247,7 +250,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 
 		CircularReqDTO reqDTO = new CircularReqDTO();
 		reqDTO.setCircularVerId(circularVerId);
-		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR) 
+				|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
 			PanelBackingBean ppBB = new PanelBackingBean();
 			ppBB.getManagedBean().setSelectionOfZone(false);
 			ppBB.getManagedBean().setSelectedPanelItems(null);
@@ -341,6 +345,11 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			getManagedBean().setContinuityCircularAuditSearch(true);
 		}
 		// End - #30866
+		// Start Fix - #34367
+		if (!trackingDiarySearch) {
+			getPTJOwner();
+		}
+		// End Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
 	}
 	//Start - #30866
@@ -362,8 +371,9 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 										"lbl.ct.circular.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 										new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-			} else if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
-					&& getManagedBean().getProcurementMode() == null && getManagedBean().isContinuityCircularAuditSearch()) {
+			} else if ((getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR) 
+					|| getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY))
+					&& getManagedBean().getProcurementMode() == null && getManagedBean().isContinuityCircularAuditSearch()) { //#37620,#34367
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -394,7 +404,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		CircularReqDTO reqDTO = new CircularReqDTO();
 		reqDTO.setCircularVerId(circularVerId);
 
-		if(getManagedBean().getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+		if(getManagedBean().getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+				|| getManagedBean().getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
 			PanelBackingBean panelBackingBean = new PanelBackingBean();
 			panelBackingBean.getManagedBean().setSelectionOfZone(false);
 			panelBackingBean.getManagedBean().setSelectedPanelItems(null);
@@ -472,14 +483,6 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	}
 	
 	// Start - #30866
-	/**
-	 * This method used to retrieve login user information.
-	 */
-	public FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-
 	/**
 	 * The method used to verify the login user is supplier.
 	 * 
@@ -585,7 +588,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 */
 	public void getCircularTypeOnChange() {
 		if (getManagedBean().getSearchCircularDocType() != null) {
-			if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+			if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+					|| getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
 				getManagedBean().setPqCircularType(true);
 			} else {
 				getManagedBean().setPqCircularType(false);
@@ -701,8 +705,15 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			getManagedBean().setCircularDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR); // use for back button
 			getManagedBean().setExternalPageUrlForAudit(CENTRAL_CONTRACT_VIEW_AUDIT); // use for back button
 			searchDefault =  CENTRAL_CONTRACT_VIEW_AUDIT;
-		} else if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
-			getManagedBean().setCircularDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		} else if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR) || 
+				getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
+			//#37620,#34367 Start
+			if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				getManagedBean().setCircularDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			} else {
+				getManagedBean().setCircularDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
+			}
+			//#37620,#34367 End
 			if (getManagedBean().getProcurementModeCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)
 					|| getManagedBean().getProcurementModeCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
 				getManagedBean().setCircularPqQtList(circularData);
