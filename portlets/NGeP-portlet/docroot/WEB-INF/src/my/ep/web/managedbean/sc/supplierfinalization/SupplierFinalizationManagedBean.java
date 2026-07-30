@@ -18,6 +18,7 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmAuthority;
 import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -25,6 +26,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalJustification;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRecommendationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
@@ -368,7 +370,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#35320 - Start
 	private String selectedSupplierOfferedPrice;
 	//#35320 - End
-		
+	//#34860 Start
+	private List<String> justificationReasonList;
+	private List<ScQtFinalJustification> finalJustificationList;
+	private String justificationText;
+	//#34860 end
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2795,6 +2802,33 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
-	}//#35320 - End	
+	}//#35320 - End
+
+	//#34860 Start
+	public List<String> getJustificationReasonList() {
+		return justificationReasonList;
+	}
+	
+	public void setJustificationReasonList(List<String> justificationReasonList) {
+		this.justificationReasonList = justificationReasonList;
+	}
+	
+	public String getJustificationText() {
+		return justificationText;
+	}
+
+	public void setJustificationText(String justificationText) {
+		this.justificationText = justificationText;
+	}
+	
+	public List<ScQtFinalJustification> getFinalJustificationList() {
+		return finalJustificationList;
+	}
+
+	public void setFinalJustificationList(List<ScQtFinalJustification> finalJustificationList) {
+		this.finalJustificationList = finalJustificationList;
+	}
+	//#34860 End
+
 }
 // ***25201
