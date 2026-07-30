@@ -2023,7 +2023,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			Long docId = getContractVer().getContractVerId();
 			String docType = getContractVer().getDocType();
 			if (isInactiveUserChecking(inactiveUserResult)
-					&& CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(getTaskName())) {
+					&& CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(getTaskName())
+					&& ctAmendment.getAmendmentLoa().isApprovalReq()) {
 				log.info("xoxoxoxoxo start get new approver");
 				
 				PmUser currentApprover = getCurrentApprover();
@@ -3280,106 +3281,75 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		log.info("xoxoxoxoxooxoxo1 action : "+action);
 		
 		//#30737 - Start
-		// No need to check inactive user for Confirm Fa Meeting + Submit
-		if ((!CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME.equalsIgnoreCase(getTaskName())
-				&& !CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME.equalsIgnoreCase(getTaskName()))
+		String taskName = getTaskName();
+		CtAmendment ctAmendment = getContractVer().getCtAmendment();
+		if ((!CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME.equalsIgnoreCase(taskName)
+				&& !CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME.equalsIgnoreCase(taskName))
 					&& (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
-						|| (!CTProcessNameConst.SIGN_OFF_HT_NAME.equalsIgnoreCase(getTaskName()) 
-								&& BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)) 
-								|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))) {
-			
+						|| (!CTProcessNameConst.SIGN_OFF_HT_NAME.equalsIgnoreCase(taskName) 
+							&& BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)) 
+						|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))) {
 			log.info("xoxoxoxoxo action : SUBMIT(exclude Confirm FA Meeting) / ACKNOWLEDGE(exclude sign off) / APPROVE");
 			
+			boolean isApprovalReq = ctAmendment.getAmendmentLoa().isApprovalReq();
+	    	log.info("xoxoxoxoxoxo isApprovalReq : "+isApprovalReq);
+	    	
 		    List<SelectedInactiveUserDTO> selectedInactiveUsers = new ArrayList<>();
 		    
-		    if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())) {
-		    	
+		    if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(taskName)) {
 		    	log.info("xoxoxoxo UPDATE_FA_RESULT_HT_NAME...");
+		    	selectedInactiveUsers = retrieveCommitteeInactiveUsers();
 		    	
-		    	List<PmUser> committeeMembers = new ArrayList<PmUser>();
-		    	List<PmUser> committeeChairpersons = new ArrayList<PmUser>();
+		    } else {
 		    	
-				List<CtCommitteeMember> ctCommitteeMembers = null;
-				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
-						|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-					log.info("xoxoxoxoxo getFilteredCommitteeMembers()");
-					ctCommitteeMembers = getFilteredCommitteeMembers();
-					log.info("xoxoxoxo total filteredMembers : "+ctCommitteeMembers.size());
-				} else {
-					log.info("xoxoxoxoxo getCtCommitteeMembers()");
-					ctCommitteeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
-					log.info("xoxoxoxo total members : "+ctCommitteeMembers.size());
-				}
-				
-				for(CtCommitteeMember member : ctCommitteeMembers){
-					log.info("xoxoxoxoxo list of member : "+member.getMemberName());
-					log.info("xoxoxoxoxo member role code : "+member.getMemberRole().getParameterCode());
-					
-					if(member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-						log.info("xoxoxoxoxo "+member.getMemberName()+" as a chairperson");
-						committeeChairpersons.add(member.getPmUser());
-					} else if(member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
-						log.info("xoxoxoxoxo "+member.getMemberName()+" as a member");
-						committeeMembers.add(member.getPmUser());
-					}
-				}
-				
-				if(!committeeChairpersons.isEmpty()) {
-					log.info("xoxoxoxoxo committeeChairpersons is not empty");
-					log.info("xoxoxoxoxo chairperson type : "+getManagedBean().getCommitteeType()+ "_CHAIRPERSON");
-					selectedInactiveUsers.addAll(getInactiveUsers(
-							getManagedBean().getCommitteeType()+ "_CHAIRPERSON", 
-							committeeChairpersons,
-							getContractVer().getDocType(),
-							ParameterConst.COMMITTEE_ROLE_CHAIRPERSON));
-				}
-				
-				if(!committeeMembers.isEmpty()) {
-					log.info("xoxoxoxoxo committeeMembers is not empty");
-					log.info("xoxoxoxoxo member type : "+getManagedBean().getCommitteeType()+ "_MEMBER");
-					selectedInactiveUsers.addAll(getInactiveUsers(
-							getManagedBean().getCommitteeType()+"_MEMBER", 
-							committeeMembers, 
-							getContractVer().getDocType(),
-							ParameterConst.COMMITTEE_ROLE_MEMBER));
-				}
-		    	
-		    } else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) && CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(getTaskName())) { 
-		    	
-		    	processInactiveUserForReviseCancel(action);
-		    	return;
-		    	
-			} else {
-		    	
-		    	String roleCode = determineRoleCode(action, getTaskName());
-			    log.info("xoxoxoxoxooxoxo roleCode : "+roleCode);
-		    	
-		    	List<PmUser> selectedUsers = determineUsers(action, getTaskName());
-			    log.info("xoxoxoxoxooxoxo selectedUsers : "+selectedUsers.size());
-			    
-		    	selectedInactiveUsers = getInactiveUsers(roleCode, selectedUsers, getContractVer().getDocType(), null);
-		    }
-		    
-		    
-		    if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(getTaskName())
-		            && !selectedInactiveUsers.isEmpty()) {
+		    	if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) 
+		    			&& CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(taskName)) { 
+		    		log.info("xoxoxoxoxoxo isPbqcAuthorityReq? : "+ctAmendment.isPbqcAuthorityReq());
 
+		    		if (!ctAmendment.isPbqcAuthorityReq()) {
+		    			log.info("xoxoxoxoxoxo isPbqcAuthorityReq false CA -> MCA");
+		    			processInactiveUserForReviseCancel(action);
+		    			return;
+		    		}
+		    		
+		    	} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)
+		    			&& CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME.equalsIgnoreCase(taskName)) {
+//		    		if (getContractVer().getCtAmendment().isPbqcAuthorityReq()) {
+			    		log.info("xoxoxoxoxoxo Chairperson SignOff");
+			    		processInactiveUserForReviseCancel(action);
+			    		return;
+//		    		}
+		    	}
+		    	selectedInactiveUsers = retrieveInactiveUsers(action, taskName, isApprovalReq);
+		    }
+	    	
+		    if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)
+		            && !selectedInactiveUsers.isEmpty()) {
 		    	log.info("xoxoxoxoxoxo process for PREPARE_LOA_HT_NAME");
 		    	
-		        SelectedInactiveUserDTO inactiveUser = selectedInactiveUsers.get(0);
-		        Long userStatus = inactiveUser.getStatus();
+		    	if(isApprovalReq){
+		    		log.info("xoxoxoxoxoxo isApprovalReq is true. (MCA to CA)");
+		    		//MCA to CA
+		    		SelectedInactiveUserDTO inactiveUser = selectedInactiveUsers.get(0);
+			        Long userStatus = inactiveUser.getStatus();
 
-		        if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
-		            handleInactiveUserValidation(action, selectedInactiveUsers);
-		        } else {
-		        	log.info("xoxoxoxo not 5");
-		            getManagedBean().setInactiveUserRevise(userStatus);
-		        }
-
+			        if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+			            handleInactiveUserValidation(action, selectedInactiveUsers);
+			        } else {
+			        	log.info("xoxoxoxo not 5");
+			            getManagedBean().setInactiveUserRevise(userStatus);
+			        }
+		    	
+		    	} else {
+		    		log.info("xoxoxoxoxoxo isApprovalReq is false. (MCA to Supplier)");
+		    		//MCA to Supplier
+		    		//logic checking supplier..
+		    		//TODO
+		    	}
+		        
 		    } else {
 		        handleInactiveUserValidation(action, selectedInactiveUsers);
 		    }
-		    
 		}
 		//#30737 - End
 		
@@ -10401,42 +10371,148 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	// 34442 - end
 	
 	// #30737 - start
-	private String determineRoleCode(String action, String taskName) {
+	private List<SelectedInactiveUserDTO> retrieveCommitteeInactiveUsers() {
 		
-		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
-		  	// CA -> DO (pending meeting confirmation)	
-			log.info("role do : "+getManagedBean().getCommitteeType()+"_SECRETARY");
-			return getManagedBean().getCommitteeType()+"_SECRETARY";
+		List<SelectedInactiveUserDTO> selectedInactiveUsers = new ArrayList<>();
+		List<PmUser> committeeMembers = new ArrayList<PmUser>();
+    	List<PmUser> committeeChairpersons = new ArrayList<PmUser>();
+    	
+    	Long statusId = getContractVer().getStatus().getStatusId();
+		List<CtCommitteeMember> ctCommitteeMembers = null;
+		
+		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(statusId)
+				|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(statusId)) {
+			ctCommitteeMembers = getFilteredCommitteeMembers();
+			log.info("xoxoxoxo total getFilteredCommitteeMembers() : "+ctCommitteeMembers.size());
+		} else {
+			ctCommitteeMembers = getContractVer().getCtAmendment().getCtCommitteeMembers();
+			log.info("xoxoxoxo total getCtCommitteeMembers() : "+ctCommitteeMembers.size());
 		}
 		
-		// MCA -> CA (approval) MCA -> CA (submit prepare loa)
-		else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-		    return determineContractApproverRole();
+		for(CtCommitteeMember member : ctCommitteeMembers){
+			log.info("xoxoxoxoxo list of member : "+member.getMemberName());
+			log.info("xoxoxoxoxo member role code : "+member.getMemberRole().getParameterCode());
+			
+			if(member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				log.info("xoxoxoxoxo "+member.getMemberName()+" as a chairperson");
+				committeeChairpersons.add(member.getPmUser());
+			} else if(member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+				log.info("xoxoxoxoxo "+member.getMemberName()+" as a member");
+				committeeMembers.add(member.getPmUser());
+			}
 		}
+		
+		if(!committeeChairpersons.isEmpty()) {
+			log.info("xoxoxoxoxo committeeChairpersons is not empty");
+			log.info("xoxoxoxoxo chairperson type : "+getManagedBean().getCommitteeType()+ "_CHAIRPERSON");
+			selectedInactiveUsers.addAll(getInactiveUsers(
+					getManagedBean().getCommitteeType()+ "_CHAIRPERSON", 
+					committeeChairpersons,
+					getContractVer().getDocType(),
+					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON));
+		}
+		
+		if(!committeeMembers.isEmpty()) {
+			log.info("xoxoxoxoxo committeeMembers is not empty");
+			log.info("xoxoxoxoxo member type : "+getManagedBean().getCommitteeType()+ "_MEMBER");
+			selectedInactiveUsers.addAll(getInactiveUsers(
+					getManagedBean().getCommitteeType()+"_MEMBER", 
+					committeeMembers, 
+					getContractVer().getDocType(),
+					ParameterConst.COMMITTEE_ROLE_MEMBER));
+		}
+		
+		return selectedInactiveUsers;
+	}
+	
+	private List<SelectedInactiveUserDTO> retrieveInactiveUsers(String action, String taskName, boolean isApprovalReq) {
+	    log.info("xoxoxoxoxo after checking....");
+
+	    String roleCode = determineRoleCode(action, taskName, isApprovalReq);
+	    log.info("xoxoxoxoxooxoxo roleCode : " + roleCode);
+
+	    List<PmUser> selectedUsers = determineUsers(action, taskName, isApprovalReq);
+	    log.info("xoxoxoxoxooxoxo selectedUsers : " + selectedUsers.size());
+
+	    return getInactiveUsers(
+	            roleCode,
+	            selectedUsers,
+	            getContractVer().getDocType(),
+	            null);
+	}
+	
+	private String determineRoleCode(String action, String taskName, boolean isApprovalReq) {
+		log.info("xoxoxoxoxoxo [determineRoleCode]");
+		
+	    if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+	        // CA -> DO (pending meeting confirmation)
+	    	log.info("xoxoxoxoxoxo CA -> DO (pending meeting confirmation)");
+	        log.info("xoxoxoxoxoxo role do : " + getManagedBean().getCommitteeType() + "_SECRETARY");
+	        return getManagedBean().getCommitteeType() + "_SECRETARY";
+	    }
+
+	    if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+
+	        if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)
+	                && !isApprovalReq) {
+	        	log.info("xoxoxoxoxoxo MCA -> Supplier");
+	            // find supplier role
+	        	return null; //TEMP
+	        	/**
+				 * if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+						userRole = RoleCode.MOF_SUPPLIER_USER.value();
+					} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+						userRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
+					} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+						userRole = RoleCode.BASIC_SUPPLIER_USER.value();
+					} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+						userRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+					}
+				 */
+	        }
+
+	        // MCA -> CA (approval)
+	        // MCA -> CA (submit prepare LOA when approval is required)
+	        return determineContractApproverRole();
+	    }
 	    return null;
 	}
 	
-	private List<PmUser> determineUsers(String action, String taskName) {
-		
+	private List<PmUser> determineUsers(String action, String taskName, boolean isApprovalReq) {
+		log.info("xoxoxoxoxoxo [determineUsers]");
 		
 		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			
 			// MCA -> CA (submit Prepare LOA)
 			if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)) {
 				
-				CtActor ctActorApprover = retrieveContractActor(
-						ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
-						ctBackingBean.getManagedBean().getContractVer().getDocType(),
-						determineContractApproverRole());
+				if (isApprovalReq) {
+					log.info("xoxoxoxoxoxo MCA -> CA (isApprovalReq true)");
+					PmUser currentApprover = getCurrentApprover();
+					
+					List<PmUser> users = new ArrayList<>();
+			  		if (currentApprover != null) {
+			  			log.info("xoxoxoxoxooxoxo ctActorApprover name : "+currentApprover.getUserName());
+				        users.add(currentApprover);
+			  		}
+			  		return users;
 				
-				List<PmUser> users = new ArrayList<>();
-		  		if (ctActorApprover != null) {
-		  			log.info("xoxoxoxoxooxoxo ctActorApprover name : "+ctActorApprover.getUserName());
-		  			log.info("xoxoxoxoxooxoxo ctActorApprover.getRoleCode() : "+ctActorApprover.getRoleCode());
-			        users.add(ctActorApprover.getUser());
-		  		}
-				
-		  		return users;
+				} else {
+					
+					log.info("xoxoxoxoxoxo MCA -> Supplier (isApprovalReq false)");
+					
+					//find supplier
+					getSupplierListForLoaAck();
+					
+					List<PmUser> users = new ArrayList<>();
+					List<SmPersonnel> smPersonnels = getManagedBean().getSupplierList();
+					log.info("xoxoxoxoxooxoxo smPersonnels : "+smPersonnels.size());
+					for(SmPersonnel smPersonnel : smPersonnels) {
+						log.info("xoxoxoxoxooxoxo supplier name : "+smPersonnel.getPmUser().getUserName());
+						users.add(smPersonnel.getPmUser());
+					}
+					return users;
+				}
 			}
 			
 			// MCA -> CA (approval)
@@ -10444,43 +10520,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		
 		else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
-			
-			// CA -> MCA/CCA - without QC/PB/FPB - (Pending Decision by the Approving Authority at the Ministry of Finance Level) 
-//			if (CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(taskName)) {
-//				
-//				String userRole = determineContractAdminRole();
-//		  		
-//				CtActor ctActor = retrieveContractActor(
-//						ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
-//						ctBackingBean.getManagedBean().getContractVer().getDocType(),
-//						userRole);
-//				
-//		  		if (ctActor != null) {
-//		  			log.info("xoxoxoxoxooxoxo ctActor name : "+ctActor.getUserName());
-//		  			log.info("xoxoxoxoxooxoxo ctActor.getRoleCode() : "+ctActor.getRoleCode());
-//		          
-//			        List<PmUser> users = new ArrayList<PmUser>();
-//			        users.add(ctActor.getUser());
-//			        return users;
-//		  		}
 				
 			// CA -> DO (pending meeting confirmation)	
-//			} else {
-				List<PmUser> users = new ArrayList<PmUser>();
-				PmUser secretary = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary();
-				if (secretary != null) {
-					log.info("xoxoxoxoxo secretary : "+secretary.getUserName());
-					users.add(secretary);
-				}
-				return users;
-//			}
+			List<PmUser> users = new ArrayList<PmUser>();
+			PmUser secretary = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary();
+			if (secretary != null) {
+				log.info("xoxoxoxoxo secretary : "+secretary.getUserName());
+				users.add(secretary);
+			}
+			return users;
 		}
 		return null;
 	}
 	
 	private void processInactiveUserForReviseCancel(String action) {
-		log.info("xoxoxoxoxooxoxo action : REVISE / CANCEL / APPROVE(Review FA)");
-
+		log.info("xoxoxoxoxooxoxo action : REVISE / CANCEL / APPROVE(Review FA) / Chairperson SignOff");
+		
 	    List<SelectedInactiveUserDTO> inactiveUsersForReviseOrCancel =
 	    		getInactiveUsersForRevise(
 	    				getContractVer().getContractVerId(),
@@ -10495,14 +10550,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
             getManagedBean().setInactiveUserRevise(userStatus);
 
             if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
-                log.info("xoxoxoxoxooxoxo REVISE / CANCEL / APPROVE(reviewfa) + return 5");
+                log.info("xoxoxoxoxooxoxo REVISE / CANCEL / APPROVE(reviewfa) / Chairperson SignOff (+) return 5");
                 handleInactiveUserValidation(action, inactiveUsersForReviseOrCancel);
             } 
-            
-//            else if (!InactiveUserConst.INACTIVE_USER_5.equals(userStatus) && BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
-//            	log.info("xoxoxoxoxo Approve + Review FA (CA -> MCA)");
-//            	return inactiveUsersForReviseOrCancel;
-//            }
 	    }
 	}
 	
