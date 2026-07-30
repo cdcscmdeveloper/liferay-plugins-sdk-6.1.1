@@ -15,7 +15,10 @@ import javax.faces.model.SelectItem;
 
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.persistence.entity.pm.common.PmAuthority;
+import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -23,6 +26,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalJustification;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRecommendationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
@@ -330,6 +334,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private ScQt checkCategoryCodeQt;//#29466
 	
+	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+	private PmAuthority approvalAuthority;
+	private PmAuthorityCommittee approvalAuthCommittee;
+	private List<PmAuthority> listApprovalAuthority;
+	private List<PmAuthorityCommittee> listApprovalAuthCommittee;
+	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
 	//#30008 - start
 	private boolean notReachAgrm;
 	
@@ -360,8 +370,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#35320 - Start
 	private String selectedSupplierOfferedPrice;
 	//#35320 - End
-	
-	private ScQtEvaluationResultDtl tempRecommendedSupplier;//#39620 
+	//#34860 Start
+	private List<String> justificationReasonList;
+	private List<ScQtFinalJustification> finalJustificationList;
+	private String justificationText;
+	//#34860 end
 	
 	/**
 	 * @return the activeIndex
@@ -2646,11 +2659,47 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public ScQtRecommend getLastSelectedItem() {
 		return lastSelectedItem;
 	}
-	
+
 	public void setLastSelectedItem(ScQtRecommend lastSelectedItem) {
 		this.lastSelectedItem = lastSelectedItem;
 	}
 	//35157 - end
+		
+	//#27502 - New DO MOF Role and Process - Start
+	
+	public List<PmAuthority> getListApprovalAuthority() {
+		return listApprovalAuthority;
+	}
+
+	public void setListApprovalAuthority(List<PmAuthority> listApprovalAuthority) {
+		this.listApprovalAuthority = listApprovalAuthority;
+	}
+
+	public PmAuthority getApprovalAuthority() {
+		return approvalAuthority;
+	}
+
+	public void setApprovalAuthority(PmAuthority approvalAuthority) {
+		this.approvalAuthority = approvalAuthority;
+	}
+
+	public List<PmAuthorityCommittee> getListApprovalAuthCommittee() {
+		return listApprovalAuthCommittee;
+	}
+
+	public void setListApprovalAuthCommittee(List<PmAuthorityCommittee> listApprovalAuthCommittee) {
+		this.listApprovalAuthCommittee = listApprovalAuthCommittee;
+	}
+
+	public PmAuthorityCommittee getApprovalAuthCommittee() {
+		return approvalAuthCommittee;
+	}
+
+	public void setApprovalAuthCommittee(PmAuthorityCommittee approvalAuthCommittee) {
+		this.approvalAuthCommittee = approvalAuthCommittee;
+	}
+	
+	//#27502 - New DO MOF Role and Process - End
 
 	public boolean isNotReachAgrm() {
 		return notReachAgrm;
@@ -2755,15 +2804,31 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
 	}//#35320 - End
 
-	//#39620 - Start
-	public ScQtEvaluationResultDtl getTempRecommendedSupplier() {
-		return tempRecommendedSupplier;
+	//#34860 Start
+	public List<String> getJustificationReasonList() {
+		return justificationReasonList;
+	}
+	
+	public void setJustificationReasonList(List<String> justificationReasonList) {
+		this.justificationReasonList = justificationReasonList;
+	}
+	
+	public String getJustificationText() {
+		return justificationText;
 	}
 
-	public void setTempRecommendedSupplier(ScQtEvaluationResultDtl tempRecommendedSupplier) {
-		this.tempRecommendedSupplier = tempRecommendedSupplier;
-	}//#39620 - End
+	public void setJustificationText(String justificationText) {
+		this.justificationText = justificationText;
+	}
 	
-	
+	public List<ScQtFinalJustification> getFinalJustificationList() {
+		return finalJustificationList;
+	}
+
+	public void setFinalJustificationList(List<ScQtFinalJustification> finalJustificationList) {
+		this.finalJustificationList = finalJustificationList;
+	}
+	//#34860 End
+
 }
 // ***25201

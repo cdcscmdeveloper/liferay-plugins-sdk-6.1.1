@@ -19,9 +19,11 @@
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
+				<!-- 35571 start -->
 				<td class="header-info-text">
-					#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName}
+					#{stopInstrBB.retrievePtjNameByUserLogin(stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName)}
 				</td>
+				<!-- 35571 end -->
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " /></td>
 				<td class="header-info-text">
 					#{stopInstrBB.getStatusDescById(stopInstrBB.managedBean.stopInstr.pmStatus.statusId)}

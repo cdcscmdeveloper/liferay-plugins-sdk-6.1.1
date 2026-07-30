@@ -18,7 +18,7 @@
 						<p:commandLink
 							onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{backingBean.otherDescriptionHistory}"
+							action="#{supplierDataMaintenanceBackingBean.otherDescriptionHistory}"
 							process="@this"
 							partialSubmit="true"
 							update=":form">
@@ -157,11 +157,11 @@
 	
 	<!-- 36504 - START -->
 	<ac:otherDescriptionHistory
-		categoryCodeList="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}"
+		categoryCodeList="#{supplierDataMaintenanceBackingBean.managedBean.historyOtherDescList}"
 		applNo="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangePO}"
 		otherDescChangeApprover="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeApprover}"
 		otherDescChangeSupplier="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeSupplier}"  />
-   	<!-- 36504 - END -->
+	<!-- 36504 - END -->
    	
 </ui:composition>
