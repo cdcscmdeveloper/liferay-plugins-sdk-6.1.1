@@ -934,7 +934,7 @@ public boolean isSpecCommittee() {
 			return  Boolean.TRUE;
 		}
 		return Boolean.FALSE;	
-	}
+		}
 	//#38151 end
 
 }
