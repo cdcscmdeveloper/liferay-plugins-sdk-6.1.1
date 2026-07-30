@@ -180,13 +180,16 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if (panelDoctype != null) {
 				getManagedBean().setOutComes(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
 			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.ERROR_750095, new String[] { ResourceBundleUtils.getMessage(
-										getOwnerOrgProfile().getPmOrgValidity().getOrgName(), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				if (getOwnerOrgProfile() != null && getOwnerOrgProfile().getPmOrgValidity() != null) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+									MessageConst.ERROR_750095,
+									new String[] { ResourceBundleUtils.getMessage(getOwnerOrgProfile()
+											.getPmOrgValidity().getOrgName(), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				}
 			}
 			//End Fix - #34367
 			getManagedBean().setCircularVer(new CtCircularVer());
