@@ -48,13 +48,13 @@
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
 					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}" converter="capitalizeConverter" /></td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
 							<td>
 								<h:outputText value="#{cc.attrs.currRegStatus}"/>
 							</td>
@@ -66,9 +66,23 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
 							<td>
-								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" converter="capitalizeConverter" />
+								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
 							</td>
 						</tr>
+						<ui:fragment rendered="#{not empty cc.attrs.bean.strLabelCountryOrigin and cc.attrs.bean.strLabelCountryOrigin.toLowerCase() eq 'unknown'}">
+							<tr >
+								<td></td>
+								<td>
+									<div class="ui-messages ui-widget"  
+										aria-live="polite"
+										style="max-width: 90ch;">
+										<div class="ui-messages-warn ui-corner-all">
+											<h:outputText value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}" escape="false" />
+										</div>
+									</div>
+								</td>
+							</tr>
+						</ui:fragment>
 					</p:outputPanel>
 					
 					<tr>

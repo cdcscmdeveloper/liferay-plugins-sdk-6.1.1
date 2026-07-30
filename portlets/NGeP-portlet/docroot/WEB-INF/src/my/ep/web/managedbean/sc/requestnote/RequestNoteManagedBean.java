@@ -418,7 +418,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String supplierAccountTypeErrorMessage;
 	private PmOrgProfile selectedPtj;
 	private PmOrgProfile ministryOrgProfile;
-	private Integer saveIndex; 
+	private Integer saveIndex;
+	private Map<Long, Object> thresholdDataReasonGroupMap;	
+	private Integer currentGroupIndex = 0;
     //27868 - end
 	
 	//#26059 - Start
@@ -428,6 +430,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean containRejectDecision = Boolean.FALSE;
     private List<CommodityGroup> commodityGroups =	new ArrayList<>();
     private	Integer	counter = 0;
+    private Integer counterReason = 0;
     private boolean existInAssignItemDetail = Boolean.FALSE;
     private ScQuote scQuote;
     private String selectedBpmAction;
@@ -2533,6 +2536,29 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSaveIndex(Integer saveIndex) {
 		this.saveIndex = saveIndex;
 	}
+	
+	
+	/**
+	 * @return the thresholdDataReasonGroupMap
+	 */
+	public Map<Long, Object> getThresholdDataReasonGroupMap() {
+	    return thresholdDataReasonGroupMap;
+	}
+
+	/**
+	 * @param thresholdDataReasonGroupMap the thresholdDataReasonGroupMap to set
+	 */
+	public void setThresholdDataReasonGroupMap(Map<Long, Object> thresholdDataReasonGroupMap) {
+	    this.thresholdDataReasonGroupMap = thresholdDataReasonGroupMap;
+	}
+	
+	public Integer getCurrentGroupIndex() {
+		return currentGroupIndex;
+	}
+
+	public void setCurrentGroupIndex(Integer currentGroupIndex) {
+		this.currentGroupIndex = currentGroupIndex;
+	}
 	//27868 - end
 	// #26059 - start
 	/**
@@ -2632,6 +2658,26 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setCounter(Integer counter) {
 		this.counter = counter;
+	}
+	
+	
+	/**
+	 * Retrieves the current counter reason value.
+	 * 
+	 * @return The counter reason value as an {@link Integer}.
+	 */
+	public Integer getCounterReason() {
+		return counterReason;
+	}
+
+	/**
+	 * Sets the counter reason value.
+	 * 
+	 * @param counter
+	 *            The counter reason value to set.
+	 */
+	public void setCounterReason(Integer counterReason) {
+		this.counterReason = counterReason;
 	}
 	
 	/**
