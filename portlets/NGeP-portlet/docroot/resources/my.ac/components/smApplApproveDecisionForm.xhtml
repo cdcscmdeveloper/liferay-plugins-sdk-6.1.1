@@ -48,13 +48,13 @@
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
 					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}"/></td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
 							<td>
 								<h:outputText value="#{cc.attrs.currRegStatus}"/>
 							</td>
@@ -74,12 +74,10 @@
 								<td></td>
 								<td>
 									<div class="ui-messages ui-widget"  
-										aria-live="polite">
+										aria-live="polite"
+										style="max-width: 90ch;">
 										<div class="ui-messages-warn ui-corner-all">
-											<ul>
-												<li><span class="ui-messages-warn-summary"></span>
-													<span class="ui-messages-warn-detail"><h:outputText value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}" escape="false" /></span></li>
-											</ul>
+											<h:outputText value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}" escape="false" />
 										</div>
 									</div>
 								</td>

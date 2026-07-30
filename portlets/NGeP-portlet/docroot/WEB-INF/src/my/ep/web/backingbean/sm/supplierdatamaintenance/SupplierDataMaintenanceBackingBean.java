@@ -1534,8 +1534,8 @@ public class SupplierDataMaintenanceBackingBean extends
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistoryDataMaintenance(previousKN.getSupplierCategoryId()));
 	
-					if (previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
-							(appl.getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) && 
+					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
+							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) && 
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
 							!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
@@ -3459,11 +3459,17 @@ public class SupplierDataMaintenanceBackingBean extends
 	    switch (param.toUpperCase()) {
 
 	        case "ONE":
+	        	boolean applTypeNoEdit = !otherDescBean.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_UPDATE_MOF) && 
+	        		!otherDescBean.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI);
+	        	
 	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
 	            		SupplierManagementConst.SUPPLIER_APPROVER, SupplierManagementConst.APPROVER_SDM) &&
-                    otherDescBean.getOtherDescOld() != null) {
+                    otherDescBean.getOtherDescOld() != null && applTypeNoEdit) {
 	                	return otherDescBean.getOtherDescOld();
-	            }
+	            } else if (isRole(roleType, SupplierManagementConst.SUPPLIER_RENEWAL) &&
+	                    otherDescBean.getOtherDesc() != null && applTypeNoEdit)  {
+		            		return otherDescBean.getOtherDesc();
+		        }
 	            break;
 	        
 	        case "TWO":
@@ -3693,7 +3699,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			if (!getManagedBean().isOtherDescChangeApprover()) {
 				getManagedBean().setOtherDescChangeApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
-			} else if (!getManagedBean().isOtherDescChangeSupplier()) {
+			} else if (!getManagedBean().isOtherDescChangeSupApprover()) {
 				getManagedBean().setOtherDescChangeSupApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}

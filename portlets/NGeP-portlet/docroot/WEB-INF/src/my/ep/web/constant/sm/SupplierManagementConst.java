@@ -246,11 +246,11 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_RENEWAL = "S";
 	public static final String APPLIED_CAT = "APPLIED";
 	public static final String PREVIOUS_CAT = "PREVIOUS";
-	public static final long STATUS_PENDING_SITE_VISIT = 20105;
-	public static final long STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE = 20103;
-	
 	public static final String SECTION_MAIN = "MAIN";
 	public static final String SECTION_RENEWAL = "RENEWAL";
+	public static final String APPL_TYPE_UPDATE_MOF = "U";
+	public static final long STATUS_PENDING_SITE_VISIT = 20105;
+	public static final long STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE = 20103;
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
@@ -787,6 +787,7 @@ public class SupplierManagementConst {
 	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
 	public static final int PHASE_1 = 1;
 	// #9299 End
+	public static final Long APP_VERSION_REDMINE_NO_40112 = 40112L;		//#40112
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
