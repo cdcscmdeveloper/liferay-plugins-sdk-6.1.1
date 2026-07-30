@@ -888,31 +888,18 @@ public boolean isSpecCommittee() {
 		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
 
-		if (null == publishDate) {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
 
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
 
-			Date effDate = appVerDtls.getEffDate();
-			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+		Date effDate = appVerDtls.getEffDate();
+		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-			if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
-		} else {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-
-			if (publishDate.before(effDate)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
+		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() || null != publishDate
+				&& publishDate.before(effDate) || createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) {
+			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
 
@@ -925,6 +912,7 @@ public boolean isSpecCommittee() {
 				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(currentStatusId)
 				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(currentStatusId)
 				|| QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currentStatusId) 
+				|| QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currentStatusId) 
 				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId)
 				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
 			return Boolean.TRUE;
