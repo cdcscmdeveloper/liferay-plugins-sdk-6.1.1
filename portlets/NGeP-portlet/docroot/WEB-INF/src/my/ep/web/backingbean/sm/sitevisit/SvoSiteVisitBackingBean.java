@@ -2232,12 +2232,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-
 				// #30504 #34795 start
 				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
 				PmUser currPo = PmCommonUtil.retrieveUserWithPoRoleTaskByLoginId(currPoLoginId);
 				log.info("---Curent PO: " + currPo.getUserName());
-
+				
 				if (currPo.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
 						|| currPo.getPmUserOrgs().get(0).getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
 						|| isExistInPoRoleTask(svTask.getSmAppl().getApplType(), currPo)

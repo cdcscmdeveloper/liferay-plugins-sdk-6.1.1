@@ -2292,9 +2292,10 @@ public class SmApplicationUtil {
 					|| per.getDesignation() == null 
 					|| per.getPmCountry() == null || per.getIdentificationNo() == null
 					|| per.getIdentificationTypeId() == null || per.getBirthDate() == null 
-					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))
+					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(
+							SupplierManagementConst.STYPE_CONSULTANT)) 
 					|| ((per.getMobileArea() == null || per.getMobileNo() == null)/*|| per.getMobileTelcoId() == null)*/ //#40200
-					&& per.isAuthorized() == true)
+							&& per.isAuthorized() == true)
 					|| per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
 			} 
@@ -3858,7 +3859,7 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
 		//13362
-
+		
 		// #39422 - Start - Add checking
 		if (managedBean.getApplnOverLapRemarks() == null || managedBean.getApplnOverLapRemarks().isEmpty()) {
 			managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
@@ -4047,7 +4048,7 @@ public class SmApplicationUtil {
 					if("".equalsIgnoreCase(companyName)){
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
-
+						
 						// #39422 - Start - Change null to N/A
 						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
 						// #39422 - End -

@@ -31,6 +31,14 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
+//#28175
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#34031 Start
+import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.persistence.entity.sm.SmRvAssistOfficer;
+import my.ep.persistence.entity.sm.SmRvDocFile;
+import my.ep.persistence.entity.sm.SmRvSuppDoc;
+//#34031 End
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
