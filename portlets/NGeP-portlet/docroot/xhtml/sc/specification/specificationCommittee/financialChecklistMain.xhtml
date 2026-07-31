@@ -350,8 +350,8 @@
 				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
 				action="#{specificationBackingBean.financialCheckListPreview}"
 				onstart="blockWidget.show()"
-				oncomplete="financialChecklistPreview.show();"
-				process="@this" update="@([id$=financialChecklistTitleListId])"/>
+				oncomplete="blockWidget.hide(); financialChecklistPreview.show();"
+				process="@this" update="@([id$=financialChecklistTitleListId], [id$=finSelectedDownloadButton])"/>
 			<ui:remove>#10141 End Vinod </ui:remove>
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
