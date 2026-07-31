@@ -13,7 +13,9 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 		</h:outputText>
 	</p:column>
-	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
+	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
+	<ui:remove>#29187 End Vinod</ui:remove>
 		<h:panelGroup rendered="#{isScoring and !isRepeated}">
 			<h:outputText value="#{tplSpecAnswer.autoScore}">
 				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
@@ -30,15 +32,21 @@
 			</h:outputText>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
+	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
+	<ui:remove>#29187 End Vinod</ui:remove>
 		
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
+			<ui:remove>#29187 Start Vinod Added Compliance checking in disable and removed required, #40791</ui:remove>
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
-				required="false" maxlength="14"
+				maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
-				disabled="#{(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null}"
+				disabled="#{(tplSpecAnswer.compliance ne null and !tplSpecAnswer.compliance)
+					or (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
 					or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+				<ui:remove>#29187 End Vinod, #40791</ui:remove>
 				<ui:remove>21692 add disabled</ui:remove>
 				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
 				<ac:validateNumber
@@ -59,7 +67,35 @@
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:130px;">
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<p:column style="width:10%;" rendered="#{isManSpecAndCompliance}">
+		<ui:fragment
+			rendered="#{isSpecTypeTechnical 
+			and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+			or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+			<h:selectOneMenu id="specCompliance"
+				label="#{lbl['lbl.sc.tec.compliance']}"
+				value="#{tplSpecAnswer.compliance}"
+				valueChangeListener="#{templateSpecBackingBean.itemComplianceChangeControl}"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}"
+				rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification 
+				and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
+				<f:selectItems
+					value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(true)}" />
+				<p:ajax event="change" process="@this" partialSubmit="true"
+					update="@([id$=questionTbl])"
+					listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
+			</h:selectOneMenu>
+			<h:outputText value=""
+				rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification  
+				and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}" />
+			<p:message id="specComplianceMsg" for="specCompliance" display="icon" />
+		</ui:fragment>
+	</p:column>
+	<ui:remove>#29187 End Vinod</ui:remove>
+	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '130px'};">	
+	<ui:remove>#29187 End Vinod</ui:remove>
 		<ui:remove>21692 - Start</ui:remove>
 		<p:inputTextarea style="width:calc(100% - 15px);"
 			value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"

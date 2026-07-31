@@ -980,5 +980,4 @@ public class QTScheduleDetailBackingBean extends
 
         return Boolean.TRUE.equals(sampleExistCache);
     }
-	
 }

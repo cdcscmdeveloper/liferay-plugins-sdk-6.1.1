@@ -1646,18 +1646,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			chkBondWaivedAttachment();
 			//#13847 end
 			
-			// #25956 start
-			if (getManagedBean().getTaskName() != null
-					&& (getManagedBean().getTaskName().equalsIgnoreCase(
-							CTProcessNameConst.ACK_FA_CANCEL_MEETING_HT_NAME)
-							|| getManagedBean().getTaskName().equalsIgnoreCase(
-									CTProcessNameConst.ACK_FA_CANCEL_MEETING_DECISION_HT_NAME) || getManagedBean()
-							.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_REJECT_LOA_HT_NAME))) {
-				ctBackingBean.getManagedBean().setDisableAmendDetails(true);
-				ctBackingBean.getManagedBean().setViewContract(true);
-			}
-			// #25956 end
-			
 		} finally {
 			contractAmendmentSO = null;
 			reqDTO = null;
