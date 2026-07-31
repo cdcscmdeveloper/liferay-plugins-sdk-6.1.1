@@ -3490,10 +3490,18 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
 			history = getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory();
+			Iterator<SmSuppCatOtherDescHistory> iterator = history.iterator();
+
 			boolean firstDataApprover = true;
 
-			for (SmSuppCatOtherDescHistory obj : history) {
-				if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
+			while (iterator.hasNext()) {
+			    SmSuppCatOtherDescHistory obj = iterator.next();
+			    
+			    if (obj.getRoleType() == null) { //skip data display for supplier
+			        continue;
+			    }
+			    
+			    if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
 					firstDataApprover = false;
 				}
 			}
