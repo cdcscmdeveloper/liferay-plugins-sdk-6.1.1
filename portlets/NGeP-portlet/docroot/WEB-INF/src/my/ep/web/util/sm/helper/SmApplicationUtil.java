@@ -16419,7 +16419,7 @@ public class SmApplicationUtil {
 		if ((roleSupApprover || roleSupProcessingOfficer || roleSupplier || roleApproverSDMA)
 				&& history.getOtherDescOld() != null) {
 			supplierHistory.setApplNoHistory(history.getApplNoHistory());
-			supplierHistory.setCreatedDate(history.getCreatedDate());
+			supplierHistory.setCreatedDate(history.getSmSupplierCategory().getCreatedDate());
 			supplierHistory.setCreatedBy(history.getCreatedBy());
 			supplierHistory.setOtherDesc(history.getOtherDescOld());
 			supplierHistory.setRoleDesc(SupplierManagementConst.ROLE_SUPPLIER);
