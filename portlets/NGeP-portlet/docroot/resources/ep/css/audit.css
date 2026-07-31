@@ -169,13 +169,19 @@
 .audit-main-panel .col-old-value     { width: 9.7% !important; }
 .audit-main-panel .col-new-value     { width: 9.7% !important; }
 
-/* Remove grey hover effect on content area */
-.audit-main-panel .ui-state-hover,
-.audit-main-panel .ui-widget-content:hover,
-.audit-main-panel .ui-panel-content:hover {
+
+/* ===============================
+   FIX HOVER ISSUE (PRIMEFACES 3.5)
+   =============================== */
+
+/* Prevent hover bocor ke container */
+.audit-main-panel .ui-panel-content.ui-state-hover,
+.audit-main-panel .ui-widget-content.ui-state-hover {
+    background: white !important;
     box-shadow: none !important;
 }
 
-.audit-main-panel .ui-widget-content {
-    background: white !important;
+/* Apply hover hanya ke datatable row */
+.audit-main-panel .ui-datatable tbody tr:hover {
+    background: #f5f5f5 !important;
 }

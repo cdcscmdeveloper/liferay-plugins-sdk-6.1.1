@@ -350,4 +350,80 @@
    		</f:facet>
 	</p:dialog>
  </p:panel>
+ <!-- #37620,#34367 -->
+ <p:panel id="circularPnl" toggleable="true"  toggleSpeed="500" rendered="#{ctBackingBean.managedBean.contractPanelItem}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.panel.circular']}" />
+		</f:facet>
+		<h:panelGrid style="width:100%;" styleClass="top-aligned-columns">
+			<h:panelGroup style="width:100%;">
+				<table style="width: 100%">
+					<tr>
+						<td class="columnWidth150"><p:outputLabel
+								value="#{lbl['lbl.ct.circular.no']}" /></td>
+						<td><p:inputText style="width:210px;" disabled="true"
+								value="#{ctBackingBean.managedBean.ctCircularPanel.ctCircular.circularNo}" />
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
+						</td>
+						<td><h:panelGrid columns="3">
+								<p:inputText style="width:170px;" disabled="true" maxlength="30"
+									value="#{ctBackingBean.managedBean.ctCircularPanel.circularFileRefNo}" />
+								<p:spacer width="1" />
+							</h:panelGrid></td>
+					</tr>
+					<tr>
+					<td><p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" /></td>
+						<td><p:inputTextarea style="width:210px;" disabled="true"
+								maxlength="50" rows="2" autoResize="false"
+								value="#{ctBackingBean.managedBean.ctCircularPanel.circularNo}" />
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
+						</td>
+						<td><p:inputText style="width:80px;" disabled="true"
+								value="#{ctBackingBean.managedBean.ctCircularPanel.startDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText>
+						</td>
+						
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.ct.circular.central.panel.contract.name']}" />
+						</td>
+						<td style="height: 44px; "><p:inputTextarea style="width:210px;margin-top:2px;margin-bottom:5px;" disabled="true"
+								maxlength="50" rows="4" autoResize="false"
+								value="#{ctBackingBean.managedBean.ctCircularPanel.name}" />
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.ct.end.date']}" />
+						</td>
+						<td><p:inputText style="width:80px;" disabled="true"
+								value="#{ctBackingBean.managedBean.ctCircularPanel.endDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.ct.status']}" />
+						</td>
+						<td><h:panelGrid columns="3">
+								<p:inputText style="width:170px;" disabled="true" maxlength="30"
+									value="#{ctBackingBean.managedBean.ctCircularPanel.recordStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive'] }" />
+								<p:spacer width="1" />
+						</h:panelGrid></td>
+						<td><p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+						</td>
+						<td><p:dataGrid value="#{ctBackingBean.managedBean.circularPanelAttachment}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" styleClass="ui-datagrid-content-empty"
+					emptyMessage ="#{lbl['lbl.txt.na']}">
+						<h:commandLink value="#{attachFile.fileName}"
+							styleClass="blue_font blue_font_wrap"  
+							action="#{ctBackingBean.downloadFile(attachFile)}" />
+						</p:dataGrid>
+						</td>
+					</tr>				
+				</table>
+			</h:panelGroup>
+		</h:panelGrid>
+        </p:panel>
 </ui:composition>

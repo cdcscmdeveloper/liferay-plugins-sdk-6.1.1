@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst; //Fix - #34367
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
@@ -72,6 +73,12 @@ public class CircularManagedBean extends BaseManagedBean {
 	private transient IPagingDataModel<VCcDp> circularDpListingDataModel = new CircularDpListingPagingDataModel();
 	private transient IPagingDataModel<VCcQt> circularQtListingDataModel = new CircularQtListingPagingDataModel();
 	// End - #30866
+	// Start Fix - #34367
+	private Long userPTJProfile;
+	private boolean ptjOwner = false;
+	private boolean validateConstantRules = false;
+	// End Fix - #34367
+
 	private class CircularListingPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
 
@@ -151,7 +158,20 @@ public class CircularManagedBean extends BaseManagedBean {
 				} else {
 					resDTO = circularSO.searchCircularVer(reqDTO);
 				}
-				if(resDTO.isSuccessful()) {
+				if (resDTO.isSuccessful()) {
+					// Start Fix - #34367
+					for (CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+						if (circularVer.getCtCircular().getOwnerOrgProfile() != null
+								&& circularVer.getCtCircular().getCircularType()
+										.equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+							if (isValidateConstantRules()
+									&& (getUserPTJProfile() != null && circularVer.getCtCircular().getOwnerOrgProfile()
+											.getOrgProfileId().equals(getUserPTJProfile()))) {
+								setPtjOwner(true);
+							}
+						}
+					}
+					// End Fix - #34367
 					return resDTO.getCircularVerResultBean();
 				}
 			} catch (Exception e) {
@@ -588,4 +608,30 @@ public class CircularManagedBean extends BaseManagedBean {
 		this.circularPqQtList = circularPqQtList;
 	}
 	// End - #30866
+	// Start Fix - #34367
+	public boolean isPtjOwner() {
+		return ptjOwner;
+	}
+
+	public void setPtjOwner(boolean ptjOwner) {
+		this.ptjOwner = ptjOwner;
+	}
+
+	public Long getUserPTJProfile() {
+		return userPTJProfile;
+	}
+
+	public void setUserPTJProfile(Long userPTJProfile) {
+		this.userPTJProfile = userPTJProfile;
+	}
+
+	public boolean isValidateConstantRules() {
+		
+		return validateConstantRules;
+	}
+
+	public void setValidateConstantRules(boolean validateConstantRules) {
+		this.validateConstantRules = validateConstantRules;
+	}
+	// End Fix - #34367
 }

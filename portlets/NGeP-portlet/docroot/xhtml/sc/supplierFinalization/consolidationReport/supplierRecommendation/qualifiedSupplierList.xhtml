@@ -17,13 +17,26 @@
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 		<c:if test="#{!consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
-			<ui:remove> #28777#29729 - Start </ui:remove>
-			<c:if
-				test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
-				<h:outputText styleClass="instruction" escape="false"
-					value="#{lbl['lbl.sc.branch.related.deleted.instruction.four']}" />
-			</c:if>
-			<ui:remove> #28777#29729 - End </ui:remove>
+			<ui:remove> 28777,29729,30432 - Start </ui:remove>
+			<c:choose>
+				<c:when test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+					<h:outputText styleClass="instruction" escape="false"
+						value="#{lbl['lbl.sc.branch.related.deleted.instruction.four']}" />
+					<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
+						<ui:param name="number" value="5." /> 
+						<ui:param name="includePopup" value="#{includePopup}" />
+						<ui:param name="break" value="&lt;br/&gt;" />
+					</ui:include>
+				</c:when>
+				<c:otherwise>
+					<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
+						<ui:param name="number" value="4." /> 
+						<ui:param name="includePopup" value="#{includePopup}" />
+						<ui:param name="break" value="&lt;br/&gt;" />
+					</ui:include>
+				</c:otherwise>
+			</c:choose>
+			<ui:remove> 28777,29729,30432 - End </ui:remove>
 			<ui:remove>#21692 - start</ui:remove>
 			<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
 				<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
@@ -40,7 +53,7 @@
 		<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
 
-			<ui:remove> #28777#29729 - Start </ui:remove>
+			<ui:remove> 28777,29729 - Start </ui:remove>
 		<p:remoteCommand name="fetchDisqualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=disqualSuppDetailsPopupId])" oncomplete="disqualSuppDetailsPopup.show(); return false;"/>
 							 
@@ -48,7 +61,7 @@
 				value="#{lbl['lbl.sc.list.qualified.supplier']}"
 				style="font-weight:bold; font-size: 15px;"
 				rendered="#{isDisqualified}" />
-			<ui:remove> #28777#29729 - End </ui:remove>
+			<ui:remove> 28777,29729 - End </ui:remove>
 
 			<p:dataTable id="qualifiedSuppliers"
 				var="qualifiedSupp" widgetVar="shortlistedSuppDtls" 
@@ -78,7 +91,7 @@
 									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
 									rendered="#{isOneTierWithTechnical or isTwoTier}"
 									process="@this">
-									<ui:remove> #28777#29729 </ui:remove>
+									<ui:remove> 28777,29729 </ui:remove>
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.technical']}"
 										styleClass="commandLink" />
@@ -87,7 +100,7 @@
 								<p:commandLink
 									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
 									process="@this">
-									<ui:remove> #28777#29729 </ui:remove>
+									<ui:remove> 28777,29729 </ui:remove>
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.financial']}"
 										styleClass="commandLink" />
@@ -131,7 +144,7 @@
 						<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 
-					<ui:remove> #28777#29729 - Start </ui:remove>
+					<ui:remove> 28777,29729 - Start </ui:remove>
 					<p:spacer width="15" height="15" />
 					<p:commandLink
 						action="#{consolidationReportBackingBean.showSupplierBranchList(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -139,7 +152,7 @@
 						oncomplete="suppBranchListPopup.show();">
 						<h:graphicImage value="/css/images/exclam-info.png" />
 					</p:commandLink>
-					<ui:remove> #28777#29729 - End </ui:remove>
+					<ui:remove> 28777,29729 - End </ui:remove>
 
 				</p:column>
 	
@@ -266,7 +279,7 @@
 																
 			</p:dataTable>
 
-			<ui:remove> #28777#29729 - Start </ui:remove>
+			<ui:remove> 28777,29729 - Start </ui:remove>
 			<h:outputText escape="false"
 				value="#{lbl['lbl.sc.list.disqualified.supplier']}"
 				style="font-weight:bold; font-size: 15px;"

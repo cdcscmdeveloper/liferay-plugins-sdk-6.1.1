@@ -57,7 +57,7 @@ public class TemplateSpecBean implements Serializable {
 	private ScQt qt;
 	private List<TplSpecAnswer> hideanswerList;//32453-End
 	private boolean wordBreakForQT;//#29007 Added Vinod
-	private boolean weightage35384WIP;;//#38151
+	private boolean weightage35384WIP;//#38151
 	//#34363 Start Vinod
 	private boolean checkListCompleted;
 	//#34363 End Vinod

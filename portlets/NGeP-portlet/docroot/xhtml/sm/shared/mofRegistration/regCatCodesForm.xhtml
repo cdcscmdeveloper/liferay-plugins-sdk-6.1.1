@@ -17,24 +17,19 @@
 	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.smAppl.applType ne 'R' and backingBean.managedBean.smAppl.applType ne 'N'}">
 		<!-- 36504 - START -->
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputPanel
-						align="left">
-						<h:outputText
-							value="#{lbl['lbl.sm.other.desc.history.click']}"
+		<p:outputPanel align="left" rendered="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and backingBean.managedBean.otherDescChangeSupplierPrev}">
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
 							escape="false" />
-						<p:commandLink
-							onstart="blockWidget.show()"
+						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{backingBean.otherDescriptionHistory}"
-							process="@this"
-							partialSubmit="true"
-							update="@form">
+							action="#{backingBean.otherDescriptionHistoryPrev}" process="@this"
+							partialSubmit="true" update="@form">
 							<u><h:outputText
 									value="#{lbl['lbl.sm.other.desc.history.here']}"
-									style="color:blue;"
-									escape="false" /></u>
+									style="color:blue;" escape="false" /></u>
 						</p:commandLink>
 						<p:spacer width="2" />
 						<h:outputText
@@ -42,9 +37,10 @@
 							escape="false" />
 						<br />
 						<p:spacer height="2" />
-					</p:outputPanel></td>
-			</tr>
-		</table>
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
 		<!-- 36504 - END -->
 		<p:dataTable var="aprvdCatBean"
 			widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
@@ -124,38 +120,35 @@
 				<ui:include src="overlapCategorySuppDoc.xhtml" />
 		</c:if>
 		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U'}">
+			<ui:remove>#36838</ui:remove>
 			<p:panel header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true">
-			<!-- 36504 - START -->
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputPanel
-							align="left">
-							<h:outputText
-								value="#{lbl['lbl.sm.other.desc.history.click']}"
-								escape="false" />
-							<p:commandLink
-								onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()"
-								action="#{backingBean.otherDescriptionHistory}"
-								process="@this"
-								partialSubmit="true"
-								update=":form:tt:catCodeInfPan">
-								<u><h:outputText
-										value="#{lbl['lbl.sm.other.desc.history.here']}"
-										style="color:blue;"
-										escape="false" /></u>
-							</p:commandLink>
-							<p:spacer width="2" />
-							<h:outputText
-								value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
-								escape="false" />
-							<br />
-							<p:spacer height="2" />
-						</p:outputPanel></td>
-				</tr>
-			</table>
-			<!-- 36504 - END -->
-			<c:choose>
+				<!-- 36504 - START -->
+				<p:outputPanel align="left" rendered="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and backingBean.managedBean.otherDescChangeSupplier}">
+					<table style="width: 100%">
+						<tr>
+							<td>
+								<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
+									escape="false" />
+								<p:commandLink onstart="blockWidget.show()"
+									oncomplete="blockWidget.hide()"
+									action="#{backingBean.otherDescriptionHistory}" process="@this"
+									partialSubmit="true" update="@form">
+									<u><h:outputText
+											value="#{lbl['lbl.sm.other.desc.history.here']}"
+											style="color:blue;" escape="false" /></u>
+								</p:commandLink>
+								<p:spacer width="2" />
+								<h:outputText
+									value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+									escape="false" />
+								<br />
+								<p:spacer height="2" />
+							</td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				<!-- 36504 - END -->
+				<c:choose>
 				<c:when
 					test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser  and backingBean.managedBean.smAppl.supplierType ne 'J'}">
 					<table>
@@ -380,7 +373,17 @@
 	</p:confirmDialog>
 	
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory categoryCodeList="#{backingBean.managedBean.approvedCategoryList}" applNo="#{backingBean.managedBean.smAppl.applNo}" />
+	<ac:otherDescriptionHistory
+		categoryCodeList="#{backingBean.managedBean.activeCategoryList}"
+		applNo="#{backingBean.managedBean.smAppl.applNo}"
+		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
+	<ac:otherDescriptionHistoryPrev
+		categoryCodeList="#{backingBean.managedBean.previousCategoryList}"
+		otherDescChangePO="#{backingBean.managedBean.otherDescChangePOPrev}"
+		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApproverPrev}"
+		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplierPrev}"  />
 	<ac:otherDescriptionEdit />
    	<!-- 36504 - END -->
 

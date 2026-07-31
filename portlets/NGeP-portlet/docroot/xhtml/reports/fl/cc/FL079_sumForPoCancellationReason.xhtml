@@ -42,7 +42,7 @@
 					postUpdateListener="ccSumForPoCancelReasonRptBB.resetPtjProfile()"
 					update=":form"
 					saveObject="ccSumForPoCancelReasonRptBB.managedBean.ptjGroup"
-					conditionField="#{ccSumForPoCancelReasonRptBB.constuctConditionFieldsForPTJGroup()}">
+					conditionField="#{ccSumForPoCancelReasonRptBB.constructConditionForPTJGroupByRole()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -58,7 +58,7 @@
 					value="#{ccSumForPoCancelReasonRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="ccSumForPoCancelReasonRptBB.managedBean.ptj"
-					conditionField="#{ccSumForPoCancelReasonRptBB.getPTJCondition()}">
+					conditionField="#{ccSumForPoCancelReasonRptBB.constructConditionForPTJByRole()}">
 				</ac:lov>
 			</td>
 		</tr>

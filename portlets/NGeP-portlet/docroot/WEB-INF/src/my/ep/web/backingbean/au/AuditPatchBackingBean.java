@@ -29,11 +29,13 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.au.IAuditPatchSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.au.AuditPatchConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
 import my.ep.dto.au.AuditPatchReqDTO;
 import my.ep.dto.au.VAuditPatchDTO;
+import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.SLAUtils;
@@ -60,6 +62,8 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	private static Logger log = Logger.getLogger(AuditPatchBackingBean.class);
 	private transient IPagingDataModel<VAuditPatchDTO> searchMaster = new SearchMasterPagingDataModel();
 	private transient IPagingDataModel<VAuditPatchDTO> searchDetail = new SearchDetailPagingDataModel();
+	
+	private List<VAuditPatchDTO> documentTypeList;
 	
 	public static final String NAV_TO_SEARCH = "auditPatchMain";
 	public static final String NAV_TO_MAINTAIN = "auditPatchDetailMain";
@@ -94,12 +98,36 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getSearchBean().setSearching(true);
 		
+		if(this.getManagedBean().getSearchBean().getChangeTypeID().equals(AuditPatchConst.CHANGE_TYPE_EKONTRAK)){
+			checkEKontrakValidation();
+		} else {
+			checkValidation();
+		}
+		
 		this.getManagedBean().getSearchBean().setChangeTypeIDOldVal(this.getManagedBean().getSearchBean().getChangeTypeID());
 		this.getManagedBean().getSearchBean().setDocTypeIDOldVal(this.getManagedBean().getSearchBean().getDocTypeID());
 		this.getManagedBean().getSearchBean().setDocNoOldVal(this.getManagedBean().getSearchBean().getDocNo());
 		this.getManagedBean().getSearchBean().seteAduanNoOldVal(this.getManagedBean().getSearchBean().geteAduanNo());
 		
 		searchMaster.reloadData();
+	}
+
+	/**
+	 * this method checks data validation for changetype user request/system errors
+	 */
+	public void checkValidation(){
+		if(this.getManagedBean().getSearchBean().getDocNo().isEmpty() && this.getManagedBean().getSearchBean().geteAduanNo().isEmpty()){
+			throw new EpException(MessageConst.ERROR_880002);
+		}
+	}
+	
+	/**
+	 * this method checks data validation for changetype user request/system errors
+	 */
+	public void checkEKontrakValidation(){
+		if(this.getManagedBean().getSearchBean().getDocNo().isEmpty()){
+			throw new EpException(MessageConst.ERROR_880002);
+		}
 	}
 
 	/**
@@ -157,6 +185,10 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	 */
 	public List<VAuditPatchDTO> getChangeTypeList() {
 		IAuditPatchSO auditPatchSO;
+		
+		documentTypeList = getManagedBean().getSearchBean().getChangeTypeID() != null ? 
+				getDocumentTypeList(getManagedBean().getSearchBean().getChangeTypeID()) : null;
+				
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		auditPatchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditPatchSO.class);
 		return auditPatchSO.getChangeTypeList(languageCode);
@@ -166,11 +198,11 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	 * Retrieve Dropdown Document Type
 	 * 
 	 */
-	public List<VAuditPatchDTO> getDocumentTypeList() {
+	public List<VAuditPatchDTO> getDocumentTypeList(Integer changeTypeID) {
 		IAuditPatchSO auditPatchSO;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		auditPatchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPatchSO.class);
-		return auditPatchSO.getDocumentTypeList(languageCode);
+		auditPatchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditPatchSO.class);
+		return auditPatchSO.getDocumentTypeList(languageCode, changeTypeID);
 	}
 
 	/**
@@ -224,7 +256,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 				return auditPatchSO.searchMasterResultList(auditPatchReqDTO, searchBean);
 
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "FirstUIViewMaster Patch Audit", "",
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.AUDIT, "FirstUIViewMaster Patch Audit", "",
 						"auditPatchSO", new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
 			}
 			return null;
@@ -256,12 +288,15 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 				auditPatchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditPatchSO.class);
 
 				ISearchResultBean<VAuditPatchDTO> resDTO;
+				
 
 				auditPatchReqDTO.setpType(getManagedBean().getSearchBean().getpType());
 				auditPatchReqDTO.setChangeTypeID(getManagedBean().getSearchBean().getChangeTypeID());
 				auditPatchReqDTO.seteAduanNo(getManagedBean().getSearchBean().geteAduanNo());
 				auditPatchReqDTO.setDocTypeID(getManagedBean().getSearchBean().getDocTypeID());
 				auditPatchReqDTO.setDocNo(getManagedBean().getSearchBean().getDocNo());
+				
+				getManagedBean().setHideAduan(!getManagedBean().getSearchBean().geteAduanNo().isEmpty());
 				
 				resDTO = auditPatchSO.searchDetailResultList(auditPatchReqDTO, searchBean);
 				return resDTO;
@@ -288,13 +323,17 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 
 	/**
-	 * resets the whole search paramaters when changed
+	 * Resets the other search criteria when on change Change Type.
 	 */
 	public void changeType() {
-		this.getManagedBean().getSearchBean().setChangeType(null);
-		this.getManagedBean().getSearchBean().setDocType(null);
+		
+		documentTypeList = getManagedBean().getSearchBean().getChangeTypeID() != null ? 
+				getDocumentTypeList(getManagedBean().getSearchBean().getChangeTypeID()) : null;
+				
+		this.getManagedBean().getSearchBean().setDocTypeID(null);
 		this.getManagedBean().getSearchBean().setDocNo(null);
 		this.getManagedBean().getSearchBean().seteAduanNo(null);
+		getSearchMaster().resetData();//#40761, #35740
 	}
 	
 	/**
@@ -305,12 +344,14 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		try {
 			Map<String, String> paramMap = new HashMap<>();
 
-			paramMap.put(AuditPatchConst.P_LANGUAGE, reqDTO.getpLanguage());
+			paramMap.put(AuditPatchConst.P_LANGUAGE, AuditPatchConst.LANGUAGE_MY);
 			paramMap.put(AuditPatchConst.P_CHANGE_TYPE, reqDTO.getChangeTypeID().toString());
 			paramMap.put(AuditPatchConst.P_DOC_TYPE, reqDTO.getDocTypeID().toString());
 			paramMap.put(AuditPatchConst.P_DOC_NO, reqDTO.getDocNo());
 			paramMap.put(AuditPatchConst.P_USER, String.valueOf(getUserIdSessionFromLoginId()));
-			paramMap.put(AuditPatchConst.P_EADUAN_NO, reqDTO.geteAduanNo());
+			if(reqDTO.getChangeTypeID() != AuditPatchConst.CHANGE_TYPE_EKONTRAK){
+				paramMap.put(AuditPatchConst.P_EADUAN_NO, reqDTO.geteAduanNo());
+			}
 			
 			paramMap.values().removeAll(Collections.singleton(null));
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PAL, paramMap);
@@ -329,11 +370,11 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		String oriLanguange = reqDTO.getpLanguage();
 		try {
 			reqDTO.setFetchAll(true);
-			reqDTO.setpLanguage(reqDTO.getpLanguage());
+			reqDTO.setpLanguage(AuditPatchConst.LANGUAGE_MY);
 			ISearchResultBean<VAuditPatchDTO> res = getAuditPatchSO().searchDetailResultList(reqDTO, searchDetail.getSearchBean());
 			details = res.getResultList();
 			
-			createSheetLayout();
+			createSheetLayout(reqDTO.getChangeTypeID());
 			exportExcelReportAudit();
 			
 		} catch (Exception e) {
@@ -345,15 +386,21 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 	
 	/**
-	 * creates excel sheetlayout row by row 
+	 * Creates the Excel sheet layout by populating the report row by row
+	 * based on the specified change type.
+	 *  
+	 * @param changeTypeID
 	 */
-	private void createSheetLayout(){
+	private void createSheetLayout(Integer changeTypeID){
 		if (wb == null){
 			wb = new XSSFWorkbook();
 		}
 		Sheet sheetRptAudit = wb.createSheet("Sheet1");
 		// Setting Report - Populate Table Header Cell Value
-		String[] colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType5;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ;
+		String[] colHeaderDataTableRpt = 
+				changeTypeID.equals(AuditPatchConst.CHANGE_TYPE_EKONTRAK) ? 
+						ReportExcelAuditConstant.ColHeaderListType6 : 
+							ReportExcelAuditConstant.ColHeaderListType5;
 		CellStyle cellStyleTitleRpt = new ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
 		// Section - Setting Table Header Cell Style for each cell
 		CellStyle colHeaderDataTableRptStyle = new ExcelCellStyleBuilder(wb).setHAlignment(HorizontalAlignment.CENTER)
@@ -364,15 +411,14 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		// Cell Format: DateTime
 		CellStyle cellStyleDateTime = new ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
 		// End Section - Setting Cell Style for each cell
+		
 		// Create Row/Cell - Report Title
 		Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
 		Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
-		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
-																		// Cell
-																		// Value
+		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value																		
 		cellTitleRow.setCellStyle(cellStyleTitleRpt);
-		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
-																			// Cell
+		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Column Cell
+
 		// Create Row/Cell - Report Header Datatable
 		Row titleHeaderRow = sheetRptAudit.createRow(3);
 		for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
@@ -380,56 +426,69 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 			cell.setCellValue(colHeaderDataTableRpt[i]);
 			cell.setCellStyle(colHeaderDataTableRptStyle);
 		}
-		// Section: Populate Audit Trail Details Record for Request Note.
+		
+		// Section: Populate Audit Trail Details Record
 		// Create Row/Cell - Audit Trail Details
 		int rowIndex = sheetRptAudit.getLastRowNum() + 1;
 		if (!EntityHelper.isCollectionEmpty(details)) {
 			for(VAuditPatchDTO vapdto : details){
 				Row currRow = sheetRptAudit.createRow(rowIndex++);
 				Cell cellActionDate = currRow.createCell(1);
-				cellActionDate.setCellValue(vapdto.getActionDate());		//getActionDate
+				cellActionDate.setCellValue(vapdto.getActionDate());//getActionDate
 				cellActionDate.setCellStyle(cellStyleDateTime);
+				
 				Cell cellActionType = currRow.createCell(2);
 				cellActionType.setCellValue(vapdto.getActionType());
 				cellActionType.setCellStyle(cellStyleString);
+				
 				Cell cellActionBy = currRow.createCell(3);
 				cellActionBy.setCellValue(vapdto.getActionBy());
 				cellActionBy.setCellStyle(cellStyleString);
+				
 				Cell cellOrganisation = currRow.createCell(4);
 				cellOrganisation.setCellValue(vapdto.getOrganization());
 				cellOrganisation.setCellStyle(cellStyleString);
+				
 				Cell cellRole = currRow.createCell(5);
 				cellRole.setCellValue(vapdto.getRole());
 				cellRole.setCellStyle(cellStyleString);
 				Cell cellDocType = currRow.createCell(6);
 				cellDocType.setCellValue(vapdto.getDocTypeName());
 				cellDocType.setCellStyle(cellStyleString);
+				
 				Cell cellDocNo = currRow.createCell(7);
 				cellDocNo.setCellValue(vapdto.getDocNo());
 				cellDocNo.setCellStyle(cellStyleString);
+				
 				Cell cellFieldName = currRow.createCell(8);
 				cellFieldName.setCellValue(vapdto.getFieldName());
 				cellFieldName.setCellStyle(cellStyleString);
+				
 				Cell cellOldValue = currRow.createCell(9);
 				cellOldValue.setCellValue(vapdto.getOldValue());
 				cellOldValue.setCellStyle(cellStyleString);
+				
 				Cell cellNewValue = currRow.createCell(10);
 				cellNewValue.setCellValue(vapdto.getNewValue());
 				cellNewValue.setCellStyle(cellStyleString);
+				
 				Cell cellChangeType = currRow.createCell(11);
 				cellChangeType.setCellValue(vapdto.getChangeTypeName());
 				cellChangeType.setCellStyle(cellStyleString);
+				
 				Cell cellReqBy = currRow.createCell(12);
 				cellReqBy.setCellValue(vapdto.getRequestBy());
 				cellReqBy.setCellStyle(cellStyleString);
+				
 				Cell cellReqOrg = currRow.createCell(13);
 				cellReqOrg.setCellValue(vapdto.getRequestOrg());
 				cellReqOrg.setCellStyle(cellStyleString);
-				Cell celleAduanNo = currRow.createCell(14);
-				celleAduanNo.setCellValue(vapdto.geteAduanNo());
-				celleAduanNo.setCellStyle(cellStyleString);
-			}
-			for (int a = 0; a < details.size(); a++) {
+				
+				if(!changeTypeID.equals(AuditPatchConst.CHANGE_TYPE_EKONTRAK)){
+					Cell celleAduanNo = currRow.createCell(14);
+					celleAduanNo.setCellValue(vapdto.geteAduanNo());
+					celleAduanNo.setCellStyle(cellStyleString);
+				}
 			}
 		} else {
 			createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length);
@@ -440,13 +499,14 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 	
 	/**
-	 * sets excel column widths manually for each row 
+	 * Sets the column widths for the Excel sheet.
+	 *
+	 * @param totalNoOfCell ,the total number of columns to be configured
+	 * @param sheetName ,the Excel sheet for which the column widths are set
 	 */
-	
-	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
-		
+	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {		
 		// Default width for specific column ranges
-				int defaultWidth = 19 * 256;
+		int defaultWidth = 19 * 256;
 
 		// Define a map for specific column widths
 		Map<Integer, Integer> columnWidths = new HashMap<>();
@@ -470,6 +530,13 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		}
 	}
 
+	/**
+	 * Creates a No Records Found row with the predefined cell style.
+	 *
+	 * @param sheet ,the target Excel sheet
+	 * @param rowIndex ,the row index for the new row
+	 * @param totalCell ,the last column index for merging the cell
+	 */
 	private void createNotFoundRecord(Sheet sheet, int rowIndex, int totalCell) {
 		// Section - Setting Cell Style for No Records Found message.
 		CellStyle noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDataCellStyleString();
@@ -548,5 +615,9 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	 */
 	public void setSearchDetail(IPagingDataModel<VAuditPatchDTO> searchDetail) {
 		this.searchDetail = searchDetail;
+	}
+	
+	public List<VAuditPatchDTO> getDocumentTypeList() {
+	    return documentTypeList;
 	}
 }

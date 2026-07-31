@@ -31,10 +31,10 @@
 	<h:outputText styleClass="instruction" escape="false" rendered="#{lOIDetailBackingBean.managedBean.displayReviseInstrn}"
 			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
 
-	<ui:remove> #28777#29729 - Start </ui:remove>
+	<ui:remove> 28777,29729 - Start </ui:remove>
 	<ui:param name="isDisqualified"
 		value="#{lOIDetailBackingBean.checkListDisqualifiedSupplierBranchDeleted(lOIDetailBackingBean.managedBean.scQt.qtId)}"></ui:param>
-	<ui:remove> #28777#29729 - End </ui:remove>
+	<ui:remove> 28777,29729 - End </ui:remove>
 
 	<p:outputPanel id="itemSupplierPanel">
 
@@ -53,21 +53,21 @@
 							</p:tabMenu>
 						</td>
 					</c:if>
-					<td class="tdWidth"><ui:remove> #28777#29729 - Start </ui:remove> <c:if
+					<td class="tdWidth"><ui:remove> 28777,29729 - Start </ui:remove> <c:if
 							test="#{lOIDetailBackingBean.checkInstructionSupplierBranchDeleted(lOIDetailBackingBean.managedBean.scQt.qtId)}">
 							<h:outputText styleClass="instruction"
 								value="#{lbl['lbl.sc.branch.related.deleted.instruction']} "
 								escape="false" />
-						</c:if> <ui:remove> #28777#29729 - End </ui:remove> <h:outputText styleClass="instruction"
+						</c:if> <ui:remove> 28777,29729 - End </ui:remove> <h:outputText styleClass="instruction"
 							value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
 							escape="false" />
 						<h:outputText styleClass="instruction"
 							value="#{lOIDetailBackingBean.managedBean.scQt.closingDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-						</h:outputText> <ui:remove> #28777#29729 - Start </ui:remove> <h:outputText
+						</h:outputText> <ui:remove> 28777,29729 - Start </ui:remove> <h:outputText
 							escape="false" value="#{lbl['lbl.sc.list.qualified.supplier']}"
 							style="font-weight:bold; font-size: 15px;"
-							rendered="#{isDisqualified}" /> <ui:remove> #28777#29729 - End </ui:remove>
+							rendered="#{isDisqualified}" /> <ui:remove> 28777,29729 - End </ui:remove>
 
 						<p:dataTable id="recommendTblPkg"
 							var="supplierDtl"
@@ -102,7 +102,7 @@
 									<h:outputText value="#{supplierDtl.qtEvaluationResult.scQtProposal.supplierNo}" />
 								</p:commandLink>
 
-								<ui:remove> #28777#29729 - Start </ui:remove>
+								<ui:remove> 28777,29729 - Start </ui:remove>
 								<p:spacer width="15" height="15" />
 								<p:commandLink process="@this"
 									action="#{lOIDetailBackingBean.showSupplierBranchList(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -110,7 +110,7 @@
 									oncomplete="suppBranchListPopup.show();">
 									<h:graphicImage value="/css/images/exclam-info.png" />
 								</p:commandLink>
-								<ui:remove> #28777#29729 - End </ui:remove>
+								<ui:remove> 28777,29729 - End </ui:remove>
 
 							</p:column>
 
@@ -253,7 +253,7 @@
 											<h:outputText value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
 
-										<ui:remove> #28777#29729 - Start </ui:remove>
+										<ui:remove> 28777,29729 - Start </ui:remove>
 										<p:spacer width="15" height="15" />
 										<p:commandLink process="@this"
 											action="#{lOIDetailBackingBean.showSupplierBranchList(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -261,7 +261,7 @@
 											oncomplete="suppBranchListPopup.show();">
 											<h:graphicImage value="/css/images/exclam-info.png" />
 										</p:commandLink>
-										<ui:remove> #28777#29729 - End </ui:remove>
+										<ui:remove> 28777,29729 - End </ui:remove>
 
 										<br />
 									</p:column>
@@ -285,7 +285,7 @@
 												value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
 										
-									    <ui:remove> #28777#29729 - Start </ui:remove>
+									    <ui:remove> 28777,29729 - Start </ui:remove>
 										<p:spacer width="15" height="15" />
 										<p:commandLink process="@this"
 											action="#{lOIDetailBackingBean.showSupplierBranchList(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -293,7 +293,7 @@
 											oncomplete="suppBranchListPopup.show();">
 											<h:graphicImage value="/css/images/exclam-info.png" />
 										</p:commandLink>
-										<ui:remove> #28777#29729 - End </ui:remove>
+										<ui:remove> 28777,29729 - End </ui:remove>
 										
 										<br />
 									</p:column>
@@ -374,9 +374,9 @@
 							<p:column headerText="#{lbl['lbl.sc.total.overall.score']}"
 								style="text-align: right;">
 							<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
-							rendered ="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBean.managedBean.weightage35384WIP}">
+							rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}">
 									<p:commandLink
-										action="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+										action="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId,item.requestItem.requestNoteItemId)}"
 										process="@this" update="@([id$=SuppScoreDetailsPopupId])"
 										rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}"
 										styleClass="commandLink">
@@ -522,7 +522,7 @@
 									update="recommendTbl" />
 							</h:column>
 
-						</h:panelGrid> <ui:remove> #28777#29729 - Start </ui:remove> <h:outputText
+						</h:panelGrid> <ui:remove> 28777,29729 - Start </ui:remove> <h:outputText
 							escape="false"
 							value="#{lbl['lbl.sc.list.disqualified.supplier']}"
 							style="font-weight:bold; font-size: 15px;"
@@ -913,7 +913,7 @@
 									rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or lOIDetailBackingBean.managedBean.multiLOIZoneDetails.get(lOIDetailBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 									value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 							</p:column>
-						</p:dataTable> <ui:remove> #28777#29729 - End </ui:remove></td>
+						</p:dataTable> <ui:remove> 28777,29729 - End </ui:remove></td>
 				</tr>
 			</table>
 		</p:panel>

@@ -384,6 +384,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	// Bug #35078@Syazani -- 22/09/2023 -- End
 	// #29766 Start Vinod
 	private String alertForInactivePK7;
+	private boolean autoRevise;
 	// #29766 End Vinod
 
 	// #29661 start
@@ -394,6 +395,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private List<SmSupplierCategory> deletedCategoryList;
 	private boolean categorySelected;
 	private List<ScQtCategory> qtCategoryList;
+	private boolean showCategoryCode = false; 
+	private List<SmSupplierCategory> originalSupplierCategoryList;
 	// #29661 end
 	
 	private SmSupplier tempSmSupplier;	// Bug #40022@Syazani -- 16/02/2026
@@ -2225,6 +2228,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setAlertForInactivePK7(String alertForInactivePK7) {
 		this.alertForInactivePK7 = alertForInactivePK7;
 	}
+	
+	public boolean isAutoRevise() {
+		return autoRevise;
+	}
+
+	public void setAutoRevise(boolean autoRevise) {
+		this.autoRevise = autoRevise;
+	}
+	
 	// #29766 End Vinod
 
 	//#29661 Start
@@ -2282,6 +2294,22 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	public void setAddedCategoryList(List<SmSupplierCategory> addedCategoryList) {
 		this.addedCategoryList = addedCategoryList;
+	}
+	
+	public boolean isShowCategoryCode() {
+		return showCategoryCode;
+	}
+
+	public void setShowCategoryCode(boolean showCategoryCode) {
+		this.showCategoryCode = showCategoryCode;
+	}
+
+	public List<SmSupplierCategory> getOriginalSupplierCategoryList() {
+		return originalSupplierCategoryList;
+	}
+
+	public void setOriginalSupplierCategoryList(List<SmSupplierCategory> originalSupplierCategoryList) {
+		this.originalSupplierCategoryList = originalSupplierCategoryList;
 	}
 	//#29661 End
 	// Bug #40022@Syazani -- 16/02/2026 -- Start

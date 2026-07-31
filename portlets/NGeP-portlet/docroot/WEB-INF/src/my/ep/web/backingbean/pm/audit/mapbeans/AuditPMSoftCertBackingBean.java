@@ -4,9 +4,11 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -16,6 +18,7 @@ import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.softcertprovider.SoftCertProviderManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMSoftCertBackingBean
@@ -101,16 +104,13 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 		}
 	}
 	
-	private String checkSoftCert(String parameter){
+	private String checkSoftCert(String parameterCode){
 		 
-		PmParameter pmParameter = getParameterByTypeAndCode(ParameterTypeConst.SOFTCERT_PROVIDER, parameter);
 		String description = null;
 		
-		for(PmParameterDesc desc : pmParameter.getPmParameterDescsSpecCallOnly()){
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)){
-				description = desc.getCodeName();
-			}
-		}
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		description = ParameterHelper.getInstance().getParameterDesc("DT", parameterCode, locale);
+		
 		return description;
 		
 	}

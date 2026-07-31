@@ -170,7 +170,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				orderId = paymentId.toString();
 				errorDesc = "";
 				errorCode = "";
-				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
+				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());
 				if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 					log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 					channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -370,7 +370,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						orderId = paymentId.toString();
 						errorDesc = "";
 						errorCode = "";
-						paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
+						paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());
 						if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 							log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 							channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -1042,11 +1042,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
 				getManagedBean().setMessageId(MessageConst.INFO_721067);
 				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
+				return;
 			}
-		} else {
-			getManagedBean().setMessageId(MessageConst.INFO_721068);
-			getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 		}
+		// #40340 - added INFO_721068 fallback for cross-user admin path
+		getManagedBean().setMessageId(MessageConst.INFO_721068);
+		getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 	}
 	//#29481 - End
 /*	public static void main(String args[]){

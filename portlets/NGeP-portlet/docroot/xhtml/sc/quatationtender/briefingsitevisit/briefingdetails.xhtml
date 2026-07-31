@@ -35,17 +35,23 @@
 						</td>
 					</tr>
 					<tr>
+						<ui:remove>#28188 - Start </ui:remove>
 						<td><p:outputLabel value="#{lbl['lbl.sc.date.time.day']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="1">
-							<ac:dateTime id="briefdate"
-									mindate="#{qTBriefingSiteVisitBackingBean.handleBSVMinDate()}"
+							<ac:dateTimeBsv id="briefdate"
+									mindate="#{qTBriefingSiteVisitBackingBean.handleOriginalBSVMinDate()}"
+									minDateTime="#{qTBriefingSiteVisitBackingBean.handleOriginalBSVMinDate()}"
 									required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+									disabled="#{not empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.qtBsvDtlId and 
+							    			not empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
 									label="#{lbl['lbl.sc.date.time.day']}"
 									value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
+									validator="#{qTBriefingSiteVisitBackingBean.validateBsvDate}"
 									update="@this, @([id$=pday]) "  >									
-							</ac:dateTime>
+							</ac:dateTimeBsv>
 						</td>
+						<ui:remove>#28188 - End </ui:remove>
 						<td>
 							<p:inputText id="pday" value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}" style="width: 65px; text-align: center;" disabled="true">
 									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
@@ -196,9 +202,12 @@
 					</tr>
 				</table>
 				<div class="ppRightBtn">
+					<ui:remove>#28188 - Start (Add parameter) </ui:remove>
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						process="@this, bsvdetailsdlg" update="@(.briefingList,.amendButton)" 
-						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList}" />
+						onclick="briefdate0SetValue();" 
+						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList(qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.qtBsvDtlId)}" />
+					<ui:remove>#28188 - End </ui:remove>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.cancelBriefingList}"
 						partialSubmit="true" />

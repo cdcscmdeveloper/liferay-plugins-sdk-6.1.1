@@ -15,7 +15,9 @@
 			<h:outputText styleClass="instruction"  rendered="#{specificationBackingBean.managedBean.qt.panel}"
 			value="#{lbl['lbl.sc.spec.tech.check.list.panel.instruction']}"
 			escape="false" />
-			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
+			<ui:remove>#30432 - Start</ui:remove>
+			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml" /> 
+			<ui:remove>#30432 - End</ui:remove>
 			<h:outputText styleClass="instruction"  rendered="#{!specificationBackingBean.managedBean.qt.panel}"
 			value="#{lbl['lbl.sc.spec.tech.check.list.instruction1']}"
 			escape="false" />
@@ -72,9 +74,11 @@
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
 
+				<ui:remove> #40138 Start Vinod enabling to delete mandatory checklist if it is removed from mandatory</ui:remove>
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
-					disabled="true"
+					disabled="#{stageTwoTechnical.isEnableToDelete() ? 'false' : 'true'}"
 					rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }">
+					<ui:remove> #40138 End Vinod</ui:remove>
 					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
@@ -431,9 +435,10 @@
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="@([id$=specCommitteeTechnicalChecklist])" />
+				
+			<!-- #40245 : hide 'Create Specification' button for panel contract item (Maintenance Screen) -->			
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				rendered="#{specificationBackingBean.managedBean.isChecklist() or !specificationBackingBean.managedBean.qt.panel and 
-				!((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
+				rendered="#{specificationBackingBean.createSpecificationVisible}"
 				process="@this" styleClass="BtnSpacing"
 				update="@([id$=commiteeCreationSpec])"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
@@ -460,8 +465,9 @@
 					value="#{false}" />
 			</p:commandButton>
 
+			<!-- #40245 : show 'Add Panel Item' button for panel contract item  (Maintenance Screen)-->
 			<p:commandButton styleClass="BtnSpacing" 
-				rendered="#{specificationBackingBean.managedBean.qt.panel and !((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
+				rendered="#{specificationBackingBean.addPanelItemVisible}"
 				value="#{lbl['lbl.sc.spec.btn.add.panel.item']}" process="@this"
 				actionListener="#{specificationBackingBean.circularListSelect(specificationBackingBean.managedBean.qt.circularVer)}"
 				oncomplete="addPanelItem.show();" update="@([id$=circularpanelItemsSelectionPopUp])" />

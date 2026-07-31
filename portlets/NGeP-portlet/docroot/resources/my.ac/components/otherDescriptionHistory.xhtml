@@ -35,7 +35,7 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.application.no']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText value="#{cc.attrs.applNo}" />
+							<h:outputText value="#{otherDescBean.applNoHistory}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}"
@@ -46,41 +46,36 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
-								rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SUPPLIER_PO or 
-								otherDescBean.roleType eq SupplierManagementConst.SUPPLIER_APPROVER}"
-								value="#{otherDescBean.otherDesc}" />
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}"
+					             style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
-								rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}"
-								value="#{otherDescBean.otherDesc}" />
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}" 
+					             style="white-space: pre-wrap;"/>
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 							<h:outputText
-								rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO or 
-								otherDescBean.roleType eq SupplierManagementConst.SUPPLIER_PO}"
-								value="#{supplierDataMaintenanceBackingBean.getUserNameByUserId(otherDescBean.createdBy)}" />
+								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'THREE')}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
-								rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}"
-								value="#{otherDescBean.otherDesc}" />
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}" 
+					             style="white-space: pre-wrap;"/>
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 							<h:outputText
-								rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP or 
-								otherDescBean.roleType eq SupplierManagementConst.SUPPLIER_APPROVER}"
-								value="#{supplierDataMaintenanceBackingBean.getUserNameByUserId(otherDescBean.createdBy)}" />
+								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FIVE')}" />
 						</p:column>
 					</p:dataTable>
 					<br />

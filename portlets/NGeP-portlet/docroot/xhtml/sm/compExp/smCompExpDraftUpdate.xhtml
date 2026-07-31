@@ -359,9 +359,11 @@
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
 			<h:outputText styleClass="instruction"
+				escape="false"
 				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
 				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.sm']}" />
 			<h:outputText styleClass="instruction"
+				escape="false"
 				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
 				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.ct.qt']}" />
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
@@ -521,10 +523,11 @@
 					onclick="confirmDelSuppDocDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
+		 <!-- 9299 - 40480 -->
 		<p:confirmDialog closable="true"
 			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
 			id="confirmDelSelectedCatId"
-			message="#{lbl['lbl.sm.upload.delete.message']}" severity="alert"
+			message="#{lbl['lbl.sm.comp.exp.delete.cat.codes.confirm.msg']}" severity="alert" 
 			widgetVar="confirmDelSelectedCatDialogWV">
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpCatDraft}"
@@ -536,13 +539,15 @@
 					onclick="confirmDelSelectedCatDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
-		<p:dialog dynamic="true" height="100" id="delDuplicateSm" modal="true"
+		<!--  9299 - 40830 -->
+		<p:dialog dynamic="true" height="120" id="delDuplicateSm" modal="true"
 			resizable="false" widgetVar="delDuplicateSmDialogWV" width="350px"
 			styleClass="pop_up_top">
 			<h:outputText
 				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
 				escape="false" />
-			<div align="right">
+			<!--  9299 - 40830 -->
+			<div  style="text-align:right; margin-top:10px;">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"
 					onclick="delDuplicateDialogWV.hide();"
 					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"

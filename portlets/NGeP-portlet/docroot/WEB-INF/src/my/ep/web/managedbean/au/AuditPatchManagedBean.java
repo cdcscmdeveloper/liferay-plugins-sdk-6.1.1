@@ -12,6 +12,10 @@ import my.ep.web.managedbean.BaseManagedBean;
  * Managed Bean for Audit Patch
  * 
  */
+/**
+ * @author shaqimi
+ *
+ */
 @ManagedBean(name = "auditPatchManagedBean")
 @SessionScoped
 public class AuditPatchManagedBean extends BaseManagedBean {
@@ -28,6 +32,8 @@ public class AuditPatchManagedBean extends BaseManagedBean {
 	private String eAduanNo;
 
 	private boolean isLazy = false;
+	
+	private boolean hideAduan = false;
 
 	/**
 	 * @return the selectedType
@@ -135,6 +141,20 @@ public class AuditPatchManagedBean extends BaseManagedBean {
 	 */
 	public void seteAduanNo(String eAduanNo) {
 		this.eAduanNo = eAduanNo;
+	}
+
+	/**
+	 * @return the hideAduan
+	 */
+	public boolean isHideAduan() {
+		return hideAduan;
+	}
+
+	/**
+	 * @param hideAduan the hideAduan to set
+	 */
+	public void setHideAduan(boolean hideAduan) {
+		this.hideAduan = hideAduan;
 	}
 	
 }

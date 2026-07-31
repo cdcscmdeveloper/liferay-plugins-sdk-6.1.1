@@ -35,6 +35,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -417,17 +418,23 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String supplierAccountTypeErrorMessage;
 	private PmOrgProfile selectedPtj;
 	private PmOrgProfile ministryOrgProfile;
-	private Integer saveIndex; 
+	private Integer saveIndex;
+	private Map<Long, Object> thresholdDataReasonGroupMap;	
+	private Integer currentGroupIndex = 0;
     //27868 - end
-	private boolean bpkApproverMode = Boolean.FALSE; //#26059
-	private boolean rnExceedThreshold = Boolean.FALSE; //#26059
-	private boolean showAttachments = Boolean.TRUE; //#26059
-	private boolean containRejectDecision = Boolean.FALSE; //#26059
-    private List<CommodityGroup> commodityGroups =	new ArrayList<>(); //#26059
-    
-    private	Integer	counter = 0; //#26059
-    
-    private boolean existInAssignItemDetail = Boolean.FALSE; //#26059
+	
+	//#26059 - Start
+	private boolean bpkApproverMode = Boolean.FALSE;
+	private boolean rnExceedThreshold = Boolean.FALSE;
+	private boolean showAttachments = Boolean.TRUE; 
+	private boolean containRejectDecision = Boolean.FALSE;
+    private List<CommodityGroup> commodityGroups =	new ArrayList<>();
+    private	Integer	counter = 0;
+    private Integer counterReason = 0;
+    private boolean existInAssignItemDetail = Boolean.FALSE;
+    private ScQuote scQuote;
+    private String selectedBpmAction;
+  //#26059 - End
     
     /**
      * Instantiates a new request note managed bean.
@@ -2529,6 +2536,29 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSaveIndex(Integer saveIndex) {
 		this.saveIndex = saveIndex;
 	}
+	
+	
+	/**
+	 * @return the thresholdDataReasonGroupMap
+	 */
+	public Map<Long, Object> getThresholdDataReasonGroupMap() {
+	    return thresholdDataReasonGroupMap;
+	}
+
+	/**
+	 * @param thresholdDataReasonGroupMap the thresholdDataReasonGroupMap to set
+	 */
+	public void setThresholdDataReasonGroupMap(Map<Long, Object> thresholdDataReasonGroupMap) {
+	    this.thresholdDataReasonGroupMap = thresholdDataReasonGroupMap;
+	}
+	
+	public Integer getCurrentGroupIndex() {
+		return currentGroupIndex;
+	}
+
+	public void setCurrentGroupIndex(Integer currentGroupIndex) {
+		this.currentGroupIndex = currentGroupIndex;
+	}
 	//27868 - end
 	// #26059 - start
 	/**
@@ -2630,6 +2660,26 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.counter = counter;
 	}
 	
+	
+	/**
+	 * Retrieves the current counter reason value.
+	 * 
+	 * @return The counter reason value as an {@link Integer}.
+	 */
+	public Integer getCounterReason() {
+		return counterReason;
+	}
+
+	/**
+	 * Sets the counter reason value.
+	 * 
+	 * @param counter
+	 *            The counter reason value to set.
+	 */
+	public void setCounterReason(Integer counterReason) {
+		this.counterReason = counterReason;
+	}
+	
 	/**
 	 * Checks if any item has a reject decision.
 	 */
@@ -2657,7 +2707,34 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setExistInAssignItemDetail(boolean existInAssignItemDetail) {
 		this.existInAssignItemDetail = existInAssignItemDetail;
 	}
-	
+
+	/**
+	 * @return the scQuote
+	 */
+	public ScQuote getScQuote() {
+		return scQuote;
+	}
+
+	/**
+	 * @param scQuote the scQuote to set
+	 */
+	public void setScQuote(ScQuote scQuote) {
+		this.scQuote = scQuote;
+	}
+
+	/**
+	 * @return the selectedBpmAction
+	 */
+	public String getSelectedBpmAction() {
+		return selectedBpmAction;
+	}
+
+	/**
+	 * @param selectedBpmAction the selectedBpmAction to set
+	 */
+	public void setSelectedBpmAction(String selectedBpmAction) {
+		this.selectedBpmAction = selectedBpmAction;
+	}
 	
 	// #26059 - end
 }

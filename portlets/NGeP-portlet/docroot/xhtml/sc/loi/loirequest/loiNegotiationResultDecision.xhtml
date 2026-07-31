@@ -24,7 +24,7 @@
 								value="#{lOIDetailBackingBean.managedBean.decisionCode}">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.loiNegoDecisionType)}" />
-							</p:selectOneMenu>															
+							</p:selectOneMenu>
 							<p:message id="decisionMsg" for="decisionId" display="icon" />
 						</c:when>
 						<c:otherwise>
@@ -39,7 +39,8 @@
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.justification']}" /></td>
 				<td colspan="3"><p:inputTextarea id="justificationId"
-						disabled="#{readOnlyTask or isNotReachAgreement}" label="#{lbl['lbl.sc.justification']}"
+						disabled="#{readOnlyTask or isNotReachAgreement}"
+						label="#{lbl['lbl.sc.justification']}"
 						required="#{not empty param['skipvalidation']}"
 						value="#{lOIDetailBackingBean.managedBean.justification}"
 						cols="110" rows="3" onkeyup="limitTextArea(this,1000);"
@@ -74,8 +75,6 @@
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
-
-
 	</p:panel>
 
 </ui:composition>

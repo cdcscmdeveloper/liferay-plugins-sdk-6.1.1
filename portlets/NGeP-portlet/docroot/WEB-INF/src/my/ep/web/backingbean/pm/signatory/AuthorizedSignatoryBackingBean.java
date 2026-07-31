@@ -264,8 +264,8 @@ public class AuthorizedSignatoryBackingBean extends
 		}
 		// eff date must not be after exp date
 		PmCertSignatory certSignatory = null;
-		Date effDate = null;
-		Date expDate = null;
+		//Date effDate = null;
+		//Date expDate = null;
 		for (int i = 0; i < certSignatories.size(); i++) {
 			certSignatory = certSignatories.get(i);
 			if (DbValueConst.RECORD_STATUS_ACTIVE == certSignatory.getRecordStatusFlg()) {
@@ -418,7 +418,7 @@ public class AuthorizedSignatoryBackingBean extends
 				modifiedCertSignatories.add(pmcertSignatory);
 				/************ AUDIT 35509 END *************/
 			}
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForSignatory(pmcertSignatory,

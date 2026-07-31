@@ -37,6 +37,7 @@
 
 		<br />
 		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
 		<p:dataTable var="tmp" value="#{svoSiteVisitBackingBean.managedBean.templates}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<!-- #37605 -->
@@ -47,8 +48,11 @@
 				<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}" />
 			</p:column>
 		</p:dataTable>
+		</c:if>
 	</p:panel>
 
+	<!-- 28775 -->
+	<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
 	<p:panel header="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}">
 		<table class="customTbl">
 			<tr>
@@ -61,13 +65,14 @@
 						label="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}"
 						maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.actualVisitDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						disabled="#{viewFlag}"/>
 				</td>
 				<td class="tdTitle" /><td class="tdContent" />
 			</tr>
 		</table>
 	</p:panel>
+	</c:if>
 	<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 	
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" toggleable="true">
