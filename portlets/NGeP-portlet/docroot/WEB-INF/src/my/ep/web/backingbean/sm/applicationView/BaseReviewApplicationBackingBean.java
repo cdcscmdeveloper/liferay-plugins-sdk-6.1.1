@@ -2515,16 +2515,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							getManagedBean().getEditVO().setPoEditCategory(false);
 							getManagedBean().getEditVO().setSuppEditCategory(false);
 						}
-						
-						SmApplicationUtil.roleDescriptionOtherDesc(history);
-						
-						if (history.getOtherDescOld() != null) {
-							oldHistory = SmApplicationUtil.oldOtherDescriptionHistory(history);
-						}
-					}
-					
-					if (oldHistory != null) {
-						cat.getSmSuppCatOtherDescHistory().add(oldHistory);
 					}
 					
 					getManagedBean().getSupProfileHistoryOtherDesc().add(cat);

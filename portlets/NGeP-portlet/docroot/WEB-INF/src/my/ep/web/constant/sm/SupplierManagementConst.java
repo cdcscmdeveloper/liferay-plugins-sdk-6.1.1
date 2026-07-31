@@ -244,6 +244,7 @@ public class SupplierManagementConst {
 	public static final String APPROVER_SDM = "SDMA";
 	public static final String SECTION_ROLE_APP_SDM = "SDM";
 	public static final String SUPPLIER_RENEWAL = "S";
+	public static final String SUPPLIER_DATA = "SUPD";
 	public static final String APPLIED_CAT = "APPLIED";
 	public static final String PREVIOUS_CAT = "PREVIOUS";
 	public static final String SECTION_MAIN = "MAIN";

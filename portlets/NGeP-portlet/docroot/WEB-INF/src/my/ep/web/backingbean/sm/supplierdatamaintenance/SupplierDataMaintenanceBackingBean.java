@@ -3461,7 +3461,7 @@ public class SupplierDataMaintenanceBackingBean extends
                 return otherDescBean.getOtherDesc();
 
 	        case "THREE":
-                return otherDescBean.getRoleDesc();
+                return roleDescriptionOtherDesc(otherDescBean);
 	    }
 		return noValue;
 
@@ -3474,12 +3474,9 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void saveOtherDescriptionEdit() {
 		try {
 			List<SmAppl> smApplList = new ArrayList<>();
+			List<SmSuppCatOtherDescHistoryReqDTO> supplierEditList = new ArrayList<>();
+
 			smApplList.add(getManagedBean().getHistorySuppCategory().getSmAppl());
-			getManagedBean().setOtherDescOld(null);
-			
-			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
-				getManagedBean().setOtherDescOld(getManagedBean().getHistorySuppCategory().getOtherDesc());
-			}
 			
 			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 			reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
@@ -3495,11 +3492,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			boolean firstDataApprover = true;
 
 			while (iterator.hasNext()) {
-			    SmSuppCatOtherDescHistory obj = iterator.next();
 			    
-			    if (obj.getRoleType() == null) { //skip data display for supplier
-			        continue;
-			    }
+				SmSuppCatOtherDescHistory obj = iterator.next();
 			    
 			    if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
 					firstDataApprover = false;
@@ -3513,7 +3507,26 @@ public class SupplierDataMaintenanceBackingBean extends
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
 			}
 			
-			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(reqDTO);
+			if (history.isEmpty()) {
+				
+				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
+				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
+				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
+				suppReqDTO.setCreatedBy(reqDTO.getCreatedBy());
+				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
+				
+				if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
+					suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+				}
+				
+				supplierEditList.add(suppReqDTO);
+			}
+			
+			supplierEditList.add(reqDTO);
+			
+			for (SmSuppCatOtherDescHistoryReqDTO updateDTO : supplierEditList) {
+				SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(updateDTO);
+			}
 			
 			// Initialize for appl in progress.
 			if (getManagedBean().isHasActiveTransaction() && CollectionUtils.isNotEmpty(getManagedBean().getActiveApplList())) {
@@ -3599,8 +3612,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private void setApplNoHistory(SmSupplierCategory cat) {
 		
-		SmSuppCatOtherDescHistory oldHistory = new SmSuppCatOtherDescHistory();
-		
 		for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 			
 			history.setApplNoHistory(history.getSmAppl().getApplNo());
@@ -3612,17 +3623,39 @@ public class SupplierDataMaintenanceBackingBean extends
 				getManagedBean().setOtherDescChangeSupApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
-			
-			SmApplicationUtil.roleDescriptionOtherDesc(history);
-			
-			if (history.getOtherDescOld() != null) {
-				oldHistory = SmApplicationUtil.oldOtherDescriptionHistory(history);
-			}
+		}
+	}
+	
+	public static String roleDescriptionOtherDesc(SmSuppCatOtherDescHistory history) {
+		
+		String roleDesc = "";
+		
+		boolean roleApproverSDM = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SECTION_ROLE_APP_SDM);
+		boolean roleApproverSDMA = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.APPROVER_SDM);
+		boolean roleApprover = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SECTION_REV_ROLE_APP);
+		boolean roleSupApprover = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SUPPLIER_APPROVER);
+		boolean roleProcessingOfficer = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SECTION_REV_ROLE_PO);
+		boolean roleSupProcessingOfficer = history.getRoleType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO);
+		boolean roleSupplierData = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SUPPLIER_DATA);
+		boolean roleSupplier = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SUPPLIER_RENEWAL);
+		
+		if (roleProcessingOfficer || roleSupProcessingOfficer) {
+			roleDesc = SupplierManagementConst.ROLE_PROCESSING_OFFICER;
+		} else if (roleApprover || roleSupApprover || roleApproverSDMA || roleApproverSDM) {
+			roleDesc = SupplierManagementConst.ROLE_REGISTRATION_APPROVAL;
+		} else if (roleSupplier | roleSupplierData) {
+			roleDesc = SupplierManagementConst.ROLE_SUPPLIER;
 		}
 		
-		if (oldHistory != null) {
-			cat.getSmSuppCatOtherDescHistory().add(oldHistory);
-		}
+		return roleDesc;
 	}
 	// 36504 - END
 }
