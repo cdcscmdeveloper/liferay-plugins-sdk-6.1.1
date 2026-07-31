@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -485,8 +484,8 @@ public final class AiDocSupport {
 		}
 
 		/**
-		 * Group extracted bank records by (bank name + account number), dedupe, then set each record's valid*
-		 * flags against the newly-added/modified supplier banks. Mutates the DTOs in place.
+		 * Set every extracted bank record's valid* flags against the newly-added/modified supplier banks.
+		 * Mutates the DTOs in place.
 		 * @param appl
 		 * @param docEntities
 		 */
@@ -494,31 +493,17 @@ public final class AiDocSupport {
 			if (EntityHelper.isCollectionEmpty(docEntities)) {
 				return;
 			}
-			List<AiBankDocDTO.AiBankStatementDTO> bankEntities = dedupeBankStatements(docEntities);
-
 			// Compare with new/modified banks only.
 			Map<String, String> supplierAccounts = collectChangedSupplierAccounts(appl);
 			List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
 			String companyNameSupp = appl.getSmSupplier().getCompanyName();
 
-			for (AiBankDocDTO.AiBankStatementDTO bank : bankEntities) {
-				validateBankRecord(bank, supplierAccounts, supplierBanks, companyNameSupp);
-			}
-		}
-
-		// Flatten every response's statements and keep the first per (bank name + account number).
-		private static List<AiBankDocDTO.AiBankStatementDTO> dedupeBankStatements(List<AiBankDocDTO> docEntities) {
-			Map<String, AiBankDocDTO.AiBankStatementDTO> uniqueBanks = new LinkedHashMap<>();
+			// the flags live on each record, so a repeated account still has to be verified on its own file
 			for (AiBankDocDTO entity : docEntities) {
-				for (AiBankDocDTO.AiBankStatementDTO be : entity.getBankStatements()) {
-					String key = (be.getBankName() == null ? "" : be.getBankName().trim().toLowerCase()) + "|"
-							+ (be.getAccountNo() == null ? "" : be.getAccountNo().trim());
-					if (!uniqueBanks.containsKey(key)) {
-						uniqueBanks.put(key, be);
-					}
+				for (AiBankDocDTO.AiBankStatementDTO bank : entity.getBankStatements()) {
+					validateBankRecord(bank, supplierAccounts, supplierBanks, companyNameSupp);
 				}
 			}
-			return new ArrayList<>(uniqueBanks.values());
 		}
 
 		// Account number -> financial-org name, for new/modified supplier banks only.
@@ -731,8 +716,7 @@ public final class AiDocSupport {
 			}
 		}
 
-		// Set the tenancy AI transients so isXxxFromAI() lights the icon while the field still matches the
-		// extraction.
+		// display AI icons when values match
 		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te) {
 			if (fac == null || te == null) {
 				return;
@@ -759,13 +743,12 @@ public final class AiDocSupport {
 		}
 	}
 
-	/** A parsed EPF Contribution Statement: the employer name and the employee rows. */
+	/**
+	 * A parsed EPF Contribution Statement: the employer name and the employee rows.
+	 */
 	public static class AiEpfResultDTO implements Serializable {
 
 		private static final long serialVersionUID = 1L;
-
-		/** Employee rows rendered in full by {@link #getLabel()}; the rest are summarised as a count. */
-		private static final int MAX_LABEL_EMPLOYEES = 5;
 
 		private String employerName;
 		private List<AiEmployeeDTO> employees = new ArrayList<>();
@@ -773,9 +756,8 @@ public final class AiDocSupport {
 		private boolean validEmployerName = true;
 
 		/**
-		 * Tooltip rows: the employer name with a tick/cross verdict (set by {@link AiDocValidator}), then the
-		 * first {@value #MAX_LABEL_EMPLOYEES} employees' name / IC. Any remainder is summarised as a count.
-		 * Employees carry no verdict, so they render unmarked.
+		 * Tooltip row: the employer name with a tick/cross verdict (set by {@link AiDocValidator}). The
+		 * employee rows carry no verdict of their own and are not rendered here.
 		 */
 		public String getLabel() {
 			StringBuilder sb = new StringBuilder();
@@ -787,29 +769,7 @@ public final class AiDocSupport {
 					sb.append("&#x2713; ").append(s);
 				}
 			}
-			List<AiEmployeeDTO> emps = getEmployees();
-			int shown = Math.min(emps.size(), MAX_LABEL_EMPLOYEES);
-			for (int i = 0; i < shown; i++) {
-				AiEmployeeDTO emp = emps.get(i);
-				appendEmployeeField(sb, "lbl.sm.person.name", emp.getEmployeeName());
-				appendEmployeeField(sb, "lbl.sm.person.icNo", emp.getNricNumber());
-				sb.append(BR);
-			}
-			int rest = emps.size() - shown;
-			if (rest > 0) {
-				sb.append(ResourceBundleUtils.getMessage("lbl.sm.ai.epf.more.employees",
-						new Object[] { rest }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())).append(BR);
-			}
 			return sb.toString();
-		}
-
-		// One unmarked labelled employee row; skips a field OCR left below the confidence threshold.
-		private void appendEmployeeField(StringBuilder sb, String labelKey, String value) {
-			if (value == null) {
-				return;
-			}
-			sb.append(AiDocParser.label(labelKey)).append(": ").append(value).append(BR);
 		}
 
 		public boolean isValidEmployerName() {
@@ -836,7 +796,9 @@ public final class AiDocSupport {
 			this.employees = employees;
 		}
 
-		/** One EPF employee record (KWSP No. / NRIC / name). */
+		/**
+		 * One EPF employee record (KWSP No. / NRIC / name).
+		 */
 		public static class AiEmployeeDTO implements Serializable {
 
 			private static final long serialVersionUID = 1L;
@@ -1115,7 +1077,9 @@ public final class AiDocSupport {
 			return false;
 		}
 
-		/** One bank-account record extracted by OCR, plus its per-field verification flags. */
+		/**
+		 * One bank-account record extracted by OCR, plus its per-field verification flags.
+		 */
 		public static class AiBankStatementDTO implements Serializable {
 
 			private static final long serialVersionUID = 1L;
