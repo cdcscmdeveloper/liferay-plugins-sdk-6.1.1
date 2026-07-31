@@ -251,6 +251,9 @@ public class SupplierManagementConst {
 	public static final String APPL_TYPE_UPDATE_MOF = "U";
 	public static final long STATUS_PENDING_SITE_VISIT = 20105;
 	public static final long STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE = 20103;
+	public static final String ROLE_REGISTRATION_APPROVAL = "Registration Approver";
+	public static final String ROLE_PROCESSING_OFFICER = "Processing Officer";
+	public static final String ROLE_SUPPLIER = "Supplier";
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
