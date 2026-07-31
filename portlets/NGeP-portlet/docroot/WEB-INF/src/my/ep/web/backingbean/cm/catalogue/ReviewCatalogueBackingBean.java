@@ -684,7 +684,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	    for (Object obj : cbb.getManagedBean().getRejectReasonIds()) {
 	        Long id = Long.valueOf(String.valueOf(obj));
 
-	        if (id == 10010 && (cbb.getManagedBean().getRejectReason() == null ||
+	        if (id.equals(CmConst.REJECT_REASON_OTHER) && (cbb.getManagedBean().getRejectReason() == null ||
 	                cbb.getManagedBean().getRejectReason().isEmpty())) {
 	            FacesContext.getCurrentInstance().addMessage(null,
 	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(

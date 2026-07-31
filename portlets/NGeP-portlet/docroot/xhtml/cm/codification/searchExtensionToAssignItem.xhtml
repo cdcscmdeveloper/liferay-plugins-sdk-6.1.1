@@ -15,7 +15,7 @@
 
 		<div class="clear"></div>
 
-		<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="false">
+		<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 			<table style="width: 100%; margin-bottom: 4px;">
 				<tr>
@@ -237,7 +237,7 @@
 			<!-- Item Specification PopUp -->
 			<ui:include src="/xhtml/cm/codification/itemSpecDlg.xhtml" />
 
-			<!-- #31503 Start -->
+			<!-- #31503, #34447 Start -->
 			<!--<ui:remove>#26059 - Start</ui:remove>
 			<p:confirmDialog id="asignCodeDialConfirm"
 					widgetVar="asignCodeDialConfirm" message=""
@@ -267,7 +267,7 @@
 				</div>
 			</p:confirmDialog>
 			<ui:remove>#26059 - End</ui:remove>-->
-			<!-- #31503 End -->
+			<!-- #31503, #34447 End -->
 
 			<!-- 34447 Start -->
 			<p:blockUI block="cmExtensionSearchToAssignID" widgetVar="pageBlockWidget">
