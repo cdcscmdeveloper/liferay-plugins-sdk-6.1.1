@@ -1099,14 +1099,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			String loginId = this.getManagedBean().getSelectedUser().getLoginId();
 			Long userId = this.getManagedBean().getSelectedUser().getUserId();
 			EpException pendingDocumentException;
-
+			// revert it to active
 			if (isAnyPendingTaskForUser(loginId)) {
 				logger.info("orgUnitStatusChange 1 - Pending task found");
 				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// hit error and exit
 				throw new EpException(MessageConst.ERROR_770167);
 			} else if ((pendingDocumentException = isAnyPendingDocForUserRole(validateUserOrgandRole(), userId)) != null) {
 				logger.info("orgUnitStatusChange 2 - Pending document found");
 				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// hit error and exit
 				throw pendingDocumentException;
 			} else {
 				String[] activeUserGroup = isActiveUserGroupUser();
@@ -1123,6 +1125,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					logger.info("orgUnitStatusChange 4 - After checkIsActiveGovtSellerUser");
 				}
 				logger.info("Before inactiveUserOrgRoleAndReceivingAddress");
+				// if inactive set expire Date to SyetemDate
 				inactiveUserOrgRoleAndReceivingAddress(status);
 				logger.info("After inactiveUserOrgRoleAndReceivingAddress");
 			}
