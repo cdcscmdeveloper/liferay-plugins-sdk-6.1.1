@@ -1508,7 +1508,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						
 						setApplNoHistory(cat);
 				}
-				// 36504 - SDM - START
+				// 36504 - SDM - END
 
 				
 				apprvList.add(cat);
@@ -1565,12 +1565,14 @@ public class SupplierDataMaintenanceBackingBean extends
 											mainCatcode.equals(existingCatcode)) {
 										catObj.getSmSuppCatOtherDescHistory().addAll(previousKN.getSmSuppCatOtherDescHistory());
 									}
-									SmApplicationUtil.sortbyDateOtherDescHistory(previousKN.getSmSuppCatOtherDescHistory());
 								}
 							} else {
 								otherDescSet.add(mainCatcode);
-								SmApplicationUtil.sortbyDateOtherDescHistory(previousKN.getSmSuppCatOtherDescHistory());
 								otherDescList.add(previousKN);
+							}
+							
+							if (previousKN.getSmSuppCatOtherDescHistory() != null) {
+								SmApplicationUtil.sortbyDateOtherDescHistory(previousKN.getSmSuppCatOtherDescHistory());
 							}
 					}
 				}
@@ -3447,131 +3449,24 @@ public class SupplierDataMaintenanceBackingBean extends
 	// #34031 End
 	
 	// 36504 - START
-	public String getOtherDescValMaintenance(SmSuppCatOtherDescHistory otherDescBean, String param) {
-
-	    if (otherDescBean == null || param == null) {
-	        return SmCommonUtil.getMessage("lbl.sm.no.available", null);
-	    }
-
-	    String roleType = otherDescBean.getRoleType();
-	    String noValue = SmCommonUtil.getMessage("lbl.sm.no.available", null);
-
-	    switch (param.toUpperCase()) {
-
-	        case "ONE":
-	        	boolean applTypeNoEdit = !otherDescBean.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_UPDATE_MOF) && 
-	        		!otherDescBean.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI);
-	        	
-	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
-	            		SupplierManagementConst.SUPPLIER_APPROVER, SupplierManagementConst.APPROVER_SDM) &&
-                    otherDescBean.getOtherDescOld() != null && applTypeNoEdit) {
-	                	return otherDescBean.getOtherDescOld();
-	            } else if (isRole(roleType, SupplierManagementConst.SUPPLIER_RENEWAL) &&
-	                    otherDescBean.getOtherDesc() != null && applTypeNoEdit)  {
-		            		return otherDescBean.getOtherDesc();
-		        }
-	            break;
-	        
-	        case "TWO":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-	            		SupplierManagementConst.SUPPLIER_PO)) {
-	                return otherDescBean.getOtherDesc();
-	            }
-	            break;
-
-	        case "THREE":
-	        	if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-                        SupplierManagementConst.SUPPLIER_PO)) {
-	                return getUserNameByUserId(otherDescBean.getCreatedBy());
-	            }
-	            break;
-	        
-	        case "FOUR":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
-	            		SupplierManagementConst.SUPPLIER_APPROVER,
-	            		SupplierManagementConst.SECTION_ROLE_APP_SDM, SupplierManagementConst.APPROVER_SDM)) {
-	                return otherDescBean.getOtherDesc();
-	            }
-	            break;
-
-	        case "FIVE":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
-	                                SupplierManagementConst.SUPPLIER_APPROVER,
-	                                SupplierManagementConst.SECTION_ROLE_APP_SDM, SupplierManagementConst.APPROVER_SDM)) {
-	                return getUserNameByUserId(otherDescBean.getCreatedBy());
-	            }
-	            break;
-	    }
-
-	    return noValue;
-	}
-	
 	public String getOtherDescVal(SmSuppCatOtherDescHistory otherDescBean, String param) {
-
-	    if (otherDescBean == null || param == null) {
-	        return SmCommonUtil.getMessage("lbl.sm.no.available", null);
-	    }
-
-	    String roleType = otherDescBean.getRoleType();
 	    String noValue = SmCommonUtil.getMessage("lbl.sm.no.available", null);
 
 	    switch (param.toUpperCase()) {
 
 	        case "ONE":
-	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
-	            		SupplierManagementConst.SUPPLIER_APPROVER) &&
-                    otherDescBean.getOtherDescOld() != null) {
-	                	return otherDescBean.getOtherDescOld();
-	            } else if (isRole(roleType, SupplierManagementConst.SUPPLIER_RENEWAL) &&
-                    otherDescBean.getOtherDesc() != null)  {
-	            		return otherDescBean.getOtherDesc();
-	            }
-	            break;
+	        	 return getUserNameByUserId(otherDescBean.getCreatedBy());
 
 	        case "TWO":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-	            		SupplierManagementConst.SUPPLIER_PO)) {
-	                return otherDescBean.getOtherDesc();
-	            }
-	            break;
+                return otherDescBean.getOtherDesc();
 
 	        case "THREE":
-	        	if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-                        SupplierManagementConst.SUPPLIER_PO)) {
-	                return getUserNameByUserId(otherDescBean.getCreatedBy());
-	            }
-	            break;
-
-	        case "FOUR":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
-	            		SupplierManagementConst.SUPPLIER_APPROVER)) {
-	                return otherDescBean.getOtherDesc();
-	            }
-	            break;
-
-	        case "FIVE":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
-	                                SupplierManagementConst.SUPPLIER_APPROVER)) {
-	                return getUserNameByUserId(otherDescBean.getCreatedBy());
-	            }
-	            break;
+                return otherDescBean.getRoleDesc();
 	    }
+		return noValue;
 
-	    return noValue;
 	}
 
-	private boolean isRole(String roleType, String... roles) {
-	    if (roleType == null) {
-	        return false;
-	    }
-	    for (String role : roles) {
-	        if (roleType.equalsIgnoreCase(role)) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-	
 	/**
 	 * To save data Other Description Supplier Data Maintenance
 	 *  
@@ -3581,7 +3476,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			List<SmAppl> smApplList = new ArrayList<>();
 			smApplList.add(getManagedBean().getHistorySuppCategory().getSmAppl());
 			getManagedBean().setOtherDescOld(null);
-			getManagedBean().setOtherDescOld(getManagedBean().getHistorySuppCategory().getOtherDesc());
+			
+			if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
+				getManagedBean().setOtherDescOld(getManagedBean().getHistorySuppCategory().getOtherDesc());
+			}
 			
 			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 			reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
@@ -3692,6 +3590,9 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * @param cat 
 	 */
 	private void setApplNoHistory(SmSupplierCategory cat) {
+		
+		SmSuppCatOtherDescHistory oldHistory = new SmSuppCatOtherDescHistory();
+		
 		for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 			
 			history.setApplNoHistory(history.getSmAppl().getApplNo());
@@ -3703,6 +3604,16 @@ public class SupplierDataMaintenanceBackingBean extends
 				getManagedBean().setOtherDescChangeSupApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
+			
+			SmApplicationUtil.roleDescriptionOtherDesc(history);
+			
+			if (history.getOtherDescOld() != null) {
+				oldHistory = SmApplicationUtil.oldOtherDescriptionHistory(history);
+			}
+		}
+		
+		if (oldHistory != null) {
+			cat.getSmSuppCatOtherDescHistory().add(oldHistory);
 		}
 	}
 	// 36504 - END
