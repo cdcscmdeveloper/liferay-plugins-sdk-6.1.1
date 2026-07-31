@@ -8619,7 +8619,7 @@ public class SpecificationBackingBean extends
 				technical.setOverallFin(new BigDecimal(0));
 			}
 //			#38151 wip
-			if (this.getManagedBean().getWipStatusMax() < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+			if (this.getManagedBean().isWeightage35384WIP()) {
 				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 				if (null != passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
 						&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
