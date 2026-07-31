@@ -3396,6 +3396,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 
 		SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
 		suppSearchDeletedReqDTO.setSupplierId(supplierId);
@@ -3412,12 +3414,23 @@ public class SupplierFinalizationBiddingBackingBean extends
 			}
 		}
 
-		if (CollectionUtils.isEmpty(supplierBranchListDeleted)) {
-			getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
-		} else {
-			supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
-			getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(supplierId);
+		for (SmSupplierBranch wipSupplierBranch : wipSupplierBranchListDeleted) {
+			int statusFlag = wipSupplierBranch.getRecordStatusFlg();
+			if (statusFlag == DbValueConst.RECORD_STATUS_ACTIVE) {
+				wipSupplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_YES);
+			} else {
+				wipSupplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_NO);
+			}
 		}
+
+		if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
+			supplierBranchListDeleted.addAll(wipSupplierBranchListDeleted);
+		}
+
+		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
+		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		
 	}
 
 	// #28777 & #29729 - End

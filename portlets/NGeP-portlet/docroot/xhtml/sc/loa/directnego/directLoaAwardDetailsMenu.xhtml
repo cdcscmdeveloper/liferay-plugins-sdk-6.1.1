@@ -8,8 +8,16 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
-	
-	<ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
+	<ui:remove>#30432 - Start</ui:remove>
+	<c:choose>
+		<c:when test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
+			<ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>	
+		</c:when>
+		<c:otherwise>
+			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include> 
+		</c:otherwise>
+	</c:choose>
+	<ui:remove>#30432 - End</ui:remove>
 	<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include> <br/>
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.uom.instruction.view.progressive.payment.option']}" escape="false" />
 	<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
@@ -50,8 +58,15 @@
 		</p:outputPanel>
 		<br />
 		<!-- #29007 End Vinod -->
-		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}"
-			value="#{lbl['lbl.sc.item.codification.instruction']}" />
+		<!-- #31503 Start -->
+		<h:outputText styleClass="instruction"
+			rendered="#{isSupplierAckStatus}"
+			value="#{lbl['lbl.sc.qt.assign.item.code.instruction']}" />
+		<br />
+		<h:outputText styleClass="instruction"
+			rendered="#{isSupplierAckStatus}"
+			value="#{lbl['lbl.sc.qt.assign.item.code.instruction2']}" />
+		<!-- #31503 End -->		
 		<table width="100%">
 			<tr>
 				<td valign="top" width="20%"><h:outputLabel

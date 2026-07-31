@@ -48,18 +48,19 @@
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
 					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}"/></td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
 							<td>
 								<h:outputText value="#{cc.attrs.currRegStatus}"/>
 							</td>
 						</tr>
 					</p:outputPanel>
+					
 					<!-- #37925 START -->
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi}">
 						<tr>
@@ -68,6 +69,20 @@
 								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
 							</td>
 						</tr>
+						<ui:fragment rendered="#{not empty cc.attrs.bean.strLabelCountryOrigin and cc.attrs.bean.strLabelCountryOrigin.toLowerCase() eq 'unknown'}">
+							<tr >
+								<td></td>
+								<td>
+									<div class="ui-messages ui-widget"  
+										aria-live="polite"
+										style="max-width: 90ch;">
+										<div class="ui-messages-warn ui-corner-all">
+											<h:outputText value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}" escape="false" />
+										</div>
+									</div>
+								</td>
+							</tr>
+						</ui:fragment>
 					</p:outputPanel>
 					
 					<tr>
@@ -106,7 +121,7 @@
 								<h:outputText value="#{cc.attrs.bean.currRegStatus}" rendered="#{cc.attrs.bean.displayLabelRegistrationStatus}" /><!-- #37925 -->
 								<p:outputPanel rendered="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="approveSelBox" required="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"
+										id="approveSelBox" required="#{!cc.attrs.poRecommend and (cc.attrs.smAppl.applType eq 'B' or cc.attrs.changeCurrRegStatus)}"
 										value="#{cc.attrs.bean.approvedStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
@@ -119,7 +134,7 @@
 								</p:outputPanel>
 								<p:outputPanel rendered="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="poRecommendSelBox" required="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"
+										id="poRecommendSelBox" required="#{cc.attrs.poRecommend and (cc.attrs.smAppl.applType eq 'B' or cc.attrs.changeCurrRegStatus)}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
@@ -329,23 +344,24 @@
 								value="#{lbl['lbl.sm.remarks.overLap.note3']}" escape="false" /></td>
 					</tr>
 					<!-- 13362 END -->
+					<!-- 40150 START -->
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
 						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 								style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
-								maxlength="2500"
+								maxlength="4000"
 								value="#{cc.attrs.overLapRemarks}"
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
-								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.ola']}"
 								required="false">
 								<!-- 39422 START -->
 								<p:ajax event="blur" process="@this" update="@this"/>
 								<!-- 39422 End -->
-								<f:validateLength maximum="2500" />
+								<f:validateLength maximum="4000" />
 							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
 								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"
 								display="icon" /></td>
-					</tr>
+					</tr><!-- 40150 END -->
 					<tr>
 					<td></td>
 						<td align="left"><p:outputLabel style="float:left;"

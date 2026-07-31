@@ -193,7 +193,7 @@
 							onclick="blockWidget.show();"
 							oncomplete="deleteConfirmPopUp.hide(); blockWidget.hide();"
 							partialSubmit="true" process="@this"
-							update="@([id$=selectedCategoryTable])"
+							update="@([id$=selectedCategoryTable],[id$=supplierPnlId])"
 							action="#{directLOABackingBean.deleteProcurementRelatedCategory()}" />
 						<p:commandButton value="#{lbl['lbl.btn.no']}"
 							onclick="deleteConfirmPopUp.hide();" type="button"

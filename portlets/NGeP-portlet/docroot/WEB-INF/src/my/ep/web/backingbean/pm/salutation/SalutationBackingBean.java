@@ -314,7 +314,7 @@ public class SalutationBackingBean extends
 					IAuditPMSO.class);
 
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION) && salutation.getSalutationId() != null) {
-				SalutationResDTO oldResDTO = salutationSO.retriveSalutaionById(reqDTO);
+				SalutationResDTO oldResDTO = salutationSO.retrieveSalutationById(reqDTO);
 				getManagedBean().setOldPmSalutation(oldResDTO.getSalutation());
 			}
 			/************ END: AUDIT #28895_35509 *************/

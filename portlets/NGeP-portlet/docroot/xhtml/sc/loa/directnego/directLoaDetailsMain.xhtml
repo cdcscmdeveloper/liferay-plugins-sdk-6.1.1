@@ -59,66 +59,42 @@
 						<p:tabMenu id="menuTab" styleClass="sidemenu"
 							activeIndex="#{directLOABackingBean.managedBean.selectedTabIndex}">
 
+							<ui:remove>#29468 Vinod Start Added Action for all menu items to validate unit price and quantity</ui:remove>
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}"
-								update="@form">
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="0" />
-							</p:menuitem>
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(0)}"
+								update="@form" />
 							<!-- #29661 start -->
 							<p:menuitem value="#{lbl['lbl.sc.sr.cat.code']}"
+								update="@form"
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(1)}"
 								actionListener="#{directLOABackingBean.getSmSupplierCategory(directLOABackingBean.managedBean.scLoa)}"
-								update="@form">
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="1" />
-							</p:menuitem>
+								rendered="#{directLOABackingBean.managedBean.showCategoryCode}" /><!-- #29661 #40096 adli  -->
 							<!-- #29661 end -->
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
-								update="@form">
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="2" />
-							</p:menuitem>
+								update="@form"
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(2)}" />
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-								actionListener="#{directLOABackingBean.searchSupplierItemByName}" update="@form"><ui:remove>#29007 Added actionListener Vinod</ui:remove>
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="3" />
-							</p:menuitem>
+								actionListener="#{directLOABackingBean.searchSupplierItemByName}" update="@form"
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(3)}" /><ui:remove>#29007 Added actionListener Vinod</ui:remove>
 							<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
-								update="@form">
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="4" />
-							</p:menuitem>
+								update="@form"
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(4)}" />
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}"
-								update="@form">
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="5" />
-							</p:menuitem>
+								update="@form"
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(5)}" />
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								update="@form"
-								disabled="#{!(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled )}"><!-- new #25726 remove non periodic to condition -->
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="6" />
-							</p:menuitem>
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(6)}"
+								disabled="#{!(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled )}" /><!-- new #25726 remove non periodic to condition -->
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
 								update="@form"
-								disabled="#{!directLOABackingBean.managedBean.scLoa.bondReq}">
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="7" />
-							</p:menuitem>
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(7)}"
+								disabled="#{!directLOABackingBean.managedBean.scLoa.bondReq}" />
 							<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
 								update="@form"
-								disabled="#{!directLOABackingBean.managedBean.scLoa.approvalReq}">
-								<f:setPropertyActionListener
-									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-									value="8" />
-							</p:menuitem>
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(8)}"
+								disabled="#{!directLOABackingBean.managedBean.scLoa.approvalReq}" />
+							<ui:remove>#29468 Vinod End</ui:remove>
 						</p:tabMenu>
 					</h:panelGroup></td>
 				<td width="80%" valign="top"><h:panelGroup id="menuContent">
