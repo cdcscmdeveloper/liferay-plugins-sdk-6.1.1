@@ -19213,7 +19213,7 @@ public class SmApplicationBackingBean extends
 				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
-				suppReqDTO.setCreatedBy(reqDTO.getCreatedBy());
+				suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
 				
 				if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
