@@ -3449,13 +3449,32 @@ public class SupplierDataMaintenanceBackingBean extends
 	// #34031 End
 	
 	// 36504 - START
+	/**
+	 * Returns the display value for the specified parameter from the given
+	 * supplier category other description history record.
+	 *
+	 * The supported parameter values are:
+	 *   - ONE - Returns the creator's username with the first letter capitalized.
+	 *   - TWO - Returns the other description.
+	 *   - THREE - Returns the formatted role description.
+	 *
+	 * - If the specified parameter is not supported, a localized
+	 * "Not Available" message is returned.
+	 *
+	 * @param otherDescBean the supplier category other description history record
+	 *                      containing the values to retrieve
+	 * @param param the identifier that determines which value to return
+	 * @return the requested display value
+	 */
 	public String getOtherDescVal(SmSuppCatOtherDescHistory otherDescBean, String param) {
 	    String noValue = SmCommonUtil.getMessage("lbl.sm.no.available", null);
 
 	    switch (param.toUpperCase()) {
 
 	        case "ONE":
-	        	 return getUserNameByUserId(otherDescBean.getCreatedBy());
+	        	 String userName = "";
+	        	 userName = getUserNameByUserId(otherDescBean.getCreatedBy());
+	        	 return capitalizeFirstLetter(userName);
 
 	        case "TWO":
                 return otherDescBean.getOtherDesc();
@@ -3512,7 +3531,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
-				suppReqDTO.setCreatedBy(reqDTO.getCreatedBy());
+				suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
 				
 				if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
@@ -3626,6 +3645,20 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 	
+	/**
+	 * Returns the display description for the role associated with the given
+	 * supplier category other description history record.
+	 *
+	 * The role type is mapped to one of the following descriptions:
+	 *  - Processing Officer
+	 *  - Registration Approval
+	 *  - Supplier
+	 * 
+	 * The returned description is formatted with the first letter capitalized.
+	 *
+	 * @param history the supplier category other description history
+	 * @return the formatted role description
+	 */
 	public static String roleDescriptionOtherDesc(SmSuppCatOtherDescHistory history) {
 		
 		String roleDesc = "";
@@ -3655,7 +3688,24 @@ public class SupplierDataMaintenanceBackingBean extends
 			roleDesc = SupplierManagementConst.ROLE_SUPPLIER;
 		}
 		
-		return roleDesc;
+		return capitalizeFirstLetter(roleDesc);
+	}
+	
+	/**
+	 * Capitalizes the first character of the given text and converts all
+	 * remaining characters to lowercase.
+	 *
+	 * @param text the text to format
+	 * @return the formatted text with the first letter capitalized, or the
+	 *         original value if the input is {@code null} or empty
+	 */
+	public static String capitalizeFirstLetter(String text) {
+	    if (text == null || text.isEmpty()) {
+	        return text;
+	    }
+
+	    return text.substring(0, 1).toUpperCase() +
+	           text.substring(1).toLowerCase();
 	}
 	// 36504 - END
 }
