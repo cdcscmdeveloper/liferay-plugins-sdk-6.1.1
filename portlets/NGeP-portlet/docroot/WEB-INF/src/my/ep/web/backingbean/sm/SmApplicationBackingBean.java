@@ -19172,7 +19172,6 @@ public class SmApplicationBackingBean extends
 			if (!getManagedBean().isOtherDescChangeSupplier()){
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
-			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
 			
 			if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
 				initPmUserRole();
@@ -19184,6 +19183,8 @@ public class SmApplicationBackingBean extends
 			
 			boolean firstDataPO = true;
 			boolean firstDataApprover = true;
+			boolean supplierUserRenewal = getManagedBean().isSupplierUser() && 
+					getManagedBean().getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL);
 
 			while (iterator.hasNext()) {
 			    
@@ -19204,7 +19205,7 @@ public class SmApplicationBackingBean extends
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
 			} else if (getManagedBean().isApproverUser()) {
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
-			} else if (getManagedBean().getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) {
+			} else if (supplierUserRenewal) {
 				reqDTO.setRoleType(SupplierManagementConst.SUPPLIER_RENEWAL);
 			}
 			
@@ -19213,18 +19214,20 @@ public class SmApplicationBackingBean extends
 				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
-				suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
+				suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
 				
-				if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
-					suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+				if (supplierUserRenewal) {
+					suppReqDTO.setCreatedBy(reqDTO.getCreatedBy());
+				} else {
+					suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
 				}
-				
 				supplierEditList.add(suppReqDTO);
 			}
 			
 			supplierEditList.add(reqDTO);
-			
+			getManagedBean().getHistorySuppCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
+
 			for (SmSuppCatOtherDescHistoryReqDTO updateDTO : supplierEditList) {
 				SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(updateDTO);
 			}

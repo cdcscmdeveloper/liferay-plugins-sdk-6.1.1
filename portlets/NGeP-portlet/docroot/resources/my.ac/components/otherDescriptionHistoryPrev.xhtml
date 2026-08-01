@@ -39,7 +39,8 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText value="#{otherDescBean.createdDate}">
+							 <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}">
 								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
 							</h:outputText>
 						</p:column>
@@ -47,21 +48,21 @@
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by']}"
 							style="width : 15% !important; vertical-align:top;">
 					        <h:outputText
-					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}" 
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}"
 					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.other.description']}"
 							style="width : 15% !important; vertical-align:top;">
 					        <h:outputText
-					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}" 
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'THREE')}" 
 					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.role']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 							<h:outputText
-								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'THREE')}" />
+								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}" />
 						</p:column>
 					</p:dataTable>
 					<br />
