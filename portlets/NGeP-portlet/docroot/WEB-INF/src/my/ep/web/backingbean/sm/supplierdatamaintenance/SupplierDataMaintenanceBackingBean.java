@@ -1508,7 +1508,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						
 						setApplNoHistory(cat);
 				}
-				// 36504 - SDM - START
+				// 36504 - SDM - END
 
 				
 				apprvList.add(cat);
@@ -1534,8 +1534,8 @@ public class SupplierDataMaintenanceBackingBean extends
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistoryDataMaintenance(previousKN.getSupplierCategoryId()));
 	
-					if (previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
-							(appl.getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL)) && 
+					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
+							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) && 
 							(catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) && 
 							!EntityHelper.isCollectionEmpty(previousKN.getSmSuppCatOtherDescHistory())) {
@@ -1565,12 +1565,14 @@ public class SupplierDataMaintenanceBackingBean extends
 											mainCatcode.equals(existingCatcode)) {
 										catObj.getSmSuppCatOtherDescHistory().addAll(previousKN.getSmSuppCatOtherDescHistory());
 									}
-									SmApplicationUtil.sortbyDateOtherDescHistory(previousKN.getSmSuppCatOtherDescHistory());
 								}
 							} else {
 								otherDescSet.add(mainCatcode);
-								SmApplicationUtil.sortbyDateOtherDescHistory(previousKN.getSmSuppCatOtherDescHistory());
 								otherDescList.add(previousKN);
+							}
+							
+							if (previousKN.getSmSuppCatOtherDescHistory() != null) {
+								SmApplicationUtil.sortbyDateOtherDescHistory(previousKN.getSmSuppCatOtherDescHistory());
 							}
 					}
 				}
@@ -3447,125 +3449,43 @@ public class SupplierDataMaintenanceBackingBean extends
 	// #34031 End
 	
 	// 36504 - START
-	public String getOtherDescValMaintenance(SmSuppCatOtherDescHistory otherDescBean, String param) {
-
-	    if (otherDescBean == null || param == null) {
-	        return SmCommonUtil.getMessage("lbl.sm.no.available", null);
-	    }
-
-	    String roleType = otherDescBean.getRoleType();
-	    String noValue = SmCommonUtil.getMessage("lbl.sm.no.available", null);
-
-	    switch (param.toUpperCase()) {
-
-	        case "ONE":
-	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
-	            		SupplierManagementConst.SUPPLIER_APPROVER, SupplierManagementConst.APPROVER_SDM) &&
-                    otherDescBean.getOtherDescOld() != null) {
-	                	return otherDescBean.getOtherDescOld();
-	            }
-	            break;
-	        
-	        case "TWO":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-	            		SupplierManagementConst.SUPPLIER_PO)) {
-	                return otherDescBean.getOtherDesc();
-	            }
-	            break;
-
-	        case "THREE":
-	        	if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-                        SupplierManagementConst.SUPPLIER_PO)) {
-	                return getUserNameByUserId(otherDescBean.getCreatedBy());
-	            }
-	            break;
-	        
-	        case "FOUR":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
-	            		SupplierManagementConst.SUPPLIER_APPROVER,
-	            		SupplierManagementConst.SECTION_ROLE_APP_SDM, SupplierManagementConst.APPROVER_SDM)) {
-	                return otherDescBean.getOtherDesc();
-	            }
-	            break;
-
-	        case "FIVE":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
-	                                SupplierManagementConst.SUPPLIER_APPROVER,
-	                                SupplierManagementConst.SECTION_ROLE_APP_SDM, SupplierManagementConst.APPROVER_SDM)) {
-	                return getUserNameByUserId(otherDescBean.getCreatedBy());
-	            }
-	            break;
-	    }
-
-	    return noValue;
-	}
-	
+	/**
+	 * Returns the display value for the specified parameter from the given
+	 * supplier category other description history record.
+	 *
+	 * The supported parameter values are:
+	 *   - ONE - Returns the creator's username with the first letter capitalized.
+	 *   - TWO - Returns the other description.
+	 *   - THREE - Returns the formatted role description.
+	 *
+	 * - If the specified parameter is not supported, a localized
+	 * "Not Available" message is returned.
+	 *
+	 * @param otherDescBean the supplier category other description history record
+	 *                      containing the values to retrieve
+	 * @param param the identifier that determines which value to return
+	 * @return the requested display value
+	 */
 	public String getOtherDescVal(SmSuppCatOtherDescHistory otherDescBean, String param) {
-
-	    if (otherDescBean == null || param == null) {
-	        return SmCommonUtil.getMessage("lbl.sm.no.available", null);
-	    }
-
-	    String roleType = otherDescBean.getRoleType();
 	    String noValue = SmCommonUtil.getMessage("lbl.sm.no.available", null);
 
 	    switch (param.toUpperCase()) {
 
 	        case "ONE":
-	            if (isRole(roleType, SupplierManagementConst.SUPPLIER_PO,
-	            		SupplierManagementConst.SUPPLIER_APPROVER) &&
-                    otherDescBean.getOtherDescOld() != null) {
-	                	return otherDescBean.getOtherDescOld();
-	            } else if (isRole(roleType, SupplierManagementConst.SUPPLIER_RENEWAL) &&
-                    otherDescBean.getOtherDesc() != null)  {
-	            		return otherDescBean.getOtherDesc();
-	            }
-	            break;
+	        	 String userName = "";
+	        	 userName = getUserNameByUserId(otherDescBean.getCreatedBy());
+	        	 return capitalizeFirstLetter(userName);
 
 	        case "TWO":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-	            		SupplierManagementConst.SUPPLIER_PO)) {
-	                return otherDescBean.getOtherDesc();
-	            }
-	            break;
+                return otherDescBean.getOtherDesc();
 
 	        case "THREE":
-	        	if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_PO,
-                        SupplierManagementConst.SUPPLIER_PO)) {
-	                return getUserNameByUserId(otherDescBean.getCreatedBy());
-	            }
-	            break;
-
-	        case "FOUR":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
-	            		SupplierManagementConst.SUPPLIER_APPROVER)) {
-	                return otherDescBean.getOtherDesc();
-	            }
-	            break;
-
-	        case "FIVE":
-	            if (isRole(roleType, SupplierManagementConst.SECTION_REV_ROLE_APP,
-	                                SupplierManagementConst.SUPPLIER_APPROVER)) {
-	                return getUserNameByUserId(otherDescBean.getCreatedBy());
-	            }
-	            break;
+                return roleDescriptionOtherDesc(otherDescBean);
 	    }
+		return noValue;
 
-	    return noValue;
 	}
 
-	private boolean isRole(String roleType, String... roles) {
-	    if (roleType == null) {
-	        return false;
-	    }
-	    for (String role : roles) {
-	        if (roleType.equalsIgnoreCase(role)) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-	
 	/**
 	 * To save data Other Description Supplier Data Maintenance
 	 *  
@@ -3573,9 +3493,9 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void saveOtherDescriptionEdit() {
 		try {
 			List<SmAppl> smApplList = new ArrayList<>();
+			List<SmSuppCatOtherDescHistoryReqDTO> supplierEditList = new ArrayList<>();
+
 			smApplList.add(getManagedBean().getHistorySuppCategory().getSmAppl());
-			getManagedBean().setOtherDescOld(null);
-			getManagedBean().setOtherDescOld(getManagedBean().getHistorySuppCategory().getOtherDesc());
 			
 			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 			reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
@@ -3586,10 +3506,15 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
 			history = getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory();
+			Iterator<SmSuppCatOtherDescHistory> iterator = history.iterator();
+
 			boolean firstDataApprover = true;
 
-			for (SmSuppCatOtherDescHistory obj : history) {
-				if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
+			while (iterator.hasNext()) {
+			    
+				SmSuppCatOtherDescHistory obj = iterator.next();
+			    
+			    if (obj.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM)) {
 					firstDataApprover = false;
 				}
 			}
@@ -3601,7 +3526,26 @@ public class SupplierDataMaintenanceBackingBean extends
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
 			}
 			
-			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(reqDTO);
+			if (history.isEmpty()) {
+				
+				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
+				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
+				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
+				suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
+				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
+				
+				if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
+					suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+				}
+				
+				supplierEditList.add(suppReqDTO);
+			}
+			
+			supplierEditList.add(reqDTO);
+			
+			for (SmSuppCatOtherDescHistoryReqDTO updateDTO : supplierEditList) {
+				SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(updateDTO);
+			}
 			
 			// Initialize for appl in progress.
 			if (getManagedBean().isHasActiveTransaction() && CollectionUtils.isNotEmpty(getManagedBean().getActiveApplList())) {
@@ -3686,6 +3630,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * @param cat 
 	 */
 	private void setApplNoHistory(SmSupplierCategory cat) {
+		
 		for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 			
 			history.setApplNoHistory(history.getSmAppl().getApplNo());
@@ -3693,11 +3638,74 @@ public class SupplierDataMaintenanceBackingBean extends
 			if (!getManagedBean().isOtherDescChangeApprover()) {
 				getManagedBean().setOtherDescChangeApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
-			} else if (!getManagedBean().isOtherDescChangeSupplier()) {
+			} else if (!getManagedBean().isOtherDescChangeSupApprover()) {
 				getManagedBean().setOtherDescChangeSupApprover(true);
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
 		}
+	}
+	
+	/**
+	 * Returns the display description for the role associated with the given
+	 * supplier category other description history record.
+	 *
+	 * The role type is mapped to one of the following descriptions:
+	 *  - Processing Officer
+	 *  - Registration Approval
+	 *  - Supplier
+	 * 
+	 * The returned description is formatted with the first letter capitalized.
+	 *
+	 * @param history the supplier category other description history
+	 * @return the formatted role description
+	 */
+	public static String roleDescriptionOtherDesc(SmSuppCatOtherDescHistory history) {
+		
+		String roleDesc = "";
+		
+		boolean roleApproverSDM = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SECTION_ROLE_APP_SDM);
+		boolean roleApproverSDMA = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.APPROVER_SDM);
+		boolean roleApprover = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SECTION_REV_ROLE_APP);
+		boolean roleSupApprover = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SUPPLIER_APPROVER);
+		boolean roleProcessingOfficer = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SECTION_REV_ROLE_PO);
+		boolean roleSupProcessingOfficer = history.getRoleType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO);
+		boolean roleSupplierData = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SUPPLIER_DATA);
+		boolean roleSupplier = history.getRoleType().equalsIgnoreCase(
+				SupplierManagementConst.SUPPLIER_RENEWAL);
+		
+		if (roleProcessingOfficer || roleSupProcessingOfficer) {
+			roleDesc = SupplierManagementConst.ROLE_PROCESSING_OFFICER;
+		} else if (roleApprover || roleSupApprover || roleApproverSDMA || roleApproverSDM) {
+			roleDesc = SupplierManagementConst.ROLE_REGISTRATION_APPROVAL;
+		} else if (roleSupplier | roleSupplierData) {
+			roleDesc = SupplierManagementConst.ROLE_SUPPLIER;
+		}
+		
+		return capitalizeFirstLetter(roleDesc);
+	}
+	
+	/**
+	 * Capitalizes the first character of the given text and converts all
+	 * remaining characters to lowercase.
+	 *
+	 * @param text the text to format
+	 * @return the formatted text with the first letter capitalized, or the
+	 *         original value if the input is {@code null} or empty
+	 */
+	public static String capitalizeFirstLetter(String text) {
+	    if (text == null || text.isEmpty()) {
+	        return text;
+	    }
+
+	    return text.substring(0, 1).toUpperCase() +
+	           text.substring(1).toLowerCase();
 	}
 	// 36504 - END
 }

@@ -8182,7 +8182,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			            .getExternalContext()
 			            .getSessionMap()
 			            .remove("briefingRegistrationList");
+			    
+				// 28188 -start-
+			    quationTenderReqDTO.setStatusId(workflowStatusId);
+				Map<Long, List<ScQtBsvRegistration>> briefingRegistrationMap = getBsvRegisterDetailsIntoMap();
+				if (null != briefingRegistrationMap
+						&& !briefingRegistrationMap.isEmpty()) {
+					quationTenderReqDTO
+							.setBsvAttandanceRegister(briefingRegistrationMap);
+				}
+				removeBsvRegisterDetailsIntoMap();
+				// 28188 -end-
 			}
+			
+			// 28188 -start-
+			else if (QTStatusConst.QT_PROPOSAL_PREPARATION
+					.equals(workflowStatusId)
+					&& CollectionUtils.isEmpty(briefingRegistrationList)) {
+				setBsvRegisterDtls(quationTenderReqDTO,workflowStatusId);
+			}
+			// 28188 -end-
 			
 			ScQtApproval scQtApproval = getApprovalRegistrationFromSession();
 	
@@ -8194,6 +8213,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			            .getSessionMap()
 			            .remove("scQtApprovalRegistration");
 			}
+			
 			//#28188 - End
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
@@ -15213,23 +15233,31 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 			for (BriefingZoneBean bsvDtlBean : beansList) {
 				ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+				//28188 -start-
+				if(null!=scQtBsv){
 				boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
 						.getScQtBsvDtls());
 				
 				if (isBsvdtlsChange) {
 					checkBsvRemarksMandatory(scQtBsv);
 				}
+				}
+				//28188 -end
 			}
 		} else {
 			
 			BriefingZoneBean bsvDtlBean = this.getManagedBean().getBsvDtlBean();
 			ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+			//28188 -start-
+			if(null!=scQtBsv){
 			boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
 					.getScQtBsvDtls());
 			
 			if (isBsvdtlsChange) {
 				checkBsvRemarksMandatory(scQtBsv);
 			}
+			}
+			//28188 -end-
 
 		}
 	}
@@ -15465,6 +15493,31 @@ public void retrieveDemoQtDetails(Long qtId) {
 	    return parentId;
 	}
 	//#28188 - End
+	
+	//28188 -start-
+	/**
+	 * set bsvDeatils id during submit.
+	 * @param reqDTO
+	 * @param statusId
+	 * @return
+	 */
+	private QuationTenderReqDTO setBsvRegisterDtls(QuationTenderReqDTO reqDTO,
+			Long statusId) {
+		Map<Long, List<Long>> bsvRegisterDetails = this.getManagedBean()
+				.getBsvRegisterDetails();
+		ScQt qt = this.getManagedBean().getQt();
+		Long qtId = qt.getQtId();
+		reqDTO.setStatusId(statusId);
+		if (null != bsvRegisterDetails) {
+			List<Long> bsvDtlIds = bsvRegisterDetails.get(qtId);
+			if (CollectionUtils.isNotEmpty(bsvDtlIds)) {
+				reqDTO.setBsvDtlIds(bsvDtlIds);
+			}
+		}
+		return reqDTO;
+	}
+	
+	//#28188 - end-
 	
 	//#28188 - Start
 	@SuppressWarnings("unchecked")

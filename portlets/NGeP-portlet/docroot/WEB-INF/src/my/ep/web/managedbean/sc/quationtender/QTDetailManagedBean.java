@@ -1956,6 +1956,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#28188 - Start
 	/** The Briefing/Site Visit postpone date. */
 	private Date briefingSiteVisitPostponeDate;
+	private Map<Long,List<Long>> bsvRegisterDetails;
+	
 	//#28188 - End
 	
 	// 12471 - start
@@ -12493,6 +12495,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBriefingSiteVisitPostponeDate(Date briefingSiteVisitPostponeDate) {
 		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
 	}
+	
+	public Map<Long, List<Long>> getBsvRegisterDetails() {
+		return bsvRegisterDetails;
+	}
+
+	public void setBsvRegisterDetails(Map<Long, List<Long>> bsvRegisterDetails) {
+		this.bsvRegisterDetails = bsvRegisterDetails;
+	}
+	
 	//#28188 - End
 	
 	// 12471 - start
@@ -12512,4 +12523,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.committeeMembersTypeMap = committeeMembersTypeMap;
 	}
 	// 12471 - end
+
+	
+	
+	
 }
