@@ -3528,7 +3528,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
-			
+			reqDTO.setSdm(true);
+
 		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
 			history = getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory();
 			Iterator<SmSuppCatOtherDescHistory> iterator = history.iterator();
@@ -3559,6 +3560,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
 				suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+				suppReqDTO.setSdm(true);
 				
 				supplierEditList.add(suppReqDTO);
 			}
