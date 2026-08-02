@@ -3499,7 +3499,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	        case "TWO":
 	        	 String userName = "";
 	        	 userName = getUserNameByUserId(otherDescBean.getCreatedBy());
-	        	 return capitalizeFirstLetter(userName);
+	        	 return userName;
 
 	        case "THREE":
                 return otherDescBean.getOtherDesc();
@@ -3768,33 +3768,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 
 		return null;
-	}
-	
-	/**
-	 * Capitalizes the first character of the given text and converts all
-	 * remaining characters to lowercase.
-	 *
-	 * @param text the text to format
-	 * @return the formatted text with the first letter capitalized, or the
-	 *         original value if the input is {@code null} or empty
-	 */
-	public static String capitalizeFirstLetter(String text) {
-		 if (text == null) {
-		        return text;
-		    }
-
-		    String[] words = text.toLowerCase().split("\\s+");
-		    StringBuilder result = new StringBuilder();
-
-		    for (String word : words) {
-		        if (!word.isEmpty()) {
-		            result.append(Character.toUpperCase(word.charAt(0)))
-		                  .append(word.substring(1))
-		                  .append(" ");
-		        }
-		    }
-
-		    return result.toString().trim();
 	}
 	// 36504 - END
 }
