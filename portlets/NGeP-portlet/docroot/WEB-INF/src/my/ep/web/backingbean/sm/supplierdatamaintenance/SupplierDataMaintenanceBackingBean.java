@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +26,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -49,6 +52,7 @@ import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -101,6 +105,8 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.IAuditTrailSO;
+import my.ep.biz.service.pm.authorization.role.IRoleSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApprovedCategoryCodesBackingBean;
@@ -3454,9 +3460,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * supplier category other description history record.
 	 *
 	 * The supported parameter values are:
-	 *   - ONE - Returns the creator's username with the first letter capitalized.
-	 *   - TWO - Returns the other description.
-	 *   - THREE - Returns the formatted role description.
+	 *   - ONE - Returns the created date.
+	 *   - TWO - Returns the creator's username with the first letter capitalized.
+	 *   - THREE - Returns the other description.
+	 *   - FOUR - Returns the formatted role description.
 	 *
 	 * - If the specified parameter is not supported, a localized
 	 * "Not Available" message is returned.
@@ -3470,16 +3477,34 @@ public class SupplierDataMaintenanceBackingBean extends
 	    String noValue = SmCommonUtil.getMessage("lbl.sm.no.available", null);
 
 	    switch (param.toUpperCase()) {
-
-	        case "ONE":
+	    
+		    case "ONE":
+		    	String str = "";
+		    	boolean supplierFirst = otherDescBean.getRoleType().equals(SupplierManagementConst.SUPPLIER_DATA);
+		    	boolean supplierUserRenewal = otherDescBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_RENEWAL);
+		    	
+	    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		    	
+		    	if (supplierFirst && supplierUserRenewal) {
+		    		str = sdf.format(otherDescBean.getSmAppl().getCreatedDate());
+		    	} else if (supplierFirst) {
+		    		str = sdf.format(otherDescBean.getSmAppl().getApplSubmitDate());
+		    	}
+		    	else {
+		    		str = sdf.format(otherDescBean.getCreatedDate());
+		    	}
+		    	
+	       	 	return str;
+       	 
+	        case "TWO":
 	        	 String userName = "";
 	        	 userName = getUserNameByUserId(otherDescBean.getCreatedBy());
-	        	 return capitalizeFirstLetter(userName);
-
-	        case "TWO":
-                return otherDescBean.getOtherDesc();
+	        	 return userName;
 
 	        case "THREE":
+                return otherDescBean.getOtherDesc();
+
+	        case "FOUR":
                 return roleDescriptionOtherDesc(otherDescBean);
 	    }
 		return noValue;
@@ -3533,10 +3558,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
 				suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
-				
-				if (getManagedBean().getHistorySuppCategory().getSmSuppCatOtherDescHistory().isEmpty()){
-					suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
-				}
+				suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
 				
 				supplierEditList.add(suppReqDTO);
 			}
@@ -3681,31 +3703,71 @@ public class SupplierDataMaintenanceBackingBean extends
 				SupplierManagementConst.SUPPLIER_RENEWAL);
 		
 		if (roleProcessingOfficer || roleSupProcessingOfficer) {
-			roleDesc = SupplierManagementConst.ROLE_PROCESSING_OFFICER;
+			roleDesc = epRoleName(SupplierManagementConst.PO_HQ);
 		} else if (roleApprover || roleSupApprover || roleApproverSDMA || roleApproverSDM) {
-			roleDesc = SupplierManagementConst.ROLE_REGISTRATION_APPROVAL;
-		} else if (roleSupplier | roleSupplierData) {
-			roleDesc = SupplierManagementConst.ROLE_SUPPLIER;
+			roleDesc = epRoleName(SupplierManagementConst.APPROVER_HQ);
+		} else if (roleSupplier || roleSupplierData) {
+			roleDesc = epRoleNameByUserId(history.getCreatedBy());
 		}
 		
-		return capitalizeFirstLetter(roleDesc);
+		return roleDesc;
 	}
 	
 	/**
-	 * Capitalizes the first character of the given text and converts all
-	 * remaining characters to lowercase.
+	 * Retrieves the localized role name for the specified role code.
 	 *
-	 * @param text the text to format
-	 * @return the formatted text with the first letter capitalized, or the
-	 *         original value if the input is {@code null} or empty
+	 * This method queries the Profile Management service using the current
+	 * user's locale to obtain the corresponding role description. If a matching
+	 * role is found, its role name is returned; otherwise, {@code null} is
+	 * returned.
+	 *
+	 * @param roleCode the unique code identifying the role
+	 * @return the localized role name for the specified role code, or
+	 *         {@code null} if no matching role is found
 	 */
-	public static String capitalizeFirstLetter(String text) {
-	    if (text == null || text.isEmpty()) {
-	        return text;
-	    }
+	private static String epRoleName(String roleCode) {
 
-	    return text.substring(0, 1).toUpperCase() +
-	           text.substring(1).toLowerCase();
+		IRoleSO roleSO = (IRoleSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IRoleSO.class);
+
+		RoleReqDTO reqDTO = new RoleReqDTO();
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		reqDTO.setRoleCode(roleCode);
+		RoleResDTO resDTO = roleSO.retrieveRoleDescByRoleCode(reqDTO);
+		PmRoleDesc pmRoleDesc = resDTO.getPmRoleDesc();
+		if (pmRoleDesc != null) {
+			return pmRoleDesc.getRoleName();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * Retrieves the localized active role description for the specified user.
+	 *
+	 * This method queries the Profile Management service using the current
+	 * user's locale to obtain the active role description of the specified user.
+	 * If an active role exists, its description is returned; otherwise,
+	 * {@code null} is returned.
+	 *
+	 * @param userId the unique identifier of the user
+	 * @return the localized active role description of the user, or
+	 *         {@code null} if no active role is found
+	 */
+	private static String epRoleNameByUserId(Long userId) {
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String roleDesc = userSO.retrieveActiveRoleDescByUserId(userId, language);
+		if (roleDesc != null) {
+			return roleDesc;
+		}
+
+		return null;
 	}
 	// 36504 - END
 }

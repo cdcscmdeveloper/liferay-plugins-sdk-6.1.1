@@ -4938,7 +4938,8 @@ public class SmApplicationUtil {
 							managedBean.setOtherDescChangeSupplier(true);
 							managedBean.getEditVO().setPoEditCategory(true);
 						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory()) &&
-								history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL)) {
+								(history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL) ||
+								history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_DATA))) {
 							managedBean.setOtherDescChangeSupplier(true);
 							managedBean.getEditVO().setSuppEditCategory(true);
 						}
