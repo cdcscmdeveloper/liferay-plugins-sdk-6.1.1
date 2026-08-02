@@ -184,7 +184,8 @@
 						style="float:right;"
 						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory and 
 							(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser or
-							viewSmApplBackingBean.managedBean.supplierUser) and
+							(viewSmApplBackingBean.managedBean.supplierUser and 
+							viewSmApplBackingBean.managedBean.smAppl.applType == SupplierManagementConst.APPL_TYPE_RENEW_MOF)) and
 							!aprvdCatBean.otherDescChangeMaintenance}" />
 				</p:outputPanel>
 			</p:column>
