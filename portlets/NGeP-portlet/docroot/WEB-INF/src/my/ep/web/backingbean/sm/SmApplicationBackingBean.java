@@ -19168,7 +19168,8 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			
+			reqDTO.setSdm(false);
+
 			if (!getManagedBean().isOtherDescChangeSupplier()){
 				getManagedBean().setOtherDescChangeSupplier(true);
 			}
@@ -19216,7 +19217,8 @@ public class SmApplicationBackingBean extends
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
 				suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
-				
+				suppReqDTO.setSdm(false);
+
 				if (supplierUserRenewal) {
 					suppReqDTO.setCreatedBy(reqDTO.getCreatedBy());
 				} else {
