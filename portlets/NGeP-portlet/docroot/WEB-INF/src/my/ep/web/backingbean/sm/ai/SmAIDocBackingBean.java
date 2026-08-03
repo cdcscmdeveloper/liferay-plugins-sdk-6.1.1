@@ -234,7 +234,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			appl.setAiProcessed(0);
 			return;
 		}
-		SmServiceLookup.getAIApiProcessSO().reassignResponsesToAppl(appl);
 		appl.setAiProcessed(1);
 		recomputeAiProcessed(appl);
 		// nothing extracted yet + AI off: hide everything. 2 = already extracted, ignores the toggle

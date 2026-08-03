@@ -19878,11 +19878,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return isAiAvailable() && SmAIDocBackingBean.isAiSuppDocDeleteLocked(doc, file);
 	}
 
-	// Declare button gate: a bank statement that fails AI verification blocks submission.
 	public boolean isAiBlockDeclare() {
 		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false);
 	}
-
 	//40112 - end
 	
 	//#38927 START
