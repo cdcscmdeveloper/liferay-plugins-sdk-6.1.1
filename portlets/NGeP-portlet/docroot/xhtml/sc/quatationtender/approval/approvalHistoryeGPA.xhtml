@@ -11,11 +11,11 @@
 		<p:dataTable var="historyDtls" style="width:100%"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{approvalDtlsList.historyApprovalRequests}">
-			<p:column headerText="#{lbl['lbl.sc.qt.publishing.period.request.type']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(historyDtls.approvalType)}"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.publishing.period.approved.by']}">
+			<p:column headerText="#{lbl['lbl.sc.approved.by']}">
 				<h:outputText value="#{historyDtls.approverName}" />
 			</p:column>
 			<p:column>
@@ -28,13 +28,13 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(historyDtls.approverAction)}"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.publishing.period.decision.date']}">
+			<p:column headerText="#{lbl['lbl.sc.decision.date']}">
 				<h:outputText value="#{historyDtls.approverActionDate}">
 					<f:convertDateTime
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.publishing.period.action']}">
+			<p:column headerText="#{lbl['lbl.txt.action']}">
 				<p:commandLink
 					action="#{qTDetailBB.geteGPAApprovalDtl(historyDtls)}">
 					<ui:fragment>
