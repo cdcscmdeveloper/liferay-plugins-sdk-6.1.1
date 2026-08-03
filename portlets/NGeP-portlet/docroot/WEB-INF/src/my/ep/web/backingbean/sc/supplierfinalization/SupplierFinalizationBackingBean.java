@@ -1126,11 +1126,13 @@ public class SupplierFinalizationBackingBean extends
 
 		PmAuthority authority = this.getManagedBean().getApprovalAuthority();
 		List<PmAuthorityCommittee> newComList = new ArrayList<>();
+		
 		if (authority != null && authority.getAuthId() != null) {
 			AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
 			reqDTO.setAuthority(authority);
 
 			AuthorityCommitteeResDTO resDTO = approveAuthorityCommitteeSo.retrieveListApproveAuthority(reqDTO);
+			
 			if (resDTO.getListAuthorityCommittee() != null && !resDTO.getListAuthorityCommittee().isEmpty()) {
 				for (PmAuthorityCommittee committee : resDTO.getListAuthorityCommittee()) {
 					newComList.add(committee);
@@ -1150,19 +1152,24 @@ public class SupplierFinalizationBackingBean extends
 		if (this.getManagedBean().getApprovalAuthCommittee() == null) {
 			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
 		}
+		
 		this.getManagedBean().setListApprovalAuthCommittee(newComList);
 	}
-	
+	// #27502 -end-
+
+	// #27502 -start-
 	/**
 	 * set ApprovalAuthCommittee
 	 */
 	public void changeCommApprovalAuth() {				
 		PmAuthorityCommittee authorityCommittee = this.getManagedBean().getApprovalAuthCommittee();
 		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+
 		scQtFinalization.setAuthCommittee(authorityCommittee);
-				
-	}
-			
+    }
+	// #27502 -end-
+
+	// #27502 -start-			
 	private void getListApprovalAuthority() {
 		// to retrieve Approval Authority
 		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
@@ -1170,12 +1177,15 @@ public class SupplierFinalizationBackingBean extends
 
 		List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
 		this.getManagedBean().setListApprovalAuthority(resultComittee);
+		
 		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		
-		if (scQtFinalization.getAuthCommittee() != null ){			
+		if (scQtFinalization.getAuthCommittee() != null ) {			
 			this.getManagedBean().setApprovalAuthCommittee(scQtFinalization.getAuthCommittee());
+			
 			PmAuthority pmAuthority = scQtFinalization.getAuthCommittee().getPmAuthority();
 			this.getManagedBean().setApprovalAuthority(pmAuthority);
+			
 			changeApprovalAuth();
 		}
 		
@@ -1183,21 +1193,28 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setApprovalAuthority(new PmAuthority());
 		}
 	}
-	
+	// #27502 -end-
+
+	// #27502 -start-	
 	/**
 	 * Populate informations for record tab.
 	 */
 	public void loadRecordTabDetails() {		
 		Long qtId = getManagedBean().getScQt().getQtId();
 		String committeeType = getManagedBean().getCommitteeType();
+		
 		if (StringUtils.isNotBlank(committeeType)) {
 			retrieveRecordDtls(qtId, committeeType);
-		}		
+		}
+		
 		getListApprovalAuthority();
 	}
-	
+	// #27502 -end-
+
+	// #27502 -start-	
 	private void retrieveRecordDtls(Long qtId, String committeeType) {
 		IQTMeetingSO meetingSO = null;
+		
 		try {
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTMeetingSO.class);
@@ -1206,26 +1223,33 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setCommitteType(committeeType);
 
 			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+			
 			if (resDTO.isSuccessful()) {
 				// Meeting Details
 				List<ScQtMeeting> meetingList = resDTO.getMeetingDtls();
+				
 				if (CollectionUtils.isNotEmpty(meetingList)) {
 					for (ScQtMeeting scQtMeeting : meetingList) {
 						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting.getMeetingStatus()
 								.getStatusId() : null;
 						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+						
 						SimpleDateFormat hourFormat = new SimpleDateFormat(CommonConstants.DEFAULT_HOUR_FORMAT);
 						SimpleDateFormat minuteFormat = new SimpleDateFormat(CommonConstants.DEFAULT_MINUTE_FORMAT);
 						SimpleDateFormat Date = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						
 						scQtMeeting.setMeetDateStr(getDateValues(hourFormat.format(scQtMeeting.getMeetingDate())));
 						scQtMeeting.setMeetTimeStr(getDateValues(minuteFormat.format(scQtMeeting.getMeetingDate())));
 						scQtMeeting.setMetingDate(scQtMeeting.getMeetingDate());
+						
 						if (scQtMeeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)) {
 							this.getManagedBean().setHasPreviousMeeting(true);
 						}
 					}
 				}
+				
 				this.getManagedBean().setMeetingList(meetingList);
+				
 				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
 				this.getManagedBean().setScQtCommittee(scQtCommittee);
 			}
@@ -1234,8 +1258,9 @@ public class SupplierFinalizationBackingBean extends
 			meetingSO = null;
 		}
 	}
-	
-	
+	// #27502 -end-
+
+	// #27502 -start-
 	private ScQtCommittee recordDtlsInfo() {
 
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
@@ -1263,7 +1288,6 @@ public class SupplierFinalizationBackingBean extends
 
 		return scQtCommittee;
 	}
-	
 	//#27502 - New DO MOF Role and Process - end
 	
 	private void retrievePreparationDtls(Long qtId, String committeeType) {
@@ -1904,16 +1928,19 @@ public class SupplierFinalizationBackingBean extends
 			//6906 - note 117 - end
 			SuppFinalizationReqDTO reqDTO = null;
 			ScQtCommittee scQtCommittee = null;
-			
-			//#27502 -Start
+
+			// #27502 -Start
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();			
 			scQt = qtBackingBean.getManagedBean().getQt();
+			
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+			
 			boolean isBpkCentralContract = isBpkCentralContract(scQt);
+			
 			if (isBpkCentralContract) {	
 				scQtCommittee = recordDtlsInfo();
 				reqDTO = validateInfo(2, skipValidation);
-			} else {	//#27502 - END		
+			} else {	// #27502 - END		
 				// Save Preparation and Supplier finalization tab(s) data
 				
 				if (activeIndex == 0 && !getManagedBean().isInitialDecisionFwdToBPK()) {
