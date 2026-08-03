@@ -3995,10 +3995,8 @@ public class SmApplicationBackingBean extends
 						SmAIDocBackingBean.attachPendingAiFiles(getManagedBean().getSmAppl());
 						SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
 					}
-					//#40112 - end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
-					//#40112 - start
 					if (getManagedBean().isSupplierUser()){
 						SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
 						SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
@@ -20040,6 +20038,10 @@ public class SmApplicationBackingBean extends
 	
 	public boolean isAiSuppDocDeleteLocked(SmApplSupportDoc doc, SmApplDocFile file) {
 		return isAiAvailable() && SmAIDocBackingBean.isAiSuppDocDeleteLocked(doc, file);
+	}
+
+	public boolean isAiBlockDeclare() {
+		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false);
 	}
 	//40112 - end
 	
