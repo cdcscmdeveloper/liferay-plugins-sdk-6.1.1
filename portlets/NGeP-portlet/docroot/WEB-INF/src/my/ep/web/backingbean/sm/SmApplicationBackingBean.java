@@ -3952,6 +3952,7 @@ public class SmApplicationBackingBean extends
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
 					//#40112 - start
 					if (getManagedBean().isSupplierUser()){
+						SmAIDocBackingBean.loadTenancyDocs(getManagedBean().getSmAppl());
 						SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
 					}
 					//#40112 - end
@@ -3982,6 +3983,7 @@ public class SmApplicationBackingBean extends
 					displayBumiRecommendNote();
 					//#40112 - start
 					if (getManagedBean().isSupplierUser()){
+						SmAIDocBackingBean.attachPendingAiFiles(getManagedBean().getSmAppl());
 						SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
 					}
 					//#40112 - end
@@ -3989,6 +3991,7 @@ public class SmApplicationBackingBean extends
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 					//#40112 - start
 					if (getManagedBean().isSupplierUser()){
+						SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
 						SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
 					}
 					//#40112 - end
@@ -13412,12 +13415,15 @@ public class SmApplicationBackingBean extends
 	public void deleteSupDocFileAttachment() {
 
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
-		//#40112 - start
-		getManagedBean().getSmApplDocFile().setValidatedAI(0);
-		getManagedBean().getSmApplDocFile().setAiApiResponseId(null);
-		//#40112 - end
 		// #37775 - Start
 		if (this.getManagedBean().getSmApplDocFile() != null) {
+			//#40112 - start
+			SmServiceLookup.getAIApiProcessSO().delete(
+					getManagedBean().getSmApplDocFile().getAiApiResponseId());
+			getManagedBean().getSmApplDocFile().setValidatedAI(0);
+			getManagedBean().getSmApplDocFile().setMappedFieldAI(null);
+			getManagedBean().getSmApplDocFile().setAiApiResponseId(null);
+			//#40112 - end
 			if (mainDoc.getSmApplDocFiles().size() == 1) {
 				// If there is only one file, clear its name
 				this.getManagedBean().getSmApplDocFile().setFileName(" ");
@@ -19978,9 +19984,9 @@ public class SmApplicationBackingBean extends
 				&& "R".equals(fac.getOwnershipType()) && "B".equals(fac.getFacilityType());
 	}
 
-	public boolean isAiUploadDocRow(Long documentId){
+	public boolean isAiUploadDocRow(PmDocument doc){
 		return isAiAvailable()
-				&& SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), documentId);
+				&& SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), doc);
 	}
 	
 	public void updateTenancyAI(AiTenancyDTO te){
@@ -20024,7 +20030,7 @@ public class SmApplicationBackingBean extends
 	}
 	
 	public boolean isAiSuppDocDeleteLocked(SmApplSupportDoc doc, SmApplDocFile file) {
-		return SmAIDocBackingBean.isAiSuppDocDeleteLocked(doc, file);
+		return isAiAvailable() && SmAIDocBackingBean.isAiSuppDocDeleteLocked(doc, file);
 	}
 	//40112 - end
 	
