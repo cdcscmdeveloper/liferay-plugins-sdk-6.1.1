@@ -329,6 +329,34 @@
 
 			</div>
 		</p:dialog>
+		
+		<ui:remove>
+		#27502 - New DO MOF Role and Process - Start
+		</ui:remove>
+		<p:dialog id="submitConfirmId4" widgetVar="confirmBriefPopup2"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.sf.mof.confirm.message']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true" onclick="blockWidget.show();"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
+					oncomplete="confirmBriefPopup2.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "  update="@form">
+				</p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					process="@this" onclick="confirmBriefPopup2.hide();" type="button" />
+
+			</div>
+		</p:dialog>
+		<ui:remove>
+		#27502 - New DO MOF Role and Process - End
+		</ui:remove>
 
 	</ui:define>
 
