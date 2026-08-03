@@ -59,7 +59,7 @@
 						<c:choose>
 							<c:when
 								test="${simpleQuoteBackingBean.managedBean.parameterTypeRPT == 'PRT'}">
-					            #{simpleQuoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,simpleQuoteBackingBean.managedBean.scQuote.procrameterCode)}
+					            #{simpleQuoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode)}
 					        </c:when>
 							<c:otherwise>
 					            #{simpleQuoteBackingBean.getParameterDesc(ParameterTypeConst.procurementTypeRpt,simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode)}
