@@ -992,6 +992,7 @@ public class ReportConst implements Serializable{
 	public static final String DOC_TYPE_RTF = "DocTypeRTF";
 
 	// Report Parameter Key
+	public static final String PARAM_KEY_EC_REPORT_DETAIL = "P_GENERAL_TYPE"; //#25651
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_KEY_ITEM_ID = "itemid";
 	public static final String PARAM_KEY_SUPPLIER_ID = "supplierid";
