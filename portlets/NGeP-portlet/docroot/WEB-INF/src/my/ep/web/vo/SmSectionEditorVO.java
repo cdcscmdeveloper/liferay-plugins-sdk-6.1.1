@@ -62,6 +62,8 @@ public class SmSectionEditorVO implements Serializable {
 
 	//#31230
 	private boolean hasOverlapped;
+	//27641 : Disciplinary Action - #26238
+	private boolean disciplinary;
 	//#28895_35501 - AUDIT TRAIL SM
 	private boolean suppEditAuditTrail;
 	
@@ -322,6 +324,14 @@ public class SmSectionEditorVO implements Serializable {
 		this.hasOverlapped = hasOverlapped;
 	}
 	//#31230 END
+	
+	public boolean isDisciplinary() {
+		return disciplinary;
+	}
+
+	public void setDisciplinary(boolean disciplinary) {
+		this.disciplinary = disciplinary;
+	}
 	//#28895_35501 Start - AUDIT TRAIL SM
 	public boolean isSuppEditAuditTrail() {
 		return suppEditAuditTrail;

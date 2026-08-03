@@ -469,6 +469,13 @@ public class SupplierManagementConst {
 	public static final String MOF_STATUS_EXPIRED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED;
 	public static final String MOF_STATUS_NOT_AVAILABLE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE;
 
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST = "B";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG = "C";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG = "S";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE = "M";
+	public static final String SM_DISCIPLINARY_ACTION = "DA";
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
@@ -518,6 +525,15 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_REVIEW_CANCELLATION = 20301;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED = 20117;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED = 20116;
+	
+	// 26238 - DisciplInary action - 28801 - START
+	public static final long PM_STATUS_PENDING_REVIEW_APPLICATION = 20104;
+	// 28801 - END
+	
+	// 29952 Start
+	public static final int PENDING_ACTIVATION_RECORD_STATUS = 8;
+	// 29952 End
+	
 	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
 	public static final long PM_STATUS_REGISTRATION_STATUS_REGISTERED = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
 	public static final long PM_STATUS_REGISTRATION_STATUS_FOREIGN = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN;
@@ -712,6 +728,9 @@ public class SupplierManagementConst {
 
 	public static final int MAX_PAYMENT_BANK = 35;
 
+	public static final String DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION;// 26238, 32332
+	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; // 26238
+
 	// EXTERNAL CONTEXT SESSION KEY MAP
 	public static final String KEY_MAP_PERSONNEL_LIST = "personnelList";
 
@@ -737,6 +756,8 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
 	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
 	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	public static final String AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO = "approvedCatCodeInfoTab";
 	public static final String AU_TAB_ID_OVERLAPPING_REMARK_INFO = "overlappingRemarkInfoTab";
 	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
@@ -747,7 +768,36 @@ public class SupplierManagementConst {
 	// #34031
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
-		
+	
+	// bug #29156(26238) - START
+	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	// bug #29156(26238) - END
+	
+	// bug #28278(26238) - START
+	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
+	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
+	// bug #28278(26238) - END
+	
+	// bug #29156(26238) - START
+	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
+	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
+	// bug #29156(26238) - END
+	
+	//26238 - START
+	public static final String MTO_CODE_04 = "04";
+	public static final String MTO_CODE_05 = "05";
+	public static final String MTO_CODE_06 = "06";
+	public static final String CAT_L1_22 = "22";
+	public static final String CAT_L2_17 = "17";
+	public static final String CAT_L3_09 = "09";
+	public static final int CAT_L3_347 = 347;
+	public static final String BUSINESS_TYPE_CODE_N = "N";
+	public static final String BUSINESS_TYPE_CODE_H = "H";
+	public static final int BUMI_PERCENTAGE = 50;
+	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
+	//26238 - END
+	
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -1420,6 +1470,11 @@ public class SupplierManagementConst {
 	public String getAuTabIdSupplierInfo() {
 		return AU_TAB_ID_SUPPLIER_INFO;
 	}
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public String getAuTabIdDisciplinaryActionInfo() {
+		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
+	}
+	// #28895_35501_DA End
 
 	public String getAuTabIdApprovedCategoryCodeInfo() {
 		return AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO;
@@ -1445,4 +1500,46 @@ public class SupplierManagementConst {
 		return SUPPLIER_APPL_SEARCH_URL;
 	}
 	// #28895_35501 End
+	
+	// #29156(26238) - START
+	public String getSM_MOF_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	// #29156 -START
+	// #29156(26238) - START
+	
+	
+	// 28278(26238) - START
+	public String getMOF_STATUS_DELETED() {
+		return MOF_STATUS_DELETED;
+	}
+
+	public String getMOF_STATUS_CANCELLED() {
+		return MOF_STATUS_CANCELLED;
+	}
+	// 28278(26238) - END
+	
+	// #29156(26238) -START
+	public String getMOF_STATUS_DELETED_SUPPLIER() {
+		return MOF_STATUS_DELETED_SUPPLIER;
+	}
+
+	public String getMOF_STATUS_EXPIRED_SYSTEM() {
+		return MOF_STATUS_EXPIRED_SYSTEM;
+	}
+	// #29156(26238) -END
+	
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public String getSM_BASIC_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 }
