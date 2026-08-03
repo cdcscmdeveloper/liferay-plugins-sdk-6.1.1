@@ -1281,6 +1281,15 @@ public class SmApplicationBackingBean extends
 			
 			getManagedBean().setProfBodyItems(
 					SmApplicationUtil.getProfBodyItems());
+			// 39502 - START
+			for (SelectItem shrProfBody : getManagedBean().getProfBodyItems()) {
+				if (shrProfBody.getLabel() != null && shrProfBody.getLabel().length() > 71) {
+					shrProfBody.setDescription(shrProfBody.getLabel());
+					String truncName = shrProfBody.getLabel().substring(0, 70) + "...";
+					shrProfBody.setLabel(truncName);
+				}
+			}
+			// #39502 - END
 
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
