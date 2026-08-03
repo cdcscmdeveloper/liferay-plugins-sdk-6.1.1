@@ -2478,8 +2478,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
 					
-					SmSuppCatOtherDescHistory oldHistory = new SmSuppCatOtherDescHistory();
-
 					for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 						
 						history.setApplNoHistory(history.getSmAppl().getApplNo());
