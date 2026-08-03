@@ -8,9 +8,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.pojobweight.IPoJobWeightSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.pojobweight.PoJobWeightReqDTO;
 import my.ep.dto.pm.common.pojobweight.PoJobWeightResDTO;
@@ -19,7 +21,10 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmPoJobWeight;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMJobWeightBackingBean;
 import my.ep.web.managedbean.pm.pojobweight.PoJobWeightManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -70,12 +75,23 @@ public class PoJobWeightBackingBean extends
 			PoJobWeightReqDTO reqDTO = new PoJobWeightReqDTO();
 			reqDTO.setJobWeightList(getManagedBean().getJobWeightList());
 			setupTrackingDiaryVal(reqDTO);
+			/************ AUDIT START #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMJobWeightBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+
+			/************ AUDIT END #28895-35509 *************/
 			PoJobWeightResDTO resDTO = jobWeightSO.saveJobWeight(reqDTO);
 			if (resDTO.isSuccessful()) {
 				initJobWeight();
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_INFO, MessageConst.INFO_779200,
 						new String[] {});
+				/************ AUDIT START #28895-35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_JOB_WEIGHT_RATIO)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_JOB_WEIGHT_RATIO);
+				}
+				/************ AUDIT END #28895-35509 *************/
 			}
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
