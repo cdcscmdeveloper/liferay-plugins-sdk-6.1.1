@@ -3549,7 +3549,7 @@ public class CreateQtBackingBean extends
 		eGPAStatuses.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 		eGPAStatuses.add(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA);
 
-		if (eGPAStatuses.contains(scQt.getQtStatus().getStatusId())) {
+		if (scQt.getQtStatus() != null && eGPAStatuses.contains(scQt.getQtStatus().getStatusId())) {
 			checkeGPAPublishPeriodDays(scQt);
 		}
 		//#38107 - End
@@ -4401,7 +4401,7 @@ public class CreateQtBackingBean extends
 			checkForRepublishQT(scQt, eGPAFinalDecision);
 			ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO
 					.getLatesteGPAApprovalRequestBasedOnQtId(scQt.getQtId());
-			if (eGPAApprovalRequest != null) {
+			if (eGPAApprovalRequest != null && eGPAApprovalRequest.getApproverAction() != null) {
 				String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
 				if (eGPAFinalDecision.contains(eGPADecision)
 						&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
@@ -4428,7 +4428,7 @@ public class CreateQtBackingBean extends
 			if (scQt.getParentQtId() != null) {
 				ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO.getLatesteGPAApprovalRequestBasedOnQtId(scQt
 						.getParentQtId());
-				if (eGPAApprovalRequest != null) {
+				if (eGPAApprovalRequest != null && eGPAApprovalRequest.getApproverAction() != null) {
 					String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
 					if (eGPAFinalDecision.contains(eGPADecision)
 							&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {

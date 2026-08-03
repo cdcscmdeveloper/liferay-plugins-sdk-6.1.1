@@ -15470,12 +15470,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 		statusIds.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 		statusIds.add(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA);
 
-		Long statusId = scQt.getQtStatus().getStatusId();
+		boolean enableeGPAStatuses = scQt.getQtStatus() != null && statusIds.contains(scQt.getQtStatus().getStatusId());
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
-		if (resDTO.getApproval() != null && statusIds.contains(statusId)
-				&& !this.getManagedBean().isResetBpkCurrentArea()) {
+		if (resDTO.getApproval() != null && enableeGPAStatuses && !this.getManagedBean().isResetBpkCurrentArea()) {
 			List<ScQtApproval> listOfApprovals = resDTO.getApproval();
 			for (ScQtApproval approval : listOfApprovals) {
 				String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();
@@ -15575,8 +15574,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * 
 	 * @param actionFlow
 	 */
-	public void reseteGPACurrentArea(boolean actionFlow){
-		if(actionFlow){
+	public void reseteGPACurrentArea(boolean proceedeGPA){
+		if(proceedeGPA){
 		   this.getManagedBean().setReseteGPACurrentArea(true);
 		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
 		}else{
