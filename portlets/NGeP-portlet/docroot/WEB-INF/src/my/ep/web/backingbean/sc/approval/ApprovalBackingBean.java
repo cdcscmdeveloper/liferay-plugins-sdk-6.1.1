@@ -4034,6 +4034,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);	
 
+		//#35500 EPV Start
 		Long currentStatus = scQt.getQtStatus().getStatusId();
 		List<Object[]> supplierUserIds = null;
 		supplierUserIds = detailSO.getSupplierUserIds(scQt, currentStatus);
@@ -4041,7 +4042,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_SUBMIT : QTAuditConstant.PROCESS_FLAG_REJECT);			
 		}else{
 			auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
-		}
+		}//#35500 EPV End
 		auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
 		
 		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
