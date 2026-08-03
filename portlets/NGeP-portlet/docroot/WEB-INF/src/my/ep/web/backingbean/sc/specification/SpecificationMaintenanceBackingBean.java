@@ -602,18 +602,8 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 				this.getManagedBean().setGenInfo(false);
 			}
 		}
-		log.info("asdsadwereeee " + scQt.getQtStatus().getStatusId());
 		//#38107 - Start
-		List<Long> statusAbleToUpdateSpec = new ArrayList<>();
-		statusAbleToUpdateSpec.add(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
-		statusAbleToUpdateSpec.add(QTStatusConst.QT_REVISION_PUBLICATION);
-		statusAbleToUpdateSpec.add(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL);
-		statusAbleToUpdateSpec.add(QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL);
-		statusAbleToUpdateSpec.add(QTStatusConst.QT_PENDING_BPK_APPROVAL);
-		statusAbleToUpdateSpec.add(QTStatusConst.QT_PENDING_SCHEDULE_REVISION);
-		statusAbleToUpdateSpec.add(QTStatusConst.QT_PENDING_REQUEST_REVIEW_FROM_EGPA);
-		statusAbleToUpdateSpec.add(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA);
-		if(statusAbleToUpdateSpec.contains(scQt.getQtStatus().getStatusId())){//#33837 - add bpk and reschedule
+		if(QTStatusConst.getStatusAbleToUpdateSpecificationMaintenance().contains(scQt.getQtStatus().getStatusId())){//#33837 - add bpk and reschedule
 		//#38107 - End
 			this.getManagedBean().setChecklist(true);
 			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())

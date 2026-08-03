@@ -17989,16 +17989,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		//#38107(eGPA), 33837(add bpk and reschedule) - Start
-		List<Long> notSCEndorseSignOff = new ArrayList<>();
-		notSCEndorseSignOff.add(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
-		notSCEndorseSignOff.add(QTStatusConst.QT_REVISION_PUBLICATION);
-		notSCEndorseSignOff.add(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL);
-		notSCEndorseSignOff.add(QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL);
-		notSCEndorseSignOff.add(QTStatusConst.QT_PENDING_BPK_APPROVAL);
-		notSCEndorseSignOff.add(QTStatusConst.QT_PENDING_SCHEDULE_REVISION);
-		notSCEndorseSignOff.add(QTStatusConst.QT_PENDING_REQUEST_REVIEW_FROM_EGPA);
-		notSCEndorseSignOff.add(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA);
-		if(notSCEndorseSignOff.contains(scQt.getQtStatus().getStatusId())){
+		if(QTStatusConst.getStatusAbleToUpdateSpecificationMaintenance().contains(scQt.getQtStatus().getStatusId())){
 		//#38107(eGPA), 33837(add bpk and reschedule) - End
 			this.getManagedBean().setChecklist(true);
 			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
