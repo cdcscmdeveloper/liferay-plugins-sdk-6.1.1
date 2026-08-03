@@ -43,6 +43,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -73,6 +74,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.AuditTrailReqDTO;
@@ -97,6 +99,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -4016,20 +4019,63 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		ScActor scActor = getActorByQtIdAndUserId(scQt.getQtId(),pmUser.getUserId());
+		auditResDTO.setRoleCode(scActor.getRoleCode());//#35500 fix 31st March
 		auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);//check and/or change later
-		auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
+		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);	
+
+		Long currentStatus = scQt.getQtStatus().getStatusId();
+		List<Object[]> supplierUserIds = null;
+		supplierUserIds = detailSO.getSupplierUserIds(scQt, currentStatus);
+		if  (supplierUserIds != null && CollectionUtils.isNotEmpty(supplierUserIds)){
+			auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_SUBMIT : QTAuditConstant.PROCESS_FLAG_REJECT);			
+		}else{
+			auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
+		}
 		auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
 		
 		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTO);
 		qtAuditTrailSO.insertAuditTrail(auditReqList);
+	}
+	
+	/**
+	 * #35500
+	 * Get SC Actor by qt id and user id
+	 * @param qtId
+	 * @param userId
+	 * @return
+	 */
+	protected ScActor getActorByQtIdAndUserId(Long qtId, Long userId) {
+		IScActorSO actorSO = null;
+		try {
+			actorSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+
+			ScActorReqDTO reqDTO = new ScActorReqDTO();
+			reqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION));
+			reqDTO.setDocId(qtId);
+			reqDTO.setUserId(userId);
+
+			List<ScActor> scActors = actorSO.retreiveActorByDocTypesDocIdUserId(reqDTO).getScActorList();
+			if(null!=scActors && !scActors.isEmpty()){
+				return scActors.get(0);
+			}else{
+				return null;
+			}
+		} finally {
+			actorSO = null;
+		}
 	}
 	
 	
