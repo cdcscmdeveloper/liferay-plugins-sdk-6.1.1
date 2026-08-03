@@ -4019,9 +4019,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+		//#35500 EPV Start
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		
+		//#35500 EPV End
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
 		
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -4050,6 +4051,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		qtAuditTrailSO.insertAuditTrail(auditReqList);
 	}
 	
+	//#35500 EPV Start
 	/**
 	 * #35500
 	 * Get SC Actor by qt id and user id
@@ -4077,7 +4079,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		} finally {
 			actorSO = null;
 		}
-	}
+	}//#35500 EPV End
 	
 	
 	/**
