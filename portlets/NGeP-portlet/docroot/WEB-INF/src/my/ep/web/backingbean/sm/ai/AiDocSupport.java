@@ -536,8 +536,8 @@ public final class AiDocSupport {
 					bank.setValidBankName(false);
 				}
 			}
-			// Company / account-holder name matches exactly, case-insensitive; a missing holder name is excluded.
-			if (!StringUtils.isBlank(companyNameJson) && !normalizedEquals(companyNameJson, companyNameSupp)) {
+			// Supplier name is required, so a blank or mismatched one fails the verdict.
+			if (!normalizedEquals(companyNameJson, companyNameSupp)) {
 				bank.setValidAccountHolderName(false);
 			}
 		}
