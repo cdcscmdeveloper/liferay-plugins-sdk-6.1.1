@@ -3,7 +3,7 @@
  */
 package my.ep.web.backingbean.sc.supplierfinalization;
 
-import java.io.File;	// Bug #35485@Syazani 08/02/2024
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -102,8 +102,8 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;	// Bug #37829@Syazani 13/03/2024
-import my.ep.persistence.entity.sc.common.ScActor; //Bug #32682
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -143,7 +143,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.CustomUtils;	// Bug #35485@Syazani 08/02/2024
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -152,6 +152,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean.FinalizationEndorsementReportDTO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -185,6 +186,10 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
+// Bug #35485@Syazani 08/02/2024
+// Bug #37829@Syazani 13/03/2024
+//Bug #32682
+// Bug #35485@Syazani 08/02/2024
 
 /**
  * Implementation for supplier finalization
@@ -2580,6 +2585,10 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
+			
+			// #35320 - START
+			validateCommitteeDecision(decisionTypeCode);
+			// #35320 - END
 		}
 		// #28834 - End.
 
@@ -2840,8 +2849,11 @@ public class SupplierFinalizationBackingBean extends
 						
 						if (!committeeSet.contains(committeeType)) {
 							//Bug #28235 - start
-							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+							//#35320 - WIP Data - Start
+							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A) || 
+									committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
 								isCurrentCommitteeAuthorisedToSubmit = true;
+								//#35320 - WIP Data - End
 							}else{
 								for (String committee : committeeSet) {
 									isCurrentCommitteeAuthorisedToSubmit = 
@@ -2864,11 +2876,12 @@ public class SupplierFinalizationBackingBean extends
 				}
 				
 				if (!isCurrentCommitteeAuthorisedToSubmit) {
-					String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
-															committeeType);
-					
-					throw new EpException(MessageConst.ERROR_760394, new String[] { 
-											committeeName, String.valueOf(totalIntendedPrice.intValue()) });
+					//#35320 - Start
+					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
+
+					throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode,
+							String.valueOf(totalIntendedPrice.intValue()) });
+					// #35320 - End
 				}
 			}
 
@@ -5329,6 +5342,18 @@ public class SupplierFinalizationBackingBean extends
 			
 			int i = 0;
 			items = new SelectItem[reasonList.size()];
+			
+			// #35320 - Start
+			String committeeType = getManagedBean().getCommitteeType();
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A
+					.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B
+							.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
+							.equals(committeeType)) {
+				checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+			}
+			// #35320 - Start
 
 			for (PmReasonDesc reasonDesc : reasonList) {
 
@@ -5454,6 +5479,14 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (reason != null) {
 				String committeeType = getManagedBean().getCommitteeType();
+				
+				// #35320 - Set WIP QCA, QCB to QQC - Start				
+				if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+						|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
+					committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+				}
+				// #35320 - End
+				
 				Map<String,String[]> higherAuthoritiesMap 
 							= getManagedBean().getHigherAuthoritiesMap();
 				
@@ -5640,14 +5673,26 @@ public class SupplierFinalizationBackingBean extends
 					committeeSO = null;
 				}
 			}
-			if (MapUtils.isNotEmpty(
-					higherAuthoritiesMap) && 
-						!higherAuthoritiesMap.containsKey(committeeType + 
-							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS)) {
+			// #35320 - Start
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A
+					.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B
+							.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
+							.equals(committeeType)) {
+				checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+			}
+
+			if (!this.getManagedBean()
+					.isSuppOfferPriceExceedCommunityAuthority()
+					&& MapUtils.isNotEmpty(higherAuthoritiesMap)
+					&& !higherAuthoritiesMap
+							.containsKey(committeeType
+									+ SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS)) {
 				disableFwdToHighAuthorityOption = true;
 				getManagedBean().setDisableFwdToHighAuthorityOption(
-									disableFwdToHighAuthorityOption);
-			}
+						disableFwdToHighAuthorityOption);
+			}// #35320 - End
 		}
 		
 		String decision = null;
@@ -10075,8 +10120,11 @@ public class SupplierFinalizationBackingBean extends
 
 						if (!committeeSet.contains(committeeType)) {
 							// Bug #28235 - start
-							if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+							//#35320 - WIP Data - Start
+							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A) || 
+									committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
 								isCurrentCommitteeAuthorisedToSubmit = true;
+								//#35320 - WIP Data - End
 							} else {
 								for (String committee : committeeSet) {
 									isCurrentCommitteeAuthorisedToSubmit = isCurrentCommitteeGreaterThanOrEquals(
@@ -10099,10 +10147,12 @@ public class SupplierFinalizationBackingBean extends
 				}
 
 				if (!isCurrentCommitteeAuthorisedToSubmit) {
-					String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+					//#35320 - Start
+					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 
-					throw new EpException(MessageConst.ERROR_760394, new String[] { committeeName,
+					throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode,
 							String.valueOf(totalIntendedPrice.intValue()) });
+					// #35320 - End
 				}
 			}
 
