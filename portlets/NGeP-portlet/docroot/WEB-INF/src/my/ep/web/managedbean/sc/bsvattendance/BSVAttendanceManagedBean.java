@@ -81,6 +81,10 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private int attandance_count;
 	//#25095 - end -
 	
+	// 26247(39088) - start
+	private List<Long> daImposedSupplierIds;
+	// 26247(39088) - end
+
 	/**
 	 * @return the briefingRegistrationList
 	 */
@@ -479,4 +483,14 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 	//#25095 - end -	
 	
+	// 26247(39088) - start
+	public List<Long> getDaImposedSupplierIds() {
+		return daImposedSupplierIds;
+	}
+
+	public void setDaImposedSupplierIds(List<Long> daImposedSupplierIds) {
+		this.daImposedSupplierIds = daImposedSupplierIds;
+	}
+	// 26247(39088) - end
+
 }

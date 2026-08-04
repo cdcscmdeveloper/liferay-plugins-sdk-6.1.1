@@ -64,6 +64,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -3083,12 +3084,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 		this.getManagedBean().setAction(actions);
 	}
+	
+	//#26282 and SonarLint Fixing - Start
+	/**
+	 * preRenderExtensionView
+	 */
 	public void preRenderExtensionView() {
 		log.info("**********preRenderExtensionView**************");
-
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
 
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
@@ -3124,9 +3126,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		log.info("********isPublished******"+unspsc.isPublished());
 
-		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
+		IRequestCodeSO requestSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+		ICodificationSO codificationSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 
@@ -3134,7 +3136,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		RequestCodeResDTO resDTO = null;
 		this.getManagedBean().setReviewExtCodeList(null);
 
-		if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
+		if (unspsc.getItemId() != null && !unspsc.getItemId().isEmpty()) {
 			for (String itemId : unspsc.getItemId()) {
 				log.info("itemId:" + itemId);
 
@@ -3169,7 +3171,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		remarkResDTO.setRequestCode(this.getManagedBean().getRequestCode());
 		loadRemark(remarkResDTO, res);
 		
-		reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
+		if (resDTO != null && resDTO.getRequestCode().getTempCode() != null) {
+			reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
+		}
 		CodificationResDTO resCodeDTO = codificationSO
 				.searchCommodityObj(reqCodeDTO);
 		
@@ -3193,7 +3197,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
 			
-			if (res.getTaskName().equalsIgnoreCase("Approve and Publish Extension Code") || res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {				code.setReviewedColorName(code.getColorName());
+			if (res.getTaskName().equalsIgnoreCase("Approve and Publish Extension Code") || res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {				
+				code.setReviewedColorName(code.getColorName());
 				code.setReviewedBrandName(code.getBrandName());
 				code.setReviewedTypeName(code.getTypeName());
 				code.setReviewedMeasurementName(code.getMeasurementName());
@@ -3298,9 +3303,20 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setDocStatus(
 				resStatusDTO.getPmStatusDesc() != null ? resStatusDTO
 						.getPmStatusDesc().getStatusName() : "Review");
+		
+		log.info("[#26282] Task Id: " + this.getManagedBean().getTaskId());
+		log.info("[#26282] Task name: " + this.getManagedBean().getTaskName());
+		log.info("[#26282] Task action: " + StringUtils.join(this.getManagedBean().getAction(), "-"));
+		
+		log.info("[#26282] check for Disciplinary Action - Start");
+		if (isAllSupplier()) {
+			checkForDisciplinaryAction();
+		}
+		log.info("[#26282] check for Disciplinary Action - End");
+		
 		assertView("Review Extension Code", obj);
 	}
-
+	//#26282 and SonarLint Fixing - End
 
 	public void claimTask()  {
 		log.info("**********claimTask");
@@ -3425,6 +3441,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 //			}
 		}else if(taskName.equalsIgnoreCase("Recommend Result Notification")){
 			if(processGroup.equalsIgnoreCase("Review Extension Code")){
+				log.info("[#26282] CmRecommendCodes size: " + this.getManagedBean().getRequestCode().getCmRecommendCodes().size());
 				if(this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0){
 					navigateTo(0, "unspscResultNotification");
 				}else{
@@ -3476,7 +3493,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			}else{
 				this.getManagedBean().setSelectedLovUnspscSegment(null);
-				this.getManagedBean().setSelectedLovUnspscfamily(null);;
+				this.getManagedBean().setSelectedLovUnspscfamily(null);
 				this.getManagedBean().setSelectedLovUnspscClass(null);
 				this.getManagedBean().setSelectedLovUnspsc(null);
 				checkIfLovEditable(null);
@@ -3505,7 +3522,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			this.getManagedBean().setDisableLovCommodity(!checkCo);
 		}
 	}
-	
+
+	/**
+	 * preRenderView
+	 */
+	//#26282 and SonarLint Fixing - Start
 	public void preRenderView() {
 		log.debug("**********preRenderView**************");
 		this.getManagedBean().setSelectedLovUnspscSegment(null);
@@ -3548,16 +3569,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setPayLoad(obj);
 		CDRequestDataType unspsc = (CDRequestDataType) obj;
 
-		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
+		IRequestCodeSO requestSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+		ICodificationSO codificationSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO remarkReqDTO = new CodificationReqDTO();
 
 		this.getManagedBean().setReviewExtCodeList(null);
 
-		if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
+		if (unspsc.getItemId() != null && !unspsc.getItemId().isEmpty()) {
 			for (String itemId : unspsc.getItemId()) {
 				log.info("itemId:" + itemId);
 
@@ -3586,7 +3607,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setAction(res.getAction());
 		arrangeOutcomeButton();
 
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+		IStatusSO statusSO = BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
@@ -3605,8 +3626,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					res.getTaskName().equalsIgnoreCase("Revise Temporary Code")){
 			this.getManagedBean().setDisableRevise(true);
 			CodificationReqDTO lovReqDTO = new CodificationReqDTO();
-			CodificationResDTO lovResDTO = null;
-			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+			CodificationResDTO lovResDTO;
+			ICodificationSO unspscSO = BusinessDelegate
 					.getInstance().getServiceObject("cm", ICodificationSO.class);
 
 			lovReqDTO.setUnspscCode(StringUtils.rightPad(this.getManagedBean().getRequestCode().getTempCode().substring(0,2), 8, '0'));
@@ -3630,8 +3651,19 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			this.getManagedBean().setSelectedLovUnspsc(lovResDTO.getUnspscObj());
 			checkIfLovEditable(null);
 		}
+		log.info("[#26282] Task Id: " + this.getManagedBean().getTaskId());
+		log.info("[#26282] Task name: " + this.getManagedBean().getTaskName());
+		log.info("[#26282] Task action: " + StringUtils.join(this.getManagedBean().getAction(), "-"));
+		
+		log.info("[#26282] check for Disciplinary Action - Start");
+		if (isAllSupplier()) {
+			checkForDisciplinaryAction();
+		}
+		log.info("[#26282] check for Disciplinary Action - End");
+		
 		assertView("Review UNSPSC Code",obj);
 	}
+	//#26282 and SonarLint Fixing - End
 
 	public SearchFilterBean getColorFilterBean() {
 		return colorFilterBean;
@@ -4306,13 +4338,39 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return resDTO.getRemarkList();
 	}
 	
+	//[#26282] check for Disciplinary Action - Start
+	/**
+	 * To check what DA the supplier involve
+	 */
+	public void checkForDisciplinaryAction() {
+		// check for disciplinary action
+		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(null);
 
+		if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
+			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
 
+			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
+			log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
+			log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
+			log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
 
-
-
-
-
-
-
+			// disciplinary action - Warning
+			if (disciplinaryAct.isWarning()) {
+				this.getManagedBean().setDaWarning(disciplinaryAct.isWarning());
+			}
+			// disciplinary action - Suspend Registration
+			if (disciplinaryAct.isSuspendRegistration()) {
+				this.getManagedBean().setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
+			}
+			// disciplinary action - Cancel Registration
+			if (disciplinaryAct.isCancelRegistration()) {
+				this.getManagedBean().setDaCancelReg(disciplinaryAct.isCancelRegistration());
+			}
+			// disciplinary action - Blacklist Owner/Director of Company
+			if (disciplinaryAct.isBlacklistOwner()) {
+				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
+			}
+		}
+	}
+	//[#26282] check for Disciplinary Action - End
 }

@@ -36,6 +36,7 @@ import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -57,16 +58,18 @@ import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
-import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
-import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -101,6 +104,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -136,8 +140,9 @@ import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -157,6 +162,11 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
+import my.ep.web.util.sc.helper.LocationSingleton;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -2224,7 +2234,8 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
-	
+	//Enhancement #26339 -start-
+	@SuppressWarnings("unused")
 	//Enhancement #26339 -end-
 	public String saveAssetLiabilityAction(boolean isCompleted) {
 		debugLogger("saveAssetLiabilityAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
@@ -3091,11 +3102,11 @@ public class SPDetailBackingBean extends
 				}
 			}
 			
-			// 33509 &33191, #11104 - start
+			// 33509 &33191&11104 - start
 			if (null != resDTO.getScQtProposal()) {
 				getManagedBean().setQtProposal(resDTO.getScQtProposal());
 			}
-			// 33509 &33191, #11104 - End
+			// 33509 &33191&11104 - End
 
 			getManagedBean().setScQtSampleLable(resDTO.getScQtSampleLable());
 			return NAV_TO_SAMPLING_ADDRESS_PAGE;
@@ -4840,6 +4851,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 */
 	//Bug #33726
 	private String generateDeclarationFromVelocity(ScQt scQt, ScQtProposal proposal) throws Exception {
+		debugLogger("generateDeclarationFromVelocity");
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmSupplier().getCompanyName() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
@@ -4857,10 +4869,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		VelocityContext context = new VelocityContext();
 		Date date = retriveDatesforOrgProfile(scQt.getPublishDate(),
 				scQt.getCreatedDate());
-
+		debugLogger("date" + date);
 		String ptjName = retrievePTJByOrgProfileId(
 				pmOrgProfile.getOrgProfileId(), date);
-
+		debugLogger("ptjName" + ptjName);
 		if (scQt != null) {
 			String title = scQt.getQtTitle();
 			if (title == null) {

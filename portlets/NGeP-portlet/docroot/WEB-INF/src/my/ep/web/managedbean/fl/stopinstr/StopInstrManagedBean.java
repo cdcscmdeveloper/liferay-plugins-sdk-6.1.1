@@ -17,8 +17,10 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.primefaces.model.TreeNode;
 
@@ -63,6 +65,11 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private boolean prevHideRemarks;
     private String backToNtf;
     private String searchFunctionType;//36386
+    //26279 - start
+    private String disciplinaryActionMessage;
+    private List<DisciplinaryActionVO> disciplinaryActionVO;
+    private SmDisciplinaryAction smDisciplinaryAction;
+    //26279 - end
 	/**
 	 * Gets the reason descs.
 	 *
@@ -418,4 +425,30 @@ public class StopInstrManagedBean extends BaseManagedBean {
 		this.searchFunctionType = searchFunctionType;
 	}
 	// 36386-end
+	
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
+
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
+	}
+
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
+	}
+
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 }

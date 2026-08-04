@@ -21,8 +21,6 @@
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and isRenderZone}" headerText="#{lbl['lbl.sc.zone']}">
 		</p:column>
 		<ui:remove>#29187 End Vinod</ui:remove>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal}" headerText="#{lbl['lbl.sc.zone']}">
-		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px;white-space:normal;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.total']}" />

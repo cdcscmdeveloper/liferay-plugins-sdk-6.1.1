@@ -282,8 +282,8 @@ public class TemplateSpecBackingBean extends
 						&& resDTO.getSpecAnswerList() != null) {
 					calcGrandTotalAmount(templateSpecBean);
 				}
-				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
-				// #21695 -end-
+
+				this.getManagedBean().setTemplateSpecBean(templateSpecBean);//#29187 Added for sanity
 			}
 		} finally {
 			templateSpecSO = null;

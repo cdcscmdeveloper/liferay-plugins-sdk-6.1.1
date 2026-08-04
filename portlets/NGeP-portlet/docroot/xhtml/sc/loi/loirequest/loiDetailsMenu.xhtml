@@ -17,6 +17,17 @@
 					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
+			<ui:remove>26247 - start</ui:remove>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
+			</td>
+			<td>
+				<ac:disciplinaryActionYesNo
+					supplier="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier}"
+					showTooltip="true" />
+			</td>
+			<ui:remove>26247 - end</ui:remove>
+
 		</tr>
 		<tr>
 			<td>
@@ -293,6 +304,5 @@
 			showAttachment="false" readonly="true"
 			rendered="#{not empty lOIDetailBackingBean.managedBean.supplierRemarks}" />
 	</p:outputPanel>
-	<!-- 11134 -end- -->
-	
+	<!-- 11134 -end- -->>
 </ui:composition>

@@ -223,10 +223,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
 	
 	private boolean isFinancialAttchment;//#28792
-	
+
 	// #21695 - #33391 - Start.
 	private Map<Long, List<TplSpecAnswer>> zoneTplSpecAnsMap;
-	// #21695 - #33391 - End.
+	// #21695 - #33391 - End.	
+	
+	// #30609, #26247 - Start.
+	private boolean disableUpdateProposal;
+	// #30609, #26247 - End.
 	
 	/**
 	 * Default Consructor
@@ -1960,21 +1964,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	
 	//#28792-End	
 	
-	// #21695 - #33391 - Start.
+	// #30609, #26247 - Start.
 	/**
-	 * @return the zoneTplSpecAnsMap
+	 * @return the disableUpdateProposal
 	 */
-	public Map<Long, List<TplSpecAnswer>> getZoneTplSpecAnsMap() {
-		return zoneTplSpecAnsMap;
+	public boolean isDisableUpdateProposal() {
+		return disableUpdateProposal;
 	}
 
 	/**
-	 * @param zoneTplSpecAnsMap
-	 *            the zoneTplSpecAnsMap to set
+	 * @param disableUpdateProposal the disableUpdateProposal to set
 	 */
-	public void setZoneTplSpecAnsMap(Map<Long, List<TplSpecAnswer>> zoneTplSpecAnsMap) {
-		this.zoneTplSpecAnsMap = zoneTplSpecAnsMap;
+	public void setDisableUpdateProposal(boolean disableUpdateProposal) {
+		this.disableUpdateProposal = disableUpdateProposal;
 	}
-	// #21695 - #33391 - End.
+	// #30609, #26247 - End.
 
 }

@@ -186,6 +186,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<String> disqualifiedStages;
 	private boolean hasSupplierQualifiedForCurrentSelection;// 6906 note 202
 	// 6906 note 117 - end
+	
+	private ScQtRecommend lastSelectedItem; // 35157, #26247
 
 	private boolean isDemoReq; // #28784
 
@@ -272,6 +274,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	private ScQt checkCategoryCodeQt; // #29466
 	private boolean allSupplierDisagreeEPV;//#21692
+	// 26247 - start
+	private List<String> disabledSupplierIds;
+
+	// 26247 - end
 
 	/**
 	 * @return the activeIndex
@@ -2302,6 +2308,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	// 6906 note 202 - end
 
+	// 35157, #26247 - start
+	public ScQtRecommend getLastSelectedItem() {
+		return lastSelectedItem;
+	}
+
+	public void setLastSelectedItem(ScQtRecommend lastSelectedItem) {
+		this.lastSelectedItem = lastSelectedItem;
+	}
+	// 35157, #26247 - end
+	
 	//#28784 - Start
 	public boolean isDemoReq() {
 		return isDemoReq;
@@ -2322,4 +2338,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
 	}
 	//#21692 - End
+	// 26247 - start
+	public List<String> getDisabledSupplierIds() {
+		return disabledSupplierIds;
+	}
+
+	public void setDisabledSupplierIds(List<String> disabledSupplierIds) {
+		this.disabledSupplierIds = disabledSupplierIds;
+	}
+	// 26247 - end
+
 }

@@ -156,8 +156,13 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	/** The back to previous page. */
 	private String backToPreviousPage;
-
-
+	
+	//[#26282] disciplinary action - start
+	private boolean daWarning;
+	private boolean daSuspendReg;
+	private boolean daCancelReg;
+	private boolean daBlacklistOwner;
+	//[#26282] disciplinary action - end
 
 	private SearchFilterBean codeFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
@@ -195,7 +200,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
-
+	
 	// 35503 Start
 	private String segmentTitleEng;
 	private String familyTitleEng;
@@ -1501,7 +1506,41 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setTempBrandName(String tempBrandName) {
 		this.tempBrandName = tempBrandName;
 	}
-	
+
+	//[#26282] disciplinary action - start
+	public boolean isDaWarning() {
+		return daWarning;
+	}
+
+	public void setDaWarning(boolean daWarning) {
+		this.daWarning = daWarning;
+	}
+
+	public boolean isDaSuspendReg() {
+		return daSuspendReg;
+	}
+
+	public void setDaSuspendReg(boolean daSuspendReg) {
+		this.daSuspendReg = daSuspendReg;
+	}
+
+	public boolean isDaCancelReg() {
+		return daCancelReg;
+	}
+
+	public void setDaCancelReg(boolean daCancelReg) {
+		this.daCancelReg = daCancelReg;
+	}
+
+	public boolean isDaBlacklistOwner() {
+		return daBlacklistOwner;
+	}
+
+	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
+		this.daBlacklistOwner = daBlacklistOwner;
+	}
+	//[#26282] disciplinary action - End
+
 	/*[#27625] begin*/
 	public String getTypeName() {
 		return typeName;
