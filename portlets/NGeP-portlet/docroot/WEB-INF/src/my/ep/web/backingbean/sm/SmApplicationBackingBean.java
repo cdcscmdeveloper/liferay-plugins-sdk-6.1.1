@@ -19228,19 +19228,20 @@ public class SmApplicationBackingBean extends
 			}
 			
 			if (history.isEmpty()) {
+				Long createdBy = 0L;
+				
+				if(getManagedBean().getHistorySuppCategory().getSmAppl() != null) {
+					createdBy = getManagedBean().getHistorySuppCategory().getSmAppl().getCreatedBy();
+				}
 				
 				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
 				suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+				suppReqDTO.setCreatedBy(createdBy);
 				suppReqDTO.setSdm(false);
-
-				if (supplierUserRenewal) {
-					suppReqDTO.setCreatedBy(reqDTO.getCreatedBy());
-				} else {
-					suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
-				}
+				
 				supplierEditList.add(suppReqDTO);
 			}
 			

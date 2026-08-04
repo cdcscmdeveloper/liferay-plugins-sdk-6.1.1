@@ -3553,11 +3553,16 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			
 			if (history.isEmpty()) {
+				Long createdBy = 0L;
+				
+				if(getManagedBean().getHistorySuppCategory().getSmAppl() != null) {
+					createdBy = getManagedBean().getHistorySuppCategory().getSmAppl().getCreatedBy();
+				}
 				
 				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
-				suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
+				suppReqDTO.setCreatedBy(createdBy);
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
 				suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
 				suppReqDTO.setSdm(true);
