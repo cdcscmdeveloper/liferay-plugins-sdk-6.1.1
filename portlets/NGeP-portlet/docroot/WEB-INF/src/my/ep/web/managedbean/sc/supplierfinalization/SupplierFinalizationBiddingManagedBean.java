@@ -180,7 +180,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	// #28777 & #29729 - End
 	
 	//#25651 - Start
-	private final static List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
+	private static final List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
 	private static List<String> setDirectDownloadDocDefKeys(){
 		List<String> list = new ArrayList<>();
 		
