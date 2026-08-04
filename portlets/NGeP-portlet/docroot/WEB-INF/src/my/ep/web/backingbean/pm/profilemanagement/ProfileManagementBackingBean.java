@@ -3112,16 +3112,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						
 			/** AUDIT 28895_35509 START **/
 			//#40423 - Start
-			/*IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
-			
-			PmUserOrg oldPmUserOrg = !this.getManagedBean().getSelectedUser().isBrandNew() ? 
+			// #40810 Start
+			PmUserOrg oldPmUserOrg = !userOrg.isBrandNew() ? 
 					PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(this.getManagedBean().getSelectedUser().getUserId(),
 							 this.getManagedBean().getSelectedUserOrg().getUserOrgId()) : null;
 			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
 			List<PmUserRole> oldPmUserRoles = oldPmUserOrg != null ? oldPmUserOrg.getPmUserRoles() : null;
-			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;*/
+			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;
 			//#40423 - End
 			/** AUDIT 28895_35509 START END **/
 
@@ -3265,12 +3265,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				
 				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					this.getManagedBean().setUserGrpBandNew(true); // 40810
 					this.getManagedBean().setBrandNewUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
 				}
-				//#40423 - Start
-				/*if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+				//#40423 - Start // #40810 Remove commented code
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
 					getManagedBean().setNewAuditPmUser(user);
 					getManagedBean().setNewAuditPmUserOrg(userOrg);
 					setNewAuditPmUserRoles(userOrg.getPmUserRoles());
@@ -3279,8 +3280,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
 					getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
 					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
-				}*/
-				//#40423 - End
+				} 
+				//#40423 - End // #40810
 				/************ END AUDIT #28895_35509 shaqimi 24072025 *************/
 				
 				uploadAttachments();
@@ -3340,10 +3341,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
 					}
 				}
-				//#40423 - Start
-				/*if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+				//#40423 - Start  // 40810 - remove commented code
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
-				}*/
+				}
 				//#40423 - End
 				getManagedBean().setNewAuditPmUserRoles(new ArrayList<PmUserRole>());
 				getManagedBean().setNewAuditPmAddressTypes(new ArrayList<PmAddressType>());
