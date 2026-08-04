@@ -175,19 +175,14 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 			if (!isReportError) {
 
 				RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
-
-				// R5 #14076 start
-
 				restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
-
 				getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 				RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 				log.debug("Report URL: " + resDTO.getReportUrl());
 				getManagedBean().setMinistryFlag(null);
+				commonReportValidation(params, restDtlDTO);
+				
 			}
-			commonReportValidation(params, restDtlDTO);
-			// R5 #14076 end
-
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
 					"ccContractItemUsageMonitoringDtlsReportBB", null,
