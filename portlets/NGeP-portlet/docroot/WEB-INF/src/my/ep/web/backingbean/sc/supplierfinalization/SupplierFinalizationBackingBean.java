@@ -4046,7 +4046,7 @@ return	remarksNotFound;
 	 */
 	public void saveQtFinalJustification(IQTSuppFinalizationSO qtSuppFinalizationSO){
 		List<String> reasonIdList = this.getManagedBean().getJustificationReasonList();
-		List<ScQtFinalJustification> finalJustificationList = new ArrayList<ScQtFinalJustification>();;
+		List<ScQtFinalJustification> finalJustificationList = new ArrayList<ScQtFinalJustification>();
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		Long qtFinalizationId = this.getManagedBean().getScQtFinalization().getFinalizationId();
 		

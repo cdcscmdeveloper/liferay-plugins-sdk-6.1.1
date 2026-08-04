@@ -234,7 +234,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			appl.setAiProcessed(0);
 			return;
 		}
-		SmServiceLookup.getAIApiProcessSO().reassignResponsesToAppl(appl);
 		appl.setAiProcessed(1);
 		recomputeAiProcessed(appl);
 		// nothing extracted yet + AI off: hide everything. 2 = already extracted, ignores the toggle
@@ -1057,12 +1056,24 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public static boolean isBankAiMismatch(SmAppl appl) {
+		return isBankAiMismatch(appl, true);
+	}
+
+	/**
+	 * emitMessages: the submit-time check raises the mismatch messages, the Declare button gate stays silent.
+	 * @param appl
+	 * @param emitMessages
+	 * @return
+	 */
+	public static boolean isBankAiMismatch(SmAppl appl, boolean emitMessages) {
 		if (!isAIApplicable(appl)) {
 			return false;
 		}
 		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())) {
 			return false;
 		}
+		// validatedAI is transient and only initAiState sets it, so recompute before reading it
+		validateBank(appl, emitMessages);
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()) {
 			if (suppDoc.getPmDocument() == null || EntityHelper.isCollectionEmpty(suppDoc.getSmApplDocFiles())
 					|| !isBankDoc(suppDoc.getPmDocument())) {
@@ -1070,7 +1081,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			for (SmApplDocFile file : suppDoc.getSmApplDocFiles()) {
 				if (file.getValidatedAI() == 2) {
-					validateBank(appl, true);
 					return true;
 				}
 			}
