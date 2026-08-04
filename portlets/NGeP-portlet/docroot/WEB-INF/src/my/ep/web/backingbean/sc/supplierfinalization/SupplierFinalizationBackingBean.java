@@ -1810,8 +1810,8 @@ public class SupplierFinalizationBackingBean extends
 			
 			//#27502 -Start
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 			scQt = qtBackingBean.getManagedBean().getQt();
+			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 			if (isBpkCentralContract) {			
 				reqDTO = validateInfo(2, skipValidation);
@@ -3035,7 +3035,6 @@ public class SupplierFinalizationBackingBean extends
 			if (createNewBP) {
 				addBriefingPaper(scQtFinalization);
 			}
-			updateBPMTask(outcome, null, reqDTO);
 			//34860 start
 			if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -3044,6 +3043,8 @@ public class SupplierFinalizationBackingBean extends
 				saveQtFinalJustification(qtSuppFinalizationSO);
 			}				
 			//34860 end
+			updateBPMTask(outcome, null, reqDTO);
+			
 			// 38523 - refactor code - end
 			// 38523 - indenting codes - end
 		}
@@ -4047,7 +4048,6 @@ return	remarksNotFound;
 	public void saveQtFinalJustification(IQTSuppFinalizationSO qtSuppFinalizationSO){
 		List<String> reasonIdList = this.getManagedBean().getJustificationReasonList();
 		List<ScQtFinalJustification> finalJustificationList = new ArrayList<ScQtFinalJustification>();;
-		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		Long qtFinalizationId = this.getManagedBean().getScQtFinalization().getFinalizationId();
 		
 		for(String reasonCode : reasonIdList){
