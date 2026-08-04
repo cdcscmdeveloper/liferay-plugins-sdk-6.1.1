@@ -88,6 +88,8 @@
            	<portlet id="pmPoJobTypeRatio"></portlet>
            	<portlet id="poRoleTaskWeightage"></portlet>
 			<portlet id="softCertProvider"></portlet>
+			<portlet id="pmAuSearch"></portlet><!-- #35509 -->
+			<portlet id="pmAuUserOrgSearch"></portlet><!-- #35509 -->
 		</category>
 		<!-- Profile Management - END -->		
 
