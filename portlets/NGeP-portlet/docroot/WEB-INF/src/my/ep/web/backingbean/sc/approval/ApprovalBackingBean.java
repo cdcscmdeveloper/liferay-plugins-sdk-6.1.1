@@ -4024,14 +4024,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		//#35500 EPV End
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
-		
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		ScActor scActor = getActorByQtIdAndUserId(scQt.getQtId(),pmUser.getUserId());
+		Long userId = getUserIdSessionFromLoginId();
+		ScActor scActor = getActorByQtIdAndUserId(scQt.getQtId(),userId);
 		auditResDTO.setRoleCode(scActor.getRoleCode());//#35500 fix 31st March
 		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
-		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+		auditResDTO.setCreatedBy(userId);
 		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);	
 
 		//#35500 EPV Start
