@@ -414,12 +414,13 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		String userlist = populateInactiveUserIdIntoString(selectedUsers);
 		inactiveDto.setUserIds(userlist); 
 		inactiveDto.setUserRoleCode(roleCode); 
-		inactiveDto.setOrgProfileId(ctCircular.getOwnerOrgProfile().getOrgProfileId());
+		inactiveDto.setOrgProfileId(getOwnerOrgProfile().getOrgProfileId());
 		inactiveDto.setDocType(ctCircularVer.getDocType());
 		inactiveDto.setDocNo(ctCircular.getCircularNo());
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
 		
 		InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+		resDto.setRoleCode(roleCode);
 		log.info("checkInactiveUserBySP STATUSSS : "+  resDto.getStatus());
 		
 		return resolveInactiveUserStatus(selectedUsers, resDto);
@@ -438,6 +439,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
 		
 		InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+		resDto.setRoleCode(roleCode);
 		log.info("getLoginStatusForCancelCircularFromSP STATUSSS : "+  resDto.getStatus());
 		
 		return resolveInactiveUserStatus(selectedUsers, resDto);
@@ -473,14 +475,6 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
   	  	        selectedUser.setUserName(users.get(i).getUserName());
   	  	        selectedUser.setUserRoleDesc(userRoleDesc);
   	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
-  	  	        
-  	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(resDto.getMemberRoleCode())) {
-  	  	        	log.info("xoxoxoxoxoxo add as chairperson");
-  	  	        	selectedUser.setMemberRole("Chairperson");
-  	  	        } else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(resDto.getMemberRoleCode())) {
-  	  	        	log.info("xoxoxoxoxoxo add as member");
-  	  	        	selectedUser.setMemberRole("Member");
-  	  	        }
   	  	        selectedUsers.add(selectedUser);
   	  	    }
   	    }

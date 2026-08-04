@@ -593,9 +593,6 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 				getManagedBean().getCircularVer().setCtCircularPidReason(null);
 			}
 			
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
-				validateCircular(action);
-			
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
@@ -607,7 +604,15 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
 			}
-			
+
+			//#30737 - start
+			circularVer.setCtCircular(circular);
+			getManagedBean().setCircular(circular);
+
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
+				validateCircular(action);
+			//#30737 - end
+
 			// #39594 - Start
 			if (!circularVer.getCtCircularPidReason().isEmpty()) {
 				circularVer.getCtCircularPidReason().clear();
@@ -2518,12 +2523,13 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 		List<SelectedInactiveUserDTO> userListStatus = new ArrayList<SelectedInactiveUserDTO>();
 
 		CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+		CtCircular circular = getManagedBean().getCircular();
 
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			log.info("validateCircular action : " + outcome);
 			String userRole = RoleCode.BPK_CQ_APPROVER.value();
 			userListStatus = getLoginStatusFromSP(
-					ctCircularVer.getCtCircular(), ctCircularVer,
+					circular, ctCircularVer,
 					getManagedBean().getApproverModel().getTarget(), userRole);
 			handleInactiveUserValidation(outcome, userListStatus);
 		}

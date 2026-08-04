@@ -624,11 +624,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			CtCircular circular = getManagedBean().getCircular();
-			
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				validateCircular(action);
-			}
-			
+
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
@@ -640,6 +636,15 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
 			}
 			
+			//#30737 - start
+			circularVer.setCtCircular(circular);
+			getManagedBean().setCircular(circular);
+
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				validateCircular(action);
+			}
+			//#30737 - end
+
 			//Start Fix - #34367
 			if (circularVer.getDocType() == null) {
 				String userDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
@@ -4006,7 +4011,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 
 			userListStatus = validateInactiveUserForRevise(
 					ctCircularVer.getCtCircular(), ctCircularVer,
-					RoleCode.BPK_CCA.value());
+					RoleCode.BPK_PCA.value());
 
 			if (!userListStatus.isEmpty()) {
 				Long userStatus = null;
