@@ -370,6 +370,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					+ resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			
+			//#38377 (reload from DB if email updated using my account menu)
+			pmUser = SmCommonUtil.getUserByUserId(pmUser.getUserId());
 
 			this.getManagedBean().setOrderId(
 					resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
