@@ -94,6 +94,7 @@ public class MolPayServlet extends HttpServlet {
 		String currency = reqMap.get("currency");
 		String paydate = reqMap.get("paydate");
 		String skey = reqMap.get("skey");
+		String paymentGateway = StringUtils.defaultIfEmpty(reqMap.get("paymentGateway"), "N");
 		String channel = reqMap.get("channel");
 		String paymentRefNo = reqMap.get("paymentRefNo");
 		String bankName = reqMap.get("bankName");
@@ -133,7 +134,7 @@ public class MolPayServlet extends HttpServlet {
 		
 		//#38377
 		log.info("#38377########paymentGateway map:"+reqMap.get("paymentGateway"));
-		if(reqMap.get("paymentGateway").equals("Y") || nbcb != null){
+		if("Y".equals(paymentGateway) || nbcb != null){
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -144,17 +145,18 @@ public class MolPayServlet extends HttpServlet {
 			// To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 			String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
-
+			
+			log.info("######38377#####vKey>>>>" + vKey);
 			log.info("SKey>>>>" + skey);
 			log.info("Key1>>>>" + key1);
 			
 			//#38377
-			if(reqMap.get("paymentGateway").equals("Y") || skey.equals(key1)){
+			if("Y".equals(paymentGateway) || skey.equals(key1)){
 				log.info("SKey & Key1 Are Match>>>>");
 				
 				//#38377
-				if(amount==null){
-					amount = resDTO.getPyPayment().getPaymentAmt().toString();
+				if (StringUtils.isBlank(amount) && resDTO.getPyPayment().getPaymentAmt() != null) {
+				    amount = resDTO.getPyPayment().getPaymentAmt().toString();
 				}
 				BigDecimal txAmount = new BigDecimal(amount);
 				boolean validPayment = false;
@@ -296,16 +298,16 @@ public class MolPayServlet extends HttpServlet {
 					//#33137 - start
 					if(channel.equalsIgnoreCase("FPX")){
 						smPaymentRes.setTransactionId(tranID);
+						smPaymentRes.setFpxTranId("Y".equals(paymentGateway)?null:tranID);
 						log.info("SET TRANSACTION ID--------------------33137"+tranID);
 					}else{
 						//#38377
-						smPaymentRes.setTransactionId(reqMap.get("paymentGateway").equals("Y")?tranID:molpayTransId);
+						smPaymentRes.setTransactionId("Y".equals(paymentGateway)?tranID:molpayTransId);
 						log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
 					}
 					//#38377
-					pymtReqDTO.setEpPaymentGateway(reqMap.get("paymentGateway").equals("Y")?true:false);
-					smPaymentRes.setMolpayTransactionId(reqMap.get("paymentGateway").equals("Y")?null:molpayTransId);
-					smPaymentRes.setFpxTranId(reqMap.get("paymentGateway").equals("Y")?null:tranID);
+					pymtReqDTO.setEpPaymentGateway("Y".equals(paymentGateway)?true:false);
+					smPaymentRes.setMolpayTransactionId("Y".equals(paymentGateway)?null:molpayTransId);
 					log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
 					log.info("#38377########smPaymentRes.setFpxTranId:"+smPaymentRes.getFpxTranId());
 					log.info("#38377########smPaymentRes.setMolpayTransactionId:"+smPaymentRes.getMolpayTransactionId());
@@ -387,28 +389,28 @@ public class MolPayServlet extends HttpServlet {
 					
 					PaymentResDTO pymtResDTO = new PaymentResDTO();
 					
-					//#38377 send success payment email
-					log.info(">>>>before send success email payment statusCode:"+statusCode+"<<<<<");
-					if (statusCode == SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT) {
+					// #38377 send success payment email (status code null means
+					// already got success payment for this payment id)
+					log.info(">>>>before send success email payment statusCode:" + statusCode + "<<<<<");
+					if (statusCode != null && statusCode == SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT) {
 						log.info(">>>>start send success email payment<<<");
 						pymtResDTO = reqSO.saveSuccessPaymentEmailTemplateParams(pymtReqDTO);
 						pymtReqDTO.setNotifyMessageId(pymtResDTO.getNotifyMessageId());
 						reqSO.sendSuccessPaymentEmail(pymtReqDTO);
 					}
+
+					// #38377 status code null means already got success payment
+					// for this payment id so no need to save to avoid duplicate
+					// resit
+					if (statusCode != null) {
+						log.info("###############38377 update payment  paymentOrder.setChannelName:"+paymentOrder.getChannelName());
+						pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+					}
+					printSuccessResponseCode(paymentGateway, statusCode, pymtResDTO.isSuccessful(), res.getWriter());
 					
-					pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
-						//#38377
-						if(reqMap.get("paymentGateway").equals("Y")){
-							PrintWriter out = res.getWriter();
-							try{
-								out.print("Success backend call new payment gateway");
-							}finally{
-								out.close();
-							}
-						}
-						else if(nbcb.equals("1")){
+						if(nbcb.equals("1")){
 							//to auto generate mof cert
 							if(smPayment.getPyBill().getBillType().
 									equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) && 
@@ -626,5 +628,19 @@ public class MolPayServlet extends HttpServlet {
 		log.info("######38377#####cardMaskedNum:" + reqMap.get("cardMaskedNum"));
 		
 		return reqMap;
+	}
+	
+	private void printSuccessResponseCode(String paymentGateway, Long statusCode, boolean isSuccessSave, PrintWriter out) {
+		log.info("#38377########printSuccessResponseCode:" + paymentGateway + "||" + statusCode + "||" + isSuccessSave);
+		if ("Y".equals(paymentGateway)) {
+			if (isSuccessSave || statusCode == null) {
+				try {
+					out.print(SupplierManagementConst.MOL_SUCCESS);
+					log.info("#38377########response code:" + SupplierManagementConst.MOL_SUCCESS);
+				} finally {
+					out.close();
+				}
+			}
+		}
 	}
 }

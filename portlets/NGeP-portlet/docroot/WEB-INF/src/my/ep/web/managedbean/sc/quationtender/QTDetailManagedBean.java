@@ -1679,6 +1679,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.panelSuppliers = panelSuppliers;
 	}
 
+	private boolean weightage35384WIP; //#38151
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	// #19336, #25201, #17376, #19287 -start-
@@ -1702,7 +1704,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #15391 - start
 	private boolean isChecklist;
-	private boolean isGenInfo;
+	private boolean isGenInfo = Boolean.FALSE; //#25726
 	private boolean specUpdateInProgress;
 	// #15391 - end
 	
@@ -1863,6 +1865,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
+	
+	private boolean zoneQtyHasZeroVal;//#38679
 	
 	// #35320 - Start
 	private boolean afterSF;
@@ -11752,6 +11756,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#29732
 	
+	//#38679
+	public boolean isZoneQtyHasZeroVal() {
+		return zoneQtyHasZeroVal;
+	}
+	
+	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
+		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
+	}
+	//#38679
+	
 	// #35320 - Start
 	public boolean isAfterSF() {
 		return afterSF;
@@ -11760,4 +11774,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setAfterSF(boolean afterSF) {
 		this.afterSF = afterSF;
 	}// #35320 - End
+	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 }
