@@ -15462,15 +15462,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 
-		List<Long> statusIds = new ArrayList<>();
-		statusIds.add(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
-		statusIds.add(QTStatusConst.QT_REVISION_PUBLICATION);
-		statusIds.add(QTStatusConst.QT_PENDING_SCHEDULE_REVISION);
-		statusIds.add(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-		statusIds.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
-		statusIds.add(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA);
-
-		boolean enableeGPAStatuses = scQt.getQtStatus() != null && statusIds.contains(scQt.getQtStatus().getStatusId());
+		boolean enableeGPAStatuses = scQt.getQtStatus() != null
+				&& QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId());
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
@@ -15505,14 +15498,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 	//#38107 - Start
 	private void validateeGPAPublishPeriod(ScQt scQt, String approvalCategoryCode) {
 		FacesContext fc = FacesContext.getCurrentInstance();
-		List<Long> eGPAStatuses = new ArrayList<>();
-		eGPAStatuses.add(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
-		eGPAStatuses.add(QTStatusConst.QT_REVISION_PUBLICATION);
-		eGPAStatuses.add(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-		eGPAStatuses.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
-		eGPAStatuses.add(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA);
 
-		if (eGPAStatuses.contains(scQt.getQtStatus().getStatusId())
+		if (QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId())
 				&& ParameterConst.APPROVAL_CATEGORY_EGPA.equals(approvalCategoryCode)) {
 			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);

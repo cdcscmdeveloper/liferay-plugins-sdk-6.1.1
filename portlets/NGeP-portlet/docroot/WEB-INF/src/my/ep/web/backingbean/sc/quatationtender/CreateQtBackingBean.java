@@ -3542,14 +3542,8 @@ public class CreateQtBackingBean extends
 
 		//#38107 - Start
 		// Do checking for eGPA before update closing date
-		List<Long> eGPAStatuses = new ArrayList<>();
-		eGPAStatuses.add(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
-		eGPAStatuses.add(QTStatusConst.QT_REVISION_PUBLICATION);
-		eGPAStatuses.add(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-		eGPAStatuses.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
-		eGPAStatuses.add(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA);
-
-		if (scQt.getQtStatus() != null && eGPAStatuses.contains(scQt.getQtStatus().getStatusId())) {
+		if (scQt.getQtStatus() != null
+				&& QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId())) {
 			checkeGPAPublishPeriodDays(scQt);
 		}
 		//#38107 - End
