@@ -3527,7 +3527,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
 			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
+			reqDTO.setRoleType(SupplierManagementConst.APPROVER_SDM);
 			reqDTO.setSdm(true);
 
 		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
