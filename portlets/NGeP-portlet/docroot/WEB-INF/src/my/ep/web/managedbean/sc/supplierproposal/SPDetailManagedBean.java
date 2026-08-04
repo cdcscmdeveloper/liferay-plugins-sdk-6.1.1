@@ -1980,4 +1980,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 	// #30609, #26247 - End.
 
+	// #21695 - #33391 - Start.
+	/**
+	 * @return the zoneTplSpecAnsMap
+	 */
+	public Map<Long, List<TplSpecAnswer>> getZoneTplSpecAnsMap() {
+		return zoneTplSpecAnsMap;
+	}
+
+	/**
+	 * @param zoneTplSpecAnsMap
+	 *            the zoneTplSpecAnsMap to set
+	 */
+	public void setZoneTplSpecAnsMap(Map<Long, List<TplSpecAnswer>> zoneTplSpecAnsMap) {
+		this.zoneTplSpecAnsMap = zoneTplSpecAnsMap;
+	}
+	// #21695 - #33391 - End.
 }

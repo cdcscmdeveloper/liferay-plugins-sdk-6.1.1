@@ -71,6 +71,11 @@
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
 			<ui:param name="isWeightageReq" value="#{templateSpecBean.specMaster.weightageReq}" />	<!-- Bug #35307@Syazani 12/12/2023 -->
+			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial eq null ? 'false': templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
+			<!-- 25138 -start- -->
+			<ui:param name="isPackageItemSpec"
+				value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
+			<!-- 25138 -end- -->
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
@@ -220,20 +225,21 @@
 						</div>
 						
 						<div class="ppRightBtn">
-						  <!-- 34148 -start- -->
-							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-								action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
-								partialSubmit="true"
-								process="@this, zoneEstimationPnl"
-								update="zoneEstimationPnl, @(.calcEstAmount)"> <!--#25039#67 add indicativeBtn -->
-								<!-- 34148 -end- -->
-								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
-							</p:commandButton>
-							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+						<!-- 34148 -start- -->
+						<p:commandButton value="#{lbl['lbl.btn.ok']}"
+							action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
+							partialSubmit="true" process="@this, zoneEstimationPnl"
+							update="zoneEstimationPnl, @(.calcEstAmount)"> <!--#25039#67 add indicativeBtn -->
+							<!-- 34148 -end- -->
+							<f:setPropertyActionListener
+								target="#{templateSpecBean.specComponentId}"
+								value="#{templateSpecId}" />
+						</p:commandButton>
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 								partialSubmit="true" process="@this" update="@this"
 								action="#{templateSpecBackingBean.zoneEstCostCancelAction(templateSpecBean)}"
 								oncomplete="#{zoneEstimationPopup}.hide()" rendered="#{editable}" />
-						</div>			
+						</div>				
 					</c:if>
 				</p:dialog>
 
@@ -242,6 +248,32 @@
 			
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
+<<<<<<< HEAD
+			<ui:fragment
+				rendered="#{isContentTypeScore and isSpecTypeTechnical and !evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
+				<h:outputText rendered="#{!isPartialQt}" styleClass="instruction"
+					value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+				<h:outputText rendered="#{isPartialQt}" styleClass="instruction"
+					value="#{lbl['lbl.sc.tec.partialoffer.instruction']}"
+					escape="false" />
+				<br />
+			</ui:fragment>
+			<!-- #32110, #21695 -start- -->
+			<ui:param name="filterList"
+				value="#{!isSqSpec and isZonal and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
+			</ui:param>
+			<!-- #32110, #21695 -end- -->
+			<!-- #33859 - start --><!-- #32110, #21695 -start- -->
+			<ui:remove>#29187 Start Vinod</ui:remove>
+			<ui:include src="uomAndQuantityDetailsPopUp.xhtml" />
+			<ui:remove>#29187 End Vinod</ui:remove>
+			<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
+				value="#{templateSpecBean.specAnswerList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				scrollable1="true" scrollWidth1="#{scrollWidth}"
+				style="word-break: break-all">
+				<!-- #32110, #21695 -end- --><!-- #33859 - end -->	
+=======
 				<!-- #33859 - start -->
 				<ui:remove>#29187 Start Vinod</ui:remove>
 				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" />
@@ -250,6 +282,7 @@
 					value="#{templateSpecBean.specAnswerList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}"  style="word-break: break-all">
 				<!-- #33859 - end -->	
+>>>>>>> refs/remotes/origin/release-pre-prd
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}" />
 					<ui:param name="question" value="#{tplSpecAnswer.tplSpecQuestion}" />
@@ -281,24 +314,26 @@
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 				</p:dataTable>
-				
-				<c:if test="#{isContentTypeScore and isSpecTypeFinancial}">
-					<p:spacer height="10" />
-					<table style="width:100%">
+
+			<!--  #21695, #25138 REMOVE TOTAL SCORE -->
+			<ui:remove><!-- //#25138(wip) start--></ui:remove>
+			<c:if
+				test="#{isContentTypeScore and isSpecTypeFinancial and templateSpecBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+				<p:spacer height="10" />
+				<table style="width: 100%">
 					<tr>
-						<td class="TableFieldLeft" width="8%">
-							<p:outputLabel value="#{lbl['lbl.sc.total.score']}" />
-						</td>
-						<td class="TableFieldRight" width="92%">
-							<p:inputText style="text-align:right;" styleClass="calcScore" size="8" 
+						<td class="TableFieldLeft" width="8%"><p:outputLabel
+								value="#{lbl['lbl.sc.total.score']}" /></td>
+						<td class="TableFieldRight" width="92%"><p:inputText
+								style="text-align:right;" styleClass="calcScore" size="8"
 								value="#{templateSpecBackingBean.calcTotalScore(templateSpecBean)}"
-								disabled="true" />
-						</td>
+								disabled="true" /></td>
 					</tr>
-					</table>
-				</c:if>
-				
-				<c:if test="#{isContentTypeUpdateSpec}">
+				</table>
+			</c:if>
+			<ui:remove><!-- //#25138(wip) --></ui:remove>
+
+			<c:if test="#{isContentTypeUpdateSpec}">
 					<ui:include src="tierQtyPopup.xhtml" />
 				</c:if>
 				
