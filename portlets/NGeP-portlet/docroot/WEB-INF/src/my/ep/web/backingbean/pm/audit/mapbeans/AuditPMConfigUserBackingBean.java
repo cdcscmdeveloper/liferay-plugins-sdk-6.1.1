@@ -119,7 +119,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		auditPMReqDTO = new AuditPMReqDTO();
 		
 		managedBeans = (ProfileManagementManagedBean) manageBean;
-		isBrandNew = managedBeans.isUserGrpBandNew(); //40810
+		isBrandNew = managedBeans.isUserGrpBrandNew(); //40810
 		
 		this.roleCode = roleCode;
 		this.docType = isBrandNew ? managedBeans.getNewAuditPmUser().getUserName() : managedBeans.getSelectedUser()
