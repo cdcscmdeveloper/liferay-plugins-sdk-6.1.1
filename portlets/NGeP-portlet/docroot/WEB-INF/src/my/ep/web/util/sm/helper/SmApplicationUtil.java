@@ -16208,7 +16208,8 @@ public class SmApplicationUtil {
 		} else {
 			applNewReg = findHistoryOtherDesc(supplierId);
 		}
-			
+		
+		// Approved/Existing Category Codes
 		if (applNewReg != null) {
 			for (SmAppl appl : applNewReg) {
 				for (SmSupplierCategory previousKN : appl.getSmSupplierCategories()) {
@@ -16217,11 +16218,12 @@ public class SmApplicationUtil {
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 					
-					// WIP Site Visit After cannot display on Approved Category code.
+					// WIP Site Visit After cannot display on Approved Category code except KR(Existing Category Code).
 					boolean applSiteVisitAfter = managedBean.getSmAppl().getApplId().equals(previousKN.getSmAppl().getApplId()) &&
 							managedBean.getSmAppl().getPmStatus().getStatusId().equals
-							(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-							
+							(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) &&
+							!SupplierManagementConst.APPL_TYPE_RENEW_MOF.equalsIgnoreCase(managedBean.getSmAppl().getApplType());
+					
 					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
 							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) || 
 							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) &&													
