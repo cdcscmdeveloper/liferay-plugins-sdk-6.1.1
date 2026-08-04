@@ -4028,7 +4028,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		ScActor scActor = getActorByQtIdAndUserId(scQt.getQtId(),pmUser.getUserId());
 		auditResDTO.setRoleCode(scActor.getRoleCode());//#35500 fix 31st March
-		auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
@@ -4070,15 +4069,20 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			reqDTO.setDocId(qtId);
 			reqDTO.setUserId(userId);
 
-			List<ScActor> scActors = actorSO.retreiveActorByDocTypesDocIdUserId(reqDTO).getScActorList();
-			if(null!=scActors && !scActors.isEmpty()){
-				return scActors.get(0);
+			List<ScActor> scActorsList = actorSO.retreiveActorByDocTypesDocIdUserId(reqDTO).getScActorList();
+			if(null!=scActorsList && !scActorsList.isEmpty()){
+				for (ScActor scActor : scActorsList){
+					if (scActor.getRoleCode().equals(RoleCode.PPB_SECRETARY) || scActor.getRoleCode().equals(RoleCode.FPB_SECRETARY)){
+						return scActor;
+					}
+				}
 			}else{
 				return null;
 			}
 		} finally {
 			actorSO = null;
 		}
+		return null;
 	}//#35500 EPV End
 	
 	
