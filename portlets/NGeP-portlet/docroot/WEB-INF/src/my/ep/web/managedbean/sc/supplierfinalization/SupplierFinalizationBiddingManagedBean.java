@@ -182,7 +182,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	//#25651 - Start
 	private final static List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
 	private static List<String> setDirectDownloadDocDefKeys(){
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		
 		list.add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
 		list.add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
