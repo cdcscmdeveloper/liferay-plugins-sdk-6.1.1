@@ -424,10 +424,10 @@
 				<p:outputPanel id="divisionBasicProDropdownPanelId">
 					<!-- #33592-->
 					<ui:fragment rendered="#{smPersonnelBackingBean.managedBean.divisionBox}">
-						<!-- #34159, #36717 - Start  -->
+						<!-- #34159, #36717 - Start, change required, value  -->
 						<p:selectOneMenu required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.division']}" id="basicPermAddDivisionList"
-							value="#{smPersonnelBackingBean.managedBean.divisionId}"
+							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmDivision.divisionId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{smPersonnelBackingBean.managedBean.permAddDivisionList}" />
