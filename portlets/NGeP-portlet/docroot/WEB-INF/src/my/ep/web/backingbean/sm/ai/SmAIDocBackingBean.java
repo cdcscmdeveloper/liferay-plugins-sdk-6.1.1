@@ -70,6 +70,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final String TYPE_BANK = "bank";
 	private static final String LBL_AI_UNAVAILABLE = "lbl.sm.ai.unavailable";
 	private static final int SC_AI_UNAVAILABLE = 503;
+	private static final String AI_UPLOAD_MARKER = "_ai";
 
 	private List<AiEpfResultDTO> epfs;
 	private AiTenancyDTO tenancy;
@@ -318,7 +319,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			extension = originalFilename.substring(dotIndex);
 			oriFilename = originalFilename.substring(0, dotIndex);
 		}
-		return oriFilename + "_" + timestamp + extension;
+		// marker last before the extension so the delete-lock can find it
+		return oriFilename + "_" + timestamp + AI_UPLOAD_MARKER + extension;
 	}
 
 	/**
@@ -934,11 +936,24 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public static boolean isAiSuppDocDeleteLocked(SmApplSupportDoc doc, SmApplDocFile file){
-		if (file == null || file.getAiApiResponseId() == null
+		if (file == null || !isAiAssistantUpload(file.getFileName())
 				|| doc == null || doc.getPmDocument() == null){
 			return false;
 		}
 		return isEpfDoc(doc.getPmDocument()) || isTenancyDoc(doc.getPmDocument());
+	}
+
+	// true when the filename carries the AI Assistant marker (last token before the extension)
+	private static boolean isAiAssistantUpload(String fileName){
+		if (fileName == null){
+			return false;
+		}
+		String name = fileName.trim();
+		int dot = name.lastIndexOf('.');
+		if (dot > 0){
+			name = name.substring(0, dot);
+		}
+		return name.endsWith(AI_UPLOAD_MARKER);
 	}
 
 	/**
