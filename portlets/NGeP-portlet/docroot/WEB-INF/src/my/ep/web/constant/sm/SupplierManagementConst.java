@@ -757,20 +757,20 @@ public class SupplierManagementConst {
 	
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 	
-	// bug #29156 -START
+	// bug #29156(26238) - START
 	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
 	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
-	// bug #29156 -END
+	// bug #29156(26238) - END
 	
-	// bug #28278 -START
+	// bug #28278(26238) - START
 	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
 	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
-	// bug #28278 -END
+	// bug #28278(26238) - END
 	
-	// bug #29156 -START
+	// bug #29156(26238) - START
 	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
 	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
-	// bug #29156 -END
+	// bug #29156(26238) - END
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
@@ -1495,7 +1495,7 @@ public class SupplierManagementConst {
 	}
 	// #28895_35501 End
 	
-	// #29156 -START
+	// #29156(26238) - START
 	public String getSM_MOF_DISCIPLINARY_ACTION_BLACKLIST() {
 		return SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
 	}
@@ -1503,7 +1503,8 @@ public class SupplierManagementConst {
 	public String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
 		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	}
-	// #29156 -START
+	// #29156(26238) - START
+	
 //	#37925 START
 	public String getApplTypeBumi() {
 		return APPL_TYPE_BUMI;
@@ -1537,4 +1538,24 @@ public class SupplierManagementConst {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
 //	#37925 END
+	
+	// 28278(26238) - START
+	public String getMOF_STATUS_DELETED() {
+		return MOF_STATUS_DELETED;
+	}
+
+	public String getMOF_STATUS_CANCELLED() {
+		return MOF_STATUS_CANCELLED;
+	}
+	// 28278(26238) - END
+	
+	// #29156(26238) -START
+	public String getMOF_STATUS_DELETED_SUPPLIER() {
+		return MOF_STATUS_DELETED_SUPPLIER;
+	}
+
+	public String getMOF_STATUS_EXPIRED_SYSTEM() {
+		return MOF_STATUS_EXPIRED_SYSTEM;
+	}
+	// #29156(26238) -END
 }

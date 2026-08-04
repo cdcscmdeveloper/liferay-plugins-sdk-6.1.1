@@ -397,6 +397,26 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
 		this.disciplinaryActionMsg = disciplinaryActionMsg;
 	}
+
+	// 26247 - start
+	public String getQtDisciplinaryActionMsg() {
+		return qtDisciplinaryActionMsg;
+	}
+
+	public void setQtDisciplinaryActionMsg(String qtDisciplinaryActionMsg) {
+		this.qtDisciplinaryActionMsg = qtDisciplinaryActionMsg;
+	}
+
+	public Long getQtId() {
+		return qtId;
+	}
+
+	public void setQtId(Long qtId) {
+		this.qtId = qtId;
+	}
+
+	// 26247 - end
+	
 	// #28895_35501 Start - AUDIT TRAIL SM
 	public PmUser getOldSelectedUser() {
 		return oldSelectedUser;

@@ -88,6 +88,8 @@
            	<portlet id="pmPoJobTypeRatio"></portlet>
            	<portlet id="poRoleTaskWeightage"></portlet>
 			<portlet id="softCertProvider"></portlet>
+			<portlet id="pmAuSearch"></portlet><!-- #35509 -->
+			<portlet id="pmAuUserOrgSearch"></portlet><!-- #35509 -->
 		</category>
 		<!-- Profile Management - END -->		
 
@@ -191,6 +193,7 @@
 			<portlet id="maintenanceRequestApproval"/>
 			<portlet id="maintenanceRequestRevision"/>
 			<!-- 25037 - end -->
+			<portlet id="disciplinaryActionDp"/><!-- #26284 -->
 			<portlet id="demoInvitation"/><!-- #28784 -->	
 		</category>
 

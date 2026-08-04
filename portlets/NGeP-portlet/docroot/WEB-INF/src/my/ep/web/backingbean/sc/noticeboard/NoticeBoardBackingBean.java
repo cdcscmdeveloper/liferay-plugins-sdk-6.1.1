@@ -45,6 +45,7 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#29732
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -75,6 +76,8 @@ import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -1093,6 +1096,9 @@ public class NoticeBoardBackingBean extends
 		}
 		ScQt scQt = this.getManagedBean().getScQt();
 		final Long qtId = scQt.getQtId();
+		// #27575, #26247 -start-
+		getManagedBean().setQtId(qtId);
+		// #27575, #26247 -end-
 		Long currentStatus = scQt.getQtStatus().getStatusId();
 		try {
 			
@@ -1151,7 +1157,6 @@ public class NoticeBoardBackingBean extends
 					}
 				}
 			}
-			
 			// construct the proposal/update url
 			if (QTStatusConst.QT_PROPOSAL_PREPARATION
 					.equals(currentStatus) && isValidSupplier ) {
