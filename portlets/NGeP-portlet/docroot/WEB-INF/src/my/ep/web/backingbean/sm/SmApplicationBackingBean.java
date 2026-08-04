@@ -8391,6 +8391,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				log.info("****** Calc countf ******* ");
 				calcPersonnelListCount();
 				getManagedBean().setRedirectToPersonPage(false);
+				//#40112 - start
+				SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
+				SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
+				//#40112 - end
 
 			}
 
