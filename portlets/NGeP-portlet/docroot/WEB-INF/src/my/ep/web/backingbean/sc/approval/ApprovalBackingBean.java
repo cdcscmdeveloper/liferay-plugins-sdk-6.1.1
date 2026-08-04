@@ -4071,7 +4071,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			List<ScActor> scActorsList = actorSO.retreiveActorByDocTypesDocIdUserId(reqDTO).getScActorList();
 			if(null!=scActorsList && !scActorsList.isEmpty()){
 				for (ScActor scActor : scActorsList){
-					if (scActor.getRoleCode().equals(RoleCode.PPB_SECRETARY) || scActor.getRoleCode().equals(RoleCode.FPB_SECRETARY)){
+					if (scActor.getRoleCode().equals(RoleCode.PPB_SECRETARY.value()) || scActor.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())){
 						return scActor;
 					}
 				}
