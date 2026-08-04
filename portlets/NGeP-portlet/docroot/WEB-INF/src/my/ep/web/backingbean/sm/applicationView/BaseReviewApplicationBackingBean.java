@@ -2477,6 +2477,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				cat.setOtherDescChangeMaintenance(false);
 
 				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())) {
+					
 					for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 						
 						history.setApplNoHistory(history.getSmAppl().getApplNo());
@@ -2513,7 +2514,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							getManagedBean().getEditVO().setSuppEditCategory(false);
 						}
 					}
+					
 					getManagedBean().getSupProfileHistoryOtherDesc().add(cat);
+				}
+				
+				if (cat.getSmSuppCatOtherDescHistory() != null) {
+					SmApplicationUtil.sortbyDateOtherDescHistory(cat.getSmSuppCatOtherDescHistory());
 				}
 			}
 			// 36504 - END
