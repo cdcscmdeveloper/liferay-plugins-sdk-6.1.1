@@ -237,6 +237,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		approvalCategories
 		.add(ParameterConst.APPROVAL_CATEGORY_PROCUREMENT_BOARD);
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_OTHERS);
+		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_EGPA);//#38107
 
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		searchBean
