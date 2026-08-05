@@ -415,20 +415,22 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 * 
 	 */
 	public void preRenderViewCancelReq() {
-		getPTJOwner();//Fix - #34367
+		//Start Fix - #34367
+		getPTJOwner();
 		String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
 		ICircularSO circularSO = null;
+		//End Fix - #34367
 		try {
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
 			
 			//#33533 start
+
 			if(getManagedBean().getTaskIdFromTaskList()!=null && !getManagedBean().isChkCancelPage()){
 				taskId = getManagedBean().getTaskIdFromTaskList();
 				getManagedBean().setTaskIdFromTaskList(null);
 			}
-			
 			if(taskId==null) {
 				if(getManagedBean().getCancelCircularReq()==null && // 34442
 						(isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
@@ -2953,7 +2955,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				iterator.next();
 				iterator.remove();
 			}
-			getManagedBean().setOutComes(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+			getManagedBean().setOutComes(new String[] {BpmOutcomeConst.BPM_SUBMIT});
 		}else{
 			getManagedBean().setOutComes(null);
 			new PanelBackingBean();
