@@ -76,6 +76,7 @@ public class CircularManagedBean extends BaseManagedBean {
 	// Start Fix - #34367
 	private Long userPTJProfile;
 	private boolean ptjOwner = false;
+	private boolean validateConstantRules = false;
 	// End Fix - #34367
 
 	private class CircularListingPagingDataModel extends PagingDataModel<CtCircularVer> {
@@ -157,17 +158,20 @@ public class CircularManagedBean extends BaseManagedBean {
 				} else {
 					resDTO = circularSO.searchCircularVer(reqDTO);
 				}
-				if(resDTO.isSuccessful()) {
-					//Start Fix - #34367
-					for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+				if (resDTO.isSuccessful()) {
+					// Start Fix - #34367
+					for (CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
 						if (circularVer.getCtCircular().getOwnerOrgProfile() != null
-								&& circularVer.getCtCircular().getCircularType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
-							if (circularVer.getCtCircular().getOwnerOrgProfile().getOrgProfileId().equals(userPTJProfile)) {
+								&& circularVer.getCtCircular().getCircularType()
+										.equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+							if (isValidateConstantRules()
+									&& (getUserPTJProfile() != null && circularVer.getCtCircular().getOwnerOrgProfile()
+											.getOrgProfileId().equals(getUserPTJProfile()))) {
 								setPtjOwner(true);
 							}
-						}		 
+						}
 					}
-					//End Fix - #34367
+					// End Fix - #34367
 					return resDTO.getCircularVerResultBean();
 				}
 			} catch (Exception e) {
@@ -620,6 +624,14 @@ public class CircularManagedBean extends BaseManagedBean {
 	public void setUserPTJProfile(Long userPTJProfile) {
 		this.userPTJProfile = userPTJProfile;
 	}
+
+	public boolean isValidateConstantRules() {
+		
+		return validateConstantRules;
+	}
+
+	public void setValidateConstantRules(boolean validateConstantRules) {
+		this.validateConstantRules = validateConstantRules;
+	}
 	// End Fix - #34367
-	
 }

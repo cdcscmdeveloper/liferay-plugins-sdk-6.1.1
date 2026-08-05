@@ -25,6 +25,14 @@
 	
 	<cc:implementation>
 		<style>
+			/* #37925 START */
+		    .same-width-textarea-warn {
+		        width: 100% !important;
+		        max-width: 90ch !important;
+		        box-sizing: border-box !important;
+		    }
+		    /* #37925 END */
+		    
 			.selectRecRejectReasonTable .ui-chkbox-box{
       	 	   pointer-events: all;
 			}
@@ -73,11 +81,18 @@
 							<tr >
 								<td></td>
 								<td>
-									<div class="ui-messages ui-widget"  
-										aria-live="polite"
-										style="max-width: 90ch;">
+									<div class="ui-messages ui-widget same-width-textarea-warn"
+										aria-live="polite">
 										<div class="ui-messages-warn ui-corner-all">
-											<h:outputText value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}" escape="false" />
+											<a href="#" class="ui-messages-close"
+												onclick="$(this).closest('.ui-messages').slideUp();return false;">
+												<span class="ui-icon ui-icon-close"></span>
+											</a> <span class="ui-messages-warn-icon"></span>
+											<ul>
+												<li><h:outputText class="ui-messages-warn-detail"
+														value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}"
+														escape="false" /></li>
+											</ul>
 										</div>
 									</div>
 								</td>
@@ -238,8 +253,10 @@
 										<p:outputLabel
 										value="*" styleClass="mandatory" id="recRejReasonLblMndty"
 										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}" /></td>
-								<td style="padding-top: 5px;"><p:inputTextarea cols="100"
-										style="width : auto;"
+								<td style="padding-top: 5px;">
+								<!-- #37925 -->
+								<p:inputTextarea cols="100"
+										styleClass="same-width-textarea-warn"
 										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}"
 										value="#{cc.attrs.approvalRemarks}"
 										id="recRmrksForRejectTxtArea" rows="5"
@@ -274,8 +291,10 @@
 				<tr>
 					<td style="vertical-align: top"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approval']}" /></td>
-					<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-							style="width : auto;" rows="10"
+					<td style="padding-top: 5px;">
+					<!-- #37925 -->
+					<p:inputTextarea cols="90"
+							styleClass="same-width-textarea-warn" rows="10"
 							value="#{cc.attrs.approvalRemarks}"
 							id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
 							validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
@@ -347,8 +366,10 @@
 					<!-- #40150 START -->
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
-						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-								style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
+						<td style="padding-top: 5px;">
+						<!-- #37925 -->
+						<p:inputTextarea cols="90"
+								styleClass="same-width-textarea-warn" rows="10" id="rmrksForSplApprTxtArea"
 								maxlength="4000"
 								value="#{cc.attrs.overLapRemarks}"
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
