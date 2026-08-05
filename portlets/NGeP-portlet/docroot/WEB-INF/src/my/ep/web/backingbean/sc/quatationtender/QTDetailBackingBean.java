@@ -4335,6 +4335,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
+			//#38107 - Start
+			checkSettingPopUpeGPAApprovalNeeded(qt);
+			//#38107 - End
 			//#25077 Start 
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
@@ -4361,7 +4364,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
 					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
-					|| currentStatus.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION)) {
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION)
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA)) {//#38107
 
 				// check if its Pending Schedule and Documents , only execute
 				// this part
@@ -4506,6 +4510,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							approvalCategory);
 				}
 				this.getManagedBean().setResetBpkCurrentArea(false); //#25077
+				this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 				
 				// 29732 fix duplicate issues -start-
 				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
@@ -4616,12 +4621,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (approverPublication == null 
 					|| CollectionUtils.isEmpty(approverPublication.getApproverSettings())) {
 				this.getManagedBean().setResetBpkCurrentArea(false); // #25077
+				   this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 				throw new EpException(MessageConst.ERROR_775174);
 			}
 
 			if ((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) || currentStatus
-						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || currentStatus
+						.equals(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA))//#38107
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)
 					) {
 
@@ -4706,6 +4713,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (isInactiveCommiteeApproverRole(null, approverSettings, RoleCode.PUBLICATION_APPROVER.value())) {
 			String roleName = getEpRoleDescByRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			this.getManagedBean().setResetBpkCurrentArea(false); // #25077
+			   this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_775171, new String[] { roleName },
 					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 
@@ -4803,9 +4811,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						 * approverSettingDtls( RoleCode.BUDGET_APPROVER,
 						 * qtApproval))); } else
 						 */
+						//#38107 - Start
+                      	List<String> categoryCodes = new ArrayList<>();
+                      	categoryCodes.add(ParameterConst.APPROVAL_CATEGORY_BPK);
+                      	categoryCodes.add(ParameterConst.APPROVAL_CATEGORY_EGPA);
 						List<PmParameter> settings = null;
-						if (ParameterConst.APPROVAL_CATEGORY_BPK
-								.equals(approvalCategoryCode)) {
+						if (categoryCodes.contains(approvalCategoryCode)) {
+						//#38107 - End
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval, settings));
 						} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
@@ -9799,7 +9811,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(statusId)
 					|| QTStatusConst.QT_PENDING_PB_APPROVAL.equals(statusId)
 					|| QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(statusId)
-					|| QTStatusConst.QT_PENDING_DOCUMENT_REVISION.equals(statusId)) {
+					|| QTStatusConst.QT_PENDING_DOCUMENT_REVISION.equals(statusId)
+					|| QTStatusConst.QT_PENDING_RESCHEDULE_EGPA.equals(statusId)) {//#38107
 				isStatusOfBpkOrScheduleRevise = true;
 			}
 		}
@@ -12064,6 +12077,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 		 	      	                     if(null == approvalReqAttachement){
 		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
 		 	      	                     }
 	    						  }
@@ -12074,6 +12088,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 		 	      	                     if(null == approvalReqAttachement){
 		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
 		 	      	                     }
 						         } 
@@ -12096,6 +12111,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
 						if (null == approverAction || null == approverAction.getParameterId()) {
 							this.getManagedBean().setResetBpkCurrentArea(false);
+							this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 							//25635,37892 -start-
 							setOtherApprovalLoaded();
 							//25635,37892 -end-
@@ -12105,6 +12121,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
 	                    if(null == approvalReqAttachement){
 	                    	this.getManagedBean().setResetBpkCurrentArea(false);
+	     				   	this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 	                    	throw new EpException(MessageConst.ERROR_760509);
 	                    }
 	                    
@@ -15440,4 +15457,181 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//#28188 - End
 
+	//#38107 - Start
+	private void checkSettingPopUpeGPAApprovalNeeded(ScQt scQt) {
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+
+		boolean enableeGPAStatuses = scQt.getQtStatus() != null
+				&& QTStatusConst.getStatusAbleToShoweGPAPopUp().contains(scQt.getQtStatus().getStatusId());
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtdetail(scQt);
+		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
+		if (resDTO.getApproval() != null && enableeGPAStatuses && !this.getManagedBean().isResetBpkCurrentArea()) {
+			List<ScQtApproval> listOfApprovals = resDTO.getApproval();
+			for (ScQtApproval approval : listOfApprovals) {
+				String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();
+				if (!this.getManagedBean().isReseteGPACurrentArea() && !approval.isDeleted()
+						&& ParameterConst.APPROVAL_CATEGORY_EGPA.equals(approvalCategoryCode)
+						&& !this.getManagedBean().isMaintanceFlow()) {
+					List<ScQtApprovalRequest> requests = approval.getScQtApprovalDtls();
+					eGPAPopUpDetail(requests);
+				}
+				validateeGPAPublishPeriod(scQt, approvalCategoryCode);
+			}
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	private void eGPAPopUpDetail(List<ScQtApprovalRequest> requests) {
+		for (ScQtApprovalRequest req : requests) {
+			if (req.getApproverAction() == null && req.getApproverActionDate() == null) {
+				this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
+				RequestContext.getCurrentInstance().execute("eGPAApprovalNeededDlgTemp.show()");
+				throw new EpException(" ");
+			}
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	private void validateeGPAPublishPeriod(ScQt scQt, String approvalCategoryCode) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+
+		if (QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId())
+				&& ParameterConst.APPROVAL_CATEGORY_EGPA.equals(approvalCategoryCode)) {
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			// eGPA review decision that made it so RPP cannot be reduce,
+			// can only be increase
+			List<String> eGPAFinalDecision = new ArrayList<>();
+			eGPAFinalDecision.add(ParameterConst.APPROVAL_EGPA_DECISION_APPROVED_WITHOUT_AMEND);
+			eGPAFinalDecision.add(ParameterConst.APPROVAL_EGPA_DECISION_APPROVED_WITH_AMEND);
+			checkForRepublishQT(scQt, eGPAFinalDecision);
+			ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO
+					.getLatesteGPAApprovalRequestBasedOnQtId(scQt.getQtId());
+			if (eGPAApprovalRequest != null) {
+				String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
+				if (eGPAFinalDecision.contains(eGPADecision)
+						&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
+					this.getManagedBean().setReseteGPACurrentArea(false);
+					throw new EpException(MessageConst.ERROR_770408);
+				} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
+						&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
+					addFacesMessage(fc, MessageConst.ERROR_760260,
+							new String[] { String.valueOf(scQt.getPublishPeriod()) });
+				}
+			}
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	private void checkForRepublishQT(ScQt scQt, List<String> eGPAFinalDecision) {
+		try {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			if (scQt.getParentQtId() != null) {
+				ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO.getLatesteGPAApprovalRequestBasedOnQtId(scQt
+						.getParentQtId());
+				if (eGPAApprovalRequest != null) {
+					String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
+					if (eGPAFinalDecision.contains(eGPADecision)
+							&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
+						addFacesMessage(fc, MessageConst.ERROR_770408, null);
+					} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
+							&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
+						addFacesMessage(fc, MessageConst.ERROR_760260,
+								new String[] { String.valueOf(scQt.getPublishPeriod()) });
+					}
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkForRepublishQT",
+					scQt.getQtNo(), "checkForRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	/**
+	 * Make sure eGPA confirmation box only appear once
+	 * 
+	 * @param actionFlow
+	 */
+	public void reseteGPACurrentArea(boolean proceedeGPA){
+		if(proceedeGPA){
+		   this.getManagedBean().setReseteGPACurrentArea(true);
+		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+		}else{
+		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	/**
+	 * Retrieve all details needed for eGPA approval screen
+	 * 
+	 * @param approvalReq
+	 * @return
+	 */
+	public String geteGPAApprovalDtl(ScQtApprovalRequest approvalReq) {
+		this.getManagedBean().setScQtApprovalRequest(approvalReq);
+		return QTConstants.MAINT_EGPA_APPROVAL_DETAIL;
+	}
+	//#38107 - End
+
+	//#38107 - Start
+	/**
+	 * 
+	 * Back action for any approval details page
+	 * 
+	 * @return String
+	 */
+	public String maintenanceDetailsBackAction() {
+		this.getManagedBean().setScQtApprovalRequest(null);
+		return QTConstants.MAINTANANCE_PAGE_FULL;
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	/**
+	 * To Convert existing date to name of month in the middle instead of number
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public String convertDayDateToMonthDate(Date date) {
+		String pattern = "dd-MMMM-yy";
+
+		// Create an instance of SimpleDateFormat used for formatting
+		// the string representation of date according to the chosen pattern
+		DateFormat df = new SimpleDateFormat(pattern);
+
+		// Using DateFormat format method we can create a string
+		// representation of a date with the defined format.
+		return df.format(date);
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	public String retrieveeGPAApproverRemark(Long docId) {
+		try {
+			return getQTDetailSO().retrieveeGPAApproverRemark(SourcingConstants.SC_REMARK_DOC_TYPE_EGPA, docId);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "retrieveeGPAApproverRemark", docId.toString(),
+					"retrieveeGPAApproverRemark", getUserIdSessionFromLoginId(), e);
+		}
+		return null;
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	public boolean currentStatuseGPAReview() {
+		return this.getManagedBean().getQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_REQUEST_REVIEW_FROM_EGPA);
+	}
+	//#38107 - End
 }

@@ -1972,6 +1972,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<TplSpecZoneDtl> deleteZonesTreeNodes;	//37851
 	
+	//#38107 - Start
+	private boolean reseteGPACurrentArea = false;
+	//#38107 - End
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12544,4 +12548,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.deleteZonesTreeNodes = deleteZonesTreeNodes;
 	}
 	//37851 --  End
+
+	//#38107 - Start
+	public boolean isReseteGPACurrentArea() {
+		return reseteGPACurrentArea;
+	}
+	//#38107 - End
+
+	//#38107 - Start
+	public void setReseteGPACurrentArea(boolean reseteGPACurrentArea) {
+		this.reseteGPACurrentArea = reseteGPACurrentArea;
+	}
+	//#38107 - End
 }
