@@ -1391,7 +1391,7 @@ public class RuleCatalogueBackingBean extends
 								if(zone.getZoneId().equals(cfRuleValue.getZoneId())){
 									orgProfileReqDTO.getPmOrgProfile().getPmZone();
 									orgProfileReqDTO.getPmOrgProfile().setPmZone(zone);
-									orgProfileReqDTO.getPmOrgProfile().setBpk(true);
+									//orgProfileReqDTO.getPmOrgProfile().setBpk(true); #27827
 									orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
 								}
 							}
