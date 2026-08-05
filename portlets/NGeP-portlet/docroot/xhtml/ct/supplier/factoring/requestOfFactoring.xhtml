@@ -462,17 +462,19 @@
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 		<!-- #34442 - start -->
-		<p:confirmDialog
-			message="#{supplierBackingBean.confirmationContentMsg}"
-			severity="alert" widgetVar="approveConfirmDlg" closable="true"
-			header="#{lbl['lbl.msg.confirm.cancel.header']}">
+		<p:dialog widgetVar="approveConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line;"
+				value="#{supplierBackingBean.confirmationContentMsg}" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					onclick="approveConfirmDlg.hide();gpki_dlg.show();" type="button" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="approveConfirmDlg.hide()" type="button" />
 			</div>
-		</p:confirmDialog>
+		</p:dialog>
 		<!-- #34442 - end -->
 	</ui:define>
 </ui:composition>

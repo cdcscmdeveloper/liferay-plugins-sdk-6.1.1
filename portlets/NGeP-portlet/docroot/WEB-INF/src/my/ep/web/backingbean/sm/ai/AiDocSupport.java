@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -38,7 +37,16 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
  */
 public final class AiDocSupport {
 
+	private static final String BR = "<br/>";
+
+	// AI doc extraction master switch from ngep.properties; absent or anything but "1" is off.
+	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
+
 	private AiDocSupport() {
+	}
+
+	public static boolean isAiEnabled() {
+		return AI_ONOFF != null && AI_ONOFF.trim().equalsIgnoreCase("1");
 	}
 
 	/**
@@ -435,7 +443,7 @@ public final class AiDocSupport {
 			te.setValidLandlordsName(StringUtils.isBlank(landlordName) || StringUtils.isBlank(te.getLandlordsName())
 					|| fuzzyMatchJaroWinkler(landlordName, te.getLandlordsName()) >= MIN_FUZZY_SCORE);
 			te.setValidTenantsName(StringUtils.isBlank(te.getTenantsName())
-					|| compareCompany(companyName, te.getTenantsName()));
+					|| normalizedEquals(companyName, te.getTenantsName()));
 			te.setValidMonthlyRental(rentalRate == null || te.getMonthlyRental() == null
 					|| rentalRate.compareTo(te.getMonthlyRental().setScale(2)) == 0);
 			compareAddress(te, addr);
@@ -464,8 +472,20 @@ public final class AiDocSupport {
 		}
 
 		/**
-		 * Group extracted bank records by (bank name + account number), dedupe, then set each record's valid*
-		 * flags against the newly-added/modified supplier banks. Mutates the DTOs in place.
+		 * Verify an EPF extraction's employer name against the registered company name; sets the verdict flag
+		 * on the DTO. A blank employer name is excluded from the verdict (left valid), as with the other docs.
+		 */
+		public static void validateEpf(AiEpfResultDTO ee, String companyName) {
+			if (ee == null) {
+				return;
+			}
+			ee.setValidEmployerName(StringUtils.isBlank(ee.getEmployerName())
+					|| normalizedEquals(companyName, ee.getEmployerName()));
+		}
+
+		/**
+		 * Set every extracted bank record's valid* flags against the newly-added/modified supplier banks.
+		 * Mutates the DTOs in place.
 		 * @param appl
 		 * @param docEntities
 		 */
@@ -473,52 +493,52 @@ public final class AiDocSupport {
 			if (EntityHelper.isCollectionEmpty(docEntities)) {
 				return;
 			}
-			List<AiBankDocDTO.AiBankStatementDTO> allBankEntities = new ArrayList<>();
+			// Compare with new/modified banks only.
+			Map<String, String> supplierAccounts = collectChangedSupplierAccounts(appl);
+			List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
+			String companyNameSupp = appl.getSmSupplier().getCompanyName();
+
+			// the flags live on each record, so a repeated account still has to be verified on its own file
 			for (AiBankDocDTO entity : docEntities) {
-				allBankEntities.addAll(entity.getBankStatements());
-			}
-			Map<String, AiBankDocDTO.AiBankStatementDTO> uniqueBanks = new LinkedHashMap<>();
-			for (AiBankDocDTO.AiBankStatementDTO be : allBankEntities) {
-				String key = (be.getBankName() == null ? "" : be.getBankName().trim().toLowerCase()) + "|"
-						+ (be.getAccountNo() == null ? "" : be.getAccountNo().trim());
-				if (!uniqueBanks.containsKey(key)) {
-					uniqueBanks.put(key, be);
+				for (AiBankDocDTO.AiBankStatementDTO bank : entity.getBankStatements()) {
+					validateBankRecord(bank, supplierAccounts, supplierBanks, companyNameSupp);
 				}
 			}
-			List<AiBankDocDTO.AiBankStatementDTO> bankEntities = new ArrayList<>(uniqueBanks.values());
+		}
 
-			// Compare with new/modified banks only.
+		// Account number -> financial-org name, for new/modified supplier banks only.
+		private static Map<String, String> collectChangedSupplierAccounts(SmAppl appl) {
 			Map<String, String> supplierAccounts = new HashMap<>();
 			for (SmSupplierBank suppBank : appl.getSmSupplierBanks()) {
 				if (!StringUtils.isEmpty(suppBank.getChangedFieldStatus())) {
 					supplierAccounts.put(suppBank.getAccountNo(), suppBank.getPmFinancialOrg().getFinOrgName());
 				}
 			}
-			List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
-			String companyNameSupp = appl.getSmSupplier().getCompanyName();
+			return supplierAccounts;
+		}
 
-			for (AiBankDocDTO.AiBankStatementDTO bank : bankEntities) {
-				String companyNameJson = bank.getAccountHolderName();
-				String bankName = supplierAccounts.get(bank.getAccountNo());
-				if (bankName == null) {
-					bank.setValidAccountNo(false);
+		private static void validateBankRecord(AiBankDocDTO.AiBankStatementDTO bank,
+				Map<String, String> supplierAccounts, List<String> supplierBanks, String companyNameSupp) {
+			String companyNameJson = bank.getAccountHolderName();
+			String bankName = supplierAccounts.get(bank.getAccountNo());
+			if (bankName == null) {
+				bank.setValidAccountNo(false);
 
-					bankName = fuzzyMatchList(bank.getBankName(), supplierBanks);
-					if (StringUtils.isEmpty(bankName)) {
-						bank.setValidBankName(false);
-					}
-
-				} else {
-					double score = fuzzyMatchJaroWinkler(bankName, bank.getBankName());
-					log.debug("Bank name fuzzy score=" + score + " supplier=" + bankName + " extracted=" + bank.getBankName());
-					if (score < MIN_FUZZY_SCORE) {
-						bank.setValidBankName(false);
-					}
+				bankName = fuzzyMatchList(bank.getBankName(), supplierBanks);
+				if (StringUtils.isEmpty(bankName)) {
+					bank.setValidBankName(false);
 				}
-				// Company / account-holder name matches exactly, case-insensitive; a missing holder name is excluded.
-				if (!StringUtils.isBlank(companyNameJson) && !compareCompany(companyNameJson, companyNameSupp)) {
-					bank.setValidAccountHolderName(false);
+
+			} else {
+				double score = fuzzyMatchJaroWinkler(bankName, bank.getBankName());
+				log.debug("Bank name fuzzy score=" + score + " supplier=" + bankName + " extracted=" + bank.getBankName());
+				if (score < MIN_FUZZY_SCORE) {
+					bank.setValidBankName(false);
 				}
+			}
+			// Supplier name is required, so a blank or mismatched one fails the verdict.
+			if (!normalizedEquals(companyNameJson, companyNameSupp)) {
+				bank.setValidAccountHolderName(false);
 			}
 		}
 		
@@ -529,7 +549,7 @@ public final class AiDocSupport {
 		 * @param st2
 		 * @return
 		 */
-		public static boolean compareCompany(String st1, String st2) {
+		public static boolean normalizedEquals(String st1, String st2) {
 			String c1 = canonicalizeCompanyName(st1);
 			String c2 = canonicalizeCompanyName(st2);
 			if (c1.isEmpty() || c2.isEmpty()) {
@@ -607,45 +627,49 @@ public final class AiDocSupport {
 			int len1 = s1.length();
 			int len2 = s2.length();
 
-			if (len1 == 0 && len2 == 0) {
-				return 1.0;
-			}
 			if (len1 == 0 || len2 == 0) {
-				return 0.0;
-			}
-
-			int matchWindow = Math.max(len1, len2) / 2 - 1;
-			if (matchWindow < 0) {
-				matchWindow = 0;
+				return (len1 == 0 && len2 == 0) ? 1.0 : 0.0;
 			}
 
 			boolean[] s1Matches = new boolean[len1];
 			boolean[] s2Matches = new boolean[len2];
 
-			int matches = 0;
-			int transpositions = 0;
-
-			for (int i = 0; i < len1; i++) {
-				int start = Math.max(0, i - matchWindow);
-				int end = Math.min(i + matchWindow + 1, len2);
-
-				for (int j = start; j < end; j++) {
-					if (s2Matches[j] || s1.charAt(i) != s2.charAt(j)) {
-						continue;
-					}
-					s1Matches[i] = true;
-					s2Matches[j] = true;
-					matches++;
-					break;
-				}
-			}
-
+			int matches = countMatches(s1, s2, s1Matches, s2Matches);
 			if (matches == 0) {
 				return 0.0;
 			}
+			int transpositions = countTranspositions(s1, s2, s1Matches, s2Matches);
 
-			int k = 0;
+			return ((double) matches / len1 + (double) matches / len2
+					+ (matches - (double) transpositions / 2) / matches) / 3.0;
+		}
+
+		// Flag the matching characters within the Jaro match window; returns the match count.
+		private static int countMatches(String s1, String s2, boolean[] s1Matches, boolean[] s2Matches) {
+			int len1 = s1.length();
+			int len2 = s2.length();
+			int matchWindow = Math.max(0, Math.max(len1, len2) / 2 - 1);
+			int matches = 0;
 			for (int i = 0; i < len1; i++) {
+				int start = Math.max(0, i - matchWindow);
+				int end = Math.min(i + matchWindow + 1, len2);
+				for (int j = start; j < end; j++) {
+					if (!s2Matches[j] && s1.charAt(i) == s2.charAt(j)) {
+						s1Matches[i] = true;
+						s2Matches[j] = true;
+						matches++;
+						break;
+					}
+				}
+			}
+			return matches;
+		}
+
+		// Count out-of-order matched characters (twice the Jaro transposition count).
+		private static int countTranspositions(String s1, String s2, boolean[] s1Matches, boolean[] s2Matches) {
+			int transpositions = 0;
+			int k = 0;
+			for (int i = 0; i < s1.length(); i++) {
 				if (!s1Matches[i]) {
 					continue;
 				}
@@ -657,9 +681,7 @@ public final class AiDocSupport {
 				}
 				k++;
 			}
-
-			return ((double) matches / len1 + (double) matches / len2
-					+ (double) (matches - transpositions / 2) / matches) / 3.0;
+			return transpositions;
 		}
 
 		// The basic-company (headquarters) facility that the Premises Type form binds to.
@@ -694,8 +716,7 @@ public final class AiDocSupport {
 			}
 		}
 
-		// Set the tenancy AI transients so isXxxFromAI() lights the icon while the field still matches the
-		// extraction.
+		// display AI icons when values match
 		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te) {
 			if (fac == null || te == null) {
 				return;
@@ -722,13 +743,42 @@ public final class AiDocSupport {
 		}
 	}
 
-	/** A parsed EPF Contribution Statement: the employer name and the employee rows. */
+	/**
+	 * A parsed EPF Contribution Statement: the employer name and the employee rows.
+	 */
 	public static class AiEpfResultDTO implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
 		private String employerName;
 		private List<AiEmployeeDTO> employees = new ArrayList<>();
+
+		private boolean validEmployerName = true;
+
+		/**
+		 * Tooltip row: the employer name with a tick/cross verdict (set by {@link AiDocValidator}). The
+		 * employee rows carry no verdict of their own and are not rendered here.
+		 */
+		public String getLabel() {
+			StringBuilder sb = new StringBuilder();
+			if (employerName != null) {
+				String s = AiDocParser.label("lbl.cm.company.name") + ": " + employerName + BR;
+				if (!validEmployerName) {
+					sb.append("<span style='color: red;'>").append("&#x2717; ").append(s).append("</span>");
+				} else {
+					sb.append("&#x2713; ").append(s);
+				}
+			}
+			return sb.toString();
+		}
+
+		public boolean isValidEmployerName() {
+			return validEmployerName;
+		}
+
+		public void setValidEmployerName(boolean validEmployerName) {
+			this.validEmployerName = validEmployerName;
+		}
 
 		public String getEmployerName() {
 			return employerName;
@@ -746,7 +796,9 @@ public final class AiDocSupport {
 			this.employees = employees;
 		}
 
-		/** One EPF employee record (KWSP No. / NRIC / name). */
+		/**
+		 * One EPF employee record (KWSP No. / NRIC / name).
+		 */
 		public static class AiEmployeeDTO implements Serializable {
 
 			private static final long serialVersionUID = 1L;
@@ -813,43 +865,24 @@ public final class AiDocSupport {
 				return AiDocParser.label("lbl.sm.ai.doc.invalid");
 			}
 			StringBuilder sb = new StringBuilder();
-			String err1 = "<span style='color: red;'>";
-			String err2 = "</span>";
-			String yes = "&#x2713; ";
-			String no = "&#x2717; ";
-			if (tenantsName != null) {
-				String s = AiDocParser.label("lbl.cm.company.name") + ": " + tenantsName + "<br/>";
-				if (!validTenantsName) {
-					sb.append(err1).append(no).append(s).append(err2);
-				} else {
-					sb.append(yes).append(s);
-				}
-			}
-			if (landlordsName != null) {
-				String s = AiDocParser.label("lbl.sm.facility.landLordName") + ": " + landlordsName + "<br/>";
-				if (!validLandlordsName) {
-					sb.append(err1).append(no).append(s).append(err2);
-				} else {
-					sb.append(yes).append(s);
-				}
-			}
-			if (monthlyRental != null) {
-				String s = AiDocParser.label("lbl.sm.facility.monthRent") + ": " + monthlyRental + "<br/>";
-				if (!validMonthlyRental) {
-					sb.append(err1).append(no).append(s).append(err2);
-				} else {
-					sb.append(yes).append(s);
-				}
-			}
-			if (premisesAddress != null) {
-				String s = AiDocParser.label("lbl.sm.facility.address") + ": " + premisesAddress + "<br/>";
-				if (!validAddress) {
-					sb.append(err1).append(no).append(s).append(err2);
-				} else {
-					sb.append(yes).append(s);
-				}
-			}
+			appendField(sb, "lbl.cm.company.name", tenantsName, validTenantsName);
+			appendField(sb, "lbl.sm.facility.landLordName", landlordsName, validLandlordsName);
+			appendField(sb, "lbl.sm.facility.monthRent", monthlyRental, validMonthlyRental);
+			appendField(sb, "lbl.sm.facility.address", premisesAddress, validAddress);
 			return sb.toString();
+		}
+
+		// One labelled field row: a green tick when valid, red cross wrapped in red when not; skips null values.
+		private void appendField(StringBuilder sb, String labelKey, Object value, boolean valid) {
+			if (value == null) {
+				return;
+			}
+			String s = AiDocParser.label(labelKey) + ": " + value + BR;
+			if (!valid) {
+				sb.append("<span style='color: red;'>").append("&#x2717; ").append(s).append("</span>");
+			} else {
+				sb.append("&#x2713; ").append(s);
+			}
 		}
 
 		public boolean hasError() {
@@ -1024,7 +1057,7 @@ public final class AiDocSupport {
 			}
 			for (AiBankStatementDTO bank : this.bankStatements) {
 				sb.append("Bank " + bank.getEntityId().substring(5)).append(":<br/>");
-				sb.append(bank.getLabel()).append("<br/>");
+				sb.append(bank.getLabel()).append(BR);
 			}
 			return sb.toString();
 		}
@@ -1044,7 +1077,9 @@ public final class AiDocSupport {
 			return false;
 		}
 
-		/** One bank-account record extracted by OCR, plus its per-field verification flags. */
+		/**
+		 * One bank-account record extracted by OCR, plus its per-field verification flags.
+		 */
 		public static class AiBankStatementDTO implements Serializable {
 
 			private static final long serialVersionUID = 1L;
@@ -1064,7 +1099,7 @@ public final class AiDocSupport {
 				String yes = "&#x2713; ";
 				String no = "&#x2717; ";
 				if (accountHolderName != null) {
-					String s = AiDocParser.label("lbl.cm.company.name") + ": " + accountHolderName + "<br/>";
+					String s = AiDocParser.label("lbl.cm.company.name") + ": " + accountHolderName + BR;
 					if (!validAccountHolderName) {
 						sb.append(err1).append(no).append(s).append(err2);
 					} else {
@@ -1072,7 +1107,7 @@ public final class AiDocSupport {
 					}
 				}
 				if (bankName != null) {
-					String s = AiDocParser.label("lbl.gfmas.bank.desc") + ": " + bankName + "<br/>";
+					String s = AiDocParser.label("lbl.gfmas.bank.desc") + ": " + bankName + BR;
 					if (!validBankName) {
 						sb.append(err1).append(no).append(s).append(err2);
 					} else {
@@ -1080,7 +1115,7 @@ public final class AiDocSupport {
 					}
 				}
 				if (accountNo != null) {
-					String s = AiDocParser.label("lbl.fl.bank.acc.no") + ": " + accountNo + "<br/>";
+					String s = AiDocParser.label("lbl.fl.bank.acc.no") + ": " + accountNo + BR;
 					if (!validAccountNo) {
 						sb.append(err1).append(no).append(s).append(err2);
 					} else {

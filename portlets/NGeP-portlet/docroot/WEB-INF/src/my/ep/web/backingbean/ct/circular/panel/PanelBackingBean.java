@@ -118,7 +118,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils; // #39594
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
@@ -167,7 +166,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	
 	private String confirmationContentMsg;//34442 
-	
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -176,12 +174,27 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 
 		/*Execute first time retrieve from maintenance*/	
 		if(getManagedBean().getOutComes()==null) {
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			//Start Fix - #34367
+			getPTJOwner();
+			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId()); 
+			if (panelDoctype != null) {
+				getManagedBean().setOutComes(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+			} else {
+				if (getOwnerOrgProfile() != null && getOwnerOrgProfile().getPmOrgValidity() != null) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+									MessageConst.ERROR_750095,
+									new String[] { ResourceBundleUtils.getMessage(getOwnerOrgProfile()
+											.getPmOrgValidity().getOrgName(), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				}
+			}
+			//End Fix - #34367
 			getManagedBean().setCircularVer(new CtCircularVer());
 			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
 			//#37620,#34367 - Start
-			getPTJOwner();
-			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId()); 
 			PmStatus status = new PmStatus();
 			if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
 				status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
@@ -2825,6 +2838,23 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		setPanelCircularVar(reqDTO);
 		return "/xhtml/ct/circular/portal/panelCircularTab.xhtml?faces-redirect=true";
 	}
+	
+	// start - 36503
+	/**
+	 * Determines whether the Category Code tab should be displayed.
+	 * The tab is hidden when the panel circular is accessed
+	 * from the Purchase Request (PR) or Purchase Order (PO) modules.
+	 *
+	 * @return true if the Category Code tab should be shown,
+	 *         false otherwise.
+	 */
+	public boolean isShowCategoryCodeTab() {
+		String gotoPreviewPage = getManagedBean().getGotoPreviewPage();
+
+		return !"/xhtml/fl/purchaserequest/prBasePage.xhtml".equals(gotoPreviewPage)
+				&& !"/xhtml/fl/purchaseorder/poBasePage.xhtml".equals(gotoPreviewPage);
+	}
+	// end - 36503
 
 	/**
 	 * Method used to set new effective date  for panel circular
@@ -3728,11 +3758,13 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if (existing.getPmCategoryL1().getCategoryL1Id().equals(l1Id) &&
 				existing.getPmCategoryL2().getCategoryL2Id().equals(l2Id) &&
 				existing.getPmCategoryL3().getCategoryL3Id().equals(l3Id)) {
+				
 				throw new EpException(MessageConst.ERROR_750090, new String[] {categoryCode, categoryName}); // Duplicate message Error
 			}
 		}
 		
 		ctCategoryList.add(createPanelCategory(pmCategoryL3, circularVer));
+		getManagedBean().setAutoUpdate(Boolean.TRUE); //#40498,#30014
 	}
 	
 	/**
@@ -3838,5 +3870,22 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		this.confirmationContentMsg = confirmationContentMsg;
 	}
 	// 34442 - end
-
+	
+	//#40498,#30014 - Start
+	/**
+	 * Disables auto-update for the main page messages before opening the
+	 * category code popup.
+	 */
+	public void beforeOpenCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+	}
+	
+	/**
+	 * Restores auto-update for the main page messages after the category code
+	 * popup is closed.
+	 */
+	public void afterCloseCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+	}
+	//#40498,#30014 - End
 }

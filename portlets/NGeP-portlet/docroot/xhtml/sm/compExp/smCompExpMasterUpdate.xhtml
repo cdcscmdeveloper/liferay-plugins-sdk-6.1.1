@@ -116,6 +116,7 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
+				<!-- 9299- 40712 -->
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel
@@ -123,7 +124,7 @@
 					<td style="width: 66%"><p:selectOneMenu
 							value="#{smCompExpMB.selectedMaster.procumentMode.parameterId}">
 							<f:selectItems
-								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypeProcurementMode)}" />
+								value="#{smCompExpBB.getProcurementMethodDropdownValues(ParameterConst.paramTypeProcurementMethod)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -404,10 +405,11 @@
 					onclick="confirmDelSuppDocDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
+		<!-- 9299- 40711 -->
 		<p:confirmDialog closable="true"
 			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
 			id="confirmDelSelectedCatId"
-			message="#{lbl['lbl.sm.comp.exp.update.project.cat.code.delete.msg']}" severity="alert"
+			message="#{lbl['lbl.sm.comp.exp.delete.cat.codes.confirm.msg']}" severity="alert"
 			widgetVar="confirmDelSelectedCatDialogWV">
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpCatMaster}"

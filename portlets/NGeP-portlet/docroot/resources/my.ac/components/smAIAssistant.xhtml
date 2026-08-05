@@ -25,6 +25,7 @@
 		</style>
 		
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
+		<ui:param name="pnlId" value="pnl#{cc.attrs.aiDlg}" />
 		
 		<p:dialog id="block#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}"
 			modal="true" resizable="false" closable="false" showHeader="false">
@@ -59,7 +60,7 @@
         			</h:commandLink>
 				</p:column>
 				<p:column style="width:5%;text-align:center;">
-					<p:commandLink action="#{ai.deleteDoc(doc)}" update="docs#{cc.attrs.aiDlg}">
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>
@@ -96,6 +97,7 @@
 
 					<p:dataTable id="dt#{cc.attrs.aiDlg}" var="emp" value="#{ai.getEmployees()}" rowKey="#{emp}"
 						selection="#{ai.selectedEmployees}"
+						rows="10"
 						style="width:100%">
 						<ac:paginator for="dt#{cc.attrs.aiDlg}" />
 						<p:column selectionMode="multiple" style="width:5%" />
@@ -124,7 +126,7 @@
 					<h:outputText value="#{lbl['lbl.sm.facility.monthRent']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.monthlyRental}" />
 					<br/>
-					<h:outputText value="#{lbl['lbl.sm.facility.company.address']}: " style="font-weight:bold;" />
+					<h:outputText value="#{lbl['lbl.sm.companyaddress']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.premisesAddress}" />
 				</p:outputPanel>
 
@@ -146,6 +148,7 @@
 				<p:commandButton id="submitBtnAI"
 					value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
+					process="@this dt#{cc.attrs.aiDlg}"
 					update=":#{p:component(cc.attrs.updateId)}"
 					rendered="#{not empty cc.attrs.updateId}"
 					onclick="#{cc.attrs.aiDlg}.hide();"

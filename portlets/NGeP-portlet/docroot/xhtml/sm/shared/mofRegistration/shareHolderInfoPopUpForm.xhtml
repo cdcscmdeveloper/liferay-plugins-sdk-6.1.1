@@ -51,13 +51,15 @@
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
 						disabled="#{backingBean.managedBean.selectedShareHolder.ssmData}"
 						size="35">
-							<p:ajax event="blur" partialSubmit="true" process="@this" update="shareHolderNameAiIcon" />
+						<!-- #40112 - start -->
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearNameAI()}" update="shareHolderNameAiIcon" />
 						</p:inputText>
-						<!-- #40112 -->
 						<p:outputPanel id="shareHolderNameAiIcon">
 							<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
 							rendered="#{backingBean.managedBean.selectedShareHolder.nameFromAI}" />
 						</p:outputPanel>
+						<!-- #40112 - end -->
 						<ac:smFieldChangeAlert
 							isShow="#{backingBean.managedBean.showFieldChanges 
 								and not empty backingBean.managedBean.latestPersonnel}"
@@ -202,7 +204,9 @@
 							size="35" maxlength="12"
 							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							<p:ajax event="blur" partialSubmit="true" process="@this" update="shareHolderIcAiIcon" />
+							<!-- #40112 -->
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearIcAI()}" update="shareHolderIcAiIcon" />
 						</p:inputText>
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
@@ -213,7 +217,9 @@
 							size="35" maxlength="12">
 							<p:ajax process="@this" partialSubmit="true" update="@this"
 								listener="#{backingBean.trimPersonnelPassportValue}" />
-							<p:ajax event="blur" partialSubmit="true" process="@this" update="shareHolderIcAiIcon" />
+							<!-- #40112 -->
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearIcAI()}" update="shareHolderIcAiIcon" />
 						</p:inputText>
 						<!-- #40112 -->
 						<p:outputPanel id="shareHolderIcAiIcon">
@@ -302,13 +308,15 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epfNo}"
 						id="equiEpfNo" size="35">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-						<p:ajax event="blur" partialSubmit="true" process="@this" update="shareHolderEpfNoAiIcon" />
+						<!-- #40112 - start -->
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{backingBean.managedBean.selectedShareHolder.clearEpfNoAI()}" update="shareHolderEpfNoAiIcon" />
 					</p:inputText>
-					<!-- #40112 -->
 					<p:outputPanel id="shareHolderEpfNoAiIcon">
 						<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
 						rendered="#{backingBean.managedBean.selectedShareHolder.epfNoFromAI}" />
 					</p:outputPanel>
+					<!-- #40112 - end -->
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 							and not empty backingBean.managedBean.latestPersonnel}"
@@ -1137,8 +1145,8 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":#{p:component('shrProfDt')}, @([id$=Msg]),:#{p:component('delShrProfBodyBtnId')}"/>
-		
-		<p:dialog width="500px" height="300px" closable="false"
+		<!-- #39502 -->
+		<p:dialog width="800px" height="300px" closable="false"
 			header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
 			widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
@@ -1148,13 +1156,19 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<!-- #39502 -->
+					<td><p:selectOneMenu style="width: 430px;margin-bottom: 5px;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.profBody.profBody']}" id="equiStfPrdBdyLbl"
 							value="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<!-- #39502 - START -->
 							<f:selectItems var="shrProfBody"
-								value="#{backingBean.managedBean.profBodyItems}" />
+								value="#{backingBean.managedBean.profBodyItems}"
+							    itemValue="#{shrProfBody.value}"
+							    itemLabel="#{shrProfBody.label}"
+							    itemDescription="#{shrProfBody.description}" />
+								<!-- #39502 - END -->
 							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeProfBody}"
 								update="shrProfBodyOthersAssoc, shrProfBodyOthersAssocMand" />
 						</p:selectOneMenu> 

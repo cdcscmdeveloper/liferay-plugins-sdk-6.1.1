@@ -165,6 +165,10 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 	@Path("/checkpay")
 	public String checkPayment(@QueryParam("id") Long paymentId, @QueryParam("key") String key){
 		log.info("START "+paymentId);
+		if (!isValidApiKey(key)) {
+			log.warn("[API #38750] checkpay rejected: invalid api key");
+			return "Error Key";
+		}
 		String token = loginOps();
 		log.info("tok:"+token);
 		String body = callResyncApi(paymentId, token, key);
@@ -175,8 +179,8 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 	@Path("/opslogin")
 	public String opslogin(@QueryParam("key") String key) {
 		log.info("[API #38750] opslogin (web tier direct)");
-		if (key == null || key.trim().isEmpty()) {
-			log.warn("[API #38750] opslogin rejected: missing key");
+		if (!isValidApiKey(key)) {
+			log.warn("[API #38750] opslogin rejected: invalid api key");
 			return "";
 		}
 		return loginOps();
@@ -186,9 +190,27 @@ public static final Logger log = Logger.getLogger(PaymentReconcileRest.class);
 	@Path("/resync")
 	public String resync(@QueryParam("id") Long id, @QueryParam("token") String token, @QueryParam("apikey") String apikey) {
 		log.info("[API #38750] resync id=" + id);
+		if (!isValidApiKey(apikey)) {
+			log.warn("[API #38750] resync rejected: invalid api key");
+			return "";
+		}
 		return callResyncApi(id, token, apikey);
 	}
-	
+
+	//38750 - TEMP
+	@GET
+	@Path("/poke-opslogin")
+	public String pokeOpslogin() {
+		log.info("[API #38750] poke-opslogin -> biz-sm loginOpsViaPortal");
+		String token = SmServiceLookup.getSmSchedulerSO().loginOpsViaPortal();
+		return "biz-sm got token via portal: " + token;
+	}
+
+	private boolean isValidApiKey(String apikey) {
+		String expected = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.api");
+		return expected != null && !expected.trim().isEmpty() && expected.equals(apikey);
+	}
+
 	private String loginOps() {
 		String loginUrl = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.login.url");
 		String username = EpPropertiesUtils.getInstance().getProperty("reconcile.payment.username");

@@ -131,7 +131,7 @@
 				<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}.show();return false;"
 					process="@this" partialSubmit="true"
 					rendered="#{!table.pmDocument.hardCopyReq
-						and not(cc.attrs.hasAI and backingBean.isAiUploadDocRow(table.pmDocument.documentId))}"
+						and not(cc.attrs.hasAI and backingBean.isAiUploadDocRow(table.pmDocument))}"
 					update="@([id$=#{cc.attrs.uploadDialogId}])"
 					action="#{backingBean.assignSelectedSupportDocIndex(table,index)}">
 					<p:graphicImage value="/css/images/design/upload.png"
@@ -139,7 +139,7 @@
 				</p:commandLink>
 				<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}AI.show();return false;"
 					process="@this" partialSubmit="true"
-					rendered="#{cc.attrs.hasAI and backingBean.isAiUploadDocRow(table.pmDocument.documentId)}"
+					rendered="#{cc.attrs.hasAI and backingBean.isAiUploadDocRow(table.pmDocument)}"
 					update="@([id$=#{cc.attrs.uploadDialogId}])"
 					action="#{backingBean.assignSelectedSupportDocIndex(table,index)}">
 					<p:graphicImage value="/css/images/ai/upload.png"
@@ -159,8 +159,9 @@
         			</h:commandLink>
 			    	<p:tooltip for="file" value="#{applDocs.fileName}" position="top"/>
 					<p:spacer width="10" />
-					<p:commandLink 
-						rendered="#{fn:length(applDocs.fileName) > 1}"				
+					<!-- #40112 -->
+					<p:commandLink
+						rendered="#{fn:length(applDocs.fileName) > 1 and not backingBean.isAiSuppDocDeleteLocked(table,applDocs)}"
 						action="#{backingBean.onDeleteSupDocFileAttachment(table,index,applDocs)}" update="@form">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
@@ -185,6 +186,9 @@
 					</p:outputPanel>
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 3}">
 						<p:graphicImage id="imgHasAI3" value="/css/images/ai/icon.png" />
+						<p:tooltip for="imgHasAI3" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
 					</p:outputPanel>
 					<br/>
 				</ui:repeat>
