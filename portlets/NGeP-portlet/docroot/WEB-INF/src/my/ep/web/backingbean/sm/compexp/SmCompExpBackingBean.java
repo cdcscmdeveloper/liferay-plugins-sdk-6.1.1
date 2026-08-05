@@ -62,6 +62,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 import com.liferay.portal.util.PortalUtil;
+//#9299 - #40660
+import my.ep.util.CustomUtils;
 
 /**
  * BackingBean for Sm Company Experience
@@ -84,6 +86,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private static String lblClientTypeFed = "lbl.sm.comp.exp.update.client.type.federal";
 	private static String lblClientTypeNonFed = "lbl.sm.comp.exp.update.client.type.other";
 	private static String smCompExpNewXhtml = "smCompExpNew.xhtml";
+	// #9299 - #40713 Start
+	private static String lblPopUpHeaderQT = "lbl.sm.comp.exp.master.popup.header.qt";
+	private static String lblPopUpHeaderCT = "lbl.sm.comp.exp.master.popup.header.ct";
+	// #9299 - #40713 End
 
 	/**
 	 * Prerender for Company Experience Alert
@@ -1066,15 +1072,22 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void delSmCompExpDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		// #9299 - #40714 Start
+		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
+		if (null != reqDTO.getSelectedDraft().getPaymentMethod() && null == reqDTO.getSelectedDraft().getPaymentMethod().getParameterId()) {
+			reqDTO.getSelectedDraft().setPaymentMethod(null);
+		}
+		// #9299 - #40714 End
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.ERROR_775237, new String[] { this.getManagedBean().getSelectedDraft().getTitle() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			// #9299 - #40789 Start
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+				FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+					MessageConst.ERROR_775237, new String[] {
+						this.getManagedBean().getSelectedDraft().getFileReferenceNo()
+					}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			// #9299 - #40789 End
 			redirectToDraft();
 		}
 	}
@@ -1164,15 +1177,22 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void deactivateDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		// #9299 - #40714 Start
+		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
+		if (null != reqDTO.getSelectedDraft().getPaymentMethod() && null == reqDTO.getSelectedDraft().getPaymentMethod().getParameterId()) {
+			reqDTO.getSelectedDraft().setPaymentMethod(null);
+		}
+		// #9299 - #40714 End
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.ERROR_775236, new String[] { this.getManagedBean().getSelectedDraft().getTitle() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			// #9299 - #40789 Start
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+				FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+					MessageConst.ERROR_775236, new String[] {
+						this.getManagedBean().getSelectedDraft().getFileReferenceNo()
+					}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			// #9299 - #40789 End
 			redirectToDraft();
 		}
 	}
@@ -1200,6 +1220,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private void deactivateMaster(Long compExpMasterId) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(compExpMasterId);
+		// #9299 - #40714 Start
+		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+		reqDTO.setSelectedMaster(resDTO.getMaster());
+		if (null != reqDTO.getSelectedMaster().getPaymentMethod() && null == reqDTO.getSelectedMaster().getPaymentMethod().getParameterId()) {
+			reqDTO.getSelectedMaster().setPaymentMethod(null);
+		}
+		// #9299 - #40714 End
 		getSmCompExpSo().deleteMaster(reqDTO);
 	}
 
@@ -1219,6 +1246,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
 		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
+		// #9299 - #40713 Start
+		if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_QT)) {
+			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderQT, null));
+		} else if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderCT, null));
+		}
+		// #9299 - #40713 End
 	}
 
 	/**
@@ -1274,6 +1308,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
+		// #9299 - #40660
+		this.getManagedBean().setHistMaster((SmCompExpMaster) CustomUtils.getInstance().deepCopy(resDTO.getMaster()));
 		if (null != this.getManagedBean().getSelectedMaster().getPaymentMethod()) {
 			this.getManagedBean().getSelectedMaster().getPaymentMethod().getParameterId();
 		} else {
@@ -1327,21 +1363,28 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		PmParameter procumentMode = master.getProcumentMode();
 		error = validateNewDetail(error, title, contractValue, procumentMode);
 
+
+		// 9299 - 40478
+		Date contractEffDate = master.getContractEffDate();
+		Date contractExpDate = master.getContractExpDate();
+		error = validateDate(error, contractEffDate, contractExpDate);
+		// 9299 - 40664 Start
 		if (this.getManagedBean().isConsultant()) {
 			String projectLoc = master.getProjectLoc();
 			String workServDesc = master.getWorkServDesc();
 			BigDecimal consultantFee = master.getConsultantFee();
 			error = validateNewConsultant(error, projectLoc, workServDesc, consultantFee);
 		}
-		// 9299 - 40478
-		Date contractEffDate = master.getContractEffDate();
-		Date contractExpDate = master.getContractExpDate();
-		error = validateDate(error, contractEffDate, contractExpDate);
-
+		// 9299 - 40664 End
 		Long sourceType = master.getSourceType().getParameterId();
 		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
 
+		// #9299 - #40717 Start
+		if (!error && null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
+			master.setPaymentMethod(null);
+		}
+		// #9299 - #40717 Start
 		if (!error && update) {
 			updateSmComExpMaster(false);
 		} else if (!error) {
@@ -1380,17 +1423,26 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			masterId = getSmCompExpSo().checkDuplicate(reqDTO);
 		}
 		if (masterId != null) {
-			RequestContext.getCurrentInstance().execute("duplicateDialogWV.show();");
+			// 9299 - 40788 Start
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_775241, new String[] { master.getTitle() },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			// 9299 - 40788 End
 		} else {
 			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 			reqDTO.setDeclareMaster(master);
 			SmCompExpResDTO resDTO;
 			resDTO = getSmCompExpSo().declareDraft(reqDTO);
 			if (resDTO.isSuccessful()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775240,
-								new String[] { master.getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// #9299 - #40789 Start
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+						MessageConst.ERROR_775240, new String[] {
+							master.getFileReferenceNo()
+						}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// #9299 - #40789 End
 				proceedAfterTnC();
 			}
 
@@ -1433,14 +1485,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		//9299 - 40664 START
-		if (null == procumentMode.getParameterId()) {
+		if (null == contractValue) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775231,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
-		if (null == contractValue) {
+		if (null == procumentMode.getParameterId()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1458,97 +1510,127 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @throws IOException
 	 */
 	public void updateSmComExpMaster(boolean delete) throws IOException {
-		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
-		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
-		SmCompExpMaster master = resDTO.getMaster();
-		SmCompExpMasterHistory history = new SmCompExpMasterHistory();
-
-		history.setCompExpMaster(master);
-		history.setSmSupplier(master.getSmSupplier());
-		history.setSmAppl(master.getSmSupplier().getSmAppl());
-		history.setTitle(master.getTitle());
-		history.setProcumentMode(master.getProcumentMode());
-		history.setOriAgencyName(master.getOriAgencyName());
-		history.setAgencyName(master.getAgencyName());
-		history.setOrgProfile(master.getOrgProfile());
-		history.setFileReferenceNo(master.getFileReferenceNo());
-		history.setFileExtensionNo(master.getFileExtensionNo());
-		history.setLoaNo(master.getLoaNo());
-		history.setContractValue(master.getContractValue());
-		history.setPaymentMethod(master.getPaymentMethod());
-		history.setClientType(master.getClientType());
-		history.setContractEffDate(master.getContractEffDate());
-		history.setContractExpDate(master.getContractExpDate());
-		history.setContractStatus(master.getContractStatus());
-		history.setContractId(master.getContractId());
-		history.setQtId(master.getQtId());
-		history.setMigration(master.isMigration());
-		if (this.getManagedBean().isConsultant()) {
-			history.setProjectLoc(master.getProjectLoc());
-			history.setWorkServDesc(master.getWorkServDesc());
-			history.setConsultantFee(master.getConsultantFee());
-		}
-		history.setSourceType(SmApplicationUtil.retrievePmParameterById(master.getSourceType().getParameterId()));
-		setActionType(history, delete);
-
-		List<SmCompExpMasterHistoryDoc> histDocList = new ArrayList<>();
-		for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
-			SmCompExpMasterHistoryDoc newDoc = new SmCompExpMasterHistoryDoc();
-			newDoc.setFileName(doc.getFileName());
-			newDoc.setFilePath(doc.getFilePath());
-			newDoc.setCompExpMasterHist(history);
-			histDocList.add(newDoc);
-		}
-		history.setCompExpMasterHistDocs(histDocList);
-
-		List<SmCompExpCatMasterHistory> histCatList = new ArrayList<>();
-		// Expected Max Size in loop (30) based on NGEP_PDS database
-		for (SmCompExpCatMaster oldCat : master.getCompExpMasterCats()) {
-			SmCompExpCatMasterHistory newCat = new SmCompExpCatMasterHistory();
-			CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
-
-			reqDTO2.setCategoryL1Id(oldCat.getCategoryL1().getCategoryL1Id());
-			oldCat.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO2).getCategoryL1());
-			newCat.setCategoryL1(oldCat.getCategoryL1());
-			newCat.setCategoryL1Name(oldCat.getCategoryL1().getCategoryName());
-
-			reqDTO2.setCategoryL2Id(oldCat.getCategoryL2().getCategoryL2Id());
-			oldCat.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO2).getCategoryL2());
-			newCat.setCategoryL2(oldCat.getCategoryL2());
-			newCat.setCategoryL2Name(oldCat.getCategoryL2().getCategoryName());
-
-			reqDTO2.setCategoryL3Id(oldCat.getCategoryL3().getCategoryL3Id());
-			oldCat.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO2).getCategoryL3());
-			newCat.setCategoryL3(oldCat.getCategoryL3());
-			newCat.setCategoryL3Name(oldCat.getCategoryL3().getCategoryName());
-
-			newCat.setCompExpMasterHist(history);
-			histCatList.add(newCat);
-		}
-		history.setCompExpCatMasterHists(histCatList);
-
-		SmCompExpReqDTO reqDTO3 = new SmCompExpReqDTO();
-		reqDTO3.setHistory(history);
-
 		// #9299 - #40660 Start
 		SmCompExpMaster selectedMaster = this.getManagedBean().getSelectedMaster();
 		SmCompExpResDTO resDTO1 = new SmCompExpResDTO();
 		if (delete) {
 			delSmCompExpMaster(resDTO1);
 		} else {
-			addHistoryDoc(selectedMaster); 
-			SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
-			reqDTO4.setUpdateMaster(selectedMaster); 
-			resDTO1 = getSmCompExpSo().updateMaster(reqDTO4);
-			if (resDTO1.isSuccessful()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775238,
-								new String[] { selectedMaster.getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			//9299 - 40788 Start
+			boolean duplicate = false;
+			
+			if (selectedMaster.getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)){
+				SmCompExpReqDTO duplicateReqDTO = new SmCompExpReqDTO();
+				duplicateReqDTO.setPtjId(selectedMaster.getOrgProfile().getOrgProfileId());
+				duplicateReqDTO.setFileReferenceNo(selectedMaster.getFileReferenceNo());
+				duplicateReqDTO.setFileExtensionNo(selectedMaster.getFileExtensionNo());
+				
+				Long duplicateMasterId = getSmCompExpSo().checkDuplicate(duplicateReqDTO);
+				
+				if(duplicateMasterId != null
+						&& !duplicateMasterId.equals(selectedMaster.getCompExpMasterId())){
+					duplicate = true;
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									null,
+									MessageUtils.getMessage(
+											MessageConst.ERROR_775241,
+											new String[] {selectedMaster.getTitle() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+			}
+			if (!duplicate){
+				//9299 - 40788 End
+				SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
+				reqDTO4.setUpdateMaster(selectedMaster); 
+				resDTO1 = getSmCompExpSo().updateMaster(reqDTO4);
+				if (resDTO1.isSuccessful()) {
+					// #9299 - #40789 Start
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.ERROR_775238, new String[] {
+								selectedMaster.getFileReferenceNo()
+							}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					// #9299 - #40789 End
+				} 
+			//9299 - 40788 Start
 			} 
+		//9299 - 40788 End
 		} 
 		if (resDTO1.isSuccessful()) { 
+			SmCompExpMaster master = this.getManagedBean().getHistMaster();
+			SmCompExpMasterHistory history = new SmCompExpMasterHistory();
+ 
+			history.setCompExpMaster(master);
+			history.setSmSupplier(master.getSmSupplier());
+			history.setSmAppl(master.getSmSupplier().getSmAppl());
+			history.setTitle(master.getTitle());
+			history.setProcumentMode(master.getProcumentMode());
+			history.setOriAgencyName(master.getOriAgencyName());
+			history.setAgencyName(master.getAgencyName());
+			history.setOrgProfile(master.getOrgProfile());
+			history.setFileReferenceNo(master.getFileReferenceNo());
+			history.setFileExtensionNo(master.getFileExtensionNo());
+			history.setLoaNo(master.getLoaNo());
+			history.setContractValue(master.getContractValue());
+			history.setPaymentMethod(master.getPaymentMethod());
+			history.setClientType(master.getClientType());
+			history.setContractEffDate(master.getContractEffDate());
+			history.setContractExpDate(master.getContractExpDate());
+			history.setContractStatus(master.getContractStatus());
+			history.setContractId(master.getContractId());
+			history.setQtId(master.getQtId());
+			history.setMigration(master.isMigration());
+			if (this.getManagedBean().isConsultant()) {
+				history.setProjectLoc(master.getProjectLoc());
+				history.setWorkServDesc(master.getWorkServDesc());
+				history.setConsultantFee(master.getConsultantFee());
+			} 
+			history.setSourceType(SmApplicationUtil.retrievePmParameterById(master.getSourceType().getParameterId()));
+			setActionType(history, delete);
+ 
+			List<SmCompExpMasterHistoryDoc> histDocList = new ArrayList<>();
+			for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
+				SmCompExpMasterHistoryDoc newDoc = new SmCompExpMasterHistoryDoc();
+				newDoc.setFileName(doc.getFileName());
+				newDoc.setFilePath(doc.getFilePath());
+				newDoc.setCompExpMasterHist(history);
+				histDocList.add(newDoc);
+			} 
+			history.setCompExpMasterHistDocs(histDocList);
+ 
+			List<SmCompExpCatMasterHistory> histCatList = new ArrayList<>();
+			// Expected Max Size in loop (30) based on NGEP_PDS database
+			for (SmCompExpCatMaster oldCat : master.getCompExpMasterCats()) {
+				SmCompExpCatMasterHistory newCat = new SmCompExpCatMasterHistory();
+				CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
+ 
+				reqDTO2.setCategoryL1Id(oldCat.getCategoryL1().getCategoryL1Id());
+				oldCat.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO2).getCategoryL1());
+				newCat.setCategoryL1(oldCat.getCategoryL1());
+				newCat.setCategoryL1Name(oldCat.getCategoryL1().getCategoryName());
+ 
+				reqDTO2.setCategoryL2Id(oldCat.getCategoryL2().getCategoryL2Id());
+				oldCat.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO2).getCategoryL2());
+				newCat.setCategoryL2(oldCat.getCategoryL2());
+				newCat.setCategoryL2Name(oldCat.getCategoryL2().getCategoryName());
+ 
+				reqDTO2.setCategoryL3Id(oldCat.getCategoryL3().getCategoryL3Id());
+				oldCat.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO2).getCategoryL3());
+				newCat.setCategoryL3(oldCat.getCategoryL3());
+				newCat.setCategoryL3Name(oldCat.getCategoryL3().getCategoryName());
+ 
+				newCat.setCompExpMasterHist(history);
+				histCatList.add(newCat);
+			} 
+			history.setCompExpCatMasterHists(histCatList);
+ 
+			SmCompExpReqDTO reqDTO3 = new SmCompExpReqDTO();
+			reqDTO3.setHistory(history);		
 			SmCompExpResDTO resDTO2; 
 			resDTO2 = getSmCompExpSo().addHistory(reqDTO3);
 			if (resDTO2.isSuccessful()) { 
@@ -1556,33 +1638,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			} 
 		} 
 		// #9299 - #40660 End
-	}
-
-	private void addHistoryDoc(SmCompExpMaster selectedMaster) {
-		for (SmCompExpMasterDoc doc : selectedMaster.getCompExpMasterDocs()) {
-			if (null == doc.getSmComExpMasterDocId()) {
-				doc.setCompExpMaster(selectedMaster);
-			}
-		}
-		for (SmCompExpCatMaster cat : selectedMaster.getCompExpMasterCats()) {
-			if (null == cat.getCompExpCatMasterId()) {
-				CategoryCodeReqDTO reqDTO4 = new CategoryCodeReqDTO();
-
-				reqDTO4.setCategoryL1Id(cat.getCategoryL1().getCategoryL1Id());
-				cat.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO4).getCategoryL1());
-				cat.setCategoryL1Name(cat.getCategoryL1().getCategoryName());
-
-				reqDTO4.setCategoryL2Id(cat.getCategoryL2().getCategoryL2Id());
-				cat.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO4).getCategoryL2());
-				cat.setCategoryL2Name(cat.getCategoryL2().getCategoryName());
-
-				reqDTO4.setCategoryL3Id(cat.getCategoryL3().getCategoryL3Id());
-				cat.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO4).getCategoryL3());
-				cat.setCategoryL3Name(cat.getCategoryL3().getCategoryName());
-
-				cat.setCompExpMaster(selectedMaster);
-			}
-		}
 	}
 
 	private void setActionType(SmCompExpMasterHistory history, boolean delete) {
@@ -1610,15 +1665,18 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	// #9299 - #40660
 	public void delSmCompExpMaster(SmCompExpResDTO resDTO1) throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
+		// #9299 - #40714
+		reqDTO.setSelectedMaster(this.getManagedBean().getSelectedMaster());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteMaster(reqDTO);
 		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775239, new String[] { this
-							.getManagedBean().getSelectedMaster().getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
+			// #9299 - #40789 Start
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+				FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+					MessageConst.ERROR_775239, new String[] {
+						this.getManagedBean().getSelectedMaster().getFileReferenceNo()
+					}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
+			// #9299 - #40789 End
 			// #9299 - #40660
 			resDTO1.setSuccessful(true);
 		}
