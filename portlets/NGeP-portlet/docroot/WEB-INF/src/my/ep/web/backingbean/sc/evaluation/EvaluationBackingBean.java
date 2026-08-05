@@ -11907,6 +11907,7 @@ private void retriveCommitteeRemarksList(){
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
 		
 		String reportName = StringUtils.EMPTY;
+		String committeeType = this.getManagedBean().getCommitteeType(); // #25651
 		
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
 			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
@@ -11951,7 +11952,9 @@ private void retriveCommitteeRemarksList(){
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_EC_REPORT_DETAIL, committeeType + ""); // #25651
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		
 		
 		if (StringUtils.isNotBlank(reportName)) { 
 			generatePdfFromOracle(reportName, paramMap, attachment, this
@@ -20431,8 +20434,7 @@ private void retriveCommitteeRemarksList(){
 		for (Map.Entry<String, String> entry : reportDetail) {
 			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
 					&& entry.getKey().equals(docDefinitionKey)) {
-				//reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
-				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
 
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN
 					.equals(docDefinitionKey) && entry.getKey().equals(docDefinitionKey)) {
@@ -20499,8 +20501,7 @@ private void retriveCommitteeRemarksList(){
 		for (Map.Entry<String, String> entry : reportDetail) {
 			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
 					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
-				//reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
-				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
 
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN
 					.equals(docDefinitionKey) && entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
@@ -20565,8 +20566,7 @@ private void retriveCommitteeRemarksList(){
 		for (Map.Entry<String, String> entry : reportDetail) {
 			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
 					&& entry.getKey().equals(docDefinitionKey)) {
-				//reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
-				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
 
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN
 					.equals(docDefinitionKey) && entry.getKey().equals(docDefinitionKey)) {
@@ -20593,8 +20593,7 @@ private void retriveCommitteeRemarksList(){
 		for (Map.Entry<String, String> entry : reportDetail) {
 			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
 					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
-				//reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
-				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
 				
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN
 					.equals(docDefinitionKey) && entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
@@ -20669,8 +20668,7 @@ private void retriveCommitteeRemarksList(){
 		for (Map.Entry<String, String> entry : reportDetail) {
 			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
 					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
-				//reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
-				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
 				
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
 					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
@@ -20757,8 +20755,7 @@ private void retriveCommitteeRemarksList(){
 		for (Map.Entry<String, String> entry : reportDetail) {
 			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
 					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
-				//reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
-				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
 
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
 					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
