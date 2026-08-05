@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -2479,8 +2479,8 @@ public class EvaluationMeetingBackingBean extends
 		}
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
 	}
-
-	private boolean isCommitteeModified(List<ScCommitteeMember> currList) {
+	/*#34444 start*/
+	public boolean isCommitteeModified(List<ScCommitteeMember> currList) {/*#34444 start*/
 		List<QtCommitteeMemberBean> previousList = this.getManagedBean().getPrevCommitteeMembers();
 		if (CollectionUtils.isEmpty(previousList)) {
 			previousList = new ArrayList<>();

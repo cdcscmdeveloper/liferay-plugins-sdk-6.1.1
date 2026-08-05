@@ -104,14 +104,14 @@
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<ui:remove>#21692 - start</ui:remove>
 						<h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
-							<p:commandButton value="#{lbl[buttonLabel]}"
+							<p:commandButton value="#{lbl[buttonLabel]} +##123"
 								styleClass="ui-button"
 								action="#{suppFinalizationBackingBean.submitAction}"
 								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 								partialSubmit="true" process="@form" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen() and (bpmAction == 'SUBMIT')}" />
-							<p:commandButton value="#{lbl[buttonLabel]}"
+							<p:commandButton value="#{lbl[buttonLabel]} +#879"
 								styleClass="ui-button"
 								action="#{suppFinalizationBackingBean.submitAction}"
 								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
@@ -120,7 +120,7 @@
 								rendered="#{(suppFinalizationBackingBean.managedBean.qtRefinalized or
 									suppFinalizationBackingBean.checkMeetingDoneLessThanValidityEndDate(suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate))
 									and !suppFinalizationBackingBean.isQTMaintenanceScreen() and bpmAction != 'SUBMIT' and bpmAction != 'REVISE'}" />
-							<p:commandButton value="#{lbl[buttonLabel]}"
+							<p:commandButton value="#{lbl[buttonLabel]} #3214"
 								styleClass="ui-button"
 								action="#{suppFinalizationBackingBean.submitAction}"
 								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
@@ -130,7 +130,7 @@
 						</h:panelGroup>
 						<ui:remove>#21692 - end</ui:remove>
 						<h:panelGroup rendered="#{bpmAction == 'REVISEBP'}">
-							<p:commandButton value="#{lbl[buttonLabel]}"
+							<p:commandButton value="#{lbl[buttonLabel]} +4560@##"
 								styleClass="ui-button"
 								action="#{suppFinalizationBackingBean.submitAction}"
 								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
@@ -225,17 +225,17 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}+4444YES@@#"
 					oncomplete="reviseSuppFinalizationDlgs.hide();"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization(true)}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
+				<p:commandButton value="#{lbl['lbl.btn.no']}+##NO**"
 					onclick="reviseSuppFinalizationDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
 
 
 
-
+		<ui:remove>#34444 Start Ann</ui:remove>
 		<!-- ***28834 start -->
 		<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
@@ -244,21 +244,30 @@
 				<tr>
 					<td align="center"><p:outputLabel
 							value="#{lbl['lbl.popup.revisebp']}" /></td>
-				</tr>
+				</tr> 
 			</table>
 			<p:spacer height="1" />
+			
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					onclick="blockWidget.show();"
-					oncomplete="confirmBriefPopup.hide(); " partialSubmit="true"
+					onstart="blockWidget.show();"
+					oncomplete="confirmBriefPopup.hide(); popupConfirmInfoDlg.show();" partialSubmit="true"
 					process="@form" update="@form"
-					action="#{suppFinalizationBackingBean.submitBrief(bpmAction)}" />
+					actionListener="#{suppFinalizationBackingBean.managedBean.prepareAction(suppFinalizationBackingBean.managedBean.outcome)}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="confirmBriefPopup.hide();" type="button"
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
 		<!-- ***28834 end -->
+		
+	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+		widget="popupConfirmInfoDlg"
+		okAction="#{suppFinalizationBackingBean.submitBrief(suppFinalizationBackingBean.managedBean.btnAction)}"
+		title="#{suppFinalizationBackingBean.managedBean.confirmTitle}"
+		content="#{suppFinalizationBackingBean.managedBean.confirmContent}"
+		update="@form" />
+	<ui:remove>#34444 End Ann</ui:remove>
 
 		<!-- ***28834 start -->
 		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
@@ -281,6 +290,8 @@
 		</p:dialog>
 		<!-- ***28834 end -->
 		
+		
+		<ui:remove>#34444 Start Ann</ui:remove>
 		<!-- ***28834 start  new ***-->
 			<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
@@ -304,6 +315,8 @@
 			</div>
 		</p:dialog>
 		<!-- ***28834 end new ***-->
+		<ui:remove>#34444 end Ann</ui:remove>
+		
 		<!-- ***28834 start  new -->
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"

@@ -20,21 +20,25 @@
 						autoUpdate="true" closable="true" severity="error, info" />
 
 					<div align="right" class="BtnSpacing">
-						<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+						<p:commandButton value="#{lbl['lbl.btn.save']} +save123" process="@all"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							partialSubmit="true"
 							action="#{suppFinalMeetingBackingBean.saveAction}" update="@form" />
-
+						<ui:remove>#34444 Start Ann</ui:remove>
 						<ui:repeat var="bpmAction"
 							value="#{suppFinalMeetingBackingBean.managedBean.outComes}">
 							<ui:fragment rendered="#{bpmAction ne '~'}">
 								<ui:param name="buttonLabel"
 									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" style="float:right;" process="@all" onclick="blockWidget.show();"
-									partialSubmit="true" oncomplete="confirmSubmitMeetingPopup.show();blockWidget.hide();" />
+								<p:commandButton value="#{lbl[buttonLabel]}+36533***"
+									onstart="blockWidget.show();" styleClass="ui-button"
+									oncomplete="confirmSubmitMeetingPopup.show();blockWidget.hide();"
+									style="float:right;"
+									actionListener="#{suppFinalMeetingBackingBean.managedBean.prepareAction(bpmAction)}"
+									process="@all" update="@form" />
 							</ui:fragment>
 						</ui:repeat>
+						<ui:remove>#34444 Start Ann</ui:remove>
 					</div> <ui:include
 						src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
 
@@ -231,11 +235,21 @@
 					</td>
 			</tr>
 		</table>
+		<ui:remove>#34444 Start Ann</ui:remove>
 		<ac:confirmationPopup id="confirmSubmitMeetingId"
-		widget="confirmSubmitMeetingPopup" width="490"
-		height="100"
-		title="#{lbl['lbl.sc.confirmation']}"
-		okAction="suppFinalMeetingBackingBean.submitAction('SUBMIT')" 
-		content="#{lbl['lbl.sc.popup.sendtofinalcommittee']}"/>
+			widget="confirmSubmitMeetingPopup" width="490" height="100"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction=""
+			content="#{lbl['lbl.sc.popup.sendtofinalcommittee']}"
+			oncompleteOk="popupConfirmInfoDlg.show();" />
+
+
+		<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+			widget="popupConfirmInfoDlg"
+			okAction="#{suppFinalMeetingBackingBean.submitAction(suppFinalMeetingBackingBean.managedBean.btnAction)}"
+			title="#{suppFinalMeetingBackingBean.managedBean.confirmTitle}"
+			content="#{suppFinalMeetingBackingBean.managedBean.confirmContent}"
+			update="@all" okProcess="@all" oncompleteOk="" />
+		<ui:remove>#34444 End Ann</ui:remove>
 	</ui:define>
 </ui:composition>
