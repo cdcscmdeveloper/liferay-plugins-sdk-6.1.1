@@ -3110,8 +3110,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
-			
-			PmUserOrg oldPmUserOrg = !this.getManagedBean().getSelectedUser().isBrandNew() ? 
+			// #40810 Start
+			PmUserOrg oldPmUserOrg = !userOrg.isBrandNew() ? 
 					PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(this.getManagedBean().getSelectedUser().getUserId(),
 							 this.getManagedBean().getSelectedUserOrg().getUserOrgId()) : null;
 			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
@@ -3263,6 +3263,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				
 				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					this.getManagedBean().setUserGrpBrandNew(true); // 40810
 					this.getManagedBean().setBrandNewUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
