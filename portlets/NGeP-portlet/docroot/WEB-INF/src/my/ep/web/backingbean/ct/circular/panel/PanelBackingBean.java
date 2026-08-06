@@ -168,6 +168,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	
 	private String confirmationContentMsg;//34442 
 	private boolean isShowValidation = false;//Fix-#34367
+	private final String validationMsgId = "circularRulesValidation";//Fix-#34367
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -184,7 +185,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				if (getOwnerOrgProfile() != null && getOwnerOrgProfile().getPmOrgValidity() != null) {
 					isShowValidation = true;
 					FacesContext.getCurrentInstance().addMessage(
-							"circularRulesValidation",
+							validationMsgId,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 									MessageConst.ERROR_750095,
 									new String[] { ResourceBundleUtils.getMessage(getOwnerOrgProfile()
@@ -258,26 +259,18 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 		CircularReqDTO circularReqDTO = new CircularReqDTO();	
-		CTCircularContractDataType dataType = new CTCircularContractDataType();
 		getPTJOwner();
 		String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
-		dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[] { BpmOutcomeConst.BPM_SAVE });
+		CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[] { BpmOutcomeConst.BPM_SAVE });
 		circularReqDTO.setCircularDocNo(dataType.getDocNo());
 		CircularResDTO circulaResDTO = circularSO.getCircularTypeByDocNo(circularReqDTO);	
 		if (panelDoctype == null && circulaResDTO.getCircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
 			String[] outComes = this.getManagedBean().getOutComes();
-			List<String> list = new ArrayList<String>(Arrays.asList(outComes));
-			if (list.contains(BpmOutcomeConst.BPM_SUBMIT) || list.contains(BpmOutcomeConst.BPM_APPROVE) || list.contains(BpmOutcomeConst.BPM_REVISE)) {
-				list.remove(BpmOutcomeConst.BPM_SUBMIT);
-				list.remove(BpmOutcomeConst.BPM_APPROVE);
-				list.remove(BpmOutcomeConst.BPM_REVISE);
-				list.remove(BpmOutcomeConst.BPM_SAVE);
-				outComes = list.toArray(new String[0]);
-				this.getManagedBean().setOutComes(outComes);
-			}
+			List<String> list = new ArrayList<>(Arrays.asList(outComes));
+			removeButtonForInactivePanel(list);
 		}
 		//End Fix - #34367
-		circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
+		circularReqDTO.setCircularVerId(dataType.getDocId());
 		setPanelCircularVar(circularReqDTO);
 	}
 
@@ -440,36 +433,21 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			}
 			//Start - #34367
 			CircularReqDTO cancelReqDTO = new CircularReqDTO();
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			CTCircularCancellationDataType dataType = new CTCircularCancellationDataType();						
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);					
 			if(getManagedBean().getCancelCircularReq()!=null && getManagedBean().getCancelCircularReq().getCancelCircularReqId()!=null){
-				cancelReqDTO.setCancelCircularReqId(getManagedBean().getCancelCircularReq().getCancelCircularReqId().longValue());
+				cancelReqDTO.setCancelCircularReqId(getManagedBean().getCancelCircularReq().getCancelCircularReqId());
 			} else {
-				dataType = super.getBpmTaskDetails(CTCircularCancellationDataType.class,new String[] { BpmOutcomeConst.BPM_SAVE });
-				cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
+				CTCircularCancellationDataType dataType = super.getBpmTaskDetails(CTCircularCancellationDataType.class,new String[] { BpmOutcomeConst.BPM_SAVE });
+				cancelReqDTO.setCancelCircularReqId(dataType.getDocId());
 				CircularResDTO circularResDTO = circularSO.getCancelCircularType(cancelReqDTO);
-				log.info(" circularResDTO.getCancelcircularDoctype() :: BOB "+ circularResDTO.getCancelcircularDoctype());
 				if (panelDoctype == null && circularResDTO.getCancelcircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
 					String[] outComes = getManagedBean().getOutComes();
-					List<String> list = new ArrayList<String>(Arrays.asList(outComes));
-					if (list.contains(BpmOutcomeConst.BPM_SUBMIT) || list.contains(BpmOutcomeConst.BPM_APPROVE) || list.contains(BpmOutcomeConst.BPM_REVISE)) {
-						list.remove(BpmOutcomeConst.BPM_SUBMIT);
-						list.remove(BpmOutcomeConst.BPM_APPROVE);
-						list.remove(BpmOutcomeConst.BPM_REVISE);
-						list.remove(BpmOutcomeConst.BPM_SAVE);
-						outComes = list.toArray(new String[0]);
-						getManagedBean().setOutComes(outComes);
-					}
+					List<String> list = new ArrayList<>(Arrays.asList(outComes));
+					removeButtonForInactivePanel(list);
 				} else {
-					if (isShowValidation &&  circularResDTO.getCancelcircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
-						Iterator<FacesMessage> iterator = FacesContext.getCurrentInstance().getMessages("circularRulesValidation");
-						while (iterator.hasNext()) {
-							iterator.next();
-							iterator.remove();
-						}
-					}
+					removeFacesValidationMessage(circularResDTO);
 				}
-				cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
+				cancelReqDTO.setCancelCircularReqId(dataType.getDocId());
 			}
 			//End - #34367
 			//#33533 end
@@ -538,6 +516,44 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			circularSO = null;
 		}		
 	}
+	
+	//Start - Fix #34367
+	/**
+	 * This method is invoked when the specified PTJ does not exist in any
+	 * configured rule constants in Profile Management, such as PTJCC or PTJCO.
+	 * <p>
+	 * It retains only the CANCEL and REJECT actions and removes all other
+	 * available actions.
+	 * </p>
+	 *
+	 * @param list
+	 *            the list of actions to be updated
+	 */
+	private void removeButtonForInactivePanel(List<String> list) {
+		String[] outComes;
+		if (list.contains(BpmOutcomeConst.BPM_SUBMIT) || list.contains(BpmOutcomeConst.BPM_APPROVE) || list.contains(BpmOutcomeConst.BPM_REVISE)) {
+			list.remove(BpmOutcomeConst.BPM_SUBMIT);
+			list.remove(BpmOutcomeConst.BPM_APPROVE);
+			list.remove(BpmOutcomeConst.BPM_REVISE);
+			list.remove(BpmOutcomeConst.BPM_SAVE);
+			outComes = list.toArray(new String[0]);
+			getManagedBean().setOutComes(outComes);
+		}
+	}
+	
+	/**
+	 * @param circularResDTO
+	 */
+	private void removeFacesValidationMessage(CircularResDTO circularResDTO) {
+		if (isShowValidation &&  circularResDTO.getCancelcircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+			Iterator<FacesMessage> iterator = FacesContext.getCurrentInstance().getMessages(validationMsgId);
+			while (iterator.hasNext()) {
+				iterator.next();
+				iterator.remove();
+			}
+		}
+	}
+	//End - Fix #34367
 
 	/**
 	 * The method used to navigate to contract maintenance screen.
@@ -2951,7 +2967,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 		//Start Fix - #34367
 		if (isShowValidation && circularDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) {
-			Iterator<FacesMessage> iterator = FacesContext.getCurrentInstance().getMessages("circularRulesValidation");
+			Iterator<FacesMessage> iterator = FacesContext.getCurrentInstance().getMessages(validationMsgId);
 			while (iterator.hasNext()) {
 				iterator.next();
 				iterator.remove();
