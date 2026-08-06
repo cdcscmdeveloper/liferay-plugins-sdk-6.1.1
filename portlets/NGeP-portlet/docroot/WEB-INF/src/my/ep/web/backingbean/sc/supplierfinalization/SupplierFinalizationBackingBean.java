@@ -1931,7 +1931,8 @@ public class SupplierFinalizationBackingBean extends
 
 			// #27502 -Start
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();			
-			scQt = qtBackingBean.getManagedBean().getQt();			
+			scQt = qtBackingBean.getManagedBean().getQt();
+			
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 			
 			boolean isBpkCentralContract = isBpkCentralContract(scQt);
@@ -4171,12 +4172,8 @@ return	remarksNotFound;
 	 */
 	public void saveQtFinalJustification(IQTSuppFinalizationSO qtSuppFinalizationSO){
 		List<String> reasonIdList = this.getManagedBean().getJustificationReasonList();
-<<<<<<< HEAD
-		List<ScQtFinalJustification> finalJustificationList = new ArrayList<ScQtFinalJustification>();;
-=======
 		List<ScQtFinalJustification> finalJustificationList = new ArrayList<ScQtFinalJustification>();
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
->>>>>>> branch 'master' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 		Long qtFinalizationId = this.getManagedBean().getScQtFinalization().getFinalizationId();
 		
 		for(String reasonCode : reasonIdList){
