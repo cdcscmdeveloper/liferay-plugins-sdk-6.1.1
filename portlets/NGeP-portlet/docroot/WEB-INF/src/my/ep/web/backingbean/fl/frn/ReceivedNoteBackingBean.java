@@ -857,6 +857,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
 						.getOrgProfileId());
 				userReqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
+				userReqDTO.setNotify(Boolean.TRUE);
 				userReqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				userReqDTO.setDocNo(getManagedBean().getFulfilmentNote().getFulfilmentNoteNo());
 				UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);

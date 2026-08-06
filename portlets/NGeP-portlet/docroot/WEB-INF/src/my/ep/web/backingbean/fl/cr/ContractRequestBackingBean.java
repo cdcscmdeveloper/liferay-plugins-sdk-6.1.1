@@ -5449,6 +5449,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					userReqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
 					userReqDTO.setDocType(getManagedBean().getFlRequest().getDocType());
 					userReqDTO.setDocNo(getManagedBean().getFlRequest().getDocNo());
+					userReqDTO.setNotify(Boolean.TRUE);
 					UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
 					if (resDTO.getUserStatus().equals(2)) {
 						getManagedBean().setAssignNewUser(Boolean.TRUE);

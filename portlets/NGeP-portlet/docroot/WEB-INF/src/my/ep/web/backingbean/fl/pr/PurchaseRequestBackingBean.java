@@ -3646,6 +3646,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
 							.getOrgProfileId());
 					userReqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
+					userReqDTO.setNotify(Boolean.TRUE);	
 					userReqDTO.setDocType(getManagedBean().getFulfilmentRequest().getDocType());
 					userReqDTO.setDocNo(getManagedBean().getFulfilmentRequest().getDocNo());
 					UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
