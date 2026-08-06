@@ -237,6 +237,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		approvalCategories
 		.add(ParameterConst.APPROVAL_CATEGORY_PROCUREMENT_BOARD);
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_OTHERS);
+		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_EGPA);//#38107
 
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		searchBean
@@ -4034,9 +4035,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);	
 
 		//#35500 EPV Start
-		Long currentStatus = scQt.getQtStatus().getStatusId();
-		List<Object[]> supplierUserIds = null;
-		supplierUserIds = detailSO.getSupplierUserIds(scQt, currentStatus);
+		SCQuotationTenderDataType dataType = (SCQuotationTenderDataType) this.getManagedBean().getPayLoad();
+		List<String>supplierUserIds = dataType.getSupplierList();
 		if  (supplierUserIds != null && CollectionUtils.isNotEmpty(supplierUserIds)){
 			auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_SUBMIT : QTAuditConstant.PROCESS_FLAG_REJECT);			
 		}else{
@@ -4071,7 +4071,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			List<ScActor> scActorsList = actorSO.retreiveActorByDocTypesDocIdUserId(reqDTO).getScActorList();
 			if(null!=scActorsList && !scActorsList.isEmpty()){
 				for (ScActor scActor : scActorsList){
-					if (scActor.getRoleCode().equals(RoleCode.PPB_SECRETARY) || scActor.getRoleCode().equals(RoleCode.FPB_SECRETARY)){
+					if (scActor.getRoleCode().equals(RoleCode.PPB_SECRETARY.value()) || scActor.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())){
 						return scActor;
 					}
 				}
