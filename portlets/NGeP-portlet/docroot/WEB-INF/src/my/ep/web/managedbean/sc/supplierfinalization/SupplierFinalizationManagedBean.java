@@ -272,8 +272,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean allSupplierDisagreeEPV;//#21692
 	// 26247 - start
 	private List<String> disabledSupplierIds;
-
 	// 26247 - end
+	
+	// #35320 - Start
+	private String selectedSupplierOfferedPrice;
+	// #35320 - End
+
+	
 
 	/**
 	 * @return the activeIndex
@@ -2328,4 +2333,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	// 26247 - end
 
+	
+	// #35320 - Start
+	public String getSelectedSupplierOfferedPrice() {
+		return selectedSupplierOfferedPrice;
+	}
+
+	public void setSelectedSupplierOfferedPrice(
+			String selectedSupplierOfferedPrice) {
+		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
+	}// #35320 - End	
 }
