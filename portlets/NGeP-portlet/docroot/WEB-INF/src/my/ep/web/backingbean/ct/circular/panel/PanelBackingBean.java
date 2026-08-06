@@ -2946,9 +2946,10 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 * Method used to retrieve the available approverList base on doc type 
 	 * during Cancel Circular Request 
 	 */
-	public void retrieveApproverList(String circularDocType) {
+	public void retrieveApproverList(String circularDocType) {//Fix - #34367
 		getManagedBean().getApproverModel().setSource(getAvailableApproverList(getApproverRoleCodeByDocType()));
 		getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+		//Start Fix - #34367
 		if (isShowValidation && circularDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) {
 			Iterator<FacesMessage> iterator = FacesContext.getCurrentInstance().getMessages("circularRulesValidation");
 			while (iterator.hasNext()) {
@@ -2960,6 +2961,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			getManagedBean().setOutComes(null);
 			new PanelBackingBean();
 		}
+		//End Fix - #34367
 	}
 
 	/**
