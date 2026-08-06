@@ -3167,9 +3167,8 @@ public class SupplierFinalizationBackingBean extends
 								IQTSuppFinalizationSO.class);
 				saveQtFinalJustification(qtSuppFinalizationSO);
 			}				
-			//34860 end
 			updateBPMTask(outcome, null, reqDTO);
-			
+			//34860 end
 			// 38523 - refactor code - end
 			// 38523 - indenting codes - end
 		}
