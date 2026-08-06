@@ -267,7 +267,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		if (panelDoctype == null && circulaResDTO.getCircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
 			String[] outComes = this.getManagedBean().getOutComes();
 			List<String> list = new ArrayList<>(Arrays.asList(outComes));
-			removeUnnecessaryOutcomes(list);
+			removeButtonForInactivePanel(list);
 		}
 		//End Fix - #34367
 		circularReqDTO.setCircularVerId(dataType.getDocId());
@@ -443,7 +443,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				if (panelDoctype == null && circularResDTO.getCancelcircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
 					String[] outComes = getManagedBean().getOutComes();
 					List<String> list = new ArrayList<>(Arrays.asList(outComes));
-					removeUnnecessaryOutcomes(list);
+					removeButtonForInactivePanel(list);
 				} else {
 					removeFacesValidationMessage(circularResDTO);
 				}
@@ -519,9 +519,17 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	
 	//Start - Fix #34367
 	/**
+	 * This method is invoked when the specified PTJ does not exist in any
+	 * configured rule constants in Profile Management, such as PTJCC or PTJCO.
+	 * <p>
+	 * It retains only the CANCEL and REJECT actions and removes all other
+	 * available actions.
+	 * </p>
+	 *
 	 * @param list
+	 *            the list of actions to be updated
 	 */
-	private void removeUnnecessaryOutcomes(List<String> list) {
+	private void removeButtonForInactivePanel(List<String> list) {
 		String[] outComes;
 		if (list.contains(BpmOutcomeConst.BPM_SUBMIT) || list.contains(BpmOutcomeConst.BPM_APPROVE) || list.contains(BpmOutcomeConst.BPM_REVISE)) {
 			list.remove(BpmOutcomeConst.BPM_SUBMIT);
