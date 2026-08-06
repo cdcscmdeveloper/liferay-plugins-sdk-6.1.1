@@ -2011,7 +2011,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(!isDanExists()){
 					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);//28719
 					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.toString());
+					userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.value());
 					userReqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 					UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 					if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){

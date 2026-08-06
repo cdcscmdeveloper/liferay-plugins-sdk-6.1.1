@@ -684,7 +684,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			FlFulfilmentRequest flRequest = getManagedBean().getAdjustment().getFlRequest();
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.toString());
+			userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.value());
 			userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 			if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
