@@ -3160,6 +3160,7 @@ public class SupplierFinalizationBackingBean extends
 			if (createNewBP) {
 				addBriefingPaper(scQtFinalization);
 			}
+			// updateBPMTask(outcome, null, reqDTO); // #34860 remove
 			//34860 start
 			if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
