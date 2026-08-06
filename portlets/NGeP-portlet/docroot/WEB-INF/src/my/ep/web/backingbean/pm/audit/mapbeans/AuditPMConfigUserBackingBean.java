@@ -84,6 +84,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	String orgName;
 	BigInteger orgProfileId;
 	String orgType;
+	boolean isBrandNew; // 40810
 	
 	DecimalFormat df = new DecimalFormat("#,##0.00");
 
@@ -118,31 +119,28 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		auditPMReqDTO = new AuditPMReqDTO();
 		
 		managedBeans = (ProfileManagementManagedBean) manageBean;
+		isBrandNew = managedBeans.isUserGrpBrandNew(); //40810
 		
 		this.roleCode = roleCode;
-		this.docType = managedBeans.getSelectedUser().isBrandNew() ? 
-				managedBeans.getNewAuditPmUser().getUserName() : managedBeans.getSelectedUser().getUserName();
-		this.docId = managedBeans.getOldAuditPmUserOrg() != null ? BigInteger.valueOf(managedBeans.getOldAuditPmUserOrg().getUserOrgId()) : 
-			BigInteger.valueOf(managedBeans.getBrandNewUserOrgId());
-		this.docGroupId = managedBeans.getSelectedUser().isBrandNew() ? 
-				BigInteger.valueOf(managedBeans.getNewAuditPmUser().getUserId()) : 
-					BigInteger.valueOf(managedBeans.getSelectedUser().getUserId());
-		this.docNo = managedBeans.getSelectedUser().isBrandNew() ? 
-				managedBeans.getNewAuditPmUser().getIdentificationNo() : 
-					managedBeans.getSelectedUser().getIdentificationNo();
-		this.lvl3CodeIndex = managedBeans.getSelectedUserOrg().isBrandNew() ? 
-				managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue() : 
-					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue();
-		this.orgName = managedBeans.getSelectedUserOrg().isBrandNew() ? 
-				managedBeans.getCurrentActiveOrg().getPmOrgValidity().getOrgName() : 
-					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgName();
-		this.orgProfileId = managedBeans.getSelectedUserOrg().isBrandNew() ? 
-				BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg().getUserOrgId()) : 
-					BigInteger.valueOf(managedBeans.getSelectedUserOrg().getUserOrgId());
-		this.orgType = managedBeans.getSelectedUserOrg().isBrandNew() ? 
-				managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode() : 
-					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode();
-				
+		this.docType = isBrandNew ? managedBeans.getNewAuditPmUser().getUserName() : managedBeans.getSelectedUser()
+				.getUserName();
+		this.docId = managedBeans.getOldAuditPmUserOrg() != null ? BigInteger.valueOf(managedBeans
+				.getOldAuditPmUserOrg().getUserOrgId()) : BigInteger.valueOf(managedBeans.getBrandNewUserOrgId());
+		this.docGroupId = isBrandNew ? BigInteger.valueOf(managedBeans.getNewAuditPmUser().getUserId()) : BigInteger
+				.valueOf(managedBeans.getSelectedUser().getUserId());
+		this.docNo = isBrandNew ? managedBeans.getNewAuditPmUser().getIdentificationNo() : managedBeans
+				.getSelectedUser().getIdentificationNo();
+		this.lvl3CodeIndex = isBrandNew ? managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode()
+				.getParameterId().intValue() : managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode()
+				.getParameterId().intValue();
+		this.orgName = isBrandNew ? managedBeans.getCurrentActiveOrg().getPmOrgValidity().getOrgName() : managedBeans
+				.getSelectedUserOrg().getPmOrgProfile().getOrgName();
+		this.orgProfileId = isBrandNew ? BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg().getUserOrgId())
+				: BigInteger.valueOf(managedBeans.getSelectedUserOrg().getUserOrgId());
+		this.orgType = isBrandNew ? managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode()
+				.getParameterCode() : managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode()
+				.getParameterCode();
+
 		this.objList = new ArrayList<>();
 		
 		if(managedBeans.getOrgCategory() == AuditConst.PM_AUD_FEDERAL && federalGovUsers.contains(orgType)){
@@ -524,7 +522,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);
 		}
-		dtlObj.setGroupOrgProfileId(managedBeans.getSelectedUser().isBrandNew() ? 
+		// 40810
+		dtlObj.setGroupOrgProfileId(isBrandNew ? 
 				BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgProfileId()) : 
 					BigInteger.valueOf(managedBeans.getOldAuditPmUserOrg().getPmOrgProfile().getOrgProfileId()));
 		dtlObj.setNewValue(newValue);
