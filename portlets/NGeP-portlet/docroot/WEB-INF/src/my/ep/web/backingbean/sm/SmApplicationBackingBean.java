@@ -19178,13 +19178,19 @@ public class SmApplicationBackingBean extends
 	 */
 	public void saveOtherDescriptionEdit() {
 		try {
+			
+			String roleCode = "";
 			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 			List<SmSuppCatOtherDescHistoryReqDTO> supplierEditList = new ArrayList<>();
-			
+			Long userId = getUserIdSessionFromLoginId();
+			roleCode = SmApplicationUtil.epRoleNameByUserId(userId).getPmRole().getRoleCode();
+
 			reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
-			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			reqDTO.setCreatedBy(userId);
+			reqDTO.setChangeBy(reqDTO.getCreatedBy());
+			reqDTO.setRoleCode(roleCode);
 			reqDTO.setSdm(false);
 
 			if (!getManagedBean().isOtherDescChangeSupplier()){
@@ -19234,12 +19240,16 @@ public class SmApplicationBackingBean extends
 					createdBy = getManagedBean().getHistorySuppCategory().getSmAppl().getCreatedBy();
 				}
 				
+				roleCode = SmApplicationUtil.epRoleNameByUserId(createdBy).getPmRole().getRoleCode();
+
 				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
 				suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
 				suppReqDTO.setCreatedBy(createdBy);
+				suppReqDTO.setChangeBy(reqDTO.getChangeBy());
+				suppReqDTO.setRoleCode(roleCode);
 				suppReqDTO.setSdm(false);
 				
 				supplierEditList.add(suppReqDTO);
