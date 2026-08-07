@@ -2246,6 +2246,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				paymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
 				paymentVO.setTotalAmount(paymentVO.getPrice());
 				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+				// #RUU
+				additionalFee();
 
 				getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
 				getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
@@ -2256,9 +2258,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 				for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
 						.getPaymentDetailsVOList()) {
-					getManagedBean().setTotalPaymentAmount(
-							getManagedBean().getTotalPaymentAmount().add(
-									paymentDetailsVO.getPrice()));
+					// #RUU Start
+					getManagedBean().setTotalPaymentAmount(getManagedBean().getTotalPaymentAmount().add(paymentDetailsVO.getTotalAmount()));
+					// #RUU End
 				}
 				getManagedBean().setTotalPaymentAmount(
 						getManagedBean().getTotalPaymentAmount().setScale(2,
@@ -2778,6 +2780,47 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 	}
 	
+	// #RUU Start
+	private void additionalFee() {
+		List<SmPaymentDetailsVO> tempPaymentDetailsVOList = new ArrayList<>();
+		for(SmPaymentDetailsVO currPaymentVO : getManagedBean().getPaymentDetailsVOList()){
+			if(!currPaymentVO.isRecalculate()){
+				tempPaymentDetailsVOList.add(currPaymentVO);
+			}
+		}
+		getManagedBean().setPaymentDetailsVOList(tempPaymentDetailsVOList);
+		SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
+		if(null != this.getManagedBean().getActiveCategoryList() && !this.getManagedBean().getActiveCategoryList().isEmpty()){
+			List<SmSupplierCategory> normalCatCode = new ArrayList<>();
+			List<SmSupplierCategory> specialCatCode = new ArrayList<>();
+			for (SmSupplierCategory catCode : getManagedBean().getActiveCategoryList()) {
+				if (!catCode.isSpecialCategory()) {
+					normalCatCode.add(catCode);
+				} else if (catCode.isSpecialCategory()) {
+					specialCatCode.add(catCode);
+				}
+			}
+			if (!normalCatCode.isEmpty() && normalCatCode.size() > 15) {
+				paymentVO = new SmPaymentDetailsVO();
+				paymentVO.setDetails("Normal Code Category Fee");
+				paymentVO.setPrice(new BigDecimal(1000));
+				paymentVO.setQuantity(normalCatCode.size() - 15);
+				paymentVO.setTotalAmount(paymentVO.getPrice().multiply(BigDecimal.valueOf(paymentVO.getQuantity())));
+				paymentVO.setRecalculate(true);
+				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+			}
+			if (!specialCatCode.isEmpty()) {
+				paymentVO = new SmPaymentDetailsVO();
+				paymentVO.setDetails("Special Code Category Fee");
+				paymentVO.setPrice(new BigDecimal(1000));
+				paymentVO.setQuantity(specialCatCode.size());
+				paymentVO.setTotalAmount(paymentVO.getPrice().multiply(BigDecimal.valueOf(paymentVO.getQuantity())));
+				paymentVO.setRecalculate(true);
+				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+			}
+		}
+	}
+	// #RUU End
 	//#26238
 	private void checkActiveDisciplinaryAction(SmSupplier currSupp, String applType){
 		if (currSupp == null){
@@ -3406,6 +3449,26 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			showRegistrationDecisionUI();
 		}
 		// 37925 END
+		// #RUU Start
+		if (getManagedBean().isSupplierUser() && outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) {
+			additionalFee();
+			getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
+			getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
+			getManagedBean().setGstPercentageLabels(
+					SmCommonUtil.getMessage("lbl.sm.gst.percent",
+							new String[] { getManagedBean().getGstAmount()
+									.toString() }));
+			for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
+					.getPaymentDetailsVOList()) {
+				getManagedBean().setTotalPaymentAmount(
+						getManagedBean().getTotalPaymentAmount().add(
+								paymentDetailsVO.getTotalAmount()));
+			}
+			getManagedBean().setTotalPaymentAmount(
+					getManagedBean().getTotalPaymentAmount().setScale(2,
+							BigDecimal.ROUND_UP));
+		}
+		// #RUU End
 	}
 
 	/**

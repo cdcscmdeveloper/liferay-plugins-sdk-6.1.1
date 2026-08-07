@@ -13,6 +13,10 @@ public class SmPaymentDetailsVO implements Serializable {
 	private String details;
 	private BigDecimal price;
 	private BigDecimal totalAmount;
+	// #RUU Start
+	private int quantity;
+	private boolean recalculate;
+	// #RUU End
 
 	public String getDetails() {
 		return details;
@@ -37,5 +41,22 @@ public class SmPaymentDetailsVO implements Serializable {
 	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
+	// #RUU Start
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public boolean isRecalculate() {
+		return recalculate;
+	}
+
+	public void setRecalculate(boolean recalculate) {
+		this.recalculate = recalculate;
+	}
+	// #RUU end
 
 }
