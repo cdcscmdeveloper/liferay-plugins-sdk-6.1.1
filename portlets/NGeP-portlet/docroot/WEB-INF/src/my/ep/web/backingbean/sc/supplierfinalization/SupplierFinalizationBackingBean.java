@@ -3160,7 +3160,7 @@ public class SupplierFinalizationBackingBean extends
 			if (createNewBP) {
 				addBriefingPaper(scQtFinalization);
 			}
-			updateBPMTask(outcome, null, reqDTO);
+			// updateBPMTask(outcome, null, reqDTO); // #34860 remove
 			//34860 start
 			if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -3168,6 +3168,7 @@ public class SupplierFinalizationBackingBean extends
 								IQTSuppFinalizationSO.class);
 				saveQtFinalJustification(qtSuppFinalizationSO);
 			}				
+			updateBPMTask(outcome, null, reqDTO);
 			//34860 end
 			// 38523 - refactor code - end
 			// 38523 - indenting codes - end
@@ -8025,8 +8026,7 @@ return	remarksNotFound;
 				if (!qtRefinalized) {
 					scQtFinalization.setOnlineBiddingEndorse(null);
 				}
-				this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
-				this.getManagedBean().setSingleAward(true);
+				checkForMLOI(finalizationMethodStr);//#40396
 			} else {
 				this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
 				scQtFinalization.setOnlineBiddingEndorse(null);
@@ -13920,6 +13920,17 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return reasonDescs;
 	}
 	//#34860 End
-
+	
+	//#40396 - Start
+	private void checkForMLOI(String finalizationMethodStr) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
+			this.getManagedBean().setMultipleLoi(true);
+		} else {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+			this.getManagedBean().setSingleAward(true);
+		}
+	}
+	//#40396 - End
 }
 // ***19336
