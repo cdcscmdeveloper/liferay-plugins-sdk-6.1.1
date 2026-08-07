@@ -13354,8 +13354,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		checkStatus.add(SCProcessNameConst.PREPARE_QT_SCHEDULE);
 		checkStatus.add(SCProcessNameConst.REVISE_QT_SCHEDULE);
 		checkStatus.add(SCProcessNameConst.APPROVE_PUBLICATION);
-		checkStatus.add(SCProcessNameConst.REVISE_BPK);
-		checkStatus.add(SCProcessNameConst.APPROVE_BPK);
 		
 		if (checkStatus.contains(status)) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
