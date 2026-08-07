@@ -899,8 +899,8 @@ public boolean isSpecCommittee() {
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() 
-				|| null != publishDate && publishDate.before(effDate)) {
+		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() || null != publishDate
+				&& publishDate.before(effDate) || createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
