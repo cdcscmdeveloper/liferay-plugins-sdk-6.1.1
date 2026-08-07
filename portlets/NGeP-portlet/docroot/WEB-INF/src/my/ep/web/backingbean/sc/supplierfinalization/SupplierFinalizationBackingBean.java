@@ -3160,7 +3160,7 @@ public class SupplierFinalizationBackingBean extends
 			if (createNewBP) {
 				addBriefingPaper(scQtFinalization);
 			}
-			updateBPMTask(outcome, null, reqDTO);
+			// updateBPMTask(outcome, null, reqDTO); // #34860 remove
 			//34860 start
 			if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -3168,6 +3168,7 @@ public class SupplierFinalizationBackingBean extends
 								IQTSuppFinalizationSO.class);
 				saveQtFinalJustification(qtSuppFinalizationSO);
 			}				
+			updateBPMTask(outcome, null, reqDTO);
 			//34860 end
 			// 38523 - refactor code - end
 			// 38523 - indenting codes - end
