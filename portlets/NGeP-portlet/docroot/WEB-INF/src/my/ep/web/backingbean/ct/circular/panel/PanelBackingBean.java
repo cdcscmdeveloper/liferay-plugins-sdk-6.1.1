@@ -4055,11 +4055,11 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
            } else if(getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
                userRole = RoleCode.BPK_PQ_APPROVER.value();
            }
-           userListStatus = getLoginStatusForCancelCircularFromSP(getManagedBean().getCircularDocType(), 
-                getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), 
-                   getManagedBean().getApproverModel().getTarget(), 
+           userListStatus = getLoginStatusForCancelCircularFromSP(getManagedBean().getCircularDocType(),
+                getManagedBean().getCancelCircularReq().getCancelCircularReqNo(),
+                   getManagedBean().getApproverModel().getTarget(),
                 userRole);
-            handleInactiveUserValidation(action, userListStatus);
+            handleInactiveUserValidation(action, getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), userListStatus);
         }
         
         if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
@@ -4067,7 +4067,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
             
             userListStatus = validateInactiveUserForReviseFromCancelCircular(getManagedBean().getCircularDocType(), 
                 getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), 
-                RoleCode.BPK_CCA.value());
+                RoleCode.BPK_PCA.value());
             
             if (!userListStatus.isEmpty()) {
                  Long userStatus = null;
@@ -4080,7 +4080,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
                  
                  if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
                     log.info("xoxoxoxoxooxoxo REVISE + return 5");
-                    handleInactiveUserValidation(action, userListStatus);
+                    handleInactiveUserValidation(action, getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), userListStatus);
                  }
             }
         }
@@ -4097,7 +4097,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			userListStatus = getLoginStatusFromSP(
 					ctCircularVer.getCtCircular(), ctCircularVer,
 					getManagedBean().getApproverModel().getTarget(), userRole);
-			handleInactiveUserValidation(outcome, userListStatus);
+			handleInactiveUserValidation(outcome, ctCircularVer.getCtCircular().getCircularNo(), userListStatus);
 		}
 
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
@@ -4119,12 +4119,12 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 
 				if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
 					log.info("xoxoxoxoxooxoxo REVISE + return 5");
-					handleInactiveUserValidation(outcome, userListStatus);
+					handleInactiveUserValidation(outcome, ctCircularVer.getCtCircular().getCircularNo(), userListStatus);
 				}
 			}
 		}
 	}
-	
+
 	@Override
     protected CtCircularVer getCircularVer() {
     	return getManagedBean().getCircularVer();

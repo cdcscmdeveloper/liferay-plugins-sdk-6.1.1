@@ -206,18 +206,21 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	 * Handles inactive user validation during actions.
 	 *
 	 * @param outcome -action outcome such as SUBMIT or REVISE
+	 * @param docNo -circular/cancel-circular doc number to use when building
+	 * validation error messages, since it cannot be reliably derived from
+	 * {@link #getCircularVer()} (that is null for the cancel-circular flow)
 	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation. 
+	 * @throws EpException if inactive user conditions are met during validation.
 	 * Different error messages will be generated based on the returned error code.
 	 */
-	public void handleInactiveUserValidation(String outcome, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+	public void handleInactiveUserValidation(String outcome, String docNo, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
         try {
         	checkInactiveUserOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
         		selectedInactiveUsers
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(ex, selectedInactiveUsers);
+        	throw buildInactiveUserException(ex, docNo, selectedInactiveUsers);
         }
     }
 	
@@ -297,15 +300,16 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
      * @return localized {@link EpException} with resolved message
      * parameters
     */
-    protected EpException buildInactiveUserException(EpException ex, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+    protected EpException buildInactiveUserException(EpException ex, String docNo, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
     	log.info("Catch buildInactiveUserException");
-        
+
         String errorCode = ex.getMessage();
         log.info("BuildInactiveUserException errorCode : "+errorCode);
-        
+
         String[] messageKeys =
                 getInactiveUserMessageKeys(
                         errorCode,
+                        docNo,
                         getSelectedUserNames(selectedInactiveUsers),
                         ex.getParameters());
         
@@ -329,21 +333,17 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
      * Returns message parameters based on inactive user validation error code.
      *
      * @param errorCode -inactive user validation error code
+     * @param circularNo -circular/cancel-circular doc number, supplied by the
+     * caller since it cannot be reliably derived from {@link #getCircularVer()}
+     * (that is null for the cancel-circular flow)
      * @param selectedUserName -selected user name used in message parameter generation
      * @return message parameters for inactive user validation message
-     * 
+     *
      * NOTE:
      * Complexity is caused by explicit business error code mapping.
     */
-    private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserName, String[] parameters) {
+    private String[] getInactiveUserMessageKeys(String errorCode, String circularNo, String selectedUserName, String[] parameters) {
 
-    	CtCircularVer circularVer = getCircularVer();
-    	CtCircular ctCircular = circularVer != null ? circularVer.getCtCircular() : null;
-    	if (ctCircular == null) {
-    		return null;
-    	}
-    	String circularNo = ctCircular.getCircularNo();
-    	
         if (MessageConst.ERROR_100068.equals(errorCode)
         		|| MessageConst.ERROR_100070.equals(errorCode)) {
         	if(parameters != null){

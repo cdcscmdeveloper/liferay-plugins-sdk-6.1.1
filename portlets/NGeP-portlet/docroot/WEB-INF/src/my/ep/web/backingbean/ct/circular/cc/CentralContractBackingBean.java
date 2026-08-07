@@ -2531,7 +2531,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 			userListStatus = getLoginStatusFromSP(
 					circular, ctCircularVer,
 					getManagedBean().getApproverModel().getTarget(), userRole);
-			handleInactiveUserValidation(outcome, userListStatus);
+			handleInactiveUserValidation(outcome, circular.getCircularNo(), userListStatus);
 		}
 
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
@@ -2553,7 +2553,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 
 				if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
 					log.info("xoxoxoxoxooxoxo REVISE + return 5");
-					handleInactiveUserValidation(outcome, userListStatus);
+					handleInactiveUserValidation(outcome, circular.getCircularNo(), userListStatus);
 				}
 			}
 		}
