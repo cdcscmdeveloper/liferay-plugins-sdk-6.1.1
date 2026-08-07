@@ -13923,14 +13923,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	//#40396 - Start
 	private void checkForMLOI(String finalizationMethodStr) {
-	if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
-		this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
-		this.getManagedBean().setMultipleLoi(true);
-	} else {
-		this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
-		this.getManagedBean().setSingleAward(true);
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
+			this.getManagedBean().setMultipleLoi(true);
+		} else {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+			this.getManagedBean().setSingleAward(true);
+		}
 	}
-}
-//#40396 - End
+	//#40396 - End
 }
 // ***19336
