@@ -8026,8 +8026,7 @@ return	remarksNotFound;
 				if (!qtRefinalized) {
 					scQtFinalization.setOnlineBiddingEndorse(null);
 				}
-				this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
-				this.getManagedBean().setSingleAward(true);
+				checkForMLOI(finalizationMethodStr);//#40396
 			} else {
 				this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
 				scQtFinalization.setOnlineBiddingEndorse(null);
@@ -13922,14 +13921,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	}
 	//#34860 End
 	
-	// #40396 - Start
-	/**
-	 * @return
-	 */
-	public boolean isQTCancelledBidSchedule() {
-		ScQt scQt = this.getManagedBean().getScQt();
-		return getQTSuppFinalizationSO().isQTCancelledBidSchedule(scQt.getQtId());
+	//#40396 - Start
+	private void checkForMLOI(String finalizationMethodStr) {
+	if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+		this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
+		this.getManagedBean().setMultipleLoi(true);
+	} else {
+		this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+		this.getManagedBean().setSingleAward(true);
 	}
-	// #40396 - End
+}
+//#40396 - End
 }
 // ***19336
