@@ -484,14 +484,15 @@ public class SimpleQuoteBackingBean extends
 	protected void initializeProcurementOptionsForQuote(ScQuote scQuote) {
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
+		String parameterType = scQuote.getProcurementType().getParameterType();
 
 		if (scQuote.getProcurementType() != null) {
 			if (scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT, Boolean.TRUE));
+						getRadioButtonCodeValues(parameterType, Boolean.TRUE));
 			} else {
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT, Boolean.FALSE));
+						getRadioButtonCodeValues(parameterType, Boolean.FALSE));
 			}
 		}
 
@@ -499,7 +500,7 @@ public class SimpleQuoteBackingBean extends
 			disableSpecialItemRadioButton();
 		}
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
+		getManagedBean().setParameterTypeRPT(parameterType);
 
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)
@@ -8521,7 +8522,8 @@ public class SimpleQuoteBackingBean extends
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			
-			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+					|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
 				PanelBackingBean ppBB = new PanelBackingBean();
 				ppBB.getManagedBean().setSelectionOfZone(false);
 				ppBB.getManagedBean().setSelectedPanelItems(null);

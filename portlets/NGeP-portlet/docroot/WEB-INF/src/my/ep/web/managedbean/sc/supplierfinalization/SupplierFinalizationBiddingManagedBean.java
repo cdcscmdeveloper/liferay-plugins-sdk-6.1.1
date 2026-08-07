@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.supplierfinalization;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
@@ -176,6 +178,28 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private boolean flagBranchDeleted = false;
 
 	// #28777 & #29729 - End
+	
+	//#25651 - Start
+	private static final List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
+	private static List<String> setDirectDownloadDocDefKeys(){
+		List<String> list = new ArrayList<>();
+		
+		list.add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+		list.add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT);
+		
+		return list;
+	}
+
+	/**
+	 * @return the directdownloaddocdefkeys
+	 */
+	public static List<String> getDirectdownloaddocdefkeys() {
+		return directDownloadDocDefKeys;
+	}
+	//#25651 - End
 	
 	/**
 	 * @return the onlineBiddingActiveIndex

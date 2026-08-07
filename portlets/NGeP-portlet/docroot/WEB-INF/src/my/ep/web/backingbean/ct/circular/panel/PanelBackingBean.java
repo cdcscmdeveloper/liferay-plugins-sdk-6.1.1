@@ -9,6 +9,7 @@ import java.io.IOException;//#28713 start basri
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays; //Fix - #34367
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -118,7 +119,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils; // #39594
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
@@ -166,19 +166,45 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	private static final String PROCESS_PANEL_PAGE = "/xhtml/ct/circular/panel/circularBase.xhtml?faces-redirect=true"; //#33533
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	
+	private String confirmationContentMsg;//34442 
+	private boolean isShowValidation = false;//Fix-#34367
+	private final String validationMsgId = "circularRulesValidation";//Fix-#34367
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
 	 */
 	public PanelBackingBean(){
-
 		/*Execute first time retrieve from maintenance*/	
 		if(getManagedBean().getOutComes()==null) {
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			//Start Fix - #34367
+			getPTJOwner();
+			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId()); 
+			if (panelDoctype != null) {
+				getManagedBean().setOutComes(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+			} else {
+				if (getOwnerOrgProfile() != null && getOwnerOrgProfile().getPmOrgValidity() != null) {
+					isShowValidation = true;
+					FacesContext.getCurrentInstance().addMessage(
+							validationMsgId,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+									MessageConst.ERROR_750095,
+									new String[] { ResourceBundleUtils.getMessage(getOwnerOrgProfile()
+											.getPmOrgValidity().getOrgName(), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				}
+			}
+			//End Fix - #34367
 			getManagedBean().setCircularVer(new CtCircularVer());
 			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
+			//#37620,#34367 - Start
 			PmStatus status = new PmStatus();
-			status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
+			if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
+				status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
+			} else {
+				status.setStatusId(ContractStatusConst.MQ_PENDING_SUBMISSION);
+			}
+			//#37620,#34367 - End			
 			getManagedBean().getCircularVer().setStatus(status);
 			status = new PmStatus();
 			status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
@@ -207,25 +233,44 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 */
 	public void preRenderCircular() {		
 		renewSesionObject();
-		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getPTJOwner();//Fix - #34367
+		// #37620,#34367 - Start
+		String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
+		if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
+			getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		} else {
+			getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
+		}
+		// #37620,#34367 - End
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 
 	/**
 	 * Method used to retrieve the information and render it on screen.
 	 */
-	public void preRenderView() {		
+	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		if(taskId==null) 
 			return;
-
-		CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});			
-		CircularReqDTO circularReqDTO = new CircularReqDTO();
-		circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
+		//Start Fix - #34367
+		ICircularSO circularSO = null;
+		circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+		CircularReqDTO circularReqDTO = new CircularReqDTO();	
+		getPTJOwner();
+		String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
+		CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[] { BpmOutcomeConst.BPM_SAVE });
+		circularReqDTO.setCircularDocNo(dataType.getDocNo());
+		CircularResDTO circulaResDTO = circularSO.getCircularTypeByDocNo(circularReqDTO);	
+		if (panelDoctype == null && circulaResDTO.getCircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+			String[] outComes = this.getManagedBean().getOutComes();
+			List<String> list = new ArrayList<>(Arrays.asList(outComes));
+			removeButtonForInactivePanel(list);
+		}
+		//End Fix - #34367
+		circularReqDTO.setCircularVerId(dataType.getDocId());
 		setPanelCircularVar(circularReqDTO);
 	}
 
@@ -249,6 +294,13 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			resDTO= circularSO.retrieveCircularVerById(reqDTO);
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+			
+			if (getManagedBean().getCircularVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
+				getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			} else {
+				getManagedBean().setFileDirectory(baseDir + "/CT/Circulars/" + ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
+			}
+			
 
 			if(getManagedBean().getCircularVer().getExtendStartDate() != null && getManagedBean().getCircularVer().getExtendEndDate() != null){
 				getManagedBean().setCircularExtension(true);
@@ -293,7 +345,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			initializeCtCircularPidReasons(getManagedBean().getCircularVer(), getManagedBean().getCtCircularPidReasons());
 			// #39594 - End
 
-			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		} catch (Exception e) {
@@ -345,8 +397,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	public void preRenderCancelCircular() {
 		renewSesionObject();
 		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-		FacesContext fc = FacesContext.getCurrentInstance();
 		getPTJOwner();//Fix - #34367
+		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
 	}
 
@@ -356,33 +408,48 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 * 
 	 */
 	public void preRenderViewCancelReq() {
+		//Start Fix - #34367
+		getPTJOwner();
+		String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
 		ICircularSO circularSO = null;
+		//End Fix - #34367
 		try {
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
 			
 			//#33533 start
+
 			if(getManagedBean().getTaskIdFromTaskList()!=null && !getManagedBean().isChkCancelPage()){
 				taskId = getManagedBean().getTaskIdFromTaskList();
 				getManagedBean().setTaskIdFromTaskList(null);
 			}
-			
 			if(taskId==null) {
-				if((isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
+				if(getManagedBean().getCancelCircularReq()==null && // 34442
+						(isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
 					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
 				}
 				return;
 			}
-			
+			//Start - #34367
 			CircularReqDTO cancelReqDTO = new CircularReqDTO();
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);					
 			if(getManagedBean().getCancelCircularReq()!=null && getManagedBean().getCancelCircularReq().getCancelCircularReqId()!=null){
-				cancelReqDTO.setCancelCircularReqId(getManagedBean().getCancelCircularReq().getCancelCircularReqId().longValue());
-			}else{
-				CTCircularCancellationDataType dataType = super.getBpmTaskDetails(CTCircularCancellationDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});						
-				cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
+				cancelReqDTO.setCancelCircularReqId(getManagedBean().getCancelCircularReq().getCancelCircularReqId());
+			} else {
+				CTCircularCancellationDataType dataType = super.getBpmTaskDetails(CTCircularCancellationDataType.class,new String[] { BpmOutcomeConst.BPM_SAVE });
+				cancelReqDTO.setCancelCircularReqId(dataType.getDocId());
+				CircularResDTO circularResDTO = circularSO.getCancelCircularType(cancelReqDTO);
+				if (panelDoctype == null && circularResDTO.getCancelcircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+					String[] outComes = getManagedBean().getOutComes();
+					List<String> list = new ArrayList<>(Arrays.asList(outComes));
+					removeButtonForInactivePanel(list);
+				} else {
+					removeFacesValidationMessage(circularResDTO);
+				}
+				cancelReqDTO.setCancelCircularReqId(dataType.getDocId());
 			}
+			//End - #34367
 			//#33533 end
 
 			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
@@ -401,6 +468,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			} else {
 				getManagedBean().setCircularDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 				getManagedBean().setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+				
 			}
 			// #37620,#34367 - End
 
@@ -448,6 +516,44 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			circularSO = null;
 		}		
 	}
+	
+	//Start - Fix #34367
+	/**
+	 * This method is invoked when the specified PTJ does not exist in any
+	 * configured rule constants in Profile Management, such as PTJCC or PTJCO.
+	 * <p>
+	 * It retains only the CANCEL and REJECT actions and removes all other
+	 * available actions.
+	 * </p>
+	 *
+	 * @param list
+	 *            the list of actions to be updated
+	 */
+	private void removeButtonForInactivePanel(List<String> list) {
+		String[] outComes;
+		if (list.contains(BpmOutcomeConst.BPM_SUBMIT) || list.contains(BpmOutcomeConst.BPM_APPROVE) || list.contains(BpmOutcomeConst.BPM_REVISE)) {
+			list.remove(BpmOutcomeConst.BPM_SUBMIT);
+			list.remove(BpmOutcomeConst.BPM_APPROVE);
+			list.remove(BpmOutcomeConst.BPM_REVISE);
+			list.remove(BpmOutcomeConst.BPM_SAVE);
+			outComes = list.toArray(new String[0]);
+			getManagedBean().setOutComes(outComes);
+		}
+	}
+	
+	/**
+	 * @param circularResDTO
+	 */
+	private void removeFacesValidationMessage(CircularResDTO circularResDTO) {
+		if (isShowValidation &&  circularResDTO.getCancelcircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+			Iterator<FacesMessage> iterator = FacesContext.getCurrentInstance().getMessages(validationMsgId);
+			while (iterator.hasNext()) {
+				iterator.next();
+				iterator.remove();
+			}
+		}
+	}
+	//End - Fix #34367
 
 	/**
 	 * The method used to navigate to contract maintenance screen.
@@ -740,6 +846,49 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		}
 		return "circularBase.xhtml";
 	}
+	
+	// 34442 - start
+	/**
+	 * Handles the action button click - shows the confirmation dialog for
+	 * approve actions, or proceeds directly for other actions.
+	 *
+	 * @param action the BPM outcome action being performed
+	 * @return {@code null} if the confirmation dialog was shown; otherwise
+	 *         the navigation outcome from {@link #saveCancelCircularReq(String)}
+	 */
+	public String showConfirmationDialog(String action) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			String docType = getManagedBean().getCircularDocType();
+
+			boolean isPanelCircular = ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(docType)
+					|| ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY.equalsIgnoreCase(docType);
+
+			if (isPanelCircular) {
+				setConfirmationContentMsg(ResourceBundleUtils.getMessage("lbl.ct.pq.cancel.rev.app.confirm",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			} else {
+				setConfirmationContentMsg(ResourceBundleUtils.getMessage("lbl.ct.cq.cancel.rev.app.confirm",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			}
+			getManagedBean().setAction(action);
+			RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			return null;
+		} else {
+			return saveCancelCircularReq(action);
+		}
+	}
+	
+	/**
+	 * Saves the cancel circular request using the action currently set on
+	 * the managed bean.
+	 *
+	 * @return the navigation outcome from {@link #saveCancelCircularReq(String)}
+	 */
+	public String saveCancelCircularReq() {
+		String action = getManagedBean().getAction();
+		return saveCancelCircularReq(action);
+	}
+	// 34442 - end
 
 	/**
 	 *Method used to save cancel  circular details into database
@@ -2707,7 +2856,20 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			// set action
 			getManagedBean().setAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			//#34442 - start
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				setConfirmationContentMsg(
+					    getConfirmationContent(
+					        String.valueOf(getManagedBean().getCircularVer().getStatus().getStatusId())
+					    )
+					);
+				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#34442 - end
 			return null;
 		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
@@ -2744,6 +2906,23 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		setPanelCircularVar(reqDTO);
 		return "/xhtml/ct/circular/portal/panelCircularTab.xhtml?faces-redirect=true";
 	}
+	
+	// start - 36503
+	/**
+	 * Determines whether the Category Code tab should be displayed.
+	 * The tab is hidden when the panel circular is accessed
+	 * from the Purchase Request (PR) or Purchase Order (PO) modules.
+	 *
+	 * @return true if the Category Code tab should be shown,
+	 *         false otherwise.
+	 */
+	public boolean isShowCategoryCodeTab() {
+		String gotoPreviewPage = getManagedBean().getGotoPreviewPage();
+
+		return !"/xhtml/fl/purchaserequest/prBasePage.xhtml".equals(gotoPreviewPage)
+				&& !"/xhtml/fl/purchaseorder/poBasePage.xhtml".equals(gotoPreviewPage);
+	}
+	// end - 36503
 
 	/**
 	 * Method used to set new effective date  for panel circular
@@ -2783,9 +2962,22 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 * Method used to retrieve the available approverList base on doc type 
 	 * during Cancel Circular Request 
 	 */
-	public void retrieveApproverList() {		
+	public void retrieveApproverList(String circularDocType) {//Fix - #34367
 		getManagedBean().getApproverModel().setSource(getAvailableApproverList(getApproverRoleCodeByDocType()));
 		getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+		//Start Fix - #34367
+		if (isShowValidation && circularDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) {
+			Iterator<FacesMessage> iterator = FacesContext.getCurrentInstance().getMessages(validationMsgId);
+			while (iterator.hasNext()) {
+				iterator.next();
+				iterator.remove();
+			}
+			getManagedBean().setOutComes(new String[] {BpmOutcomeConst.BPM_SUBMIT});
+		}else{
+			getManagedBean().setOutComes(null);
+			new PanelBackingBean();
+		}
+		//End Fix - #34367
 	}
 
 	/**
@@ -3640,18 +3832,20 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
                 + pmCategoryL3.getPmCategoryL2().getCategoryL2Code()
                 + pmCategoryL3.getCategoryL3Code();
 
-		String categoryName = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryName();
+		String categoryName = pmCategoryL3.getCategoryName(); //#40876
 
 		// Duplicate Check
 		for (CtPanelCategory existing : ctCategoryList) {
 			if (existing.getPmCategoryL1().getCategoryL1Id().equals(l1Id) &&
 				existing.getPmCategoryL2().getCategoryL2Id().equals(l2Id) &&
 				existing.getPmCategoryL3().getCategoryL3Id().equals(l3Id)) {
+				
 				throw new EpException(MessageConst.ERROR_750090, new String[] {categoryCode, categoryName}); // Duplicate message Error
 			}
 		}
 		
 		ctCategoryList.add(createPanelCategory(pmCategoryL3, circularVer));
+		getManagedBean().setAutoUpdate(Boolean.TRUE); //#40498,#30014
 	}
 	
 	/**
@@ -3747,5 +3941,32 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
 	}
 	//#35506 - End
+	
+	// 34442 - start
+	public String getConfirmationContentMsg() {
+		return confirmationContentMsg;
+	}
 
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+		this.confirmationContentMsg = confirmationContentMsg;
+	}
+	// 34442 - end
+	
+	//#40498,#30014 - Start
+	/**
+	 * Disables auto-update for the main page messages before opening the
+	 * category code popup.
+	 */
+	public void beforeOpenCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+	}
+	
+	/**
+	 * Restores auto-update for the main page messages after the category code
+	 * popup is closed.
+	 */
+	public void afterCloseCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+	}
+	//#40498,#30014 - End
 }

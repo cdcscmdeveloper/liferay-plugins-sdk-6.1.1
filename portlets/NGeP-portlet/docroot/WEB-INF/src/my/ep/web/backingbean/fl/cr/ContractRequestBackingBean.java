@@ -5094,7 +5094,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//29728 - end
 		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
 				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
-			validateContractRequest(outcome);
+			//#34443 remove validate
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFlRequest().getDocNo()+"|");
 			sb.append(getOrderAmount()+"|");
@@ -7630,4 +7630,30 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	
 	//25296 - End
+	
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTrigger(String action) throws Exception {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			validateContractRequest(action);
+			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+			return null;
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			validateContractRequest(action);
+			RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
+			return null;
+		} else {
+			return gpkiSignAction(action);
+		}
+	}
+	// #34443 end
+	
 }

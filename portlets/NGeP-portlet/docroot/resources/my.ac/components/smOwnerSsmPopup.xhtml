@@ -18,6 +18,30 @@
 	</cc:interface>
 
 	<cc:implementation>
+		<!-- START #40385 -->
+		<style type="text/css">
+			.ui-dialog.no-scroll-dialog {
+			    overflow: hidden !important;
+			}
+			
+    		.no-scroll-dialog .ui-dialog-content {
+        		overflow: hidden !important;
+    		}
+    		
+    		.responsive-dialog {
+ 			   box-sizing: border-box;
+			}
+
+			@media screen and (max-width: 768px) {
+    			.responsive-dialog {
+        			width: 90% !important;
+        			left: 5% !important;
+        			max-width: 100% !important;
+        		}
+    		}
+		</style>
+		<!-- END #40385 -->
+		
 		<p:dialog id="#{cc.attrs.dialogId}" header="#{cc.attrs.title}"
 			widgetVar="#{cc.attrs.dialogId}WidgetVar" modal="true"
 			height="#{cc.attrs.height}" width="#{cc.attrs.width}"
@@ -47,7 +71,7 @@
  				</c:when>
 				<c:otherwise>
 					<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}" 
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}"
 							escape="false" />
 				</c:otherwise>
 				</c:choose> 
@@ -62,29 +86,25 @@
 		</p:dialog>
 
 		<p:dialog id="#{cc.attrs.dialogId}Change"
-			style="overflow-wrap: break-word;" 
 			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
-			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
-			height="250" resizable="false" ><!-- #40385 --> 
-			<p:outputPanel id="popupRolePanelId" style="display: block; margin-bottom: 15px;"><!-- #40385 --> 
+			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true" 
+			resizable="false" 
+			styleClass="responsive-dialog no-scroll-dialog" 
+			style="width: 800px; max-width: 65%; box-sizing: border-box;"><!-- #40385 -->
+			<p:outputPanel id="popupRolePanelId" style="width: 100%;"><!-- #40385 -->
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt" 
-					scrollable="true" 
-					scrollHeight="150"
-					><!-- #40385 --> 
+					style="width: 100%;" 
+					scrollable="true" scrollHeight="200"><!-- #40385 -->
 					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
-						<h:outputText value="#{person.name}" />
+						<h:outputText value="#{person.name}" style="white-space: normal; word-break: break-word;" /><!-- #40385 -->
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.roles']}" style="width: auto; white-space: nowrap;"><!-- #40385 --> 
-						<c:if test="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
-							<!-- #27951 p:selectBooleanCheckbox value="#{person.director}" itemLabel="#{lbl['lbl.sm.person.dir']}" disabled="#{(person.directorSsm or person.clerical)}">
-								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
-							</p:selectBooleanCheckbox> -->
-							<p:selectBooleanCheckbox value="#{person.higherManagement}" itemLabel="#{lbl['lbl.sm.person.hghMngmt']}" disabled="#{(person.clerical)}">
-								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
-							</p:selectBooleanCheckbox>
-						</c:if>
+					<p:column headerText="#{lbl['lbl.sm.roles']}">
+						<p:selectBooleanCheckbox value="#{person.higherManagement}" itemLabel="#{lbl['lbl.sm.person.hghMngmt']}" disabled="#{(person.clerical)}"
+							rendered="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
+							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+						</p:selectBooleanCheckbox><!-- #40385 change c:if to rendered -->
 						<p:selectBooleanCheckbox value="#{person.management}" itemLabel="#{lbl['lbl.sm.person.mngmt']}" disabled="#{(person.clerical)}">
 							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
 						</p:selectBooleanCheckbox>
@@ -98,7 +118,7 @@
 				<p:commandButton value="#{cc.attrs.btnOkLabel}"
 					process="#{cc.attrs.btnOkProcess}" partialSubmit="true"
 					immediate="true" action="#{cc.attrs.bBean.changeRoleAndProceed()}"
-					update="#{cc.attrs.btnOkUpdate}"
+					update="#{cc.attrs.btnOkUpdate}" 
 					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()}" />
 					
 				<p:commandButton value="#{cc.attrs.btnCancelLabel}" immediate="true" partialSubmit="true" action="#{cc.attrs.bBean.resetRoleValue()}"
