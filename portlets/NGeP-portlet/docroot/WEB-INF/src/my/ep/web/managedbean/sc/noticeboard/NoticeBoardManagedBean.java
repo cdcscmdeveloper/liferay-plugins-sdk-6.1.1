@@ -204,6 +204,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	// #28777 & #29729 - End
 	
+	private Map<BigDecimal, Date> amendmentBSVDateMap; //#28188
+	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
@@ -1404,6 +1406,21 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.hideZoneBSVRegisterBtn = hideZoneBSVRegisterBtn;
 	}
 	// #28777 & #29729 - End
+	
+	//#28188 - Start
+	/**
+	 * @return the amendmentBSVDateMap
+	 */
+	public Map<BigDecimal, Date> getAmendmentBSVDateMap() {
+		return amendmentBSVDateMap;
+	}
 
-
+	/**
+	 * @param amendmentBSVDateMap the amendmentBSVDateMap to set
+	 */
+	public void setAmendmentBSVDateMap(Map<BigDecimal, Date> amendmentBSVDateMap) {
+		this.amendmentBSVDateMap = amendmentBSVDateMap;
+	}
+	//#28188 - End
+	
 }
