@@ -175,8 +175,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 
 	private List<ScSupplierItemPrice> deleteSupplierItemZonalTierPromotionPrices;
 
-	private List<ScSupplierItemPrice> deleteSessionSupplierItemPrices;
-
 	private boolean enableTierNormalDel = Boolean.FALSE;
 
 	private boolean enableTierPromoDel = Boolean.FALSE;
@@ -1409,26 +1407,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setSupplierItemPromoPrices(List<ScSupplierItemPrice> supplierItemPromoPrices) {
 		this.supplierItemPromoPrices = supplierItemPromoPrices;
 	}
-
-	/**
-	 * Get list of supplier item prices marked for deletion in the current session.
-	 * 
-	 * @return the deleteSessionSupplierItemPrices
-	 */
-	public List<ScSupplierItemPrice> getDeleteSessionSupplierItemPrices() {
-		return deleteSessionSupplierItemPrices;
-	}
-
-	/**
-	 * Sets the supplier item prices marked for deletion in the current session.
-	 * 
-	 * @param deleteSessionSupplierItemPrices
-	 *            the list of ScSupplierItemPrice to set
-	 */
-	public void setDeleteSessionSupplierItemPrices(List<ScSupplierItemPrice> deleteSessionSupplierItemPrices) {
-		this.deleteSessionSupplierItemPrices = deleteSessionSupplierItemPrices;
-	}
-
 	// 29557 - end
 	// 27868 & 35321 - start
 	/**
