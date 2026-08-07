@@ -197,7 +197,8 @@
 			<!-- Enhancement 25037-end- -->	
 			<portlet id="demoInvitation"/><!-- #28784 -->
 			<portlet id="disciplinaryActionDp"/><!-- #26284 -->
-			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->	
+			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->
+			<portlet id="QTBSVChange"/><!-- #28188 -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->

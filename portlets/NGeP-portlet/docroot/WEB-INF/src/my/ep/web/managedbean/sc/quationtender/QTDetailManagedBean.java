@@ -1872,6 +1872,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean afterSF;
 	// #35320 - End
 	
+	// #28188 - Start
+	/** The Briefing/Site Visit postpone date. */
+	private Date briefingSiteVisitPostponeDate;
+	private Map<Long, List<Long>> bsvRegisterDetails;
+
+	// #28188 - End
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -11775,6 +11782,33 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.afterSF = afterSF;
 	}// #35320 - End
 	
+	// #28188 - Start
+	/**
+	 * @return the briefingSiteVisitPostponeDate
+	 */
+	public Date getBriefingSiteVisitPostponeDate() {
+		return briefingSiteVisitPostponeDate;
+	}
+
+	/**
+	 * @param briefingSiteVisitPostponeDate
+	 *            the briefingSiteVisitPostponeDate to set
+	 */
+	public void setBriefingSiteVisitPostponeDate(
+			Date briefingSiteVisitPostponeDate) {
+		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
+	}
+
+	public Map<Long, List<Long>> getBsvRegisterDetails() {
+		return bsvRegisterDetails;
+	}
+
+	public void setBsvRegisterDetails(Map<Long, List<Long>> bsvRegisterDetails) {
+		this.bsvRegisterDetails = bsvRegisterDetails;
+	}
+
+	// #28188 - End
+
 	//#38151
 	public boolean isWeightage35384WIP() {
 		return weightage35384WIP;
