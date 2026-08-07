@@ -16347,6 +16347,33 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	
+	/**
+	 * Retrieves the localized active role description for the specified user.
+	 *
+	 * This method queries the Profile Management service using the current
+	 * user's locale to obtain the active role description of the specified user.
+	 * If an active role exists, its description is returned; otherwise,
+	 * {@code null} is returned.
+	 *
+	 * @param userId the unique identifier of the user
+	 * @return the localized active role description of the user, or
+	 *         {@code null} if no active role is found
+	 */
+	public static PmRoleDesc epRoleNameByUserId(Long userId) {
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		PmRoleDesc role = userSO.retrieveActiveRoleDescByUserId(userId, language);
+		if (role != null) {
+			return role;
+		}
+
+		return null;
+	}
 	// 36504 - END
 
 //	#37925 START
