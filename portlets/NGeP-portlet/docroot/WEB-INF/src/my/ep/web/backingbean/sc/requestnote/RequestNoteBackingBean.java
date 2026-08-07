@@ -87,8 +87,6 @@ import my.ep.dto.osb.sc.DPOsbReqDTO; //#25790
 import my.ep.dto.osb.sc.DPOsbResDTO; //#25790
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -134,7 +132,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg; //#27868
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason; //#27868
@@ -933,9 +930,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
-		// 33224 - Start
-		InactiveUserResDTO inactiveUserResDTO = new InactiveUserResDTO();
-		// 33224 - End
+		getManagedBean().setCounter(0);//#27868
+		getManagedBean().setCounterReason(0);//#27868
 		try {
 			if (getManagedBean().getPrInquiryId() != null) {
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
@@ -948,15 +944,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))
 					&& requestNote != null) {
 				checkSupplierDisciplinaryAction(requestNote);
-				
-				//#33224 - Start
-				log.info("--- 33224 (- Method requestNoteSubmit: checkInactiveUserAction Start ---");
-					//inactiveUserResDTO = checkInactiveUserAction(requestNote,RoleCode.RN_APPROVER.value() );
-				log.info("--- 33224 (- Method requestNoteSubmit: checkInactiveUserAction End ---");
-				//#33224 -End
 			}
 			//#26284 -End
-			
+
 			// reRecommend
 			requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 			requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
@@ -1172,16 +1162,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isDeliveryTermPrompt = Boolean.FALSE;
 		List<ScRequestNoteDtl> requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
-		// 33224 - Start
-		InactiveUserResDTO inactiveUserResDTO = new InactiveUserResDTO();
 
 		// 26284 - Start
 		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
-		    
-			// 33224 - Start
-			checkInactiveUserAction(scRequestNote, RoleCode.RN_APPROVER.value());
-			// 33224 - End
-			checkSupplierDisciplinaryAction(scRequestNote);
+		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
 		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());				
@@ -1471,6 +1455,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ThresholdData thresholdData = new ThresholdData(); // #26059 , #27868
 		Map<Long, ThresholdDataReason> thresholdDataReasonMap = new HashMap<>();// #26059 , #27868
 		Map<String, BigDecimal> totalByExtensionCode = new HashMap<>();// ##27868
+		getManagedBean().setExceededAmountAlerted(Boolean.FALSE);// #26059 , #27868
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
@@ -1499,25 +1484,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			else if (getManagedBean().getRequestNote() != null
 					&& getManagedBean().getRequestNote().getRequestNoteId() != null) { // #27868
 				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
-
-				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+				for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNote().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(null);
 					scRequestNoteDtl.setBpkThresholdDecision(null);
 				}
-
-				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
 			}
 			// #26059 - end
 		}
 
 		// approver group name validation
 		if (null == requestNote.getPmUserGroup()) {
-			throw new EpException(MessageConst.ERROR_760315, 
-					new String[] { ResourceBundleUtils.getMessage( "lbl.sc.ptj.approver.group", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.ptj.approver.group", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
 		}
 		// approver name validation
 		if (null == requestNote.getApprover()) {
@@ -1719,12 +1698,170 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNoteDtls(updateScRequestNoteDtlList);
 		try {
 			requestNoteSO.updateRequestNoteDetail(requestNoteReqDTO);
+			
+			RequestNoteReqDTO scRequestNoteReqDTO = new RequestNoteReqDTO();
+			scRequestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(scRequestNoteReqDTO);
+
+			List<ScRequestNoteDtl> tempList = getManagedBean().getRequestNote().getRequestNoteDtls();
+			List<ScRequestNoteDtl> dbList = requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls();
+			List<ScRequestNoteDtl> mergeList = mergeRequestNoteDtl(dbList,tempList);
+
+			getManagedBean().getRequestNote().getRequestNoteDtls().clear();
+			getManagedBean().getRequestNote().getRequestNoteDtls().addAll(mergeList);
+			
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean", getManagedBean().getRequestNote().getRequestNoteNo(),
 					"updateScRequestNoteDtl", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
+	
+	/**
+	 * Merge DB and temp lists by PK.
+	 *
+	 * @param dbList existing DB records
+	 * @param tempList managed bean records
+	 * @return merged list with updates and new items
+	 */
+	public List<ScRequestNoteDtl> mergeRequestNoteDtl(List<ScRequestNoteDtl> dbList, List<ScRequestNoteDtl> tempList) {
+
+		if (dbList == null)
+			return tempList;
+		if (tempList == null || tempList.isEmpty())
+			return dbList;
+
+		List<ScRequestNoteDtl> result = new ArrayList<>(dbList.size() + tempList.size());
+		Map<Long, ScRequestNoteDtl> tempMap = new HashMap<>(tempList.size());
+		
+		mergeAndAppendRequestNoteDtl(dbList, tempList, result, tempMap);
+
+		return result;
+	}
+
+	/**
+	 * Merge DB list with temp list using PK mapping.
+	 *
+	 * @param dbList existing DB records
+	 * @param tempList managed bean records
+	 * @param result output merged list
+	 * @param tempMap temporary map for lookup
+	 */
+	private void mergeAndAppendRequestNoteDtl(List<ScRequestNoteDtl> dbList, List<ScRequestNoteDtl> tempList, List<ScRequestNoteDtl> result,
+			Map<Long, ScRequestNoteDtl> tempMap) {
+		// build map once
+		for (ScRequestNoteDtl temp : tempList) {
+			Long id = temp.getRequestNoteDtlId();
+			if (id != null) {
+				tempMap.put(id, temp);
+			}
+		}
+
+		// merge
+		for (ScRequestNoteDtl db : dbList) {
+
+			Long pk = db.getRequestNoteDtlId();
+
+			if (pk != null) {
+				ScRequestNoteDtl temp = tempMap.remove(pk);
+
+				if (temp != null) {
+					copyChangedFields(db, temp);
+				}
+			}
+
+			result.add(db);
+		}
+
+		// add remaining temp (new records + null PK)
+		for (ScRequestNoteDtl temp : tempList) {
+			if (temp.getRequestNoteDtlId() == null || tempMap.containsKey(temp.getRequestNoteDtlId())) {
+				result.add(temp);
+			}
+		}
+	}
+
+	/**
+	 * Copy non-null and changed values.
+	 *
+	 * @param target DB entity
+	 * @param source managed bean entity
+	 */
+	private void copyChangedFields(ScRequestNoteDtl target, ScRequestNoteDtl source) {
+
+		if (target == null || source == null)
+			return;
+		if (source.getScRequestSupplierItem() != null
+				&& (target.getScRequestSupplierItem() == null || !target.getScRequestSupplierItem().equals(
+						source.getScRequestSupplierItem()))) {
+			target.setScRequestSupplierItem(source.getScRequestSupplierItem());
+		}
+		if (source.getRequestItem() != null
+				&& (target.getRequestItem() == null || !target.getRequestItem().equals(source.getRequestItem()))) {
+			target.setRequestItem(source.getRequestItem());
+		}
+		if (source.getFulfilmentType() != null
+				&& (target.getFulfilmentType() == null || !target.getFulfilmentType()
+						.equals(source.getFulfilmentType()))) {
+			target.setFulfilmentType(source.getFulfilmentType());
+		}
+		if (source.getPriceType() != null
+				&& (target.getPriceType() == null || !target.getPriceType().equals(source.getPriceType()))) {
+			target.setPriceType(source.getPriceType());
+		}
+		if (source.getAssignedUser() != null
+				&& (target.getAssignedUser() == null || !target.getAssignedUser().equals(source.getAssignedUser()))) {
+			target.setAssignedUser(source.getAssignedUser());
+		}
+		if (source.getDeliverTerm() != null
+				&& (target.getDeliverTerm() == null || !target.getDeliverTerm().equals(source.getDeliverTerm()))) {
+			target.setDeliverTerm(source.getDeliverTerm());
+		}
+		if (source.getvCmSupplierItem() != null
+				&& (target.getvCmSupplierItem() == null || !target.getvCmSupplierItem().equals(
+						source.getvCmSupplierItem()))) {
+			target.setvCmSupplierItem(source.getvCmSupplierItem());
+		}
+		if (source.getPriceTypeId() != null
+				&& (target.getPriceTypeId() == null || !target.getPriceTypeId().equals(source.getPriceTypeId()))) {
+			target.setPriceTypeId(source.getPriceTypeId());
+		}
+		if (source.getProcTypeCategoryId() != null
+				&& (target.getProcTypeCategoryId() == null || !target.getProcTypeCategoryId().equals(
+						source.getProcTypeCategoryId()))) {
+			target.setProcTypeCategoryId(source.getProcTypeCategoryId());
+		}
+		if (source.getConditionField() != null
+				&& (target.getConditionField() == null || !target.getConditionField()
+						.equals(source.getConditionField()))) {
+			target.setConditionField(source.getConditionField());
+		}
+		if (source.getPiRequestSupplierItem() != null
+				&& (target.getPiRequestSupplierItem() == null || !target.getPiRequestSupplierItem().equals(
+						source.getPiRequestSupplierItem()))) {
+			target.setPiRequestSupplierItem(source.getPiRequestSupplierItem());
+		}
+		if (source.getTotalPricePerItem() != null
+				&& (target.getTotalPricePerItem() == null || !target.getTotalPricePerItem().equals(
+						source.getTotalPricePerItem()))) {
+			target.setTotalPricePerItem(source.getTotalPricePerItem());
+		}
+		if (source.getTotalPricePerItemRounded() != null
+				&& (target.getTotalPricePerItemRounded() == null || !target.getTotalPricePerItemRounded().equals(
+						source.getTotalPricePerItemRounded()))) {
+			target.setTotalPricePerItemRounded(source.getTotalPricePerItemRounded());
+		}
+		if (target.isShowPurchaseInquiry() != source.isShowPurchaseInquiry()) {
+			target.setShowPurchaseInquiry(source.isShowPurchaseInquiry());
+		}
+		if (target.isProdAndServiceFlag() != source.isProdAndServiceFlag()) {
+			target.setProdAndServiceFlag(source.isProdAndServiceFlag());
+		}
+		if (target.isReRecommend() != source.isReRecommend()) {
+			target.setReRecommend(source.isReRecommend());
+		}
+	}
+
 	/**
 	 * Checks if any detail in the list has a BPK threshold decision.
 	 * @param scRequestNoteDtlList List of request note details.
@@ -2202,65 +2339,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
 
-			//#33224 - Start
-			InactiveUserResDTO inactiveUserResDTO = new InactiveUserResDTO();
-			PmUser userDetail = new PmUser();
-			String[] paramMessage = new String[3];	
-
-			log.info("--- 33224 (- Method: checkInactiveUserAction Start ---");
-			if ((outcome.equals(BpmOutcomeConst.BPM_REVISE))){
-				inactiveUserResDTO = checkInactiveUserAction(requestNote, RoleCode.REQUISITIONER.value());
-				log.info("--- 33224 (- Method: before checkInactiveUserAction End ---");
-				log.info("--- 33224 (- Method: before checkInactiveUserAction End status ---" + inactiveUserResDTO.getStatus());
-			}
-			log.info("--- 33224 (- Method: checkInactiveUserAction End ---");
-			
-		    if(!DPConstants.RESPONSE_ACTIVE_USER.equals(inactiveUserResDTO.getStatus())){
-	    	
-	    	log.info("checkInactiveRequisitioner - LoginIds: " + inactiveUserResDTO.getLoginIds());
-	        log.info("checkInactiveRequisitioner - userIDs: " + inactiveUserResDTO.getUserIds());
-		        
-	        userDetail = getUserById(Long.parseLong(extractUserId(inactiveUserResDTO.getUserIds())));
-	        log.info("checkInactiveRequisitioner - getUserName: " + userDetail.getUserName()); 
-	        
-			paramMessage[0] = ParameterConst.DOCTYPE_REQUEST_NOTE;
-			paramMessage[1] = requestNote.getRequestNoteNo();
-			paramMessage[2] = userDetail.getUserName();
-			
-		    }
-	    
-		    else if (DPConstants.RESPONSE_NO_ACTIVE_USER.equals(inactiveUserResDTO.getStatus())) {
-		     
-		    	PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(requestNote.getPmOrgProfile().getOrgProfileId());
-				String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-		        log.info("checkInactiveRequisitioner - ministryName");
-		
-		    	throw new EpException(MessageConst.ERROR_700128, new String[] {
-						getParameterDesc(RoleCode.REQUISITIONER.value(), ministryName) });
-		    }
-	
-		    else{
-		    
-//			String infoMsg = MessageUtils.getMessage(
-//	        MessageConst.INFO_700128,
-//	        new String[] {
-//	            getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),
-//	            requestNote.getRequestNoteNo(),
-//	            String.valueOf(userDetail.getUserName())
-//	        },
-//	        MessageUtils.BUNDLE_COMMON_MESSAGES,
-//	        new FacesScopes().getUserLocale() );
-//	
-//			log.info("INFO_700128 message = " + infoMsg);
-//	
-//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, infoMsg));
-//	
-//			log.info("Showing INFO_700128");
-		 }
-			
-			
-			//#33224 -End
-
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
@@ -2347,15 +2425,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				} else if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
 					// 26059 - start - replace with original code
-//					successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
-//							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
+					successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 					// 26059 - end
-					
-					// 33224 - start - replace new message code user inactive
-					
-					successMessage(MessageConst.INFO_700128,paramMessage);
-					// 33224 - end 
-					
 				} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700011, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
@@ -2393,9 +2465,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
-		// #33224 - Start
-		InactiveUserResDTO inactiveUserResDTO = new InactiveUserResDTO();
-		// #33224 - End
+		
 		// #31679 - Start
 		if (requestNoteReqDTO.getRequestNote() != null) {
 			
@@ -2404,7 +2474,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				checkSupplierDisciplinaryAction(scRequestNote);
 			}
 			//#26284 -End
-			
+
 			log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"
 					+ "- Method: approverAction Start ---");
 
@@ -9009,145 +9079,4 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	    return false; 
 	}		 
-	
-	//33224 start
-	/**
-	 * Validates if the current user inactive.
-	 *
-	 * @param requestNote The {@link ScRequestNote} containing the current user info to validate.
-	 * @param nextUserRole containing the expected role for the next user.
-	 * 
-	 * @return InactiveUserResDTO status and list of the next active user.
-	 */
-	public InactiveUserResDTO checkInactiveUserAction(ScRequestNote requestNote, String nextUserRole) {
-
-    if (requestNote == null || requestNote.getCreatedBy() == null) {
-        log.info("checkInactiveRequisitioner - no requisitioner found, skipping check");
-        return null;
-    }
-
-    Long requisitionerUserId = requestNote.getCreatedBy();
-    log.info("checkInactiveRequisitioner - checking requisitioner userId: " + requisitionerUserId);
-
-    IUserSO userSO = BusinessDelegate.getInstance()
-            .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-    
-    UserReqDTO userReqDTO = new UserReqDTO();
-    userReqDTO.setUserId(requisitionerUserId);
-    UserResDTO resDTO = userSO.retrieveUserByUserId(userReqDTO);
-    Boolean isreq = false;
-    Long orgProfileId =0L;
-    PmUser userDetail = new PmUser();
-    String nextUserIDActiveTrim = null;
-
-    if(!resDTO.getPmUser().getPmUserOrgs().isEmpty()){
-    	for (PmUserOrg org : resDTO.getPmUser().getPmUserOrgs()){
-    		if(org.getRecordStatusFlg() == 1){
-    		
-    		orgProfileId = org.getPmOrgProfile().getOrgProfileId();
-    		
-    		isreq = checkUserRole(org);
-    	}
-      }
-    }
-
-    InactiveUserReqDTO inactiveUserReqDTO = new InactiveUserReqDTO();
-    inactiveUserReqDTO.setUserIds(requisitionerUserId.toString());
-    inactiveUserReqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
-    inactiveUserReqDTO.setDocNo(requestNote.getRequestNoteNo());
-    inactiveUserReqDTO.setUserRoleCode(isreq? RoleCode.REQUISITIONER.value(): ""); //to modify based on rolecode field in param
-    inactiveUserReqDTO.setOrgProfileId(orgProfileId);
-
-    InactiveUserResDTO inactiveUserResDTO = userSO.checkInactiveUserBySP(inactiveUserReqDTO);
-    log.info("checkInactiveRequisitioner - nextUserRole: " + nextUserRole);
-    log.info("rn checkInactiveRequisitioner - status: " + inactiveUserResDTO.getStatus()
-            + ", message: " + inactiveUserResDTO.getMessage());
-    
-//    if(!"1".equals(inactiveUserResDTO.getStatus())){
-//    	
-//    	log.info("checkInactiveRequisitioner - LoginIds: " + inactiveUserResDTO.getLoginIds());
-//        log.info("checkInactiveRequisitioner - userIDs: " + inactiveUserResDTO.getUserIds());
-//
-//        nextUserIDActiveTrim = extractUserId(inactiveUserResDTO.getUserIds());
-//        log.info("checkInactiveRequisitioner - nextUserActiveTrim: " + nextUserIDActiveTrim);
-//        
-//        userDetail = getUserById(Long.parseLong(nextUserIDActiveTrim));
-//        log.info("checkInactiveRequisitioner - getUserName: " + userDetail.getUserName()); 
-//    }
-//    
-//    if ("5".equals(inactiveUserResDTO.getStatus())) {
-//     
-//    	PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(orgProfileId);
-//		String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-//        log.info("checkInactiveRequisitioner - ministryName");
-//
-//    	throw new EpException(MessageConst.ERROR_700128, new String[] {
-//				getParameterDesc(inactiveUserReqDTO.getUserRoleCode(), ministryName) });
-//    }
-//
-//	else{
-//	    
-//		String infoMsg = MessageUtils.getMessage(
-//        MessageConst.INFO_700128,
-//        new String[] {
-//            getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),
-//            inactiveUserReqDTO.getDocNo(),
-//            String.valueOf(userDetail.getUserName())
-//        },
-//        MessageUtils.BUNDLE_COMMON_MESSAGES,
-//        new FacesScopes().getUserLocale() );
-//
-//		log.info("INFO_700128 message = " + infoMsg);
-//
-//		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, infoMsg));
-//
-//log.info("Showing INFO_700128");
-//	 }
-    
-    return inactiveUserResDTO;
-	}
-
-	/** to check user role after call sp check inactive
-	 * @param org
-	 * @return
-	 */
-	private Boolean checkUserRole(PmUserOrg org) {
-		Boolean isReqUser = false;
-		
-		if (org.getPmUserRoles() != null && !org.getPmUserRoles().isEmpty()) {
-		    for (PmUserRole userRole : org.getPmUserRoles()) {
-		        log.info("checkInactiveRequisitioner - checking role: "
-		                + userRole.getPmRole().getRoleCode());
-
-		        if (RoleCode.REQUISITIONER.value()
-		                .equalsIgnoreCase(userRole.getPmRole().getRoleCode())
-		                && userRole.isRecordStatus()) {
-		            // found active requisitioner role
-		        	isReqUser = true;
-		            log.info("checkInactiveRequisitioner - active requisitioner role found");
-		            break;
-		        }
-		    }
-		}
-		return isReqUser;
-	}
-	
-	/** to trim user id
-	 * @param input
-	 * @return
-	 */
-	public static String extractUserId(String input) {
-	    if (input == null || input.trim().isEmpty()) {
-	        return "";
-	    }
-
-	    int index = input.indexOf(',');
-
-	    if (index != -1) {
-	        return input.substring(0, index).trim();
-	    }
-
-	    return input.trim();
-	}
-	//33224 end
 }
