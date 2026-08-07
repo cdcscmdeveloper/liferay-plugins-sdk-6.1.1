@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.ct.actor.ICtActorSO;
-import my.ep.biz.service.ct.maintain.IContractAmendmentSO; //#30737
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
