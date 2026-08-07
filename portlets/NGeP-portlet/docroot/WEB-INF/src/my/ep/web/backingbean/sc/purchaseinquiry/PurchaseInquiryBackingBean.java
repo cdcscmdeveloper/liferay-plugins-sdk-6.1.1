@@ -327,6 +327,7 @@ public class PurchaseInquiryBackingBean extends
 		getManagedBean().getSupplierItemZonalPromotionPrices().clear();
 		getManagedBean().getSupplierItemZonalTierStandardPrices().clear();
 		getManagedBean().getSupplierItemZonalTierPromotionPrices().clear();
+		getManagedBean().getDeleteSessionSupplierItemPrices().clear();
 		
 		CatalogueResDTO supplierResDTO = null;
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
@@ -2411,7 +2412,7 @@ public class PurchaseInquiryBackingBean extends
 		checkProcTypeOption();
 		dataCreatedDate = assignActualDate();
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		String parameterType = ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+		String parameterType = getManagedBean().getRequestNoteDtl().getProcurementType().getParameterType();
 		if (isGovtSellerBySupplierId(smSupplier.getSupplierId())) {
 			getManagedBean().setProcurementTypes(getRadioButtonCodeValues(parameterType, Boolean.TRUE));
 			inactiveReasonChecking();
@@ -3108,9 +3109,8 @@ public class PurchaseInquiryBackingBean extends
 	                && scSupplierItemPrice.getPricing().getPrice() == null) {
 	            scSupplierItemPrice.setPricing(null);
 	        }
+	        scSupplierItemPrice.setRecordStatusFlg(0);
 	    }
-
-	    getPrInquirySO().deleteSupplierItemPrices(scSupplierItemPriceList);
 
 	    FacesContext fc = FacesContext.getCurrentInstance();
 	    getManagedBean().setNavToPreviousPage(fc.getViewRoot().getViewId());
@@ -3187,6 +3187,21 @@ public class PurchaseInquiryBackingBean extends
 				.getSupplierItemZonalTierStandardPrices());
 		scSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_TIER_PROMOTION_PRICE, this.getManagedBean()
 				.getSupplierItemZonalTierPromotionPrices());
+
+
+		HashMap<Long, List<ScSupplierItemPrice>> deleteSupplierItemPriceListing = new HashMap<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		deleteSupplierItemPriceListing.put(PriceTypeConstants.TIER_STANDARD_PRICE, this.getManagedBean()
+				.getDeleteSupplierItemTierStandardPrices());
+		deleteSupplierItemPriceListing.put(PriceTypeConstants.TIER_PROMOTION_PRICE, this.getManagedBean()
+				.getDeleteSupplierItemTierPromotionPrices());
+		deleteSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_STANDARD_PRICE, this.getManagedBean()
+				.getDeleteSupplierItemZonalStandardPrices());
+		deleteSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_PROMOTION_PRICE, this.getManagedBean()
+				.getDeleteSupplierItemZonalPromotionPrices());
+		deleteSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_TIER_STANDARD_PRICE, this.getManagedBean()
+				.getDeleteSupplierItemZonalTierStandardPrices());
+		deleteSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_TIER_PROMOTION_PRICE, this.getManagedBean()
+				.getDeleteSupplierItemZonalTierPromotionPrices());
 
 		// save for type 01
 		if (!this.getManagedBean().getSupplierItemNormalPrices().isEmpty()) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024] - #36312 - Sqube DP Master Code Smell Major G97
@@ -3279,7 +3294,13 @@ public class PurchaseInquiryBackingBean extends
 						onChangeNewPrice(scSupplierItemPrice.getPriceType().getParameterCode(),
 								scSupplierItemPrice.getItemPrice(), BigDecimal.ZERO);
 				}
-				
+
+				if (deleteSupplierItemPriceListing.get(currentKey) != null
+						&& !deleteSupplierItemPriceListing.get(currentKey).isEmpty()) {
+					deleteScSupplierItemPrices(deleteSupplierItemPriceListing.get(currentKey));
+					prInquiryReqDTO.getSupplierItemPrices().addAll(deleteSupplierItemPriceListing.get(currentKey));
+				}
+
 				List<ScSupplierItemPrice> addedScSupplierItemPrice = getPrInquirySO().saveSupplierItemPrices(prInquiryReqDTO);
 
 				if (i == 0)
@@ -3295,6 +3316,13 @@ public class PurchaseInquiryBackingBean extends
 				else if (i == 5)
 					this.getManagedBean().setSupplierItemZonalTierPromotionPrices(addedScSupplierItemPrice);
 			}
+			
+			if (deleteSupplierItemPriceListing.get(currentKey) != null && !deleteSupplierItemPriceListing.get(currentKey).isEmpty()) {
+				PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
+				deleteScSupplierItemPrices(deleteSupplierItemPriceListing.get(currentKey));
+				prInquiryReqDTO.setSupplierItemPrices(deleteSupplierItemPriceListing.get(currentKey));
+				getPrInquirySO().saveSupplierItemPrices(prInquiryReqDTO);
+			}
 		}
 		
 		if(outcome.equals("SUBMIT")){
@@ -3303,35 +3331,22 @@ public class PurchaseInquiryBackingBean extends
 	}
 	
 	/**
-	 * To deleteScSupplierItemPrices.
+	 * Marks the given supplier item prices as deleted by setting their
+	 * record status flag to inactive (0).
+	 * <p>
+	 * If a supplier item price has no pricing information or its pricing
+	 * contains a {@code null} price value, the pricing reference is cleared
+	 * before marking the record as deleted.
+	 *
+	 * @param scSupplierItemPriceList the list of supplier item prices to be marked as deleted
 	 */
-	public void deleteScSupplierItemPrices() {
-		
-		List<ScSupplierItemPrice> deleteScSupplierItemPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-			
-		if (this.getManagedBean().getDeleteSupplierItemTierStandardPrices() != null && !this.getManagedBean().getDeleteSupplierItemTierStandardPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemTierStandardPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemTierPromotionPrices() != null && !this.getManagedBean().getDeleteSupplierItemTierPromotionPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemTierPromotionPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemZonalStandardPrices() != null && !this.getManagedBean().getDeleteSupplierItemZonalStandardPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemZonalStandardPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices() != null && !this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices() != null && !this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices() != null && !this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices();
-			
-		for (ScSupplierItemPrice deleteScSupplierItemPrice : deleteScSupplierItemPrices){
-			if(deleteScSupplierItemPrice.getPricing()== null){
-				deleteScSupplierItemPrice.setPricing(null);
+	public void deleteScSupplierItemPrices(List<ScSupplierItemPrice> scSupplierItemPriceList) {			
+		for (ScSupplierItemPrice item : scSupplierItemPriceList) {
+			if (item.getPricing() == null || (item.getPricing() != null && item.getPricing().getPrice() == null)) {
+				item.setPricing(null);
 			}
-			else if(deleteScSupplierItemPrice.getPricing().getPrice() == null){
-				deleteScSupplierItemPrice.setPricing(null);
-			}
+			item.setRecordStatusFlg(0);
 		}
-		
-		getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices);
 	}
 	
 	// ZonalTierStandardPrice -- start
@@ -3495,8 +3510,13 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-		this.getManagedBean().setDeleteSupplierItemZonalTierStandardPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		if (this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices() != null
+				&& !this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices().isEmpty()) {
+			this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices().addAll(deleteScSupplierItemPrices);
+		} else {
+			this.getManagedBean().setDeleteSupplierItemZonalTierStandardPrices(deleteScSupplierItemPrices);
+		}
+
 		this.getManagedBean().setSupplierItemZonalTierStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalTierStandardPrices().size() == 0){
@@ -3673,8 +3693,13 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 
-		this.getManagedBean().setDeleteSupplierItemZonalTierPromotionPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		if (this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices() != null
+				&& !this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices().isEmpty()) {
+			this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices().addAll(deleteScSupplierItemPrices);
+		} else {
+			this.getManagedBean().setDeleteSupplierItemZonalTierPromotionPrices(deleteScSupplierItemPrices);
+		}
+
 		this.getManagedBean().setSupplierItemZonalTierPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalTierPromotionPrices().size() == 0){
@@ -3808,8 +3833,13 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-		this.getManagedBean().setDeleteSupplierItemZonalStandardPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		if (this.getManagedBean().getDeleteSupplierItemZonalStandardPrices() != null
+				&& !this.getManagedBean().getDeleteSupplierItemZonalStandardPrices().isEmpty()) {
+			this.getManagedBean().getDeleteSupplierItemZonalStandardPrices().addAll(deleteScSupplierItemPrices);
+		} else {
+			this.getManagedBean().setDeleteSupplierItemZonalStandardPrices(deleteScSupplierItemPrices);
+		}
+
 		this.getManagedBean().setSupplierItemZonalStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalStandardPrices().size() == 0){
@@ -3943,8 +3973,13 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-		this.getManagedBean().setDeleteSupplierItemZonalPromotionPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		if (this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices() != null
+				&& !this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices().isEmpty()) {
+			this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices().addAll(deleteScSupplierItemPrices);
+		} else {
+			this.getManagedBean().setDeleteSupplierItemZonalPromotionPrices(deleteScSupplierItemPrices);
+		}
+
 		this.getManagedBean().setSupplierItemZonalPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalPromotionPrices().size() == 0){
@@ -4094,8 +4129,13 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-		this.getManagedBean().setDeleteSupplierItemTierStandardPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		if (this.getManagedBean().getDeleteSupplierItemTierStandardPrices() != null
+				&& !this.getManagedBean().getDeleteSupplierItemTierStandardPrices().isEmpty()) {
+			this.getManagedBean().getDeleteSupplierItemTierStandardPrices().addAll(deleteScSupplierItemPrices);
+		} else {
+			this.getManagedBean().setDeleteSupplierItemTierStandardPrices(deleteScSupplierItemPrices);
+		}
+
 		this.getManagedBean().setSupplierItemTierStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemTierStandardPrices().size() == 0){
@@ -4239,8 +4279,13 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 
-		this.getManagedBean().setDeleteSupplierItemTierPromotionPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		if (this.getManagedBean().getDeleteSupplierItemTierPromotionPrices() != null
+				&& !this.getManagedBean().getDeleteSupplierItemTierPromotionPrices().isEmpty()) {
+			this.getManagedBean().getDeleteSupplierItemTierPromotionPrices().addAll(deleteScSupplierItemPrices);
+		} else {
+			this.getManagedBean().setDeleteSupplierItemTierPromotionPrices(deleteScSupplierItemPrices);
+		}
+
 		this.getManagedBean().setSupplierItemTierPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemTierPromotionPrices().size() == 0){

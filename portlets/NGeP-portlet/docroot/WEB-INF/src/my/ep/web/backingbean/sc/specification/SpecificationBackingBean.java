@@ -17988,12 +17988,9 @@ if (null != checklist && !checklist.isEmpty()) {
 				this.getManagedBean().setGenInfo(false);
 			}
 		}
-		if((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) 
-				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(scQt.getQtStatus().getStatusId()))){//#33837 - add bpk and reschedule
+		//#38107(eGPA), 33837(add bpk and reschedule) - Start
+		if(QTStatusConst.getStatusAbleToUpdateSpecificationMaintenance().contains(scQt.getQtStatus().getStatusId())){
+		//#38107(eGPA), 33837(add bpk and reschedule) - End
 			this.getManagedBean().setChecklist(true);
 			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
 					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
@@ -23697,6 +23694,30 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 
 	// #10141 End Vinod
+	// #10141 Start Vinod
+	/**
+	 * this method will check to disable Download Button For Popup.
+	 * 
+	 * @param previewChecklist
+	 * 
+	 * @return boolean
+	 */
+	public boolean disableDownloadButtonForPopup(
+			List<ScQtCheckList> previewChecklist) {
+		if (null == previewChecklist
+				|| CollectionUtils.isEmpty(previewChecklist)) {
+			return true;
+		}
+
+		for (ScQtCheckList checkList : previewChecklist) {
+			if (checkList.isSelected()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// #10141 End Vinod
 
 	// #10141 Start Vinod
 	/**
@@ -23989,48 +24010,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					qtNo, SLALogConstant.QT_DOWNLOAD_REPORT_SPEC_PREPARE, getUserIdSessionFromLoginId(), e);
 		}
 		
-	}
-
-	// #10141 End Vinod
-	// #10141 Start Vinod
-	/**
-	 * this method will check whether atleast one checklist is selected and if
-	 * selected will call the hidden button.
-	 * 
-	 * @param actualButtonId
-	 *            this is the actual id for the hidden button since it is not
-	 *            recognized directly we used binding to get this id.
-	 * @param isTechnical
-	 *            this is to make sure the correct checklist is used for
-	 *            checking.
-	 * 
-	 * @return
-	 * 
-	 * @throws
-	 * 
-	 */
-	public void validateAtleastOneChecklistSelected(String actualButtonId, boolean isTechnical) {
-		List<ScQtCheckList> scQtChecklistListLocal;
-		int selectedCount = 0;
-
-		if (isTechnical) {
-			scQtChecklistListLocal = this.getManagedBean().getTechChecklistPreview();
-		} else {
-			scQtChecklistListLocal = this.getManagedBean().getFinChecklistPreview();
-		}
-
-		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
-			Long checklistStatus = scQtCheckList.getPmStatus().getStatusId();
-			if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-				return;
-			} else if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_COMPLETED)) {
-				selectedCount++;
-			}
-		}
-		if (selectedCount != 0) {
-			// Trigger the hidden download button.
-			RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
-		}
 	}
 
 	// #10141 End Vinod
