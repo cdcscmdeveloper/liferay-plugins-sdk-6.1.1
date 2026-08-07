@@ -105,7 +105,6 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
-		CircularBackingBean circularBB = new CircularBackingBean();
 		Long orgProfileId = null;
 		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
@@ -113,7 +112,6 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 			for (PmUserOrg orgProfile : userResDTO.getUserOrgList()) {
 				if (orgProfile != null && orgProfile.getPmOrgProfile() != null) {
 					orgProfileId = orgProfile.getPmOrgProfile().getOrgProfileId();
-					circularBB.getManagedBean().setUserPTJProfile(orgProfileId);
 					setOwnerOrgProfile(orgProfile.getPmOrgProfile());
 					break;
 				}

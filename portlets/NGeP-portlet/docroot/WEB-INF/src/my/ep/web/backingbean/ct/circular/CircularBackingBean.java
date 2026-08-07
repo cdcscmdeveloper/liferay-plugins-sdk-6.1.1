@@ -347,7 +347,11 @@ public class CircularBackingBean extends CircularBaseBackingBean<CircularManaged
 		// End - #30866
 		// Start Fix - #34367
 		if (!trackingDiarySearch) {
-			getPTJOwner();
+			Long ptjOrgProfile = getPTJOwner();
+			if (ptjOrgProfile != null) {
+				getManagedBean().setUserPTJProfile(ptjOrgProfile);
+			}
+			getManagedBean().setValidateConstantRules(getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId()) != null);
 		}
 		// End Fix - #34367
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
