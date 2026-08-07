@@ -3738,11 +3738,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#27502 - New DO MOF Role and Process - Start
 		for (TabBean tabBean : committeTabs) {
 		    String tabType = tabBean.getTabType();
-		    Long statusId = tabBean.getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId();
 
 		    // Condition 1: If tabType is not FINALIZATION and committee status is CMT_COMPLETED
-		    boolean isTabTypeNotFinalizationAndCompleted = !SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabType)
-		            && QTStatusConst.CMT_COMPLETED.equals(statusId);
+			boolean isTabTypeNotFinalizationAndCompleted = !SourcingConstants.COMMITTE_TYPE_FINALIZATION
+					.equals(tabType)
+					&& QTStatusConst.CMT_COMPLETED.equals(tabBean.getScQtCommittee().getScCommittee()
+							.getCommitteStatus().getStatusId());
 
 		    // Condition 2: If tabType is FINALIZATION and necessary fields in scQt are set
 		    boolean isFinalizationWithRequiredFields = SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabType)
