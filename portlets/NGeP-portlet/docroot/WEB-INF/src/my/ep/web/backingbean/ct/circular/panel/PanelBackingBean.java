@@ -166,7 +166,11 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	private static final String PROCESS_PANEL_PAGE = "/xhtml/ct/circular/panel/circularBase.xhtml?faces-redirect=true"; //#33533
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	
-	private String confirmationContentMsg;//34442 
+	// #34442 - start
+	private String taskId;
+	private String confirmationContentMsg;
+	// #34442 - end
+		
 	private boolean isShowValidation = false;//Fix-#34367
 	private final String validationMsgId = "circularRulesValidation";//Fix-#34367
 	/**
@@ -424,9 +428,17 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				taskId = getManagedBean().getTaskIdFromTaskList();
 				getManagedBean().setTaskIdFromTaskList(null);
 			}
+			
+			// #34442 - start
+			if (taskId != null) {
+				this.taskId = taskId;
+			} else if (this.taskId != null) {
+				return;
+			}
+			// #34442 - end
+						
 			if(taskId==null) {
-				if(getManagedBean().getCancelCircularReq()==null && // 34442
-						(isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
+				if((isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
 					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
 				}
 				return;

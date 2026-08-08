@@ -606,4 +606,9 @@ public interface QTConstants {
 	public static final String RPT_ALL_LBL = "lbl.rpt.all";
 	// #29580-end
 
+	// 28188 -start-
+	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
+	// 28188 -end-
+
+
 }
