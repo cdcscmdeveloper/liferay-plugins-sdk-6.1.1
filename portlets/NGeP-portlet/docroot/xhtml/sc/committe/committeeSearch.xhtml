@@ -9,9 +9,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<!-- #35320 start -->
+
+		<!-- 35320 start -->
 		<p:panel header="#{lbl['lbl.sc.committee.search']}" toggleable="true"
-			id="qtsearchid"><!-- #35320 end -->
+			id="qtsearchid">
+			<!-- 35320 end -->
 			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.committee.search.instruction']}" escape="false" />
 			<table style="width: 100%;">
 				<tr>
@@ -112,7 +114,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:6%;text-align: center;">
-					<!-- #35320 start -->
+					<!-- 35320 start -->
 					<ui:param name="isFCCommitteeType"
 						value="#{scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeB or 
 						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeA or
@@ -122,23 +124,11 @@
 						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSbh or 
 						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSwk or
 						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommittee}" />
+					<!-- 25037 start -->
 					<p:commandLink
 						action="#{committeBackingBean.editAction(scqtcommittee)}"
 						partialSubmit="true" process="@this">
-
-						<h:graphicImage
-							value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
-							styleClass="tasklist_title1" />
-						<!-- #35320 end -->
-					</p:commandLink>
-					
-					<!-- 25037 -start- -->
-					<p:commandLink
-						action="#{committeBackingBean.editAction(scqtcommittee)}"
-						partialSubmit="true" process="@this"
-						rendered="#{(isFCCommitteeType and !committeBackingBean.isCommitteeRecordStatusActive(scqtcommittee.scCommittee)) 
-							or (!isFCCommitteeType and scqtcommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED)}">
-						<!-- 25037 -end- -->
+						<!-- 25037 end --><!-- 35320 end -->
 						<h:graphicImage
 							value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 							styleClass="tasklist_title1" />
