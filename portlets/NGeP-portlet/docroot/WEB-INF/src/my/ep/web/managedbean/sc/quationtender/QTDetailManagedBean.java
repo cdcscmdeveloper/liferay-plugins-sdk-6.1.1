@@ -1968,6 +1968,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#28188 - Start
 	/** The Briefing/Site Visit postpone date. */
 	private Date briefingSiteVisitPostponeDate;
+	private Map<Long,List<Long>> bsvRegisterDetails;
 	//#28188 - End
 	
 	private List<TplSpecZoneDtl> deleteZonesTreeNodes;	//37851
@@ -12560,4 +12561,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.reseteGPACurrentArea = reseteGPACurrentArea;
 	}
 	//#38107 - End
+	
+	//#28188 - Start
+	public Map<Long, List<Long>> getBsvRegisterDetails() {
+		return bsvRegisterDetails;
+	}
+
+	public void setBsvRegisterDetails(Map<Long, List<Long>> bsvRegisterDetails) {
+		this.bsvRegisterDetails = bsvRegisterDetails;
+	}
+	//#28188 - End
 }
