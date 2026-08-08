@@ -5983,12 +5983,13 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
         	} else {
         		getManagedBean().setLOPOSelected(false);
         	}
+        	
+    		//#35323 - Start
+    		if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(selectedRuleType)) {
+    			loadPRValues();
+    		}
+    		//#35323 - End
         }
-		//#35323 - Start
-		if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(selectedRuleType)) {
-			loadPRValues();
-		}
-		//#35323 - End
         //#36738 Start
         Long ruleTypeId = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
         if (this.getManagedBean().getOriginalConfigRuleValueMap() != null && this.getManagedBean().getOriginalConfigRuleValueMap().containsKey(ruleTypeId)){
