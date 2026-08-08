@@ -1434,7 +1434,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			}
 			// check validation
 			
-			// 29669,29641 start
+			// 29669,29641,30672 start
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P")
 					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
 
@@ -1447,7 +1447,8 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				}
 				//#35323 and sonarLint fixing - End
 			}
-			// 29669,29641 end
+			// 29669,29641,30672 end
+			
 			// 29650 start
 			if (ruleTypeDesc.getRuleType().getRangeType() == 3) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
