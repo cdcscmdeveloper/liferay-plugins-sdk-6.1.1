@@ -19179,6 +19179,12 @@ public class SmApplicationBackingBean extends
 	public void saveOtherDescriptionEdit() {
 		try {
 			
+			// #37605 - START
+			if(!SmApplicationUtil.convertToAscii(getManagedBean().getOtherDescEdited())){
+				throw new EpException(MessageConst.ERROR_760555);
+			}
+			// #37605 - END
+
 			String roleCode = "";
 			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 			List<SmSuppCatOtherDescHistoryReqDTO> supplierEditList = new ArrayList<>();

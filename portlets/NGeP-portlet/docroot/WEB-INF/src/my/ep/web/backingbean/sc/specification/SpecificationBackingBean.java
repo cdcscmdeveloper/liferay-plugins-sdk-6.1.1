@@ -11552,6 +11552,7 @@ public class SpecificationBackingBean extends
 		
 		// #10141 Start Vinod
 		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
+		log.info("====Vinod #40887 inActiveChecklist===="+inActiveChecklist.size());
 		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
 			List<ScQtCheckList> techCL = this.getManagedBean().getScQtCheckSt2techProposal();
 			List<ScQtCheckList> deleteTechCheckList = deleteInactiveChecklist(techCL);
@@ -11566,6 +11567,7 @@ public class SpecificationBackingBean extends
 			if (CollectionUtils.isNotEmpty(deleteTechCheckList)) {
 				this.getManagedBean().getMarkDeletedTechChecklist().addAll(deleteTechCheckList);
 			}
+			log.info("====Vinod #40887 deleteTechCheckList===="+deleteTechCheckList.size());
 
 			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedFinChecklist())) {
 				this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
@@ -11573,6 +11575,7 @@ public class SpecificationBackingBean extends
 			if (CollectionUtils.isNotEmpty(deletefinCheckList)) {
 				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
+			log.info("====Vinod #40887 deletefinCheckList===="+deletefinCheckList.size());
 		}
 		// #10141 End Vinod
 
@@ -13288,6 +13291,9 @@ public class SpecificationBackingBean extends
 		}
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls(null,false);	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+		log.info("====Vinod #40887 getMarkDeletedTechChecklist===="+this.getManagedBean().getMarkDeletedTechChecklist().size());
+		log.info("====Vinod #40887 getMarkDeletedFinChecklist===="+this.getManagedBean().getMarkDeletedFinChecklist().size());
+		log.info("====Vinod #40887 checklistRemoveList===="+checklistRemoveList.size());
 		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
 			for (int i = 0; i < checklistRemoveList.size(); i++) {
 				if (null == checklistRemoveList.get(i).getQtChecklistId()) {
@@ -13492,6 +13498,7 @@ public class SpecificationBackingBean extends
 
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
+			log.info("====Vinod #40887 getTobeRemoveList===="+spReqDTO.getTobeRemoveList().size());
 			resDTO = specSO.updateBPMAction(spReqDTO);
 
 		} finally {
