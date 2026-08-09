@@ -12245,14 +12245,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		// #30457 - End
 	}
 	
-	public void closeImagePopup(){ //only affecting draft tab and draft_supp_temp only
-			this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setCmImages(
-					this.getManagedBean().getSelectedMaintainItem().getCmImages());
-		
-		this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setItemDesc(
-				this.getManagedBean().getSelectedMaintainItem().getItemDesc());
+	//#29961 - Start
+	/**
+	 * Updates the selected draft supplier item when the image popup is closed.
+	 * only affecting draft tab and draft_supp_temp only
+	 */
+	public void closeImagePopup(){	
+	    int index = this.getManagedBean().getItemSelectedIndex();
+	    CmSupplierItem selected = this.getManagedBean().getSelectedMaintainItem();
+
+	    if (selected == null) {
+	        return;
+	    }
+
+	    List<CmSupplierItem> draftList = this.getManagedBean().getDraftSearchDataModel().getList();
+
+	    if (CollectionUtils.isEmpty(draftList)
+	            || index < 0
+	            || index >= draftList.size()) {
+	        return;
+	    }
+
+	    CmSupplierItem row = draftList.get(index);
+
+	    row.setCmImages(selected.getCmImages());
+	    row.setItemDesc(selected.getItemDesc());
 	}
-	
+	//#29961 - End
+
 	// #30457, #14188 - start
 	public void deleteImageFromPopup(int imageIndex) {
 		log.info("imageIndex:" + imageIndex);
