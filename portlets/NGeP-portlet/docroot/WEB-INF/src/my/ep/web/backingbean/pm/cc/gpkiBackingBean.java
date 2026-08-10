@@ -53,7 +53,8 @@ public class gpkiBackingBean implements Serializable {
 	private static String otpExp = EpPropertiesUtils.getInstance().getProperty("mygpki.otpExpiry");
 	private static String hostOTP = EpPropertiesUtils.getInstance().getProperty("mygpki.hostOTP");
 	private static String hostBroker = EpPropertiesUtils.getInstance().getProperty("mygpki.hostBroker");
-	private static boolean disableBtn = false;
+	private static String reqTimeout = EpPropertiesUtils.getInstance().getProperty("mygpki.requestTimeout");
+	private boolean disableBtn = false;
 	private static String serialNumber = "SERIALNUMBER";
 	private static String sn = "SN";
 	private static String surname = "SURNAME";
@@ -207,6 +208,10 @@ public class gpkiBackingBean implements Serializable {
 		if(nonceNull != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.gpki.nonce.null", null);
 		}
+		if(map.get("gpkiUnavailable") != null){
+			statusMsg = SmCommonUtil.getMessage("lbl.gpki.unavailable", null);
+			log.info("#35488 MyGPKI unreachable: "+map.get("gpkiUnavailable"));
+		}
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
@@ -285,6 +290,7 @@ public class gpkiBackingBean implements Serializable {
 		RequestContext.getCurrentInstance().addCallbackParam("otpExp", otpExp);
 		RequestContext.getCurrentInstance().addCallbackParam("hostOTP", hostOTP);
 		RequestContext.getCurrentInstance().addCallbackParam("hostBroker", hostBroker);
+		RequestContext.getCurrentInstance().addCallbackParam("reqTimeout", reqTimeout);
 		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 		try {
 			String gpkiNonce = (String) map.get(nonce);
@@ -394,14 +400,14 @@ public class gpkiBackingBean implements Serializable {
 	/**
 	 * Enable Re-send OTP button
 	 */
-	public static void enableBtn(){
+	public void enableBtn(){
 		disableBtn = false;
 	}
 	
 	/**
 	 * Disable Re-send OTP button
 	 */
-	public static void disableBtn(){
+	public void disableBtn(){
 		disableBtn = true;
 	}
 	

@@ -57,7 +57,8 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:dialog>
 	
-	<p:dialog widgetVar="gpki_dlg2" resizable="false" modal="true" id="gpki_dlg2" >
+	<p:dialog widgetVar="gpki_dlg2" resizable="false" modal="true" id="gpki_dlg2"
+		onHide="clearTimeout(otpTimeoutId);">
 		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>

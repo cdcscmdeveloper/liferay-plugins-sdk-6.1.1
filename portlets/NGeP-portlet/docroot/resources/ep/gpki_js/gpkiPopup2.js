@@ -8,6 +8,10 @@ var hostBroker = "";
 var gpkiNonce;
 var gpki = {};
 var gpkiRequestTime = 0;
+// per-request timeout, overridden from mygpki.requestTimeout in setUser()
+var gpkiReqTimeout = 30;
+// cooldown on the Re-send button after an unanswered OTP request
+var OTP_RETRY_COOLDOWN = 30 * 1000;
 (function () {
   var nric = "";
   var email = "";
@@ -27,26 +31,28 @@ var gpkiRequestTime = 0;
     agencyId = args.agencyId;
     signType = args.signType;
     saluran = args.saluran;
-    otpExp = Number(args.otpExp);
-    if (typeof otpExp !== "number") {
-      otpExp = 120;
-    }
+    otpExp = positiveOr(args.otpExp, 120);
     hostOTP = args.hostOTP;
     hostBroker = args.hostBroker;
     gpkiNonce = args.gpkiNonce;
-    gpkiRequestTime = Number(args.nonceTime);
-    if (typeof gpkiRequestTime !== "number" || isNaN(gpkiRequestTime)) {
-    	gpkiRequestTime = 0;
-    }
+    gpkiRequestTime = positiveOr(args.nonceTime, 0);	// 0 = not requested yet
+    gpkiReqTimeout = positiveOr(args.reqTimeout, 30);
     this.requestMedium();
   };
 
   this.requestMedium = function () {
-    request_mediumList(nric, appCode, modeUsed);
+    //request_mediumList(nric, appCode, modeUsed);
+    gpkiPost(hostBroker + "mediumList_new/",
+      { nric: nric, applicationCode: appCode, mode: modeUsed },
+      parseResultMedium, giveUpMedium);
   };
 
   this.requestOtp = function () {
-    request_otp(nric, agencyId, nric, modeUsed, otpExp, saluran, email);
+    //request_otp(nric, agencyId, nric, modeUsed, otpExp, saluran, email);
+    gpkiPost(hostOTP + "request_otp_new/",
+      { nric: nric, agencyId: agencyId, userId: nric, mode: modeUsed,
+        otpExp: otpExp, saluran: saluran, emailuser: email },
+      parseTxResultRequestOTP, giveUpOtp);
   };
 
   this.signToken = function (a) {
@@ -81,7 +87,11 @@ var gpkiRequestTime = 0;
 	  return;
 	}
     const data = encodeURIComponent(Gpki.hash(text));
-    sign_roaming(nric, gpkiNonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
+    //sign_roaming(nric, gpkiNonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
+    gpkiPost(hostOTP + "sign_roaming/",
+      { nric: nric, nonce: gpkiNonce, otpCode: otpCode, data: data, pin: pin,
+        agencyId: agencyId, mode: modeUsed, signType: signType, dataSeq: 0 },
+      parseTxResultSigningRoaming, giveUpSign);
   };
 
   this.otpExp = function () { return otpExp; };
@@ -225,4 +235,81 @@ function getTimeoutMillis(){
 	return Math.max(timeout - diff, 0);
   } catch (e){ }
   return DEFAULT_TIMEOUT;
+}
+
+/**
+ * @param v raw property value
+ * @param d fallback when absent or not a positive number
+ * @returns {Number}
+ */
+function positiveOr(v, d) {
+  const n = Number(v);
+  return isNaN(n) || n <= 0 ? d : n;
+}
+
+/**
+ * POST to GPKI with a bounded timeout, single attempt. Replaces the vendor
+ * Gpki.runScript* wrappers, whose async:false requests cannot honour a
+ * timeout and report nothing when the host is unreachable.
+ * @param url endpoint
+ * @param param request body, sent base64-encoded
+ * @param onDone parser for a successful response
+ * @param onGiveUp called with the failure reason when the request fails or times out
+ */
+function gpkiPost(url, param, onDone, onGiveUp) {
+  const body = JSON.stringify(param);
+  const encoded = window.btoa ? btoa(body) : Base64.encode(body);
+  Gpki.start();
+  $.ajax({
+    url: url,
+    type: "POST",
+    cache: false,
+    async: true,
+    dataType: "json",
+    data: encoded,
+    contentType: "application/json; charset=utf-8",
+    timeout: gpkiReqTimeout * 1000
+  }).done(function (data, textStatus, jqxhr) {
+    Gpki.end();
+    onDone(jqxhr.responseText);
+  }).fail(function (jqxhr, textStatus) {
+    Gpki.end();
+    // "timeout"/0, "error"/0 unreachable, "error"/502 host down, "parsererror"/200 non-JSON body
+    onGiveUp(textStatus + "/" + jqxhr.status);
+  });
+}
+
+/**
+ * Medium lookup unanswered: drop the spinner dialog, which has no close button,
+ * and report on the signing dialog the same way a rejected lookup does.
+ */
+function giveUpMedium(reason) {
+  gpki_dlg.hide();
+  gpki_dlg2.show();
+  unavailableError("medium " + reason);
+}
+
+/**
+ * OTP request unanswered: brief cooldown, then let the user try again.
+ */
+function giveUpOtp(reason) {
+  disableBtn();
+  // same slot the success path uses, so closing the dialog cancels it
+  otpTimeoutId = setTimeout(enableBtn, OTP_RETRY_COOLDOWN);
+  unavailableError("otp " + reason);
+}
+
+/**
+ * Signing unanswered: unblock the panel, never re-sign on the user's behalf.
+ */
+function giveUpSign(reason) {
+  gpkiBlockWidget.hide();
+  unavailableError("sign " + reason);
+}
+
+/**
+ * @param reason which call failed and why, logged server-side for triage
+ */
+function unavailableError(reason) {
+  errorAction([{ name: 'gpkiUnavailable', value: reason }]);
 }
