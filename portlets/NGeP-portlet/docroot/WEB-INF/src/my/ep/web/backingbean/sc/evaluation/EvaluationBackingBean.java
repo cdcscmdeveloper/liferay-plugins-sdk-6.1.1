@@ -15403,8 +15403,8 @@ private void retriveCommitteeRemarksList(){
 				selectedEvaluationReport
 				        .setScQtEvaluationReportDetailAttachment(reportAttachment); //#25651
 			}
-			List<ScQtEvaluationReport> evaluationReports = getManagedBean()
-					.getScQtEvaluationReportList();
+			List<ScQtEvaluationReportDetail> evaluationReports = getManagedBean()
+					.getScQtEvaluationReportDetailList();  //#25651
 			int indexOfReport = evaluationReports.indexOf(selectedEvaluationReport);
 			reportAttachment.setDocNo(selectedEvaluationReport.getScQt()
 					.getQtNo());
@@ -15477,7 +15477,7 @@ private void retriveCommitteeRemarksList(){
 		reqDTO.setEvaluationReportDetailList(evaluationReportList); //#25651
 		reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
 		if(CollectionUtils.isNotEmpty(getManagedBean()
-				.getReportsToBeRemovedList())){
+				.getReportDetailsToBeRemovedList())){ //#25651
 			List<ScQtEvaluationReportDetail> localReports=new ArrayList<>(); //#25651
 		for(ScQtEvaluationReportDetail evaluationReport:getManagedBean()
 				.getReportDetailsToBeRemovedList()){ //#25651
