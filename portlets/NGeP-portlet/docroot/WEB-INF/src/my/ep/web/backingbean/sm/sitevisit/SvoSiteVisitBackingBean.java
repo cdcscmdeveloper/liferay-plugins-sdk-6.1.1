@@ -33,31 +33,14 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
-
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 //#30504 start
 import my.ep.biz.service.pm.common.zone.IZoneSO;
-import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
-import my.ep.dto.pm.common.zone.ZoneReqDTO;
 //#30504 end
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
-import my.ep.biz.service.sm.trackingdiary.ISmTrackingDiarySO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -66,6 +49,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -75,7 +59,6 @@ import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.dto.sm.trackingdiary.SmTrackingDiaryReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -147,7 +130,20 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
+
 import com.liferay.portal.util.PortalUtil;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
 public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManagedBean> {
@@ -971,30 +967,28 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
 			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
-				if (!svBankInfo.getSmSupplierBank().getSmChequeSignatories().isEmpty()) {	
+				if (!svBankInfo.getSmSupplierBank().getSmChequeSignatories().isEmpty()) {
 					for (SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()) {
 						totalCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
-						if(chequeSignatory.getSmPersonnel().isBumi() != null){  //#39860
+						if (chequeSignatory.getSmPersonnel().isBumi() != null) { // #39860
 							if (chequeSignatory.getSmPersonnel().isBumi()) {
 								bumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+							} else {
+								if (chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)) {
+									nonBumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 								} else {
-									if (chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode()
-											.equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)) {
-										nonBumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
-										} else {
-											nonMyCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
-											}
-									}
+									nonMyCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+								}
 							}
 						}
 					}
 				}
 			}
+		}
 		totalChequeSignatory = totalCheckingList.size();
 		cheqBumi = bumiCheckingList.size();
 		cheqNonBumi = nonBumiCheckingList.size();
 		cheqNonMalaysian = nonMyCheckingList.size();
-				
 		// #14055 - end	
 		
 		this.getManagedBean().setTotalCheqSign(totalChequeSignatory);
