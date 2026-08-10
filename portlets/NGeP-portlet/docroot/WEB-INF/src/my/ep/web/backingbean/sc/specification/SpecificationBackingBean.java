@@ -25161,4 +25161,37 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		               && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
 	}
 	// #40245 - end
+	
+	//#25651 - Start
+	/**
+	 * To check technical specification more than one item
+	 * @return true or false
+	 */  
+	public Boolean checkTechnicalSpecificationForItems(){
+		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		ScQt scQt = this.getManagedBean().getQt();
+		if(specSO.checkTechnicalSpecificationForItems(scQt)){
+			return true;
+		}
+		return false;
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To check financial specification for items
+	 * @return true or false
+	 */  
+	public Boolean checkFinancialSpecificationForItems(){
+		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		ScQt scQt = this.getManagedBean().getQt();
+		if(specSO.checkFinancialSpecificationForItems(scQt)){
+			return true;
+		}
+		return false;
+	}
+	//#25651 - End
+	
 }

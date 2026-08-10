@@ -15403,8 +15403,8 @@ private void retriveCommitteeRemarksList(){
 				selectedEvaluationReport
 				        .setScQtEvaluationReportDetailAttachment(reportAttachment); //#25651
 			}
-			List<ScQtEvaluationReport> evaluationReports = getManagedBean()
-					.getScQtEvaluationReportList();
+			List<ScQtEvaluationReportDetail> evaluationReports = getManagedBean()
+					.getScQtEvaluationReportDetailList();  //#25651
 			int indexOfReport = evaluationReports.indexOf(selectedEvaluationReport);
 			reportAttachment.setDocNo(selectedEvaluationReport.getScQt()
 					.getQtNo());
