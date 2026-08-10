@@ -141,6 +141,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDemoTechnicalCommitteeRemar
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinancialCommitteeRemark;
@@ -235,6 +237,11 @@ public class EvaluationBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	// #25651 - Start 
+	private int countDownloadReports = 0;
+	private int countDownloadAllReports = 0;
+	// #25651 - End
+
 
 	/** The skip. */
 	private boolean skip;
@@ -9324,22 +9331,25 @@ public void saveComplianceSample() {
 					}
 				}
 			//#28784 - end
+				
+			//#25651 - Start
+			List<ScQtEvaluationReportDetail> evaluationReportsDetail = evaluationSO.retriveEvaluationReportDetail(reqDTO).getReportsDetail();
+			this.getManagedBean().setScQtEvaluationReportDetailList(evaluationReportsDetail);
+			//#25651 - End
 
 		
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				ScAttachment attachment = this.getManagedBean().getScQt()
 						.getScEvaluationCommitteeReportAttachment();
-				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-Evaluation-Committee-Report");
+				this.getManagedBean().setReportDownloadAllFileName(SourcingConstants.LAPORAN_JAWATANKUASA_PENILAIAN); // #25651
 
 				this.getManagedBean().setScAttachment(attachment);
 			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				ScAttachment attachment = this.getManagedBean().getScQt()
 						.getScOpenCommitteeReportAttachment();
-				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-Opening-Committee-Report");
+				this.getManagedBean().setReportDownloadAllFileName(SourcingConstants.LAPORAN_JAWATANKUASA_PEMBUKA); // #25651
 
 				this.getManagedBean().setScAttachment(attachment);
 
@@ -9347,8 +9357,7 @@ public void saveComplianceSample() {
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				ScAttachment attachment = this.getManagedBean().getScQt()
 						.getScTechnicalEvaluationReportAttachment();
-				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-TechnicalEvaluation-Committee-Report");
+				this.getManagedBean().setReportDownloadAllFileName(SourcingConstants.LAPORAN_JAWATANKUASA_TEKNIKAL); // #25651
 
 				this.getManagedBean().setScAttachment(attachment);
 
@@ -9356,8 +9365,7 @@ public void saveComplianceSample() {
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				ScAttachment attachment = this.getManagedBean().getScQt()
 						.getScFinancialEvaluationReportAttachment();
-				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-FinancialEvaluation-Committee-Report");
+				this.getManagedBean().setReportDownloadAllFileName(SourcingConstants.LAPORAN_JAWATANKUASA_KEWANGAN); // #25651
 
 				this.getManagedBean().setScAttachment(attachment);
 
@@ -10301,9 +10309,9 @@ private void retriveCommitteeRemarksList(){
 				attachment.setDocNo(scQt.getQtNo());
 				scAttachment = attachment;
 				List<ScAttachment> attachments = convertReportAsReportAttachment(getManagedBean()
-						.getScQtEvaluationReportList());
+						.getScQtEvaluationReportDetailList());// #25651
 				SaveEvaluationAttachment(this.getManagedBean()
-						.getReportDownloadFileName() + ".zip", scAttachment);
+						.getReportDownloadAllFileName() + ".zip", scAttachment);// #25651
 				convertmultipleFilesAsaZipFile(attachments, scAttachment);
 				scQt.setScEvaluationCommitteeReportAttachment(attachment);
 				reqDTO.setScQt(scQt);
@@ -10325,9 +10333,9 @@ private void retriveCommitteeRemarksList(){
 				attachment.setDocNo(scQt.getQtNo());
 				scAttachment = attachment;	
 				List<ScAttachment> attachments = convertReportAsReportAttachment(getManagedBean()
-						.getScQtEvaluationReportList());
+						.getScQtEvaluationReportDetailList());// #25651
 				SaveEvaluationAttachment(this.getManagedBean()
-						.getReportDownloadFileName() + ".zip", scAttachment);
+						.getReportDownloadAllFileName() + ".zip", scAttachment);// #25651
 				convertmultipleFilesAsaZipFile(attachments, scAttachment);
 				scQt.setScOpenCommitteeReportAttachment(attachment);
 				reqDTO.setScQt(scQt);
@@ -10348,9 +10356,9 @@ private void retriveCommitteeRemarksList(){
 				attachment.setDocNo(scQt.getQtNo());
 				scAttachment = attachment;	
 				List<ScAttachment> attachments = convertReportAsReportAttachment(getManagedBean()
-						.getScQtEvaluationReportList());
+						.getScQtEvaluationReportDetailList());// #25651
 				SaveEvaluationAttachment(this.getManagedBean()
-						.getReportDownloadFileName() + ".zip", scAttachment);
+						.getReportDownloadAllFileName() + ".zip", scAttachment);// #25651
 				convertmultipleFilesAsaZipFile(attachments, scAttachment);
 				scQt.setScTechnicalEvaluationReportAttachment(attachment);
 				reqDTO.setScQt(scQt);
@@ -10371,9 +10379,9 @@ private void retriveCommitteeRemarksList(){
 				attachment.setDocNo(scQt.getQtNo());
 				scAttachment = attachment;
 				List<ScAttachment> attachments = convertReportAsReportAttachment(getManagedBean()
-						.getScQtEvaluationReportList());
+						.getScQtEvaluationReportDetailList());// #25651
 				SaveEvaluationAttachment(this.getManagedBean()
-						.getReportDownloadFileName() + ".zip", scAttachment);
+						.getReportDownloadAllFileName() + ".zip", scAttachment);// #25651
 				convertmultipleFilesAsaZipFile(attachments, scAttachment);
 				scQt.setScFinancialEvaluationReportAttachment(attachment);
 				reqDTO.setScQt(scQt);
@@ -10418,20 +10426,48 @@ private void retriveCommitteeRemarksList(){
 		 * FacesContext.getCurrentInstance().addMessage(null, message);
 		 */
 	}
+	
 	private List<ScAttachment> convertReportAsReportAttachment(
-			List<ScQtEvaluationReport> evaluationReports) throws Exception {
+			List<ScQtEvaluationReportDetail> evaluationReports) throws Exception { // #25651
 		List<ScAttachment> attachments = new ArrayList<ScAttachment>();
 		try {
+			
+			//#25651 - Start
+			String comiteeType = this.getManagedBean().getCommitteeType();
+			List<Object[]> reportDetailList = new ArrayList<>();
+			
+			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+				reportDetailList = reportDetailECAttachmentType(comiteeType);
+			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+				reportDetailList = reportDetailECAttachmentType(comiteeType);
+			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+				reportDetailList = reportDetailECAttachmentType(comiteeType);
+			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+				reportDetailList = reportDetailECAttachmentType(comiteeType);
+			}
+			//#25651 - End
+			
 			if (null != evaluationReports) {
-				for(ScQtEvaluationReport evaluationreport:evaluationReports){
+				for(ScQtEvaluationReportDetail evaluationreport:evaluationReports){ // #25651
 					if(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD.equalsIgnoreCase(evaluationreport.getDefinationType().getParameterCode())){
-						if(null!=evaluationreport.getScQtEvaluationReportAttachment()){
-							attachments.add(evaluationreport.getScQtEvaluationReportAttachment());	
+						if(null!=evaluationreport.getScQtEvaluationReportDetailAttachment()){ // #25651
+							attachments.add(evaluationreport.getScQtEvaluationReportDetailAttachment());// #25651
 						}
 					}
 					
+					//#25651 - Start
+					if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(evaluationreport.getDefinationType().getParameterCode())){
+						for (Object[] reportDetail : reportDetailList) {
+							String codeReportName = (String) reportDetail[0];
+							String fileReportName = (String) reportDetail[1];
+						    if(codeReportName.equals(evaluationreport.getPmDocument().getDocDefinitionKey())){
+						    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
+						    }
+						}
+					}
+					//#25651 - End
+					
 				}
-				attachments.add(generateDocumentAttachment());
 			}
 			
 
@@ -11364,14 +11400,14 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void downloadReport() throws Exception {
+	public void downloadReport(ScQtEvaluationReportDetail scQtEvaluationReportDetail) throws Exception {// #25651
 		debugLogger("downloadReport");
-		  log.info("Start EvaluationdownloadReport"+DateUtils.getCurrentDate());
-		ScAttachment evalReportAttachment = generateDocumentAttachment();
-		downloadFile(evalReportAttachment);
+		log.info("Start EvaluationdownloadReport"+DateUtils.getCurrentDate());
+		generateDocumentAttachment(scQtEvaluationReportDetail);// #25651
 		log.info("end EvaluationdownloadReport"+DateUtils.getCurrentDate());
 	}
 
+	// #25651 - Start
 	/**
 	 * Generate document attachment.generate all evaluation reports.
 	 * 
@@ -11381,199 +11417,163 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
-	private ScQtEvaluationReportAttachment generateDocumentAttachment(
-			ScQtEvaluationReport scQtEvaluationReport) throws Exception {
-		debugLogger("generateDocumentAttachment");
-		String definitionType = scQtEvaluationReport.getDefinationType()
-				.getParameterCode();
-		ScQtEvaluationReportAttachment scQtEvaluationReportAttachment = null;
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(definitionType)) {
-			String docDefinitionKey = scQtEvaluationReport.getPmDocument()
-					.getDocDefinitionKey();
-			scQtEvaluationReportAttachment = new ScQtEvaluationReportAttachment();
-			scQtEvaluationReportAttachment
-					.setScQtEvaluationReport(scQtEvaluationReport);
-			scQtEvaluationReportAttachment.setDocNo(scQtEvaluationReport
-					.getScQt().getQtNo());
+	private void generateDocumentAttachment(ScQtEvaluationReportDetail scQtEvaluationReportDetail) throws Exception {
 
-			StringBuilder filename = new StringBuilder();
-			// replace white space due to firefox
-			filename.append(scQtEvaluationReport.getTitle().replaceAll("\\s",
-					"_"));
+		ScQt scQt = getManagedBean().getScQt();
+		String comiteeType = this.getManagedBean().getCommitteeType();
+		String docDefinitionKey = scQtEvaluationReportDetail.getPmDocument().getDocDefinitionKey();
+		String definitionType = scQtEvaluationReportDetail.getDefinationType().getParameterCode();
+		List<String> reportDetailList = new ArrayList<>();
 
-//			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
-//				filename.append(".pdf");
-//				scQtEvaluationReportAttachment.setFileName(filename.toString());
-//				generateCoverPdfFromVelocity(
-//						(ScAttachment) scQtEvaluationReportAttachment,
-//						getManagedBean().getScQt());
-//			} else if (SourcingConstants.DOC_DEF_KEY_MAKLUMAT_TENDER_HARGA
-//					.equals(docDefinitionKey)) {
-//				// filename.append(".pdf");
-//				// scQtEvaluationReportAttachment.setFileName(filename.toString());
-//				generateMaklumatTenderHargaPdfFromVelocity(
-//						(ScAttachment) scQtEvaluationReportAttachment,
-//						getManagedBean().getScQt());
-//			} else if (SourcingConstants.DOC_DEF_KEY_MEETING_DTLS
-//					.equals(docDefinitionKey)) {
-//				filename.append(".pdf");
-//				scQtEvaluationReportAttachment.setFileName(filename.toString());
-//				generateMeetingDetailsPdfFromVelocity(
-//						(ScAttachment) scQtEvaluationReportAttachment,
-//						getManagedBean().getScQt());
-//
-//			} else if (SourcingConstants.DOC_DEF_KEY_COMMITTEE_DTLS
-//					.equals(docDefinitionKey)) {
-//				filename.append(".pdf");
-//				scQtEvaluationReportAttachment.setFileName(filename.toString());
-//				generateCommitteeDetailsPdfFromVelocity(
-//						(ScAttachment) scQtEvaluationReportAttachment,
-//						getManagedBean().getScQt());
-//
-//			}  
-				
-			if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_SHORTLISTED
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generatePematuhan1Pdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_ASSESSMENT_METHOD
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateKaedah1Pdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_SHORTLISTED
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generatePematuhan2Pdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_ASSESSMENT_METHOD
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateKaedah2Pdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_ASSESSMENT_METHOD_FIN
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateFinancialKaedah2Pdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_TECH_FIN_EVALUATION
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateAnalisisKeputusanPenilaianTeknikalPdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_TECH_SPECIFICATION
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateTeknikalSpecificationPdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_EVAL_REPORT
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateEvaluationPdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_HARGA_TAWARAN
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateHargaTawaranPdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_OVERALL_FIN_RESULT
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateOverallFinancialResultPdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_OVERALL_TECH_RESULT
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateOverallTechnicalResultPdf(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_USER_SCORE_SCHEMA
-					.equals(docDefinitionKey)) {
-				if (null != getManagedBean().getScQt()
-						.getTechnicalUserScoringSchemaAttachment()) {
-					filename = new StringBuilder();
-					filename.append(getManagedBean().getScQt()
-							.getTechnicalUserScoringSchemaAttachment()
-							.getFileName().replaceAll("\\s", "_"));
-					// filename.append(".pdf");
-					scQtEvaluationReportAttachment.setFileName(filename
-							.toString());
-					scQtEvaluationReportAttachment.setFilePath(getManagedBean()
-							.getScQt()
-							.getTechnicalUserScoringSchemaAttachment()
-							.getFilePath());
-				}
-				// downloadFile(scQtEvaluationReportAttachment);
-				// downloadLocalFile(scQtEvaluationReportAttachment);
-			} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_USER_SCORE_SCHEMA
-					.equals(docDefinitionKey)) {
-				if (null != getManagedBean().getScQt()
-						.getFinancialUserScoringSchemaAttachment()) {
-					filename = new StringBuilder();
-					filename.append(getManagedBean().getScQt()
-							.getFinancialUserScoringSchemaAttachment()
-							.getFileName().replaceAll("\\s", "_"));
-					// filename.append(".pdf");
-					scQtEvaluationReportAttachment.setFileName(filename
-							.toString());
-					scQtEvaluationReportAttachment.setFilePath(getManagedBean()
-							.getScQt()
-							.getFinancialUserScoringSchemaAttachment()
-							.getFilePath());
-				}
-				// downloadFile(scQtEvaluationReportAttachment);
-				// downloadLocalFile(scQtEvaluationReportAttachment);
-			}
-			scQtEvaluationReport
-					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
-		} else {
-			String docDefinitionKey = scQtEvaluationReport.getPmDocument()
-					.getDocDefinitionKey();
-			scQtEvaluationReportAttachment = new ScQtEvaluationReportAttachment();
-			scQtEvaluationReportAttachment
-					.setScQtEvaluationReport(scQtEvaluationReport);
-			scQtEvaluationReportAttachment.setDocNo(scQtEvaluationReport
-					.getScQt().getQtNo());
-			if (SourcingConstants.DOC_DEF_KEY_QT_INFO.equals(docDefinitionKey)) {
-				//generateSebutHargaPdfFromVelocity(
-						//(ScAttachment) scQtEvaluationReportAttachment,
-						//scQtEvaluationReport);
-			}
-			//scQtEvaluationReport
-					//.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+			reportDetailList = reportDetailECAttachmentType(docDefinitionKey, comiteeType);
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+			reportDetailList = reportDetailECAttachmentType(docDefinitionKey, comiteeType);
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+			reportDetailList = reportDetailECAttachmentType(docDefinitionKey, comiteeType);
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+			reportDetailList = reportDetailECAttachmentType(docDefinitionKey, comiteeType);
 		}
-		return scQtEvaluationReportAttachment;
+
+		if (definitionType.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)) {
+			List<ScAttachment> evalReportAttachments = new ArrayList<>();
+			for (String reportDetail : reportDetailList) {
+
+				ScAttachment reportAttachment = new ScQtEvaluationReportDetailAttachment();
+				StringBuilder fileName = new StringBuilder(reportDetail);
+				fileName.append(".pdf");
+				reportAttachment.setFileName(fileName.toString());
+				reportAttachment.setDocNo(scQt.getQtNo());
+				generateEvaluationPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, false);
+				evalReportAttachments.add(reportAttachment);
+
+			}
+			downloadAllFiles(this.getManagedBean().getReportDownloadFileName(), evalReportAttachments);
+		}
+
 	}
+	// #25651 - End
 	
-	private ScAttachment generateDocumentAttachment() throws Exception {
+	// #25651 - Start
+	/**
+	 * Generate file document for all committee evaluation reports detail.
+	 * 
+	 * @param docDefinitionKey
+	 * @param comiteeType
+	 * @return List<String>
+	 * 
+	 */
+	private List<String> reportDetailECAttachmentType(String docDefinitionKey, String comiteeType) {
+
+		List<String> reportDetailList = new ArrayList<>();
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		int countTechItemReport = 0;
+		int countTechPackageReport = 0;
+		int countFinancalItemReport = 0;
+		int countFinancalPackageReport = 0;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)) {
+				switch (comiteeType) {
+				case ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE:
+					if (entry.getValue().equals(SourcingConstants.LAPORAN_MAKLUMAT_UMUM_EC)) {
+						reportDetailList.add(entry.getValue());
+					}
+					this.getManagedBean().setReportDownloadFileName(
+							SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_MAKLUMAT_UMUM);
+					break;
+				case ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE:
+					if (entry.getValue().equals(SourcingConstants.LAPORAN_MAKLUMAT_UMUM_OC)) {
+						reportDetailList.add(entry.getValue());
+					}
+					this.getManagedBean().setReportDownloadFileName(
+							SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_PEMATUHAN_MAKLUMAT_UMUM);
+					break;
+				case ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE:
+					if (entry.getValue().equals(SourcingConstants.LAPORAN_MAKLUMAT_UMUM_TEC)) {
+						reportDetailList.add(entry.getValue());
+					}
+					this.getManagedBean().setReportDownloadFileName(
+							SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_TEKNIKAL_MAKLUMAT_UMUM);
+					break;
+				case ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE:
+					if (entry.getValue().equals(SourcingConstants.LAPORAN_MAKLUMAT_UMUM_FEC)) {
+						reportDetailList.add(entry.getValue());
+					}
+					this.getManagedBean().setReportDownloadFileName(
+							SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_KEWANGAN_MAKLUMAT_UMUM);
+					break;
+				default:
+					break;
+				}
+
+			} else if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN.equals(docDefinitionKey)) {
+				reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_PEMATUHAN);
+				this.getManagedBean()
+						.setReportDownloadFileName(SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_PEMATUHAN);
+
+			} else if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)) {
+				countTechItemReport++;
+				if (countTechItemReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_SECARA_ITEM);
+
+				} else if (countTechItemReport == DbValueConst.RECORD_STATUS_CANCELLED) {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_LAMPIRAN_ITEM);
+
+				} else {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_PERINCIAN_ITEM);
+				}
+				this.getManagedBean().setReportDownloadFileName(
+						SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_TEKNIKAL_ITEM);
+
+			} else if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)) {
+				countTechPackageReport++;
+				if (countTechPackageReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_SECARA_PAKEJ);
+
+				} else if (countTechPackageReport == DbValueConst.RECORD_STATUS_CANCELLED) {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_LAMPIRAN_PAKEJ);
+
+				} else {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_PERINCIAN_PAKEJ);
+				}
+				this.getManagedBean().setReportDownloadFileName(
+						SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_TEKNIKAL_PAKEJ);
+
+			} else if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)) {
+				countFinancalItemReport++;
+				if (countFinancalItemReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_SECARA_ITEM);
+				} else {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_LAMPIRAN_ITEM);
+				}
+				this.getManagedBean().setReportDownloadFileName(
+						SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_KEWANGAN_ITEM);
+
+			} else if (entry.getKey().equals(docDefinitionKey)
+					&& SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)) {
+				countFinancalPackageReport++;
+				if (countFinancalPackageReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_SECARA_PAKEJ);
+				} else {
+					reportDetailList.add(SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_LAMPIRAN_PAKEJ);
+				}
+				this.getManagedBean().setReportDownloadFileName(
+						SourcingConstants.FILE_NAME_LAPORAN_PENILAIAN_KEWANGAN_PAKEJ);
+
+			}
+		}
+		return reportDetailList;
+	}
+
+	// #25651 - End
+	
+	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {//#25651
 		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = null;
@@ -11608,14 +11608,11 @@ private void retriveCommitteeRemarksList(){
 		}
 		// 37617 - end
 		
-		StringBuilder fileName = new StringBuilder(
-				getManagedBean().getReportDownloadFileName());
+		StringBuilder fileName = new StringBuilder(fileReportName); //#25651
 		fileName.append(".pdf");
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		generateEvaluationPdf(
-				(ScAttachment) reportAttachment,
-				getManagedBean().getScQt());
+		generateEvaluationPdf((ScAttachment) reportAttachment ,scQt , docDefinitionKey, true); //#25651
 		
 		return reportAttachment;
 	}
@@ -11893,8 +11890,8 @@ private void retriveCommitteeRemarksList(){
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
-	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt)
-			throws Exception {
+	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String docDefinitionKey, boolean isDownloadAll)
+			throws Exception { // #25621
 		debugLogger("generateEvaluationPdf");
 		populateAttachmentDetails(attachment);
 		
@@ -11910,33 +11907,37 @@ private void retriveCommitteeRemarksList(){
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
 		
 		String reportName = StringUtils.EMPTY;
+		String committeeType = this.getManagedBean().getCommitteeType(); // #25651
 		
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
 			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
 			} else {
-				log.info("================================");
-				reportName = ReportConst.SC_EC_RPT_JSP;
+				//reportName = ReportConst.SC_EC_RPT_JSP;
+				reportName = (isDownloadAll)? downloadAllECReportDetail(docDefinitionKey): downloadECReportDetail(docDefinitionKey);// #25651
 			}
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
 			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 				reportName = ReportConst.SC_OC_RPT_WIP_JSP;
 			} else {
-				reportName = ReportConst.SC_OC_RPT_JSP;
+				//reportName = ReportConst.SC_OC_RPT_JSP;
+				reportName = (isDownloadAll)? downloadAllOCReportDetail(docDefinitionKey): downloadOCReportDetail(docDefinitionKey);// #25651
 			}
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(this.getManagedBean()
 				.getCommitteeType())) {
 			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 				reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
 			} else {
-				reportName = ReportConst.SC_TEC_RPT_JSP;
+				//reportName = ReportConst.SC_TEC_RPT_JSP;
+				reportName = (isDownloadAll)? downloadAllTECReportDetail(docDefinitionKey): downloadTECReportDetail(docDefinitionKey);// #25651
 			}
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(this.getManagedBean()
 				.getCommitteeType())) {
 			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 				reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
 			} else {
-				reportName = ReportConst.SC_FEC_RPT_JSP;
+				//reportName = ReportConst.SC_FEC_RPT_JSP;
+				reportName = (isDownloadAll)? downloadAllFECReportDetail(docDefinitionKey): downloadFECReportDetail(docDefinitionKey);// #25651
 			}
 		}
 		//#35015 wip 4ser -End		
@@ -11955,7 +11956,9 @@ private void retriveCommitteeRemarksList(){
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_EC_REPORT_DETAIL, committeeType + ""); // #25651
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		
 		
 		if (StringUtils.isNotBlank(reportName)) { 
 			generatePdfFromOracle(reportName, paramMap, attachment, this
@@ -12647,6 +12650,110 @@ private void retriveCommitteeRemarksList(){
 //				SourcingConstants.DOCPATH_EV_COVER, context,
 //				new FileOutputStream(getActualFilePath(attachment)));
 //	}
+	
+	// #25651 - Start
+	/**
+	 * Generate list file documents for all committee evaluation reports detail.
+	 * 
+	 * @param comiteeType
+	 * @return List<String>
+	 * 
+	 */
+	private List<Object[]> reportDetailECAttachmentType(String comiteeType) {
+		List<Object[]> reportDetailList = new ArrayList<>();
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		int countTechItemReport = 0;
+		int countTechPackageReport = 0;
+		int countFinancalItemReport = 0;
+		int countFinancalPackageReport = 0;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM)) {
+				switch (comiteeType) {
+				case ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE:
+					if (entry.getValue().equals(SourcingConstants.LAPORAN_MAKLUMAT_UMUM_EC)) {
+						reportDetailList.add(new Object[] { entry.getKey(), entry.getValue() });
+					}
+					break;
+				case ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE:
+					if (entry.getValue().equals(SourcingConstants.LAPORAN_MAKLUMAT_UMUM_OC)) {
+						reportDetailList.add(new Object[] { entry.getKey(), entry.getValue() });
+					}
+					break;
+				case ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE:
+					if (entry.getValue().equals(SourcingConstants.LAPORAN_MAKLUMAT_UMUM_TEC)) {
+						reportDetailList.add(new Object[] { entry.getKey(), entry.getValue() });
+					}
+					break;
+				case ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE:
+					if (entry.getValue().equals(SourcingConstants.LAPORAN_MAKLUMAT_UMUM_FEC)) {
+						reportDetailList.add(new Object[] { entry.getKey(), entry.getValue() });
+					}
+					break;
+				default:
+					break;
+				}
+			} else if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN)) {
+				reportDetailList.add(new Object[] { entry.getKey(), SourcingConstants.LAPORAN_PENILAIAN_PEMATUHAN });
+
+			} else if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM)) {
+				countTechItemReport++;
+				if (countTechItemReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_SECARA_ITEM });
+					
+				} else if (countTechItemReport == DbValueConst.RECORD_STATUS_CANCELLED) {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_LAMPIRAN_ITEM });
+					
+			    } else {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_PERINCIAN_ITEM });
+				}
+
+			} else if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ)) {
+				countTechPackageReport++;
+				if (countTechPackageReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_SECARA_PAKEJ });
+					
+				} else if (countTechPackageReport == DbValueConst.RECORD_STATUS_CANCELLED) {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_LAMPIRAN_PAKEJ });
+				} else {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_PERINCIAN_PAKEJ });
+				}
+
+			}  else if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM)) {
+				countFinancalItemReport++;
+				if (countFinancalItemReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_SECARA_ITEM });
+				} else {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_LAMPIRAN_ITEM });
+				}
+	
+			} else if (entry.getKey().equals(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ)) {
+				countFinancalPackageReport++;
+				if (countFinancalPackageReport == DbValueConst.RECORD_STATUS_ACTIVE) {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_SECARA_PAKEJ });
+				} else {
+					reportDetailList.add(new Object[] { entry.getKey(),
+							SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_LAMPIRAN_PAKEJ });
+				}
+			
+			}
+			
+		}
+		return reportDetailList;
+	}
+
+	// #25651 - End
+
+	// #25651 - End
 
 	/**
 	 * Download all reports.download all evaluation reports.
@@ -12656,8 +12763,24 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void downloadAllReports() throws Exception {
 		debugLogger("downloadAllReports");
-		List<ScQtEvaluationReport> evaluationReports = getManagedBean()
-				.getScQtEvaluationReportList();
+		
+		// #25651 - Start
+		String comiteeType = this.getManagedBean().getCommitteeType();
+		List<Object[]> reportDetailList = new ArrayList<>();
+		
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+			reportDetailList = reportDetailECAttachmentType(comiteeType);
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+			reportDetailList = reportDetailECAttachmentType(comiteeType);
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+			reportDetailList = reportDetailECAttachmentType(comiteeType);
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(comiteeType)) {
+			reportDetailList = reportDetailECAttachmentType(comiteeType);
+		}
+		// #25651 - End
+		
+		List<ScQtEvaluationReportDetail> evaluationReports = getManagedBean()
+				.getScQtEvaluationReportDetailList();// #25651
 		List<ScAttachment> attachments = new ArrayList<ScAttachment>();
 		/*for (ScQtEvaluationReport scQtEvaluationReport : evaluationReports) {
 			ScQtEvaluationReportAttachment reportAttachment = scQtEvaluationReport
@@ -12670,17 +12793,28 @@ private void retriveCommitteeRemarksList(){
 			}
 			attachments.add(reportAttachment);
 		}*/
-		for(ScQtEvaluationReport evaluationreport:evaluationReports){
+		for(ScQtEvaluationReportDetail evaluationreport:evaluationReports){// #25651
 			if(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD.equalsIgnoreCase(evaluationreport.getDefinationType().getParameterCode())){
-				if(null!=evaluationreport.getScQtEvaluationReportAttachment()){
-					attachments.add(evaluationreport.getScQtEvaluationReportAttachment());	
+				if(null!=evaluationreport.getScQtEvaluationReportDetailAttachment()){// #25651
+					attachments.add(evaluationreport.getScQtEvaluationReportDetailAttachment());// #25651	
 				}
 			}
 			
+			// #25651 - Start
+			if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(evaluationreport.getDefinationType().getParameterCode())){
+				for (Object[] reportDetail : reportDetailList) {
+					String codeReportName = (String) reportDetail[0];
+					String fileReportName = (String) reportDetail[1];
+				    if(codeReportName.equals(evaluationreport.getPmDocument().getDocDefinitionKey())){
+				    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
+				    }
+				}
+			}
+			// #25651 - End
+			
 		}
-		attachments.add(generateDocumentAttachment());
-		downloadAllFiles(this.getManagedBean().getReportDownloadFileName(),
-				attachments);
+	
+		downloadAllFiles(this.getManagedBean().getReportDownloadAllFileName(), attachments); // #25651
 	}
 
 	/**
@@ -15210,13 +15344,13 @@ private void retriveCommitteeRemarksList(){
 	public void addDocumentList() {
 		debugLogger("addDocumentList");
 		ScQt scQt = this.getManagedBean().getScQt();
-		List<ScQtEvaluationReport> scQtDocReports = this.getManagedBean()
-				.getScQtEvaluationReportList();
+		List<ScQtEvaluationReportDetail> scQtDocReports = this.getManagedBean()
+				.getScQtEvaluationReportDetailList(); //#25651
 		if (scQtDocReports == null) {
-			scQtDocReports = new ArrayList<ScQtEvaluationReport>();
+			scQtDocReports =  new ArrayList<ScQtEvaluationReportDetail>();//#25651
 			//scQt.setScQtE(scQtDocReports);
 		}
-		ScQtEvaluationReport scQtDocReport = new ScQtEvaluationReport();
+		ScQtEvaluationReportDetail scQtDocReport = new ScQtEvaluationReportDetail();//#25651
 		scQtDocReport
 				.setDocCategory(EvaluationReport.getName(getManagedBean()
 						.getCommitteeType()));
@@ -15255,22 +15389,22 @@ private void retriveCommitteeRemarksList(){
 			throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
-			ScQtEvaluationReport selectedEvaluationReport = getManagedBean()
-					.getSelectedReport();
-			ScQtEvaluationReportAttachment reportAttachment = selectedEvaluationReport
-					.getScQtEvaluationReportAttachment();
+			ScQtEvaluationReportDetail selectedEvaluationReport = getManagedBean()
+					.getSelectedReportDetail();// #25651
+			ScQtEvaluationReportDetailAttachment reportAttachment = selectedEvaluationReport
+					.getScQtEvaluationReportDetailAttachment();// #25651
 			if (null == reportAttachment) {
-				reportAttachment = new ScQtEvaluationReportAttachment();
-				reportAttachment.setScQtEvaluationReport(selectedEvaluationReport);
+				reportAttachment = new ScQtEvaluationReportDetailAttachment(); //#25651
+				reportAttachment.setScQtEvaluationReportDetail(selectedEvaluationReport); //#25651
 				selectedEvaluationReport
-						.setScQtEvaluationReportAttachment(reportAttachment);
+				        .setScQtEvaluationReportDetailAttachment(reportAttachment); //#25651
 			} else {
-				reportAttachment.setScQtEvaluationReport(selectedEvaluationReport);
+				reportAttachment.setScQtEvaluationReportDetail(selectedEvaluationReport); //#25651
 				selectedEvaluationReport
-						.setScQtEvaluationReportAttachment(reportAttachment);
+				        .setScQtEvaluationReportDetailAttachment(reportAttachment); //#25651
 			}
-			List<ScQtEvaluationReport> evaluationReports = getManagedBean()
-					.getScQtEvaluationReportList();
+			List<ScQtEvaluationReportDetail> evaluationReports = getManagedBean()
+					.getScQtEvaluationReportDetailList();  //#25651
 			int indexOfReport = evaluationReports.indexOf(selectedEvaluationReport);
 			reportAttachment.setDocNo(selectedEvaluationReport.getScQt()
 					.getQtNo());
@@ -15282,7 +15416,7 @@ private void retriveCommitteeRemarksList(){
 						+ fileName);
 			}
 			selectedEvaluationReport
-					.setScQtEvaluationReportAttachment(reportAttachment);
+			        .setScQtEvaluationReportDetailAttachment(reportAttachment); //#25651
 			
 		}
 	}
@@ -15299,11 +15433,11 @@ private void retriveCommitteeRemarksList(){
 		
 		try{
 		log.debug("deleteReportsUploadFile");
-		ScQtEvaluationReport selectedEvaluationReport = getManagedBean()
-				.getSelectedReport();
-		selectedEvaluationReport.setScQtEvaluationReportAttachment(null);
+		ScQtEvaluationReportDetail selectedEvaluationReport = getManagedBean()
+				.getSelectedReportDetail(); //#25651
+		selectedEvaluationReport.setScQtEvaluationReportDetailAttachment(null); //#25651
 		 getManagedBean()
-			.setSelectedReport(selectedEvaluationReport);
+			.setSelectedReportDetail(selectedEvaluationReport); //#25651
 		}finally{
 		
 		}
@@ -15316,18 +15450,18 @@ private void retriveCommitteeRemarksList(){
 	 *  
 	 */
 	public void deleteReportsTabDtls() {
-		List<ScQtEvaluationReport> evaluationReportRemoveList = getManagedBean()
-				.getReportsToBeRemovedList();
+		List<ScQtEvaluationReportDetail> evaluationReportRemoveList = getManagedBean()
+				.getReportDetailsToBeRemovedList(); //#25651
 		if (null == evaluationReportRemoveList) {
-			evaluationReportRemoveList = new ArrayList<ScQtEvaluationReport>();
+			evaluationReportRemoveList = new ArrayList<ScQtEvaluationReportDetail>(); //#25651
 			getManagedBean()
-			.setReportsToBeRemovedList(evaluationReportRemoveList);
+			.setReportDetailsToBeRemovedList(evaluationReportRemoveList); //#25651
 		}
 		markDeleteSelectedRowsAction(getManagedBean()
-				.getScQtEvaluationReportList(), evaluationReportRemoveList);
+				.getScQtEvaluationReportDetailList(), evaluationReportRemoveList); //#25651
 		if(CollectionUtils.isNotEmpty(evaluationReportRemoveList)){
 			getManagedBean()
-			.setReportsToBeRemovedList(evaluationReportRemoveList);
+			.setReportDetailsToBeRemovedList(evaluationReportRemoveList); //#25651
 		}
 
 	}
@@ -15338,15 +15472,15 @@ private void retriveCommitteeRemarksList(){
 		try{
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		List<ScQtEvaluationReport> evaluationReportList=this.getManagedBean().getScQtEvaluationReportList();
+		List<ScQtEvaluationReportDetail> evaluationReportList=this.getManagedBean().getScQtEvaluationReportDetailList(); //#25651
 		EvaluationReqDTO reqDTO=new EvaluationReqDTO();
-		reqDTO.setEvaluationReportList(evaluationReportList);
+		reqDTO.setEvaluationReportDetailList(evaluationReportList); //#25651
 		reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
 		if(CollectionUtils.isNotEmpty(getManagedBean()
-				.getReportsToBeRemovedList())){
-			List<ScQtEvaluationReport> localReports=new ArrayList<ScQtEvaluationReport>();
-		for(ScQtEvaluationReport evaluationReport:getManagedBean()
-				.getReportsToBeRemovedList()){
+				.getReportDetailsToBeRemovedList())){ //#25651
+			List<ScQtEvaluationReportDetail> localReports=new ArrayList<>(); //#25651
+		for(ScQtEvaluationReportDetail evaluationReport:getManagedBean()
+				.getReportDetailsToBeRemovedList()){ //#25651
 			if(null!=evaluationReport.getQtReportId() && !evaluationReport.isBrandNew()){
 				evaluationReport.setDeleted(true);
 				localReports.add(evaluationReport);
@@ -15357,7 +15491,7 @@ private void retriveCommitteeRemarksList(){
 		}
 		EvaluationResDTO resDto=evaluationSO.saveReportsDtls(reqDTO);
 		getManagedBean()
-		.setReportsToBeRemovedList(null);
+		.setReportDetailsToBeRemovedList(null); //#25651
 		}finally{
 			evaluationSO = null;
 		}
@@ -20288,4 +20422,401 @@ private void retriveCommitteeRemarksList(){
 		return newScoreValue;
 	}
 	//#38151 end
+	
+	// #25651 - Start
+	/**
+	 * To get report detail each file name for EC commitee.
+	 * 
+	 * @param docDefinitionKey
+	 * @return reportDetailCodeName
+	 */
+	private String downloadECReportDetail(String docDefinitionKey) {
+		countDownloadReports++;
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey)) {
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN
+					.equals(docDefinitionKey) && entry.getKey().equals(docDefinitionKey)) {
+				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_TEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 3) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_SPEC_RPT_JSP;
+
+			}else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_TEC_PACKAGE_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_TEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 3) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_SPEC_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_FEC_ITEM_RPT_JSP; 
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_FEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_FEC_PACKAGE_RPT_JSP;
+				
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_FEC_APPENDIX_RPT_JSP;
+			}
+		}
+
+		return reportDetailCodeName;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report detail for all file name for EC commitee.
+	 * 
+	 * @param docDefinitionKey
+	 * @return reportDetailCodeName
+	 */
+	private String downloadAllECReportDetail(String docDefinitionKey) {
+		countDownloadAllReports++; 
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+		
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN
+					.equals(docDefinitionKey) && entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
+				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 3) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 4) {
+				reportDetailCodeName = ReportConst.SC_TEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 5) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_SPEC_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 6) {
+				reportDetailCodeName = ReportConst.SC_TEC_PACKAGE_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 7) {
+				reportDetailCodeName = ReportConst.SC_TEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 8) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_SPEC_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 9) {
+				reportDetailCodeName = ReportConst.SC_FEC_ITEM_RPT_JSP; 
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 10) {
+				reportDetailCodeName = ReportConst.SC_FEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 11) {
+				reportDetailCodeName = ReportConst.SC_FEC_PACKAGE_RPT_JSP;
+				
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 12) {
+				reportDetailCodeName = ReportConst.SC_FEC_APPENDIX_RPT_JSP;
+			}
+	    }
+		return reportDetailCodeName;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report detail each file name for OC commitee.
+	 * 
+	 * @param docDefinitionKey
+	 * @return reportDetailCodeName
+	 */
+	private String downloadOCReportDetail(String docDefinitionKey) {
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey)) {
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN
+					.equals(docDefinitionKey) && entry.getKey().equals(docDefinitionKey)) {
+				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+			}
+		}
+
+		return reportDetailCodeName;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report detail for all file name for OC commitee.
+	 * 
+	 * @param docDefinitionKey
+	 * @return reportDetailCodeName
+	 */
+	private String downloadAllOCReportDetail(String docDefinitionKey) {
+		countDownloadAllReports++; 
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+		
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
+				
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN
+					.equals(docDefinitionKey) && entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
+				reportDetailCodeName = ReportConst.SC_OC_DOC_COMPLIANCE_RPT_JSP;
+
+			}
+	    }
+		return reportDetailCodeName;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report detail each file name for FEC commitee.
+	 * 
+	 * @param docDefinitionKey
+	 * @return reportDetailCodeName
+	 */
+	private String downloadTECReportDetail(String docDefinitionKey) {
+		countDownloadReports++;
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey)) {
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_TEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 3) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_SPEC_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_TEC_PACKAGE_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_TEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 3) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_SPEC_RPT_JSP;
+
+			} 
+		}
+
+		return reportDetailCodeName;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report detail for all file name for TEC commitee.
+	 * 
+	 * @param docDefinitionKey
+	 * @return reportDetailCodeName
+	 */
+	private String downloadAllTECReportDetail(String docDefinitionKey) {
+		countDownloadAllReports++; 
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+		
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
+				
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 3) {
+				reportDetailCodeName = ReportConst.SC_TEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 4) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_SPEC_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 5) {
+				reportDetailCodeName = ReportConst.SC_TEC_PACKAGE_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 6) {
+				reportDetailCodeName = ReportConst.SC_TEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 7) {
+				reportDetailCodeName = ReportConst.SC_TEC_ITEM_SPEC_RPT_JSP;
+
+			} 
+	    }
+		return reportDetailCodeName;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report detail each file name for FEC commitee.
+	 * 
+	 * @param docDefinitionKey
+	 * @return reportDetailCodeName
+	 */
+	private String downloadFECReportDetail(String docDefinitionKey) {
+		countDownloadReports++;
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey)) {
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_FEC_ITEM_RPT_JSP; 
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_FEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 1) {
+				reportDetailCodeName = ReportConst.SC_FEC_PACKAGE_RPT_JSP;
+				
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadReports == 2) {
+				reportDetailCodeName = ReportConst.SC_FEC_APPENDIX_RPT_JSP;
+			}
+		}
+
+		return reportDetailCodeName;
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report detail for all file name for FEC commitee.
+	 * 
+	 * @param docDefinitionKey
+	 * @return reportDetailCodeName
+	 */
+	private String downloadAllFECReportDetail(String docDefinitionKey) {
+		countDownloadAllReports++; 
+		List<Map.Entry<String, String>> reportDetail = this.getManagedBean().getReportDetail();
+		String reportDetailCodeName = StringUtils.EMPTY;
+
+		for (Map.Entry<String, String> entry : reportDetail) {
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 1) {
+				reportDetailCodeName = ReportConst.SC_EC_GENERAL_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 2) {
+				reportDetailCodeName = ReportConst.SC_FEC_ITEM_RPT_JSP; 
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 3) {
+				reportDetailCodeName = ReportConst.SC_FEC_APPENDIX_RPT_JSP;
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 4) {
+				reportDetailCodeName = ReportConst.SC_FEC_PACKAGE_RPT_JSP;
+				
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ.equals(docDefinitionKey)
+					&& entry.getKey().equals(docDefinitionKey) && countDownloadAllReports == 5) {
+				reportDetailCodeName = ReportConst.SC_FEC_APPENDIX_RPT_JSP;
+			}
+		}
+
+		return reportDetailCodeName;
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get label dynamic report detail instruction for evaluation commitee.
+	 * 
+	 * @param mode
+	 * @param section
+	 * @return reportDetailCodeName
+	 */
+	public String getLabelReportDetailInstruction(String mode, String section) {
+	    return "lbl.sc.evaluation."
+	            + this.getManagedBean().getCommitteeType().toLowerCase() + "."
+	            + mode + "."
+	            + section;
+	}
+	
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * Flag to check instruction report detail for committee secretary.
+	 * @return true or false
+	 */
+	public Boolean getStatusReportDetailInstruction() {
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		String committeeType = this.getManagedBean().getCommitteeType();
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		if(evaluationSO.checkStatusReportDetailInstruction(committeeType, qtId)){
+			return true;
+		}
+	    return false;
+	}
+	
+	// #25651 - End
+		
 }

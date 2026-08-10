@@ -1111,7 +1111,7 @@ public class PurchaseInquiryBackingBean extends
 				.getScRequestSupplierItem();
 		
 		// update pricing
-		updatePricing(scRequestSupplierItem);
+		//updatePricing(scRequestSupplierItem);//#29557
 		
 		finalizeRemarks(prInquiry.getRemarks());
 
@@ -2411,7 +2411,7 @@ public class PurchaseInquiryBackingBean extends
 		checkProcTypeOption();
 		dataCreatedDate = assignActualDate();
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		String parameterType = ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+		String parameterType = getManagedBean().getRequestNoteDtl().getProcurementType().getParameterType();
 		if (isGovtSellerBySupplierId(smSupplier.getSupplierId())) {
 			getManagedBean().setProcurementTypes(getRadioButtonCodeValues(parameterType, Boolean.TRUE));
 			inactiveReasonChecking();
