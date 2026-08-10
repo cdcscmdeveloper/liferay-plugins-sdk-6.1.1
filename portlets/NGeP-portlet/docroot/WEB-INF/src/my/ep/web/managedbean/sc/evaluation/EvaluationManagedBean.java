@@ -736,6 +736,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
 	List<ScQtEvaluationReportDetail> scQtEvaluationReportDetailList; 
 	private String reportDownloadAllFileName;
+	private List<ScQtEvaluationReportDetail> reportDetailsToBeRemovedList; 
+	private ScQtEvaluationReportDetail selectedReportDetail; 
 	// #25651 - End
 	
 	/**tabIndex
@@ -4918,6 +4920,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setReportDownloadAllFileName(String reportDownloadAllFileName) {
 		this.reportDownloadAllFileName = reportDownloadAllFileName;
+	}
+	
+	public List<ScQtEvaluationReportDetail> getReportDetailsToBeRemovedList() {
+		return reportDetailsToBeRemovedList;
+	}
+
+	public void setReportDetailsToBeRemovedList(List<ScQtEvaluationReportDetail> reportDetailsToBeRemovedList) {
+		this.reportDetailsToBeRemovedList = reportDetailsToBeRemovedList;
+	}
+
+	public ScQtEvaluationReportDetail getSelectedReportDetail() {
+		return selectedReportDetail;
+	}
+
+	public void setSelectedReportDetail(ScQtEvaluationReportDetail selectedReportDetail) {
+		this.selectedReportDetail = selectedReportDetail;
 	}
 	
 	//#25651 - End

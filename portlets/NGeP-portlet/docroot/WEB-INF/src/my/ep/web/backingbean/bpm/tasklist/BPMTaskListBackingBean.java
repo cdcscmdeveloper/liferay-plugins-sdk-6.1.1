@@ -239,6 +239,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.PREPARE_QT_DETAILS, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//#38107 - Start
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QUOTATION_TENDER_EGPA)
+					+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//#38107 - End
 			
 			temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME + SCProcessNameConst.APPROVE_BUDGET, SourcingConstants.NAV_PAGE_QT_APPROVAL);
 			temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME + SCProcessNameConst.APPROVE_BPK, SourcingConstants.NAV_PAGE_QT_APPROVAL);
@@ -751,6 +755,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					)+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					)+ SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//#38107 - Start
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_EGPA + SCProcessNameConst.REVISE_QT_SCHEDULE,
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//#38107 - End
 			
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
 					)+ SCProcessNameConst.APPROVE_BUDGET,

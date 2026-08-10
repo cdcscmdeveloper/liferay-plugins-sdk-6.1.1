@@ -12,8 +12,8 @@
 		styleClass="pop_up_top"
 		header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650"
 		height="650">
-		<p:ajax event="close" oncomplete="blockWidget.hide()"
-			update="@all"
+		<p:ajax event="close"
+			update="@([id$=technicalChecklistPreviewId])"
 			actionListener="#{specificationBackingBean.closeTechChecklistPreview()}" />
 
 		<p:panel id="technicalChecklistPreviewPanel1Id"
@@ -51,12 +51,12 @@
 						<p:selectBooleanCheckbox
 							value="#{specificationBackingBean.managedBean.selectAllTechPreview}">
 							<p:ajax partialSubmit="true" process="@this"
-								update="@([id$=technicalChecklistTitleListId])"
+								update="@([id$=technicalChecklistTitleListId], [id$=techSelectedDownloadButton])"
 								listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.selectAllTechPreview, specificationBackingBean.managedBean.techChecklistPreview)}" />
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{techChecklist.selected}">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=technicalChecklistTitleListId])"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=technicalChecklistTitleListId], [id$=techSelectedDownloadButton])"
 							listener="#{specificationBackingBean.updateSelectedTechnicalChecklistPreviewIndex(techChecklist)}" />
 					</p:selectBooleanCheckbox>
 
@@ -71,22 +71,16 @@
 
 			</p:dataTable>
 			<div align="right">
-				<ui:remove> Hidden Download Button to call actual method to download </ui:remove>
-				<p:commandButton style="display:none;" id="techDownloadButton"
+				<p:commandButton id="techSelectedDownloadButton"
+					disabled="#{specificationBackingBean.disableDownloadButtonForPopup(specificationBackingBean.managedBean.techChecklistPreview)}"
+					styleClass="BtnSpacing" process="@this"
 					value="#{lbl['lbl.btn.download']}" ajax="false"
-					binding="#{tecButton}"
 					action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport(tecButton)}" />
-				<ui:remove> This method will check if atleast one checklist is selected </ui:remove>
-				<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="true"
-					styleClass="BtnSpacing"
-					action="#{specificationBackingBean.validateAtleastOneChecklistSelected(tecButton.clientId,true)}"
-					process="@this" update="@([id$=techDownloadButton])" />
 			</div>
 		</p:panel>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true"
-				oncomplete="blockWidget.hide()"
-				update="@([id$=stageTwotechProposal])"
+				update="@([id$=technicalChecklistPreviewId])"
 				onclick="technicalChecklistPreview.hide();"
 				action="#{specificationBackingBean.closeTechChecklistPreview()}"
 				styleClass="BtnSpacing" process="@this" />
