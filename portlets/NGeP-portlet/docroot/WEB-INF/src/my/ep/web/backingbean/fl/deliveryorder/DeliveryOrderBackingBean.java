@@ -230,11 +230,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reValidateRetrieveDelAmt();
 			}
 			
-			//improvementCode-start
-			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+			//40793-start
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				validatePOCOCurrentStatus(action, getManagedBean().getFlDeliveryOrder().getDeliveryOrderId());
 			}
-			//improvementCode-end
+			//40793-end
 						
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -2272,7 +2272,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	}
 	// #34443 end
 	
-	//improvementCode-start
+	//40793-start
 	/**
 	 * validate current POCO work flow status
 	 * 
@@ -2301,5 +2301,5 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			throw new EpException(MessageConst.ERROR_740069);
 		}
 	}
-	//improvementCode-end
+	//40793-end
 }
