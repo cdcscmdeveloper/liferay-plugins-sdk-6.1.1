@@ -908,6 +908,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
 				return;
+			} else if (!isSendNotificationButton || inactiveCLWarn) {
+				checkInactiveChecklistAndDisplayWarning(this.getManagedBean()
+						.getTaskName());
+				return;
 			}
 			//#10141 End Vinod
 			
@@ -13578,6 +13582,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSO;
 		try {
