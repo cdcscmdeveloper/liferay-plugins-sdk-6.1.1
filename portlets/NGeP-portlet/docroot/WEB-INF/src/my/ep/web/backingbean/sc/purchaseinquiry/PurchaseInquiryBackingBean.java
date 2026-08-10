@@ -1110,7 +1110,7 @@ public class PurchaseInquiryBackingBean extends
 				.getScRequestSupplierItem();
 		
 		// update pricing
-		updatePricing(scRequestSupplierItem);
+		//updatePricing(scRequestSupplierItem);//#29557
 		
 		finalizeRemarks(prInquiry.getRemarks());
 
