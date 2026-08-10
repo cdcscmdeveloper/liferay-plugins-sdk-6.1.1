@@ -15836,7 +15836,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//#28188 - End
 	
-	// 33222 - start amir
+	// 33222 - start
 	private void validateInactiveCommitteeMemberUpdate() {
 		List<TabBean> tabBeans = this.getManagedBean().getScCommitteeMemberTabList();
 		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
