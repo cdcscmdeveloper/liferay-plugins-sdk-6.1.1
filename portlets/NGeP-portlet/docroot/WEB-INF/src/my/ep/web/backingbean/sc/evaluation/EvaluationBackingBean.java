@@ -9014,7 +9014,6 @@ private void retriveCommitteeRemarksList(){
 					&& !this.getManagedBean().isDemoWip()) {
 				for (int i = 0; i < committeActivities.size(); i++) {
 					committeActivities.get(i).setSignedOff(false);
-					committeActivities.get(i).setAttended(false);
 				}
 			}
 			// #28784 - End
