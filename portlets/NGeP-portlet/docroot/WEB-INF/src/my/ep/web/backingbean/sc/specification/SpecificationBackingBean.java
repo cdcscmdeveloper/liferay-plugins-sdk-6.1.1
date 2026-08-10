@@ -355,6 +355,9 @@ public class SpecificationBackingBean extends
 	private int tempNewChecklistIndex = 0;
 	// Bug #35219@Syazani 07/11/2023 -- End
 
+	// #48486,#10141 - Start
+	private static final String TAB_CHANGE = "tabChange";
+	// #48486,#10141 - End
 	/**
 	 * Instantiates a new specification backing bean.
 	 */
@@ -1439,7 +1442,7 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
-			retriveFinancialScoring("tabChange");	// Bug #35688@Syazani 10/07/2024
+			retriveFinancialScoring(TAB_CHANGE);	// Bug #35688@Syazani 10/07/2024 / #48486,#10141 
 			break;
 
 		case 6:
@@ -2465,6 +2468,10 @@ public class SpecificationBackingBean extends
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
+			//#48486,#10141 - Start
+			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true
+					: false;
+			//#48486,#10141 - End
 			//#25138 - add if() condition - start
 			if (null == this.getManagedBean()
 					.getScQtCheckSt2financeProposalList()
@@ -2472,7 +2479,8 @@ public class SpecificationBackingBean extends
 							.getScQtCheckSt2financeProposalList().isEmpty()
 					// #25138 - 31578 - Start.
 					|| (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls()))
+										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())
+										&& isNeedRefresh) //#48486,#10141 
 					// #25138 - 31578 - End.					
 					) {
 				
@@ -3056,7 +3064,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFinancialScoring(newFinancialScoring);
 				}// #33525 - End
 				// Bug #35688@Syazani 10/07/2024 -- Start
-				boolean isNotThrow = StringUtils.isNotEmpty(condition) && "tabChange".equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024
+				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024/ // #48486,#10141 
 				finWeightageSum(isNotThrow);
 				// Bug #35688@Syazani 10/07/2024 -- End
 				localChecklist = null;
@@ -22890,7 +22898,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		for (ScQtCheckList checklist : checklists) {
 			for (ScQtCheckList inactive : this.getManagedBean().getInActiveChecklist()) {
 				if (checklist.getDocCategory().equals(inactive.getDocCategory())
-						&& inactive.getQtChecklistId() == checklist.getQtChecklistId()) {
+						&& inactive.getQtChecklistId().equals(checklist.getQtChecklistId())) {
 					checklist.setSelected(true);
 					checklist.setDeleted(true);
 					deleteCheckLists.add(checklist);
