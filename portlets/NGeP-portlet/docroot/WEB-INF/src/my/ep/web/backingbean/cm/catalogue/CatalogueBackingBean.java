@@ -12106,7 +12106,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * Updates the selected draft supplier item when the image popup is closed.
 	 * only affecting draft tab and draft_supp_temp only
 	 */
-	public void closeImagePopup(){	
+	public void closeImagePopup(){
 	    int index = this.getManagedBean().getItemSelectedIndex();
 	    CmSupplierItem selected = this.getManagedBean().getSelectedMaintainItem();
 
