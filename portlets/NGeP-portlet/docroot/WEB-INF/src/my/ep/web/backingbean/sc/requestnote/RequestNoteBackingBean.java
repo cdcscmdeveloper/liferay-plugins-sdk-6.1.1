@@ -1028,9 +1028,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				&& scRequestNote != null) {
 			checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
-		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-		    }
+			validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
 		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
 					getManagedBean().getRequestSupplierItem());
 			// 27868 - end
@@ -7677,8 +7675,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (null != rnDtl.getJustificationType() && null != rnDtl.getJustificationType().getReasonId()) {
 					PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
 							.getReasonId());
-
-					if (reason != null && !reason.isRecordStatus()) {
+					
+					if (reason == null) {
+						continue;
+					}
+					
+					boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+					if (!reasonStatus) {
 						throw new EpException(MessageConst.ERROR_760718, new String[] {
 								getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
 										.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
@@ -7687,6 +7690,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		
+		/**
+		 * Retrieves the PK7 reason status by reason ID.
+		 *
+		 * @param reasonId
+		 *            the reason ID
+		 * @return true if the reason is active, otherwise false
+		 */
+		private boolean retrievePK7ReasonStatus(Long reasonId) {
+			IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+			return reqSO.getPK7ReasonStatus(reasonId);
+		}		
 
 		/**
 		 * Retrieves the {@link PmReason} details for a given reason ID.
