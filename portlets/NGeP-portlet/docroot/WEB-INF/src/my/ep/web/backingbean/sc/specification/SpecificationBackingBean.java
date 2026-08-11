@@ -11386,13 +11386,28 @@ public class SpecificationBackingBean extends
 			try {
 				String techInactive = inactiveChecklistsForError(this.getManagedBean().getScQtCheckSt2techProposal());
 
-				if (StringUtils.isNotEmpty(techInactive) || StringUtils.isNotBlank(techInactive)) {
-					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
+				if (StringUtils.isNotEmpty(techInactive)) {
+					StringBuilder message = new StringBuilder();
+					message.append(CollectionUtils.isNotEmpty(FacesContext
+							.getCurrentInstance().getMessageList()) ? QTConstants.SPAN_ERROR_ICON
+							: "");
+					String error = MessageUtils.getMessage(
+							MessageConst.ERROR_775250,
+							new String[] { techInactive },
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale());
+					String errorAlignment = CollectionUtils
+							.isNotEmpty(FacesContext.getCurrentInstance()
+									.getMessageList()) ? QTConstants.SPAN_ERROR_CONTENT_OPEN
+							+ error + QTConstants.SPAN_ERROR_CONTENT_CLOSE
+							: error;
+					message.append(errorAlignment);
+					this.getManagedBean().setDisableButtonForInactiveChecklist(
+							true);
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-									MessageConst.ERROR_775250, new String[] { techInactive },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									message.toString()));
 				}
 			} catch (Exception e) {
 				handleException(e);
@@ -11406,13 +11421,28 @@ public class SpecificationBackingBean extends
 				String finInactive = inactiveChecklistsForError(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList());
 
-				if (StringUtils.isNotEmpty(finInactive) || StringUtils.isNotBlank(finInactive)) {
-					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
+				if (StringUtils.isNotEmpty(finInactive)) {
+					StringBuilder message = new StringBuilder();
+					message.append(CollectionUtils.isNotEmpty(FacesContext
+							.getCurrentInstance().getMessageList()) ? QTConstants.SPAN_ERROR_ICON
+							: "");
+					String error = MessageUtils.getMessage(
+							MessageConst.ERROR_775251,
+							new String[] { finInactive },
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale());
+					String errorAlignment = CollectionUtils
+							.isNotEmpty(FacesContext.getCurrentInstance()
+									.getMessageList()) ? QTConstants.SPAN_ERROR_CONTENT_OPEN
+							+ error + QTConstants.SPAN_ERROR_CONTENT_CLOSE
+							: error;
+					message.append(errorAlignment);
+					this.getManagedBean().setDisableButtonForInactiveChecklist(
+							true);
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-									MessageConst.ERROR_775251, new String[] { finInactive },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									message.toString()));
 				}
 			} catch (Exception e) {
 				handleException(e);
