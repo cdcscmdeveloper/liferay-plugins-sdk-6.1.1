@@ -20,7 +20,7 @@
 							escape="false" />
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{backingBean.otherDescriptionHistory}" process="@this"
+							action="#{supplierDataMaintenanceBackingBean.otherDescriptionHistoryMaintenance}" process="@this"
 							partialSubmit="true" update="@form">
 							<u><h:outputText
 									value="#{lbl['lbl.sm.other.desc.history.here']}"
@@ -43,7 +43,9 @@
 			value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
 			rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			sortBy="#{aprvdCatBean.pmCategoryL1.categoryL1Code}">
+			sortBy="#{aprvdCatBean.pmCategoryL1.categoryL1Code}"
+			style="width:100%"
+    		tableStyle="table-layout:fixed">>
 
 			<ac:paginator for="catApprDt" />
 			<p:columnGroup type="header">
@@ -52,10 +54,10 @@
 						style="width : 2%;" />
 					<p:column style="width :350px;white-space : normal"
 						headerText="#{lbl['lbl.sm.catCodes.cate']}" />
-					<p:column style="width :100px;white-space : normal" headerText="#{lbl['lbl.sm.catCodes.catType']}" />
-					<p:column style="width :200px;white-space : normal" headerText="#{lbl['lbl.sm.catCodes.othDesc']}" /> <!-- 36504 -->
-					<p:column style="width :200px;white-space : normal" headerText="#{lbl['lbl.sm.officer.decision']}" />
-					<p:column style="width :450px;white-space : normal" headerText="#{lbl['lbl.sm.remark']}" />
+					<p:column style="white-space : normal" headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+					<p:column style="white-space : normal" headerText="#{lbl['lbl.sm.catCodes.othDesc']}" /> <!-- 36504 -->
+					<p:column style="white-space : normal" headerText="#{lbl['lbl.sm.officer.decision']}" />
+					<p:column style="white-space : normal" headerText="#{lbl['lbl.sm.remark']}" />
 					<p:column headerText="#{lbl['lbl.sm.status']}" />
 				</p:row>
 			</p:columnGroup>
@@ -173,13 +175,17 @@
 			<p:column>
 				<p:outputPanel>
 					<h:outputText
+						style="white-space: pre-wrap;"
 						value="#{aprvdCatBean.otherDesc}"
 						rendered="#{not empty aprvdCatBean.otherDesc and
 						    (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 						     aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}" />
 				     <p:graphicImage value="/css/images/design/icon_alert.png"
 						style="float:right;"
-						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
+						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory and 
+							(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser or
+							viewSmApplBackingBean.managedBean.supplierUser) and
+							!aprvdCatBean.otherDescChangeMaintenance}" />
 				</p:outputPanel>
 			</p:column>
 			<!-- 36504 - END -->
@@ -268,8 +274,8 @@
 	</p:outputPanel>
 	
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory
-		categoryCodeList="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
+	<ac:otherDescriptionHistoryMaintenance
+		categoryCodeList="#{viewSmApplBackingBean.managedBean.supProfileHistoryOtherDesc}"
 		applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{viewSmApplBackingBean.managedBean.otherDescChangePO}"
 		otherDescChangeApprover="#{viewSmApplBackingBean.managedBean.otherDescChangeApprover}"

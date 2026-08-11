@@ -13,81 +13,106 @@
 </cc:interface>
 
 <cc:implementation>
-    <h:outputScript target="body">
-        function hideCategoryCodePopup() {
-            try {
-                if (typeof PF === 'function' &amp;&amp; PF('catCodePopup')) {
-                    PF('catCodePopup').hide();
-                }
-            } catch (e) {}
+<!-- #40500,#30014 fixing css-->
+<h:outputStylesheet>
+    <style>
+        /* 1. Fix overflow dialog */
+        .category-search-dialog .ui-dialog-content {
+            overflow: visible;
         }
-    </h:outputScript>
 
-	<h:outputStylesheet>
-	<style>
-		#catCodeCtPopup.ui-dialog {
-			max-height: 700px;
-			max-width: 70vw;
-			top: 50% !important;
-			left: 50% !important;
-			transform: translate(-50%, -50%) !important;
-			margin-top: 0 !important;
-			animation: fadeInPopup 0.4s ease-out;
-			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-			border-radius: 10px;
-		}
+        /* 2. Lebar 100% untuk semua elemen */
+        .category-search-dialog .ui-datatable,
+        .category-search-dialog .ui-datatable-tablewrapper,
+        .category-search-dialog .ui-datatable-scrollable-header,
+        .category-search-dialog .ui-datatable-scrollable-header .ui-datatable-tablewrapper,
+        .category-search-dialog .ui-datatable-scrollable-header table,
+        .category-search-dialog .ui-datatable-scrollable-body table {
+            width: 100% !important;
+        }
 
-		/* Scroll hanya untuk isi tabel */
-		#catCodeCtDescrTbl .ui-datatable-scrollable-body {
-			overflow-y: auto !important;
-			max-height: 350px !important;
-		}
+        /* 3. Layout tabel */
+        .category-search-dialog .ui-datatable-scrollable-header table,
+        .category-search-dialog .ui-datatable-scrollable-body table {
+            table-layout: fixed;
+        }
 
-		/* Header tetap di atas */
-		#catCodeCtDescrTbl .ui-datatable-scrollable-header-box {
-			position: sticky !important;
-			top: 0 !important;
-			z-index: 10 !important;
-			background-color: white;
-		}
+        /* 4. Styling Header */
+        .category-search-dialog .ui-datatable th.ui-state-default,
+        .category-search-dialog .ui-datatable-scrollable-header,
+        .category-search-dialog .ui-datatable-scrollable-header .ui-datatable-tablewrapper,
+        .category-search-dialog .ui-datatable-scrollable-header table,
+        .category-search-dialog .ui-datatable-scrollable-header th:last-child {
+            background: #295066 !important;
+            background-image: none !important;
+        }
 
-		/* Paginator tetap di bawah */
-		#catCodeCtDescrTbl+.ui-paginator {
-			position: relative;
-			z-index: 11;
-		}
-		/* Sembunyikan seluruh wrapper scroll saat data kosong */
-		.hide-scroll-wrapper .ui-datatable-scrollable-header,
-		.hide-scroll-wrapper .ui-datatable-scrollable-body,
-		.hide-scroll-wrapper .ui-datatable-scrollable-footer {
-			display: none !important;
-		}
+        .category-search-dialog .ui-datatable th.ui-state-default {
+            color: #ffffff !important;
+            text-align: center !important;
+            font-weight: bold !important;
+            border: 1px solid #1e3d6f !important;
+        }
 
-		/* Scroll aktif hanya kalau data ada */
-		.ui-datatable-scrollable-body {
-			overflow-y: auto !important;
-			max-height: 350px !important;
-		}
-		@keyframes fadeInPopup {
-			from {
-				opacity: 0;
-				transform: translate(-50%, -50%) scale(0.95);
-			}
-			to {
-				opacity: 1;
-				transform: translate(-50%, -50%) scale(1);
-			}
-		}
-	</style>
-	</h:outputStylesheet>
+        .category-search-dialog .ui-datatable-scrollable-header th:last-child {
+            border-right: none !important;
+        }
 
+        /* 5. Hilangkan extra space */
+        .category-search-dialog .ui-datatable-scrollable-header::after {
+            content: none !important;
+            display: none !important;
+        }
 
-		<p:dialog id="catCodeCtPopup"
-		header="#{lbl['lbl.ct.category.code.search']}"
-		widgetVar="catCodePopup" modal="true" width="720" 
-		position="top"
-        positionType="fixed"
-        contentStyle="margin-top: 0;">
+        /* 6. HILANGKAN RESIZE HANDLE */
+        .category-search-dialog .ui-column-resizer {
+            display: none !important;
+        }
+
+        /* 7. Scroll Body */
+        .category-search-dialog .ui-datatable-scrollable-body {
+            overflow-y: auto !important;
+            max-height: 300px !important;
+        }
+
+        /* 8. Alignment header dan body */
+        .category-search-dialog .ui-datatable-scrollable-header {
+            padding-right: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* Pastikan body juga tidak ada space ekstra */
+        .category-search-dialog .ui-datatable-scrollable-body {
+            padding-right: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* Hilangkan border kanan pada kolom terakhir */
+        .category-search-dialog .ui-datatable-scrollable-body td:last-child,
+        .category-search-dialog .ui-datatable-scrollable-header th:last-child {
+            border-right: none !important;
+        }
+
+        /* 9. Border untuk isi tabel */
+        .category-search-dialog .ui-datatable td {
+            border: 1px solid #d3d3d3 !important;
+        }
+
+        /* 10. Paginator */
+        #catCodeCtDescrTbl + .ui-paginator {
+            position: relative;
+            z-index: 11;
+        }
+    </style>
+</h:outputStylesheet>
+	<p:remoteCommand
+    	name="afterCloseCategoryPopupRC"
+    	action="#{panelBackingBean.afterCloseCategoryPopup}" /> <!-- #40498,#30014 -->
+
+		<p:dialog id="categoryDialog"  header="#{lbl['lbl.ct.category.code.search']}" 
+			width="850" resizable="false" position="top" widgetVar="catCodePopup" modal="true"
+			styleClass="category-search-dialog"
+			onHide="afterCloseCategoryPopupRC();"> <!-- #40500,#30014 -->
 
 		<p:messages id="catCodeCtPopupMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
@@ -119,7 +144,8 @@
 				</h:panelGrid>
 				</td>
 			</tr>
-			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByCode}">
+			<ui:fragment
+						rendered="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByCode}"> <!-- #40500,#30014 -->
 			<tr>
 				<td style="text-align: right; padding-right: 15px;">
 					<h:outputText value="#{lbl['lbl.ct.tbl.category']}"/>
@@ -159,10 +185,11 @@
 					</h:selectOneMenu>
 				</td>
 			</tr>
-			</c:if>
+			</ui:fragment>
 			</table>
 			
-			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByDescription}">
+			<ui:fragment
+					rendered="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByDescription}"> <!-- #40500,#30014 -->
 			<p:panel header="#{lbl['lbl.ct.search.category']}" toggleable="true">
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -192,13 +219,13 @@
 				</tr>
 				</table>
 			</p:panel>
-
+			<!-- #40500,#30014 //Refinement Scrollbar function -->
 			<p:panel header="#{lbl['lbl.ct.category.result']}" toggleable="true">
 						<p:dataTable id="catCodeCtDescrTbl"
 							value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
 							selection="#{categoryCodeSearchBackingBean.managedBean.selectedCategoryL3}"
-							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}" var="pmCategoryL3"							
-							lazy="true" rows="10" scrollable="true"
+							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}"
+							var="pmCategoryL3" lazy="true" rows="10" scrollable="true" resizableColumns="false"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
 							<ac:paginator for="catCodeCtDescrTbl" />
@@ -229,7 +256,7 @@
 							</p:column>
 						</p:dataTable>
 					</p:panel>
-			</c:if>
+			</ui:fragment>
 		</h:panelGroup>
 
 			<table style="width: 100%;">
@@ -238,15 +265,14 @@
 						<p:commandButton
 							value="#{lbl['lbl.btn.ok']}"
 							action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-							process="@form" update="#{cc.attrs.update}"
-							oncomplete="if (!args || !args.validationFailed) hideCategoryCodePopup();"
-							styleClass="BtnSpacing" id="catCodeCtOkBttn" name="catCodeCtOkBttn"/> 
+							process="@form" update="#{cc.attrs.update} catCodeCtPnl"
+							resetValues="true" /> <!-- #40498,#30014 --> 
 						<p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 							process="@this" update="@this"
 							action="#{categoryCodeSearchBackingBean.cancelAction}"
-							oncomplete="catCodePopup.hide()"
-							styleClass="BtnSpacing" id="catCodeCtCnclBttn" name="catCodeCtCnclBttn" />
+							oncomplete="catCodePopup.hide()" styleClass="BtnSpacing"
+							id="catCodeCtCnclBttn" name="catCodeCtCnclBttn" /> <!-- #40498,#30014 --> 
 					</td>
 				</tr>
 			</table>
