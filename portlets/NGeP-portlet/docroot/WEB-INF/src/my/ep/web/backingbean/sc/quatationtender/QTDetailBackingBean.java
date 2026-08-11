@@ -3043,6 +3043,24 @@ public class QTDetailBackingBean extends
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
+		// #35320 - Start;
+		if (scQt.getFinalizationCommitte() != null
+				&& scQt.getFinalizationCommitte().getParameterCode() != null) {
+			if (scQt.getFinalizationCommitte()
+					.getParameterCode()
+					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
+					|| scQt.getFinalizationCommitte()
+							.getParameterCode()
+							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				if (isStatusTrigger(currentStatusId)) {
+					scQt.setFinalizationCommitte(new PmParameter());
+					scQt.setFinalizationSecratery(new PmUser());
+					this.getManagedBean().setQt(scQt);
+				}
+			}
+		}
+		// #35320 - End
+		
 		if (finalizationSecratary == null
 				&& isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
 			ICommitteSO committeSO;
@@ -7070,6 +7088,10 @@ public class QTDetailBackingBean extends
 	public String cancelQtDetails() {
 		debugLogger("cancelQtDetails");
 		IQTDetailSO detailSO;
+		
+		// #35320 - Start
+		this.getManagedBean().setAfterSF(false);
+		// #35320 - End
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -7097,6 +7119,17 @@ public class QTDetailBackingBean extends
 				TabBean tabBean = new TabBean(null, null, qtApproval,
 						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
+				
+				// #35320 - Start
+				if (isQTStatusGreaterThanOrEquals(scQt.getQtStatus().getStatusId(),
+						QTStatusConst.QT_SUPPLIER_FINALIZATION)) {
+					this.getManagedBean().setAfterSF(true);
+
+					ScQtApproval approval = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval();
+					List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
+					approverSettings.get(0).setCommitteeType(scQt.getFinalizationCommitte());
+					approverSettings.get(0).setPmUser(scQt.getFinalizationSecratery());
+				}// #35320 - End
 			} else {
 				// #9019 -start-
 				// null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
@@ -12624,4 +12657,19 @@ public class QTDetailBackingBean extends
 		return !isShow;
 	}
 	//#21692 - End
+	
+	/**
+	 * #35320
+	 * @param statusId
+	 * @return boolean
+	 */
+	private static boolean isStatusTrigger(long statusId) {
+        final List<Long> triggerStatuses = Arrays.asList(
+                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+                QTStatusConst.QT_REVISION_PUBLICATION,
+                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
+                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
+        );
+        return triggerStatuses.contains(statusId);
+	}
 }
