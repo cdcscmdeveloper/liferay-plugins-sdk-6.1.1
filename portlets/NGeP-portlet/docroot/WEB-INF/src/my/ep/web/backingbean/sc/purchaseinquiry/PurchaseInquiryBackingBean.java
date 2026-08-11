@@ -1111,7 +1111,7 @@ public class PurchaseInquiryBackingBean extends
 				.getScRequestSupplierItem();
 		
 		// update pricing
-		updatePricing(scRequestSupplierItem);
+		//updatePricing(scRequestSupplierItem);//#29557
 		
 		finalizeRemarks(prInquiry.getRemarks());
 
@@ -1146,7 +1146,7 @@ public class PurchaseInquiryBackingBean extends
 		// updating price
 		List<ScRequestSupplierItem> scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
 		scRequestSupplierItems.add(scRequestSupplierItem);
-		prInquiry.setScRequestSupplierItems(scRequestSupplierItems);
+		//prInquiry.setScRequestSupplierItems(scRequestSupplierItems); //#29557
 
 		prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
 		reqDTO.setPrInquiryDetail(prInquiry);
@@ -3305,33 +3305,19 @@ public class PurchaseInquiryBackingBean extends
 	/**
 	 * To deleteScSupplierItemPrices.
 	 */
-	public void deleteScSupplierItemPrices() {
-		
-		List<ScSupplierItemPrice> deleteScSupplierItemPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-			
-		if (this.getManagedBean().getDeleteSupplierItemTierStandardPrices() != null && !this.getManagedBean().getDeleteSupplierItemTierStandardPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemTierStandardPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemTierPromotionPrices() != null && !this.getManagedBean().getDeleteSupplierItemTierPromotionPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemTierPromotionPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemZonalStandardPrices() != null && !this.getManagedBean().getDeleteSupplierItemZonalStandardPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemZonalStandardPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices() != null && !this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices() != null && !this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices();
-		else if (this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices() != null && !this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices().isEmpty())
-			deleteScSupplierItemPrices = this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices();
-			
-		for (ScSupplierItemPrice deleteScSupplierItemPrice : deleteScSupplierItemPrices){
-			if(deleteScSupplierItemPrice.getPricing()== null){
-				deleteScSupplierItemPrice.setPricing(null);
+	public void deleteScSupplierItemPrices(List<ScSupplierItemPrice> deleteScSupplierItemPrices) {
+
+		if (deleteScSupplierItemPrices != null && !deleteScSupplierItemPrices.isEmpty()) {
+			for (ScSupplierItemPrice deleteScSupplierItemPrice : deleteScSupplierItemPrices) {
+				if (deleteScSupplierItemPrice.getPricing() == null) {
+					deleteScSupplierItemPrice.setPricing(null);
+				} else if (deleteScSupplierItemPrice.getPricing().getPrice() == null) {
+					deleteScSupplierItemPrice.setPricing(null);
+				}
 			}
-			else if(deleteScSupplierItemPrice.getPricing().getPrice() == null){
-				deleteScSupplierItemPrice.setPricing(null);
-			}
+
+			getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices);
 		}
-		
-		getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices);
 	}
 	
 	// ZonalTierStandardPrice -- start
@@ -3496,7 +3482,7 @@ public class PurchaseInquiryBackingBean extends
 		}
 		
 		this.getManagedBean().setDeleteSupplierItemZonalTierStandardPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices());
 		this.getManagedBean().setSupplierItemZonalTierStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalTierStandardPrices().size() == 0){
@@ -3674,7 +3660,7 @@ public class PurchaseInquiryBackingBean extends
 		}
 
 		this.getManagedBean().setDeleteSupplierItemZonalTierPromotionPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices());
 		this.getManagedBean().setSupplierItemZonalTierPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalTierPromotionPrices().size() == 0){
@@ -3809,7 +3795,7 @@ public class PurchaseInquiryBackingBean extends
 		}
 		
 		this.getManagedBean().setDeleteSupplierItemZonalStandardPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemZonalStandardPrices());
 		this.getManagedBean().setSupplierItemZonalStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalStandardPrices().size() == 0){
@@ -3944,7 +3930,7 @@ public class PurchaseInquiryBackingBean extends
 		}
 		
 		this.getManagedBean().setDeleteSupplierItemZonalPromotionPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices());
 		this.getManagedBean().setSupplierItemZonalPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalPromotionPrices().size() == 0){
@@ -4095,7 +4081,7 @@ public class PurchaseInquiryBackingBean extends
 		}
 		
 		this.getManagedBean().setDeleteSupplierItemTierStandardPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemTierStandardPrices());
 		this.getManagedBean().setSupplierItemTierStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemTierStandardPrices().size() == 0){
@@ -4240,7 +4226,7 @@ public class PurchaseInquiryBackingBean extends
 		}
 
 		this.getManagedBean().setDeleteSupplierItemTierPromotionPrices(deleteScSupplierItemPrices);
-		deleteScSupplierItemPrices();
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemTierPromotionPrices());
 		this.getManagedBean().setSupplierItemTierPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemTierPromotionPrices().size() == 0){
