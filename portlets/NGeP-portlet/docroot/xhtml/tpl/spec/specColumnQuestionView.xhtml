@@ -33,7 +33,7 @@
 		<!-- #29007 Start Vinod -->
 		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
 				rendered="#{!isRepeated and isRenderUOMandQuantity and templateSpecBean.wordBreakForQT}" 
-				style="word-break:break-all;"/>	
+				style="word-break:break-all;"/>
 		<ui:remove>#29187 End Vinod</ui:remove>
 		<p:spacer width="5" />
 		<ui:fragment rendered="#{!empty question.cmItem.extensionCode and directLOABackingBean.managedBean.iconForDL}">

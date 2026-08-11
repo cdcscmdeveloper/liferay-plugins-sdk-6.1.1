@@ -55,6 +55,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private boolean cloneBtnRendered;
 	private SelectItem[] uomDropDownList;
 	private boolean secretaryValidate;//#21695 use in #28784
+
 	// #29187 Start Vinod
 	List<SelectItem> mandatorySpecList;
 	private boolean zoneForItemHlink;
