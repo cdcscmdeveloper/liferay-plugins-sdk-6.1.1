@@ -854,10 +854,10 @@ public class PurchaseInquiryBackingBean extends
 				requestNote.setRequestNoteDtls(Arrays.asList(requestNoteDtl));
 				
 				// 27868 - start
-				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateReasonStatus(requestNote.getRequestNoteDtls());
+				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {					
 					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());
 				}
+				validateReasonStatus(requestNote.getRequestNoteDtls());
 				validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
 						scRequestSupplierItem);
 				// 27868 - end
