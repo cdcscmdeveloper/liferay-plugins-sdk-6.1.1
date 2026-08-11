@@ -181,7 +181,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		/*Execute first time retrieve from maintenance*/	
 		if (getManagedBean().getOutComes() == null) {
 			// Start Fix - #34367
-			getPTJOwner();
 			if (getPTJOwner() != null) {
 				String panelDoctype = rulesConstantValidation();// Fix - #34367
 				getManagedBean().setCircularVer(new CtCircularVer());
@@ -304,7 +303,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 		CircularReqDTO circularReqDTO = new CircularReqDTO();	
-		getPTJOwner();
 		if (getPTJOwner() != null) {
 			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
 			CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class,
