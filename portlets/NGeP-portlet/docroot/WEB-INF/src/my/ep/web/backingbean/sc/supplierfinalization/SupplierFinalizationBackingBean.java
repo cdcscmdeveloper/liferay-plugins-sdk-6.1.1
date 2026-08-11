@@ -7365,8 +7365,7 @@ public class SupplierFinalizationBackingBean extends
 				if (!qtRefinalized) {
 					scQtFinalization.setOnlineBiddingEndorse(null);
 				}
-				this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
-				this.getManagedBean().setSingleAward(true);
+				checkForMLOI(finalizationMethodStr);//#40396
 			} else {
 				this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
 				scQtFinalization.setOnlineBiddingEndorse(null);
@@ -13028,7 +13027,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 		} else {
 			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId,
-					null);
+					null,null);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				// BigDecimal supplierNo = (BigDecimal) row[1];
@@ -13047,7 +13046,7 @@ public class SupplierFinalizationBackingBean extends
 		
 		 //#38151 - cover after save if managebean reset.
 		retrievescoresettings(this.getManagedBean().getScQt());
-		
+
 		for (ScQtScoreSetting scoresett : this.getManagedBean().getScQt().getScQtScoreSettings()) {
 			if (this.getManagedBean().getEvaluationStageId() == PACKAGE_TYPE_TAB_INDEX
 					&& scoresett.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE) {
@@ -13076,7 +13075,7 @@ public class SupplierFinalizationBackingBean extends
 		
 		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.FINANCIAL_DOCTYPE);
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
+				selectedZoneId,null);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
@@ -13182,5 +13181,16 @@ public class SupplierFinalizationBackingBean extends
 		return getQTSuppFinalizationSO().isQTCancelledBidSchedule(scQt.getQtId());
 	}
 	// #40396 - End
-
+	
+	//#40396 - Start
+	private void checkForMLOI(String finalizationMethodStr) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
+			this.getManagedBean().setMultipleLoi(true);
+		} else {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+			this.getManagedBean().setSingleAward(true);
+		}
+	}
+	//#40396 - End
 }

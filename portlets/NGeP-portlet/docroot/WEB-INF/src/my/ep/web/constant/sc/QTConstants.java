@@ -452,6 +452,9 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
+	public static final String SPAN_ERROR_ICON = "<span class=\"ui-messages-error-icon\" style=\"position: relative;right: 25px;\"></span>";
+	public static final String SPAN_ERROR_CONTENT_OPEN = "<span style=\"position: relative;right: 25px;\">";
+	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span>";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -564,6 +567,10 @@ public interface QTConstants {
 	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
 
 	// 29661- end-
+	
+	// 28188 -start-
+	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
+	// 28188 -end-
 
 	// #39113 Start Vinod 25/09/2025
 	public static final String LBL_SC_REMARK = "lbl.sc.remark";

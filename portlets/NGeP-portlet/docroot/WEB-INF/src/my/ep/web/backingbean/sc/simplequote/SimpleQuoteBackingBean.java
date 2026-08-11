@@ -503,14 +503,15 @@ public class SimpleQuoteBackingBean extends
 	protected void initializeProcurementOptionsForQuote(ScQuote scQuote) {
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
+		String parameterType = scQuote.getProcurementType().getParameterType();
 
 		if (scQuote.getProcurementType() != null) {
 			if (scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT, Boolean.TRUE));
+						getRadioButtonCodeValues(parameterType, Boolean.TRUE));
 			} else {
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT, Boolean.FALSE));
+						getRadioButtonCodeValues(parameterType, Boolean.FALSE));
 			}
 		}
 
@@ -518,7 +519,7 @@ public class SimpleQuoteBackingBean extends
 			disableSpecialItemRadioButton();
 		}
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
+		getManagedBean().setParameterTypeRPT(parameterType);
 
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)
@@ -9000,8 +9001,13 @@ public class SimpleQuoteBackingBean extends
 		if (getManagedBean().getScQuote().getJustificationType() != null
 				&& getManagedBean().getScQuote().getJustificationType().getReasonId() != null) {
 			PmReason reason = retrieveReasonDtlById(getManagedBean().getScQuote().getJustificationType().getReasonId());
+			
+			if (reason == null) {
+				return;
+			}
 
-			if (reason != null && !reason.isRecordStatus()) {
+			boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+			if (!reasonStatus) {
 				getManagedBean().setReasonCodeInActive(true);
 				String reasonDesc = getReasonDesc(reason);
 				if (!StringUtils.isEmpty(reasonDesc)) {
@@ -9021,6 +9027,19 @@ public class SimpleQuoteBackingBean extends
 			}
 
 		}
+	}
+	
+	/**
+	 * Retrieves the PK7 reason status by reason ID.
+	 *
+	 * @param reasonId
+	 *            the reason ID
+	 * @return true if the reason is active, otherwise false
+	 */
+	private boolean retrievePK7ReasonStatus(Long reasonId) {
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		return reqSO.getPK7ReasonStatus(reasonId);
 	}
 
 	/**
