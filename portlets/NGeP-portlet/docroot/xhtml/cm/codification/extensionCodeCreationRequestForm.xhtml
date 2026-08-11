@@ -120,7 +120,7 @@
 			<ac:confirmationPopupCM
 				id="extensionCodeCreation" widget="extensionCodeCreation"
 				loadingWidget="pageBlockWidget"
-				okParam="#{extensionCodeCreationBackingBean.submitIntoDB}" hasParam="true"
+				okAction="extensionCodeCreationBackingBean.submitIntoDB" hasParam="false"
 				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 				content="#{lbl['lbl.cm.dialog.message.extension.code.creation']}"
 				selectedItem="#{extensionCodeCreationBackingBean.managedBean.selectedLovUnspsc}"
