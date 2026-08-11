@@ -227,7 +227,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 */
 	private PmStatus setNewPanelCircularStatus(String panelDoctype) {
 		PmStatus status = new PmStatus();
-		log.info("panelDoctype "+panelDoctype+" and "+(ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)));
 		if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
 			status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
 		} else {
