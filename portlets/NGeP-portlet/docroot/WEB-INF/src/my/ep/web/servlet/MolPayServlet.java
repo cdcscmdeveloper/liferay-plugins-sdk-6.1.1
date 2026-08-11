@@ -302,7 +302,7 @@ public class MolPayServlet extends HttpServlet {
 						log.info("SET TRANSACTION ID--------------------33137"+tranID);
 					}else{
 						//#38377
-						smPaymentRes.setTransactionId("Y".equals(paymentGateway)?tranID:molpayTransId);
+						smPaymentRes.setTransactionId("Y".equals(paymentGateway)?orderId:molpayTransId);
 						log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
 					}
 					//#38377
