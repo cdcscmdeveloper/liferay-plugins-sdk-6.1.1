@@ -43,6 +43,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -73,6 +74,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.AuditTrailReqDTO;
@@ -97,13 +99,14 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtAmend;
+import my.ep.persistence.entity.sc.quationtender.ScQtAmend;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -234,6 +237,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		approvalCategories
 		.add(ParameterConst.APPROVAL_CATEGORY_PROCUREMENT_BOARD);
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_OTHERS);
+		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_EGPA);//#38107
 
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		searchBean
@@ -763,6 +767,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 						QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
 						qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();
+						
+						//28188 -start-
+						setProposalStartDate(getManagedBean().getQt());
+						
+						//28188 -end-
+						
 						break;
 					}
 				}
@@ -2613,8 +2623,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							    }
 							}
 						}
-					}
-					//#28188 - End
+					}//#28188 - End
 				}
 			}
 		}
@@ -4016,21 +4025,69 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
-		
+		//#35500 EPV Start
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		//#35500 EPV End
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
-		auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+		Long userId = getUserIdSessionFromLoginId();
+		ScActor scActor = getActorByQtIdAndUserId(scQt.getQtId(),userId);
+		auditResDTO.setRoleCode(scActor.getRoleCode());//#35500 fix 31st March
 		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
-		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);//check and/or change later
-		auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
+		auditResDTO.setCreatedBy(userId);
+		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);	
+
+		//#35500 EPV Start
+		SCQuotationTenderDataType dataType = (SCQuotationTenderDataType) this.getManagedBean().getPayLoad();
+		List<String>supplierUserIds = dataType.getSupplierList();
+		if  (supplierUserIds != null && CollectionUtils.isNotEmpty(supplierUserIds)){
+			auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_SUBMIT : QTAuditConstant.PROCESS_FLAG_REJECT);			
+		}else{
+			auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
+		}//#35500 EPV End
 		auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
 		
 		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTO);
 		qtAuditTrailSO.insertAuditTrail(auditReqList);
 	}
+	
+	//#35500 EPV Start
+	/**
+	 * #35500
+	 * Get SC Actor by qt id and user id
+	 * @param qtId
+	 * @param userId
+	 * @return
+	 */
+	protected ScActor getActorByQtIdAndUserId(Long qtId, Long userId) {
+		IScActorSO actorSO = null;
+		try {
+			actorSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+
+			ScActorReqDTO reqDTO = new ScActorReqDTO();
+			reqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION));
+			reqDTO.setDocId(qtId);
+			reqDTO.setUserId(userId);
+
+			List<ScActor> scActorsList = actorSO.retreiveActorByDocTypesDocIdUserId(reqDTO).getScActorList();
+			if(null!=scActorsList && !scActorsList.isEmpty()){
+				for (ScActor scActor : scActorsList){
+					if (scActor.getRoleCode().equals(RoleCode.PPB_SECRETARY.value()) || scActor.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())){
+						return scActor;
+					}
+				}
+			}else{
+				return null;
+			}
+		} finally {
+			actorSO = null;
+		}
+		return null;
+	}//#35500 EPV End
 	
 	
 	/**
@@ -4381,5 +4438,63 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End
+	
+	// 28188 -start-
+	/**
+	 * set proposal start date during bsvApproval.
+	 * 
+	 * @param scQt
+	 */
+	private void setProposalStartDate(ScQt scQt) {
+		if (this.getManagedBean() != null
+				&& this.getManagedBean().getAmendMentBean() != null) {
+
+			checkAmendDetailsAppoved(this.getManagedBean().getAmendMentBean(),
+					scQt);
+		} else {
+
+			IQTDetailSO detailSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+
+			ScQtAmend scQtAmend = detailSO.retrieveQtAmend(scQt.getQtId());
+
+			if (null != scQtAmend) {
+				QtAmendMentBean amendMentBean = detailSO
+						.getQtAmendMentBean(scQtAmend);
+				checkAmendDetailsAppoved(amendMentBean, scQt);
+
+			}
+		}
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * check amendment details exist or not during publication bsv approval
+	 * time.
+	 * 
+	 * @param amendMentBean
+	 * @param scQt
+	 */
+	private void checkAmendDetailsAppoved(QtAmendMentBean amendMentBean,
+			ScQt scQt) {
+		if (amendMentBean != null) {
+			QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(
+					QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+			// Proposal Start Date
+			if (valueBean != null && null == valueBean.getIsApproved()) {
+				Object newValue = valueBean.getNewValue();
+
+				if (newValue instanceof Date) {
+					scQt.setProposalStartDate((Date) newValue);
+					updatePublishClosingDate(scQt);
+				}
+			}
+
+		}
+	}
+	// 28188 -end-
 	
 }
