@@ -376,6 +376,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmRevisit> smRevisitList;
 	private SmRevisit currentSmRevisit;
 	// #34031 End
+	
 	private Long currRegStatusId; //#26238
 	
 	// 26238 - START
@@ -390,7 +391,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	//28637
 	private boolean viewCatCode;
-		
+	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -2375,6 +2376,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.currentSmRevisit = currentSmRevisit;
 	}
 	// #34031 End
+	
 	// #38856 End
 	public Long getCurrRegStatusId() {
 		return currRegStatusId;

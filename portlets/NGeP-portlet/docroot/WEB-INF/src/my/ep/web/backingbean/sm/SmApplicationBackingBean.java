@@ -18162,25 +18162,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#38927 END
 	
-	//#39282
-	/**
-	 * To generate unique file name yyyyMMdd_HHmmss
-	 *
-	 * @param String  the StringBuilder accumulating the messages
-	 */
-	private String generateUniqueFilename(String originalFilename) {
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String oriFilename = "";
-        String extension = "";
-        int dotIndex = originalFilename.lastIndexOf('.');
-        if (dotIndex > 0) {
-            extension = originalFilename.substring(dotIndex);
-            oriFilename = originalFilename.substring(0, dotIndex);
-        }
-
-        return oriFilename + "_" + timestamp + extension;
-    }
-	
 	//#26238
 	private void checkActiveDisciplinaryAction(SmSupplier currSupp, String applType){
 		if (currSupp == null){
@@ -18217,5 +18198,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);
 	}
+	
+	//#39282
+	/**
+	 * To generate unique file name yyyyMMdd_HHmmss
+	 *
+	 * @param String  the StringBuilder accumulating the messages
+	 */
+	private String generateUniqueFilename(String originalFilename) {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String oriFilename = "";
+        String extension = "";
+        int dotIndex = originalFilename.lastIndexOf('.');
+        if (dotIndex > 0) {
+            extension = originalFilename.substring(dotIndex);
+            oriFilename = originalFilename.substring(0, dotIndex);
+        }
+
+        return oriFilename + "_" + timestamp + extension;
+    }
 }
 

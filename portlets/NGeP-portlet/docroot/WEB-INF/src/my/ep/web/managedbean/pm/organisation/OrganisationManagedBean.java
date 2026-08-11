@@ -1268,7 +1268,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setStatus(Long status) {
 		this.status = status;
 	}
-
+	
 	/************ AUDIT START #28895-35509 *************/
 	public PmOrgProfile getAuditOldPMOrgProfile() {
 		return auditOldPMOrgProfile;

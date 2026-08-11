@@ -7876,7 +7876,6 @@ public class SupplierFinalizationBackingBean extends
 								qualSupplier.setShortListed(true);
 							} 
 							// 26247 - end
-
 							
 							//#21692 - Start
 							resetQualifiedSupplierForMLOIAndBidding(qualSupplier);
@@ -11133,8 +11132,6 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	// 26247 - end
-
-
 	
 	/**
 	 * #35320 - Check All supplier Offered Price Exceeded Committee Authority
