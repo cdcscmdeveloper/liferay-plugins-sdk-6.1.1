@@ -106,7 +106,7 @@ import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtAmend;
+import my.ep.persistence.entity.sc.quationtender.ScQtAmend;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -237,6 +237,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		approvalCategories
 		.add(ParameterConst.APPROVAL_CATEGORY_PROCUREMENT_BOARD);
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_OTHERS);
+		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_EGPA);//#38107
 
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		searchBean
@@ -766,6 +767,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 						QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
 						qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();
+						
+						//28188 -start-
+						setProposalStartDate(getManagedBean().getQt());
+						
+						//28188 -end-
+						
 						break;
 					}
 				}
@@ -2616,8 +2623,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							    }
 							}
 						}
-					}
-					//#28188 - End
+					}//#28188 - End
 				}
 			}
 		}
@@ -4432,5 +4438,63 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 	}
 	//#21692 #note-504 - End
+	
+	// 28188 -start-
+	/**
+	 * set proposal start date during bsvApproval.
+	 * 
+	 * @param scQt
+	 */
+	private void setProposalStartDate(ScQt scQt) {
+		if (this.getManagedBean() != null
+				&& this.getManagedBean().getAmendMentBean() != null) {
+
+			checkAmendDetailsAppoved(this.getManagedBean().getAmendMentBean(),
+					scQt);
+		} else {
+
+			IQTDetailSO detailSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+
+			ScQtAmend scQtAmend = detailSO.retrieveQtAmend(scQt.getQtId());
+
+			if (null != scQtAmend) {
+				QtAmendMentBean amendMentBean = detailSO
+						.getQtAmendMentBean(scQtAmend);
+				checkAmendDetailsAppoved(amendMentBean, scQt);
+
+			}
+		}
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * check amendment details exist or not during publication bsv approval
+	 * time.
+	 * 
+	 * @param amendMentBean
+	 * @param scQt
+	 */
+	private void checkAmendDetailsAppoved(QtAmendMentBean amendMentBean,
+			ScQt scQt) {
+		if (amendMentBean != null) {
+			QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(
+					QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+			// Proposal Start Date
+			if (valueBean != null && null == valueBean.getIsApproved()) {
+				Object newValue = valueBean.getNewValue();
+
+				if (newValue instanceof Date) {
+					scQt.setProposalStartDate((Date) newValue);
+					updatePublishClosingDate(scQt);
+				}
+			}
+
+		}
+	}
+	// 28188 -end-
 	
 }

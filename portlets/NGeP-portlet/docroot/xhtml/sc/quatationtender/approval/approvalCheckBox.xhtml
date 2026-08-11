@@ -117,5 +117,15 @@
 
 		</ui:fragment>
 
+		<ui:remove>38107 - Start</ui:remove>
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryeGPA}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/approval/approvalDetailseGPA.xhtml" />
+			<ui:include
+				src="/xhtml/sc/quatationtender/approval/approvalHistoryeGPA.xhtml" />
+		</ui:fragment>
+		<ui:remove>38107 - End</ui:remove>
+
 	</p:panel>
 </ui:composition>
