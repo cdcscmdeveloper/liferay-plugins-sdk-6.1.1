@@ -165,9 +165,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private Boolean isDowngradeRole;
 	// end #29956
 	
-	//14685 - START
-	private boolean showMessage;
-	//14685 - END
 	
 	// 27346
 	private StreamedContent downloadfile;
@@ -1096,15 +1093,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
 	}
 	
-	//14685 - START
-	public boolean isShowMessage() {
-		return showMessage;
-	}
-
-	public void setShowMessage(boolean showMessage) {
-		this.showMessage = showMessage;
-	}
-	//14685 - END
 
 	//start #29956
 	public Boolean isDowngradeRole() {
