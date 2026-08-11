@@ -3241,17 +3241,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()!=null){
 				Calendar cal = Calendar.getInstance();  
 				cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-				cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-
-				if(cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())<0){
+				//29961 - start Updated by Mohd Nur Naim Bin misiran. set the year range selected follow the parameter rules
+				//cal.add(Calendar.YEAR, getManagedBean().getRuleValue());
+				cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
+				if (cal.getTime().compareTo(
+						this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()) < 0) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(MessageConst.ERROR_715012,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775179, new String[] { "" + getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 					return "editCatalogItem";
 				}
+				//29961 - End
 			}
 
 			//////Image more than 5
@@ -4022,14 +4023,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//1 year period between start and end date
 			Calendar cal = Calendar.getInstance();  
 			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-
-			if(cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())<0){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(MessageConst.ERROR_715012,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
+			// 29961 - start Updated by Mohd Nur Naim Bin misiran. set the year
+			// range selected follow the parameter rules
+			// cal.add(Calendar.YEAR,
+			// CmHelper.getInstance().getStandardPricingYear());
+			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
+			if (cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()) < 0) {
+				FacesContext.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775179, new String[] { ""
+										+ getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
 			}
@@ -4978,6 +4982,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			Double minPriceVal = Double.valueOf(getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM));
 			DecimalFormat df = new DecimalFormat("0.00#");
 			//#30457 - End 29/07/2022
+
+			//#29961 - Start
+			Integer minYearVal = getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY);
+			//#29961 - End
 			
 			for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {					
 				reqDTO.setSupplierItemId(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getSupplierItemId());	
@@ -5308,17 +5316,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					//1 year period between start and end date
 					Calendar cal = Calendar.getInstance();  
 					cal.setTime(catalog.getCmStandardPricing().getStartDate());
-					cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-	
-					if(cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate())<0){
+					//#29961 - Start 27/7/2022
+					cal.add(Calendar.YEAR, minYearVal);
+					if (cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate()) < 0) {
 						FacesContext.getCurrentInstance().addMessage(
 								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-										MessageUtils.getMessage(MessageConst.ERROR_715012,
-												MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes().getUserLocale())));
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+										MessageConst.ERROR_775179, new String[] { "" + minYearVal},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 						return naviToMaintenancePage(false);
-					}
+					} //#29961 - End 27/7/2022
 				}//#30457-end
 
 				//same item with existed one cannot overlap the date
@@ -8284,24 +8292,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setError3(false);
 		}
 
-		//check for 1 year period
-		if(standardPricing.getStartDate() != null && standardPricing.getEndDate()!=null){
-			Calendar cal = Calendar.getInstance();  
+		// # 29961 - Start Remove error7
+		/*// check for 1 year period
+		if (standardPricing.getStartDate() != null && standardPricing.getEndDate() != null) {
+			Calendar cal = Calendar.getInstance();
 			cal.setTime(standardPricing.getStartDate());
 			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
 
-//			log.info("start 1year after "+cal.getTime());
-//			log.info("end date "+standardPricing.getEndDate().getTime());
-//			log.info("start compare to end "+cal.getTime().compareTo(standardPricing.getEndDate()));
-//			log.info("end compare to start "+standardPricing.getEndDate().compareTo(cal.getTime()));
+			// log.info("start 1year after "+cal.getTime());
+			// log.info("end date "+standardPricing.getEndDate().getTime());
+			// log.info("start compare to end "+cal.getTime().compareTo(standardPricing.getEndDate()));
+			// log.info("end compare to start "+standardPricing.getEndDate().compareTo(cal.getTime()));
 
-			if(cal.getTime().compareTo(standardPricing.getEndDate())<0){
+			if (cal.getTime().compareTo(standardPricing.getEndDate()) < 0) {
 				this.getManagedBean().setError7(true);
-			}else{
+			} else {
 				this.getManagedBean().setError7(false);
 			}
-		}else
-			this.getManagedBean().setError7(false);
+		} else
+			this.getManagedBean().setError7(false);*/
+		// # 29961 - End Remove error7
 	}
 
 	/**
@@ -11302,14 +11312,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	// 14921 - End
 	
-	public Date  getNextTwoYear(Date startDate){
+	//29961 - start
+	public Date getNextTwoYear(Date startDate) {
 		Calendar cal = Calendar.getInstance();
-		if(startDate!=null){
+		if (startDate != null) {
 			cal.setTime(startDate);
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
+			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
 		}
 		return cal.getTime();
 	}
+	//29961 - end
 	
 	public void onDateSelectListener(Integer index){
 		Date startDate = index < 0 ? this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate():
@@ -11756,13 +11768,33 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		// #30457 - End
 	}
 
-	public void closeImagePopup(){ //only affecting draft tab and draft_supp_temp only
-		this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setCmImages(
-				this.getManagedBean().getSelectedMaintainItem().getCmImages());
-	
-		this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setItemDesc(
-			this.getManagedBean().getSelectedMaintainItem().getItemDesc());
-    	}
+	//#29961 - Start
+	/**
+	 * Updates the selected draft supplier item when the image popup is closed.
+	 * only affecting draft tab and draft_supp_temp only
+	 */
+	public void closeImagePopup(){
+	    int index = this.getManagedBean().getItemSelectedIndex();
+	    CmSupplierItem selected = this.getManagedBean().getSelectedMaintainItem();
+
+	    if (selected == null) {
+	        return;
+	    }
+
+	    List<CmSupplierItem> draftList = this.getManagedBean().getDraftSearchDataModel().getList();
+
+	    if (CollectionUtils.isEmpty(draftList)
+	            || index < 0
+	            || index >= draftList.size()) {
+	        return;
+	    }
+
+	    CmSupplierItem row = draftList.get(index);
+
+	    row.setCmImages(selected.getCmImages());
+	    row.setItemDesc(selected.getItemDesc());
+	}
+	//#29961 - End
 	
 	// #30457, #14188 - start
 	public void deleteImageFromPopup(int imageIndex) {
@@ -11782,6 +11814,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		Double minPriceVal = getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM);
 		DecimalFormat df = new DecimalFormat("0.00#");
 		//#30457 - End 29/07/2022
+		//#29961 - Start
+		Integer minYearVal = getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY);
+		//#29961 - End
 		
 		if (this.getManagedBean().getCloneCmSupplierItemLs().size() < 1) {
 			throw new EpException(MessageConst.ERROR_715013);
@@ -11842,11 +11877,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// 1 year period between start and end date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(catalog.getCmStandardPricing().getStartDate());
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-
+			//#29961 - Start
+			cal.add(Calendar.YEAR, minYearVal);
 			if (cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate()) < 0) {
-				throw new EpException(MessageConst.ERROR_715012);
-			}
+				throw new EpException(MessageConst.ERROR_775179, new String[] { ""
+						+ minYearVal});
+			} //#29961 - End
 		}
 		RequestContext.getCurrentInstance().execute("updateDeclareDialog.show()");
 	}
@@ -11863,4 +11899,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.declareChecked = declareChecked;
 	}
 	//#30457 - farid - end
+	
+	
+	// 29961 - start
+	private Integer getEndYearByRulesValue(String RuleType) {
+		log.info("getEndYearByRulesValue");
+
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject("pm", IRuleSO.class);
+
+		Integer ruleValue = 0;
+
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		RuleResDTO ruleResDTO = null;
+
+		ruleReqDTO.setRuleType(RuleType);
+		RuleResDTO rules = ruleSO.getRuleValueByRuleType(ruleReqDTO);
+
+		if (rules.getRulevalue() != null) {
+			ruleValue = Integer.parseInt(rules.getRulevalue());
+		}
+		return ruleValue;
+	}
+	// 29961 - end
 }
