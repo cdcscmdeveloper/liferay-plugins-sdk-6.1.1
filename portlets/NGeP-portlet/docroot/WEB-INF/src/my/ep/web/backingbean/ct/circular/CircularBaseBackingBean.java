@@ -68,7 +68,6 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 				IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		Long orgProfileId = null;
-		log.info(" getFacesScopes().getUserSessionBean().getUserId() "+getFacesScopes().getUserSessionBean().getUserId());
 		if (getFacesScopes().getUserSessionBean().getUserId() != null) {
 			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
