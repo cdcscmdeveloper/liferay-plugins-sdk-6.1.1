@@ -61,6 +61,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -193,6 +194,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.comm.TplCommMember;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -848,6 +850,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// 26247 - end
 
+	
+	// 38523, #35320 - start
+	protected IReasonSO getReasonSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+	}
+
+	// 38523, #35320 - end
 	
 	//38343 - start
 	protected IDocumentSO getDocumentSO() {
@@ -7515,5 +7524,95 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// 26247 - end
 	
+	// #35320 - START
+	/**
+	 * Set PTJ Org Profile of user for committee member.
+	 * 
+	 * @param tplMember
+	 */
+	public void setTplCommMemberOrgProfile(TplCommMember tplMember) {
 
+		if (tplMember.getPmUser() != null
+				&& tplMember.getPmUser().getOrgTypeCode() != null) {
+			String orgTypeCode = tplMember.getPmUser().getOrgTypeCode()
+					.getParameterCode();
+			if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)) {
+				tplMember.setPmOrgProfile(getBKPOrgProfileByUserId(tplMember
+						.getPmUser().getUserId()));
+			} else if (orgTypeCode
+					.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)) {
+				tplMember.setPmOrgProfile(getOTHOrgProfileByUserId(tplMember
+						.getPmUser().getUserId()));
+			} else {
+				tplMember.setPmOrgProfile(getPTJOrgProfileByUserId(tplMember
+						.getPmUser().getUserId()));
+			}
+		}
+	}
+
+	// #35320 - END
+
+	// #35320 - START
+	/**
+	 * Set Committeemember data.
+	 * 
+	 * @param deleteScMember
+	 * @param currentScMember
+	 */
+	public TplCommMember setTplCommitteeMemberData(
+			TplCommMember deletedCommitteeMember,
+			TplCommMember currentCommitteeMember) {
+
+		deletedCommitteeMember.setDeleted(false);
+		deletedCommitteeMember.setRepresentativeType(currentCommitteeMember
+				.getRepresentativeType());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember
+				.getMemberRole());
+		deletedCommitteeMember.setMemberRoleId(currentCommitteeMember
+				.getMemberRoleId());
+		deletedCommitteeMember.setMemberName(currentCommitteeMember
+				.getMemberName());
+		deletedCommitteeMember.setDesignation(currentCommitteeMember
+				.getDesignation());
+		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
+		deletedCommitteeMember.setGrade(currentCommitteeMember.getGrade());
+		deletedCommitteeMember.setPNP(currentCommitteeMember.isPNP());
+		deletedCommitteeMember.setPmUser(currentCommitteeMember.getPmUser());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember
+				.getMemberRole());
+		deletedCommitteeMember.setAccessRight(currentCommitteeMember
+				.getAccessRight());
+		deletedCommitteeMember.setTplCommittee(currentCommitteeMember
+				.getTplCommittee());
+
+		if (deletedCommitteeMember.getMemberRole() != null) {
+			deletedCommitteeMember.setMemberRoleId(deletedCommitteeMember
+					.getMemberRole().getParameterId());
+		}
+
+		if (deletedCommitteeMember.getRepresentativeType() != null) {
+			deletedCommitteeMember
+					.setRepresentativeTypeId(deletedCommitteeMember
+							.getRepresentativeType().getParameterId());
+		}
+		return deletedCommitteeMember;
+	}
+
+	// #35320 - END
+
+	// #35320 - START
+	/**
+	 * Representive type change.
+	 * 
+	 * @param member
+	 *            the member
+	 */
+	public void tplRepresentiveTypeChangedListener(TplCommMember member) {
+		Long paramId = member.getRepresentativeTypeId();
+		if (null != paramId) {
+			member.setRepresentativeType(ParameterHelper.getInstance()
+					.getPmParameterById(paramId));
+		}
+	}
+	// #35320 - END
 }

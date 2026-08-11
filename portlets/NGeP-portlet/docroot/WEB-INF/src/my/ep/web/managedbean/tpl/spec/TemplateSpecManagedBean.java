@@ -68,7 +68,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private PmOrgProfile orgProfileOfLoginUser;
 	private boolean cloneBtnRendered;
 	private SelectItem[] uomDropDownList;
-	
+
 	/* #21695 START */
 	private boolean secretaryValidate;
 	private boolean zoneSpecUpdate;
@@ -156,7 +156,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 
 	/** The qt. */
 	private ScQt qt;
-
+	
 	// #29187 Start Vinod
 	List<SelectItem> mandatorySpecList;
 	private boolean zoneForItemHlink;

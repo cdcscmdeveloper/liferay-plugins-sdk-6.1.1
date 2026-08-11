@@ -33,16 +33,6 @@ public class SLALogConstant {
 	/*
 	 * METHOD_NAME
 	 */
-	//#29187 Start Vinod
-	public static final String QT_GET_COMPLIANCE_DROPDOWN_VALUES = "getComplianceDropdownValues";
-	public static final String QT_CHECK_SAMPLE_COMPLIANCE = "checkSampleCompliance";
-	public static final String QT_CHECK_SPEC_COMPLIANCE = "checkTechnicalSpecCompliance";
-	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
-	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
-	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
-	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
-	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
-	//#29187 End Vinod
 	// 25037 - start
 	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
 	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";
@@ -69,11 +59,20 @@ public class SLALogConstant {
 	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION = "createLampiranA3forQTVerification";
 
 	// #29007 -end-
+	//#29187 Start Vinod
+	public static final String QT_GET_COMPLIANCE_DROPDOWN_VALUES = "getComplianceDropdownValues";
+	public static final String QT_CHECK_SAMPLE_COMPLIANCE = "checkSampleCompliance";
+	public static final String QT_CHECK_SPEC_COMPLIANCE = "checkTechnicalSpecCompliance";
+	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
+	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
+	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
+	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
+	//#29187 End Vinod
 	
 	//#21695 start
 	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean"; //use this
 	//#21695 end
-
 	private SLALogConstant() {
 
 	}

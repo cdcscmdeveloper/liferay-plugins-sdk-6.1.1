@@ -597,6 +597,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean noProposalSubmitted;
 	private boolean supplierRejected;
 	// 6906 - end
+	private boolean allSupplierRejectEpv;//#21692
 	/*#29187 Start Vinod*/
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private boolean isComplianceCnfrm;
@@ -960,8 +961,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.maxItemTsScore = maxItemTsScore;
 	}
 	// #28784 - End
-	
-	private boolean allSupplierRejectEpv;//#21692
 
 	/**
 	 * Gets the today.
@@ -4374,6 +4373,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.supplierRejected = supplierRejected;
 	}
 	// 6906 - end
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 	/* #29187 Start Vinod */
 	public TplSpecZoneDtl getTplSpecZoneDtl() {
 		return tplSpecZoneDtl;
@@ -4408,15 +4416,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	
 	/* #29187 End Vinod */
-
-	//#21692 - Start
-	public boolean isAllSupplierRejectEpv() {
-		return allSupplierRejectEpv;
-	}
-	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
-		this.allSupplierRejectEpv = allSupplierRejectEpv;
-	}
-	//#21692 - End
 
 	//#28784 - Start
 	public String getTotalScoreLabel() {
