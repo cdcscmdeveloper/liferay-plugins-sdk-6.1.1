@@ -159,7 +159,7 @@ public class ViewSuppProfileManagedBean extends
 	private List<SelectItem> permenantCityLs;
 	private String disciplinaryActionMsg; 
 	// 26238 - END
-
+	
 	public ViewSuppProfileManagedBean() {
 
 	}

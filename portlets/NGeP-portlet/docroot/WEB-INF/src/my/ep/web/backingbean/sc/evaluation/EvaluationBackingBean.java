@@ -8657,7 +8657,8 @@ private void retriveCommitteeRemarksList(){
 					.getQtProposalChecklist());
 			evalReqDTO.setAnswersList(answers);
 			evalReqDTO.setChecklistType(getManagedBean().getCheckListType());
-			evalReqDTO.setScQt(this.getManagedBean().getScQt()); // #28784
+			evalReqDTO.setScQt(this.getManagedBean().getScQt()); //#40791
+			
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				evalReqDTO
@@ -13884,6 +13885,52 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//#28784 - End
+	
+	//#28784 - Start
+	private void checkTECMeetingDone() {
+		if (!this.getManagedBean().isReadOnly()
+				&& Arrays.asList(QTStatusConst.TEC_DEMO_STATUSES).contains(this.getManagedBean().getCurrentStatusId())
+				&& this.getManagedBean().getScQt().isDemoRequired()) {
+			checkMeetingDoneAfterDemo();
+		} else if (!this.getManagedBean().isReadOnly()
+				&& Arrays.asList(QTStatusConst.TEC_DEMO_STATUSES).contains(this.getManagedBean().getCurrentStatusId())
+				&& !this.getManagedBean().getScQt().isDemoRequired()) {
+			checkMeetingDoneNormalTEC();
+		}
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void checkMeetingDoneAfterDemo() {
+		if (this.getManagedBean().getPresentationDemoActiveIndex() == 1) {
+			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
+			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
+		}
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	private void checkMeetingDoneNormalTEC() {
+		//remove comment for 4serangkai checking meeting details wip n non wip - Start
+		/*IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		int wipStatus = evaluationSO.checkWipScoreSetting(reqDTO);
+
+		boolean wipTEC = wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE;
+		boolean nonWIPTEC = wipStatus >= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT
+				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_CURRENT;*/
+		//remove comment for 4serangkai checking meeting details wip n non wip - End
+
+//		if (wipTEC || nonWIPTEC) {//open for 4ser
+		if (this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE) {//delete this after 4ser
+			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
+			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
+		}
+	}
+	//#28784 - End
 
 	//#21692 - start
 	/**
@@ -14393,52 +14440,6 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	// #29187 End Vinod
-
-	//#28784 - Start
-	private void checkTECMeetingDone() {
-		if (!this.getManagedBean().isReadOnly()
-				&& Arrays.asList(QTStatusConst.TEC_DEMO_STATUSES).contains(this.getManagedBean().getCurrentStatusId())
-				&& this.getManagedBean().getScQt().isDemoRequired()) {
-			checkMeetingDoneAfterDemo();
-		} else if (!this.getManagedBean().isReadOnly()
-				&& Arrays.asList(QTStatusConst.TEC_DEMO_STATUSES).contains(this.getManagedBean().getCurrentStatusId())
-				&& !this.getManagedBean().getScQt().isDemoRequired()) {
-			checkMeetingDoneNormalTEC();
-		}
-	}
-	//#28784 - End
-
-	//#28784 - Start
-	private void checkMeetingDoneAfterDemo() {
-		if (this.getManagedBean().getPresentationDemoActiveIndex() == 1) {
-			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
-			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
-		}
-	}
-	//#28784 - End
-	
-	//#28784 - Start
-	private void checkMeetingDoneNormalTEC() {
-		//remove comment for 4serangkai checking meeting details wip n non wip - Start
-		/*IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-		reqDTO.setScQt(this.getManagedBean().getScQt());
-		int wipStatus = evaluationSO.checkWipScoreSetting(reqDTO);
-
-		boolean wipTEC = wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
-				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE;
-		boolean nonWIPTEC = wipStatus >= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT
-				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_CURRENT;*/
-		//remove comment for 4serangkai checking meeting details wip n non wip - End
-
-//		if (wipTEC || nonWIPTEC) {//open for 4ser
-		if (this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE) {//delete this after 4ser
-			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
-			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
-		}
-	}
-	//#28784 - End
 	
 	//#28784 - Start
 	private void setAttendanceForDemoEvaluation(ScQtCommitteeActivity committeeActivity) {

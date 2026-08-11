@@ -1957,10 +1957,12 @@ public class OrganisationBackingBean extends
 			if (manualAddr.isBrandNew() && !manualAddr.isModified()) {
 				getManagedBean().getAddressTypesList().add(deliveryAddr);
 				deliveryAddr.setPmAddress(manualAddr);
+
 				/**********************************START: AUDIT 35509******************************************/
 				this.getManagedBean().getNewReceivingAddressList().add(setManualPmAddressType(deliveryAddr, true));
 				this.getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr, false));
 				/**********************************END: AUDIT 35509******************************************/
+
 			} else {
 				for (int i = 0; i < getManagedBean().getAddressTypesList().size(); i++) {
 					PmAddressType adressType = getManagedBean().getAddressTypesList().get(i);
@@ -1970,6 +1972,7 @@ public class OrganisationBackingBean extends
 							&& address.getAddressId().equals(manualAddr.getAddressId())) {
 						getManagedBean().getAddressTypesList().set(i, adressType);
 						deliveryAddr.setPmAddress(manualAddr);
+						
 						/**********************************START: AUDIT 35509******************************************/
 						getManagedBean().getEditedReceivingAddressList().set(i, setManualPmAddressType(deliveryAddr, true));
 						/**********************************END: AUDIT 35509******************************************/
