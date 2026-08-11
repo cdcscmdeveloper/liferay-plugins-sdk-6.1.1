@@ -122,6 +122,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemo;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplierAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoTechnicalCommitteeRemark;
@@ -778,6 +779,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 										.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 									committeeActivity.setAttended(true);
 								}
+								setAttendanceForDemoEvaluation(committeeActivity);//#28784
 							}
 							Map<Object, Object> map = CustomUtils.listToMap(resDTO.getQtCommittee()
 									.getCommitteeActivities(), "getScCommitteeMember.getCommitteeMemberId");
@@ -7923,6 +7925,12 @@ private void retriveCommitteeRemarksList(){
 					renewSesionObject();
 				}
 			} else {
+				//#28784 - Start
+				if (tabindex == 0) {
+					evaluationSO.saveQTDtl(reqDtO);
+					renewSesionObject();
+				}
+				//#28784 - End
 				if (tabindex == 3
 						&& this.getManagedBean().getScQt().isDemoRequired()
 						&& this.getManagedBean()
@@ -9263,6 +9271,7 @@ private void retriveCommitteeRemarksList(){
 		// #28784 - End
 		{
 			afterDemoInv(true); // #28784
+			saveDemoMeetingDtls();//#28784
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -14427,6 +14436,40 @@ private void retriveCommitteeRemarksList(){
 		if (this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE) {//delete this after 4ser
 			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
 			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
+		}
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	private void setAttendanceForDemoEvaluation(ScQtCommitteeActivity committeeActivity) {
+		if (this.getManagedBean().getTaskName() != null
+				&& this.getManagedBean().getTaskName().equals(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION)) {
+			DemoReqDTO reqDTO = new DemoReqDTO();
+			reqDTO.setScQt(this.getManagedBean().getScQt());
+			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
+			DemoResDTO resDTO = qtDemoSO.retrieveScQtDemoByQtNo(reqDTO);
+			if (resDTO.getScQtDemo() != null) {
+				ScQtDemo scQtDemo = resDTO.getScQtDemo();
+				if (scQtDemo.getChangedDate().after(committeeActivity.getChangedDate())) {
+					committeeActivity.setAttended(false);
+				}
+			}
+		}
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	private void saveDemoMeetingDtls() {
+		if (this.getManagedBean().getTaskName() != null
+				&& this.getManagedBean().getTaskName().equals(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION)) {
+			try {
+				saveMeetingDtls(false);
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("QT", "saveDemoMeetingDtls",
+						this.getManagedBean().getScQt().getQtNo(), "saveDemoMeetingDtls",
+						getUserIdSessionFromLoginId(), e);
+			}
 		}
 	}
 	//#28784 - End
