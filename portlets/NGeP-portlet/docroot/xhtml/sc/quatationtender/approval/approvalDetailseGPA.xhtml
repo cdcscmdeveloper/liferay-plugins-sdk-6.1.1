@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:param name="isEGPAApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
+	
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+		<p:dataTable id="egpaReqDtlsId"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{approvalDtlsList.scQtApprovalDtls}" var="requestdetails"
+			rowIndexVar="index" editable="true" rowKey="#{requestdetails}">
+
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
+				<h:outputText
+					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.from']}">
+				<h:panelGroup>
+					<h:outputText value="#{requestdetails.originalValue}" />
+				</h:panelGroup>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.to']}">
+				<h:panelGroup>
+					<h:outputText value="#{requestdetails.changedValue}" />
+				</h:panelGroup>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.qt.publishing.period.request.decision']}">
+				<c:if test="#{requestdetails.approverId ne null}">
+					<h:outputText value="#{requestdetails.approverName}" />
+				</c:if>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.decision.date']}">
+				<h:outputText value="#{requestdetails.approverActionDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}"
+		attachmentList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}"
+		readonly="#{!isEGPAApprovalDtlsEditable and qTDetailBB.currentStatuseGPAReview()}"
+		fileUploadListener="approvalBackingBean.handleFileUpload" />
+
+</ui:composition>

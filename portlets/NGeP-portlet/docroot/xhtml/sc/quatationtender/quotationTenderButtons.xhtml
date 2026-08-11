@@ -189,29 +189,38 @@
 								
 							<ui:remove> #30477 Start </ui:remove>	
 <!-- #29732 Start - reOpen Fix -->
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}" 
 								styleClass="ui-button" onclick="blockWidget.show();" 
 								oncomplete="blockWidget.hide();" 
 								rendered="#{isClone2 and isCommitteeApprovalReviseTask}" 
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}">
+							<ui:remove>#10141 End Vinod</ui:remove>
 <!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
 							
 							<ui:remove>9019 -start</ui:remove>
 							<ui:remove>9019 Reopen note#383 Remove skipvalidation checking when cancel</ui:remove>
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							 <p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="cancel1QTDlg.show();"
 								update="@([id$=#{cancel1QTDlg}])"
-								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"/>
+								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"/>
+							<ui:remove>#10141 End Vinod</ui:remove>
 						
 <!-- #29732 Start - reOpen Fix -->							
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}" 
 								styleClass="ui-button" onclick="blockWidget.show();" 
 								oncomplete="blockWidget.hide();" 
 								rendered="#{!isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}" 
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" 
-								update="@form">
+								update="@form"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}">
+							<ui:remove>#10141 End Vinod</ui:remove>
 							<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 				    		<f:param name="skipsubmitvalidation" value="0" />
 			       			<ui:remove>end 9019 - Reopen #note-317</ui:remove>		
@@ -219,11 +228,14 @@
 							</p:commandButton>
 							<ui:remove>9019 -end</ui:remove>
 							<ui:remove>#34718 - Start</ui:remove>
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}" 
 								styleClass="ui-button" onclick="blockWidget.show();" 
 								oncomplete="blockWidget.hide();submissionConfirmPopUp.show();" 
 								rendered="#{isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-								update="@form"/>
+								update="@form"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"/>
+							<ui:remove>#10141 End Vinod</ui:remove>
 							<ui:remove>#34718 - End</ui:remove>
 						</ui:repeat>
 					</c:when>
@@ -450,6 +462,26 @@
 			</div>
 		</p:dialog>
 		<ui:remove> #25077 End </ui:remove>
+	    <ui:remove> 38107 - Start </ui:remove>
+		<p:dialog id="eGPAApprovalNeededIdTemp" widgetVar="eGPAApprovalNeededDlgTemp"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
+			height="100" closable="false">
+			<table>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period.submit.confirmation1']}" /></td></tr>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period.submit.confirmation2']}" /></td></tr>
+			</table>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="eGPAApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
+					partialSubmit="true" process="@form" update="@form"
+					action="#{qTDetailBB.updateBpmTask(bpAction)}" actionListener="#{qTDetailBB.reseteGPACurrentArea(true)}"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="eGPAApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();"
+					partialSubmit="true" process="@form" update="@form"
+					action="#{qTDetailBB.reseteGPACurrentArea(false)}" />
+			</div>
+		</p:dialog>
+		<ui:remove> 38107 - End </ui:remove>
 		<!-- 15391 Start -->
 		<p:dialog id="specCommAlertdialog" widgetVar="specCommAlert"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"

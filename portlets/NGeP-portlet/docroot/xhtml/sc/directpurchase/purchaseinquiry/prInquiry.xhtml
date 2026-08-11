@@ -511,15 +511,7 @@
 		            </p:tab>
 		
 		            <p:tab title="#{lbl['lbl.cm.promotion']}">
-		
-		                <ui:fragment rendered="#{not empty purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices}">
-		                    <ui:include src="price/pricingPromotionTierTab.xhtml" />
-		                </ui:fragment>
-		
-		                <ui:fragment rendered="#{empty purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices}">
-		                    <ui:include src="price/disableTab.xhtml" />
-		                </ui:fragment>
-		
+		                <ui:include src="price/pricingPromotionTierTab.xhtml" />		
 		            </p:tab>
 		
 		        </p:tabView>
@@ -531,28 +523,12 @@
 		            activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalPricingIndex}">
 		
 		            <p:tab title="#{lbl['lbl.cm.standard']}">
-		
-		                <ui:fragment rendered="#{not empty purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices}">
-		                    <ui:include src="price/zonalStandardPricingTab.xhtml" />
-		                </ui:fragment>
-		
-		                <ui:fragment rendered="#{empty purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices}">
-		                    <ui:include src="price/disableTab.xhtml" />
-		                </ui:fragment>
-		
+		            	<ui:include src="price/zonalStandardPricingTab.xhtml" />
 		            </p:tab>
 		
 		
 		            <p:tab title="#{lbl['lbl.cm.promotion']}">
-		
-		                <ui:fragment rendered="#{not empty purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices}">
-		                    <ui:include src="price/zonalPromotionPricingTab.xhtml" />
-		                </ui:fragment>
-		
-		                <ui:fragment rendered="#{empty purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices}">
-		                    <ui:include src="price/disableTab.xhtml" />
-		                </ui:fragment>
-		
+		            	<ui:include src="price/zonalPromotionPricingTab.xhtml" />
 		            </p:tab>
 		
 		        </p:tabView>
@@ -564,28 +540,12 @@
 		            activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalTierPricingIndex}">
 		
 		            <p:tab title="#{lbl['lbl.cm.standard']}">
-		
-		                <ui:fragment rendered="#{not empty purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices}">
-		                    <ui:include src="price/zonalTierPricingTab.xhtml" />
-		                </ui:fragment>
-		
-		                <ui:fragment rendered="#{empty purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices}">
-		                    <ui:include src="price/disableTab.xhtml" />
-		                </ui:fragment>
-		
+		            	<ui:include src="price/zonalTierPricingTab.xhtml" />
 		            </p:tab>
 		
 		
 		            <p:tab title="#{lbl['lbl.cm.promotion']}">
-		
-		                <ui:fragment rendered="#{not empty purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices}">
-		                    <ui:include src="price/zonalPromotionTierPricingTab.xhtml" />
-		                </ui:fragment>
-		
-		                <ui:fragment rendered="#{empty purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices}">
-		                    <ui:include src="price/disableTab.xhtml" />
-		                </ui:fragment>
-		
+		            	<ui:include src="price/zonalPromotionTierPricingTab.xhtml" />		
 		            </p:tab>
 		
 		        </p:tabView>

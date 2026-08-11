@@ -17995,12 +17995,9 @@ if (null != checklist && !checklist.isEmpty()) {
 				this.getManagedBean().setGenInfo(false);
 			}
 		}
-		if((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) 
-				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(scQt.getQtStatus().getStatusId()))){//#33837 - add bpk and reschedule
+		//#38107(eGPA), 33837(add bpk and reschedule) - Start
+		if(QTStatusConst.getStatusAbleToUpdateSpecificationMaintenance().contains(scQt.getQtStatus().getStatusId())){
+		//#38107(eGPA), 33837(add bpk and reschedule) - End
 			this.getManagedBean().setChecklist(true);
 			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
 					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
@@ -23573,7 +23570,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		for (ScQtCheckList checklist : checklists) {
 			for (ScQtCheckList inactive : this.getManagedBean().getInActiveChecklist()) {
 				if (checklist.getDocCategory().equals(inactive.getDocCategory())
-						&& inactive.getQtChecklistId() == checklist.getQtChecklistId()) {
+						&& inactive.getQtChecklistId().equals(checklist.getQtChecklistId())) {
 					checklist.setSelected(true);
 					checklist.setDeleted(true);
 					deleteCheckLists.add(checklist);
@@ -25171,4 +25168,37 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		               && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
 	}
 	// #40245 - end
+	
+	//#25651 - Start
+	/**
+	 * To check technical specification more than one item
+	 * @return true or false
+	 */  
+	public Boolean checkTechnicalSpecificationForItems(){
+		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		ScQt scQt = this.getManagedBean().getQt();
+		if(specSO.checkTechnicalSpecificationForItems(scQt)){
+			return true;
+		}
+		return false;
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To check financial specification for items
+	 * @return true or false
+	 */  
+	public Boolean checkFinancialSpecificationForItems(){
+		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		ScQt scQt = this.getManagedBean().getQt();
+		if(specSO.checkFinancialSpecificationForItems(scQt)){
+			return true;
+		}
+		return false;
+	}
+	//#25651 - End
+	
 }
