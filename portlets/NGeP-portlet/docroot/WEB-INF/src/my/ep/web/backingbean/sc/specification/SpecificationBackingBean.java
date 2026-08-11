@@ -11386,8 +11386,7 @@ public class SpecificationBackingBean extends
 			try {
 				String techInactive = inactiveChecklistsForError(this.getManagedBean().getScQtCheckSt2techProposal());
 
-				if (StringUtils.isNotEmpty(techInactive)
-						|| StringUtils.isNotBlank(techInactive)) {
+				if (StringUtils.isNotEmpty(techInactive)) {
 					StringBuilder message = new StringBuilder();
 					message.append(CollectionUtils.isNotEmpty(FacesContext
 							.getCurrentInstance().getMessageList()) ? QTConstants.SPAN_ERROR_ICON
@@ -11422,8 +11421,7 @@ public class SpecificationBackingBean extends
 				String finInactive = inactiveChecklistsForError(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList());
 
-				if (StringUtils.isNotEmpty(finInactive)
-						|| StringUtils.isNotBlank(finInactive)) {
+				if (StringUtils.isNotEmpty(finInactive)) {
 					StringBuilder message = new StringBuilder();
 					message.append(CollectionUtils.isNotEmpty(FacesContext
 							.getCurrentInstance().getMessageList()) ? QTConstants.SPAN_ERROR_ICON
