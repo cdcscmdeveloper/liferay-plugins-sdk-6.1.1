@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;//#28188
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -174,6 +175,8 @@ import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAtta
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;//#28188
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -8792,4 +8795,377 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// #25651 - End
 	
+	// #28188 - Start
+	/**
+	 * Group and sort briefingsitevist details.
+	 * 
+	 * @param inputList
+	 * @return List<ScQtBsvDtl>
+	 */
+	protected List<ScQtBsvDtl> groupAndSortBriefingSiteVisitDtls(List<ScQtBsvDtl> inputList) {
+
+		if (CollectionUtils.isEmpty(inputList)) {
+			return new ArrayList<>();
+		}
+
+		// STEP 1: Build id -> dtl map for lookup
+		List<Long> parentIdList = new ArrayList<>();
+		Map<Long, ScQtBsvDtl> idMap = new LinkedHashMap<>();
+		for (ScQtBsvDtl dtl : inputList) {
+			if (dtl.getQtBsvDtlId() != null) {
+				idMap.put(dtl.getQtBsvDtlId(), dtl);
+			}
+			if (dtl.getParentPostponeId() != null
+					&& !parentIdList.contains(dtl.getParentPostponeId())) {
+				parentIdList.add(dtl.getParentPostponeId());
+			}
+		}
+
+		// Group by root ancestor key
+		// getRootParentBsvId walks all the way up the chain to find the true
+		// root
+		Map<Long, List<ScQtBsvDtl>> parentGrouped = new LinkedHashMap<>();
+		long phantomKey = Long.MIN_VALUE;
+		parentGrouped(parentGrouped, idMap, inputList, phantomKey);
+
+		// active leaf (open status, no live child) pushed to bottom
+		Map<Long, List<ScQtBsvDtl>> childGrouped = new LinkedHashMap<>();
+		childGrouped(childGrouped, parentGrouped, parentIdList, phantomKey);
+
+		// sort grouped list based on status
+		Map<Long, List<ScQtBsvDtl>> sortedGroups = new LinkedHashMap<>();
+		sortedByGroups(sortedGroups, childGrouped);
+
+		// Flatten
+		List<ScQtBsvDtl> finalList = new ArrayList<>();
+		for (List<ScQtBsvDtl> bsvList : sortedGroups.values()) {
+			finalList.addAll(bsvList);
+		}
+
+		return finalList;
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * Group By parentId.
+	 * 
+	 * @param parentGrouped
+	 * @param idMap
+	 * @param inputList
+	 * @param phantomKey
+	 * @return Map<Long, List<ScQtBsvDtl>>
+	 */
+
+	private Map<Long, List<ScQtBsvDtl>> parentGrouped(
+			Map<Long, List<ScQtBsvDtl>> parentGrouped,
+			Map<Long, ScQtBsvDtl> idMap, List<ScQtBsvDtl> inputList,
+			long phantomKey) {
+		for (ScQtBsvDtl dtl : inputList) {
+			Long rootKey = getRootParentBsvId(dtl, idMap);
+
+			if (rootKey == null) {
+				rootKey = phantomKey--;
+			}
+
+			List<ScQtBsvDtl> parentList = parentGrouped.get(rootKey);
+			if (parentList == null) {
+
+				parentList = new ArrayList<>();
+				parentGrouped.put(rootKey, parentList);
+			}
+
+			parentList.add(dtl);
+		}
+		return parentGrouped;
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * Group by each child.
+	 * 
+	 * @param childGrouped
+	 * @param parentGrouped
+	 * @param parentIdList
+	 * @param phantomKey
+	 * @return Map<Long, List<ScQtBsvDtl>>
+	 */
+	private Map<Long, List<ScQtBsvDtl>> childGrouped(
+			Map<Long, List<ScQtBsvDtl>> childGrouped,
+			Map<Long, List<ScQtBsvDtl>> parentGrouped, List<Long> parentIdList,
+			long phantomKey) {
+		for (Map.Entry<Long, List<ScQtBsvDtl>> entry : parentGrouped.entrySet()) {
+			List<ScQtBsvDtl> childGroupList = entry.getValue();
+			bsvSorting(childGroupList);
+
+			for (ScQtBsvDtl child : childGroupList) {
+
+				Long rootKey = getRootParentBsvId(child, parentIdList);
+
+				if (rootKey == null) {
+					rootKey = phantomKey--;
+				}
+
+				if (!childGrouped.containsKey(rootKey)) {
+					childGrouped.put(rootKey, new ArrayList<ScQtBsvDtl>());
+
+				}
+				List<ScQtBsvDtl> childList = childGrouped.get(rootKey);
+				if (CollectionUtils.isNotEmpty(childList)) {
+					childList.add(child);
+					childGrouped.put(rootKey, childList);
+
+				} else {
+
+					childGrouped.get(rootKey).add(child);
+				}
+
+				if (null != child
+						&& null != child.getQtBsvDtlId()
+						&& child.getRecordStatusFlg().equals(
+								DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+					child.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
+				}
+
+			}
+		}
+		return childGrouped;
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * sorting bsvDetails based on StatusId.
+	 * 
+	 * @param sortedGroups
+	 * @param childGrouped
+	 * @return Map<Long, List<ScQtBsvDtl>>
+	 */
+	private Map<Long, List<ScQtBsvDtl>> sortedByGroups(
+			Map<Long, List<ScQtBsvDtl>> sortedGroups,
+			Map<Long, List<ScQtBsvDtl>> childGrouped) {
+		for (Map.Entry<Long, List<ScQtBsvDtl>> entry : childGrouped.entrySet()) {
+			Long key = entry.getKey();
+			List<ScQtBsvDtl> list = entry.getValue();
+
+			List<ScQtBsvDtl> sortedList = new ArrayList<>();
+			List<ScQtBsvDtl> postponeList = new ArrayList<>();
+			List<ScQtBsvDtl> rejectList = new ArrayList<>();
+			List<ScQtBsvDtl> pendingList = new ArrayList<>();
+			List<ScQtBsvDtl> completedList = new ArrayList<>();
+			List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
+			for (ScQtBsvDtl scQtBsvDtl : list) {
+				if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_POSTPONE)) {
+					postponeList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_REQUEST_REJECT)) {
+					rejectList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_PENDING)) {
+					pendingList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_COMPLETED)) {
+					completedList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl
+								.getBsvStatus()
+								.getStatusId()
+								.equals(QTStatusConst.BSV_PENDING_UPDATE_APPROVAL)) {
+					pendingUpdateApprList.add(scQtBsvDtl);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(rejectList)) {
+				sortedList.addAll(rejectList);
+			}
+			if (CollectionUtils.isNotEmpty(postponeList)) {
+				sortedList.addAll(postponeList);
+			}
+
+			if (CollectionUtils.isNotEmpty(pendingList)) {
+				sortedList.addAll(pendingList);
+			}
+			if (CollectionUtils.isNotEmpty(completedList)) {
+				sortedList.addAll(completedList);
+			}
+			if (CollectionUtils.isNotEmpty(pendingUpdateApprList)) {
+				sortedList.addAll(pendingUpdateApprList);
+			}
+
+			if (CollectionUtils.isNotEmpty(sortedList)) {
+				sortedGroups.put(key, sortedList);
+			}
+		}
+		return sortedGroups;
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * Walks up parentPostponeId chain to find the true root ID. Includes cycle
+	 * guard to prevent infinite loop on bad data.
+	 * 
+	 * @param dtl
+	 * @param idMap
+	 * @retrun Long bsvDtlId.
+	 */
+	private Long getRootParentBsvId(ScQtBsvDtl dtl, Map<Long, ScQtBsvDtl> idMap) {
+		if (dtl == null) {
+			return null;
+		}
+
+		if (dtl.getParentPostponeId() == null) {
+			return dtl.getQtBsvDtlId(); // already the root
+		}
+
+		Long parentId = dtl.getParentPostponeId();
+		ScQtBsvDtl parent = idMap.get(parentId);
+
+		Set<Long> visited = new HashSet<>();
+		if (dtl.getQtBsvDtlId() != null) {
+			visited.add(dtl.getQtBsvDtlId());
+		}
+
+		while (parent != null && parent.getParentPostponeId() != null) {
+			if (!visited.add(parentId)) {
+				break;
+			}
+			parentId = parent.getParentPostponeId();
+			parent = idMap.get(parentId);
+		}
+
+		return parentId;
+	}
+
+	// #28188 - end-
+
+	// #28188 - Start
+	/**
+	 * find the bsvDtlId as a parentId for other details.
+	 * 
+	 * @param dtl
+	 * @param parentIdList
+	 * @return Long bsvDtlId.
+	 */
+	private Long getRootParentBsvId(ScQtBsvDtl dtl, List<Long> parentIdList) {
+		if (dtl == null) {
+			return null;
+		}
+
+		if (dtl.getParentPostponeId() == null) {
+			return dtl.getQtBsvDtlId(); // may be null for brand-new roots
+		}
+		Long parentId = dtl.getQtBsvDtlId();
+
+		if (CollectionUtils.isNotEmpty(parentIdList)) {
+
+			if (null != parentId && parentIdList.contains(parentId)) {
+
+				return parentId;
+			} else if (null != parentId && !parentIdList.contains(parentId)) {
+
+				return dtl.getParentPostponeId();
+			} else if (null == parentId) {
+
+				return dtl.getParentPostponeId();
+			}
+		}
+
+		return parentId;
+	}
+	
+	//28188 -start-
+	/**
+	 * 
+	 * @param bsvRegistrationList
+	 * @param qtBsvDtls
+	 */
+	@SuppressWarnings("unchecked")
+	protected void putBsvRegisterDetailsIntoMap(
+			List<ScQtBsvRegistration> bsvRegistrationList, ScQtBsvDtl qtBsvDtls) {
+		
+		if(CollectionUtils.isNotEmpty(bsvRegistrationList) && null!=qtBsvDtls && null!=qtBsvDtls.getQtBsvDtlId()){
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance()
+				.getExternalContext().getSessionMap();
+		Long bsvDtlId = qtBsvDtls.getQtBsvDtlId();
+		Map<Long, List<ScQtBsvRegistration>> briefingMap = (Map<Long, List<ScQtBsvRegistration>>) FacesContext
+				.getCurrentInstance().getExternalContext().getSessionMap()
+				.get(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);
+
+		if (briefingMap == null) {
+			briefingMap = new HashMap<>();
+
+			briefingMap.put(bsvDtlId, bsvRegistrationList);
+
+		} else {
+
+			briefingMap.put(bsvDtlId, bsvRegistrationList);
+
+		}
+		sessionMap.put("briefingRegistrationMap", briefingMap);
+		}
+		
+	}
+
+	// #28188 -end-
+	
+	//28188 -start-
+	/**
+	 * fetch BsvRegister Details from Session.
+	 * @return Map<Long, List<ScQtBsvRegistration>>.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Map<Long, List<ScQtBsvRegistration>> getBsvRegisterDetailsIntoMap(){
+		 Object obj = FacesContext.getCurrentInstance()
+		            .getExternalContext()
+		            .getSessionMap()
+		            .get(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);
+		  if (obj instanceof Map<?,?>) {
+			 return (Map<Long, List<ScQtBsvRegistration>>) obj;
+		  }
+		  return new HashMap<>();
+	}
+	//28188 -end-
+	
+	//28188 -start-
+	/**
+	 * remove BsvRegisterDetails from Session.
+	 */
+	protected void removeBsvRegisterDetailsIntoMap(){
+	    FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap()
+	            .remove(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);	
+	}
+	//28188 -end-
+
+	// 28188 -start-
+	/**
+	 * sort bsvDetails by cretaedDate.
+	 * 
+	 * @param bsvDtls
+	 */
+	private void bsvSorting(List<ScQtBsvDtl> bsvDtls) {
+		Collections.sort(bsvDtls, new Comparator<ScQtBsvDtl>() {
+			public int compare(ScQtBsvDtl bsvDtls1, ScQtBsvDtl bsvDtls2) {
+
+				return new CompareToBuilder()
+
+				.append(bsvDtls1.getCreatedDate(), bsvDtls2.getCreatedDate())
+						.toComparison();
+			}
+		});
+	}
+	// 28188 -end-
+
 }
