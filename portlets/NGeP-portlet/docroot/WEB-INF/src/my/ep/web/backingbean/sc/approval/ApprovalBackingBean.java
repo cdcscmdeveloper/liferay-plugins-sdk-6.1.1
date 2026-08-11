@@ -761,6 +761,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 						QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
 						qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();
+						
+						//28188 -start-
+						setProposalStartDate(getManagedBean().getQt());
+						
+						//28188 -end-
+						
 						break;
 					}
 				}
@@ -4287,6 +4293,65 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}	
 	// 36671 - end
+	
+	// 28188 -start-
+	/**
+	 * set proposal start date during bsvApproval.
+	 * 
+	 * @param scQt
+	 */
+	private void setProposalStartDate(ScQt scQt) {
+		if (this.getManagedBean() != null
+				&& this.getManagedBean().getAmendMentBean() != null) {
+
+			checkAmendDetailsAppoved(this.getManagedBean().getAmendMentBean(),
+					scQt);
+		} else {
+
+			IQTDetailSO detailSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+
+			ScQtAmend scQtAmend = detailSO.retrieveQtAmend(scQt.getQtId());
+
+			if (null != scQtAmend) {
+				QtAmendMentBean amendMentBean = detailSO
+						.getQtAmendMentBean(scQtAmend);
+				checkAmendDetailsAppoved(amendMentBean, scQt);
+
+			}
+		}
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * check amendment details exist or not during publication bsv approval
+	 * time.
+	 * 
+	 * @param amendMentBean
+	 * @param scQt
+	 */
+	private void checkAmendDetailsAppoved(QtAmendMentBean amendMentBean,
+			ScQt scQt) {
+		if (amendMentBean != null) {
+			QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(
+					QTFieldConst.FIELD_QT_PROPOSAL_START_DATE);
+			// Proposal Start Date
+			if (valueBean != null && null == valueBean.getIsApproved()) {
+				Object newValue = valueBean.getNewValue();
+
+				if (newValue instanceof Date) {
+					scQt.setProposalStartDate((Date) newValue);
+					updatePublishClosingDate(scQt);
+				}
+			}
+
+		}
+	}
+
+	// 28188 -end-
 	
 	//#21692 - Start
 	/**

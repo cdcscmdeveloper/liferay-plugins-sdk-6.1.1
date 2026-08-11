@@ -3110,8 +3110,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
-			
-			PmUserOrg oldPmUserOrg = !this.getManagedBean().getSelectedUser().isBrandNew() ? 
+			// #40810 Start
+			PmUserOrg oldPmUserOrg = !userOrg.isBrandNew() ? 
 					PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(this.getManagedBean().getSelectedUser().getUserId(),
 							 this.getManagedBean().getSelectedUserOrg().getUserOrgId()) : null;
 			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
@@ -3263,6 +3263,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				
 				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					this.getManagedBean().setUserGrpBrandNew(true); // 40810
 					this.getManagedBean().setBrandNewUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
@@ -4525,23 +4526,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 
-	private void validateEmailAndNotificationPreferences(PmUser user,
-			PmUserOrg pmUserOrg) {
+	private void validateEmailAndNotificationPreferences(PmUser user, PmUserOrg pmUserOrg) {
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-
-		if (user.isNotifyBySms()) {
-			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
-				throw new EpException(MessageConst.ERROR_770090);
-			}
+		//#40623 Start
+		if (user.isNotifyBySms() && StringUtils.isBlank(pmUserOrg.getMobileNo())) {
+			throw new EpException(MessageConst.ERROR_770090);
+		}
 			//#40246 Start
 			/*if (pmUserOrg.getMobileTelcoId() == null) {
 				throw new EpException(MessageConst.ERROR_770250);
 			}*/
 			//#40246 End
-		}
-	}
+	}	//#40623 End
 
 	private void validateOrgProfile(PmUserOrg pmUserOrg) {
 		if (pmUserOrg.getPmOrgProfile() == null

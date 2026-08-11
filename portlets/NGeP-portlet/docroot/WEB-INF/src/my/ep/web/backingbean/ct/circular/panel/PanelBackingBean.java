@@ -3609,7 +3609,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
                 + pmCategoryL3.getPmCategoryL2().getCategoryL2Code()
                 + pmCategoryL3.getCategoryL3Code();
 
-		String categoryName = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryName();
+		String categoryName = pmCategoryL3.getCategoryName(); //#40876
 
 		// Duplicate Check
 		for (CtPanelCategory existing : ctCategoryList) {
@@ -3621,6 +3621,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 		
 		ctCategoryList.add(createPanelCategory(pmCategoryL3, circularVer));
+		getManagedBean().setAutoUpdate(Boolean.TRUE); //#40498,#30014
 	}
 	
 	/**
@@ -3720,4 +3721,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
 	}
 	//#35506 - End
+	
+	//#40498,#30014 - Start
+	/**
+	 * Disables auto-update for the main page messages before opening the
+	 * category code popup.
+	 */
+	public void beforeOpenCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+	}
+	
+	/**
+	 * Restores auto-update for the main page messages after the category code
+	 * popup is closed.
+	 */
+	public void afterCloseCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+	}
+	//#40498,#30014 - End
 }

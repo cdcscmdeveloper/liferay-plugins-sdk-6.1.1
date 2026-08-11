@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;//#28188
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -915,6 +916,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										.getManagedBean().getInActiveChecklistNotificationText() },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
+				return;
+			} else if (!isSendNotificationButton || inactiveCLWarn) {
+				checkInactiveChecklistAndDisplayWarning(this.getManagedBean()
+						.getTaskName());
 				return;
 			}
 			//#10141 End Vinod
@@ -3341,8 +3346,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							//#28188 - Start (for sorting) 
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
-									groupAndSortSiteVisitList(briefingResDTO.getBriefingList()),
-									groupAndSortSiteVisitList(briefingResDTO.getSiteVisitList()), scQtBsv);
+									groupAndSortBriefingSiteVisitDtls(briefingResDTO.getBriefingList()),
+									groupAndSortBriefingSiteVisitDtls(briefingResDTO.getSiteVisitList()), scQtBsv);
 							//#28188 - End
 							zoneBeans.add(briefingZoneBean);
 						}
@@ -3372,8 +3377,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 					//#28188 - Start (for sorting)
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							null, groupAndSortSiteVisitList(resDTO.getBriefingList()),
-							groupAndSortSiteVisitList(resDTO.getSiteVisitList()), qtBsv);
+							null, groupAndSortBriefingSiteVisitDtls(resDTO.getBriefingList()),
+							groupAndSortBriefingSiteVisitDtls(resDTO.getSiteVisitList()), qtBsv);
 					//#28188 - End
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
 				}
@@ -8181,7 +8186,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			            .getExternalContext()
 			            .getSessionMap()
 			            .remove("briefingRegistrationList");
+			    
+				// 28188 -start-
+			    quationTenderReqDTO.setStatusId(workflowStatusId);
+				Map<Long, List<ScQtBsvRegistration>> briefingRegistrationMap = getBsvRegisterDetailsIntoMap();
+				if (null != briefingRegistrationMap
+						&& !briefingRegistrationMap.isEmpty()) {
+					quationTenderReqDTO
+							.setBsvAttandanceRegister(briefingRegistrationMap);
+				}
+				removeBsvRegisterDetailsIntoMap();
+				// 28188 -end-
 			}
+			
+			// 28188 -start-
+			else if (QTStatusConst.QT_PROPOSAL_PREPARATION
+					.equals(workflowStatusId)
+					&& CollectionUtils.isEmpty(briefingRegistrationList)) {
+				setBsvRegisterDtls(quationTenderReqDTO,workflowStatusId);
+			}
+			// 28188 -end-
 			
 			ScQtApproval scQtApproval = getApprovalRegistrationFromSession();
 	
@@ -8193,6 +8217,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			            .getSessionMap()
 			            .remove("scQtApprovalRegistration");
 			}
+			
 			//#28188 - End
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
@@ -13333,8 +13358,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		checkStatus.add(SCProcessNameConst.PREPARE_QT_SCHEDULE);
 		checkStatus.add(SCProcessNameConst.REVISE_QT_SCHEDULE);
 		checkStatus.add(SCProcessNameConst.APPROVE_PUBLICATION);
-		checkStatus.add(SCProcessNameConst.REVISE_BPK);
-		checkStatus.add(SCProcessNameConst.APPROVE_BPK);
 		
 		if (checkStatus.contains(status)) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -13438,6 +13461,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSO;
 		try {
@@ -15212,23 +15236,31 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 			for (BriefingZoneBean bsvDtlBean : beansList) {
 				ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+				//28188 -start-
+				if(null!=scQtBsv){
 				boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
 						.getScQtBsvDtls());
 				
 				if (isBsvdtlsChange) {
 					checkBsvRemarksMandatory(scQtBsv);
 				}
+				}
+				//28188 -end
 			}
 		} else {
 			
 			BriefingZoneBean bsvDtlBean = this.getManagedBean().getBsvDtlBean();
 			ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+			//28188 -start-
+			if(null!=scQtBsv){
 			boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
 					.getScQtBsvDtls());
 			
 			if (isBsvdtlsChange) {
 				checkBsvRemarksMandatory(scQtBsv);
 			}
+			}
+			//28188 -end-
 
 		}
 	}
@@ -15281,20 +15313,23 @@ public void retrieveDemoQtDetails(Long qtId) {
 	    }
 
 	    // STEP 1: Build id -> dtl map for lookup (only non-null IDs)
-	    Map<Long, ScQtBsvDtl> idMap = new LinkedHashMap<Long, ScQtBsvDtl>();
-	    for (ScQtBsvDtl dtl : inputList) {
-	        if (dtl.getQtBsvDtlId() != null) {
-	            idMap.put(dtl.getQtBsvDtlId(), dtl);
-	        }
-	    }
+		List<Long> parentIdList = new ArrayList<>();
+		for (ScQtBsvDtl dtl : inputList) {
+
+			if (dtl.getParentPostponeId() != null
+					&& !parentIdList.contains(dtl.getParentPostponeId())) {
+
+				parentIdList.add(dtl.getParentPostponeId());
+			}
+		}
 
 	    // STEP 2: Group by root ancestor key (walks up via getParentBsvId).
 	    Map<Long, List<ScQtBsvDtl>> grouped = new LinkedHashMap<Long, List<ScQtBsvDtl>>();
 	    long phantomKey = Long.MIN_VALUE;
 
 	    for (ScQtBsvDtl dtl : inputList) {
-	        Long rootKey = getRootParentBsvId(dtl, idMap);
-
+	        Long rootKey = getRootParentBsvId(dtl, parentIdList);
+	       
 	        if (rootKey == null) {
 	            rootKey = phantomKey--;
 	        }
@@ -15309,6 +15344,15 @@ public void retrieveDemoQtDetails(Long qtId) {
 	        }else{
 	        	grouped.get(rootKey).add(dtl);
 	        }
+	        
+			// 28188 -start-
+			if (null != dtl
+					&& null != dtl.getQtBsvDtlId()
+					&& dtl.getRecordStatusFlg().equals(
+							DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+				dtl.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
+			}
+			// 28188 -end-
 	        
 	    }
 	    // STEP 3: sort grouped list based on status
@@ -15364,9 +15408,23 @@ public void retrieveDemoQtDetails(Long qtId) {
         }
 
 	    // STEP 4: Flatten - each group kept together, ordered by root ID
-	    List<ScQtBsvDtl> finalList = new ArrayList<ScQtBsvDtl>();
-	    for (List<ScQtBsvDtl> list : grouped.values()) {
-	        finalList.addAll(list);
+	    List<Map.Entry<Long, List<ScQtBsvDtl>>> list =
+                new LinkedList<Map.Entry<Long, List<ScQtBsvDtl>>>(grouped.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<Long, List<ScQtBsvDtl>>>() {
+            public int compare(Map.Entry<Long, List<ScQtBsvDtl>> o1, Map.Entry<Long, List<ScQtBsvDtl>> o2) {
+                return (o1.getKey()).compareTo(o2.getKey());
+            }
+        });
+
+        Map<Long, List<ScQtBsvDtl>> result = new LinkedHashMap<>();
+        for (Map.Entry<Long, List<ScQtBsvDtl>> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+	   
+	    List<ScQtBsvDtl> finalList = new ArrayList<>();
+	    for (List<ScQtBsvDtl> bsvList : result.values()) {
+	        finalList.addAll(bsvList);
 	    }
 
 	    return finalList;
@@ -15413,25 +15471,56 @@ public void retrieveDemoQtDetails(Long qtId) {
 	//#28188 - End
 
 	//#28188 - Start
-	private Long getRootParentBsvId(ScQtBsvDtl dtl,
-	                                Map<Long, ScQtBsvDtl> idMap) {
+	private Long getRootParentBsvId(ScQtBsvDtl dtl, List<Long> parentIdList) {
 	    if (dtl == null) return null;
-
+         
 	    if (dtl.getParentPostponeId() == null) {
-	        return dtl.getQtBsvDtlId(); // may be null for brand-new roots
+	    	  return dtl.getQtBsvDtlId(); // may be null for brand-new roots
 	    }
-
-	    Long parentId = dtl.getParentPostponeId();
-	    ScQtBsvDtl parent = idMap.get(parentId);
-
-	    while (parent != null && parent.getParentPostponeId() != null) {
-	        parentId = parent.getParentPostponeId();
-	        parent = idMap.get(parentId);
-	    }
-
+	    Long parentId=dtl.getQtBsvDtlId();
+	    
+        if(CollectionUtils.isNotEmpty(parentIdList)){
+        	
+        	if(null!=parentId && parentIdList.contains(parentId)){
+        		 
+        		return parentId;	
+        	}else if(null!=parentId && !parentIdList.contains(parentId)){
+        		
+        		 return dtl.getParentPostponeId();
+        	}else if(null==parentId){
+        		
+        		return dtl.getParentPostponeId();
+        	}
+        }
+	    
 	    return parentId;
 	}
 	//#28188 - End
+	
+	//28188 -start-
+	/**
+	 * set bsvDeatils id during submit.
+	 * @param reqDTO
+	 * @param statusId
+	 * @return
+	 */
+	private QuationTenderReqDTO setBsvRegisterDtls(QuationTenderReqDTO reqDTO,
+			Long statusId) {
+		Map<Long, List<Long>> bsvRegisterDetails = this.getManagedBean()
+				.getBsvRegisterDetails();
+		ScQt qt = this.getManagedBean().getQt();
+		Long qtId = qt.getQtId();
+		reqDTO.setStatusId(statusId);
+		if (null != bsvRegisterDetails) {
+			List<Long> bsvDtlIds = bsvRegisterDetails.get(qtId);
+			if (CollectionUtils.isNotEmpty(bsvDtlIds)) {
+				reqDTO.setBsvDtlIds(bsvDtlIds);
+			}
+		}
+		return reqDTO;
+	}
+	
+	//#28188 - end-
 	
 	//#28188 - Start
 	@SuppressWarnings("unchecked")
