@@ -801,9 +801,9 @@ public class PurchaseInquiryBackingBean extends
 				}
 				// 27868 - start
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateReasonStatus(requestNoteDtls);
 					validateUserProfileAgencyForSpecialItem(requestNoteDtls);
 				}
+				validateReasonStatus(requestNoteDtls);
 				validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
 				// 27868 - end
 				// Add selected supplier item.
@@ -854,10 +854,10 @@ public class PurchaseInquiryBackingBean extends
 				requestNote.setRequestNoteDtls(Arrays.asList(requestNoteDtl));
 				
 				// 27868 - start
-				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateReasonStatus(requestNote.getRequestNoteDtls());
+				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {					
 					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());
 				}
+				validateReasonStatus(requestNote.getRequestNoteDtls());
 				validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
 						scRequestSupplierItem);
 				// 27868 - end
@@ -1315,10 +1315,10 @@ public class PurchaseInquiryBackingBean extends
 			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
 				finalizeWIPDropdownPK7();
 			} else {
-				getManagedBean()
-						.setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
-				inactiveReasonChecking();
+				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));				
 			}
+			
+			inactiveReasonChecking();
 			// 27868 - end
 		} // 27868 - start
 		else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
@@ -4457,7 +4457,13 @@ public class PurchaseInquiryBackingBean extends
 		if (null != getManagedBean().getRequestNoteDtl().getJustificationType()) {
 			PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
 					.getReasonId());
-			if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
+			
+			if (reason == null) {
+				return;
+			}
+			boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+			
+			if (!reasonStatus && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
 				for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
 					throw new EpException(MessageConst.ERROR_760716, new String[] {
 							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
@@ -4907,9 +4913,9 @@ public class PurchaseInquiryBackingBean extends
 		if (reason == null) {
 			return;
 		}
-
-		boolean isInactive = !reason.isRecordStatus();
-		boolean isActiveButMissingAsIs = reason.isRecordStatus() && !isAsIsReasonIncludedInDropdown();
+		boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+		boolean isInactive = !reasonStatus;
+		boolean isActiveButMissingAsIs = reasonStatus && !isAsIsReasonIncludedInDropdown();
 
 		if (isInactive || isActiveButMissingAsIs) {
 			getManagedBean().setReasonCodeInActive(true);
@@ -4919,6 +4925,20 @@ public class PurchaseInquiryBackingBean extends
 				getManagedBean().setInActiveReasonDesc(reasonDesc);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Retrieves the PK7 reason status by reason ID.
+	 *
+	 * @param reasonId
+	 *            the reason ID
+	 * @return true if the reason is active, otherwise false
+	 */
+	private boolean retrievePK7ReasonStatus(Long reasonId) {
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		return reqSO.getPK7ReasonStatus(reasonId);
 	}
 
 	/**
