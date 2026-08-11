@@ -2880,7 +2880,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * validate current POCO work flow status
 	 * 
 	 * @param action
-	 * @param deliveryOrderId
+	 * @param invoiceId
 	 * @throws EpException
 	 *             if not allow to proceed
 	 * 
