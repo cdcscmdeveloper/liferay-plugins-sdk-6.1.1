@@ -160,7 +160,7 @@
 						itemValue="#{null}"></f:selectItem>
 					<ui:remove>#27476 start</ui:remove>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{poPurRptBB.hasSupplierRole()}"
-						itemValue="#{FulfilmentConst.getFlRptGroupSuppName()}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<!-- 29550 - start(to cater option displayed by factoring user)-->
 					<c:choose>
 						<c:when test="#{flReportBB.hasFactoringUserRole()}">
@@ -177,19 +177,19 @@
 						</c:when>
 						<c:otherwise>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.itemType']}"
-								itemValue="#{FulfilmentConst.getFlRptGroupItemType()}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptGroupItemType()}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
-								itemValue="#{FulfilmentConst.getFlRptGroupProcType()}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptGroupProcType()}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-								itemValue="#{FulfilmentConst.getFlRptGroupDocStatus()}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-								itemValue="#{FulfilmentConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>							
+								itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>							
 						</c:otherwise>
 					</c:choose>
 					<!-- 29550 - end -->
 					<c:if test="#{poPurRptBB.hasRoleForProcumentType()}">
 						<f:selectItem itemLabel="#{lbl['lbl.fl.procurement.type']}"
-							itemValue="#{FulfilmentConst.getFlRptGroupProcType()}"></f:selectItem>
+							itemValue="#{FlReportConst.getFlRptGroupProcType()}"></f:selectItem>
 					</c:if>
 					<ui:remove>#27476 end</ui:remove>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
