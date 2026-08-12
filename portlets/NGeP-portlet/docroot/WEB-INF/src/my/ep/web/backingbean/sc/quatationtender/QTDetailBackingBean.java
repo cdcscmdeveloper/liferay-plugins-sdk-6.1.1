@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;//#28188
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -263,6 +264,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.LanguageCode;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
@@ -916,6 +918,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										.getManagedBean().getInActiveChecklistNotificationText() },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
+				return;
+			} else if (!isSendNotificationButton || inactiveCLWarn) {
+				checkInactiveChecklistAndDisplayWarning(this.getManagedBean()
+						.getTaskName());
 				return;
 			}
 			//#10141 End Vinod
@@ -13457,14 +13463,24 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSO;
+		PmUser secretaryUser = new PmUser();
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					ICommitteSO.class);
 			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
 			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
+			if (CollectionUtils.isNotEmpty(committeeMembersList)) {
+				for (ScCommitteeMember committeeMem : committeeMembersList) {
+					if (committeeMem.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						secretaryUser = committeeMem.getPmUser();
+						break;
+					}
+				}
+			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKINGBEAN,
 					this.getManagedBean().getQt().getQtNo(),
@@ -13472,10 +13488,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
+		
+		String languageCode = secretaryUser.getPreferredLanguage() != null
+				|| !secretaryUser.getPreferredLanguage().isEmpty() ? secretaryUser
+				.getPreferredLanguage() : CommonConstants.DEFAULT_LANGUAGE_CODE;
+		Locale userLocale = new Locale(languageCode,
+				LanguageCode.getCountryCode(languageCode.toUpperCase()));
 
 		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
 		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
-		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
+		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), userLocale));
 		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
 
 		if (qtResDTO.isSuccessful()) {
