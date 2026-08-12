@@ -152,7 +152,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean.FinalizationEndorsementReportDTO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -186,10 +185,7 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
-// Bug #35485@Syazani 08/02/2024
-// Bug #37829@Syazani 13/03/2024
-//Bug #32682
-// Bug #35485@Syazani 08/02/2024
+
 
 /**
  * Implementation for supplier finalization
@@ -5803,6 +5799,8 @@ public class SupplierFinalizationBackingBean extends
 				}
 				createShortlistedSuppliersDataModel();// 35140
 			} 
+			
+			setDisableSFJustification();	//40314
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_EVALUATION)) {
 			scQtFinalization.setRePublishOption(null);
