@@ -355,6 +355,9 @@ public class SpecificationBackingBean extends
 	private int tempNewChecklistIndex = 0;
 	// Bug #35219@Syazani 07/11/2023 -- End
 
+	// #48486,#10141 - Start
+	private static final String TAB_CHANGE = "tabChange";
+	// #48486,#10141 - End
 	/**
 	 * Instantiates a new specification backing bean.
 	 */
@@ -1439,7 +1442,7 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
-			retriveFinancialScoring("tabChange");	// Bug #35688@Syazani 10/07/2024
+			retriveFinancialScoring(TAB_CHANGE);	// Bug #35688@Syazani 10/07/2024 / #48486,#10141 
 			break;
 
 		case 6:
@@ -2465,6 +2468,10 @@ public class SpecificationBackingBean extends
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
+			//#48486,#10141 - Start
+			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true
+					: false;
+			//#48486,#10141 - End
 			//#25138 - add if() condition - start
 			if (null == this.getManagedBean()
 					.getScQtCheckSt2financeProposalList()
@@ -2472,7 +2479,8 @@ public class SpecificationBackingBean extends
 							.getScQtCheckSt2financeProposalList().isEmpty()
 					// #25138 - 31578 - Start.
 					|| (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls()))
+										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())
+										&& isNeedRefresh) //#48486,#10141 
 					// #25138 - 31578 - End.					
 					) {
 				
@@ -3056,7 +3064,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFinancialScoring(newFinancialScoring);
 				}// #33525 - End
 				// Bug #35688@Syazani 10/07/2024 -- Start
-				boolean isNotThrow = StringUtils.isNotEmpty(condition) && "tabChange".equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024
+				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024/ // #48486,#10141 
 				finWeightageSum(isNotThrow);
 				// Bug #35688@Syazani 10/07/2024 -- End
 				localChecklist = null;
@@ -11374,46 +11382,7 @@ public class SpecificationBackingBean extends
 		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)
 				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(statusId)
 				|| QTStatusConst.QT_PENDING_MSC_APPROVAL.equals(statusId)) {
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
-			try {
-				String techInactive = inactiveChecklistsForError(this.getManagedBean().getScQtCheckSt2techProposal());
-
-				if (StringUtils.isNotEmpty(techInactive) || StringUtils.isNotBlank(techInactive)) {
-					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-									MessageConst.ERROR_775250, new String[] { techInactive },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
-			} catch (Exception e) {
-				handleException(e);
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, QTConstants.SPECIFICICATON_COMM_PREPARATION);
-				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
-						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo, SLALogConstant.QT_SPEC_PRE_RENDER_VIEW,
-						getUserIdSessionFromLoginId(), e);
-			}
-			try {
-				String finInactive = inactiveChecklistsForError(this.getManagedBean()
-						.getScQtCheckSt2financeProposalList());
-
-				if (StringUtils.isNotEmpty(finInactive) || StringUtils.isNotBlank(finInactive)) {
-					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-									MessageConst.ERROR_775251, new String[] { finInactive },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
-			} catch (Exception e) {
-				handleException(e);
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, QTConstants.SPECIFICICATON_COMM_PREPARATION);
-				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
-						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo, SLALogConstant.QT_SPEC_PRE_RENDER_VIEW,
-						getUserIdSessionFromLoginId(), e);
-			}
+			validateDisabledChecklistAndDisplayErrorInPrerender(scQt);
 		}
 		// #10141 End Vinod
 		this.getManagedBean().getQtCategoryList();//#29661 #40094
@@ -18136,6 +18105,12 @@ public class SpecificationBackingBean extends
 		checkSampleWipData(this.getManagedBean().getScQtCheckSt2techProposal(),
 				this.getManagedBean().getQt());
 		// 11104_end
+		// #10141 Start Vinod
+		if (QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
+				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
+			validateDisabledChecklistAndDisplayErrorInPrerender(scQt);
+		}
+		// #10141 End Vinod
 
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
@@ -22844,6 +22819,98 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 Start Vinod
 	/**
+	 * This method will check inactive checklists for technical and financial
+	 * and Add the error messages in screen for pre-render.
+	 * 
+	 * @param scQt
+	 *            
+	 * 
+	 */
+	private void validateDisabledChecklistAndDisplayErrorInPrerender(ScQt scQt){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		String qtNo = scQt != null ? scQt.getQtNo() : "";
+		try {
+			String techInactive = inactiveChecklistsForError(this
+					.getManagedBean().getScQtCheckSt2techProposal());
+
+			if (StringUtils.isNotEmpty(techInactive)) {
+				StringBuilder message = new StringBuilder();
+				message.append(CollectionUtils.isNotEmpty(FacesContext
+						.getCurrentInstance().getMessageList()) ? QTConstants.SPAN_ERROR_ICON
+						: "");
+				String error = MessageUtils.getMessage(
+						MessageConst.ERROR_775250,
+						new String[] { techInactive },
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale());
+				String errorAlignment = CollectionUtils
+						.isNotEmpty(FacesContext.getCurrentInstance()
+								.getMessageList()) ? QTConstants.SPAN_ERROR_CONTENT_OPEN
+						+ error + QTConstants.SPAN_ERROR_CONTENT_CLOSE
+						: error;
+				message.append(errorAlignment);
+				this.getManagedBean().setDisableButtonForInactiveChecklist(
+						true);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								message.toString()));
+			}
+		} catch (Exception e) {
+			handleException(e);
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.SPECIFICICATON_COMM_PREPARATION);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_SPEC_PRE_RENDER_VIEW,
+					getUserIdSessionFromLoginId(), e);
+		}
+		try {
+			String finInactive = inactiveChecklistsForError(this
+					.getManagedBean().getScQtCheckSt2financeProposalList());
+
+			if (StringUtils.isNotEmpty(finInactive)) {
+				StringBuilder message = new StringBuilder();
+				message.append(CollectionUtils.isNotEmpty(FacesContext
+						.getCurrentInstance().getMessageList()) ? QTConstants.SPAN_ERROR_ICON
+						: "");
+				String error = MessageUtils.getMessage(
+						MessageConst.ERROR_775251,
+						new String[] { finInactive },
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale());
+				String errorAlignment = CollectionUtils
+						.isNotEmpty(FacesContext.getCurrentInstance()
+								.getMessageList()) ? QTConstants.SPAN_ERROR_CONTENT_OPEN
+						+ error + QTConstants.SPAN_ERROR_CONTENT_CLOSE
+						: error;
+				message.append(errorAlignment);
+				this.getManagedBean().setDisableButtonForInactiveChecklist(
+						true);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								message.toString()));
+			}
+		} catch (Exception e) {
+			handleException(e);
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.SPECIFICICATON_COMM_PREPARATION);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_SPEC_PRE_RENDER_VIEW,
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	// #10141 End Vinod
+
+	// #10141 Start Vinod
+	/**
 	 * This method will build the error message to display if there are any
 	 * inactive checklists in technical / financial checklists.
 	 * 
@@ -22890,7 +22957,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		for (ScQtCheckList checklist : checklists) {
 			for (ScQtCheckList inactive : this.getManagedBean().getInActiveChecklist()) {
 				if (checklist.getDocCategory().equals(inactive.getDocCategory())
-						&& inactive.getQtChecklistId() == checklist.getQtChecklistId()) {
+						&& inactive.getQtChecklistId().equals(checklist.getQtChecklistId())) {
 					checklist.setSelected(true);
 					checklist.setDeleted(true);
 					deleteCheckLists.add(checklist);
