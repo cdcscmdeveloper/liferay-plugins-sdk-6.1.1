@@ -179,46 +179,25 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 */
 	public PanelBackingBean(){
 		/*Execute first time retrieve from maintenance*/	
-		if(getManagedBean().getOutComes()==null) {
-			//Start Fix - #34367
-			getPTJOwner();
-			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId()); 
-			if (panelDoctype != null) {
-				getManagedBean().setOutComes(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
-			} else {
-				if (getOwnerOrgProfile() != null && getOwnerOrgProfile().getPmOrgValidity() != null) {
-					isShowValidation = true;
-					FacesContext.getCurrentInstance().addMessage(
-							validationMsgId,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-									MessageConst.ERROR_750095,
-									new String[] { ResourceBundleUtils.getMessage(getOwnerOrgProfile()
-											.getPmOrgValidity().getOrgName(), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-				}
-			}
-			//End Fix - #34367
-			getManagedBean().setCircularVer(new CtCircularVer());
-			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
-			//#37620,#34367 - Start
-			PmStatus status = new PmStatus();
-			if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
-				status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
-			} else {
-				status.setStatusId(ContractStatusConst.MQ_PENDING_SUBMISSION);
-			}
-			//#37620,#34367 - End			
-			getManagedBean().getCircularVer().setStatus(status);
-			status = new PmStatus();
-			status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
-			getManagedBean().getCancelCircularReq().setStatus(status);
-			initializeRemarks();
-			if(ctBB == null){
+		if (getManagedBean().getOutComes() == null) {
+			// Start Fix - #34367
+			if (getPTJOwner() != null) {
+				String panelDoctype = rulesConstantValidation();// Fix - #34367
+				getManagedBean().setCircularVer(new CtCircularVer());
+				getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
+				PmStatus status = setNewPanelCircularStatus(panelDoctype);// #37620,#34367
+				getManagedBean().getCircularVer().setStatus(status);
+				status = new PmStatus();
+				status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
+				getManagedBean().getCancelCircularReq().setStatus(status);
+				initializeRemarks();
+			}// End Fix - #34367
+			if (ctBB == null) {
 				ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			}
-			ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		}  
+			ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean()
+					.getAttachmentList());
+		} 
 
 		/*Setting list of approver during initialization*/
 		if(getManagedBean().getUserMap().size()==0) {
@@ -231,11 +210,71 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 		}
 	}
+	
+	// #37620,#34367 - Start
+	/**
+	 * Creates and sets the initial status for a new panel circular based on the
+	 * specified panel document type.
+	 * <p>
+	 * A PQ pending submission status is assigned when the document type is a
+	 * panel circular. Otherwise, an MQ pending submission status is assigned.
+	 * </p>
+	 * 
+	 * @param panelDoctype
+	 *            the document type of the panel circular
+	 * @return a {@code PmStatus} containing the appropriate pending submission
+	 *         status
+	 */
+	private PmStatus setNewPanelCircularStatus(String panelDoctype) {
+		PmStatus status = new PmStatus();
+		if (ParameterConst.DOCTYPE_PANEL_CIRCULAR.equalsIgnoreCase(panelDoctype)) {
+			status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
+		} else {
+			status.setStatusId(ContractStatusConst.MQ_PENDING_SUBMISSION);
+		}
+		return status;
+	}
 
+	// #37620,#34367 - End
+
+	// Start Fix - #34367 - Static Code Analysis - #40968
+	/**
+	 * Validates the rule constant configuration for the owner's organization
+	 * profile.
+	 * <p>
+	 * If a valid PTJ rule type is found, the SAVE and SUBMIT outcomes are made
+	 * available. If no PTJ rule type is found and the owner's organization
+	 * profile validity information is available, a validation error message is
+	 * displayed to the user.
+	 * </p>
+	 * 
+	 * @return the PTJ rule type associated with the owner's organization
+	 *         profile, or {@code null} if no applicable rule type is found
+	 */
+	private String rulesConstantValidation() {
+		String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
+		if (panelDoctype != null) {
+			getManagedBean().setOutComes(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+		} else {
+			if (getOwnerOrgProfile() != null && getOwnerOrgProfile().getPmOrgValidity() != null) {
+				isShowValidation = true;
+				FacesContext.getCurrentInstance().addMessage(
+						validationMsgId,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_750095, new String[] { ResourceBundleUtils.getMessage(
+										getOwnerOrgProfile().getPmOrgValidity().getOrgName(),
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		}
+		return panelDoctype;
+	}
+	// End Fix - #34367 - Static Code Analysis - #40968
+	
 	/**
 	 * Method used to retrieve the information and render it on screen.
 	 */
-	public void preRenderCircular() {		
+	public void preRenderCircular() {
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getPTJOwner();//Fix - #34367
@@ -263,19 +302,22 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 		CircularReqDTO circularReqDTO = new CircularReqDTO();	
-		getPTJOwner();
-		String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
-		CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[] { BpmOutcomeConst.BPM_SAVE });
-		circularReqDTO.setCircularDocNo(dataType.getDocNo());
-		CircularResDTO circulaResDTO = circularSO.getCircularTypeByDocNo(circularReqDTO);	
-		if (panelDoctype == null && circulaResDTO.getCircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
-			String[] outComes = this.getManagedBean().getOutComes();
-			List<String> list = new ArrayList<>(Arrays.asList(outComes));
-			removeButtonForInactivePanel(list);
+		if (getPTJOwner() != null) {
+			String panelDoctype = getPTJRuleTypeByOrgProfile(getOwnerOrgProfile().getOrgProfileId());
+			CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class,
+					new String[] { BpmOutcomeConst.BPM_SAVE });
+			circularReqDTO.setCircularDocNo(dataType.getDocNo());
+			CircularResDTO circulaResDTO = circularSO.getCircularTypeByDocNo(circularReqDTO);
+			if (panelDoctype == null
+					&& circulaResDTO.getCircularDoctype().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+				String[] outComes = this.getManagedBean().getOutComes();
+				List<String> list = new ArrayList<>(Arrays.asList(outComes));
+				removeButtonForInactivePanel(list);
+			}
+			// End Fix - #34367
+			circularReqDTO.setCircularVerId(dataType.getDocId());
+			setPanelCircularVar(circularReqDTO);
 		}
-		//End Fix - #34367
-		circularReqDTO.setCircularVerId(dataType.getDocId());
-		setPanelCircularVar(circularReqDTO);
 	}
 
 	/**
@@ -439,7 +481,11 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 						
 			if(taskId==null) {
 				if((isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
-					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
+					//Start Fix - #34367
+					if(panelDoctype != null){
+						getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});
+					}
+					//End Fix - #34367
 				}
 				return;
 			}
