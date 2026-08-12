@@ -1397,7 +1397,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		// make sure to delete the new obj before update if doesn't selected
 		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
 				.getConfigRuleDescList()) {
-  
+
 			sortConfigRuleValueList(ruleTypeDesc.getRuleType().getConfigRuleValues()); //#35323
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
 					.getParameterCode().equals("C")) {
