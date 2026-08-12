@@ -7501,8 +7501,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// 26247 - end
 	
-
-	
 	// #35320 - START
 	/**
 	 * Set PTJ Org Profile of user for committee member.
