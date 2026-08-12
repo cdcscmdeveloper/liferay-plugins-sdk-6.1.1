@@ -306,6 +306,11 @@ public interface QTConstants {
 	public static final int DIRECT_LOA_TAB_INDEX_THREE=3;
 	//#29468 End Vinod
 	
+	// #40974  - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	// #40974  - End
+	
 	// 21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
