@@ -231,17 +231,22 @@
 					</ui:fragment></td>
 				<td>
 					<!-- #21695 FARID START DISABLE SCQT PARTIAL-->
-					<p:selectOneRadio required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly or 
-								specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial}"
-						label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
-						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
-						<!-- 21695 -end- -->
-						<f:selectItems
-							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="technicalWeigtage,addpoints"></p:ajax>
-					</p:selectOneRadio> <p:message id="techScoring" for="techWeightage" display="icon"></p:message></td>
+					<ui:remove><!-- #38679 adjust disable condition with new requirement --></ui:remove>
+							<p:selectOneRadio required="true"
+								disabled="#{specificationBackingBean.managedBean.readOnly or 
+								(specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial 
+								or specificationBackingBean.managedBean.qt.partial ne null and !specificationBackingBean.managedBean.qt.partial 
+								and specificationBackingBean.managedBean.zoneQtyHasZeroVal)}"
+								label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
+								value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
+								<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+								update="technicalWeigtage,addpoints"></p:ajax>
+							</p:selectOneRadio>
+
+						 <p:message id="techScoring" for="techWeightage" display="icon"></p:message>
+				</td>
 			</tr>
 
 		</table>
