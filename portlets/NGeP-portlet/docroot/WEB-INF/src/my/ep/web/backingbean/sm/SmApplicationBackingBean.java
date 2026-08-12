@@ -5944,6 +5944,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void addOrUpdateCompanyExperienceToSmAppl() {
 		//#40165 - START
 		SmCompanyExperience exp = getManagedBean().getSelectedCompanyExperience();
+		//9299 - 40960 START
+		exp.setNewlyAdded(true);
+		//9299 - 40960 END
 		
 		Map<String, String> fieldsToCheck = new LinkedHashMap<String, String>();
 		fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projTitle", null), exp.getTitle());
@@ -12113,7 +12116,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			
 			//#9299 - Start
-			if(!getAppVersionDetailsWithRedmineNo() && checkCompanyExperienceNewlyAdded(getManagedBean().getSmAppl().getSmCompanyExperiences())){
+			if(getAppVersionDetailsWithRedmineNo() && checkCompanyExperienceNewlyAdded(getManagedBean().getSmAppl().getSmCompanyExperiences())){
 				SmApplicationUtil.setCompExpDraft(getManagedBean().getSmAppl());
 			}
 			//#9299 - End
