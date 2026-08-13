@@ -1713,16 +1713,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScAttachment scoreAttachment;
 	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
-	
-	/**
-	 * Sets the panel suppliers.
-	 * 
-	 * @param panelSuppliers
-	 *            the new panel suppliers
-	 */
-	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
-	}
 
 	private boolean comingFromNextButton;//#38151
 	private boolean weightage35384WIP; //#38151
@@ -1966,7 +1956,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#28188 - Start
 	/** The Briefing/Site Visit postpone date. */
 	private Date briefingSiteVisitPostponeDate;
+	private Map<Long,List<Long>> bsvRegisterDetails;
+	
 	//#28188 - End
+	
+	// 12471 - start
+	private String approverUserId;
+	private Map<String, String> committeeMembersTypeMap;
+
+	// 12471 - end
+
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -3532,6 +3531,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public List<SmSupplier> getPanelSuppliers() {
 		return panelSuppliers;
+	}
+	
+	/**
+	 * Sets the panel suppliers.
+	 * 
+	 * @param panelSuppliers
+	 *            the new panel suppliers
+	 */
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
 	}
 
 	/**
@@ -12486,6 +12495,36 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBriefingSiteVisitPostponeDate(Date briefingSiteVisitPostponeDate) {
 		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
 	}
+	
+	public Map<Long, List<Long>> getBsvRegisterDetails() {
+		return bsvRegisterDetails;
+	}
+
+	public void setBsvRegisterDetails(Map<Long, List<Long>> bsvRegisterDetails) {
+		this.bsvRegisterDetails = bsvRegisterDetails;
+	}
+	
 	//#28188 - End
+	
+	// 12471 - start
+	public String getApproverUserId() {
+		return approverUserId;
+	}
+
+	public void setApproverUserId(String approverUserId) {
+		this.approverUserId = approverUserId;
+	}
+
+	public Map<String, String> getCommitteeMembersTypeMap() {
+		return committeeMembersTypeMap;
+	}
+
+	public void setCommitteeMembersTypeMap(Map<String, String> committeeMembersTypeMap) {
+		this.committeeMembersTypeMap = committeeMembersTypeMap;
+	}
+	// 12471 - end
+
+	
+	
 	
 }

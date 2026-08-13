@@ -690,8 +690,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupApproverPrev;
 	private List<SmSupplierCategory> previousCategoryList;
 	private SmSupplierCategory historySuppCategory;
-	private IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel = new OtherDescSearchPagingDataModel();
 	// 36504 - END
+	
+	// #40031 - Start
+	private String prevRole;
+	private String removedRoleMsg;
+	private boolean latestApplHasPrevRole;
+	// #40031 - End
 		
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4723,55 +4728,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.otherDescEdited = otherDescEdited;
 	}
 
-	public IPagingDataModel<SmSuppCatOtherDescHistory> getOtherDescDataModel() {
-		return otherDescDataModel;
-	}
-
-	public void setOtherDescDataModel(
-			IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel) {
-		this.otherDescDataModel = otherDescDataModel;
-	}
-
-	private class OtherDescSearchPagingDataModel extends
-			PagingDataModel<SmSuppCatOtherDescHistory> {
-		/**
-			 * 
-			 */
-		private static final long serialVersionUID = 1L;
-
-		public OtherDescSearchPagingDataModel() {
-			super("OtherDescriptionDtId");
-		}
-
-		@Override
-		protected ISearchResultBean<SmSuppCatOtherDescHistory> pageChangeListener(
-				ISearchBean<SmSuppCatOtherDescHistory> searchBean) {
-			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
-			reqDTO.setOtherDescHistorySearchBean(searchBean);
-			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-			try {
-				return getOtherDescHistoryResultBean(reqDTO);
-			} catch (Exception ex) {
-				return new SearchResultBean<SmSuppCatOtherDescHistory>();
-			} finally {
-				reqDTO = null;
-			}
-		}
-
-		private ISearchResultBean<SmSuppCatOtherDescHistory> getOtherDescHistoryResultBean(
-				SmSuppCatOtherDescHistoryReqDTO reqDTO) {
-			reqDTO.getOtherDescHistorySearchBean().getDataFilterBeans().clear();
-			// reqDTO.setSupplierCategoryId(getSupplierAppl());;
-			return SmServiceLookup.getMofRegistrationSO()
-					.retrieveOtherDescHistorySearchBean(reqDTO)
-					.getOtherDescResultBean();
-		}
-	}
-
-	public void searchOtherDescHistoryDesc() {
-		otherDescDataModel.reloadData();
-	}
-
 	/**
 	 * @return the otherDescChangePO
 	 */
@@ -4943,4 +4899,29 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 	// 36504 - END
 	
+	// #40031 - Start
+	public String getPrevRole() {
+		return prevRole;
+	}
+
+	public void setPrevRole(String prevRole) {
+		this.prevRole = prevRole;
+	}
+
+	public String getRemovedRoleMsg() {
+		return removedRoleMsg;
+	}
+
+	public void setRemovedRoleMsg(String removedRoleMsg) {
+		this.removedRoleMsg = removedRoleMsg;
+	}
+
+	public boolean isLatestApplHasPrevRole() {
+		return latestApplHasPrevRole;
+	}
+
+	public void setLatestApplHasPrevRole(boolean latestApplHasPrevRole) {
+		this.latestApplHasPrevRole = latestApplHasPrevRole;
+	}
+	// #40031 - End
 }

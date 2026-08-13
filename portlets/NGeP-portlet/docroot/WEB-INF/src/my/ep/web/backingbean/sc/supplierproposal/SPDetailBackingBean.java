@@ -1280,6 +1280,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
 				List<TemplateSpecBean> activeTemplateSpecBeans = new ArrayList<>();//#34363 - note 50 - Added - Vinod
+				//#21695,#40261 - Start
+				boolean isQuotation = ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(this.getManagedBean().getQt()
+						.getProcurementMode().getParameterCode()) ? true : false;
+				boolean isTender = ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
+						.getProcurementMode().getParameterCode()) ? true : false;
+				//#3657 - note #64 - Start
+				List<String> errorZone =  new ArrayList<>();
+				//#3657 - note #64 - End
+				//#21695,#40261 - End
 				// #28777 & #29729, 35592(35838) - Start
 				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {
 					// #28777 & #29729, 35592(35838) - End
@@ -1293,39 +1302,61 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
+							//#21695,#40261 - Start
+							int answerQuantityZero = 0;				
 							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
-								//#21695 
-								
-								if(null ==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
+								// #21695
+								if (null == specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+										|| null == specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+												.getSpecZoneId()) { // #28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
-								}	//#28785-End
-								
-								//#21695 4serangkai use this only, else is using old codes
-								if (getManagedBean().getQt().isPartial()) {
-									if (specAnswer.getRatePerUom() != null) {
+								} // #28785-End
+
+								// #21695 4serangkai use this only, else is
+								// using old codes
+								if (getManagedBean().getQt().isPartial() || isQuotation) {
+									// #3657 - Note #49 - Start
+									if (specAnswer.getRatePerUom() == null
+											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) < 0) {
+										specAnswer.setDeleted(true);
+										toDeleteZoneAnswers.add(specAnswer);
+									} else {
+										answers.add(specAnswer);
+									}
+									// #3657 - Note #49 - End
+									// #21695 end
+								} else if (isTender) {
+									if (specAnswer.getRatePerUom() != null
+											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 										answers.add(specAnswer);
 									} else {
 										specAnswer.setDeleted(true);
 										toDeleteZoneAnswers.add(specAnswer);
 									}
-									//#21695 end
-								}else{
-									if (specAnswer.getRatePerUom() != null
-											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
-										answers.add(specAnswer);
-									}else {
-										specAnswer.setDeleted(true);
-										toDeleteZoneAnswers.add(specAnswer);
+
+									if ((specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(
+											new BigDecimal(0)) < 1)
+											&& specAnswer.getTplSpecZoneQty().getQty().intValue() == 0) {
+										answerQuantityZero++;
 									}
 								}
 							}
-							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
-									.getSpecAnswerList().size())){
-								for(TplSpecAnswer answerNullPrice : toDeleteZoneAnswers){
-										throw new EpException(MessageConst.ERROR_760464);
+							
+							if (isTender) {
+
+								int sizeOriginalAnswer = templateSpecBean.getSpecAnswerList().size()
+										- answerQuantityZero;
+								int SizeDeleteZoneAnswers = toDeleteZoneAnswers.size() - answerQuantityZero;
+								if (!toDeleteZoneAnswers.isEmpty() && SizeDeleteZoneAnswers != 0
+										&& SizeDeleteZoneAnswers != sizeOriginalAnswer) {
+									//#3657 - note #64 - Start
+									errorZone.add(specZoneDtl.getZoneName());
+									//#3657 - note #64 - End
 								}
-								
-							} else if (!toDeleteZoneAnswers.isEmpty()) {
+							}
+																																	
+						 if (!toDeleteZoneAnswers.isEmpty()) {
+						//#21695,#40261 - End
 								Set<TplSpecSuppAnswer> zoneSpecSuppAnswersSet = new HashSet<TplSpecSuppAnswer>();
 								for(TplSpecAnswer specAnswer :toDeleteZoneAnswers){
 									TplSpecSuppAnswer specSupplierAnswer = specAnswer.getTplSpecSuppAnswer();
@@ -1347,6 +1378,21 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 //					checkAllUnitPriceForPartialOffer(activeTemplateSpecBeans);
 //				}
 				//#34363 - note 50 - End - Vinod
+				//#3657 - note #64 - Start
+				if (isTender && errorZone != null && !errorZone.isEmpty()) {
+						StringBuilder strB = new StringBuilder();
+						String unitPrice = ResourceBundleUtils.getMessage(SourcingConstants.LABEL_UNIT_PRICE,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+						for (String zone : errorZone) {
+							strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538,
+									new String[] { unitPrice, zone }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale()));
+						}
+						FacesContext.getCurrentInstance().validationFailed();
+						throw new EpException(strB.toString());
+					
+				}
+				//#3657 - note #64 - End
 				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
 				proposalReqDTO.setToBeRemovedSpecSuppAnswers(tobeDeletedSuppAnswers);
 			} else {
@@ -1355,7 +1401,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			}
 			//#32783 fix revert old codes related to #21695 -START
 	        if(answers == null || answers.size() == 0){
-	            throw new EpException(MessageConst.ERROR_760463);	
+	        	//#3657 - note #64 - Start
+	        	FacesContext.getCurrentInstance().validationFailed();
+	        	//#3657 - note #64 - End
+	        	throw new EpException(MessageConst.ERROR_760463);	
 	        }// Enhancement #3657@Syazani 12/10/2023 -- Start
 
 			//#32783 fix revert old codes related to #21695 -END    
@@ -1444,6 +1493,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								new String[] { unitPrice, zone }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale()));
 					}
+					//#3657 - note #64 - Start
+					FacesContext.getCurrentInstance().validationFailed();
+					//#3657 - note #64 - End
 					throw new EpException(strB.toString());
 				} else {
 					throw new EpException(MessageConst.ERROR_760464);
@@ -6825,7 +6877,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			proposalReqDTO.setSupplierId(supplierId);
-			proposalReqDTO.setYear(year.intValue());
+			//Bug #40833 - Start
+			proposalReqDTO.setYear(year != null ? year.intValue() : null);
+			//Bug #40833 - End
 			proposalReqDTO.setApplId(applId);
 			proposalReqDTO.setCategoryL3Codes(getCategoryL3Codes(scQt));
 			proposalReqDTO

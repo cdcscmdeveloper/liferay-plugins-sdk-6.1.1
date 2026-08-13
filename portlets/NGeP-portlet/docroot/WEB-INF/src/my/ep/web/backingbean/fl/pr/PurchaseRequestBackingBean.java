@@ -1368,13 +1368,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		populateItemsForSelectedAddress();
 		// #27476 start
-		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
-			validateThresholdPK7AndSpecialItem();
-		} else {
-			checkPRThresholdPerItem();
+		String procType = getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode();
+		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+		        || procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+		    validateThresholdPK7AndSpecialItem();
+		} else if (!procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) { //#31344 - Exclude check threshold item for G2G
+		    checkPRThresholdPerItem();
 		}
 		// #27476 end
 	}
@@ -1546,7 +1545,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
 										.getUserLocale())));
 
-			} else {
+			} else if (!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){ //#31344 - Exclude check threshold item for G2G
 				checkPRThresholdPerItem();
 			}
 		}
@@ -5072,10 +5072,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 		
 		catalogueReqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
-		catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
-		CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
-		skuDesc = catalogueResDTO.getSkuNumber();
+		//40227-Start
+		if(scRequestItem.getCmItem()!=null){
+			catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
+			catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
+			CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
+			skuDesc = catalogueResDTO.getSkuNumber();
+		}
+		//40227-End
+		
 		//29396-end
 		
 		return skuDesc;

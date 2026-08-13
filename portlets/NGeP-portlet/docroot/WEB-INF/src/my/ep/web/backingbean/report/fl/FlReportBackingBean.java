@@ -1266,7 +1266,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		// summary report sheet cell - accumulate amount payable supplier
 		Cell cellSummaryAmtPayableSupplier = row.createCell(13);
 		cellSummaryAmtPayableSupplier.setCellValue(summaryAmtPayableSupplier.doubleValue());
-		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, true, true, false, true,
+		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true,
 				false, false));
 
 		CellRangeAddress cellZoneSummaryAmt = new CellRangeAddress(rowSummary, rowSummary, 13, 14);

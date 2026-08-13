@@ -30,6 +30,16 @@ public class UserCommitteeSearchBean implements Serializable {
 	
 	/** The identification type. */
 	private String identificationType;
+	
+	// 12471 - start
+	private String orgCat;
+	private String ministry;
+	private String ptjGroup;
+	private String ptj;
+	private String orgType;
+	private String orgName;
+	// 12471 - end
+
 
 	/**
 	 * Instantiates a new user committee search bean.
@@ -91,4 +101,53 @@ public class UserCommitteeSearchBean implements Serializable {
 		this.identificationType = identificationType;
 	}
 
+	// 12471 - start
+	public String getOrgCat() {
+		return orgCat;
+	}
+
+	public void setOrgCat(String orgCat) {
+		this.orgCat = orgCat;
+	}
+
+	public String getMinistry() {
+		return ministry;
+	}
+
+	public void setMinistry(String ministry) {
+		this.ministry = ministry;
+	}
+
+	public String getPtjGroup() {
+		return ptjGroup;
+	}
+
+	public void setPtjGroup(String ptjGroup) {
+		this.ptjGroup = ptjGroup;
+	}
+
+	public String getPtj() {
+		return ptj;
+	}
+
+	public void setPtj(String ptj) {
+		this.ptj = ptj;
+	}
+
+	public String getOrgType() {
+		return orgType;
+	}
+
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	// 12471 - end
 }
