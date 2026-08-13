@@ -666,6 +666,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean inquirySiteVisitAfter;
 	//#34392 - end
 	
+	// #40031 - Start
+	private String prevRole;
+	private String removedRoleMsg;
+	private boolean latestApplHasPrevRole;
+	// #40031 - End
+
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4794,8 +4800,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return missinDocsNonMandatory;
 	}
 
-	public void setMissinDocsNonMandatory(
-			List<SmApplSupportDoc> missinDocsNonMandatory) {
+	public void setMissinDocsNonMandatory(List<SmApplSupportDoc> missinDocsNonMandatory) {
 		this.missinDocsNonMandatory = missinDocsNonMandatory;
 	}
 	
@@ -4833,4 +4838,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setShowDifferenceRejection(boolean showDifferenceRejection) {
 		this.showDifferenceRejection = showDifferenceRejection;
 	}
+
+	// #40031 - Start
+	public String getPrevRole() {
+		return prevRole;
+	}
+
+	public void setPrevRole(String prevRole) {
+		this.prevRole = prevRole;
+	}
+
+	public String getRemovedRoleMsg() {
+		return removedRoleMsg;
+	}
+
+	public void setRemovedRoleMsg(String removedRoleMsg) {
+		this.removedRoleMsg = removedRoleMsg;
+	}
+
+	public boolean isLatestApplHasPrevRole() {
+		return latestApplHasPrevRole;
+	}
+
+	public void setLatestApplHasPrevRole(boolean latestApplHasPrevRole) {
+		this.latestApplHasPrevRole = latestApplHasPrevRole;
+	}
+	// #40031 - End
 }
