@@ -12,6 +12,8 @@
 		<cc:attribute name="disabled" default="false" />
 		<cc:attribute name="mindate" />
 		<cc:attribute name="minDateTime" /><ui:remove>#28188</ui:remove>
+		<cc:attribute name="restrictionDateTime" /><ui:remove>#28188</ui:remove>
+		<cc:attribute name="checkBSVNormalMain" /><ui:remove>#28188</ui:remove>
 		<cc:attribute name="maxdate" />
 		<cc:attribute name="label" />
 		<cc:attribute name="size" />
@@ -39,7 +41,7 @@
 			label="#{cc.attrs.label}"
 			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			<ui:remove>#28188 - Start Change attribute </ui:remove>
-			<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="#{cc.id}sb:calHour" immediate="false" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="#{cc.id}sb:calHour #{cc.id}sb:calMin" immediate="false" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 			<ui:remove>#28188 - End Change attribute </ui:remove>
 			
 			<cc:insertChildren />
@@ -50,16 +52,20 @@
 			required="#{cc.attrs.required}"
 			label="#{cc.attrs.label} #{lbl['lbl.txt.hour']}">
 			<ui:remove>#28188 - Start Change selectItem method </ui:remove>
-			<f:selectItems value="#{dateTimeBackingBean.getHoursDropdownValues(cc)}" />
+			<f:selectItems value="#{dateTimeBackingBean.getHoursDropdownValuesBSV(cc)}" />
 			<ui:remove>#28188 - End Change selectItem method </ui:remove>
-			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<ui:remove>#28188 - Start Change update attribute </ui:remove>
+			<p:ajax event="change" partialSubmit="true" process="@this calDate" update="calMin" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<ui:remove>#28188 - End Change update attribute </ui:remove>
 		</h:selectOneMenu>
 		<h:selectOneMenu id="calMin" style="width: 72px;"
 			disabled="#{cc.attrs.disabled}"
 			required="#{cc.attrs.required}"
 			label="#{cc.attrs.label} #{lbl['lbl.txt.minute']}">
-			<f:selectItems value="#{dateTimeBackingBean.getMinutesDropdownValues(cc.attrs.modVal)}" />
-			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<ui:remove>#28188 - Start Change selectItem method and update attribute </ui:remove>
+			<f:selectItems value="#{dateTimeBackingBean.getMinutesDropdownValuesBSV(cc)}" />
+			<p:ajax event="change" partialSubmit="true" process="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
+			<ui:remove>#28188 - End Change selectItem method and update attribute</ui:remove>
 		</h:selectOneMenu>
 		<p:message id="calDateMsg" for="calDate" display="icon" />
 		

@@ -187,42 +187,54 @@
 								
 							<ui:remove> #30477 Start </ui:remove>	
 <!-- #29732 Start - reOpen Fix -->
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}" 
 								styleClass="ui-button" onclick="blockWidget.show();" 
 								oncomplete="blockWidget.hide();" 
 								rendered="#{isClone2 and isCommitteeApprovalReviseTask}" 
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}">
+							<ui:remove>#10141 End Vinod</ui:remove>
 <!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
 							
 							<ui:remove>9019 -start</ui:remove>
 							<ui:remove>9019 Reopen note#383 Remove skipvalidation checking when cancel</ui:remove>
-							
+								
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							 <p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="cancel1QTDlg.show();"
 								update="@([id$=#{cancel1QTDlg}])"
-								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"/>
+								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"/>
+							<ui:remove>#10141 End Vinod</ui:remove>
 						
-<!-- #29732 Start - reOpen Fix -->							
+<!-- #29732 Start - reOpen Fix -->	
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>						
 							<p:commandButton value="#{lbl[buttonLabel]}" 
 								styleClass="ui-button" onclick="blockWidget.show();" 
 								oncomplete="blockWidget.hide();" 
 								rendered="#{!isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}" 
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" 
-								update="@form">
+								update="@form"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}">
+							<ui:remove>#10141 End Vinod</ui:remove>
 							<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 				    		<f:param name="skipsubmitvalidation" value="0" />
 			       			<ui:remove>end 9019 - Reopen #note-317</ui:remove>	
 <!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<ui:remove>9019 -end</ui:remove>
-							<ui:remove>#34718 - Start</ui:remove>
+							<ui:remove>#34718 - Start</ui:remove>	
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}" 
 								styleClass="ui-button" onclick="blockWidget.show();" 
 								oncomplete="blockWidget.hide();submissionConfirmPopUp.show();" 
 								rendered="#{isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-								update="@form"/>
+								update="@form"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"/>
+							<ui:remove>#10141 End Vinod</ui:remove>
 							<ui:remove>#34718 - End</ui:remove>
 						</ui:repeat>
 					</c:when>
@@ -266,9 +278,12 @@
 				  	</c:if>
 				  	<!-- 26095@hatta - end -->
 			  	 
-			  	 	<ui:remove>9019 update condition to disable cancel button for QT status was pending</ui:remove>
-					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission}">
-					<ui:remove>9019 -end- </ui:remove>
+			  	 	<ui:remove>9019 update condition to disable cancel button for QT status was pending, 12471 - add renderCancelButton </ui:remove>
+			  	 	<!--12471 add checking if QT has been approved for publication and current committee status is Pending Submission / Revision -->
+					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission 
+					and !qTDetailBB.renderCancelButton()}">
+					<!-- 9019 & 12471 -end- -->
+					<ui:remove>9019, 12471 - end</ui:remove>
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
 							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />

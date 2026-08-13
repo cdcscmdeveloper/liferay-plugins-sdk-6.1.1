@@ -22,7 +22,9 @@
 			widgetVar="qualifiedSupplierDtls"
 			rowKey="#{qualifiedSupp.evaluationResultDtlId}" rowIndexVar="index"
 			rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{preferencemarginList}">
+			value="#{preferencemarginList}"
+			rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq DbValueConst.recordStatusActive or !suppFinalizationBackingBean.managedBean.zoneDetails.get(suppFinalizationBackingBean.managedBean.zoneActiveIndex).branchDeactivated}">
+			<ui:remove> 28777,29729 </ui:remove>
 
 			<ac:paginator for="preferenceMarginSFSuppliers" />
 
@@ -42,8 +44,10 @@
 					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 
 			</p:column>
-			<ui:remove><!-- #38151 Start (header text)--></ui:remove>
-			<p:column headerText="#{supplierDetailBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
+			<ui:remove><!-- #38151 Start (header text)-->
+			           <!-- #40142-->
+			</ui:remove>
+			<p:column headerText="#{suppFinalizationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 				style="width:5%; text-align:right;">
 				<h:outputText value="#{qualifiedSupp.totalScore}">
 					<f:convertNumber
@@ -104,7 +108,8 @@
 			widgetVar="qualifiedSupplierDtls"
 			rowKey="#{disqualifiedSupp.evaluationResultDtlId}" rowIndexVar="index"
 			rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{preferencemarginList}">
+			value="#{preferencemarginList}"
+			rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalizationBackingBean.managedBean.zoneDetails.get(suppFinalizationBackingBean.managedBean.zoneActiveIndex).branchDeactivated}">
 
 			<ac:paginator for="preferenceMarginSFSuppliersDis" />
 

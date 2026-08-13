@@ -2365,7 +2365,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 		agencyList.add(agency);
 		existingOrgProfileIds.add(orgId);
-		RequestContext.getCurrentInstance().execute("dtSuppAccTypeWidget.paginator.endLink.click()");
 
 		log.info(".......agencyList.size.......=" + agencyList.size());
 	}
