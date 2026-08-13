@@ -60,7 +60,7 @@ public class TemplateSpecBean implements Serializable {
 	private List<TplSpecAnswer> hideanswerList;
 	// 32453, #21695, #25138 -End
 	private boolean wordBreakForQT;//#29007 Added Vinod
-	private boolean weightage35384WIP;;//#38151,#38679
+	private boolean weightage35384WIP;//#38151,#38679
 
 	/**
 	 * Constructor for template specification bean
