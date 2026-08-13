@@ -701,7 +701,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			getManagedBean().setSelectedCircularVerList(null);
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			getPTJOwner(); //Fix - #34367
-			List<CtCircularVer> updatedCircularList = new ArrayList<CtCircularVer>();//Fix - #34367
+			List<CtCircularVer> updatedCircularList = new ArrayList<>();//Fix - #34367
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			
 			// #37620,#34367 - Start
@@ -716,21 +716,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			
 			CircularResDTO resDTO = circularSO.retrieveActiveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
-				// Start Fix - #34367
-				for (CtCircularVer circularver : resDTO.getCircularVerList()) {
-
-				    if (circularver.getCtCircular().getCircularType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
-				        // PANEL
-				        if (circularver.getCtCircular().getOwnerOrgProfile() != null
-				                && circularver.getCtCircular().getOwnerOrgProfile().getOrgProfileId().equals(getOwnerOrgProfile().getOrgProfileId())) {
-
-				            updatedCircularList.add(circularver);
-				        }
-				    } else {
-				        // NON-PANEL
-				        updatedCircularList.add(circularver);
-				    }
-				}
+				controlCancelCircularList(updatedCircularList, resDTO);//Fix - #34367
 				getManagedBean().setCircularVerList(updatedCircularList);
 				// End Fix - #34367
 			}
@@ -741,6 +727,39 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			circularSO = null;
 		}
 	}
+	//Start Fix - #34367
+	/**
+	 * Filters the circular version list based on the circular document type and
+	 * owner organization profile.
+	 * <p>
+	 * Non-panel circulars are added to the updated list without additional
+	 * validation. For panel circulars, the circular is added only when its owner
+	 * organization profile matches the current owner's organization profile.
+	 * </p>
+	 *
+	 * @param updatedCircularList
+	 *            the list to which eligible circular versions are added
+	 * @param resDTO
+	 *            the response data transfer object containing the circular version
+	 *            list to be filtered
+	 */
+	private void controlCancelCircularList(List<CtCircularVer> updatedCircularList, CircularResDTO resDTO) {
+		for (CtCircularVer circularver : resDTO.getCircularVerList()) {
+				CtCircular circular = circularver.getCtCircular();
+			if (!circular.getCircularType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+				// NON-PANEL
+				updatedCircularList.add(circularver);
+				continue;
+			}
+			// PANEL
+			if (circular.getOwnerOrgProfile() != null
+					&& circular.getOwnerOrgProfile().getOrgProfileId()
+							.equals(getOwnerOrgProfile().getOrgProfileId())) {
+				updatedCircularList.add(circularver);
+			}
+		}
+	}
+	//End Fix - #34367
 
 	/**
 	 *Method used to save/update of newly created circular
