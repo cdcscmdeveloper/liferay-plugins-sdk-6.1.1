@@ -1566,4 +1566,14 @@ public class SupplierManagementConst {
 		return MOF_STATUS_EXPIRED_SYSTEM;
 	}
 	// #29156(26238) -END
+	
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public String getSM_BASIC_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 }
