@@ -5899,7 +5899,7 @@ public class TemplateSpecBackingBean extends
 	// #39210 End Vinod 3/10/2025
 	
 
-	//#38151 Start
+	//#38151 & #38679 Start
 
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -5935,7 +5935,7 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 	}
-	//#38151 End
+	//#38151 & #38679 End
 	
 	
 	// #35293 - Start
