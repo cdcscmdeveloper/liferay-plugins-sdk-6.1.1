@@ -16190,7 +16190,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			if (null != financialPackageScore
 					&& financialPackageScore.getSettingType() == 2) {
 				//#25138 - add if condition for one item only - start
-				if(!this.getManagedBean().isSingleItem()){
+				if(!this.getManagedBean().isSingleItem() && !checkFinancialSpecificationForItems()){ //#25651
 					if (null == financialPackageScore.getPassingScore()) {
 
 						this.getManagedBean().setActiveIndex(5);
