@@ -256,7 +256,7 @@
 					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" partialSubmit="true"
 					process="@form" update="@form"
-					action="#{specificationBackingBean.specCommitteBpmTask(bpAction)}" />
+					action="#{specificationBackingBean.submitAction(bpAction)}" />
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
 					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
