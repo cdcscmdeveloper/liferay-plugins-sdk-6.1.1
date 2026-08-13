@@ -15008,6 +15008,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
 						.equals(qtType.getParameterCode());
+		boolean isQTtypePK7WP = qtType != null
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
+						.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
+						.equals(qtType.getParameterCode());
 
 		PmStatus pmStatus = (scLoa != null) ? scLoa.getPmStatus() : null;
 		List<Long> approvalStatus = Arrays.asList(
@@ -15016,7 +15021,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isPendingApproval = pmStatus != null
 				&& approvalStatus.contains(pmStatus.getStatusId());
 
-		if (isQTtypePK7 && isPendingApproval) {
+		if ((isQTtypePK7 || isQTtypePK7WP) && isPendingApproval) {
 			return true;
 		}
 
