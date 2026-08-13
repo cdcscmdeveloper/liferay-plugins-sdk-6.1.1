@@ -9120,7 +9120,12 @@ public class SimpleQuoteBackingBean extends
 				&& getManagedBean().getScQuote().getJustificationType().getReasonId() != null) {
 			PmReason reason = retrieveReasonDtlById(getManagedBean().getScQuote().getJustificationType().getReasonId());
 
-			if (reason != null && !reason.isRecordStatus()) {
+			if (reason == null) {
+				return;
+			}
+
+			boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+			if (!reasonStatus) {
 				getManagedBean().setReasonCodeInActive(true);
 				String reasonDesc = getReasonDesc(reason);
 				if (!StringUtils.isEmpty(reasonDesc)) {
@@ -9140,6 +9145,19 @@ public class SimpleQuoteBackingBean extends
 			}
 
 		}
+	}
+	
+	/**
+	 * Retrieves the PK7 reason status by reason ID.
+	 *
+	 * @param reasonId
+	 *            the reason ID
+	 * @return true if the reason is active, otherwise false
+	 */
+	private boolean retrievePK7ReasonStatus(Long reasonId) {
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		return reqSO.getPK7ReasonStatus(reasonId);
 	}
 
 	/**
