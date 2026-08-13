@@ -11,7 +11,7 @@ import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting; //#38151
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting; //#38151,#38679
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
@@ -23,9 +23,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;//#38151
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;//#38151,#38679
 import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151,#38679
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -110,14 +110,14 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private boolean isDemoReq; // #28784
 	private boolean allSupplierDisagreeEPV;//#21692
 	
-	//#38151 start
+	//#38151,#38679 start
 	private List<WeightageScoreBean> weightageScoreBeans;
 	private Long overallTechnicalRecommendationPercent;
 	private Long overallFinancialRecommendationPercent;
 	private List<ScQtScoreSetting> scoreSettings;
 	private boolean weightage35384WIP;
 	private SupplierFinalizationBackingBean suppFinalBean;
-	//#38151 end
+	//#38151,#38679 end
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		/**
@@ -695,7 +695,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
-	//#38151 - Start
+	//#38151, #38679 - Start
 	public List<WeightageScoreBean> getWeightageScoreBeans() {
 		return weightageScoreBeans;
 	}
@@ -743,5 +743,5 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - End
+	//#38151, #38679 - End
 }
