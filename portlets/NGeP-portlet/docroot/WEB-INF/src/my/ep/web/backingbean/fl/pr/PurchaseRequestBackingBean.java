@@ -164,6 +164,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonRestr;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -1367,13 +1368,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		populateItemsForSelectedAddress();
 		// #27476 start
-		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
-			validateThresholdPK7AndSpecialItem();
-		} else {
-			checkPRThresholdPerItem();
+		String procType = getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode();
+		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+		        || procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+		    validateThresholdPK7AndSpecialItem();
+		} else if (!procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) { //#31344 - Exclude check threshold item for G2G
+		    checkPRThresholdPerItem();
 		}
 		// #27476 end
 	}
@@ -1545,7 +1545,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
 										.getUserLocale())));
 
-			} else {
+			} else if (!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){ //#31344 - Exclude check threshold item for G2G
 				checkPRThresholdPerItem();
 			}
 		}
@@ -4061,8 +4062,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
 			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
-			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
 			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+			
+			sumAmt = map.getValue().add(sumAmt);
 			
 			// #31344
 			boolean exceedThreshold = sumAmt.doubleValue() > thresholdAmt;
@@ -5070,10 +5072,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 		
 		catalogueReqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
-		catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
-		CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
-		skuDesc = catalogueResDTO.getSkuNumber();
+		//40227-Start
+		if(scRequestItem.getCmItem()!=null){
+			catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
+			catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
+			CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
+			skuDesc = catalogueResDTO.getSkuNumber();
+		}
+		//40227-End
+		
 		//29396-end
 		
 		return skuDesc;
@@ -5513,7 +5520,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setExceedBpkThreshold(isBpkExceed);
 		// 31344
 
-		if (!isExceedThreshold) {
+		if (!isExceedThreshold  && !isBpkExceed) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(

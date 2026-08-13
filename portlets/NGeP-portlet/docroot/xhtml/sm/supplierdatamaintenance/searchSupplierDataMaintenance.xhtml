@@ -152,12 +152,13 @@
 				</p:outputPanel>
 				
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/supplierInfoMaintenance.xhtml" />
-				<!-- #32008 -->
+				<!-- #33783 - start, #32008 -->
 				<c:if test="#{!supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
 					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" >
 						<ui:param name="isSuppDataMaintenance" value="true"/> <!-- #24819 -->
 					</ui:include>
 				</c:if>
+				<!-- #33783 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regOwnerAndDirectorMaintenance.xhtml" /> <!-- 26238 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regCatCodesMaintenance.xhtml" />
 				<ui:remove>#34031</ui:remove>

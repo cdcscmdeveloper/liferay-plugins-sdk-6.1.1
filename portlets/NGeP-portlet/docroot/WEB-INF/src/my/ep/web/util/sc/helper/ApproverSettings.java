@@ -24,12 +24,32 @@ public class ApproverSettings {
 	private static final Logger log = EpLogger
 			.getLogger(ApproverSettings.class);
 	
-	
+	// 12471 - start
+	/**
+	 * Retrieve approver user list and generate its pick list model
+	 * @param code
+	 * @param orgProfileId
+	 * @param approval
+	 * @return DualListModel
+	 */
 	public static DualListModel<ScQtApproverSettings> getDetails(RoleCode code, Long[] orgProfileId, ScQtApproval approval){
+		return getDetails(code, orgProfileId, approval, null);
+	}
+	/**
+	 * Retrieve approver user list and generate its pick list model
+	 * Method overload to help update user object as disabled if exist in disabled list
+	 * @param code
+	 * @param orgProfileId
+	 * @param approval
+	 * @param disabledUserIds
+	 * @return DualListModel
+	 */
+	public static DualListModel<ScQtApproverSettings> getDetails(RoleCode code, Long[] orgProfileId, ScQtApproval approval, List<Long> disabledUserIds){
 		
-		List<ScQtApproverSettings> availableApprovers = new ArrayList<ScQtApproverSettings>();
-		List<ScQtApproverSettings> selectedApprovers = new ArrayList<ScQtApproverSettings>();
-		List<PmUser> approvers = new ArrayList<PmUser>();
+		List<ScQtApproverSettings> availableApprovers = new ArrayList<>();
+		List<ScQtApproverSettings> selectedApprovers = new ArrayList<>();
+		List<PmUser> approvers = new ArrayList<>();
+	// 12471 - end
 		for(Long opid:orgProfileId){
 			List<PmUser> res=getApprovers(code,opid);
 			for(PmUser u:res){
@@ -38,8 +58,7 @@ public class ApproverSettings {
 				}
 			}
 		}
-//		removeDeskOfficer(approvers);
-	
+
 		for(PmUser pmUser:approvers){
 			ScQtApproverSettings qtApproverSettings = new ScQtApproverSettings();
 			qtApproverSettings.setPmUser(pmUser);
@@ -47,13 +66,17 @@ public class ApproverSettings {
 			if(checkSelectedApprover(approval,pmUser.getUserId())){
 				selectedApprovers.add(qtApproverSettings);
 			}else{
+				// 12471 - start
+				if (disabledUserIds != null && disabledUserIds.contains(qtApproverSettings.getPmUser().getUserId())) {
+					qtApproverSettings.setDisableRow(true);
+				}
+				// 12471 - end
 				availableApprovers.add(qtApproverSettings);
 			}
 			
 		}		
 		
-		return new DualListModel<ScQtApproverSettings>(availableApprovers,
-				selectedApprovers);
+		return new DualListModel<>(availableApprovers, selectedApprovers);// 12471
 	}
 	
 	private static boolean checkSelectedApprover(ScQtApproval approval,Long userId){

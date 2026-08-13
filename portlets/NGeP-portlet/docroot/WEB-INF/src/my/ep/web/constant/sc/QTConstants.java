@@ -302,7 +302,14 @@ public interface QTConstants {
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
 	public static final String CLOSE_CLONE_LOA_SPEC_POPUP = "cloneLoaSpec.hide()";
+	public static final String LBL_TPL_SPEC_CONTENT_QUANTITY = "lbl.tpl.spec.content.quantity";
+	public static final int DIRECT_LOA_TAB_INDEX_THREE=3;
 	//#29468 End Vinod
+	
+	// #40974  - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	// #40974  - End
 	
 	// 21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
@@ -374,6 +381,14 @@ public interface QTConstants {
 	
 	public static final String SERVICE_OBJECT_CC = "cc";
 	
+	// 12471 - start
+	public static final String MEMBER_INFO_POPUP = "memberInfoPopUp.show()";
+	public static final String LABEL_TEXT_SELECT = "lbl.txt.select";
+	public static final String DATATABLE_EXISTINGCOMMITTEESEARCHID = "existingcommitteesearchid";
+	public static final String DATATABLE_EXISTINGMEMBERTBL = "existingMemberTbl";
+	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
+	// 12471 - end
+
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
 	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
@@ -442,7 +457,15 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
+	public static final String SPAN_ERROR_ICON = "<span class=\"ui-messages-error-icon\" style=\"position: relative;right: 25px;\"></span>";
+	public static final String SPAN_ERROR_CONTENT_OPEN = "<span style=\"position: relative;right: 25px;\">";
+	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span>";
 	// #10141 End Vinod
+	
+	public static final String PORTLET_ID = "PORTLET_ID";
+	public static final String PORTLET_NAME_CREATE = "createmanualsourcing";
+	public static final String PORTLET_NAME_REVIEW = "reviewmanualsourcing";
+	public static final String  USER_PTJ_POPUP_HIDE = "userPtjPopup.hide();";
 	
 	//#29732 -Start
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
@@ -549,6 +572,10 @@ public interface QTConstants {
 	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
 
 	// 29661- end-
+	
+	// 28188 -start-
+	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
+	// 28188 -end-
 
 	// #39113 Start Vinod 25/09/2025
 	public static final String LBL_SC_REMARK = "lbl.sc.remark";

@@ -1162,32 +1162,32 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			// summary report sheet cell - total poco
 	        Cell cellSummaryTotalPOCO = row.createCell(4);
 	        cellSummaryTotalPOCO.setCellValue(((Integer) accsumpoco).intValue());
-	        cellSummaryTotalPOCO.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, false, false, false));
+	        cellSummaryTotalPOCO.setCellStyle(columnStyle(wb, createHelper, false, true, true, false, false, false, false));
 	        
 	        // summary report total amt
 	        Cell cellSummaryTotalAmt = row.createCell(5);
 	        cellSummaryTotalAmt.setCellValue((accsumTotalAmtWithGST).doubleValue());
-	        cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 	        // summary report total deduct
 	        Cell cellSummaryTotalDeduct = row.createCell(6);
 	        cellSummaryTotalDeduct.setCellValue((accsumTotalDeduc).doubleValue());
-	        cellSummaryTotalDeduct.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalDeduct.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 	        // summary report total gst
 	        Cell cellSummaryTotalGST = row.createCell(7);
 	        cellSummaryTotalGST.setCellValue((accsumGST).doubleValue());
-	        cellSummaryTotalGST.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalGST.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 	        // summary report total service fee
 	        Cell cellSummaryTotalServiceFee = row.createCell(8);
 	        cellSummaryTotalServiceFee.setCellValue((accsumServiceFee).doubleValue());
-	        cellSummaryTotalServiceFee.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalServiceFee.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 	        // summary report total pay supplier
 	        Cell cellSummaryTotalPaySupplier = row.createCell(9);
 	        cellSummaryTotalPaySupplier.setCellValue((accsumPayableToSupplier).doubleValue());
-	        cellSummaryTotalPaySupplier.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+	        cellSummaryTotalPaySupplier.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 	        
 
 		}
@@ -1248,25 +1248,25 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		// summary report sheet cell - total amount with gst
 		Cell cellSummaryTotalAmt = row.createCell(9);
 		cellSummaryTotalAmt.setCellValue(summaryTotalAmt.doubleValue());
-		cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+		cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 		// summary report sheet cell - deduction amount
 		Cell cellSummaryDeductionAmt = row.createCell(10);
 		cellSummaryDeductionAmt.setCellValue(summaryDeductionAmt.doubleValue());
-		cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+		cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 				false));
 		// summary report sheet cell - gst amount
 		Cell cellSummaryGSTAmt = row.createCell(11);
 		cellSummaryGSTAmt.setCellValue(summaryGSTAmt.doubleValue());
-		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false, false));
 		// summary report sheet cell - service fee amount
 		Cell cellSummaryServiceFeeAmt = row.createCell(12);
 		cellSummaryServiceFeeAmt.setCellValue(summaryServiceFeeAmt.doubleValue());
-		cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+		cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 				false));
 		// summary report sheet cell - accumulate amount payable supplier
 		Cell cellSummaryAmtPayableSupplier = row.createCell(13);
 		cellSummaryAmtPayableSupplier.setCellValue(summaryAmtPayableSupplier.doubleValue());
-		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, true,
+		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true,
 				false, false));
 
 		CellRangeAddress cellZoneSummaryAmt = new CellRangeAddress(rowSummary, rowSummary, 13, 14);
@@ -1580,79 +1580,79 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			// summary report sheet cell - jan
 			Cell cellSummaryTotalJan = row.createCell(3);
 			cellSummaryTotalJan.setCellValue((janTotal).doubleValue());
-			cellSummaryTotalJan.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJan.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - feb
 			Cell cellSummaryTotalFeb = row.createCell(4);
 			cellSummaryTotalFeb.setCellValue((febTotal).doubleValue());
-			cellSummaryTotalFeb.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalFeb.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 
 			// summary report sheet cell - mar
 			Cell cellSummaryTotalMac = row.createCell(5);
 			cellSummaryTotalMac.setCellValue((macTotal).doubleValue());
-			cellSummaryTotalMac.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalMac.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - april
 			Cell cellSummaryTotalApr = row.createCell(6);
 			cellSummaryTotalApr.setCellValue((aprTotal).doubleValue());
-			cellSummaryTotalApr.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalApr.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - may
 			Cell cellSummaryTotalMay = row.createCell(7);
 			cellSummaryTotalMay.setCellValue((mayTotal).doubleValue());
-			cellSummaryTotalMay.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalMay.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - june
 			Cell cellSummaryTotalJun = row.createCell(8);
 			cellSummaryTotalJun.setCellValue((junTotal).doubleValue());
-			cellSummaryTotalJun.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJun.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - july
 			Cell cellSummaryTotalJuly = row.createCell(9);
 			cellSummaryTotalJuly.setCellValue((julyTotal).doubleValue());
-			cellSummaryTotalJuly.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalJuly.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - aug
 			Cell cellSummaryTotalAug = row.createCell(10);
 			cellSummaryTotalAug.setCellValue((augTotal).doubleValue());
-			cellSummaryTotalAug.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalAug.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - sept
 			Cell cellSummaryTotalSep = row.createCell(11);
 			cellSummaryTotalSep.setCellValue((sepTotal).doubleValue());
-			cellSummaryTotalSep.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalSep.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - oct
 			Cell cellSummaryTotalOct = row.createCell(12);
 			cellSummaryTotalOct.setCellValue((octTotal).doubleValue());
-			cellSummaryTotalOct.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalOct.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - nov
 			Cell cellSummaryTotalNov = row.createCell(13);
 			cellSummaryTotalNov.setCellValue((novTotal).doubleValue());
-			cellSummaryTotalNov.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalNov.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - dec
 			Cell cellSummaryTotalDec = row.createCell(14);
 			cellSummaryTotalDec.setCellValue((decTotal).doubleValue());
-			cellSummaryTotalDec.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalDec.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));
 			
 			// summary report sheet cell - total
 			Cell cellSummaryTotalAll = row.createCell(15);
 			cellSummaryTotalAll.setCellValue((totalAll).doubleValue());
-			cellSummaryTotalAll.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+			cellSummaryTotalAll.setCellStyle(columnStyle(wb, createHelper, false, true, false, false, true, false,
 					false));   
 		}
 		if(reportList.isEmpty()){

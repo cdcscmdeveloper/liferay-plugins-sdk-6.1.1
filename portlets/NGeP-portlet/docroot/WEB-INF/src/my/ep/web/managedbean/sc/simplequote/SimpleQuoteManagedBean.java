@@ -451,8 +451,29 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	// #28865 - start
 	
 	//27868 & 35321 - start
+	private String parameterTypeRPT;
 	private Date createdDate;
+	private boolean dropDownRPTvalue = Boolean.FALSE;
+    private boolean reasonCodeInActive= Boolean.FALSE;
+    private String inActiveReasonDesc = "";
+    private boolean includeBasicSupplier = Boolean.FALSE;
+    private boolean includeMofSupplier = Boolean.FALSE;
+    private boolean includeG2gSupplier = Boolean.FALSE;
+    private boolean newPK7Code = Boolean.FALSE;
+	private ScQuoteSupplier tempScQuoteSupplier = null;
+	private String wipReasonCategory;
+	private Long inactiveReasonId;
+	private String inactiveJustificationRemark;
+	private SelectItem[] inactiveJustDropdown = null; 
 	//27868 & 35321 - end
+	
+	// #5426 - start
+	private Long remainingMinute;
+	private Long remainingHour;
+	private Long remainingDay;
+	private Long remainingInterval;
+	private String remainingTimeMsg;
+	// #5426 - end
 	
 	private Boolean deleteBusinessNature = false;
 	/**
@@ -2841,6 +2862,20 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	
 	//27868 & 35321 - start
 	/**
+	 * @return the parameterTypeRPT
+	 */
+	public String getParameterTypeRPT() {
+		return parameterTypeRPT;
+	}
+
+	/**
+	 * @param parameterTypeRPT the parameterTypeRPT to set
+	 */
+	public void setParameterTypeRPT(String parameterTypeRPT) {
+		this.parameterTypeRPT = parameterTypeRPT;
+	}
+
+	/**
 	 * @return the createdDate
 	 */
 	public Date getCreatedDate() {
@@ -2853,6 +2888,173 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+
+	public boolean isDropDownRPTvalue() {
+		return dropDownRPTvalue;
+	}
+
+	public void setDropDownRPTvalue(boolean dropDownRPTvalue) {
+		this.dropDownRPTvalue = dropDownRPTvalue;
+	}
+
+	public boolean isReasonCodeInActive() {
+		return reasonCodeInActive;
+	}
+
+	public void setReasonCodeInActive(boolean reasonCodeInActive) {
+		this.reasonCodeInActive = reasonCodeInActive;
+	}
+
+	public String getInActiveReasonDesc() {
+		return inActiveReasonDesc;
+	}
+
+	public void setInActiveReasonDesc(String inActiveReasonDesc) {
+		this.inActiveReasonDesc = inActiveReasonDesc;
+	}
+
+	public boolean isIncludeBasicSupplier() {
+		return includeBasicSupplier;
+	}
+
+	public void setIncludeBasicSupplier(boolean includeBasicSupplier) {
+		this.includeBasicSupplier = includeBasicSupplier;
+	}
+
+	public boolean isIncludeMofSupplier() {
+		return includeMofSupplier;
+	}
+
+	public void setIncludeMofSupplier(boolean includeMofSupplier) {
+		this.includeMofSupplier = includeMofSupplier;
+	}
+
+	public boolean isIncludeG2gSupplier() {
+		return includeG2gSupplier;
+	}
+
+	public void setIncludeG2gSupplier(boolean includeG2gSupplier) {
+		this.includeG2gSupplier = includeG2gSupplier;
+	}
+
+	public boolean isNewPK7Code() {
+		return newPK7Code;
+	}
+
+	public void setNewPK7Code(boolean newPK7Code) {
+		this.newPK7Code = newPK7Code;
+	}
+
+	public ScQuoteSupplier getTempScQuoteSupplier() {
+		return tempScQuoteSupplier;
+	}
+
+	public void setTempScQuoteSupplier(ScQuoteSupplier tempScQuoteSupplier) {
+		this.tempScQuoteSupplier = tempScQuoteSupplier;
+	}
+
+	public String getWipReasonCategory() {
+		return wipReasonCategory;
+	}
+
+	public void setWipReasonCategory(String wipReasonCategory) {
+		this.wipReasonCategory = wipReasonCategory;
+	}
+	
+	public Long getInactiveReasonId() {
+		return inactiveReasonId;
+	}
+
+	public void setInactiveReasonId(Long inactiveReasonId) {
+		this.inactiveReasonId = inactiveReasonId;
+	}
+	
+	public String getInactiveJustificationRemark() {
+		return inactiveJustificationRemark;
+	}
+
+	public void setInactiveJustificationRemark(String inactiveJustificationRemark) {
+		this.inactiveJustificationRemark = inactiveJustificationRemark;
+	}
+	
+	public SelectItem[] getInactiveJustDropdown() {
+		return inactiveJustDropdown;
+	}
+
+	public void setInactiveJustDropdown(SelectItem[] inactiveJustDropdown) {
+		this.inactiveJustDropdown = inactiveJustDropdown;
+	}
 	//27868 & 35321 - end
 	
+	//5426 - start
+	/**
+	 * @return the remainingMinute
+	 */
+	public Long getRemainingMinute() {
+		return remainingMinute;
+	}
+
+	/**
+	 * @param remainingMinute the remainingMinute to set
+	 */
+	public void setRemainingMinute(Long remainingMinute) {
+		this.remainingMinute = remainingMinute;
+	}
+
+	/**
+	 * @return the remainingHour
+	 */
+	public Long getRemainingHour() {
+		return remainingHour;
+	}
+
+	/**
+	 * @param remainingHour the remainingHour to set
+	 */
+	public void setRemainingHour(Long remainingHour) {
+		this.remainingHour = remainingHour;
+	}
+
+	/**
+	 * @return the remainingDay
+	 */
+	public Long getRemainingDay() {
+		return remainingDay;
+	}
+
+	/**
+	 * @param remainingDay the remainingDay to set
+	 */
+	public void setRemainingDay(Long remainingDay) {
+		this.remainingDay = remainingDay;
+	}
+
+	/**
+	 * @return the remainingInterval
+	 */
+	public Long getRemainingInterval() {
+		return remainingInterval;
+	}
+
+	/**
+	 * @param remainingInterval the remainingInterval to set
+	 */
+	public void setRemainingInterval(Long remainingInterval) {
+		this.remainingInterval = remainingInterval;
+	}
+
+	/**
+	 * @return the remainingTimeMsg
+	 */
+	public String getRemainingTimeMsg() {
+		return remainingTimeMsg;
+	}
+
+	/**
+	 * @param remainingTimeMsg the remainingTimeMsg to set
+	 */
+	public void setRemainingTimeMsg(String remainingTimeMsg) {
+		this.remainingTimeMsg = remainingTimeMsg;
+	}
+	//5426 - end
 }

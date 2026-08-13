@@ -2510,9 +2510,7 @@ public class ConsolidationReportBackingBean extends
 			}
 		}
 
-		ScQt scQt = this.getManagedBean().getScQt();
-		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(
-				supplierId, scQt);
+		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(supplierId);
 		for (SmSupplierBranch wipSupplierBranch : wipSupplierBranchListDeleted) {
 			int statusFlag = wipSupplierBranch.getRecordStatusFlg();
 			if (statusFlag == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -3058,7 +3056,7 @@ public class ConsolidationReportBackingBean extends
 
 			}
 		}else{
-			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
+			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null,null);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				//BigDecimal supplierNo = (BigDecimal) row[1];
@@ -3112,7 +3110,7 @@ public class ConsolidationReportBackingBean extends
 
 		retrieveQualifiedSuppliersInfoByEvalStage("2");
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
+				selectedZoneId,null);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];

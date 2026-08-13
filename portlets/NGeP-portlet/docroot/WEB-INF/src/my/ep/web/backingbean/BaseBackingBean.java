@@ -164,6 +164,7 @@ import my.ep.web.backingbean.cm.codification.CodificationBackingBean;//#31341
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.SSTConstant; //#27868
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
@@ -656,6 +657,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getDropdownValues(String parameterType) {
 		return getDropdownValuesBySearchBean(parameterType, null);
 	}
+	
+	//9299 - 40712 Start
+	public SelectItem[] getProcurementMethodDropdownValues (String parameterType){
+		return getDropdownValuesByProcurementMethod(parameterType, null);
+	}
+	//9299 - 40712 End
 
 	/**
 	 * Get parameter id select items by parameter type and search bean for
@@ -753,6 +760,48 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+	
+	// 9299 -40712 Start
+	public SelectItem[] getDropdownValuesByProcurementMethod(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			List<PmParameterDesc> filteredList = new ArrayList<PmParameterDesc>();
+
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				if (!ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(parameterDesc.getPmParameter()
+						.getParameterCode())) {
+					filteredList.add(parameterDesc);
+				}
+			}
+
+			items = new SelectItem[filteredList.size() + 1];
+
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
+			int i = 1;
+
+			for (PmParameterDesc parameterDesc : filteredList) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
+						parameterDesc.getCodeName());
+			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	// 9299 -40712 End	
 	
 	// new #25725/25726 - Start
 	
@@ -898,6 +947,216 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 
+	// 27868 - start
+	/**
+	 * Combines current WIP reason into dropdown items if not already present.
+	 * Preserves existing order and keeps "Select" as the first entry.
+	 */
+	public SelectItem[] getReasonCodeDropdownValuesCombineWIPCode(Long currentReasonId, SelectItem[] items) {
+		try {
+			if (items == null || items.length == 0) {
+				return items;
+			}
+
+			PmReasonDesc reasonDesc = getReasonDescByReasonId(currentReasonId);
+			if (reasonDesc == null || reasonDesc.getPmReason() == null) {
+				return items;
+			}
+
+			String currentReasonCode = reasonDesc.getPmReason().getReasonCode();
+
+			// check if WIP reason already exists
+			for (SelectItem item : items) {
+				if (item != null && currentReasonCode.equals(item.getValue())) {
+					return items;
+				}
+			}
+
+			// create new array (+1)
+			SelectItem[] combinedItems = new SelectItem[items.length + 1];
+
+			// keep "Select" at index 0
+			combinedItems[0] = items[0];
+
+			// insert WIP reason as first selectable item
+			combinedItems[1] = new SelectItem(currentReasonCode, reasonDesc.getReasonDesc());
+
+			// copy remaining items
+			System.arraycopy(items, 1, combinedItems, 2, items.length - 1);
+
+			return combinedItems;
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+
+	/**
+	 * Retrieves dropdown values for Reason codes based on profile ID and
+	 * category code. If no reasons are found for the given profile ID, it will
+	 * load reasons without profile filtering.
+	 * 
+	 * @param profileId
+	 *            the profile ID used to filter reasons
+	 * @param categoryCode
+	 *            the category code of the reason
+	 * @return an array of SelectItem objects for use in a dropdown list
+	 */
+	public SelectItem[] getReasonCodeDropdownValues(Long profileId, String categoryCode) {
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(profileId, categoryCode);
+
+			List<PmReasonDesc> distinctList = new ArrayList<>();
+			Set<Long> addedReasonIds = new HashSet<>();
+
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				Long reasonId = reasonDesc.getPmReason().getReasonId();
+				if (!addedReasonIds.contains(reasonId)) {
+					addedReasonIds.add(reasonId);
+					distinctList.add(reasonDesc);
+				}
+			}
+
+			if (distinctList.isEmpty()) {
+				List<PmReasonDesc> reasonDescsWithoutProfileId = ReasonHelper.getInstance().getReasonDescList(
+						categoryCode);
+
+				for (PmReasonDesc reasonDesc : reasonDescsWithoutProfileId) {
+					Long reasonId = reasonDesc.getPmReason().getReasonId();
+					if (!addedReasonIds.contains(reasonId)) {
+						addedReasonIds.add(reasonId);
+						distinctList.add(reasonDesc);
+					}
+				}
+			}
+
+			SelectItem[] items = new SelectItem[distinctList.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
+			int i = 1;
+			for (PmReasonDesc reasonDesc : distinctList) {
+				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
+			}
+
+			return items;
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES,
+					getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return new SelectItem[0];
+	}
+
+	/**
+	 * Retrieves drop down values from new and old parameter types. Includes the
+	 * old parameter only if its code matches the given oldParameterCode.
+	 * 
+	 * @param newParameterType
+	 *            the parameter type for new values
+	 * @param oldParameterType
+	 *            the parameter type for old values
+	 * @param oldParameterCode
+	 *            the specific old parameter code to include
+	 * @return an array of SelectItem objects representing the combined radio
+	 *         button options
+	 */
+	public SelectItem[] getDropDownValuesCombineWIPParameter(String newParameterType, String oldParameterType,
+			String oldParameterCode) {
+
+		List<SelectItem> items = new ArrayList<>();
+
+		try {
+			List<PmParameterDesc> newParameterDescs = ParameterHelper.getInstance().getParameterDescList(
+					newParameterType);
+
+			for (PmParameterDesc desc : newParameterDescs) {
+				if (CommonConstants.PK7.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(CommonConstants.PK7_NEW, desc.getCodeName()));
+				} else {
+					items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+				}
+			}
+
+			List<PmParameterDesc> oldParameterDescs = ParameterHelper.getInstance().getParameterDescList(
+					oldParameterType);
+
+			for (PmParameterDesc desc : oldParameterDescs) {
+				if (oldParameterCode != null
+						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(CommonConstants.PK7_OLD, desc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM,
+					getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[0]);
+	}
+	
+	 /**
+	  * Retrieves dropdown values by combining new and old WIP parameters.
+	  *
+	  * @param newParameterType the new parameter type
+	  * @param oldParameterType the old parameter type
+	  * @param oldParameterCode the old parameter code to include
+	  * @return an array of dropdown values
+	  */
+	public SelectItem[] getDropdownValuesWithWIP(String newParameterType, String oldParameterType,
+			String oldParameterCode) {
+
+		List<SelectItem> items = new ArrayList<>();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescList(newParameterType);
+
+			for (PmParameterDesc desc : parameterDescs) {
+				items.add(new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName()));
+			}
+
+			parameterDescs = ParameterHelper.getInstance().getParameterDescList(oldParameterType);
+
+			for (PmParameterDesc desc : parameterDescs) {
+				if (oldParameterCode != null
+						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE,
+					SLALogConstant.COMMON_BASE_BACKINGBEAN, SSTConstant.EMPTY_STRING,
+					SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM,
+					getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[0]);
+	}
+	
+
+	// 27868 - end
+	
 	/**
 	 * Get reason by reason category code and reason code
 	 * 
@@ -4341,6 +4600,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 
 		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return getCategoryName(catL3, false);
+		}
 		String categoryName = getCategoryName(catL3, isFullName);
 
 		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
@@ -4409,6 +4671,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return latest or old category code description
 	 */
 	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return cat.getPmCategoryL3().getCategoryName();
+		}
 		String catName1 = cat.getPmCategoryL1().getCategoryName();
 		String catName2 = cat.getPmCategoryL2().getCategoryName();
 		String catName3 = cat.getPmCategoryL3().getCategoryName();
@@ -4543,6 +4808,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return formatted.replaceAll("(\r\n|\n)", "<br/>");
 	}
 	// #28854 - End
+	
+	// #25000 - Start
+	/**
+	 * A utility method to format a date.
+	 * 
+	 * @param date
+	 *            the Date object to format
+	 * @return the formatted date string, or an empty string if the date is null
+	 */
+	public String formatDate(Date date) {
+		SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		return date != null ? dateformat.format(date) : "";
+	}
+	// #25000 - End
 	
 	@Deprecated
 	/**
@@ -4732,10 +5011,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			CmColor color = cmitem.getCmColor();
 			CmUnspsc unspsc = cmitem.getCmUnspsc();
 			// segment title
-			String itemName = common.removeItemNameNA(type.getTypeName()) + " "
+			String itemName = (common.removeItemNameNA(type.getTypeName()) + " "
 					+ common.removeItemNameNA(brand.getBrandName()) + " "
 					+ common.removeItemNameNA(measurement.getMeasurementName()) + " "
-					+ common.removeItemNameNA(color.getColorName());
+					+ common.removeItemNameNA(color.getColorName())).trim().replaceAll("\\s+", " ");
 			// segment code
 			String extCode = type.getTypeCode() + brand.getBrandCode() + measurement.getMeasurementCode()
 					+ color.getColorCode();

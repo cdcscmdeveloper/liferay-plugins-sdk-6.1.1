@@ -101,7 +101,14 @@
 				</p:column>
 				<p:column style="width:29%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.name']}">
-					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					<ui:remove>12471 start</ui:remove>
+					<p:commandLink
+						actionListener="#{evaluationMeetingBackingBean.onClickMemberInfo(committeeMember.pmUser)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						process="@this" update="@([id$=memberInfoPopup])">
+						<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					</p:commandLink>
+					<ui:remove>12471 end</ui:remove>
 				</p:column>
 				<p:column style="width:15%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.identification.no']}">
@@ -154,12 +161,16 @@
 								itemValue="#{role.pmParameter.parameterId}" 
 								value="#{meetingBB.getRoleTypeDropdownValuesBasedOnPTJ(committeeMember.PNP,meetingBB.managedBean.qt,committeeMember.pmUser, filteredRoles)}" />
 							<!-- <p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{meetingBB.chnageMemberRole(index,meetingBB.managedBean.committeeMemberActivity)}"></p:ajax>  -->
+								listener="#{meetingBB.chnageMemberRole(index,meetingBB.managedBean.committeeMemberActivity)}"></p:ajax>  --><!-- #35500 -->
 						</p:selectOneMenu>
 						<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
 					</ui:fragment>
 				</p:column>
 			</p:dataTable>
+			<ui:remove>12471 start</ui:remove>
+			<ac:qtCommitteMemberInfoPopup bBean="#{evaluationMeetingBackingBean}"
+				widget="memberInfoPopUp" />
+			<ui:remove>12471 end</ui:remove>
 			<ui:fragment rendered="#{isCommitteeUpdatable}">
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
