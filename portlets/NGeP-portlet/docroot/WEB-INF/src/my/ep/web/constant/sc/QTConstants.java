@@ -306,6 +306,11 @@ public interface QTConstants {
 	public static final int DIRECT_LOA_TAB_INDEX_THREE=3;
 	//#29468 End Vinod
 	
+	// #40974  - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	// #40974  - End
+	
 	// 21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
@@ -455,6 +460,7 @@ public interface QTConstants {
 	public static final String SPAN_ERROR_ICON = "<span class=\"ui-messages-error-icon\" style=\"position: relative;right: 25px;\"></span>";
 	public static final String SPAN_ERROR_CONTENT_OPEN = "<span style=\"position: relative;right: 25px;\">";
 	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span>";
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION_HIDE = "inActiveChecklistNotification.hide()";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -511,7 +517,7 @@ public interface QTConstants {
 			
 	// 25791-End
 	
-	//#38151
+	//#38151 & #38679
 	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
 	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
