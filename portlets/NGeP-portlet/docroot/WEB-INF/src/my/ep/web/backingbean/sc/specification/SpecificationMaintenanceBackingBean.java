@@ -684,6 +684,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
 
 			if (isInactiveChecklistPopup) {
+				this.getManagedBean().setPreRenderInactiveChecklist(true);
 				RequestContext.getCurrentInstance()
 				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
 				return;
