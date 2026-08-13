@@ -7332,6 +7332,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		}
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
+		if (getManagedBean().isSupplierUser()) {
+			getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(),
 				facilityBean);
