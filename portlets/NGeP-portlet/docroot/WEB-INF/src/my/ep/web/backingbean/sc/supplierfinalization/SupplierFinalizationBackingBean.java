@@ -6012,6 +6012,7 @@ public class SupplierFinalizationBackingBean extends
 				createShortlistedSuppliersDataModel();// 35140
 			} 
 			
+			setDisableSFJustification();	//40314
 			//#28834 - Start
 			if(scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION)){
 				this.getManagedBean().setDisableJustifications(false);
