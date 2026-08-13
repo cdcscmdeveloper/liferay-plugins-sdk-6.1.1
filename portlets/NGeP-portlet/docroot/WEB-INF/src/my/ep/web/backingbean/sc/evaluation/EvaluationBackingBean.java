@@ -20151,7 +20151,7 @@ private void retriveCommitteeRemarksList(){
 
 	// 29661 -end-
 	
-	//#38151 Start
+	//#38151 & #38679  Start
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
@@ -20186,7 +20186,7 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 	}
-	//#38151 End
+	//#38151 & #38679  End
 	
 	//#28784 - Start
 	private void changePerakuanToBottom(List<ScQtEvaluationReport> reportList) {
