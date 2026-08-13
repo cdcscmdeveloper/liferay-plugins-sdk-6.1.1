@@ -3974,11 +3974,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 		
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
-		auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+		// #35500 EPV Start
+		Long userId = getUserIdSessionFromLoginId();
+		ScActor scActor = getActorByQtIdAndUserId(scQt.getQtId(),userId);
+		auditResDTO.setRoleCode(scActor.getRoleCode());
+		// #35500 EPV End
 		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
-		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+		auditResDTO.setCreatedBy(userId);// #35500 EPV 
 		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);
 		
 		// #35500 EPV Start
