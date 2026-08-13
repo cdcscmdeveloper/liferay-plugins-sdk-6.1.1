@@ -11,11 +11,11 @@
 	<h:panelGroup id="recommendationid">
 			<p:panel id="package" toggleable="true">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.by.package.item']}" rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"/><ui:remove><!-- #38151 label--></ui:remove>
+					<h:outputText value="#{lbl['lbl.sc.by.package.item']}" rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"/><ui:remove><!-- #38151,#38679 label--></ui:remove>
 					
-					<h:outputText value="#{lbl['lbl.sc.by.package']}" rendered="#{specificationBackingBean.managedBean.weightage35384WIP}" /><ui:remove><!-- #38151 tooltip--></ui:remove>
+					<h:outputText value="#{lbl['lbl.sc.by.package']}" rendered="#{specificationBackingBean.managedBean.weightage35384WIP}" /><ui:remove><!-- #38151,#38679 tooltip--></ui:remove>
 					<ac:iconTooltip
-						value="#{lbl['lbl.sc.by.package.item.recommendation.tooltip']}" rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"/><ui:remove><!-- #38151 tooltip--></ui:remove>
+						value="#{lbl['lbl.sc.by.package.item.recommendation.tooltip']}" rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"/><ui:remove><!-- #38151,#38679 tooltip--></ui:remove>
 				</f:facet>
 				<table>
 					<tr>
@@ -33,7 +33,7 @@
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
 									rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
-							</p:inputText></td> <ui:remove><!-- #38151 add rendered for WIP--></ui:remove>
+							</p:inputText></td> <ui:remove><!-- #38151,#38679 add rendered for WIP--></ui:remove>
 							<ui:remove>//#38151 edit listener</ui:remove>
 					</tr>
 					<tr>

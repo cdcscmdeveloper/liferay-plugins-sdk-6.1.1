@@ -134,7 +134,7 @@
 
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.overall.score']}" style="width:5%; text-align:right;"/> <!-- #38151 update label-->
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.overall.score']}" style="width:5%; text-align:right;"/> <!-- #38151,#38679 update label-->
 						<ui:remove>#29021 - start </ui:remove>
 		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 		               		<f:facet name="header">
@@ -277,7 +277,7 @@
 					</h:outputText> 					
 				</p:column>
 				<ui:remove>
-					<!-- #38151 add action link popup-->
+					<!-- #38151,#38679 add action link popup-->
 				</ui:remove>
 				<p:column style="text-align:right;">
 				<p:commandLink
@@ -559,7 +559,7 @@
 					</h:outputText> 					
 				</p:column>
 	
-				<ui:remove><!--  #38151 --></ui:remove>
+				<ui:remove><!-- #38151,#38679 --></ui:remove>
 				<p:column style="text-align:right;">
 					<p:column style="text-align:right;">
 						<p:commandLink
@@ -584,7 +584,7 @@
 							</h:outputText>
 					</p:column>
 				</p:column>
-				<ui:remove><!--  #38151 --></ui:remove>
+				<ui:remove><!-- #38151,#38679 --></ui:remove>
 
                	<!-- 29021 -start- -->	
 				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
