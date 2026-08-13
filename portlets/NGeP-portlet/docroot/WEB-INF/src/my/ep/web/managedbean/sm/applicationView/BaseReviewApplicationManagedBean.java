@@ -406,6 +406,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupPO;
 	private boolean otherDescChangeSupApprover;
 	private boolean otherDescChangeMaintenance;
+	private boolean authoriseUser;
 	private String otherDescEdited;
 	private String otherDescOld;
 	private SmSupplierCategory historySuppCategory;
@@ -2822,6 +2823,20 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setSupProfileHistoryOtherDesc(
 			List<SmSupplierCategory> supProfileHistoryOtherDesc) {
 		this.supProfileHistoryOtherDesc = supProfileHistoryOtherDesc;
+	}
+	
+	/**
+	 * @return the authoriseUser
+	 */
+	public boolean isAuthoriseUser() {
+		return authoriseUser;
+	}
+
+	/**
+	 * @param authoriseUser the authoriseUser to set
+	 */
+	public void setAuthoriseUser(boolean authoriseUser) {
+		this.authoriseUser = authoriseUser;
 	}
 	// 36504 - END
 }

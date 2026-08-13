@@ -5431,14 +5431,25 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(userId);
 			getManagedBean().setApproverUser(false);
 			getManagedBean().setPoUser(false);
-
+			getManagedBean().setAuthoriseUser(false);
+			
 			if (!EntityHelper.isCollectionEmpty(userRoles)) { 
 				for (PmUserRole userRole : userRoles) {
+					boolean authoriseUser = userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_OFFICER.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.DISC_SECRETARY.value())||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_ADMIN.value())||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SDO.value())||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SVC.value())||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SVO.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value());
+					
 					if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value())) {
 						getManagedBean().setPoUser(true);
 					} else if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_APPROVER.value())) {
 						getManagedBean().setApproverUser(true);
 						break;
+					} else if (authoriseUser) {
+						getManagedBean().setAuthoriseUser(true);
 					}
 				}
 			}
