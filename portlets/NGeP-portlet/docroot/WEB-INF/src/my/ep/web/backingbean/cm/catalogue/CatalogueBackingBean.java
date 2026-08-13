@@ -4023,10 +4023,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//1 year period between start and end date
 			Calendar cal = Calendar.getInstance();  
 			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-			// 29961 - start Updated by Mohd Nur Naim Bin misiran. set the year
-			// range selected follow the parameter rules
-			// cal.add(Calendar.YEAR,
-			// CmHelper.getInstance().getStandardPricingYear());
+			// 29961 - start Updated by Mohd Nur Naim Bin misiran. set the year range selected follow the parameter rules
+			// cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
 			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
 			if (cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()) < 0) {
 				FacesContext.getCurrentInstance()
@@ -4037,6 +4035,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
 			}
+			// 29961 - end
 
 			//201002@akmal - Bug29265 - Start
 			//validate promotion's mandatory case if one field is inserted
@@ -11899,8 +11898,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.declareChecked = declareChecked;
 	}
 	//#30457 - farid - end
-	
-	
+
 	// 29961 - start
 	private Integer getEndYearByRulesValue(String RuleType) {
 		log.info("getEndYearByRulesValue");
