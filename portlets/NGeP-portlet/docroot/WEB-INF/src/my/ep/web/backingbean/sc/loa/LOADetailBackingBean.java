@@ -4372,6 +4372,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
         		// #26770 - Start.
         		validateReportAttachment();
         		// #26770 - End.
+        		// 27868 - start
+        		validateReasonStatus(scLoa);
+        		// 27868 - end
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
