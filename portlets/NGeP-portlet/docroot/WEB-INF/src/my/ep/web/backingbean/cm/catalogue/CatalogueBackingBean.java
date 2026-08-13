@@ -4023,19 +4023,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//1 year period between start and end date
 			Calendar cal = Calendar.getInstance();  
 			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-			// 29961 - start Updated by Mohd Nur Naim Bin misiran. set the year range selected follow the parameter rules
-			// cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
+			//29961 - start Updated by Mohd Nur Naim Bin misiran. set the year range selected follow the parameter rules
+			//cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
 			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
-			if (cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()) < 0) {
-				FacesContext.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775179, new String[] { ""
-										+ getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+			if (cal.getTime().compareTo(
+					this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()) < 0) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775179, new String[] { "" + getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
 			}
-			// 29961 - end
+			//29961 - end
 
 			//201002@akmal - Bug29265 - Start
 			//validate promotion's mandatory case if one field is inserted
@@ -4981,7 +4980,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			Double minPriceVal = Double.valueOf(getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM));
 			DecimalFormat df = new DecimalFormat("0.00#");
 			//#30457 - End 29/07/2022
-
+			
 			//#29961 - Start
 			Integer minYearVal = getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY);
 			//#29961 - End
@@ -8290,7 +8289,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			this.getManagedBean().setError3(false);
 		}
-
+		
 		// # 29961 - Start Remove error7
 		/*// check for 1 year period
 		if (standardPricing.getStartDate() != null && standardPricing.getEndDate() != null) {
@@ -11310,7 +11309,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	// 14921 - End
-	
+
 	//29961 - start
 	public Date getNextTwoYear(Date startDate) {
 		Calendar cal = Calendar.getInstance();
@@ -11707,6 +11706,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return false;
 	}
 	//26284 - End
+
+	// 29961 - start
+	private Integer getEndYearByRulesValue(String RuleType) {
+		log.info("getEndYearByRulesValue");
+
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject("pm", IRuleSO.class);
+
+		Integer ruleValue = 0;
+
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		RuleResDTO ruleResDTO = null;
+
+		ruleReqDTO.setRuleType(RuleType);
+		RuleResDTO rules = ruleSO.getRuleValueByRuleType(ruleReqDTO);
+
+		if (rules.getRulevalue() != null) {
+			ruleValue = Integer.parseInt(rules.getRulevalue());
+		}
+		return ruleValue;
+	}
+	// 29961 - end
 	
 	//30457 - START 27/7/2022
 	public Double getMinimumPrice(String RuleType) {
@@ -11766,7 +11786,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		// #30457 - End
 	}
-
+	
 	//#29961 - Start
 	/**
 	 * Updates the selected draft supplier item when the image popup is closed.
@@ -11898,25 +11918,4 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.declareChecked = declareChecked;
 	}
 	//#30457 - farid - end
-
-	// 29961 - start
-	private Integer getEndYearByRulesValue(String RuleType) {
-		log.info("getEndYearByRulesValue");
-
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject("pm", IRuleSO.class);
-
-		Integer ruleValue = 0;
-
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		RuleResDTO ruleResDTO = null;
-
-		ruleReqDTO.setRuleType(RuleType);
-		RuleResDTO rules = ruleSO.getRuleValueByRuleType(ruleReqDTO);
-
-		if (rules.getRulevalue() != null) {
-			ruleValue = Integer.parseInt(rules.getRulevalue());
-		}
-		return ruleValue;
-	}
-	// 29961 - end
 }
