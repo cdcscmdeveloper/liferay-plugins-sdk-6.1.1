@@ -1679,7 +1679,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.panelSuppliers = panelSuppliers;
 	}
 
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151,#38679
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
@@ -11809,7 +11809,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #28188 - End
 
-	//#38151
+	//#38151,#38679
 	public boolean isWeightage35384WIP() {
 		return weightage35384WIP;
 	}
@@ -11817,5 +11817,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151
+	//#38151,#38679
 }
