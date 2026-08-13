@@ -516,7 +516,7 @@ public interface QTConstants {
 			
 	// 25791-End
 	
-	//#38151
+	//#38151 & #38679
 	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
 	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
