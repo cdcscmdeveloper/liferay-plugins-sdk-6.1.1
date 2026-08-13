@@ -43,7 +43,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean; // #25037
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
-import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151,#38679
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -319,14 +319,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String selectedSupplierOfferedPrice;
 	// #35320 - End
 	
-	//#38151 start
+	//#38151,#38679 start
 	private List<WeightageScoreBean> weightageScoreBeans;
 	private Long overallTechnicalRecommendationPercent;
 	private Long overallFinancialRecommendationPercent;
 	private List<ScQtScoreSetting> scoreSettings;
 	private boolean WeightageReq;
 	private boolean weightage35384WIP;
-	//#38151 end
+	//#38151,#38679 end
 	
 	/**
 	 * @return the activeIndex
@@ -2584,7 +2584,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
 	}// #35320 - End
 	
-	//#38151 - Start
+	//#38151,#38679 - Start
 	public List<WeightageScoreBean> getWeightageScoreBeans() {
 		return weightageScoreBeans;
 	}
@@ -2632,5 +2632,5 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - End
+	//#38151,#38679 - End
 }

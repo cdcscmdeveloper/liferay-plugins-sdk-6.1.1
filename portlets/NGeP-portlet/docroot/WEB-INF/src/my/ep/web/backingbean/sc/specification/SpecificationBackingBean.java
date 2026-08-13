@@ -8206,7 +8206,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
-//			#38151 wip
+//			#38151,#38679 wip
 			if (this.getManagedBean().isWeightage35384WIP()) {
 				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 				if (null != passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
