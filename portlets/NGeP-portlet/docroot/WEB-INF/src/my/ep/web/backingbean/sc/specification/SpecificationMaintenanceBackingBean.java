@@ -676,10 +676,10 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		// #10141 Start Vinod
-		boolean isReadOnly = this.getManagedBean().isReadOnly();
-		if (!isReadOnly
+		// BUG #40852 WIP QT - Confirmation box not displayed upon clicking pencil Icon
+		if (isEditable
 				&& QTStatusConst.getQTSpecMaintenanceInactiveChecklistUpdateGroup().contains(
-						this.getManagedBean().getCurrentStatusId())) {
+						scQt.getQtStatus().getStatusId())) {
 			boolean isInactiveChecklistPopup = specBB.checkInactiveChecklistForPopup(this.getManagedBean()
 					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
 
