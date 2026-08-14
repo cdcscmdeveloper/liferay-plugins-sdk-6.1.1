@@ -322,13 +322,13 @@ a:hover.blue_font {
 						size="35" label="#{lbl['lbl.sc.procurment.type.category']}"
 						disabled="true" /></td>
 				<td style="width: 155px;">
-					<p:outputLabel value="#{lbl['lbl.sc.reason']}" rendered="#{isDocTypePurchaseRequest}" />
+					<p:outputLabel value="#{lbl['lbl.sc.reason']}" rendered="#{isDocTypePurchaseRequest and not empty lOADetailBackingBean.getReasonDescPurchaseRequest()}" />
 				</td>
 				<td>
 					<p:inputText id="reasonTxt"
 						value="#{lOADetailBackingBean.getReasonDescPurchaseRequest()}"
 						size="35" disabled="true"
-						rendered="#{isDocTypePurchaseRequest}" />
+						rendered="#{isDocTypePurchaseRequest and not empty lOADetailBackingBean.getReasonDescPurchaseRequest()}" />
 				</td>
 				<ui:remove> #27868 end </ui:remove>
 			</tr>

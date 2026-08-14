@@ -50,7 +50,7 @@
 	</p:column>
 	<ui:remove>#29187 End Vinod</ui:remove>
 	<!-- #33859 - end -->
-	<!-- #38151 add isWeightageWipP2-->
+	<!-- #38151,#38679 add isWeightageWipP2-->
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:60px; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" 
 		rendered="#{isHasWeightage and isWeightageWipP2}">
 		</p:column>
@@ -58,14 +58,14 @@
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}" rendered="#{isScoringReq}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.system.score']}"/>
-			<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}"  rendered="#{isSpecTypeTechnical and isHasWeightage and !isWeightageWipP2}"/> <!-- #38151 -->				
+			<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}"  rendered="#{isSpecTypeTechnical and isHasWeightage and !isWeightageWipP2}"/> <!-- #38151,#38679 -->				
 		</f:facet>
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}" rendered="#{isScoringReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
-			<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}"  rendered="#{isSpecTypeTechnical and isHasWeightage and !isWeightageWipP2}"/> <!-- #38151 -->				
+			<ac:iconTooltip value="#{lbl['lbl.sc.tec.score.tooltip']}"  rendered="#{isSpecTypeTechnical and isHasWeightage and !isWeightageWipP2}"/> <!-- #38151,#38679 -->				
 		</f:facet>
 		</p:column>
 		<ui:remove>#29187 Start Vinod</ui:remove>
