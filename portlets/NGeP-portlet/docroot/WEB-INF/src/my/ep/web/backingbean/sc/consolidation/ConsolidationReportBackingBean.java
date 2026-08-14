@@ -527,6 +527,8 @@ public class ConsolidationReportBackingBean extends
 
 		if (!SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReport.getTitle())) {
 			docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+		} else {
+			reportAttachment.setTempFileName("");
 		}
 		// #28784 - End
        //codes fixed related to 25619 issue.
