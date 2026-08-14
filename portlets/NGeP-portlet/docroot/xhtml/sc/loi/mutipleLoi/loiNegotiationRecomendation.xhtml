@@ -129,10 +129,10 @@
 								</h:outputText>
 							</p:column>
 
-							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
+							<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
 							<p:column headerText="#{lbl['lbl.sc.mloi.overall.score']}"
 								style="text-align: right;">
-								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
+								<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
 								<p:commandLink action ="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId, null)}" 
 	 											  rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}" process="@this" update="@([id$=SuppScoreDetailsPopupId])" styleClass="commandLink" >
 							
@@ -147,7 +147,7 @@
 										pattern="#{CommonUtils.getDisplayNumberFormat(
 																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 								</h:outputText>
-								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
+								<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.ranking']}"
@@ -369,8 +369,8 @@
 								</ui:repeat>
 							</p:column>
 
-							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
-						    <!-- #38151 update label-->
+							<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
+						    <!-- #38151,#38679 update label-->
 							<p:column headerText="#{lbl['lbl.sc.total.overall.score']}"
 								style="text-align: right;">
 							<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
@@ -404,7 +404,7 @@
 										rendered="#{lOIDetailBackingBean.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}" />
 								
 							</p:column>
-							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
+							<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
 
 							<p:column headerText="#{lbl['lbl.sc.ranking']}" style="text-align: center;">
 								<ui:repeat var="recommendedSuppl"
@@ -926,7 +926,7 @@
 		readonly="#{lOIDetailBackingBean.managedBean.readOnly}" />
 
 	<ui:remove>
-		<!-- #38151 datatable value popup-->
+		<!-- #38151,#38679 datatable value popup-->
 		<!-- start -->
 	</ui:remove>
 	<p:dialog id="SuppScoreDetailsPopupId"
@@ -958,13 +958,13 @@
 					<p:column colspan="1">
 						<f:facet name="header">
 							<h:outputText
-								value="#{lbl['lbl.sc.eval.tec.score.popup']}(#{lOIDetailBackingBean.managedBean.overallTechnicalRecommendationPercent})" />
+								value="#{lbl['lbl.sc.eval.tec.score.popup']}(#{lOIDetailBackingBean.managedBean.overallTechnicalRecommendationPercent}%)" />
 						</f:facet>
 					</p:column>
 					<p:column colspan="1">
 						<f:facet name="header">
 							<h:outputText
-								value="#{lbl['lbl.sc.eval.fin.score.popup']}(#{lOIDetailBackingBean.managedBean.overallFinancialRecommendationPercent})" />
+								value="#{lbl['lbl.sc.eval.fin.score.popup']}(#{lOIDetailBackingBean.managedBean.overallFinancialRecommendationPercent}%)" />
 						</f:facet>
 					</p:column>
 				</p:row>
@@ -997,7 +997,7 @@
 		</p:dataTable>
 	</p:dialog>
 	<ui:remove>
-		<!-- #38151 datatable value popup-->
+		<!-- #38151,#38679 datatable value popup-->
 		<!-- end -->
 	</ui:remove>
 </ui:composition>

@@ -726,7 +726,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	// 29661 -end-
 	
 	private boolean comingFromNextButton;//#38151
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151 & #38679
 	
 	// #25651 - Start
 	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
@@ -4843,7 +4843,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	// 29661 -end-
 	
-	//#38151 - start
+	//#38151 & #38679 - start
 	/**
 	 * @return the flag from nextbutton
 	 */
@@ -4865,7 +4865,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - end
+	//#38151 & #38679 - end
 
 	public String getMaxItemAllOtherElementsScoreLabel() {
 		return maxItemAllOtherElementsScoreLabel;
