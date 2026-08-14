@@ -11,6 +11,9 @@
 		<cc:attribute name="section" required="true"/>
 		<cc:attribute name="tabNo" required="true"/>
 		<cc:attribute name="label" required="true"/>
+		<!-- 36504 - START -->
+		<cc:attribute name="poEdit" default="false" />
+		<cc:attribute name="appEdit" default="false" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -21,6 +24,11 @@
 				style="vertical-align:top !important;" />&#160;
 			<h:outputText value="S" rendered="#{cc.attrs.suppEdit}" 
 				title="#{lbl['tt.sm.edit.by.supp']}" style="color:red !important;"/>
+			<h:outputText value="P" rendered="#{cc.attrs.poEdit}"
+				title="#{lbl['tt.sm.edit.by.po']}" style="color:red !important;"/>
+			<h:outputText value="A" rendered="#{cc.attrs.appEdit}" 
+				title="#{lbl['tt.sm.edit.by.app']}" style="color:red !important;"/>
+			<!-- 36504 - END -->
 		</p:commandLink>
 	</cc:implementation>
 
