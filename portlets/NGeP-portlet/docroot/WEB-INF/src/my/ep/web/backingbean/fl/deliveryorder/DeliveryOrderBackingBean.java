@@ -231,6 +231,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reValidateRetrieveDelAmt();
 			}
 			
+			//40793-start
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				validatePOCOCurrentStatus(action, getManagedBean().getFlDeliveryOrder().getDeliveryOrderId());
+			}
+			//40793-end
+						
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			reqDTO.setSupplier(hasSupplierRole());
@@ -2322,4 +2328,35 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 	}
 	// #34443 end
+	
+	//40793-start
+	/**
+	 * validate current POCO work flow status
+	 * 
+	 * @param action
+	 * @param deliveryOrderId
+	 * @throws EpException
+	 *             if not allow to proceed
+	 * 
+	 */
+	private void validatePOCOCurrentStatus(String action, Long deliveryOrderId) {
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlOrderId(getManagedBean().getFlDeliveryOrder().getFlRequest().getFlFulfilmentOrder()
+				.getFulfilmentOrderId());
+		reqDTO.setDocType(getManagedBean().getFlDeliveryOrder().getFlRequest().getFlFulfilmentOrder().getDocType());
+		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+		reqDTO.setActionCode(action);
+		reqDTO.setDeliveryOrderId(deliveryOrderId);
+
+		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
+
+		Boolean allowToProceed = resDTO.isFlag();
+		if (!allowToProceed) {
+			throw new EpException(MessageConst.ERROR_740069);
+		}
+	}
+	//40793-end
 }

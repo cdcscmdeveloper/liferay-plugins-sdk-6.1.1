@@ -71,6 +71,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -97,6 +98,8 @@ import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;//#38151
 import my.ep.dto.sc.quationtender.SpecificationResDTO;//#38151
+import my.ep.dto.sc.quationtender.SuppFinalJustificationReqDTO;
+import my.ep.dto.sc.quationtender.SuppFinalJustificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -140,6 +143,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalJustification;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRecommendationRemarks;
@@ -193,6 +197,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
@@ -532,6 +537,12 @@ public class SupplierFinalizationBackingBean extends
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
 		scQt = qtBackingBean.getManagedBean().getQt();	
 		boolean isBpkCentralContract = isBpkCentralContract(scQt);
+		//#27502 - New DO MOF Role and Process - Start
+		if (isBpkCentralContract){
+			getManagedBean().setCommitteeType(ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCES);	
+			loadRecordTabDetails();
+		}
+		//#27502 - New DO MOF Role and Process - end
 		// #27502 -- END
 		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -752,6 +763,15 @@ public class SupplierFinalizationBackingBean extends
 		}
 		this.getManagedBean().setJustification(
 				scQtFinalization.getJustification());
+		//#34860 start
+		List<String> justificationReasonList = new ArrayList<>();
+		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
+				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
+		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList){
+			justificationReasonList.add(finalJustification.getJustification(). getReasonCode());
+		}
+		this.getManagedBean().setJustificationReasonList(justificationReasonList);
+		//#34860 end
 		decisionEvent(null);
 		//#26169 #38 - START Added by Haidah
 		validateFCByDataTypeRule();
@@ -1010,30 +1030,61 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getEndorsementReportActiveIndex());
 		
-		PmReason justificationParam = this.getManagedBean().getJustification();
-		if (justificationParam == null) {
-			this.getManagedBean().setJustification(new PmReason());
-		} else {
-			if (justificationParam.getReasonId() != null
-					&& JUSTIFICATION_OTHERS.equalsIgnoreCase(justificationParam.getReasonCode())) {
+		//#34860 Start
+		List<ScQtFinalJustification> finalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
+				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
+		for (ScQtFinalJustification finalJustification: finalJustificationList){
+			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(finalJustification.getJustification().getReasonCode())){
 				this.getManagedBean().setRenderjustificationTextbox(true);
+				this.getManagedBean().setJustificationText(finalJustification.getJustificationText());
 			}
 		}
+		//#34860 End
+		
 		
 		// #28834 - Start.
 		setDisableSFJustification();
 		// #28834 - End.
 		
 		try {
+			//#34860 Start
 			this.getManagedBean()
-					.setJustDropdown(
-							getReasonCodeDropdownValues(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION
-									.value()));
+			.setJustDropdown(
+					getReasonCodeCheckboxValues(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION
+							.value()));
+			//#34860 End
 			//getSuppFinalizationEndorsementReportStreamContent();
 		} catch (Exception e) {
 			log.error(e);
 		}
-	}	
+	}
+	
+	//#34860 Start
+	/**
+	 * #34860
+	 * Populate values for Reason Check Box base on reason category code
+	 * @param categoryCode
+	 *            the reason category code
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getReasonCodeCheckboxValues(String categoryCode) {
+		SelectItem[] items = null;
+		try {
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(categoryCode);
+
+			items = new SelectItem[reasonDescs.size()];
+			int i = 0;
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return items;
+	}
+	//#34860 End
 	
 	// #28834 - Start.
 	private void setDisableSFJustification() {
@@ -1075,11 +1126,13 @@ public class SupplierFinalizationBackingBean extends
 
 		PmAuthority authority = this.getManagedBean().getApprovalAuthority();
 		List<PmAuthorityCommittee> newComList = new ArrayList<>();
+		
 		if (authority != null && authority.getAuthId() != null) {
 			AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
 			reqDTO.setAuthority(authority);
 
 			AuthorityCommitteeResDTO resDTO = approveAuthorityCommitteeSo.retrieveListApproveAuthority(reqDTO);
+			
 			if (resDTO.getListAuthorityCommittee() != null && !resDTO.getListAuthorityCommittee().isEmpty()) {
 				for (PmAuthorityCommittee committee : resDTO.getListAuthorityCommittee()) {
 					newComList.add(committee);
@@ -1099,33 +1152,144 @@ public class SupplierFinalizationBackingBean extends
 		if (this.getManagedBean().getApprovalAuthCommittee() == null) {
 			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
 		}
+		
 		this.getManagedBean().setListApprovalAuthCommittee(newComList);
 	}
 	// #27502 -end-
 
 	// #27502 -start-
-	public void changeCommApprovalAuth() {
-		log.info("start changeCommApprovalAuth");
-	}
+	/**
+	 * set ApprovalAuthCommittee
+	 */
+	public void changeCommApprovalAuth() {				
+		PmAuthorityCommittee authorityCommittee = this.getManagedBean().getApprovalAuthCommittee();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+
+		scQtFinalization.setAuthCommittee(authorityCommittee);
+    }
 	// #27502 -end-
 
-	// #27502 -start-
+	// #27502 -start-			
 	private void getListApprovalAuthority() {
 		// to retrieve Approval Authority
 		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
 
 		List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
-
+		this.getManagedBean().setListApprovalAuthority(resultComittee);
+		
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		
+		if (scQtFinalization.getAuthCommittee() != null ) {			
+			this.getManagedBean().setApprovalAuthCommittee(scQtFinalization.getAuthCommittee());
+			
+			PmAuthority pmAuthority = scQtFinalization.getAuthCommittee().getPmAuthority();
+			this.getManagedBean().setApprovalAuthority(pmAuthority);
+			
+			changeApprovalAuth();
+		}
+		
 		if (this.getManagedBean().getApprovalAuthority() == null) {
 			this.getManagedBean().setApprovalAuthority(new PmAuthority());
 		}
-
-		this.getManagedBean().setListApprovalAuthority(resultComittee);
-
 	}
-	// #27502 - New DO MOF Role and Process - end
+	// #27502 -end-
 
+	// #27502 -start-	
+	/**
+	 * Populate informations for record tab.
+	 */
+	public void loadRecordTabDetails() {		
+		Long qtId = getManagedBean().getScQt().getQtId();
+		String committeeType = getManagedBean().getCommitteeType();
+		
+		if (StringUtils.isNotBlank(committeeType)) {
+			retrieveRecordDtls(qtId, committeeType);
+		}
+		
+		getListApprovalAuthority();
+	}
+	// #27502 -end-
+
+	// #27502 -start-	
+	private void retrieveRecordDtls(Long qtId, String committeeType) {
+		IQTMeetingSO meetingSO = null;
+		
+		try {
+			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTMeetingSO.class);
+			MeetingReqDTO reqDTO = new MeetingReqDTO();
+			reqDTO.setQtId(qtId);
+			reqDTO.setCommitteType(committeeType);
+
+			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				// Meeting Details
+				List<ScQtMeeting> meetingList = resDTO.getMeetingDtls();
+				
+				if (CollectionUtils.isNotEmpty(meetingList)) {
+					for (ScQtMeeting scQtMeeting : meetingList) {
+						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting.getMeetingStatus()
+								.getStatusId() : null;
+						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+						
+						SimpleDateFormat hourFormat = new SimpleDateFormat(CommonConstants.DEFAULT_HOUR_FORMAT);
+						SimpleDateFormat minuteFormat = new SimpleDateFormat(CommonConstants.DEFAULT_MINUTE_FORMAT);
+						SimpleDateFormat Date = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						
+						scQtMeeting.setMeetDateStr(getDateValues(hourFormat.format(scQtMeeting.getMeetingDate())));
+						scQtMeeting.setMeetTimeStr(getDateValues(minuteFormat.format(scQtMeeting.getMeetingDate())));
+						scQtMeeting.setMetingDate(scQtMeeting.getMeetingDate());
+						
+						if (scQtMeeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)) {
+							this.getManagedBean().setHasPreviousMeeting(true);
+						}
+					}
+				}
+				
+				this.getManagedBean().setMeetingList(meetingList);
+				
+				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
+				this.getManagedBean().setScQtCommittee(scQtCommittee);
+			}
+			
+		} finally {
+			meetingSO = null;
+		}
+	}
+	// #27502 -end-
+
+	// #27502 -start-
+	private ScQtCommittee recordDtlsInfo() {
+
+		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
+		if (scQtCommittee != null) {
+			setUserDetails(scQtCommittee);
+
+			// Meeting Details
+			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+			if (CollectionUtils.isNotEmpty(meetingList)) {
+				List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+
+				for (ScQtMeeting meeting : meetingList) {
+					if (null != meeting.getMeetingDate()) {
+						compareMeetingDates(meeting, localMeetingList);
+					} else {
+						throw new EpException(MessageConst.ERROR_760418);
+					}
+				}
+				scQtCommittee.setScQtMeetings(meetingList);
+			}
+
+			List<ScQtCommitteRemarks> remarksList = finalizeRemarks(this.getManagedBean().getCommitteeRemarkList());
+			scQtCommittee.setQtCommitteRemarks(remarksList);	
+		}
+
+		return scQtCommittee;
+	}
+	//#27502 - New DO MOF Role and Process - end
+	
 	private void retrievePreparationDtls(Long qtId, String committeeType) {
 		log.info("..In retrievePreparationDtls()..");
 		IQTMeetingSO meetingSO = null;
@@ -1320,7 +1484,8 @@ public class SupplierFinalizationBackingBean extends
 			 //20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
 			if (this.getManagedBean().isBpkCentralContract()){
 				meeting.setMeetingStatusStr(QTStatusConst.MS_DONE);
-			    meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_DONE));			    
+			    meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_DONE));	
+			    meeting.setMeetingLocation(TemplateDocConst.PARAM_SPACE);
 			}else{
 				meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
 			}
@@ -1763,15 +1928,19 @@ public class SupplierFinalizationBackingBean extends
 			//6906 - note 117 - end
 			SuppFinalizationReqDTO reqDTO = null;
 			ScQtCommittee scQtCommittee = null;
-			
-			//#27502 -Start
-			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+
+			// #27502 -Start
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();			
 			scQt = qtBackingBean.getManagedBean().getQt();
+			
+			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+			
 			boolean isBpkCentralContract = isBpkCentralContract(scQt);
-			if (isBpkCentralContract) {			
+			
+			if (isBpkCentralContract) {	
+				scQtCommittee = recordDtlsInfo();
 				reqDTO = validateInfo(2, skipValidation);
-			} else {	//#27502 - END		
+			} else {	// #27502 - END		
 				// Save Preparation and Supplier finalization tab(s) data
 				
 				if (activeIndex == 0 && !getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -1830,9 +1999,10 @@ public class SupplierFinalizationBackingBean extends
 								&& !getManagedBean().isDisableJustifications()
 								// #28834 - End.
 								) {
-					if ((this.getManagedBean().getJustification() == null
-							|| this.getManagedBean().getJustification()
-									.getReasonId() == null) && this.getManagedBean().isSubmit()) {//#35205 & #28834
+					//#34860 start					
+					if (CollectionUtils.isEmpty(this.getManagedBean().getJustificationReasonList())
+							 && this.getManagedBean().isSubmit()){	//#34860 end					
+					
 						navigateToEndorsementReportTab();
 						throw new EpException(MessageConst.ERROR_100061,
 								new String[] { ResourceBundleUtils.getMessage(
@@ -1891,6 +2061,7 @@ public class SupplierFinalizationBackingBean extends
 //			}
 			
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
+			
 			prepareUpdateCommitteeMember();// 25037
 			// #28834 - Start.
 			checkDisableBfButtonAfterValidation();
@@ -1917,11 +2088,12 @@ public class SupplierFinalizationBackingBean extends
 	 * Allow save data for justification dropdown is empty to null value       
 	 */
 	public void setNullSelectionForJustification(SuppFinalizationReqDTO reqDTO){
-		if(this.getManagedBean().getJustification() != null
-				&& this.getManagedBean().getJustification().getReasonId() == null 
-				&& !this.getManagedBean().isSubmit()){
+		//#34860 commented to make null for justification_id in SC_QT_FINALIZATION
+//		if(this.getManagedBean().getJustification() != null 
+//				&& this.getManagedBean().getJustification().getReasonId() == null 
+//				&& !this.getManagedBean().isSubmit()){
 			reqDTO.getScQtFinalization().setJustification(null);
-		}
+//		}//#34860 commented to make null for justification_id in SC_QT_FINALIZATION
 	}
 	//#35205 & #28834 - End
 	
@@ -2302,7 +2474,7 @@ public class SupplierFinalizationBackingBean extends
 		Boolean isInitialSelectionItemized = 
 				this.getManagedBean().isInitialSelectionItemized();
 		boolean isRenderjustificationTextbox = this.getManagedBean().isRenderjustificationTextbox();
-		
+		String justificationText = this.getManagedBean().getJustificationText(); //#34860
 		renewSesionObject();
 
 		getManagedBean().setCommitteeType(committeeType);
@@ -2317,6 +2489,7 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setInitialSelectionItemized(
 						   isInitialSelectionItemized);
 		getManagedBean().setRenderjustificationTextbox(isRenderjustificationTextbox);
+		getManagedBean().setJustificationText(justificationText); //#34860
 		
 		loadInitialData(qtId);
 		// #18685 - Start.
@@ -2804,6 +2977,14 @@ public class SupplierFinalizationBackingBean extends
 		log.info("submitSuppFinalization");
 		String outcome = this.getManagedBean().getOutcome();
 		this.getManagedBean().setAction(outcome);
+		//#34860 Start
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+			List<String> selectedJustificationList = this.getManagedBean().getJustificationReasonList();
+			if (CollectionUtils.isEmpty(selectedJustificationList)) {
+				throw new EpException(MessageConst.ERR_760832);
+			}
+		}
+		//#34860 End
 		//#21692 - Start
 		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
 			checkSupplierAwardedRejectValidityExtension();
@@ -2979,7 +3160,16 @@ public class SupplierFinalizationBackingBean extends
 			if (createNewBP) {
 				addBriefingPaper(scQtFinalization);
 			}
+			// updateBPMTask(outcome, null, reqDTO); // #34860 remove
+			//34860 start
+			if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
+				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				saveQtFinalJustification(qtSuppFinalizationSO);
+			}				
 			updateBPMTask(outcome, null, reqDTO);
+			//34860 end
 			// 38523 - refactor code - end
 			// 38523 - indenting codes - end
 		}
@@ -3959,12 +4149,53 @@ return	remarksNotFound;
 						
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.saveSupplierFinalization(reqDTO);
+			//#34860 start
+			String outcome = this.getManagedBean().getOutcome();
+			if (BpmOutcomeConst.BPM_SAVE.equals(outcome)){
+				saveQtFinalJustification(qtSuppFinalizationSO);
+			}					
+			//#34860 end
+			
 			reloadData(resDTO);				
-			this.evaluateDecisionList();//6906 note 117
+			this.evaluateDecisionList();//6906 note 117			
+			
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
+
+	//#34860 Start
+	/**
+	 * #34860
+	 * save into ScQtFinalJustification
+	 * @param qtSuppFinalizationSO
+	 */
+	public void saveQtFinalJustification(IQTSuppFinalizationSO qtSuppFinalizationSO){
+		List<String> reasonIdList = this.getManagedBean().getJustificationReasonList();
+		List<ScQtFinalJustification> finalJustificationList = new ArrayList<ScQtFinalJustification>();
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		Long qtFinalizationId = this.getManagedBean().getScQtFinalization().getFinalizationId();
+		
+		for(String reasonCode : reasonIdList){
+			PmReason pmReason = getReasonByCategoryAndCode(
+					ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(), reasonCode);
+			
+			ScQtFinalJustification finalJustification = new ScQtFinalJustification();
+		    finalJustification.setScQt(this.getManagedBean().getScQt());                 
+		    finalJustification.setQtFinalizationId(qtFinalizationId);
+		    finalJustification.setJustification(pmReason);    
+		    if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reasonCode)){
+		    	finalJustification.setJustificationText(this.getManagedBean().getJustificationText());
+		    }	    
+		    
+		    finalJustificationList.add(finalJustification);
+		}	
+		this.getManagedBean().setFinalJustificationList(finalJustificationList);
+		SuppFinalJustificationReqDTO finalJustificationReqDTO = new SuppFinalJustificationReqDTO();
+		finalJustificationReqDTO.setScQt(this.getManagedBean().getScQt());
+		finalJustificationReqDTO.setFinalJustificationList(this.getManagedBean().getFinalJustificationList());
+		qtSuppFinalizationSO.saveJustificationList(finalJustificationReqDTO);
+	}//#34860 End
 
 	private void updateBPMTask(String outcome, PmDigiSign digiSign, SuppFinalizationReqDTO reqDTO) {
 		log.info("updateBPMTask");
@@ -4643,7 +4874,6 @@ return	remarksNotFound;
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
-		List<ScAttachment> attachments = new ArrayList<>(); //#25651
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getDocumentList());
@@ -4668,29 +4898,10 @@ return	remarksNotFound;
 				}
 			}
 		}
-		
-		//#25651 - Start
-		attachments.addAll(scAttachments);
-		List<Object[]> reportDetailList = reportDetailAttachmentType();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
-			for(ScQtFinalizationReportDetail finalizationreport:scQtFinalizationReportDetail){
-				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport.getDefinationType().getParameterCode())){
-					for (Object[] reportDetail : reportDetailList) {
-						String codeReportName = (String) reportDetail[0];
-						String fileReportName = (String) reportDetail[1];
-					    if(codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())){
-					    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
-					    }
-					}
-				}
-			}
-		}
-		//#25651 - Start
 
 		// Generate all the reports before submission
-		if (!skipDownload) { // 38523
-			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
+		if (!skipDownload) {
+			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
 	}
@@ -4927,7 +5138,7 @@ return	remarksNotFound;
 		// #18685 - Start
 		paramMap.put("flowType", "tasklist");
 		// #18685 - End
-		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
+		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);
 	}
 
 	private void generateEndorsementReportFromVelocityToPdf(
@@ -5392,7 +5603,19 @@ return	remarksNotFound;
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveSupplierFinalizationDtls(reqDTO);
 			ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
-
+			
+			//#34860 start
+			SuppFinalJustificationReqDTO justificationReqDTO = new SuppFinalJustificationReqDTO();
+			
+			justificationReqDTO.setScQt(scQt);
+			SuppFinalJustificationResDTO justificationResDTO = qtSuppFinalizationSO.retrieveSupplierFinalJustification(justificationReqDTO);
+			
+			List<ScQtFinalJustification> finalJustificationList = justificationResDTO.getFinalJustificationList();
+			if (CollectionUtils.isNotEmpty(finalJustificationList)){
+				this.getManagedBean().setFinalJustificationList(finalJustificationList);
+			}
+			//#34860 end			
+			
 			if (CollectionUtils.isNotEmpty(zoneDetails)
 					&& this.getManagedBean().getCurrentZone() == null) {
 				this.getManagedBean().setCurrentZone(zoneDetails.get(0));
@@ -7306,7 +7529,7 @@ return	remarksNotFound;
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (1)) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (1) + "}]); ");
           mainMenuModel.addMenuItem(menuItem);
          
           
@@ -7319,7 +7542,7 @@ return	remarksNotFound;
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (2)) + "}]); ");//#27502 - New DO MOF Role and Process
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (2) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
           // Supplier Finalization Menu Item
@@ -7331,7 +7554,7 @@ return	remarksNotFound;
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 3 : (3)) + "}]); ");//#27502 - New DO MOF Role and Process
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (3) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
           menuItem = new MenuItem();
@@ -7783,8 +8006,7 @@ return	remarksNotFound;
 				if (!qtRefinalized) {
 					scQtFinalization.setOnlineBiddingEndorse(null);
 				}
-				this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
-				this.getManagedBean().setSingleAward(true);
+				checkForMLOI(finalizationMethodStr);//#40396
 			} else {
 				this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
 				scQtFinalization.setOnlineBiddingEndorse(null);
@@ -10406,25 +10628,38 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 */
 	public void justificationChange(AjaxBehaviorEvent event) {
 		log.info("justificationChange");
-		String reasonCode = (String) event.getComponent().getAttributes()
-				.get("value");
-		this.getManagedBean().setRenderjustificationTextbox(false);
-		PmReason reason = getReasonByCategoryAndCode(
-				ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(), reasonCode);
-		//Bug #29707 - start
-		if (reason == null) {
-			this.getManagedBean().getScQtFinalization().setJustification(new PmReason());
-			this.getManagedBean().setJustification(new PmReason());
-		} else {
-			this.getManagedBean().getScQtFinalization().setJustification(reason);
-			this.getManagedBean().setJustification(reason);
-			if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reason.getReasonCode())) {
-				this.getManagedBean().setRenderjustificationTextbox(true);
+		//#34860 start
+		List<String> values = this.getManagedBean().getJustificationReasonList();
+		boolean hasOthers = false;
+		//#34860 End
+		for (String reasonCode : values){
+			this.getManagedBean().setRenderjustificationTextbox(false);
+			PmReason reason = getReasonByCategoryAndCode(
+					ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(), reasonCode);
+			//Bug #29707 - start
+			//#34860 Start
+			if (reason == null) {
+				this.getManagedBean().getScQtFinalization().setJustification(new PmReason());
+				this.getManagedBean().setJustification(new PmReason());
 			} else {
-				this.getManagedBean().getScQtFinalization().setJustificationText(null);
+				this.getManagedBean().getScQtFinalization().setJustification(reason);
+				this.getManagedBean().setJustification(reason);
+				if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reasonCode)) {//#36840
+					this.getManagedBean().setRenderjustificationTextbox(true);
+					// #36840 -start-
+					hasOthers = true;
+					break;
+					// #36840 -end-
+				} //#34860 End
 			}
+			//Bug #29707 - end
 		}
-		//Bug #29707 - end
+		//#34860 Start
+		if (!hasOthers) {
+			this.getManagedBean().setRenderjustificationTextbox(false);
+		    this.getManagedBean().setJustificationText(null);
+		}
+		//#34860 End
 	}
 	
 	/**
@@ -12627,7 +12862,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				boolean meetingStatusAndDate = null != meeting.getMeetingStatus()
 						&& null != meeting.getMeetingStatus().getStatusId()
 						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
-						&& meeting.getMeetingDate().before(proposalValidityEndDate);
+						&& null !=  meeting.getMeetingDate() && meeting.getMeetingDate().before(proposalValidityEndDate);//27502 - New DO MOF Role and Process
 				if ((this.getManagedBean().isSecretaryUser() && meetingStatusAndDate && meeting.getRecordStatusFlg()
 						.equals(DbValueConst.RECORD_STATUS_ACTIVE)) || meetingStatusAndDate) {
 					lessThanValidityEndDate = true;
@@ -13645,7 +13880,37 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	}
 	// #40396 - End
 
+	//#34860 Start
+	/**
+	 * #34860
+	 * Get the justification list
+	 * @param categoryCode
+	 * @return
+	 */
+	public List<PmReasonDesc> getJustificationList(String categoryCode) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		List<PmReasonDesc> reasonDescs = new ArrayList<PmReasonDesc>();
+		try {
+			reasonDescs = ReasonHelper.getInstance().getReasonDescList(categoryCode);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return reasonDescs;
+	}
+	//#34860 End
 	
-
+	//#40396 - Start
+	private void checkForMLOI(String finalizationMethodStr) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
+			this.getManagedBean().setMultipleLoi(true);
+		} else {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+			this.getManagedBean().setSingleAward(true);
+		}
+	}
+	//#40396 - End
 }
 // ***19336

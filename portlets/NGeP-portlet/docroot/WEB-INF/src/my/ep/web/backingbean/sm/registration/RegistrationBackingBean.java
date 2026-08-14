@@ -5831,15 +5831,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	//13320-end
 	
-	//14685 - START
-	public void showMessageToggle(){
-		if(this.getManagedBean().isShowMessage()){
-			this.getManagedBean().setShowMessage(false);
-		}else{
-			this.getManagedBean().setShowMessage(true);
-		}
-	}
-	//14685 - END
 	
 	//  #28720 - Start
 	public void onChangeEmail()

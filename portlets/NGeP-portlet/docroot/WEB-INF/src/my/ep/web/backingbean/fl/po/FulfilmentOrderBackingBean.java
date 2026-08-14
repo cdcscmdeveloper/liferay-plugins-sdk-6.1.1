@@ -458,6 +458,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			throw new EpException(MessageConst.ERROR_740046);
 		}
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			//40793-start
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				validatePOCOCurrentStatus(action);
+			}
+			//40793-end
+			
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
@@ -2997,4 +3003,32 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 	}
 	//31788
+
+	//40793-start
+	/**
+	 * validate current POCO work flow status
+	 * 
+	 * @param action
+	 * @throws EpException
+	 *             if not allow to proceed
+	 * 
+	 */
+	private void validatePOCOCurrentStatus(String action) {
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
+		reqDTO.setTaskDocType(getManagedBean().getFulfilmentOrder().getDocType());
+		reqDTO.setActionCode(action);
+
+		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
+
+		Boolean allowToProceed = resDTO.isFlag();
+		if (!allowToProceed) {
+			throw new EpException(MessageConst.ERROR_740069);
+		}
+	}
+	//40793-end
 }

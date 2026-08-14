@@ -19,6 +19,7 @@ import my.ep.constant.ct.ContractConst; //Fix - #34367
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
+import my.ep.persistence.entity.ct.circular.CtCircular;//Fix - #34367
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.VCcCt; //Fix - #30866
 import my.ep.persistence.entity.ct.circular.VCcDp; //Fix - #30866
@@ -76,6 +77,7 @@ public class CircularManagedBean extends BaseManagedBean {
 	// Start Fix - #34367
 	private Long userPTJProfile;
 	private boolean ptjOwner = false;
+	private boolean validateConstantRules = false;
 	// End Fix - #34367
 
 	private class CircularListingPagingDataModel extends PagingDataModel<CtCircularVer> {
@@ -151,23 +153,14 @@ public class CircularManagedBean extends BaseManagedBean {
 				reqDTO.setSearchCircularStatus(getSearchCircularStatus());
 
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-				CircularResDTO resDTO = null;
+				CircularResDTO resDTO;//Fix - #34367 - SonarLint compliance
 				if(isReadOnly()) {
 					resDTO = circularSO.searchLatestCircularVer(reqDTO);
 				} else {
 					resDTO = circularSO.searchCircularVer(reqDTO);
 				}
-				if(resDTO.isSuccessful()) {
-					//Start Fix - #34367
-					for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
-						if (circularVer.getCtCircular().getOwnerOrgProfile() != null
-								&& circularVer.getCtCircular().getCircularType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
-							if (circularVer.getCtCircular().getOwnerOrgProfile().getOrgProfileId().equals(userPTJProfile)) {
-								setPtjOwner(true);
-							}
-						}		 
-					}
-					//End Fix - #34367
+				if (resDTO.isSuccessful()) {
+					controlActionPanelCircularData(resDTO);//Fix - #34367
 					return resDTO.getCircularVerResultBean();
 				}
 			} catch (Exception e) {
@@ -176,6 +169,36 @@ public class CircularManagedBean extends BaseManagedBean {
 			}
 			return null;
 		}
+		// Start Fix - #34367 - SonarLint compliance
+		/**
+		 * Controls the action panel circular data based on the circular document type,
+		 * owner organization profile, and configured constant rules.
+		 * <p>
+		 * The PTJ owner flag is set to {@code true} when the circular is a panel
+		 * circular, the constant rules validation is successful, and the circular's
+		 * owner organization profile matches the current user's PTJ profile.
+		 * </p>
+		 *
+		 * @param resDTO
+		 *            the response data transfer object containing the circular version
+		 *            result list to be validated
+		 */
+		private void controlActionPanelCircularData(CircularResDTO resDTO) {
+		    for (CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+		        CtCircular circular = circularVer.getCtCircular();
+		        if (circular.getOwnerOrgProfile() == null) {
+		            continue;
+		        }
+		        boolean isUserPtjOwner = getUserPTJProfile() != null
+		                && circular.getOwnerOrgProfile().getOrgProfileId().equals(getUserPTJProfile());
+		        if (circular.getCircularType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)
+		                && isValidateConstantRules()
+		                && isUserPtjOwner) {
+		            setPtjOwner(true);
+		        }
+		    }
+		}
+		// End Fix - #34367 - SonarLint compliance
 	}
 	//Start - #30866
 	private class CircularCtListingPagingDataModel extends PagingDataModel<VCcCt> {
@@ -620,6 +643,14 @@ public class CircularManagedBean extends BaseManagedBean {
 	public void setUserPTJProfile(Long userPTJProfile) {
 		this.userPTJProfile = userPTJProfile;
 	}
+
+	public boolean isValidateConstantRules() {
+		
+		return validateConstantRules;
+	}
+
+	public void setValidateConstantRules(boolean validateConstantRules) {
+		this.validateConstantRules = validateConstantRules;
+	}
 	// End Fix - #34367
-	
 }
