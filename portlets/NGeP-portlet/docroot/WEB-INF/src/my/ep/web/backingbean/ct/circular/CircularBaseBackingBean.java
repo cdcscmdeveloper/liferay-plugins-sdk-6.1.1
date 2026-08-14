@@ -189,7 +189,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	}
 	//34442 - end
 
-	//Start Fix - #34367
+	//Start Fix - #34367 , #30737
 	
 	public PmOrgProfile getOwnerOrgProfile() {
 		return ownerOrgProfile;
@@ -198,7 +198,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	public void setOwnerOrgProfile(PmOrgProfile ownerOrgProfile) {
 		this.ownerOrgProfile = ownerOrgProfile;
 	}
-	//End Fix - #34367
+	//End Fix - #34367 , #30737
 	
 	//#30737 - Start
 	

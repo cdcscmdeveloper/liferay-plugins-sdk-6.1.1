@@ -598,11 +598,11 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
 			}
-			getPTJOwner();//Fix - #34367
+			getPTJOwner();//Fix - #34367 , #30737
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
 				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
+				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367 , #30737
 			}
 
 			//#30737 - start

@@ -787,11 +787,11 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
 			}
-			getPTJOwner();//Fix - #34367
+			getPTJOwner();//Fix - #34367 , #30737
 			if(circular==null){
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
-				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
+				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367 , #30737
 			}
 			
 			//#30737 - start
