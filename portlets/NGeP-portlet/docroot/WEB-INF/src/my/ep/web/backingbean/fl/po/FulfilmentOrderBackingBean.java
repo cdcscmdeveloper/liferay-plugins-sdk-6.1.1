@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.IFulfilmentYepSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -45,6 +46,9 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -88,6 +92,8 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.yep.FlYepTasklist;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -101,6 +107,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
@@ -331,6 +338,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					resDTO = fulfilmentOrderSO.saveAP58AL(AttachreqDTO);
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
+					if(getManagedBean().isAssignNewUser()) {
+						reqDTO.setAssignNewUser(Boolean.TRUE);
+						reqDTO.setNewUser(getManagedBean().getNewUser());
+					}
 					reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 					resDTO = fulfilmentOrderSO.proceedAP58(reqDTO);
 				}
@@ -387,11 +398,25 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_745016;
 				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				if (reqDTO.isAssignNewUser()) { // 31788 - acknowledge new assign user
+					messageId = MessageConst.INFO_700128;
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									messageId,
+									new String[] {
+											getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean()
+													.getFulfilmentOrder().getDocType()),
+											getManagedBean().getFulfilmentOrder().getDocNo(),
+											reqDTO.getNewUser().getUserName() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -2733,6 +2758,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		switch (action) {
 		case BpmOutcomeConst.BPM_AP58_PROCEED:
 			validateApprovalLetter();
+			validateUserYep();
 			dialogCommand = "ap58ProceedConfirmDlg.show()";
 			break;
 		case BpmOutcomeConst.BPM_CLOSE_MANUAL:
@@ -2740,6 +2766,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			dialogCommand = "closeManualConfirmDlg.show()";
 			break;
 		case BpmOutcomeConst.BPM_PROCEED:
+			validateUserYep();
 			dialogCommand = "cfProceedConfirmDlg.show()";
 			break;
 		case BpmOutcomeConst.BPM_CARRYFORWARD:
@@ -2832,4 +2859,142 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	}
 
 	// End - #36503
+	
+	// 31788
+	public void validateUserYep(){
+		IFulfilmentOrderSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		FlYepTasklist yepTask = fulfilmentRequestSO.getYepTaskListByDocId(getManagedBean().getFulfilmentOrder()
+				.getFulfilmentOrderId());
+
+		if (yepTask == null) {
+			return;
+		}
+
+		long statusId = yepTask.getStatusId();
+
+		if (statusId == FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL.longValue()) {
+
+			log.info("Task id: " + yepTask.getTaskId());
+
+			List<String> taskAssignee = fulfilmentRequestSO.getTaskAssigneesByTaskId(yepTask.getTaskId());
+
+			if (taskAssignee == null || taskAssignee.isEmpty()) {
+				return;
+			}
+			log.info("Assignee: " + taskAssignee.get(0));
+
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setLoginId(taskAssignee.get(0));
+			UserResDTO userResDTO = userSO.retrievePmUserByLoginId(userReqDTO);
+
+			if (userResDTO == null || userResDTO.getPmUser() == null) {
+				return;
+			}
+
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getFlRequest()
+					.getFulfilmentReqId());
+
+			userReqDTO.setUserId(userResDTO.getPmUser().getUserId());
+			userReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			userReqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+			userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+			userReqDTO.setNotify(Boolean.TRUE);
+			userReqDTO.setApprovalLimit(sumItemAmt);
+			userReqDTO.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
+			userReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+
+			UserResDTO validateUserStatus = userSO.validateUserAlt(userReqDTO);
+
+			if (validateUserStatus.getUserStatus().equals(2)) {
+				getManagedBean().setAssignNewUser(Boolean.TRUE);
+				UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
+				getManagedBean().setNewUser(availableUser.getPmUser());
+			} else if (validateUserStatus.getUserStatus().equals(0)) {
+				PmOrgProfile orgProfile = getManagedBean().getFlRequest().getPreparedOrgProfile();
+				throw new EpException(MessageConst.ERROR_700128,
+						new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
+								orgProfile.getOrgValidity().getOrgName() });
+			}
+
+		} else if (statusId == FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH.longValue()
+				|| statusId == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY.longValue()) {
+
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.value());
+			userReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+			if (userResDTO == null || userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()) {
+				userSO.sendNotifyToPtjAdminInactive(getManagedBean().getFlRequest().getPreparedOrgProfile()
+						.getOrgProfileId(), RoleCode.PAY_OFFICER.value(), getManagedBean().getFulfilmentOrder()
+						.getDocType(), getManagedBean().getFulfilmentOrder().getDocNo());
+
+				PmOrgProfile orgProfile = getManagedBean().getFlRequest().getPreparedOrgProfile();
+				throw new EpException(MessageConst.ERROR_700128,
+						new String[] { getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()),
+								orgProfile.getOrgValidity().getOrgName() });
+			}
+		} else if (statusId == FulfilmentStatusConst.CO_PENDING_INVOICE.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_INVOICE.longValue()) {
+			log.info("Task id: " + yepTask.getTaskId());
+
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			Object token = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.BPM_PRINCIPAL));
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setCtxToken(token);
+			bpmReqDTO.setTaskId(yepTask.getTaskId());
+			BpmResponseDTO bpmResDTO = bpmSO.getTaskDetails(bpmReqDTO);
+			log.info("Acquired By: " + bpmResDTO.getAcquiredBy());
+			
+			if(bpmResDTO.getAcquiredBy() == null) return;
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setLoginId(bpmResDTO.getAcquiredBy());
+			UserResDTO userResDTO = userSO.retrievePmUserByLoginId(userReqDTO);
+
+			if (userResDTO == null || userResDTO.getPmUser() == null) return;
+			
+			// THE PROBLEM HERE IS IF THE USER IS G2G
+			if(!userResDTO.getPmUser().getRecordStatusFlg().equals(1)){
+				SmSupplier supplier = getManagedBean().getFlRequest().getSmSupplier();
+				userReqDTO.setOrgProfileId(supplier.getSupplierId());
+				UserResDTO nextSupp = userSO.retrieveLatestLoggedInUserByOrgProfile(userReqDTO);
+				getManagedBean().setAssignNewUser(Boolean.TRUE);
+				getManagedBean().setNewUser(nextSupp.getPmUser());
+			}
+			
+		} else if (statusId == FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE.longValue()) {
+
+			List<String> taskAssignee = fulfilmentRequestSO.getTaskAssigneesByTaskId(yepTask.getTaskId());
+
+			if (taskAssignee == null || taskAssignee.isEmpty()) {
+				return;
+			}
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setLoginId(taskAssignee.get(0));
+			UserResDTO userResDTO = userSO.retrievePmUserByLoginId(userReqDTO);
+			
+			// THE PROBLEM HERE IS IF THE USER IS G2G
+			if(userResDTO.getPmUser().getRecordStatusFlg().equals(1)){
+				SmSupplier supplier = getManagedBean().getFlRequest().getSmSupplier();
+				userReqDTO.setOrgProfileId(supplier.getSupplierId());
+				UserResDTO nextSupp = userSO.retrieveLatestLoggedInUserByOrgProfile(userReqDTO);
+				getManagedBean().setAssignNewUser(Boolean.TRUE);
+				getManagedBean().setNewUser(nextSupp.getPmUser());
+			}
+		}
+	}
+	//31788
 }
