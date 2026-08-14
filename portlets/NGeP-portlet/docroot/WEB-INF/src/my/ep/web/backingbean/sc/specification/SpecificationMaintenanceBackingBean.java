@@ -684,6 +684,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
 
 			if (isInactiveChecklistPopup) {
+				this.getManagedBean().setPreRenderInactiveChecklist(true);
 				RequestContext.getCurrentInstance()
 				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
 				return;
@@ -882,7 +883,7 @@ public boolean isSpecCommittee() {
 	}
 	//29732 -End
 	
-	//#38151 Start
+	//#38151 & #38679 Start
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
@@ -904,9 +905,9 @@ public boolean isSpecCommittee() {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
-		//#38151 End
+		//#38151 & #38679 End
 	
-	//#38151 start
+	//#38151 & #38679 start
 	public boolean checkWeightage35384WIPbyStatus() {
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
@@ -920,6 +921,6 @@ public boolean isSpecCommittee() {
 		}
 		return Boolean.FALSE;
 	}
-	//#38151 end
+	//#38151 & #38679 end
 
 }
