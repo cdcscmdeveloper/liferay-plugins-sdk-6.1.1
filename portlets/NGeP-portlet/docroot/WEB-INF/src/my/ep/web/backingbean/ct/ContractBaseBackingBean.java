@@ -731,12 +731,16 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	  	        selectedUser.setUserRoleDesc(userRoleDesc);
   	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
   	  	        
+//  	  	        /**TEMP*/ selectedUser.setStatus(3L);
+  	  	        
   	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(resDto.getMemberRoleCode())) {
   	  	        	log.info("xoxoxoxoxoxo add as chairperson");
-  	  	        	selectedUser.setMemberRole("Chairperson");
+  	  	        	selectedUser.setMemberRole(ResourceBundleUtils.getMessage("lbl.ct.chairperson", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
   	  	        } else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(resDto.getMemberRoleCode())) {
   	  	        	log.info("xoxoxoxoxoxo add as member");
-  	  	        	selectedUser.setMemberRole("Member");
+  	  	        	selectedUser.setMemberRole(ResourceBundleUtils.getMessage("lbl.ct.member", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
   	  	        }
   	  	        selectedUsers.add(selectedUser);
   	  	    }

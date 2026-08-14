@@ -3292,8 +3292,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			log.info("xoxoxoxoxo action : SUBMIT(exclude Confirm FA Meeting) / ACKNOWLEDGE(exclude sign off) / APPROVE");
 			
-			boolean isApprovalReq = ctAmendment.getAmendmentLoa().isApprovalReq();
-	    	log.info("xoxoxoxoxoxo isApprovalReq : "+isApprovalReq);
+			boolean isApprovalReq = false;
+			if (ctAmendment.getAmendmentLoa() != null) {
+				isApprovalReq = ctAmendment.getAmendmentLoa().isApprovalReq();
+			}
 	    	
 		    List<SelectedInactiveUserDTO> selectedInactiveUsers = new ArrayList<>();
 		    
