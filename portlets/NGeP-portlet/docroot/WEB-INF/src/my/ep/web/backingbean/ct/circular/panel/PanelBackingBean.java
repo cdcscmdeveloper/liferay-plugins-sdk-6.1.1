@@ -969,10 +969,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
 
-						if(panelItem.getCtPanelZones().size()==0) {
+						if(panelItem.getCtPanelZones().size()==0) {//#40748
 							getManagedBean().setSelectedTabIndex(1);
 							throw new EpException(MessageConst.ERROR_100023, 
-									new String[]{ResourceBundleUtils.getMessage("lbl.ct.Zone", 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.zone", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						} else {
 							for (CtPanelZone panelZone: panelItem.getCtPanelZones()) {
