@@ -2249,7 +2249,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				paymentVO.setTotalAmount(paymentVO.getPrice());
 				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
 				// #RUU
-				additionalFee();
+				catCodeFee(false);
 
 				getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
 				getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
@@ -3412,7 +3412,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// 37925 END
 		// #RUU Start
 		if (getManagedBean().isSupplierUser() && outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) {
-			additionalFee();
+			catCodeFee(false);
 			getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
 			getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
 			getManagedBean().setGstPercentageLabels(
@@ -12161,9 +12161,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			log.info("<<< #30929: SmApplicationBackingBean.submitPOorApproverReviewToBPM() - finish >>>");
 			// #RUU Start
-			additionalFee();
+			catCodeFee(true);
 			if (null != getManagedBean().getPaymentDetailsVOList() && !getManagedBean().getPaymentDetailsVOList().isEmpty()) {
-				additionalPyBillDtls(reqDTO);
+				catCodePyBillDtls(reqDTO);
 			}
 			// #RUU End
 		} 
@@ -20128,11 +20128,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	// #40306 End
 	// #RUU Start
-	private void additionalFee() {
+	private void catCodeFee(boolean approveAction) {
 		List<SmPaymentDetailsVO> tempPaymentDetailsVOList = new ArrayList<>();
 		if (null != getManagedBean().getPaymentDetailsVOList() && !getManagedBean().getPaymentDetailsVOList().isEmpty()) {
 			for (SmPaymentDetailsVO currPaymentVO : getManagedBean().getPaymentDetailsVOList()) {
-				if (!currPaymentVO.isRecalculate()) {
+				if (!currPaymentVO.isCatCode()) {
 					tempPaymentDetailsVOList.add(currPaymentVO);
 				}
 			}
@@ -20143,10 +20143,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			List<SmSupplierCategory> normalCatCode = new ArrayList<>();
 			List<SmSupplierCategory> specialCatCode = new ArrayList<>();
 			for (SmSupplierCategory catCode : getManagedBean().getActiveCategoryList()) {
-				if (!catCode.isSpecialCategory()) {
-					normalCatCode.add(catCode);
-				} else if (catCode.isSpecialCategory()) {
-					specialCatCode.add(catCode);
+				if (approveAction) {
+					if (!catCode.isSpecialCategory() && catCode.isApprovedByAp()) {
+						normalCatCode.add(catCode);
+					} else if (catCode.isSpecialCategory() && catCode.isApprovedByAp()) {
+						specialCatCode.add(catCode);
+					}
+
+				} else {
+					if (!catCode.isSpecialCategory()) {
+						normalCatCode.add(catCode);
+					} else if (catCode.isSpecialCategory()) {
+						specialCatCode.add(catCode);
+					}
 				}
 			}
 			if (!normalCatCode.isEmpty() && normalCatCode.size() > 15) {
@@ -20155,7 +20164,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				paymentVO.setPrice(new BigDecimal(1000));
 				paymentVO.setQuantity(normalCatCode.size() - 15);
 				paymentVO.setTotalAmount(paymentVO.getPrice().multiply(BigDecimal.valueOf(paymentVO.getQuantity())));
-				paymentVO.setRecalculate(true);
+				paymentVO.setCatCode(true);
 				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
 			}
 			if (!specialCatCode.isEmpty()) {
@@ -20164,16 +20173,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				paymentVO.setPrice(new BigDecimal(1000));
 				paymentVO.setQuantity(specialCatCode.size());
 				paymentVO.setTotalAmount(paymentVO.getPrice().multiply(BigDecimal.valueOf(paymentVO.getQuantity())));
-				paymentVO.setRecalculate(true);
+				paymentVO.setCatCode(true);
 				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
 			}
 		}
 	}
 
-	private void additionalPyBillDtls(ReviewApplicationReqDTO reqDTO) {
+	private void catCodePyBillDtls(ReviewApplicationReqDTO reqDTO) {
 		reqDTO.setPyBillDtls(new ArrayList<PyBillDtl>());
 		for (SmPaymentDetailsVO paymentVO : getManagedBean().getPaymentDetailsVOList()) {
-			if (paymentVO.isRecalculate()) {
+			if (paymentVO.isCatCode()) {
 				PyBillDtl billDtl = new PyBillDtl();
 				PmParameter itemCode = new PmParameter();
 				itemCode = SmApplicationUtil.retrievePmParameterById(1L);
