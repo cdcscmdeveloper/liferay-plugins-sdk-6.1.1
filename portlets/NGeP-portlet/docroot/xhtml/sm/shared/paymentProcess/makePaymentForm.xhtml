@@ -53,9 +53,9 @@
 			
 			<p:column style="text-align:right !important;">
 				<ui:remove>#RUU Start</ui:remove>
-				<h:outputText rendered="#{itemLs.recalculate}"
+				<h:outputText rendered="#{itemLs.catCode}"
 					value="#{itemLs.quantity}" />
-				<h:outputText rendered="#{!itemLs.recalculate}" value="-" />
+				<h:outputText rendered="#{!itemLs.catCode}" value="-" />
 				<ui:remove>#RUU Start</ui:remove>
 			</p:column>
 			
