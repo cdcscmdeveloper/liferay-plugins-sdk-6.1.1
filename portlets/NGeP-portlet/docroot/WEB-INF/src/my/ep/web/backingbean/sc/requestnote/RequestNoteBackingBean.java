@@ -9198,55 +9198,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     inactiveUserReqDTO.setUserIds(requisitionerUserId.toString());
     inactiveUserReqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
     inactiveUserReqDTO.setDocNo(requestNote.getRequestNoteNo());
-    inactiveUserReqDTO.setUserRoleCode(isreq? RoleCode.REQUISITIONER.value(): ""); //to modify based on rolecode field in param
+    inactiveUserReqDTO.setUserRoleCode(isreq? RoleCode.REQUISITIONER.value(): nextUserRole); //to modify based on rolecode field in param
     inactiveUserReqDTO.setOrgProfileId(orgProfileId);
 
     InactiveUserResDTO inactiveUserResDTO = userSO.checkInactiveUserBySP(inactiveUserReqDTO);
     log.info("checkInactiveRequisitioner - nextUserRole: " + nextUserRole);
     log.info("rn checkInactiveRequisitioner - status: " + inactiveUserResDTO.getStatus()
             + ", message: " + inactiveUserResDTO.getMessage());
-    
-//    if(!"1".equals(inactiveUserResDTO.getStatus())){
-//    	
-//    	log.info("checkInactiveRequisitioner - LoginIds: " + inactiveUserResDTO.getLoginIds());
-//        log.info("checkInactiveRequisitioner - userIDs: " + inactiveUserResDTO.getUserIds());
-//
-//        nextUserIDActiveTrim = extractUserId(inactiveUserResDTO.getUserIds());
-//        log.info("checkInactiveRequisitioner - nextUserActiveTrim: " + nextUserIDActiveTrim);
-//        
-//        userDetail = getUserById(Long.parseLong(nextUserIDActiveTrim));
-//        log.info("checkInactiveRequisitioner - getUserName: " + userDetail.getUserName()); 
-//    }
-//    
-//    if ("5".equals(inactiveUserResDTO.getStatus())) {
-//     
-//    	PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(orgProfileId);
-//		String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-//        log.info("checkInactiveRequisitioner - ministryName");
-//
-//    	throw new EpException(MessageConst.ERROR_700128, new String[] {
-//				getParameterDesc(inactiveUserReqDTO.getUserRoleCode(), ministryName) });
-//    }
-//
-//	else{
-//	    
-//		String infoMsg = MessageUtils.getMessage(
-//        MessageConst.INFO_700128,
-//        new String[] {
-//            getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),
-//            inactiveUserReqDTO.getDocNo(),
-//            String.valueOf(userDetail.getUserName())
-//        },
-//        MessageUtils.BUNDLE_COMMON_MESSAGES,
-//        new FacesScopes().getUserLocale() );
-//
-//		log.info("INFO_700128 message = " + infoMsg);
-//
-//		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, infoMsg));
-//
-//log.info("Showing INFO_700128");
-//	 }
-    
+        
     return inactiveUserResDTO;
 	}
 
