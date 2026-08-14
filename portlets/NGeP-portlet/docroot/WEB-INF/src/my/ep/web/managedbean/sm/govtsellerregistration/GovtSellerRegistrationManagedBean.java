@@ -51,9 +51,6 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	private boolean showBranchPointOfContact;
 	private Long divisionIds;//13320
 	
-	//14685 - START
-	private boolean showMessage;
-	//14685 - END
 	
 	//#34319 - Start
 	private boolean cancelApp;
@@ -262,15 +259,6 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	public void setBranchCompanyDivisions(List<SelectItem> branchCompanyDivisions) {
 		this.branchCompanyDivisions = branchCompanyDivisions;
 	}
-	//14685 - START
-	public boolean isShowMessage() {
-		return showMessage;
-	}
-
-	public void setShowMessage(boolean showMessage) {
-		this.showMessage = showMessage;
-	}
-	//14685 - END
 
 	public boolean isCancelApp() {
 		return cancelApp;

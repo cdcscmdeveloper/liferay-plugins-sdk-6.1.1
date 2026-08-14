@@ -86,14 +86,14 @@ public class DecimalConverter extends NumberConverter {
 						minValue, maxValue, isIntegerOnly);
 
 			} else if (maxFractionDigits < decimalValue) {
-				// #35293 - Start
+				// #35293 related to #38679 - Start
 				String label = (String) MessageFactory.getLabel(context, component);
 				String labelManualScore = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.user.score",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				if (!labelManualScore.equalsIgnoreCase(label)) {
 					throw getDecimalConverterException(context, component, value, minValue, maxValue, isIntegerOnly);
 				}
-				// #35293 - End
+				// #35293 related to #38679 - End
 
 
 			}

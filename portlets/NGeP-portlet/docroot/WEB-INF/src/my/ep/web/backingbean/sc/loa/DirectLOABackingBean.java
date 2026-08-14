@@ -133,6 +133,8 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -9860,6 +9862,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
 			sb.append("^4");
 		}
+		
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+		if (scLoa.getContractType().getParameterType().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			
+			sb.append("|pmUserOrgs.pmOrgProfile.bpk^");
+			sb.append(true);
+			sb.append("^1");	
+			
+			PmZone zone = SmCommonUtil.getInstance().getUserZone();		
+			if (zone != null) {
+
+				sb.append("|pmUserOrgs.pmOrgProfile.pmZone.zoneId^");
+				sb.append(zone.getZoneId()); 
+			}
+		 }
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		return sb.toString();
 	}
 
@@ -10223,8 +10241,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			if (!getManagedBean().isDisableFields()) {
-				String loaStatus = getStatusDescById(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
-				if (StringEscapeUtils.unescapeJava(SourcingConstants.LOA_PENDING_VERIFICATION_STATUS).equals(loaStatus)) {
+				//#40771 - Start
+				if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
+				//#40771 - End
 					getManagedBean().setDisableFields(true);
 				}
 			}
@@ -14184,13 +14203,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isQTtypePK7 = qtType != null
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+		boolean isQTtypePK7WP = qtType != null
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equals(qtType.getParameterCode());
 
 		PmStatus pmStatus = (scLoa != null) ? scLoa.getPmStatus() : null;
 		List<Long> approvalStatus = Arrays.asList(QTStatusConst.LOA_PENDING_APPROVAL,
 				QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
 		boolean isPendingApproval = pmStatus != null && approvalStatus.contains(pmStatus.getStatusId());
 
-		if (isQTtypePK7 && isPendingApproval) {
+		if ((isQTtypePK7 || isQTtypePK7WP) && isPendingApproval) {
 			return true;
 		}
 
