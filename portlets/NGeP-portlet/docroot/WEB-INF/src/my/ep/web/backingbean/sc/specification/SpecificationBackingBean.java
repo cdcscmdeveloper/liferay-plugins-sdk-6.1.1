@@ -12778,16 +12778,6 @@ if (null != checklist && !checklist.isEmpty()) {
 						}
 
 					}
-					// #10141 Start Vinod
-					boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
-							.getManagedBean().isShowInactiveChecklistPopup(), action);
-
-					if (isInactiveChecklistPopup) {
-						RequestContext.getCurrentInstance()
-						.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
-						return;
-					}
-					// #10141 End Vinod
 					// 25638 - Start
 					SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
 					reviseSpecificationCommittee(resDTO, action);
@@ -16190,7 +16180,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			if (null != financialPackageScore
 					&& financialPackageScore.getSettingType() == 2) {
 				//#25138 - add if condition for one item only - start
-				if(!this.getManagedBean().isSingleItem()){
+				if(!this.getManagedBean().isSingleItem() && !checkFinancialSpecificationForItems()){ //#25651
 					if (null == financialPackageScore.getPassingScore()) {
 
 						this.getManagedBean().setActiveIndex(5);
@@ -21007,6 +20997,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public void submitAction(String outcome) {
 		assertConcurrentComittteeChangesApproval();
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			// #10141 Start Vinod
+			boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
+					.getManagedBean().isShowInactiveChecklistPopup(), outcome);
+
+			if (isInactiveChecklistPopup) {
+				RequestContext.getCurrentInstance()
+				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+				return;
+			}
+			// #10141 End Vinod
 			// 1873 - start - note 52
 			if (!assertPendingFinancialSubmission()) {
 				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
@@ -23414,6 +23414,28 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 Start Vinod
 	/**
+	 * This method is to check if ok action for maintenance is from prerender
+	 * and navigate accordingly.
+	 * 
+	 * @param bpAction
+	 * 
+	 * @return
+	 * 
+	 */
+	public void okActionForSpecMaintenance(String bpAction) {
+		if (this.getManagedBean().isPreRenderInactiveChecklist()) {
+			RequestContext.getCurrentInstance().execute(
+					QTConstants.INACTIVE_CHECKLIST_NOTIFICATION_HIDE);
+			this.getManagedBean().setPreRenderInactiveChecklist(false);
+		} else {
+			submitSpecMaintenanceDtls(bpAction);
+		}
+	}
+
+	// #10141 End Vinod
+
+	// #10141 Start Vinod
+	/**
 	 * This method will check inactive checklists for technical and financial if
 	 * there are any inactive checklists this method will popup a window to
 	 * remove those checklists.
@@ -23451,6 +23473,30 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 				this.getManagedBean().setShowInactiveChecklistPopup(true);
 				return true;
+			}
+		}
+		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
+		
+		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
+			List<ScQtCheckList> techCL = this.getManagedBean().getScQtCheckSt2techProposal();
+			List<ScQtCheckList> deleteTechCheckList = deleteInactiveChecklist(techCL);
+			techCL.removeAll(deleteTechCheckList);
+			List<ScQtCheckList> finCL = this.getManagedBean().getScQtCheckSt2financeProposalList();
+			List<ScQtCheckList> deletefinCheckList = deleteInactiveChecklist(finCL);
+			finCL.removeAll(deletefinCheckList);
+
+			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
+				this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+			}
+			if (CollectionUtils.isNotEmpty(deleteTechCheckList)) {
+				this.getManagedBean().getMarkDeletedTechChecklist().addAll(deleteTechCheckList);
+			}
+
+			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedFinChecklist())) {
+				this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
+			}
+			if (CollectionUtils.isNotEmpty(deletefinCheckList)) {
+				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
 		

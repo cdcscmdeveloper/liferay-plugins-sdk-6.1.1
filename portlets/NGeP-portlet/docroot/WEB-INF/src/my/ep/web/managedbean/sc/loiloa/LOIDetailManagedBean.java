@@ -458,7 +458,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private Long overallFinancialRecommendationPercent;//#38151
 	private List<ScQtScoreSetting> scoreSettings;//#38151
 	private boolean WeightageReq; //#38151
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151 & #38679
 	
 	
 	// 34491 - start
@@ -2591,7 +2591,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
-	//#38151 - Start
+	//#38151 & #38679 - Start
 	public List<WeightageScoreBean> getWeightageScoreBeans() {
 		return weightageScoreBeans;
 	}
@@ -2639,7 +2639,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - End
+	//#38151 & #38679 - End
 
 	// 34491 - start
 	public int getMeetingPreparationActiveIndex() {

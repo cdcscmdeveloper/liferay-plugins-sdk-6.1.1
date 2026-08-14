@@ -1702,6 +1702,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean selectAllFinPreview;
 	private boolean saveForSendNotification;
 	private ScAttachment scoreAttachment;
+	private boolean preRenderInactiveChecklist;
 	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
@@ -11530,6 +11531,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setScoreAttachment(ScAttachment scoreAttachment) {
 		this.scoreAttachment = scoreAttachment;
+	}
+	
+	public boolean isPreRenderInactiveChecklist() {
+		return preRenderInactiveChecklist;
+	}
+
+	public void setPreRenderInactiveChecklist(boolean preRenderInactiveChecklist) {
+		this.preRenderInactiveChecklist = preRenderInactiveChecklist;
 	}
 	// #10141 - end
 		
