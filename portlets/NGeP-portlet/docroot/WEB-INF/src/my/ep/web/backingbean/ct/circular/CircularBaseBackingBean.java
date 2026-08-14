@@ -414,7 +414,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		String userlist = populateInactiveUserIdIntoString(selectedUsers);
 		inactiveDto.setUserIds(userlist); 
 		inactiveDto.setUserRoleCode(roleCode); 
-		inactiveDto.setOrgProfileId(getOwnerOrgProfile().getOrgProfileId());
+		inactiveDto.setOrgProfileId(ctCircular.getOwnerOrgProfile().getOrgProfileId());
 		inactiveDto.setDocType(ctCircularVer.getDocType());
 		inactiveDto.setDocNo(ctCircular.getCircularNo());
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
