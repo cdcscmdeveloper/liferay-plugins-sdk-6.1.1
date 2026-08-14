@@ -12106,23 +12106,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * Updates the selected draft supplier item when the image popup is closed.
 	 * only affecting draft tab and draft_supp_temp only
 	 */
-	public void closeImagePopup(){	
+	public void closeImagePopup(){
 	    int index = this.getManagedBean().getItemSelectedIndex();
 	    CmSupplierItem selected = this.getManagedBean().getSelectedMaintainItem();
 
-	    log.info("CLOSE POPUP index = " + index);
-
 	    if (selected == null) {
-	        log.info("Selected maintain item is null");
 	        return;
 	    }
 
-	    log.info("CLOSE supplierItemId = " + selected.getSupplierItemId());
-	    log.info("CLOSE image size = " + (selected.getCmImages() == null ? 0 : selected.getCmImages().size()));
-	    log.info("CLOSE itemDesc = " + selected.getItemDesc());
-
-	    List<CmSupplierItem> draftList =
-	            this.getManagedBean().getDraftSearchDataModel().getList();
+	    List<CmSupplierItem> draftList = this.getManagedBean().getDraftSearchDataModel().getList();
 
 	    if (CollectionUtils.isEmpty(draftList)
 	            || index < 0
@@ -12134,9 +12126,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	    row.setCmImages(selected.getCmImages());
 	    row.setItemDesc(selected.getItemDesc());
-
-	    log.info("AFTER CLOSE image size = " + (row.getCmImages() == null ? 0 : row.getCmImages().size()));
-	    log.info("AFTER CLOSE itemDesc = " + row.getItemDesc());
 	}
 	//#29961 - End
 

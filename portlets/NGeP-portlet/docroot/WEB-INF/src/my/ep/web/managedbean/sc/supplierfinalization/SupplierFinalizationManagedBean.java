@@ -355,7 +355,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private boolean WeightageReq;//#38151
 	
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151 & #38679
 	
 	// 26247 - start
 	private List<String> disabledSupplierIds;
@@ -2718,7 +2718,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
 	}
 	//#21692 - End
-	//#38151 - Start
+	//#38151 & #38679 - Start
 	public List<WeightageScoreBean> getWeightageScoreBeans() {
 		return weightageScoreBeans;
 	}
@@ -2766,7 +2766,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - End
+	//#38151 & #38679 - End
 	
 	// 26247 - start
 	public List<String> getDisabledSupplierIds() {

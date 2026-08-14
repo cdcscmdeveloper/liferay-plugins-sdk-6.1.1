@@ -50,8 +50,9 @@
 				<td class="TableFieldLeft" width="8%">
 					<p:outputLabel value="#{lbl['lbl.sc.total.score']}" />
 				</td>
+				<!-- #36226 related to #25138-->
 				<td class="TableFieldRight" width="92%">
-					<p:inputText style="text-align:right;" styleClass="calcScore" size="8"
+					<p:inputText style="text-align:right;" styleClass="calcScore" size="13"
 						value="#{evaluationBackingBean.managedBean.totalScore} / #{evaluationBackingBean.managedBean.totalMaxScore} "
 						disabled="true" readonly="true"/>
 				</td>
