@@ -15539,7 +15539,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				IQTDetailSO.class);
 
 		boolean enableeGPAStatuses = scQt.getQtStatus() != null
-				&& QTStatusConst.getStatusAbleToShoweGPAPopUp().contains(scQt.getQtStatus().getStatusId());
+				&& QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId());
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
