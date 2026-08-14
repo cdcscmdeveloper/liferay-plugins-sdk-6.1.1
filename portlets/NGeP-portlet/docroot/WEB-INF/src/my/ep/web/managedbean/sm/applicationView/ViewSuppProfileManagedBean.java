@@ -158,6 +158,7 @@ public class ViewSuppProfileManagedBean extends
 	private List<SelectItem> residentialCityLs;
 	private List<SelectItem> permenantCityLs;
 	private String disciplinaryActionMsg; 
+	private Long myCountryId;
 	// 26238 - END
 	
 	public ViewSuppProfileManagedBean() {
@@ -1145,5 +1146,13 @@ public class ViewSuppProfileManagedBean extends
 	 */
 	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
 		this.disciplinaryActionMsg = disciplinaryActionMsg;
+	}
+	
+	public Long getMyCountryId() {
+		return myCountryId;
+	}
+
+	public void setMyCountryId(Long myCountryId) {
+		this.myCountryId = myCountryId;
 	}
 }
