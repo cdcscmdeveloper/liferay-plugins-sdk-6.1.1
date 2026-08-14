@@ -3567,6 +3567,18 @@
 			cataloguemaintenancetemp-portlet
 		</css-class-wrapper>
 	</portlet>
+	
+	<!-- #35320 Start -->
+	<portlet> 
+		<portlet-name>finalizationCommitteeMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>committee-portlet</css-class-wrapper>
+	</portlet>
+	<!-- #35320 End -->
+	
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

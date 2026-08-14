@@ -27,7 +27,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.AuditConst;
@@ -68,8 +67,12 @@ import org.apache.log4j.Logger;
 public class ProfCertifiedBodyBackingBean extends
 
 BaseBackingBean<ProfCertifiedBodyManagedBean> {
-	private static final Logger log = EpLogger
-			.getLogger(ProfCertifiedBodyBackingBean.class);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = EpLogger.getLogger(ProfCertifiedBodyBackingBean.class);
 
 	private IPagingDataModel<PmCertBody> profCertBodyModel = new CertBodyPagingDataModel();
 	
@@ -491,7 +494,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		     this.getManagedBean().setOldPmCertBody(oldPmCertBody);		
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -512,7 +514,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		     this.getManagedBean().setOldPmCertBody(oldPmCertBody);		
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -558,7 +559,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	}
 
 	/**
-	 * get YES & NO options //TODO: to load dynamically
+	 * get YES & NO options
 	 * 
 	 * @return SelectItem[]
 	 */

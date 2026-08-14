@@ -270,10 +270,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	private ScQt checkCategoryCodeQt; // #29466
 	private boolean allSupplierDisagreeEPV;//#21692
+	
 	// 26247 - start
 	private List<String> disabledSupplierIds;
-
 	// 26247 - end
+	
+	// #35320 - Start
+	private String selectedSupplierOfferedPrice;
+	// #35320 - End
+
+	
 
 	/**
 	 * @return the activeIndex
@@ -2287,7 +2293,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	// 6906 note 202 - end
-
+	
 	// 35157, #26247 - start
 	public ScQtRecommend getLastSelectedItem() {
 		return lastSelectedItem;
@@ -2309,15 +2315,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.isDemoReq = isDemoReq;
 	}
 	//#28784 - End
-
-	//#21692 - Start
-	public boolean isAllSupplierDisagreeEPV() {
-		return allSupplierDisagreeEPV;
-	}
-	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
-		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
-	}
-	//#21692 - End
+	
 	// 26247 - start
 	public List<String> getDisabledSupplierIds() {
 		return disabledSupplierIds;
@@ -2327,5 +2325,23 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disabledSupplierIds = disabledSupplierIds;
 	}
 	// 26247 - end
+	
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
+	
+	// #35320 - Start
+	public String getSelectedSupplierOfferedPrice() {
+		return selectedSupplierOfferedPrice;
+	}
 
+	public void setSelectedSupplierOfferedPrice(
+			String selectedSupplierOfferedPrice) {
+		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
+	}// #35320 - End	
 }

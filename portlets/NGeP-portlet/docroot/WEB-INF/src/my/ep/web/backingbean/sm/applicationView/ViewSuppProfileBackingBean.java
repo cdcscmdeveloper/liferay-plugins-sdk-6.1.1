@@ -197,16 +197,6 @@ public class ViewSuppProfileBackingBean extends
 	}
 	
 	/**
-	 * get faces scopes
-	 * 
-	 * @return FacesScopes
-	 */
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-	
-	/**
 	 * View Disciplinary Action
 	 */
 	public void onViewDisciplinaryAction() {
@@ -344,6 +334,16 @@ public class ViewSuppProfileBackingBean extends
 	} 
 	//26238 -  END Disciplinary Action - 28111, //31033 end
 	
+	/**
+	 * get faces scopes
+	 * 
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+
 	//#29482 - Start
 	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
 		this.getManagedBean().setSmPersonnel(smPersonnel);
