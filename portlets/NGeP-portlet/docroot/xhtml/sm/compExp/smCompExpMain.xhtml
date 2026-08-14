@@ -169,9 +169,10 @@
 						<p:row>
 							<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
 								style="width:2% !important; text-align: center !important;" />
+							<!--  9299 - 40991 -->
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
-								style="width:50% !important; text-align: center !important;" />
+								style="width:40% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 								style="width:10% !important; text-align: center !important;" />
@@ -184,6 +185,11 @@
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
 								style="width:10% !important; text-align: center !important;" />
+							<!--  9299 - 40991 START -->
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.record.status']}"
+								style="width:10% !important; text-align: center !important;" />
+							<!--  9299 - 40991 END -->
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
 								style="width:8% !important; text-align: center !important;" />
@@ -221,6 +227,16 @@
 							<br />
 						</ui:repeat>
 					</p:column>
+					<!-- 9299 - 40991 START -->
+					<p:column style="text-align: center !important;">
+						<h:outputText styleClass="outputLabel-view"
+							rendered="#{masterNonFed.recordStatusFlg eq ParameterConst.recordStatusActive}"
+							value="#{lbl['lbl.sm.comp.exp.master.record.status.active']}" />
+						<h:outputText styleClass="outputLabel-view"
+							rendered="#{masterNonFed.recordStatusFlg eq ParameterConst.recordStatusDeleted}"
+							value="#{lbl['lbl.sm.comp.exp.master.record.status.delete']}" />
+					</p:column>
+					<!-- 9299 - 40991 END -->
 					<p:column style="text-align: center !important;">
 						<p:commandLink
 							action="#{smCompExpBB.redirectToUpdateMaster(masterNonFed)}"
