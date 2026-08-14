@@ -970,7 +970,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				if (!svBankInfo.getSmSupplierBank().getSmChequeSignatories().isEmpty()) {
 					for (SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()) {
 						totalCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
-						if (chequeSignatory.getSmPersonnel().isBumi() != null) { // #39860
+						if(chequeSignatory.getSmPersonnel().isBumi() != null){  //#39860
 							if (chequeSignatory.getSmPersonnel().isBumi()) {
 								bumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 							} else {
@@ -989,7 +989,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		cheqBumi = bumiCheckingList.size();
 		cheqNonBumi = nonBumiCheckingList.size();
 		cheqNonMalaysian = nonMyCheckingList.size();
-				
 		// #14055 - end	
 		
 		this.getManagedBean().setTotalCheqSign(totalChequeSignatory);
