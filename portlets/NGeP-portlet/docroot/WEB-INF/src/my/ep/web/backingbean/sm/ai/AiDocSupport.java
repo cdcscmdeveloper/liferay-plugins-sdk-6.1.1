@@ -8,8 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.DatatypeConverter;
@@ -30,6 +32,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 /**
@@ -305,11 +308,17 @@ public final class AiDocSupport {
 				return dto;
 			}
 			try {
+				Set<String> seen = new HashSet<>();
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject bankEntity = entities.getJSONObject(i);
 					String entityId = bankEntity.getString("entity");
 					JSONArray properties = bankEntity.getJSONArray(PROPERTIES);
-					dto.getBankStatements().add(toBankStatement(properties, entityId));
+					AiBankDocDTO.AiBankStatementDTO bank = toBankStatement(properties, entityId);
+					// one row per bank name + account number, per FRS 2.4
+					String key = AiDocValidator.bankAccountKey(bank);
+					if (key == null || seen.add(key)) {
+						dto.getBankStatements().add(bank);
+					}
 				}
 			} catch (JSONException e) {
 				log.error("Error DocEntity", e);
@@ -484,7 +493,7 @@ public final class AiDocSupport {
 		}
 
 		/**
-		 * Set every extracted bank record's valid* flags against the newly-added/modified supplier banks.
+		 * Set every extracted bank record's valid* flags against the supplier's Bank Information.
 		 * Mutates the DTOs in place.
 		 * @param appl
 		 * @param docEntities
@@ -493,8 +502,7 @@ public final class AiDocSupport {
 			if (EntityHelper.isCollectionEmpty(docEntities)) {
 				return;
 			}
-			// Compare with new/modified banks only.
-			Map<String, String> supplierAccounts = collectChangedSupplierAccounts(appl);
+			Map<String, String> supplierAccounts = collectSupplierAccounts(appl);
 			List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
 			String companyNameSupp = appl.getSmSupplier().getCompanyName();
 
@@ -506,13 +514,19 @@ public final class AiDocSupport {
 			}
 		}
 
-		// Account number -> financial-org name, for new/modified supplier banks only.
-		private static Map<String, String> collectChangedSupplierAccounts(SmAppl appl) {
+		// Account number -> financial-org name, over every bank keyed in at Bank Information.
+		private static Map<String, String> collectSupplierAccounts(SmAppl appl) {
 			Map<String, String> supplierAccounts = new HashMap<>();
+			if (EntityHelper.isCollectionEmpty(appl.getSmSupplierBanks())) {
+				return supplierAccounts;
+			}
 			for (SmSupplierBank suppBank : appl.getSmSupplierBanks()) {
-				if (!StringUtils.isEmpty(suppBank.getChangedFieldStatus())) {
-					supplierAccounts.put(suppBank.getAccountNo(), suppBank.getPmFinancialOrg().getFinOrgName());
+				String accountNo = normalizeAccountNo(suppBank.getAccountNo());
+				// a half-keyed row has nothing to compare against; so has one with no digits at all
+				if (StringUtils.isEmpty(accountNo) || suppBank.getPmFinancialOrg() == null) {
+					continue;
 				}
+				supplierAccounts.put(accountNo, suppBank.getPmFinancialOrg().getFinOrgName());
 			}
 			return supplierAccounts;
 		}
@@ -520,7 +534,7 @@ public final class AiDocSupport {
 		private static void validateBankRecord(AiBankDocDTO.AiBankStatementDTO bank,
 				Map<String, String> supplierAccounts, List<String> supplierBanks, String companyNameSupp) {
 			String companyNameJson = bank.getAccountHolderName();
-			String bankName = supplierAccounts.get(bank.getAccountNo());
+			String bankName = supplierAccounts.get(normalizeAccountNo(bank.getAccountNo()));
 			if (bankName == null) {
 				bank.setValidAccountNo(false);
 
@@ -559,12 +573,39 @@ public final class AiDocSupport {
 			return c1.equals(c2);
 		}
 		
+		/**
+		 * Grouping key for an extracted bank record: bank name + account number, per FRS 2.4.
+		 * @param bank
+		 * @return null when neither is present, so the record is never treated as a duplicate
+		 */
+		public static String bankAccountKey(AiBankDocDTO.AiBankStatementDTO bank) {
+			if (bank == null || (StringUtils.isBlank(bank.getBankName())
+					&& StringUtils.isBlank(bank.getAccountNo()))) {
+				return null;
+			}
+			return canonicalizeCompanyName(bank.getBankName()) + "|"
+					+ normalizeAccountNo(bank.getAccountNo());
+		}
+
 		public static String canonicalizeCompanyName(String name) {
 			if (StringUtils.isBlank(name)) {
 				return "";
 			}
 			String canonical = name.toLowerCase().replaceAll("[^a-z0-9\\s]", "");
 			return canonical.replaceAll("\\s+", " ").trim();
+		}
+
+		/**
+		 * Account numbers are numeric; the dashes and spaces are only how they get keyed in
+		 * or printed on the statement, so compare on the digits alone.
+		 * @param accountNo
+		 * @return digits only, empty when there are none
+		 */
+		public static String normalizeAccountNo(String accountNo) {
+			if (StringUtils.isBlank(accountNo)) {
+				return "";
+			}
+			return accountNo.replaceAll("[^0-9]", "");
 		}
 
 		public static String fuzzyMatchList(String target, List<String> list) {
@@ -713,6 +754,7 @@ public final class AiDocSupport {
 				addr.setStateIdAI(null);
 				addr.setDistrictIdAI(null);
 				addr.setCityIdAI(null);
+				addr.setCountryIdAI(null);
 			}
 		}
 
@@ -732,6 +774,7 @@ public final class AiDocSupport {
 				PmCity city = te.getPmCity();
 				if (city != null) {
 					addr.setCityIdAI(city.getCityId());
+					addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
 					if (city.getPmDistrict() != null) {
 						addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
 						if (city.getPmDistrict().getPmState() != null) {

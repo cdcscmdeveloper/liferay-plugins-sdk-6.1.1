@@ -707,7 +707,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
 	
 	private boolean comingFromNextButton;//#38151
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151 & #38679
 	
 	// 29661 -start-
 	private int companyExpProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
@@ -4588,7 +4588,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
-	//#38151 - start
+	//#38151 & #38679 - start
 	/**
 	 * @return the flag from nextbutton
 	 */
@@ -4610,7 +4610,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - end
+	//#38151 & #38679 - end
 	
 	// 29661 -start-
 
