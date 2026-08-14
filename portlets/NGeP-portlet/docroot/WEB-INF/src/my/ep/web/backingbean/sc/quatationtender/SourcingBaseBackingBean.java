@@ -3245,8 +3245,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType){
 		SelectItem[] items = null;
 		
-		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
+		// #35320 - Start
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
+			// #35320 - End
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
 			//Enhancement #21691 - start -
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
