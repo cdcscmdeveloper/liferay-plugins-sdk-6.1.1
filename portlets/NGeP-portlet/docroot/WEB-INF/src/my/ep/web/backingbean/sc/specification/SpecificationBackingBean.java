@@ -12849,16 +12849,6 @@ public class SpecificationBackingBean extends
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-					// #10141 Start Vinod
-					boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
-							.getManagedBean().isShowInactiveChecklistPopup(), action);
-
-					if (isInactiveChecklistPopup) {
-						RequestContext.getCurrentInstance()
-						.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
-						return;
-					}
-					// #10141 End Vinod
 					//Bug_28291
 					checkTechnicalAndFinancialSpec(this.getManagedBean().getQt());
 					//20210621@asyrafhaziq_Bug #30914 - Start
@@ -20339,6 +20329,19 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public void submitAction(String outcome) {
 		assertConcurrentComittteeChangesApproval();
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			// #10141 Start Vinod
+			boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
+					.getManagedBean().isShowInactiveChecklistPopup(), outcome);
+
+			if (isInactiveChecklistPopup) {
+				RequestContext.getCurrentInstance()
+				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+				return;
+			}else{
+				this.getManagedBean().setShowInactiveChecklistPopup(false);
+				this.getManagedBean().setInActiveChecklist(null);
+			}
+			// #10141 End Vinod
 			// 1873 - start - note 52
 			if (!assertPendingFinancialSubmission()) {
 				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
@@ -22783,28 +22786,29 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				this.getManagedBean().setShowInactiveChecklistPopup(true);
 				return true;
 			}
-			
-			if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
-				List<ScQtCheckList> techCL = this.getManagedBean().getScQtCheckSt2techProposal();
-				List<ScQtCheckList> deleteTechCheckList = deleteInactiveChecklist(techCL);
-				techCL.removeAll(deleteTechCheckList);
-				List<ScQtCheckList> finCL = this.getManagedBean().getScQtCheckSt2financeProposalList();
-				List<ScQtCheckList> deletefinCheckList = deleteInactiveChecklist(finCL);
-				finCL.removeAll(deletefinCheckList);
+		}
+		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
+		
+		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
+			List<ScQtCheckList> techCL = this.getManagedBean().getScQtCheckSt2techProposal();
+			List<ScQtCheckList> deleteTechCheckList = deleteInactiveChecklist(techCL);
+			techCL.removeAll(deleteTechCheckList);
+			List<ScQtCheckList> finCL = this.getManagedBean().getScQtCheckSt2financeProposalList();
+			List<ScQtCheckList> deletefinCheckList = deleteInactiveChecklist(finCL);
+			finCL.removeAll(deletefinCheckList);
 
-				if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
-					this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
-				}
-				if (CollectionUtils.isNotEmpty(deleteTechCheckList)) {
-					this.getManagedBean().getMarkDeletedTechChecklist().addAll(deleteTechCheckList);
-				}
+			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
+				this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+			}
+			if (CollectionUtils.isNotEmpty(deleteTechCheckList)) {
+				this.getManagedBean().getMarkDeletedTechChecklist().addAll(deleteTechCheckList);
+			}
 
-				if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedFinChecklist())) {
-					this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
-				}
-				if (CollectionUtils.isNotEmpty(deletefinCheckList)) {
-					this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
-				}
+			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedFinChecklist())) {
+				this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
+			}
+			if (CollectionUtils.isNotEmpty(deletefinCheckList)) {
+				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
 		
