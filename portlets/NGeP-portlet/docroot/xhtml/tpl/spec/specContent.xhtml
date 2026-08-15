@@ -50,6 +50,8 @@
 	<ui:param name="navToNextPage" value="#{templateSpecId}nextBtnWG.getJQ().click();" />
 	<ui:param name="addItemSpecOnComplete" value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
 	<ui:param name="zoneEstimationPopup" value="#{templateSpecId}zoneEstimationPopup" />
+		<ui:param name="specScorePopup" value="#{templateSpecId}specScorePopup" /> <!-- #38151,#38679 -->	
+	
 	<p:blockUI block="spg" widgetVar="#{templateSpecId}specBlockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
