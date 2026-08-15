@@ -34,9 +34,12 @@
 	<p:dialog id="imageAndBasicId" widgetVar="imageBasicDialog" position="center"
 		width="700" height="400" closable="true" resizable="false" styleClass="pop_up_top"
 		header="#{lbl['lbl.cm.image.basic.item.spec']}" modal="true" >
+		   	<!-- #29961 - Start -->
 			<c:if test="#{!catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
-				<p:ajax event="close" process="@form" listener="#{catalogueBackingBean.closeImagePopup()}"/>
+				<p:ajax event="close" process="@this"
+				listener="#{catalogueBackingBean.closeImagePopup()}"/>
 			</c:if>
+			<!-- #29961 - End -->
 
 			<p:blockUI block="imageAndBasicIdPopup" widgetVar="popupBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

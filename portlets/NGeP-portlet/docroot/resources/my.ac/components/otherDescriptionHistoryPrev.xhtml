@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:ac="http://ac.my/jsf/composite/cc" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:cc="http://java.sun.com/jsf/composite">
+  <cc:interface>
+    <cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.other.desc.history.header']}" />
+    <cc:attribute name="categoryCodeList" type="java.util.List" required="true" />
+    <cc:attribute name="otherDescChangePO" type="java.lang.Boolean" />
+    <cc:attribute name="otherDescChangeApprover" type="java.lang.Boolean" />
+    <cc:attribute name="otherDescChangeSupplier" type="java.lang.Boolean" />
+  </cc:interface>
+  <cc:implementation>
+	<p:dialog id="otherDescriptionHistoryDlgPrevId"
+		header="#{cc.attrs.dialogHeader}" closable="true"
+		widgetVar="otherDescriptionHistoryDlgPrev" modal="true" resizable="false" width="90%"
+         height="700px">
+      <p:outputPanel id="otherDescriptionMsg"
+		style="max-height:700px; overflow-y:auto; display:block;">
+        <ui:repeat var="cat" value="#{cc.attrs.categoryCodeList}" rendered="#{cc.attrs.otherDescChangePO or 
+        cc.attrs.otherDescChangeApprover or cc.attrs.otherDescChangeSupplier}">
+				<p:panel rendered="#{not empty cat.smSuppCatOtherDescHistory}">
+				 <h:outputText value="#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
+							 (#{empty cat.categoryL1Name ? cat.pmCategoryL1.categoryName : cat.categoryL1Name}, 
+							 #{empty cat.categoryL2Name ? cat.pmCategoryL2.categoryName : cat.categoryL2Name}, 
+							 #{empty cat.categoryL3Name ? cat.pmCategoryL3.categoryName : cat.categoryL3Name})" />
+					<br />
+					<p:dataTable id="OtherDescriptionDtId" var="otherDescBean"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{cat.smSuppCatOtherDescHistory}"
+						rowKey="#{otherDescBean}" rowIndexVar="index">
+						<ac:paginator for="OtherDescriptionDtId" />
+						<p:column headerText="#{lbl['lbl.sm.other.desc.history.no']}"
+							style="width : 2% !important; vertical-align:top;">
+							<p:outputLabel value="#{index + 1}"
+								style="float: left;white-space: normal !important;" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sm.other.desc.history.application.no']}"
+							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+							<h:outputText value="#{otherDescBean.applNoHistory}" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}"
+							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+							 <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+							</h:outputText>
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sm.other.desc.history.action.by']}"
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}"
+					            style="white-space: pre-wrap;" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sm.other.desc.history.other.description']}"
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'THREE')}" 
+					            style="white-space: pre-wrap;" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sm.other.desc.history.role']}"
+							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+							<h:outputText
+								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}" />
+						</p:column>
+					</p:dataTable>
+					<br />
+				</p:panel>
+			</ui:repeat>
+			<p:panel rendered="#{!cc.attrs.otherDescChangePO and !cc.attrs.otherDescChangeApprover and !cc.attrs.otherDescChangeSupplier}">
+			<p:dataTable id="OtherDescriptionDtId2" var="otherDescBean"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{cat.smSuppCatOtherDescHistory}" rowKey="#{otherDescBean}"
+					rowIndexVar="index" >
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.no']}" style="width : 2% !important; vertical-align:top;">
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.application.no']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.by']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.other.description']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.role']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+              </p:column>
+            </p:dataTable>
+            <br />
+          </p:panel>
+      </p:outputPanel>
+    </p:dialog>
+  </cc:implementation>
+</ui:composition>
