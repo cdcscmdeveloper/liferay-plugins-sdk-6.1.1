@@ -7696,6 +7696,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			List<ScQtBsvDtl> rejectList = new ArrayList<>();
 			List<ScQtBsvDtl> pendingList = new ArrayList<>();
 			List<ScQtBsvDtl> completedList = new ArrayList<>();
+			List<ScQtBsvDtl> cancelledList = new ArrayList<>();
 			List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
 			for (ScQtBsvDtl scQtBsvDtl : list) {
 				if (scQtBsvDtl.getBsvStatus() != null
@@ -7714,6 +7715,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 						&& scQtBsvDtl.getBsvStatus().getStatusId()
 								.equals(QTStatusConst.BSV_COMPLETED)) {
 					completedList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_CANCELLED)) {
+					cancelledList.add(scQtBsvDtl);	
 				} else if (scQtBsvDtl.getBsvStatus() != null
 						&& scQtBsvDtl
 								.getBsvStatus()
@@ -7735,6 +7740,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			}
 			if (CollectionUtils.isNotEmpty(completedList)) {
 				sortedList.addAll(completedList);
+			}
+			if (CollectionUtils.isNotEmpty(cancelledList)) {
+				sortedList.addAll(cancelledList);
 			}
 			if (CollectionUtils.isNotEmpty(pendingUpdateApprList)) {
 				sortedList.addAll(pendingUpdateApprList);

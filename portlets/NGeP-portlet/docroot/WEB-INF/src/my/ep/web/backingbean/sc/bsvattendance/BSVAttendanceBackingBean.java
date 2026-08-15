@@ -176,7 +176,8 @@ public class BSVAttendanceBackingBean extends
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 								//#28188 - Start
 								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)
-										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED) 
+									    || scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_CANCELLED)) {
 									newBriefingList.add(scqtdtl);
 									briefingZoneBean.setBriefingList(newBriefingList);
 								}
@@ -191,7 +192,8 @@ public class BSVAttendanceBackingBean extends
 								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
 								//#28188 - Start
 								if (scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING) 
-										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)
+										|| scqtdtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_CANCELLED)) {
 									newSiteVisitList.add(scqtdtl);
 									briefingZoneBean.setSitevisitList(newSiteVisitList);
 								}
