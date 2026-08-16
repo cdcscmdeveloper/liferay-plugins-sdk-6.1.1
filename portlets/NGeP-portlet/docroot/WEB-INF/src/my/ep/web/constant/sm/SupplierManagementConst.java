@@ -244,13 +244,15 @@ public class SupplierManagementConst {
 	public static final String APPROVER_SDM = "SDMA";
 	public static final String SECTION_ROLE_APP_SDM = "SDM";
 	public static final String SUPPLIER_RENEWAL = "S";
+	public static final String SUPPLIER_DATA = "SUPD";
 	public static final String APPLIED_CAT = "APPLIED";
 	public static final String PREVIOUS_CAT = "PREVIOUS";
-	public static final long STATUS_PENDING_SITE_VISIT = 20105;
-	public static final long STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE = 20103;
-	
 	public static final String SECTION_MAIN = "MAIN";
 	public static final String SECTION_RENEWAL = "RENEWAL";
+	public static final String APPL_TYPE_UPDATE_MOF = "U";
+	public static final String APPL_TYPE_RENEW_MOF = "R";
+	public static final long STATUS_PENDING_SITE_VISIT = 20105;
+	public static final long STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE = 20103;
 	// 36504 - END
 	
 	public static final String LOGIN_URL = "";
@@ -1632,6 +1634,10 @@ public class SupplierManagementConst {
 	
 	public String getSECTION_RENEWAL() {
 		return SECTION_RENEWAL;
+	}
+	
+	public String getAPPL_TYPE_RENEW_MOF() {
+		return APPL_TYPE_RENEW_MOF;
 	}
 	// 36504 - END
 	

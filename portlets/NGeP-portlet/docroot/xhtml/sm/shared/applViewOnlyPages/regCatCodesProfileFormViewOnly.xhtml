@@ -12,7 +12,8 @@
 	<p:panel header="#{lbl['lbl.sm.wizard.catCodeStepLbl']}" toggleable="true">
 		<!-- 36504 - START -->
 		<p:outputPanel align="left" rendered="#{viewSmApplBackingBean.managedBean.otherDescChangeSupplier and 
-		(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser)}">
+		(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser or
+		viewSmApplBackingBean.managedBean.authoriseUser)}">
 			<table style="width: 100%">
 				<tr>
 					<td>
@@ -45,7 +46,7 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			sortBy="#{aprvdCatBean.pmCategoryL1.categoryL1Code}"
 			style="width:100%"
-    		tableStyle="table-layout:fixed">>
+    		tableStyle="table-layout:fixed">
 
 			<ac:paginator for="catApprDt" />
 			<p:columnGroup type="header">
@@ -183,7 +184,8 @@
 				     <p:graphicImage value="/css/images/design/icon_alert.png"
 						style="float:right;"
 						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory and 
-							(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser) and
+							(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser or
+							viewSmApplBackingBean.managedBean.supplierUser or viewSmApplBackingBean.managedBean.authoriseUser) and
 							!aprvdCatBean.otherDescChangeMaintenance}" />
 				</p:outputPanel>
 			</p:column>
@@ -274,7 +276,7 @@
 	
 	<!-- 36504 - START -->
 	<ac:otherDescriptionHistoryMaintenance
-		categoryCodeList="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
+		categoryCodeList="#{viewSmApplBackingBean.managedBean.supProfileHistoryOtherDesc}"
 		applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{viewSmApplBackingBean.managedBean.otherDescChangePO}"
 		otherDescChangeApprover="#{viewSmApplBackingBean.managedBean.otherDescChangeApprover}"

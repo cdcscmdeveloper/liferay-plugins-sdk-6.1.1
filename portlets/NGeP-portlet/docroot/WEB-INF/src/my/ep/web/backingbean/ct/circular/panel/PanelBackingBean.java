@@ -3609,7 +3609,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
                 + pmCategoryL3.getPmCategoryL2().getCategoryL2Code()
                 + pmCategoryL3.getCategoryL3Code();
 
-		String categoryName = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryName();
+		String categoryName = pmCategoryL3.getCategoryName(); //#40876
 
 		// Duplicate Check
 		for (CtPanelCategory existing : ctCategoryList) {

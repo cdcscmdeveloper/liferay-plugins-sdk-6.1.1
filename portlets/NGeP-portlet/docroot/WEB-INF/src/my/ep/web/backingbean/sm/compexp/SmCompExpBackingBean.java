@@ -915,15 +915,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		error = validateList(error, sourceType, smCompExpDocList);
 
 		if (!error) {
-			if (clienType.equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
-				SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-				reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
-				reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
-				reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
-				checkDuplicate(getSmCompExpSo().checkDuplicate(reqDTO));
-			} else {
-				declareSmComExp();
-			}
+			// #9299 - #40790 Start
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
+			reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
+			checkDuplicate(getSmCompExpSo().checkDuplicate(reqDTO));
+			// #9299 - #40790 End
 		}
 	}
 
@@ -1403,16 +1400,22 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	private void saveMaster(SmCompExpMaster master, String clienType) throws IOException {
-		Long masterId = null;
-		if (clienType.equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
-			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-			reqDTO.setPtjId(master.getOrgProfile().getOrgProfileId());
-			reqDTO.setFileReferenceNo(master.getFileReferenceNo());
-			reqDTO.setFileExtensionNo(master.getFileExtensionNo());
-			masterId = getSmCompExpSo().checkDuplicate(reqDTO);
-		}
+		// #9299 - #40790 Start
+		Long masterId;
+		SmCompExpReqDTO reqDTO1 = new SmCompExpReqDTO();
+		reqDTO1.setFileReferenceNo(master.getFileReferenceNo());
+		reqDTO1.setFileExtensionNo(master.getFileExtensionNo());
+		masterId = getSmCompExpSo().checkDuplicate(reqDTO1);
+		// #9299 - #40790 End
 		if (masterId != null) {
-			RequestContext.getCurrentInstance().execute("duplicateDialogWV.show();");
+			// 9299 - 40788 Start
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_775241, new String[] { master.getTitle() },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			// 9299 - 40788 End
+
 		} else {
 			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 			reqDTO.setDeclareMaster(master);
@@ -1499,6 +1502,24 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (delete) {
 			delSmCompExpMaster(resDTO1);
 		} else {
+			//9299 - 40788 Start
+			boolean duplicate = false;
+			// #9299 - #40790 Start
+			SmCompExpReqDTO duplicateReqDTO = new SmCompExpReqDTO();
+			duplicateReqDTO.setFileReferenceNo(selectedMaster.getFileReferenceNo());
+			duplicateReqDTO.setFileExtensionNo(selectedMaster.getFileExtensionNo());
+			Long duplicateMasterId = getSmCompExpSo().checkDuplicate(duplicateReqDTO);
+			if (duplicateMasterId != null && !duplicateMasterId.equals(selectedMaster.getCompExpMasterId())) {
+				duplicate = true;
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775241,
+								new String[] { selectedMaster.getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			// #9299 - #40790 End
+			}
+			if (!duplicate){
+				//9299 - 40788 End
 			SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
 			reqDTO4.setUpdateMaster(selectedMaster); 
 			resDTO1 = getSmCompExpSo().updateMaster(reqDTO4);
@@ -1510,6 +1531,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 							selectedMaster.getFileReferenceNo()
 						}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				// #9299 - #40789 End
+				} 
+			//9299 - 40788
 			} 
 		} 
 		if (resDTO1.isSuccessful()) { 

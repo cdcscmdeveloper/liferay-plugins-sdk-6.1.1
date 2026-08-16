@@ -375,11 +375,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupPO;
 	private boolean otherDescChangeSupApprover;
 	private boolean otherDescChangeMaintenance;
+	private boolean authoriseUser;
 	private String otherDescEdited;
 	private String otherDescOld;
 	private SmSupplierCategory historySuppCategory;
 	private SmSupplierCategory selectedCategory;
 	private List<SmSupplierCategory> historyOtherDescList;
+	private List<SmSupplierCategory> supProfileHistoryOtherDesc;
 	// 36504 - END
 	
 	public String getSupportingDocMode() {
@@ -2836,6 +2838,35 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	 */
 	public void setOtherDescChangeMaintenance(boolean otherDescChangeMaintenance) {
 		this.otherDescChangeMaintenance = otherDescChangeMaintenance;
+	}
+	
+	/**
+	 * @return the supProfileHistoryOtherDesc
+	 */
+	public List<SmSupplierCategory> getSupProfileHistoryOtherDesc() {
+		return supProfileHistoryOtherDesc;
+	}
+
+	/**
+	 * @param supProfileHistoryOtherDesc the supProfileHistoryOtherDesc to set
+	 */
+	public void setSupProfileHistoryOtherDesc(
+			List<SmSupplierCategory> supProfileHistoryOtherDesc) {
+		this.supProfileHistoryOtherDesc = supProfileHistoryOtherDesc;
+	}
+	
+	/**
+	 * @return the authoriseUser
+	 */
+	public boolean isAuthoriseUser() {
+		return authoriseUser;
+	}
+
+	/**
+	 * @param authoriseUser the authoriseUser to set
+	 */
+	public void setAuthoriseUser(boolean authoriseUser) {
+		this.authoriseUser = authoriseUser;
 	}
 	// 36504 - END
 	
