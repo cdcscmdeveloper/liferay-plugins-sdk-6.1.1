@@ -13,10 +13,11 @@
 		.column-align-center {
 			text-align: center !important;
 		}
-			 .calanderWidth input {
-	       width:75px;margin-bottom: 5px;
-	   }
-		.top-aligned-columns td {
+		.calanderWidth input {
+	       width:75px;
+		   margin-bottom: 5px;
+	   	}
+	   	.top-aligned-columns td {
 			vertical-align: top;
 		}
 		.column-align-right {
@@ -52,8 +53,35 @@
          .zone-tree-node tr td {
 			border: none;
 			padding: 4px 3px;
-		}
-		</style>
+		 }
+		 /* 24336 Start*/
+		 .calanderWidth110 input {
+	        width: 110px;
+	        vertical-align: top;
+         } 
+		 .columnWidth320 {
+			width: 320px;
+			vertical-align: top;
+			text-align: right;
+		 }
+		 .reduction-type-radio label {
+			float: left;
+			margin-left: 10px;
+		 }
+		 .change-contract-value-inputtext {
+			width: 110px;
+		 }	
+		 .committee-type-radio {
+			float: left;
+			margin-left: 25px !important;
+		 }
+		 .committee-type-radio tr:first-child label {
+		    display: inline-table;
+		    margin-left: 10px;
+		 }
+		 /* 24336 End*/
+	 </style>
+
 		<script type="text/javascript">  
 	    $(document).on("keypress", 'form', function (e) {
     	    var code = e.keyCode || e.which;
@@ -167,7 +195,7 @@
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{(amendmentBackingBean.managedBean.ackFA eq null or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa or ctBackingBean.managedBean.viewSCL)
-			 and (ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
+			 and (ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
 			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
 			 and (ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
 			 || ctBackingBean.isPk7FromDp())}"
@@ -185,11 +213,15 @@
 			or amendmentBackingBean.managedBean.decisionPbQcLOA or (amendmentBackingBean.managedBean.disableMeetingDetails and amendmentBackingBean.managedBean.disableDecisionDetails)}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.decision']))}" update=":form" />
 	
-	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
+			<!-- #24336 change menuitem value - Start -->
+	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting.amendment.checklist']}" 
+			update=":form"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
-			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting']))}" update=":form" />
-	
+			rendered="#{(amendmentBackingBean.isCtApproverSetting() or amendmentBackingBean.isApproverSetting()) 
+				and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
+			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting.amendment.checklist']))}"  />
+			<!-- #24336 - End -->
+
 		</p:tabMenu>
 		 </td>
 		 <td width="80%">
@@ -286,7 +318,12 @@
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.approver.setting'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) 
+											== lbl['lbl.ct.menu.approver.setting.amendment.checklist'] }"> <!-- #24336 -->
+					<!-- #24336 start -->
+					<ui:include	src="amendmentChecklist.xhtml" />
+					<!-- #24336 end -->
+					 
 					<ui:include	src="approverSetting.xhtml" />
 					<ui:include src="/xhtml/ct/shared/remarkAppSetting.xhtml" />
 					<!-- <ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" /> -->
@@ -385,5 +422,23 @@
 			</div>
 		</p:confirmDialog>
 		<!-- #26186 end -->
+		<!-- #34442 - start -->
+		<p:dialog widgetVar="acknowledgeConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line; text-align:center;"
+				value="#{amendmentBackingBean.confirmationContentMsg}" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					process="@this"
+					action="#{amendmentBackingBean.acknowledgeAction()}"
+					onstart="acknowledgeConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="acknowledgeConfirmDlg.hide()" type="button" />
+			</div>
+		</p:dialog>
+		<!-- #34442 - end -->
 	</ui:define>  
 </ui:composition>

@@ -133,7 +133,7 @@
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 						</td>
 					</p:outputPanel>
-					<!-- #33783 - start -->
+					<!-- #32304 - start -->
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I'
 								or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}">
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.clbg']}"/></td>
@@ -149,7 +149,7 @@
 								</p:selectOneRadio></td>
 						</c:otherwise></c:choose>	
 					</c:if>
-					<!-- #33783 - end -->
+					<!-- #32304 - end -->
 	
 					</tr>
 				<!-- #24819 -->

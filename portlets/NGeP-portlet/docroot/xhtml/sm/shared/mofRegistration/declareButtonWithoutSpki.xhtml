@@ -9,7 +9,8 @@
 	<!-- #31407 START -->
 	<p:commandButton value="#{lbl['lbl.sm.submitForPay']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 		action="#{backingBean.checkBeforeSubmit}" update=":form"
-		style="margin-bottom:5px;" />
+		style="margin-bottom:5px;"
+		disabled="#{backingBean.aiBlockDeclare}"/><!-- #40112 -->
 	<!-- #31407 END -->
 	
 	<p:confirmDialog id="printConfirm" closable="true"

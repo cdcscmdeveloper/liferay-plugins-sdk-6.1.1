@@ -182,7 +182,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String proceedToCompanyInfo() {
-		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37900
+//		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37900 comment related #40254 comment related #40254
 		if (this.getManagedBean().getSmSupp() == null) {
 			//default to malaysia
 			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -4247,12 +4247,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		this.getManagedBean().setBusinessStateLs(stateSelectLs);
 		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
-		
-		// #36718 - Start - reset regNo when business type changed
-		if (this.getManagedBean().getSmAppl().isBrandNew() && !this.getManagedBean().getSmAppl().isApplValidWithSsm()) {
-			this.getManagedBean().getSmSupp().setRegNo(null);
-		}
-		// #36718 - End
 	}
 			
 	/**
@@ -4341,6 +4335,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 		*/
+		
+		// #36718 - Start
+		if (StringUtils.isBlank(getManagedBean().getSmBusinessAdd().getMapLatitude())
+				|| StringUtils.isBlank(getManagedBean().getSmBusinessAdd().getMapLongitude())) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate.company.info", null) }));
+		}
+		// #36718 - End
+				
 		if (!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1) {
 			throw new EpException(MessageConst.ERROR_721011);
 		}
@@ -5828,15 +5831,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	//13320-end
 	
-	//14685 - START
-	public void showMessageToggle(){
-		if(this.getManagedBean().isShowMessage()){
-			this.getManagedBean().setShowMessage(false);
-		}else{
-			this.getManagedBean().setShowMessage(true);
-		}
-	}
-	//14685 - END
 	
 	//  #28720 - Start
 	public void onChangeEmail()

@@ -168,3 +168,20 @@
 .audit-main-panel .col-field-name    { width: 9.0% !important; }
 .audit-main-panel .col-old-value     { width: 9.7% !important; }
 .audit-main-panel .col-new-value     { width: 9.7% !important; }
+
+
+/* ===============================
+   FIX HOVER ISSUE (PRIMEFACES 3.5)
+   =============================== */
+
+/* Prevent hover bocor ke container */
+.audit-main-panel .ui-panel-content.ui-state-hover,
+.audit-main-panel .ui-widget-content.ui-state-hover {
+    background: white !important;
+    box-shadow: none !important;
+}
+
+/* Apply hover hanya ke datatable row */
+.audit-main-panel .ui-datatable tbody tr:hover {
+    background: #f5f5f5 !important;
+}

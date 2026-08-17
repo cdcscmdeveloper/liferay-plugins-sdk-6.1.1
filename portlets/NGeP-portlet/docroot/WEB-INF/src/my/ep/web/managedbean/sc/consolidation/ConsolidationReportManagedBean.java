@@ -120,7 +120,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	
 	private List<ScQtScoreSetting> scoreSettings;//#38151
 		
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151 & #38679
 	
 	private SupplierFinalizationBackingBean suppFinalBean; //#38151
 	
@@ -740,7 +740,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	//#38151 - End
 	
-	//#38151
+	//#38151 & #38679
 	public boolean isWeightage35384WIP() {
 		return weightage35384WIP;
 	}
@@ -748,6 +748,6 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151
+	//#38151 & #38679
 	
 }

@@ -22,6 +22,14 @@
 							listener="#{qTBriefingSiteVisitBackingBean.processChecked}" />
 					</p:selectOneRadio></td>
 			</tr>
+			<ui:remove>#28188 add instruction - Start</ui:remove>
+			<tr>
+				<td colspan="2" style="width: 280px; white-space: nowrap;"><h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.qt.bsv.instruction']}"
+						escape="false" /></td>
+			</tr>
+			<ui:remove>#28188 add instruction - End</ui:remove>
+			
 		</table>
 		<p:dataTable id="briefingdtlid" var="briefingdtls"
 			value="#{bsvdtlbean.briefingList}" rowKey="#{briefingdtls}"
@@ -39,18 +47,23 @@
 				rendered="#{isBSVEnabled and !isQTStatusPublished}" />
 			<p:column headerText="#{lbl['lbl.sc.description']}"
 				style="white-space: normal;word-wrap: break-word;">
+				<ui:remove>#28188 -start change rendered </ui:remove>
 				<h:panelGroup
-					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_CANCELLED}">
-					<p:commandLink
+					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId }">
+					<p:commandLink rendered="#{briefingdtls.bsvStatus.statusId eq QTStatusConst.BSV_COMPLETED}"
 						action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
 						partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 						<h:outputText value="#{briefingdtls.bsvDesc}" />
 					</p:commandLink>
+					<h:outputText value="#{briefingdtls.bsvDesc}"
+						rendered="#{briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}" />
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId or briefingdtls.bsvStatus.statusId eq QTStatusConst.BSV_CANCELLED}">
+					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId}">
 					<h:outputText value="#{briefingdtls.bsvDesc}" />
 				</h:panelGroup>
+				<ui:remove>#28188 -end change rendered </ui:remove>
+				
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
@@ -85,14 +98,16 @@
 			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:5%;white-space: normal;text-align: center;"
 				rendered="#{isBSVEnabled}">
+				<ui:remove>#28188 - Start </ui:remove>
 				<p:commandLink 
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
 					partialSubmit="true" process="@this" update="@([id$=briefdlgId])"
-					rendered="#{briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}">
+					rendered="#{briefingdtls.bsvStatus.statusId == QTStatusConst.BSV_PENDING}">
 					<h:graphicImage
 						value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 						styleClass="tasklist_title1" />
 				</p:commandLink>
+				<ui:remove>#28188 - End </ui:remove>
 			</p:column>
 		</p:dataTable>
 		<ui:param name="briefingDelPopUp" value="briefingDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />
@@ -153,19 +168,23 @@
 
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="white-space: normal;word-wrap: break-word;">
+						<ui:remove>#28188 -start change rendered </ui:remove>
 						<h:panelGroup
-							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_CANCELLED}">
-							<p:commandLink
+							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId }">
+							<p:commandLink rendered="#{sitevisitdtls.bsvStatus.statusId eq QTStatusConst.BSV_COMPLETED}"
 								action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
 								partialSubmit="true" process="@this"
 								update="@([id$=briefdlgId])">
 								<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 							</p:commandLink>
+							<h:outputText value="#{sitevisitdtls.bsvDesc}"
+						rendered="#{sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}" />
 						</h:panelGroup>
 						<h:panelGroup
-							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId or sitevisitdtls.bsvStatus.statusId eq QTStatusConst.BSV_CANCELLED}">
+							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId }">
 							<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 						</h:panelGroup>
+						<ui:remove>#28188 -end change rendered </ui:remove>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
@@ -201,14 +220,16 @@
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:5%;white-space: normal;text-align: center;"
 						rendered="#{isBSVEnabled}">
+						<ui:remove>#28188 - Start </ui:remove>
 						<p:commandLink
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
 							partialSubmit="true" process="@this" update="@([id$=briefdlgId])"
-							rendered="#{sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}">
+							rendered="#{sitevisitdtls.bsvStatus.statusId == QTStatusConst.BSV_PENDING}">
 							<h:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
-								styleClass="tasklist_title1" />
+								styleClass="tasklist_title1"/>
 						</p:commandLink>
+						<ui:remove>#28188 - End </ui:remove>
 					</p:column>
 				</p:dataTable>
 				<ui:param name="siteVisitDelPopUp" value="siteVisitDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />

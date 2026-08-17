@@ -3,7 +3,6 @@ package my.ep.web.backingbean.pm.settings;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode; //#35323
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;	//#34397, #34398
@@ -96,6 +95,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;//#36738
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -120,6 +120,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#35323
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMSysParamBackingBean;
@@ -199,7 +200,7 @@ public class RuleCatalogueBackingBean extends
 	
 	private static final Map<Long, Integer> SUPPLIER_PRIORITY;
 	static {
-	    Map<Long, Integer> map = new HashMap<Long, Integer>();
+	    Map<Long, Integer> map = new HashMap<>();
 	    map.put(RuleTypeConst.BASIC, 1);
 	    map.put(RuleTypeConst.MOF, 2);
 	    map.put(RuleTypeConst.G2G, 3);
@@ -371,6 +372,11 @@ public class RuleCatalogueBackingBean extends
 		this.inactiveFeeContPopUpMsg = inactiveFeeContPopUpMsg;
 	}
 
+	// SonarLint Fixing..
+	/**
+	 * Executes initialization logic before the page is rendered.
+	 * @return
+	 */
 	public String preRenderView() {
 		getManagedBean().setTabActiveIndex(0);
 		getManagedBean().setFeeExemptionIndex(0);
@@ -381,7 +387,6 @@ public class RuleCatalogueBackingBean extends
 		setCurrentActiveOrg();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
-			//initConfigRule();//#36738
 			initFeeSettings();
 			initOperationThreshold();
 			initGst();
@@ -391,7 +396,8 @@ public class RuleCatalogueBackingBean extends
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
-			log.error(e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+					"RuleCatalogueBackingBean.preRenderView", null, e); //#35323
 			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					null, e.getMessage()));
 			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
@@ -1160,6 +1166,7 @@ public class RuleCatalogueBackingBean extends
 		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
 				.getConfigRuleDescList()) {
 
+			sortConfigRuleValueList(ruleTypeDesc.getRuleType().getConfigRuleValues()); //#35323
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
 					.getParameterCode().equals("C")) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc
@@ -1206,6 +1213,9 @@ public class RuleCatalogueBackingBean extends
 
 				//#35323 and sonarLint fixing - Start
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
+					if (ruleTypeValue.getRecordStatusFlg() == 0) {// if is inActive one go to next record
+						continue;
+					}
 					validateRuleValue(ruleTypeDesc, ruleTypeValue);
 				}
 				//#35323 and sonarLint fixing - End
@@ -1328,13 +1338,13 @@ public class RuleCatalogueBackingBean extends
 						switch (ruleTypeDesc.getRuleType().getValidationType()) {
 						//#35323 and sonarLint Fixing - Start
 						case '1':
-							validateType1(ruleTypeDesc, baseValueToCompare, value);
+							validationType1(ruleTypeDesc, baseValueToCompare, value);
 							break;
 						case '2':
-							validateType2(ruleTypeDesc, value);
+							validationType2(ruleTypeDesc, value);
 							break;
 						case '3':
-							validateType3(ruleTypeDesc);
+							validationType3(ruleTypeDesc);
 							break;
 						default:
 						}
@@ -1351,13 +1361,6 @@ public class RuleCatalogueBackingBean extends
 			ruleSO = BusinessDelegate.getInstance().getServiceObject( //#35323
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
-			
-			// #35323 - Start
-			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())) {
-				setupPurchaseRequestRule(this.getManagedBean().getSelectedRuleDescType().getRuleType());
-			}
-			// #35323 - End
-			setupTrackingDiaryVal(reqDTO);
 			
 			List<PmConfigRule> ruleTypeList = new ArrayList<>(); //#35323 and sonarlint Fixing
 			for (PmConfigRuleDesc desc : getManagedBean()
@@ -1398,6 +1401,9 @@ public class RuleCatalogueBackingBean extends
 			}
 			OrgProfileResDTO orgProfResDTO = orgProfileSO.saveOrUpdatePmOrgProfileList(orgProfileReqDTO);
 			/* 27827 - END */
+
+			setupTrackingDiaryVal(reqDTO); //#35323
+
 			/************ AUDIT #28895_35509 - START **************/
 			/* START - AuditgetAuditReqDTOSelectedRuleValueListOld() */
 			List<PmConfigRuleDesc> listOldVal = retriveConfigRuleDescFromDB();
@@ -1483,6 +1489,7 @@ public class RuleCatalogueBackingBean extends
 			}
 			//#35323 - Start
 			this.getManagedBean().setNewPRList(false);
+			sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
 				loadPRValues();
 			}
@@ -1536,17 +1543,14 @@ public class RuleCatalogueBackingBean extends
 
 					}
 					//#35323 - Start
-					if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(ruleTypeDesc.getRuleType().getRuleType())) {
-						String parameterCode = ruleTypeValue.getSupplAcctTypeId().getParameterCode();
-						String supplCodeTypeName = ParameterConst.BASIC_PARAM_CODE.equalsIgnoreCase(parameterCode) ? ParameterConst.ASAS : ParameterConst.MOF_PARAM_CODE
-								.equalsIgnoreCase(parameterCode) ? ParameterConst.MOF : ParameterConst.G2G;
-						
+					if (isPurchaseRequest(ruleTypeDesc)) {
+						String supplCodeTypeName = retrieveSupplierAccountType(ruleTypeValue);
+
 						msgParam = new String[] {
 								supplCodeTypeName,
 								getRuleTypeDesc(ruleTypeDesc.getRuleType().getRuleType(),
 										CommonConstants.LANGUAGE_CODE_MALAY) };
 					}
-					//#35323 - End
 				} else {
 					if (ruleTypeValue.isModified()
 							&& ruleTypeValue.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
@@ -1573,20 +1577,29 @@ public class RuleCatalogueBackingBean extends
 						}
 					}else if(ruleTypeValue.isModified()){
 						messageId = MessageConst.TD_80221;
+
+						String ruleValueOrSupplAccType;
+						if (isPurchaseRequest(ruleTypeDesc)) {
+						    ruleValueOrSupplAccType = retrieveSupplierAccountType(ruleTypeValue);
+						} else {
+						    ruleValueOrSupplAccType = ruleTypeValue.getRuleValue();
+						}
+
 						msgParam = new String[] {
 								getRuleTypeDesc(ruleTypeDesc.getRuleType()
 										.getRuleType(),
 										CommonConstants.LANGUAGE_CODE_MALAY),
-										ruleTypeValue.getRuleValue(),
+										ruleValueOrSupplAccType,
 										ruleTypeValue.getEffDate() != null ? 
 												DateUtils.dateToString("dd/MM/yyyy",ruleTypeValue.getEffDate()) : "",
 										ruleTypeValue.getExpDate() != null ? 
 												DateUtils.dateToString("dd/MM/yyyy",ruleTypeValue.getExpDate()) : ""
 								};
 					}
+					//#35323 - End
 				}
 
-				if (messageId != null & msgParam != null) {
+				if (messageId != null && msgParam != null) {
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyForRuleConfig(
@@ -1698,9 +1711,10 @@ public class RuleCatalogueBackingBean extends
 	boolean isDateOverlaped(Date start1, Date end1, Date start2, Date end2) {
 		this.getManagedBean().setFirstExpiryDateIsNull(false);
 
-		if (isEmptyDate(end1) && !isEmptyDate(start2)) {
-		    this.getManagedBean().setFirstExpiryDateIsNull(true);
-		    return true;
+		if (this.getManagedBean().getTabActiveIndex() == 0 
+				&& isEmptyDate(end1) && !isEmptyDate(start2)) {
+			this.getManagedBean().setFirstExpiryDateIsNull(true);
+			return true;
 		}
 		if (end1 == null && end2 == null) {
 			return true;
@@ -1783,12 +1797,10 @@ public class RuleCatalogueBackingBean extends
 
 			}
 
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
-								getActionDesc(messageId, msgParam), fee
-										.getRecordStatusFlg().longValue()));
+				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForFeeExemption(
+						fee, getActionDesc(messageId, msgParam), fee.getRecordStatusFlg().longValue()));
 			}
 			/************ AUDIT #28895_35509 *************/
 			// Audit Get deleted value for orgType
@@ -1808,18 +1820,13 @@ public class RuleCatalogueBackingBean extends
 			/************ END AUDIT #28895_35509 *************/
 		}
 		statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(Long
-				.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		reqDTO.setStatus(statusResDTO.getPmStatus() != null ? statusResDTO
-				.getPmStatus() : new PmStatus());
+		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
+		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+		reqDTO.setStatus(statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus());
 		reqDTO.setUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
 		try {
-			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IFeeExemptionSO.class);
+			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
 			/************ AUDIT #28895_35509 *************/
@@ -1973,7 +1980,7 @@ public class RuleCatalogueBackingBean extends
 							fee.getItemId().getItemName() };
 				}
 			}
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -2290,7 +2297,7 @@ public class RuleCatalogueBackingBean extends
 							fee.getRequestItemId().getItemName() };
 				}
 			}
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -2481,7 +2488,7 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -2886,6 +2893,11 @@ public class RuleCatalogueBackingBean extends
 			ThresholdResDTO resDTO = thresholdSO
 					.updateOperationalThresholdList(reqDTO);
 			if (resDTO.isSuccessful()) {
+				//#34445, Fix as-is bug:#40055 Start
+				if (resDTO.getPmConfigGeneral() != null) {
+			        getManagedBean().setSelectedConfigGeneral(resDTO.getPmConfigGeneral());
+			    }
+				//#34445, Fix as-is bug:#40055 End
 				initOperationThreshold();
 				getManagedBean().setTabActiveIndex(3);
 				if (type == 1) {
@@ -2949,7 +2961,7 @@ public class RuleCatalogueBackingBean extends
 			if (configRuleValuesMarkIndex.getToValue() != null
 					&& (configRuleValuesMarkIndex.getRuleValue() != null
 					&& !configRuleValuesMarkIndex.getRuleValue().isEmpty())) {
-				ruleValue.setFromValue(configRuleValuesMarkIndex.getToValue().add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
+				ruleValue.setFromValue(configRuleValuesMarkIndex.getToValue().add(BigDecimal.valueOf(ParameterConst.TWO_DECIMAL)));
 				ruleValue.setRuleType(configRuleType);
 				configRuleType.getConfigRuleValues().add(markIndex + 1, ruleValue);
 			} else {
@@ -2961,7 +2973,7 @@ public class RuleCatalogueBackingBean extends
 					|| configRuleValuesMarkIndex.getSupplAcctTypeIds() != null
 					&& !configRuleValuesMarkIndex.getSupplAcctTypeIds().isEmpty())) {
 				BigDecimal toValue = configRuleValuesMarkIndex.getToValue();
-				ruleValue.setFromValue(toValue.add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
+				ruleValue.setFromValue(toValue.add(BigDecimal.valueOf(ParameterConst.TWO_DECIMAL)));
 				ruleValue.setRuleType(configRuleType);
 				ruleValue.setSupplAcctTypeIds(null);
 				configRuleType.getConfigRuleValues().add(markIndex + 1, ruleValue);
@@ -2993,7 +3005,7 @@ public class RuleCatalogueBackingBean extends
 					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(true);
 				} else {
 					rulevalue.setFromValue(configRuleType.getConfigRuleValues()
-							.get(index).getToValue().add(new BigDecimal("0.01"))); //#35323
+							.get(index).getToValue().add(new BigDecimal(ParameterConst.TWO_DECIMAL))); //#35323
 					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(false);
 				}
 				// 29669 - end
@@ -3032,10 +3044,12 @@ public class RuleCatalogueBackingBean extends
 			Date expDate = ruleValue.getExpDate();
 
 			for (PmConfigRuleValue value : configRuleType.getConfigRuleValues()) {
-				if (value.getGroupValueId().equals(ruleValue.getGroupValueId())) {
+				//#35323 - Start
+				if (value.getGroupValueId() != null && value.getGroupValueId().equals(ruleValue.getGroupValueId())) {
 					value.setEffDate(effDate);
 					value.setExpDate(expDate);
 				}
+				//#35323 - End
 			}
 			
 		}
@@ -3100,16 +3114,23 @@ public class RuleCatalogueBackingBean extends
 	}
 	//SonarLint Fixing and #35323 - End
 
+	//#35323 and sonarLint fixing - Start
+	/**
+	 * @param pmConfigValues
+	 * @param groupId
+	 * @return addIndex
+	 */
 	public int getLastIndexToClone(List<PmConfigRuleValue> pmConfigValues,
-			Integer GroupId) {
+			Integer groupId) {
 		int addIndex = 0;
 		for (PmConfigRuleValue ruleValue : pmConfigValues) {
-			if (ruleValue.getGroupValueId().equals(GroupId)) {
-				addIndex = pmConfigValues.indexOf(ruleValue);
-			}
+		    if (ruleValue.getGroupValueId() != null && ruleValue.getGroupValueId().equals(groupId)) {
+		        addIndex = pmConfigValues.indexOf(ruleValue);
+		    }
 		}
 		return addIndex;
 	}
+	//#35323 and sonarLint fixing - End
 
 	public void addTaxableItem() {
 		try {
@@ -3811,7 +3832,7 @@ public class RuleCatalogueBackingBean extends
 							.getLocationName() };
 				}
 
-				if (messageId != null & msgParam != null) {
+				if (messageId != null && msgParam != null) {
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyForDesignatedArea(
@@ -4487,9 +4508,8 @@ public class RuleCatalogueBackingBean extends
 
 			return ruleSO.getRuleDescByType(reqDTO);
 
-		} catch (Exception e) {
-			log.error(e);
-			return null;
+		} finally {
+			ruleSO = null;
 		}
 	}
 
@@ -4579,13 +4599,17 @@ public class RuleCatalogueBackingBean extends
 
 	public void deleteQtValue() {
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		Boolean resetMinistryDropdown = false;//#36738 #40071
 		if (rowIndex != null) {
 			PmPtjSpecialApproval deletedSpecialApproval = this.getManagedBean()
 					.getPtjSpecialApprovalList().get(rowIndex.intValue());
 			if (deletedSpecialApproval != null) {
 				deletedSpecialApproval.setDeleted(true);
 				this.getManagedBean().getDeletedPtjSpecialApprovalList().add(deletedSpecialApproval);// should
-
+				//#36738 #40071 Start
+				resetMinistryDropdown = getDeletedMinistryList(deletedSpecialApproval);
+				this.getManagedBean().getOriginalPtjSpecialApprovalList().remove(deletedSpecialApproval);
+				//#36738 #40071 End
 				/*** AUDIT 28895_35509 ***/
 				// added
 				CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedPtjSpecialApprovalList()); // list
@@ -4608,6 +4632,10 @@ public class RuleCatalogueBackingBean extends
 				/*** AUDIT 28895_35509 ***/
 			}
 		}
+		//#36738 #40071 Start
+		if (resetMinistryDropdown){
+			resetQtValues();
+		}//#36738 #40071 End
 	}
 
 	/*** AUDIT 28895_35509 ***/
@@ -4647,10 +4675,18 @@ public class RuleCatalogueBackingBean extends
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
+			//#36738 #40071 Start
+			List<String> deletedMinistryNameList = this.getManagedBean().getDeletedMinistryNameList() !=  null
+					? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();			
 			for (PmOrgProfile orgProfile : list) {
+				if (deletedMinistryNameList.contains(orgProfile.getPmOrgValidity().getOrgName())){
+					continue;
+				}
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
 						orgProfile.getOrgName());
 			}
+			items = Arrays.copyOf(items, i);
+			//#36738 #40071 end
 		} catch (Exception e) {
 			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(
@@ -5419,7 +5455,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
-	//#34397, #34398
+	//#34397, #34398, #27827
 	/**
 	 * Retrieve zones
 	 */
@@ -5551,6 +5587,7 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	// 29650 - end
+	
 	//#34397, #34398 - start
 	/**
 	 * @param type
@@ -5561,12 +5598,18 @@ public class RuleCatalogueBackingBean extends
 			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
 			|| RuleTypeConst.RENEW_PERIOD.equals(type);
 	}
-	
+    
+	//#27827 - start
 	public List<PmZone> getZones() {
-		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
-				getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		String type = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
+		if(RuleTypeConst.PTJ_CODE.equals(type)){
+			return getManagedBean().getMainZones();
+		} else {
+			return isRenewTypes(type) ? getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		}
 	}
-	
+	//#27827 - end
+
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
 		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
 			if (val.getZoneId() == null && val.isBrandNew()) {
@@ -5753,6 +5796,7 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
+		// #27827 to be deployed together - START
 		// search via desc
 		if (StringUtils.isNotBlank(searchRuleDesc)) {
 			List<PmConfigRuleValue> byDesc = searchByRuleValueDesc(originalList, searchRuleDesc, false);
@@ -5772,6 +5816,7 @@ public class RuleCatalogueBackingBean extends
 				resultList.retainAll(byZone);
 			}
 		}
+		// #27827 to be deployed together - END
 
 		// search via effective date and expiry date (exact date if only one, between if both)
 		if (searchEffDate != null || searchExpDate != null) {
@@ -5832,6 +5877,7 @@ public class RuleCatalogueBackingBean extends
 		return searchRuleTypeValueList;
 	}
 	
+	// #27827 to be deployed together - START
 	/**
 	 * #36738
 	 * filter rule values by description
@@ -5886,6 +5932,7 @@ public class RuleCatalogueBackingBean extends
 			return configRuleValuesList;
 		}
 	}
+	// #27827 to be deployed together - END
 	
 	/**
 	 * #36738
@@ -5963,13 +6010,7 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeExpiryDate(null);
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
-		
-		//#35323 - Start - Checking for list value.....
-		for (PmConfigRuleValue value : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()) {
-			log.info("CONFIG_RULE_VALUE=" + value.getRuleValueId());
-			log.info("EFF_DATE=" + value.getEffDate());
-		}
-		//#35323 - End - Checking for list value.....
+		sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 	}
 	
 	/**
@@ -6045,19 +6086,35 @@ public class RuleCatalogueBackingBean extends
 	 * @return
 	 */
 	private List<PmPtjSpecialApproval> searchByPtj(List<PmPtjSpecialApproval> ptjApprovalList, String search, boolean useName) {
-	    List<PmPtjSpecialApproval> result = new ArrayList<PmPtjSpecialApproval>();
-	    for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
-	        String value = useName 
-	            ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName()
-	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
-	            String searchRegex = searchRegex(search);
-	            
-	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
-	        		|| value.toLowerCase().matches(searchRegex)) {
-	            result.add(ptjApproval);
-	        }
-	    }
-	    return result;
+		List<PmPtjSpecialApproval> result = new ArrayList<>();
+
+		if (search == null || search.isEmpty()) {
+			return result;
+		}
+
+		String searchLower = search.toLowerCase();
+		String regex = searchRegex(search);
+
+		for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
+			for (PmOrgValidity validity : ptjApproval.getPmOrgProfile().getPmOrgValidityList()) {
+				if (DbValueConst.RECORD_STATUS_ACTIVE !=(validity.getRecordStatusFlg())) {
+					continue;
+				}
+				
+				String value = useName ? validity.getOrgName() : validity.getOrgCode();
+				if (value == null) {
+					continue;
+				}
+				
+				String valueLower = value.toLowerCase();
+				if (valueLower.contains(searchLower) || valueLower.matches(regex)) {
+					result.add(ptjApproval);
+					break;
+				}
+			}
+		}
+
+		return result;
 	}
 	
 	/**
@@ -6128,10 +6185,39 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setRuleTypeCollapsePanel(true);
 		this.getManagedBean().setRuleValueCollapsePanel(true);
 		this.getManagedBean().setQtValueCollapsePanel(true);
+		this.getManagedBean().setDeletedMinistryNameList(null);//#36738 #40071
 	}
 	
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
 	    this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
+	}
+	
+	/**
+	 * #36738 #40071
+	 * Get ministry list based on the deleted ptj
+	 * @param deletedSpecialApproval
+	 * @return
+	 */
+	public Boolean getDeletedMinistryList(PmPtjSpecialApproval deletedSpecialApproval) {
+		List<PmPtjSpecialApproval> ptjSpecialApprovalList = this.getManagedBean().getPtjSpecialApprovalList();
+		String deletedMinistryName = deletedSpecialApproval.getPmOrgProfile().getMinistryName();
+		Map<String, Integer> countMinistryMap = new HashMap<String, Integer>();
+		List<String> deleteMinistryString = this.getManagedBean().getDeletedMinistryNameList() != null
+				? this.getManagedBean().getDeletedMinistryNameList() : new ArrayList<String>();
+		Boolean	resetMinistryDropdown = false;		
+		
+		for (PmPtjSpecialApproval ptjSpecialApproval : ptjSpecialApprovalList) {
+			String ministryName = ptjSpecialApproval.getPmOrgProfile().getMinistryName();
+			countMinistryMap.put(ministryName,
+					countMinistryMap.containsKey(ministryName) ? countMinistryMap.get(ministryName) + 1 : 1);
+		}	
+
+		if (countMinistryMap.containsKey(deletedMinistryName) && countMinistryMap.get(deletedMinistryName) == 1) {
+			deleteMinistryString.add(deletedSpecialApproval.getPmOrgProfile().getMinistryName());
+			resetMinistryDropdown = true;
+		}
+		this.getManagedBean().setDeletedMinistryNameList(deleteMinistryString);
+		return resetMinistryDropdown;
 	}
 	//#36738 End
 	
@@ -6161,8 +6247,8 @@ public class RuleCatalogueBackingBean extends
 	    if (selectedValue == null) {
            return;
        }
-       // save selected ids into the row
-       if (this.getManagedBean().getSelectedSuppAccountType() == null) {
+	    // save selected ids into the row
+	    if (this.getManagedBean().getSelectedSuppAccountType() == null || this.getManagedBean().getSelectedSuppAccountType().isEmpty()) {
        		selectedValue.setSupplAcctTypeIds(null);
        		selectedValue.setSameSupplAcctType(false);
        } else if (this.getManagedBean().getSelectedSuppAccountType().size() == 1){
@@ -6249,6 +6335,8 @@ public class RuleCatalogueBackingBean extends
 		if (ids != null && !ids.isEmpty()) {
 			this.getManagedBean().getSelectedSuppAccountType().addAll(ids);
 
+			// 3 means all supplier account types (BASIC/MOF/G2G) are selected.
+			// User ticked the "ALL" checkbox.
 			if (ids.size() == 3) {
 				this.getManagedBean().setSelectedAllSuppAccountType(true);
 			}
@@ -6320,11 +6408,17 @@ public class RuleCatalogueBackingBean extends
 
 			v.setRuleType(rule);
 
-			if (row[2] != null)
+			if (row[2] != null){
 				v.setFromValue((BigDecimal) row[2]);
+			} else {
+				v.setFromValue(null);
+			}
 
-			if (row[3] != null)
+			if (row[3] != null){
 				v.setToValue((BigDecimal) row[3]);
+			} else {
+				v.setToValue(null);
+			}
 
 			if (row[4] != null) {
 				Number gid = (Number) row[4];
@@ -6333,11 +6427,13 @@ public class RuleCatalogueBackingBean extends
 				v.setGroupValueId(null);
 			}
 
-			if (row[5] != null)
+			if (row[5] != null){
 				v.setEffDate((Date) row[5]);
+			}
 
-			if (row[6] != null)
+			if (row[6] != null){
 				v.setExpDate((Date) row[6]);
+			}
 
 			Number showFlagValue = (Number) row[7];
 			boolean showFlag = showFlagValue != null && showFlagValue.intValue() == 1;
@@ -6347,10 +6443,14 @@ public class RuleCatalogueBackingBean extends
 			boolean isSameSupplAccType = suppAccType != null && suppAccType.intValue() == 1;
 			v.setSameSupplAcctType(isSameSupplAccType);
 
-			List<Long> supplAcctTypeList = parseLongList(row[9]);
+			if (row[9] != null) {
+			    v.setRecordStatusFlg(((Number) row[9]).intValue());
+			}
+
+			List<Long> supplAcctTypeList = parseLongList(row[10]);
 
 			v.setSupplAcctTypeIds(supplAcctTypeList);
-			v.setMergedConfigRuleValueIds(String.valueOf(row[10]));
+			v.setMergedConfigRuleValueIds(String.valueOf(row[11]));
 
 			list.add(v);
 		}
@@ -6402,6 +6502,11 @@ public class RuleCatalogueBackingBean extends
 		newRuleValue.setFromValue(BigDecimal.ONE);
 	}
 
+	/**
+	 * Rebuild Purchase Request (PR) rule values from merged data.
+	 *
+	 * @param descRuleType the PR rule configuration containing merged value
+	 */
 	private void setupPurchaseRequestRule(PmConfigRule descRuleType) {
 	    IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 
@@ -6418,24 +6523,49 @@ public class RuleCatalogueBackingBean extends
 	    }
 	}
 
-	private void processMergedRow(PmConfigRule ruleType, PmConfigRuleValue merged, IParameterSO parameterSO,
-			ParameterReqDTO reqDTO) {
+	/**
+	 * Expand one merged rule row into multiple rule value.
+	 *
+	 * @param ruleType 
+	 * @param merged
+	 * @param parameterSO
+	 * @param reqDTO
+	 */
+	private void processMergedRow(PmConfigRule ruleType, PmConfigRuleValue merged, IParameterSO parameterSO, ParameterReqDTO reqDTO) {
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
 		List<Long> supplierTypeIds = merged.getSupplAcctTypeIds();
 		List<Long> configValueIds = splitIds(merged.getMergedConfigRuleValueIds());
 
 		boolean first = true;
 
-		for (int i = 0; i < supplierTypeIds.size(); i++) {
-			PmConfigRuleValue value = buildRuleValue(merged, supplierTypeIds, configValueIds, i, first, parameterSO, reqDTO);
+		if (supplierTypeIds != null && !supplierTypeIds.isEmpty() && merged.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			for (int i = 0; i < supplierTypeIds.size(); i++) {
+				PmConfigRuleValue value = buildRuleValue(merged, supplierTypeIds, configValueIds, i, first, parameterSO, reqDTO);
 
-			if (value.isShowFlag() && first) {
-				first = false;
+				if (value.isShowFlag() && first) {
+					first = false;
+				}
+
+				ruleType.getConfigRuleValues().add(value);
 			}
 
-			ruleType.getConfigRuleValues().add(value);
+		} else {
+			for (int i = 0; i < configValueIds.size(); i++) {
+				Long configValueId = getConfigValueId(configValueIds, i);
+
+				PmConfigRuleValue value = ruleSO.getRuleValueByRuleValueId(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD, configValueId);
+
+				ruleType.getConfigRuleValues().add(value);
+			}
 		}
 	}
 
+	/**
+	 * Build a rule value for a specific supplier account type.
+	 *
+	 * @return a rule value ready to be added into the rule list
+	 */
 	private PmConfigRuleValue buildRuleValue(PmConfigRuleValue merged, List<Long> supplierTypeIds,
 			List<Long> configValueIds, int index, boolean first, IParameterSO parameterSO, ParameterReqDTO reqDTO) {
 
@@ -6446,9 +6576,14 @@ public class RuleCatalogueBackingBean extends
 			return createNewRuleValue(merged, supplAcctTypeId, first, parameterSO, reqDTO);
 		}
 
-		return updateExistingRuleValue(merged, configValueId, reqDTO);
+		return updateExistingRuleValue(merged, configValueId);
 	}
 
+	/**
+	 * Create a new Purchase Request rule value.
+	 *
+	 * @return newly created rule value
+	 */
 	private PmConfigRuleValue createNewRuleValue(PmConfigRuleValue merged, Long supplAcctTypeId, boolean first,
 			IParameterSO parameterSO, ParameterReqDTO reqDTO) {
 
@@ -6475,7 +6610,13 @@ public class RuleCatalogueBackingBean extends
 		return value;
 	}
 
-	private PmConfigRuleValue updateExistingRuleValue(PmConfigRuleValue merged, Long configValueId, ParameterReqDTO reqDTO) {
+	/**
+	 * Retrieve and update an existing Purchase Request rule value.
+	 * Update expired date and set modified flag.
+	 *
+	 * @return updated rule value
+	 */
+	private PmConfigRuleValue updateExistingRuleValue(PmConfigRuleValue merged, Long configValueId) {
 
 		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IRuleSO.class);
@@ -6483,14 +6624,23 @@ public class RuleCatalogueBackingBean extends
 		PmConfigRuleValue value = ruleSO.getRuleValueByRuleValueId(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD,
 				configValueId);
 
-		value.setExpDate(merged.getExpDate());
-		/*35323 - Audit Start*/
-		value.setModified(true);
-		/*35323 - Audit End*/
+		if (isExpDateChanged(value.getExpDate(), merged.getExpDate())) {
+		    value.setExpDate(merged.getExpDate());
+		    /* 35323 - Audit Start */
+		    value.setModified(true);
+		    /* 35323 - Audit End */
+		}
 
 		return value;
 	}
 
+	/**
+	 * Retrieve a configuration rule value ID from the given list based on the specified index.
+	 *
+	 * @param ids
+	 * @param index
+	 * @return the ID if available, otherwise null
+	 */
 	private Long getConfigValueId(List<Long> ids, int index) {
 		if (ids == null || ids.isEmpty() || index >= ids.size()) {
 			return null;
@@ -6498,6 +6648,12 @@ public class RuleCatalogueBackingBean extends
 		return ids.get(index);
 	}
 
+	/**
+	 * Split a comma-separated string of IDs and converts them into a list of Long value.
+	 *
+	 * @param ids
+	 * @return list
+	 */
 	private List<Long> splitIds(String ids) {
 		List<Long> result = new ArrayList<>();
 
@@ -6513,7 +6669,8 @@ public class RuleCatalogueBackingBean extends
 					result.add(Long.valueOf(p.trim()));
 				} catch (NumberFormatException e) {
 					// log and skip invalid value
-					log.warn("Invalid supplier account type id: " + p, e);
+					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+							"RuleCatalogueBackingBean.splitIds", null, e);
 				}
 			}
 		}
@@ -6599,7 +6756,8 @@ public class RuleCatalogueBackingBean extends
 		try {
 			return ParameterHelper.getInstance().getParameterDescListBySearchBean(parameterType, searchBean);
 		} catch (Exception e) {
-			log.error("Error retrieving parameter list for " + parameterType, e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+					"RuleCatalogueBackingBean.getParameterDescList", null, e);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 			return Collections.emptyList();
@@ -6655,9 +6813,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	private void validateValueForPR(PmConfigRule descRuleType){
-		if (!RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean()
-				.getSelectedRuleDescType().getRuleType().getRuleType())
-				&& RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(descRuleType.getRuleType())
+		if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(descRuleType.getRuleType())
 				&& descRuleType.getConfigRuleValues().get(0).getRuleValueId() == 0L) {
 			setupPurchaseRequestRule(descRuleType);
 		}
@@ -6667,8 +6823,8 @@ public class RuleCatalogueBackingBean extends
 		return this.getManagedBean().isFirstExpiryDateIsNull() ? MessageConst.ERROR_770275 : MessageConst.ERROR_770109;
 	}
 
-	private void validateType1(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue baseValueToCompare, PmConfigRuleValue value) {
-		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
+	private void validationType1(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue baseValueToCompare, PmConfigRuleValue value) {
+		if (RuleTypeConst.LO_PO_ACKNOWLEDGMENT_PERIOD.equals(ruleTypeDesc.getRuleType().getRuleType())) {
 			return;
 		}
 
@@ -6679,12 +6835,12 @@ public class RuleCatalogueBackingBean extends
 		throw new EpException(getExpiryDateErrorCode(), new String[] { ruleTypeDesc.getRuleDesc() });
 	}
 
-	private void validateType2(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue value) {
-		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
+	private void validationType2(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue value) {
+		if (RuleTypeConst.LO_PO_ACKNOWLEDGMENT_PERIOD.equals(ruleTypeDesc.getRuleType().getRuleType())) {
 			return;
 		}
 
-		if ("c".equalsIgnoreCase(ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode())) {
+		if (RuleTypeConst.CATEGORY_CODE.equals(ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode())) {
 
 			throw new EpException(MessageConst.ERROR_770199, new String[] { ruleTypeDesc.getRuleDesc(),
 					value.getCategoryDisplayValue() });
@@ -6693,12 +6849,56 @@ public class RuleCatalogueBackingBean extends
 		throw new EpException(MessageConst.ERROR_770110, new String[] { ruleTypeDesc.getRuleDesc() });
 	}
 
-	private void validateType3(PmConfigRuleDesc ruleTypeDesc) {
-		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
+	private void validationType3(PmConfigRuleDesc ruleTypeDesc) {
+		if (RuleTypeConst.LO_PO_ACKNOWLEDGMENT_PERIOD.equals(ruleTypeDesc.getRuleType().getRuleType())) {
 			return;
 		}
 
 		throw new EpException(MessageConst.ERROR_770154, new String[] { ruleTypeDesc.getRuleDesc() });
+	}
+
+	private String retrieveSupplierAccountType(PmConfigRuleValue ruleTypeValue) {
+
+		String parameterCode = ruleTypeValue.getSupplAcctTypeId().getParameterCode();
+
+		if (ParameterConst.BASIC_PARAM_CODE.equalsIgnoreCase(parameterCode)) {
+			return ParameterConst.ASAS;
+		}
+
+		if (ParameterConst.MOF_PARAM_CODE.equalsIgnoreCase(parameterCode)) {
+			return ParameterConst.MOF;
+		}
+
+		return ParameterConst.G2G;
+	}
+	
+	private boolean isExpDateChanged(Date oldDate, Date newDate) {
+
+	    if (oldDate == null && newDate == null) {
+	        return false;
+	    }
+
+	    if (oldDate != null && newDate == null) {
+	        return false;
+	    }
+
+	    if (oldDate == null && newDate != null) {
+	        return true;
+	    }
+
+	    return oldDate.compareTo(newDate) != 0;
+	}
+
+	private void sortConfigRuleValueList(List<PmConfigRuleValue> configRuleValueList) {
+		Collections.sort(configRuleValueList, new Comparator<PmConfigRuleValue>() {
+			@Override
+			public int compare(PmConfigRuleValue o1, PmConfigRuleValue o2) {
+				return new CompareToBuilder()
+				.append(o1.getEffDate(), o2.getEffDate())
+				.append(o1.getFromValue(), o2.getFromValue())
+				.toComparison();
+			}
+		});
 	}
 	//#35323 - End
 }

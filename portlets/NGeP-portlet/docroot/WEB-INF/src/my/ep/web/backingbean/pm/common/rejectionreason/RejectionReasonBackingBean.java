@@ -81,6 +81,7 @@ import my.ep.web.util.pm.helper.ReasonHelper;
 import org.apache.commons.collections.CollectionUtils; //#28962
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext; //#28962
 /**
  * Backing Bean for Rejection Reason
  * 
@@ -178,8 +179,11 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 		// 35509
 		
+		this.getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
+		
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
 					.remove(rowIndex);
+		
 	}
 	
 	/**
@@ -188,15 +192,18 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * @param pidReason
 	 */
 	public void reasonApplicableChange(PmPIDReason pidReason){
-		
+
 		List<PmPIDReason> temp = new ArrayList<PmPIDReason>();
 		temp.addAll(this.getManagedBean().getSelectedReason().getPmPIDReasonList());
 		temp.remove(pidReason);
 		for(PmPIDReason pReason : temp){
 			if(pReason.getDocType()!= null && pReason.getDocType().equals(pidReason.getDocType())){
+				getManagedBean().setReasonApplicabilityDuplicate(true); // 39618
 				throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
 						"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())});
+			} else {
+				getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
 			}
 		}
 	}
@@ -248,6 +255,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setSuppAppCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppComCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppTypeCheck(Boolean.FALSE);
+			this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618 
 	
 			if(id!=null && id>0){
 				loadRejectReason(id);
@@ -1970,6 +1978,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setAuditDeleteComRestrictions(null);
 		this.getManagedBean().setAuditDeleteSuppRestrictions(null);
 		
+		this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618
+		
 		// 28962-Audit START
 		this.getManagedBean().setAuditAddSupplAcctType(null);
 		this.getManagedBean().setAuditUpdateSupplAcctType(null);
@@ -2589,4 +2599,18 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 
 	//#28962 - End
+	
+	//#39618 - Start
+	public void validationForUpdate(){
+		log.info(" rejectionreasonbackingbean  in validationForUpdate()  :::::::::::::::::::::::::::::::: "+getManagedBean().isReasonApplicabilityDuplicate());
+		if(getManagedBean().isReasonApplicabilityDuplicate()){
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		}
+		
+	}
+	//#39618 - End
+	
 }

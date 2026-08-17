@@ -20,6 +20,13 @@
 
 	<p:panel id="openCategoryCodesPanel" 
 		header="#{lbl['lbl.sc.category.code.registered']}" toggleable="true">
+		
+		<p:spacer height="10"></p:spacer>
+		<h:outputText styleClass="instruction"  
+			value="#{lbl['lbl.sc.category.code.loa.add.instructions']}"
+			escape="false" />
+		<p:spacer height="10"></p:spacer>
+		
 		<p:row>
 			<p:column>
 				<p:dataTable id="supplierPnlId" var="categorySM" 
@@ -107,6 +114,13 @@
 
 	<p:panel id="panelResult"
 		header="#{lbl['lbl.sc.category.code.procurement']}" toggleable="true">
+
+		<p:spacer height="10"></p:spacer>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.category.code.loa.add.instructions']}"
+			escape="false" />
+		<p:spacer height="10"></p:spacer>
+
 		<p:row>
 			<p:column>
 				<p:dataTable id="selectedCategoryTable" var="categorySelected" 
@@ -179,7 +193,7 @@
 							onclick="blockWidget.show();"
 							oncomplete="deleteConfirmPopUp.hide(); blockWidget.hide();"
 							partialSubmit="true" process="@this"
-							update="@([id$=selectedCategoryTable])"
+							update="@([id$=selectedCategoryTable],[id$=supplierPnlId])"
 							action="#{directLOABackingBean.deleteProcurementRelatedCategory()}" />
 						<p:commandButton value="#{lbl['lbl.btn.no']}"
 							onclick="deleteConfirmPopUp.hide();" type="button"

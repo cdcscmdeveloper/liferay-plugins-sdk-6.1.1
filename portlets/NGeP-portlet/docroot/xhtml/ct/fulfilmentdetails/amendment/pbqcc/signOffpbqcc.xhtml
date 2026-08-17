@@ -12,6 +12,12 @@
 		rendered="#{(ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision or 
 		ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecisionRevision)
     		or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq)}">
+		
+		<!-- #24336 start -->
+		<h:outputText value="#{lbl['lbl.ct.instruction.authority.decision.pbm']}"
+			styleClass="instruction" style="color:blue" escape="false" /><br /><br />
+		<!-- #24336 end -->	
+		
 		<h:panelGrid columns="2" style="width:100%"
 			columnClasses="columnWidth150">
 			<!-- #26186 start-->
@@ -218,6 +224,12 @@
 	<p:panel id="mofPanel" header="#{lbl['lbl.ct.panel.mof.meeting.decision']}" toggleable="true"  toggleSpeed="500"
 		rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMofMeetingDecision
 			or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq)}">
+
+		<!-- #24336 start -->
+		<h:outputText value="#{lbl['lbl.ct.instruction.authority.decision.mof']}"
+			styleClass="instruction" style="color:blue" escape="false" /><br /><br />
+		<!-- #24336 end -->	
+			
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150">
 			<!-- #26186 start-->
 			<h:panelGrid columns="2" style="float:right;">

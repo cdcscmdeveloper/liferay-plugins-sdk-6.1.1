@@ -19,11 +19,11 @@ public class ItemThresholdRptManagedBean extends FlReportManagedBean {
 	 
 	private static final long serialVersionUID = 1L;
 	private String reportUrl;
-	private String procurementTypeCode;
+	private Long procurementTypeId;
 	private String financialYear;
 	private boolean reasonFlag;
 	private SelectItem[] reasonDropdown;
-	private String reasonCode;
+	private Long reasonId;
 	
 	public ItemThresholdRptManagedBean(){}
 	
@@ -33,14 +33,6 @@ public class ItemThresholdRptManagedBean extends FlReportManagedBean {
 
 	public void setReportUrl(String reportUrl) {
 		this.reportUrl = reportUrl;
-	}
-
-	public String getProcurementTypeCode() {
-		return procurementTypeCode;
-	}
-
-	public void setProcurementTypeCode(String procurementTypeCode) {
-		this.procurementTypeCode = procurementTypeCode;
 	}
 
 	public String getFinancialYear() {
@@ -67,14 +59,32 @@ public class ItemThresholdRptManagedBean extends FlReportManagedBean {
 		this.reasonDropdown = reasonDropdown;
 	}
 
-	public String getReasonCode() {
-		return reasonCode;
+	/**
+	 * @return the procurementTypeId
+	 */
+	public Long getProcurementTypeId() {
+		return procurementTypeId;
 	}
 
-	public void setReasonCode(String reasonCode) {
-		this.reasonCode = reasonCode;
+	/**
+	 * @param procurementTypeId the procurementTypeId to set
+	 */
+	public void setProcurementTypeId(Long procurementTypeId) {
+		this.procurementTypeId = procurementTypeId;
+	}
+
+	/**
+	 * @return the reasonId
+	 */
+	public Long getReasonId() {
+		return reasonId;
+	}
+
+	/**
+	 * @param reasonId the reasonId to set
+	 */
+	public void setReasonId(Long reasonId) {
+		this.reasonId = reasonId;
 	}
 	
-	
-
 }

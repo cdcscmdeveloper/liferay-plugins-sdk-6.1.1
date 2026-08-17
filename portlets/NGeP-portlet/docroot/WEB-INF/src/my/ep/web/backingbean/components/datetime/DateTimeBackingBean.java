@@ -1,7 +1,9 @@
 package my.ep.web.backingbean.components.datetime;
 
+import java.util.ArrayList;//#28188
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;//#28188
 
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
@@ -161,4 +163,313 @@ public class DateTimeBackingBean {
 					new Object[]{});
 		}
 	}
+	
+	//#28188 - Start
+	/**
+	 * Time changed action for selected date
+	 *
+	 * @param component the component
+	 * @return the date
+	 */
+	public Date timeChangedActionBSV(UIComponent component) {
+		debugLogger("timeChangedAction");
+
+	    Date dateValue = null;
+	    FacesScopes facesScopes = new FacesScopes();
+
+	    org.primefaces.component.calendar.Calendar calDateObj =
+	            (org.primefaces.component.calendar.Calendar)
+	                    facesScopes.findComponentById(component, "calDate");
+
+	    Object dateObj = calDateObj.getValue();
+
+	    Object hourObj =
+	            ((HtmlSelectOneMenu)
+	                    facesScopes.findComponentById(component, "calHour"))
+	                    .getValue();
+
+	    Object minuteObj =
+	            ((HtmlSelectOneMenu)
+	                    facesScopes.findComponentById(component, "calMin"))
+	                    .getValue();
+
+	    //#28188 - Start
+	    if (dateObj != null){
+	        if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
+	            //hourObj = "00";
+	        	hourObj = getFirstAvailableHour(component);
+	        }
+	        
+	        if (minuteObj == null || StringUtils.isBlank(minuteObj.toString())) {
+	            minuteObj = getFirstAvailableMinute(component);
+	        }
+
+	        int hourValue = Integer.parseInt(hourObj.toString());
+	        int minuteValue = Integer.parseInt(minuteObj.toString());
+
+	        Calendar selectedCal = Calendar.getInstance();
+	        selectedCal.setTime((Date) dateObj);
+	        selectedCal.set(Calendar.HOUR_OF_DAY, hourValue);
+	        selectedCal.set(Calendar.MINUTE, minuteValue);
+	        selectedCal.set(Calendar.SECOND, 0);
+	        selectedCal.set(Calendar.MILLISECOND, 0);
+
+	        dateValue = selectedCal.getTime();
+	    }
+	    //#28188 - End
+	    
+	    return dateValue;
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	/**
+	 * Hours dropdown for selected date BSV
+	 *
+	 * @param component the component
+	 * @return the date
+	 */
+	public List<SelectItem> getHoursDropdownValuesBSV(UIComponent component) {
+	    List<SelectItem> hours = new ArrayList<>();
+
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    UIComponent composite =
+	            UIComponent.getCurrentCompositeComponent(context);
+
+	    
+	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
+	    
+	    /*FacesScopes facesScopes = new FacesScopes();
+
+	    org.primefaces.component.calendar.Calendar calDateObj =
+	            (org.primefaces.component.calendar.Calendar)
+	                    facesScopes.findComponentById(composite, "calDate");*/
+
+	    
+	    Date selectedDate = getSelectedCalendarDate(composite, minDate);
+
+	    log.info("MIN DATE = " + minDate);
+	    log.info("SELECTED DATE = " + selectedDate);
+
+	    int minHour = 0;
+	    
+	    //#28188 - Start
+	    if (minDate != null && selectedDate != null) {
+
+	        Calendar calMin = Calendar.getInstance();
+	        calMin.setTime(minDate);
+
+	        Calendar calSel = Calendar.getInstance();
+	        calSel.setTime(selectedDate);
+
+	        boolean sameDay =
+	            calMin.get(Calendar.YEAR) == calSel.get(Calendar.YEAR)
+	            &&
+	            calMin.get(Calendar.DAY_OF_YEAR) == calSel.get(Calendar.DAY_OF_YEAR);
+	        
+	        if (sameDay) {
+
+	            int modValue = Integer.parseInt(
+	                composite.getAttributes().get("modVal").toString()
+	            );
+
+	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
+	            int oldMinute = calMin.get(Calendar.MINUTE);
+
+	            int lastMinuteSlot = 60 - modValue; // 45 if modVal = 15
+
+	            if (oldMinute >= lastMinuteSlot) {
+	                minHour = oldHour + 1;
+	            } else {
+	                minHour = oldHour;
+	            }
+
+	        } else {
+	            minHour = 0;
+	        }
+	    }
+	    //#28188 - End
+
+	    for (int i = minHour; i < 24; i++) {
+	        hours.add(new SelectItem(
+	                String.format("%02d", i),
+	                String.format("%02d", i)
+	        ));
+	    }
+
+	    return hours;
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private String getFirstAvailableHour(UIComponent component) {
+	    List<SelectItem> hours = getHoursDropdownValuesBSV(component);
+
+	    for (SelectItem item : hours) {
+	        if (item.getValue() != null) {
+	            return item.getValue().toString();
+	        }
+	    }
+
+	    return "00";
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	private String getFirstAvailableMinute(UIComponent component) {
+	    List<SelectItem> minutes = getMinutesDropdownValuesBSV(component);
+
+	    for (SelectItem item : minutes) {
+	        if (item.getValue() != null) {
+	            return item.getValue().toString();
+	        }
+	    }
+
+	    return "00";
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	/**
+	 * Gets the minutes dropdown values for BSV.
+	 *
+	 * @param UIComponent the component
+	 * @return the minutes dropdown values
+	 */
+	public List<SelectItem> getMinutesDropdownValuesBSV(UIComponent component) {
+	    List<SelectItem> minutes = new ArrayList<>();
+
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    UIComponent composite =
+	            UIComponent.getCurrentCompositeComponent(context);
+
+		// 28188 -start-
+
+		Date bsvNormalMaintain = (Date) composite.getAttributes().get(
+				"checkBSVNormalMain");
+		// 28188 -end-
+	    
+	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
+
+	    FacesScopes facesScopes = new FacesScopes();
+
+	    /*org.primefaces.component.calendar.Calendar calDateObj =
+	            (org.primefaces.component.calendar.Calendar)
+	                    facesScopes.findComponentById(composite, "calDate");*/
+
+	    Object hourObj =
+	            ((HtmlSelectOneMenu)
+	                    facesScopes.findComponentById(composite, "calHour"))
+	                    .getValue();
+
+	    if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
+	        hourObj = getFirstAvailableHour(component);
+	    }
+	    
+	    Date selectedDate = getSelectedCalendarDate(composite, minDate);
+
+	    int modValue = Integer.parseInt(
+	            composite.getAttributes().get("modVal").toString()
+	    );
+
+	    int minMinute = 0;
+
+	    if (minDate != null && selectedDate != null && hourObj != null) {
+
+	        Calendar calMin = Calendar.getInstance();
+	        calMin.setTime(minDate);
+
+	        Calendar calSel = Calendar.getInstance();
+	        calSel.setTime(selectedDate);
+
+	        boolean sameDay =
+	                calMin.get(Calendar.YEAR) == calSel.get(Calendar.YEAR)
+	                        && calMin.get(Calendar.DAY_OF_YEAR) == calSel.get(Calendar.DAY_OF_YEAR);
+
+	        int selectedHour = Integer.parseInt(hourObj.toString());
+
+
+	        //#28188 - Start
+	        if (sameDay) {
+
+	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
+	            int oldMinute = calMin.get(Calendar.MINUTE);
+	            
+				// 28188 -start-
+				int nextMinute = oldMinute;
+				if (null == bsvNormalMaintain) {
+					nextMinute = oldMinute + modValue;
+				}
+				// 28188 -end-
+                
+	            if (nextMinute >= 60) {
+	                /*
+	                 * Old time is at last minute slot, example 07:45.
+	                 * Next valid time is next hour 08:00.
+	                 */
+	                if (selectedHour <= oldHour) {
+	                    selectedHour = oldHour + 1;
+	                }
+
+	                minMinute = 0;
+
+	            } else if (selectedHour <= oldHour) {
+
+	                minMinute = nextMinute;
+
+	                if (minMinute % modValue != 0) {
+	                    minMinute = ((minMinute / modValue) + 1) * modValue;
+	                }
+
+	            } else {
+	                minMinute = 0;
+	            }
+
+	        } else {
+	            minMinute = 0;
+	        }
+	        
+	        //#28188 - End
+	    }
+
+	    for (int i = minMinute; i < 60; i++) {
+	        if (i % modValue == 0) {
+	            minutes.add(new SelectItem(
+	                    String.format("%02d", i),
+	                    String.format("%02d", i)
+	            ));
+	        }
+	    }
+
+	    return minutes;
+	}
+	//#28188 - End
+
+	//#28188 - Start
+	private Date getSelectedCalendarDate(UIComponent composite, Date fallbackDate) {
+	    FacesScopes facesScopes = new FacesScopes();
+
+	    org.primefaces.component.calendar.Calendar calDateObj =
+	        (org.primefaces.component.calendar.Calendar)
+	            facesScopes.findComponentById(composite, "calDate");
+
+	    if (calDateObj == null) {
+	        return fallbackDate;
+	    }
+
+	    Object value = calDateObj.getLocalValue();
+
+	    if (value == null) {
+	        value = calDateObj.getValue();
+	    }
+
+	    if (value instanceof Date) {
+	        return (Date) value;
+	    }
+
+	    // IMPORTANT: if calendar value not available during AJAX/render,
+	    // use restrictionDateTime date as selected date
+	    return fallbackDate;
+	}
+	//#28188 - End
 }

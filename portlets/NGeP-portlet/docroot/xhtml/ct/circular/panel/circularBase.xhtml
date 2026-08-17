@@ -140,5 +140,22 @@
 					onclick="cancelConfirmDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
+		<!-- #34442 - start -->
+		<p:dialog id="approvalConfirmDlgId" widgetVar="approvalConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line; text-align:center;"
+				value="#{panelBackingBean.confirmationContentMsg}" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					partialSubmit="true" process="@this"
+					onstart="approvalConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();gpki_dlg.show();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="approvalConfirmDlg.hide()" type="button" />
+			</div>
+		</p:dialog>
+		<!-- #34442 - end -->
 	</ui:define>	    
 </ui:composition>				

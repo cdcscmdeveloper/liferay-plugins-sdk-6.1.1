@@ -387,38 +387,6 @@
 					</table>
 				</td>
 			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td>
-					<table>
-						<tr>
-							<td><p:inputText id="responsePeriod"
-									value="#{scQt.responsePeriod}"
-									style="width:200px;" disabled="true" /></td>
-							<td colspan="2">
-								<ac:iconTooltip
-									value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
-				</td>
-				<td>
-				<c:if test="#{qtExtensionResponseDueDate != null}">
-					<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-					</p:inputText>
-				</c:if>
-				<c:if test="#{qtExtensionResponseDueDate == null}">
-					<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
-					</p:inputText>
-				</c:if>
-				</td>
-			</tr>
 			<tr>
 				<td></td>
 				<td></td>
@@ -477,7 +445,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneRadio value="#{scQt.sampleReq}"
-								disabled="#{scQt.partial or isReadOnly}">
+								disabled="true">
 								<f:selectItems
 									value="#{demoInvBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change" partialSubmit="true"

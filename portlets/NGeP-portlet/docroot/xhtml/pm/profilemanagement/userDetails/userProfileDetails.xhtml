@@ -581,9 +581,12 @@
 							countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileCountry}" 
 							areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileArea}" 
 							number="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileNo}" 
-							isMobile="true"
+							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+							<!-- #40246 Start -->
+							<!-- isMobile="true"
 							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}"
-							telcoId="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileTelcoId}" />
+							telcoId="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileTelcoId}" /> -->
+							<!-- #40246 End -->
 						</td>
 						
 					</tr>

@@ -23,6 +23,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.report.ct.CtReportBackingBean; //Fix - #40102
 import my.ep.web.backingbean.report.ct.CtReportBaseBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.constant.report.ReportConst;
@@ -51,14 +52,11 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 	
 	@Override
 	public void resetSearch() {		
-		log.debug("resetSearch: ccContractItemMonitoringRptBB");
+		log.debug("resetSearch: ccContractItemUsageMonitoringDtlsReportBB");
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
 		getManagedBean().setDisableMinistryField(false);
 		getManagedBean().setDisableOrgField(false);
-		getManagedBean().setSelectedMinistry(null);
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
 		getManagedBean().setContractNo(null);
 		getManagedBean().setContractPhysicalNo(null);
 		getManagedBean().setLoaNo(null);
@@ -79,8 +77,15 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 		}
 		getManagedBean().setFormattedSelectedItems(null);
 		getManagedBean().setLovSelectedItemList(null);
-		getManagedBean().setSelectedSupplier(null);	
+		getManagedBean().setSelectedSupplier(null);
+		getManagedBean().setSelectedPTJ(null); // Fix #40102, #40398, #30918
 		// End fix- #29416
+		// Start Fix - #40102
+		CtReportBackingBean ctReportBBean = new CtReportBackingBean();
+		if (ctReportBBean.getManagedBean().getReportCode() != null) {
+			ctReportBBean.setCurrentActiveOrg();
+		}
+		// End Fix - #40102
 		
 	}
 	

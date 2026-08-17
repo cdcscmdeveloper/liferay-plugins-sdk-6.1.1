@@ -39,6 +39,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst; //27868
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -211,6 +212,15 @@ public class PurchaseInDefaultBackingBean extends
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									message));
 				}
+				
+				//#26059 - Start
+				if (contractItem.getScRequestItem() != null && contractItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(contractItem.getScRequestItem().getCmItem().getItemName());
+					contractItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
+				//#26059 - End
+				
 				scPurchaseInDefault.setContractedItem(contractItem);
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
@@ -263,8 +273,11 @@ public class PurchaseInDefaultBackingBean extends
 				}
 				
 				//#26059 - Start
-				CommonUtils commonUtils = new CommonUtils();
-				ctPanelItem.setItemName(commonUtils.removeItemNameNA(ctPanelItem.getItemName()));
+				if (ctPanelItem.getScRequestItem() != null && ctPanelItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(ctPanelItem.getScRequestItem().getCmItem().getItemName());
+					ctPanelItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
 				//#26059 - End
 
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
@@ -1579,6 +1592,8 @@ public class PurchaseInDefaultBackingBean extends
 		// approved by
 		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
 		
+		CommonUtils commonUtils = new CommonUtils(); //#26059 - Start													   
+
 		// contract item
 		if (purchaseInDefault.getContractedItem() != null) {
 			/*
@@ -1604,6 +1619,21 @@ public class PurchaseInDefaultBackingBean extends
 				 getManagedBean().setContractTypeAsMinistry(Boolean.TRUE);
 			}
 			//#9133 - end
+			
+			//#26059 - Start
+			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
+					&& purchaseInDefault.getContractedItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getContractedItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getContractedItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			//#26059 - End
 		}
 		
 		if(purchaseInDefault.getCircularItem() != null) {
@@ -1612,6 +1642,19 @@ public class PurchaseInDefaultBackingBean extends
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {
 			getManagedBean().setCheckContractItem(Boolean.FALSE);
+			
+			// #26059 - Start
+			if (purchaseInDefault.getPanelItem().getScRequestItem() != null
+					&& purchaseInDefault.getPanelItem().getScRequestItem().getCmItem() != null) {
+				purchaseInDefault
+						.getPanelItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
 		}
 
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
@@ -1637,12 +1680,6 @@ public class PurchaseInDefaultBackingBean extends
 			//#31603 - end
 		}	
 		//#9133 - end
-		
-		//#26059 - Start
-		CommonUtils commonUtils = new CommonUtils();
-		purchaseInDefault.getPanelItem().setItemName(
-				commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem().getItemName()));
-		//#26059 - End
 		
 		finaliseEditableRemark(purchaseInDefault);//#31603
 
@@ -1805,6 +1842,8 @@ public class PurchaseInDefaultBackingBean extends
 		
 		getManagedBean().setContractId(Long.valueOf(directPurchaseDataType.getContractId()));
 		
+		CommonUtils commonUtils = new CommonUtils(); //#26059 - Start
+		
 		// approved by
 		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
 
@@ -1838,6 +1877,22 @@ public class PurchaseInDefaultBackingBean extends
 			 * contractItem = ConIresDTO.getCtContractItem();
 			 * purchaseInDefault.setContractedItem(contractItem);
 			 */
+			
+			// #26059 - Start
+			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
+					&& purchaseInDefault.getContractedItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getContractedItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getContractedItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
+			
 			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
 			getManagedBean().setCheckContractItem(Boolean.TRUE);
 		}
@@ -1848,6 +1903,19 @@ public class PurchaseInDefaultBackingBean extends
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {
 			getManagedBean().setCheckContractItem(Boolean.FALSE);
+			
+			// #26059 - Start
+			if (purchaseInDefault.getPanelItem().getScRequestItem() != null
+					&& purchaseInDefault.getPanelItem().getScRequestItem().getCmItem() != null) {
+				purchaseInDefault
+						.getPanelItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
 		}
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
 
@@ -2437,8 +2505,10 @@ public class PurchaseInDefaultBackingBean extends
 		
 		PmReason pmReason = new PmReason();
 		for (PmReason reason : reasonResDTO.getPmReasonList()) {
-			pmReason = reason;
-			break;
+			if (reason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY)) { // start #27868
+				pmReason = reason;
+				break;
+			}// end #27868
 		}
 		
 		return pmReason;

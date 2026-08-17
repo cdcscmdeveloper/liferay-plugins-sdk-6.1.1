@@ -575,6 +575,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getDropdownValues(String parameterType) {
 		return getDropdownValuesBySearchBean(parameterType, null);
 	}
+	
+	//9299 - 40712 Start
+	public SelectItem[] getProcurementMethodDropdownValues (String parameterType){
+		return getDropdownValuesByProcurementMethod(parameterType, null);
+	}
+	//9299 - 40712 End
 
 	/**
 	 * Get parameter id select items by parameter type and search bean for
@@ -658,6 +664,41 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+	
+	// 9299 -40712, 40978 Start
+	public SelectItem[] getDropdownValuesByProcurementMethod(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+
+		FacesScopes face = new FacesScopes();
+
+		// seeded up-front so a failure below still leaves a usable dropdown
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		items.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				PmParameter parameter = parameterDesc.getPmParameter();
+
+				if (null != parameter
+						&& !ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(parameter.getParameterCode())) {
+					items.add(new SelectItem(parameter.getParameterId(), parameterDesc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			// e.getMessage() is null for an NPE - log the trace or the cause is invisible
+			log.error("getDropdownValuesByProcurementMethod failed for parameterType " + parameterType, e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[items.size()]);
+	}
+	// 9299 -40712, 40978 End
 
 	// new #25725/25726 - Start
 	
@@ -953,7 +994,50 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 
 		return items.toArray(new SelectItem[0]);
-	}	
+	}
+	
+	 /**
+	  * Retrieves dropdown values by combining new and old WIP parameters.
+	  *
+	  * @param newParameterType the new parameter type
+	  * @param oldParameterType the old parameter type
+	  * @param oldParameterCode the old parameter code to include
+	  * @return an array of dropdown values
+	  */
+	public SelectItem[] getDropdownValuesWithWIP(String newParameterType, String oldParameterType,
+			String oldParameterCode) {
+
+		List<SelectItem> items = new ArrayList<>();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescList(newParameterType);
+
+			for (PmParameterDesc desc : parameterDescs) {
+				items.add(new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName()));
+			}
+
+			parameterDescs = ParameterHelper.getInstance().getParameterDescList(oldParameterType);
+
+			for (PmParameterDesc desc : parameterDescs) {
+				if (oldParameterCode != null
+						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE,
+					SLALogConstant.COMMON_BASE_BACKINGBEAN, SSTConstant.EMPTY_STRING,
+					SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM,
+					getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[0]);
+	}
 	//27868 - end
 
 	/**
@@ -4410,6 +4494,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 
 		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return getCategoryName(catL3, false);
+		}
 		String categoryName = getCategoryName(catL3, isFullName);
 
 		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
@@ -4478,6 +4565,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return latest or old category code description
 	 */
 	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return cat.getPmCategoryL3().getCategoryName();
+		}
 		String catName1 = cat.getPmCategoryL1().getCategoryName();
 		String catName2 = cat.getPmCategoryL2().getCategoryName();
 		String catName3 = cat.getPmCategoryL3().getCategoryName();
@@ -4857,10 +4947,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		CmColor color = cmitem.getCmColor();
 		CmUnspsc unspsc = cmitem.getCmUnspsc();
 		// segment title
-		String itemName = common.removeItemNameNA(type.getTypeName()) + " "
+		String itemName = (common.removeItemNameNA(type.getTypeName()) + " "
 				+ common.removeItemNameNA(brand.getBrandName()) + " "
 				+ common.removeItemNameNA(measurement.getMeasurementName()) + " "
-				+ common.removeItemNameNA(color.getColorName());
+				+ common.removeItemNameNA(color.getColorName())).trim().replaceAll("\\s+", " ");
 		// segment code
 		String extCode = type.getTypeCode() + brand.getBrandCode() + measurement.getMeasurementCode()
 				+ color.getColorCode();

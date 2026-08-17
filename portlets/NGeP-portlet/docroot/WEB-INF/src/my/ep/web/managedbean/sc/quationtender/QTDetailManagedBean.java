@@ -229,6 +229,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The boolean determine ct panel category */
 	private boolean ctPanelCategory;
+	
+	/** The boolean determining to show the category code panel **/
+	private boolean showCategoryCodePanel;//#29661 #40094
 	//#29661 end
 	
 	// Drop down Listing for Approver
@@ -1699,6 +1702,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean selectAllFinPreview;
 	private boolean saveForSendNotification;
 	private ScAttachment scoreAttachment;
+	private boolean preRenderInactiveChecklist;
 	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
@@ -1961,6 +1965,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#35320 - Start
 	private boolean afterSF;
 	//#35320 - End
+	
+	//#28188 - Start
+	/** The Briefing/Site Visit postpone date. */
+	private Date briefingSiteVisitPostponeDate;
+	private Map<Long,List<Long>> bsvRegisterDetails;
+	//#28188 - End
+	
+	private List<TplSpecZoneDtl> deleteZonesTreeNodes;	//37851
+	
+	//#38107 - Start
+	private boolean reseteGPACurrentArea = false;
+	//#38107 - End
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11516,6 +11532,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setScoreAttachment(ScAttachment scoreAttachment) {
 		this.scoreAttachment = scoreAttachment;
 	}
+	
+	public boolean isPreRenderInactiveChecklist() {
+		return preRenderInactiveChecklist;
+	}
+
+	public void setPreRenderInactiveChecklist(boolean preRenderInactiveChecklist) {
+		this.preRenderInactiveChecklist = preRenderInactiveChecklist;
+	}
 	// #10141 - end
 		
 		//#9019 - Start (Harun) 08082022 Missing remarks issue
@@ -12433,6 +12457,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCtPanelCategory(boolean ctPanelCategory) {
 		this.ctPanelCategory = ctPanelCategory;
 	}
+	
+	public boolean isShowCategoryCodePanel() {
+		return showCategoryCodePanel;
+	}
+
+	public void setShowCategoryCodePanel(boolean showCategoryCodePanel) {
+		this.showCategoryCodePanel = showCategoryCodePanel;
+	}
 	//#29661 end
 	//#21692 - End
 	public boolean isUserAbleToChangePBSecretary() {
@@ -12500,5 +12532,52 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.weightage35384WIP = weightage35384WIP;
 	}
 	//#38151
+	
+	//#28188 - Start
+	/**
+	 * @return the briefingSiteVisitPostponeDate
+	 */
+	public Date getBriefingSiteVisitPostponeDate() {
+		return briefingSiteVisitPostponeDate;
+	}
 
+	/**
+	 * @param briefingSiteVisitPostponeDate the briefingSiteVisitPostponeDate to set
+	 */
+	public void setBriefingSiteVisitPostponeDate(Date briefingSiteVisitPostponeDate) {
+		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
+	}
+	//#28188 - End
+
+	//37851 -- Start
+	public List<TplSpecZoneDtl> getDeleteZonesTreeNodes() {
+		return deleteZonesTreeNodes;
+	}
+
+	public void setDeleteZonesTreeNodes(List<TplSpecZoneDtl> deleteZonesTreeNodes) {
+		this.deleteZonesTreeNodes = deleteZonesTreeNodes;
+	}
+	//37851 --  End
+
+	//#38107 - Start
+	public boolean isReseteGPACurrentArea() {
+		return reseteGPACurrentArea;
+	}
+	//#38107 - End
+
+	//#38107 - Start
+	public void setReseteGPACurrentArea(boolean reseteGPACurrentArea) {
+		this.reseteGPACurrentArea = reseteGPACurrentArea;
+	}
+	//#38107 - End
+	
+	//#28188 - Start
+	public Map<Long, List<Long>> getBsvRegisterDetails() {
+		return bsvRegisterDetails;
+	}
+
+	public void setBsvRegisterDetails(Map<Long, List<Long>> bsvRegisterDetails) {
+		this.bsvRegisterDetails = bsvRegisterDetails;
+	}
+	//#28188 - End
 }

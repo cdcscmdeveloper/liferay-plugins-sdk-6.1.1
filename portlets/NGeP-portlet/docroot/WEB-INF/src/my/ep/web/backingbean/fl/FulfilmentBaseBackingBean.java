@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,8 @@ import org.apache.log4j.Logger;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
@@ -29,14 +32,20 @@ import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -61,6 +70,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
@@ -74,6 +84,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -475,6 +486,12 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 */
 	protected void convertCtAddressToFlAddress(CtContractValue ctSupplierDtl,FlSupplierDtl supplierDtl){//33917
 		//CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue(); //33917
+		//40227-Start
+		if (ctSupplierDtl == null) {
+			return;
+		}
+		//40227-end
+		
 		if(ctSupplierDtl.getSupplierBranch() != null){
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(ctSupplierDtl.getSupplierBranch());
@@ -484,6 +501,14 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		FlAddress flAddress = new FlAddress();
 		CtAddress ctAddress = ctSupplierDtl.getSupplierAddress();
+		
+		//40227-Start
+		if (ctAddress == null) {
+	        supplierDtl.setFlAddress(flAddress);
+	        return;
+	    }
+		//40227-end
+		
 		flAddress.setAddress1(ctAddress.getAddress1());
 		flAddress.setAddress2(ctAddress.getAddress2());
 		flAddress.setAddress3(ctAddress.getAddress3());
@@ -893,29 +918,26 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return void
 	 */
 	public void showItemDescPopup(Long cmItemId) {
-        if (cmItemId == null) {
-            return;
-        }
-        
-        try {
-        	CodificationReqDTO cReqDTO = new CodificationReqDTO();
-            cReqDTO.setItemId(cmItemId);
-            ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
-                    ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-            CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
-            if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
-                return;
-            }
-
-            CmItem item = codificationResDTO.getCmItem();
-            populateItemDescPopup(item);
-        } catch (Exception e) {
-        	SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
-					getUserIdSessionFromLoginId(), e);
+		if (cmItemId == null) {
 			return;
-        }
-        
-    }
+		}
+
+		try {
+			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+			cReqDTO.setItemId(cmItemId);
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+			CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
+			if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
+				return;
+			}
+			CmItem item = codificationResDTO.getCmItem();
+			populateItemDescPopup(item);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
 
     /**
      * Populate the item description for pop up
@@ -923,29 +945,27 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
      * @return void
      */
 	private void populateItemDescPopup(CmItem item) {
-        CommonUtils common = new CommonUtils();
-        CodificationBackingBean cdbb = new CodificationBackingBean();
-        
-        String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " " +
-        		common.removeItemNameNA(item.getCmBrand().getBrandName()) + " " +
-        		common.removeItemNameNA(item.getCmMeasurement().getMeasurementName()) + " " +
-        		common.removeItemNameNA(item.getCmColor().getColorName());
+		CommonUtils common = new CommonUtils();
+		CodificationBackingBean cdbb = new CodificationBackingBean();
 
-        String segmentCode = item.getCmType().getTypeCode() +
-                             item.getCmBrand().getBrandCode() +
-                             item.getCmMeasurement().getMeasurementCode() +
-                             item.getCmColor().getColorCode();
-        
-        String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " + segmentTitle;
+		String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " "
+				+ common.removeItemNameNA(item.getCmBrand().getBrandName()) + " "
+				+ common.removeItemNameNA(item.getCmMeasurement().getMeasurementName()) + " "
+				+ common.removeItemNameNA(item.getCmColor().getColorName());
 
-        cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
-        cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
-        cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
-        cdbb.getManagedBean().setSegmentTitle(segmentTitle);
-        cdbb.getManagedBean().setSegmentCode(segmentCode);
-        cdbb.getManagedBean().setFamilyTitle(familyTitle);
-        cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
-    }
+		String segmentCode = item.getCmType().getTypeCode() + item.getCmBrand().getBrandCode()
+				+ item.getCmMeasurement().getMeasurementCode() + item.getCmColor().getColorCode();
+
+		String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " + segmentTitle;
+
+		cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
+		cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
+		cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
+		cdbb.getManagedBean().setSegmentTitle(segmentTitle.replaceAll("\\s+", " ").trim());
+		cdbb.getManagedBean().setSegmentCode(segmentCode);
+		cdbb.getManagedBean().setFamilyTitle(familyTitle);
+		cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
+	}
 	
 	/**
 	 * Filter item contain NA, N A, N/A
@@ -1008,4 +1028,141 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	}
 		
 	// #31344 -end-
+	
+	/** 
+	* #29556
+	* Download file GARIS_PANDUAN_PENGGUNAAN_SISTEM_ePEROLEHAN_BAGI_PENYEDIAAN_ITEM_DAN_SPESIFIKASI.pdf
+	*/
+	public void downloadItemSpecGuideline() throws IOException {
+		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
+
+		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.COMMON);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
+
+		commonDownload(filePath.toString(), CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
+	}
+	
+	// 35571 - Start
+	/**
+	 * Retrieves PTJ name based on logged-in user.
+	 * 
+	 * If accessed via task, where task ID is not null, and the logged-in user
+	 * has either FL_APPROVER or RECEIVING_OFFICER role, the PTJ name will be
+	 * retrieved from the user's organization profile.
+	 * 
+	 * @param ptjName
+	 * @return PTJ name from user's organization profile if available; 
+	 * otherwise the original PTJ name
+	 */
+	public String retrievePtjNameByUserLogin(String ptjName) {
+		String taskId = getManagedBean().getTaskId();
+		Long userId = getUserIdSessionFromLoginId();
+
+		boolean isApprover = getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+		boolean isReceivingOfficer = getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
+
+		log.info("User ID : " + userId);
+		log.info("Task ID ManagedBean : " + taskId);
+		log.info("Has Role FL_APPROVER : " + isApprover);
+		log.info("Has Role RECEIVING_OFFICER : " + isReceivingOfficer);
+
+		if (isAllowedToRetrievePtjFromUserOrg(taskId, isApprover, isReceivingOfficer)) {
+			String orgName = retrieveOrgNameByUserId(userId);
+			
+			if (orgName != null) {
+				return orgName;
+			}
+		}
+
+		return ptjName;
+	}
+
+	/**
+	 * Checks whether the logged-in user is allowed to retrieve PTJ name from
+	 * the user's organization profile.
+	 * 
+	 * @param taskIdManagedBean
+	 * @param isApprover
+	 * @param isReceivingOfficer
+	 * @return
+	 */
+	private boolean isAllowedToRetrievePtjFromUserOrg(String taskId, boolean isApprover,
+			boolean isReceivingOfficer) {
+		return taskId != null && (isApprover || isReceivingOfficer);
+	}
+
+	/**
+	 * Retrieves organization name based on the logged-in user's ID.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private String retrieveOrgNameByUserId(Long userId) {
+		Long orgProfileId = retrieveOrgProfileIdByUserId(userId);
+
+		if (orgProfileId != null) {
+			return retrieveOrgNameByOrgProfileId(orgProfileId);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieves organization profile ID based on the logged-in user's ID.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private Long retrieveOrgProfileIdByUserId(Long userId) {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		
+		if (userId != null){
+			userReqDTO.setUserId(userId);
+
+			UserResDTO userOrgResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+
+			if (userOrgResDTO != null && userOrgResDTO.getUserOrgList() != null && !userOrgResDTO.getUserOrgList().isEmpty()) {
+				PmUserOrg userOrg = userOrgResDTO.getUserOrgList().get(0);
+				
+				if (userOrg.getPmOrgProfile() != null) {
+					return userOrg.getPmOrgProfile().getOrgProfileId();
+				}
+			} 
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieves organization name based on organization profile ID.
+	 * 
+	 * @param orgProfileId
+	 * @return
+	 */
+	private String retrieveOrgNameByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+
+		OrgProfileResDTO resDTO = orgProfileSO.getActivePmOrgValidityByOrgProfileId(reqDTO);
+
+		if (resDTO != null && resDTO.getPmOrgProfile() != null) {
+			return resDTO.getPmOrgProfile().getOrgName();
+		}
+
+		return null;
+		
+	}
+	
+	// 35571 - End
+	
 }

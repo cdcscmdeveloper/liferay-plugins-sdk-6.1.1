@@ -24,6 +24,7 @@ import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -141,6 +142,14 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		if(getManagedBean().getTransactionToDate().compareTo(getManagedBean().getTransactionFromDate()) < 0){
 			throw new EpException(MessageConst.ERROR_REPORT_780088);
 		}
+		
+		//add ministry for internal auditor
+		if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+			params.put(FlReportConst.FL_RPT_MINISTRY, "Y");
+		}else{
+			params.put(FlReportConst.FL_RPT_MINISTRY, "N");
+		}
+		
 		
 		checkOneYearDifferentForTransactionFeeRpt(getManagedBean().getTransactionFromDate(), getManagedBean().getTransactionToDate());
 		
