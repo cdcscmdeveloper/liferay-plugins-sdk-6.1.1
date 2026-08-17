@@ -5779,6 +5779,8 @@ public class SupplierFinalizationBackingBean extends
 				}
 				createShortlistedSuppliersDataModel();// 35140
 			} 
+			
+			setDisableSFJustification();	//40314
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_EVALUATION)) {
 			scQtFinalization.setRePublishOption(null);
