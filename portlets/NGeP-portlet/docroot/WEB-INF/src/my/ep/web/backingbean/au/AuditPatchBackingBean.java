@@ -333,7 +333,10 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		this.getManagedBean().getSearchBean().setDocTypeID(null);
 		this.getManagedBean().getSearchBean().setDocNo(null);
 		this.getManagedBean().getSearchBean().seteAduanNo(null);
+		
+		getManagedBean().setLazy(false);//#40761#8, #35740
 		getSearchMaster().resetData();//#40761, #35740
+		searchMaster = new SearchMasterPagingDataModel();//#40761#8, #35740
 	}
 	
 	/**
