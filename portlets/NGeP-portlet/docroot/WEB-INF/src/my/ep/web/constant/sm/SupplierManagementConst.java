@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import my.ep.constants.SMProcessNameConst;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -309,6 +310,14 @@ public class SupplierManagementConst {
 	public static final String MOL_SUCCESS = my.ep.constant.sm.SupplierManagementConst.MOL_SUCCESS;
 	public static final String MOL_FAIL = my.ep.constant.sm.SupplierManagementConst.MOL_FAIL;
 	public static final String MOL_PENDING = my.ep.constant.sm.SupplierManagementConst.MOL_PENDING;
+	
+	//#38377
+	public static final String PAYMENT_GATEWAY_SUCCESS = "SUCC";
+	public static final String PAYMENT_GATEWAY_FAIL = "FAIL";
+	public static final String PAYMENT_GATEWAY_PENDING = "PEND";
+	public static final String PAYMENT_GATEWAY_CHANNEL_MGATE = "MGATE";
+	public static final String PAYMENT_GATEWAY_CHANNEL_FPX = "FPX";
+	
 	public static final String PAYMENT_INVALID_RES = my.ep.constant.sm.SupplierManagementConst.PAYMENT_INVALID_RES;
 
 	public static final String PM_STATUS_PAYMENT = "SPY";
@@ -793,6 +802,7 @@ public class SupplierManagementConst {
 	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
+	public static final Pattern FOREIGN_REG_NO_PATTERN = Pattern.compile("^99[0-9]{4}-[A-Z]$");
 //	#37925 END
 	
 	// Getters for panel info
@@ -1537,6 +1547,11 @@ public class SupplierManagementConst {
 	public String getSsmCompanyCountryMalaysia() {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
+
+	public static Pattern getForeignRegNoPattern() {
+		return FOREIGN_REG_NO_PATTERN;
+	}
+	
 //	#37925 END
 	
 	// 28278(26238) - START
@@ -1558,4 +1573,14 @@ public class SupplierManagementConst {
 		return MOF_STATUS_EXPIRED_SYSTEM;
 	}
 	// #29156(26238) -END
+	
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public String getSM_BASIC_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 }

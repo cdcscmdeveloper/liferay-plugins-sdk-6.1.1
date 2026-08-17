@@ -3063,7 +3063,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
 		// #34031
+
 		initSmRvHistory();
+
 		SmCommonUtil.redirectToPage(basePage, "", null);
 	}
 
@@ -4599,28 +4601,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		return catVoList;
 	}
-	//28281 - end	
-	// #29617 start
-	public void setSmeSupplierInfo(SmSupplier supplier) {
-		SupplierSmeReqDTO reqDTO = new SupplierSmeReqDTO();
-		SmSmeSupplier smeSupplier = new SmSmeSupplier();
-		reqDTO.setSmSupplier(supplier);
-		ISupplierSmeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				ISupplierSmeSO.class);
-		smeSupplier = reqSO.retrieveCurrentSmeInfo(reqDTO);
-		getManagedBean().setSmeSupplier(smeSupplier);
-	}
-	// #29617 end
-	//#12483 - START
-	public void sortApplicationRevises(){
-		Collections.sort(this.getManagedBean().getSmAppl().getSmApplRevises(), new Comparator<SmApplRevise>(){
-			@Override
-			public int compare(SmApplRevise revise1, SmApplRevise revise2) {
-				return Integer.valueOf(revise1.getCreatedDate().compareTo(revise2.getCreatedDate()));
-			}
-		});
-	}
-	//#12483 - END
+	//28281 - end
 	
 	//START 31111
 	public void onViewOverlapCategory(SmAppl smAppl) {
@@ -4850,6 +4831,28 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	//END 31111
 	
+	// #29617 start
+	public void setSmeSupplierInfo(SmSupplier supplier) {
+		SupplierSmeReqDTO reqDTO = new SupplierSmeReqDTO();
+		SmSmeSupplier smeSupplier = new SmSmeSupplier();
+		reqDTO.setSmSupplier(supplier);
+		ISupplierSmeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				ISupplierSmeSO.class);
+		smeSupplier = reqSO.retrieveCurrentSmeInfo(reqDTO);
+		getManagedBean().setSmeSupplier(smeSupplier);
+	}
+	// #29617 end
+	//#12483 - START
+	public void sortApplicationRevises(){
+		Collections.sort(this.getManagedBean().getSmAppl().getSmApplRevises(), new Comparator<SmApplRevise>(){
+			@Override
+			public int compare(SmApplRevise revise1, SmApplRevise revise2) {
+				return Integer.valueOf(revise1.getCreatedDate().compareTo(revise2.getCreatedDate()));
+			}
+		});
+	}
+	//#12483 - END
+	
 	//31033 start
 	/**
 	 *
@@ -5035,7 +5038,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			} else {
 				reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
 			}
-
+			
 			ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
 			List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
 

@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -528,6 +527,8 @@ public class ConsolidationReportBackingBean extends
 
 		if (!SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReport.getTitle())) {
 			docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+		} else {
+			reportAttachment.setTempFileName("");
 		}
 		// #28784 - End
        //codes fixed related to 25619 issue.
@@ -2330,9 +2331,9 @@ public class ConsolidationReportBackingBean extends
 				&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED || qualSupplier
 						.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
 		// 26247 commit under 21692 - start
-		SmSupplier supplier = qualSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier(); //#26247
+//		SmSupplier supplier = qualSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier(); //#26247
 		if (disagreeProposalValidityExtension
-				|| this.disabledQTProcess(supplier) //#26247
+//				|| this.disabledQTProcess(supplier) //#26247
 				) {
 			qualSupplier.setDeskOfficerRank(null);
 			updateCachedData(qualSupplier);
@@ -2356,5 +2357,4 @@ public class ConsolidationReportBackingBean extends
 		return countItemDisabled;
 	}
 	// 26247 - end
-
 }
