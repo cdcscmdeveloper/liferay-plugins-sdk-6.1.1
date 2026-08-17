@@ -12,20 +12,15 @@
 			<table style="width: 100%">
 				<tr>
 					<td>
-						<h:outputText
-							value="#{lbl['lbl.sm.other.desc.history.click']}"
+						<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
 							escape="false" />
-						<p:commandLink
-							onstart="blockWidget.show()"
+						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{supplierDataMaintenanceBackingBean.otherDescriptionHistory}"
-							process="@this"
-							partialSubmit="true"
-							update=":form">
+							action="#{supplierDataMaintenanceBackingBean.otherDescriptionHistoryMaintenance}" process="@this"
+							partialSubmit="true" update=":form">
 							<u><h:outputText
 									value="#{lbl['lbl.sm.other.desc.history.here']}"
-									style="color:blue;"
-									escape="false" /></u>
+									style="color:blue;" escape="false" /></u>
 						</p:commandLink>
 						<p:spacer width="2" />
 						<h:outputText
@@ -156,7 +151,7 @@
 	</p:confirmDialog>
 	
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory
+	<ac:otherDescriptionHistoryMaintenance
 		categoryCodeList="#{supplierDataMaintenanceBackingBean.managedBean.historyOtherDescList}"
 		applNo="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangePO}"
