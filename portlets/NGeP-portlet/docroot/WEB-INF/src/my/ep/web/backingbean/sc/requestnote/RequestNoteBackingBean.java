@@ -144,6 +144,7 @@ import my.ep.persistence.entity.pm.map.PmPK7Mapping;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScAssignItemDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -848,9 +849,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		//#26059 - Start
-		if(requestNoteResDTO.getAssignItemDtl()!=null){
-			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
-		}
+//		ScAssignItemDtl assignItemDtl = null;
+//		if(requestNoteResDTO.getAssignItemDtl()!=null){
+//			assignItemDtl = requestNoteResDTO.getAssignItemDtl();
+//			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
+//		}
 		
 		if(requestNoteResDTO.getQuote() !=null){
 			scQuote = requestNoteResDTO.getQuote();
@@ -8890,10 +8893,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			return false;
 		}
 
-		if (getManagedBean().isExistInAssignItemDetail()) {
-			return true;
-		}
-
 		ScRequestItem item = requestNoteDtl.getRequestItem();
 		CmItem cmItem = item.getCmItem();
 		return isValidExtensionLength(cmItem.getExtensionCode());
@@ -8945,8 +8944,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			return;
 		}
 
-		if (getManagedBean().isExistInAssignItemDetail()) {
-			return;
+		ScAssignItemDtl assignItemDtl = getRequestNoteSO().fetchExistingAssignmentDetail(requestItem);
+		if(assignItemDtl !=null){
+			if(requestItem.getRequestNoteItemId().equals(assignItemDtl.getScRequestItem().getRequestNoteItemId())){
+				return;
+			}
 		}
 		
 		if(scQuote !=null && scQuote.isPanel() && DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId()) && requestItem.getCmItem() !=null){
