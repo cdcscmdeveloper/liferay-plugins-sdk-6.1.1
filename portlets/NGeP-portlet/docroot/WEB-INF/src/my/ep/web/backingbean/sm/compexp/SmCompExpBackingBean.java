@@ -65,6 +65,8 @@ import com.liferay.portal.util.PortalUtil;
 //#9299 - #40660
 import my.ep.util.CustomUtils;
 
+import org.apache.log4j.Logger;
+
 /**
  * BackingBean for Sm Company Experience
  * 
@@ -75,6 +77,7 @@ import my.ep.util.CustomUtils;
 public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = Logger.getLogger(SmCompExpBackingBean.class); //40978
 	private static String smCompExpTncXhtml = "smCompExpTnc.xhtml";
 	private static String alertFlag = "?redirect";
 	private static String smCompExpAlertXhtml = "smCompExpAlert.xhtml";
@@ -90,6 +93,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private static String lblPopUpHeaderQT = "lbl.sm.comp.exp.master.popup.header.qt";
 	private static String lblPopUpHeaderCT = "lbl.sm.comp.exp.master.popup.header.ct";
 	// #9299 - #40713 End
+	// #9299 - #40714 Start
+	private static String lblPopUpHeaderFedSM = "lbl.sm.comp.exp.master.popup.header.fed.sm";
+	private static String lblPopUpHeaderNonFedSM = "lbl.sm.comp.exp.master.popup.header.non.fed.sm";
+	// #9299 - #40714 End
 
 	/**
 	 * Prerender for Company Experience Alert
@@ -1239,17 +1246,29 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
 
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
-		SelectItem clientTypeFederalItem = new SelectItem();
-		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
-		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
-		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
-		// #9299 - #40713 Start
-		if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_QT)) {
-			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderQT, null));
-		} else if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
-			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderCT, null));
-		}
-		// #9299 - #40713 End
+		// #9299 - #40714 Start
+		if (resDTO.getMaster().getClientType().equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
+			SelectItem clientTypeFederalItem = new SelectItem();
+			clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
+			clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+			this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
+			// #9299 - #40713 Start
+			if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_QT)) {
+				this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderQT, null));
+			} else if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+				this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderCT, null));
+			} else if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+				this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderFedSM, null));
+			}
+			// #9299 - #40713 End
+		} else if (resDTO.getMaster().getClientType().equals(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
+			SelectItem clientTypeNonFederalItem = new SelectItem();
+			clientTypeNonFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
+			clientTypeNonFederalItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
+			this.getManagedBean().getClientTypeItems().add(clientTypeNonFederalItem);
+			this.getManagedBean().setPopUpHeader(SmCommonUtil.getMessage(lblPopUpHeaderNonFedSM, null));
+		} 
+		// #9299 - #40714 End
 	}
 
 	/**
@@ -1283,6 +1302,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param selectedMaster
 	 */
 	public void redirectToUpdateMaster(SmCompExpMaster selectedMaster) {
+		log.info("redirectToUpdateMaster ENTER masterId=" + selectedMaster.getCompExpMasterId()); // 40978
 		this.getManagedBean().setDraftUpdate(false);
 		this.getManagedBean().setMasterUpdate(true);
 		this.getManagedBean().setMasterNew(false);
@@ -1305,6 +1325,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
+		// 40978
+		log.info("redirectToUpdateMaster after SO "
+				+ (null == resDTO.getMaster().getProcumentMode() ? "null" : resDTO.getMaster().getProcumentMode()
+						.getParameterId()));
 		// #9299 - #40660
 		this.getManagedBean().setHistMaster((SmCompExpMaster) CustomUtils.getInstance().deepCopy(resDTO.getMaster()));
 		if (null != this.getManagedBean().getSelectedMaster().getPaymentMethod()) {
@@ -1315,6 +1339,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null != this.getManagedBean().getSelectedMaster().getProcumentMode()) {
 			this.getManagedBean().getSelectedMaster().getProcumentMode().getParameterId();
 		} else {
+			log.info("redirectToUpdateMaster procumentMode null"); //40978
 			this.getManagedBean().getSelectedMaster().setProcumentMode(new PmParameter());
 		}
 
