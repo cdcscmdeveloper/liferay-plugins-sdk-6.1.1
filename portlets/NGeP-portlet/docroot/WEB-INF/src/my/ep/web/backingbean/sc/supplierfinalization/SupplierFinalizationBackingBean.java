@@ -3321,6 +3321,11 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
 		}
+		//#28784 - Start
+		if (SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReport.getTitle())) {
+			reportAttachment.setTempFileName("");
+		}
+		//#28784 - End
 		downloadFile(reportAttachment);
 		
 		// Bug #35485@Syazani 08/02/2024 -- Start

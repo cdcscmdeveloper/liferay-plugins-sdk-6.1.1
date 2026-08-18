@@ -7429,7 +7429,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			downloadSFAndRecommendationFilesAsZipFile(zos, scAttachments);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "downloadSFAndRecommendationFiles", "",
+					"downloadSFAndRecommendationFiles", getUserIdSessionFromLoginId(), ex);
 		} finally {
 			zos.close();
 			response.flushBuffer();
