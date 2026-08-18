@@ -152,6 +152,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
+	
+	private boolean isSupplementContractComplete = true; //28719
 
 	//#35508 start
   	private String originalSupplierInvRef;
@@ -1265,6 +1267,16 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+	
+	//28719-start
+	public boolean isSupplementContractComplete() {
+		return isSupplementContractComplete;
+	}
+
+	public void setSupplementContractComplete(boolean isSupplementContractComplete) {
+		this.isSupplementContractComplete = isSupplementContractComplete;
+	}
+	//28719-end	
 	
 	//#35508 start
 	/**
