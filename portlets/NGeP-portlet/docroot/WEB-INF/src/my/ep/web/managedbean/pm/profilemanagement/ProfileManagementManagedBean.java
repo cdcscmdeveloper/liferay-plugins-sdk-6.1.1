@@ -105,6 +105,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private PmUserOrg newAuditPmUserOrg;
 	private List<PmUserRole> newAuditPmUserRoles;
 	private List<PmAddressType> newAuditPmAddressTypes;
+	private boolean userGrpBrandNew = false; // #40810
 	/************ AUDIT #28895-35509 *************/
 	
 	public ProfileManagementManagedBean(){}
@@ -968,5 +969,16 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setBrandNewUserOrgId(Long brandNewUserOrgId) {
 		this.brandNewUserOrgId = brandNewUserOrgId;
 	}
+	
+	// #40810 Start
+	public boolean isUserGrpBrandNew() {
+		return userGrpBrandNew;
+	}
+
+	public void setUserGrpBrandNew(boolean userGrpBrandNew) {
+		this.userGrpBrandNew = userGrpBrandNew;
+	}
+	// #40810 - end
+	
 	/************ END: AUDIT #35509 *************/
 }
