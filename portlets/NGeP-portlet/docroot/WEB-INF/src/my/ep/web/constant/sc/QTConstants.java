@@ -477,6 +477,10 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
+	public static final String SPAN_ERROR_ICON = "<span class=\"ui-messages-error-icon\" style=\"position: relative;right: 25px;\"></span>";
+	public static final String SPAN_ERROR_CONTENT_OPEN = "<span style=\"position: relative;right: 25px;\">";
+	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span>";
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION_HIDE = "inActiveChecklistNotification.hide()";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -527,7 +531,7 @@ public interface QTConstants {
 			
 	// 25791-End
 	
-	//#38151
+	//#38151 & #38679
 	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
 	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
@@ -605,5 +609,10 @@ public interface QTConstants {
 	public static final String RPT_DROPDOWN_CANCELLED_LBL = "lbl.rpt.drpdown.cancelledLabel";
 	public static final String RPT_ALL_LBL = "lbl.rpt.all";
 	// #29580-end
+
+	// 28188 -start-
+	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
+	// 28188 -end-
+
 
 }

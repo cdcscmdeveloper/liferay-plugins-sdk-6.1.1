@@ -4874,7 +4874,6 @@ return	remarksNotFound;
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
-		List<ScAttachment> attachments = new ArrayList<>(); //#25651
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getDocumentList());
@@ -4899,29 +4898,10 @@ return	remarksNotFound;
 				}
 			}
 		}
-		
-		//#25651 - Start
-		attachments.addAll(scAttachments);
-		List<Object[]> reportDetailList = reportDetailAttachmentType();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
-			for(ScQtFinalizationReportDetail finalizationreport:scQtFinalizationReportDetail){
-				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport.getDefinationType().getParameterCode())){
-					for (Object[] reportDetail : reportDetailList) {
-						String codeReportName = (String) reportDetail[0];
-						String fileReportName = (String) reportDetail[1];
-					    if(codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())){
-					    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
-					    }
-					}
-				}
-			}
-		}
-		//#25651 - Start
 
 		// Generate all the reports before submission
-		if (!skipDownload) { // 38523
-			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
+		if (!skipDownload) {
+			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
 	}
@@ -8026,8 +8006,7 @@ return	remarksNotFound;
 				if (!qtRefinalized) {
 					scQtFinalization.setOnlineBiddingEndorse(null);
 				}
-				this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
-				this.getManagedBean().setSingleAward(true);
+				checkForMLOI(finalizationMethodStr);//#40396
 			} else {
 				this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
 				scQtFinalization.setOnlineBiddingEndorse(null);
@@ -13921,6 +13900,17 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return reasonDescs;
 	}
 	//#34860 End
-
+	
+	//#40396 - Start
+	private void checkForMLOI(String finalizationMethodStr) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
+			this.getManagedBean().setMultipleLoi(true);
+		} else {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+			this.getManagedBean().setSingleAward(true);
+		}
+	}
+	//#40396 - End
 }
 // ***19336

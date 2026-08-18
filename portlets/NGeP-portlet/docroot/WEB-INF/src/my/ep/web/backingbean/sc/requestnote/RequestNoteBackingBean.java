@@ -144,6 +144,7 @@ import my.ep.persistence.entity.pm.map.PmPK7Mapping;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScAssignItemDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -828,6 +829,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param RequestNoteResDTO
 	 *            requestNoteResDTO
 	 */
+	@SuppressWarnings("null")
 	private void reloadRequestNoteForCodification(RequestNoteResDTO requestNoteResDTO) {
 		debugLogger("reloadRequestNoteForCodification");
 		ScRequestNote requestNote = null;
@@ -848,12 +850,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		//#26059 - Start
-		if(requestNoteResDTO.getAssignItemDtl()!=null){
-			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
-		}
-		
 		if(requestNoteResDTO.getQuote() !=null){
 			scQuote = requestNoteResDTO.getQuote();
+		}
+			
+		Map<Long, ScAssignItemDtl> assignItemDtlMap = new HashMap<>();
+		if (CollectionUtils.isNotEmpty(requestNoteDtlList)) {
+			List<Long> requestItemIds = new ArrayList<>();
+			
+			for (ScRequestNoteDtl dtl : requestNoteDtlList) {
+				if (dtl.getRequestItem() != null && dtl.getRequestItem().getRequestNoteItemId() != null) {
+					requestItemIds.add(dtl.getRequestItem().getRequestNoteItemId());
+				}
+			}
+			
+			if (!requestItemIds.isEmpty()) {
+				assignItemDtlMap = getRequestNoteSO().fetchBulkAssignmentDetails(requestItemIds);
+			}
 		}
 		//#26059 - End
 
@@ -861,7 +874,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
 
 		getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));
-
+		
 		// CHECK VALIDITY PID
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		try {
@@ -897,7 +910,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//#26059 - Start
 					CommonUtils commonUtils = new CommonUtils();
 					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
-					compareItemName(requestItem,scQuote);
+					
+					ScAssignItemDtl cachedAssignDtl = assignItemDtlMap.get(requestItem.getRequestNoteItemId());
+					compareItemName(requestItem,scQuote,cachedAssignDtl);
 					//#26059 - End
 				}
 			}
@@ -1167,9 +1182,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
 		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
-		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());				
-		    }
+		    validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
 		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
 					getManagedBean().getRequestSupplierItem());
 			// 27868 - end
@@ -8548,7 +8561,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
 						.getReasonId());
 
-				if (reason != null && !reason.isRecordStatus()) {
+				if (reason == null) {
+					continue;
+				}
+				
+				boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+				if (!reasonStatus) {
 					throw new EpException(MessageConst.ERROR_760718, new String[] {
 							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
 									.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
@@ -8556,6 +8574,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			}
 		}
+	}
+	
+	/**
+	 * Retrieves the PK7 reason status by reason ID.
+	 *
+	 * @param reasonId
+	 *            the reason ID
+	 * @return true if the reason is active, otherwise false
+	 */
+	private boolean retrievePK7ReasonStatus(Long reasonId) {
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		return reqSO.getPK7ReasonStatus(reasonId);
 	}
 	
 	/**
@@ -8874,10 +8905,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			return false;
 		}
 
-		if (getManagedBean().isExistInAssignItemDetail()) {
-			return true;
-		}
-
 		ScRequestItem item = requestNoteDtl.getRequestItem();
 		CmItem cmItem = item.getCmItem();
 		return isValidExtensionLength(cmItem.getExtensionCode());
@@ -8923,14 +8950,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * 
 	 * @param requestItem
 	 *            the request item containing the CmItem to compare and update
+	 * @param scQuote
+	 * @param assignItemDtl
+	 *        
 	 */
-	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote) {
+	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote , ScAssignItemDtl assignItemDtl) {
 		if (requestItem == null || requestItem.getCmItem() == null) {
 			return;
 		}
 
-		if (getManagedBean().isExistInAssignItemDetail()) {
-			return;
+		if(assignItemDtl !=null){
+			if(requestItem.getRequestNoteItemId().equals(assignItemDtl.getScRequestItem().getRequestNoteItemId())){
+				return;
+			}
 		}
 		
 		if(scQuote !=null && scQuote.isPanel() && DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId()) && requestItem.getCmItem() !=null){

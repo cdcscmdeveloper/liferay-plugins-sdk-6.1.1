@@ -48,7 +48,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
-import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 
@@ -486,9 +485,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			String content = AiDocParser.getFakeData(filepath, filename);
 			return new JsonWrapper(System.currentTimeMillis(), content, docType);
 		}
-		if (!filename.contains("ai_demo")){
-			return null;
-		}
 		///temporary demo filter - end
 		
 		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
@@ -739,7 +735,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		// any supporting document may carry a bank statement, so every matching row is validated
 		boolean hasBankDoc = false;
 		List<AiBankDocDTO> entities = new ArrayList<>();
-		SmFieldChangeUtil.setBankFieldChangeStatus(appl);
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
 			if (!isBankDoc(suppDoc.getPmDocument()) || EntityHelper.isCollectionEmpty(suppDoc.getSmApplDocFiles())){
 				continue;
@@ -1009,6 +1004,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		boolean hasWrongCompanyName = false;
 		boolean hasUnreadable = false;
 		StringBuilder sb = new StringBuilder();
+		// the same bank may arrive on several statements; it is listed once, per FRS 2.4
+		Set<String> seen = new HashSet<>();
 
 		for (AiBankDocDTO doc : docEntities){
 			// nothing parsed out of this file: it blocks submit too, but it is not a mismatch
@@ -1020,7 +1017,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				continue;
 			}
 			// per-bank mismatch rows, labels from the bundle
-			if (appendBankMismatchRows(doc.getBankStatements(), sb)){
+			if (appendBankMismatchRows(doc.getBankStatements(), sb, seen)){
 				hasWrongCompanyName = true;
 			}
 		}
@@ -1044,9 +1041,15 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	// Append a mismatch row per invalid bank field; returns true if any account-holder name mismatched.
-	private static boolean appendBankMismatchRows(List<AiBankDocDTO.AiBankStatementDTO> banks, StringBuilder sb){
+	// seen carries the bank name + account number keys already listed, across every statement.
+	private static boolean appendBankMismatchRows(List<AiBankDocDTO.AiBankStatementDTO> banks, StringBuilder sb,
+			Set<String> seen){
 		boolean hasWrongCompanyName = false;
 		for (AiBankDocDTO.AiBankStatementDTO bank : banks){
+			String key = AiDocValidator.bankAccountKey(bank);
+			if (key != null && !seen.add(key)){
+				continue;
+			}
 			if (!bank.isValidAccountHolderName()){
 				hasWrongCompanyName = true;
 			}
@@ -1081,7 +1084,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public static boolean isBankAiMismatch(SmAppl appl, boolean emitMessages) {
-		if (!isAIApplicable(appl)) {
+		if (!isAIApplicable(appl) || !AiDocSupport.isBlockDeclareEnabled()) {
 			return false;
 		}
 		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())) {
