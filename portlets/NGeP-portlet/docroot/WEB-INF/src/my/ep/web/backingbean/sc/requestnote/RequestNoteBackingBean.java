@@ -773,12 +773,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		// #26059 - Start
-		if (requestNoteResDTO.getAssignItemDtl() != null) {
-			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
-		}
-
 		if (requestNoteResDTO.getQuote() != null) {
 			scQuote = requestNoteResDTO.getQuote();
+		}
+		
+		Map<Long, ScAssignItemDtl> assignItemDtlMap = new HashMap<>();
+		if (CollectionUtils.isNotEmpty(requestNoteDtlList)) {
+			List<Long> requestItemIds = new ArrayList<>();
+			
+			for (ScRequestNoteDtl dtl : requestNoteDtlList) {
+				if (dtl.getRequestItem() != null && dtl.getRequestItem().getRequestNoteItemId() != null) {
+					requestItemIds.add(dtl.getRequestItem().getRequestNoteItemId());
+				}
+			}
+			
+			if (!requestItemIds.isEmpty()) {
+				assignItemDtlMap = getRequestNoteSO().fetchBulkAssignmentDetails(requestItemIds);
+			}
 		}
 		// #26059 - End
 		
@@ -820,7 +831,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//#26059 - Start
 					CommonUtils commonUtils = new CommonUtils();
 					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
-					compareItemName(requestItem,scQuote);
+					
+					ScAssignItemDtl cachedAssignDtl = assignItemDtlMap.get(requestItem.getRequestNoteItemId());
+					compareItemName(requestItem,scQuote,cachedAssignDtl);
 					//#26059 - End	
 				}
 			}
@@ -1028,9 +1041,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				&& scRequestNote != null) {
 			checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
-		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-		    }
+			validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
 		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
 					getManagedBean().getRequestSupplierItem());
 			// 27868 - end
@@ -1566,6 +1577,151 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean",
 					getManagedBean().getRequestNote().getRequestNoteNo(), "updateScRequestNoteDtl",
 					getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	/**
+	 * Merge DB and temp lists by PK.
+	 *
+	 * @param dbList existing DB records
+	 * @param tempList managed bean records
+	 * @return merged list with updates and new items
+	 */
+	public List<ScRequestNoteDtl> mergeRequestNoteDtl(List<ScRequestNoteDtl> dbList, List<ScRequestNoteDtl> tempList) {
+
+		if (dbList == null)
+			return tempList;
+		if (tempList == null || tempList.isEmpty())
+			return dbList;
+
+		List<ScRequestNoteDtl> result = new ArrayList<>(dbList.size() + tempList.size());
+		Map<Long, ScRequestNoteDtl> tempMap = new HashMap<>(tempList.size());
+		
+		mergeAndAppendRequestNoteDtl(dbList, tempList, result, tempMap);
+
+		return result;
+	}
+
+	/**
+	 * Merge DB list with temp list using PK mapping.
+	 *
+	 * @param dbList existing DB records
+	 * @param tempList managed bean records
+	 * @param result output merged list
+	 * @param tempMap temporary map for lookup
+	 */
+	private void mergeAndAppendRequestNoteDtl(List<ScRequestNoteDtl> dbList, List<ScRequestNoteDtl> tempList, List<ScRequestNoteDtl> result,
+			Map<Long, ScRequestNoteDtl> tempMap) {
+		// build map once
+		for (ScRequestNoteDtl temp : tempList) {
+			Long id = temp.getRequestNoteDtlId();
+			if (id != null) {
+				tempMap.put(id, temp);
+			}
+		}
+
+		// merge
+		for (ScRequestNoteDtl db : dbList) {
+
+			Long pk = db.getRequestNoteDtlId();
+
+			if (pk != null) {
+				ScRequestNoteDtl temp = tempMap.remove(pk);
+
+				if (temp != null) {
+					copyChangedFields(db, temp);
+				}
+			}
+
+			result.add(db);
+		}
+
+		// add remaining temp (new records + null PK)
+		for (ScRequestNoteDtl temp : tempList) {
+			if (temp.getRequestNoteDtlId() == null || tempMap.containsKey(temp.getRequestNoteDtlId())) {
+				result.add(temp);
+			}
+		}
+	}
+
+	/**
+	 * Copy non-null and changed values.
+	 *
+	 * @param target DB entity
+	 * @param source managed bean entity
+	 */
+	private void copyChangedFields(ScRequestNoteDtl target, ScRequestNoteDtl source) {
+
+		if (target == null || source == null)
+			return;
+		if (source.getScRequestSupplierItem() != null
+				&& (target.getScRequestSupplierItem() == null || !target.getScRequestSupplierItem().equals(
+						source.getScRequestSupplierItem()))) {
+			target.setScRequestSupplierItem(source.getScRequestSupplierItem());
+		}
+		if (source.getRequestItem() != null
+				&& (target.getRequestItem() == null || !target.getRequestItem().equals(source.getRequestItem()))) {
+			target.setRequestItem(source.getRequestItem());
+		}
+		if (source.getFulfilmentType() != null
+				&& (target.getFulfilmentType() == null || !target.getFulfilmentType()
+						.equals(source.getFulfilmentType()))) {
+			target.setFulfilmentType(source.getFulfilmentType());
+		}
+		if (source.getPriceType() != null
+				&& (target.getPriceType() == null || !target.getPriceType().equals(source.getPriceType()))) {
+			target.setPriceType(source.getPriceType());
+		}
+		if (source.getAssignedUser() != null
+				&& (target.getAssignedUser() == null || !target.getAssignedUser().equals(source.getAssignedUser()))) {
+			target.setAssignedUser(source.getAssignedUser());
+		}
+		if (source.getDeliverTerm() != null
+				&& (target.getDeliverTerm() == null || !target.getDeliverTerm().equals(source.getDeliverTerm()))) {
+			target.setDeliverTerm(source.getDeliverTerm());
+		}
+		if (source.getvCmSupplierItem() != null
+				&& (target.getvCmSupplierItem() == null || !target.getvCmSupplierItem().equals(
+						source.getvCmSupplierItem()))) {
+			target.setvCmSupplierItem(source.getvCmSupplierItem());
+		}
+		if (source.getPriceTypeId() != null
+				&& (target.getPriceTypeId() == null || !target.getPriceTypeId().equals(source.getPriceTypeId()))) {
+			target.setPriceTypeId(source.getPriceTypeId());
+		}
+		if (source.getProcTypeCategoryId() != null
+				&& (target.getProcTypeCategoryId() == null || !target.getProcTypeCategoryId().equals(
+						source.getProcTypeCategoryId()))) {
+			target.setProcTypeCategoryId(source.getProcTypeCategoryId());
+		}
+		if (source.getConditionField() != null
+				&& (target.getConditionField() == null || !target.getConditionField()
+						.equals(source.getConditionField()))) {
+			target.setConditionField(source.getConditionField());
+		}
+		if (source.getPiRequestSupplierItem() != null
+				&& (target.getPiRequestSupplierItem() == null || !target.getPiRequestSupplierItem().equals(
+						source.getPiRequestSupplierItem()))) {
+			target.setPiRequestSupplierItem(source.getPiRequestSupplierItem());
+		}
+		if (source.getTotalPricePerItem() != null
+				&& (target.getTotalPricePerItem() == null || !target.getTotalPricePerItem().equals(
+						source.getTotalPricePerItem()))) {
+			target.setTotalPricePerItem(source.getTotalPricePerItem());
+		}
+		if (source.getTotalPricePerItemRounded() != null
+				&& (target.getTotalPricePerItemRounded() == null || !target.getTotalPricePerItemRounded().equals(
+						source.getTotalPricePerItemRounded()))) {
+			target.setTotalPricePerItemRounded(source.getTotalPricePerItemRounded());
+		}
+		if (target.isShowPurchaseInquiry() != source.isShowPurchaseInquiry()) {
+			target.setShowPurchaseInquiry(source.isShowPurchaseInquiry());
+		}
+		if (target.isProdAndServiceFlag() != source.isProdAndServiceFlag()) {
+			target.setProdAndServiceFlag(source.isProdAndServiceFlag());
+		}
+		if (target.isReRecommend() != source.isReRecommend()) {
+			target.setReRecommend(source.isReRecommend());
 		}
 	}
 	
@@ -7677,8 +7833,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (null != rnDtl.getJustificationType() && null != rnDtl.getJustificationType().getReasonId()) {
 					PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
 							.getReasonId());
-
-					if (reason != null && !reason.isRecordStatus()) {
+					
+					if (reason == null) {
+						continue;
+					}
+					
+					boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+					if (!reasonStatus) {
 						throw new EpException(MessageConst.ERROR_760718, new String[] {
 								getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
 										.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
@@ -7687,6 +7848,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		
+		/**
+		 * Retrieves the PK7 reason status by reason ID.
+		 *
+		 * @param reasonId
+		 *            the reason ID
+		 * @return true if the reason is active, otherwise false
+		 */
+		private boolean retrievePK7ReasonStatus(Long reasonId) {
+			IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+			return reqSO.getPK7ReasonStatus(reasonId);
+		}		
 
 		/**
 		 * Retrieves the {@link PmReason} details for a given reason ID.
@@ -8645,31 +8819,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * 
 	 * @param requestItem
 	 *            the request item containing the CmItem to compare and update
+	 * @param scQuote
+	 * @param assignItemDtl
+	 *        
 	 */
-	public void compareItemName(ScRequestItem requestItem, ScQuote scQuote) {
+	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote , ScAssignItemDtl assignItemDtl) {
 		if (requestItem == null || requestItem.getCmItem() == null) {
 			return;
 		}
 
-		if (getManagedBean().isExistInAssignItemDetail()) {
+		if(assignItemDtl !=null){
+			if(requestItem.getRequestNoteItemId().equals(assignItemDtl.getScRequestItem().getRequestNoteItemId())){
+				return;
+			}
+		}
+		
+		if(scQuote !=null && scQuote.isPanel() && DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId()) && requestItem.getCmItem() !=null){
 			return;
 		}
 
-		if (scQuote != null
-				&& scQuote.isPanel()
-				&& DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem
-						.getItemType().getParameterId())
-				&& requestItem.getCmItem() != null) {
-			return;
-		}
-
-		String cmItemName = getCleanedItemName(requestItem.getCmItem()
-				.getItemName());
+		String cmItemName = getCleanedItemName(requestItem.getCmItem().getItemName());
 		String itemName = getCleanedItemName(requestItem.getItemName());
 
 		boolean namesDiffer = !cmItemName.equalsIgnoreCase(itemName);
-		boolean tempUnspscBlank = StringUtils.isBlank(requestItem
-				.getTempUnspscCode());
+		boolean tempUnspscBlank = StringUtils.isBlank(requestItem.getTempUnspscCode());
 
 		if (namesDiffer && tempUnspscBlank) {
 			trimExtensionCode(requestItem.getCmItem());
