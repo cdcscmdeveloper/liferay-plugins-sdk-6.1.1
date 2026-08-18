@@ -11923,7 +11923,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				
 				//#38151 To apply the same scoring settings/calculation for both packages and items.
 				newItemScoreSetting.setOverallTechnical(
-					    !this.getManagedBean().isWeightage35384WIP()
+					    this.getManagedBean().isWeightage35384WIP()
 					        ? itemScoreSetting.getOverallTechnical()
 					        : packageScoreSetting.getOverallTechnical()
 					);
@@ -11932,7 +11932,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				
 				//#38151 To apply the same scoring settings/calculation for both packages and items.
 				newItemScoreSetting.setOverallFin(
-						    !this.getManagedBean().isWeightage35384WIP()
+						    this.getManagedBean().isWeightage35384WIP()
 						        ? itemScoreSetting.getOverallFin()
 						        : packageScoreSetting.getOverallFin()
 						);

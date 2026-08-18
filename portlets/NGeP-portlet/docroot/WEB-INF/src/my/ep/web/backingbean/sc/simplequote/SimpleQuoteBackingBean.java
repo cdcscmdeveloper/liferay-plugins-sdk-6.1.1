@@ -482,16 +482,14 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private void handleInactiveReason() {
 
-		if (getManagedBean().getScQuote().getJustificationType() == null) {
+		if (getManagedBean().getCurrentReasonId() == null) {
 			return;
 		}
 
-		Long reasonId = getManagedBean().getScQuote().getJustificationType().getReasonId();
+		Long reasonId = getManagedBean().getCurrentReasonId();
 
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonId(reasonId != null
-				? reasonId
-				: getManagedBean().getInactiveReasonId());
+		reqDTO.setReasonId(reasonId);
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 
 		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(
@@ -506,21 +504,24 @@ public class SimpleQuoteBackingBean extends
 				.equalsIgnoreCase(parameterCode);
 		boolean isSIT = ReasonCategory.JUSTIFICATION_SIT.value()
 				.equalsIgnoreCase(parameterCode);
+		boolean isADH = ReasonCategory.JUSTIFICATION_AD_HOC.value()
+				.equalsIgnoreCase(parameterCode);
 
-		if (!isPK7 && !isPK7W && !isSIT) {
+		if (!isPK7 && !isPK7W && !isSIT && !isADH) {
 			return;
 		}
 
 		this.getManagedBean().setProcurementTypes(
-				getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));
+				getRadioButtonCodeValues(isPK7 ? ParameterTypeConst.PROCUREMENT_TYPE : ParameterTypeConst.PROCUREMENT_TYPE_RPT));
 
-		this.getManagedBean().setParameterTypeRPT(
-				ParameterTypeConst.PROCUREMENT_TYPE_RPT);
+		this.getManagedBean().setParameterTypeRPT(isPK7 ? ParameterTypeConst.PROCUREMENT_TYPE : ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 
-		this.getManagedBean().getScQuote().getProcurementType()
-				.setParameterCode((isPK7 || isPK7W)
-						? ParameterConst.PROC_TYPE_PK7
-						: ParameterConst.PROC_TYPE_SPECIAL_ITEM);
+		this.getManagedBean()
+				.getScQuote()
+				.getProcurementType()
+				.setParameterCode(
+						(isPK7 || isPK7W) ? ParameterConst.PROC_TYPE_PK7 : isADH ? ParameterConst.PROC_TYPE_AD_HOC
+								: ParameterConst.PROC_TYPE_SPECIAL_ITEM);
 
 		this.getManagedBean().setJustDropdown(
 				getReasonCodeDropdownValues(parameterCode));
@@ -3135,6 +3136,12 @@ public class SimpleQuoteBackingBean extends
 		dataCreatedDate = assignActualDate();
 		
 		// 27868 - start
+		getManagedBean().setCurrentReasonId(null);
+		if (getManagedBean().getScQuote().getJustificationType() != null
+				&& getManagedBean().getScQuote().getJustificationType().getReasonId() != null) {
+			getManagedBean().setCurrentReasonId(getManagedBean().getScQuote().getJustificationType().getReasonId());
+		}
+
 		getManagedBean().setIncludeMofSupplier(Boolean.FALSE);
 		getManagedBean().setIncludeBasicSupplier(Boolean.FALSE);
 		getManagedBean().setIncludeG2gSupplier(Boolean.FALSE);
@@ -9235,7 +9242,7 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setInActiveReasonDesc(reasonDesc);
 					PmParameter pmParameter = new PmParameter();
 					pmParameter.setParameterCode(StringUtils.EMPTY);
-					getManagedBean().setInactiveReasonId(reason.getReasonId());
+					getManagedBean().setCurrentReasonId(reason.getReasonId());
 					getManagedBean().setInactiveJustificationRemark(
 							getManagedBean().getScQuote().getJustificationRemark() != null
 									? getManagedBean().getScQuote().getJustificationRemark()
