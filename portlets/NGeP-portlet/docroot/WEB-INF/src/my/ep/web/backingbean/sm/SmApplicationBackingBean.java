@@ -20032,6 +20032,11 @@ public class SmApplicationBackingBean extends
 		return isAiAvailable() && fac != null && SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED.equals(fac.getOwnershipType());
 	}
 
+	// (ERR-722683)
+	public boolean isShowEpfAiBtn(){
+		return isAiAvailable() && !getManagedBean().isDisAllowOwnerEdit();
+	}
+
 	public boolean isAiUploadDocRow(PmDocument doc){
 		return isAiAvailable() && SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), doc);
 	}
