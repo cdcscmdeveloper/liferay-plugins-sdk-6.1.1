@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct;
 
@@ -92,6 +92,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote; //Fix - #30045
+import my.ep.persistence.entity.sc.loaloi.ScLoa; //#37620,#34367
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -165,6 +166,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
 	private CtAgency selectedRecommendedAgency;
+	
+	private String confirmationContentMsg;//34442 
 	
 	//#13847 start
 	/**
@@ -376,15 +379,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 
 				// Start Fix - #30856
-				if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+				//#40170 start
+				if (ctBB.getManagedBean().getCtContractAmount().isBondExempted() && 
+						ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)) {
 					//Remove Code for removePerformanceDatatableRow - #40072 
-				
 					// Start - Fix #29368
-					if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)) {
-						checkandResetBondExempted();
-					}
+					checkandResetBondExempted();
 					// End - Fix #29368
 				}
+				//#40170 end
 				// End Fix - #30856
 
 				// Bug 34142, 15851 - shaqimi start 04/12/2022
@@ -493,6 +496,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else {
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
 			}
+			
+			//Start - Fix 29368
+			//from tasklist
+			checkandResetBondExempted(); //#40170
+			//End - Fix 29368
 		} catch(Exception e) {
 			log.error(e.getMessage(), e);
 		}		
@@ -699,6 +707,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			} else {
 				// Start Fix - #30045 || #27551 - add null checking
+				// The scRequestNote variable is only used to determine the procurement type.
+				// However, the values for reason and procurement type are always retrieved from the CT table.
 				ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(ctBB.getManagedBean(),
 						"contractVer.ctContractItems[0].scRequestItem.requestNote");
 				if (scRequestNote != null) {
@@ -845,6 +855,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 			}
+			
+			// #37620,#34367 - Start
+			// Retrieve LOA and update contract panel state (flag, circular data, and attachment)
+			// based on validation logic in retrieveItemPanelDetails.
+			ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(ctBB.getManagedBean(), "contractVer.ctContract.loa");
+			ctBB.retrieveItemPanelDetails(loa);
+			// #37620,#34367 - End
 			
 			chkBondWaivedAttachment();
 			sortDeductions();
@@ -1293,27 +1310,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		            syncBondsToTarget(contractAmt, allBondsFromUI, isEffectiveContract);
 
 		            // Set the attachment flag with more readable logic.
-		            boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
-		            boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
-		            int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
-		            contractAmt.setIsBondAttachment(flag);
+		            //#40283 - Start ( Set the bond attachment flag for FD/FU only)
+				if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+						|| ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+					
+					boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
+					boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
+					int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
+					contractAmt.setIsBondAttachment(flag);
+				}
+				//#40283 - End
 		        }
 		    }
 		// 24333 - End
 		
 		//#13847 start
-		if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
-				|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null) {
-			//#40114 start
-			Long statusId = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
-			if (checkStatusApprovalForBondWaiver(action, statusId)
-					&& ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
-				ctBB.removeInactiveDefermentHistory();
-				ctBB.removeDefermentLatest();
-			}
-			ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action, statusId));
-			//#40114 end
-		}
+		setBondWaiverDetailsForSave(ctContractVer, action); //#40197
 		//#13847 end
 		
 		//#30014 - Start (Set Company Experience Date and Flag to 4 - App Realtime/Data Patching)
@@ -1523,6 +1535,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
+		String docType = ctBB.getManagedBean().getContractVer().getDocType(); //#40283
 
 		/*Validation for delivery term main page*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
@@ -1980,7 +1993,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    log.info("validateCtContractVer method test : End Checking ");
 		  //#24333 - End
 		}
-		validationPerformanceBond(action); //#13847
+		
+		//#40283 start
+		if (docType != null
+				&& (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION) 
+						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
+			validationPerformanceBond(action); // #13847
+		}
+		//#40283 end
 		
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
@@ -2160,6 +2181,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	//#13847 - end
 	
+	//#34442 - start
+	/**
+	 * Checks whether the Performance Bond confirmation dialog should be displayed.
+	 *
+	 * @return {@code true} if the Performance Bond is required, not waived, not exempted,
+	 *         and the Performance Bond details are incomplete; {@code false} otherwise.
+	 */
+	private boolean shouldShowPerformanceBondConfirmation() {
+	    CtContractAmount amount = ctBB.getManagedBean().getCtContractAmount();
+
+	    return amount.isBondReq()
+	            && !amount.isBondWaived()
+	            && !amount.isBondExempted()
+	            && ctBB.getManagedBean().getCtPerformanceBond() == null;
+	}
+	//#34442 - end
+	
 	/**
 	 * The method used to authenticate user during submit the contract.
 	 * This method will invoke a confirmation dialog for user authentication.
@@ -2172,52 +2210,120 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	
 	public String gpkiSignAction(String outcome) throws Exception {
+		//#34442 - start
+		String docType = ctBB.getManagedBean().getContractVer().getDocType();
+		String statusId = String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId());
+		String contractNo = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
+		//#34442 - end
+		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			validateCtContractVer(outcome);
-			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-			// Start - 25890 - Minh
-			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-				PmStatus pmStatus = ctBB.getManagedBean().getContractVer().getStatus();
-				if (pmStatus != null
-						&& ContractStatusConst.FD_PENDING_APPROVAL.longValue() == pmStatus.getStatusId().longValue()) {
-					validateFDDescAndAmount(outcome);
-				}
+		//#34442, #40555 - start
+			return handleApproveOrReject(outcome, docType, statusId, contractNo);
+		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+			return handleCancelOutcome(outcome);
+		} else {
+			return handleSubmitOrOther(outcome, docType, statusId, contractNo);
+		}
+		//#34442, #40555 - end
+	}
+
+	//#34442, #40555 - start
+	private String handleApproveOrReject(String outcome, String docType, String statusId, String contractNo) throws Exception {
+		validateCtContractVer(outcome);
+		//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+		boolean isApprove = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome); //34442
+		
+		// Start - 25890 - Minh
+		if (isApprove) { //34442
+			PmStatus pmStatus = ctBB.getManagedBean().getContractVer().getStatus();
+			if (pmStatus != null
+					&& ContractStatusConst.FD_PENDING_APPROVAL.longValue() == pmStatus.getStatusId().longValue()) {
+				validateFDDescAndAmount(outcome);
 			}
-			// End - 25890 - Minh
-			StringBuilder sb = new StringBuilder();
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ctBB.getManagedBean().getContractVer().getDocType());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ctBB.getManagedBean().getCtContractAmount().getContractAmount());
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(outcome);		
-			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());		
-			getManagedBean().setTextBeforeSign(sb.toString());	
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			return null;
-		//#25406 - Start	
-		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
-				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
-			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
-			return null;
-		}else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome) 
-				&& ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+		}
+		// End - 25890 - Minh
+		StringBuilder sb = new StringBuilder();
+		sb.append(ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ctBB.getManagedBean().getContractVer().getDocType());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(ctBB.getManagedBean().getCtContractAmount().getContractAmount());
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(outcome);		
+		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());		
+		getManagedBean().setTextBeforeSign(sb.toString());	
+		getManagedBean().setButtonAction(outcome);
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+
+		//#34442 - start
+		boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+		boolean isFU = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		boolean isFulfilmentDocument = isFD || isFU;
+
+		if (isApprove) {
+			if ((isFulfilmentDocument && shouldShowPerformanceBondConfirmation()) || !isFulfilmentDocument) {
+				setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
+
+				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+
+				return null;
+			}
+		}
+		//#34442 - end
+
+		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		return null;
+	}
+	//#34442, #40555 - end
+
+	//#34442, #40555 - start
+	private String handleCancelOutcome(String outcome) throws Exception {
+		//#25406 - Start
+		boolean isCOM = ctBB.getManagedBean().getContractVer().getDocType()
+				.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
+
+		if (isCOM) {
 			validateRemarkCancel(outcome);
 			RequestContext.getCurrentInstance().execute("cancelComConfirmDlg.show()");
-			return null;
-		//#25406 - End
 		} else {
-			return this.saveContract(outcome);
+			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 		}
+		return null;
+		//#25406 - End
 	}
+	//#34442, #40555 - end
+
+	//#34442, #40555 - start
+	private String handleSubmitOrOther(String outcome, String docType, String statusId, String contractNo) throws Exception {
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			boolean isFD = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+			boolean isCOM = docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
+
+			if (isFD && shouldShowPerformanceBondConfirmation()) {
+				setConfirmationContentMsg(getConfirmationContent(statusId, contractNo));
+
+				RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+
+				return null;
+			} else if (isCOM) {
+				setConfirmationContentMsg(getConfirmationContent(statusId));
+
+				RequestContext.getCurrentInstance().update("form:submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+
+				return null;
+			}
+		}
+		return this.saveContract(outcome);
+	}
+	//#34442, #40555 - end
 
 	/**
 	 * The method used to set value for security check
@@ -3737,15 +3843,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ParameterConst.CONTRACT_TYPE_CENTRAL)
 					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
 				userRole = RoleCode.BPK_CCA.value();
-				//#25406 - Start
-			}else if ((ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_CENTRAL)
-					|| ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-							ParameterConst.CONTRACT_TYPE_MINISTRY))
-					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				//#25406 - Start (Fixing #35506)
+				//Fixing #35506 - Start
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
 				userRole = RoleCode.CT_APPROVER.value();
 				//#25406 - End
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL) && getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
 			}
+			//Fixing #35506 - End 
 		} else if (getManagedBean().getTaskName() != null
 				&& ((getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME) || getManagedBean()
 						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME.replaceAll("\\s", ""))) || (getManagedBean()
@@ -4332,6 +4440,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		}
 	}
+	
+	//#40170 start
 	//Start - Fix #29368
 	/**
 	 * The method used to check the bond exempted condition,
@@ -4339,16 +4449,38 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * otherwise true
 	 */
 	public void checkandResetBondExempted(){
-				
-		if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
-			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
-				ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
-			  }
-		   }
+		// Check Contract Version
+	    if (ctBB.getManagedBean().getContractVer() != null
+	            && ctBB.getManagedBean().getContractVer().getCtContractAmount() != null) {
+	        resetBondExemptionIfInvalid(ctBB.getManagedBean().getContractVer().getCtContractAmount());
+	    }
+
+	    // Check Managed Bean Contract Amount
+	    if (ctBB.getManagedBean().getCtContractAmount() != null) {
+	        resetBondExemptionIfInvalid(ctBB.getManagedBean().getCtContractAmount());
+	    }
 	//End - Fix #29368
 
 	}
 	// End Fix - #30856
+	
+	/**
+	 * Resets bond exemption flag if bond is required, marked as exempted,
+	 * and no supporting document is provided.
+	 *
+	 * @param contractAmount the contract amount object to validate
+	 */
+	private void resetBondExemptionIfInvalid(CtContractAmount contractAmount) {
+		if (contractAmount.isBondReq() && contractAmount.isBondExempted()) {
+			boolean isFileNameMissing = contractAmount.getBondExemptedFileName() == null;
+	        boolean isFilePathMissing = contractAmount.getBondExemptedFilePath() == null;
+
+	        if (isFileNameMissing && isFilePathMissing) {
+				contractAmount.setBondExempted(false);
+			}
+		}
+	}
+	//#40170 end
 	
 	// Start - #30866
 	/**
@@ -4647,13 +4779,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		if ((BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))
-				&& ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null) {
+				&& ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() != null) { //#40194
 
 			DecimalFormat df = new DecimalFormat("#.00");
 
 			bondAmount = Double.valueOf(df.format(bondAmount));
-			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()
-					.doubleValue()));
+			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt()
+					.doubleValue())); //#40194
 
 			if (Double.compare(bondAmount, originalBondAmt) < 0) {
 				setTabValue("PB");
@@ -4911,4 +5043,39 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return approvalStatus.containsValue(status) && outcome.equals(BpmOutcomeConst.BPM_APPROVE);
 	}
 	//#40114 end
+	
+	//#40197 start
+	/**
+	 * Method to set ct bond waiver details to be saved into the database.
+	 * 
+	 * @param ctContractVer object ctcontracver from save function
+	 * @param action the action button click by the user
+	 */
+	private void setBondWaiverDetailsForSave(CtContractVer ctContractVer, String action){
+		if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
+				|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null) {
+			//#40114 start
+			Long statusId = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
+			if (checkStatusApprovalForBondWaiver(action, statusId)
+					&& ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+				ctBB.removeInactiveDefermentHistory();
+				ctBB.removeDefermentLatest();
+			}
+			ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action, statusId));
+			//#40114 end
+		}else if (CollectionUtils.isNotEmpty(ctContractVer.getCtBondWaiverDetails())){
+			ctContractVer.setCtBondWaiverDetails(null);
+		}
+	}
+	//#40197 end
+	
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

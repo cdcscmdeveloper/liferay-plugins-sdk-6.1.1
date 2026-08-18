@@ -213,6 +213,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				validateOrderFulfiledAndDOFRNPendingCancellation();
 			}
 			//36754 -end
+			
+			//40793 -start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+				validatePOCOCurrentStatus(action, getManagedBean().getInvoice().getInvoiceId());
+			}
+			//40793 -end
+			
 			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
 				//32967-start
 				if(null != getManagedBean().getAccountNo()){
@@ -2836,5 +2843,66 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}	
 	}
 	//36754 -End
+	
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTrigger(String action) throws Exception {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+			return null;
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null
+					|| flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage("lbl.txt.remarks",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			}
+			RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
+			return null;
+		} else {
+			return signingAction(action);
+		}
+	}
+	// #34443 end
+	
+	//40793-start
+	/**
+	 * validate current POCO work flow status
+	 * 
+	 * @param action
+	 * @param invoiceId
+	 * @throws EpException
+	 *             if not allow to proceed
+	 * 
+	 */
+	private void validatePOCOCurrentStatus(String action, Long invoiceId) {
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlOrderId(getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType());
+		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_INVOICE);
+		reqDTO.setActionCode(action);
+		reqDTO.setInvoiceId(invoiceId);
+
+		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
+
+		Boolean allowToProceed = resDTO.isFlag();
+		if (!allowToProceed) {
+			throw new EpException(MessageConst.ERROR_740069);
+		}
+	}
+	//40793-end
 	
 }

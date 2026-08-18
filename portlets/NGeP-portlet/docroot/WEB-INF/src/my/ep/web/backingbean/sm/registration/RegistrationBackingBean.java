@@ -182,7 +182,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String proceedToCompanyInfo() {
-		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37900
+//		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37900 comment related #40254 comment related #40254
 		if (this.getManagedBean().getSmSupp() == null) {
 			//default to malaysia
 			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -5831,15 +5831,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	//13320-end
 	
-	//14685 - START
-	public void showMessageToggle(){
-		if(this.getManagedBean().isShowMessage()){
-			this.getManagedBean().setShowMessage(false);
-		}else{
-			this.getManagedBean().setShowMessage(true);
-		}
-	}
-	//14685 - END
 	
 	//  #28720 - Start
 	public void onChangeEmail()

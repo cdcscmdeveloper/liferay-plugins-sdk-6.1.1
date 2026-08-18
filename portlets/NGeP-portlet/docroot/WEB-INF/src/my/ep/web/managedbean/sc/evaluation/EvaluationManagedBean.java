@@ -11,6 +11,8 @@
 package my.ep.web.managedbean.sc.evaluation;
 
 import java.math.BigDecimal;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +40,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportDetail;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinancialCommitteeRemark;
@@ -723,7 +726,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	// 29661 -end-
 	
 	private boolean comingFromNextButton;//#38151
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151 & #38679
+	
+	// #25651 - Start
+	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
+	List<ScQtEvaluationReportDetail> scQtEvaluationReportDetailList; 
+	private String reportDownloadAllFileName;
+	private List<ScQtEvaluationReportDetail> reportDetailsToBeRemovedList; 
+	private ScQtEvaluationReportDetail selectedReportDetail; 
+	// #25651 - End
 	
 	/**tabIndex
 	 * Gets the today.
@@ -1039,8 +1050,48 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 * Instantiates a new evaluation managed bean.
 	 */
 	public EvaluationManagedBean() {
+		// #25651 - Start
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM,
+				SourcingConstants.LAPORAN_MAKLUMAT_UMUM_EC));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM,
+				SourcingConstants.LAPORAN_MAKLUMAT_UMUM_OC));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM,
+				SourcingConstants.LAPORAN_MAKLUMAT_UMUM_TEC));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_MAKLUMAT_UMUM,
+				SourcingConstants.LAPORAN_MAKLUMAT_UMUM_FEC));
 
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_PENILAIAN_PEMATUHAN,
+				SourcingConstants.LAPORAN_PENILAIAN_PEMATUHAN));
+		
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM,
+				SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_SECARA_ITEM));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM,
+				SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_LAMPIRAN));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_ITEM,
+				SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_PERINCIAN));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ,
+				SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_SECARA_PAKEJ));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ,
+				SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_LAMPIRAN));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_TEKNIKAL_PAKEJ,
+				SourcingConstants.LAPORAN_PENILAIAN_TEKNIKAL_PERINCIAN));
+		
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM,
+				SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_SECARA_ITEM));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_ITEM,
+				SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_LAMPIRAN));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ,
+				SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_SECARA_PAKEJ));
+		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_EVALUATION_LAPORAN_KEWANGAN_PAKEJ,
+				SourcingConstants.LAPORAN_PENILAIAN_KEWANGAN_LAMPIRAN));
+		// #25651 - End
 	}
+	
+	// #25651 - Start
+	public List<Map.Entry<String, String>> getReportDetail() {
+	    return reportDetail;
+	}
+	// #25651 - End
 
 	/**
 	 * Gets the sc qt meetings.
@@ -4792,7 +4843,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	// 29661 -end-
 	
-	//#38151 - start
+	//#38151 & #38679 - start
 	/**
 	 * @return the flag from nextbutton
 	 */
@@ -4814,7 +4865,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - end
+	//#38151 & #38679 - end
 
 	public String getMaxItemAllOtherElementsScoreLabel() {
 		return maxItemAllOtherElementsScoreLabel;
@@ -4839,4 +4890,39 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setTooltipDemo(String tooltipDemo) {
 		this.tooltipDemo = tooltipDemo;
 	}
+	
+	//#25651 - Start
+	public List<ScQtEvaluationReportDetail> getScQtEvaluationReportDetailList() {
+		return scQtEvaluationReportDetailList;
+	}
+
+	public void setScQtEvaluationReportDetailList(List<ScQtEvaluationReportDetail> scQtEvaluationReportDetailList) {
+		this.scQtEvaluationReportDetailList = scQtEvaluationReportDetailList;
+	}
+
+	public String getReportDownloadAllFileName() {
+		return reportDownloadAllFileName;
+	}
+
+	public void setReportDownloadAllFileName(String reportDownloadAllFileName) {
+		this.reportDownloadAllFileName = reportDownloadAllFileName;
+	}
+	
+	public List<ScQtEvaluationReportDetail> getReportDetailsToBeRemovedList() {
+		return reportDetailsToBeRemovedList;
+	}
+
+	public void setReportDetailsToBeRemovedList(List<ScQtEvaluationReportDetail> reportDetailsToBeRemovedList) {
+		this.reportDetailsToBeRemovedList = reportDetailsToBeRemovedList;
+	}
+
+	public ScQtEvaluationReportDetail getSelectedReportDetail() {
+		return selectedReportDetail;
+	}
+
+	public void setSelectedReportDetail(ScQtEvaluationReportDetail selectedReportDetail) {
+		this.selectedReportDetail = selectedReportDetail;
+	}
+	
+	//#25651 - End
 }

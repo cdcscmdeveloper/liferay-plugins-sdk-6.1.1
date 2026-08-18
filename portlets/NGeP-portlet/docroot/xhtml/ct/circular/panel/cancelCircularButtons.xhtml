@@ -8,15 +8,20 @@
 	   <tr>
 	    <td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  oncomplete="window.history.back();" rendered="false" /></td>
 	    <td class="ppRightBtn">
-	    	<f:event listener="#{panelBackingBean.preRenderViewCancelReq}" type="preRenderView" />	
+	    	<f:event listener="#{panelBackingBean.preRenderViewCancelReq}" type="preRenderView" />
+	    	 <p:outputPanel id="outcomePanel"><!-- Fix - #34367 -->	
 		   	<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+				<!-- #34442 - start -->
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" 
+				update=":form:approvalConfirmDlgId" 
 				process="@form"
 				onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
-				action="#{panelBackingBean.saveCancelCircularReq(action)}" />
-			</ui:repeat>	    			
+				action="#{panelBackingBean.showConfirmationDialog(action)}" />
+				<!-- #34442 - end -->
+			</ui:repeat>
+			</p:outputPanel>	    			
 	    </td>
 	   </tr>
 	 </table>			

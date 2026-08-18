@@ -323,7 +323,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 
 	/**
-	 * resets the whole search paramaters when changed
+	 * Resets the other search criteria when on change Change Type.
 	 */
 	public void changeType() {
 		
@@ -333,6 +333,10 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		this.getManagedBean().getSearchBean().setDocTypeID(null);
 		this.getManagedBean().getSearchBean().setDocNo(null);
 		this.getManagedBean().getSearchBean().seteAduanNo(null);
+		
+		getManagedBean().setLazy(false);//#40761#8, #35740
+		getSearchMaster().resetData();//#40761, #35740
+		searchMaster = new SearchMasterPagingDataModel();//#40761#8, #35740
 	}
 	
 	/**
@@ -385,7 +389,10 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 	
 	/**
-	 * creates excel sheetlayout row by row 
+	 * Creates the Excel sheet layout by populating the report row by row
+	 * based on the specified change type.
+	 *  
+	 * @param changeTypeID
 	 */
 	private void createSheetLayout(Integer changeTypeID){
 		if (wb == null){
@@ -407,15 +414,14 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		// Cell Format: DateTime
 		CellStyle cellStyleDateTime = new ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
 		// End Section - Setting Cell Style for each cell
+		
 		// Create Row/Cell - Report Title
 		Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
 		Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
-		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
-																		// Cell
-																		// Value
+		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value																		
 		cellTitleRow.setCellStyle(cellStyleTitleRpt);
-		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
-																			// Cell
+		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Column Cell
+
 		// Create Row/Cell - Report Header Datatable
 		Row titleHeaderRow = sheetRptAudit.createRow(3);
 		for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
@@ -423,51 +429,64 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 			cell.setCellValue(colHeaderDataTableRpt[i]);
 			cell.setCellStyle(colHeaderDataTableRptStyle);
 		}
-		// Section: Populate Audit Trail Details Record for Request Note.
+		
+		// Section: Populate Audit Trail Details Record
 		// Create Row/Cell - Audit Trail Details
 		int rowIndex = sheetRptAudit.getLastRowNum() + 1;
 		if (!EntityHelper.isCollectionEmpty(details)) {
 			for(VAuditPatchDTO vapdto : details){
 				Row currRow = sheetRptAudit.createRow(rowIndex++);
 				Cell cellActionDate = currRow.createCell(1);
-				cellActionDate.setCellValue(vapdto.getActionDate());		//getActionDate
+				cellActionDate.setCellValue(vapdto.getActionDate());//getActionDate
 				cellActionDate.setCellStyle(cellStyleDateTime);
+				
 				Cell cellActionType = currRow.createCell(2);
 				cellActionType.setCellValue(vapdto.getActionType());
 				cellActionType.setCellStyle(cellStyleString);
+				
 				Cell cellActionBy = currRow.createCell(3);
 				cellActionBy.setCellValue(vapdto.getActionBy());
 				cellActionBy.setCellStyle(cellStyleString);
+				
 				Cell cellOrganisation = currRow.createCell(4);
 				cellOrganisation.setCellValue(vapdto.getOrganization());
 				cellOrganisation.setCellStyle(cellStyleString);
+				
 				Cell cellRole = currRow.createCell(5);
 				cellRole.setCellValue(vapdto.getRole());
 				cellRole.setCellStyle(cellStyleString);
 				Cell cellDocType = currRow.createCell(6);
 				cellDocType.setCellValue(vapdto.getDocTypeName());
 				cellDocType.setCellStyle(cellStyleString);
+				
 				Cell cellDocNo = currRow.createCell(7);
 				cellDocNo.setCellValue(vapdto.getDocNo());
 				cellDocNo.setCellStyle(cellStyleString);
+				
 				Cell cellFieldName = currRow.createCell(8);
 				cellFieldName.setCellValue(vapdto.getFieldName());
 				cellFieldName.setCellStyle(cellStyleString);
+				
 				Cell cellOldValue = currRow.createCell(9);
 				cellOldValue.setCellValue(vapdto.getOldValue());
 				cellOldValue.setCellStyle(cellStyleString);
+				
 				Cell cellNewValue = currRow.createCell(10);
 				cellNewValue.setCellValue(vapdto.getNewValue());
 				cellNewValue.setCellStyle(cellStyleString);
+				
 				Cell cellChangeType = currRow.createCell(11);
 				cellChangeType.setCellValue(vapdto.getChangeTypeName());
 				cellChangeType.setCellStyle(cellStyleString);
+				
 				Cell cellReqBy = currRow.createCell(12);
 				cellReqBy.setCellValue(vapdto.getRequestBy());
 				cellReqBy.setCellStyle(cellStyleString);
+				
 				Cell cellReqOrg = currRow.createCell(13);
 				cellReqOrg.setCellValue(vapdto.getRequestOrg());
 				cellReqOrg.setCellStyle(cellStyleString);
+				
 				if(!changeTypeID.equals(AuditPatchConst.CHANGE_TYPE_EKONTRAK)){
 					Cell celleAduanNo = currRow.createCell(14);
 					celleAduanNo.setCellValue(vapdto.geteAduanNo());
@@ -483,13 +502,14 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 	
 	/**
-	 * sets excel column widths manually for each row 
+	 * Sets the column widths for the Excel sheet.
+	 *
+	 * @param totalNoOfCell ,the total number of columns to be configured
+	 * @param sheetName ,the Excel sheet for which the column widths are set
 	 */
-	
-	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
-		
+	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {		
 		// Default width for specific column ranges
-				int defaultWidth = 19 * 256;
+		int defaultWidth = 19 * 256;
 
 		// Define a map for specific column widths
 		Map<Integer, Integer> columnWidths = new HashMap<>();
@@ -513,6 +533,13 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		}
 	}
 
+	/**
+	 * Creates a No Records Found row with the predefined cell style.
+	 *
+	 * @param sheet ,the target Excel sheet
+	 * @param rowIndex ,the row index for the new row
+	 * @param totalCell ,the last column index for merging the cell
+	 */
 	private void createNotFoundRecord(Sheet sheet, int rowIndex, int totalCell) {
 		// Section - Setting Cell Style for No Records Found message.
 		CellStyle noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDataCellStyleString();

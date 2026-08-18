@@ -199,8 +199,8 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYMAINTYPE_FIELDLABELID, null, pmDocumentRestr
 						.getPmCategoryL3().getPmCategoryL2().getCategoryName(), actionType(updated));
 				/* 26 */
-				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBTYPE_FIELDLABELID, null, pmDocumentRestr
-						.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryName(), actionType(updated));
+				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBTYPE_FIELDLABELID, null,pmDocumentRestr
+						.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryName() , actionType(updated));
 				/* 27 */
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBDIVTYPE_FIELDLABELID, null, pmDocumentRestr
 						.getPmCategoryL3().getCategoryName(), actionType(updated));

@@ -194,7 +194,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				
 				// 36247-Start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					validatePOCOCurrentStatus(action, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());// 36361
+					validatePOCOCurrentStatus(action, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());// 36361/40227
 				}
 				// 36247-End
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
@@ -770,13 +770,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
-		// 36361 - start
+		// 36361/40227 - start
 		if (outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
 			validatePOCOCurrentStatus(outcome, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 
 		}
-		// 36361 - end
+		// 36361/40227 - end
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
@@ -935,13 +935,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
 		}
 		
-		if(getManagedBean().getFulfilmentNote().isBrandNew() && getManagedBean().getFulfilmentNote().getFlDeliveryOrder()!=null) { // validate to avoid duplicate FRN under one DO inserted
-			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
-			if(receivedNoteSO.retrieveActiveReceivedNoteByDeliveryOrderId(reqDTO).getFulfilmentNote()!=null) {
-				throw new EpException(MessageConst.ERROR_100048);
-			}
-		}
-		
+		//#34443 remove checking DO to confirmDialogueTrigger
 		// 39692-Start
 		if ((outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SAVE)
 				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT) || outcome
@@ -973,12 +967,19 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 				return null;
 			}
-			if(getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT) ||
-					getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)){
+			if (getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)) {
 				getManagedBean().setValidated(Boolean.TRUE);
 				getManagedBean().setAutoUpdate(Boolean.TRUE);
-				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+				//#34443 update confirm dialog start
+				if (getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT)) {
+					RequestContext.getCurrentInstance().execute("rejectDOConfirmDlg.show()");
+				}
+				if (getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)) {
+					RequestContext.getCurrentInstance().execute("rejectFRNReviseConfirmDlg.show()");
+				}
 				return null;
+				//#34443 update confirm dialog end
 			}
 			getManagedBean().setValidated(Boolean.TRUE);
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
@@ -1969,7 +1970,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @throws EpException if not allow to proceed
 	 * 
 	 */
-	private void validatePOCOCurrentStatus(String action, Long deliveryOrderId) {// 36361
+	private void validatePOCOCurrentStatus(String action, Long deliveryOrderId) {// 36361/40227
 		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1978,8 +1979,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				.getFulfilmentOrderId());
 		reqDTO.setDocType(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType());
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-		reqDTO.setActionCode(action);// 36361
-		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361
+		reqDTO.setActionCode(action);// 36361/40227
+		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361/40227
 		// 38104-Start
 		if (getManagedBean().getFulfilmentNote() != null
 				&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
@@ -2018,11 +2019,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				RequestContext.getCurrentInstance().execute("limitConfirmDlg.show();");
 				return null;
 			} else {
-				return gpkiSignAction(outcome);
+				return confirmDialogueTrigger(outcome);
 			}
 		}
 
-		return gpkiSignAction(outcome);
+		return confirmDialogueTrigger(outcome);
 	}
 	
 	/**
@@ -2253,5 +2254,96 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				IFulfilmentSO.class);
 		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
+	
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 */
+	public String confirmDialogueTrigger(String action) {
+		Long status = getManagedBean().getFulfilmentNote().getStatus().getStatusId();
 
+		validateDeliveryOrderForFulfilmentNote();
+
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+				&& (status.equals(FulfilmentStatusConst.FN_PENDING_APPROVAL) || status
+						.equals(FulfilmentStatusConst.FN_PENDING_REV_APPROVAL))) {
+			RequestContext.getCurrentInstance().execute("approveFRNConfirmDlg.show()");
+			return null;
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				&& (status.equals(FulfilmentStatusConst.FN_PENDING_APPROVAL) || status
+						.equals(FulfilmentStatusConst.FN_PENDING_REV_APPROVAL))) {
+			validateFulfilmentNoteReject();
+			RequestContext.getCurrentInstance().execute("rejectFRNConfirmDlg.show()");
+			return null;
+		} else {
+			return gpkiSignAction(action);
+		}
+	}
+
+	/**
+	 * remark compulsory for reject action
+	 * 
+	 */
+	private void validateFulfilmentNoteReject() {
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null
+				|| flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+			getManagedBean().setSelectedTabIndex(0);
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.txt.remarks", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	/**
+	 * validate delivery order in order to proceed fulfilment note
+	 * 
+	 */
+	private void validateDeliveryOrderForFulfilmentNote() {
+		IDeliveryOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IDeliveryOrderSO.class);
+		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+		PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
+		if (status == null || statusDeliveryOrderBlock(status.getStatusId())) {
+			throw new EpException(MessageConst.ERROR_745068, new String[] { getManagedBean().getFulfilmentNote()
+					.getFlDeliveryOrder().getDeliveryOrderNo() });
+		}
+		// validate to avoid duplicate FRN under one DO inserted
+		if (getManagedBean().getFulfilmentNote().isBrandNew()
+				&& getManagedBean().getFulfilmentNote().getFlDeliveryOrder() != null) {
+			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			if (receivedNoteSO.retrieveActiveReceivedNoteByDeliveryOrderId(reqDTO).getFulfilmentNote() != null) {
+				throw new EpException(MessageConst.ERROR_100048);
+			}
+		}
+	}
+
+	/**
+	 * check DO status to disable FRN action
+	 * 
+	 * @param doStatus
+	 *            status id DO
+	 * @return boolean based on DO status blocking
+	 * 
+	 */
+	private boolean statusDeliveryOrderBlock(Long doStatus) {
+		Set<Long> doStatusBlocking = new HashSet<>();
+		doStatusBlocking.add(FulfilmentStatusConst.DO_CLOSED_DUE_TO_AP59);
+		doStatusBlocking.add(FulfilmentStatusConst.DO_CANCELLED);
+		doStatusBlocking.add(FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL);
+		doStatusBlocking.add(FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL);
+
+		if (doStatus != null) {
+			return doStatusBlocking.contains(doStatus);
+		}
+
+		return true;
+	}
+	// #34443 end
 }

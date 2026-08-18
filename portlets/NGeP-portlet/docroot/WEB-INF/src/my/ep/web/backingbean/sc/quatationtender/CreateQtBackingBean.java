@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;	// Bug #40087@Syazani 06/04/2026
 import java.util.List;
 import java.util.Locale;
 
@@ -3539,6 +3540,14 @@ public class CreateQtBackingBean extends
 		debugLogger("handlePublishClosingDate");
 		ScQt scQt = this.getManagedBean().getQt();
 
+		//#38107 - Start
+		// Do checking for eGPA before update closing date
+		if (scQt.getQtStatus() != null
+				&& QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId())) {
+			checkeGPAPublishPeriodDays(scQt);
+		}
+		//#38107 - End
+		
 		updatePublishClosingDate(scQt);
 	}
 	
@@ -4146,16 +4155,8 @@ public class CreateQtBackingBean extends
 				spBB.retriveTechnicalCheckList();
 				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
 			}//11104-End
-			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
-				for(ScQtCheckList checklist:st2technicalproposalList){
-					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
-							.getDefinationType().getParameterCode())) {
-						deltechnicalproposalList.add(checklist);
-						getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
-						st2technicalproposalList.remove(checklist);
-						break;
-					}
-				}
+			if (CollectionUtils.isNotEmpty(st2technicalproposalList)) {
+				removeSampleChecklist(st2technicalproposalList, deltechnicalproposalList);	// Bug #40087@Syazani 06/04/2026
 			}
 		}
 	}
@@ -4362,9 +4363,81 @@ public class CreateQtBackingBean extends
 		}
 	}
 	//37851 - End
+	
+	// Bug #40087@Syazani 06/04/2026 -- Start
+	private void removeSampleChecklist(List<ScQtCheckList> st2technicalproposalList,
+			List<ScQtCheckList> deltechnicalproposalList) {
+		Iterator<ScQtCheckList> itScQtChecklist = st2technicalproposalList.iterator();
+		while (itScQtChecklist.hasNext()) {
+			ScQtCheckList checklist = itScQtChecklist.next();
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
+					.getParameterCode())) {
+				deltechnicalproposalList.add(checklist);
+				getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
+				itScQtChecklist.remove();
+				break;
+			}
+		}
+	}
+	// Bug #40087@Syazani 06/04/2026 -- End
+	
+	//#38107 - Start
+	private void checkeGPAPublishPeriodDays(ScQt scQt) {
+		try {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			// eGPA review decision that made it so RPP cannot be reduce,
+			// can only be increase
+			List<String> eGPAFinalDecision = new ArrayList<>();
+			eGPAFinalDecision.add(ParameterConst.APPROVAL_EGPA_DECISION_APPROVED_WITHOUT_AMEND);
+			eGPAFinalDecision.add(ParameterConst.APPROVAL_EGPA_DECISION_APPROVED_WITH_AMEND);
+			checkForRepublishQT(scQt, eGPAFinalDecision);
+			ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO
+					.getLatesteGPAApprovalRequestBasedOnQtId(scQt.getQtId());
+			if (eGPAApprovalRequest != null && eGPAApprovalRequest.getApproverAction() != null) {
+				String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
+				if (eGPAFinalDecision.contains(eGPADecision)
+						&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
+					addFacesMessage(fc, MessageConst.ERROR_770408, null);
+				} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
+						&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
+					addFacesMessage(fc, MessageConst.ERROR_760260, new String[] { String.valueOf(scQt.getPublishPeriod()) });
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE,
+					"checkeGPAPublishPeriodDays", scQt.getQtNo(), "checkeGPAPublishPeriodDays",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	private void checkForRepublishQT(ScQt scQt, List<String> eGPAFinalDecision) {
+		try {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			if (scQt.getParentQtId() != null) {
+				ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO.getLatesteGPAApprovalRequestBasedOnQtId(scQt
+						.getParentQtId());
+				if (eGPAApprovalRequest != null && eGPAApprovalRequest.getApproverAction() != null) {
+					String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
+					if (eGPAFinalDecision.contains(eGPADecision)
+							&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
+						addFacesMessage(fc, MessageConst.ERROR_770408, null);
+					} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
+							&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
+						addFacesMessage(fc, MessageConst.ERROR_760260,
+								new String[] { String.valueOf(scQt.getPublishPeriod()) });
+					}
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkForRepublishQT",
+					scQt.getQtNo(), "checkForRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#38107 - End
 }
-
-
-
-//#28784
-

@@ -63,7 +63,8 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 		}
 		getManagedBean().setFormattedSelectedItems(null);
 		getManagedBean().setLovSelectedItemList(null);
-		getManagedBean().setSelectedSupplier(null);	
+		getManagedBean().setSelectedSupplier(null);
+		getManagedBean().setSelectedPTJ(null); // Fix #40102, #40398, #30918
 		// End fix- #29416
 		// Start Fix - #40102
 		CtReportBackingBean ctReportBBean = new CtReportBackingBean();
