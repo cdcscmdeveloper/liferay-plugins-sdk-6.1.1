@@ -2270,6 +2270,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			}
 			settinglist=null;
+			List<ScQtCheckList> oriFinancialScoring = this.getManagedBean().getFinancialScoring();//#28784, #33525 - Get User key in weightageScore if avail
 			this.getManagedBean().setFinancialScoring(
 					null);
 			this.getManagedBean().setFinancialScoring(
@@ -2435,7 +2436,21 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 				this.getManagedBean().getFinancialScoring()
 						.addAll(localChecklist);
-
+				
+				//#28784, #33525 - enter back the user weightage value if avail
+				List<ScQtCheckList> newFinancialScoring = this.getManagedBean().getFinancialScoring();
+				if (oriFinancialScoring != null) {
+					for (ScQtCheckList o : oriFinancialScoring) {
+						for (ScQtCheckList l : newFinancialScoring)
+							if (null != l.getQtScoreWeightage().getQtScoreWeightageId()
+									&& l.getQtScoreWeightage().getQtScoreWeightageId()
+											.equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {
+								l.getQtScoreWeightage().setWeightage(o.getQtScoreWeightage().getWeightage());
+							}
+					}
+					this.getManagedBean().setFinancialScoring(newFinancialScoring);
+				}
+				//#28784, #33525 - End
 				// Bug #35688@Syazani 10/07/2024 -- Start
 				boolean isNotThrow = StringUtils.isNotEmpty(condition) && "tabChange".equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024
 				finWeightageSum(isNotThrow);
@@ -18622,7 +18637,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							.getEvaluationType()) && this.getManagedBean().getQt().isDemoRequired()) {
 
 				if (!demoList) {
-					ScQtCheckList st2technicalproposalList1 = createSpecList("2");
+					ScQtCheckList st2technicalproposalList1 = new ScQtCheckList();// code inspection 28784
 					st2technicalproposalList1.setDefinationType(new PmParameter());
 					st2technicalproposalList1.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 					st2technicalproposalList1.setScoringReq(true); // change from false to true(31032021) - Azmi
@@ -19262,20 +19277,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	//#28784 - End
 
 	//#28784 - Start
-	public void checkFinancialparentSpecQuestion(
-			ScQtCheckList financialSpecChecklist) {
-		log.info("====checkFinancialparentSpecQuestionExecuted=======");
-		if (CollectionUtils.isNotEmpty(financialSpecChecklist.getScQtDoc()
-				.getTplSpecMaster().getTplSpecQuestions())) {
-			for (TplSpecQuestion financialQuestion : financialSpecChecklist
-					.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-				log.info("=====financialQuestion.getParentSpecQuestion()===="
-						+ financialQuestion.getParentSpecQuestion());
+	public void checkFinancialparentSpecQuestion(ScQtCheckList financialSpecChecklist) {
+		if (CollectionUtils.isNotEmpty(financialSpecChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions())) {
+			for (TplSpecQuestion financialQuestion : financialSpecChecklist.getScQtDoc().getTplSpecMaster()
+					.getTplSpecQuestions()) {
 				if (null == financialQuestion.getParentSpecQuestion()
-						|| null == financialQuestion.getParentSpecQuestion()
-								.getSpecQuestionId()) {
-					throw new EpException(MessageConst.ERROR_760483,
-							new String[] { financialSpecChecklist.getTitle() });
+						|| null == financialQuestion.getParentSpecQuestion().getSpecQuestionId()) {
+					throw new EpException(MessageConst.ERROR_760483, new String[] { financialSpecChecklist.getTitle() });
 				}
 
 			}
@@ -19537,8 +19545,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 				//debugLogger("put into list: " + statusDesc);
 			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
+				SLAUtils.getInstance().logSLAError("QT", "getDemoStatusDescById", getManagedBean().getQt().getQtNo(),
+						"getDemoStatusDescById", getUserIdSessionFromLoginId(), e);
 			} finally {
 			}
 		}
