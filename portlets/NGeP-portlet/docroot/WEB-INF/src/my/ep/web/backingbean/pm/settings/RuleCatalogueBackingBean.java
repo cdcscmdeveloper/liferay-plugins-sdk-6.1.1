@@ -5734,6 +5734,13 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
 			this.getManagedBean().setSelectedRuleDescType(searchRuleDescList.get(0));
 			this.getManagedBean().setOriginalConfigRuleValueList(searchRuleDescList.get(0).getRuleType().getConfigRuleValues());
+
+			//#35323 - Start
+			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(searchRuleDescList.get(0).getRuleType().getRuleType())){
+				loadPRValues();
+			}
+			//#35323 - End
+
 		}else{
 			this.getManagedBean().setConfigRuleDescList(null);
 			this.getManagedBean().setSelectedRuleDescType(null);
