@@ -5622,7 +5622,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 
 		// agency validation
-		if (outcomeCheckReason.contains(action)
+		Set<String> outcomeAgencyValidation = new HashSet<>();
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_SUBMIT);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_APPROVE);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_REVISE);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_SAVE);
+		
+		if (outcomeAgencyValidation.contains(action)
 				&& getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 			validateAgencyValidationByReason();
@@ -5873,7 +5879,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
 							getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 							getManagedBean().getReason() });
-				} else if (isFlFulfilmentApprover()) {
+				} else if (isFlFulfilmentRequisitioner()) {
 					throw new EpException(MessageConst.ERROR_740081, new String[] {
 							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgCode(),
 							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
