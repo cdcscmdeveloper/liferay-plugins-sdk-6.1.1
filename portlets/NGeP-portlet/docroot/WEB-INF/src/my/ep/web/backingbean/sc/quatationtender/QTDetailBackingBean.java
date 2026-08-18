@@ -3925,7 +3925,7 @@ public class QTDetailBackingBean extends
 									//21692 - End
 								}
 							}
-							tabBeans.add(new TabBean(titleName, approvalCategoryCode, qtApproval, retrieveFinalizationCommitteeType()));
+							// Bug #40447 - remove duplicate code
 							//#21692 - Start
 							if (CollectionUtils.isNotEmpty(qtApproval.getHistoryApprovalRequests())) {
 								LinkedHashSet<ScQtApprovalRequest> removeDuplicate = new LinkedHashSet<>(qtApproval.getHistoryApprovalRequests());
