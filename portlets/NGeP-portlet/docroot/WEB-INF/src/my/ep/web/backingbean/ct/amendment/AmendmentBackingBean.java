@@ -3743,7 +3743,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//Bug 33096 - shaqimi start
 		BigDecimal ctAmt;
 		if(ctBackingBean.getManagedBean().isViewSCL()){
-			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
+			
+//			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
+			
+			//#24336
+			ctAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
+			
 		} else {
 			
 			//#24336 - Start
