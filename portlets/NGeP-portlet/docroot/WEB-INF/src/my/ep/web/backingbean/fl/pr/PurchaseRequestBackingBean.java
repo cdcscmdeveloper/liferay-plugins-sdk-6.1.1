@@ -5873,7 +5873,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
 							getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 							getManagedBean().getReason() });
-				} else {
+				} else if (isFlFulfilmentApprover()) {
 					throw new EpException(MessageConst.ERROR_740081, new String[] {
 							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgCode(),
 							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
