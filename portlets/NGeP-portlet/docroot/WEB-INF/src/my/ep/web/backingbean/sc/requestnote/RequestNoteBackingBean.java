@@ -854,9 +854,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			scQuote = requestNoteResDTO.getQuote();
 		}
 			
-		Map<Long, ScAssignItemDtl> assignItemDtlMap = new HashMap<Long, ScAssignItemDtl>();
+		Map<Long, ScAssignItemDtl> assignItemDtlMap = new HashMap<>();
 		if (CollectionUtils.isNotEmpty(requestNoteDtlList)) {
-			List<Long> requestItemIds = new ArrayList<Long>();
+			List<Long> requestItemIds = new ArrayList<>();
 			
 			for (ScRequestNoteDtl dtl : requestNoteDtlList) {
 				if (dtl.getRequestItem() != null && dtl.getRequestItem().getRequestNoteItemId() != null) {
@@ -8950,6 +8950,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * 
 	 * @param requestItem
 	 *            the request item containing the CmItem to compare and update
+	 * @param scQuote
+	 * @param assignItemDtl
+	 *        
 	 */
 	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote , ScAssignItemDtl assignItemDtl) {
 		if (requestItem == null || requestItem.getCmItem() == null) {
