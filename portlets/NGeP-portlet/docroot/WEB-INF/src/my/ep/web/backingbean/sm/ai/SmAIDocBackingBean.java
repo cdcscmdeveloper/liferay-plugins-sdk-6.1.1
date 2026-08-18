@@ -1069,22 +1069,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	/**
-	 * Block submit when a bank statement does not match Bank Info.
-	 * @param appl
-	 * @return
-	 */
-	public static boolean isBankAiMismatch(SmAppl appl) {
-		return isBankAiMismatch(appl, true);
-	}
-
-	/**
 	 * emitMessages: the submit-time check raises the mismatch messages, the Declare button gate stays silent.
 	 * @param appl
 	 * @param emitMessages
 	 * @return
 	 */
 	public static boolean isBankAiMismatch(SmAppl appl, boolean emitMessages) {
-		if (!isAIApplicable(appl) || !AiDocSupport.isBlockDeclareEnabled()) {
+		if (!isAIApplicable(appl)) {
 			return false;
 		}
 		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())) {
