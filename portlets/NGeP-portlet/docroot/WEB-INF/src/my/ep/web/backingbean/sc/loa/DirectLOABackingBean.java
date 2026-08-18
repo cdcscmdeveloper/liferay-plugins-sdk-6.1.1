@@ -14317,6 +14317,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<SmSupplierCategory> originalList = new ArrayList<SmSupplierCategory>(filteredSmSupplierCategoryList);
 	    this.getManagedBean().setSupplierCategoryList(supplierList);//#29661 #40093
 	    this.getManagedBean().setOriginalSupplierCategoryList(originalList);
+		// #29661 #41032 Start
+		Long currentStatus = scLoa.getCurrentStatus().getPmStatus().getStatusId();
+		if (Arrays.asList(QTStatusConst.LOA_PENDING_STATUSES).contains(currentStatus)
+				&& !QTStatusConst.LOA_PENDING_VERIFICATION.equals(currentStatus)) {
+			this.getManagedBean().setShowCategoryCode(true);
+		}// #29661 #41032 End
 	    
 	    removeAddedCategoryCode();
 	    //#29661 #40511 end

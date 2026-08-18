@@ -177,7 +177,7 @@
 				disabled = "#{simpleQuoteBackingBean.managedBean.qtyNonEditable}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
 				rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}"
-				onchange="if (this.value.endsWith('.')) { this.value += '0'; }"  
+				onchange="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"  
 				onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 --> <ui:remove>#39230</ui:remove>
 				<p:ajax event="change" 
 					partialSubmit="true" process="@this" 

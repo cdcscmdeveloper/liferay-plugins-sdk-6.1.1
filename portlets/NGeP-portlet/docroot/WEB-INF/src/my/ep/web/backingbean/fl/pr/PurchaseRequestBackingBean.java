@@ -5592,12 +5592,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param action
 	 */
 	private void validatePK7forPRAction(String action) {
-		if (getManagedBean().getReason() != null) {
-			Set<String> outcomeCheckReason = new HashSet<>();
 
-			outcomeCheckReason.add(BpmOutcomeConst.BPM_SUBMIT);
-			outcomeCheckReason.add(BpmOutcomeConst.BPM_APPROVE);
-			outcomeCheckReason.add(BpmOutcomeConst.BPM_REVISE);
+		Set<String> outcomeCheckReason = new HashSet<>();
+
+		outcomeCheckReason.add(BpmOutcomeConst.BPM_SUBMIT);
+		outcomeCheckReason.add(BpmOutcomeConst.BPM_APPROVE);
+		outcomeCheckReason.add(BpmOutcomeConst.BPM_REVISE);
+
+		if (getManagedBean().getReason() != null) {
 
 			if (outcomeCheckReason.contains(action)
 					&& getPMReasonForThreshold().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
@@ -5610,14 +5612,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 
 		// check for exceed threshold
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
-				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			if(getManagedBean().isPRExceedThreshold()){
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if (getManagedBean().isPRExceedThreshold()) {
 				buildErrorMessageForExceedThreshold(true);
-			} else if(getManagedBean().isExceedBpkThreshold()) {
+			} else if (getManagedBean().isExceedBpkThreshold()) {
 				buildErrorMessageForExceedBpkThreshold(true);
 			}
 			// #31344
+		}
+
+		// agency validation
+		Set<String> outcomeAgencyValidation = new HashSet<>();
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_SUBMIT);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_APPROVE);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_REVISE);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_SAVE);
+		
+		if (outcomeAgencyValidation.contains(action)
+				&& getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			validateAgencyValidationByReason();
 		}
 
 		// supplier acc type validation
@@ -5847,6 +5861,34 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 
 		return pmReason;
+	}
+	
+	public void validateAgencyValidationByReason() {
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(getPMReasonForThreshold().getReasonId());
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+
+		if (reasonSO.isAgencyValidatedRequiredForReason(reqDTO)) {
+			if (!reasonSO.isAgencyValidatedForReason(reqDTO)) {
+				if (isFlFulfilmentApprover()) {
+					throw new EpException(MessageConst.ERROR_740082, new String[] {
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgCode(),
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+							getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+							getManagedBean().getReason() });
+				} else if (isFlFulfilmentRequisitioner()) {
+					throw new EpException(MessageConst.ERROR_740081, new String[] {
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgCode(),
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+							getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+							getManagedBean().getReason() });
+				}
+			}
+
+		}
 	}
 
 	// #27476 end

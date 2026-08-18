@@ -18398,7 +18398,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//#31407 - START
 	public void checkBeforeSubmit() {
 		//#40112 - start
-		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl())) {
+		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)
+				&& AiDocSupport.isBlockDeclareEnabled()) {
 			return;
 		}
 		//#40112 - end
@@ -20065,7 +20066,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	public boolean isAiBlockDeclare() {
-		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false);
+		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false) 
+				&& AiDocSupport.isBlockDeclareEnabled();
 	}
 	//40112 - end
 	
