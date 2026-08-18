@@ -4623,7 +4623,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	//#33867 - START
 	/**
-	 * Method to validate the user's status is inactive and check if there is any inactive role(s)
+	 * Validates the selected user's status and roles before updating the user information.
+	 * Checks whether the affected roles have any active users if the selected user is deactivated.
+	 * Displays an attention dialog if the affected roles have no active users.
 	 */
 	public void validateStatusAndRole() {
 		int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
@@ -4675,22 +4677,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	//#33867 - START
 	/**
-	 * Method to validate the user's status is inactive and check if there is any inactive role(s)
+	 * Checks for roles assigned to the selected user that do not have active users.
 	 *
-	 * @param roleList
-	 * @return String
+	 * @param roleList list of roles to be checked
+	 * @return roles without active users, or an empty string if none are found
 	 */
 	public String checkActiveUser(List<String> roleList) {
 		PmUser user = this.getManagedBean().getSelectedUser();
 		PmUserOrg userOrg = this.getManagedBean().getSelectedUserOrg();
 
-		String[] roleArray = roleList.toArray(new String[0]);
-
 		RoleReqDTO roleReqDTO = new RoleReqDTO();
 		roleReqDTO.setUserId(user.getUserId());
 		roleReqDTO.setUserOrgId(userOrg.getUserOrgId());
 		roleReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
-		roleReqDTO.setRoleArray(roleArray);
+		roleReqDTO.setRoleList(roleList);
 
 		FacesScopes facesScopes = new FacesScopes();
 		roleReqDTO.setUserLocale(facesScopes.getUserLocale());
