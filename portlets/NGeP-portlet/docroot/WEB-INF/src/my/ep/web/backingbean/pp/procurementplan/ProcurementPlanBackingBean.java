@@ -2381,10 +2381,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		if (preserveInactiveVerifier && ppPlanActors != null) {
 
-			List<PmUser> currentTarget = this.getManagedBean().getVerifierModel().getTarget();
+			List<PmUser> selectedVerifiers = this.getManagedBean().getVerifierModel().getTarget();
 
-			if (currentTarget == null) {
-				currentTarget = new ArrayList<PmUser>();
+			if (selectedVerifiers == null) {
+				selectedVerifiers = new ArrayList<PmUser>();
 			}
 
 			for (PpPlanActor ppPlanActor : ppPlanActors) {
@@ -2400,23 +2400,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					continue;
 				}
 
-				boolean alreadyInTarget = false;
+				// Check whether the existing Verification Officer is already in the selected verifier list to avoid adding a duplicate
+				boolean isVerifierAlreadySelected = false;
 
-				for (PmUser targetUser : currentTarget) {
+				for (PmUser targetUser : selectedVerifiers) {
 					if (targetUser != null && targetUser.getUserId() != null
 							&& targetUser.getUserId().equals(ppPlanActor.getPmUser().getUserId())) {
 
-						alreadyInTarget = true;
+						isVerifierAlreadySelected = true;
 						break;
 					}
 				}
 
-				if (!alreadyInTarget) {
-					currentTarget.add(ppPlanActor.getPmUser());
+				if (!isVerifierAlreadySelected) {
+					selectedVerifiers.add(ppPlanActor.getPmUser());
 				}
 			}
 
-			this.getManagedBean().getVerifierModel().setTarget(currentTarget);
+			this.getManagedBean().getVerifierModel().setTarget(selectedVerifiers);
 		}
 		// #33690 - END
 		
@@ -3297,8 +3298,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			// #33690 - START
 			// EP preparation
-			validationPlanSubmit(action, ppPlan);
-
 			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())) {
 
 				getAllEpItem(ppPlan);
@@ -3322,8 +3321,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			// Singleton
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
+			
+			// ProcurementPlanSO initialization
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
 
-			if (!BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(action)) {
 
 				// New object
 				InactiveUserReqDTO inactiveUserReqDTO = new InactiveUserReqDTO();
@@ -3356,24 +3358,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							currentPlanOfficerUserId = currentPlanOfficer.getUserId();
 
 						} else {
-							log.error("Current Plan Officer lookup failed or mismatched. " + "Requested login ID = "
-									+ currentPlanOfficerLoginId + ", returned login ID = "
-									+ (currentPlanOfficer != null ? currentPlanOfficer.getLoginId() : null)
-									+ ", returned user ID = "
-									+ (currentPlanOfficer != null ? currentPlanOfficer.getUserId() : null));
+							Exception ex = new Exception("Current Plan Officer lookup failed for login ID: "
+									+ currentPlanOfficerLoginId);
+
+							SLAUtils.getInstance().logSLAError(AuditPPConst.PLAN_OFFICER, "savePlan",
+									ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+									new FacesScopes().getUserSessionBean().getUserId(), ex);
 						}
 					}
 
+					// Fallback to PP_ACTOR when the Plan Officer cannot be resolved from BPM
 					if (currentPlanOfficerUserId == null) {
 
-						if (ppPlan.isBrandNew()) {
+						currentPlanOfficerUserId = reqSO.retrievePlanOfficerUserId(ppPlan.getPlanId(),
+								retrievePlanDocType(ppPlan));
 
-							currentPlanOfficerUserId = ppPlan.getCreatedBy();
+						if (currentPlanOfficerUserId == null) {
 
-						} else {
+							Exception ex = new Exception("Unable to resolve current Plan Officer from PP_ACTOR.");
 
-							log.error("Unable to resolve current BPM Plan Officer." + " BPM login ID = "
-									+ currentPlanOfficerLoginId + ", plan createdBy = " + ppPlan.getCreatedBy());
+							SLAUtils.getInstance().logSLAError(AuditPPConst.PLAN_OFFICER, "savePlan",
+									ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+									new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 							return null;
 						}
@@ -3460,7 +3466,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 							if (originalApproverUserId == null) {
 
-								log.error("Unable to resolve original " + "Plan Approver USER_ID. Login ID = " + originalApprover.getLoginId());
+								Exception ex = new Exception("Unable to resolve Plan Approver USER_ID for login ID: "
+										+ originalApprover.getLoginId());
+
+								SLAUtils.getInstance().logSLAError(AuditPPConst.PLAN_APPROVER_OFFICER, "savePlan",
+										ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+										new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 								continue;
 							}
@@ -3505,11 +3516,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 					log.info("VERIFY inactive checked user IDs = " + reqDTO.getInactiveCheckedUserId());
 
-				} else {
-
-					inactiveUserReqDTO.setUserIds(String.valueOf(new FacesScopes().getUserSessionBean().getUserId()));
-
-					inactiveUserReqDTO.setUserRoleCode(getUserRoleValue());
 				}
 
 				if (ppPlan.getOrgProfile() != null) {
@@ -3519,11 +3525,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				inactiveUserReqDTO.setDocType(retrievePlanDocType(ppPlan));
 				inactiveUserReqDTO.setDocNo(ppPlan.getPlanNo());
 				inactiveUserReqDTO.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
-				inactiveUserReqDTO.setParamText(null);
 				// Set End
 
 				// Get data input from Stored Procedure (SP)
-				log.info("===== INACTIVE SP INPUT DATA START =====");
+				log.info("===== INACTIVE SP INPUT DATA STORE PRC START =====");
 				log.info("PLAN CREATED BY = " + ppPlan.getCreatedBy());
 				log.info("SP CHECK ACTION = " + action);
 				log.info("P_USER_ID = " + inactiveUserReqDTO.getUserIds());
@@ -3533,7 +3538,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				log.info("P_DOC_NO = " + inactiveUserReqDTO.getDocNo());
 				log.info("P_NOTIFY_ADMIN_ROLE = " + inactiveUserReqDTO.getNotifyAdmin());
 				log.info("P_PARAM = " + inactiveUserReqDTO.getParamText());
-				log.info("===== INACTIVE SP INPUT DATA END =====");
+				log.info("===== INACTIVE SP INPUT DATA STORE PRC END =====");
 
 				inactiveUserResDTO = userSO.checkInactiveUserBySP(inactiveUserReqDTO);
 
@@ -3594,6 +3599,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 					return null;
 				}
+				
+				// 0
+				if (spStatusInt == PrcCheckUserProfileStatus.ORACLE_EXCEPTION) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, inactiveUserResDTO.getMessage()));
+
+					return null;
+				}
 
 				// 5
 				if (spStatusInt == PrcCheckUserProfileStatus.NO_AGENCY_NO_ROLE_NO_ACTIVE_USER) {
@@ -3625,21 +3638,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 					return null;
 				}
-
-				
-				// 0
-				if (spStatusInt == PrcCheckUserProfileStatus.ORACLE_EXCEPTION) {
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, inactiveUserResDTO.getMessage()));
-
-					return null;
-				}
 				
 				// 9
 				if (spStatusInt == PrcCheckUserProfileStatus.ADMIN_USER_NOT_FOUND) {
 
-					log.error("P_STATUS = 9 returned outside the VERIFY "
-							+ "manual Approver-selection flow. Message = " + inactiveUserResDTO.getMessage());
+					Exception ex = new Exception("P_STATUS = 9 returned outside VERIFY manual Approver-selection flow.");
+
+					SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "savePlan",
+							ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+							new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, inactiveUserResDTO.getMessage()));
@@ -3648,6 +3655,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 
+			validationPlanSubmit(action, ppPlan);
+			
 			String intendedPlanOfficerLoginId = this.getManagedBean().getCurrentPlanOfficerLoginId();
 			Long currentLoginUserId = new FacesScopes().getUserSessionBean().getUserId();
 
@@ -3715,7 +3724,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}	
 			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan));
-			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
+//			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
 			
 			if (this.getManagedBean().getDeletePpItems() == null) {
 				this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());

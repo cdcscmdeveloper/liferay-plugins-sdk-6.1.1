@@ -46,7 +46,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						itemValue="#{actor}" itemLabel="#{actor.userName}"
 						value="#{pPlanBackingBean.managedBean.approverModel}"
 						disabled="#{!pPlanBackingBean.managedBean.modeEditable or (!pPlanBackingBean.isRolePlanner() and !pPlanBackingBean.managedBean.allowVerifierSelectApprover)}"
-						filterMatchMode="contains" converter="pmUserConverter"> <!-- #33690 -->
+						filterMatchMode="contains" converter="pmUserConverter">
+						<ui:remove>33690</ui:remove>
 						<f:facet name="sourceCaption">#{lbl['lbl.pp.available.approver']}</f:facet>
 						<f:facet name="targetCaption">#{lbl['lbl.pp.selected.approver']}</f:facet>
 						<p:column style="width:75%;">
