@@ -2491,10 +2491,10 @@ public class SpecificationBackingBean extends
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
-			// #48486,#10141 - Start
+			// #40846,#10141 - Start
 			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true
 					: false;
-			// #48486,#10141 - End
+			// #40846,#10141 - End
 
 			//#25138 - add if() condition - start
 			if (null == this.getManagedBean()
