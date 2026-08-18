@@ -4914,6 +4914,7 @@ public class SmApplicationUtil {
 				for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 					
 					history.setApplNoHistory(history.getSmAppl().getApplNo());
+					
 					if (!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.APPROVER_SDM) &&
 							!history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_ROLE_APP_SDM)) {
 						if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
@@ -4937,11 +4938,16 @@ public class SmApplicationUtil {
 							managedBean.setOtherDescChangeSupplier(true);
 							managedBean.getEditVO().setPoEditCategory(true);
 						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory()) &&
-								history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL)) {
+								(history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_RENEWAL) ||
+								history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_DATA))) {
 							managedBean.setOtherDescChangeSupplier(true);
 							managedBean.getEditVO().setSuppEditCategory(true);
 						}
 					}
+				}
+				
+				if (cat.getSmSuppCatOtherDescHistory() != null) {
+					sortbyDateOtherDescHistory(cat.getSmSuppCatOtherDescHistory());
 				}
 			}
 			// 36504 - END
@@ -16202,7 +16208,8 @@ public class SmApplicationUtil {
 		} else {
 			applNewReg = findHistoryOtherDesc(supplierId);
 		}
-			
+		
+		// Approved/Existing Category Codes
 		if (applNewReg != null) {
 			for (SmAppl appl : applNewReg) {
 				for (SmSupplierCategory previousKN : appl.getSmSupplierCategories()) {
@@ -16211,11 +16218,12 @@ public class SmApplicationUtil {
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 					
-					// WIP Site Visit After cannot display on Approved Category code.
+					// WIP Site Visit After cannot display on Approved Category code except KR(Existing Category Code).
 					boolean applSiteVisitAfter = managedBean.getSmAppl().getApplId().equals(previousKN.getSmAppl().getApplId()) &&
 							managedBean.getSmAppl().getPmStatus().getStatusId().equals
-							(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-							
+							(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) &&
+							!SupplierManagementConst.APPL_TYPE_RENEW_MOF.equalsIgnoreCase(managedBean.getSmAppl().getApplType());
+					
 					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
 							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) || 
 							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) &&													
@@ -16249,12 +16257,14 @@ public class SmApplicationUtil {
 										mainCatcode.equals(existingCatcode)) {
 									catObj.getSmSuppCatOtherDescHistory().addAll(previousKN.getSmSuppCatOtherDescHistory());
 								}
-								sortbyDateOtherDescHistory(catObj.getSmSuppCatOtherDescHistory());
 							}
 						} else {
 							otherDescSet.add(mainCatcode);
-							sortbyDateOtherDescHistory(previousKN.getSmSuppCatOtherDescHistory());
 							prevList.add(previousKN);
+						}
+						
+						if (previousKN.getSmSuppCatOtherDescHistory() != null) {
+							sortbyDateOtherDescHistory(previousKN.getSmSuppCatOtherDescHistory());
 						}
 					}
 				}
@@ -16292,6 +16302,7 @@ public class SmApplicationUtil {
 	 * @param scat
 	 */
 	private static void setApplNoHistory(SmSupplierCategory cat, SmApplicationManagedBean managedBean, String sectionType) {
+		
 		for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 			
 			history.setApplNoHistory(history.getSmAppl().getApplNo());
@@ -16335,6 +16346,33 @@ public class SmApplicationUtil {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Retrieves the localized active role description for the specified user.
+	 *
+	 * This method queries the Profile Management service using the current
+	 * user's locale to obtain the active role description of the specified user.
+	 * If an active role exists, its description is returned; otherwise,
+	 * {@code null} is returned.
+	 *
+	 * @param userId the unique identifier of the user
+	 * @return the localized active role description of the user, or
+	 *         {@code null} if no active role is found
+	 */
+	public static PmRoleDesc epRoleNameByUserId(Long userId) {
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		PmRoleDesc role = userSO.retrieveActiveRoleDescByUserId(userId, language);
+		if (role != null) {
+			return role;
+		}
+
+		return null;
 	}
 	// 36504 - END
 

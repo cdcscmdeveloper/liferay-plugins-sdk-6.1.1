@@ -1143,8 +1143,8 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":#{p:component('shrProfDt')}, @([id$=Msg]),:#{p:component('delShrProfBodyBtnId')}"/>
-		
-		<p:dialog width="500px" height="300px" closable="false"
+		<!-- #39502 -->
+		<p:dialog width="800px" height="300px" closable="false"
 			header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
 			widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
@@ -1154,13 +1154,19 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						<!-- #39502 -->
+					<td><p:selectOneMenu style="width: 430px;margin-bottom: 5px;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.profBody.profBody']}" id="equiStfPrdBdyLbl"
 							value="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<!-- #39502 - START -->
 							<f:selectItems var="shrProfBody"
-								value="#{backingBean.managedBean.profBodyItems}" />
+								value="#{backingBean.managedBean.profBodyItems}"
+								itemValue="#{shrProfBody.value}"
+							    itemLabel="#{shrProfBody.label}"
+							    itemDescription="#{shrProfBody.description}" />
+								<!-- #39502 - END -->								
 							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeProfBody}"
 								update="shrProfBodyOthersAssoc, shrProfBodyOthersAssocMand" />
 						</p:selectOneMenu> 
