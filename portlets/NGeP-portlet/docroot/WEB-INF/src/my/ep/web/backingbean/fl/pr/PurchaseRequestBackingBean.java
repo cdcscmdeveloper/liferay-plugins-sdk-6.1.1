@@ -5690,9 +5690,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_SUSPENDED);
 		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_ACTIVE);
 		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_CANCELLED);
-
+		
+		Set<Integer> recordStatusMofCheck = new HashSet<>();
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_SUSPENDED);
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_DELETED);
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_EXPIRED);
+		
 		// MOF deleted checks
-		if (mofStatus == DbValueConst.RECORD_STATUS_DELETED) {
+		if (recordStatusMofCheck.contains(mofStatus)) {
 
 			if (recordBasicMofCheck.contains(supplierStatus)) {
 				buildErrorMessageSupplierAccountTypeNonApplicable();
