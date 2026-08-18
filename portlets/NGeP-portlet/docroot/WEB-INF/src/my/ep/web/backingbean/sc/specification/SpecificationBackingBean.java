@@ -368,10 +368,10 @@ public class SpecificationBackingBean extends
 	private int tempNewChecklistIndex = 0;
 	// Bug #35219@Syazani 07/11/2023 -- End
 	
-	// #48486,#10141 - Start
+	// #40846,#10141 - Start
 	private static final String TAB_CHANGE = "tabChange";
 
-	// #48486,#10141 - End
+	// #40846,#10141 - End
 
 	/**
 	 * Instantiates a new specification backing bean.
@@ -1466,7 +1466,7 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
-			retriveFinancialScoring(TAB_CHANGE);	// Bug #35688@Syazani 10/07/2024 / #48486,#10141 
+			retriveFinancialScoring(TAB_CHANGE);	// Bug #35688@Syazani 10/07/2024 / #40846,#10141 
 			break;
 
 		case 6:
@@ -2504,7 +2504,7 @@ public class SpecificationBackingBean extends
 					// #25138 - 31578 - Start.
 					|| (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 							&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())
-							&& isNeedRefresh) //#48486,#10141 
+							&& isNeedRefresh) //#40846,#10141 
 					// #25138 - 31578 - End.					
 					) {
 				
@@ -3087,7 +3087,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFinancialScoring(newFinancialScoring);
 				}// #33525 - End
 				// Bug #35688@Syazani 10/07/2024 -- Start
-				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024/ // #48486,#10141 
+				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024/ // #40846,#10141 
 				finWeightageSum(isNotThrow);
 				// Bug #35688@Syazani 10/07/2024 -- End
 				localChecklist = null;
