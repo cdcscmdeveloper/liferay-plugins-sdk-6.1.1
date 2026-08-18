@@ -24451,7 +24451,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// #38151 End
 	
 	// #40138 Start Vinod
-	private void checkAndUpdateNewMandatoryChecklist(ScQt scQt, String specType) {
+	public void checkAndUpdateNewMandatoryChecklist(ScQt scQt, String specType) {//#40980
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 
