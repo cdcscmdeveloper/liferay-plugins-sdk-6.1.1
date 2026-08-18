@@ -5690,10 +5690,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			if (!EntityHelper.isCollectionEmpty(userRoles)) { 
 				for (PmUserRole userRole : userRoles) {
 					boolean authoriseUser = userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_OFFICER.value()) ||
-							userRole.getPmRole().getRoleCode().equals(RoleCode.DISC_SECRETARY.value())||
-							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_ADMIN.value())||
-							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SDO.value())||
-							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SVC.value())||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_APPROVER.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.DISC_SECRETARY.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_ADMIN.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SDO.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SVC.value()) ||
 							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SVO.value()) ||
 							userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value());
 					
