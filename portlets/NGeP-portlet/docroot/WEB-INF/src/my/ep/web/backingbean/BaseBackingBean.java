@@ -670,8 +670,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			ISearchBean<PmParameterDesc> searchBean) {
 
 		FacesScopes face = new FacesScopes();
-
-		// seeded up-front so a failure below still leaves a usable dropdown
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		items.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
@@ -695,7 +693,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
-
+		log.info("40978-getDropdownValuesByProcurementMethod-"+items.size());
 		return items.toArray(new SelectItem[items.size()]);
 	}
 	// 9299 -40712, 40978 End
