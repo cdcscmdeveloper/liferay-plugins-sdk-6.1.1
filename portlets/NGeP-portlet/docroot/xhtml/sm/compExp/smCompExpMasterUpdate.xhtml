@@ -106,22 +106,23 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
+				<!-- 40978 -->
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
-					<td style="width: 66%"><p:selectOneMenu
+					<td style="width: 66%"><p:selectOneMenu id="paymentMethodId"
 							value="#{smCompExpMB.selectedMaster.paymentMethod.parameterId}">
 							<f:selectItems
 								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypePaymentMethod)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-				<!-- 9299- 40712 -->
+				<!-- 9299- 40712, 40978 -->
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:selectOneMenu
+					<td style="width: 66%"><p:selectOneMenu id="procumentModeId"
 							value="#{smCompExpMB.selectedMaster.procumentMode.parameterId}">
 							<f:selectItems
 								value="#{smCompExpBB.getProcurementMethodDropdownValues(ParameterConst.paramTypeProcurementMethod)}" />
