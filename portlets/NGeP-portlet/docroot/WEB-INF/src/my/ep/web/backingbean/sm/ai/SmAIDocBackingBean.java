@@ -485,9 +485,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			String content = AiDocParser.getFakeData(filepath, filename);
 			return new JsonWrapper(System.currentTimeMillis(), content, docType);
 		}
-		if (!filename.contains("ai_demo")){
-			return null;
-		}
 		///temporary demo filter - end
 		
 		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
@@ -1087,7 +1084,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public static boolean isBankAiMismatch(SmAppl appl, boolean emitMessages) {
-		if (!isAIApplicable(appl)) {
+		if (!isAIApplicable(appl) || !AiDocSupport.isBlockDeclareEnabled()) {
 			return false;
 		}
 		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())) {
