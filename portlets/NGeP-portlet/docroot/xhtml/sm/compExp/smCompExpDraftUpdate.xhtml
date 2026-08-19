@@ -196,14 +196,23 @@
 								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypePaymentMethod)}" />
 						</p:selectOneMenu></td>
 				</tr>
+				<!-- 9299 - #41058 START -->
 				<tr>
-					<td style="width: 34%"><p:outputLabel
-							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label2"
+						value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
 					<td style="width: 66%"><h:outputText
+							rendered="#{smCompExpMB.selectedDraft.procumentMode.parameterType eq ParameterConst.paramTypeProcurementMethod}"
 							styleClass="outputLabel-view"
-							value="#{smCompExpBB.getParameterDesc(smCompExpMB.selectedDraft.procumentMode)}" /></td>
+							value="#{smCompExpBB.getParameterDesc(smCompExpMB.selectedDraft.procumentMode)}" />
+						<p:selectOneMenu
+							rendered="#{smCompExpMB.selectedDraft.procumentMode.parameterType ne ParameterConst.paramTypeProcurementMethod}"
+							value="#{smCompExpMB.selectedDraft.procumentMode.parameterId}">
+							<f:selectItems
+								value="#{smCompExpBB.getProcurementMethodDropdownValues(ParameterConst.paramTypeProcurementMethod)}" />
+						</p:selectOneMenu></td>
 				</tr>
+				<!-- 9299 - #41058 END -->
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
