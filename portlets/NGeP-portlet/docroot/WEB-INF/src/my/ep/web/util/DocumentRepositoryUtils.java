@@ -41,7 +41,9 @@ public class DocumentRepositoryUtils {
 		} else if(moduleCode.equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)) {
 			uploadPath.append(ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase());
 			uploadPath.append("/");
-			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR) || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) {
+			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR) 
+					|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)
+					|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) { //#37620,#34367
 				uploadPath.append("Circulars");
 				uploadPath.append("/");
 				uploadPath.append(docType);
