@@ -6918,7 +6918,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			proposalReqDTO.setSupplierId(supplierId);
-			proposalReqDTO.setYear(year.intValue());
+			//Bug #40833 - Start
+			proposalReqDTO.setYear(year != null ? year.intValue() : null);
+			//Bug #40833 - End
 			proposalReqDTO.setApplId(applId);
 			proposalReqDTO.setCategoryL3Codes(getCategoryL3Codes(scQt));
 			proposalReqDTO
