@@ -2530,6 +2530,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		//14150
 		SmApplicationUtil.sortSupplierCategory(getManagedBean().getSuppProfileOrHistoryCategoryList());
+		
+		// 36504
+		SmApplicationUtil.sortSupplierCategory(getManagedBean().getSupProfileHistoryOtherDesc());
 	}
 
 	//#26238
