@@ -671,7 +671,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		FacesScopes face = new FacesScopes();
 
-		// seeded up-front so a failure below still leaves a usable dropdown
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		items.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
@@ -690,7 +689,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 
 		} catch (Exception e) {
-			// e.getMessage() is null for an NPE - log the trace or the cause is invisible
 			log.error("getDropdownValuesByProcurementMethod failed for parameterType " + parameterType, e);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
