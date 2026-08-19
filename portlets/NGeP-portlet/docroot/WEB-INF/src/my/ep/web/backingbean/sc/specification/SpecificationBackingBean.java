@@ -2156,8 +2156,12 @@ public class SpecificationBackingBean extends
 			// #40138 Start Vinod
 			else {
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				//#40998/#10141 - Start
 				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				//#40998/#10141 - End
 					ScQt scQt = this.getManagedBean().getQt();
 					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.FINANCIAL_DOCTYPE);
 				}
@@ -18126,6 +18130,19 @@ public class SpecificationBackingBean extends
 			return;
 		//�#1873�#34837 -end-
 		
+		// #40998/#10141 - Start 
+		boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
+				.getManagedBean().isShowInactiveChecklistPopup(), action);
+
+		if (isInactiveChecklistPopup) {
+			RequestContext.getCurrentInstance()
+			.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+			return;
+		}
+			this.getManagedBean().getQt().setInactiveChecklistNotified(false);
+		
+		// #40998/#10141 -  End
+		
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -22738,9 +22755,18 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		if (this.getManagedBean().isPreRenderInactiveChecklist()) {
 			RequestContext.getCurrentInstance().execute(
 					QTConstants.INACTIVE_CHECKLIST_NOTIFICATION_HIDE);
-			this.getManagedBean().setPreRenderInactiveChecklist(false);
+			this.getManagedBean().setPreRenderInactiveChecklist(
+					checkInactiveChecklistForPopup(this.getManagedBean()
+							.isShowInactiveChecklistPopup(), bpAction));
 		} else {
-			submitSpecMaintenanceDtls(bpAction);
+			//#40998/#10141 - Start
+			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			if (currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				specCommitteMaintenanceBpmTask(bpAction);
+			}else{				
+				submitSpecMaintenanceDtls(bpAction);
+			}
+			//#40998/#10141 - End
 		}
 	}
 
@@ -22779,9 +22805,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
 
 				this.getManagedBean().setInActiveChecklist(inActiveChecklist);
-				this.getManagedBean().setInActiveChecklistNotificationText(
-						getMessage(QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE,
-								new String[] { confirmationMsg }));
+				this.getManagedBean()
+						.setInActiveChecklistNotificationText(
+								getMessage(
+										QTConstants.SPEC_MAINTENANCE
+												.equalsIgnoreCase(action) ? QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECMAINT
+												: QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE,
+										new String[] { confirmationMsg }));
 
 				this.getManagedBean().setShowInactiveChecklistPopup(true);
 				return true;
@@ -24445,7 +24475,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// #38151 End
 	
 	// #40138 Start Vinod
-	private void checkAndUpdateNewMandatoryChecklist(ScQt scQt, String specType) {
+	public void checkAndUpdateNewMandatoryChecklist(ScQt scQt, String specType) {//#40980
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 
