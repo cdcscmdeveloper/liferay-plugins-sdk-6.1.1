@@ -2644,12 +2644,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (supplier == null){
 			return "";
 		}
-		//#38962  - START
+		// #38962, #40110 - START
 		String pending = checkNonActiveDAWithPending(supplier);
-		if(StringUtils.isNotBlank(pending)){
+		if (StringUtils.isNotBlank(pending) && !SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType())) {
 			return pending;
 		}
-		//#38962  - END
+		// #38962, #40110 - END
 		if (!supplier.isFutureImposed() && !StringUtils.isEmpty(supplier.getTypeDisciplinaryAction())){
 			return getSupplierAccountStatusDA(supplier);
 		}
