@@ -23437,7 +23437,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		if (this.getManagedBean().isPreRenderInactiveChecklist()) {
 			RequestContext.getCurrentInstance().execute(
 					QTConstants.INACTIVE_CHECKLIST_NOTIFICATION_HIDE);
-			this.getManagedBean().setPreRenderInactiveChecklist(false);
+			this.getManagedBean().setPreRenderInactiveChecklist(
+					checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(), bpAction));
 		} else {
 			submitSpecMaintenanceDtls(bpAction);
 		}
@@ -23478,36 +23479,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
 
 				this.getManagedBean().setInActiveChecklist(inActiveChecklist);
-				this.getManagedBean().setInActiveChecklistNotificationText(
-						getMessage(QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE,
-								new String[] { confirmationMsg }));
+				this.getManagedBean()
+						.setInActiveChecklistNotificationText(
+								getMessage(
+										QTConstants.SPEC_MAINTENANCE.equalsIgnoreCase(action) ? QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECMAINT
+												: QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE,
+										new String[] { confirmationMsg }));
 
 				this.getManagedBean().setShowInactiveChecklistPopup(true);
 				return true;
-			}
-		}
-		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
-		
-		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
-			List<ScQtCheckList> techCL = this.getManagedBean().getScQtCheckSt2techProposal();
-			List<ScQtCheckList> deleteTechCheckList = deleteInactiveChecklist(techCL);
-			techCL.removeAll(deleteTechCheckList);
-			List<ScQtCheckList> finCL = this.getManagedBean().getScQtCheckSt2financeProposalList();
-			List<ScQtCheckList> deletefinCheckList = deleteInactiveChecklist(finCL);
-			finCL.removeAll(deletefinCheckList);
-
-			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
-				this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
-			}
-			if (CollectionUtils.isNotEmpty(deleteTechCheckList)) {
-				this.getManagedBean().getMarkDeletedTechChecklist().addAll(deleteTechCheckList);
-			}
-
-			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedFinChecklist())) {
-				this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
-			}
-			if (CollectionUtils.isNotEmpty(deletefinCheckList)) {
-				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
 		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
