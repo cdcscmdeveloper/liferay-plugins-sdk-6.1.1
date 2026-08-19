@@ -367,6 +367,11 @@ public class SpecificationBackingBean extends
 	/** Temporary ID for a new checklist row */
 	private int tempNewChecklistIndex = 0;
 	// Bug #35219@Syazani 07/11/2023 -- End
+	
+	// #40846,#10141 - Start
+	private static final String TAB_CHANGE = "tabChange";
+
+	// #40846,#10141 - End
 
 	/**
 	 * Instantiates a new specification backing bean.
@@ -1461,7 +1466,7 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
-			retriveFinancialScoring("tabChange");	// Bug #35688@Syazani 10/07/2024
+			retriveFinancialScoring(TAB_CHANGE);	// Bug #35688@Syazani 10/07/2024 / #40846,#10141 
 			break;
 
 		case 6:
@@ -2486,6 +2491,11 @@ public class SpecificationBackingBean extends
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
+			// #40846,#10141 - Start
+			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true
+					: false;
+			// #40846,#10141 - End
+
 			//#25138 - add if() condition - start
 			if (null == this.getManagedBean()
 					.getScQtCheckSt2financeProposalList()
@@ -2493,7 +2503,8 @@ public class SpecificationBackingBean extends
 							.getScQtCheckSt2financeProposalList().isEmpty()
 					// #25138 - 31578 - Start.
 					|| (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls()))
+							&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())
+							&& isNeedRefresh) //#40846,#10141 
 					// #25138 - 31578 - End.					
 					) {
 				
@@ -3076,7 +3087,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFinancialScoring(newFinancialScoring);
 				}// #33525 - End
 				// Bug #35688@Syazani 10/07/2024 -- Start
-				boolean isNotThrow = StringUtils.isNotEmpty(condition) && "tabChange".equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024
+				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024/ // #40846,#10141 
 				finWeightageSum(isNotThrow);
 				// Bug #35688@Syazani 10/07/2024 -- End
 				localChecklist = null;
@@ -11921,7 +11932,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				
 				//#38151 To apply the same scoring settings/calculation for both packages and items.
 				newItemScoreSetting.setOverallTechnical(
-					    !this.getManagedBean().isWeightage35384WIP()
+					    this.getManagedBean().isWeightage35384WIP()
 					        ? itemScoreSetting.getOverallTechnical()
 					        : packageScoreSetting.getOverallTechnical()
 					);
@@ -11930,7 +11941,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				
 				//#38151 To apply the same scoring settings/calculation for both packages and items.
 				newItemScoreSetting.setOverallFin(
-						    !this.getManagedBean().isWeightage35384WIP()
+						    this.getManagedBean().isWeightage35384WIP()
 						        ? itemScoreSetting.getOverallFin()
 						        : packageScoreSetting.getOverallFin()
 						);
@@ -12778,16 +12789,6 @@ if (null != checklist && !checklist.isEmpty()) {
 						}
 
 					}
-					// #10141 Start Vinod
-					boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
-							.getManagedBean().isShowInactiveChecklistPopup(), action);
-
-					if (isInactiveChecklistPopup) {
-						RequestContext.getCurrentInstance()
-						.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
-						return;
-					}
-					// #10141 End Vinod
 					// 25638 - Start
 					SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
 					reviseSpecificationCommittee(resDTO, action);
@@ -16190,7 +16191,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			if (null != financialPackageScore
 					&& financialPackageScore.getSettingType() == 2) {
 				//#25138 - add if condition for one item only - start
-				if(!this.getManagedBean().isSingleItem()){
+				if(!this.getManagedBean().isSingleItem() && !checkFinancialSpecificationForItems()){ //#25651
 					if (null == financialPackageScore.getPassingScore()) {
 
 						this.getManagedBean().setActiveIndex(5);
@@ -21007,6 +21008,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public void submitAction(String outcome) {
 		assertConcurrentComittteeChangesApproval();
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			// #10141 Start Vinod
+			boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
+					.getManagedBean().isShowInactiveChecklistPopup(), outcome);
+
+			if (isInactiveChecklistPopup) {
+				RequestContext.getCurrentInstance()
+				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+				return;
+			}
+			// #10141 End Vinod
 			// 1873 - start - note 52
 			if (!assertPendingFinancialSubmission()) {
 				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
@@ -23414,6 +23425,28 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 Start Vinod
 	/**
+	 * This method is to check if ok action for maintenance is from prerender
+	 * and navigate accordingly.
+	 * 
+	 * @param bpAction
+	 * 
+	 * @return
+	 * 
+	 */
+	public void okActionForSpecMaintenance(String bpAction) {
+		if (this.getManagedBean().isPreRenderInactiveChecklist()) {
+			RequestContext.getCurrentInstance().execute(
+					QTConstants.INACTIVE_CHECKLIST_NOTIFICATION_HIDE);
+			this.getManagedBean().setPreRenderInactiveChecklist(false);
+		} else {
+			submitSpecMaintenanceDtls(bpAction);
+		}
+	}
+
+	// #10141 End Vinod
+
+	// #10141 Start Vinod
+	/**
 	 * This method will check inactive checklists for technical and financial if
 	 * there are any inactive checklists this method will popup a window to
 	 * remove those checklists.
@@ -23451,6 +23484,30 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 				this.getManagedBean().setShowInactiveChecklistPopup(true);
 				return true;
+			}
+		}
+		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
+		
+		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
+			List<ScQtCheckList> techCL = this.getManagedBean().getScQtCheckSt2techProposal();
+			List<ScQtCheckList> deleteTechCheckList = deleteInactiveChecklist(techCL);
+			techCL.removeAll(deleteTechCheckList);
+			List<ScQtCheckList> finCL = this.getManagedBean().getScQtCheckSt2financeProposalList();
+			List<ScQtCheckList> deletefinCheckList = deleteInactiveChecklist(finCL);
+			finCL.removeAll(deletefinCheckList);
+
+			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
+				this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+			}
+			if (CollectionUtils.isNotEmpty(deleteTechCheckList)) {
+				this.getManagedBean().getMarkDeletedTechChecklist().addAll(deleteTechCheckList);
+			}
+
+			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedFinChecklist())) {
+				this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
+			}
+			if (CollectionUtils.isNotEmpty(deletefinCheckList)) {
+				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
 		
@@ -25174,7 +25231,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// #38151 End
 	
 	// #40138 Start Vinod
-	private void checkAndUpdateNewMandatoryChecklist(ScQt scQt, String specType) {
+	public void checkAndUpdateNewMandatoryChecklist(ScQt scQt, String specType) {//#40980
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 

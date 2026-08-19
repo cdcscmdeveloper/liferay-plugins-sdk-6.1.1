@@ -480,6 +480,7 @@ public interface QTConstants {
 	public static final String SPAN_ERROR_ICON = "<span class=\"ui-messages-error-icon\" style=\"position: relative;right: 25px;\"></span>";
 	public static final String SPAN_ERROR_CONTENT_OPEN = "<span style=\"position: relative;right: 25px;\">";
 	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span>";
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION_HIDE = "inActiveChecklistNotification.hide()";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -530,7 +531,7 @@ public interface QTConstants {
 			
 	// 25791-End
 	
-	//#38151
+	//#38151 & #38679
 	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
 	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
