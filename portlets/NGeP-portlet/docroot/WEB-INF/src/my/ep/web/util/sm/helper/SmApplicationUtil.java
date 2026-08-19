@@ -16599,11 +16599,13 @@ public class SmApplicationUtil {
 				draft.setContractValue(exp.getContractValue());
 				draft.setSourceType(retrievePmParameterById(ParameterConst.SOURCE_TYPE_ID_SM));
 				draft.setClientType(exp.getClientType());
-				if(exp.getClientType().equalsIgnoreCase("F")){
+				draft.setOriAgencyName(exp.getClientName());
+				draft.setAgencyName(exp.getClientName());	
+				/*if(exp.getClientType().equalsIgnoreCase("F")){Latest FRS 2.9 Store all agency name
 					draft.setOriAgencyName(exp.getClientName());
 				}else if(exp.getClientType().equalsIgnoreCase("O")){
 					draft.setAgencyName(exp.getClientName());	
-				}
+				}*/
 				draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
 				draft.setContractEffDate(exp.getProcurementDate());
 				if(isConsultant){
