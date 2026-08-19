@@ -35,6 +35,7 @@ import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -676,14 +677,22 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		// #10141 Start Vinod
-		boolean isReadOnly = this.getManagedBean().isReadOnly();
-		if (!isReadOnly
+		// BUG #40852 WIP QT - Confirmation box not displayed upon clicking pencil Icon
+		if (isEditable
 				&& QTStatusConst.getQTSpecMaintenanceInactiveChecklistUpdateGroup().contains(
-						this.getManagedBean().getCurrentStatusId())) {
+						scQt.getQtStatus().getStatusId())) {			
+			
+			//#40980 - Start
+			ScQt tmpScQt = this.getManagedBean().getQt();
+			specBB.checkAndUpdateNewMandatoryChecklist(tmpScQt, SourcingConstants.FINANCIAL_DOCTYPE);
+			specBB.checkAndUpdateNewMandatoryChecklist(tmpScQt, SourcingConstants.TECHNICAL_DOCTYPE);		
+			//#40980 - End
+			
 			boolean isInactiveChecklistPopup = specBB.checkInactiveChecklistForPopup(this.getManagedBean()
 					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
 
 			if (isInactiveChecklistPopup) {
+				this.getManagedBean().setPreRenderInactiveChecklist(true);
 				RequestContext.getCurrentInstance()
 				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
 				return;
@@ -882,7 +891,7 @@ public boolean isSpecCommittee() {
 	}
 	//29732 -End
 	
-	//#38151 Start
+	//#38151 & #38679 Start
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
@@ -904,9 +913,9 @@ public boolean isSpecCommittee() {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
-		//#38151 End
+		//#38151 & #38679 End
 	
-	//#38151 start
+	//#38151 & #38679 start
 	public boolean checkWeightage35384WIPbyStatus() {
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
@@ -920,6 +929,6 @@ public boolean isSpecCommittee() {
 		}
 		return Boolean.FALSE;
 	}
-	//#38151 end
+	//#38151 & #38679 end
 
 }

@@ -227,9 +227,9 @@
 			
 			<p:spacer width="10" />
 			<p:fileUpload widgetVar="uploadWV_AI" 
-				allowTypes="/(\.|\/)(pdf|doc|docx|zip|json)$/"
+				allowTypes="/(\.|\/)(pdf|json)$/"
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
-				invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 				update="#{cc.attrs.tableId}"
