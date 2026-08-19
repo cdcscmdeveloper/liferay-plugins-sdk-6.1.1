@@ -116,7 +116,9 @@ public class CircularManagedBean extends BaseManagedBean {
 
 				String supplierNameField = null;
 				String itemNameField = null;
-				if(getSearchCircularDocType()!=null && getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				if(getSearchCircularDocType()!=null && 
+						(getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR) 
+								|| getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY))) { //#37620,#34367
 					supplierNameField = "ctPanelItems.ctPanelSuppliers.supplier.companyName";
 					itemNameField = "ctPanelItems.itemName";
 				} else {
