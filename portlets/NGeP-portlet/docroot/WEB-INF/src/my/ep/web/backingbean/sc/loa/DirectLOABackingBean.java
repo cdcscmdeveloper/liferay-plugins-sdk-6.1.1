@@ -14954,13 +14954,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		PmReason justificationQTType = (scLoa != null) ? scLoa
 				.getJustificationType() : null;
 
-		boolean isQTtypeOldPK7 = qtType != null
-				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
-						.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
-						.equals(qtType.getParameterCode());
+		if (qtType == null) {
+			return false;
+		}
+		
+		boolean showPopup = checkQTtypeAndReasonInaciveForPopup(qtType,
+				justificationQTType);
 
-		if (!isQTtypeOldPK7) {
+		if (!showPopup) {
 			return false;
 		}
 
@@ -14979,6 +14980,41 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		this.getManagedBean().setAlertForInactivePK7(alertForPK7);
 
 		return true;
+	}
+
+	// #29766 End Vinod
+	// #29766 Start Vinod
+	/**
+	 * This method will check if qtType is old pk7 or new pk7/wp and reason is
+	 * inactive to show the popup.
+	 * 
+	 * @param qtType
+	 * @param justificationQTType
+	 * 
+	 * @return boolean
+	 */
+	private boolean checkQTtypeAndReasonInaciveForPopup(PmParameter qtType,
+			PmReason justificationQTType) {
+		boolean isQTtypeOldPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE
+				.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
+						.equals(qtType.getParameterCode());
+
+		if (isQTtypeOldPK7) {
+			return isQTtypeOldPK7;
+		}
+
+		boolean isNewPK7ReasonInactive = ParameterTypeConst.QUOTATION_TENDER_TYPE
+				.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
+						.equals(qtType.getParameterCode())
+				&& justificationQTType != null
+				&& !justificationQTType.isRecordStatus();
+
+		if (isNewPK7ReasonInactive) {
+			return isNewPK7ReasonInactive;
+		}
+		return false;
 	}
 
 	// #29766 End Vinod
@@ -15003,7 +15039,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * the reason non editable.
 	 * 
 	 * @param
-	 * @return
+	 * @return boolean
 	 */
 	public boolean checkOldPK7PselectedToDisable() {
 		ScLoa scLoa = this.getManagedBean().getScLoa();
@@ -15012,13 +15048,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isQTtypePK7 = qtType != null
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
 						.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
-						.equals(qtType.getParameterCode());
-		boolean isQTtypePK7WP = qtType != null
-				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
-						.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
-						.equals(qtType.getParameterCode());
+				&& (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
+						.equals(qtType.getParameterCode()) || ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
+						.equals(qtType.getParameterCode()));
 
 		PmStatus pmStatus = (scLoa != null) ? scLoa.getPmStatus() : null;
 		List<Long> approvalStatus = Arrays.asList(
@@ -15027,7 +15059,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isPendingApproval = pmStatus != null
 				&& approvalStatus.contains(pmStatus.getStatusId());
 
-		if ((isQTtypePK7 || isQTtypePK7WP) && isPendingApproval) {
+		if (isQTtypePK7 && isPendingApproval) {
 			return true;
 		}
 
