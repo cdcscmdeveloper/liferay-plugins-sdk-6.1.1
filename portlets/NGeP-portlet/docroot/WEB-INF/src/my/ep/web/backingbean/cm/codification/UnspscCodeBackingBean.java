@@ -4363,25 +4363,25 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	 *
 	 *
 	 */
-	public void validateRejectBeforePopup(String popupWidget) {
-	    if (this.getManagedBean().getSelectedRemarks().get(0).getRemark() == null ||
-	        this.getManagedBean().getSelectedRemarks().get(0).getRemark().trim().length() <= 0) {
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null,
-	            new FacesMessage(
-	                FacesMessage.SEVERITY_ERROR,
-	                null,
-	                MessageUtils.getMessage(
-	                    MessageConst.ERROR_716024,
-	                    MessageUtils.BUNDLE_COMMON_MESSAGES,
-	                    new FacesScopes().getUserLocale())
-	            )
-	        );
-	        return;
-	    }
-	    RequestContext.getCurrentInstance().execute(popupWidget + ".show();");
+	public void validateRejectBeforePopup(String popupWidget){
+		String remark = this.getManagedBean().getSelectedRemarks().get(0).getRemark();
+		
+		if (remark == null || remark.trim().length() <= 0){
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							null,
+							MessageUtils.getMessage(
+									MessageConst.ERROR_716024,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())
+									)
+			);
+			return;
+		}
+		RequestContext.getCurrentInstance().execute(popupWidget + ".show();");
 	}
-	
 	/**
 	 * Validate Unspsc code field before displaying popup
 	 *

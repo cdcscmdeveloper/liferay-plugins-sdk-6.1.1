@@ -670,7 +670,10 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	public void validateRejectBeforePopup() {
 	    CatalogueBackingBean cbb = new CatalogueBackingBean();
 
-	    if (cbb.getManagedBean().getRejectReasonIds().isEmpty()) {
+	    ArrayList<Long> rejectReasonIds = cbb.getManagedBean().getRejectReasonIds();
+	    String rejectReason = cbb.getManagedBean().getRejectReason();
+
+	    if (rejectReasonIds.isEmpty()) {
 	        FacesContext.getCurrentInstance().addMessage(null,
 	            new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
 	                    MessageConst.ERROR_715057,
@@ -680,12 +683,11 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	        );
 	        return;
 	    }
-
-	    for (Object obj : cbb.getManagedBean().getRejectReasonIds()) {
+	    for (Object obj : rejectReasonIds) {
 	        Long id = Long.valueOf(String.valueOf(obj));
 
-	        if (id.equals(CmConst.REJECT_REASON_OTHER) && (cbb.getManagedBean().getRejectReason() == null ||
-	                cbb.getManagedBean().getRejectReason().isEmpty())) {
+	        if (id.equals(CmConst.REJECT_REASON_OTHER) &&
+	            (rejectReason == null || rejectReason.isEmpty())) {
 	            FacesContext.getCurrentInstance().addMessage(null,
 	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
 	                        MessageConst.ERROR_715056,
@@ -696,8 +698,6 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	            return;
 	        }
 	    }
-
 	    RequestContext.getCurrentInstance().execute("rejectCatConfirmPopup.show();");
 	}
-	//34447 End
 }

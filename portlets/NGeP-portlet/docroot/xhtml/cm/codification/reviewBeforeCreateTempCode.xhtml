@@ -14,12 +14,6 @@
 			autoUpdate="true" closable="true" showSummary="false" />
 
 		<ac:lovPopup />
-		
-		<!-- 34447 Start -->
-		<p:blockUI block="cmReviewUnspsc" widgetVar="pageBlockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif" />
-		</p:blockUI>
-		<!-- 34447 End -->
 
 		<h:panelGroup id="cmReviewUnspsc">
 			<div style="text-align: right;">
@@ -74,7 +68,7 @@
 				    loadingWidget="pageBlockWidget"
 				    okParam="#{unspscCodeBackingBean.savetempCode('SUBMIT')}" hasParam="true"
 				    title="#{lbl['lbl.cm.dialog.cofirm.header']}"
-				    content="#{lbl['lbl.cd.dialog.message.recommend']}"
+				    content="#{lbl['lbl.cd.dialog.message.endorse']}"
 				    selectedItem="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc}"
 				    update="@form">
 				</ac:confirmationPopupCM>
