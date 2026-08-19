@@ -181,6 +181,12 @@ public class FlReportConst implements Serializable {
 	
 	//#27476 start
 	public static final String FL_RPT_PROCUMENT_TYPE_CODE = "PPROCTYPECODE";
+	public static final String FL_RPT_GROUP_SUPP_NAME = "SUPPLIER NAME";
+	public static final String FL_RPT_GROUP_TREASURY_CIRCULAR = "PKP NO";
+	public static final String FL_RPT_GROUP_DOC_STATUS = "STATUS";
+	public static final String FL_RPT_GROUP_REQUISITIONER = "REQUISITIONER";
+	public static final String FL_RPT_GROUP_PROC_TYPE = "PROCUREMENT TYPE";
+	public static final String FL_RPT_GROUP_ITEM_TYPE = "ITEM TYPE";
 	//#27476 end
 	
 	public FlReportConst(){}
@@ -441,5 +447,47 @@ public class FlReportConst implements Serializable {
 		return FL_086_ITEM_PANEL_THRESHOLD;
 	}
 	//31344 - end
+
+	/**
+	 * @return the flRptGroupSuppName
+	 */
+	public static String getFlRptGroupSuppName() {
+		return FL_RPT_GROUP_SUPP_NAME;
+	}
+
+	/**
+	 * @return the flRptGroupTreasuryCircular
+	 */
+	public static String getFlRptGroupTreasuryCircular() {
+		return FL_RPT_GROUP_TREASURY_CIRCULAR;
+	}
+
+	/**
+	 * @return the flRptGroupDocStatus
+	 */
+	public static String getFlRptGroupDocStatus() {
+		return FL_RPT_GROUP_DOC_STATUS;
+	}
+
+	/**
+	 * @return the flRptGroupRequisitioner
+	 */
+	public static String getFlRptGroupRequisitioner() {
+		return FL_RPT_GROUP_REQUISITIONER;
+	}
+
+	/**
+	 * @return the flRptGroupProcType
+	 */
+	public static String getFlRptGroupProcType() {
+		return FL_RPT_GROUP_PROC_TYPE;
+	}
+
+	/**
+	 * @return the flRptGroupItemType
+	 */
+	public static String getFlRptGroupItemType() {
+		return FL_RPT_GROUP_ITEM_TYPE;
+	}
 	
  }

@@ -48,7 +48,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
-import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 
@@ -70,6 +69,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final String TYPE_BANK = "bank";
 	private static final String LBL_AI_UNAVAILABLE = "lbl.sm.ai.unavailable";
 	private static final int SC_AI_UNAVAILABLE = 503;
+	private static final String AI_UPLOAD_MARKER = "_ai";
 
 	private List<AiEpfResultDTO> epfs;
 	private AiTenancyDTO tenancy;
@@ -318,7 +318,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			extension = originalFilename.substring(dotIndex);
 			oriFilename = originalFilename.substring(0, dotIndex);
 		}
-		return oriFilename + "_" + timestamp + extension;
+		// marker last before the extension so the delete-lock can find it
+		return oriFilename + "_" + timestamp + AI_UPLOAD_MARKER + extension;
 	}
 
 	/**
@@ -483,9 +484,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			log.info("skip AI");
 			String content = AiDocParser.getFakeData(filepath, filename);
 			return new JsonWrapper(System.currentTimeMillis(), content, docType);
-		}
-		if (!filename.contains("ai_demo")){
-			return null;
 		}
 		///temporary demo filter - end
 		
@@ -737,7 +735,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		// any supporting document may carry a bank statement, so every matching row is validated
 		boolean hasBankDoc = false;
 		List<AiBankDocDTO> entities = new ArrayList<>();
-		SmFieldChangeUtil.setBankFieldChangeStatus(appl);
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
 			if (!isBankDoc(suppDoc.getPmDocument()) || EntityHelper.isCollectionEmpty(suppDoc.getSmApplDocFiles())){
 				continue;
@@ -934,11 +931,24 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public static boolean isAiSuppDocDeleteLocked(SmApplSupportDoc doc, SmApplDocFile file){
-		if (file == null || file.getAiApiResponseId() == null
+		if (file == null || !isAiAssistantUpload(file.getFileName())
 				|| doc == null || doc.getPmDocument() == null){
 			return false;
 		}
 		return isEpfDoc(doc.getPmDocument()) || isTenancyDoc(doc.getPmDocument());
+	}
+
+	// true when the filename carries the AI Assistant marker (last token before the extension)
+	private static boolean isAiAssistantUpload(String fileName){
+		if (fileName == null){
+			return false;
+		}
+		String name = fileName.trim();
+		int dot = name.lastIndexOf('.');
+		if (dot > 0){
+			name = name.substring(0, dot);
+		}
+		return name.endsWith(AI_UPLOAD_MARKER);
 	}
 
 	/**
@@ -994,6 +1004,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		boolean hasWrongCompanyName = false;
 		boolean hasUnreadable = false;
 		StringBuilder sb = new StringBuilder();
+		// the same bank may arrive on several statements; it is listed once, per FRS 2.4
+		Set<String> seen = new HashSet<>();
 
 		for (AiBankDocDTO doc : docEntities){
 			// nothing parsed out of this file: it blocks submit too, but it is not a mismatch
@@ -1005,7 +1017,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				continue;
 			}
 			// per-bank mismatch rows, labels from the bundle
-			if (appendBankMismatchRows(doc.getBankStatements(), sb)){
+			if (appendBankMismatchRows(doc.getBankStatements(), sb, seen)){
 				hasWrongCompanyName = true;
 			}
 		}
@@ -1029,9 +1041,15 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	// Append a mismatch row per invalid bank field; returns true if any account-holder name mismatched.
-	private static boolean appendBankMismatchRows(List<AiBankDocDTO.AiBankStatementDTO> banks, StringBuilder sb){
+	// seen carries the bank name + account number keys already listed, across every statement.
+	private static boolean appendBankMismatchRows(List<AiBankDocDTO.AiBankStatementDTO> banks, StringBuilder sb,
+			Set<String> seen){
 		boolean hasWrongCompanyName = false;
 		for (AiBankDocDTO.AiBankStatementDTO bank : banks){
+			String key = AiDocValidator.bankAccountKey(bank);
+			if (key != null && !seen.add(key)){
+				continue;
+			}
 			if (!bank.isValidAccountHolderName()){
 				hasWrongCompanyName = true;
 			}
@@ -1051,17 +1069,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	/**
-	 * Block submit when a bank statement does not match Bank Info.
+	 * emitMessages: the submit-time check raises the mismatch messages, the Declare button gate stays silent.
 	 * @param appl
+	 * @param emitMessages
 	 * @return
 	 */
-	public static boolean isBankAiMismatch(SmAppl appl) {
+	public static boolean isBankAiMismatch(SmAppl appl, boolean emitMessages) {
 		if (!isAIApplicable(appl)) {
 			return false;
 		}
 		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())) {
 			return false;
 		}
+		// validatedAI is transient and only initAiState sets it, so recompute before reading it
+		validateBank(appl, emitMessages);
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()) {
 			if (suppDoc.getPmDocument() == null || EntityHelper.isCollectionEmpty(suppDoc.getSmApplDocFiles())
 					|| !isBankDoc(suppDoc.getPmDocument())) {
@@ -1069,7 +1090,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			for (SmApplDocFile file : suppDoc.getSmApplDocFiles()) {
 				if (file.getValidatedAI() == 2) {
-					validateBank(appl, true);
 					return true;
 				}
 			}

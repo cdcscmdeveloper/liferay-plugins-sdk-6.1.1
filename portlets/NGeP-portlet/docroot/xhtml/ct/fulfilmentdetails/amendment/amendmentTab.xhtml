@@ -59,8 +59,8 @@
 	        width: 110px;
 	        vertical-align: top;
          } 
-		 .columnWidth320 {
-			width: 320px;
+		 .columnWidth340 {
+			width: 340px;
 			vertical-align: top;
 			text-align: right;
 		 }
@@ -74,10 +74,6 @@
 		 .committee-type-radio {
 			float: left;
 			margin-left: 25px !important;
-		 }
-		 .committee-type-radio tr:first-child label {
-		    display: inline-table;
-		    margin-left: 10px;
 		 }
 		 /* 24336 End*/
 	 </style>
@@ -427,7 +423,7 @@
 			header="#{lbl['lbl.msg.confirm.cancel.header']}"
 			closable="true" draggable="false" resizable="false" modal="true"
 			style="max-width:700px;">
-			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line;"
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line; text-align:center;"
 				value="#{amendmentBackingBean.confirmationContentMsg}" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
