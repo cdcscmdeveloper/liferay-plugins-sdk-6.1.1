@@ -1014,7 +1014,7 @@ public class PmTrackingDiaryBackingBean extends
 				ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 		List<String> contractDocTypeList = Arrays.asList("MC","CC");
 		List<String> ppDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_PLAN_PROCUREMENT,ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
-		List<String> circularDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR,ParameterConst.DOCTYPE_PANEL_CIRCULAR, ParameterConst.DOCTYPE_PANEL_CIRCULAR); //#37620,#34367
+		List<String> circularDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR,ParameterConst.DOCTYPE_PANEL_CIRCULAR, ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY); //#37620,#34367
 		List<String> pmDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_COMPANY_PROFILE, ParameterConst.DOCTYPE_MARKET_RESEARCH);
 		
 		if(flDocTypeList.contains(docType)){//Fulfilment
