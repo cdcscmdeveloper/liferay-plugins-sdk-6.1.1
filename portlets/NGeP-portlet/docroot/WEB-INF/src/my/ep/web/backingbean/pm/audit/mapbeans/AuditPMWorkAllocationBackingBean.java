@@ -2,27 +2,33 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import my.ep.constant.pm.AuditConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPoJobTypeRatio;
+import my.ep.persistence.entity.pm.common.PmPoJobWeight;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.pojobtyperatio.PoJobTypeRatioManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
- * AuditPMEducationBackingBean
+ * AuditPMWorkAllocationBackingBean
  * 
  * @author haiza 28895_35509
  * 
  */
 public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final String COMMA_STRING = ",";
 	private static final String NULL_X = "X";
@@ -46,8 +52,8 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		PoJobTypeRatioManagedBean managedBean = (PoJobTypeRatioManagedBean) manageBean;
 		PmPoJobTypeRatio jobRatio = managedBean.getPoJobTypeRatio();
-
-		BigInteger docId = BigInteger.valueOf(managedBean.getSavedJobTypeRatio().getPoJobTypeRatioId());
+		PmPoJobTypeRatio savedJobRatio = managedBean.getSavedJobTypeRatio();
+		BigInteger docId = BigInteger.valueOf(savedJobRatio.getPoJobTypeRatioId());
 
 		String categoryType = jobRatio.getCategoryType() == null ? NULL_X : jobRatio.getCategoryType();
 		String doctype = jobRatio.getSupplierType() + COMMA_STRING + jobRatio.getApplType() + COMMA_STRING
@@ -57,8 +63,10 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		if (!managedBean.isBrandNew()) {
 			PmPoJobTypeRatio oldPoJobRatio = managedBean.getOriPoJobTypeRatio();
 
+			System.out.println("  -----TEST---- test masuk for : " );
 			if (!jobRatio.getPoJobWeight().getPoJobWeightId().equals(oldPoJobRatio.getPoJobWeight().getPoJobWeightId())) {
 
+				System.out.println("  -----TEST---- test masuk if : " );
 				dtlWeightCategory.setRoleCode(roleCode);
 				dtlWeightCategory.setDocType(doctype);
 				dtlWeightCategory.setPmParameterLvlId(AuditConst.PM_AUD_WORK_ALLOCATION_PMPARAMETERLVLID);
@@ -67,10 +75,8 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 				dtlWeightCategory.setLvlCode3(AuditConst.PM_LVL_CODE_3_WAML);
 				dtlWeightCategory.setDocId(docId);
 				dtlWeightCategory.setFieldLabelCode(AuditConst.PM_AUD_WAML_WEIGHT_CATEGORY_FIELDLABELCODE);
-				dtlWeightCategory.setOldValue(checkValue(oldPoJobRatio.getPoJobWeight().getPoJobWeightId()));
-				dtlWeightCategory.setNewValue(checkValue(jobRatio.getPoJobWeight().getPoJobWeightId()));
-				dtlWeightCategory.setOldValueId(BigInteger.valueOf(oldPoJobRatio.getPoJobWeight().getPoJobWeightId()));
-				dtlWeightCategory.setNewValueId(BigInteger.valueOf(jobRatio.getPoJobWeight().getPoJobWeightId()));
+				dtlWeightCategory.setOldValue(checkValue(checkPmParamDesc(oldPoJobRatio.getPoJobWeight().getPoJobWeightId(), managedBean.getJobWeightMap())));
+				dtlWeightCategory.setNewValue(checkValue(checkPmParamDesc(jobRatio.getPoJobWeight().getPoJobWeightId(), managedBean.getJobWeightMap())));
 				dtlWeightCategory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(dtlWeightCategory);
 			}
@@ -100,8 +106,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 			dtlWeightCategory.setLvlCode3(AuditConst.PM_LVL_CODE_3_WAML);
 			dtlWeightCategory.setDocId(docId);
 			dtlWeightCategory.setFieldLabelCode(AuditConst.PM_AUD_WAML_WEIGHT_CATEGORY_FIELDLABELCODE);
-			dtlWeightCategory.setNewValue(checkValue(jobRatio.getPoJobWeight().getPoJobWeightId()));
-			dtlWeightCategory.setNewValueId(BigInteger.valueOf(jobRatio.getPoJobWeight().getPoJobWeightId()));
+			dtlWeightCategory.setNewValue(checkValue(checkPmParamDesc(jobRatio.getPoJobWeight().getPoJobWeightId(), managedBean.getJobWeightMap())));
 			dtlWeightCategory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(dtlWeightCategory);
 
@@ -124,11 +129,24 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		managedBean.setSavedJobTypeRatio(null);
 		return auditPMReqDTO;
 	}
+	
+	private PmParameter checkPmParamDesc(Long jobWeightId, Map<Long, PmPoJobWeight> weightMap){
+		
+		PmPoJobWeight currentWeight = new PmPoJobWeight();
+		for (PmPoJobWeight weight : weightMap.values()) {
+			if(jobWeightId.equals(weight.getPoJobWeightId())){
+				currentWeight = weight;
+				System.out.println("  -----TEST---- currentWeight : " + currentWeight.getWeightType().getParameterType());
+				break;
+			}
+		}
+		return currentWeight.getWeightType();
+	}
 
-	private String checkValue(Long parameterId) {
-
-		return parameterId == 1 ? AuditConst.PM_AUD_MODERATE : parameterId == 2 ? AuditConst.PM_AUD_HIGH
-				: parameterId == 3 ? AuditConst.PM_AUD_EXTRA_HIGH : null;
+	private String checkValue(PmParameter parameter) {
+		
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		return ParameterHelper.getInstance().getParameterDesc(parameter.getParameterType(), parameter.getParameterCode(), locale);
 
 	}
 }

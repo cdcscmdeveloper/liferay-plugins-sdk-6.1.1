@@ -111,6 +111,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	private ContractBackingBean ctBB = null;
 	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+	
+	private String confirmationContentMsg;//34442 
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -887,7 +889,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			// 34442 - start
+			if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+				setConfirmationContentMsg(getConfirmationContent(String.valueOf(getManagedBean().getFactoring()
+						.getStatus().getStatusId()), getManagedBean().getContractNo()));
+				RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			// 34442 - end
+			
 			return null;
 		}else if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
 			validateFactoringRequest(outcome);	
@@ -1887,5 +1899,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 	}
 	//#15851 end	
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
 
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

@@ -5,10 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<p:panel header="#{lbl['lbl.sc.report.section']}" toggleable="true">
-		<h:outputText styleClass="instruction" escape="false"
-			value="#{lbl['lbl.sc.sf.briefing.paper.reports.instructions']}" />
 			
 		<ui:remove>37622 add briefingPaperDisplayFilter</ui:remove>
 		<ui:param name="finalizationReports" value="#{suppFinalizationBackingBean.managedBean.documentList}" />
@@ -80,6 +76,5 @@
 				</ui:fragment> -->
 
 		<ui:include src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperEvaluationSfReport.xhtml" />
-	</p:panel>
 
 </ui:composition>

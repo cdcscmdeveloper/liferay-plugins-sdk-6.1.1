@@ -3540,6 +3540,14 @@ public class CreateQtBackingBean extends
 		debugLogger("handlePublishClosingDate");
 		ScQt scQt = this.getManagedBean().getQt();
 
+		//#38107 - Start
+		// Do checking for eGPA before update closing date
+		if (scQt.getQtStatus() != null
+				&& QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId())) {
+			checkeGPAPublishPeriodDays(scQt);
+		}
+		//#38107 - End
+		
 		updatePublishClosingDate(scQt);
 	}
 	
@@ -4372,9 +4380,64 @@ public class CreateQtBackingBean extends
 		}
 	}
 	// Bug #40087@Syazani 06/04/2026 -- End
+	
+	//#38107 - Start
+	private void checkeGPAPublishPeriodDays(ScQt scQt) {
+		try {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			// eGPA review decision that made it so RPP cannot be reduce,
+			// can only be increase
+			List<String> eGPAFinalDecision = new ArrayList<>();
+			eGPAFinalDecision.add(ParameterConst.APPROVAL_EGPA_DECISION_APPROVED_WITHOUT_AMEND);
+			eGPAFinalDecision.add(ParameterConst.APPROVAL_EGPA_DECISION_APPROVED_WITH_AMEND);
+			checkForRepublishQT(scQt, eGPAFinalDecision);
+			ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO
+					.getLatesteGPAApprovalRequestBasedOnQtId(scQt.getQtId());
+			if (eGPAApprovalRequest != null && eGPAApprovalRequest.getApproverAction() != null) {
+				String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
+				if (eGPAFinalDecision.contains(eGPADecision)
+						&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
+					addFacesMessage(fc, MessageConst.ERROR_770408, null);
+				} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
+						&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
+					addFacesMessage(fc, MessageConst.ERROR_760260, new String[] { String.valueOf(scQt.getPublishPeriod()) });
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE,
+					"checkeGPAPublishPeriodDays", scQt.getQtNo(), "checkeGPAPublishPeriodDays",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	private void checkForRepublishQT(ScQt scQt, List<String> eGPAFinalDecision) {
+		try {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			if (scQt.getParentQtId() != null) {
+				ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO.getLatesteGPAApprovalRequestBasedOnQtId(scQt
+						.getParentQtId());
+				if (eGPAApprovalRequest != null && eGPAApprovalRequest.getApproverAction() != null) {
+					String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
+					if (eGPAFinalDecision.contains(eGPADecision)
+							&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
+						addFacesMessage(fc, MessageConst.ERROR_770408, null);
+					} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
+							&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
+						addFacesMessage(fc, MessageConst.ERROR_760260,
+								new String[] { String.valueOf(scQt.getPublishPeriod()) });
+					}
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkForRepublishQT",
+					scQt.getQtNo(), "checkForRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#38107 - End
 }
-
-
-
-//#28784
-

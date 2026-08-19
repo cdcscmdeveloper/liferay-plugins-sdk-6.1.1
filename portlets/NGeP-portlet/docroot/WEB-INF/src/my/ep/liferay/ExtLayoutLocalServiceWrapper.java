@@ -3,7 +3,6 @@ package my.ep.liferay;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.sm.SupplierManagementConst;
@@ -129,8 +128,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 					//#35580 - End
 				}
 			}
-		}
-		
+		} 
 		return layouts;
 	}
 	
@@ -203,5 +201,5 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		}
 		return isBasic;
 	}
-	
+
 }

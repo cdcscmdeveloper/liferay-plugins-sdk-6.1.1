@@ -104,6 +104,7 @@ import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
@@ -2386,6 +2387,18 @@ public class LOIDetailBackingBean extends
 		userReqDTO.setMinisterOrgProfileId(retrieveMinistryOrgProfile(
 				scLoi != null ?scLoi.getScLoiLoa().getPmOrgProfile()
 						.getOrgProfileId():null).getOrgProfileId());
+		
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - start
+		Long contractType = resDTO.getScQt().getContractType().getParameterId();
+
+		if (contractType != null && contractType.equals(SourcingConstants.CENTRAL_CONTRACT)) {
+			PmZone zone = SmCommonUtil.getInstance().getUserZone();
+			if (zone != null) {
+				userReqDTO.setZoneCode(zone.getZoneCode());
+			}
+			userReqDTO.setBpk(true);
+		}
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
@@ -8093,7 +8106,7 @@ public class LOIDetailBackingBean extends
 	//#21692 - End
 	
 	//#38151 - Start
-	public void qualifiedSupplierListPopupScore(Long supplierId) {
+	public void qualifiedSupplierListPopupScore(Long supplierId, Long requestItemID) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -8113,9 +8126,9 @@ public class LOIDetailBackingBean extends
 		String evalstageF = null;
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
-		retrievescoresettings(this.getManagedBean().getScQt());
-		//#38679 use new calculation if only has quantity 0 for zonal only
 
+		retrievescoresettings(this.getManagedBean().getScQt());
+		//#38679 use new calculation if only has quantity 0 for zonal only	
 		requestNoteItemId = (CollectionUtils.isNotEmpty(this.getManagedBean().getRecommendList()))
 			    ? this.getManagedBean().getRecommendList().get(0).getRequestItem().getRequestNoteItemId()
 			    : requestNoteItemId;
@@ -8123,7 +8136,7 @@ public class LOIDetailBackingBean extends
 		selectedZoneId = (this.getManagedBean().getSelectedZone() != null)
 			    ? this.getManagedBean().getSelectedZone().getSpecZoneId()
 			    : selectedZoneId;
-
+		
 		boolean isQtyNotNull = null != selectedZoneId
 				        && qtSuppFinalizationSO.checkValueQtyNullForPopupRec(qtId);
 		
@@ -8137,7 +8150,7 @@ public class LOIDetailBackingBean extends
 		} else {
 
 			for (ScQtRecommend recommendList : this.getManagedBean().getRecommendList()) {
-				if (recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
+				if (null == selectedZoneId || recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
 					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
 
 				}
@@ -8148,6 +8161,7 @@ public class LOIDetailBackingBean extends
 		if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)) {
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
+			requestItemID = null;
 		} else if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM)) {
 			//if WIP cannot use Evalstage TI have to change T, 4serangkai deployment only can use TI
 			//evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
@@ -8166,7 +8180,7 @@ public class LOIDetailBackingBean extends
 
 			}
 		} else {
-			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
+			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null,requestItemID);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				//BigDecimal supplierNo = (BigDecimal) row[1];
@@ -8175,7 +8189,7 @@ public class LOIDetailBackingBean extends
 				BigDecimal reqItemId = (BigDecimal) row[6];
 				// Handle each row
 				if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
-						&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue())) {
+						&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || requestItemID == reqItemId.longValue())) {
 					totalScoreTecEval = supplierTotalScore;
 					break;
 				}
@@ -8211,18 +8225,22 @@ public class LOIDetailBackingBean extends
 
 
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
+				selectedZoneId,requestItemID);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
 			//BigDecimal supplierNo = (BigDecimal) row[1];
 			BigDecimal supplierTotalScore = (BigDecimal) row[3];
 			String evalStage = row[4].toString();
+			BigDecimal selectedZone = (BigDecimal) row[5];
 			BigDecimal reqItemId = (BigDecimal) row[6];
 			// Handle each row
 
 			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageF)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue())) {
+					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() 
+					|| requestItemID == reqItemId.longValue() && (null != selectedZoneId && selectedZone.longValue() == selectedZoneId)
+					|| null == selectedZoneId)) {
+
 				totalScoreFinEval = supplierTotalScore;
 				break;
 			}

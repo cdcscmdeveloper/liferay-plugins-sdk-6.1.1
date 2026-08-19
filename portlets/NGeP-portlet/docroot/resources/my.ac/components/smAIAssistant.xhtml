@@ -25,7 +25,7 @@
 		</style>
 		
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
-		<p:remoteCommand name="resetDoc" action="#{ai.resetDoc()}" update="pnl#{cc.attrs.aiDlg}"/>
+		<ui:param name="pnlId" value="pnl#{cc.attrs.aiDlg}" />
 		
 		<p:dialog id="block#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}"
 			modal="true" resizable="false" closable="false" showHeader="false">
@@ -48,13 +48,10 @@
 			<h:inputHidden id="ai"/>
 			<p:messages id="messages" for="ai" showDetail="true" autoUpdate="true" closable="true"/>
 			
-			<h:outputText value="#{lbl['lbl.sm.instruction.attachment']}" styleClass="instruction" escape="false" />
-
-			<h:outputText value="#{lbl['lbl.sm.ai.reminder']}" styleClass="instruction"/><br/>
-			<h:outputText value="#{lbl['lbl.sm.ai.tnc.instruction']}" rendered="#{cc.attrs.docType eq 'tenancy'}" 
-				styleClass="instruction"/>
-			<h:outputText value="#{lbl['lbl.sm.ai.epf.instruction']}" rendered="#{cc.attrs.docType eq 'epf'}" 
-				styleClass="instruction"/>
+			<h:outputText value="#{lbl['lbl.sm.ai.tnc.instruction']}" rendered="#{cc.attrs.docType eq 'tenancy'}"
+				styleClass="instruction" escape="false"/>
+			<h:outputText value="#{lbl['lbl.sm.ai.epf.instruction']}" rendered="#{cc.attrs.docType eq 'epf'}"
+				styleClass="instruction" escape="false"/>
 			<br/><br/>
 			<p:dataTable id="docs#{cc.attrs.aiDlg}" var="doc" value="#{ai.getDocs()}" emptyMessage="">
 				<p:column headerText="#{lbl['lbl.sm.sme.supp.doc.name']}">
@@ -63,7 +60,7 @@
         			</h:commandLink>
 				</p:column>
 				<p:column style="width:5%;text-align:center;">
-					<p:commandLink action="#{ai.deleteDoc(doc)}" update="docs#{cc.attrs.aiDlg}">
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>
@@ -72,16 +69,16 @@
 			
 			<!-- temp, allowTypes buang json -->
 			<p:fileUpload mode="advanced"
-				allowTypes="/(\.|\/)(pdf|doc|docx|json)$/"
+				allowTypes="/(\.|\/)(pdf|json)$/"
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
-				invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{ai.handleSupDocFileAttachment}"
 				update="pnl#{cc.attrs.aiDlg}"
 				auto="true"
 				label="#{lbl['lbl.txt.upload']}"
 				dragDropSupport="false"
-				multiple="false"
+				multiple="#{cc.attrs.docType eq 'epf'}"
 				showButtons="false"
 				onstart="block#{cc.attrs.aiDlg}.show()"
 				oncomplete="block#{cc.attrs.aiDlg}.hide();"/>
@@ -93,13 +90,14 @@
 			<p:outputPanel id="result#{cc.attrs.aiDlg}">
 				<!-- epf -->
 				<p:outputPanel rendered="#{ai.postAI and cc.attrs.docType eq 'epf'}">
-					<h:outputText value="Extracted Employees" styleClass="instruction" />
+					<h:outputText value="#{lbl['lbl.sm.ai.epf.extracted']}" styleClass="instruction" />
 					<br/>
 					<h:outputText value="#{lbl['lbl.sm.ai.epf.select']}" />
 					<p:spacer height="5" />
 
 					<p:dataTable id="dt#{cc.attrs.aiDlg}" var="emp" value="#{ai.getEmployees()}" rowKey="#{emp}"
 						selection="#{ai.selectedEmployees}"
+						rows="10"
 						style="width:100%">
 						<ac:paginator for="dt#{cc.attrs.aiDlg}" />
 						<p:column selectionMode="multiple" style="width:5%" />
@@ -117,7 +115,7 @@
 
                 <!-- tenancy -->
 				<p:outputPanel rendered="#{ai.postAI and cc.attrs.docType eq 'tenancy'}">
-					<h:outputText value="Extracted Tenancy Details" styleClass="instruction" />
+					<h:outputText value="#{lbl['lbl.sm.ai.tnc.extracted']}" styleClass="instruction" />
 					<br/><br/>
 					<h:outputText value="#{lbl['lbl.sm.facility.landLordName']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.landlordsName}" />
@@ -128,14 +126,14 @@
 					<h:outputText value="#{lbl['lbl.sm.facility.monthRent']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.monthlyRental}" />
 					<br/>
-					<h:outputText value="#{lbl['lbl.sm.facility.company.address']}: " style="font-weight:bold;" />
+					<h:outputText value="#{lbl['lbl.sm.companyaddress']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.premisesAddress}" />
 				</p:outputPanel>
 
                 <!-- others -->
                 <p:outputPanel rendered="#{ai.postAI and cc.attrs.docType != 'epf' and cc.attrs.docType != 'tenancy'}">
 					<p:spacer height="10" />
-					<h:outputText value="lbl.sm.ai.success" />
+					<h:outputText value="#{lbl['lbl.sm.ai.success']}" />
 				</p:outputPanel>
 			</p:outputPanel>
 
@@ -144,17 +142,19 @@
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
 					rendered="#{empty cc.attrs.updateId}"
-					onclick="#{cc.attrs.aiDlg}.hide();"/>
-					
+					onclick="#{cc.attrs.aiDlg}.hide();"
+					disabled="#{ai.blockSubmit}"/>
+
 				<p:commandButton id="submitBtnAI"
 					value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
+					process="@this dt#{cc.attrs.aiDlg}"
 					update=":#{p:component(cc.attrs.updateId)}"
 					rendered="#{not empty cc.attrs.updateId}"
 					onclick="#{cc.attrs.aiDlg}.hide();"
 					onstart="block#{cc.attrs.aiDlg}.show()"
 					oncomplete="block#{cc.attrs.aiDlg}.hide();"
-					disabled="#{empty ai.docs}"/>
+					disabled="#{empty ai.docs or ai.blockSubmit}"/>
 					
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
 			</div>

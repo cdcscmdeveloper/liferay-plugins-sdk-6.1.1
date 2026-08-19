@@ -129,6 +129,7 @@ import my.ep.persistence.entity.pm.common.PmReason;//#27868
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmReasonRestr; //#27868
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.map.PmPK7Mapping;
 import my.ep.persistence.entity.sc.common.ScActor;
@@ -3904,9 +3905,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				updateContractDetails(scLoa);
 				validateContractDetails(scLoa);
 				// 27868 - start
-				if (validateProcurementTypeisRPT(scLoa.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateReasonStatus(scLoa);
-				}
+				validateReasonStatus(scLoa);
 				// 27868 - end
 				
 			
@@ -4173,9 +4172,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		validateLOADetails(scLoa, outcome);
 		// 27868 - start
-		if (validateProcurementTypeisRPT(scLoa.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
-			validateReasonStatus(scLoa);
-		}
+		validateReasonStatus(scLoa);
 		// 27868 - end
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -4375,6 +4372,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
         		// #26770 - Start.
         		validateReportAttachment();
         		// #26770 - End.
+        		// 27868 - start
+        		validateReasonStatus(scLoa);
+        		// 27868 - end
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
@@ -8205,7 +8205,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt())); 
 			sb.append("^4");
 		}
-		
+			//@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			if (scLoa.getContractType().getParameterType().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+				
+				sb.append("|pmUserOrgs.pmOrgProfile.bpk^");
+				sb.append(true);
+				sb.append("^1");	
+				
+				PmZone zone = SmCommonUtil.getInstance().getUserZone();		
+				if (zone != null) {
+
+					sb.append("|pmUserOrgs.pmOrgProfile.pmZone.zoneId^");
+					sb.append(zone.getZoneId()); 
+				}
+			 }
+			//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		return sb.toString();
 	}
 
@@ -12996,13 +13010,31 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setReasonId(getManagedBean().getScLoa().getScQuote().getJustificationType().getReasonId());
 
 			PmReason reason = reqSO.retrieveReasonDtlById(reqDTO).getPmReason();
-			if (reason != null && !reason.isRecordStatus()) {
+			if (reason == null) {
+				return;
+			}
+			boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());			
+			
+			if (!reasonStatus) {
 				throw new EpException(MessageConst.ERROR_760715, new String[] {
 						getParameterDesc(getManagedBean().getScLoa().getProcurementType().getParameterType(),
 								getManagedBean().getScLoa().getProcurementType().getParameterCode()),
 						getReasonDesc(getManagedBean().getScLoa().getScQuote().getJustificationType()) });
 			}
 		}
+	}
+	
+	/**
+	 * Retrieves the PK7 reason status by reason ID.
+	 *
+	 * @param reasonId
+	 *            the reason ID
+	 * @return true if the reason is active, otherwise false
+	 */
+	private boolean retrievePK7ReasonStatus(Long reasonId) {
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		return reqSO.getPK7ReasonStatus(reasonId);
 	}
 	
 	/**
@@ -13409,5 +13441,31 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	        return false;
 	    }
 		// #26059 - End
+	    
+	// 41033, 41034 - start
+	/**
+	 * Sorts SC LOA remarks in descending order by created date (latest first).
+	 * 
+	 * @return
+	 */
+	public List<ScLoaRemark> getSortedRemarksByDate() {
+		List<ScLoaRemark> remarks = getManagedBean().getScLoa().getScLoaRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScLoaRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScLoaRemark>() {
+			@Override
+			public int compare(ScLoaRemark r1, ScLoaRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+
+		return sortedList;
+	}
+	// 41033,41034 - end
 }
 

@@ -39,6 +39,7 @@ public interface QTConstants {
 	public static final String MAINT_EPV_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovalEpv.xhtml";//#21692 add new page for history
 	public static final String EXTEND_PROPOSAL_VALIDITY_SUPPLIER_ACCEPTANCE = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";//#21692 supplier screen
 	public static final String EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";//#21692 approval screen
+	public static final String MAINT_EGPA_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovaleGPA.xhtml";//#38107
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -476,6 +477,11 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
+	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 25px;\"></span></div>";
+	public static final String SPAN_ERROR_CONTENT_OPEN = "<div><span style=\"position: relative;right: 25px;\">";
+	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span></div></div>";
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION_HIDE = "inActiveChecklistNotification.hide()";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECMAINT = "lbl.sc.spec.confirm.inactive.techfin.checklist.specmaint";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -526,7 +532,7 @@ public interface QTConstants {
 			
 	// 25791-End
 	
-	//#38151
+	//#38151 & #38679
 	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
 	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
@@ -604,5 +610,10 @@ public interface QTConstants {
 	public static final String RPT_DROPDOWN_CANCELLED_LBL = "lbl.rpt.drpdown.cancelledLabel";
 	public static final String RPT_ALL_LBL = "lbl.rpt.all";
 	// #29580-end
+
+	// 28188 -start-
+	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
+	// 28188 -end-
+
 
 }

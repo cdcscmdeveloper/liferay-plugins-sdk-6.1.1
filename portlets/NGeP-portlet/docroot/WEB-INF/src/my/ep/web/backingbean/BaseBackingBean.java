@@ -575,6 +575,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getDropdownValues(String parameterType) {
 		return getDropdownValuesBySearchBean(parameterType, null);
 	}
+	
+	//9299 - 40712 Start
+	public SelectItem[] getProcurementMethodDropdownValues (String parameterType){
+		return getDropdownValuesByProcurementMethod(parameterType, null);
+	}
+	//9299 - 40712 End
 
 	/**
 	 * Get parameter id select items by parameter type and search bean for
@@ -658,6 +664,39 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+	
+	// 9299 -40712, 40978 Start
+	public SelectItem[] getDropdownValuesByProcurementMethod(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+
+		FacesScopes face = new FacesScopes();
+
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		items.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				PmParameter parameter = parameterDesc.getPmParameter();
+
+				if (null != parameter
+						&& !ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(parameter.getParameterCode())) {
+					items.add(new SelectItem(parameter.getParameterId(), parameterDesc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			log.error("getDropdownValuesByProcurementMethod failed for parameterType " + parameterType, e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[items.size()]);
+	}
+	// 9299 -40712, 40978 End
 
 	// new #25725/25726 - Start
 	
@@ -953,7 +992,50 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 
 		return items.toArray(new SelectItem[0]);
-	}	
+	}
+	
+	 /**
+	  * Retrieves dropdown values by combining new and old WIP parameters.
+	  *
+	  * @param newParameterType the new parameter type
+	  * @param oldParameterType the old parameter type
+	  * @param oldParameterCode the old parameter code to include
+	  * @return an array of dropdown values
+	  */
+	public SelectItem[] getDropdownValuesWithWIP(String newParameterType, String oldParameterType,
+			String oldParameterCode) {
+
+		List<SelectItem> items = new ArrayList<>();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescList(newParameterType);
+
+			for (PmParameterDesc desc : parameterDescs) {
+				items.add(new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName()));
+			}
+
+			parameterDescs = ParameterHelper.getInstance().getParameterDescList(oldParameterType);
+
+			for (PmParameterDesc desc : parameterDescs) {
+				if (oldParameterCode != null
+						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE,
+					SLALogConstant.COMMON_BASE_BACKINGBEAN, SSTConstant.EMPTY_STRING,
+					SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM,
+					getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[0]);
+	}
 	//27868 - end
 
 	/**
