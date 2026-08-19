@@ -253,8 +253,6 @@ import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
-//#RUU
-import my.ep.persistence.entity.py.PyBillDtl;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -2226,47 +2224,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 			// set payment details section only for supplier and application type is
 			// NEW or RENEW
-			if (getManagedBean().isSupplierUser()
-					&& (getManagedBean().getSmAppl().getApplType()
-							.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) || getManagedBean()
-							.getSmAppl().getApplType()
-							.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
-				SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
-				paymentVO.setDetails(getParameterDesc(
-						ParameterTypeConst.SUPP_PAYMENT_ITEM,
-						SupplierManagementConst.MOF_PAYMENT));
-				paymentVO.setPrice(SmRuleHelper.getInstance().getRegistrationFee());
-				paymentVO.setTotalAmount(paymentVO.getPrice());
-				getManagedBean().setPaymentDetailsVOList(
-						new ArrayList<SmPaymentDetailsVO>());
-				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
-
-				paymentVO = new SmPaymentDetailsVO();
-				paymentVO.setDetails(getParameterDesc(
-						ParameterTypeConst.SUPP_PAYMENT_ITEM,
-						SupplierManagementConst.PROCESSING_PAYMENT));
-				paymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
-				paymentVO.setTotalAmount(paymentVO.getPrice());
-				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
-				// #RUU
-				catCodeFee(false);
-
-				getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
-				getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
-				getManagedBean().setGstPercentageLabels(
-						SmCommonUtil.getMessage("lbl.sm.gst.percent",
-								new String[] { getManagedBean().getGstAmount()
-										.toString() }));
-
-				for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
-						.getPaymentDetailsVOList()) {
-					// #RUU Start
-					getManagedBean().setTotalPaymentAmount(getManagedBean().getTotalPaymentAmount().add(paymentDetailsVO.getTotalAmount()));
-					// #RUU End
-				}
-				getManagedBean().setTotalPaymentAmount(
-						getManagedBean().getTotalPaymentAmount().setScale(2,
-								BigDecimal.ROUND_UP));
+			// #RUU Start
+			if (getManagedBean().isSupplierUser() 
+					&& (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+							|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || getManagedBean().getSmAppl()
+							.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES))) {
+				displayCatCodeFee();
+			// #RUU End
 				getManagedBean().setApplDeclarationAlertMsg(
 						SmCommonUtil.getMessage(
 								"lbl.sm.payment.declaration.appl.alert.msg",
@@ -3412,22 +3376,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// 37925 END
 		// #RUU Start
 		if (getManagedBean().isSupplierUser() && outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) {
-			catCodeFee(false);
-			getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
-			getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
-			getManagedBean().setGstPercentageLabels(
-					SmCommonUtil.getMessage("lbl.sm.gst.percent",
-							new String[] { getManagedBean().getGstAmount()
-									.toString() }));
-			for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
-					.getPaymentDetailsVOList()) {
-				getManagedBean().setTotalPaymentAmount(
-						getManagedBean().getTotalPaymentAmount().add(
-								paymentDetailsVO.getTotalAmount()));
-			}
-			getManagedBean().setTotalPaymentAmount(
-					getManagedBean().getTotalPaymentAmount().setScale(2,
-							BigDecimal.ROUND_UP));
+			displayCatCodeFee();
 		}
 		// #RUU End
 	}
@@ -12168,12 +12117,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.updateSmSupplierInfo(getManagedBean(), reqDTO);
 			}
 			log.info("<<< #30929: SmApplicationBackingBean.submitPOorApproverReviewToBPM() - finish >>>");
-			// #RUU Start
-			catCodeFee(true);
-			if (null != getManagedBean().getPaymentDetailsVOList() && !getManagedBean().getPaymentDetailsVOList().isEmpty()) {
-				catCodePyBillDtls(reqDTO);
-			}
-			// #RUU End
 		} 
 		
 		//#12483 - START
@@ -20269,71 +20212,46 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	// #40306 End
 	// #RUU Start
-	private void catCodeFee(boolean approveAction) {
-		List<SmPaymentDetailsVO> tempPaymentDetailsVOList = new ArrayList<>();
-		if (null != getManagedBean().getPaymentDetailsVOList() && !getManagedBean().getPaymentDetailsVOList().isEmpty()) {
-			for (SmPaymentDetailsVO currPaymentVO : getManagedBean().getPaymentDetailsVOList()) {
-				if (!currPaymentVO.isCatCode()) {
-					tempPaymentDetailsVOList.add(currPaymentVO);
-				}
-			}
-		}
-		getManagedBean().setPaymentDetailsVOList(tempPaymentDetailsVOList);
+	private void displayCatCodeFee() {
 		SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
-		if(null != this.getManagedBean().getActiveCategoryList() && !this.getManagedBean().getActiveCategoryList().isEmpty()){
-			List<SmSupplierCategory> normalCatCode = new ArrayList<>();
-			List<SmSupplierCategory> specialCatCode = new ArrayList<>();
-			for (SmSupplierCategory catCode : getManagedBean().getActiveCategoryList()) {
-				if (approveAction) {
-					if (!catCode.isSpecialCategory() && catCode.isApprovedByAp()) {
-						normalCatCode.add(catCode);
-					} else if (catCode.isSpecialCategory() && catCode.isApprovedByAp()) {
-						specialCatCode.add(catCode);
-					}
+		paymentVO.setDetails(getParameterDesc(
+				ParameterTypeConst.SUPP_PAYMENT_ITEM,
+				SupplierManagementConst.MOF_PAYMENT));
+		paymentVO.setPrice(SmRuleHelper.getInstance().getRegistrationFee());
+		paymentVO.setTotalAmount(paymentVO.getPrice());
+		getManagedBean().setPaymentDetailsVOList(
+				new ArrayList<SmPaymentDetailsVO>());
+		getManagedBean().getPaymentDetailsVOList().add(paymentVO);
 
-				} else {
-					if (!catCode.isSpecialCategory()) {
-						normalCatCode.add(catCode);
-					} else if (catCode.isSpecialCategory()) {
-						specialCatCode.add(catCode);
-					}
-				}
-			}
-			if (!normalCatCode.isEmpty() && normalCatCode.size() > 15) {
-				paymentVO = new SmPaymentDetailsVO();
-				paymentVO.setDetails("Normal Code Category Fee");
-				paymentVO.setPrice(new BigDecimal(1000));
-				paymentVO.setQuantity(normalCatCode.size() - 15);
-				paymentVO.setTotalAmount(paymentVO.getPrice().multiply(BigDecimal.valueOf(paymentVO.getQuantity())));
-				paymentVO.setCatCode(true);
-				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
-			}
-			if (!specialCatCode.isEmpty()) {
-				paymentVO = new SmPaymentDetailsVO();
-				paymentVO.setDetails("Special Code Category Fee");
-				paymentVO.setPrice(new BigDecimal(1000));
-				paymentVO.setQuantity(specialCatCode.size());
-				paymentVO.setTotalAmount(paymentVO.getPrice().multiply(BigDecimal.valueOf(paymentVO.getQuantity())));
-				paymentVO.setCatCode(true);
-				getManagedBean().getPaymentDetailsVOList().add(paymentVO);
-			}
+		paymentVO = new SmPaymentDetailsVO();
+		paymentVO.setDetails(getParameterDesc(
+				ParameterTypeConst.SUPP_PAYMENT_ITEM,
+				SupplierManagementConst.PROCESSING_PAYMENT));
+		paymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
+		paymentVO.setTotalAmount(paymentVO.getPrice());
+		getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+
+		getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
+		getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
+		getManagedBean().setGstPercentageLabels(
+				SmCommonUtil.getMessage("lbl.sm.gst.percent",
+						new String[] { getManagedBean().getGstAmount()
+								.toString() }));
+
+		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
+		if(null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()){
+			getManagedBean().isSpecialCategoryRechecked();
 		}
+
+		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
+				.getPaymentDetailsVOList()) {
+			getManagedBean().setTotalPaymentAmount(
+					getManagedBean().getTotalPaymentAmount().add(
+							paymentDetailsVO.getPrice()));
+		}
+		getManagedBean().setTotalPaymentAmount(
+				getManagedBean().getTotalPaymentAmount().setScale(2,
+						BigDecimal.ROUND_UP));
 	}
-
-	private void catCodePyBillDtls(ReviewApplicationReqDTO reqDTO) {
-		reqDTO.setPyBillDtls(new ArrayList<PyBillDtl>());
-		for (SmPaymentDetailsVO paymentVO : getManagedBean().getPaymentDetailsVOList()) {
-			if (paymentVO.isCatCode()) {
-				PyBillDtl billDtl = new PyBillDtl();
-				PmParameter itemCode = new PmParameter();
-				itemCode = SmApplicationUtil.retrievePmParameterById(1L);
-				billDtl.setItemCode(itemCode);
-				billDtl.setItemDesc(paymentVO.getDetails());
-				billDtl.setItemPrice(paymentVO.getTotalAmount());
-				billDtl.setItemQty(paymentVO.getQuantity());
-				reqDTO.getPyBillDtls().add(billDtl);
-			}
-		}
-	}	
 	// #RUU End
 }
