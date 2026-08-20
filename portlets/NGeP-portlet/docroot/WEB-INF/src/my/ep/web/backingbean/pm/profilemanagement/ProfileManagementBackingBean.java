@@ -1094,6 +1094,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 
 		int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
+		int statusActive = DbValueConst.RECORD_STATUS_ACTIVE;
 		String loginId = this.getManagedBean().getSelectedUser().getLoginId();
 		Long userId = this.getManagedBean().getSelectedUser().getUserId();
 		EpException pendingDocumentException;
@@ -1103,19 +1104,19 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			// revert it to active
 			if (isAnyPendingTaskForUser(loginId)) {
 				logger.info("orgUnitStatusChange 1 - Pending task found");
-				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(statusActive);
 				// hit error and exit
 				throw new EpException(MessageConst.ERROR_770167);
 			} else if ((pendingDocumentException = isAnyPendingDocForUserRole(validateUserOrgandRole(), userId)) != null) {
 				logger.info("orgUnitStatusChange 2 - Pending document found");
-				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(statusActive);
 				// hit error and exit
 				throw pendingDocumentException;
 			} else {
 				String[] activeUserGroup = isActiveUserGroupUser();
 				if (activeUserGroup != null) {
 					logger.info("orgUnitStatusChange 3 - Active user group found");
-					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(statusActive);
 					throw new EpException(MessageConst.ERROR_770202, activeUserGroup);
 				}
 				boolean validGovtSeller = validateUserOrgProfileAndStatus();
