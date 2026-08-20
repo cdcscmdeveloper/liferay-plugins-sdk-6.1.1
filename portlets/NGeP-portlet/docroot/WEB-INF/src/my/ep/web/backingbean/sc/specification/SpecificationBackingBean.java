@@ -23222,8 +23222,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			String docDefKey = null != techChecklist.getPmDocument()
 					&& null != techChecklist.getPmDocument().getDocDefinitionKey() ? techChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
-			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| Arrays.asList(QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST).contains(docDefKey)) {
+			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(
+					defType)
+					|| (Arrays.asList(
+							QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST)
+							.contains(docDefKey) && techChecklist
+							.isScoringReq())) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = techChecklist.getQtChecklistId();
 				String title = techChecklist.getTitle();
@@ -23263,8 +23267,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			String docDefKey = null != finChecklist.getPmDocument()
 					&& null != finChecklist.getPmDocument().getDocDefinitionKey() ? finChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
-			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey)) {
+			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(
+					defType)
+					|| (Arrays.asList(
+							QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST)
+							.contains(docDefKey) && finChecklist.isScoringReq())) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = finChecklist.getQtChecklistId();
 				String title = finChecklist.getTitle();
