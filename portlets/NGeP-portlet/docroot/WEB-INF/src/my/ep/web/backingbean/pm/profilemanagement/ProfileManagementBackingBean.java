@@ -1094,11 +1094,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 
 		int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
+		String loginId = this.getManagedBean().getSelectedUser().getLoginId();
+		Long userId = this.getManagedBean().getSelectedUser().getUserId();
+		EpException pendingDocumentException;
+
 		logger.info("Selected User Org status: " + status);
 		if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
-			String loginId = this.getManagedBean().getSelectedUser().getLoginId();
-			Long userId = this.getManagedBean().getSelectedUser().getUserId();
-			EpException pendingDocumentException;
 			// revert it to active
 			if (isAnyPendingTaskForUser(loginId)) {
 				logger.info("orgUnitStatusChange 1 - Pending task found");
