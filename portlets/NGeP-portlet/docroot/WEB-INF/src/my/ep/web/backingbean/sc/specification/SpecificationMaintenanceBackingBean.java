@@ -932,6 +932,40 @@ public boolean isSpecCommittee() {
 		}
 		return Boolean.FALSE;
 	}
+	
+	private boolean specStatusEndorseRev(Date effTimestamp) {
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatus(this.getManagedBean().getQt().getQtId());
+			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}			 
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
+
+	private boolean specStatusPendingDocRev(Date effTimestamp) {
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatusPenDoc(this.getManagedBean().getQt().getQtId());
+			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
 	//#38151 & #38679 end
 
 }
