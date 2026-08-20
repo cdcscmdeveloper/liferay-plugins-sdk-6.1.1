@@ -18520,7 +18520,8 @@ public class SmApplicationBackingBean extends
 	//#31407 - START
 	public void checkBeforeSubmit() {
 		//#40112 - start
-		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl())) {
+		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)
+				&& AiDocSupport.isBlockDeclareEnabled()) {
 			return;
 		}
 		//#40112 - end
@@ -20028,13 +20029,16 @@ public class SmApplicationBackingBean extends
 
 	public boolean isShowTenancyAiBtn(){
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
-		return isAiAvailable() && fac != null
-				&& "R".equals(fac.getOwnershipType()) && "B".equals(fac.getFacilityType());
+		return isAiAvailable() && fac != null && SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED.equals(fac.getOwnershipType());
+	}
+
+	// (ERR-722683)
+	public boolean isShowEpfAiBtn(){
+		return isAiAvailable() && !getManagedBean().isDisAllowOwnerEdit();
 	}
 
 	public boolean isAiUploadDocRow(PmDocument doc){
-		return isAiAvailable()
-				&& SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), doc);
+		return isAiAvailable() && SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), doc);
 	}
 	
 	public void updateTenancyAI(AiTenancyDTO te){
@@ -20083,7 +20087,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	public boolean isAiBlockDeclare() {
-		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false);
+		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false) 
+				&& AiDocSupport.isBlockDeclareEnabled();
 	}
 	//40112 - end
 	

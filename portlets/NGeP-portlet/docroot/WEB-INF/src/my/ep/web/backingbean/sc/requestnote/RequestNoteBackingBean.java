@@ -144,6 +144,7 @@ import my.ep.persistence.entity.pm.map.PmPK7Mapping; //#27868
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScAssignItemDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -773,12 +774,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		// #26059 - Start
-		if (requestNoteResDTO.getAssignItemDtl() != null) {
-			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
-		}
-
 		if (requestNoteResDTO.getQuote() != null) {
 			scQuote = requestNoteResDTO.getQuote();
+		}
+		
+		Map<Long, ScAssignItemDtl> assignItemDtlMap = new HashMap<>();
+		if (CollectionUtils.isNotEmpty(requestNoteDtlList)) {
+			List<Long> requestItemIds = new ArrayList<>();
+			
+			for (ScRequestNoteDtl dtl : requestNoteDtlList) {
+				if (dtl.getRequestItem() != null && dtl.getRequestItem().getRequestNoteItemId() != null) {
+					requestItemIds.add(dtl.getRequestItem().getRequestNoteItemId());
+				}
+			}
+			
+			if (!requestItemIds.isEmpty()) {
+				assignItemDtlMap = getRequestNoteSO().fetchBulkAssignmentDetails(requestItemIds);
+			}
 		}
 		// #26059 - End
 		
@@ -820,7 +832,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//#26059 - Start
 					CommonUtils commonUtils = new CommonUtils();
 					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
-					compareItemName(requestItem,scQuote);
+					
+					ScAssignItemDtl cachedAssignDtl = assignItemDtlMap.get(requestItem.getRequestNoteItemId());
+					compareItemName(requestItem,scQuote,cachedAssignDtl);
 					//#26059 - End	
 				}
 			}
@@ -1566,6 +1580,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
+	
 	
 	/**
 	 * Merge DB and temp lists by PK.
@@ -8126,7 +8141,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 			group.setCurrentItemTotalAmount(sumTotalPrice);
-			group.setAccumulativeAmountPerItemGroup(group.getAccumulativeAmountPerItemGroup().add(sumTotalPrice));
 			group.setDecision(SSTConstant.EMPTY_STRING);
 			getManagedBean().getCommodityGroups().add(group);
 		}
@@ -8661,31 +8675,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * 
 	 * @param requestItem
 	 *            the request item containing the CmItem to compare and update
+	 * @param scQuote
+	 * @param assignItemDtl
+	 *        
 	 */
-	public void compareItemName(ScRequestItem requestItem, ScQuote scQuote) {
+	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote , ScAssignItemDtl assignItemDtl) {
 		if (requestItem == null || requestItem.getCmItem() == null) {
 			return;
 		}
 
-		if (getManagedBean().isExistInAssignItemDetail()) {
+		if(assignItemDtl !=null){
+			if(requestItem.getRequestNoteItemId().equals(assignItemDtl.getScRequestItem().getRequestNoteItemId())){
+				return;
+			}
+		}
+		
+		if(scQuote !=null && scQuote.isPanel() && DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId()) && requestItem.getCmItem() !=null){
 			return;
 		}
 
-		if (scQuote != null
-				&& scQuote.isPanel()
-				&& DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem
-						.getItemType().getParameterId())
-				&& requestItem.getCmItem() != null) {
-			return;
-		}
-
-		String cmItemName = getCleanedItemName(requestItem.getCmItem()
-				.getItemName());
+		String cmItemName = getCleanedItemName(requestItem.getCmItem().getItemName());
 		String itemName = getCleanedItemName(requestItem.getItemName());
 
 		boolean namesDiffer = !cmItemName.equalsIgnoreCase(itemName);
-		boolean tempUnspscBlank = StringUtils.isBlank(requestItem
-				.getTempUnspscCode());
+		boolean tempUnspscBlank = StringUtils.isBlank(requestItem.getTempUnspscCode());
 
 		if (namesDiffer && tempUnspscBlank) {
 			trimExtensionCode(requestItem.getCmItem());
@@ -8845,4 +8858,35 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return false;
 	}
 	// #26059 - End
+	
+	// 41034 - start
+	/**
+	 * Sorts Request Note remarks in descending order by created date (latest
+	 * first).
+	 * 
+	 * @return
+	 */
+	public List<ScRequestNoteRemark> getSortedRequestNoteRemarksByDate() {
+		// Null check for request note
+		if (getManagedBean().getRequestNote() == null) {
+			return Collections.emptyList();
+		}
+
+		List<ScRequestNoteRemark> remarks = getManagedBean().getRequestNote().getRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScRequestNoteRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScRequestNoteRemark>() {
+			@Override
+			public int compare(ScRequestNoteRemark r1, ScRequestNoteRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+		return sortedList;
+	}
+	// 41034 - end
 }
