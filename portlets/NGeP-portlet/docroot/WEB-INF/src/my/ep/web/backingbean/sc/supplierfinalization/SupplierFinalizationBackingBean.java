@@ -1036,7 +1036,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtFinalJustification> finalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
 		for (ScQtFinalJustification finalJustification: finalJustificationList){
-			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(finalJustification.getJustification().getReasonCode())){
+			if(finalJustification.getJustification() != null && JUSTIFICATION_OTHERS.equalsIgnoreCase(finalJustification.getJustification().getReasonCode())){
 				this.getManagedBean().setRenderjustificationTextbox(true);
 				this.getManagedBean().setJustificationText(finalJustification.getJustificationText());
 			}
@@ -3273,6 +3273,11 @@ public class SupplierFinalizationBackingBean extends
 				  .getParameterCode();
 	log.info("decisionTypeCode"+decisionTypeCode);
 		this.checkIfLoggedinUserIsSecretary();
+		
+		/*#34444 - Start*/
+		String outcome = this.getManagedBean().getOutcome();
+		this.getManagedBean().setAction(outcome);
+		/*#34444 -  End*/
 				
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
@@ -3329,7 +3334,10 @@ public class SupplierFinalizationBackingBean extends
 
 			}
 		} else {
-			this.submitSuppFinalization();
+			/*#34444 - Start*/
+			RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
+			//this.submitSuppFinalization();
+			/*#34444 - End*/
 		}
 	}
 	//28834 end new

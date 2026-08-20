@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 
 package my.ep.web.backingbean.sc.loiloa;
@@ -3343,8 +3343,11 @@ public class LOIDetailBackingBean extends
 	        if (remarksNotFound) {
 	            throw new EpException(MessageConst.ERR_775152);
 	        }
-			RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
-			return;
+	        /*#34444 - Start*/
+			//RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
+			//return;
+	        reviseAction();
+	        /*#34444 - End*/
 		}
 		//25638 - End
 		//#21692 - Start

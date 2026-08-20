@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOIDetailBackingBean.checkProposalValidityDateReach(lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
@@ -61,11 +62,17 @@
 					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and !lOIDetailBackingBean.isApproverAbleToSave()}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					process="@form" update="@form" /><ui:remove>21692</ui:remove>
-					
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+
+				<ui:remove>#34444 Start Ann</ui:remove>
+				<ui:param name="btnAction" value="SUBMIT" />
+				<p:commandButton value="#{lbl['lbl.btn.submit']} ++LOI sumit"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
-					action="#{lOIDetailBackingBean.submitAction}" process="@form"
-					update="@form" /><ui:remove>#21692</ui:remove>
+					process="@form"
+					actionListener="#{lOIDetailBackingBean.managedBean.prepareAction(btnAction)}"
+					update="@form"
+					oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();" />
+				<ui:remove>#21692</ui:remove>
+				<ui:remove>#34444 End Ann</ui:remove>
 
 				<ui:remove>36339, 21692</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
@@ -180,6 +187,16 @@
 			</div>
 			</p:dialog>
 			<ui:remove>#21692 - end</ui:remove>
+
+				<ui:remove>#34444 Start Ann</ui:remove>
+				<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+					widget="popupConfirmInfoDlg" 
+					okAction="#{lOIDetailBackingBean.submitAction()}"
+					title="#{lOIDetailBackingBean.managedBean.confirmTitle}"
+					content="#{lOIDetailBackingBean.managedBean.confirmContent}"
+					update="@form" />
+				<ui:remove>#34444 End Ann</ui:remove>
+
 			</ui:define>
 		</ui:decorate>
 	</div>

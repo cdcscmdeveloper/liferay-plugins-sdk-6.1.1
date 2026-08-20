@@ -48,24 +48,26 @@
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
-					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+					<p:commandButton value="#{lbl['lbl.btn.save']} N22222" process="@all"
 						partialSubmit="true" update="@form" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						rendered="#{isPendingNegotiationStatus}"
 						action="#{lOIDetailBackingBean.saveMultipleLoiAction}" />
-
+					<ui:remove>#34444 Start Ann</ui:remove>
 					<ui:repeat var="bpmAction"
 						value="#{lOIDetailBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-						<p:commandButton value="#{lbl[buttonLabel]}"
+						<p:commandButton value="#{lbl[buttonLabel]} NNNN1111"
 							styleClass="ui-button"
-							action="#{lOIDetailBackingBean.updateMultiLoiBpmTaskAction(bpmAction)}"
 							partialSubmit="true" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" process="@form" update="@form"
+							oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();" 
+							actionListener="#{lOIDetailBackingBean.managedBean.prepareAction(bpmAction)}" 
+							process="@form" update="@form"
 							rendered="#{validityDaysExpiredQt}" />
 					</ui:repeat>
+					<ui:remove>#34444 End Ann</ui:remove>
 				</ui:define>
 			</ui:decorate>
 
@@ -179,13 +181,22 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+			<p:commandButton value="#{lbl['lbl.btn.yes']} mmm333"
 				oncomplete="reviseLoiDlgs.hide();"
 				action="#{lOIDetailBackingBean.reviseAction()}" />
 			<p:commandButton value="#{lbl['lbl.btn.no']}"
 				onclick="reviseLoiDlgs.hide();" type="button" />
 			</div>
-		</p:dialog>	
+		</p:dialog>
+
+		<ui:remove>#34444 Start Ann</ui:remove>
+		<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+			widget="popupConfirmInfoDlg"
+			okAction="#{lOIDetailBackingBean.updateMultiLoiBpmTaskAction(lOIDetailBackingBean.managedBean.btnAction)}"
+			title="#{lOIDetailBackingBean.managedBean.confirmTitle}"
+			content="#{lOIDetailBackingBean.managedBean.confirmContent}"
+			update="@all" okProcess="@all" oncompleteOk="" />
+		<ui:remove>#34444 End Ann</ui:remove>
 
 	</ui:define>
 </ui:composition>

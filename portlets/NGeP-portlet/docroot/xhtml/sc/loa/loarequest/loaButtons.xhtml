@@ -41,7 +41,7 @@
 					and !(!qtLOABackingBean.managedBean.ableToSubmitLOA and lOADetailBackingBean.isApproverAbleToSave())}" process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+				<p:commandButton value="#{lbl['lbl.btn.submit']} **%##SUBMIT>##test9970-N"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
 					action="#{lOADetailBackingBean.submitConformationForLampiranA3}" process="@form"
 					update="@form" onstart="blockWidget.show();"
@@ -113,7 +113,7 @@
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
 			<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
 			
-			   <p:commandButton value="#{lbl['lbl.btn.save']}"
+			   <p:commandButton value="#{lbl['lbl.btn.save']} +++##test_SAVE12111-N"
 					action="#{lOADetailBackingBean.saveAction(false)}"
 					rendered="#{(isPendingApprovalStatus or isPendingRevApprovalStatus or isPendingRevisionStatus) and !isTrackingDairyView
 								 and isSqStillValid and !(!qtLOABackingBean.managedBean.ableToSubmitLOA and lOADetailBackingBean.isApproverAbleToSave())}"
@@ -143,7 +143,7 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 							
-							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
+							<h:panelGroup rendered="#{bpmAction == 'REVISE'}  ++##Revise12111-N">
 								<p:commandButton value="#{lbl['lbl.btn.supplierAction']}"
 									rendered="#{isPendingVerification and isSqStillValid}"
 									onstart="blockWidget.show();cd.show();"
@@ -176,7 +176,7 @@
 							<h:panelGroup id="buttonsPG" rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE') and (bpmAction !='REJECT')}">
 	                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 								<!-- changes the calling action   -->
-								<p:commandButton value="#{lbl[buttonLabel]}"
+								<p:commandButton value="#{lbl[buttonLabel]}  ##test730112-N"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{!isPendingVerification and isSqStillValid and bpmAction != 'APPROVE' and bpmAction != 'SUBMIT'}"
 									oncomplete="blockWidget.hide();"
@@ -184,7 +184,7 @@
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
 								<ui:remove>21692 - Start</ui:remove>
-								<p:commandButton value="#{lbl[buttonLabel]}"
+								<p:commandButton value="#{lbl[buttonLabel]} ##test12111-N"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{!isPendingVerification and isSqStillValid and (bpmAction == 'APPROVE' or bpmAction == 'SUBMIT')
 									and qtLOABackingBean.managedBean.ableToSubmitLOA}"

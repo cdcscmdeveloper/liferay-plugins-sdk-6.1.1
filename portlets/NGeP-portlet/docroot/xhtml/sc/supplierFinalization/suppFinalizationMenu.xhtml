@@ -211,16 +211,15 @@
 			src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
-
+		<ui:remove>#34444 Start Ann</ui:remove>
 		<p:dialog id="reviseSuppFinalizationDlgs"
 			widgetVar="reviseSuppFinalizationDlgs"
-			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			header="#{lbl['lbl.sc.popup.confirm.revise.header']}"
 			resizable="false" width="400" height="75" closable="false">
 			<table>
 				<tr>
-					<td align="center"><h:graphicImage
-							value="/css/images/design/exclamation.png" /> <p:outputLabel
-							value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" /></td>
+					<td align="center"> <p:outputLabel
+							value="#{lbl['lbl.sc.popup.confirm.revise.content']}" /></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
@@ -233,7 +232,6 @@
 			</div>
 		</p:dialog>
 
-		<ui:remove>#34444 Start Ann</ui:remove>
 		<!-- ***28834 start -->
 		<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
@@ -248,12 +246,13 @@
 
 			<div class="ppRightBtn">
 				<ui:param name="actionProcess"
-					value="#{suppFinalizationBackingBean.submitBrief(suppFinalizationBackingBean.managedBean.outcome)}" />
+					value="#{suppFinalizationBackingBean.submitBrief(suppFinalizationBackingBean.managedBean.action)}" />
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					onstart="blockWidget.show();"
 					oncomplete="confirmBriefPopup.hide(); popupConfirmInfoDlg.show();"
-					partialSubmit="true" process="@form" update="@form"
-					actionListener="#{suppFinalizationBackingBean.managedBean.prepareAction(suppFinalizationBackingBean.managedBean.outcome)}" />
+					partialSubmit="true" 
+					actionListener="#{suppFinalizationBackingBean.managedBean.prepareAction(suppFinalizationBackingBean.managedBean.action)}" 
+					process="@form" update="@form" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="confirmBriefPopup.hide();" type="button"
 					partialSubmit="true" process="@this" />
@@ -278,8 +277,9 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					onstart="blockWidget.show();"
 					oncomplete="confirmBriefPopup1.hide(); popupConfirmInfoDlg.show();"
-					partialSubmit="true" process="@form" update="@form"
-					actionListener="#{suppFinalizationBackingBean.managedBean.prepareAction(suppFinalizationBackingBean.managedBean.outcome)}" />
+					partialSubmit="true"
+					actionListener="#{suppFinalizationBackingBean.managedBean.prepareAction(suppFinalizationBackingBean.managedBean.action)}" 
+					process="@form" update="@form" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="confirmBriefPopup1.hide();" type="button"
 					partialSubmit="true" process="@this" />
@@ -302,11 +302,13 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
+			<ui:param name="actionProcess"
+					value="#{suppFinalizationBackingBean.submitSuppFinalization('')}" />
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					onclick="blockWidget.show();"
-					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
-					oncomplete="submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "
-					update="@form">
+					oncomplete="submissionPopup.hide(); popupConfirmInfoDlg.show(); if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "
+					actionListener="#{suppFinalizationBackingBean.managedBean.prepareAction(suppFinalizationBackingBean.managedBean.action)}"
+					process="@form" update="@form" >
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
@@ -334,7 +336,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					onstart="blockWidget.show();"
 					oncomplete="confirmBriefPopup2.hide(); popupConfirmInfoDlg.show(); if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "
-					update="@form" process="@form">
+					actionListener="#{suppFinalizationBackingBean.managedBean.prepareAction(suppFinalizationBackingBean.managedBean.action)}"
+					update="@form" process="@form" >
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
@@ -342,7 +345,13 @@
 
 			</div>
 		</p:dialog>
-		
+		<c:if
+			test="#{!suppFinalizationBackingBean.managedBean.secretaryUser and suppFinalizationBackingBean.managedBean.qtRefinalized or
+									suppFinalizationBackingBean.checkMeetingDoneLessThanValidityEndDate(suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)
+									and !suppFinalizationBackingBean.isQTMaintenanceScreen() and suppFinalizationBackingBean.managedBean.action != 'SUBMIT' and suppFinalizationBackingBean.managedBean.action != 'REVISE'}">
+			<ui:param name="actionProcess"
+				value="#{suppFinalizationBackingBean.submitSuppFinalization('')}" />
+		</c:if>
 		<ac:confirmationPopupQT id="popupConfirmInfoDlg"
 			widget="popupConfirmInfoDlg" okAction="#{actionProcess}"
 			title="#{suppFinalizationBackingBean.managedBean.confirmTitle}"
