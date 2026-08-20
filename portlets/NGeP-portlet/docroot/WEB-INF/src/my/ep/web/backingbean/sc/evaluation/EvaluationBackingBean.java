@@ -11694,15 +11694,6 @@ private void retriveCommitteeRemarksList(){
 					.getComplianceSampleItemListDM().getList();
 
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
-				for (ScQtSampleItem sampleItem : sampleCompliance) {
-					if (null == sampleItem.getSubmissionStatus()
-							|| null == sampleItem.getSubmissionStatus()
-									.getParameterId()) {
-						throw new EpException(MessageConst.ERROR_760363);
-
-					}
-				}
-
 				reqDTO.setSampleComplianceList(sampleCompliance);
 			}
 
