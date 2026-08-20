@@ -16614,7 +16614,21 @@ public class SmApplicationUtil {
 					draft.setWorkServDesc(exp.getWorkServiceDesc());
 					draft.setConsultantFee(exp.getConsultantFee());
 				} else {
-					draft.setProcumentMode(retrievePmParameterById(exp.getProcurementModeId().longValue()));
+					
+					if (exp.getProcurementModeId() != null && exp.getProcurementModeId().longValue() > 0) {
+					    long pmId = exp.getProcurementModeId().longValue();
+					    long procurementModeId;
+					    if (pmId == SupplierManagementConst.PM_QUOTATION) {
+					        procurementModeId = SupplierManagementConst.PMQ_QUOTATION;
+					    } else if (pmId == SupplierManagementConst.PM_TENDER) {
+					        procurementModeId = SupplierManagementConst.PMQ_TENDER;
+					    } else if (pmId == SupplierManagementConst.PM_DIRECT_NEGO) {
+					        procurementModeId = SupplierManagementConst.PMQ_DIRECT_NEGO;
+					    } else {
+					        procurementModeId = pmId;
+					    }
+					    draft.setProcumentMode(retrievePmParameterById(procurementModeId));
+					}
 				}
 				List<SmCompExpCatDraft> catDraftList = new ArrayList<>();
 				for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
