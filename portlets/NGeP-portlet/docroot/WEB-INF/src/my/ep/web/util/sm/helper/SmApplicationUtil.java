@@ -16606,7 +16606,9 @@ public class SmApplicationUtil {
 				}else if(exp.getClientType().equalsIgnoreCase("O")){
 					draft.setAgencyName(exp.getClientName());	
 				}*/
-				draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				if(exp.getPaymentMethodId() != null && exp.getPaymentMethodId().longValue() > 0) {
+					draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				}				
 				draft.setContractEffDate(exp.getProcurementDate());
 				if(isConsultant){
 					draft.setFileReferenceNo(exp.getRefNo());
@@ -16615,7 +16617,7 @@ public class SmApplicationUtil {
 					draft.setConsultantFee(exp.getConsultantFee());
 				} else {
 					
-					if (exp.getProcurementModeId() != null && exp.getProcurementModeId().longValue() > 0) {
+					if(exp.getProcurementModeId() != null && exp.getProcurementModeId().longValue() > 0) {
 					    long pmId = exp.getProcurementModeId().longValue();
 					    long procurementModeId;
 					    if (pmId == SupplierManagementConst.PM_QUOTATION) {
