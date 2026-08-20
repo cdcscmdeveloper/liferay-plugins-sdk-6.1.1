@@ -665,47 +665,38 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	
-	// 9299 -40712 Start
+	// 9299 -40712, 40978 Start
 	public SelectItem[] getDropdownValuesByProcurementMethod(String parameterType,
 			ISearchBean<PmParameterDesc> searchBean) {
 
-		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
+
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		items.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 
 		try {
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
 					parameterType, searchBean);
 
-			List<PmParameterDesc> filteredList = new ArrayList<PmParameterDesc>();
-
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				if (!ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(parameterDesc.getPmParameter()
-						.getParameterCode())) {
-					filteredList.add(parameterDesc);
+				PmParameter parameter = parameterDesc.getPmParameter();
+
+				if (null != parameter
+						&& !ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(parameter.getParameterCode())) {
+					items.add(new SelectItem(parameter.getParameterId(), parameterDesc.getCodeName()));
 				}
 			}
 
-			items = new SelectItem[filteredList.size() + 1];
-
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-
-			int i = 1;
-
-			for (PmParameterDesc parameterDesc : filteredList) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
-						parameterDesc.getCodeName());
-			}
-
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("getDropdownValuesByProcurementMethod failed for parameterType " + parameterType, e);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
-		return items;
+		return items.toArray(new SelectItem[items.size()]);
 	}
-	// 9299 -40712 End
+	// 9299 -40712, 40978 End
 
 	// new #25725/25726 - Start
 	
