@@ -21,6 +21,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
@@ -81,6 +82,8 @@ public class ViewSuppProfileManagedBean extends
 	private SmAddress smBusinessAdd;
 	private SmAddress smPermenantAdd;
 	private SmAddress smResAdd;
+	
+	private boolean sameAsOwner;
 	private boolean disabledCompanyNameInMaintenance;
 	private boolean disabledBusinessTypeInMaintenance;
 	private List<SelectItem> countryLs;
@@ -108,7 +111,9 @@ public class ViewSuppProfileManagedBean extends
 	private boolean sabahSarawakType;
 	
 	private SmPersonnel smPersonnel;
+	private SmSupplierOwner smSuppOwner;
 	private List<SmSupplierOwner> smSuppOwners = new ArrayList<SmSupplierOwner>();
+	private SmPersonnelAddress smPersonnelAdd;
 	private Integer userBumiFlg;
 	private Integer userMuslimFlg;
 	
@@ -119,6 +124,7 @@ public class ViewSuppProfileManagedBean extends
 	private boolean gstFlag;
 	
 	private SmSupplierBusiness selectedBusinessNature;
+	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	
 	//27437 : Disciplinary Action
 	private IPagingDataModel<SmSupplier> basicSupplierDataModel = new SmBasicSupplierPagingDataModel();
@@ -208,13 +214,13 @@ public class ViewSuppProfileManagedBean extends
 					if (!isSearchCriteriaEmpty()) {
 						return getApplicationHistoryResultBean(reqDTO);
 					} else {
-						return new SearchResultBean();
+						return new SearchResultBean<SmSupplier>();
 					}
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<SmSupplier>();
 				}
 			} catch (Exception ex) {
-				return new SearchResultBean();
+				return new SearchResultBean<SmSupplier>();
 			} finally {
 				reqDTO = null;
 			}
@@ -505,6 +511,14 @@ public class ViewSuppProfileManagedBean extends
 	public void setOldRegStatusId(Long oldRegStatusId) {
 		this.oldRegStatusId = oldRegStatusId;
 	}
+
+	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
+		return selectedBusinessNatureLs;
+	}
+
+	public void setSelectedBusinessNatureLs(SmSupplierBusiness[] selectedBusinessNatureLs) {
+		this.selectedBusinessNatureLs = selectedBusinessNatureLs;
+	}
 	public SmSupplierBank[] getSelectedSuppBanks() {
 		return selectedSuppBanks;
 	}
@@ -543,6 +557,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setSmResAdd(SmAddress smResAdd) {
 		this.smResAdd = smResAdd;
+	}
+
+	public boolean isSameAsOwner() {
+		return sameAsOwner;
+	}
+
+	public void setSameAsOwner(boolean sameAsOwner) {
+		this.sameAsOwner = sameAsOwner;
 	}
 
 	public boolean isDisabledCompanyNameInMaintenance() {
@@ -667,6 +689,25 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setSmPersonnel(SmPersonnel smPersonnel) {
 		this.smPersonnel = smPersonnel;
+	}
+
+	public SmSupplierOwner getSmSuppOwner() {
+		if(smSuppOwner == null) {
+			smSuppOwner = new SmSupplierOwner();
+		}
+		return smSuppOwner;
+	}
+
+	public void setSmSuppOwner(SmSupplierOwner smSuppOwner) {
+		this.smSuppOwner = smSuppOwner;
+	}
+
+	public SmPersonnelAddress getSmPersonnelAdd() {
+		return smPersonnelAdd;
+	}
+
+	public void setSmPersonnelAdd(SmPersonnelAddress smPersonnelAdd) {
+		this.smPersonnelAdd = smPersonnelAdd;
 	}
 
 	public Integer getUserBumiFlg() {
