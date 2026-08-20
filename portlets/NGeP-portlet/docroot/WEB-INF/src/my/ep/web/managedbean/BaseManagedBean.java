@@ -210,6 +210,8 @@ public abstract class BaseManagedBean implements Serializable {
 	// #34444 START
 	private String btnAction;
 	
+	private String prepareAction;
+	
 	@javax.faces.bean.ManagedProperty("#{lbl}")
 	private ResourceBundle lbl;
 	// #34444 END
@@ -1332,6 +1334,21 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void prepareAction(String action) {
 		this.btnAction = action;
+		this.prepareAction = this.btnAction;
 	}
 	// #34444 END
+
+	/**
+	 * @return the prepareAction
+	 */
+	public String getPrepareAction() {
+		return prepareAction;
+	}
+
+	/**
+	 * @param prepareAction the prepareAction to set
+	 */
+	public void setPrepareAction(String prepareAction) {
+		this.prepareAction = prepareAction;
+	}
 }
