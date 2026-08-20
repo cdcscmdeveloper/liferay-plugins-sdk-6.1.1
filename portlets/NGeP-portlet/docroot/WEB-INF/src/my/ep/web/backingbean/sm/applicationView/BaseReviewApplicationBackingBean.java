@@ -2530,6 +2530,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		//14150
 		SmApplicationUtil.sortSupplierCategory(getManagedBean().getSuppProfileOrHistoryCategoryList());
+		
+		// 36504
+		SmApplicationUtil.sortSupplierCategory(getManagedBean().getSupProfileHistoryOtherDesc());
 	}
 
 	//#26238
@@ -2570,12 +2573,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (supplier == null){
 			return "";
 		}
-		// #38962 - START
+		// #38962, #40110 - START
 		String pending = checkNonActiveDAWithPending(supplier);
-		if (StringUtils.isNotBlank(pending)) {
+		if (StringUtils.isNotBlank(pending) && !SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType())) {
 			return pending;
 		}
-		// #38962 - END
+		// #38962, #40110 - END
 		if (!supplier.isFutureImposed() && !StringUtils.isEmpty(supplier.getTypeDisciplinaryAction())){
 			return getSupplierAccountStatusDA(supplier);
 		}
@@ -5436,10 +5439,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			if (!EntityHelper.isCollectionEmpty(userRoles)) { 
 				for (PmUserRole userRole : userRoles) {
 					boolean authoriseUser = userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_OFFICER.value()) ||
-							userRole.getPmRole().getRoleCode().equals(RoleCode.DISC_SECRETARY.value())||
-							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_ADMIN.value())||
-							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SDO.value())||
-							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SVC.value())||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_APPROVER.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.DISC_SECRETARY.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_ADMIN.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SDO.value()) ||
+							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SVC.value()) ||
 							userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_SVO.value()) ||
 							userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value());
 					
