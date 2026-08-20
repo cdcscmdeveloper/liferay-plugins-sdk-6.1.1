@@ -901,8 +901,11 @@ public boolean isSpecCommittee() {
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() || null != publishDate
-				&& publishDate.before(effDate)) {
+		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
+		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
+		
+		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc)) 
+				|| (null != publishDate && publishDate.before(effDate))) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
