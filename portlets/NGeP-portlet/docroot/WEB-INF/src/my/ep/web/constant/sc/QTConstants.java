@@ -442,6 +442,10 @@ public interface QTConstants {
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FN = "FN";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_PC = "PC";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_AL = "AL";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE = "FGE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE = "FNE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_CH = "CH";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_SD = "SD";
 	public static final String[] TECHNICAL_CHECKLIST_SELECT_LIST = new String[]{
 		TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
 		TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
@@ -452,9 +456,13 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_CH,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_SD
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
 	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 25px;\"></span></div>";
