@@ -7425,7 +7425,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 			group.setCurrentItemTotalAmount(sumTotalPrice);
-			group.setAccumulativeAmountPerItemGroup(group.getAccumulativeAmountPerItemGroup().add(sumTotalPrice));
 			group.setDecision(SSTConstant.EMPTY_STRING);
 			getManagedBean().getCommodityGroups().add(group);
 		}
@@ -9110,5 +9109,36 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    }
 
 	    return false; 
-	}		 
+	}
+
+	// 41034 - start
+	/**
+	 * Sorts Request Note remarks in descending order by created date (latest
+	 * first).
+	 * 
+	 * @return
+	 */
+	public List<ScRequestNoteRemark> getSortedRequestNoteRemarksByDate() {
+		// Null check for request note
+		if (getManagedBean().getRequestNote() == null) {
+			return Collections.emptyList();
+		}
+
+		List<ScRequestNoteRemark> remarks = getManagedBean().getRequestNote().getRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScRequestNoteRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScRequestNoteRemark>() {
+			@Override
+			public int compare(ScRequestNoteRemark r1, ScRequestNoteRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+		return sortedList;
+	}
+	// 41034 - end
 }

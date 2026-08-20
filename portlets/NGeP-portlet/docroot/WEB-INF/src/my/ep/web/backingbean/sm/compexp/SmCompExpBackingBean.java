@@ -538,7 +538,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			String filePath = this.getManagedBean().getSmCompExpFilePath();
 
 			SmCompExpMasterDoc docFile = new SmCompExpMasterDoc();
-			docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", ""));
+			// #9299 - #41052
+			docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
 			docFile.setFilePath(filePath);
 			if (this.getManagedBean().isDraftUpdate()) {
 				this.getManagedBean().getSmCompExpDocList().add(docFile);
