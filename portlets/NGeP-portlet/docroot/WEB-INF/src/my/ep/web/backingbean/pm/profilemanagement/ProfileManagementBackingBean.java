@@ -1131,7 +1131,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				logger.info("After inactiveUserOrgRoleAndReceivingAddress");
 			}
 		}
+		//#35489 - Start
 		this.getManagedBean().setOrgUnitStatusChange(true);
+		//#35489 - End
 		logger.info("orgUnitStatusChange - End");
 	}
 	//#36489,#40780 - End
