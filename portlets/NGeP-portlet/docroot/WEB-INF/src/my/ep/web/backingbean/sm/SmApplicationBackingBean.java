@@ -1224,11 +1224,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		
 		log.info("[proceedToApplication] #31754 fromBpm: " + fromBpm);
 		if (!fromBpm) {
 			subStartTime = System.currentTimeMillis();
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentSupplier-1", 
 					subStartTime); //20211005@fadhli - #31754
@@ -1623,8 +1623,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSmAppl().setSmStaffTotals(
 					SmApplicationUtil.getStaffList(smAppl));
 		}
-
-		getManagedBean().setTabActiveIndex(0);
+		
+		checkActiveDisciplinaryAction(currSupp, applicationType);
+		
 		if (!fromBpm) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
@@ -2985,24 +2986,30 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (!StringUtils.isBlank(applType)
 				&& !getManagedBean().getSmAppl().isActiveAppl()
 				&& getManagedBean().isSupplierUser()) {
-			if (getManagedBean().getCompanyBasicGst() != null) {
-				SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
-						.getSmSupplier().getRegNo(), getManagedBean()
-						.getCompanyBasicGst().getGstRegNo());
-				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
-						ruleHelper);
+			//27805: Disciplinary Action - start
+			if(!getManagedBean().getEditVO().isDisciplinary()){
+				if (getManagedBean().getCompanyBasicGst() != null) {
+					SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+							.getSmSupplier().getRegNo(), getManagedBean()
+							.getCompanyBasicGst().getGstRegNo());
+					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+							ruleHelper);
+				}
+				if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+						.getSmSupplier())) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
+				//#27356
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+				// #34303 - start
+				setValueForFacilityHeadquarters();
+				// #34303 - end
+				RequestContext.getCurrentInstance().execute(
+						"saveDraftConfirmDialog.show();");
+			} else if(getManagedBean().getEditVO().isDisciplinary()) {
+				validateUpdateSmAppl(applType, currentPageType, outputPageType,false);
 			}
-			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
-					.getSmSupplier())) {
-				throw new EpException(MessageConst.ERROR_722542);
-			}
-			//#27356
-			SmApplicationUtil.validateCoordinate(getManagedBean());
-			// #34303 - start
-			setValueForFacilityHeadquarters();
-			// #34303 - end
-			RequestContext.getCurrentInstance().execute(
-					"saveDraftConfirmDialog.show();");
+			//27805: Disciplinary Action - end
 		} else {
 			if ((getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())
@@ -6390,13 +6397,100 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		log.info("Start deleteSelectedPendingApprovalCategoryCodes");
 		if (getManagedBean().getDeleteNewApplCategoryList() != null
 				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
-			List<SmSupplierCategory> categories = getManagedBean()
-					.getDeleteNewApplCategoryList();
-			deleteCatCodes(categories);
-			// API FOR LIST OF OVERLAPPING CATEGORIES
-			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+			List<SmSupplierCategory> categories = getManagedBean().getDeleteNewApplCategoryList();
 
-			initPhysicalConsultingCatcode();
+			// 28391: Disciplinary Action - start - <
+
+			List<SmSupplierCategory> activeCategoryList = getManagedBean().getActiveCategoryList();
+			boolean flagProceedDeleteCategory = true;
+		    // 28660: Disciplinary Action - start
+			boolean flagProceedDeleteCategoryAddChecking = true; 
+			// 28660: Disciplinary Action - end
+			
+			
+			for (SmSupplierCategory eachActiveCategory : activeCategoryList) {
+
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+					flagProceedDeleteCategory = false;
+				}
+				
+				// 28660: Disciplinary Action - start
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+					flagProceedDeleteCategoryAddChecking = false;
+				}
+				// 28660: Disciplinary Action - end
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
+			// 28391: Disciplinary Action - Start - <28391>
+			// 28660: Disciplinary Action - start
+			if (flagProceedDeleteCategory && flagProceedDeleteCategoryAddChecking || flagProceedDeleteCategory 
+					&& !flagProceedDeleteCategoryAddChecking) {
+				// 28660: Disciplinary Action - end
+				deleteCatCodes(categories);
+
+				// API FOR LIST OF OVERLAPPING CATEGORIES
+				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+				initPhysicalConsultingCatcode();
+
+			} else {
+				// 28660: Disciplinary Action - start
+				boolean flagProceedDeleteCategoryFirstCheck = false;
+				boolean flagProceedDeleteCategorySecondCheck = false;
+				boolean flagProceedDeleteCategoryFinalCheck = false; 
+				
+				for (SmSupplierCategory eachSelectedCategory : categories) {
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+						flagProceedDeleteCategoryFirstCheck = true;
+					}
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+						flagProceedDeleteCategorySecondCheck = true;
+					}
+				}
+				
+				if(flagProceedDeleteCategorySecondCheck && flagProceedDeleteCategoryFirstCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} else if (!flagProceedDeleteCategorySecondCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} 
+
+				if (flagProceedDeleteCategoryFinalCheck) {
+					// 28660: Disciplinary Action - end
+					deleteCatCodes(categories);
+
+					// API FOR LIST OF OVERLAPPING CATEGORIES
+					SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+					initPhysicalConsultingCatcode();
+				} else {
+					throw new EpException(MessageConst.INFO_776044);
+				}
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
 		} else {
 			throw new EpException(MessageConst.ERROR_722534, new String[] { "Category Code" });
 		}
@@ -7952,7 +8046,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void saveOrUpdateAppl() {
 		//checkin if coordinate null #27853
 		if(!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()){
-		SmApplicationUtil.validateCoordinate(getManagedBean());
+			//START 27748
+			if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+			}
+			//END 27748		
 		}
 		
 		// checking if suddenly premise information is missing (#21955)
