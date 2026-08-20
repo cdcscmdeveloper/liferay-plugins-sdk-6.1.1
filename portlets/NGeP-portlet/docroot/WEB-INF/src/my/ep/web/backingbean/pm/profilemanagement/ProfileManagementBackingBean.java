@@ -1078,7 +1078,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	}
     
-	//#36489 - Start
+	//#36489,#40780 - Start
 	/**
 	 * check if user still have:
 	 * 1) pending task (BPM)
@@ -1133,7 +1133,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		this.getManagedBean().setOrgUnitStatusChange(true);
 		logger.info("orgUnitStatusChange - End");
 	}
-	//#36489 - End
+	//#36489,#40780 - End
 
 	public void userStatusChange() {
 		logger.info("userStatusChange");
