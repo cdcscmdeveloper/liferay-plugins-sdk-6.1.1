@@ -42,9 +42,6 @@
 					#{lbl['lbl.sm.bankname']}
 				</f:facet>
 				<p:outputPanel>
-				<h:outputText value="#{bankInfo.displayMessageBank}" styleClass="splNotesFonts" rendered="#{registrationBackingBean.managedBean.showMessage}"
-				update="bankAlert,bankInfoId" style="float: inherit;width : 70% !important;" escape="false" />
-				
 				<p:selectOneMenu id="bankNameId" value="#{bankInfo.pmFinancialOrg.financialOrgId}"
 					style="width: 80% !important;margin-bottom: 5px !important;"
 					disabled="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}">
@@ -55,12 +52,12 @@
 						itemLabel="#{finOrg.finOrgName}" />
 					<p:ajax event="change" process="@form" update="@this, bankAccNoId" listener="#{bankInfo.setAccountNo('')}"/>
 				</p:selectOneMenu>
-				<p:commandLink id="bankAlert" action="#{registrationBackingBean.showMessageToggle}" update="bankNameColId,bankInfoId"
-				 process="@this,bankNameColId" rendered="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}"
-				 style="padding-right:5px;" >
-				<p:graphicImage value="/css/images/design/icon_info_red.png" />
-				</p:commandLink>
-				
+				<p:graphicImage id="bankAlert" value="/css/images/design/icon_info_red.png" style="padding-right:5px;"
+				 rendered="#{bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}" />
+				<p:tooltip id="bankAlertTt" for="bankAlert">
+					<p:outputLabel value="#{bankInfo.displayMessageBank}" escape="false" />
+				</p:tooltip>
+
 				</p:outputPanel>
 				
 			</p:column>
