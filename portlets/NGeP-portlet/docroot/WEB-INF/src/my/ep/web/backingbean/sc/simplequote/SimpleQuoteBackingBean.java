@@ -1715,13 +1715,10 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			//#39230 - Start
-			log.info("#39230 (saveSimpleQuote) - getManagedBean().getRequestNote().getPmOrgProfile() : " + getManagedBean().getRequestNote().getPmOrgProfile());
+			//#39230 - Start			
 			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
-				log.info("#39230 (saveSimpleQuote) - throw error message");
 				throw new EpException(MessageConst.ERROR_760824);
 			} else {
-				log.info("#39230 (saveSimpleQuote) - getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId() : " + getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
 						.getPmOrgProfile().getOrgProfileId());
 			}
@@ -2509,12 +2506,9 @@ public class SimpleQuoteBackingBean extends
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			//#39230 - Start
-			log.info("#39230 (submitSimpleQuote) - getManagedBean().getRequestNote().getPmOrgProfile() : " + getManagedBean().getRequestNote().getPmOrgProfile());		
 			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
-				log.info("#39230 (submitSimpleQuote) - throw error message");
 				throw new EpException(MessageConst.ERROR_760824);
 			} else {
-				log.info("#39230 (submitSimpleQuote) - getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId() : " + getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
 						.getPmOrgProfile().getOrgProfileId());
 			}
