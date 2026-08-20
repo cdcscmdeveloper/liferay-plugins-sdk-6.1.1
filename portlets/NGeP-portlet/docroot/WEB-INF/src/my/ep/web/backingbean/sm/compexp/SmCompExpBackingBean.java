@@ -65,8 +65,6 @@ import com.liferay.portal.util.PortalUtil;
 //#9299 - #40660
 import my.ep.util.CustomUtils;
 
-import org.apache.log4j.Logger;
-
 /**
  * BackingBean for Sm Company Experience
  * 
@@ -77,7 +75,6 @@ import org.apache.log4j.Logger;
 public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = Logger.getLogger(SmCompExpBackingBean.class); //40978
 	private static String smCompExpTncXhtml = "smCompExpTnc.xhtml";
 	private static String alertFlag = "?redirect";
 	private static String smCompExpAlertXhtml = "smCompExpAlert.xhtml";
@@ -541,7 +538,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			String filePath = this.getManagedBean().getSmCompExpFilePath();
 
 			SmCompExpMasterDoc docFile = new SmCompExpMasterDoc();
-			docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", ""));
+			// #9299 - #41052
+			docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
 			docFile.setFilePath(filePath);
 			if (this.getManagedBean().isDraftUpdate()) {
 				this.getManagedBean().getSmCompExpDocList().add(docFile);
@@ -1302,7 +1300,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param selectedMaster
 	 */
 	public void redirectToUpdateMaster(SmCompExpMaster selectedMaster) {
-		log.info("redirectToUpdateMaster ENTER masterId=" + selectedMaster.getCompExpMasterId()); // 40978
 		this.getManagedBean().setDraftUpdate(false);
 		this.getManagedBean().setMasterUpdate(true);
 		this.getManagedBean().setMasterNew(false);
@@ -1325,10 +1322,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
-		// 40978
-		log.info("redirectToUpdateMaster after SO "
-				+ (null == resDTO.getMaster().getProcumentMode() ? "null" : resDTO.getMaster().getProcumentMode()
-						.getParameterId()));
 		// #9299 - #40660
 		this.getManagedBean().setHistMaster((SmCompExpMaster) CustomUtils.getInstance().deepCopy(resDTO.getMaster()));
 		if (null != this.getManagedBean().getSelectedMaster().getPaymentMethod()) {
@@ -1339,7 +1332,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null != this.getManagedBean().getSelectedMaster().getProcumentMode()) {
 			this.getManagedBean().getSelectedMaster().getProcumentMode().getParameterId();
 		} else {
-			log.info("redirectToUpdateMaster procumentMode null"); //40978
 			this.getManagedBean().getSelectedMaster().setProcumentMode(new PmParameter());
 		}
 
