@@ -3529,7 +3529,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			
 			if (firstDataApprover){
-				reqDTO.setOtherDescOld(getManagedBean().getOtherDescOld());
 				reqDTO.setRoleType(SupplierManagementConst.APPROVER_SDM);
 			} else {
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
