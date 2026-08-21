@@ -6969,7 +6969,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					flReqDTO.setYear(cal.get(Calendar.YEAR));
 					IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-					BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+					BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 					totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
 
@@ -7163,7 +7163,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 					// changes to calculate per ptj per item per year
 					// using 8 digit
-					BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+					BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 					totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
 					
@@ -8141,6 +8141,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 			group.setCurrentItemTotalAmount(sumTotalPrice);
+			group.setAccumulativeAmountPerItemGroup(group.getAccumulativeAmountPerItemGroup().add(sumTotalPrice));
 			group.setDecision(SSTConstant.EMPTY_STRING);
 			getManagedBean().getCommodityGroups().add(group);
 		}
@@ -8222,7 +8223,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								IFlItemSummarySO.class);
 
 				BigDecimal totalAmt = itemSummarySO
-						.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+						.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				group.setAccumulativeAmountPerItemGroup(totalAmt);
 				
