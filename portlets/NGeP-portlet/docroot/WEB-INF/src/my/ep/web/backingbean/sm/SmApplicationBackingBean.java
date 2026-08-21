@@ -20252,7 +20252,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @throws EpException if the field value is null or empty
 	 */
 	private void validateMandatoryField(SmPersonnel personnel) {
-		if (personnel.getEmail() == null || personnel.getEmail().trim().isEmpty()) {
+		if (personnel.getEpRole() != null &&
+				(personnel.getEmail() == null || personnel.getEmail().trim().isEmpty())) {
 	        throw new EpException("Email is mandatory", null);
 	    }
 	}

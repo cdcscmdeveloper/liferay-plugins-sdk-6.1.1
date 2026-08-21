@@ -2368,7 +2368,8 @@ public class SmApplicationUtil {
 				validPersonnel = false;
 			}*/ //Commented for #31130
 			//#40801 START
-			if (per.getEmail() == null || per.getEmail().trim().isEmpty()) {
+			if (per.getEpRole() != null &&
+					(per.getEmail() == null || per.getEmail().trim().isEmpty())) {
 				validPersonnel = false;
 		    }
 			//#40801 END
