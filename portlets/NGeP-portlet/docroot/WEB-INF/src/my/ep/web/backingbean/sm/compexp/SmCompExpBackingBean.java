@@ -209,6 +209,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
 		}
+		
+		PmParameter procumentMode = this.getManagedBean().getSelectedDraft().getProcumentMode();
+		if (procumentMode == null
+		        || procumentMode.getParameterId() == null
+		        || procumentMode.getParameterId().longValue() == 0L) {
+		    this.getManagedBean().getSelectedDraft().setProcumentMode(new PmParameter());
+		}
 
 		this.getManagedBean().setTempEffDate(false);
 		dateChange();
