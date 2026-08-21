@@ -1406,30 +1406,32 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			master.setPaymentMethod(null);
 		}
 		// #9299 - #40717 Start
+		// #9299 - #41073 Start
+		for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
+			doc.setCompExpMaster(master);
+		}
+		for (SmCompExpCatMaster cat : master.getCompExpMasterCats()) {
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+ 
+			reqDTO.setCategoryL1Id(cat.getCategoryL1().getCategoryL1Id());
+			cat.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO).getCategoryL1());
+			cat.setCategoryL1Name(cat.getCategoryL1().getCategoryName());
+ 
+			reqDTO.setCategoryL2Id(cat.getCategoryL2().getCategoryL2Id());
+			cat.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO).getCategoryL2());
+			cat.setCategoryL2Name(cat.getCategoryL2().getCategoryName());
+ 
+			reqDTO.setCategoryL3Id(cat.getCategoryL3().getCategoryL3Id());
+			cat.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO).getCategoryL3());
+			cat.setCategoryL3Name(cat.getCategoryL3().getCategoryName());
+ 
+			cat.setCompExpMaster(master);
+		}
+		// #9299 - #41073 End
 		if (!error && update) {
 			updateSmComExpMaster(false);
 		} else if (!error) {
 			master.setSmAppl(this.getManagedBean().getSupplier().getSmAppl());
-			for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
-				doc.setCompExpMaster(master);
-			}
-			for (SmCompExpCatMaster cat : master.getCompExpMasterCats()) {
-				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-
-				reqDTO.setCategoryL1Id(cat.getCategoryL1().getCategoryL1Id());
-				cat.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO).getCategoryL1());
-				cat.setCategoryL1Name(cat.getCategoryL1().getCategoryName());
-
-				reqDTO.setCategoryL2Id(cat.getCategoryL2().getCategoryL2Id());
-				cat.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO).getCategoryL2());
-				cat.setCategoryL2Name(cat.getCategoryL2().getCategoryName());
-
-				reqDTO.setCategoryL3Id(cat.getCategoryL3().getCategoryL3Id());
-				cat.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO).getCategoryL3());
-				cat.setCategoryL3Name(cat.getCategoryL3().getCategoryName());
-
-				cat.setCompExpMaster(master);
-			}
 			saveMaster(master, clienType);
 		}
 	}
