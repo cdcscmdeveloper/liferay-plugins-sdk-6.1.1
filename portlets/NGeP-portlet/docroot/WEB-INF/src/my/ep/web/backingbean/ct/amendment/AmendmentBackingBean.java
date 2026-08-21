@@ -2850,9 +2850,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// #24336 - Start
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-				// Validate reduction amount does not exceed the allowed contract limit
-				validateReductionAmount();
-				
 				// Ensure the new amount effective date is provided.
 				validateNewAmtEffDate();
 			}
@@ -3542,6 +3539,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	public void setMenuByIndex(int outputValue) { //#35132
 		getManagedBean().setSelectedTabIndex(outputValue);
+		
+		//#24336
+		handleSelectedAmendmentChecklistValue();
 	}
 
 	/**
