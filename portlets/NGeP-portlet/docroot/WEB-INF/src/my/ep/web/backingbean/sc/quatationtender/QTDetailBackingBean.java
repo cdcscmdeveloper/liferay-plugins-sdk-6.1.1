@@ -895,7 +895,8 @@ public class QTDetailBackingBean extends
 	 */
 	//Enhancement #25729 -start-
 	public void submitQTDetailsAction() {
-	//Enhancement #25729 -end-
+	//Enhancement #25729 -end-	
+
 		// #29732 Start
 		if (this.getManagedBean().getQt().getQtStatus().getStatusId().equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
 			String changedCatCodeList = checkCatCodeChange();

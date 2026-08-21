@@ -1224,11 +1224,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		
 		log.info("[proceedToApplication] #31754 fromBpm: " + fromBpm);
 		if (!fromBpm) {
 			subStartTime = System.currentTimeMillis();
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentSupplier-1", 
 					subStartTime); //20211005@fadhli - #31754
@@ -1623,8 +1623,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSmAppl().setSmStaffTotals(
 					SmApplicationUtil.getStaffList(smAppl));
 		}
-
-		getManagedBean().setTabActiveIndex(0);
+		
+		checkActiveDisciplinaryAction(currSupp, applicationType);
+		
 		if (!fromBpm) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
@@ -2421,7 +2422,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						//SET SMPERSONNEL
 						if(ssmResDTO.getSmPersonnelAll()!=null){
 							if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
-								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								//#27165
@@ -2985,24 +2986,30 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (!StringUtils.isBlank(applType)
 				&& !getManagedBean().getSmAppl().isActiveAppl()
 				&& getManagedBean().isSupplierUser()) {
-			if (getManagedBean().getCompanyBasicGst() != null) {
-				SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
-						.getSmSupplier().getRegNo(), getManagedBean()
-						.getCompanyBasicGst().getGstRegNo());
-				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
-						ruleHelper);
+			//27805: Disciplinary Action - start
+			if(!getManagedBean().getEditVO().isDisciplinary()){
+				if (getManagedBean().getCompanyBasicGst() != null) {
+					SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+							.getSmSupplier().getRegNo(), getManagedBean()
+							.getCompanyBasicGst().getGstRegNo());
+					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+							ruleHelper);
+				}
+				if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+						.getSmSupplier())) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
+				//#27356
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+				// #34303 - start
+				setValueForFacilityHeadquarters();
+				// #34303 - end
+				RequestContext.getCurrentInstance().execute(
+						"saveDraftConfirmDialog.show();");
+			} else if(getManagedBean().getEditVO().isDisciplinary()) {
+				validateUpdateSmAppl(applType, currentPageType, outputPageType,false);
 			}
-			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
-					.getSmSupplier())) {
-				throw new EpException(MessageConst.ERROR_722542);
-			}
-			//#27356
-			SmApplicationUtil.validateCoordinate(getManagedBean());
-			// #34303 - start
-			setValueForFacilityHeadquarters();
-			// #34303 - end
-			RequestContext.getCurrentInstance().execute(
-					"saveDraftConfirmDialog.show();");
+			//27805: Disciplinary Action - end
 		} else {
 			if ((getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())
@@ -4891,6 +4898,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
+		
+		// #40031 - Start - Change Value same as -selectOne-, since no need to change process
+		String dropdownRole = getManagedBean().getSelectedShareHolder().getEpRole();
+		boolean showPopup = false;
+
+		if (!StringUtils.equals(dropdownRole, getManagedBean().getPrevRole()) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
+
+			String msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
+					new String[] { getEpRoleDescByRoleCode(getManagedBean().getPrevRole()) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+
+			getManagedBean().setRemovedRoleMsg(msg);
+			showPopup = true;
+		}
+		// #40031 - End
+				
 		SmApplicationUtil.setPersonnelRoleChange(getManagedBean().getSmAppl(),
 				SmApplicationUtil.getPrevApprovedPersonnel(getManagedBean()
 						.getSelectedShareHolder(), getManagedBean()
@@ -4904,7 +4927,51 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setDisableAuthorizedRadio(
 				disableAuthorizedRadio(getManagedBean()
 						.getSelectedShareHolder()));
+		
+		// #40031 - Start
+		if (showPopup) {
+			RequestContext.getCurrentInstance().execute("confirmDeleteRoleDlg.show()");
+		}
+		// #40031 - End
 	}
+	
+	// #40031 - Start
+	/**
+	 * To determine previous role when popup for delete action appear
+	 */
+	public void determinePreviousRole() {
+		SmPersonnel personnel = getManagedBean().getSelectedShareHolder();
+		SmAppl latestAppl = getManagedBean().getSmSupplier().getSmAppl();
+		SmAppl appl = getManagedBean().getSmAppl();
+		String normalizeRole = StringUtils.trimToEmpty(personnel.getEpRole());
+		getManagedBean().setPrevRole(normalizeRole);
+		getManagedBean().setLatestApplHasPrevRole(false);
+		List<SmPersonnel> personnels = latestAppl.getSmPersonnels();
+		if (appl.isResubmit()) {
+			appl = SmCommonUtil.getLatestRejectedApplBySupplier(getManagedBean().getSmSupplier());
+			personnels = appl.getSmPersonnels();
+		}
+
+		if (personnels != null && !personnels.isEmpty()) {
+			for (SmPersonnel person : personnels) {
+				if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo()) && StringUtils.isNotBlank(person.getEpRole())) {
+					getManagedBean().setLatestApplHasPrevRole(true);
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * revert back role on its original role
+	 * 
+	 * @param role
+	 */
+	public void revertRole(String role) {
+		getManagedBean().getSelectedShareHolder().setEpRole(role);
+	}
+
+	// #40031 - End
 
 	/**
 	 * Ajax call to set approve or reject date for the selected category.
@@ -6330,15 +6397,102 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		log.info("Start deleteSelectedPendingApprovalCategoryCodes");
 		if (getManagedBean().getDeleteNewApplCategoryList() != null
 				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
-			List<SmSupplierCategory> categories = getManagedBean()
-					.getDeleteNewApplCategoryList();
-			deleteCatCodes(categories);
-			// API FOR LIST OF OVERLAPPING CATEGORIES
-			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+			List<SmSupplierCategory> categories = getManagedBean().getDeleteNewApplCategoryList();
 
-			initPhysicalConsultingCatcode();
+			// 28391: Disciplinary Action - start - <
+
+			List<SmSupplierCategory> activeCategoryList = getManagedBean().getActiveCategoryList();
+			boolean flagProceedDeleteCategory = true;
+		    // 28660: Disciplinary Action - start
+			boolean flagProceedDeleteCategoryAddChecking = true; 
+			// 28660: Disciplinary Action - end
+			
+			
+			for (SmSupplierCategory eachActiveCategory : activeCategoryList) {
+
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+					flagProceedDeleteCategory = false;
+				}
+				
+				// 28660: Disciplinary Action - start
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+					flagProceedDeleteCategoryAddChecking = false;
+				}
+				// 28660: Disciplinary Action - end
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
+			// 28391: Disciplinary Action - Start - <28391>
+			// 28660: Disciplinary Action - start
+			if (flagProceedDeleteCategory && flagProceedDeleteCategoryAddChecking || flagProceedDeleteCategory 
+					&& !flagProceedDeleteCategoryAddChecking) {
+				// 28660: Disciplinary Action - end
+				deleteCatCodes(categories);
+
+				// API FOR LIST OF OVERLAPPING CATEGORIES
+				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+				initPhysicalConsultingCatcode();
+
+			} else {
+				// 28660: Disciplinary Action - start
+				boolean flagProceedDeleteCategoryFirstCheck = false;
+				boolean flagProceedDeleteCategorySecondCheck = false;
+				boolean flagProceedDeleteCategoryFinalCheck = false; 
+				
+				for (SmSupplierCategory eachSelectedCategory : categories) {
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+						flagProceedDeleteCategoryFirstCheck = true;
+					}
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+						flagProceedDeleteCategorySecondCheck = true;
+					}
+				}
+				
+				if(flagProceedDeleteCategorySecondCheck && flagProceedDeleteCategoryFirstCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} else if (!flagProceedDeleteCategorySecondCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} 
+
+				if (flagProceedDeleteCategoryFinalCheck) {
+					// 28660: Disciplinary Action - end
+					deleteCatCodes(categories);
+
+					// API FOR LIST OF OVERLAPPING CATEGORIES
+					SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+					initPhysicalConsultingCatcode();
+				} else {
+					throw new EpException(MessageConst.INFO_776044);
+				}
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
 		} else {
-			throw new EpException(MessageConst.INFO_776044);
+			throw new EpException(MessageConst.ERROR_722534, new String[] { "Category Code" });
 		}
 	}
 
@@ -7892,7 +8046,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void saveOrUpdateAppl() {
 		//checkin if coordinate null #27853
 		if(!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()){
-		SmApplicationUtil.validateCoordinate(getManagedBean());
+			//START 27748
+			if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+			}
+			//END 27748		
 		}
 		
 		// checking if suddenly premise information is missing (#21955)
@@ -8234,6 +8392,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, getManagedBean());
 		}
 		//#34138 - end
+		
+		// #40031 - Start - Store role incase ajax rendered role changed
+		determinePreviousRole();
+		// #40031 - End
 	}
 	
 	//start #31479
@@ -8437,6 +8599,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.setDisableStaff(false);
 			}
 		}*/
+		// #40031 - Start
+		getManagedBean().setPrevRole(null);
+		// #40031 - End
 		if (getManagedBean().getIdentificationTypes() == null) {
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
@@ -9254,6 +9419,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
 		SmCommonUtil.getInstance().setUserDetails(bpmAppl);
+		
+		// #40031 - Start
+		// To record if it is from pending appl declaration - 20100
+		Long initialPmStatusId = null;
+		if (bpmAppl != null && bpmAppl.getPmStatus() != null) {
+			initialPmStatusId = bpmAppl.getPmStatus().getStatusId();
+		}
+		// #40031 - End
+				
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -9381,6 +9555,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
 				+ getManagedBean().getTaskId());
 		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		// #40031 - Start
+		reqDTO.setInitialStatusId(initialPmStatusId);
+		// #40031 - End
 		resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		regSo = null;
 		retriveLatestApplAfterUpdate("", "");
@@ -16104,7 +16281,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
 				this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 				if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
-					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList<SmEquityCompany>());
 				}
 				//delete all old company share #27145
 				Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
@@ -16120,9 +16297,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}		
 			}
 			//SET SMPERSONNEL
-			if(ssmResDTO.getSmPersonnelAll()!=null){
-				if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
-					this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
+			if (ssmResDTO.getSmPersonnelAll() != null) {
+				if (this.getManagedBean().getSmAppl().getSmPersonnels() == null) {
+					this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
 				}
 				for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 					//#27165
@@ -17124,9 +17301,41 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    log.info("DEBUG 37925: isDisplayDropdownRegStatus() value -> " + getManagedBean().isDisplayDropdownRegStatus());
 	}
 
+	/**
+     * Determines and updates the company country based on application details.
+     *
+     * @param smAppl the supplier application details, must not be null
+     * @return the resolved country string
+     */
 	private String getCompanyCountry(SmAppl smAppl) {
-	    String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
-	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
+        boolean isRoc = isRocBusinessType(smAppl.getSmSupplier().getBusinessType());
+        boolean isForeign = isValidForeignRegNo(smAppl.getSmSupplier().getRegNo());
+
+        if (isRoc && !isForeign) {
+            String localCompany = SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA;
+            smAppl.getSmCompanyBasic().setSsmCompanyCountry(localCompany);
+            return localCompany;
+        }
+
+        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
+
+        if (country != null && !country.isEmpty()) {
+            return country;
+        }
+
+        return SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
+	}
+	
+	/**
+	 * Validate FOREIGN supplier reg no.
+	 * Format: 99 + 4 digits (total 6 digits) + hyphen + 1 uppercase letter
+	 * Example: 991234-A
+	 */
+	public boolean isValidForeignRegNo(String regNo) {
+	    if (regNo == null) {
+	        return false;
+	    }
+	    return SupplierManagementConst.FOREIGN_REG_NO_PATTERN.matcher(regNo.trim()).matches();
 	}
 
 	/**
@@ -18162,25 +18371,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#38927 END
 	
-	//#39282
-	/**
-	 * To generate unique file name yyyyMMdd_HHmmss
-	 *
-	 * @param String  the StringBuilder accumulating the messages
-	 */
-	private String generateUniqueFilename(String originalFilename) {
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String oriFilename = "";
-        String extension = "";
-        int dotIndex = originalFilename.lastIndexOf('.');
-        if (dotIndex > 0) {
-            extension = originalFilename.substring(dotIndex);
-            oriFilename = originalFilename.substring(0, dotIndex);
-        }
-
-        return oriFilename + "_" + timestamp + extension;
-    }
-	
 	//#26238
 	private void checkActiveDisciplinaryAction(SmSupplier currSupp, String applType){
 		if (currSupp == null){
@@ -18217,5 +18407,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);
 	}
+	
+	//#39282
+	/**
+	 * To generate unique file name yyyyMMdd_HHmmss
+	 *
+	 * @param String  the StringBuilder accumulating the messages
+	 */
+	private String generateUniqueFilename(String originalFilename) {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String oriFilename = "";
+        String extension = "";
+        int dotIndex = originalFilename.lastIndexOf('.');
+        if (dotIndex > 0) {
+            extension = originalFilename.substring(dotIndex);
+            oriFilename = originalFilename.substring(0, dotIndex);
+        }
+
+        return oriFilename + "_" + timestamp + extension;
+    }
 }
 

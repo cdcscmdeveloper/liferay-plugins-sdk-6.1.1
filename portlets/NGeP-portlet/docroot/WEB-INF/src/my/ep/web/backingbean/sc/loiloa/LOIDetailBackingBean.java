@@ -5394,6 +5394,7 @@ public class LOIDetailBackingBean extends
 							scQtRecommendDtl.getLoiAwarded())) {
 						SmSupplier smSupplier = scQtRecommendDtl.getSupplier();
 						Long supplierId = smSupplier.getSupplierId();
+						
 						// 26247 - start
 						if (this.disabledQTProcess(supplierMap.get(supplierId))) {
 							continue;
@@ -5665,15 +5666,16 @@ public class LOIDetailBackingBean extends
 										new ArrayList<ScQtRecommendDtl>());
 						}
 						ScQtRecommendDtl recommendDtl = recommendDtlsMap.get(supplierId);
-						// 26247 - start //#21692 - Start
+						
+						//#21692 - Start
 						if (Integer.valueOf(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED).equals(
 								evaluationResultDtl.getQtEvaluationResult().getScQtProposal()
-										.getIsAgreeQtExtendPeriod()) || this.disabledQTProcess(supplier)) {
+										.getIsAgreeQtExtendPeriod())) {
 							recommendDtl.setRecordStatus(Boolean.FALSE);
 							recommendDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						}
-						// 26247 - end //#21692 - End
-
+						//#21692 - End
+						
 						evaluationResultDtl.getScQtRecommendDtl()
 							.add(recommendDtl);						
 						

@@ -14734,7 +14734,6 @@ public class SmApplicationUtil {
 			}
 		}
 		log.info("30747 : daysLeft :" + daysLeft + " / time : " + dateCal.getTime());
-		
 		mapDate.put(daysLeft, dateCal.getTime());
 		return mapDate;
 	}
@@ -15637,6 +15636,7 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37784- END
+	
 //	#37925 START
 	/**
 	 * Retrieves the registration status list based on supplier type and application type.
@@ -15771,48 +15771,8 @@ public class SmApplicationUtil {
 	    );
 	}
 
-//	#37925 END
-	//#38991 -START
-	/**
-	* Validate sm company experience info before saving the application.
-	* 
-	* @param validSave
-	*            - boolean
-	* @param managedBean
-	*            - SmApplicationManagedBean object
-	* @param currentTab
-	*            - int current tab
-	* @return true, if successful
-	*/			
-	public static boolean validateComExpProjectBeforeSave(boolean validSave,
-			SmApplicationManagedBean managedBean, int currentTab){
-		boolean validCompExperience = true;
-		StringBuilder sbCompExperience = new StringBuilder();
-		sbCompExperience.append("<br/>");
-		int x = 0;
-		SmAppl appl = managedBean.getSmAppl();
-			
-		for (SmCompanyExperience compExperience : appl.getSmCompanyExperiences()){
-			if (compExperience.getClientType() == null) {
-				validCompExperience = false;
-				sbCompExperience.append(++x + ". ");
-				sbCompExperience.append(compExperience.getTitle());
-				sbCompExperience.append("<br/>");
-				}
-			}
-		if (!validCompExperience){
-			if(managedBean.isSupplierUser()){
-				if (currentTab != -1) {
-					setNavigationBackToCurrentPage(currentTab, managedBean);
-					}
-				throw new EpException(SmCommonUtil.getMessage("lbl.sm.project.done.for.not.completed",
-						new String[] { sbCompExperience.toString() }));
-				}		
-			}
-		appl = null;
-		return validSave;
-		}
-	//#38991 -END
+	//	#37925 END
+	
 	// 39392 - START
 	/**
 	 * Check Disciplinary Action for suspend reg, blacklisted owners/directors,
@@ -15827,20 +15787,6 @@ public class SmApplicationUtil {
 		RegistrationBackingBean.checkBannedOwners(smAppl.getSmSupplier().getSmSupplierOwners());
 	}
 	// 39392 - END
-	//#40165 - START
-	public static void CheckAsciiValidation(Map<String, String> fields) throws EpException {
-	    for (Map.Entry<String, String> entry : fields.entrySet()) {
-	        String fieldName = entry.getKey();
-	        String value = entry.getValue();
-	        
-	        if (value != null && !value.isEmpty()) {
-	            if (!convertToAscii(value)) {
-	                throw new EpException(MessageConst.ERROR_760543, new String[] { fieldName });
-	            }
-	        }
-	    }
-	}
-	//#40165 - END
 	
 	//#26282 - Start
 	/**
@@ -15883,4 +15829,61 @@ public class SmApplicationUtil {
 		
 	}
 	//#33303 - END
+	
+	//#38991 -START
+	/**
+	* Validate sm company experience info before saving the application.
+	* 
+	* @param validSave
+	*            - boolean
+	* @param managedBean
+	*            - SmApplicationManagedBean object
+	* @param currentTab
+	*            - int current tab
+	* @return true, if successful
+	*/			
+	public static boolean validateComExpProjectBeforeSave(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab){
+		boolean validCompExperience = true;
+		StringBuilder sbCompExperience = new StringBuilder();
+		sbCompExperience.append("<br/>");
+		int x = 0;
+		SmAppl appl = managedBean.getSmAppl();
+			
+		for (SmCompanyExperience compExperience : appl.getSmCompanyExperiences()){
+			if (compExperience.getClientType() == null) {
+				validCompExperience = false;
+				sbCompExperience.append(++x + ". ");
+				sbCompExperience.append(compExperience.getTitle());
+				sbCompExperience.append("<br/>");
+				}
+			}
+		if (!validCompExperience){
+			if(managedBean.isSupplierUser()){
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.project.done.for.not.completed",
+						new String[] { sbCompExperience.toString() }));
+				}		
+			}
+		appl = null;
+		return validSave;
+		}
+	//#38991 -END	
+	
+	//#40165 - START
+	public static void CheckAsciiValidation(Map<String, String> fields) throws EpException {
+	    for (Map.Entry<String, String> entry : fields.entrySet()) {
+	        String fieldName = entry.getKey();
+	        String value = entry.getValue();
+	        
+	        if (value != null && !value.isEmpty()) {
+	            if (!convertToAscii(value)) {
+	                throw new EpException(MessageConst.ERROR_760543, new String[] { fieldName });
+	            }
+	        }
+	    }
+	}
+	//#40165 - END
 }

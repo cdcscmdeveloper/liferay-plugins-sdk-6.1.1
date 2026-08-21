@@ -1416,11 +1416,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			
 			//#35320 - Start
 			String committeeType = this.getManagedBean().getCommitteeType();			
-			String variable2 = getMessageCommon(getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
-			
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{getManagedBean().getScQt().getQtNo(), variable2}, 
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 	
+			String variable2 = getMessageCommon(getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));			
+			successMessage(MessageConst.INFO_700004, getManagedBean().getScQt().getQtNo(), variable2, false);			
 			//#35320 - Start 					  
 		} finally {
 			qtMeetingSO = null;

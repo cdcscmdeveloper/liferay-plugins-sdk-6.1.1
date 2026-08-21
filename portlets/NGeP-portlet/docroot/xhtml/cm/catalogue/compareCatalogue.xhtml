@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc"> <ui:remove>#26284 - add library</ui:remove>
 
 	<ui:define name="contentSection">
 		<p:messages id="catCmpMsg" showDetail="true"
@@ -66,7 +67,7 @@
 											<h:outputLabel value="#{lbl['lbl.cm.basic.item.spec']}"
 												style="width:200px;" />
 										</p:panel> <p:panel styleClass="comparePanelLabel">
-											<h:outputText value="" style="padding-left: 20px;" />
+											<h:outputText value="" style="padding-left: 10px;" />
 											<ac:iconTooltip
 												value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}" />
 											<h:outputLabel
@@ -206,7 +207,19 @@
 										<td colspan="5"
 											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.itemDesc}&#160;</td>
 									</tr>
-
+									<ui:remove>#26284 - Start</ui:remove>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;"><p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												rendered="#{supplierItem.smSupplier ne null and catalogueBackingBean.getDisciplinaryActionActive(supplierItem.smSupplier)}"
+												action="#{catalogueBackingBean.supplierDisciplinaryActionInfo(supplierItem.smSupplier)}" 
+												process="@this" partialSubmit="true" update=":form">
+												<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
+												</p:commandLink>
+												<h:outputText rendered="#{supplierItem.smSupplier ne null and !catalogueBackingBean.getDisciplinaryActionActive(supplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>&#160;</td>
+									</tr>
+									<ui:remove>#26284 - End	</ui:remove>
 
 								</table>
 
