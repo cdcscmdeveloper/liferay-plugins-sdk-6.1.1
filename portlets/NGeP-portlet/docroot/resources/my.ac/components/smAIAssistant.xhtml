@@ -69,9 +69,9 @@
 			
 			<!-- temp, allowTypes buang json -->
 			<p:fileUpload mode="advanced"
-				allowTypes="/(\.|\/)(pdf|doc|docx|json)$/"
+				allowTypes="/(\.|\/)(pdf|json)$/"
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
-				invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{ai.handleSupDocFileAttachment}"
 				update="pnl#{cc.attrs.aiDlg}"
@@ -97,6 +97,7 @@
 
 					<p:dataTable id="dt#{cc.attrs.aiDlg}" var="emp" value="#{ai.getEmployees()}" rowKey="#{emp}"
 						selection="#{ai.selectedEmployees}"
+						rows="10"
 						style="width:100%">
 						<ac:paginator for="dt#{cc.attrs.aiDlg}" />
 						<p:column selectionMode="multiple" style="width:5%" />
@@ -125,7 +126,7 @@
 					<h:outputText value="#{lbl['lbl.sm.facility.monthRent']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.monthlyRental}" />
 					<br/>
-					<h:outputText value="#{lbl['lbl.sm.facility.company.address']}: " style="font-weight:bold;" />
+					<h:outputText value="#{lbl['lbl.sm.companyaddress']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.premisesAddress}" />
 				</p:outputPanel>
 

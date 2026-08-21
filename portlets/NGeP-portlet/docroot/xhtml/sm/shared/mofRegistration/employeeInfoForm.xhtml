@@ -140,19 +140,13 @@
 					id="addEmpBtnId" update=":#{p:component('empInfoId')}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					process="@this,:#{p:component('workShopBlockPanel')}"
+					process="@this,:#{p:component('empInfoId')}"
 					disabled="#{empty backingBean.managedBean.selectedWorkers}"
 					id="deleteEmpBtnId" oncomplete="empDeletePopUp.show()"
-					update="@this">
+					update="@this,:#{p:component('workShopDialogMsg')}">
 				</p:commandButton>
 			</div>
 		</p:outputPanel>
 
 	</p:panel>
-	
-	<ac:confirmationPopup id="empDeletePopUpId" widget="empDeletePopUp"
-		okAction="backingBean.removeEmployee()" width="400" height="100"
-		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{lbl['lbl.msg.confirm.delete']}"
-		update=":#{p:component('pnlEmployeeInfo')}" />
 </ui:composition>

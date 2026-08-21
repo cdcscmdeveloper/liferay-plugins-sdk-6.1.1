@@ -338,7 +338,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) && procCatId == null) {
 				throw new EpException(MessageConst.ERROR_775181);
 			}
-			if (this.getManagedBean().getSelectedTabIndex() == QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
+			// #40974  - Start
+			int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+			if (!this.getManagedBean().isShowCategoryCode() ){
+				tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+			}
+			if (this.getManagedBean().getSelectedTabIndex() == tabIndex) {
+			// #40974  - End
 				validateTierQuantityAndUnitPriceForSideMenueOrSave();
 			}
 			// #29468 End Vinod
@@ -914,6 +920,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setReadOnlyLOADownload(this.getManagedBean().isReadOnly());
 			}
 			// Bug #35078@Syazani -- 22/09/2023 -- End
+			
+			// #29661 #40096 Start
+			Long currentStatus = scLoa.getCurrentStatus().getPmStatus().getStatusId();
+			if (Arrays.asList(QTStatusConst.LOA_PENDING_STATUSES).contains(currentStatus)
+					&& !QTStatusConst.LOA_PENDING_VERIFICATION.equals(currentStatus)) {
+				this.getManagedBean().setShowCategoryCode(true);
+			}// #29661 #40096 End
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
@@ -1594,12 +1607,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */	
 	private void validateLOAReportAttachments(ScLoa scLoa) {
 		List<ScLoaReport> loaReports = scLoa.getScLoaReports();
+		// #40974  - Start
+		int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+		if (this.getManagedBean().isShowCategoryCode() ){
+			tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		}
+		// #40974  - End
 		
 		if (CollectionUtils.isNotEmpty(loaReports)) {
 			for (ScLoaReport report : loaReports) {
 				if (report.getScLoaReportAttachment() != null && 
 						report.getScLoaReportAttachment().getFileName() == null) {
-					this.getManagedBean().setSelectedTabIndex(1);
+					this.getManagedBean().setSelectedTabIndex(tabIndex); // #40974 
 					throw new EpException(MessageConst.ERROR_760402);
 				}
 			}
@@ -5165,8 +5184,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setPayLoad(awardSupplierDataType);
 			//#29164 CR 26474: Static Code Analysis Start
 			//if(getManagedBean().getCurrentStatusId() != null){
+			// #40974  - Start
+			int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+			if (this.getManagedBean().isShowCategoryCode() ){
+				tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+			}
+			// #40974  - End
 				if(getManagedBean().getCurrentStatusId() != null && QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
-					getManagedBean().setSelectedTabIndex(2);//#29661
+					getManagedBean().setSelectedTabIndex(tabIndex);//#29661 / #40974 
 					getManagedBean().setIconForDL(true);//29007
 				}
 			//}
@@ -10219,8 +10244,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			if (!getManagedBean().isDisableFields()) {
-				String loaStatus = getStatusDescById(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
-				if (StringEscapeUtils.unescapeJava(SourcingConstants.LOA_PENDING_VERIFICATION_STATUS).equals(loaStatus)) {
+				 //#40771 - Start
+				if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
+				 //#40771 - End
 					getManagedBean().setDisableFields(true);
 				}
 			}
@@ -10574,7 +10600,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public void onBackToZoneItemDetailsTab() {
-		getManagedBean().setSelectedTabIndex(2);
+		// #40974  - Start
+		int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		if (this.getManagedBean().isShowCategoryCode() ){
+			tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+		}
+		getManagedBean().setSelectedTabIndex(tabIndex);
+		// #40974  - End
 		this.getManagedBean().setSpecKeyword(null);//29007
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
@@ -13464,14 +13496,40 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void tabChangeActionDirectLOA(int selectedTabIndex) {
 
 		int previousTabIndex = this.getManagedBean().getSelectedTabIndex();
-		if (previousTabIndex == QTConstants.DIRECT_LOA_TAB_INDEX_THREE
-				&& selectedTabIndex != QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
+		// #40974  - Start
+		int tabIndexThree = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+		if (selectedTabIndex > QTConstants.DIRECT_LOA_TAB_INDEX_ONE && !this.getManagedBean().isShowCategoryCode() ){
+			selectedTabIndex = selectedTabIndex - QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+			tabIndexThree = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		}
+		if (previousTabIndex == tabIndexThree
+				&& selectedTabIndex != tabIndexThree) {
+		// #40974  - End
 			validateTierQuantityAndUnitPriceForSideMenueOrSave();
 		} 
 		
 		this.getManagedBean().setSelectedTabIndex(selectedTabIndex);
 
 	}
+	
+	// #40974  - Start
+	/**
+	 * Get new tab index
+	 * @param selectedTabIndex
+	 * @return
+	 */
+	public int newTabIndexDirectLOA(int selectedTabIndex) {
+		System.out.println("newTabIndexDirectLOA");
+		
+		int tabIndex = selectedTabIndex;
+		if (selectedTabIndex > QTConstants.DIRECT_LOA_TAB_INDEX_ONE && !this.getManagedBean().isShowCategoryCode() ){
+			tabIndex = tabIndex - QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+			
+		}		
+		return tabIndex;
+		
+	}
+	// #40974  - End
 
 	// #29468 Vinod End
 	
@@ -14523,6 +14581,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<SmSupplierCategory> originalList = new ArrayList<SmSupplierCategory>(filteredSmSupplierCategoryList);
 		this.getManagedBean().setSupplierCategoryList(supplierList);// #29661 #40093
 		this.getManagedBean().setOriginalSupplierCategoryList(originalList);
+		// #29661 #41032 Start
+		Long currentStatus = scLoa.getCurrentStatus().getPmStatus().getStatusId();
+		if (Arrays.asList(QTStatusConst.LOA_PENDING_STATUSES).contains(currentStatus)
+				&& !QTStatusConst.LOA_PENDING_VERIFICATION.equals(currentStatus)) {
+			this.getManagedBean().setShowCategoryCode(true);
+		}// #29661 #41032 End
 
 		removeAddedCategoryCode();
 		// #29661 #40511 end
@@ -14897,13 +14961,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		PmReason justificationQTType = (scLoa != null) ? scLoa
 				.getJustificationType() : null;
 
-		boolean isQTtypeOldPK7 = qtType != null
-				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
-						.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
-						.equals(qtType.getParameterCode());
+		if (qtType == null) {
+			return false;
+		}
+		
+		boolean showPopup = checkQTtypeAndReasonInaciveForPopup(qtType,
+				justificationQTType);
 
-		if (!isQTtypeOldPK7) {
+		if (!showPopup) {
 			return false;
 		}
 
@@ -14922,6 +14987,41 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		this.getManagedBean().setAlertForInactivePK7(alertForPK7);
 
 		return true;
+	}
+
+	// #29766 End Vinod
+	// #29766 Start Vinod
+	/**
+	 * This method will check if qtType is old pk7 or new pk7/wp and reason is
+	 * inactive to show the popup.
+	 * 
+	 * @param qtType
+	 * @param justificationQTType
+	 * 
+	 * @return boolean
+	 */
+	private boolean checkQTtypeAndReasonInaciveForPopup(PmParameter qtType,
+			PmReason justificationQTType) {
+		boolean isQTtypeOldPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE
+				.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
+						.equals(qtType.getParameterCode());
+
+		if (isQTtypeOldPK7) {
+			return isQTtypeOldPK7;
+		}
+
+		boolean isNewPK7ReasonInactive = ParameterTypeConst.QUOTATION_TENDER_TYPE
+				.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
+						.equals(qtType.getParameterCode())
+				&& justificationQTType != null
+				&& !justificationQTType.isRecordStatus();
+
+		if (isNewPK7ReasonInactive) {
+			return isNewPK7ReasonInactive;
+		}
+		return false;
 	}
 
 	// #29766 End Vinod
@@ -14946,7 +15046,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * the reason non editable.
 	 * 
 	 * @param
-	 * @return
+	 * @return boolean
 	 */
 	public boolean checkOldPK7PselectedToDisable() {
 		ScLoa scLoa = this.getManagedBean().getScLoa();
@@ -14955,8 +15055,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isQTtypePK7 = qtType != null
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
 						.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
-						.equals(qtType.getParameterCode());
+				&& (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
+						.equals(qtType.getParameterCode()) || ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
+						.equals(qtType.getParameterCode()));
 
 		PmStatus pmStatus = (scLoa != null) ? scLoa.getPmStatus() : null;
 		List<Long> approvalStatus = Arrays.asList(
