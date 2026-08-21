@@ -5557,6 +5557,15 @@ public class SupplierFinalizationBackingBean extends
 			
 			int i = 0;
 			items = new SelectItem[reasonList.size()];
+			
+			// #35320 - Start
+			String committeeType = getManagedBean().getCommitteeType();
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
+				checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+			}
+			// #35320 - Start
 
 			for (PmReasonDesc reasonDesc : reasonList) {
 
@@ -5682,6 +5691,14 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (reason != null) {
 				String committeeType = getManagedBean().getCommitteeType();
+				
+				// #35320 - Set WIP QCA, QCB to QQC - Start				
+				if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+						|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
+					committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+				}
+				// #35320 - End
+				
 				Map<String,String[]> higherAuthoritiesMap 
 							= getManagedBean().getHigherAuthoritiesMap();
 				
@@ -5870,14 +5887,20 @@ public class SupplierFinalizationBackingBean extends
 					committeeSO = null;
 				}
 			}
-			if (MapUtils.isNotEmpty(
-					higherAuthoritiesMap) && 
-						!higherAuthoritiesMap.containsKey(committeeType + 
-							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS)) {
-				disableFwdToHighAuthorityOption = true;
-				getManagedBean().setDisableFwdToHighAuthorityOption(
-									disableFwdToHighAuthorityOption);
+			// #35320 - Start
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
+				checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
 			}
+
+			if (!this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()
+					&& MapUtils.isNotEmpty(higherAuthoritiesMap)
+					&& !higherAuthoritiesMap.containsKey(committeeType
+							+ SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS)) {
+				disableFwdToHighAuthorityOption = true;
+				getManagedBean().setDisableFwdToHighAuthorityOption(disableFwdToHighAuthorityOption);
+			}// #35320 - End
 		}
 		
 		String decision = null;
@@ -5989,6 +6012,7 @@ public class SupplierFinalizationBackingBean extends
 				createShortlistedSuppliersDataModel();// 35140
 			} 
 			
+			setDisableSFJustification();	//40314
 			//#28834 - Start
 			if(scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION)){
 				this.getManagedBean().setDisableJustifications(false);
@@ -6578,8 +6602,7 @@ public class SupplierFinalizationBackingBean extends
 				if (!qtRefinalized) {
 					scQtFinalization.setOnlineBiddingEndorse(null);
 				}
-				this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
-				this.getManagedBean().setSingleAward(true);
+				checkForMLOI(finalizationMethodStr);//#40396
 			} else {
 				this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
 				scQtFinalization.setOnlineBiddingEndorse(null);
@@ -12755,5 +12778,16 @@ public class SupplierFinalizationBackingBean extends
 		return getQTSuppFinalizationSO().isQTCancelledBidSchedule(scQt.getQtId());
 	}
 	//#40396 - End
-	
+		
+	//#40396 - Start
+	private void checkForMLOI(String finalizationMethodStr) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
+			this.getManagedBean().setMultipleLoi(true);
+		} else {
+			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
+			this.getManagedBean().setSingleAward(true);
+		}
+	}
+	//#40396 - End
 }
