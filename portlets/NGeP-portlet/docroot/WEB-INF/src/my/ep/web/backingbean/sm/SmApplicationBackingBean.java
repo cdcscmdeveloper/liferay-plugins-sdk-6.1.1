@@ -8300,6 +8300,7 @@ public class SmApplicationBackingBean extends
 		}
 		validateOwnerIndividualAcc(getManagedBean().getSelectedShareHolder());
 		validateAuthorizedPersonnel(getManagedBean().getSelectedShareHolder());
+		validateMandatoryField(getManagedBean().getSelectedShareHolder()); //40801
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
 				.getSelectedShareHolder(), getManagedBean().getSmAppl());
@@ -20289,4 +20290,19 @@ public class SmApplicationBackingBean extends
 	    return gmapsScriptSrc;
 	}
 	// #40306 End
+	//#40801 START
+	/**
+	 * Validates that the specified field contains a value.
+	 *
+	 * @param value the field value to validate
+	 * @param fieldName the display name of the field used in the validation message
+	 * @throws EpException if the field value is null or empty
+	 */
+	private void validateMandatoryField(SmPersonnel personnel) {
+		if (personnel.getEpRole() != null &&
+				(personnel.getEmail() == null || personnel.getEmail().trim().isEmpty())) {
+	        throw new EpException("Email is mandatory", null);
+	    }
+	}
+	//#40801 END
 }
