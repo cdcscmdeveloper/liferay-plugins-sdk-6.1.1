@@ -17843,12 +17843,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
      * @return the resolved country string
      */
 	private String getCompanyCountry(SmAppl smAppl) {
-        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
-
-        if (country != null && !country.isEmpty()) {
-            return country;
-        }
-
         boolean isRoc = isRocBusinessType(smAppl.getSmSupplier().getBusinessType());
         boolean isForeign = isValidForeignRegNo(smAppl.getSmSupplier().getRegNo());
 
@@ -17856,6 +17850,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
             String localCompany = SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA;
             smAppl.getSmCompanyBasic().setSsmCompanyCountry(localCompany);
             return localCompany;
+        }
+
+        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
+
+        if (country != null && !country.isEmpty()) {
+            return country;
         }
 
         return SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
