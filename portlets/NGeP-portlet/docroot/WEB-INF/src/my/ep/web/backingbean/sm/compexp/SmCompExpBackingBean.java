@@ -209,14 +209,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
 		}
-		// #9299 - 41078 Start
+		// #9299 - #41078 Start
 		PmParameter procumentMode = this.getManagedBean().getSelectedDraft().getProcumentMode();
 		if (procumentMode == null
 		        || procumentMode.getParameterId() == null
 		        || procumentMode.getParameterId().longValue() == 0L) {
 		    this.getManagedBean().getSelectedDraft().setProcumentMode(new PmParameter());
 		}
-		// #9299 - 41078 End
+		// #9299 - #41078 End
 
 		this.getManagedBean().setTempEffDate(false);
 		dateChange();
@@ -1109,11 +1109,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null != draft.getPaymentMethod() && null != draft.getPaymentMethod().getParameterId()) {
 			master.setPaymentMethod(draft.getPaymentMethod());
 		}
-	    // #9299 - 41078 Start
+	    // #9299 - #41078 Start
 		if (null != draft.getProcumentMode() && null != draft.getProcumentMode().getParameterId()) {
 			master.setProcumentMode(draft.getProcumentMode());
 		}
-	    // #9299 - 41078 End
+	    // #9299 - #41078 End
 		master.setClientType(draft.getClientType());
 		master.setContractEffDate(draft.getContractEffDate());
 		master.setContractExpDate(draft.getContractExpDate());
@@ -1185,11 +1185,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null != reqDTO.getSelectedDraft().getPaymentMethod() && null == reqDTO.getSelectedDraft().getPaymentMethod().getParameterId()) {
 			reqDTO.getSelectedDraft().setPaymentMethod(null);
 		}
-	    // #9299 - 41078 Start
+	    // #9299 - #41078 Start
 		if (null != reqDTO.getSelectedDraft().getProcumentMode() && (null == reqDTO.getSelectedDraft().getProcumentMode().getParameterId() || 0 == reqDTO.getSelectedDraft().getProcumentMode().getParameterId())) {
 			reqDTO.getSelectedDraft().setProcumentMode(null);
 		}
-	    // #9299 - 41078 End
+	    // #9299 - #41078 End
 		// #9299 - #40714 End
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
