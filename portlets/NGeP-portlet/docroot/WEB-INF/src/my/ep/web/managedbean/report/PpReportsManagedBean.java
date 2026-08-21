@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.report;
 
+import java.util.Date;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -26,6 +28,13 @@ public class PpReportsManagedBean extends ReportBaseManagedBean {
 	private boolean ministryMandatory;	//[#27197]
 	
 	private String documentType; //#27472
+
+	//start [#28218]
+	private String subPlanProgressStatus;
+	private Date invitationDate;
+	private String contractType;
+	private boolean disabledContractType;
+	//end [#28218]
 
 	public PpReportsManagedBean() {
 	}
@@ -218,6 +227,40 @@ public class PpReportsManagedBean extends ReportBaseManagedBean {
 		this.documentType = documentType;
 	}
 	//END #27472
+
+	//start [#28218]
+	public String getSubPlanProgressStatus() {
+		return subPlanProgressStatus;
+	}
+
+	public void setSubPlanProgressStatus(String subPlanProgressStatus) {
+		this.subPlanProgressStatus = subPlanProgressStatus;
+	}
+
+	public Date getInvitationDate() {
+		return invitationDate;
+	}
+
+	public void setInvitationDate(Date invitationDate) {
+		this.invitationDate = invitationDate;
+	}
+
+	public String getContractType() {
+		return contractType;
+	}
+
+	public void setContractType(String contractType) {
+		this.contractType = contractType;
+	}
+
+	public boolean isDisabledContractType() {
+		return disabledContractType;
+	}
+
+	public void setDisabledContractType(boolean disabledContractType) {
+		this.disabledContractType = disabledContractType;
+	}
+	//end [#28218]
 	
 	
 }

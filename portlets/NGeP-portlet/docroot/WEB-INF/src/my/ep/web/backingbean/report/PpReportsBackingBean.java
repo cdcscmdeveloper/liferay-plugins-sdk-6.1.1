@@ -3,6 +3,7 @@ package my.ep.web.backingbean.report;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.constant.report.PmReportConst;
@@ -164,6 +166,19 @@ public class PpReportsBackingBean extends
 		getManagedBean().setProcurementTypeId(null);
 		getManagedBean().setStatus(null);
 		getManagedBean().setDocumentType(ReportConst.PDF); //#27472 reset to pdf default
+
+		//start [#28218]
+		getManagedBean().setSubPlanProgressStatus(PpReportConst.SUBPLAN_PROGRESS_ALL);
+		getManagedBean().setInvitationDate(null);
+		// BPK users pick the contract type; everyone else is locked to Ministry
+		if (isBpkUser()) {
+			getManagedBean().setContractType(PpReportConst.CONTRACT_TYPE_ALL);
+			getManagedBean().setDisabledContractType(false);
+		} else {
+			getManagedBean().setContractType(PpReportConst.CONTRACT_TYPE_MINISTRY);
+			getManagedBean().setDisabledContractType(true);
+		}
+		//end [#28218]
 		
 		//[#27197] - start
 		//set mandatory for Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
@@ -383,6 +398,22 @@ public class PpReportsBackingBean extends
 		if (yearFrom != null) {
 			year = Integer.parseInt(yearFrom);
 		}
+		//start [#28218] seven years before current year plus current year, no future year
+		if (PpReportConst.PP_OVERALL_PROCUREMENT_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			List<String> overallYearList = new ArrayList<String>();
+			if (year != null) {
+				for (int i = year - range; i <= year; i++) {
+					overallYearList.add(Integer.toString(i));
+				}
+				// default only - the user is free to pick any year in the list
+				if (StringUtils.isBlank(this.getManagedBean().getSelectedYear())) {
+					this.getManagedBean().setSelectedYear(yearFrom);
+				}
+			}
+			return overallYearList;
+		}
+		//end [#28218]
+
 		List<String> yearList = new ArrayList<String>();
 		if (year != null) {
 			year = year + 1;
@@ -517,6 +548,28 @@ public class PpReportsBackingBean extends
 			map.put(PpReportConst.PARAM_PP_STATUS, getManagedBean()
 					.getStatus().toString());
 		}
+		
+		//start [#28218] criteria used by the Overall Procurement Plan Report only
+		if (PpReportConst.PP_OVERALL_PROCUREMENT_RPT_VAL.equals(getManagedBean().getReportCode())) {
+			// "All" is the absence of a filter, so it is not passed to the report
+			if (StringUtils.isNotBlank(getManagedBean().getSubPlanProgressStatus())
+					&& !PpReportConst.SUBPLAN_PROGRESS_ALL.equals(getManagedBean().getSubPlanProgressStatus())) {
+				map.put(PpReportConst.PARAM_PP_SUBPLAN_PROGRESS, getManagedBean()
+						.getSubPlanProgressStatus());
+			}
+
+			if (getManagedBean().getInvitationDate() != null) {
+				map.put(PpReportConst.PARAM_PP_INVITATION_DATE, new SimpleDateFormat(
+						CommonConstants.DEFAULT_DATE_FORMAT).format(getManagedBean().getInvitationDate()));
+			}
+
+			if (StringUtils.isNotBlank(getManagedBean().getContractType())
+					&& !PpReportConst.CONTRACT_TYPE_ALL.equals(getManagedBean().getContractType())) {
+				map.put(PpReportConst.PARAM_PP_CONTRACT_TYPE, getManagedBean()
+						.getContractType());
+			}
+		}
+		//end [#28218]
 		
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
@@ -2116,6 +2169,83 @@ public class PpReportsBackingBean extends
 	public static SelectItem[] getActiveAndInactiveStatusOptions() {
 		return PpCommonUtil.getStatusOptionsDefault();
 	}
+
+	//start [#28218]
+	/**
+	 * Sub Plan Progress Status options for the Overall Procurement Plan Report.
+	 *
+	 * @return SelectItem[]
+	 */
+	public static SelectItem[] getSubPlanProgressStatusOptions() {
+		return new SelectItem[] {
+				new SelectItem(PpReportConst.SUBPLAN_PROGRESS_ALL, label("lbl.txt.all")),
+				new SelectItem(PpReportConst.SUBPLAN_PROGRESS_NEW, label("lbl.pp.subplan.progress.new")),
+				new SelectItem(PpReportConst.SUBPLAN_PROGRESS_IN_PROGRESS, label("lbl.pp.subplan.progress.inprogress")),
+				new SelectItem(PpReportConst.SUBPLAN_PROGRESS_COMPLETED, label("lbl.pp.subplan.progress.completed")) };
+	}
+
+	/**
+	 * Contract Type options for the Overall Procurement Plan Report.
+	 *
+	 * @return SelectItem[]
+	 */
+	public static SelectItem[] getContractTypeOptions() {
+		return new SelectItem[] {
+				new SelectItem(PpReportConst.CONTRACT_TYPE_ALL, label("lbl.txt.all")),
+				new SelectItem(PpReportConst.CONTRACT_TYPE_MINISTRY, label("lbl.pp.contract.type.ministry")),
+				new SelectItem(PpReportConst.CONTRACT_TYPE_CENTRAL, label("lbl.pp.contract.type.central")) };
+	}
+
+	private static String label(String key) {
+		return ResourceBundleUtils.getMessage(key,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+
+	/**
+	 * Contract Type is only selectable by BPK users; everyone else is fixed to Ministry.
+	 *
+	 * @return boolean
+	 */
+	public boolean isBpkUser() {
+		return isBPKOfficer() || isBPKAuditor()
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
+	}
+
+	/**
+	 * Expected Invitation Date is bounded by the selected Application Year.
+	 *
+	 * @return the first day of the selected year, or null when no year is selected
+	 */
+	public Date getInvitationDateMin() {
+		return invitationDateBound(Calendar.JANUARY, 1);
+	}
+
+	/**
+	 * @return the last day of the selected year, or null when no year is selected
+	 */
+	public Date getInvitationDateMax() {
+		return invitationDateBound(Calendar.DECEMBER, 31);
+	}
+
+	private Date invitationDateBound(int month, int dayOfMonth) {
+		String selectedYear = getManagedBean().getSelectedYear();
+		if (StringUtils.isBlank(selectedYear)) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(Integer.parseInt(selectedYear), month, dayOfMonth);
+		return cal.getTime();
+	}
+
+	/**
+	 * Clearing the year invalidates any Expected Invitation Date already picked.
+	 */
+	public void onChangeSelectedYear() {
+		getManagedBean().setInvitationDate(null);
+	}
+	//end [#28218]
 	
 	public void onChangeProcurementMethod(){
 		getManagedBean().setProcurementTypeId(null);

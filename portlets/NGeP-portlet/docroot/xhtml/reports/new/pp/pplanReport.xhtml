@@ -32,6 +32,11 @@
 	<ui:param name="isPPBudgetAllocationAmendmentReport"
 		value="#{PpReportConst.ppBudgetAllocationAmendmentRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
 	<!--//[#24974,#27472] - end  -->
+
+	<!--//[#28218] - start  -->
+	<ui:param name="isPPOverallReport"
+		value="#{PpReportConst.ppOverallProcurementRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
+	<!--//[#28218] - end  -->
 	<c:if test="#{not (isPPPerformanceReport or isPpPeTotal)}">	<!--[#24976]--> <!--//[#29484]-->
 	<table style="width: 100%;">
 		<tr>
@@ -90,9 +95,9 @@
 					saveObject="ppReportsBackingBean.managedBean.selectedPTJ"
 					conditionField="#{ppReportsBackingBean.constructPTJConditionFields()}" /></td>
 		</tr>
-		<c:if test="#{isPPSummReport or isPPDtlReport}">
+		<c:if test="#{isPPSummReport or isPPDtlReport or isPPOverallReport}"> <!--[#28218]-->
 			<tr>
-				<c:if test="#{isPPDtlReport}">
+				<c:if test="#{isPPDtlReport or isPPOverallReport}"> <!--[#28218]-->
 					<!-- #27472 change width-->
 					<td width="20%"><p:outputLabel value="#{lbl['lbl.pp.category']}"></p:outputLabel>
 					</td>
@@ -152,7 +157,7 @@
 			<tr>
 				<!-- #27472 change width-->
 				<td width="20%"><p:outputLabel
-						value="#{isPPSummReport or isPPDtlReport ? lbl['lbl.pp.ppitem.status'] :  lbl['lbl.pp.epitem.status']}" /></td>
+						value="#{isPPSummReport or isPPDtlReport or isPPOverallReport ? lbl['lbl.pp.ppitem.status'] :  lbl['lbl.pp.epitem.status']}" /></td> <!--[#28218]-->
 				<!-- #27472 change width-->
 				<td width="15%"><p:selectOneMenu id="ppSearchStatus"
 						value="#{ppReportsBackingBean.managedBean.status}">
@@ -190,11 +195,18 @@
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItems
 						value="#{ppReportsBackingBean.generateCommonYearList()}"></f:selectItems>
+					<!--[#28218] Expected Invitation Date is bounded by the year, so re-render it-->
+					<c:if test="#{isPPOverallReport}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{ppReportsBackingBean.onChangeSelectedYear()}"
+							update="@form" />
+					</c:if>
 				</p:selectOneMenu> <p:message id="ppYearMsg" for="ppYear" display="icon"
 					showDetail="false" /></td>
 
 			<!-- #27472 start-->
-			<c:if test="#{not isPPSummReport and not isPPDtlReport and not isPESummReport and not isPEDtlReport}">
+			<!--[#28218] Document Type already rendered on the status row for PP_009-->
+			<c:if test="#{not isPPSummReport and not isPPDtlReport and not isPESummReport and not isPEDtlReport and not isPPOverallReport}">
 				<td width="15%">
 					<p:outputLabel value="#{lbl['lbl.rpt.documentType']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
@@ -210,6 +222,58 @@
 			</c:if>
 
 		</tr>
+
+		<!--[#28218] - start  -->
+		<c:if test="#{isPPOverallReport}">
+			<tr>
+				<td width="20%">
+					<p:outputLabel value="#{lbl['lbl.pp.subplan.progress.status']}" />
+					&#160; <p:graphicImage id="giSubPlanProgress"
+						value="/css/images/design/tooltips.png" />
+					<p:tooltip id="ttSubPlanProgress" for="giSubPlanProgress">
+						<h:outputText escape="false"
+							value="#{lbl['lbl.pp.subplan.progress.tooltip']}" />
+					</p:tooltip>
+				</td>
+				<td width="15%">
+					<p:selectOneMenu id="somSubPlanProgress"
+						label="#{lbl['lbl.pp.subplan.progress.status']}"
+						value="#{ppReportsBackingBean.managedBean.subPlanProgressStatus}">
+						<f:selectItems value="#{ppReportsBackingBean.getSubPlanProgressStatusOptions()}" />
+					</p:selectOneMenu>
+				</td>
+				<td width="15%">
+					<p:outputLabel value="#{lbl['lbl.pp.invitation.date']}" />
+				</td>
+				<td width="15%">
+					<p:calendar id="calInvitationDate"
+						label="#{lbl['lbl.pp.invitation.date']}"
+						value="#{ppReportsBackingBean.managedBean.invitationDate}"
+						readonlyInput="true" showOn="button" navigator="true"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+						disabled="#{empty ppReportsBackingBean.managedBean.selectedYear}"
+						mindate="#{ppReportsBackingBean.invitationDateMin}"
+						maxdate="#{ppReportsBackingBean.invitationDateMax}" />
+				</td>
+				<td width="35%"></td>
+			</tr>
+			<tr>
+				<td width="20%">
+					<p:outputLabel value="#{lbl['lbl.pp.contract.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td width="15%">
+					<p:selectOneMenu id="somContractType"
+						label="#{lbl['lbl.pp.contract.type']}"
+						disabled="#{ppReportsBackingBean.managedBean.disabledContractType}"
+						value="#{ppReportsBackingBean.managedBean.contractType}">
+						<f:selectItems value="#{ppReportsBackingBean.getContractTypeOptions()}" />
+					</p:selectOneMenu>
+				</td>
+				<td width="65%" colspan="3"></td>
+			</tr>
+		</c:if>
+		<!--[#28218] - end  -->
 	</table>
 	</c:if>	<!--[#24976]-->
 	<!--[#24976] - start  -->
