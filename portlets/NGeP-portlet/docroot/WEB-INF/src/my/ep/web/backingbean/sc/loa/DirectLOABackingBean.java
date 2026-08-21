@@ -921,6 +921,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			// Bug #35078@Syazani -- 22/09/2023 -- End
 			
+			// #29661 #40096 Start
+			Long currentStatus = scLoa.getCurrentStatus().getPmStatus().getStatusId();
+			if (Arrays.asList(QTStatusConst.LOA_PENDING_STATUSES).contains(currentStatus)
+					&& !QTStatusConst.LOA_PENDING_VERIFICATION.equals(currentStatus)) {
+				this.getManagedBean().setShowCategoryCode(true);
+			}// #29661 #40096 End
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
