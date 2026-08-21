@@ -1109,7 +1109,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		master.setSmSupplier(draft.getSmSupplier());
 		master.setSmAppl(draft.getSmSupplier().getSmAppl());
 		master.setTitle(draft.getTitle());
-		master.setProcumentMode(draft.getProcumentMode());
+		//master.setProcumentMode(draft.getProcumentMode());
 		master.setOriAgencyName(draft.getOriAgencyName());
 		master.setAgencyName(draft.getAgencyName());
 		master.setOrgProfile(draft.getOrgProfile());
@@ -1119,6 +1119,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		master.setContractValue(draft.getContractValue());
 		if (null != draft.getPaymentMethod() && null != draft.getPaymentMethod().getParameterId()) {
 			master.setPaymentMethod(draft.getPaymentMethod());
+		}
+		if (null != draft.getProcumentMode() && null != draft.getProcumentMode().getParameterId()) {
+			master.setProcumentMode(draft.getProcumentMode());
 		}
 		master.setClientType(draft.getClientType());
 		master.setContractEffDate(draft.getContractEffDate());
@@ -1190,6 +1193,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setSelectedDraft(this.getManagedBean().getSelectedDraft());
 		if (null != reqDTO.getSelectedDraft().getPaymentMethod() && null == reqDTO.getSelectedDraft().getPaymentMethod().getParameterId()) {
 			reqDTO.getSelectedDraft().setPaymentMethod(null);
+		}
+		if (null != reqDTO.getSelectedDraft().getProcumentMode() && (null == reqDTO.getSelectedDraft().getProcumentMode().getParameterId() || 0 == reqDTO.getSelectedDraft().getProcumentMode().getParameterId())) {
+			reqDTO.getSelectedDraft().setProcumentMode(null);
 		}
 		// #9299 - #40714 End
 		SmCompExpResDTO resDTO;
@@ -1404,6 +1410,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		// #9299 - #40717 Start
 		if (!error && null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
 			master.setPaymentMethod(null);
+		}
+		if (!error && null != master.getProcumentMode() && null == master.getProcumentMode().getParameterId()) {
+			master.setProcumentMode(null);
 		}
 		// #9299 - #40717 Start
 		// #9299 - #41073 Start
