@@ -118,8 +118,9 @@
 						id="oderQtyId" required="true"
 						validatorMessage="Order Qty: must be a decimal number between 0.0 and 9999999999.999"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.quantity}"
-						size="28">
-						<p:ajax partialSubmit="true" process="@this" update="@this" />
+						size="28"
+						onchange="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"> <ui:remove>#39230</ui:remove>
+						<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 							maxIntegerDigits="10" />

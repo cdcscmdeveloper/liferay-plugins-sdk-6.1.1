@@ -580,7 +580,7 @@
 		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
 			<!-- #40112 - start -->
-			<p:outputPanel rendered="#{backingBean.aiAvailable}">
+			<p:outputPanel rendered="#{backingBean.showEpfAiBtn}">
 				<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" style="width: 150px;" onclick="epfAI.show()" immediate="true">
 					<p:ajax partialSubmit="true" process="@this" />
 				</p:commandButton>

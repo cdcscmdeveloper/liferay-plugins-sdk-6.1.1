@@ -910,7 +910,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
 				return;
-			} else if (!isSendNotificationButton || inactiveCLWarn) {
+			} else if (!isSendNotificationButton && inactiveCLWarn) {
 				checkInactiveChecklistAndDisplayWarning(this.getManagedBean()
 						.getTaskName());
 				return;
