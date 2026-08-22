@@ -1467,6 +1467,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			doc.setCompExpMaster(master);
 		}
 		for (SmCompExpCatMaster cat : master.getCompExpMasterCats()) {
+			// 9299 - #41094: never call retrieveCategoryLxDtlById with a null id (the SO rejects a null id
+			// and the EJB exception was masked as ERR-000001). Skip any incomplete row defensively.
+			if (null == cat.getCategoryL1().getCategoryL1Id() || null == cat.getCategoryL2().getCategoryL2Id()
+					|| null == cat.getCategoryL3().getCategoryL3Id()) {
+				continue;
+			}
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
  
 			reqDTO.setCategoryL1Id(cat.getCategoryL1().getCategoryL1Id());
