@@ -923,7 +923,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			error = validateDetail(error, clienType, agencyName, fileReferenceNo, fileExtensionNo);
 		}
 		if (sourceType.equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+			// 9299 - #41078: Procurement Method mandatory on declare draft; placed before the date checks so the error message order follows the field layout
+			error = validateProcurement(error);
 			error = validateDate(error, contractEffDate, contractExpDate);
+		}
+		// 9299 - #41078: Consultant fields (Project Location / Service Provided / Consultant Fee) mandatory on declare draft, same as Add New Company Experience; after the dates and before the supporting-doc check so the error order follows the field layout
+		if (sourceType.equals(ParameterConst.SOURCE_TYPE_ID_SM) && this.getManagedBean().isConsultant()) {
+			error = validateNewConsultant(error,
+					this.getManagedBean().getSelectedDraft().getProjectLoc(),
+					this.getManagedBean().getSelectedDraft().getWorkServDesc(),
+					this.getManagedBean().getSelectedDraft().getConsultantFee());
 		}
 		error = validateList(error, sourceType, smCompExpDocList);
 
@@ -977,6 +986,20 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775227,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		return error;
+	}
+
+	// 9299 - #41078: Procurement Method is mandatory when declaring an SM draft.
+	private boolean validateProcurement(boolean err) {
+		boolean error = err;
+		PmParameter procumentMode = this.getManagedBean().getSelectedDraft().getProcumentMode();
+		if (null == procumentMode || null == procumentMode.getParameterId() || procumentMode.getParameterId().longValue() == 0L) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775232,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		return error;
