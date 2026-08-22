@@ -1430,25 +1430,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
 
-		// 9299 - #41094: detect a duplicate File Reference No. BEFORE the category re-fetch below, so a
-		// duplicate (like any validation error) sets error=true and the UI-bound category objects are
-		// left untouched. This stops the Sub Category / Sub Category Division dropdowns from resetting
-		// (Issue 1) and stops the follow-up ERR-000001 when the user re-declares with reset categories (Issue 2).
-		if (!error) {
-			SmCompExpReqDTO dupReqDTO = new SmCompExpReqDTO();
-			dupReqDTO.setFileReferenceNo(fileReferenceNo);
-			dupReqDTO.setFileExtensionNo(fileExtensionNo);
-			Long dupMasterId = getSmCompExpSo().checkDuplicate(dupReqDTO);
-			if (null != dupMasterId
-					&& (this.getManagedBean().isMasterNew() || !dupMasterId.equals(master.getCompExpMasterId()))) {
-				error = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775241,
-								new String[] { master.getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-		}
-
 		// #9299 - #40717 Start
 		if (!error && null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
 			master.setPaymentMethod(null);
@@ -1457,18 +1438,27 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			master.setProcumentMode(null);
 		}
 		// #9299 - #40717 Start
-		// #9299 - #41073 Start
-		// 9299 - #41094: resolve category/doc details only when the save will actually proceed (no
-		// validation error and not a duplicate). Running this unconditionally used to overwrite the
-		// UI-bound category objects on a failed save -> dropdown reset (Issue 1) and NPE/IAE on
-		// incomplete rows -> ERR-000001 (Issue 2).
-		if (!error) {
+		// #9299 - #41073 / #41094: category & doc detail now resolved in saveMaster / updateSmComExpMaster,
+		// AFTER the duplicate File Reference No. check passes (previously ran here, before the check).
+		if (!error && update) {
+			updateSmComExpMaster(false);
+		} else if (!error) {
+			master.setSmAppl(this.getManagedBean().getSupplier().getSmAppl());
+			saveMaster(master, clienType);
+		}
+	}
+
+	// 9299 - #41094: resolve category (code+name) + doc parent link from DB. Called ONLY after the duplicate
+	// File Reference No. check passes (saveMaster / updateSmComExpMaster). Kept out of onSaveMaster so a duplicate
+	// or validation failure no longer overwrites the UI-bound category objects (dropdown reset, Issue 1) nor calls
+	// retrieveCategoryLxDtlById on incomplete rows (ERR-000001, Issue 2).
+	private void resolveMasterCategoryDetails(SmCompExpMaster master) {
 		for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
 			doc.setCompExpMaster(master);
 		}
 		for (SmCompExpCatMaster cat : master.getCompExpMasterCats()) {
-			// 9299 - #41094: never call retrieveCategoryLxDtlById with a null id (the SO rejects a null id
-			// and the EJB exception was masked as ERR-000001). Skip any incomplete row defensively.
+			// 9299 - #41094: never call retrieveCategoryLxDtlById with a null id (SO rejects null id;
+			// the EJB exception was masked as ERR-000001). Skip incomplete rows defensively.
 			if (null == cat.getCategoryL1().getCategoryL1Id() || null == cat.getCategoryL2().getCategoryL2Id()
 					|| null == cat.getCategoryL3().getCategoryL3Id()) {
 				continue;
@@ -1488,14 +1478,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			cat.setCategoryL3Name(cat.getCategoryL3().getCategoryName());
  
 			cat.setCompExpMaster(master);
-		}
-		} // 9299 - #41094: end if(!error) guard
-		// #9299 - #41073 End
-		if (!error && update) {
-			updateSmComExpMaster(false);
-		} else if (!error) {
-			master.setSmAppl(this.getManagedBean().getSupplier().getSmAppl());
-			saveMaster(master, clienType);
 		}
 	}
 
@@ -1517,6 +1499,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			// 9299 - 40788 End
 		} else {
 			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			resolveMasterCategoryDetails(master); // 9299 - #41094
 			reqDTO.setDeclareMaster(master);
 			SmCompExpResDTO resDTO;
 			resDTO = getSmCompExpSo().declareDraft(reqDTO);
@@ -1620,6 +1603,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			if (!duplicate){
 				//9299 - 40788 End
 				SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
+				resolveMasterCategoryDetails(selectedMaster); // 9299 - #41094
 				reqDTO4.setUpdateMaster(selectedMaster); 
 				resDTO1 = getSmCompExpSo().updateMaster(reqDTO4);
 				if (resDTO1.isSuccessful()) {
