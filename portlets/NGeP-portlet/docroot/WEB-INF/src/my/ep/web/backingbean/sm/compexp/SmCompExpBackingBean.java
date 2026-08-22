@@ -936,6 +936,24 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 		error = validateList(error, sourceType, smCompExpDocList);
 
+		// 9299 - #41078: SM draft — procurement mandatory + consultant fields mandatory (self-declared only)
+		if (sourceType.equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+			PmParameter procumentMode = this.getManagedBean().getSelectedDraft().getProcumentMode();
+			if (procumentMode == null || procumentMode.getParameterId() == null
+					|| procumentMode.getParameterId().longValue() == 0L) {
+				error = true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_775232, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			if (this.getManagedBean().isConsultant() && !this.getManagedBean().getSelectedDraft().isMigration()) {
+				error = validateNewConsultant(error,
+						this.getManagedBean().getSelectedDraft().getProjectLoc(),
+						this.getManagedBean().getSelectedDraft().getWorkServDesc(),
+						this.getManagedBean().getSelectedDraft().getConsultantFee());
+			}
+		}
+
 		if (!error) {
 			// #9299 - #40790 Start
 			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
