@@ -1430,6 +1430,25 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
 
+		// 9299 - #41094: detect a duplicate File Reference No. BEFORE the category re-fetch below, so a
+		// duplicate (like any validation error) sets error=true and the UI-bound category objects are
+		// left untouched. This stops the Sub Category / Sub Category Division dropdowns from resetting
+		// (Issue 1) and stops the follow-up ERR-000001 when the user re-declares with reset categories (Issue 2).
+		if (!error) {
+			SmCompExpReqDTO dupReqDTO = new SmCompExpReqDTO();
+			dupReqDTO.setFileReferenceNo(fileReferenceNo);
+			dupReqDTO.setFileExtensionNo(fileExtensionNo);
+			Long dupMasterId = getSmCompExpSo().checkDuplicate(dupReqDTO);
+			if (null != dupMasterId
+					&& (this.getManagedBean().isMasterNew() || !dupMasterId.equals(master.getCompExpMasterId()))) {
+				error = true;
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775241,
+								new String[] { master.getTitle() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		}
+
 		// #9299 - #40717 Start
 		if (!error && null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
 			master.setPaymentMethod(null);
@@ -1439,6 +1458,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 		// #9299 - #40717 Start
 		// #9299 - #41073 Start
+		// 9299 - #41094: resolve category/doc details only when the save will actually proceed (no
+		// validation error and not a duplicate). Running this unconditionally used to overwrite the
+		// UI-bound category objects on a failed save -> dropdown reset (Issue 1) and NPE/IAE on
+		// incomplete rows -> ERR-000001 (Issue 2).
+		if (!error) {
 		for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
 			doc.setCompExpMaster(master);
 		}
@@ -1459,6 +1483,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
  
 			cat.setCompExpMaster(master);
 		}
+		} // 9299 - #41094: end if(!error) guard
 		// #9299 - #41073 End
 		if (!error && update) {
 			updateSmComExpMaster(false);
