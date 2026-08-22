@@ -1167,6 +1167,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		List<SmCompExpCatMaster> catMasterList = new ArrayList<>();
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft catDraft : this.getManagedBean().getSmCompExpCatDraftList()) {
+			// 9299 - #41094: never call retrieveCategoryLxDtlById with a null id (SO rejects null id;
+			// the EJB exception was masked as ERR-000001). Skip incomplete rows defensively.
+			if (null == catDraft.getCategoryL1().getCategoryL1Id() || null == catDraft.getCategoryL2().getCategoryL2Id()
+					|| null == catDraft.getCategoryL3().getCategoryL3Id()) {
+				continue;
+			}
 			SmCompExpCatMaster catMaster = new SmCompExpCatMaster();
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 
