@@ -497,7 +497,7 @@
 						</table>
 					</td>
 				</tr>
-				
+				<ui:fragment rendered="#{isSampleExist}"><!-- #11104 Reendorse -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -537,6 +537,7 @@
 					</td>
 					
 					</tr>
+					</ui:fragment><!-- #11104 Reendorse -->
 				
 			</table>
 		</p:panel>

@@ -27,7 +27,12 @@
 			
 			<td class="txtBold" width="15%">MOF No. </td>
 			<td width="5%">:</td>
-			<td width="20%"> $mof </td>
+			##34920
+			<td width="20%"> 
+				#if($mof != $null) $mof 
+				#else N/A
+				#end
+			</td>
 			<td width="5%"> </td>
 			<br/><br/>
 		</tr>
@@ -35,7 +40,12 @@
 		<tr align="left">
 			<td class="txtBold" width="15%">Application Reference No. </td>
 			<td width="5%">:</td>
-			<td width="20%"> $applNo </td>
+			##34920
+			<td width="20%"> 
+				#if($applNo != $null) $applNo
+				#else N/A
+				#end
+			</td>
 			<td width="5%"> </td>
 			
 			<td class="txtBold" width="15%">Type of Application </td>
@@ -52,9 +62,18 @@
 		<tr>
 			##Loop Question 
 			<td> <br/><br/>
+			##START #34920
+			#set($i = 0)
 			#foreach($ques in $question)
 				<tr>
-					<td >$velocityCount.</td>
+					<td >
+						#if ($ques.smQuestion.smAnswerCategory.answerCategoryId != 2)
+							#set($i = $i+1)
+							$i.
+						#else
+					 	#end
+					</td>
+					##END #34920
 					<td >$!ques.smQuestion.questionValue</td>
 					
 				</tr>
@@ -64,7 +83,10 @@
 					</td>
 					<td>
 					#if ($ques.smQuestion.smAnswerCategory.answerCategoryId == 2) 
-						$!ques.otherRemark
+						##34920
+						<p style="text-align: justify;padding: 10px;min-height: 100px;border:solid thin black;">
+							$!ques.otherRemark
+						</p>
 					#else 
 						#foreach($answerid  in $ques.smQuestion.smAnswerCategory.smAnswers) 
 							#if($ques.smQuestion.smAnswerCategory.answerCategoryId == 3) ##soalan no1,no4- no11 

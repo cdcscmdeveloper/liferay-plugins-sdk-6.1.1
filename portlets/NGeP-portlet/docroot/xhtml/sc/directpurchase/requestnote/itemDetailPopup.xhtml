@@ -5,7 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+<!-- #25726/25725 - Check and display Italic value -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
 	<ui:param name="requestNoteDtl"
 					value="#{requestNoteBackingBean.managedBean.requestNoteDtl}"></ui:param>
 					
@@ -20,9 +25,19 @@
 				value="#{requestNoteDtl.requestItem.uom.uomCode}" />
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
+					<ui:remove>#26059 - Start</ui:remove>
 					<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
-					<td><p:inputText disabled="true" size="54"
-							value="#{requestNoteDtl.requestItem.cmItem.extensionCode}" /></td>
+					<td><p:inputText disabled="true" size="54" rendered="#{requestNoteDtl.requestItem.cmItem.extensionCode eq null}"
+							value="#{requestNoteDtl.requestItem.cmItem.extensionCode}" /> 
+							<p:outputPanel
+							id="commandLinkOutPanel" rendered="#{requestNoteDtl.requestItem.cmItem.extensionCode ne null}">
+							<p:commandLink oncomplete="itemDescDialogId.show();"
+								value="#{requestNoteDtl.requestItem.cmItem.extensionCode}"
+								style="color: #009ae5; font-size:12px; font-style:italic"
+								action="#{lOADetailBackingBean.showItemDescPopup(requestNoteDtl.requestItem)}"
+								process="@this" update="@([id$=itemDescDialogId])" />
+						</p:outputPanel></td>
+					<ui:remove>#26059 - End</ui:remove>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
@@ -86,9 +101,13 @@
 										disabled="#{isViewOnly or isQtyViewOnly}"
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
 										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
-										value="#{requestNoteDtl.requestItem.quantity}">
-										<p:ajax partialSubmit="true" process="@this" update="@this" />
-										<p:ajax event="blur" update="itemTotalPriceId" listener="#{requestNoteBackingBean.calculatePricePerItem(requestNoteDtl)}" />
+										value="#{requestNoteDtl.requestItem.quantity}"
+										onblur="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"> <ui:remove>#39230</ui:remove>
+										<p:ajax event="blur"
+								            partialSubmit="true"
+								            process="@this"
+								            update="@this itemTotalPriceId"
+								            listener="#{requestNoteBackingBean.calculatePricePerItem(requestNoteDtl)}" /> <ui:remove>#39230</ui:remove>
 										<ac:validateNumber
 											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 											maxIntegerDigits="10" />
@@ -140,13 +159,20 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.request.note.fulfill.type']}" /></td>
+					<!-- #25726/25725 - Check and display Italic value -->
 					<td><p:inputText
 							value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.fulfilmentType)}"
-							disabled="true" size="30" style="margin-top: 5px;" /> <ac:iconTooltip
+							disabled="true" size="30" style="margin-top: 5px;" 
+							styleClass="#{requestNoteBackingBean.checkItalicCodeNameForMy(requestNoteDtl.fulfilmentType.parameterId) ? 'italic-item' : ''}"/> 
+							<ac:iconTooltip
 							value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" /></td>
 				</tr>
 			</table>
 
+			<ui:remove>#26059 - Start</ui:remove>
+			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+			<ui:remove>#26059 - End</ui:remove>
+			
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton id="okBtn"
 					rendered="#{!isViewOnly}"

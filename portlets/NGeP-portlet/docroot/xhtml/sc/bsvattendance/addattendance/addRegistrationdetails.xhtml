@@ -30,26 +30,16 @@
 				<h:outputText value="#{lbl[scQtBriefReg.attended ? 'lbl.txt.yes' : 'lbl.txt.no']}" />
 			</p:column>
 			
-			<p:column style="text-align: center;">
+			<ui:remove>26247 - start</ui:remove>
+			<p:column style="white-space:normal;width:18%;text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
-				
-				<!-- #31033 start -->
-				<p:commandLink  style="color:red; font-weight:bold;" 
-					immediate="true"
-					rendered="#{scQtBriefReg.supplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(scQtBriefReg.supplier)}" 
-					process="@this" partialSubmit="true" update=":form">
-						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-				</p:commandLink><p:spacer width="2"/>
-				<!-- #31033 End -->
-				
-				<h:outputText rendered="#{!scQtBriefReg.supplier.disciplinaryActions}"
-				 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+				<ac:disciplinaryActionYesNo
+					supplier="#{scQtBriefReg.supplier}" maxRow="0" index="#{index}"/>
 			</p:column>
-
+			<ui:remove>26247 - end</ui:remove>
 		</p:dataTable>
 
 		<table style="width: 100%">
@@ -79,12 +69,17 @@
 							buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
 							saveObject="bsvAttendanceBackingBean.managedBean.restrictedSupplierList"
 							update="@form" conditionField="#{bsvAttendanceBackingBean.constuctConditionFields()}"/>
-					</c:if> <p:commandButton id="regDelteBtn"
+					</c:if> 
+						<ui:remove>#28188 - Start - Add new condition for disabled</ui:remove>
+						<p:commandButton id="regDelteBtn"
 						value="#{lbl['lbl.btn.delete']}"
-						disabled="#{(bsvAttendanceBackingBean.managedBean.maintanceFlow and !bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew) or null eq bsvAttendanceBackingBean.managedBean.selectedbriefRegistrationEnableDisable}"
+						disabled="#{bsvAttendanceBackingBean.registrationDeleteDisabled}"          
 						process="@this,complisttbl" partialSubmit="true"
 						oncomplete="supplierListDeleteIdPopUp.show();"
-						update="@([id$=#{supplierListDeleteId}])" /></td>
+						update="@([id$=#{supplierListDeleteId}])" />
+						<ui:remove>#28188 - End - Add new condition for disabled</ui:remove>
+						
+					</td>
 			</tr>
 		</table>
 		<ui:param name="supplierListDeleteId" value="supplierListDeleteId"></ui:param>
@@ -202,20 +197,16 @@
 				<p:selectBooleanCheckbox value="#{scQtBriefAttendace.preRegisterd}"
 					disabled="true" />
 			</p:column>
+			<ui:remove>#28188 - Start - Change condition for disabled</ui:remove>
 			<p:column style="width:6%;white-space: normal; text-align:center;">
 				<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}"
-					disabled="#{(bsvAttendanceBackingBean.managedBean.maintanceFlow and !scQtBriefAttendace.brandNew and bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.attended) or !scQtBriefAttendace.authorized}">
+				    disabled="#{bsvAttendanceBackingBean.isAttendanceTickUntick(scQtBriefAttendace.authorized)}">
 					<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
 						 listener="#{bsvAttendanceBackingBean.updateBriefingAttendance(scQtBriefAttendace,bsvAttendanceBackingBean.managedBean.selectedbriefRegistration,scQtBriefAttendace.attended)}"></p:ajax>
 				</p:selectBooleanCheckbox>
 			</p:column>
+			<ui:remove>#28188 - End - Change condition for disabled</ui:remove>
 		</p:dataTable>
 			
 	</p:panel>
-	<!-- Bug #31033 #32560 Start -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<!-- Bug #31033 #32560 end -->
 </ui:composition>

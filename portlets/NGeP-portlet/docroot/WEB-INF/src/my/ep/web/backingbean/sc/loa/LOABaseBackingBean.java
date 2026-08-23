@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.loa;
 
-import java.util.ArrayList; //#26475
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +28,9 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.constant.sc.QTConstants;	// Bug #35227@Syazani 20/10/2022
 import my.ep.web.managedbean.sc.loa.LOABaseManagedBean;
+import my.ep.web.util.EpPortletUtil;	// Bug #35227@Syazani 20/10/2022
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -159,6 +160,9 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		} else {
 			getManagedBean().getScLoa().setBondReq(false);
 		}
+		// Reopen #25726 note 220 - issue 5	
+		//calcBondAmountWithSST(getManagedBean().getScLoa(), isDirectLOA()); //Bug #35227@Syazani 20/10/2022
+
 	}
 	
 	/**
@@ -214,4 +218,10 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		return isQuotation;
 	}
 	// #26770 - End.
+	
+	// Bug #35227@Syazani 20/10/2022 -- Start
+	public boolean isDirectLOA() {
+		return QTConstants.PORTLET_NAME_DL_CREATE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// Bug #35227@Syazani 20/10/2022 -- End
 }

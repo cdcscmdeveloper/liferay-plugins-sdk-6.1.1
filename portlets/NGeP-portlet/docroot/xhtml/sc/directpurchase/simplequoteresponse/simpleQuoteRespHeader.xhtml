@@ -31,6 +31,19 @@ simpleQuoteBackingBean.managedBean.scQuote.createdDate)}
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 						</h:outputText></td>
+					<ui:remove>#5426 - start</ui:remove>
+					<td style="width: 8%">
+						<h:outputLabel id="remainingMsg" value="#{simpleQuoteBackingBean.displayRemainingTimeMsg()}" />
+					</td>	
+					 <td>
+					<FONT style="color: red;font-weight: bold;">
+							<h:outputText id="days" value="#{simpleQuoteBackingBean.displayRemainingTime()}"/>
+				
+						
+					 	<p:poll binding="#{poll}" interval="1" listener="#{simpleQuoteBackingBean.initCountdown()}" update="days, remainingMsg" widgetVar="poll" process="@this" partialSubmit="true"/>
+					</FONT> 
+					</td>
+					<ui:remove>#5426 - end</ui:remove>	
 				</tr>
 			</table>
 		</div>

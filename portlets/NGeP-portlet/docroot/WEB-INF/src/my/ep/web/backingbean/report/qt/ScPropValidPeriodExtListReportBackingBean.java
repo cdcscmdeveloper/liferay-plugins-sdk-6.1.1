@@ -75,8 +75,43 @@ public class ScPropValidPeriodExtListReportBackingBean extends QtReportBackingBe
 		if (StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())) {
 			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());
 		}
+		//Send title with all Uppercase
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationTitle())) {
+			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getQuotationTitle().toUpperCase());
+		}
 
 		return params;
+	}
+	
+	/**
+	 * Html error will appear if qt title AND number is not keyed in.
+	 * 
+	 * @return
+	 */
+	public boolean showErrorWhenTitleAndNumberNull() {
+		ScReportFieldsSearchBean reportFieldBean = this.getManagedBean().getScReportSearchBean();
+		return this.getManagedBean().getQuotationNumber() == null && StringUtils.isEmpty(this.getManagedBean().getQuotationTitle())
+				&& null == reportFieldBean.getPtjProfile() && StringUtils.isEmpty(reportFieldBean.getScStatus());
+	}
+	
+	/**
+	 * Clear all Tender Title field, this enable error message to show up when user delete Tender Title
+	 */
+	public void clearTenderTitle() {
+		if (StringUtils.isEmpty(this.getManagedBean().getQuotationTitle()) && this.getManagedBean().getQuotationId() == null) {
+			this.getManagedBean().setQuotationNumber(null);
+			this.getManagedBean().setQuotationTitle(null);
+		}
+	}
+	
+	/**
+	 * Clear all Decision Status field, this enable error message to show up when user delete Tender Title
+	 */
+	public void clearDecisionStatus() {
+		if (StringUtils.isEmpty(this.getManagedBean().getScReportSearchBean().getScStatus()) && this.getManagedBean().getQuotationId() == null) {
+			this.getManagedBean().setQuotationNumber(null);
+			this.getManagedBean().getScReportSearchBean().setScStatus(null);
+		}
 	}
 	
 }

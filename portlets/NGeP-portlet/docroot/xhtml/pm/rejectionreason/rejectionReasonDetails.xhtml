@@ -8,6 +8,7 @@
 
 	<p:outputPanel id="opRejectReasonCat">
 		<table class="ppOneTable">
+			<!-- 8411 - START -->
 			<tr>
 				<th><p:outputLabel value="#{lbl['lbl.pm.reason.category']}" />
 					<p:outputLabel value="* " styleClass="mandatory" /></th>
@@ -15,16 +16,35 @@
 						disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 						label="#{lbl['lbl.pm.reason.category']}"
 						styleClass="ppDropDownWidthM"
+						style="width:225px;"
+						value="#{rejectionReasonBackingBean.managedBean.selectedReason.pmReasonCategory.categoryCode}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.reason.justification']}" itemValue="#{rejectionReasonBackingBean.justification}"/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.reason.rejectionreason']}" itemValue="#{rejectionReasonBackingBean.rejectionReason}"/>
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{rejectionReasonBackingBean.resetCategoryChange(false)}"
+							update="somReasonCat,:form:conditionTabId:cTabID,pRejectReasonDet,pReasonRestriction" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<th><p:outputLabel value="#{lbl['lbl.pm.reason.type']}" />
+					<p:outputLabel value="* " styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="somReasonCat" required="true"
+						disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew or 
+									rejectionReasonBackingBean.managedBean.selectedReason.pmReasonCategory.categoryCode==null}"
+						label="#{lbl['lbl.pm.reason.type']}"
+						styleClass="ppDropDownWidthM"
+						style="width:225px;"
 						value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterId}">
 						<f:selectItems
-							value="#{rejectionReasonBackingBean.reasonCategoryOptions()}" />
+							value="#{rejectionReasonBackingBean.reasonCategoryOptions(false)}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{rejectionReasonBackingBean.reasonCategoryChange(false,
 						rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterId)}"
 							update=":form:conditionTabId:cTabID,pReasonRestriction,pRejectReasonDet" />
-					</p:selectOneMenu> <p:message id="somReasonCategoryMsg" for="somReasonCategory"
-						display="icon" /></td>
+					</p:selectOneMenu></td>
 			</tr>
+			<!-- 8411 - END -->
 		</table>
 
 		<p:panel id="pRejectReasonDet"
@@ -34,7 +54,7 @@
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.reason.code']}" /></th>
 					<td><p:inputText id="itReasonCode" styleClass="ppDisplayTextS"
-							style="text-transform:uppercase;width:19%" required="true" maxlength="10"
+							style="text-transform:uppercase;width:22%" required="true" maxlength="10"
 							disabled="true"
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCode}"
 							validatorMessage="#{lbl['lbl.pm.reason.code']} - #{lbl['lbl.pm.uppercase']}"
@@ -56,10 +76,15 @@
 						    	#{reasonDesc.pmLanguage.languageName}
 					        </p:column>
 							<p:column headerText="* #{lbl['lbl.pm.reason.desc']}">
-								<p:inputTextarea id="itReasonDesc" disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
+								<!-- #34445, Fix as-is bug: #39087 Start -->
+								<p:inputTextarea id="itReasonDesc"
+									disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 									value="#{reasonDesc.reasonDesc}" cols="50" rows="5"
 									required="true" maxlength="255"
-									label="#{lbl['lbl.pm.reason.desc']}" autoResize="false" />
+									label="#{lbl['lbl.pm.reason.desc']}" autoResize="false">
+									<f:validateLength maximum="255" />
+								</p:inputTextarea>
+								<!-- #34445, Fix as-is bug: #39087 End -->
 								<p:message id="itReasonDescMsg" for="itReasonDesc"
 									display="icon" />
 							</p:column>
@@ -93,6 +118,52 @@
 					</tr>
 
 				</c:if>
+
+				<!--28962- Start-->
+				<c:if
+					test="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.specialItemWithApproval
+	                || rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.wipItemPK7}">
+					<tr>
+						<th>
+							<p:outputLabel value="#{lbl['lbl.pm.reason.direct.purchase.threshold']}" />
+						</th>
+						<td>
+							<p:inputText id="directPurchaseThreshold" size="20"
+								maxlength="17" style="text-align:left"
+								label="#{lbl['lbl.pm.reason.direct.purchase.threshold']}"
+								value="#{rejectionReasonBackingBean.managedBean.selectedReason.dpThreshold}">
+								<f:attribute name="max" value="99999999999.99" />
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+								<f:validator validatorId="quantityDoubleRangeValidator" />
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputText>
+							<p:graphicImage id="toolTipDP" value="/css/images/design/tooltips.png" /> 
+							<p:tooltip for="toolTipDP" value="#{lbl['lbl.pm.reason.threshold.tooltip']}" showEffect="fade" hideEffect="fade" /> 
+							<p:message id="directPurchaseThresholdMsg" for="directPurchaseThreshold" display="icon" />
+						</td>
+					</tr>
+					<tr>
+						<th>
+							<p:outputLabel value=" #{lbl['lbl.pm.reason.purchase.request.threshold']}" />
+						</th>
+						<td>
+							<p:inputText id="purchaseRequestThreshold" size="20"
+								maxlength="17" style="text-align:left"
+								label="#{lbl['lbl.pm.reason.purchase.request.threshold']}"
+								value="#{rejectionReasonBackingBean.managedBean.selectedReason.prThreshold}">
+								<f:attribute name="max" value="99999999999.99" />
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+								<f:validator validatorId="quantityDoubleRangeValidator" />
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputText>
+							<p:graphicImage id="toolTipPR" value="/css/images/design/tooltips.png" /> 
+							<p:tooltip for="toolTipPR" value="#{lbl['lbl.pm.reason.threshold.tooltip']}" position="bottom" /> 
+							<p:message id="purchaseRequestThresholdMsg" for="purchaseRequestThreshold" display="icon" />
+						</td>
+					</tr>
+				</c:if>
+				<!--28962- End-->
+
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></th>
@@ -118,9 +189,11 @@
 										value="#{lbl['lbl.pm.reason.purchase.form']}" /></th>
 								<td width="5%"><p:selectBooleanCheckbox id="chkPrchaseContract"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}">
+										<!-- #39618, Fix as-is bug Start -->
 										<p:ajax event="change" process="@this"
-											update="circularCategory, sourcingMethod,circularCriteriaLabel"
+											update="circularCategory, sourcingMethod, circularCriteriaLabel, dtReasonApplicaility"
 											listener="#{rejectionReasonBackingBean.purchaseFromContractChange()}" />
+										<!-- #39618, Fix as-is bug END -->
 									</p:selectBooleanCheckbox></td>
 								<th width="20%"><p:outputLabel
 										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> 
@@ -200,6 +273,13 @@
 					</p:panel>
 				</p:tab>
 			</p:tabView>
+			<!--28962- Start-->
+			<c:if
+				test="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.specialItemWithApproval 
+				|| rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.wipItemPK7}">
+				<ui:include src="agencySuppAccTypeList.xhtml" />
+			</c:if>
+			<!--28962- End-->
 		</p:panel>
 		<!-- Restriction List (App Type, Supp Type, Comp Reg Type) -->
 		<ui:include src="restrictionList.xhtml" />

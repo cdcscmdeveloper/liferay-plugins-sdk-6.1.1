@@ -5,6 +5,43 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- #37874 -->
+	<script>
+	function fixCatcodeMenu(){
+		var panels = document.getElementsByClassName('ui-selectonemenu-panel');
+		if (!panels || panels.length === 0) { return; }
+		
+		for (var i = 0; i &lt; panels.length; i++) {
+			var panel = panels[i];
+			// Check for all category code menu
+			if (!panel || !panel.id || panel.id.indexOf('cons') === -1) continue;
+			if (!panel.style || panel.style.display === 'none') continue;
+			
+			var left = parseInt(panel.style.left);
+			if (isNaN(left)) continue;
+			
+			
+			var windowWidth = window.innerWidth || document.documentElement.clientWidth;
+			var panelRight = panel.getBoundingClientRect().right;
+			var diff = panelRight - windowWidth;
+				
+			if (diff &gt; 0) {
+				left = left - diff - 5;
+				panel.style.left = left + 'px';
+			}
+			
+			if (left &gt;= 0) continue;
+			panel.style.left = '3px';
+		}
+	}
+	
+	jQuery(document).ready(function() {
+		jQuery(document).on('mousedown', '.ui-selectonemenu', function() {
+			setTimeout(fixCatcodeMenu, 200);
+		});
+	});
+	</script>
 
 	<p:panel header="#{lbl['lbl.sm.projDtls.catHdr']}" toggleable="true"
 		id="compExpCatPanHdr">
@@ -46,8 +83,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{backingBean.managedBean.supplierParentCatList}"
-						var="parent" itemLabel="#{parent.categoryL1Code} - #{parent.categoryName}"
-						itemValue="#{parent.categoryL1Id}" />
+						var="parent" itemLabel="#{parent.categoryL1Code} - #{backingBean.getCompanyExpCatName(parent)}"
+						itemValue="#{parent.categoryL1Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.populateExperienceChildCategoryByParent(expCategoryBean.pmCategoryL1.categoryL1Id,
 								expCategoryBean.pmCategoryL2,
@@ -69,8 +106,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{expCategoryBean.pmCategoryL2.pmCategoryL2s}"
-						var="conslChild" itemLabel="#{conslChild.categoryL2Code} - #{conslChild.categoryName}"
-						itemValue="#{conslChild.categoryL2Id}" />
+						var="conslChild" itemLabel="#{conslChild.categoryL2Code} - #{backingBean.getCompanyExpCatName(conslChild)}"
+						itemValue="#{conslChild.categoryL2Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.populateExperienceSubChildCategoryByChild(expCategoryBean.pmCategoryL2.categoryL2Id,expCategoryBean.pmCategoryL3)}"
 						update="conslSubChild" />
@@ -89,8 +126,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{expCategoryBean.pmCategoryL3.pmCategoryL3s}"
-						var="conslSubChild" itemLabel="#{conslSubChild.categoryL3Code} - #{conslSubChild.categoryName}"
-						itemValue="#{conslSubChild.categoryL3Id}" />
+						var="conslSubChild" itemLabel="#{conslSubChild.categoryL3Code} - #{backingBean.getCompanyExpCatName(conslSubChild)}"
+						itemValue="#{conslSubChild.categoryL3Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.checkDuplicateCategoryForProject(expCategoryBean,backingBean.managedBean.selectedCompanyExperience)}"
 						update="conslSubChild" />

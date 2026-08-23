@@ -25,6 +25,14 @@
 	
 	<cc:implementation>
 		<style>
+			/* #37925 START */
+		    .same-width-textarea-warn {
+		        width: 100% !important;
+		        max-width: 90ch !important;
+		        box-sizing: border-box !important;
+		    }
+		    /* #37925 END */
+		    
 			.selectRecRejectReasonTable .ui-chkbox-box{
       	 	   pointer-events: all;
 			}
@@ -32,23 +40,66 @@
     			pointer-events: none;
 			}
 		</style>
+		<!-- 13362 START -->
+		<script>
+					$(function(){
+					    // Self-executing recursive animation
+					    (function pulse(){
+					        $('#blinkId4').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+					    })();
+					});
+		</script>
+		<!-- 13362 END -->
+		
 		<p:outputPanel id="#{cc.attrs.changeRegStatusUpdateId}">
 			<table style="width: 100%" border="#{cc.attrs.border ? 1 : 0}">
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
 					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}"/></td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+							<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
 							<td>
 								<h:outputText value="#{cc.attrs.currRegStatus}"/>
 							</td>
 						</tr>
 					</p:outputPanel>
+					
+					<!-- #37925 START -->
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
+							<td>
+								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
+							</td>
+						</tr>
+						<ui:fragment rendered="#{not empty cc.attrs.bean.strLabelCountryOrigin and cc.attrs.bean.strLabelCountryOrigin.toLowerCase() eq 'unknown'}">
+							<tr >
+								<td></td>
+								<td>
+									<div class="ui-messages ui-widget same-width-textarea-warn"
+										aria-live="polite">
+										<div class="ui-messages-warn ui-corner-all">
+											<a href="#" class="ui-messages-close"
+												onclick="$(this).closest('.ui-messages').slideUp();return false;">
+												<span class="ui-icon ui-icon-close"></span>
+											</a> <span class="ui-messages-warn-icon"></span>
+											<ul>
+												<li><h:outputText class="ui-messages-warn-detail"
+														value="#{lbl['lbl.sm.approver.country.of.origin.unknown.warn']}"
+														escape="false" /></li>
+											</ul>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</ui:fragment>
+					</p:outputPanel>
+					
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
 						<td>
@@ -58,12 +109,14 @@
 								rendered="#{cc.attrs.facilityType eq 'B'}" />
 						</td>
 					</tr>
-					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N' and cc.attrs.smAppl.applType ne 'B'}">
+					
+					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
+					<!-- #37925 END -->
 						<tr>
-							<td style="border-style: none !important;float: right !important;">
-								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
+							<td style="border-style: none !important;float: right !important;"> <!-- #37925 -->
+								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" id="changeRegStatusChk"
 									disabled="#{empty cc.attrs.currRegStatus}">
-									<p:ajax event="change" partialSubmit="true" process="@this"
+									<p:ajax event="change" partialSubmit="true" process="@this" listener="#{cc.attrs.backingBean.updateApproverRegistrationStatusValue()}"
 										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
 								</p:selectBooleanCheckbox>
 							</td>
@@ -76,32 +129,33 @@
 							or cc.attrs.changeCurrRegStatus}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" />
-								<c:if test="#{cc.attrs.valueReqd}">
-									<p:outputLabel value="*" styleClass="mandatory" />
-								</c:if>
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{cc.attrs.bean.displayDropdownRegStatus}"/><!-- #37925 -->
 							</td>
 			
 							<td>
-								<p:outputPanel rendered="#{!cc.attrs.poRecommend}">
+								<h:outputText value="#{cc.attrs.bean.currRegStatus}" rendered="#{cc.attrs.bean.displayLabelRegistrationStatus}" /><!-- #37925 -->
+								<p:outputPanel rendered="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="approveSelBox" required="#{cc.attrs.valueReqd}"
+										id="approveSelBox" required="#{!cc.attrs.poRecommend and (cc.attrs.smAppl.applType eq 'B' or cc.attrs.changeCurrRegStatus)}"
 										value="#{cc.attrs.bean.approvedStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
 										<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
 											itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+											<p:ajax update="approveSelBoxMsg" process="@this" /><!-- #37925 -->
 									</p:selectOneMenu>
 									<p:message id="approveSelBoxMsg" for="approveSelBox"
 										showSummary="true" showDetail="false" display="icon" />
 								</p:outputPanel>
-								<p:outputPanel rendered="#{cc.attrs.poRecommend}">
+								<p:outputPanel rendered="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
+										id="poRecommendSelBox" required="#{cc.attrs.poRecommend and (cc.attrs.smAppl.applType eq 'B' or cc.attrs.changeCurrRegStatus)}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
 										<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
 											itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+										<p:ajax update="poRecommendSelBox" process="@this" /><!-- #37925 -->
 									</p:selectOneMenu>
 									<p:message id="poRecommendSelBoxMsg" for="poRecommendSelBox"
 										showSummary="true" showDetail="false" display="icon" />
@@ -199,8 +253,10 @@
 										<p:outputLabel
 										value="*" styleClass="mandatory" id="recRejReasonLblMndty"
 										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}" /></td>
-								<td style="padding-top: 5px;"><p:inputTextarea cols="100"
-										style="width : auto;"
+								<td style="padding-top: 5px;">
+								<!-- #37925 -->
+								<p:inputTextarea cols="100"
+										styleClass="same-width-textarea-warn"
 										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}"
 										value="#{cc.attrs.approvalRemarks}"
 										id="recRmrksForRejectTxtArea" rows="5"
@@ -235,8 +291,10 @@
 				<tr>
 					<td style="vertical-align: top"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approval']}" /></td>
-					<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-							style="width : auto;" rows="10"
+					<td style="padding-top: 5px;">
+					<!-- #37925 -->
+					<p:inputTextarea cols="90"
+							styleClass="same-width-textarea-warn" rows="10"
 							value="#{cc.attrs.approvalRemarks}"
 							id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
 							validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
@@ -249,26 +307,82 @@
 				
                 <!-- #15629 end -->
 												
-				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<c:if test="#{cc.attrs.overLappedCategoryExists and cc.attrs.smAppl.applType ne 'C'}"> <!-- 39614 -->
+				<!-- 13362 START -->
+				<tr><td><br></br></td></tr>
+					<tr>
+						<td></td>
+						<td align="left">
+							<span id="blinkId4">
+								<!-- #13362 START -->
+								<p:graphicImage id="alert-img-overlapcat"
+									style="vertical-align:top"
+									value="/css/images/design/icon_alert.png" />
+								<strong><h:outputText
+										styleClass="warning"
+										value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+							</span>
+							<span style="opacity: 0.0;">
+								<p:graphicImage id="alert-img-overlapcat2"
+									style="vertical-align:top"
+									value="/css/images/design/icon_alert.png" />
+								<strong><h:outputText
+										styleClass="instruction"
+										value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+								<!-- #13362 END -->
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td align="left">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
+							<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{backingBean.onViewOverlapCategory()}"
+						process="@this"
+						partialSubmit="true">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
+					</p:commandLink>&#160; 
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/>
+					
+						</td>
+					</tr>
+				<tr><td><br></br></td></tr>
+				<!-- 13362 END -->
 					<tr>
 					<td></td>
 						<td align="left"><p:outputLabel style="float:left;"
 								value="#{lbl['lbl.sm.remarks.overLap.note1']}" escape="false" /></td>
 					</tr>
+					<!-- 13362 START -->
+					<tr>
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
+								value="#{lbl['lbl.sm.remarks.overLap.note3']}" escape="false" /></td>
+					</tr>
+					<!-- 13362 END -->
+					<!-- 40150 START -->
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
-						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-								style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
-								maxlength="2500"
+						<td style="padding-top: 5px;">
+						<!-- #37925 -->
+						<p:inputTextarea cols="90"
+								styleClass="same-width-textarea-warn" rows="10" id="rmrksForSplApprTxtArea"
+								maxlength="4000"
 								value="#{cc.attrs.overLapRemarks}"
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
-								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.ola']}"
 								required="false">
-								<f:validateLength maximum="2500" />
+								<!-- 39422 START -->
+								<p:ajax event="blur" process="@this" update="@this"/>
+								<!-- 39422 End -->
+								<f:validateLength maximum="4000" />
 							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
 								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"
 								display="icon" /></td>
-					</tr>
+					</tr><!-- 40150 END -->
 					<tr>
 					<td></td>
 						<td align="left"><p:outputLabel style="float:left;"

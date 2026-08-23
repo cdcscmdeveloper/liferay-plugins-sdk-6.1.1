@@ -64,17 +64,18 @@
 
 			<p:column style="text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
+				<!-- Bug #35078@Syazani - 14/09/2023 Start -->
 				<p:commandButton id="download" icon="ui-icon-download"
-					disabled="#{not lOADetailBackingBean.managedBean.enableDownloadAllDocuments}"
 					style="background-color:transparent !important; border:0px none;"
-					ajax="false"
+					disabled="#{lOADetailBackingBean.managedBean.downloadLOADisabled}"
+					ajax="false" process="@form" update="@form" partialSubmit="true"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true or
 					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload}" />
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 					popupWidgetVar="qtLoaSuppUploadDlg"
-					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or
-					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload and !scLoaReport.uploadlampiranA3}"
+					rendered="#{(scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or
+					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload and !scLoaReport.uploadlampiranA3) and (!isQtAudit)}"
 					attachment="#{scLoaReport.scLoaReportAttachment}"
 					update=":#{p:component('contentsTbl')}"
 					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
@@ -86,15 +87,18 @@
 						target="#{lOADetailBackingBean.managedBean.attachmentDocType}"
 						value="LAR" />
 				</ac:scSingleFileUploadButton><!-- #29007 vinod Added uploadlampiranA3 -->
+				<!-- Bug #35078@Syazani - 14/09/2023 End -->
 			</p:column>
 		</p:dataTable>
 
 		<div class="ppRightBtn BtnSpacing">
+			<!-- Bug #35078@Syazani - 14/09/2023 Start -->
 			<p:commandButton rendered="#{!isPendingVerification}"
-				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+				disabled="#{lOADetailBackingBean.managedBean.readOnlyLOADownload}"
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				styleClass="ui-button"
 				action="#{lOADetailBackingBean.downloadAllReports}" />
+			<!-- Bug #35078@Syazani - 14/09/2023 End -->
 
 			<p:commandButton
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"

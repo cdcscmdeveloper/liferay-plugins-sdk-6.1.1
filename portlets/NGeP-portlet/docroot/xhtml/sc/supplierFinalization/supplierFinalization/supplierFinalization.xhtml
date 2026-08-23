@@ -50,9 +50,25 @@
 	<p:panel header="#{lbl['lbl.sc.sf.committee.decision']}" toggleable="true">
        <h:outputText styleClass="instruction" escape="false"
 			value="#{lbl['lbl.sc.sf.committee.decision.instructions']}" />
-		<!-- #29729 Start -->
-		   <h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.psfd']}" /> 
-		<!-- #29729 End -->
+		<ui:remove> 28777,29729,30432 - Start </ui:remove>
+		<c:choose>
+			<c:when
+				test="#{suppFinalizationBackingBean.checkInstructionSupplierBranchDeleted(suppFinalizationBackingBean.managedBean.scQt.qtId)}">
+				<h:outputText styleClass="instruction" escape="false"
+					value="#{lbl['lbl.sc.branch.related.deleted.instruction.three']}" />
+				<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml">
+					<ui:param name="number" value="4." />
+					<ui:param name="break" value="&lt;br/&gt;" />
+				</ui:include>
+			</c:when>
+			<c:otherwise>
+				<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml">
+					<ui:param name="number" value="3." />
+					<ui:param name="break" value="&lt;br/&gt;" />
+				</ui:include>
+			</c:otherwise>
+		</c:choose>
+		<ui:remove> 28777,29729,30432 - End</ui:remove>
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 			columnClasses="columnWidth20">
 			
@@ -134,10 +150,10 @@
 							<td>
 								<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
 									value="#{suppFinalizationBackingBean.managedBean.finalizationMethod}"
-									disabled="#{!(isSecretaryUser or 
+									disabled="#{(!(isSecretaryUser or 
 													isBPKTaskAndClaimed) or isQTStatusReFinalized or suppFinalizationBackingBean.isQTMaintenanceScreen() 
 													or suppFinalizationBackingBean.managedBean.reversed
-													or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
+													or supplierFinalizationReadOnly) and !suppFinalizationBackingBean.isQTCancelledBidSchedule()}"><!-- 6906 note 117/#40396 -->
 									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
 									<!-- #29562 START -->
 									<p:ajax oncomplete="typeConfirmation.show();" listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this"/>
@@ -356,7 +372,7 @@
 						<!-- #25426 ruzaimah - Start -->
 						<p:ajax event="change" partialSubmit="true" update="@this"
 							process="@this" 
-							listener="#{suppFinalizationBackingBean.CheckInactiveCommiteeRole(suppFinalizationBackingBean.managedBean.scQtFinalization,'ALL')}"/>
+							listener="#{suppFinalizationBackingBean.checkInactiveCommiteeRole(suppFinalizationBackingBean.managedBean.scQtFinalization,'ALL')}"/>
 						<!-- #25426 End -->
 					</p:selectOneMenu>
 					</td>

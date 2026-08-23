@@ -6,6 +6,39 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
+<!-- #25726/25725 - Check and display Italic value - Start -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
+
+	
+<h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{templateSpecBackingBean.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+</h:outputScript>
+<!-- #25726/25725 - Check and display Italic value - End--> 
+
 	
 	<ui:param name="delConfirmPopup" value="#{templateSpecId}delConfirmPopup" />
 	<ui:param name="tierQtyPopup" value="#{templateSpecId}tierQtyPopup" />
@@ -19,7 +52,9 @@
 	<ui:param name="addItemSpecOnComplete" value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
 <!-- 	#25039 Begin - version zonal -->	
 	<ui:param name="zoneEstimationPopup" value="#{templateSpecId}zoneEstimationPopup" />
-<!-- 	#25039 End - version zonal -->		
+<!-- 	#25039 End - version zonal -->
+	<ui:param name="specScorePopup" value="#{templateSpecId}specScorePopup" /> <!-- #38151,#38679 -->	
+	
 	<p:blockUI block="spg" widgetVar="#{templateSpecId}specBlockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
@@ -73,6 +108,7 @@
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
 			<ui:param name="isPackageItemSpec" value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
 			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial eq null ? 'false': templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
+			<ui:param name="isWeightageReq" value="#{templateSpecBean.specMaster.weightageReq}" />	<!-- Bug #35307@Syazani 12/12/2023 -->
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
@@ -260,7 +296,9 @@
 				</ui:param>
 				<ui:remove> #32110 related to #21695 Farid End 30/11/2021</ui:remove>
 				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
-				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" /><!-- #29187 Added Vinod -->
+				<ui:remove>#29187 Start Vinod</ui:remove>
+				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" />
+				<ui:remove>#29187 End Vinod</ui:remove>
 				<!-- #33859 - start -->
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
 					value="#{filterList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -395,8 +433,12 @@
 				<c:if test="#{isZonal}">
 					<ui:include src="zoneQtyPopup.xhtml" />
 				</c:if>
-				
-				<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
+
+			<!-- #31503 Start -->
+			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+			<!-- #31503 End -->
+
+			<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
 			
 					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 						<div style="height:250px;">

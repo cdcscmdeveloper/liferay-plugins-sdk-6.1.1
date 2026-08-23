@@ -10,10 +10,11 @@
 	
 	<h:panelGroup id="frequency">
 	<!-- Enhancement #25659 remove the Radio button options selection between Frequency Payment/progressive Payment  -->
+	<!-- new #25726 - remove Non Periodic Schedule to the rendered -->
 	<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq (ParameterConst.fulfilmentTypeScheduled || ParameterConst.fulfilmentTypeNonPeriodicScheduled)}">
+				rendered="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq (ParameterConst.fulfilmentTypeScheduled)}">
 
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.instruction']}"

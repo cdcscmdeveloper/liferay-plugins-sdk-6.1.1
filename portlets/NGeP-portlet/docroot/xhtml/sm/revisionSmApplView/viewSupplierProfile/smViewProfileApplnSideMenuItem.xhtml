@@ -59,11 +59,15 @@
 					tabNo="5" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK}"
 					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditBank}" />
 			</p:menuitem>
+			<!-- 36504 - START -->
 			<p:menuitem>
 				<ac:smApplMenuItemView bean="#{viewSmApplBackingBean}" label="#{lbl['lbl.sm.catCodeStepLbl']}"
 					tabNo="6" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY}"
-					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditCategory}" />
+					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditCategory}" 
+					poEdit="#{viewSmApplBackingBean.managedBean.editVO.poEditCategory}" 
+					appEdit="#{viewSmApplBackingBean.managedBean.editVO.appEditCategory}" />
 			</p:menuitem>
+			<!-- 36504 - END -->
 			<p:menuitem>
 				<ac:smApplMenuItemView bean="#{viewSmApplBackingBean}" label="#{lbl['lbl.sm.factoryStepLbl']}"
 					tabNo="7" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY}"
@@ -170,11 +174,15 @@
 					tabNo="4" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK}"
 					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditBank}" />
 			</p:menuitem>
+			<!-- 36504 - START -->
 			<p:menuitem>
 				<ac:smApplMenuItemView bean="#{viewSmApplBackingBean}" label="#{lbl['lbl.sm.catCodeStepLbl']}"
 					tabNo="5" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY}"
-					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditCategory}" />
+					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditCategory}" 
+					poEdit="#{viewSmApplBackingBean.managedBean.editVO.poEditCategory}" 
+					appEdit="#{viewSmApplBackingBean.managedBean.editVO.appEditCategory}" />
 			</p:menuitem>
+			<!-- 36504 - END -->
 			<p:menuitem>
 				<ac:smApplMenuItemView bean="#{viewSmApplBackingBean}" label="#{lbl['lbl.sm.factoryStepLbl']}"
 					tabNo="6" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY}"
@@ -283,11 +291,15 @@
 					tabNo="4" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK}"
 					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditBank}" />
 			</p:menuitem>
+			<!-- 36504 - START -->
 			<p:menuitem>
 				<ac:smApplMenuItemView bean="#{viewSmApplBackingBean}" label="#{lbl['lbl.sm.catCodeStepLbl']}"
 					tabNo="5" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY}"
-					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditCategory}" />
+					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditCategory}" 
+					poEdit="#{viewSmApplBackingBean.managedBean.editVO.poEditCategory}"
+					appEdit="#{viewSmApplBackingBean.managedBean.editVO.appEditCategory}" />
 			</p:menuitem>
+			<!-- 36504 - END -->
 			<p:menuitem>
 				<ac:smApplMenuItemView bean="#{viewSmApplBackingBean}" label="#{lbl['lbl.sm.factoryStepLbl']}"
 					tabNo="6" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY}"
@@ -312,6 +324,14 @@
 			actionListener="#{viewSmApplBackingBean.setTabValue('7',SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 			update=":form" />
 			--><!-- #32008 - end -->
+			<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
+			<c:if test="#{!viewSmApplBackingBean.managedBean.viewApplicationHistory and viewSmApplBackingBean.managedBean.auditAccess}">
+				<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)}"
+					update=":form" />
+			</c:if>
+			<ui:remove>#28895_35501 End</ui:remove>
 			<c:if test="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
 			<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
@@ -417,6 +437,14 @@
 		onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 		actionListener="#{viewSmApplBackingBean.setTabValue('4',null)}"
 		update=":form" />
+		<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
+		<c:if test="#{viewSmApplBackingBean.managedBean.auditAccess}">
+			<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('5', SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)}"
+				update=":form" />
+		</c:if>
+		<ui:remove>#28895_35501 End</ui:remove>
 		</c:if>
 		</c:when>
 		<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
@@ -432,6 +460,14 @@
 		<p:menuitem value="#{lbl['lbl.sm.catalogue.info']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						actionListener="#{viewSmApplBackingBean.setTabValue('3',null)}"
 						update=":form" />	
+		<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
+		<c:if test="#{viewSmApplBackingBean.managedBean.auditAccess}">
+			<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('4', SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)}"
+				update=":form" />
+		</c:if>
+		<ui:remove>#28895_35501 End</ui:remove>
 		</c:when>
 		</c:choose>
 	</p:tabMenu>

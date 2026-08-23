@@ -69,11 +69,20 @@
 					styleClass="show-column-names"
 					value="#{delAddressSummary.flFulfilmentItemAddr}">
 					<p:column headerText="#{lbl['lbl.fl.item.code']}">
-						<h:outputText
-							value="#{newItems.itemCode}" />
+						<!-- #31344 display item details in popup -->				
+						<p:commandLink oncomplete="itemDescDialogId.show();" 
+							value="#{newItems.scRequestItem.cmItem.extensionCode}" 
+							style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
+							action="#{flOrderBB.showItemDescPopup(newItems.scRequestItem.cmItem.itemId)}" 
+							process="@this" 
+							update="@([id$=itemDescDialogId])"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;" >
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
+						<!--#31344 filter item name-->
+						<h:outputText
+							value="#{flOrderBB.filterNARequestItemName(newItems.scRequestItem.requestNoteItemId)}"
+							id="itemDesc"
+							title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}"/>

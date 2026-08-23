@@ -3,17 +3,22 @@
  */
 package my.ep.web.backingbean.fl.deliveryorder;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -24,45 +29,47 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.fl.audit.IAuditFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.AuditFLConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.fl.audit.AuFLReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
+import my.ep.persistence.entity.fl.audit.FlAuditTrail;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -72,8 +79,10 @@ import my.ep.persistence.entity.fl.order.FlTempDoItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -88,8 +97,10 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
+import my.ep.web.backingbean.fl.audit.AuditFulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -130,6 +141,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	private String className="@(.myDoClassName)";
+	private static final int SUPPLIER_DO_REF_LENGTH  = 30; //36247
 	
 	/**
 	 * @return the className
@@ -186,7 +198,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * navigate to acknowledge page.
 	 */
 	public String createDeliveryOrder(String action) {
-		FacesScopes facesScopes = new FacesScopes();
+//		FacesScopes facesScopes = new FacesScopes();//36534
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
 		IUserGroupSO userGroupSO = null;
@@ -200,6 +212,17 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			}else{
 				flOrderId = getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
 			}
+			//38009-Start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				validateExpectedDeliveryDate();
+				
+				// 39692-Start
+				if (hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentRequest().getFulfilmentReqId())) {
+					throw new EpException(MessageConst.ERROR_760823);
+				}
+				// 39692-End
+			}
+			//38009-End
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				reValidateRetrieveDelAmt();
@@ -208,7 +231,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			reqDTO.setSupplier(hasSupplierRole());
-			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());//36534
 			
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
@@ -345,6 +368,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reqDTO.setApproverUserList(approverUserList);
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
+				//#35508 fl audit trail - DO modification start
+				AuditFulfilmentBackingBean auflBB = new AuditFulfilmentBackingBean();
+				if (resDTO.isSuccessful() && auflBB.getAuditFlConfigState()) {
+					Long userAuditId = getUserIdSessionFromLoginId(); 
+					insertAuditTrailFl(userAuditId, action);
+				}
+				//#35508 fl audit trail - DO modification end
 			}
 			else{
 				resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
@@ -511,7 +541,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 			
 		} else {
-			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getCtContract().getContractNo());	
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getCtContract().getContractNo());
 		}
 		
 	}
@@ -731,7 +761,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			
 			//#34178 - added inside if statement to also include process name without space to cater Oracle 12C upgrade issue
 			if (FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName())
-					|| this.getManagedBean().getProcessName().equals(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", ""))) {
+					|| getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", "")+"Submition")){
 				FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
 				if(doModDataType.getErrorId() != null && doModDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -747,7 +777,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doModDataType.getDoId()));
 			}else if (FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName())
-					|| this.getManagedBean().getProcessName().equals(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))) {
+					|| getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))) {
 				FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
 				if(doCancelDataType.getErrorId() != null && doCancelDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -762,6 +792,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+				
+				//35429-Start
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus()!=null){
+					if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION){
+						String[] outcome = new String[1];
+						outcome[0] = BpmOutcomeConst.BPM_APPROVE;
+						this.getManagedBean().setOutComes(outcome);
+					}
+				}
+				//35429-End
+				
 			}
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -773,36 +815,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setHideRemarks(false);
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-				//26279 - start
-				if(getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT 
-						|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL 
-						|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL) {
-					SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-					SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-					if(smDisciplinaryAction != null) {
-						getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-						boolean isWarningOnly = false;
-						String warningOrDisciplinaryActionMsg = null;
-						String language =  new FacesScopes().getUserLocale().getLanguage();
-						if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
-								&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
-								&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
-								&& !smDisciplinaryAction.isManufacturerCancel()) {
-							isWarningOnly = true;
-							warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-							getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-						} else if(smDisciplinaryAction.isCancelCategory() 
-								|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
-								|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
-								|| smDisciplinaryAction.isManufacturerCancel()){
-							warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-							getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-						}
-					} else {
-						getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-					}
-				}
-				//26279 - end
+				checkDisciplinaryAction();//26279
 		}else{
 			getManagedBean().setOrderDisabledForSdCheck(false);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -830,14 +843,49 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setGstAmtChanged(false);
 		}
 		
-		//28855 - Start
-		if(getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+		// 28855 - Start
+		if (getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 			getManagedBean().setContractFlag(true);
 		} else {
 			getManagedBean().setContractFlag(false);
 		}
-		//28855 - End
+		// 28855 - End
 	}
+	
+	// 26279 - start
+	/**
+	 * Checks Disciplinary Action
+	 * 
+	 * if true will display Disciplinary Action
+	 * 
+	 */
+	private void checkDisciplinaryAction() {
+		if (isDisciplinaryActionDOPendingStatus()) {
+			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+	}
+
+	/**
+	 * Checks if the current DO's status is one of the pending statuses
+	 * 
+	 * @return true if the DO's status is one of the pending statuses,
+	 *         false for otherwise statuses
+	 */
+	private boolean isDisciplinaryActionDOPendingStatus() {
+		Long statusId = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
+		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT,
+				FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL,
+				FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL));
+		return pendingStatusIds.contains(statusId);
+	}
+	// 26279 - End
 
 	/**
 	 * Retrieve rejection data.
@@ -998,8 +1046,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * Back action.
 	 *
 	 * @return the string
+	 * @throws IOException  
 	 */
-	public String backAction() {
+	public String backAction() throws IOException {//36519-Start
 		if(this.getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -1011,6 +1060,17 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			}
 			return getManagedBean().getBackToPrevious();
 		}
+		// 36519-Start
+		else if (getManagedBean().getBackToNtf() != null) {
+			FacesContext
+					.getCurrentInstance()
+					.getExternalContext()
+					.redirect(
+							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
+									+ "notifications");
+			return null;
+		}
+		// 36519-End
 		else{
 			if(this.getManagedBean().isPendingDelivery()){
 				log.info("****back Action isPendingDelivery value doPending****"+this.getManagedBean().isPendingDelivery());
@@ -1059,6 +1119,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				//29234 end
+				
+				validateSupplierDoRefLength(getManagedBean().getFlDeliveryOrder().getSupplierDoRef()); //36247
+				
 				IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 				supplierDoNoList = new ArrayList<String>();
 				supplierDoNoList.add(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());
@@ -1131,6 +1194,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				// 36247-Start
+				if (flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef() != null) {
+					validateSupplierDoRefLength(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
+				}
+				// 36247-End
+				
 				if(supplierDoNoList.contains(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef())){
 					throw new EpException(MessageConst.ERROR_740042, new String[]{flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef(),getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
 				}else{
@@ -1218,6 +1287,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
 			}
 			//#26191-end
+			// 36361-Start
+			if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				validateDelQtySaved();
+			}
+			// 36361-End
 		}
 		return createDeliveryOrder(getManagedBean().getButtonAction());
 	}
@@ -1456,8 +1530,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setBackToNtf("notifications");//36519
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW); //36519
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button. //36519
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
@@ -1612,86 +1687,550 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		getManagedBean().setSubmittedDoList(submittedDoList);
 	}
 	
-	//26279 - start
+	// 26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
-		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
-		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionHistoryDlg.show();");
+		SmSupplier supplier;
+
+		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		}
 	}
-	//26279 - end
+
+	// 26279 - end
 	
-	//28855 - start
+	// 28855 - start
+	/**
+	 * Populates item information and specifications based on the provided
+	 * fulfilment item address.
+	 * 
+	 * @param flItemAddr
+	 *            The fulfilment item address containing the item details.
+	 */
 	public void doItemInfoList(FlFulfilmentItemAddr flItemAddr) {
-		 IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-		
+		IRequestItemSO requestItemSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
-		
-		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
-		
+
+		getManagedBean().setSpecificationList(
+				requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+
 		if (!getManagedBean().getSpecificationList().isEmpty()) {
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
-				for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
-					if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
-							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
-						getManagedBean().setSupplierOffer(specification.getSupplierOffer());
-					}
-					if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
-							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
-						getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
-					}
-					if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
-							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
-						getManagedBean().setItemSpecification(specification.getItemSpec());	
-						getManagedBean().getItemSpecList().add(specification);
-					}					
+			for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
+				if (specification.getSupplierOffer() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					getManagedBean().setSupplierOffer(specification.getSupplierOffer());
 				}
-			
-			} else {
+				if (specification.getNewOfferSpec() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
+				}
+				if (specification.getItemSpec() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
+					getManagedBean().setItemSpecification(specification.getItemSpec());
+					getManagedBean().getItemSpecList().add(specification);
+				}
+			}
+
+		} else {
 			getManagedBean().setSupplierOffer(null);
 			getManagedBean().setNewOfferedSpec(null);
 			getManagedBean().setItemSpecification(null);
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
-			}
-			
-		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract()!=null?getManagedBean().getFulfilmentRequest().getCtContract().getContractId() : null;
-		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		}
+
+		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
+				.getFulfilmentRequest().getCtContract().getContractId() : null;
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
 		reqFDTO.setContractId(contractId);
-		String  loaDocType=  fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
-		
-		/*IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
-		ContractReqDTO cireqDTO = new ContractReqDTO();
-		cireqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
-		ContractResDTO ciResDTO = contractSO.retrieveContract(cireqDTO);
-		
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
-		AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO();
-		if (ciResDTO.getContract().getLoa() != null) {
-		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
-		AwardSupplierResDTO resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);*/
+		String loaDocType = fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
 
-			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
-				getManagedBean().setDpFlag(true);
-				String supplierOffer = getManagedBean().getSupplierOffer();
-				if(supplierOffer !=null && supplierOffer.length() > 0) {
-					String trimWipDpZone = supplierOffer.replace("<br/>", "");
-					getManagedBean().setSupplierOffer(trimWipDpZone);
-				}
-			} else {
-				getManagedBean().setDpFlag(false);
-				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
-					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+		if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			getManagedBean().setDpFlag(true);
+			String supplierOffer = getManagedBean().getSupplierOffer();
+			if (supplierOffer != null && supplierOffer.length() > 0) {
+				String trimWipDpZone = supplierOffer.replace("<br/>", " ");
+				getManagedBean().setSupplierOffer(trimWipDpZone);
+			}
+		} else {
+			getManagedBean().setDpFlag(false);
+			if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+				getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+			}
+		}
+	}
+
+	// 28855 - end
+	
+	// 36247-Start
+	/**
+	 * 
+	 * Validation for Supplier Do Reference length Maximum length is 30
+	 * 
+	 * @param supplierDoRef
+	 */
+	private void validateSupplierDoRefLength(String supplierDoRef) {
+		if (supplierDoRef.length() > SUPPLIER_DO_REF_LENGTH ) {
+			String label = ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new EpException(MessageConst.ERROR_721114,
+					new String[] { label, String.valueOf(SUPPLIER_DO_REF_LENGTH ) });
+		}
+	}
+	// 36247-End
+	
+	// 36361-Start
+	/**
+	 * Validate that the delivered quantity does not exceed the remaining
+	 * quantity. Validate also if there are duplicate SupplierDoNo references
+	 * 
+	 * @throws EpException
+	 *             if the delivered quantity is greater than the remaining
+	 *             quantity
+	 */
+	private void validateDelQtySaved() {
+		BigDecimal remainingQty;
+		BigDecimal sumDeliveredQty;
+		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+
+		for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			if (flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				for (FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+					if (itemAddr.getDeliveredQty().doubleValue() > 0) {
+						FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+						reqDTO.setFlFulfilmentItemAddr(itemAddr.getFulfilmentItemAddrId());
+						reqDTO.setFulfilmentItemId(itemAddr.getFlFulfilmentItem().getFulfilmentItemId());
+
+						FulfilmentResDTO resDTO = deliveryOrderSO.retrieveTotalDelQty(reqDTO);
+						sumDeliveredQty = resDTO.getTotalDelOrderQty();
+
+						remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty);
+						if (itemAddr.getDeliveredQty() == null) {
+							itemAddr.setDeliveredQty(new BigDecimal(0));
+						}
+
+						if (itemAddr.getDeliveredQty().doubleValue() > remainingQty.doubleValue()) {
+							throw new EpException(MessageConst.ERROR_740071);
+						}
+					}
 				}
 			}
-		//}
+		}
+	}
+	// 36361-End
+	
+	// #35508 fl audit trail
+	/**
+	 * insert audit for DO
+	 * 
+	 * @param doBean
+	 *            delivery order manage bean
+	 * @param userAudit
+	 *            pmuser audit
+	 * @param action
+	 *            action type for audit
+	 * 
+	 */
+	public void insertAuditTrailFl(Long userAuditId, String action) {
+		// add audit insert
+		IAuditFulfilmentSO auditFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IAuditFulfilmentSO.class);
+		FlDeliveryOrder fldo = getManagedBean().getFlDeliveryOrder();
+
+		List<FlAuditTrail> objList = new ArrayList<>();
+		Long orgProfileId = null;
+		Long statusId = null;
+		String orgName = null;
+		String auditActionType = null;
+		String newSupplierDoRef = null;
+		String oldSupplierDoRef = null;
+		String fieldAuditCode = null;
+		String roleCode = null;
+
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+			// audit fl supplier
+			auditActionType = AuditFLConst.AUD_ACTION_TYPE_MODIFY;
+			newSupplierDoRef = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
+			oldSupplierDoRef = getManagedBean().getOriginalSupplierDoRef();
+			orgProfileId = fldo.getFlRequest().getSmSupplier().getSupplierId();
+			orgName = fldo.getFlRequest().getSmSupplier().getCompanyName();
+			statusId = FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL;
+			fieldAuditCode = AuditFLConst.FL_AU_DO_NO_FIELDLABELCODE;
+			roleCode = getUserRole();
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			// audit fl approver
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(userAuditId);
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+
+			auditActionType = null;
+			newSupplierDoRef = null;
+			oldSupplierDoRef = null;
+			orgProfileId = pmOrgAudit.getOrgProfileId();
+			orgName = pmOrgAudit.getOrgName();
+			statusId = FulfilmentStatusConst.DO_SUBMITTED;
+			fieldAuditCode = null;
+			roleCode = RoleCode.FL_APPROVER.value();
+		}
+		// insert for DO audit
+		if (orgProfileId != null) {
+			FlAuditTrail auFLSPDTO = new FlAuditTrail();
+			auFLSPDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+			auFLSPDTO.setRoleCode(roleCode);
+			auFLSPDTO.setOrgProfileId(orgProfileId);
+			auFLSPDTO.setOrgName(orgName);
+			auFLSPDTO.setDocId(fldo.getDeliveryOrderId());
+			auFLSPDTO.setDocNo(fldo.getDeliveryOrderNo());
+			auFLSPDTO.setStatusId(statusId);
+			auFLSPDTO.setActionType(auditActionType);
+			auFLSPDTO.setFulfilmentRequestId(fldo.getFlRequest().getFulfilmentReqId());
+			auFLSPDTO.setOldValue(oldSupplierDoRef);
+			auFLSPDTO.setNewValue(newSupplierDoRef);
+			auFLSPDTO.setCreatedBy(userAuditId);
+			auFLSPDTO.setChangedBy(userAuditId);
+			auFLSPDTO.setFieldLabelCode(fieldAuditCode);
+
+			objList.add(auFLSPDTO);
+			AuFLReqDTO auFlDTO = new AuFLReqDTO();
+			auFlDTO.setFlAuditTrailList(objList);
+			auditFulfilmentSO.insertAuditFLDetails(auFlDTO);
+		}
 
 	}
-	//28855 - end
+	// #35508 fl audit trail
+	
+	//38009-Start
+		/**
+		 * Validates the expected delivery date for each delivery address in the fulfilment request.
+		 * If the date is before January 1, 1900, an exception is thrown and the tab index is set to 1.
+		 *
+		 * @throws EpException if the expected delivery date is invalid.
+		 */
+	public void validateExpectedDeliveryDate() {
+		for (FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			Date estDelDate = selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate();
+			if (estDelDate != null && estDelDate.before(new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime())) {
+				getManagedBean().setSelectedTabIndex(1);
+				throw new EpException(MessageConst.ERROR_100067, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.fl.exp.del.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+		}
+	}
+	// 38009-End
+	
+	// 30753-Start
+	/**
+	 * Checks the threshold limit before allowing SUBMIT.
+	 * 
+	 * If the amount exceeds the limit, a confirmation popup is displayed.
+	 * Otherwise, the process continues to the signing action.
+	 *
+	 * @param outcome 
+	 * @return The result from signingAction, or null if the popup is shown.
+	 * @throws Exception If validation or signing fails.
+	 */
+	public String checkLimitBeforeSubmit(String outcome) throws Exception {
+
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+
+			validateDeliveryAgainstLimit();
+
+			if (getManagedBean().isShowLimitExceededDialog()) {
+				RequestContext.getCurrentInstance().update(":form:limitConfirmDlg");
+				RequestContext.getCurrentInstance().execute("limitConfirmDlg.show();");
+				return null;
+			} else {
+				return signingAction(outcome);
+			}
+		}
+
+		return signingAction(outcome);
+	}
+	
+	/**
+	 * Check if total delivery amount exceeds the allowed limit
+	 * 
+	 */
+	private void validateDeliveryAgainstLimit() {
+		if (getManagedBean().getFulfilmentOrder() != null
+				&& getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest() != null) {
+			FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
+			if (order.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+				validatePurchaseOrderLimit();
+			} 
+//			else {
+//				validateContractOrderLimit();
+//			}
+		}
+
+	}
+
+	/**
+	 * Validates that total delivery does not exceed the contract order limit.
+	 * Shows a warning message if the threshold is exceeded.
+	 */
+	private void validateContractOrderLimit() {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		getManagedBean().setShowLimitExceededDialog(false);
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
+		if (order == null || order.getFlFulfilmentRequest() == null) {
+			return;
+		}
+
+		FlFulfilmentRequest flRequest = order.getFlFulfilmentRequest();
+		if (flRequest.getPreparedOrgProfile() == null) {
+			return;
+		}
+
+		reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
+		reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setCtContract(flRequest.getCtContract());
+
+		FulfilmentResDTO resDTOLimit = fulfilmentSO.retrieveCOLimitAmount(reqDTO);
+
+		if (resDTOLimit != null) {
+			setMessageForCOExceedLimit(resDTOLimit, flRequest);
+		}
+	}
+	
+	/**
+	 * Sets the limit exceeded message when Contract Order (CO) exceeds the
+	 * allowed limit.
+	 * 
+	 * @param resDTOLimit
+	 * @param flRequest
+	 */
+	private void setMessageForCOExceedLimit(FulfilmentResDTO resDTOLimit, FlFulfilmentRequest flRequest) {
+		BigDecimal limitAmount = resDTOLimit.getLimitAmount() != null ? resDTOLimit.getLimitAmount() : BigDecimal.ZERO;
+		boolean isContractSharing = resDTOLimit.isContractSharing();
+
+		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
+				.getFulfilmentRequest().getCtContract().getContractId() : null;
+
+		FulfilmentReqDTO reqDTODel = new FulfilmentReqDTO();
+		reqDTODel.setContractId(contractId);
+		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTODel);
+
+		if (isContractSharing && limitAmount.compareTo(BigDecimal.ZERO) > 0
+				&& totalDeliveryAmount.compareTo(limitAmount) > 0) {
+
+			String msg = MessageUtils.getMessage(MessageConst.INFO_745095, new String[] { flRequest
+					.getPreparedOrgProfile().getOrgName() }, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
+					.getUserLocale());
+
+			getManagedBean().setLimitExceededMessage(msg);
+			getManagedBean().setShowLimitExceededDialog(true);
+
+		} else if (limitAmount.compareTo(BigDecimal.ZERO) > 0 && totalDeliveryAmount.compareTo(limitAmount) > 0) {
+
+			String msg = MessageUtils.getMessage(MessageConst.INFO_745094, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					getFacesScopes().getUserLocale());
+
+			getManagedBean().setLimitExceededMessage(msg);
+			getManagedBean().setShowLimitExceededDialog(true);
+		}
+	}
+
+	/**
+	 * Validates total delivery amount exceeds its allowed limit. Shows a
+	 * warning message if the threshold is exceeded.
+	 */
+	private void validatePurchaseOrderLimit() {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+		getManagedBean().setShowLimitExceededDialog(false);
+		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
+		Long fulfilmentReqId = order.getFlFulfilmentRequest().getFulfilmentReqId();
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(fulfilmentReqId);
+		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTO);
+
+		FulfilmentResDTO resDTOPanel = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
+		boolean isPanel = resDTOPanel.isPanel();
+		PmParameter procurementType = order.getFlFulfilmentRequest().getProcurementType();
+
+		reqDTO.setPanel(isPanel);
+		reqDTO.setValidationAmt(totalDeliveryAmount);
+		reqDTO.setProcurementType(procurementType);
+		reqDTO.setSupplierId(order.getFlFulfilmentRequest().getSmSupplier().getSupplierId());
+		FulfilmentResDTO resDTO = fulfilmentSO.validatePOThresholdAmount(reqDTO);
+
+		if (resDTO != null) {
+			BigDecimal limitAmount = resDTO.getLimitAmount();
+			String supplierTypeId = resDTO.getSupplierTypeId();
+			boolean isExceedLimit = resDTO.isExceedLimit();
+			boolean isHasThreshold = resDTO.isHasThreshold();
+
+			if (!isHasThreshold) {
+				String msg = MessageUtils.getMessage(MessageConst.INFO_745100,
+						new String[] { totalDeliveryAmount.toPlainString() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale());
+
+				getManagedBean().setLimitExceededMessage(msg);
+				getManagedBean().setShowLimitExceededDialog(true);
+			} else {
+				if (isExceedLimit) {
+					setMessageForPOExceedLimit(isPanel, supplierTypeId, limitAmount, procurementType);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Sets the limit exceeded message based on supplier and procurement attributes.
+	 *
+	 * @param isPanel         
+	 * @param supplierTypeId  
+	 * @param limitAmount     
+	 * @param procurementType 
+	 */
+	private void setMessageForPOExceedLimit(boolean isPanel, String supplierTypeId, BigDecimal limitAmount,
+			PmParameter procurementType) {
+
+		String procurementTypeDesc = this.getParameterDesc(procurementType);
+
+		if (procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+			procurementTypeDesc = procurementTypeDesc + " ("
+					+ (isPanel ? ParameterConst.PANEL : ParameterConst.NON_PANEL) + ")";
+		}
+
+		String msg;
+		if (!isPanel && supplierTypeId != null) {
+			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, supplierTypeId);
+			msg = MessageUtils.getMessage(MessageConst.INFO_745093, new String[] { limitAmount.toString(),
+					procurementTypeDesc, suppAccTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		} else {
+			msg = MessageUtils.getMessage(MessageConst.INFO_745092, new String[] { limitAmount.toString(),
+					procurementTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+		}
+
+		getManagedBean().setLimitExceededMessage(msg);
+		getManagedBean().setShowLimitExceededDialog(true);
+	}
+	
+	/**
+	 * Calculates total delivery amount (accumulated + current)
+	 * 
+	 * @param reqDTO
+	 * @return accumulatedDelivery.add(currentDelivery)
+	 */
+	private BigDecimal calculateTotalDeliveryAmount(FulfilmentReqDTO reqDTO) {
+
+		FlFulfilmentRequest flRequest = getManagedBean().getFulfilmentRequest();
+		BigDecimal accumulatedDelivery = BigDecimal.ZERO;
+
+		// Accumulated amount
+		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+
+		FulfilmentResDTO resDTODelAmt = deliveryOrderSO.retrieveTotalAccumulatedDelAmount(reqDTO);
+		if (resDTODelAmt != null && resDTODelAmt.getTotalAccumulatedDelOrderAmount() != null) {
+			accumulatedDelivery = resDTODelAmt.getTotalAccumulatedDelOrderAmount();
+		}
+
+		// current transaction
+		BigDecimal currentDelivery = calculateCurrentDelivery(flRequest);
+
+		return accumulatedDelivery.add(currentDelivery);
+
+	}
+	
+	/**
+	 * Calculates the current transaction delivery amount based on selected
+	 * delivery addresses.
+	 * 
+	 * @param flRequest
+	 * @return currentDelivery
+	 */
+	private BigDecimal calculateCurrentDelivery(FlFulfilmentRequest flRequest) {
+		BigDecimal currentDelivery = BigDecimal.ZERO;
+
+		List<FlDeliveryAddress> deliveryAddresses = flRequest.getFlDeliveryAddresses();
+		if (deliveryAddresses != null && !deliveryAddresses.isEmpty()) {
+			for (FlDeliveryAddress flDeliveryAddress : deliveryAddresses) {
+				if (flDeliveryAddress.getFlTempDoAddr() != null && flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+					currentDelivery = currentDelivery.add(calDelAmtForSelectedAddr(flDeliveryAddress));
+				}
+			}
+		}
+
+		return currentDelivery;
+	}
+	
+	/**
+	 * Calculates delivery amount for selected delivery address.
+	 * 
+	 * @param address
+	 * @return total
+	 */
+	private BigDecimal calDelAmtForSelectedAddr(FlDeliveryAddress address) {
+		BigDecimal total = BigDecimal.ZERO;
+
+		List<FlFulfilmentItemAddr> itemAddresses = address.getFlFulfilmentItemAddr();
+		if (itemAddresses == null || itemAddresses.isEmpty()) {
+			return total;
+		}
+
+		for (FlFulfilmentItemAddr item : itemAddresses) {
+			BigDecimal deliveredAmt = item.getDeliveredAmt();
+			if (deliveredAmt != null && deliveredAmt.compareTo(BigDecimal.ZERO) > 0) {
+				total = total.add(deliveredAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,
+						RoundingMode.HALF_UP));
+			}
+		}
+
+		return total;
+	}
+	
+	// 30753-End
+	
+	/**
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
+	 * @param fulfilmentReqId
+	 * @return true if invalid FRN data is detected
+	 */
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
+	}
 }

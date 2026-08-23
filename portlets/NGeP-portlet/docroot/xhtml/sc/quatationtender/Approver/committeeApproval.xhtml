@@ -28,7 +28,15 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText value="#{committeeapprover.memberName}" />
+				<ui:remove>12471 start</ui:remove>
+				<p:commandLink
+					actionListener="#{approvalBackingBean.onClickMemberInfo(committeeapprover.pmUser)}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					update="@form">
+					<h:outputText value="#{committeeapprover.memberName}"
+						style="white-space: normal;" />
+				</p:commandLink>
+				<ui:remove>12471 end</ui:remove>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
@@ -70,7 +78,9 @@
 					style="width: 110px;margin-bottom: 5px;"
 					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED or (approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or assertDisabledRole}">
 					<p:ajax event="change" partialSubmit="true" process="@this"
-						listener="#{approvalBackingBean.roleChangedListener(committeeapprover)}" />
+						listener="#{approvalBackingBean.onChangeRole(committeeapprover)}" /><!-- #35500 issue fix 4-9 -->
+					<!-- <p:ajax event="change" partialSubmit="true" process="@this"
+						listener="#{approvalBackingBean.roleChangedListener(committeeapprover)}" /> -->
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems var="role" itemDisabled="#{!role.selectable}"
@@ -83,5 +93,9 @@
 			</p:column>
 
 		</p:dataTable>
+		<ui:remove>12471 start</ui:remove>
+		<ac:qtCommitteMemberInfoPopup bBean="#{approvalBackingBean}"
+			widget="memberInfoPopUp" />
+		<ui:remove>12471 end</ui:remove>
 	</p:panel>
 </ui:composition>

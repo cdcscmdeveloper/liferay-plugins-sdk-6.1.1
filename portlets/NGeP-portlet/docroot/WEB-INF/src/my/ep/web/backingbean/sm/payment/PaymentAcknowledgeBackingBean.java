@@ -35,7 +35,6 @@ public class PaymentAcknowledgeBackingBean extends BaseBackingBean<PaymentAcknow
 		log.info("printReceipt>>>>" + this.getManagedBean().getPaymentId());
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_PAYMENT_ID, this.getManagedBean().getPaymentId() + "");
-
 		//Enhancement #19056 To replace Receipt document format for SPKI purchase to Tax Invoice format
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -46,6 +45,19 @@ public class PaymentAcknowledgeBackingBean extends BaseBackingBean<PaymentAcknow
 		billType = resDTO.getPyPayment().getPyBill().getBillType(); //billtype = R/P/S
 		log.info(":::printReceipt() paymentId: "+ this.getManagedBean().getPaymentId() +". billType: "+ billType);
 		
+		// #38977 - Start
+		if (!resDTO.getPyPayment().getReprintReceipt()) {
+			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT,
+					ReportConst.PARAM_PAYMENT_PREPRINT_ASAL);
+			resDTO.getPyPayment().setReprintReceipt(true);
+			reqDTO.setPyPayment(resDTO.getPyPayment());
+			reqSO.updatePaymentReceipt(reqDTO);
+		} else if (resDTO.getPyPayment().getReprintReceipt()) {
+			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT,
+					ReportConst.PARAM_PAYMENT_PREPRINT_SALINAN);
+		}
+		// #38977 - End
+		
 		if (billType.equalsIgnoreCase(
 						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) || 
 			billType.equalsIgnoreCase(
@@ -53,7 +65,9 @@ public class PaymentAcknowledgeBackingBean extends BaseBackingBean<PaymentAcknow
 			generateReport(ReportConst.SM_PAYMENT_RECEIPT_JSP, paramMap);
 		} else if (billType.equalsIgnoreCase(
 						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) { //S
-	        generateReport(ReportConst.SM_TAX_INVOICE_JSP, paramMap);
+			//START 35182
+			generateReport(ReportConst.SM_TAX_INVOICE_SST, paramMap);
+			//END 35182
 		}		
 		//end of Enhancement #19056
 	}

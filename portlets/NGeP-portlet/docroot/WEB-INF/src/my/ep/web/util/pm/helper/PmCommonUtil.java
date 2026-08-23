@@ -2407,6 +2407,43 @@ public class PmCommonUtil implements Serializable{
 		return items;
 	}
 	
+	// start - #27868
+	public static SelectItem[] getPtjDropdown(Long jabatanId) {
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+
+		try {
+			int i = 1;
+			List<Object[]> list = new ArrayList<Object[]>();
+			if (jabatanId != null) {
+				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(jabatanId);
+				reqDTO.setOrgCode(OrganizationType.DIVISION.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				list = resDTO.getOrgProfileDDList();
+				items = new SelectItem[list.size() + 1];
+			} else {
+				items = new SelectItem[1];
+			}
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+
+			for (Object[] object : list) {
+				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			orgProfileSO = null;
+		}
+		return items;
+	}
+
+	// end - #27868
 
 	/**
 	 * retrieve org profile dtl
@@ -2919,4 +2956,71 @@ public class PmCommonUtil implements Serializable{
 		return certIssuer;
 	}
 	//#32705 - End
+	// 34795 -start
+	public static PmUser retrieveUserWithPoRoleTaskByLoginId(String loginId) {
+		PmUser pmUser = new PmUser();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setLoginId(loginId);
+			reqDTO.setLoadPmPoRoleTask(true);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+			resDTO = userSO.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				pmUser = resDTO.getPmUser();
+			}
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770053, new String[] {
+					loginId.toString(), e.getMessage() });
+		} finally {
+			userSO = null;
+		}
+		return pmUser;
+	}
+	// 34795 -end
+	// #9299 - #41053 Start
+	public static SelectItem[] getJabatanDropdownSM(Long ministryId) {
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+
+		try {
+			int i = 1;
+			List<Object[]> list = new ArrayList<Object[]>();
+			if (ministryId != null) {
+				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(ministryId);
+				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				list = resDTO.getOrgProfileDDList();
+				if (null != list && !list.isEmpty()) {
+					items = new SelectItem[list.size() + 1];
+				} else {
+					items = new SelectItem[1];
+				}
+			} else {
+				items = new SelectItem[1];
+			}
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
+			if (null != list && !list.isEmpty()) {
+				for (Object[] object : list) {
+					items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			orgProfileSO = null;
+		}
+		return items;
+	}
+	// #9299 - #41053 End
 }

@@ -12,20 +12,28 @@
 		} 
 	</style>
     <p:panel id="memberPanel" header="#{lbl['lbl.ct.panel.meeting.decision']}" toggleable="true"  toggleSpeed="500">
+    
+    	<!-- #24336 start -->
+		<h:outputText value="#{lbl['lbl.ct.instruction.authority.decision.pbm']}"
+			styleClass="instruction" style="color:blue" escape="false" /><br /><br />
+		<!-- #24336 end -->
+		
         <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidthSize16" styleClass="panelColumns" >
-        	<h:panelGrid columns="2" style="float:right;">
+			<!-- #26186 start -->
+			<h:panelGrid columns="2" style="float:right;">
 				<h:outputText value="* " styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.pbm.decision.date']}" />
 			</h:panelGrid>
 			<p:calendar
 				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcDecisionDate}"
-				size="25" id="calPbqcDecisionMember" navigator="true" required="true"
-				label="#{lbl['lbl.ct.pbm.decision.date']}" readonlyInput="true"
-				showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-				 disabled="true">
+				size="25" id="calPbqcDecisionMember" navigator="true"
+				required="true" label="#{lbl['lbl.ct.pbm.decision.date']}"
+				readonlyInput="true" showOn="button"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true">
 			</p:calendar>
-			
-     		<h:panelGrid columns="2" style="float:right;">
+			<!-- #26186 end -->
+
+			<h:panelGrid columns="2" style="float:right;">
 	        	<h:outputText value="* " styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.decision']}"/>
 			</h:panelGrid>
@@ -67,13 +75,13 @@
             	          <div align="left">
 				           <h:outputText value="#{data.memberName}" /></div>
 				     </p:column> 
-				 
+				 	<!-- #35238 start -->
 				     <p:column style="width:20%;white-space:normal;" 
 				         styleClass="column-align-center"  headerText="#{lbl['lbl.ct.role']}">
 				         <div align="left">
-				         <h:outputText value="#{amendmentBackingBean.getParameterDesc(index,data.memberRole)}"  /></div>
+				         <h:outputText value="#{amendmentBackingBean.getParameterDesc(data.memberRole)}"  /></div>
 				     </p:column> 	
-				     
+				     <!-- #35238 end -->
 				     <p:column style="width:20%;white-space:normal;" 
 				          styleClass="column-align-center"  headerText="#{lbl['lbl.ct.represent.type']}">
 				       <div align="left">

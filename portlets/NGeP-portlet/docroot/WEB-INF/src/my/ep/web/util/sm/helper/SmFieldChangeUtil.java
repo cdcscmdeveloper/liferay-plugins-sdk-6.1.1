@@ -56,8 +56,8 @@ public class SmFieldChangeUtil {
 					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
 					.getSmAppl();
 			bean.setLatestApproveAppl(srcAppl);
-			if (bean.getSmAppl().isResubmit() && bean.isSupplierUser()
-					&& bean.getSmAppl().getOriginalAppl() != null) {
+			//#35194
+			if (bean.getSmAppl().isResubmit() && bean.getSmAppl().getOriginalAppl() != null) {
 				mofReqDTO.setSmAppl(bean.getSmAppl());
 				SmAppl latestRejectedAppl = SmServiceLookup
 						.getMofRegistrationSO()
@@ -1376,6 +1376,13 @@ public class SmFieldChangeUtil {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrievePreviousSmAppl(appl).getSmAppl();
+		//#35194 - start
+		if(appl.isResubmit() && appl.getOriginalAppl() != null){
+			reqDTO.setSmAppl(appl);
+			srcAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveLatestRejectedApplication(reqDTO).getSmAppl();
+		}
+		//#35194 - end
 		if(srcAppl != null){
 			reqDTO.setApplId(srcAppl.getApplId());
 			srcAppl = SmServiceLookup.getMofRegistrationSO()

@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.supportingdocinquiry;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -168,7 +169,9 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
 		//this.getManagedBean().setAppId(1258837L);
 		reqDTO.setAppId(this.getManagedBean().getAppId());
-		
+		// #37775 - Start
+		reqSO.recheckSupportDocFileAndDocFileInquiry(reqDTO.getAppId());
+		// #37775 - End
 		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByAppId(reqDTO);
 		this.getManagedBean().setSmApplInquiry(resDTO.getSmApplInquiry());
 		//#11641 - START
@@ -543,6 +546,8 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				
 				SmApplDocFile smApplDocFile = new SmApplDocFile();
 				smApplDocFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+				String uniqueName = generateUniqueFilename(smApplDocFile.getFileName()); //#39282
+				smApplDocFile.setFileName(uniqueName);
 				smApplDocFile.setSmApplSupportDoc(doc);
 				smApplDocFile.setFilePath(filePath);
 				
@@ -565,7 +570,8 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
 
-				commonUploadFile(event, filePath);
+				/*commonUploadFile(event, filePath);*/
+				SmCommonUtil.processUpload(filePath, event, smApplDocFile.getFileName()); //#39282
 				
 				List<SmApplDocFile> smApplDocFiles = new ArrayList<SmApplDocFile>();
 				for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()){
@@ -613,6 +619,17 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 		this.getManagedBean().setSmApplDocFile(null);
 	}
+	
+	//#34392 - start
+	public void deleteInquirySupDocFileAttachment() {
+		SmApplSupportDoc smApplSupportDoc = getManagedBean().getSupportDoc();
+		if(this.getManagedBean().getSmApplDocFile() != null){
+			smApplSupportDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			smApplSupportDoc.getNewAddedFiles().remove(this.getManagedBean().getSmApplDocFile());
+		}
+		this.getManagedBean().setSmApplDocFile(null);
+	}
+	//#34392 - end
 	
 	public void assignSelectedSupportDocIndex(SmApplSupportDoc doc, int index) {
 		this.getManagedBean().setAttachedFileIndex(index);
@@ -678,5 +695,23 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 	}
 	// #34392 - END
+	//#39282
+	/**
+	 * To generate unique file name yyyyMMdd_HHmmss
+	 *
+	 * @param String  the StringBuilder accumulating the messages
+	 */
+	private String generateUniqueFilename(String originalFilename) {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String oriFilename = "";
+        String extension = "";
+        int dotIndex = originalFilename.lastIndexOf('.');
+        if (dotIndex > 0) {
+            extension = originalFilename.substring(dotIndex);
+            oriFilename = originalFilename.substring(0, dotIndex);
+        }
+
+        return oriFilename + "_" + timestamp + extension;
+    }
 }
 

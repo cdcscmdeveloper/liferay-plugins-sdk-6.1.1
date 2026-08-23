@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
+import my.ep.web.backingbean.report.ct.CtReportBackingBean; //Fix - #40102
 import my.ep.web.backingbean.report.ct.CtReportBaseBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.panel.ContractItemMonitoringCCRptManagedBean;
@@ -17,6 +18,7 @@ import my.ep.web.util.DateUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext; // #29416
 
 @ManagedBean(name = "ccContractItemMonitoringRptBB")
 @ViewScoped
@@ -40,9 +42,6 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 		getManagedBean().setReportUrl(null);
 		getManagedBean().setDisableMinistryField(false);
 		getManagedBean().setDisableOrgField(false);
-		getManagedBean().setSelectedMinistry(null);
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
 		getManagedBean().setContractNo(null);
 		getManagedBean().setContractPhysicalNo(null);
 		getManagedBean().setLoaNo(null);
@@ -55,8 +54,23 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 		getManagedBean().setCircularNo(null);
 		getManagedBean().setCircularName(null);
 		getManagedBean().setCircularEffFromDate(null);
-		getManagedBean().setCircularEffToDate(null);		
-		
+		getManagedBean().setCircularEffToDate(null);
+		// Start fix- #29416
+		if (getManagedBean().isLovItemReportNameTriggered()) {
+			getManagedBean().setLovItemReportNameTriggered(false);
+			RequestContext.getCurrentInstance().execute("resetAllData();");
+		}
+		getManagedBean().setFormattedSelectedItems(null);
+		getManagedBean().setLovSelectedItemList(null);
+		getManagedBean().setSelectedSupplier(null);
+		getManagedBean().setSelectedPTJ(null); // Fix #40102, #40398, #30918
+		// End fix- #29416
+		// Start Fix - #40102
+		CtReportBackingBean ctReportBBean = new CtReportBackingBean();
+		if (ctReportBBean.getManagedBean().getReportCode() != null) {
+			ctReportBBean.setCurrentActiveOrg();
+		}
+		// End Fix - #40102
 	}
 	@Override
 	public LinkedHashMap<String, String> getparams() {
@@ -132,7 +146,15 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 			map.put(CtReportConst.PARAM_KEY_CIRCULAR_TO_DATE, df.format(
 					getManagedBean().getCircularEffToDate()));
 		}
-		
+		// Start - #29416
+		if (getManagedBean().getSelectedSupplier() != null) {
+			map.put(CtReportConst.PARAM_KEY_SUPPLIER_NAME, getManagedBean().getSelectedSupplier().getOrgProfileId()
+					.toString());
+		}
+		if (getManagedBean().getContractItemId() != null) {
+			map.put(CtReportConst.PARAM_KEY_ITEM_NAME, getManagedBean().getContractItemId());
+		}
+		// End - #29416
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
 			map.put(CtReportConst.PARAM_KEY_REPORT, getManagedBean()

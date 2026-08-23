@@ -54,7 +54,7 @@ th{
 				</tr>
 			</tbody>
 		</table>
-	</div>
+	</div> 
 	<table width="100%">
 		<tr>
 			<td>
@@ -128,6 +128,9 @@ th{
 		<tr>
 			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH SAH LAKU :</span> $validityPeriod</td>
 		</tr>
+		<tr>
+			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JUMLAH HARGA INDIKATIF (RM) :</span> $estimatedAmount</td>
+		</tr>
 		#if($panel == "true")
 			
 		#else
@@ -146,8 +149,18 @@ th{
 								<td>Perincian Zon</td>
 								<td>Negeri</td>
 								#if ($locationLevel == "District")
+									## 38731 -start-
+									#if ($isLocLevelDistrictContainsDivision)
+										<td>Bahagian</td>
+									#end
+									## 38731 -end-
 									<td>Daerah</td>
 								#end
+								## 38731 -start-
+								#if ($locationLevel == "Division")
+									<td>Bahagian</td>
+								#end
+								## 38731 -end-
 							</tr>
 						</span>
 							#foreach($location in $zoneLocality)
@@ -159,10 +172,36 @@ th{
 										$locCriteria.pmState.stateName
 									</td>
 									#if ($locationLevel == "District")
+										## 38731 -start-
+										#if ($isLocLevelDistrictContainsDivision)
+											#if ($locCriteria.pmDivision)
+												<td>
+													$locCriteria.pmDivision.divisionName
+												</td>
+												<td>
+													#foreach($pmDivisionDistricts in $locCriteria.pmDivision.pmDistricts)
+														$pmDivisionDistricts.districtName <br/>
+													#end
+												</td>
+											#else
+												<td></td>
+												<td>
+													$locCriteria.pmDistrict.districtName
+												</td>
+											#end
+											
+										#else
+											<td>
+												$locCriteria.pmDistrict.districtName
+											</td>
+										#end
+									#end
+									#if ($locationLevel == "Division")
 										<td>
-											$locCriteria.pmDistrict.districtName
+											$locCriteria.pmDivision.divisionName
 										</td>
 									#end
+									## 38731 -end-
 								</tr>
 								</span>
 								#end
@@ -177,8 +216,18 @@ th{
 								<tr>
 									<td>Negeri</td>
 									#if ($locationLevel == "District")
+										## 38731 -start-
+										#if ($isLocLevelDistrictContainsDivision)
+											<td>Bahagian</td>
+										#end
+										## 38731 -end-
 										<td>Daerah</td>
 									#end
+									## 38731 -start-
+									#if ($locationLevel == "Division")
+										<td>Bahagian</td>
+									#end
+									## 38731 -end-
 								</tr>
 								</span>
 								#foreach($tplSpecLoc in $locality)
@@ -188,10 +237,36 @@ th{
 											$tplSpecLoc.pmState.stateName
 										</td>
 										#if ($locationLevel == "District")
+											## 38731 -start-
+											#if ($isLocLevelDistrictContainsDivision)
+												#if ($tplSpecLoc.pmDivision)
+													<td>
+														$tplSpecLoc.pmDivision.divisionName
+													</td>
+													<td>
+														#foreach($pmDivisionDistricts in $tplSpecLoc.pmDivision.pmDistricts)
+															$pmDivisionDistricts.districtName <br/>
+														#end
+													</td>
+												#else
+													<td></td>
+													<td>
+														$tplSpecLoc.pmDistrict.districtName
+													</td>
+												#end
+												
+											#else
+												<td>
+													$tplSpecLoc.pmDistrict.districtName
+												</td>
+											#end
+										#end
+										#if ($locationLevel == "Division")
 											<td>
-												$tplSpecLoc.pmDistrict.districtName
+												$tplSpecLoc.pmDivision.divisionName
 											</td>
 										#end
+										## 38731 -end-
 									</tr>
 								</span>
 								#end

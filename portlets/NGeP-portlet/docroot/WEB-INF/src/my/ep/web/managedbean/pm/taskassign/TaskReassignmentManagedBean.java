@@ -91,6 +91,14 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean showRemoveProcessMessageOther;
 	// #29822 - end
 	
+	// 20231012 #7465 - Start
+	private boolean fromUserMaintenanceDetails;
+	private PmOrgProfile pmOrgProfile;
+	private PmUser pmUser;
+	// 20231012 #7465 - End
+
+	private boolean enableAssignButton = true; //#36053
+
 	public TaskReassignmentManagedBean(){}
 
 	/**
@@ -680,4 +688,40 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	}
 
 	// #29822 - end
+
+	// 20231012 #7465 - Start
+	public boolean isFromUserMaintenanceDetails() {
+		return fromUserMaintenanceDetails;
+	}
+
+	public void setFromUserMaintenanceDetails(boolean fromUserMaintenanceDetails) {
+		this.fromUserMaintenanceDetails = fromUserMaintenanceDetails;
+	}
+
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
+	// 20231012 #7465 - End
+
+	//#36053 Start
+	public boolean isEnableAssignButton() {
+		return enableAssignButton;
+	}
+
+	public void setEnableAssignButton(boolean enableAssignButton) {
+		this.enableAssignButton = enableAssignButton;
+	}
+	//#36053 End
 }

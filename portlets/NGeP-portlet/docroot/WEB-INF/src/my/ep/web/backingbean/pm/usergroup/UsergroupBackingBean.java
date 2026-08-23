@@ -20,6 +20,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -27,6 +28,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -62,6 +64,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMUserGroupBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserGroupSearchBean;
@@ -91,6 +95,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	private static final Logger logger = EpLogger.getLogger(UsergroupBackingBean.class);
 
 	private String NAV_TO_MAIN = "userGroupSearchMain";
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml"; //#34445
 
 	private IPagingDataModel<PmUserGroup> userGroupList = new UserGroupProfilePagingDataModel();
 
@@ -599,96 +604,119 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public String saveUserGroup() {
 		debugLogger("saveUserGroup");
-		PmUserGroup userGroup = this.getManagedBean().getUserGroup();
-		// userGroup.setRoleCode("FL_APPROVER");
 		
-		//#29225 get changes
-		if(this.getManagedBean().isUserSearch()){
-			for(PmUserGroupUser searchList : this.getManagedBean().getUserGroupUserSearch()){
-				for(PmUserGroupUser originList: userGroup.getPmUserGroupUsers()){
-					if(searchList.getUserGroupUserId() == originList.getUserGroupUserId()){
-						originList.setRecordStatusFlg(searchList.getRecordStatusFlg());
+		//#34445 Start
+		try {
+			PmUserGroup userGroup = this.getManagedBean().getUserGroup();
+
+			// #29225 get changes
+			if (this.getManagedBean().isUserSearch()) {
+				for (PmUserGroupUser searchList : this.getManagedBean().getUserGroupUserSearch()) {
+					for (PmUserGroupUser originList : userGroup.getPmUserGroupUsers()) {
+						if (searchList.getUserGroupUserId() == originList.getUserGroupUserId()) {
+							originList.setRecordStatusFlg(searchList.getRecordStatusFlg());
+						}
 					}
 				}
 			}
-		}
-		
-		IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 
-		// userGroup.setGroupCode(userGroup.getGroupCode().toUpperCase());
-		if (userGroup.isBrandNew()) {
+			IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 
-			UserGroupReqDTO seqReqDto = new UserGroupReqDTO();
-			seqReqDto.setGroupCode("GR");
-			UserGroupResDTO seqResDto = userGrpSo.generateGroupCode(seqReqDto);
-			userGroup.setGroupCode(seqResDto.getGroupCode());
-		}
+			if (userGroup.isBrandNew()) {
 
-		userGroupValidationMsg(userGroup);
+				UserGroupReqDTO seqReqDto = new UserGroupReqDTO();
+				seqReqDto.setGroupCode("GR");
+				UserGroupResDTO seqResDto = userGrpSo.generateGroupCode(seqReqDto);
+				userGroup.setGroupCode(seqResDto.getGroupCode());
+			}
 
-		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
-		
-		//logger.info("[#26037] - calling setUserDetails...start");
-		HashMap<Long,Integer> hMap = this.getManagedBean().getHmGroupUserFlagStatDb();
-		for (PmUserGroupUser groupUser : pmUserGroupUsers) {
-			//logger.info("[#26423] User [" + groupUser.getPmUser().getUserId()  + "]");
-			if(hMap != null && !(hMap.isEmpty())) {
-				//[#26423] - start
-				if(hMap.containsKey(groupUser.getPmUser().getUserId())) {
-					//logger.info("[#26423] Existing user [" + groupUser.getPmUser().getUserId()  + "]");
-					if(groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
-						//logger.info("[#26037] User [" + groupUser.getPmUser().getUserId()  + "] status has been changed from " + hMap.get(groupUser.getPmUser().getUserId()) + " to " + groupUser.getRecordStatusFlg());
+			userGroupValidationMsg(userGroup);
+
+			List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
+
+			HashMap<Long, Integer> hMap = this.getManagedBean().getHmGroupUserFlagStatDb();
+			for (PmUserGroupUser groupUser : pmUserGroupUsers) {
+				if (hMap != null && !(hMap.isEmpty())) {
+					// [#26423] - start
+					if (hMap.containsKey(groupUser.getPmUser().getUserId())) {
+						if (groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId())
+								.intValue()) {
+							setUserDetails(userGroup, groupUser);
+						}
+					} else {
 						setUserDetails(userGroup, groupUser);
 					}
+					// [#26423] - end
 				} else {
-					//logger.info("[#26423] New user added [" + groupUser.getPmUser().getUserId()  + "]");
 					setUserDetails(userGroup, groupUser);
 				}
-				//[#26423] - end
-			} else {
-				setUserDetails(userGroup, groupUser);
 			}
-		}
-		//logger.info("[#26037] - calling setUserDetails...end");
-		
-		changeUserGroupStatus(pmUserGroupUsers);
-		userGroup.setPmUserGroupUsers(pmUserGroupUsers);
-		if (userGroup.isBrandNew()) {
-			findDuplicateGroup(userGroup);
-		}
 
-		UserGroupReqDTO reqDto = new UserGroupReqDTO();
-		reqDto.setUserGroup(userGroup);
-		reqDto.setRoleCode(PmCommonUtil.getUserRoleValue());
-		reqDto.setPmUser(getFacesScopes().getUserSessionBean());
-
-		UserGroupResDTO resDTO = userGrpSo.saveOrUpdateUserGroup(reqDto);
-
-		this.getManagedBean().setUserGroup(resDTO.getUserGroup());
-		if (resDTO.isSuccessful()) {
-
-			logger.info("resDTO.getUserGroup().getGroupCode() :" + resDTO.getUserGroup().getGroupCode());
+			changeUserGroupStatus(pmUserGroupUsers);
+			userGroup.setPmUserGroupUsers(pmUserGroupUsers);
 			if (userGroup.isBrandNew()) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.ERR_900022,
-										new String[] { resDTO.getUserGroup().getGroupName() },
-										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.ERR_900023,
-										new String[] { resDTO.getUserGroup().getGroupName() },
-										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				findDuplicateGroup(userGroup);
 			}
+
+			UserGroupReqDTO reqDto = new UserGroupReqDTO();
+			reqDto.setUserGroup(userGroup);
+			reqDto.setRoleCode(PmCommonUtil.getUserRoleValue());
+			reqDto.setPmUser(getFacesScopes().getUserSessionBean());
+
+			/** AUDIT 28895_35509 START **/
+			if (reqDto.getUserGroup() != null && reqDto.getUserGroup().getUserGroupId() != null
+					&& !userGroup.isBrandNew()) {
+				UserGroupResDTO resDTOOld = userGrpSo.retrieveUserGroupByUserGroupId(reqDto);
+				this.getManagedBean().setUserGroupOld(resDTOOld.getUserGroup());
+			}
+			/** AUDIT 28895_35509 END **/
+
+			UserGroupResDTO resDTO = userGrpSo.saveOrUpdateUserGroup(reqDto);
+			/** AUDIT 28895_35509 START **/
+			this.getManagedBean().setUserGroupUpdate(resDTO.getUserGroupUpdate());
+			this.getManagedBean().setUserGroupNew(resDTO.getUserGroupNew());
+			if (null != resDTO.getUserGroupNew()) {
+				this.getManagedBean().setRoleDesc(
+						PmCommonUtil.getRoleDescByRoleCodeAndLanguage(resDTO.getUserGroupNew().getRoleCode(), "ms"));
+			}
+			/** AUDIT 28895_35509 END **/
+			this.getManagedBean().setUserGroup(resDTO.getUserGroup());
+			if (resDTO.isSuccessful()) {
+
+				logger.info("resDTO.getUserGroup().getGroupCode() :" + resDTO.getUserGroup().getGroupCode());
+				if (userGroup.isBrandNew()) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERR_900022, new String[] { resDTO.getUserGroup().getGroupName() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERR_900023, new String[] { resDTO.getUserGroup().getGroupName() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				/************ AUDIT #28895_35509 *************/
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMUserGroupBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USERGROUP)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORGUSERGROUPCFG);
+				}
+				/************ END AUDIT #28895_35509 *************/
+			}
+			if (userGroup.isBrandNew()) {
+				return NAV_TO_MAIN;
+			} else {
+				return gotoMaintanance(resDTO.getUserGroup());
+			}
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
 		}
-		if (userGroup.isBrandNew()) {
-			return NAV_TO_MAIN;
-		} else {
-			return gotoMaintanance(resDTO.getUserGroup());
-			//return "userGroupMaintenance"; //#29225 duplicate return
-		}
+		//#34445 End
 	}
 
 	public String constuctConditionFields() {

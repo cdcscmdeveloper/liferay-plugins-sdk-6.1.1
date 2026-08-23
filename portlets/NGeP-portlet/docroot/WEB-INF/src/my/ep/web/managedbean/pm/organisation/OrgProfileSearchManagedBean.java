@@ -3,6 +3,8 @@
  */
 package my.ep.web.managedbean.pm.organisation;
 
+import java.util.ArrayList; //#27868
+import java.util.List; //#27868
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -33,6 +35,12 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	private boolean disabledJabatan;
 	private boolean disabledMinistry;
 	private boolean disabledPegaiPengawa;	
+
+	//start - 27868
+	private List<Long> ptjIds = new ArrayList<>();
+	private boolean specialItemProcType;
+	private boolean specialItemSearching = false;
+	//end - 27868
 	
 	
 	public OrgProfileSearchManagedBean() {
@@ -207,6 +215,29 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 		this.disabledPegaiPengawa = disabledPegaiPengawa;
 	}
 
-	
-	
+	//start - #27868
+	public List<Long> getPtjIds() {
+		return ptjIds;
+	}
+
+	public void setPtjIds(List<Long> ptjIds) {
+		this.ptjIds = ptjIds;
+	}
+
+	public boolean isSpecialItemProcType() {
+		return specialItemProcType;
+	}
+
+	public void setSpecialItemProcType(boolean specialItemProcType) {
+		this.specialItemProcType = specialItemProcType;
+	}
+
+	public boolean isSpecialItemSearching() {
+		return specialItemSearching;
+	}
+
+	public void setSpecialItemSearching(boolean specialItemSearching) {
+		this.specialItemSearching = specialItemSearching;
+	}
+	//end - #27868
 }
