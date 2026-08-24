@@ -709,6 +709,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					checkandResetBondExempted();
 				  }
 				//End Fix- #29368 / #30856
+				
+				//#24336 - Start
+				if (!ctBackingBean.getManagedBean().isInitPage()) {
+		            initCommitteeType(taskId);
+		            ctBackingBean.getManagedBean().setInitPage(true);
+		        }
+				//#24336 - End
+				
 				return;
 			}
 			
@@ -810,7 +818,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// #24336 - Start
 			// Runs all initial setup when the page is first loaded
 			if (!ctBackingBean.getManagedBean().isInitPage()) {
-			    initializePage();
+			    initializePage(taskId);
 			}
 			// #24336 - End
 
@@ -9798,8 +9806,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Performs initial page setup. */
-	private void initializePage() {
-	    initCommitteeType();
+	private void initializePage(String taskId) {
+	    initCommitteeType(taskId);
 	    // Loads the correct checklist options based on data.
 	    handleSelectedAmendmentChecklistValue();
 	    // Updates values when amendment type changes.
@@ -9809,19 +9817,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Initializes the committee type during page first load. */
-	private void initCommitteeType() {
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		if (ctAmendment == null) {
+	private void initCommitteeType(String taskId) {
+
+	    String committeeType = getManagedBean().getCommitteeType();
+
+	    // New record
+	    if (taskId == null || taskId.trim().length() == 0) {
+	        if (committeeType == null) {
+	            // First initialization of new record.
+	            // Get default committee type from previous QT (if available).
+	            handleOriginalDeskOfficerCommitteeQT();
+	        }
 	        return;
 	    }
-		
-	    if (ctAmendment.getCommitteeType() == null) {
-	    	// Sets default desk officer committee from QT
-	        handleOriginalDeskOfficerCommitteeQT();
-	    }else{
-	    	// Sets saved committee type into the bean
-	    	mapCommitteeType();
+
+	    // Saved record
+	    boolean isPbqcAuthorityReq = ctBackingBean.getManagedBean()
+	            .getContractVer()
+	            .getCtAmendment()
+	            .isPbqcAuthorityReq();
+
+	    if (isPbqcAuthorityReq) {
+	        // Existing saved committee type
+	        mapCommitteeType();
+	        return;
 	    }
+
+	    // PBQC Authority is not required
+	    resetPbqcAuthoritySelection();
 	}
 	
 	/** Sets default desk officer committee if no saved value. */
