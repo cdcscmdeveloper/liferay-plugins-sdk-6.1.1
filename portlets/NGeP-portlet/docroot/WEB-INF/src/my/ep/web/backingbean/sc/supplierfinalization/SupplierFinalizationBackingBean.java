@@ -1306,10 +1306,10 @@ public class SupplierFinalizationBackingBean extends
 						boolean isItemize = getManagedBean().isItemize();
 						boolean isItemRowSelected = getManagedBean().isItemRowSelect();
 						ScQtRecommend selectedItem = getManagedBean().getSelectedItem();
-						/** Use in 4ser
+						/** Use in #21695, #25138, #25635, #29021
 						if (!isItemize || !isQtNewVersion) {*/
 				    		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
-				    	/** Use in 4ser
+				    	/** Use in #21695, #25138, #25635, #29021
 				    	}
 						else {
 							
