@@ -377,7 +377,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeMaintenance;
 	private boolean authoriseUser;
 	private String otherDescEdited;
-	private String otherDescOld;
 	private SmSupplierCategory historySuppCategory;
 	private SmSupplierCategory selectedCategory;
 	private List<SmSupplierCategory> historyOtherDescList;
@@ -2807,20 +2806,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setHistoryOtherDescList(
 			List<SmSupplierCategory> historyOtherDescList) {
 		this.historyOtherDescList = historyOtherDescList;
-	}
-	
-	/**
-	 * @return the otherDescOld
-	 */
-	public String getOtherDescOld() {
-		return otherDescOld;
-	}
-
-	/**
-	 * @param otherDescOld the otherDescOld to set
-	 */
-	public void setOtherDescOld(String otherDescOld) {
-		this.otherDescOld = otherDescOld;
 	}
 	
 	/**
