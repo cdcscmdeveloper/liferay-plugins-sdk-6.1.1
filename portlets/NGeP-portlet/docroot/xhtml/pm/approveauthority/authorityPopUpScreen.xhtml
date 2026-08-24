@@ -8,9 +8,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:dialog id="updateCommitteeDialog" header="#{lbl['lbl.pm.approveAuthority.update']}" modal="true"
-		widgetVar="updateCommitteeDialog" dynamic="true" width="800px" position="339,300">
-		<p:messages id="committeeMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"
-			severity="error"/>
+		widgetVar="updateCommitteeDialog" dynamic="true" width="800px" position="339,300" >
+		<p:messages id="committeeMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error" />
 		<p:panel id="updateCommitteePanel" toggleable="true">
 			<h:panelGroup id="committeePopupPanel">
 		 	<table>
@@ -20,34 +19,33 @@
 		 				<h:outputLabel value="#{lbl['lbl.pm.approveAuthority.name']}" />
 		 			</td>
 		 			<td>
-		 				<p:inputText id="comName" styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.approveAuthority.name']}"
-		 				maxLength="150" value="#{ApproveAuthorityBackingBean.managedBean.updateAuthCommittee.committeeName}" size="50"></p:inputText>
-		 				<ac:iconTooltip value="#{lbl['lbl.pm.approveAuthority.tooltip']}" />
+		 				<p:inputText id="comName" styleClass="ppDisplayTextL"
+							label="#{lbl['lbl.pm.approveAuthority.name']}" maxLength="150" size="50"
+							value="#{ApproveAuthorityBackingBean.managedBean.updateAuthCommittee.committeeName}" />
+						<ac:iconTooltip value="#{lbl['lbl.pm.approveAuthority.tooltip']}" />
 		 			</td>
 		 		</tr>
 		 		<tr>
 		 			<td>
-		 				<p:outputLabel value="*" styleClass="mandatory"/>
+		 				<p:outputLabel value="*" styleClass="mandatory" />
 		 				<h:outputLabel value="#{lbl['lbl.pm.approveAuthority.status']}" />
 		 			</td>
 		 			<td>
 		 				<p:selectOneMenu style="width:278px;margin-bottom:5px;"
 							value="#{ApproveAuthorityBackingBean.managedBean.updateAuthCommittee.recordStatusFlg}">
-							<f:selectItems
-								value="#{ApproveAuthorityBackingBean.getResultStatusList()}">
-							</f:selectItems>	
+							<f:selectItems value="#{ApproveAuthorityBackingBean.getResultStatusList()}" />
 						</p:selectOneMenu>
 		 			</td>
 		 		</tr>
 		 		<tr>
 		 			<td>
-		 				<p:outputLabel value="*" styleClass="mandatory"/>
+		 				<p:outputLabel value="*" styleClass="mandatory" />
 		 				<h:outputLabel value="#{lbl['lbl.pm.approveAuthority.remark']}" />
 		 			</td>
 		 			<td>
 		 				<p:inputTextarea id="remark" label="#{lbl['lbl.pm.approveAuthority.remark']}"
 							value="#{ApproveAuthorityBackingBean.managedBean.remark}"
-							cols="100" rows="8" maxlength="1000" autoResize="false"  styleClass="ui-inputtextarea">
+							cols="100" rows="8" maxlength="1000" autoResize="false" styleClass="ui-inputtextarea">
 						</p:inputTextarea>
 		 			</td>
 		 		</tr>
@@ -67,9 +65,9 @@
 								action="#{ApproveAuthorityBackingBean.closePopup()}"
 								update="updateCommitteePanel"
 								resetValues="true"
-								onclick="updateCommitteePopupBlockWidget.hide();updateCommitteeDialog.hide();"/>	
+								onclick="updateCommitteePopupBlockWidget.hide();updateCommitteeDialog.hide();" />	
 						</div>
-					</td>	
+					</td>
 		 		</tr>
 		 	</table>
 	 	</h:panelGroup>
@@ -82,14 +80,13 @@
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.pm.btn.save.msg']}"
-		update=":form:listAuthTbl, :form:committeeMsgId"/>
+		update=":form:listAuthTbl, :form:committeeMsgId" />
 
 	<ac:confirmationPopupSM id="saveAprvAuthInfoDlg" widget="saveAprvAuthInfoDlg"
 		okAction="ApproveAuthorityBackingBean.updateAuthCommittee"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.pm.btn.save.msg']}"
-		update=":form:listAuthTbl"/>
+		update=":form:listAuthTbl" />
  	<!-- 34445 end -->
-
 </ui:composition>

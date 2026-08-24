@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="pApprAuthorityResult" header="#{ApproveAuthorityBackingBean.managedBean.comName}" style="width=800px; height:50;" toggleable="true">
-		<p:spacer height="10"></p:spacer>
+		<p:spacer height="10" />
 		<div class="ppRightBtn" align="right">
 			<!-- 34445 start -->
 			<p:commandButton value="#{lbl['lbl.pm.approveAuthority.save']}" id="btnSave"
@@ -21,12 +21,12 @@
 				value="#{ApproveAuthorityBackingBean.managedBean.listAuthCommittee}"
 				var="athList" rowKey="#{athList}" rowIndexVar="index">
 				<ac:paginator for="listAuthTbl"/>
-					<p:column style="width:60%;text-align:left;white-space:normal;word-wrap:break-word;">
+					<p:column style="width:60%; text-align:left; white-space:normal; word-wrap:break-word;">
 						<f:facet name="header">
 							<h:outputText value="*" styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.pm.approveAuthority.name']}" />
 						</f:facet>
-						<h:outputText value="#{athList.committeeName}"  rendered="#{!athList.brandNew}"/>
+						<h:outputText value="#{athList.committeeName}" rendered="#{!athList.brandNew}" />
 						<p:inputText id="committeeName" value="#{athList.committeeName}"
 							size="70" maxlength="150" required="false" disabled="false"
 							rendered="#{athList.brandNew}"/>
@@ -55,10 +55,10 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.pm.approveAuthority.action']}" style="text-align:center; width:20%;">
 						<p:commandLink id="editCommittee"
-							action="#{ApproveAuthorityBackingBean.setCommittee(athList)}" update=":form:updateCommitteeDialog"
-							oncomplete="updateCommitteeDialog.show();">
+							action="#{ApproveAuthorityBackingBean.setCommittee(athList)}"
+							update=":form:updateCommitteeDialog" oncomplete="updateCommitteeDialog.show();">
 							<p:graphicImage rendered="#{!athList.brandNew}" library="ep/images/design"
-								value="/css/images/design/edit.png" title="#{lbl['lbl.pm.approveAuthority.iconupdate']}"/>
+								value="/css/images/design/edit.png" title="#{lbl['lbl.pm.approveAuthority.iconupdate']}" />
 						</p:commandLink>
 					</p:column>
 			</p:dataTable>
@@ -69,12 +69,12 @@
 				action="#{ApproveAuthorityBackingBean.addNewCommittee()}" />
 		</div>
 	</p:panel>
-
+	
 	<!-- 34445 start -->
 	<p:blockUI block="updateCommitteeDialog" widgetVar="updateCommitteePopupBlockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	<!-- 34445 end -->
-
+	
  	<ui:include src="authorityPopUpScreen.xhtml" />
 </ui:composition>

@@ -56,21 +56,18 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	public static final int TAB_PENGURUSAN_TERTINGGI = 1;
 
 	public ApproveAuthorityBackingBean() {
-		//ApproveAythorityBackingBean constructor
 	}
 
 	/**
-	 * This preLoadApproveAuthority function to load data from pm_authority
-	 * and display to user
+	 * This preLoadApproveAuthority function to load data from pm_authority and display to user
 	 */
 	public void preLoadApproveAuthority() {
-
 		renewSesionObject();
 
 		try {
 			IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
-
+			
 			List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
 			this.getManagedBean().setListAuthCode(resultComittee);
 
@@ -89,14 +86,13 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			throw e;
 		}
 	}
-
+	
 	/**
-	 * This loadCommitteeList method is to load data from pm_authority_committee
-	 * and display to user
+	 * This loadCommitteeList method is to load data from pm_authority_committee and display to user
+	 * 
 	 * @param eventTab the tab where the user has clicked
 	 */
 	public void loadCommitteeList(TabChangeEvent eventTab) {
-
 		PmAuthority tabAuth = (PmAuthority) eventTab.getData();
 		this.getManagedBean().setAuthCodeDesc(tabAuth.getAuthCodeDesc());
 		this.getManagedBean().setAuthority(tabAuth);
@@ -105,7 +101,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 		for(PmAuthority pmAuth : getManagedBean().getListAuthCode()){
 			if(tabAuth.getAuthId().equals(pmAuth.getAuthId())){
 				List<PmAuthorityCommittee> pmAuthCom = pmAuth.getPmAuthorityCommittee();
-
+				
 				for(PmAuthorityCommittee committee : pmAuthCom){
 					newComList.add(committee);
 				}
@@ -122,18 +118,16 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	}
 
 	/**
-	 * This addNewCommittee method is to create new row before user
-	 * add new committee
+	 * This addNewCommittee method is to create new row before user add new committee
 	 */
 	public void addNewCommittee() {
-
 		int index = 0;
 		if (this.getManagedBean().getListAuthCommittee() == null) {
 			this.getManagedBean().setListAuthCommittee(new ArrayList<PmAuthorityCommittee>());
 		} else {
 			index = this.getManagedBean().getListAuthCommittee().size();
 		}
-
+		
 		//create new row
 		PmAuthorityCommittee authorityComm = new PmAuthorityCommittee();
 		authorityComm.setPmAuthority(this.getManagedBean().getAuthority());
@@ -143,7 +137,6 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	}
 
 	public SelectItem[] getResultStatusList() {
-
 		SelectItem[] items = new SelectItem[2];
 		items[0] = new SelectItem(1, ResourceBundleUtils.getMessage("lbl.pm.active",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -153,17 +146,16 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				new FacesScopes().getUserLocale()));
 		return items;
 	}
-
+	
 	/**
 	 * Saves the newly added authority committee records and navigates back to the main page.
 	 *
 	 * @return the navigation outcome to the main page
 	 */
 	public String saveNewCommittee(){
-
 		try{
 			List<PmAuthorityCommittee> authCommitteeList = this.getManagedBean().getListAuthCommittee();
-
+			
 			if(authCommitteeList != null && !authCommitteeList.isEmpty()){
 				saveAuthCommittee(authCommitteeList);
 			}
@@ -179,7 +171,6 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	 * @param authCommitteeList the list of authority committees
 	 */
 	private void saveAuthCommittee(List<PmAuthorityCommittee> authCommitteeList){
-
 		for(PmAuthorityCommittee authCommittee : authCommitteeList){
 			if(authCommittee.isBrandNew()){
 				validateMessage(authCommittee);
@@ -187,7 +178,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				authCommittee.setChangedBy(getUserIdSessionFromLoginId());
 				authCommittee.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				authCommittee.setChangedDate(new Timestamp(new Date().getTime()));
-
+				
 				AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
 				reqDTO.setAuthCommittee(authCommittee);
 				reqDTO.setUser(getFacesScopes().getUserSessionBean());
@@ -195,7 +186,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				IApproveAuthorityCommitteeSO authCommitteeSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthorityCommitteeSO.class);
 				AuthorityCommitteeResDTO resDTO = authCommitteeSO.saveOrUpdateAuthorityCommittee(reqDTO);
-
+				
 				if(resDTO.isSuccessful()){
 					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 							MessageConst.INFO_775197, new String[]{resDTO.getAuthorityCommittee().getCommitteeName()});
@@ -204,27 +195,26 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			}
 		}
 	}
-
+	
 	/**
 	 * Reloads the authority and committee information after a successful save.
 	 *
 	 * @param authCommittee the authority committee used to reload the data
 	 */
 	private void reloadApproveAuthority(PmAuthorityCommittee authCommittee){
-
 		try {
 			IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
-
+			
 			List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
 			this.getManagedBean().setListAuthCode(resultComittee);
 
 			for(PmAuthority pmAuth : getManagedBean().getListAuthCode()){
-
+				
 				if(pmAuth.getAuthId().equals(authCommittee.getPmAuthority().getAuthId())){
 					this.getManagedBean().setAuthCodeDesc(pmAuth.getAuthCodeDesc());
 					this.getManagedBean().setAuthority(pmAuth);
-
+					
 					List<PmAuthorityCommittee> authComList = pmAuth.getPmAuthorityCommittee();
 
 					Collections.sort(authComList, new Comparator<PmAuthorityCommittee>(){
@@ -241,14 +231,13 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			log.error(e);
 		}
 	}
-
+	
 	/**
 	 * Validates the authority committee details before saving.
 	 *
 	 * @param authCommittee the authority committee to validate
 	 */
 	private void validateMessage(PmAuthorityCommittee authCommittee){
-
 		if(StringUtils.isBlank(authCommittee.getCommitteeName())){
 			throw new EpException(MessageConst.ERROR_775199,
 					new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pm.approveAuthority.name")});
@@ -266,7 +255,6 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	 * @param authCommittee the authority committee to be updated
 	 */
 	public void setCommittee(PmAuthorityCommittee authCommittee){
-		
 		PmAuthorityCommittee editCommittee = new PmAuthorityCommittee();
 		editCommittee.setAuthCommitteeId(authCommittee.getAuthCommitteeId());
 		editCommittee.setCommitteeName(authCommittee.getCommitteeName());
@@ -290,12 +278,11 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				MessageUtils.getMessage(msgCode, params,MessageUtils.BUNDLE_COMMON_MESSAGES,
 				new FacesScopes().getUserLocale()) + " (" + msgCode + ")"));
 	}
-
+	
 	/**
 	 * This updateAuthCommittee method is to update committee at pm_authority_committee
 	 */
 	public void updateAuthCommittee(){
-
 		try{
 			PmAuthorityCommittee popUpCommittee = this.getManagedBean().getUpdateAuthCommittee();
 
@@ -329,7 +316,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				updateCommittee.setCommitteeName(popUpCommittee.getCommitteeName());
 				updateCommittee.setRecordStatusFlg(popUpCommittee.getRecordStatusFlg());
 				updateCommittee.setChangedBy(getUserIdSessionFromLoginId());
-								
+				
 				//save to pm_record_authority
 				PmRemarkAuthority remarkAuthority = new PmRemarkAuthority();
 				remarkAuthority.setPmAuthorityCommittee(original);
@@ -340,13 +327,13 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				remarkAuthority.setCreatedDate(original.getChangedDate());
 				remarkAuthority.setChangedBy(getUserIdSessionFromLoginId());
 				remarkAuthority.setChangedDate(new Timestamp(new Date().getTime()));
-
+				
 				AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
 				reqDTO.setAuthCommittee(updateCommittee);
 				reqDTO.setRemarkAuth(remarkAuthority);
 				reqDTO.setUser(getFacesScopes().getUserSessionBean());
 				reqDTO.setUserRoleValue(PmCommonUtil.getUserRoleValue());
-
+				
 				IApproveAuthorityCommitteeSO authCommitteeSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthorityCommitteeSO.class);
 				AuthorityCommitteeResDTO resDTO = authCommitteeSO.saveOrUpdateAuthorityCommittee(reqDTO);
@@ -354,7 +341,6 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				if(resDTO.isSuccessful()){
 					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 							MessageConst.INFO_775198, new String[]{resDTO.getAuthorityCommittee().getCommitteeName()});
-
 					RequestContext.getCurrentInstance().execute("updateCommitteeDialog.hide()");
 				}
 			}
@@ -362,7 +348,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			throw e;
 		}
 	}
-
+	
 	/**
 	 * Resets the committee update popup fields.
 	 */
@@ -375,14 +361,14 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	private FacesScopes getFacesScopes(){
 		return new FacesScopes();
 	}
-
+	
 	/**
 	 * This getJawatankuasaPerolehan method is to get id for TAB_JAWATANKUASA_PEROLEHAN
 	 */
 	public int getJawatankuasaPerolehan(){
 		return TAB_JAWATANKUASA_PEROLEHAN;
 	}
-
+	
 	/**
 	 * This updatePengurusanTertinggiDetail method is to get a list of committee 
 	 * for Jawatankuasa Perolehan Kerajaan di Kementerian Kewangan Malaysia
@@ -391,14 +377,14 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 		this.getManagedBean().setSelectedTabIndex(TAB_JAWATANKUASA_PEROLEHAN);
 		setAuthorityData(TAB_JAWATANKUASA_PEROLEHAN);
 	}
-
+	
 	/**
 	 * This getJawatankuasaPerolehan method is to get id for TAB_PENGURUSAN_TERTINGGI
 	 */
 	public int getPengurusanTertinggi(){
 		return TAB_PENGURUSAN_TERTINGGI;
 	}
-
+	
 	/**
 	 * This updatePengurusanTertinggiDetail method is to get a list of committee 
 	 * for Pengurusan Tertinggi Kementerian Kewangan Malaysia
@@ -407,25 +393,24 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 		this.getManagedBean().setSelectedTabIndex(TAB_PENGURUSAN_TERTINGGI);
 		setAuthorityData(TAB_PENGURUSAN_TERTINGGI);
 	}
-
+	
 	/**
 	 * Sets the authority data based on the selected tab.
 	 *
 	 * @param tabId the selected tab identifier
 	 */
 	private void setAuthorityData(int tabId){
-
 		int newtabId = tabId + 1;
-
+		
 		for(PmAuthority pmAuth : getManagedBean().getListAuthCode()){
 			this.getManagedBean().setAuthIdInString(Long.toString(pmAuth.getAuthId()));
 			this.getManagedBean().setAuthCodeDesc(pmAuth.getAuthCodeDesc());
 			if(pmAuth.getAuthId().compareTo(new Long(newtabId)) == 0){
 				this.getManagedBean().setAuthority(pmAuth);
 				this.getManagedBean().setComName(pmAuth.getAuthCodeDesc());
-
+				
 				List<PmAuthorityCommittee> authComList = checkNullObj(pmAuth.getPmAuthorityCommittee());
-
+				
 				if(authComList != null && !authComList.isEmpty()){
 					Collections.sort(authComList, new Comparator<PmAuthorityCommittee>(){
 						@Override
@@ -440,7 +425,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAIN);
 	}
-
+	
 	/**
 	 * Filters the committee list by removing records with null committee ID.
 	 *
