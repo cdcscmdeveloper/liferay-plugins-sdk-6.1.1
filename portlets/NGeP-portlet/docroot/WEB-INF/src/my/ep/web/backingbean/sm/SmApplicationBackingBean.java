@@ -20215,47 +20215,4 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    return gmapsScriptSrc;
 	}
 	// #40306 End
-	// #RUU Start
-	private void displayCatCodeFee() {
-		SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
-		paymentVO.setDetails(getParameterDesc(
-				ParameterTypeConst.SUPP_PAYMENT_ITEM,
-				SupplierManagementConst.MOF_PAYMENT));
-		paymentVO.setPrice(SmRuleHelper.getInstance().getRegistrationFee());
-		paymentVO.setTotalAmount(paymentVO.getPrice());
-		getManagedBean().setPaymentDetailsVOList(
-				new ArrayList<SmPaymentDetailsVO>());
-		getManagedBean().getPaymentDetailsVOList().add(paymentVO);
-
-		paymentVO = new SmPaymentDetailsVO();
-		paymentVO.setDetails(getParameterDesc(
-				ParameterTypeConst.SUPP_PAYMENT_ITEM,
-				SupplierManagementConst.PROCESSING_PAYMENT));
-		paymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
-		paymentVO.setTotalAmount(paymentVO.getPrice());
-		getManagedBean().getPaymentDetailsVOList().add(paymentVO);
-
-		getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
-		getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
-		getManagedBean().setGstPercentageLabels(
-				SmCommonUtil.getMessage("lbl.sm.gst.percent",
-						new String[] { getManagedBean().getGstAmount()
-								.toString() }));
-
-		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
-		if(null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()){
-			getManagedBean().isSpecialCategoryRechecked();
-		}
-
-		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
-				.getPaymentDetailsVOList()) {
-			getManagedBean().setTotalPaymentAmount(
-					getManagedBean().getTotalPaymentAmount().add(
-							paymentDetailsVO.getPrice()));
-		}
-		getManagedBean().setTotalPaymentAmount(
-				getManagedBean().getTotalPaymentAmount().setScale(2,
-						BigDecimal.ROUND_UP));
-	}
-	// #RUU End
 }
