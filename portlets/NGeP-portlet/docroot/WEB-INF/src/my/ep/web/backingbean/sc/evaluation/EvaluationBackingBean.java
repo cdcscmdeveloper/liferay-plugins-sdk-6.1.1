@@ -2592,7 +2592,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			this.getManagedBean().setPassingScore(resDTO != null ? resDTO.getPassingScore() : BigDecimal.ZERO.intValue());
 			
             if (this.getManagedBean().getScQt().isDemoRequired() && !this.getManagedBean().isDemoWip()) {
-            	/* use in 4ser
+            	/* use in #21695, #25138, #25635, #29021
             	retriveSummaryEvalPresentationDemo();*/
             	this.getManagedBean().setEvalStatusComp(false);
             }
@@ -3729,7 +3729,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					} else {
 						if (this.getManagedBean().getScQt().isDemoRequired()) {
 							// #28784 - FEC set eval type for package and Item
-							//Used by 4serangkai
+							//Used by #21695, #25138, #25635, #29021
 							/**if(this.getManagedBean().getTabItemPackageIndex() == 1){
 								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 							} else {
@@ -5693,7 +5693,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
 			evalReqDTO.setResultStages(resultStg);
-			evalReqDTO.setDemo(true); // #28784 used in 4serangkai for Itemize
+			evalReqDTO.setDemo(true); // #28784 used in #21695, #25138, #25635, #29021 for Itemize
 			if ((nonDemoEvaluation || demoEvaluation)
 					&& !this.getManagedBean().isReadOnly()
 					&& !getManagedBean().isPresentationDemoSummaryGenerated()) {//#28784
@@ -5717,7 +5717,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			resDTO = evaluationSo.retrieveAllTechnicalChecklist(reqDTO);
 			if (CollectionUtils.isNotEmpty(resDTO.getQtChecklists())) {
 				retrieveMaxTechnicalScoreAndOtherElementsScore(resDTO.getQtChecklists());
-				/** Use in 4ser
+				/** Use in #21695, #25138, #25635, #29021
 				retrieveMaxTechnicalScoreAndOtherElementsPercentage(this.getManagedBean().getScQt().getQtId());
 				*/
 			}
@@ -9041,13 +9041,8 @@ private void retriveCommitteeRemarksList(){
 		ScQt scQt = this.getManagedBean().getScQt();
 		
 		// #28784 add demo remarks - Start
-		List<Long> demoStatuses = new ArrayList<>();
-		demoStatuses.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_ENDORSEMENT);
-		demoStatuses.add(QTStatusConst.TEC_PENDING_SIGN_OFF);
 		if (this.getManagedBean().getScQt().isDemoRequired()
-				&& demoStatuses.contains(this.getManagedBean().getCurrentStatusId()) && !this.getManagedBean().isDemoWip()) {
+				&& Arrays.asList(QTStatusConst.TEC_STATUSES).contains(this.getManagedBean().getCurrentStatusId()) && !this.getManagedBean().isDemoWip()) {
 			EvaluationReqDTO demoReqDTO = saveDemoTECCommitteeRemarks();
 			if (null != demoReqDTO) {
 				reqDtO.setScQt(demoReqDTO.getScQt());
@@ -13324,7 +13319,7 @@ private void retriveCommitteeRemarksList(){
 				.getCommitteeType())
 				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
 						.getCommitteeType())) {
-			this.getManagedBean().setEvaluatioStageActiveIndex(2);//4ser, change to 3 after 4ser
+			this.getManagedBean().setEvaluatioStageActiveIndex(2);//#21695, #25138, #25635, #29021, change to 3 after #21695, #25138, #25635, #29021
 			/** this.getManagedBean().setTabTechnicalIndex(4); */	// #34748
 		}
 		List<ScQtCheckList> localcheckList = new ArrayList<>();
@@ -14171,7 +14166,7 @@ private void retriveCommitteeRemarksList(){
 	
 	//#28784 - Start
 	private void checkMeetingDoneNormalTEC() {
-		//remove comment for 4serangkai checking meeting details wip n non wip - Start
+		//remove comment for #21695, #25138, #25635, #29021 checking meeting details wip n non wip - Start
 		/*IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -14182,10 +14177,10 @@ private void retriveCommitteeRemarksList(){
 				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE;
 		boolean nonWIPTEC = wipStatus >= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT
 				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_CURRENT;*/
-		//remove comment for 4serangkai checking meeting details wip n non wip - End
+		//remove comment for #21695, #25138, #25635, #29021 checking meeting details wip n non wip - End
 
-//		if (wipTEC || nonWIPTEC) {//open for 4ser
-		if (this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE) {//delete this after 4ser
+//		if (wipTEC || nonWIPTEC) {//open for #21695, #25138, #25635, #29021
+		if (this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE) {//delete this after #21695, #25138, #25635, #29021
 			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
 			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
 		}

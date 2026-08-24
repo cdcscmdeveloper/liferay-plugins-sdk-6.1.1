@@ -484,7 +484,7 @@
 										<c:when	test="#{!isReadOnly and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
 											<p:outputPanel id="demoPop">												
 												<p:selectOneRadio value="#{scQt.demoRequired}">
-												<!-- disabled="#{scQt.partial}"> 4ser -->
+												<!-- disabled="#{scQt.partial}"> 21695, 25138, 25635, 29021 -->
 													<f:selectItems
 														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
@@ -497,7 +497,7 @@
 										<c:when	test="#{isDemoDisabled and !isReadOnly or isDemoDisabled and isMaintenanceFlow}">
 											<p:outputPanel id="demoPop">
 												<p:selectOneRadio value="#{scQt.demoRequired}">
-												<!-- disabled="#{scQt.partial}"> 4ser -->
+												<!-- disabled="#{scQt.partial}"> 21695, 25138, 25635, 29021 -->
 													<f:selectItems
 														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"

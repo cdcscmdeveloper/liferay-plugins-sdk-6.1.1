@@ -27,7 +27,8 @@
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" lazy="true"
 			value="#{evaluationBackingBean.managedBean.presentationDemoSupplierListDM}"
-			rowIndexVar="index" rowKey="#{demoSupplier}">
+			rowIndexVar="index" rowKey="#{demoSupplier}"
+			first="#{evaluationBackingBean.managedBean.retainPageNumber}">
 			<ac:paginator for="demoSupplierId" />
 
 			<p:ajax event="page"

@@ -4032,7 +4032,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
 		if (null != this.getManagedBean().getQt()
 				&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-						.getManagedBean().getQt().getEvaluationType())) {
+						.getManagedBean().getQt().getEvaluationType()) && !this.getManagedBean().isNewVersion()) {//#28784
 
 			recommendList
 					.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
