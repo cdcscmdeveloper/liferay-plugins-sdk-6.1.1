@@ -181,11 +181,11 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
 					<td style="width: 66%"><h:outputText
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
+							rendered="#{smCompExpMB.selectedDraft.paymentMethod.parameterType eq ParameterConst.paramTypePaymentMethod}"
 							styleClass="outputLabel-view"
 							value="#{smCompExpBB.getParameterDesc(smCompExpMB.selectedDraft.paymentMethod)}" />
 						<p:selectOneMenu
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
+							rendered="#{smCompExpMB.selectedDraft.paymentMethod.parameterType ne ParameterConst.paramTypePaymentMethod}"
 							value="#{smCompExpMB.selectedDraft.paymentMethod.parameterId}">
 							<f:selectItems
 								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypePaymentMethod)}" />
