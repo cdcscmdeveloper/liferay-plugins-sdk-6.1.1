@@ -56,7 +56,7 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 		for(SmAppl a : appls){
 			try {
 				log.info("Approve Cancel... " + a.getApplNo());
-				//SmServiceLookup.getReviewApplicationSO().cancelApplRest(a.getApplNo());
+				SmServiceLookup.getReviewApplicationSO().cancelApplRest(a.getApplNo());
 				log.info("Complete Approve Cancel... " + a.getApplNo());
 			} catch (Exception e){
 				log.error("Failed to Approve Cancel: " + a.getApplNo(), e);
@@ -103,7 +103,7 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 		for(SmAppl a : appls){
 			try {
 				log.info("Auto Reject... " + a.getApplNo());
-				//terminate(a.getApplId());
+				terminate(a.getApplId());
 				log.info("Complete Auto Reject... " + a.getApplNo());
 			} catch (Exception e){
 				log.error("Failed to Auto Reject: " + a.getApplNo(), e);
