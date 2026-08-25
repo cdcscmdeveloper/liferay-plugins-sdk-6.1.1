@@ -32,8 +32,7 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /> <p:outputLabel
-							rendered="#{!smCompExpMB.disableClienType}"
-							styleClass="mandatory" value="*" /></td>
+							styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><p:selectOneRadio
 							disabled="#{smCompExpMB.disableClienType}"
 							value="#{smCompExpMB.selectedDraft.clientType}">
@@ -62,11 +61,7 @@
 					<td style="width: 34%"><p:outputLabel id="agencyNameLbl"
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
-							rendered="#{smCompExpMB.selectedDraft.clientType ne null and 
-							smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and
-							(smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal or
-							(!smCompExpMB.disableClienType and smCompExpMB.selectedDraft.oriAgencyName eq null))}"
-							value="*" styleClass="mandatory" /></td>
+							value="*" styleClass="mandatory" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><p:outputPanel
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}">
 							<p:outputPanel
@@ -156,7 +151,7 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><h:outputText
 							style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 							styleClass="outputLabel-view"
@@ -165,7 +160,7 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><h:outputText
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm or 
 							(smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
@@ -218,8 +213,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
-							smCompExpMB.tempEffDate}" /></td>
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><h:outputText
 							rendered="#{!smCompExpMB.tempEffDate}"
 							styleClass="outputLabel-view"
