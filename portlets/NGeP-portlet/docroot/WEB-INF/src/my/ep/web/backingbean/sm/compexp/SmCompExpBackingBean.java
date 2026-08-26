@@ -209,6 +209,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
 		}
+		// 9299 - #41078: allow Payment Method to be keyed in (dropdown) when empty on WIP/Draft, like Procurement Method (NOT mandatory). Ensure a non-null PmParameter so the data-presence rendering never NPEs.
+		PmParameter paymentMethod = this.getManagedBean().getSelectedDraft().getPaymentMethod();
+		if (paymentMethod == null || paymentMethod.getParameterId() == null || paymentMethod.getParameterId().longValue() == 0L) {
+			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
+		}
 		
 		PmParameter procumentMode = this.getManagedBean().getSelectedDraft().getProcumentMode();
 		if (procumentMode == null
@@ -932,7 +937,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			error = validateDetail(error, clienType, agencyName, fileReferenceNo, fileExtensionNo);
 		}
 		if (sourceType.equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+			// 9299 - #41078: Procurement Method mandatory on declare draft; placed before the date checks so the error message order follows the field layout
+			error = validateProcurement(error);
 			error = validateDate(error, contractEffDate, contractExpDate);
+		}
+		// 9299 - #41078: Consultant fields (Project Location / Service Provided / Consultant Fee) mandatory on declare draft, same as Add New Company Experience; after the dates and before the supporting-doc check so the error order follows the field layout
+		if (sourceType.equals(ParameterConst.SOURCE_TYPE_ID_SM) && this.getManagedBean().isConsultant()) {
+			error = validateNewConsultant(error,
+					this.getManagedBean().getSelectedDraft().getProjectLoc(),
+					this.getManagedBean().getSelectedDraft().getWorkServDesc(),
+					this.getManagedBean().getSelectedDraft().getConsultantFee());
 		}
 		error = validateList(error, sourceType, smCompExpDocList);
 
@@ -986,6 +1000,20 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775227,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		return error;
+	}
+
+	// 9299 - #41078: Procurement Method is mandatory when declaring an SM draft.
+	private boolean validateProcurement(boolean err) {
+		boolean error = err;
+		PmParameter procumentMode = this.getManagedBean().getSelectedDraft().getProcumentMode();
+		if (null == procumentMode || null == procumentMode.getParameterId() || procumentMode.getParameterId().longValue() == 0L) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775232,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		return error;
@@ -1144,6 +1172,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		List<SmCompExpCatMaster> catMasterList = new ArrayList<>();
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft catDraft : this.getManagedBean().getSmCompExpCatDraftList()) {
+			// 9299 - #41094: never call retrieveCategoryLxDtlById with a null id (SO rejects null id;
+			// the EJB exception was masked as ERR-000001). Skip incomplete rows defensively.
+			if (null == catDraft.getCategoryL1().getCategoryL1Id() || null == catDraft.getCategoryL2().getCategoryL2Id()
+					|| null == catDraft.getCategoryL3().getCategoryL3Id()) {
+				continue;
+			}
 			SmCompExpCatMaster catMaster = new SmCompExpCatMaster();
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 
@@ -1407,19 +1441,31 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
 
-		// #9299 - #40717 Start
-		if (!error && null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
-			master.setPaymentMethod(null);
+		// #9299 - #41073 / #41094: category & doc detail now resolved in saveMaster / updateSmComExpMaster,
+		// AFTER the duplicate File Reference No. check passes (previously ran here, before the check).
+		if (!error && update) {
+			updateSmComExpMaster(false);
+		} else if (!error) {
+			master.setSmAppl(this.getManagedBean().getSupplier().getSmAppl());
+			saveMaster(master, clienType);
 		}
-		if (!error && null != master.getProcumentMode() && null == master.getProcumentMode().getParameterId()) {
-			master.setProcumentMode(null);
-		}
-		// #9299 - #40717 Start
-		// #9299 - #41073 Start
+	}
+
+	// 9299 - #41094: resolve category (code+name) + doc parent link from DB. Called ONLY after the duplicate
+	// File Reference No. check passes (saveMaster / updateSmComExpMaster). Kept out of onSaveMaster so a duplicate
+	// or validation failure no longer overwrites the UI-bound category objects (dropdown reset, Issue 1) nor calls
+	// retrieveCategoryLxDtlById on incomplete rows (ERR-000001, Issue 2).
+	private void resolveMasterCategoryDetails(SmCompExpMaster master) {
 		for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
 			doc.setCompExpMaster(master);
 		}
 		for (SmCompExpCatMaster cat : master.getCompExpMasterCats()) {
+			// 9299 - #41094: never call retrieveCategoryLxDtlById with a null id (SO rejects null id;
+			// the EJB exception was masked as ERR-000001). Skip incomplete rows defensively.
+			if (null == cat.getCategoryL1().getCategoryL1Id() || null == cat.getCategoryL2().getCategoryL2Id()
+					|| null == cat.getCategoryL3().getCategoryL3Id()) {
+				continue;
+			}
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
  
 			reqDTO.setCategoryL1Id(cat.getCategoryL1().getCategoryL1Id());
@@ -1435,13 +1481,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			cat.setCategoryL3Name(cat.getCategoryL3().getCategoryName());
  
 			cat.setCompExpMaster(master);
-		}
-		// #9299 - #41073 End
-		if (!error && update) {
-			updateSmComExpMaster(false);
-		} else if (!error) {
-			master.setSmAppl(this.getManagedBean().getSupplier().getSmAppl());
-			saveMaster(master, clienType);
 		}
 	}
 
@@ -1462,7 +1501,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			// 9299 - 40788 End
 		} else {
+			// #9299 - #40717 Start
+			if (null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
+				master.setPaymentMethod(null);
+			}
+			if (null != master.getProcumentMode() && null == master.getProcumentMode().getParameterId()) {
+				master.setProcumentMode(null);
+			}
+			// #9299 - #40717 End
 			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			resolveMasterCategoryDetails(master); // 9299 - #41094
 			reqDTO.setDeclareMaster(master);
 			SmCompExpResDTO resDTO;
 			resDTO = getSmCompExpSo().declareDraft(reqDTO);
@@ -1564,8 +1612,17 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			// #9299 - #40790 End
 			}
 			if (!duplicate){
+				// #9299 - #40717 Start
+				if (null != selectedMaster.getPaymentMethod() && null == selectedMaster.getPaymentMethod().getParameterId()) {
+					selectedMaster.setPaymentMethod(null);
+				}
+				if (null != selectedMaster.getProcumentMode() && null == selectedMaster.getProcumentMode().getParameterId()) {
+					selectedMaster.setProcumentMode(null);
+				}
+				// #9299 - #40717 End
 				//9299 - 40788 End
 				SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
+				resolveMasterCategoryDetails(selectedMaster); // 9299 - #41094
 				reqDTO4.setUpdateMaster(selectedMaster); 
 				resDTO1 = getSmCompExpSo().updateMaster(reqDTO4);
 				if (resDTO1.isSuccessful()) {

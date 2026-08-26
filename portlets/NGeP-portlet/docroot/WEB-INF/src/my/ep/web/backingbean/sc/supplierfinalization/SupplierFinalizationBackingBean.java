@@ -13478,12 +13478,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	public void checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority() {
 
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());		 
+		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+		// #27502 -start-
 		boolean isBpkCentralContract = isBpkCentralContract(qtBackingBean.getManagedBean().getQt());
 
 		if (isBpkCentralContract) {
 			return;
 		}
+		// #27502 -end-
 
 		final boolean isItemize = getManagedBean().isItemize();
 		final String committeeType = getManagedBean().getCommitteeType();
