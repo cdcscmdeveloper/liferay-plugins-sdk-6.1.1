@@ -15017,19 +15017,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
-			if (isQTStatusPublished(status)){
-				List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
-				for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
-					if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
-						this.getManagedBean().setShowCategoryCodePanel(false);
-						break;
-					}
-				}
-				//#29661 #40093 27th Apr start
-				if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
-					this.getManagedBean().setShowCategoryCodePanel(false);
-				}
-			} //#29661 #40093 27th Apr end
+			//#41068 start
+			if (isQTStatusGreaterThanOrEquals(status, QTStatusConst.QT_CLOSED)){
+				this.getManagedBean().setShowCategoryCodePanel(false);
+			}
+			//#41068 end
 		}
 		//#29661 #40094 End
 	}
