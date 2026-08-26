@@ -3751,17 +3751,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//Bug 33096 - shaqimi start
 		BigDecimal ctAmt;
 		if(ctBackingBean.getManagedBean().isViewSCL()){
-			
-//			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
-			
-			//#24336
-			ctAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
-			
+			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
 		} else {
 			
 			//#24336 - Start
 			// Calculate the current contract amount with additions or reductions.
-			BigDecimal baseAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
+			BigDecimal baseAmt = ctContractVer.getCtContractAmount().getContractAmount();
 			BigDecimal addAmt = ctContractVer.getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctContractVer.getCtAmendment().getReductionAmt();
 			
