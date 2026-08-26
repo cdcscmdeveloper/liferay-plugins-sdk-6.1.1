@@ -2826,9 +2826,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// #24336 - Start
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-				// Validate reduction amount does not exceed the allowed contract limit
-				validateReductionAmount();
-				
 				// Ensure the new amount effective date is provided.
 				validateNewAmtEffDate();
 			}
@@ -3459,6 +3456,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	public void setMenuByIndex(int outputValue) { //#35132
 		getManagedBean().setSelectedTabIndex(outputValue);
+		
+		//#24336
+		handleSelectedAmendmentChecklistValue();
 	}
 
 	/**
@@ -3675,7 +3675,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//Bug 33096 - shaqimi start
 		BigDecimal ctAmt;
 		if(ctBackingBean.getManagedBean().isViewSCL()){
-			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
+			
+			//#24336
+			ctAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
+			
 		} else {
 			
 			//#24336 - Start

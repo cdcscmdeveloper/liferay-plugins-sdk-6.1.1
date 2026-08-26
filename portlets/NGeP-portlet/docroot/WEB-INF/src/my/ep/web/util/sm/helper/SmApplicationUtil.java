@@ -2358,6 +2358,12 @@ public class SmApplicationUtil {
 			/*} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
 			}*/ //Commented for #31130
+			//#40801 START
+			if (per.getEpRole() != null && !per.getEpRole().isEmpty() &&
+					(per.getEmail() == null || per.getEmail().trim().isEmpty())) {
+				validPersonnel = false;
+		    }
+			//#40801 END
 			//31130-start
 			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
 				if (addressPer.getSmAddress() == null
@@ -16606,7 +16612,9 @@ public class SmApplicationUtil {
 				}else if(exp.getClientType().equalsIgnoreCase("O")){
 					draft.setAgencyName(exp.getClientName());	
 				}*/
-				draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				if(exp.getPaymentMethodId() != null && exp.getPaymentMethodId().longValue() > 0) {
+					draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				}				
 				draft.setContractEffDate(exp.getProcurementDate());
 				if(isConsultant){
 					draft.setFileReferenceNo(exp.getRefNo());
@@ -16614,7 +16622,21 @@ public class SmApplicationUtil {
 					draft.setWorkServDesc(exp.getWorkServiceDesc());
 					draft.setConsultantFee(exp.getConsultantFee());
 				} else {
-					draft.setProcumentMode(retrievePmParameterById(exp.getProcurementModeId().longValue()));
+					
+					if(exp.getProcurementModeId() != null && exp.getProcurementModeId().longValue() > 0) {
+					    long pmId = exp.getProcurementModeId().longValue();
+					    long procurementModeId;
+					    if (pmId == SupplierManagementConst.PM_QUOTATION) {
+					        procurementModeId = SupplierManagementConst.PMQ_QUOTATION;
+					    } else if (pmId == SupplierManagementConst.PM_TENDER) {
+					        procurementModeId = SupplierManagementConst.PMQ_TENDER;
+					    } else if (pmId == SupplierManagementConst.PM_DIRECT_NEGO) {
+					        procurementModeId = SupplierManagementConst.PMQ_DIRECT_NEGO;
+					    } else {
+					        procurementModeId = pmId;
+					    }
+					    draft.setProcumentMode(retrievePmParameterById(procurementModeId));
+					}
 				}
 				List<SmCompExpCatDraft> catDraftList = new ArrayList<>();
 				for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {

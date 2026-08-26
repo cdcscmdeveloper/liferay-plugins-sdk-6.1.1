@@ -355,7 +355,7 @@
 					process="@form" update=":form">
 					<p:graphicImage value="/css/images/design/upload.png"
 						style="margin-right:2px;" />
-				</p:commandLink> <p:outputPanel id="smCompExpSuppDocListPanelId">
+				</p:commandLink> <p:graphicImage id="suppDocToolTipsId" value="/css/images/design/tooltips.png" /><!-- 9299 CR p255: supp doc tooltip --> <p:tooltip for="suppDocToolTipsId"><img src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" /></p:tooltip> <p:outputPanel id="smCompExpSuppDocListPanelId">
 					<ui:repeat value="#{smCompExpMB.newMaster.compExpMasterDocs}"
 						var="doc">
 						<br />

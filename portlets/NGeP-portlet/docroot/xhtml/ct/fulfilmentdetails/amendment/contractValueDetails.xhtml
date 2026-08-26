@@ -7,7 +7,7 @@
 	<p:panel id="contractValuePanel" rendered="#{amendmentBackingBean.getAmendValue(1) || ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" 
 		header="#{lbl['lbl.ct.menu.contract.value']}" toggleable="true" toggleSpeed="500">
 	
-		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth320">
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth340">
 			
 			<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
 			<h:panelGrid columns="4">
@@ -150,7 +150,7 @@
 		</h:panelGrid>
 
 		<!-- Change of contract value caused by GST/SST -->
-		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth320" 
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth340" 
 			rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}">
 		
 			<p:outputLabel value="#{lbl['lbl.ct.gst.sst']}" style="font-weight: bold; text-decoration:underline;" />
@@ -200,7 +200,7 @@
 
 		</h:panelGrid>
 
-		<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth320">
+		<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth340">
 
 			<p:outputLabel value="#{lbl['lbl.ct.current.contract.amt']}" style="font-weight: bold; text-decoration:underline;" />
 			<p:spacer width="1" />
