@@ -209,6 +209,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
 		}
+		// 9299 - #41078: allow Payment Method to be keyed in (dropdown) when empty on WIP/Draft, like Procurement Method (NOT mandatory). Ensure a non-null PmParameter so the data-presence rendering never NPEs.
+		PmParameter paymentMethod = this.getManagedBean().getSelectedDraft().getPaymentMethod();
+		if (paymentMethod == null || paymentMethod.getParameterId() == null || paymentMethod.getParameterId().longValue() == 0L) {
+			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
+		}
 		
 		PmParameter procumentMode = this.getManagedBean().getSelectedDraft().getProcumentMode();
 		if (procumentMode == null
@@ -1436,14 +1441,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
 
-		// #9299 - #40717 Start
-		if (!error && null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
-			master.setPaymentMethod(null);
-		}
-		if (!error && null != master.getProcumentMode() && null == master.getProcumentMode().getParameterId()) {
-			master.setProcumentMode(null);
-		}
-		// #9299 - #40717 Start
 		// #9299 - #41073 / #41094: category & doc detail now resolved in saveMaster / updateSmComExpMaster,
 		// AFTER the duplicate File Reference No. check passes (previously ran here, before the check).
 		if (!error && update) {
@@ -1504,6 +1501,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			// 9299 - 40788 End
 		} else {
+			// #9299 - #40717 Start
+			if (null != master.getPaymentMethod() && null == master.getPaymentMethod().getParameterId()) {
+				master.setPaymentMethod(null);
+			}
+			if (null != master.getProcumentMode() && null == master.getProcumentMode().getParameterId()) {
+				master.setProcumentMode(null);
+			}
+			// #9299 - #40717 End
 			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 			resolveMasterCategoryDetails(master); // 9299 - #41094
 			reqDTO.setDeclareMaster(master);
@@ -1607,6 +1612,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			// #9299 - #40790 End
 			}
 			if (!duplicate){
+				// #9299 - #40717 Start
+				if (null != selectedMaster.getPaymentMethod() && null == selectedMaster.getPaymentMethod().getParameterId()) {
+					selectedMaster.setPaymentMethod(null);
+				}
+				if (null != selectedMaster.getProcumentMode() && null == selectedMaster.getProcumentMode().getParameterId()) {
+					selectedMaster.setProcumentMode(null);
+				}
+				// #9299 - #40717 End
 				//9299 - 40788 End
 				SmCompExpReqDTO reqDTO4 = new SmCompExpReqDTO(); 
 				resolveMasterCategoryDetails(selectedMaster); // 9299 - #41094
