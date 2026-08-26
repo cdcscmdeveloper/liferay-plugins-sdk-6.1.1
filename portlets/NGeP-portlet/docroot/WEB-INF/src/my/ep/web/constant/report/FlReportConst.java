@@ -193,6 +193,8 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_GROUP_NONE = "NONE";
 	public static final String FL_RPT_PURCHASE_ORDER_NO = "PURCHASE ORDER NO";
 	public static final String FL_RPT_ACKNOWLEDGED_OFFICER_NAME = "ACKNOWLEDGED OFFICER NAME";
+	public static final String FL_RPT_RECEIVING_OFFICER_NAME = "RECEIVING OFFICER NAME";
+	public static final String FL_RPT_PAYMENT_MATCH_OFFICER_NAME = "PAYMENT MATCH OFFICER NAME";
 	//#41069 end
 	
 	public FlReportConst(){}
@@ -515,6 +517,20 @@ public class FlReportConst implements Serializable {
 	 */
 	public static String getFlRptAcknowledgedOfficerName() {
 		return FL_RPT_ACKNOWLEDGED_OFFICER_NAME;
+	}
+
+	/**
+	 * @return the flRptReceivingOfficerName
+	 */
+	public static String getFlRptReceivingOfficerName() {
+		return FL_RPT_RECEIVING_OFFICER_NAME;
+	}
+
+	/**
+	 * @return the flRptPaymentMatchOfficerName
+	 */
+	public static String getFlRptPaymentMatchOfficerName() {
+		return FL_RPT_PAYMENT_MATCH_OFFICER_NAME;
 	}
 	
  }

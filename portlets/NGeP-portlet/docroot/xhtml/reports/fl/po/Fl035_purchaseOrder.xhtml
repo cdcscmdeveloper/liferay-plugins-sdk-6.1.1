@@ -173,7 +173,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
 								itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
-								itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.itemType']}"
@@ -181,7 +181,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
 								itemValue="#{FlReportConst.getFlRptGroupProcType()}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-								itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
+								itemValue="#{lbl['lbl.rpt.status']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
 								itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>							
 						</c:otherwise>

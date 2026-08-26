@@ -148,11 +148,11 @@
 					<f:selectItem itemLabel="#{lbl['lbl.fl.do.poco.no']}"
 						itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.acknowledgeOfficer']}"
-						itemValue="#{]}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptAcknowledgedOfficerName()]}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.receiving.officer.name']}"
-						itemValue="#{}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptReceivingOfficerName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 			<ui:remove>#41069 end</ui:remove>
