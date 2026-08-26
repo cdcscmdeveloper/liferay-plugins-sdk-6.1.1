@@ -14893,6 +14893,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	
 				specSO.insertCategoryCode(scQtCategory);
 			}
+			//#41055 start
+			this.getManagedBean().setAddedCategoryList(new ArrayList<SmSupplierCategory>());
+			//#41055 end
 		}
 	}
 	
