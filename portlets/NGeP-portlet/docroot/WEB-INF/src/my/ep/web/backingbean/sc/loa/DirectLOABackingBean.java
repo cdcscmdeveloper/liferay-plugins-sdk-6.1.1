@@ -342,7 +342,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) && procCatId == null) {
 				throw new EpException(MessageConst.ERROR_775181);
 			}
-			if (this.getManagedBean().getSelectedTabIndex() == QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
+			// #40974 - Start
+			int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+			if (!this.getManagedBean().isShowCategoryCode()) {
+				tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+			}
+			if (this.getManagedBean().getSelectedTabIndex() == tabIndex) {
+			// #40974 - End
 				validateTierQuantityAndUnitPriceForSideMenueOrSave();
 			}
 			// #29468 End Vinod
@@ -1586,12 +1592,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */	
 	private void validateLOAReportAttachments(ScLoa scLoa) {
 		List<ScLoaReport> loaReports = scLoa.getScLoaReports();
-		
+		// #40974 - Start
+		int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+		if (this.getManagedBean().isShowCategoryCode()) {
+			tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		}
+		// #40974 - End
 		if (CollectionUtils.isNotEmpty(loaReports)) {
 			for (ScLoaReport report : loaReports) {
 				if (report.getScLoaReportAttachment() != null && 
 						report.getScLoaReportAttachment().getFileName() == null) {
-					this.getManagedBean().setSelectedTabIndex(1);
+					this.getManagedBean().setSelectedTabIndex(tabIndex); // #40974 
 					throw new EpException(MessageConst.ERROR_760402);
 				}
 			}
@@ -5197,8 +5208,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setPayLoad(awardSupplierDataType);
 			//#29164 CR 26474: Static Code Analysis Start
 			//if(getManagedBean().getCurrentStatusId() != null){
+			// #40974 - Start
+			int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+			if (this.getManagedBean().isShowCategoryCode()) {
+				tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+			}
+			// #40974 - End
+
 				if(getManagedBean().getCurrentStatusId() != null && QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
-					getManagedBean().setSelectedTabIndex(2);//#29661
+					getManagedBean().setSelectedTabIndex(tabIndex);//#29661 / #40974 
 					getManagedBean().setIconForDL(true);//29007
 				}
 			//}
@@ -10595,7 +10613,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public void onBackToZoneItemDetailsTab() {
-		getManagedBean().setSelectedTabIndex(2);
+		// #40974 - Start
+		int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		if (this.getManagedBean().isShowCategoryCode()) {
+			tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+		}
+		getManagedBean().setSelectedTabIndex(tabIndex);
+		// #40974 - End
+
 		this.getManagedBean().setSpecKeyword(null);//29007
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
@@ -13143,8 +13168,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void tabChangeActionDirectLOA(int selectedTabIndex) {
 
 		int previousTabIndex = this.getManagedBean().getSelectedTabIndex();
-		if (previousTabIndex == QTConstants.DIRECT_LOA_TAB_INDEX_THREE
-				&& selectedTabIndex != QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
+		// #40974 - Start
+		int tabIndexThree = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+		if (selectedTabIndex > QTConstants.DIRECT_LOA_TAB_INDEX_ONE && !this.getManagedBean().isShowCategoryCode()) {
+			selectedTabIndex = selectedTabIndex - QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+			tabIndexThree = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		}
+		if (previousTabIndex == tabIndexThree && selectedTabIndex != tabIndexThree) {
+			// #40974 - End
+
 			validateTierQuantityAndUnitPriceForSideMenueOrSave();
 		}
 		
@@ -14687,5 +14719,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	}
 	//new #25726 - End
+	
+	// #40974 - Start
+	/**
+	 * Get new tab index
+	 * 
+	 * @param selectedTabIndex
+	 * @return
+	 */
+	public int newTabIndexDirectLOA(int selectedTabIndex) {
+		System.out.println("newTabIndexDirectLOA");
+
+		int tabIndex = selectedTabIndex;
+		if (selectedTabIndex > QTConstants.DIRECT_LOA_TAB_INDEX_ONE && !this.getManagedBean().isShowCategoryCode()) {
+			tabIndex = tabIndex - QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+
+		}
+		return tabIndex;
+
+	}
+	// #40974 - End
 
 }
