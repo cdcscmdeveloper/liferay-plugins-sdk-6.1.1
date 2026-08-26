@@ -314,6 +314,12 @@ public interface QTConstants {
 	public static final int DIRECT_LOA_TAB_INDEX_THREE=3;
 	//#29468 End Vinod
 	
+	// #40974 - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	// #40974 - End
+
+	
 	// #33831 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831 - Start
