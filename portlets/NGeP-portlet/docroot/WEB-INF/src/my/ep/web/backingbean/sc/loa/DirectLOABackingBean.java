@@ -14710,7 +14710,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				!= null ? this.getManagedBean().getProcurementRelatedCategoryList() : new ArrayList<SmSupplierCategory>();
 		List<SmSupplierCategory> deletedCategoryList = CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedCategoryList()) 
 				? this.getManagedBean().getDeletedCategoryList(): new ArrayList<SmSupplierCategory>();	
-		List<SmSupplierCategory> addedCategoryList = new ArrayList<>();		
+		//#41055 start
+		List<SmSupplierCategory> addedCategoryList = CollectionUtils.isNotEmpty(this.getManagedBean().getAddedCategoryList())
+				? this.getManagedBean().getAddedCategoryList() : new ArrayList<SmSupplierCategory>();
+		//#41055 end
 		List<SmSupplierCategory> currentCategoryList = new ArrayList<>();
 		
 		//#29661 #40093
@@ -14795,6 +14798,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				it.remove();			
 			}
 		}
+		//#41055 start
+		List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();
+		if (CollectionUtils.isNotEmpty(addedCategoryList)) {
+			addedCategoryList.retainAll(procurementRelatedCategoryList);
+			this.getManagedBean().setAddedCategoryList(addedCategoryList);
+		}
+		//#41055 end
 		this.getManagedBean().setDeletedCategoryList(deletedCategoryList);
 		this.getManagedBean().setProcurementRelatedCategoryList(procurementRelatedCategoryList);
 		this.getManagedBean().setSupplierCategoryList(originalSupplierCategoryList);//#29661 #40093
