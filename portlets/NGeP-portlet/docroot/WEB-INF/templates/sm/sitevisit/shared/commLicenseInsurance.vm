@@ -1,14 +1,14 @@
-<u class="txtBold">License/Insurance</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.license.insurance')</u>
 <table class="sTable">
 	#if($review)
 		<tr>
-			<th class="txtBold">License/ Insurance</th>
-			<th>Closing Date/ Expiry Date</th>
+			<th class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.license.insurance')</th>
+			<th>$smVmUtil.getDescByLabel('lbl.sm.license.closingexpiry.date')</th>
 		</tr>
 		#if($licenseInsurance != $null && $licenseInsurance.size() > 0)
 			#foreach($licenseIns in $licenseInsurance)
 				<tr>
-					<td>$!licenseIns.pmParameter.pmParameterDescs.get(0).codeName</td>
+					<td>$smVmUtil.getParameterDesc($!licenseIns.pmParameter)</td>
 					<td>$!smVmUtil.formatDate($!licenseIns.expDate)</td>
 				</tr>
 			#end
