@@ -188,6 +188,12 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_GROUP_PROC_TYPE = "PROCUREMENT TYPE";
 	public static final String FL_RPT_GROUP_ITEM_TYPE = "ITEM TYPE";
 	//#27476 end
+
+	//#41069 start
+	public static final String FL_RPT_GROUP_NONE = "NONE";
+	public static final String FL_RPT_PURCHASE_ORDER_NO = "PURCHASE ORDER NO";
+	public static final String FL_RPT_ACKNOWLEDGED_OFFICER_NAME = "ACKNOWLEDGED OFFICER NAME";
+	//#41069 end
 	
 	public FlReportConst(){}
 
@@ -488,6 +494,27 @@ public class FlReportConst implements Serializable {
 	 */
 	public static String getFlRptGroupItemType() {
 		return FL_RPT_GROUP_ITEM_TYPE;
+	}
+
+	/**
+	 * @return the flRptGroupNone
+	 */
+	public static String getFlRptGroupNone() {
+		return FL_RPT_GROUP_NONE;
+	}
+
+	/**
+	 * @return the flRptPurchaseOrderNo
+	 */
+	public static String getFlRptPurchaseOrderNo() {
+		return FL_RPT_PURCHASE_ORDER_NO;
+	}
+
+	/**
+	 * @return the flRptAcknowledgedOfficerName
+	 */
+	public static String getFlRptAcknowledgedOfficerName() {
+		return FL_RPT_ACKNOWLEDGED_OFFICER_NAME;
 	}
 	
  }
