@@ -8432,10 +8432,8 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
-			//#40112 - start
 			SmAIDocBackingBean.validateManualPersonnelAgainstEpf(
-					getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder());
-			//#40112 - end
+					getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder());	//#40112
 			SmCommonUtil.getInstance().setUserDetails(
 					getManagedBean().getSelectedShareHolder());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -8573,6 +8571,7 @@ public class SmApplicationBackingBean extends
 			// #27802 - end
 			
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
+			SmAIDocBackingBean.latchUserEdit(getManagedBean().getSmAppl());	//#40112
 		} catch (Exception e) {
 			//log.info("error to save appl no:"
 				//	+ getManagedBean().getSmAppl().getApplNo(), e);
@@ -13804,9 +13803,7 @@ public class SmApplicationBackingBean extends
 	 *            addr
 	 */
 	public void onChangeCity(SmAddress addr, String panelName) {
-		//#40112 - start
-		addr.clearCityAI();
-		//#40112 - end
+		addr.clearCityAI();	//#40112
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
 		//#36483 - START
@@ -18521,8 +18518,7 @@ public class SmApplicationBackingBean extends
 	//#31407 - START
 	public void checkBeforeSubmit() {
 		//#40112 - start
-		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)
-				&& AiDocSupport.isBlockDeclareEnabled()) {
+		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)) {
 			return;
 		}
 		//#40112 - end
@@ -20025,7 +20021,7 @@ public class SmApplicationBackingBean extends
 	public boolean isAiAvailable(){
 		SmAppl appl = getManagedBean().getSmAppl();
 		return AiDocSupport.isAiEnabled() && getManagedBean().isSupplierUser()
-				&& appl != null && appl.getAiProcessed() > 0;
+				&& appl != null && appl.getAiStatus() > 0;
 	}
 
 	public boolean isShowTenancyAiBtn(){
@@ -20046,6 +20042,7 @@ public class SmApplicationBackingBean extends
 		if (te == null){
 			return;
 		}
+		SmAIDocBackingBean.clearTenancyUserEdit(getManagedBean().getSmAppl());
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
 		fac.setRentalRate(te.getMonthlyRental());
 		fac.setOwnerName(te.getLandlordsName());
@@ -20088,8 +20085,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public boolean isAiBlockDeclare() {
-		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false) 
-				&& AiDocSupport.isBlockDeclareEnabled();
+		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false);
 	}
 	//40112 - end
 	
