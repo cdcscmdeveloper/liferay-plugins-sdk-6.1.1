@@ -73,7 +73,10 @@
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;white-space: normal;">
+					<ui:remove>28784 -start-</ui:remove>
+					<p:column headerText="#{lbl['lbl.sc.status']}"
+						style="width:200px;white-space: normal;">
+						<ui:remove>28784 -end-</ui:remove>
 						<h:outputText
 							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}" />
 					</p:column>

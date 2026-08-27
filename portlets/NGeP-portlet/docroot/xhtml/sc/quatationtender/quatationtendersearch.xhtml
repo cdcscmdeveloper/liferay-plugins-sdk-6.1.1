@@ -133,16 +133,18 @@
 						</h:outputText>
 					</p:column>
 
-					<!-- Bug #27412,30451,17376 START -->
-					<p:column headerText="#{lbl['lbl.sc.status']}"
-						style="width:200px;white-space: normal;" rendered="#{!qTDetailBB.isMofSupplier()}">
-						<h:outputText
-							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"
-							rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType and !qTDetailBB.managedBean.bdSfFlow}" />
-						<h:outputText value="#{scQt.statusDesc}"
-							rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType || qTDetailBB.managedBean.bdSfFlow}" />
-					<!-- Bug #27412,30451,17376 END -->
-					</p:column>
+						<!-- Bug #27412,30451,17376 START --><ui:remove>28784 -start-</ui:remove>
+						<p:column headerText="#{lbl['lbl.sc.status']}"
+							style="width:200px;white-space: normal;"
+							rendered="#{!qTDetailBB.isMofSupplier()}">
+							<ui:remove>28784 -end-</ui:remove>
+							<h:outputText
+								value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"
+								rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType and !qTDetailBB.managedBean.bdSfFlow}" />
+							<h:outputText value="#{scQt.statusDesc}"
+								rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType || qTDetailBB.managedBean.bdSfFlow}" />
+							<!-- Bug #27412,30451,17376 END -->
+						</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<!-- ***17376#55 - start -->
