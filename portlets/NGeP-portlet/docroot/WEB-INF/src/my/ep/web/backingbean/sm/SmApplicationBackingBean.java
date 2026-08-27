@@ -18366,8 +18366,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//#31407 - START
 	public void checkBeforeSubmit() {
 		//#40112 - start
-		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)
-				&& AiDocSupport.isBlockDeclareEnabled()) {
+		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)) {
 			return;
 		}
 		//#40112 - end
@@ -19974,7 +19973,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public boolean isAiAvailable(){
 		SmAppl appl = getManagedBean().getSmAppl();
 		return AiDocSupport.isAiEnabled() && getManagedBean().isSupplierUser()
-				&& appl != null && appl.getAiProcessed() > 0;
+				&& appl != null && appl.getAiStatus() > 0;
 	}
 
 	public boolean isShowTenancyAiBtn(){
@@ -20039,8 +20038,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	public boolean isAiBlockDeclare() {
-		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false) 
-				&& AiDocSupport.isBlockDeclareEnabled();
+		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false);
 	}
 	//40112 - end
 	
