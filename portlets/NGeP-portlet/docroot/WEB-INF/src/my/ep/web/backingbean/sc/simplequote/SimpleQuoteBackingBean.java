@@ -3253,6 +3253,10 @@ public class SimpleQuoteBackingBean extends
 				&& !procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 			return;
 		}
+		
+		if (!getManagedBean().isIncludeG2gSupplier()) {
+			return;
+		}
 
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
@@ -3263,10 +3267,6 @@ public class SimpleQuoteBackingBean extends
 
 		getManagedBean().setSupplierList(new ArrayList<ScQuoteSupplier>());
 		getManagedBean().setGovtSellers(new ArrayList<ScQuoteSupplier>());
-
-		if (!getManagedBean().isIncludeG2gSupplier()) {
-			return;
-		}
 
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScQuote().getScQuoteSuppliers())) {
 			for (ScQuoteSupplier supplier : getManagedBean().getScQuote().getScQuoteSuppliers()) {
