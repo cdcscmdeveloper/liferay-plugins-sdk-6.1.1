@@ -81,7 +81,8 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<td style="width: 66%"><p:inputText
+					<ui:remove>#9299 - #41104</ui:remove>
+					<td style="width: 66%"><p:inputText maxlength="20" size="20"
 							value="#{smCompExpMB.selectedMaster.loaNo}" /></td>
 				</tr>
 				<tr>
