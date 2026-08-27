@@ -14499,21 +14499,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (CollectionUtils.isNotEmpty(scQtCategoriesList)) {
 			// #41077: exclude codes marked for deletion (e.g. the old supplier's codes after a supplier change)
 			// so they do not reappear in the Procurement-Related list; they are removed from ScQtCategory on save.
-			java.util.Set<String> deletedCatCodes = new java.util.HashSet<String>();
+			java.util.Set<Long> deletedQtCategoryIds = new java.util.HashSet<Long>();
 			if (CollectionUtils.isNotEmpty(getManagedBean().getDeletedCategoryList())) {
 				for (SmSupplierCategory delCat : getManagedBean().getDeletedCategoryList()) {
-					deletedCatCodes.add(delCat.getPmCategoryL1().getCategoryL1Code()
-							+ delCat.getPmCategoryL2().getCategoryL2Code()
-							+ delCat.getPmCategoryL3().getCategoryL3Code());
+					if (null != delCat.getQtCategoryId()) {
+						deletedQtCategoryIds.add(delCat.getQtCategoryId());
+					}
 				}
 			}
 			List<SmSupplierCategory> supplierCategoryList = new ArrayList<>();
 			for (ScQtCategory scQtCategory : scQtCategoriesList) {
-				String scQtCatCode = scQtCategory.getPmCategoryL1().getCategoryL1Code()
-						+ scQtCategory.getPmCategoryL2().getCategoryL2Code()
-						+ scQtCategory.getPmCategoryL3().getCategoryL3Code();
-				if (deletedCatCodes.contains(scQtCatCode)) {
-					continue; // #41077 skip codes marked for deletion
+				if (null != scQtCategory.getQtCategoryId()
+						&& deletedQtCategoryIds.contains(scQtCategory.getQtCategoryId())) {
+					continue; // #41077 skip rows marked for deletion
 				}
 				SmSupplierCategory supplierCategoryCode = new SmSupplierCategory();
 				CategoryCodeReqDTO categoryReqDTO = new CategoryCodeReqDTO();
