@@ -3728,20 +3728,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return contractAmt;
 	}
 	
-	
+	/**
+	 * Calculate the new overall contract amount.
+	 * 
+	 * <p>This method gets the base contract amount and, if the contract value
+	 * was changed because of GST, it will add the new service tax amount
+	 * to the total.</p>
+	 * 
+	 * @return the final contract amount including service tax (if applicable)
+	 */
 	public BigDecimal newOverallContractAmount() {
-		BigDecimal contractAmount = newOverallContractAmt();
-	
-		// #24336 - Start
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		
-		// Include service tax if contract value changed by GST
-		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null){
-			contractAmount = newOverallContractAmt().add(ctAmendment.getNewStaxAmount());
-		}
-		// #24336 - End
-		
-		return contractAmount;
+	    BigDecimal contractAmount = newOverallContractAmt();
+
+	    // #24336 - Start
+	    CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
+	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
+	    CtContractAmount ctContractAmount = ctContractVer.getCtContractAmount();
+
+	    // Include service tax if contract value changed by GST
+	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
+	        contractAmount = contractAmount.add(ctAmendment.getNewStaxAmount());
+	    }
+
+	    // Include current GST and STAX amounts if the contract value was not changed due to GST/SST
+	    if (!ctAmendment.isValueChangeByGst()) {
+	        contractAmount = contractAmount
+	                .add(ctContractAmount.getGstAmount())
+	                .add(ctContractAmount.getStaxAmount());
+	    }
+	    // #24336 - End
+
+	    return contractAmount;
 	}
 	// End - #29589
 	
