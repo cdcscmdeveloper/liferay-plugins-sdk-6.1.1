@@ -127,25 +127,23 @@
 		
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
-			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
-
+			<td><p:selectOneMenu value="#{poPurRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{poPurRptBB.hasSupplierRole()}"
-						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.itemType']}"
-						itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>
-					<f:selectItem
-						itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
-						itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-						itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 					<ui:remove>#27476 start</ui:remove>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{poPurRptBB.hasSupplierRole()}"
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.itemType']}"
+						itemValue="#{FlReportConst.getFlRptGroupItemType()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
+						itemValue="#{FlReportConst.getFlRptGroupProcType()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+						itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
+						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 					<c:if test="#{poPurRptBB.hasRoleForProcumentType()}">
 						<f:selectItem itemLabel="#{lbl['lbl.fl.procurement.type']}"
-							itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+							itemValue="#{FlReportConst.getFlRptGroupProcType()}"></f:selectItem>
 					</c:if>
 					<ui:remove>#27476 end</ui:remove>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
