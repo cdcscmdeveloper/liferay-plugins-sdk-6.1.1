@@ -3279,13 +3279,12 @@ public class CommitteBackingBean extends
 									new FacesScopes().getUserLocale())));
 					return NAV_TO_COMMITTEE_MAINTENANCE;
 				}
-			} catch(EpException exp) {
-				String message = MessageUtils.getMessage(exp.getMessage(),
-						exp.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
-			            new FacesScopes().getUserLocale());
-				
+			} catch(EpException epx) {
 				FacesContext.getCurrentInstance().addMessage(
-			            null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, message));
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								epx.getMessage(), epx.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 			} catch(Exception ex) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
 						"CommitteBackingBean.updateTplCommitteDetails", null, ex);
