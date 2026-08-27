@@ -1210,29 +1210,30 @@ public class QTBriefingSiteVisitBackingBean extends
 				}
 				
 				//#28188 - Start
-				ScQtBsvDtl dbDtl = 
-				        (bsvDtl.getQtBsvDtlId() != null || bsvDtl.getParentQtBsvDtlId() != null)
-				        ? retrieveBSVDetail(
-				                bsvDtl.getQtBsvDtlId() != null
-				                        ? bsvDtl.getQtBsvDtlId()
-				                        : bsvDtl.getParentQtBsvDtlId())
-				        : null;
-	
-				Date originalBsvDate = null;
+				if (bsvDtl.getQtBsvDtlId() != null) {
+				    ScQtBsvDtl dbDtl = retrieveBSVDetail(bsvDtl.getQtBsvDtlId());
 
-				if (dbDtl != null && dbDtl.getBsvDate() != null) {
-				    originalBsvDate = dbDtl.getBsvDate();
+				    Date originalBsvDate = null;
+
+				    if (dbDtl != null && dbDtl.getBsvDate() != null) {
+				        originalBsvDate = dbDtl.getBsvDate();
+				    } else {
+				        originalBsvDate = bsvDtl.getBsvDate();
+				    }
+
+				    if (originalBsvDate != null) {
+				        this.getManagedBean().setBriefingSiteVisitPostponeDate(originalBsvDate);
+				        tempScQtBsvDtl.setBsvDate(originalBsvDate);
+				    }
 				} else {
-				    originalBsvDate = bsvDtl.getBsvDate();
-				}
+				    tempScQtBsvDtl.setBsvDate(bsvDtl.getBsvDate());
+				    if (bsvDtl.getParentQtBsvDtlId() != null) {
+				        ScQtBsvDtl parentDtl = retrieveBSVDetail(bsvDtl.getParentQtBsvDtlId());
 
-				if (originalBsvDate != null) {
-				    this.getManagedBean().setBriefingSiteVisitPostponeDate(originalBsvDate);
-				    tempScQtBsvDtl.setBsvDate(originalBsvDate);
-				}
-	
-				if (tempScQtBsvDtl.getBsvDate() != null) {
-				    this.getManagedBean().setBriefingSiteVisitPostponeDate(tempScQtBsvDtl.getBsvDate());
+				        if (parentDtl != null && parentDtl.getBsvDate() != null) {
+				            this.getManagedBean().setBriefingSiteVisitPostponeDate(parentDtl.getBsvDate());
+				        }
+				    }
 				}
 				//#28188 - End
 				
