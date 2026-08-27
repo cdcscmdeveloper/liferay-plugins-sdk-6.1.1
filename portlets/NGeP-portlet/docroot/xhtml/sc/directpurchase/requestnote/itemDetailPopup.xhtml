@@ -86,9 +86,13 @@
 										disabled="#{isViewOnly}"
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
 										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
-										value="#{requestNoteDtl.requestItem.quantity}">
-										<p:ajax partialSubmit="true" process="@this" update="@this" />
-										<p:ajax event="blur" update="itemTotalPriceId" listener="#{requestNoteBackingBean.calculatePricePerItem(requestNoteDtl)}" />
+										value="#{requestNoteDtl.requestItem.quantity}"
+										onblur="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"> <ui:remove>#39230</ui:remove>
+										<p:ajax event="blur"
+								            partialSubmit="true"
+								            process="@this"
+								            update="@this itemTotalPriceId"
+								            listener="#{requestNoteBackingBean.calculatePricePerItem(requestNoteDtl)}" /> <ui:remove>#39230</ui:remove>
 										<ac:validateNumber
 											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 											maxIntegerDigits="10" />
