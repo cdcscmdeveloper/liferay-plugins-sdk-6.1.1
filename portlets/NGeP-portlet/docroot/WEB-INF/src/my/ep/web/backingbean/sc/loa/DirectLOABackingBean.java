@@ -2701,6 +2701,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (CollectionUtils.isNotEmpty(prevProcurement)) {
 			deletedList.addAll(prevProcurement);
 		}
+		//#41077 start
+		addPersistedCategoryCodesToDeleted(deletedList);
+		//#41077 end
 		getManagedBean().setDeletedCategoryList(deletedList);
 		getManagedBean().setProcurementRelatedCategoryList(null);
 		getManagedBean().setAddedCategoryList(null);
@@ -2708,6 +2711,29 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		getManagedBean().setOriginalSupplierCategoryList(null);
 		getManagedBean().setQtCategoryList(null);
 	}
+
+	//#41077 start
+	private void addPersistedCategoryCodesToDeleted(List<SmSupplierCategory> deletedList) {
+		if (null == getManagedBean().getScQt() || null == getManagedBean().getScQt().getQtId()) {
+			return;
+		}
+		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		List<ScQtCategory> persistedCategories = specSO.retrieveScQtCategorytByQtID(
+				getManagedBean().getScQt().getQtId());
+		if (CollectionUtils.isEmpty(persistedCategories)) {
+			return;
+		}
+		for (ScQtCategory persistedCategory : persistedCategories) {
+			SmSupplierCategory deletedCategory = new SmSupplierCategory();
+			deletedCategory.setPmCategoryL1(persistedCategory.getPmCategoryL1());
+			deletedCategory.setPmCategoryL2(persistedCategory.getPmCategoryL2());
+			deletedCategory.setPmCategoryL3(persistedCategory.getPmCategoryL3());
+			deletedCategory.setQtCategoryId(persistedCategory.getQtCategoryId());
+			deletedList.add(deletedCategory);
+		}
+	}
+	//#41077 end
 
 	public SelectItem[]  getSelectRadioButtonCodeValues(String type)
 	{
