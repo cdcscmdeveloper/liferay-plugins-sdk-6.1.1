@@ -15,7 +15,7 @@ public class SmPaymentDetailsVO implements Serializable {
 	private BigDecimal totalAmount;
 	// #RUU Start
 	private int quantity;
-	private boolean catCode;
+	private boolean hasQuantity;
 	// #RUU End
 
 	public String getDetails() {
@@ -50,12 +50,12 @@ public class SmPaymentDetailsVO implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public boolean isCatCode() {
-		return catCode;
+	public boolean isHasQuantity() {
+		return hasQuantity;
 	}
 
-	public void setCatCode(boolean catCode) {
-		this.catCode = catCode;
+	public void setHasQuantity(boolean hasQuantity) {
+		this.hasQuantity = hasQuantity;
 	}
 	// #RUU end
 

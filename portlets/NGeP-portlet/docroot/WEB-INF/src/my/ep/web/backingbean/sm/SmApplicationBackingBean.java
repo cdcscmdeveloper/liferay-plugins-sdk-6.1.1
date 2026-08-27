@@ -2229,7 +2229,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 							|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || getManagedBean().getSmAppl()
 							.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES))) {
-				displayCatCodeFee();
+				calculatePayment();
 			// #RUU End
 				getManagedBean().setApplDeclarationAlertMsg(
 						SmCommonUtil.getMessage(
@@ -3376,7 +3376,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// 37925 END
 		// #RUU Start
 		if (getManagedBean().isSupplierUser() && outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) {
-			displayCatCodeFee();
+			calculatePayment();
 		}
 		// #RUU End
 	}
@@ -20232,7 +20232,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#40801 END
 	// #RUU Start
-	private void displayCatCodeFee() {
+	private void calculatePayment() {
 		SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
 		paymentVO.setDetails(getParameterDesc(
 				ParameterTypeConst.SUPP_PAYMENT_ITEM,
@@ -20260,7 +20260,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
 		if(null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()){
-			getManagedBean().isSpecialCategoryRechecked();
+			if(getManagedBean().getSmAppl().getApplCategoryType().equalsIgnoreCase("N")){
+				countNormalCatCode();
+			} else if(getManagedBean().getSmAppl().getApplCategoryType().equalsIgnoreCase("S")) {
+				countSpecialCatCode();
+			}
 		}
 
 		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
@@ -20272,6 +20276,40 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setTotalPaymentAmount(
 				getManagedBean().getTotalPaymentAmount().setScale(2,
 						BigDecimal.ROUND_UP));
+	}
+	
+	private void countSpecialCatCode() {
+		int count = getManagedBean().getActiveCategoryList().size();
+		if (count > 0) {
+			SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
+			paymentVO = new SmPaymentDetailsVO();
+			paymentVO.setDetails("Special Category Fee");
+			paymentVO.setPrice(new BigDecimal(count * 1000));
+			paymentVO.setQuantity(count);
+			paymentVO.setHasQuantity(true);
+			paymentVO.setTotalAmount(paymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+		}
+		
+	}
+	
+	private void countNormalCatCode() {
+		int count = 0;
+		if (getManagedBean().getApprovedCategoryList().size() >= 15) {
+			count = getManagedBean().getActiveCategoryList().size();
+		} else if ((getManagedBean().getApprovedCategoryList().size() + getManagedBean().getActiveCategoryList().size()) > 15) {
+			count = getManagedBean().getApprovedCategoryList().size() + getManagedBean().getActiveCategoryList().size() - 15;
+		}
+		if (count > 0) {
+			SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
+			paymentVO = new SmPaymentDetailsVO();
+			paymentVO.setDetails("Normal Category Fee");
+			paymentVO.setPrice(new BigDecimal(count * 1000));
+			paymentVO.setQuantity(count);
+			paymentVO.setHasQuantity(true);
+			paymentVO.setTotalAmount(paymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+		}
 	}
 	// #RUU End
 }
