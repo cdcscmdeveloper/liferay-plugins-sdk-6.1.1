@@ -64,6 +64,21 @@
             			<p:fileDownload value="#{ai.commonDownload(doc.filePath, doc.fileName)}" />
         			</h:commandLink>
 				</p:column>
+				<p:column headerText="#{lbl['lbl.cm.company.name']}" style="width:15%;text-align:center;"
+					rendered="#{cc.attrs.docType eq 'epf'}">
+					<p:outputPanel rendered="#{ai.getEpfDocVerdict(doc) eq 1}">
+						<p:graphicImage id="imgAiEpf1" value="/css/images/ai/yes.png" />
+						<p:tooltip for="imgAiEpf1">
+							<p:outputLabel escape="false" value="#{ai.getEpfDocLabel(doc)}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{ai.getEpfDocVerdict(doc) eq 2}">
+						<p:graphicImage id="imgAiEpf2" value="/css/images/ai/no.png" />
+						<p:tooltip for="imgAiEpf2" rendered="#{not empty ai.getEpfDocLabel(doc)}">
+							<p:outputLabel escape="false" value="#{ai.getEpfDocLabel(doc)}"/>
+						</p:tooltip>
+					</p:outputPanel>
+				</p:column>
 				<p:column style="width:5%;text-align:center;">
 					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}">
 						<p:graphicImage value="/css/images/design/trash.png" />
