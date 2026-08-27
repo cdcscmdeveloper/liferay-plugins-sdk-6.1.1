@@ -2177,4 +2177,10 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END	
+	
+	//#40444 --START
+	public boolean checkOverLappedCategoryExists(SmAppl smAppl) {
+		SmOverlapCategoryVO vo = getOverlapCategoryVO(smAppl);
+		return vo != null && vo.isOverLappedCategoryExist();
+	}//#40444 --END
 }
