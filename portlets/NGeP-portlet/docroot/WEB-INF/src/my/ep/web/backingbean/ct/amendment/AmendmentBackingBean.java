@@ -3752,9 +3752,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	    // Include current GST and STAX amounts if the contract value was not changed due to GST/SST
 	    if (!ctAmendment.isValueChangeByGst()) {
-	        contractAmount = contractAmount
-	                .add(ctContractAmount.getGstAmount())
-	                .add(ctContractAmount.getStaxAmount());
+	        if (ctContractAmount.getGstAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getGstAmount());
+	        }
+
+	        if (ctContractAmount.getStaxAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getStaxAmount());
+	        }
 	    }
 	    // #24336 - End
 
