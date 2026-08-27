@@ -478,13 +478,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #29007 Start Vinod
 			this.getManagedBean().setBpmVersionNo(bpmVersionNo);
 			// #29007 End Vinod
-			// #41076: after saving while on the Category Code side menu, the p:tabMenu (whose Category Code item is
-			// conditionally rendered) does not rebind on the @form re-render and the side-menu clicks stop responding.
-			// Re-seat the menu on the General Information tab so navigation stays usable after the save.
-			if (this.getManagedBean().isShowCategoryCode()
-					&& QTConstants.DIRECT_LOA_TAB_INDEX_ONE == this.getManagedBean().getSelectedTabIndex()) {
-				this.getManagedBean().setSelectedTabIndex(0);
-			}
 		} finally {
 			// qtAwardSO = null;
 		}
