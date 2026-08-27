@@ -1761,9 +1761,16 @@ public class SimpleQuoteBackingBean extends
 					if (ParameterConst.PROC_TYPE_G2G.equals(quote
 							.getProcurementType().getParameterCode())) {
 						// govt sellers
-						//#40654 - start
-						syncG2gSupplier(quote, suppliers);
-						//#40654 - end
+						//40234 - start
+						if ((getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty())
+						        && getManagedBean().getSupplierList() != null
+						        && !getManagedBean().getSupplierList().isEmpty()) {
+						    quote.getScQuoteSuppliers().clear();
+						}
+						//40234 - end
+						if (getManagedBean().getGovtSellers() != null) {
+							suppliers.addAll(getManagedBean().getGovtSellers());
+						}
 					}
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
@@ -1779,9 +1786,18 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - end				
 					else {
 						// by supplier
-						//#40654 - start
-						syncNormalSupplier(quote, suppliers);
-						//#40654 - end
+						//40234 - start
+						if ((getManagedBean().getSupplierList() == null || getManagedBean().getSupplierList().isEmpty())
+						        && getManagedBean().getGovtSellers() != null
+						        && !getManagedBean().getGovtSellers().isEmpty()) {
+						    quote.getScQuoteSuppliers().clear();
+						    getManagedBean().getSupplierList().clear();
+						}
+						//40234 - end
+						if (getManagedBean().getSupplierList() != null) {
+							suppliers
+									.addAll(getManagedBean().getSupplierList());
+						}
 					}
 				}
 
@@ -1995,44 +2011,7 @@ public class SimpleQuoteBackingBean extends
 		}
 		return null;
 	}
-	//#40654 - start
-	/**
-	 * @param quote
-	 * @param suppliers
-	 */
-	private void syncG2gSupplier(ScQuote quote, List<ScQuoteSupplier> suppliers) {
-		//#40234 - start
-		if ((getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty())
-		        && getManagedBean().getSupplierList() != null
-		        && !getManagedBean().getSupplierList().isEmpty()) {
-		    quote.getScQuoteSuppliers().clear();
-		}
-		//#40234 - end
-		if (getManagedBean().getGovtSellers() != null) {
-			suppliers.addAll(getManagedBean().getGovtSellers());
-		}
-	}
 
-	/**
-	 * @param quote
-	 * @param suppliers
-	 */
-	private void syncNormalSupplier(ScQuote quote, List<ScQuoteSupplier> suppliers) {
-		//#40234 - start
-		if ((getManagedBean().getSupplierList() == null || getManagedBean().getSupplierList().isEmpty())
-		        && getManagedBean().getGovtSellers() != null
-		        && !getManagedBean().getGovtSellers().isEmpty()) {
-		    quote.getScQuoteSuppliers().clear();
-		    getManagedBean().getSupplierList().clear();
-		    getManagedBean().getGovtSellers().clear();
-		}
-		//#40234 - end
-		if (getManagedBean().getSupplierList() != null) {
-			suppliers
-					.addAll(getManagedBean().getSupplierList());
-		}
-	}
-	//#40654 - end
 	/**
 	 * Validate panel item.
 	 * 
@@ -2614,8 +2593,13 @@ public class SimpleQuoteBackingBean extends
 
 					if (quote.getProcurementType().getParameterCode()
 							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-						syncG2gSupplier(quote, suppliers); //#40654
-						
+						// govt sellers
+						//40234 - start
+						if (getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()) {
+							throw new EpException(MessageConst.ERROR_760109);
+						} 
+						suppliers.addAll(getManagedBean().getGovtSellers());
+						//40234 - end
 					}
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
@@ -2631,7 +2615,10 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - end					
 					else {
 						// by supplier
-						syncNormalSupplier(quote, suppliers); //#40654
+						if (getManagedBean().getSupplierList() != null) {
+							suppliers
+									.addAll(getManagedBean().getSupplierList());
+						}
 					}
 				}
 				// by location
@@ -3013,20 +3000,20 @@ public class SimpleQuoteBackingBean extends
 		//27868 - end
 		// #28536 - start
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-			//#40234, #40654 - start
-			if (getManagedBean().getSupplierList() != null && CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+			//40234 - start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
 				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
 		    }
-			//#40234, #40654 - end
+			//40234 - end
 			getGovtSellerCriteria();
 		} else {
-			//#40234, #40654 - start
-			if (getManagedBean().getSupplierList() != null && CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
-				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
-		    } else if (getManagedBean().getGovtSellers() != null && CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
+			//40234 - start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+				removeGovtSellerFromSupplierList(getManagedBean().getSupplierList());
+		    } else if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
 		    	removeGovtSellerFromSupplierList(getManagedBean().getGovtSellers());
 		    }
-			//#40234, #40654 - end
+			//40234 - end
 		    getSupplierListCriteria();
 		}
 		// #28536 - end
@@ -10122,12 +10109,6 @@ public class SimpleQuoteBackingBean extends
 	    }
 
 	    suppliers.removeAll(suppliersToRemove);
-	    //update selected supplier list to current supplier
-	    //#40654 - start
-	    this.getManagedBean().setSupplierList(suppliers);
-	    getManagedBean().getScQuote().setScQuoteSuppliers(suppliers);
-	    //#40654 - end
-	   
 	}
 	
 	/**
@@ -10164,10 +10145,6 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		suppliers.removeAll(suppliersToRemove);
-		//#40654 - start
-		getManagedBean().setGovtSellers(suppliers);
-		getManagedBean().getScQuote().setScQuoteSuppliers(suppliers);
-		//#40654 - end
 	}
 	//40234 - end
 }
