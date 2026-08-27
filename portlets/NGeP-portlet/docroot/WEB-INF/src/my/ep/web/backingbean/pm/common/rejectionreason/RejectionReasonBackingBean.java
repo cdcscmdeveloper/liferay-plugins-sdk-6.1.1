@@ -756,6 +756,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 			log.info("saveRejectReason - End");
 			
+			/************ AUDIT *************/
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON)) {
+
+				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_REASON);
+			}
+			/************ AUDIT *************/
+			
 		} catch (EpException e) {
 			handleException(e);
 			returnPage = NAV_TO_MAINTAIN;
