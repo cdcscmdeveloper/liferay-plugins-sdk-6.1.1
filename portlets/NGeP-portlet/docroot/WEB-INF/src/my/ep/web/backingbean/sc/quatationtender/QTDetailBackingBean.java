@@ -272,6 +272,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.LanguageCode;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
@@ -911,7 +912,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
 				return;
-			} else if (!isSendNotificationButton || inactiveCLWarn) {
+			} else if (!isSendNotificationButton && inactiveCLWarn) {
 				checkInactiveChecklistAndDisplayWarning(this.getManagedBean()
 						.getTaskName());
 				return;
@@ -3817,18 +3818,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
 		// #35320 - Start;
-		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
-			if (scQt.getFinalizationCommitte().getParameterCode()
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| scQt.getFinalizationCommitte().getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				if (isStatusTrigger(currentStatusId)) {
-					scQt.setFinalizationCommitte(new PmParameter());
-					scQt.setFinalizationSecratery(new PmUser());
-					this.getManagedBean().setQt(scQt);
-				}
-			}
-		}
+		resetFinalizationCommittee(scQt, currentStatusId);
 		// #35320 - End
 		
 		if (finalizationSecratary == null
@@ -3864,6 +3854,66 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return finalizationSecratary;
 	}
+	
+	// #35320 - Start;
+		/**
+		 * #35320
+		 * Resets the finalization committee and secretary when the quotation
+		 * is finalized by a supported quotation committee and the current status
+		 * is a trigger status.
+		 *
+		 * @param scQt the quotation object to be updated
+		 * @param currentStatusId the current quotation status identifier
+		 */
+		private void resetFinalizationCommittee(ScQt scQt, Long currentStatusId) {
+		    if (!isValidFinalizationCommittee(scQt)) {
+		        return;
+		    }
+
+		    if (!isQuotationCommittee(scQt.getFinalizationCommitte())) {
+		        return;
+		    }
+
+		    if (!resetCommitteeByStatus(currentStatusId)) {
+		        return;
+		    }
+
+		    scQt.setFinalizationCommitte(new PmParameter());
+		    scQt.setFinalizationSecratery(new PmUser());
+		    this.getManagedBean().setQt(scQt);
+		}
+
+		/**
+		 * #35320
+		 * Checks whether the quotation has a valid finalization committee
+		 * and parameter code.
+		 *
+		 * @param scQt the quotation object
+		 * @return {@code true} if the committee and parameter code are present;
+		 *         {@code false} otherwise
+		 */
+		private boolean isValidFinalizationCommittee(ScQt scQt) {
+		    return scQt != null
+		            && scQt.getFinalizationCommitte() != null
+		            && scQt.getFinalizationCommitte().getParameterCode() != null;
+		}
+
+		/**
+		 * #35320
+		 * Determines whether the supplied parameter represents one of the
+		 * supported quotation committee types.
+		 *
+		 * @param committee the finalization committee parameter
+		 * @return {@code true} if the committee is quotation committee A or B;
+		 *         {@code false} otherwise
+		 */
+		private boolean isQuotationCommittee(PmParameter committee) {
+		    String parameterCode = committee.getParameterCode();
+
+		    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(parameterCode)
+		            || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameterCode);
+		}
+		// #35320 - End;
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -13608,12 +13658,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSO;
+		PmUser secretaryUser = new PmUser();
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					ICommitteSO.class);
 			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
 			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
+			if (CollectionUtils.isNotEmpty(committeeMembersList)) {
+				for (ScCommitteeMember committeeMem : committeeMembersList) {
+					if (committeeMem.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						secretaryUser = committeeMem.getPmUser();
+						break;
+					}
+				}
+			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKINGBEAN,
 					this.getManagedBean().getQt().getQtNo(),
@@ -13621,10 +13680,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
+		
+		String languageCode = secretaryUser.getPreferredLanguage() != null
+				|| !secretaryUser.getPreferredLanguage().isEmpty() ? secretaryUser
+				.getPreferredLanguage() : CommonConstants.DEFAULT_LANGUAGE_CODE;
+		Locale userLocale = new Locale(languageCode,
+				LanguageCode.getCountryCode(languageCode.toUpperCase()));
 
 		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
 		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
-		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
+		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), userLocale));
 		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
 
 		if (qtResDTO.isSuccessful()) {
@@ -15167,19 +15232,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
-			if (isQTStatusPublished(status)){
-				List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
-				for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
-					if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
-						this.getManagedBean().setShowCategoryCodePanel(false);
-						break;
-					}
-				}
-				//#29661 #40093 27th Apr start
-				if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
-					this.getManagedBean().setShowCategoryCodePanel(false);
-				}
-			} //#29661 #40093 27th Apr end
+			//#41068 start
+			if (isQTStatusGreaterThanOrEquals(status, QTStatusConst.QT_CLOSED)){
+				this.getManagedBean().setShowCategoryCodePanel(false);
+			}
+			//#41068 end
 		}
 		//#29661 #40094 End
 	}
@@ -15308,7 +15365,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @param statusId
 	 * @return boolean
 	 */
-	private static boolean isStatusTrigger(long statusId) {
+	private static boolean resetCommitteeByStatus(long statusId) {
         final List<Long> triggerStatuses = Arrays.asList(
                 QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
                 QTStatusConst.QT_REVISION_PUBLICATION,
@@ -15545,7 +15602,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				IQTDetailSO.class);
 
 		boolean enableeGPAStatuses = scQt.getQtStatus() != null
-				&& QTStatusConst.getStatusAbleToShoweGPAPopUp().contains(scQt.getQtStatus().getStatusId());
+				&& QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId());
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
