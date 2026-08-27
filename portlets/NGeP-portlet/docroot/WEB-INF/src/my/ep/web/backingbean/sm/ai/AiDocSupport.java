@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,8 +24,12 @@ import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -41,15 +46,104 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
-
-	// AI doc extraction master switch from ngep.properties; absent or anything but "1" is off.
 	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
+	private static final String AI_BLOCK_DECLARE = EpPropertiesUtils.getInstance().getProperty("google.doc.bank.co.name.check.onoff");
 
 	private AiDocSupport() {
 	}
 
 	public static boolean isAiEnabled() {
 		return AI_ONOFF != null && AI_ONOFF.trim().equalsIgnoreCase("1");
+	}
+
+	public static boolean isBlockDeclareEnabled() {
+		return AI_BLOCK_DECLARE != null && AI_BLOCK_DECLARE.trim().equalsIgnoreCase("1");
+	}
+
+	/**
+	 * Fields the applicant edited since extraction, from AI_API_RESPONSE.USER_EDIT.
+	 */
+	public static final class AiUserEdit {
+
+		public static final String KEY_TENANCY = "hq";
+		public static final String F_EPF_NO = "epf_no";
+		public static final String F_NAME = "name";
+		public static final String F_IC = "ic";
+		public static final String F_OWNER_NAME = "owner_name";
+		public static final String F_RENTAL_RATE = "rental_rate";
+		public static final String F_ADDRESS1 = "address1";
+		public static final String F_ADDRESS2 = "address2";
+		public static final String F_ADDRESS3 = "address3";
+		public static final String F_POSTCODE = "postcode";
+		public static final String F_COUNTRY = "country";
+		public static final String F_STATE = "state";
+		public static final String F_DISTRICT = "district";
+		public static final String F_CITY = "city";
+
+		private static final Logger log = Logger.getLogger(AiUserEdit.class);
+
+		private AiUserEdit() {
+		}
+
+		public static Map<String, Set<String>> parse(String userEdit) {
+			Map<String, Set<String>> edits = new HashMap<>();
+			if (StringUtils.isEmpty(userEdit)) {
+				return edits;
+			}
+			try {
+				JSONObject root = new JSONObject(userEdit);
+				for (Iterator<?> keys = root.keys(); keys.hasNext();) {
+					String entityKey = String.valueOf(keys.next());
+					JSONArray fields = root.optJSONArray(entityKey);
+					if (fields == null) {
+						continue;
+					}
+					Set<String> names = new HashSet<>();
+					for (int i = 0; i < fields.length(); i++) {
+						names.add(fields.getString(i));
+					}
+					edits.put(entityKey, names);
+				}
+			} catch (JSONException | NullPointerException e) {
+				log.error("Error parsing USER_EDIT", e);
+			}
+			return edits;
+		}
+
+		public static String toJson(Map<String, Set<String>> edits) {
+			JSONObject root = new JSONObject();
+			try {
+				for (Map.Entry<String, Set<String>> entry : edits.entrySet()) {
+					if (!entry.getValue().isEmpty()) {
+						root.put(entry.getKey(), new JSONArray(entry.getValue()));
+					}
+				}
+			} catch (JSONException e) {
+				log.error("Error building USER_EDIT", e);
+			}
+			return root.toString();
+		}
+
+		public static Set<String> fields(Map<String, Set<String>> edits, String entityKey) {
+			Set<String> names = entityKey == null ? null : edits.get(entityKey);
+			return names == null ? new HashSet<String>() : names;
+		}
+
+		public static boolean add(Map<String, Set<String>> edits, String entityKey, String field) {
+			if (entityKey == null) {
+				return false;
+			}
+			Set<String> names = edits.get(entityKey);
+			if (names == null) {
+				names = new HashSet<>();
+				edits.put(entityKey, names);
+			}
+			return names.add(field);
+		}
+
+		public static boolean clear(Map<String, Set<String>> edits, String entityKey) {
+			return entityKey != null && edits.remove(entityKey) != null;
+		}
 	}
 
 	/**
@@ -437,12 +531,14 @@ public final class AiDocSupport {
 
 		public static final Logger log = Logger.getLogger(AiDocValidator.class);
 
-		public static final double MIN_FUZZY_SCORE = 0.8;
+		public static final double MIN_BANK_MATCH_SCORE = 0.4;
+		public static final double MIN_BANK_MATCH_MARGIN = 0.15;
+		public static final double MIN_TEXT_MATCH_SCORE = 0.6;
 
 		/**
 		 * Verify a tenancy extraction against the rental info keyed in Premises Type; sets the per-field verdict
 		 * flags on the DTO. A field absent from either side is excluded from the verdict (left valid). Landlord's
-		 * Name keeps Jaro-Winkler; Company / Monthly Rental match exactly.
+		 * Name / Company / Monthly Rental match exactly; the address is matched on tokens.
 		 */
 		public static void validateTenancy(AiTenancyDTO te, String landlordName, String companyName,
 				BigDecimal rentalRate, SmAddress addr) {
@@ -450,7 +546,7 @@ public final class AiDocSupport {
 				return;
 			}
 			te.setValidLandlordsName(StringUtils.isBlank(landlordName) || StringUtils.isBlank(te.getLandlordsName())
-					|| fuzzyMatchJaroWinkler(landlordName, te.getLandlordsName()) >= MIN_FUZZY_SCORE);
+					|| normalizedEquals(landlordName, te.getLandlordsName()));
 			te.setValidTenantsName(StringUtils.isBlank(te.getTenantsName())
 					|| normalizedEquals(companyName, te.getTenantsName()));
 			te.setValidMonthlyRental(rentalRate == null || te.getMonthlyRental() == null
@@ -471,10 +567,10 @@ public final class AiDocSupport {
 			if (te.getPostcode() == null || !te.getPostcode().equals(addr.getPostcode())) {
 				return;
 			}
-			String suppAddr = addr.getAddress1() + addr.getAddress2() + addr.getAddress3();
-			String jsonAddr = te.getAddr1() + te.getAddr2() + te.getAddr3();
-			double score = fuzzyMatchJaroWinkler(suppAddr, jsonAddr);
-			if (score < MIN_FUZZY_SCORE) {
+			String suppAddr = joinParts(addr.getAddress1(), addr.getAddress2(), addr.getAddress3());
+			String jsonAddr = joinParts(te.getAddr1(), te.getAddr2(), te.getAddr3());
+			double score = tokenSimilarity(suppAddr, jsonAddr);
+			if (score < MIN_TEXT_MATCH_SCORE) {
 				return;
 			}
 			te.setValidAddress(true);
@@ -502,21 +598,22 @@ public final class AiDocSupport {
 			if (EntityHelper.isCollectionEmpty(docEntities)) {
 				return;
 			}
-			Map<String, String> supplierAccounts = collectSupplierAccounts(appl);
-			List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
+			Map<String, Long> supplierAccounts = collectSupplierAccounts(appl);
+			Set<Long> supplierOrgIds = new HashSet<>(supplierAccounts.values());
+			List<PmFinancialOrg> candidates = candidateFinancialOrgs(appl);
 			String companyNameSupp = appl.getSmSupplier().getCompanyName();
 
 			// the flags live on each record, so a repeated account still has to be verified on its own file
 			for (AiBankDocDTO entity : docEntities) {
 				for (AiBankDocDTO.AiBankStatementDTO bank : entity.getBankStatements()) {
-					validateBankRecord(bank, supplierAccounts, supplierBanks, companyNameSupp);
+					validateBankRecord(bank, supplierAccounts, supplierOrgIds, candidates, companyNameSupp);
 				}
 			}
 		}
 
-		// Account number -> financial-org name, over every bank keyed in at Bank Information.
-		private static Map<String, String> collectSupplierAccounts(SmAppl appl) {
-			Map<String, String> supplierAccounts = new HashMap<>();
+		// Account number -> chosen financial org id, over every bank keyed in at Bank Information.
+		private static Map<String, Long> collectSupplierAccounts(SmAppl appl) {
+			Map<String, Long> supplierAccounts = new HashMap<>();
 			if (EntityHelper.isCollectionEmpty(appl.getSmSupplierBanks())) {
 				return supplierAccounts;
 			}
@@ -526,29 +623,64 @@ public final class AiDocSupport {
 				if (StringUtils.isEmpty(accountNo) || suppBank.getPmFinancialOrg() == null) {
 					continue;
 				}
-				supplierAccounts.put(accountNo, suppBank.getPmFinancialOrg().getFinOrgName());
+				supplierAccounts.put(accountNo, suppBank.getPmFinancialOrg().getFinancialOrgId());
 			}
 			return supplierAccounts;
 		}
 
-		private static void validateBankRecord(AiBankDocDTO.AiBankStatementDTO bank,
-				Map<String, String> supplierAccounts, List<String> supplierBanks, String companyNameSupp) {
-			String companyNameJson = bank.getAccountHolderName();
-			String bankName = supplierAccounts.get(normalizeAccountNo(bank.getAccountNo()));
-			if (bankName == null) {
-				bank.setValidAccountNo(false);
-
-				bankName = fuzzyMatchList(bank.getBankName(), supplierBanks);
-				if (StringUtils.isEmpty(bankName)) {
-					bank.setValidBankName(false);
+		// The banks the supplier could have picked, taken from the same service types the Bank Information
+		// dropdown offers, so a match can only ever land on something selectable.
+		private static List<PmFinancialOrg> candidateFinancialOrgs(SmAppl appl) {
+			Set<String> serviceTypes = new HashSet<>();
+			if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierBanks())) {
+				for (SmSupplierBank suppBank : appl.getSmSupplierBanks()) {
+					addBankServiceTypes(serviceTypes, suppBank.getAccountPurpose());
 				}
+			}
+			if (serviceTypes.isEmpty()) {
+				addBankServiceTypes(serviceTypes, null);
+			}
+			Map<Long, PmFinancialOrg> candidates = new HashMap<>();
+			for (String serviceType : serviceTypes) {
+				FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+				reqDTO.setServiceType(serviceType);
+				FinancialOrgResDTO resDTO = SmServiceLookup.getFinancialOrgSO()
+						.retrieveFinancialOrgListByServiceType(reqDTO);
+				if (resDTO == null || EntityHelper.isCollectionEmpty(resDTO.getFinancialOrgList())) {
+					continue;
+				}
+				for (PmFinancialOrg org : resDTO.getFinancialOrgList()) {
+					candidates.put(org.getFinancialOrgId(), org);
+				}
+			}
+			return new ArrayList<>(candidates.values());
+		}
 
+		private static void addBankServiceTypes(Set<String> serviceTypes, String accountPurpose) {
+			if ("P".equalsIgnoreCase(accountPurpose)) {
+				serviceTypes.add(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
+			} else if ("R".equalsIgnoreCase(accountPurpose)) {
+				serviceTypes.add(ParameterConst.BANK_SERVICES_REGISTRATION);
 			} else {
-				double score = fuzzyMatchJaroWinkler(bankName, bank.getBankName());
-				log.debug("Bank name fuzzy score=" + score + " supplier=" + bankName + " extracted=" + bank.getBankName());
-				if (score < MIN_FUZZY_SCORE) {
+				serviceTypes.add(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
+				serviceTypes.add(ParameterConst.BANK_SERVICES_REGISTRATION);
+			}
+		}
+
+		private static void validateBankRecord(AiBankDocDTO.AiBankStatementDTO bank,
+				Map<String, Long> supplierAccounts, Set<Long> supplierOrgIds,
+				List<PmFinancialOrg> candidates, String companyNameSupp) {
+			String companyNameJson = bank.getAccountHolderName();
+			Long resolvedOrgId = resolveFinancialOrg(bank.getBankName(), candidates);
+			Long chosenOrgId = supplierAccounts.get(normalizeAccountNo(bank.getAccountNo()));
+			if (chosenOrgId == null) {
+				bank.setValidAccountNo(false);
+				// no account to anchor on, so the name only has to be one of the banks the supplier keyed in
+				if (resolvedOrgId == null || !supplierOrgIds.contains(resolvedOrgId)) {
 					bank.setValidBankName(false);
 				}
+			} else if (!chosenOrgId.equals(resolvedOrgId)) {
+				bank.setValidBankName(false);
 			}
 			// Supplier name is required, so a blank or mismatched one fails the verdict.
 			if (!normalizedEquals(companyNameJson, companyNameSupp)) {
@@ -608,121 +740,133 @@ public final class AiDocSupport {
 			return accountNo.replaceAll("[^0-9]", "");
 		}
 
-		public static String fuzzyMatchList(String target, List<String> list) {
-			if (StringUtils.isEmpty(target) || EntityHelper.isCollectionEmpty(list)) {
-				return "";
+		public static List<String> tokenize(String name) {
+			List<String> tokens = new ArrayList<>();
+			String canonical = canonicalizeCompanyName(name);
+			if (canonical.isEmpty()) {
+				return tokens;
 			}
-			double bestScore = 0;
-			String bestResult = "";
-			for (String s : list) {
-				double score = fuzzyMatchJaroWinkler(target, s);
-				if (score > bestScore && score > MIN_FUZZY_SCORE) {
-					bestScore = score;
-					bestResult = s;
+			for (String token : canonical.split(" ")) {
+				if (!token.isEmpty()) {
+					tokens.add(token);
 				}
 			}
-			return bestResult;
+			return tokens;
 		}
-		
+
+		public static String joinParts(String... parts) {
+			StringBuilder sb = new StringBuilder();
+			for (String part : parts) {
+				if (StringUtils.isNotBlank(part)) {
+					sb.append(part).append(" ");
+				}
+			}
+			return sb.toString().trim();
+		}
+
 		/**
-		 * Jaro-Winkler, better match for "maybank" and "maybank investment banking".
+		 * Share of tokens the two strings have in common, for free text with no reference list behind it.
 		 * @param st1
 		 * @param st2
-		 * @return
+		 * @return 0.0 when either side has no tokens
 		 */
-		public static double fuzzyMatchJaroWinkler(String st1, String st2) {
-			if (StringUtils.isEmpty(st1) || StringUtils.isEmpty(st2)) {
+		public static double tokenSimilarity(String st1, String st2) {
+			Set<String> shared = new HashSet<>(tokenize(st1));
+			Set<String> other = new HashSet<>(tokenize(st2));
+			if (shared.isEmpty() || other.isEmpty()) {
 				return 0.0;
 			}
-			String s1 = st1.toLowerCase().trim();
-			String s2 = st2.toLowerCase().trim();
-			double jaroSim = jaroSimilarity(s1, s2);
-			if (jaroSim < 0.7) {
-				return jaroSim;
-			}
-			int prefixLength = 0;
-			int maxPrefix = Math.min(4, Math.min(s1.length(), s2.length()));
-
-			for (int i = 0; i < maxPrefix; i++) {
-				if (s1.charAt(i) == s2.charAt(i)) {
-					prefixLength++;
-				} else {
-					break;
-				}
-			}
-
-			return jaroSim + (0.1 * prefixLength * (1 - jaroSim));
+			Set<String> union = new HashSet<>(shared);
+			union.addAll(other);
+			shared.retainAll(other);
+			return (double) shared.size() / union.size();
 		}
 
-		private static double jaroSimilarity(String st1, String st2) {
-			if (st1 == null || st2 == null) {
+		// Skim Perbankan Islam entries are separate legal entities, so they never match a conventional name.
+		public static boolean isSpiName(String name) {
+			return tokenize(name).contains("spi")
+					|| canonicalizeCompanyName(name).contains("skim perbankan islam");
+		}
+
+		/**
+		 * Resolve an extracted bank name to one PM_FINANCIAL_ORG row. Tokens are weighted by how rare they are
+		 * across the candidate list, so shared boilerplate such as BANK or BERHAD cannot carry a match on its own.
+		 * @param extractedName
+		 * @param candidates
+		 * @return the financial org id, or null when nothing clears both the floor and the runner-up
+		 */
+		public static Long resolveFinancialOrg(String extractedName, List<PmFinancialOrg> candidates) {
+			Set<String> queryTokens = new HashSet<>(tokenize(extractedName));
+			if (queryTokens.isEmpty() || EntityHelper.isCollectionEmpty(candidates)) {
+				return null;
+			}
+			boolean spi = isSpiName(extractedName);
+			List<PmFinancialOrg> pool = new ArrayList<>();
+			for (PmFinancialOrg org : candidates) {
+				if (isSpiName(org.getFinOrgName()) == spi) {
+					pool.add(org);
+				}
+			}
+			if (pool.isEmpty()) {
+				return null;
+			}
+			Map<String, Integer> docFreq = documentFrequency(pool);
+			double best = 0;
+			double runnerUp = 0;
+			PmFinancialOrg bestOrg = null;
+			for (PmFinancialOrg org : pool) {
+				double score = weightedTokenScore(queryTokens, new HashSet<>(tokenize(org.getFinOrgName())),
+						docFreq, pool.size());
+				if (score > best) {
+					runnerUp = best;
+					best = score;
+					bestOrg = org;
+				} else if (score > runnerUp) {
+					runnerUp = score;
+				}
+			}
+			log.debug("Bank name resolve extracted=" + extractedName + " best="
+					+ (bestOrg == null ? null : bestOrg.getFinOrgName()) + " score=" + best
+					+ " runnerUp=" + runnerUp);
+			if (bestOrg == null || best < MIN_BANK_MATCH_SCORE || best - runnerUp < MIN_BANK_MATCH_MARGIN) {
+				return null;
+			}
+			return bestOrg.getFinancialOrgId();
+		}
+
+		private static Map<String, Integer> documentFrequency(List<PmFinancialOrg> pool) {
+			Map<String, Integer> docFreq = new HashMap<>();
+			for (PmFinancialOrg org : pool) {
+				for (String token : new HashSet<>(tokenize(org.getFinOrgName()))) {
+					Integer freq = docFreq.get(token);
+					docFreq.put(token, freq == null ? 1 : freq + 1);
+				}
+			}
+			return docFreq;
+		}
+
+		private static double weightedTokenScore(Set<String> queryTokens, Set<String> nameTokens,
+				Map<String, Integer> docFreq, int poolSize) {
+			if (nameTokens.isEmpty()) {
 				return 0.0;
 			}
-			if (st1.equals(st2)) {
-				return 1.0;
+			Set<String> union = new HashSet<>(queryTokens);
+			union.addAll(nameTokens);
+			double shared = 0;
+			double total = 0;
+			for (String token : union) {
+				double weight = inverseDocFrequency(token, docFreq, poolSize);
+				total += weight;
+				if (queryTokens.contains(token) && nameTokens.contains(token)) {
+					shared += weight;
+				}
 			}
-
-			String s1 = st1.toLowerCase();
-			String s2 = st2.toLowerCase();
-
-			int len1 = s1.length();
-			int len2 = s2.length();
-
-			if (len1 == 0 || len2 == 0) {
-				return (len1 == 0 && len2 == 0) ? 1.0 : 0.0;
-			}
-
-			boolean[] s1Matches = new boolean[len1];
-			boolean[] s2Matches = new boolean[len2];
-
-			int matches = countMatches(s1, s2, s1Matches, s2Matches);
-			if (matches == 0) {
-				return 0.0;
-			}
-			int transpositions = countTranspositions(s1, s2, s1Matches, s2Matches);
-
-			return ((double) matches / len1 + (double) matches / len2
-					+ (matches - (double) transpositions / 2) / matches) / 3.0;
+			return total == 0 ? 0.0 : shared / total;
 		}
 
-		// Flag the matching characters within the Jaro match window; returns the match count.
-		private static int countMatches(String s1, String s2, boolean[] s1Matches, boolean[] s2Matches) {
-			int len1 = s1.length();
-			int len2 = s2.length();
-			int matchWindow = Math.max(0, Math.max(len1, len2) / 2 - 1);
-			int matches = 0;
-			for (int i = 0; i < len1; i++) {
-				int start = Math.max(0, i - matchWindow);
-				int end = Math.min(i + matchWindow + 1, len2);
-				for (int j = start; j < end; j++) {
-					if (!s2Matches[j] && s1.charAt(i) == s2.charAt(j)) {
-						s1Matches[i] = true;
-						s2Matches[j] = true;
-						matches++;
-						break;
-					}
-				}
-			}
-			return matches;
-		}
-
-		// Count out-of-order matched characters (twice the Jaro transposition count).
-		private static int countTranspositions(String s1, String s2, boolean[] s1Matches, boolean[] s2Matches) {
-			int transpositions = 0;
-			int k = 0;
-			for (int i = 0; i < s1.length(); i++) {
-				if (!s1Matches[i]) {
-					continue;
-				}
-				while (!s2Matches[k]) {
-					k++;
-				}
-				if (s1.charAt(i) != s2.charAt(k)) {
-					transpositions++;
-				}
-				k++;
-			}
-			return transpositions;
+		private static double inverseDocFrequency(String token, Map<String, Integer> docFreq, int poolSize) {
+			Integer freq = docFreq.get(token);
+			return Math.log((poolSize + 1.0) / ((freq == null ? 0 : freq) + 1.0)) + 1.0;
 		}
 
 		// The basic-company (headquarters) facility that the Premises Type form binds to.
@@ -759,25 +903,44 @@ public final class AiDocSupport {
 		}
 
 		// display AI icons when values match
-		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te) {
+		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te, Set<String> edited) {
 			if (fac == null || te == null) {
 				return;
 			}
-			fac.setOwnerNameAI(te.getLandlordsName());
-			fac.setRentalRateAI(te.getMonthlyRental());
+			if (!edited.contains(AiUserEdit.F_OWNER_NAME)) {
+				fac.setOwnerNameAI(te.getLandlordsName());
+			}
+			if (!edited.contains(AiUserEdit.F_RENTAL_RATE)) {
+				fac.setRentalRateAI(te.getMonthlyRental());
+			}
 			SmAddress addr = fac.getSmAddress();
 			if (addr != null) {
-				addr.setAddress1AI(te.getAddr1());
-				addr.setAddress2AI(te.getAddr2());
-				addr.setAddress3AI(te.getAddr3());
-				addr.setPostcodeAI(te.getPostcode());
+				if (!edited.contains(AiUserEdit.F_ADDRESS1)) {
+					addr.setAddress1AI(te.getAddr1());
+				}
+				if (!edited.contains(AiUserEdit.F_ADDRESS2)) {
+					addr.setAddress2AI(te.getAddr2());
+				}
+				if (!edited.contains(AiUserEdit.F_ADDRESS3)) {
+					addr.setAddress3AI(te.getAddr3());
+				}
+				if (!edited.contains(AiUserEdit.F_POSTCODE)) {
+					addr.setPostcodeAI(te.getPostcode());
+				}
 				PmCity city = te.getPmCity();
 				if (city != null) {
-					addr.setCityIdAI(city.getCityId());
-					addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
+					if (!edited.contains(AiUserEdit.F_CITY)) {
+						addr.setCityIdAI(city.getCityId());
+					}
+					if (!edited.contains(AiUserEdit.F_COUNTRY)) {
+						addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
+					}
 					if (city.getPmDistrict() != null) {
-						addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
-						if (city.getPmDistrict().getPmState() != null) {
+						if (!edited.contains(AiUserEdit.F_DISTRICT)) {
+							addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
+						}
+						if (city.getPmDistrict().getPmState() != null
+								&& !edited.contains(AiUserEdit.F_STATE)) {
 							addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
 						}
 					}

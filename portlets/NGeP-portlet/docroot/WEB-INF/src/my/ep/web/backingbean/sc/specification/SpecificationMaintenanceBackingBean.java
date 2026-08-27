@@ -34,6 +34,7 @@ import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -670,10 +671,16 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		// #10141 Start Vinod
-		boolean isReadOnly = this.getManagedBean().isReadOnly();
-		if (!isReadOnly
+		// BUG #40852 WIP QT - Confirmation box not displayed upon clicking pencil Icon
+		if (isEditable
 				&& QTStatusConst.getQTSpecMaintenanceInactiveChecklistUpdateGroup().contains(
-						this.getManagedBean().getCurrentStatusId())) {
+						scQt.getQtStatus().getStatusId())) {						
+				//#40980 - Start
+				ScQt tmpScQt = this.getManagedBean().getQt();
+				specBB.checkAndUpdateNewMandatoryChecklist(tmpScQt, SourcingConstants.FINANCIAL_DOCTYPE);
+				specBB.checkAndUpdateNewMandatoryChecklist(tmpScQt, SourcingConstants.TECHNICAL_DOCTYPE);		
+				//#40980 - End
+
 			boolean isInactiveChecklistPopup = specBB.checkInactiveChecklistForPopup(this.getManagedBean()
 					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
 
@@ -894,8 +901,11 @@ public boolean isSpecCommittee() {
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() || null != publishDate
-				&& publishDate.before(effDate)) {
+		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
+		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
+		
+		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc)) 
+				|| (null != publishDate && publishDate.before(effDate))) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
@@ -915,6 +925,44 @@ public boolean isSpecCommittee() {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
+	}
+	
+	private boolean specStatusEndorseRev(Date effTimestamp) {
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatus(this.getManagedBean().getQt().getQtId());
+			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}
+			
+			 
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
+
+	private boolean specStatusPendingDocRev(Date effTimestamp) {
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatusPenDoc(this.getManagedBean().getQt().getQtId());
+			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}
+			
+			 
+		} finally {
+			workFlowStatusSO = null;
+		}
 	}
 	//#38151 & #38679 end
 }

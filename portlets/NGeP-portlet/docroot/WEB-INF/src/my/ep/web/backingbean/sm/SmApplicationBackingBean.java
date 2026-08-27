@@ -8221,6 +8221,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		validateOwnerIndividualAcc(getManagedBean().getSelectedShareHolder());
 		validateAuthorizedPersonnel(getManagedBean().getSelectedShareHolder());
+		validateMandatoryField(getManagedBean().getSelectedShareHolder()); //40801
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
 				.getSelectedShareHolder(), getManagedBean().getSmAppl());
@@ -8351,10 +8352,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			}
 
-			//#40112 - start
 			SmAIDocBackingBean.validateManualPersonnelAgainstEpf(
-					getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder());
-			//#40112 - end
+					getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder());	//#40112
 			SmCommonUtil.getInstance().setUserDetails(
 					getManagedBean().getSelectedShareHolder());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -8493,6 +8492,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// #27802 - end
 			
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
+			SmAIDocBackingBean.latchUserEdit(getManagedBean().getSmAppl());	//#40112
 		} catch (Exception e) {
 			log.info("error to save appl no:"
 					+ getManagedBean().getSmAppl().getApplNo(), e);
@@ -13663,9 +13663,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            addr
 	 */
 	public void onChangeCity(SmAddress addr, String panelName) {
-		//#40112 - start
-		addr.clearCityAI();
-		//#40112 - end
+		addr.clearCityAI();	//#40112
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
 		//#36483 - START
@@ -18368,7 +18366,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//#31407 - START
 	public void checkBeforeSubmit() {
 		//#40112 - start
-		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl())) {
+		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)
+				&& AiDocSupport.isBlockDeclareEnabled()) {
 			return;
 		}
 		//#40112 - end
@@ -19980,8 +19979,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	public boolean isShowTenancyAiBtn(){
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
-		return isAiAvailable() && fac != null
-				&& "R".equals(fac.getOwnershipType()) && "B".equals(fac.getFacilityType());
+		return isAiAvailable() && fac != null && SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED.equals(fac.getOwnershipType());
+	}
+
+	// (ERR-722683)
+	public boolean isShowEpfAiBtn(){
+		return isAiAvailable() && !getManagedBean().isDisAllowOwnerEdit();
 	}
 
 	public boolean isAiUploadDocRow(PmDocument doc){
@@ -19993,6 +19996,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (te == null){
 			return;
 		}
+		SmAIDocBackingBean.clearTenancyUserEdit(getManagedBean().getSmAppl());
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
 		fac.setRentalRate(te.getMonthlyRental());
 		fac.setOwnerName(te.getLandlordsName());
@@ -20035,7 +20039,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	public boolean isAiBlockDeclare() {
-		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false);
+		return SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false) 
+				&& AiDocSupport.isBlockDeclareEnabled();
 	}
 	//40112 - end
 	
@@ -20236,4 +20241,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    return gmapsScriptSrc;
 	}
 	// #40306 End
+	//#40801 START
+	/**
+	 * Validates that the specified field contains a value.
+	 *
+	 * @param value the field value to validate
+	 * @param fieldName the display name of the field used in the validation message
+	 * @throws EpException if the field value is null or empty
+	 */
+	private void validateMandatoryField(SmPersonnel personnel) {
+		if (personnel.getEpRole() != null && !personnel.getEpRole().isEmpty() &&
+				(personnel.getEmail() == null || personnel.getEmail().trim().isEmpty())) {
+	        throw new EpException("Email is mandatory", null);
+	    }
+	}
+	//#40801 END
 }
