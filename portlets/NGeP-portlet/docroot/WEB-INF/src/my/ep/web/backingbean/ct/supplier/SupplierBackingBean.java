@@ -395,7 +395,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			if(reqDTO.getDocType() == null){
 				reqDTO.setDocType(resDTO.getDocType());
 			}
-			//Start Fix - #41062
+			//End Fix - #41062
 			getManagedBean().setFactoring(resDTO.getFactoring());
 			getManagedBean().setCtContract(resDTO.getFactoring().getCtContract());
 			if (resDTO.getFactoring().getCtContract().getLatestContractVer() != null) {

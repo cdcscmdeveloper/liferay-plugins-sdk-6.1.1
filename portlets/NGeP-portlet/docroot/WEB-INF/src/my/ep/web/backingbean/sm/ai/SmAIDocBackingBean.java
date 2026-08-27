@@ -44,6 +44,7 @@ import my.ep.web.backingbean.sm.ai.AiDocSupport.AiDocParser;
 import my.ep.web.backingbean.sm.ai.AiDocSupport.AiDocValidator;
 import my.ep.web.backingbean.sm.ai.AiDocSupport.AiEpfResultDTO;
 import my.ep.web.backingbean.sm.ai.AiDocSupport.AiTenancyDTO;
+import my.ep.web.backingbean.sm.ai.AiDocSupport.AiUserEdit;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -607,6 +608,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				per.setEpfNoAI(employee.getKwspNumber());
 				continue;
 			}
+			clearEpfUserEdit(appl, employee.getNricNumber());
 			per = new SmPersonnel();
 			per.setName(employee.getEmployeeName());
 			per.setIdentificationNo(employee.getNricNumber());
@@ -812,7 +814,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			AiDocValidator.validateTenancy(te, landlordsNameSupp, companyName, rentalRate, addr);
 
 			markProjectedFile(appl, response, te.getLabel(), te.hasError() ? 2 : 1); //1-ok, 2-err
-			AiDocValidator.setTenancyAiFields(hqFacility, te);
+			AiDocValidator.setTenancyAiFields(hqFacility, te,
+					AiUserEdit.fields(AiUserEdit.parse(response.getUserEdit()), AiUserEdit.KEY_TENANCY));
 		}
 	}
 
@@ -856,55 +859,187 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (fields == null){
 			return;
 		}
+		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
 		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
 			SmPersonnel per = byNric.get(emp.getNricNumber());
 			if (per == null){
 				continue;
 			}
-			per.setEpfNoAI(emp.getKwspNumber());
+			Set<String> edited = AiUserEdit.fields(edits, emp.getNricNumber());
+			if (!edited.contains(AiUserEdit.F_EPF_NO)){
+				per.setEpfNoAI(emp.getKwspNumber());
+			}
 
 			String aiName = emp.getEmployeeName();
 			if (aiName != null && per.getName() != null
 					&& per.getName().trim().equalsIgnoreCase(aiName.trim())){
-				per.setNameAI(aiName);
-				per.setIcAI(emp.getNricNumber());
+				if (!edited.contains(AiUserEdit.F_NAME)){
+					per.setNameAI(aiName);
+				}
+				if (!edited.contains(AiUserEdit.F_IC)){
+					per.setIcAI(emp.getNricNumber());
+				}
 			}
 		}
 	}
 	
 	/**
-	 * Extracted employee names, empty when AI does not apply so the caller leaves manual adds unrestricted.
+	 * Record every AI-populated field the applicant has changed. Call before saving.
+	 * @param appl
+	 */
+	public static void latchUserEdit(SmAppl appl){
+		if (!isAIApplicable(appl)){
+			return;
+		}
+		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
+			latchEpfUserEdit(appl, response);
+		}
+		SmFacility hqFacility = AiDocValidator.getHeadquartersFacility(appl);
+		for (AIApiResponse response : findResponses(appl, TYPE_TENANCY)){
+			latchTenancyUserEdit(hqFacility, response);
+		}
+	}
+
+	private static void latchEpfUserEdit(SmAppl appl, AIApiResponse response){
+		if (EntityHelper.isCollectionEmpty(appl.getSmPersonnels())){
+			return;
+		}
+		JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
+		if (fields == null){
+			return;
+		}
+		Set<String> extracted = new HashSet<>();
+		for (AiEpfResultDTO.AiEmployeeDTO emp : AiDocParser.toEpf(fields).getEmployees()){
+			extracted.add(emp.getNricNumber());
+		}
+		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
+		boolean changed = false;
+		for (SmPersonnel per : appl.getSmPersonnels()){
+			String key = per.getIcAI() != null ? per.getIcAI() : per.getIdentificationNo();
+			if (!extracted.contains(key)){
+				continue;
+			}
+			if (per.getEpfNoAI() != null && !per.isEpfNoFromAI()){
+				changed |= AiUserEdit.add(edits, key, AiUserEdit.F_EPF_NO);
+			}
+			if (per.getNameAI() != null && !per.isNameFromAI()){
+				changed |= AiUserEdit.add(edits, key, AiUserEdit.F_NAME);
+			}
+			if (per.getIcAI() != null && !per.isIcFromAI()){
+				changed |= AiUserEdit.add(edits, key, AiUserEdit.F_IC);
+			}
+		}
+		persistUserEdit(response, edits, changed);
+	}
+
+	private static void latchTenancyUserEdit(SmFacility fac, AIApiResponse response){
+		if (fac == null){
+			return;
+		}
+		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
+		boolean changed = false;
+		if (fac.getOwnerNameAI() != null && !fac.isOwnerNameFromAI()){
+			changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_OWNER_NAME);
+		}
+		if (fac.getRentalRateAI() != null && !fac.isRentalRateFromAI()){
+			changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_RENTAL_RATE);
+		}
+		SmAddress addr = fac.getSmAddress();
+		if (addr != null){
+			if (addr.getAddress1AI() != null && !addr.isAddress1FromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_ADDRESS1);
+			}
+			if (addr.getAddress2AI() != null && !addr.isAddress2FromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_ADDRESS2);
+			}
+			if (addr.getAddress3AI() != null && !addr.isAddress3FromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_ADDRESS3);
+			}
+			if (addr.getPostcodeAI() != null && !addr.isPostcodeFromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_POSTCODE);
+			}
+			if (addr.getCountryIdAI() != null && !addr.isCountryFromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_COUNTRY);
+			}
+			if (addr.getStateIdAI() != null && !addr.isStateFromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_STATE);
+			}
+			if (addr.getDistrictIdAI() != null && !addr.isDistrictFromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_DISTRICT);
+			}
+			if (addr.getCityIdAI() != null && !addr.isCityFromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_CITY);
+			}
+		}
+		persistUserEdit(response, edits, changed);
+	}
+
+	/**
+	 * Re-adding an employee from the AI Assistant makes its fields AI-populated again.
+	 * @param appl
+	 * @param nric
+	 */
+	public static void clearEpfUserEdit(SmAppl appl, String nric){
+		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
+			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
+			persistUserEdit(response, edits, AiUserEdit.clear(edits, nric));
+		}
+	}
+
+	/**
+	 * Re-applying an extracted tenancy statement makes its fields AI-populated again.
+	 * @param appl
+	 */
+	public static void clearTenancyUserEdit(SmAppl appl){
+		for (AIApiResponse response : findResponses(appl, TYPE_TENANCY)){
+			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
+			persistUserEdit(response, edits, AiUserEdit.clear(edits, AiUserEdit.KEY_TENANCY));
+		}
+	}
+
+	private static void persistUserEdit(AIApiResponse response, Map<String, Set<String>> edits, boolean changed){
+		if (!changed){
+			return;
+		}
+		String json = AiUserEdit.toJson(edits);
+		response.setUserEdit(json);
+		SmServiceLookup.getAIApiProcessSO().updateUserEdit(response.getApiResponseId(), json);
+	}
+
+	/**
+	 * Extracted employee IC Nos., empty when AI does not apply so the caller leaves manual adds unrestricted.
 	 * @param appl
 	 * @return
 	 */
-	public static Set<String> getAiEpfEmployeeNames(SmAppl appl){
-		Set<String> names = new HashSet<>();
+	public static Set<String> getAiEpfEmployeeNrics(SmAppl appl){
+		Set<String> nrics = new HashSet<>();
 		if (!isAIApplicable(appl)){
-			return names;
+			return nrics;
 		}
 		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
-			collectEpfEmployeeNames(response, names);
+			collectEpfEmployeeNrics(response, nrics);
 		}
-		return names;
+		return nrics;
 	}
 
-	// collect trimmed AI-extracted employee names from one EPF doc file into names
-	private static void collectEpfEmployeeNames(AIApiResponse response, Set<String> names){
+	// collect trimmed AI-extracted employee IC Nos. from one EPF doc file into nrics
+	private static void collectEpfEmployeeNrics(AIApiResponse response, Set<String> nrics){
 		JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 		if (fields == null){
 			return;
 		}
 		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
 		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
-			if (emp.getEmployeeName() != null && !emp.getEmployeeName().trim().isEmpty()){
-				names.add(emp.getEmployeeName().trim());
+			if (emp.getNricNumber() != null && !emp.getNricNumber().trim().isEmpty()){
+				nrics.add(emp.getNricNumber().trim());
 			}
 		}
 	}
 
 	/**
-	 * A manually added new personnel must appear by name in the uploaded EPF statement; throws to abort the add.
+	 * A manually added new personnel must appear by IC No. in the uploaded EPF statement; throws to abort the add.
+	 * Matched on IC No., not name - a matching name with a different IC is a different person.
 	 * @param appl
 	 * @param personnel
 	 */
@@ -912,14 +1047,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (!isAIApplicable(appl) || personnel == null || personnel.getPersonnelId() != null){
 			return;
 		}
-		Set<String> aiNames = getAiEpfEmployeeNames(appl);
-		if (aiNames.isEmpty()){
+		Set<String> aiNrics = getAiEpfEmployeeNrics(appl);
+		if (aiNrics.isEmpty()){
 			return;
 		}
-		for (String name : aiNames){
-			if (AiDocValidator.normalizedEquals(name, personnel.getName())){
-				return;
-			}
+		if (personnel.getIdentificationNo() != null
+				&& aiNrics.contains(personnel.getIdentificationNo().trim())){
+			return;
 		}
 		throw new EpException(SmCommonUtil.getMessage("lbl.sm.ai.epf.personnel.notexist", null));
 	}
