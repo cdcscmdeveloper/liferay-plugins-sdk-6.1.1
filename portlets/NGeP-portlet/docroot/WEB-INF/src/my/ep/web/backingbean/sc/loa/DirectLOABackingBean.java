@@ -342,7 +342,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) && procCatId == null) {
 				throw new EpException(MessageConst.ERROR_775181);
 			}
-			if (this.getManagedBean().getSelectedTabIndex() == QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
+			// #40974 - Start
+			int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+			if (!this.getManagedBean().isShowCategoryCode()) {
+				tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+			}
+			if (this.getManagedBean().getSelectedTabIndex() == tabIndex) {
+			// #40974 - End
 				validateTierQuantityAndUnitPriceForSideMenueOrSave();
 			}
 			// #29468 End Vinod
@@ -1586,12 +1592,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */	
 	private void validateLOAReportAttachments(ScLoa scLoa) {
 		List<ScLoaReport> loaReports = scLoa.getScLoaReports();
-		
+		// #40974 - Start
+		int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+		if (this.getManagedBean().isShowCategoryCode()) {
+			tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		}
+		// #40974 - End
 		if (CollectionUtils.isNotEmpty(loaReports)) {
 			for (ScLoaReport report : loaReports) {
 				if (report.getScLoaReportAttachment() != null && 
 						report.getScLoaReportAttachment().getFileName() == null) {
-					this.getManagedBean().setSelectedTabIndex(1);
+					this.getManagedBean().setSelectedTabIndex(tabIndex); // #40974 
 					throw new EpException(MessageConst.ERROR_760402);
 				}
 			}
@@ -2606,6 +2617,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void supplierListener(SmSupplier suSmSupplier) {
 		debugLogger("supplierListener");
 
+		// #41077: capture the previously-selected supplier so we can detect a real supplier change below
+		Object previousSupplierId = null;
+		if (getManagedBean().getScLoa() != null && getManagedBean().getScLoa().getScLoiLoa() != null
+				&& getManagedBean().getScLoa().getScLoiLoa().getSmSupplier() != null) {
+			previousSupplierId = getManagedBean().getScLoa().getScLoiLoa().getSmSupplier().getSupplierId();
+		}
+
 		//Bug #35107 - start
 		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
@@ -2653,6 +2671,35 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		setDisciplinaryAction(scLoa);// 26247
+
+		// #41077: when the supplier actually changes, the Procurement-Related category codes belong to the
+		// old supplier and are invalid for the new one. Reset the category lists so the Category Code side
+		// menu regenerates from the newly selected supplier's profile, and mark the old codes for deletion on save.
+		Object newSupplierId = (suSmSupplier != null) ? suSmSupplier.getSupplierId() : null;
+		if (previousSupplierId != null && newSupplierId != null && !previousSupplierId.equals(newSupplierId)) {
+			resetSupplierCategoryOnSupplierChange();
+		}
+	}
+
+	// #41077: reset the category-code state when the LOA supplier changes so the Category Code side menu
+	// regenerates from the newly selected supplier's profile. The previously-added Procurement-Related codes
+	// (old supplier's) are moved into deletedCategoryList so their persisted ScQtCategory rows are removed on
+	// the next save, and they are excluded from the display in convertScQtCategoriesToSmSupplierCategory.
+	private void resetSupplierCategoryOnSupplierChange() {
+		List<SmSupplierCategory> prevProcurement = getManagedBean().getProcurementRelatedCategoryList();
+		List<SmSupplierCategory> deletedList = getManagedBean().getDeletedCategoryList();
+		if (deletedList == null) {
+			deletedList = new ArrayList<SmSupplierCategory>();
+		}
+		if (CollectionUtils.isNotEmpty(prevProcurement)) {
+			deletedList.addAll(prevProcurement);
+		}
+		getManagedBean().setDeletedCategoryList(deletedList);
+		getManagedBean().setProcurementRelatedCategoryList(null);
+		getManagedBean().setAddedCategoryList(null);
+		getManagedBean().setSupplierCategoryList(null);
+		getManagedBean().setOriginalSupplierCategoryList(null);
+		getManagedBean().setQtCategoryList(null);
 	}
 
 	public SelectItem[]  getSelectRadioButtonCodeValues(String type)
@@ -5197,8 +5244,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setPayLoad(awardSupplierDataType);
 			//#29164 CR 26474: Static Code Analysis Start
 			//if(getManagedBean().getCurrentStatusId() != null){
+			// #40974 - Start
+			int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+			if (this.getManagedBean().isShowCategoryCode()) {
+				tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+			}
+			// #40974 - End
+
 				if(getManagedBean().getCurrentStatusId() != null && QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
-					getManagedBean().setSelectedTabIndex(2);//#29661
+					getManagedBean().setSelectedTabIndex(tabIndex);//#29661 / #40974 
 					getManagedBean().setIconForDL(true);//29007
 				}
 			//}
@@ -10595,7 +10649,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public void onBackToZoneItemDetailsTab() {
-		getManagedBean().setSelectedTabIndex(2);
+		// #40974 - Start
+		int tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		if (this.getManagedBean().isShowCategoryCode()) {
+			tabIndex = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+		}
+		getManagedBean().setSelectedTabIndex(tabIndex);
+		// #40974 - End
+
 		this.getManagedBean().setSpecKeyword(null);//29007
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
@@ -13143,8 +13204,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void tabChangeActionDirectLOA(int selectedTabIndex) {
 
 		int previousTabIndex = this.getManagedBean().getSelectedTabIndex();
-		if (previousTabIndex == QTConstants.DIRECT_LOA_TAB_INDEX_THREE
-				&& selectedTabIndex != QTConstants.DIRECT_LOA_TAB_INDEX_THREE) {
+		// #40974 - Start
+		int tabIndexThree = QTConstants.DIRECT_LOA_TAB_INDEX_THREE;
+		if (selectedTabIndex > QTConstants.DIRECT_LOA_TAB_INDEX_ONE && !this.getManagedBean().isShowCategoryCode()) {
+			selectedTabIndex = selectedTabIndex - QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+			tabIndexThree = QTConstants.DIRECT_LOA_TAB_INDEX_TWO;
+		}
+		if (previousTabIndex == tabIndexThree && selectedTabIndex != tabIndexThree) {
+			// #40974 - End
+
 			validateTierQuantityAndUnitPriceForSideMenueOrSave();
 		}
 		
@@ -14396,8 +14464,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	private void convertScQtCategoriesToSmSupplierCategory(List<ScQtCategory> scQtCategoriesList,ICategoryCodeSO categoryCodeSO) {
 		if (CollectionUtils.isNotEmpty(scQtCategoriesList)) {
+			// #41077: exclude codes marked for deletion (e.g. the old supplier's codes after a supplier change)
+			// so they do not reappear in the Procurement-Related list; they are removed from ScQtCategory on save.
+			java.util.Set<String> deletedCatCodes = new java.util.HashSet<String>();
+			if (CollectionUtils.isNotEmpty(getManagedBean().getDeletedCategoryList())) {
+				for (SmSupplierCategory delCat : getManagedBean().getDeletedCategoryList()) {
+					deletedCatCodes.add(delCat.getPmCategoryL1().getCategoryL1Code()
+							+ delCat.getPmCategoryL2().getCategoryL2Code()
+							+ delCat.getPmCategoryL3().getCategoryL3Code());
+				}
+			}
 			List<SmSupplierCategory> supplierCategoryList = new ArrayList<>();
 			for (ScQtCategory scQtCategory : scQtCategoriesList) {
+				String scQtCatCode = scQtCategory.getPmCategoryL1().getCategoryL1Code()
+						+ scQtCategory.getPmCategoryL2().getCategoryL2Code()
+						+ scQtCategory.getPmCategoryL3().getCategoryL3Code();
+				if (deletedCatCodes.contains(scQtCatCode)) {
+					continue; // #41077 skip codes marked for deletion
+				}
 				SmSupplierCategory supplierCategoryCode = new SmSupplierCategory();
 				CategoryCodeReqDTO categoryReqDTO = new CategoryCodeReqDTO();
 				categoryReqDTO.setCategoryL3Id(scQtCategory.getPmCategoryL3().getCategoryL3Id());
@@ -14476,7 +14560,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				!= null ? this.getManagedBean().getProcurementRelatedCategoryList() : new ArrayList<SmSupplierCategory>();
 		List<SmSupplierCategory> deletedCategoryList = CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedCategoryList()) 
 				? this.getManagedBean().getDeletedCategoryList(): new ArrayList<SmSupplierCategory>();
-		List<SmSupplierCategory> addedCategoryList = new ArrayList<>();		
+		//#41055 start
+		List<SmSupplierCategory> addedCategoryList = CollectionUtils.isNotEmpty(this.getManagedBean().getAddedCategoryList())
+				? this.getManagedBean().getAddedCategoryList() : new ArrayList<SmSupplierCategory>();
+		//#41055 end
 		List<SmSupplierCategory> currentCategoryList = new ArrayList<>();
 		
 		//#29661 #40093
@@ -14561,6 +14648,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				it.remove();			
 			}
 		}
+		//#41055 start
+		List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();
+		if (CollectionUtils.isNotEmpty(addedCategoryList)) {
+			addedCategoryList.retainAll(procurementRelatedCategoryList);
+			this.getManagedBean().setAddedCategoryList(addedCategoryList);
+		}
+		//#41055 end
 		this.getManagedBean().setDeletedCategoryList(deletedCategoryList);
 		this.getManagedBean().setProcurementRelatedCategoryList(procurementRelatedCategoryList);
 		this.getManagedBean().setSupplierCategoryList(originalSupplierCategoryList);//#29661 #40095
@@ -14649,6 +14743,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	
 				specSO.insertCategoryCode(scQtCategory);
 			}
+			//#41055 start
+			this.getManagedBean().setAddedCategoryList(new ArrayList<SmSupplierCategory>());
+			//#41055 end
 		}
 	}
 	
@@ -14687,5 +14784,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	}
 	//new #25726 - End
+	
+	// #40974 - Start
+	/**
+	 * Get new tab index
+	 * 
+	 * @param selectedTabIndex
+	 * @return
+	 */
+	public int newTabIndexDirectLOA(int selectedTabIndex) {
+		System.out.println("newTabIndexDirectLOA");
+
+		int tabIndex = selectedTabIndex;
+		if (selectedTabIndex > QTConstants.DIRECT_LOA_TAB_INDEX_ONE && !this.getManagedBean().isShowCategoryCode()) {
+			tabIndex = tabIndex - QTConstants.DIRECT_LOA_TAB_INDEX_ONE;
+
+		}
+		return tabIndex;
+
+	}
+	// #40974 - End
 
 }
