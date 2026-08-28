@@ -4008,14 +4008,17 @@ public class SmApplicationUtil {
 
 	private static void validateOverlapCategory(SmApplicationManagedBean bean,
 			String currPage) {
+		SmAppl appl = bean.getSmAppl(); //#40444
 		String msg = currPage == null ? MessageConst.ERROR_722654
 				: MessageConst.ERROR_722661;
+		//#40444 START
 		//#31018 START
 		if(bean.isSupplierUser()) { 
-			if (EntityHelper.isCollectionEmpty(bean.getOverlapDocs())) {
+			if (EntityHelper.isCollectionEmpty(appl.getSmCategoryOverlapDocs())) {
 				throw new EpException(msg);
 			} else {
-				for (SmCategoryOverlapDoc doc : bean.getOverlapDocs()) {
+				for (SmCategoryOverlapDoc doc : appl.getSmCategoryOverlapDocs()) {
+					//#40444 END
 					if (doc.getPmDocument() == null
 							|| StringUtils.isBlank(doc.getFileName())) {
 						throw new EpException(msg);
@@ -4310,9 +4313,9 @@ public class SmApplicationUtil {
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
-				// #39545 - Start
-				applStatus = StringUtils.EMPTY; //#40444
-				// #39545 - End
+				// #39545, #40444 - Start
+				applStatus = StringUtils.EMPTY;
+				// #39545, #40444 - End
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
