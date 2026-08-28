@@ -4029,10 +4029,10 @@ public class SmApplicationUtil {
 		//#40444 START
 		//#31018 START
 		if(bean.isSupplierUser()) { 
-			if (EntityHelper.isCollectionEmpty(appl.getSmCategoryOverlapDocs)) {
+			if (EntityHelper.isCollectionEmpty(appl.getSmCategoryOverlapDocs())) {
 				throw new EpException(msg);
 			} else {
-				for (SmCategoryOverlapDoc doc : appl.getSmCategoryOverlapDocs) {
+				for (SmCategoryOverlapDoc doc : appl.getSmCategoryOverlapDocs()) {
 					//#40444 END
 					if (doc.getPmDocument() == null
 							|| StringUtils.isBlank(doc.getFileName())) {
