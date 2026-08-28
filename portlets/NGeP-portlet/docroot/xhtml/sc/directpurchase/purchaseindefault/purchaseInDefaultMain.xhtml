@@ -203,7 +203,7 @@
 		<ui:remove> Popup Submit Action </ui:remove>
 		<ac:confirmationPopup id="submitConformDlgPid"
 			widget="submitConformDlg" width="400" height="100"
-			okAction="purchaseInDefaultBackingBean.submitPurchaseInDefault(null)"
+			okAction="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
 			title="#{lbl['lbl.sc.header.message.submit']}"
 			content="#{lbl['lbl.sc.confirmation.message.submit']}"
 			update="@form" />

@@ -91,6 +91,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -3344,6 +3345,7 @@ public class PurchaseInDefaultBackingBean extends
 	 */
 	public void constructConfirmationPopup(String outcome, String lovId) {
 		if (outcome == null || outcome.isEmpty()){
+			
 			return;
 		}
 
@@ -3362,10 +3364,10 @@ public class PurchaseInDefaultBackingBean extends
 	
 	/**
 	 * 
-	 * <p>
+	 * 
 	 * This method is a wrapper that delegates to the main BPM task update logic
 	 * without digi sign information.
-	 * </p>
+	 * 
 	 * 
 	 * @param outcome
 	 *            the selected BPM outcome

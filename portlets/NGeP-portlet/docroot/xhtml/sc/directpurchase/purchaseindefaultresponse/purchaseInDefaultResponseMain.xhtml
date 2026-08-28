@@ -47,7 +47,7 @@
 		<ui:remove> Popup Accept Action </ui:remove>
 		<ac:confirmationPopup id="acceptSuppDlgPid"
 			widget="acceptSuppDlg" width="400" height="100"
-			okAction="purchaseInDefaultBackingBean.wrappedUpdateBPMTask(accept)"
+			okAction="#{purchaseInDefaultBackingBean.wrappedUpdateBPMTask(accept)}"
 			title="#{lbl['lbl.sc.header.message.accept']}"
 			content="#{lbl['lbl.sc.confirmation.message.accept']}"
 			update="@form" />
