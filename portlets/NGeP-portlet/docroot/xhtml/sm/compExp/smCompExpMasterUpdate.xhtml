@@ -81,7 +81,7 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText maxlength="20" size="20"
 							value="#{smCompExpMB.selectedMaster.loaNo}" /></td>
 				</tr>
 				<tr>
@@ -236,7 +236,7 @@
 							process="@form" update=":form">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
-						</p:commandLink> <p:outputPanel id="smCompExpSuppDocListPanelId">
+						</p:commandLink> <p:graphicImage id="suppDocToolTipsId" value="/css/images/design/tooltips.png" /><!-- 9299 CR p255: supp doc tooltip --> <p:tooltip for="suppDocToolTipsId"><img src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" /></p:tooltip> <p:outputPanel id="smCompExpSuppDocListPanelId">
 							<ui:repeat
 								value="#{smCompExpMB.selectedMaster.compExpMasterDocs}"
 								var="doc">

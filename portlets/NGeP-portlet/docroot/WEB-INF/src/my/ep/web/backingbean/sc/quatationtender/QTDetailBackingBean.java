@@ -919,10 +919,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
 				return;
-			} else if (!isSendNotificationButton && inactiveCLWarn) {
-				checkInactiveChecklistAndDisplayWarning(this.getManagedBean()
-						.getTaskName());
-				return;
 			}
 			//#10141 End Vinod
 			
@@ -3748,18 +3744,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
 		//#35320 - Start;
-		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
-			if (scQt.getFinalizationCommitte().getParameterCode()
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| scQt.getFinalizationCommitte().getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				if (isStatusTrigger(currentStatusId)) {
-					scQt.setFinalizationCommitte(new PmParameter());
-					scQt.setFinalizationSecratery(new PmUser());
-					this.getManagedBean().setQt(scQt);
-				}
-			}
-		}
+		resetFinalizationCommittee(scQt, currentStatusId);
 		//#35320 - End
 		
 		if (finalizationSecratary == null
@@ -3794,6 +3779,66 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return finalizationSecratary;
 	}
+	
+	// #35320 - Start;
+		/**
+		 * #35320
+		 * Resets the finalization committee and secretary when the quotation
+		 * is finalized by a supported quotation committee and the current status
+		 * is a trigger status.
+		 *
+		 * @param scQt the quotation object to be updated
+		 * @param currentStatusId the current quotation status identifier
+		 */
+		private void resetFinalizationCommittee(ScQt scQt, Long currentStatusId) {
+		    if (!isValidFinalizationCommittee(scQt)) {
+		        return;
+		    }
+
+		    if (!isQuotationCommittee(scQt.getFinalizationCommitte())) {
+		        return;
+		    }
+
+		    if (!resetCommitteeByStatus(currentStatusId)) {
+		        return;
+		    }
+
+		    scQt.setFinalizationCommitte(new PmParameter());
+		    scQt.setFinalizationSecratery(new PmUser());
+		    this.getManagedBean().setQt(scQt);
+		}
+
+		/**
+		 * #35320
+		 * Checks whether the quotation has a valid finalization committee
+		 * and parameter code.
+		 *
+		 * @param scQt the quotation object
+		 * @return {@code true} if the committee and parameter code are present;
+		 *         {@code false} otherwise
+		 */
+		private boolean isValidFinalizationCommittee(ScQt scQt) {
+		    return scQt != null
+		            && scQt.getFinalizationCommitte() != null
+		            && scQt.getFinalizationCommitte().getParameterCode() != null;
+		}
+
+		/**
+		 * #35320
+		 * Determines whether the supplied parameter represents one of the
+		 * supported quotation committee types.
+		 *
+		 * @param committee the finalization committee parameter
+		 * @return {@code true} if the committee is quotation committee A or B;
+		 *         {@code false} otherwise
+		 */
+		private boolean isQuotationCommittee(PmParameter committee) {
+		    String parameterCode = committee.getParameterCode();
+
+		    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(parameterCode)
+		            || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameterCode);
+		}
+		// #35320 - End;
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -15021,19 +15066,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
-			if (isQTStatusPublished(status)){
-				List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
-				for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
-					if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
-						this.getManagedBean().setShowCategoryCodePanel(false);
-						break;
-					}
-				}
-				//#29661 #40093 27th Apr start
-				if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
-					this.getManagedBean().setShowCategoryCodePanel(false);
-				}
-			} //#29661 #40093 27th Apr end
+			//#41068 start
+			if (isQTStatusGreaterThanOrEquals(status, QTStatusConst.QT_CLOSED)){
+				this.getManagedBean().setShowCategoryCodePanel(false);
+			}
+			//#41068 end
 		}
 		//#29661 #40094 End
 	}
@@ -15162,13 +15199,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @param statusId
 	 * @return boolean
 	 */
-	private static boolean isStatusTrigger(long statusId) {
-        final List<Long> triggerStatuses = Arrays.asList(
-                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-                QTStatusConst.QT_REVISION_PUBLICATION,
-                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
-                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
-        );
+	private static boolean resetCommitteeByStatus(long statusId) {
+        final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
         return triggerStatuses.contains(statusId);
 	}
 	
