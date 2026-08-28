@@ -3149,8 +3149,10 @@ public class CommitteBackingBean extends
 							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 					OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
 					
+					//#35320 - Start
 					mofReqDTO.setOrgCode(ParameterConst.MOF_ORG_CODE);
 					OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+					//#35320 - End
 					reqDTO.setPmOrgProfile(mofResDTO.getPmOrgProfile());
 				} else {
 					PmOrgProfile pmOrgProfile = getManagedBean().getMinstryList().get(0);
