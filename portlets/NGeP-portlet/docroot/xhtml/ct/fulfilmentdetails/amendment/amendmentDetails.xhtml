@@ -274,7 +274,7 @@
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
-					<p:ajax event="change" update=":form:secretryDropDownPanel" process="@all"
+					<p:ajax event="change" update="secretryDropDownPanel" process="@this"
 					   onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"
 					   listener="#{amendmentBackingBean.resetPbqcAuthoritySelection}" /> <!-- #24336 -->
@@ -296,11 +296,11 @@
 					<p:selectOneRadio id="committeeType" styleClass="committee-type-radio" layout="pageDirection"
 						value="#{amendmentBackingBean.managedBean.committeeType}" disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
 						<f:selectItems value="#{amendmentBackingBean.getCommitteeTypeSelectItems()}" />
-						<p:ajax event="change" update="secretaryId" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+						<p:ajax event="change" update="secretaryPanel" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					</p:selectOneRadio>
 				</h:panelGrid>
 
-				<h:panelGrid columns="3" columnClasses="columnWidth170" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
+				<h:panelGrid id="secretaryPanel" columns="3" columnClasses="columnWidth170" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
 					<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
 					<p:spacer width="2" />
 					<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}"

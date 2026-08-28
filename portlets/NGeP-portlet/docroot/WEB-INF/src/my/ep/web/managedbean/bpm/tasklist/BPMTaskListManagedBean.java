@@ -1572,7 +1572,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			// sm module
 			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 			//#40112
-			worklistItemVO.setAiProcessed(mofResDto.getSmAppl() != null && mofResDto.getSmAppl().getAiProcessed() == 2);
+			worklistItemVO.setAiProcessed(mofResDto.getSmAppl() != null && mofResDto.getSmAppl().getAiStatus() == 2);
 			StringBuilder sb = new StringBuilder();
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));

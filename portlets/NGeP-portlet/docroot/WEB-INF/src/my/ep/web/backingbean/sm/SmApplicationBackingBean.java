@@ -8300,6 +8300,7 @@ public class SmApplicationBackingBean extends
 		}
 		validateOwnerIndividualAcc(getManagedBean().getSelectedShareHolder());
 		validateAuthorizedPersonnel(getManagedBean().getSelectedShareHolder());
+		validateMandatoryField(getManagedBean().getSelectedShareHolder()); //40801
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
 				.getSelectedShareHolder(), getManagedBean().getSmAppl());
@@ -8431,10 +8432,8 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
-			//#40112 - start
 			SmAIDocBackingBean.validateManualPersonnelAgainstEpf(
-					getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder());
-			//#40112 - end
+					getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder());	//#40112
 			SmCommonUtil.getInstance().setUserDetails(
 					getManagedBean().getSelectedShareHolder());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -8572,6 +8571,7 @@ public class SmApplicationBackingBean extends
 			// #27802 - end
 			
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
+			SmAIDocBackingBean.latchUserEdit(getManagedBean().getSmAppl());	//#40112
 		} catch (Exception e) {
 			//log.info("error to save appl no:"
 				//	+ getManagedBean().getSmAppl().getApplNo(), e);
@@ -13803,9 +13803,7 @@ public class SmApplicationBackingBean extends
 	 *            addr
 	 */
 	public void onChangeCity(SmAddress addr, String panelName) {
-		//#40112 - start
-		addr.clearCityAI();
-		//#40112 - end
+		addr.clearCityAI();	//#40112
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
 		//#36483 - START
@@ -18520,7 +18518,7 @@ public class SmApplicationBackingBean extends
 	//#31407 - START
 	public void checkBeforeSubmit() {
 		//#40112 - start
-		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl())) {
+		if (SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)) {
 			return;
 		}
 		//#40112 - end
@@ -19447,12 +19445,6 @@ public class SmApplicationBackingBean extends
      * @return the resolved country string
      */
 	private String getCompanyCountry(SmAppl smAppl) {
-        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
-
-        if (country != null && !country.isEmpty()) {
-            return country;
-        }
-
         boolean isRoc = isRocBusinessType(smAppl.getSmSupplier().getBusinessType());
         boolean isForeign = isValidForeignRegNo(smAppl.getSmSupplier().getRegNo());
 
@@ -19460,6 +19452,12 @@ public class SmApplicationBackingBean extends
             String localCompany = SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA;
             smAppl.getSmCompanyBasic().setSsmCompanyCountry(localCompany);
             return localCompany;
+        }
+
+        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
+
+        if (country != null && !country.isEmpty()) {
+            return country;
         }
 
         return SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
@@ -20023,24 +20021,28 @@ public class SmApplicationBackingBean extends
 	public boolean isAiAvailable(){
 		SmAppl appl = getManagedBean().getSmAppl();
 		return AiDocSupport.isAiEnabled() && getManagedBean().isSupplierUser()
-				&& appl != null && appl.getAiProcessed() > 0;
+				&& appl != null && appl.getAiStatus() > 0;
 	}
 
 	public boolean isShowTenancyAiBtn(){
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
-		return isAiAvailable() && fac != null
-				&& "R".equals(fac.getOwnershipType()) && "B".equals(fac.getFacilityType());
+		return isAiAvailable() && fac != null && SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED.equals(fac.getOwnershipType());
+	}
+
+	// (ERR-722683)
+	public boolean isShowEpfAiBtn(){
+		return isAiAvailable() && !getManagedBean().isDisAllowOwnerEdit();
 	}
 
 	public boolean isAiUploadDocRow(PmDocument doc){
-		return isAiAvailable()
-				&& SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), doc);
+		return isAiAvailable() && SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), doc);
 	}
 	
 	public void updateTenancyAI(AiTenancyDTO te){
 		if (te == null){
 			return;
 		}
+		SmAIDocBackingBean.clearTenancyUserEdit(getManagedBean().getSmAppl());
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
 		fac.setRentalRate(te.getMonthlyRental());
 		fac.setOwnerName(te.getLandlordsName());
@@ -20284,4 +20286,19 @@ public class SmApplicationBackingBean extends
 	    return gmapsScriptSrc;
 	}
 	// #40306 End
+	//#40801 START
+	/**
+	 * Validates that the specified field contains a value.
+	 *
+	 * @param value the field value to validate
+	 * @param fieldName the display name of the field used in the validation message
+	 * @throws EpException if the field value is null or empty
+	 */
+	private void validateMandatoryField(SmPersonnel personnel) {
+		if (personnel.getEpRole() != null && !personnel.getEpRole().isEmpty() &&
+				(personnel.getEmail() == null || personnel.getEmail().trim().isEmpty())) {
+	        throw new EpException("Email is mandatory", null);
+	    }
+	}
+	//#40801 END
 }
