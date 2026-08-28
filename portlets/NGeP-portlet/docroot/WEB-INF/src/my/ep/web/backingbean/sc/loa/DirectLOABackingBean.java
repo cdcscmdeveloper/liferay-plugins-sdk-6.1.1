@@ -412,7 +412,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					// rename temporary Loa No folder name in docRepo
 					RenameTempLoaNoRepoDirByLoaNo(scLoa);
 					//#29611 #40511 Start
+					//#41076 start
+					ScQt previousScQt = this.getManagedBean().getScQt();
+					//#41076 end
 					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
+					//#41076 start
+					restoreScQtOrgProfiles(previousScQt);
+					//#41076 end
 				}
 				deleteScQtCategory(addedCategoryList, deletedSmCategory);
 				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
@@ -470,7 +476,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				validateSupplierCategory(scLoa,outcome);
 				
 				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+					//#41076 start
+					ScQt previousScQt = this.getManagedBean().getScQt();
+					//#41076 end
 					this.getManagedBean().setScQt(resDTO.getLoa().getScQt());					
+					//#41076 start
+					restoreScQtOrgProfiles(previousScQt);
+					//#41076 end
 				} 
 				deleteScQtCategory(addedCategoryList, deletedSmCategory);
 				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
@@ -488,6 +500,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// qtAwardSO = null;
 		}
 	}
+
+	//#41076 start
+	private void restoreScQtOrgProfiles(ScQt previousScQt) {
+		ScQt currentScQt = this.getManagedBean().getScQt();
+		if (null == previousScQt || null == currentScQt) {
+			return;
+		}
+		currentScQt.setPmOrgProfile(previousScQt.getPmOrgProfile());
+		currentScQt.setMinistryOrgProfile(previousScQt.getMinistryOrgProfile());
+	}
+	//#41076 end
 
 	/**
 	 * Download report as pdf or xlsx files in Letter of Acceptance.
@@ -683,7 +706,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			//#29661 Start
 			if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+				//#41076 start
+				ScQt previousScQt = this.getManagedBean().getScQt();
+				//#41076 end
 				this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
+				//#41076 start
+				restoreScQtOrgProfiles(previousScQt);
+				//#41076 end
 				//#41077 start
 				deleteScQtCategory(addedCategoryList, deletedSmCategory);
 				//#41077 end
