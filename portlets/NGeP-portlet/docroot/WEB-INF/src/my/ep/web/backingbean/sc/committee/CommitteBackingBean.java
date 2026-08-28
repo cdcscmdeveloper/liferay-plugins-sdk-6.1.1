@@ -2588,6 +2588,7 @@ public class CommitteBackingBean extends
 		 * @return boolean isCommitteeRecordStatusActive
 		 */
 		public boolean isLatestCommitteeRecordStatusActive(TplCommittee committee) {
+
 			if (null == committee) {
 				return false;
 			}
@@ -3054,7 +3055,7 @@ public class CommitteBackingBean extends
 			for (PmUserOrg pmUserOrg : userOrgs) {
 				PmOrgProfile pmOrgProfile = pmUserOrg.getPmOrgProfile();
 
-				if (pmOrgProfile != null && pmOrgProfile.getParentOrgProfile() != null){
+				if (pmOrgProfile != null && pmOrgProfile.getParentOrgProfile() != null) {
 					minstryProfiles.add(pmOrgProfile.getParentOrgProfile().getParentOrgProfile());
 				}
 			}
@@ -3146,10 +3147,8 @@ public class CommitteBackingBean extends
 							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 					OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
 					
-					//#35320 - Start
 					mofReqDTO.setOrgCode(ParameterConst.MOF_ORG_CODE);
 					OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
-					//#35320 - End
 					reqDTO.setPmOrgProfile(mofResDTO.getPmOrgProfile());
 				} else {
 					PmOrgProfile pmOrgProfile = getManagedBean().getMinstryList().get(0);
@@ -3280,13 +3279,12 @@ public class CommitteBackingBean extends
 									new FacesScopes().getUserLocale())));
 					return NAV_TO_COMMITTEE_MAINTENANCE;
 				}
-			} catch(EpException exp) {
-				String message = MessageUtils.getMessage(exp.getMessage(),
-						exp.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
-			            new FacesScopes().getUserLocale());
-				
+			} catch(EpException epx) {
 				FacesContext.getCurrentInstance().addMessage(
-			            null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, message));
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								epx.getMessage(), epx.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 			} catch(Exception ex) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
 						"CommitteBackingBean.updateTplCommitteDetails", null, ex);
