@@ -650,6 +650,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
 
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151,#38679
+	
 	/**
 	 * Gets the today.
 	 * 
@@ -4596,4 +4599,28 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.tooltipDemo = tooltipDemo;
 	}
 	//#28784 - End
+	
+	//#38151,#38679 - start
+	/**
+	 * @return the flag from nextbutton
+	 */
+	public boolean isComingFromNextButton() {
+		return comingFromNextButton;
+	}
+
+	/**
+	 * @param set flag from nextbutton
+	 */
+	public void setComingFromNextButton(boolean comingFromNextButton) {
+		this.comingFromNextButton = comingFromNextButton;
+	}
+	
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151,#38679 - end
 }

@@ -1679,6 +1679,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.panelSuppliers = panelSuppliers;
 	}
 
+	private boolean weightage35384WIP; //#38151,#38679
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	// #19336, #25201, #17376, #19287 -start-
@@ -1702,7 +1704,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #15391 - start
 	private boolean isChecklist;
-	private boolean isGenInfo;
+	private boolean isGenInfo = Boolean.FALSE; //#25726
 	private boolean specUpdateInProgress;
 	// #15391 - end
 	
@@ -1863,6 +1865,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
+	
+	private boolean zoneQtyHasZeroVal;//#38679
+	
+	// #35320 - Start
+	private boolean afterSF;
+	// #35320 - End
+	
+	// #28188 - Start
+	/** The Briefing/Site Visit postpone date. */
+	private Date briefingSiteVisitPostponeDate;
+	private Map<Long, List<Long>> bsvRegisterDetails;
+
+	// #28188 - End
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -11747,4 +11762,60 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.resetHistoryCatCode = resetHistoryCatCode;
 	}
 	//#29732
+	
+	//#38679
+	public boolean isZoneQtyHasZeroVal() {
+		return zoneQtyHasZeroVal;
+	}
+	
+	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
+		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
+	}
+	//#38679
+	
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
+	
+	// #28188 - Start
+	/**
+	 * @return the briefingSiteVisitPostponeDate
+	 */
+	public Date getBriefingSiteVisitPostponeDate() {
+		return briefingSiteVisitPostponeDate;
+	}
+
+	/**
+	 * @param briefingSiteVisitPostponeDate
+	 *            the briefingSiteVisitPostponeDate to set
+	 */
+	public void setBriefingSiteVisitPostponeDate(
+			Date briefingSiteVisitPostponeDate) {
+		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
+	}
+
+	public Map<Long, List<Long>> getBsvRegisterDetails() {
+		return bsvRegisterDetails;
+	}
+
+	public void setBsvRegisterDetails(Map<Long, List<Long>> bsvRegisterDetails) {
+		this.bsvRegisterDetails = bsvRegisterDetails;
+	}
+
+	// #28188 - End
+
+	//#38151,#38679
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151,#38679
 }
