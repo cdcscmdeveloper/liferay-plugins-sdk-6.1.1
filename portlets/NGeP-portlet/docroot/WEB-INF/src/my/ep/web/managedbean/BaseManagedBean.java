@@ -167,16 +167,18 @@ public abstract class BaseManagedBean implements Serializable {
 	// #29007 Start
 	// #28784 - Demo WIP - To display QT BPM version
 	private String bpmVersionNo;
+	private boolean newVersion;
 	// #29007 End
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
 
-//	37925 START
+	// 37925 START
 	private String strLabelCountryOrigin;
 	private boolean displayCheckboxChangeCurrentStatus;
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
-//	37925 END
+	// 37925 END
+
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1044,7 +1046,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #28895_35501 End
 
-//	37925 START
+	// 37925 START
 	public String getStrLabelCountryOrigin() {
 		return strLabelCountryOrigin;
 	}
@@ -1076,5 +1078,17 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDisplayDropdownRegStatus(boolean displayDropdownRegStatus) {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
-//	37925 END
+	// 37925 END
+	
+	//#28784 - Start
+	public boolean isNewVersion() {
+		return newVersion;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
+	}
+	//#28784 - End
 }
