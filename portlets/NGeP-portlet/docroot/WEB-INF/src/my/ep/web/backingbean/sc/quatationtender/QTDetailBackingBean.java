@@ -907,9 +907,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#28784
 			checkDemoPresentationByStatus();
 			//#10141 Start Vinod
+			this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+			this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 			if(isSendNotificationButton){
-				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
-				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
