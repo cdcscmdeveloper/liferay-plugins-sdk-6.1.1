@@ -169,5 +169,11 @@ public class DPConstants {
 	private DPConstants() {
 		// This constructor is intentionally left empty
 	}
+	
+	//33224 (Gate3) - start
+	public static final String RESPONSE_ACTIVE_USER = "1";
+	public static final String RESPONSE_NO_ACTIVE_USER = "5";
+	//33224 (Gate3) - end
+
 
 }
