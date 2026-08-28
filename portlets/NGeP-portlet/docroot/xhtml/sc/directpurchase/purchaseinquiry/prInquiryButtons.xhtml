@@ -12,7 +12,7 @@
 		postSignAction="#{purchaseInquiryBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 		enableAutoUpdate="#{purchaseInquiryBackingBean.enableAutoUpdate()}" />
 		
-	<ui:remove>#34449 - start (Change Label)</ui:remove>	
+	<ui:remove>34449 - start (Change Label)</ui:remove>	
 		<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancelPI" value="cancelPI" />
 	<ac:cancelRejectPopup id="#{cancelPI}" widget="cancelPI" width="30%"
@@ -29,8 +29,8 @@
 		okAction="#{purchaseInquiryBackingBean.requisitionerAction('CANCELPI')}"
 		title="#{lbl['lbl.sc.confirmation.cancel']}"
 		content="#{lbl['lbl.sc.confirmation.cancel.message']}" update="@this" />
-     <!-- 26129 - End --> <ui:remove>#34449 - end</ui:remove>	
-	<ui:remove>#34449 - start (New Submit Popup)</ui:remove>
+     <!-- 26129 - End --> <ui:remove>34449 - end</ui:remove>	
+	<ui:remove>34449 - start (New Submit Popup)</ui:remove>
 	<ac:confirmationPopup id="submitPrInquiryConfirmDlgId"
 	    widget="submitPrInquiryConfirmDlg"  width="400" height="100"
 	    okAction="#{purchaseInquiryBackingBean.submitPrInquiryDtl('SUBMIT')}"
@@ -46,7 +46,7 @@
 		title="#{lbl['lbl.sc.confirmation.submit']}"
 		content="#{lbl['lbl.sc.confirmation.submit.message']}"
 		update="@form" />	
-	<ui:remove>#34449 - end</ui:remove>	
+	<ui:remove>34449 - end</ui:remove>	
 	<div>
 		<!-- view back button -->
 		<p:commandButton immediate="true" process="@this" partialSubmit="true"

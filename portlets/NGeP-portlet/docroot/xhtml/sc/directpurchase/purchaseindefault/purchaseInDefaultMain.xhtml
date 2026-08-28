@@ -35,14 +35,14 @@
 		<!-- #9133 - start -->
 		<ui:param name="draft" value="DRAFT" />
 		<!-- #9133 - end -->
-		<ui:remove>#34449 - start</ui:remove>
+		<ui:remove>34449 - start</ui:remove>
 		<ac:cancelRejectPopup id="#{rejectPID}" widget="rejectPID" width="30%"
 			height="100"
 			okAction="#{purchaseInDefaultBackingBean.approverAction(reject)}"
 			title="#{lbl['lbl.sc.header.message.reject']}"
 			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this,@([id$=messages])" />
 		<!-- 20190417@asyrafhaziq_12095 - End -->
-		<ui:remove>#34449 - end</ui:remove>
+		<ui:remove>34449 - end</ui:remove>
 
 		<ac:gpkiPopup
 			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
@@ -142,7 +142,7 @@
 							update="@form,@([id$=messages])" process="@form" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
 					<!-- #9133 - end -->
-					<ui:remove>#34449 - start</ui:remove>
+					<ui:remove>34449 - start</ui:remove>
 					<ui:repeat var="bpmAction"
 							value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel"
@@ -156,7 +156,7 @@
 								partialSubmit="true"
 								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
 						</ui:repeat>
-						<ui:remove>#34449 - end</ui:remove>
+						<ui:remove>34449 - end</ui:remove>
 						</td>
 				</tr>
 			</table>
@@ -169,9 +169,9 @@
 					content="#{purchaseInDefaultBackingBean.managedBean.confirmationMessageContent}"
 					update="@form" />
 			</p:outputPanel>
-			<ui:remove>#34449 - end</ui:remove>					
+			<ui:remove>34449 - end</ui:remove>					
 		</c:if>
-		<ui:remove> #28865, #34449 - start</ui:remove>
+		<ui:remove> #28865, 34449 - start</ui:remove>
 		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.msg']}"
 			severity="alert" widgetVar="submitSuppDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.sc.header.message.submit']}">
@@ -184,8 +184,8 @@
 					onclick="submitSuppDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<ui:remove> #28865, #34449 - end</ui:remove>
-		<ui:remove> #9133, #34449 - start</ui:remove>
+		<ui:remove> 28865, 34449 - end</ui:remove>
+		<ui:remove> 9133, 34449 - start</ui:remove>
 		<p:confirmDialog message="#{lbl['lbl.cancel.dialog.confirm.message']}"
 			severity="alert" widgetVar="cancelDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.sc.header.message.cancel']}">
@@ -198,7 +198,7 @@
 					oncomplete="cancelDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<ui:remove> #9133, #34449 - end</ui:remove>
+		<ui:remove> 9133, 34449 - end</ui:remove>
 		<ui:remove>34449 - start</ui:remove>
 		<ui:remove> Popup Submit Action </ui:remove>
 		<ac:confirmationPopup id="submitConformDlgPid"

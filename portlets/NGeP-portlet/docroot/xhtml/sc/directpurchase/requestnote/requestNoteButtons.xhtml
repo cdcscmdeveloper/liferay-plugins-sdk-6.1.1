@@ -50,7 +50,7 @@
 	<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancel" value="CANCEL" />
 	<ui:param name="cancelRN" value="cancelRN" />
-	<ui:remove>#34449 - start</ui:remove>
+	<ui:remove>34449 - start</ui:remove>
 	<ac:cancelRejectPopup id="#{cancelRN}" widget="cancelRN" width="30%"
 		height="100" okAction="#{requestNoteBackingBean.submitAction(cancel)}"
 		title="#{lbl['lbl.sc.header.message.cancel']}"
@@ -62,7 +62,7 @@
 		title="#{lbl['lbl.sc.header.message.reject']}"
 		content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />
 	<!-- 20190417@asyrafhaziq_12095 - End -->
-	<ui:remove>#34449 - end</ui:remove>
+	<ui:remove>34449 - end</ui:remove>
 
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
@@ -75,7 +75,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					onclick="cd.show()" style="float:right;"
 					rendered="#{requestNoteBackingBean.managedBean.cancel}" />
-				<ui:remove>#34449 - start</ui:remove>	
+				<ui:remove>34449 - start</ui:remove>	
 				<p:confirmDialog
 					message="#{lbl['lbl.sc.note.request.dialog.confirm.message']}"
 					header="#{lbl['lbl.sc.header.message.cancel']}"
@@ -89,7 +89,7 @@
 							oncomplete="cd.hide();" />
 					</div>
 				</p:confirmDialog>
-				<ui:remove>#34449 - end</ui:remove>
+				<ui:remove>34449 - end</ui:remove>
 			</c:if>
 		</c:if>
 		<div class="ppRightBtn">
@@ -134,7 +134,7 @@
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					action="#{requestNoteBackingBean.saveAction('')}" />
-				<ui:remove>#34449 - start</ui:remove>
+				<ui:remove>34449 - start</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					update="@([id$=requestNoteId])" onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
@@ -144,7 +144,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					onclick="cancelDlg.show()"
 					style="float:right;" process="@this" partialSubmit="true" />
-				<ui:remove>#34449 - end</ui:remove>	
+				<ui:remove>34449 - end</ui:remove>	
 			</c:if>
 		</div>
 		<div>
@@ -192,7 +192,7 @@
 				</div>
 			</c:if>
 		</div>
-		<ui:remove>#34449 - start</ui:remove>
+		<ui:remove>34449 - start</ui:remove>
 		<ui:remove> Popup Submit Action </ui:remove>
 		<ac:confirmationPopup id="submitConformDlgRn"
 			widget="submitConformDlg" width="400" height="100"
