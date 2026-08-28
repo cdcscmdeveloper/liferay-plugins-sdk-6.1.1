@@ -3258,9 +3258,61 @@ public class SimpleQuoteBackingBean extends
 		if (getManagedBean().getInactiveJustDropdown() != null) {
 			getManagedBean().setJustDropdown(getManagedBean().getInactiveJustDropdown());
 		}
+		splitSuppliers();
 		//#27868 - end
 	}
 
+	// #27868 - start
+	/**
+	 * Splits quote suppliers into government sellers and regular suppliers for
+	 * PK7 and special item procurement types.
+	 */
+	private void splitSuppliers() {
+		if (getManagedBean().getScQuote() == null || getManagedBean().getScQuote().getProcurementType() == null) {
+			return;
+		}
+
+		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+
+		if (!procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+				&& !procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			return;
+		}
+		
+		if (!getManagedBean().isIncludeG2gSupplier()) {
+			return;
+		}
+
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+		List<ScQuoteSupplier> tempGovtSellers = getManagedBean().getGovtSellers() != null ? new ArrayList<ScQuoteSupplier>(
+				getManagedBean().getGovtSellers()) : new ArrayList<ScQuoteSupplier>();
+
+		getManagedBean().setSupplierList(new ArrayList<ScQuoteSupplier>());
+		getManagedBean().setGovtSellers(new ArrayList<ScQuoteSupplier>());
+
+
+		if (CollectionUtils.isNotEmpty(getManagedBean().getScQuote().getScQuoteSuppliers())) {
+			for (ScQuoteSupplier supplier : getManagedBean().getScQuote().getScQuoteSuppliers()) {
+				if (isGovtSeller(supplier, orgProfileSO)) {
+					getManagedBean().getGovtSellers().add(supplier);
+				} else {
+					getManagedBean().getSupplierList().add(supplier);
+				}
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(tempGovtSellers)) {
+			for (ScQuoteSupplier supplier : tempGovtSellers) {
+				if (!getManagedBean().getGovtSellers().contains(supplier)) {
+					getManagedBean().getGovtSellers().add(supplier);
+				}
+			}
+		}
+	}
+
+	// #27868 - end
 	
 	/**
 	 * delete business nature from business nature in supplier criteria
@@ -5076,6 +5128,7 @@ public class SimpleQuoteBackingBean extends
 
 			}
 		}
+		splitSuppliers();//#27868
 	}
 
 	/**
@@ -5204,6 +5257,7 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+		splitSuppliers();//#27868
 	}
 
 	/**
