@@ -69,6 +69,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -196,6 +197,7 @@ import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.VMConstant; //#29006
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
@@ -4387,28 +4389,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					//22211 - END
 					updateReviseBPMTaskAction(outcome);				
 				//22111 - START
-				}else{
-					updateReviseBPMTaskActionWithoutQt(outcome);
+				} else {
+					// 34449 - start
+					handleReviseActionWithoutQt(outcome);
+					// updateReviseBPMTaskActionWithoutQt(outcome);
+					// 34449 - end
 				}//22211 - END
-			}else{
-				updateBpmTaskAction(outcome);
+			} else {
+				// 34449 - start
+				getManagedBean().setReviseMethod("lOADetailBackingBean.updateBpmTaskAction('" + outcome + "')");
+				RequestContext.getCurrentInstance().execute("reviseDlg.show()");
+				// updateBpmTaskAction(outcome);
+				// 34449 - end
 			}
 			//Enhancement #21694 END
-		}else {
-			// 33222 - start
-			if(BpmOutcomeConst.BPM_VERIFY.equals(outcome)){
-				validateContractAdminProfileRoleStatus(this.getManagedBean().getScLoa());
-			}
-			// 33222 - end
-			
-			// #29007 Start Vinod
-			checkAndInsertItemSpecOffer();
-			// #29007 End Vinod
-			updateBpmTaskAction(outcome);
+		} else {
+			// 34449 - start
+			handleSubmitActionFromBpm(outcome);
+			// 34449 - end
 		}
 	}
 	//20190405@asyrafhaziq - CR25062 - End
-	
+
 	// #26770 - Start fix sonarlint.
 	/**
 	 * To Validate Report Attachment
@@ -8671,12 +8673,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return loaGenerated;
 	}
 	
+	//#34449 - start
+	/**
+	 * Prepares the LOA cancellation by setting the current action,
+	 * configuring the wrapped BPM update as the cancel handler,
+	 * and opening the cancel confirmation dialog.
+	 *
+	 * @param outcome the BPM outcome to use for the cancellation
+	 */
 	public void cancelLoa(String outcome) {
 		debugLogger("cancelLoa");
 		this.getManagedBean().setAction(outcome);
-		
-		updateBPMTask(outcome,null);
-	}	
+		getManagedBean().setCancelMethod("lOADetailBackingBean.wrappedUpdateBpmTask('"+outcome+"')");
+		RequestContext.getCurrentInstance().execute("cancelDlg.show()");
+	}
+	//#34449 - end
 	
 	
 	/**
@@ -13447,6 +13458,145 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	        return false;
 	    }
 		// #26059 - End
+	    
+	// #34449 - start
+	/**
+	 * Prepares the LOA cancel action and trigger the cancel confirmation dialog.
+	 * 
+	 * @param isValidateBeforePopup
+	 *            true to validate before showing the popup, false to skip
+	 *            validation
+	 */
+	public void getCancelButtonMethodForLoa(boolean isValidateBeforePopup) {
+		if (isValidateBeforePopup) {
+			getManagedBean().setCancelMethod("lOADetailBackingBean.validateBeforePopup(true)");
+		} else {
+			getManagedBean().setCancelMethod("lOADetailBackingBean.validateBeforePopup(false)");
+		}
+		RequestContext.getCurrentInstance().execute(DPConstants.DIALOG_MESSAGE_CANCEL_SHOW);
+	}
+
+	/**
+	 * Sets the WIP cancel action for LOA and trigger the cancel confirmation dialog.
+	 */
+	public void constructCancelWipDialogMessage() {
+		getManagedBean().setCancelMethod("lOADetailBackingBean.validateBeforePopupWIP()");
+		RequestContext.getCurrentInstance().execute(DPConstants.DIALOG_MESSAGE_CANCEL_SHOW);
+	}
+
+	/**
+	 * Configures the LOA cancellation action for Purchase Request type using the given LOA ID
+	 * and triggers the cancel confirmation dialog.
+	 *
+	 * @param loaId the LOA identifier to cancel
+	 */
+	public void constructDialogMessageForcancelationLOADocTypePR(long loaId) {
+		getManagedBean().setCancelMethod("lOACancelDetailBackingBean.cancelationLOA(" + loaId + ")");
+		RequestContext.getCurrentInstance().execute(DPConstants.DIALOG_MESSAGE_CANCEL_SHOW);
+	}
+	
+	/**
+	 * Trigger the LOA submit confirmation dialog.
+	 */
+	public void constructSubmitDialogMesssageLoa(){
+		RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+	}
+	
+	/**
+	 * Extracts the shared logic into a single helper method so that the LOV
+	 * can invoke both behaviours through one common entry point.
+	 * 
+	 * @param outcome
+	 */
+	public void submitActionTaskFromBpm(String outcome){
+		// #29007 Start Vinod
+		checkAndInsertItemSpecOffer();
+		// #29007 End Vinod
+		updateBpmTaskAction(outcome);
+	}
+	
+	/**
+	 * Prepares the resubmit action with the given outcome and opens the resubmit confirmation dialog.
+	 *
+	 * @param outcome the BPM outcome to be used for resubmission
+	 */
+	public void constructResubmitDialogMessage (String outcome){
+		getManagedBean().setResubmitMethod("lOADetailBackingBean.updateReviseBPMTaskActionWithoutQt('"+outcome+"')");
+		RequestContext.getCurrentInstance().execute("resubmitConformDlg.show()");
+	}
+	
+	/**
+	 * Prepares the verify action with the given outcome and opens the verify confirmation dialog.
+	 *
+	 * @param outcome the BPM outcome to be used for verification
+	 */
+	public void constructVerifyDialogMessage(String outcome){
+		getManagedBean().setVerifyMethod("lOADetailBackingBean.verifyConfirmationForLampiranA3('"+outcome+"')");
+		RequestContext.getCurrentInstance().execute("verifyDlg.show()");
+	}
+	
+	/**
+	 * Handles the LOA revise action without Qt by either showing the revise
+	 * confirmation dialog or executing the revise BPM update directly,
+	 * depending on the current LOA status.
+	 *
+	 * @param outcome the BPM outcome to apply for the revise action
+	 */
+	private void handleReviseActionWithoutQt(String outcome) {
+		if (DPStatusConstants.LOA_PENDING_APPROVAL.equals(this.getManagedBean().getScLoa().getPmStatus()
+				.getStatusId().longValue())
+				|| DPStatusConstants.LOA_PENDING_REVISION_APPROVAL.equals(this.getManagedBean().getScLoa()
+						.getPmStatus().getStatusId().longValue())) {
+			getManagedBean().setReviseMethod(
+					"lOADetailBackingBean.updateReviseBPMTaskActionWithoutQt('" + outcome + "')");
+			RequestContext.getCurrentInstance().execute("reviseDlg.show()");
+		} else {
+			updateReviseBPMTaskActionWithoutQt(outcome);
+		}
+	}
+	
+	/**
+	 * Handles the BPM submit action by showing the revise submit confirmation
+	 * dialog for pending revision status, or submitting the task directly
+	 * for other statuses.
+	 *
+	 * @param outcome the BPM outcome to be submitted
+	 */
+	private void handleSubmitActionFromBpm(String outcome) {
+		if (DPStatusConstants.LOA_PENDING_REVISION.equals(this.getManagedBean().getScLoa().getPmStatus()
+				.getStatusId().longValue())) {
+			getManagedBean().setSubmitMethod("lOADetailBackingBean.submitActionTaskFromBpm('" + outcome + "')");
+			RequestContext.getCurrentInstance().execute("submitConformDlgRevise.show()");
+		}else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+			getManagedBean().setRejectMethod("lOADetailBackingBean.checkItemSpecOfferAndUpdateBpmTaskAction('"+outcome+"')");
+			RequestContext.getCurrentInstance().execute("rejectDlg.show()");
+		} else {
+			checkItemSpecOfferAndUpdateBpmTaskAction(outcome);
+		}
+	}
+	
+	/**
+	 * Convenience wrapper that updates the BPM task using the given outcome
+	 * and a null extended outcome value.
+	 *
+	 * @param outcome the BPM outcome to apply to the task
+	 */
+	public void wrappedUpdateBpmTask(String outcome){
+		updateBPMTask(outcome,null);
+	}
+	
+	/**
+	 * Checks and inserts item specification offers before updating the BPM task action.
+	 *
+	 * @param outcome the BPM outcome to be applied
+	 */
+	public void checkItemSpecOfferAndUpdateBpmTaskAction(String outcome) {
+		// #29007 Start Vinod
+		checkAndInsertItemSpecOffer();
+		// #29007 End Vinod
+		updateBpmTaskAction(outcome);
+	}
+	//#34449 - end
 	    
 	// 41033, 41034 - start
 	/**
