@@ -1108,4 +1108,19 @@ public abstract class BaseManagedBean implements Serializable {
 		this.newVersion = newVersion;
 	}
 	//#28784 - End
+	
+
+	/**
+	 * @return the disciplinaryAction
+	 */
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	/**
+	 * @param disciplinaryAction the disciplinaryAction to set
+	 */
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
 }

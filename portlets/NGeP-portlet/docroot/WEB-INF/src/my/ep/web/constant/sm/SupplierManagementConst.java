@@ -809,6 +809,36 @@ public class SupplierManagementConst {
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
 	public static final Pattern FOREIGN_REG_NO_PATTERN = Pattern.compile("^99[0-9]{4}-[A-Z]$");
 //	#37925 END
+	
+	// bug #29156(26238) - START
+	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	// bug #29156(26238) - END
+	
+	// bug #28278(26238) - START
+	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
+	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
+	// bug #28278(26238) - END
+	
+	// bug #29156(26238) - START
+	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
+	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
+	// bug #29156(26238) - END
+	
+	//26238 - START
+	public static final String MTO_CODE_04 = "04";
+	public static final String MTO_CODE_05 = "05";
+	public static final String MTO_CODE_06 = "06";
+	public static final String CAT_L1_22 = "22";
+	public static final String CAT_L2_17 = "17";
+	public static final String CAT_L3_09 = "09";
+	public static final int CAT_L3_347 = 347;
+	public static final String BUSINESS_TYPE_CODE_N = "N";
+	public static final String BUSINESS_TYPE_CODE_H = "H";
+	public static final int BUMI_PERCENTAGE = 50;
+	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
+	//26238 - END
+	
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -1591,4 +1621,45 @@ public class SupplierManagementConst {
 	}
 	
 //	#37925 END
+	// #29156(26238) - START
+	public String getSM_MOF_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	// #29156 -START
+	// #29156(26238) - START
+	
+	
+	// 28278(26238) - START
+	public String getMOF_STATUS_DELETED() {
+		return MOF_STATUS_DELETED;
+	}
+
+	public String getMOF_STATUS_CANCELLED() {
+		return MOF_STATUS_CANCELLED;
+	}
+	// 28278(26238) - END
+	
+	// #29156(26238) -START
+	public String getMOF_STATUS_DELETED_SUPPLIER() {
+		return MOF_STATUS_DELETED_SUPPLIER;
+	}
+
+	public String getMOF_STATUS_EXPIRED_SYSTEM() {
+		return MOF_STATUS_EXPIRED_SYSTEM;
+	}
+	// #29156(26238) -END
+	
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public String getSM_BASIC_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 }

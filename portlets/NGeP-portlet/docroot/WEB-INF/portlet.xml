@@ -11110,6 +11110,7 @@
 		</security-role-ref>
 	</portlet>
 </portlet-app>
+</portlet-app>
 	<!--#35320-start-->
 	<portlet>
 		<portlet-name>finalizationCommitteeMaintenance</portlet-name>
