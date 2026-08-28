@@ -12705,17 +12705,12 @@ public class QTDetailBackingBean extends
 	//#21692 - End
 	
 	/**
-	 * #35320
+	 * #35320 - Start 
 	 * @param statusId
 	 * @return boolean
 	 */
 	private static boolean resetCommitteeByStatus(long statusId) {
-        final List<Long> triggerStatuses = Arrays.asList(
-                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-                QTStatusConst.QT_REVISION_PUBLICATION,
-                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
-                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
-        );
+        final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
         return triggerStatuses.contains(statusId);
-	}
+	}//#35320 - End 
 }
