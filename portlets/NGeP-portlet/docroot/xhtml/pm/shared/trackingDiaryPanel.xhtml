@@ -17,7 +17,9 @@
 				</f:facet>
 				<ac:labelDateTime value="#{trackingDiaryObj.actionedDate}" /> 
 			</p:column>
-			<p:column style="white-space: normal!important;" width="15%"><ui:remove>28784</ui:remove>
+			<ui:remove>28784 -start-</ui:remove>
+			<p:column style="white-space: normal!important;" width="15%">
+				<ui:remove>28784 -end-</ui:remove>
 				<f:facet name="header">
 				#{lbl['lbl.td.view.action.by']}
 				</f:facet>
@@ -31,13 +33,17 @@
 			</f:facet> 
 		   #{pmTrackingDiaryBackingBean.getRoleDescByRoleCode(trackingDiaryObj.roleCode)}
             	</p:column>
+			<ui:remove>28784 -start-</ui:remove>
 			<p:column style="white-space: normal!important;" width="30%">
+				<ui:remove>28784 -end-</ui:remove>
 				<f:facet name="header">
 			#{lbl['lbl.td.view.action.desc']}
 				</f:facet>
 			<h:outputText value="#{trackingDiaryObj.actionDesc}" escape="false"/>
 			</p:column>
-			<p:column style="white-space: normal!important;" width="15%"><ui:remove>28784</ui:remove>
+			<ui:remove>28784 -start-</ui:remove>
+			<p:column style="white-space: normal!important;" width="15%">
+				<ui:remove>28784 -end-</ui:remove>
 				<f:facet name="header">
 				#{lbl['lbl.td.view.status']}
 				</f:facet>

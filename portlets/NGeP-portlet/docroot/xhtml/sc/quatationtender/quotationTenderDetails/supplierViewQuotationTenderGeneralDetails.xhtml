@@ -496,12 +496,59 @@
 						rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 				</td>
 				<td>
-						
-						
+					<!-- START #28784 -->
+					<c:choose>
+						<c:when
+							test="#{(!isDemoEvalDisabled and !isMaintenanceFlow and !isDemoSpecialCase) and 
+							(!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly)}">
+							<table>
+								<tr>
+									<td><p:selectOneRadio id="evalType"
+											label=" #{lbl['lbl.sc.evaluation.type']}"
+											value="#{scQt.evaluationType}"
+											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+											<f:selectItems
+												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />												
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												listener="#{createQtBB.renderDemoRadioButton}"
+												update="@form"></p:ajax>
+											<!-- END #26784 -->
+										</p:selectOneRadio></td>
+									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+								</tr>
+							</table>
+						</c:when>
+						<c:when test="#{isDemoEvalDisabled and !isReadOnly}">
+							<ui:remove><!-- 29464 note 42 --></ui:remove>
+							<table>
+								<tr>
+									<td><p:selectOneRadio id="evalType"
+											label=" #{lbl['lbl.sc.evaluation.type']}"
+											value="#{scQt.evaluationType}"
+											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+											<f:selectItems
+												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />												
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												listener="#{createQtBB.renderDemoRadioButton}"
+												update="@form"></p:ajax>
+											<!-- END #26784 -->
+										</p:selectOneRadio></td>
+									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+								</tr>
+							</table>
+						</c:when>
+						<c:otherwise>
 							<p:inputText id="evalTypeTxt"
 								value="#{createQtBB.getParameterDesc(ParameterTypeConst.scEvaluationType, scQt.evaluationType)}"
 								style="width:195px;" disabled="true" />
-						</td>
+						</c:otherwise>
+					</c:choose> 
+					<!-- 28784 -end- -->
+				</td>
 			</tr>
 
 			<tr>
@@ -755,6 +802,27 @@
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
+			<!-- 11104 -start- -->
+			<tr>
+				<h:panelGroup id="QuotationtenderGeneralSample">
+					<ui:fragment
+						rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
+						<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneRadio value="#{scQt.sampleReq}"
+								disabled="#{scQt.partial or isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
+								<f:selectItems
+									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax event="change" partialSubmit="true"
+									listener="#{createQtBB.sampleChange}" update="@form"
+									process="@this"></p:ajax>
+							</p:selectOneRadio></td>
+						<td style="margin-top: -3px"><ac:iconTooltip
+								value="#{lbl['lbl.sc.qt.sampel.instructions']}" /></td>
+					</ui:fragment>
+				</h:panelGroup>
+			</tr>
+			<!-- 11104 -end- -->				
 		</table>
 	</p:panel>
 	
@@ -810,7 +878,7 @@
 		</div>
 	</p:dialog>
  </ui:remove>
- 
+
 	<!-- #25729 #174 START -->
 	<ui:remove>Bug 35061 - change message value -start-</ui:remove>
 	<p:confirmDialog id="proceedBelowQtValueId"
@@ -831,7 +899,6 @@
 		</div>
 	</p:confirmDialog>
 	<!-- #25729 #174 END -->
-
 
 <!-- #28784 Start -->
 <p:confirmDialog id="demoDialogConfirm" widgetVar="demoDialogConfirm"
