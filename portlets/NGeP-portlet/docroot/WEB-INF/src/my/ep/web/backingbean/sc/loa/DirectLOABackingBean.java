@@ -14700,6 +14700,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	//#29661 #40511 end
 
+	//#41103 start
+	public boolean isSpecialCategoryType(PmCategoryL3 pmCategoryL3) {
+		if (null == pmCategoryL3 || null == pmCategoryL3.getCategoryTypeCode()
+				|| StringUtils.isBlank(pmCategoryL3.getCategoryTypeCode().getParameterCode())) {
+			return false;
+		}
+		String categoryTypeCode = pmCategoryL3.getCategoryTypeCode().getParameterCode();
+		return !ParameterConst.CATEGORY_TYPE_NORMAL.equalsIgnoreCase(categoryTypeCode)
+				&& !ParameterConst.CATEGORY_TYPE_NOT_APPLICABLE.equals(categoryTypeCode);
+	}
+	//#41103 end
+
 	/**
 	 * #29661
 	 * Convert ScQtCategory data into SmSupplierCategory
