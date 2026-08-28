@@ -2118,8 +2118,12 @@ public class SpecificationBackingBean extends
 			// #40138 Start Vinod
 			else {
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				// #40998/#10141 - Start
 				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				// #40998/#10141 - End
 					ScQt scQt = this.getManagedBean().getQt();
 					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.TECHNICAL_DOCTYPE);
 				}
@@ -2180,8 +2184,13 @@ public class SpecificationBackingBean extends
 			// #40138 Start Vinod
 			else {
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				//#40998/#10141 - Start
 				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				// #40998/#10141 - End
+
 					ScQt scQt = this.getManagedBean().getQt();
 					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.FINANCIAL_DOCTYPE);
 				}
@@ -18067,6 +18076,18 @@ if (null != checklist && !checklist.isEmpty()) {
 			return;
 		//�#1873�#34837 -end-
 		
+		// #40998/#10141 - Start
+		boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this.getManagedBean()
+				.isShowInactiveChecklistPopup(), action);
+
+		if (isInactiveChecklistPopup) {
+			RequestContext.getCurrentInstance().execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+			return;
+		}
+		this.getManagedBean().getQt().setInactiveChecklistNotified(false);
+
+		// #40998/#10141 - End
+		
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -23439,8 +23460,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					QTConstants.INACTIVE_CHECKLIST_NOTIFICATION_HIDE);
 			this.getManagedBean().setPreRenderInactiveChecklist(
 					checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(), bpAction));
-		} else {
-			submitSpecMaintenanceDtls(bpAction);
+		} else {// #40998/#10141 - Start
+			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			if (currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				specCommitteMaintenanceBpmTask(bpAction);
+			} else {
+				submitSpecMaintenanceDtls(bpAction);
+			}
+			// #40998/#10141 - End
+
 		}
 	}
 
@@ -23534,11 +23562,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	private void addInactiveChecklistsForPopup(List<ScQtCheckList> currentChecklist,
 			List<ScQtCheckList> inActiveChecklist) {
-		for (ScQtCheckList scQtCheckList : currentChecklist) {
-			if (null != scQtCheckList.getPmDocument() && !scQtCheckList.getPmDocument().isRecordStatus()) {
-				inActiveChecklist.add(scQtCheckList);
+		// #41075 - Start
+		if (currentChecklist != null) {
+			for (ScQtCheckList scQtCheckList : currentChecklist) {
+				if (null != scQtCheckList.getPmDocument() && !scQtCheckList.getPmDocument().isRecordStatus()) {
+					inActiveChecklist.add(scQtCheckList);
+				}
 			}
 		}
+		// #41075 - End
 	}
 
 	// #10141 End Vinod
@@ -25188,6 +25220,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
 				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(currentStatusId)
 				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currentStatusId) 
+				|| QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currentStatusId) 
 				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId)
 				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
 			return Boolean.TRUE;
@@ -25199,37 +25233,66 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #38151 && 40044 Start
 	public void checkWeightage35384WIP() {
+		
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getQt();
 		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
 
-		if (null == publishDate) {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
 
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
 
-			Date effDate = appVerDtls.getEffDate();
-			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+		Date effDate = appVerDtls.getEffDate();
+		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-			if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) {
-				this.getManagedBean().setWeightage35384WIP(true);
+		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
+		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
+		
+		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc)) 
+				|| (null != publishDate && publishDate.before(effDate))) {
+			this.getManagedBean().setWeightage35384WIP(true);
+		}
+	}
+	
+	private boolean specStatusEndorseRev(Date effTimestamp) {
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatus(this.getManagedBean().getQt().getQtId());
+			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
 			}
-		} else {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+			
+			 
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
 
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-
-			if (publishDate.before(effDate)) {
-				this.getManagedBean().setWeightage35384WIP(true);
+	private boolean specStatusPendingDocRev(Date effTimestamp) {
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatusPenDoc(this.getManagedBean().getQt().getQtId());
+			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
 			}
+			
+			 
+		} finally {
+			workFlowStatusSO = null;
 		}
 	}
 	// #38151 End

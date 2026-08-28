@@ -7896,6 +7896,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (null == ctContractver) {
 			newCtContractver.setCtTermination(new CtTermination());
 		} else {
+			//41079 && 29661 -start-
+			if(null==ctContractver.getCtTermination()){
+				ctContractver.setCtTermination(new CtTermination());
+			}
+			//41079 && 29661 -end-
 			return ctContractver;
 		}
 
