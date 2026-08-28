@@ -709,6 +709,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					checkandResetBondExempted();
 				  }
 				//End Fix- #29368 / #30856
+				
+				//#24336 - Start
+				if (!ctBackingBean.getManagedBean().isInitPage()) {
+		            initCommitteeType(taskId);
+		            ctBackingBean.getManagedBean().setInitPage(true);
+		        }
+				//#24336 - End
+				
 				return;
 			}
 			
@@ -810,7 +818,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// #24336 - Start
 			// Runs all initial setup when the page is first loaded
 			if (!ctBackingBean.getManagedBean().isInitPage()) {
-			    initializePage();
+			    initializePage(taskId);
 			}
 			// #24336 - End
 
@@ -3743,17 +3751,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//Bug 33096 - shaqimi start
 		BigDecimal ctAmt;
 		if(ctBackingBean.getManagedBean().isViewSCL()){
-			
-//			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
-			
-			//#24336
-			ctAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
-			
+			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
 		} else {
 			
 			//#24336 - Start
 			// Calculate the current contract amount with additions or reductions.
-			BigDecimal baseAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
+			BigDecimal baseAmt = ctContractVer.getCtContractAmount().getContractAmount();
 			BigDecimal addAmt = ctContractVer.getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctContractVer.getCtAmendment().getReductionAmt();
 			
@@ -3803,18 +3806,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return the final contract amount including service tax (if applicable)
 	 */
 	public BigDecimal newOverallContractAmount() {
-		BigDecimal contractAmount = newOverallContractAmt();
-		
-		// #24336 - Start
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		
-		// Include service tax if contract value changed by GST
-		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null){
-			contractAmount = newOverallContractAmt().add(ctAmendment.getNewStaxAmount());
-		}
-		// #24336 - End
-		
-		return contractAmount;
+	    BigDecimal contractAmount = newOverallContractAmt();
+
+	    // #24336 - Start
+	    CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
+	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
+	    CtContractAmount ctContractAmount = ctContractVer.getCtContractAmount();
+
+	    // Include service tax if contract value changed by GST
+	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
+	        contractAmount = contractAmount.add(ctAmendment.getNewStaxAmount());
+	    }
+
+	    // Include current GST and STAX amounts if the contract value was not changed due to GST/SST
+	    if (!ctAmendment.isValueChangeByGst()) {
+	        if (ctContractAmount.getGstAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getGstAmount());
+	        }
+
+	        if (ctContractAmount.getStaxAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getStaxAmount());
+	        }
+	    }
+	    // #24336 - End
+
+	    return contractAmount;
 	}
 	// End - #29589
 	
@@ -9798,8 +9814,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Performs initial page setup. */
-	private void initializePage() {
-	    initCommitteeType();
+	private void initializePage(String taskId) {
+	    initCommitteeType(taskId);
 	    // Loads the correct checklist options based on data.
 	    handleSelectedAmendmentChecklistValue();
 	    // Updates values when amendment type changes.
@@ -9809,19 +9825,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Initializes the committee type during page first load. */
-	private void initCommitteeType() {
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		if (ctAmendment == null) {
+	private void initCommitteeType(String taskId) {
+
+	    String committeeType = getManagedBean().getCommitteeType();
+
+	    // New record
+	    if (taskId == null || taskId.trim().length() == 0) {
+	        if (committeeType == null) {
+	            // First initialization of new record.
+	            // Get default committee type from previous QT (if available).
+	            handleOriginalDeskOfficerCommitteeQT();
+	        }
 	        return;
 	    }
-		
-	    if (ctAmendment.getCommitteeType() == null) {
-	    	// Sets default desk officer committee from QT
-	        handleOriginalDeskOfficerCommitteeQT();
-	    }else{
-	    	// Sets saved committee type into the bean
-	    	mapCommitteeType();
+
+	    // Saved record
+	    boolean isPbqcAuthorityReq = ctBackingBean.getManagedBean()
+	            .getContractVer()
+	            .getCtAmendment()
+	            .isPbqcAuthorityReq();
+
+	    if (isPbqcAuthorityReq) {
+	        // Existing saved committee type
+	        mapCommitteeType();
+	        return;
 	    }
+
+	    // PBQC Authority is not required
+	    resetPbqcAuthoritySelection();
 	}
 	
 	/** Sets default desk officer committee if no saved value. */

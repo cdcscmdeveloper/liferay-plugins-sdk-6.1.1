@@ -13579,7 +13579,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByItem",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByItem",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -13620,7 +13622,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {	
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByPackage",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByPackage",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 
