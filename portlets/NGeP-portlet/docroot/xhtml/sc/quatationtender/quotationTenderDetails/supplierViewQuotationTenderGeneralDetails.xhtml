@@ -495,13 +495,53 @@
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 				</td>
-				<td>
-						
-						
+				<td><c:choose><!-- START #28784 -->
+						<c:when
+							test="#{(!isDemoEvalDisabled and !isMaintenanceFlow and !isDemoSpecialCase) and 
+							(!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly)}">
+							<table>
+								<tr>
+									<td><p:selectOneRadio id="evalType"
+											label=" #{lbl['lbl.sc.evaluation.type']}"
+											value="#{scQt.evaluationType}"
+											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+											<f:selectItems
+												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />												
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												listener="#{createQtBB.renderDemoRadioButton}"
+												update="@form"></p:ajax><!-- END #26784 -->
+										</p:selectOneRadio></td>
+									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+								</tr>
+							</table>
+						</c:when>
+						<c:when	test="#{isDemoEvalDisabled and !isReadOnly}"><ui:remove><!-- 29464 note 42 --></ui:remove>
+							<table>
+								<tr>
+									<td><p:selectOneRadio id="evalType"
+											label=" #{lbl['lbl.sc.evaluation.type']}"
+											value="#{scQt.evaluationType}"
+											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+											<f:selectItems
+												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />												
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												listener="#{createQtBB.renderDemoRadioButton}"
+												update="@form"></p:ajax><!-- END #26784 -->
+										</p:selectOneRadio></td>
+									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+								</tr>
+							</table>
+						</c:when>
+						<c:otherwise>
 							<p:inputText id="evalTypeTxt"
 								value="#{createQtBB.getParameterDesc(ParameterTypeConst.scEvaluationType, scQt.evaluationType)}"
 								style="width:195px;" disabled="true" />
-						</td>
+						</c:otherwise>
+					</c:choose></td>
 			</tr>
 
 			<tr>
