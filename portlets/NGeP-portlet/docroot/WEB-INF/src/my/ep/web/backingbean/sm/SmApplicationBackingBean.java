@@ -3313,10 +3313,10 @@ public class SmApplicationBackingBean extends
 				//#32236 end
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
 						getManagedBean(), currentTab);
+				SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean()); //#40444- reposition 
 				SmApplicationUtil
 						.validateOverlapCategoryJustificationAndSuppDocs(
 								getManagedBean(), currentPageType);
-				SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean());
 				SmApplicationUtil.getInstance()
 						.removeNotApplicableInformationBeforeSave(
 								getManagedBean());
