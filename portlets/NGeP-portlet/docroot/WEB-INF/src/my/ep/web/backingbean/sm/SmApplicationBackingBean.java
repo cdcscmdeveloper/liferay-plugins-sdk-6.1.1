@@ -10526,6 +10526,9 @@ public class SmApplicationBackingBean extends
 	private void updateRegistrationStatus(SmApplSectionReview latestPOChange) {
 	    Long currentRegStatusId = getCurrRegStatusId();
 	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
+	    if(prevRegStatusId == null){
+	    	prevRegStatusId = currentRegStatusId;
+	    }
 	    
 	    // S1125: Simplified boolean expressions
 	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);
@@ -10584,7 +10587,6 @@ public class SmApplicationBackingBean extends
 	 */
 	private boolean isValidApplSectionReview(SmApplSectionReview smApplSectionReview) {
 		return smApplSectionReview != null 
-				&& smApplSectionReview.getPreviousRegStatusId() != null //#37925
 				&& smApplSectionReview.getPmRegStatus() != null 
 				&& smApplSectionReview.getPmRegStatus().getPmStatus() != null 
 				&& smApplSectionReview.getPmRegStatus().getPmStatus().getStatusId() != null;
