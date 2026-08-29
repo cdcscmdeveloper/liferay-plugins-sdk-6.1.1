@@ -10892,6 +10892,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	private boolean isValidApplSectionReview(SmApplSectionReview smApplSectionReview) {
 		return smApplSectionReview != null 
+				&& smApplSectionReview.getPreviousRegStatusId() != null //#37925
 				&& smApplSectionReview.getPmRegStatus() != null 
 				&& smApplSectionReview.getPmRegStatus().getPmStatus() != null 
 				&& smApplSectionReview.getPmRegStatus().getPmStatus().getStatusId() != null;
