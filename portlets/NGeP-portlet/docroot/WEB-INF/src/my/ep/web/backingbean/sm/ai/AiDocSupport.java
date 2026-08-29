@@ -47,7 +47,9 @@ public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
 	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
-	private static final String AI_BLOCK_DECLARE = EpPropertiesUtils.getInstance().getProperty("google.doc.bank.co.name.check.onoff");
+	private static final String AI_BANK_OCR = EpPropertiesUtils.getInstance().getProperty("google.doc.bank.co.name.check.onoff");
+	// this filename will always go to API
+	private static final String DEMO_AI_FILE = "demo_ai_40112";
 
 	private AiDocSupport() {
 	}
@@ -56,8 +58,17 @@ public final class AiDocSupport {
 		return AI_ONOFF != null && AI_ONOFF.trim().equalsIgnoreCase("1");
 	}
 
-	public static boolean isBlockDeclareEnabled() {
-		return AI_BLOCK_DECLARE != null && AI_BLOCK_DECLARE.trim().equalsIgnoreCase("1");
+	/**
+	 * Bank statements reach the OCR API when the company-name check is on; with it off only the demo
+	 * file does, so nothing else carries an extracted name that could block Declare.
+	 * @param fileName
+	 * @return
+	 */
+	public static boolean isBankOcrAllowed(String fileName) {
+		if (AI_BANK_OCR != null && AI_BANK_OCR.trim().equalsIgnoreCase("1")) {
+			return true;
+		}
+		return fileName != null && fileName.contains(DEMO_AI_FILE);
 	}
 
 	/**
@@ -584,8 +595,8 @@ public final class AiDocSupport {
 			if (ee == null) {
 				return;
 			}
-			ee.setValidEmployerName(StringUtils.isBlank(ee.getEmployerName())
-					|| normalizedEquals(companyName, ee.getEmployerName()));
+			// unlike tenancy, an employer name the OCR never read counts as a mismatch
+			ee.setValidEmployerName(normalizedEquals(companyName, ee.getEmployerName()));
 		}
 
 		/**
@@ -673,17 +684,23 @@ public final class AiDocSupport {
 			String companyNameJson = bank.getAccountHolderName();
 			Long resolvedOrgId = resolveFinancialOrg(bank.getBankName(), candidates);
 			Long chosenOrgId = supplierAccounts.get(normalizeAccountNo(bank.getAccountNo()));
+			// a field the OCR did not read is not a mismatch, so it keeps its valid verdict
+			boolean hasBankName = !StringUtils.isBlank(bank.getBankName());
+			boolean hasAccountNo = !StringUtils.isBlank(bank.getAccountNo());
 			if (chosenOrgId == null) {
-				bank.setValidAccountNo(false);
+				if (hasAccountNo) {
+					bank.setValidAccountNo(false);
+				}
 				// no account to anchor on, so the name only has to be one of the banks the supplier keyed in
-				if (resolvedOrgId == null || !supplierOrgIds.contains(resolvedOrgId)) {
+				if (hasBankName && (resolvedOrgId == null || !supplierOrgIds.contains(resolvedOrgId))) {
 					bank.setValidBankName(false);
 				}
-			} else if (!chosenOrgId.equals(resolvedOrgId)) {
+			} else if (hasBankName && !chosenOrgId.equals(resolvedOrgId)) {
 				bank.setValidBankName(false);
 			}
-			// Supplier name is required, so a blank or mismatched one fails the verdict.
-			if (!normalizedEquals(companyNameJson, companyNameSupp)) {
+			// only a name that was actually extracted can mismatch the registered one
+			if (!StringUtils.isBlank(companyNameJson) && !StringUtils.isBlank(companyNameSupp)
+					&& !normalizedEquals(companyNameJson, companyNameSupp)) {
 				bank.setValidAccountHolderName(false);
 			}
 		}
@@ -956,10 +973,19 @@ public final class AiDocSupport {
 
 		private static final long serialVersionUID = 1L;
 
+		private Long apiId;
 		private String employerName;
 		private List<AiEmployeeDTO> employees = new ArrayList<>();
 
 		private boolean validEmployerName = true;
+
+		public Long getApiId() {
+			return apiId;
+		}
+
+		public void setApiId(Long apiId) {
+			this.apiId = apiId;
+		}
 
 		/**
 		 * Tooltip row: the employer name with a tick/cross verdict (set by {@link AiDocValidator}). The
