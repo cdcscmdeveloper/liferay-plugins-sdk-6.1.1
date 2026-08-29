@@ -10834,6 +10834,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void updateRegistrationStatus(SmApplSectionReview latestPOChange) {
 	    Long currentRegStatusId = getCurrRegStatusId();
 	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
+	    log.info("37925:Before prevRegStatusId-"+prevRegStatusId+"---currentRegStatusId--"+currentRegStatusId);
+
 	     if(prevRegStatusId == null){
 	    	log.info("37925:prevRegStatusId-"+prevRegStatusId+"---currentRegStatusId--"+currentRegStatusId);
 	    	prevRegStatusId = currentRegStatusId;
