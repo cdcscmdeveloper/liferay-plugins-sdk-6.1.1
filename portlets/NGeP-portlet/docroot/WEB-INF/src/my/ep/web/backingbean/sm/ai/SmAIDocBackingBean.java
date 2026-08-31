@@ -570,9 +570,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		log.info(docType+"\t"+appl.getApplNo());
 		// recompute the task-list AI flag before the save flow persists the appl graph
 		recomputeAiStatus(appl);
-		if (TYPE_EPF.equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
-			submitEPF(appl);
-
+		if (TYPE_EPF.equals(docType)){
+			latchUnselectedEpf(appl);
+			if (!EntityHelper.isCollectionEmpty(selectedEmployees)){
+				submitEPF(appl);
+			} else {
+				// ticking nothing is still a decision - re-derive the icons against the new latches
+				validateEPF(appl);
+			}
 		} else if (TYPE_TENANCY.equals(docType)){
 			submitTenancy();
 		}
@@ -591,6 +596,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (AiEpfResultDTO.AiEmployeeDTO employee : selectedEmployees) {
 			SmPersonnel per = personnels.get(employee.getNricNumber());
 			if (per != null){
+				// re-ticking an employee rejected or edited earlier makes it AI-populated again
+				clearEpfUserEdit(appl, employee.getNricNumber());
 				per.setEpfNo(employee.getKwspNumber());
 				// existing (SSM/eP) personnel: only EPF No. is AI-populated -> only it gets the icon.
 				per.setEpfNoAI(employee.getKwspNumber());
@@ -621,10 +628,54 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				"#{backingBean}", SmApplicationBackingBean.class);
 		if (bb != null){
 			bb.saveOrUpdateAppl();
+			SmApplicationUtil.sortPersonnelByRoleInCompany(bb.getManagedBean().getSmAppl());
 			validateEPF(bb.getManagedBean().getSmAppl());
 		}
 	}
 
+
+	/**
+	 * The tick list is the applicant's accept/reject decision but lives only in this request, so
+	 * record the rejected NRICs against the response - applyEpfValidation already skips them.
+	 * Written once per statement: a reopened dialog shows nothing ticked and must not retract a
+	 * decision already made.
+	 * @param appl
+	 */
+	private void latchUnselectedEpf(SmAppl appl){
+		Set<String> picked = new HashSet<>();
+		if (!EntityHelper.isCollectionEmpty(selectedEmployees)){
+			for (AiEpfResultDTO.AiEmployeeDTO emp : selectedEmployees){
+				picked.add(emp.getNricNumber());
+			}
+		}
+		String companyName = appl.getSmSupplier() != null ? appl.getSmSupplier().getCompanyName() : null;
+		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
+			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
+			if (edits.containsKey(AiUserEdit.KEY_EPF_DECIDED)){
+				continue;
+			}
+			JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
+			if (fields == null){
+				continue;
+			}
+			AiEpfResultDTO ee = AiDocParser.toEpf(fields);
+			// never offered in the table, so there is no decision to record
+			AiDocValidator.validateEpf(ee, companyName);
+			if (!ee.isValidEmployerName()){
+				continue;
+			}
+			boolean changed = AiUserEdit.add(edits, AiUserEdit.KEY_EPF_DECIDED, AiUserEdit.F_DECIDED);
+			for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
+				if (picked.contains(emp.getNricNumber())){
+					continue;
+				}
+				changed |= AiUserEdit.add(edits, emp.getNricNumber(), AiUserEdit.F_EPF_NO);
+				changed |= AiUserEdit.add(edits, emp.getNricNumber(), AiUserEdit.F_NAME);
+				changed |= AiUserEdit.add(edits, emp.getNricNumber(), AiUserEdit.F_IC);
+			}
+			persistUserEdit(response, edits, changed);
+		}
+	}
 
 	private void submitTenancy(){
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -828,8 +879,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			byNric.put(per.getIdentificationNo(), per);
 		}
 
+		String companyName = appl.getSmSupplier() != null ? appl.getSmSupplier().getCompanyName() : null;
 		for (AIApiResponse response : responses){
-			applyEpfValidation(response, byNric);
+			applyEpfValidation(response, companyName, byNric);
 		}
 	}
 
@@ -846,13 +898,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	// One EPF file: match extracted employees to personnel by NRIC and light the EPF No./name AI icons.
-	private static void applyEpfValidation(AIApiResponse response, Map<String, SmPersonnel> byNric){
+	private static void applyEpfValidation(AIApiResponse response, String companyName,
+			Map<String, SmPersonnel> byNric){
 		JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 		if (fields == null){
 			return;
 		}
-		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
+		// a statement issued to another company lights nobody, as in the AI Assistant table
+		AiDocValidator.validateEpf(ee, companyName);
+		if (!ee.isValidEmployerName()){
+			return;
+		}
+		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
 			SmPersonnel per = byNric.get(emp.getNricNumber());
 			if (per == null){
@@ -1282,9 +1340,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					err = "lbl.sm.ai.bank.invalid";
 					break;
 				}
-			} else if (statusCode == 500){
-				err = "lbl.sm.ai.doctype.invalid";
-
 			} else if (statusCode >= 400){
 				err = LBL_AI_UNAVAILABLE;
 				addMessageOnce(FacesMessage.SEVERITY_WARN, err);
