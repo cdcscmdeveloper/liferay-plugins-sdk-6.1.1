@@ -13488,12 +13488,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	public void checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority() {
 
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());		 
+		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+		// #27502 -start-
 		boolean isBpkCentralContract = isBpkCentralContract(qtBackingBean.getManagedBean().getQt());
 
 		if (isBpkCentralContract) {
 			return;
 		}
+		// #27502 -end-
 
 		final boolean isItemize = getManagedBean().isItemize();
 		final String committeeType = getManagedBean().getCommitteeType();
@@ -13587,7 +13589,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByItem",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByItem",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -13628,7 +13632,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {	
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByPackage",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByPackage",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 

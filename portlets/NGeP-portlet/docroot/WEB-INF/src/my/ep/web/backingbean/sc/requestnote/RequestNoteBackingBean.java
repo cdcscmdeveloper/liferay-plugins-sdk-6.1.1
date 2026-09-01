@@ -1159,8 +1159,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			RequestContext.getCurrentInstance().execute("cancelRN.show()");
 		} else if (outcome.equals(BpmOutcomeConst.BPM_REJECT)) {
 			RequestContext.getCurrentInstance().execute("rejectRN.show()");
-		} else {
-			submitAction(outcome);
+		} else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){ //#34449
+			constructConfirmationMessageSubmit(false); //#34449
+		}else {
+			constructReviseConfirmationMessage(outcome);
 		}
 	}
 
@@ -7425,6 +7427,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 			group.setCurrentItemTotalAmount(sumTotalPrice);
+			group.setAccumulativeAmountPerItemGroup(group.getAccumulativeAmountPerItemGroup().add(sumTotalPrice));
 			group.setDecision(SSTConstant.EMPTY_STRING);
 			getManagedBean().getCommodityGroups().add(group);
 		}
@@ -7494,7 +7497,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				group.setAccumulativeAmountPerItemGroup(totalAmt);
 				
@@ -7894,7 +7897,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				flReqDTO.setYear(cal.get(Calendar.YEAR));
 				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
 
@@ -8080,7 +8083,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 				// changes to calculate per ptj per item per year
 				// using 8 digit
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
 				
@@ -8557,8 +8560,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
 		for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
 			if (null != rnDtl.getJustificationType() && null != rnDtl.getJustificationType().getReasonId()) {
-				PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-						.getReasonId());
+				PmReason reason = retrieveReasonDtlById(rnDtl.getJustificationType().getReasonId());
 
 				if (reason == null) {
 					continue;
@@ -9141,4 +9143,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return sortedList;
 	}
 	// 41034 - end
+	
+	//34449 - start
+	
+	/**
+	 * Prepares the submit action based on whether the task ID is empty
+	 * and opens the submit confirmation dialog.
+	 *
+	 * @param isTaskIdEmpty true if the task ID is empty; false otherwise
+	 */
+	public void constructConfirmationMessageSubmit(boolean isTaskIdEmpty ){
+		
+		if (isTaskIdEmpty){
+			getManagedBean().setAssignMethod("requestNoteBackingBean.submitAction('')");
+		}else{
+			getManagedBean().setAssignMethod("requestNoteBackingBean.submitAction('SUBMIT')");
+		}
+		
+		RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+	}
+	
+	/**
+	 * Construct Revise and Approve dialog message
+	 * @param outcome
+	 */
+	public void constructReviseConfirmationMessage (String outcome) {
+		
+		if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+			RequestContext.getCurrentInstance().execute("approveDlg.show()");
+			getManagedBean().setApproveMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		} else {
+			RequestContext.getCurrentInstance().execute("reviseDlg.show()");
+			getManagedBean().setReviseMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		}
+		
+	}
+	//34449 - end
 }
