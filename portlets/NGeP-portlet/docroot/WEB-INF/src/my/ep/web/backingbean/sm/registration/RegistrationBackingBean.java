@@ -5700,6 +5700,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	//13320-end
 
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getSmPersonnel().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getSmPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+
+	public void onChangeConfirmEmail() {
+		String email = this.getManagedBean().getConfirmEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().setConfirmEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
     //  #30829 - Start 1/11/2021
 	private SmPersonnel onSaveSmPersonnelEquityOwner(SmAppl smAppl, SmSupplierOwner smSupplierOwner, SmPersonnel smPersonnel){
 		

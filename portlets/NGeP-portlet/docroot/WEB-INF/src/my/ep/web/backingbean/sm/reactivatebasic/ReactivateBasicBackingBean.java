@@ -21,6 +21,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.ReactivateSupplierVO;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "reactivateBasicBackingBean")
 @SessionScoped
@@ -223,4 +224,13 @@ public class ReactivateBasicBackingBean extends
 	public void setBasicSupplierAdmin(SmPersonnel basicSupplierAdmin) {
 		this.basicSupplierAdmin = basicSupplierAdmin;
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = reactivateBasic.getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			reactivateBasic.setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 }

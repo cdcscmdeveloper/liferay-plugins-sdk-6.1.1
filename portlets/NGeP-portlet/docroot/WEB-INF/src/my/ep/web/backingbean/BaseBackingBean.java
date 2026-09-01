@@ -4343,4 +4343,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 
 	// new #25725/25726 - End
+	// #28720 Start
+	/**
+	 * Validate allowed email type
+	 * 
+	 * @param String
+	 *            email
+	 * @return boolean
+	 */
+	public boolean isAllowedEmail(String email) {
+		boolean allowed = true;
+		if (email.toLowerCase().contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			allowed = false;
+		}
+		return allowed;
+	}
+	// #28720 End
 }
