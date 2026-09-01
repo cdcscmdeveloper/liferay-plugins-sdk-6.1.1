@@ -333,15 +333,21 @@
 							disabled="#{backingBean.managedBean.disableIcEmail}" validator="#{backingBean.validateEmail}"
 							value="#{backingBean.managedBean.selectedShareHolder.email}" size="35">
 							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+							<ui:remove>#28720 Start</ui:remove>
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeEmail()}" update="equiEmail" />
+							<ui:remove>#28720 End</ui:remove>
 							<f:param name="disableValidate" value="true" />
 						</p:inputText> 
 					</p:outputPanel>
-					&#160; <p:graphicImage id="tooltip2"
-						value="/css/images/design/tooltips.png" /> <p:tooltip
-						id="toolinfo2" for="tooltip2">
-						<p:outputLabel escape="false"
-							value="#{lbl['tt.sm.registration.equity.owner.email']}" />
-					</p:tooltip>&#160; 
+					<ui:remove>#28720 Start</ui:remove>
+					&#160;&#160;
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" />
+					<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false"
+							value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip>
+					<ui:remove>#28720 End</ui:remove>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 							and not empty backingBean.managedBean.latestPersonnel}"
@@ -735,6 +741,11 @@
 				process="equiShrHldrJbFnc" />
 		</div>
 	</p:panel>
+	<ui:remove>#28720 Start</ui:remove>
+	<ac:smEmailAlertPopup bBean="#{backingBean}"
+		title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	<ui:remove>#28720 End</ui:remove>
 	
 	<ac:confirmationPopup id="equiJobFunctionDeletePopUpId"
 		widget="equiJobFunctionDeletePopUp"
