@@ -702,6 +702,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					checkandResetBondExempted();
 				  }
 				//End Fix- #29368 / #30856
+				
+				//#24336 - Start
+				if (!ctBackingBean.getManagedBean().isInitPage()) {
+		            initCommitteeType(taskId);
+		            ctBackingBean.getManagedBean().setInitPage(true);
+		        }
+				//#24336 - End
+				
 				return;
 			}
 			
@@ -803,7 +811,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// #24336 - Start
 			// Runs all initial setup when the page is first loaded
 			if (!ctBackingBean.getManagedBean().isInitPage()) {
-			    initializePage();
+			    initializePage(taskId);
 			}
 			// #24336 - End
 						
@@ -2826,9 +2834,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// #24336 - Start
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-				// Validate reduction amount does not exceed the allowed contract limit
-				validateReductionAmount();
-				
 				// Ensure the new amount effective date is provided.
 				validateNewAmtEffDate();
 			}
@@ -3459,6 +3464,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	public void setMenuByIndex(int outputValue) { //#35132
 		getManagedBean().setSelectedTabIndex(outputValue);
+		
+		//#24336
+		handleSelectedAmendmentChecklistValue();
 	}
 
 	/**
@@ -3680,7 +3688,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#24336 - Start
 			// Calculate the current contract amount with additions or reductions.
-			BigDecimal baseAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
+			BigDecimal baseAmt = ctContractVer.getCtContractAmount().getContractAmount();
 			BigDecimal addAmt = ctContractVer.getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctContractVer.getCtAmendment().getReductionAmt();
 			
@@ -3720,20 +3728,41 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return contractAmt;
 	}
 	
-	
+	/**
+	 * Calculate the new overall contract amount.
+	 * 
+	 * <p>This method gets the base contract amount and, if the contract value
+	 * was changed because of GST, it will add the new service tax amount
+	 * to the total.</p>
+	 * 
+	 * @return the final contract amount including service tax (if applicable)
+	 */
 	public BigDecimal newOverallContractAmount() {
-		BigDecimal contractAmount = newOverallContractAmt();
-	
-		// #24336 - Start
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		
-		// Include service tax if contract value changed by GST
-		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null){
-			contractAmount = newOverallContractAmt().add(ctAmendment.getNewStaxAmount());
-		}
-		// #24336 - End
-		
-		return contractAmount;
+	    BigDecimal contractAmount = newOverallContractAmt();
+
+	    // #24336 - Start
+	    CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
+	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
+	    CtContractAmount ctContractAmount = ctContractVer.getCtContractAmount();
+
+	    // Include service tax if contract value changed by GST
+	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
+	        contractAmount = contractAmount.add(ctAmendment.getNewStaxAmount());
+	    }
+
+	    // Include current GST and STAX amounts if the contract value was not changed due to GST/SST
+	    if (!ctAmendment.isValueChangeByGst()) {
+	        if (ctContractAmount.getGstAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getGstAmount());
+	        }
+
+	        if (ctContractAmount.getStaxAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getStaxAmount());
+	        }
+	    }
+	    // #24336 - End
+
+	    return contractAmount;
 	}
 	// End - #29589
 	
@@ -8963,7 +8992,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 
 	/**
-	 * Method to check supplier for Cancelled Bumiputera Status
+	 * Method to check supplier for Cancelled Bumiputera Status, check the
+	 * bumiputera status from supplier module and check the contract is not
+	 * direct loa or direct nego.
 	 * 
 	 * @param supplier the supplier for the current contract
 	 */
@@ -8973,23 +9004,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IQTDetailSO iQtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		try {
-			boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
-			boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
-					.getContractNo());
+			if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+					.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+				boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
+				boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+						.getContractNo());
 
-			if (!suppBumiputera && openFor) {
-				this.getManagedBean().setSupplierBumiCancel(true);
-				if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
-					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+				if (!suppBumiputera && openFor) {
+					setSupplierBumiputeraCancel();
 				}
-				handleMessageSupplierMaintenance();
 			}
-
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierBumiputera",
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
 					"checkSupplierBumiputera", getUserIdSessionFromLoginId(), e);
 		}
+	}
+	
+	/**
+	 * Method to set cancel bumiputera if the condition are met
+	 */
+	public void setSupplierBumiputeraCancel() {
+		this.getManagedBean().setSupplierBumiCancel(true);
+		if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
+			this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+		}
+		handleMessageSupplierMaintenance();
 	}
 	
 	/**
@@ -9725,8 +9765,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Performs initial page setup. */
-	private void initializePage() {
-	    initCommitteeType();
+	private void initializePage(String taskId) {
+	    initCommitteeType(taskId);
 	    // Loads the correct checklist options based on data.
 	    handleSelectedAmendmentChecklistValue();
 	    // Updates values when amendment type changes.
@@ -9736,19 +9776,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Initializes the committee type during page first load. */
-	private void initCommitteeType() {
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		if (ctAmendment == null) {
+	private void initCommitteeType(String taskId) {
+
+	    String committeeType = getManagedBean().getCommitteeType();
+
+	    // New record
+	    if (taskId == null || taskId.trim().length() == 0) {
+	        if (committeeType == null) {
+	            // First initialization of new record.
+	            // Get default committee type from previous QT (if available).
+	            handleOriginalDeskOfficerCommitteeQT();
+	        }
 	        return;
 	    }
-		
-	    if (ctAmendment.getCommitteeType() == null) {
-	    	// Sets default desk officer committee from QT
-	        handleOriginalDeskOfficerCommitteeQT();
-	    }else{
-	    	// Sets saved committee type into the bean
-	    	mapCommitteeType();
+
+	    // Saved record
+	    boolean isPbqcAuthorityReq = ctBackingBean.getManagedBean()
+	            .getContractVer()
+	            .getCtAmendment()
+	            .isPbqcAuthorityReq();
+
+	    if (isPbqcAuthorityReq) {
+	        // Existing saved committee type
+	        mapCommitteeType();
+	        return;
 	    }
+
+	    // PBQC Authority is not required
+	    resetPbqcAuthoritySelection();
 	}
 	
 	/** Sets default desk officer committee if no saved value. */

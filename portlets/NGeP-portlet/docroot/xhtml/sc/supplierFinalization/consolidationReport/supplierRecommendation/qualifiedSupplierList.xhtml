@@ -94,7 +94,7 @@
 							style="width:5%; white-space:normal;" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}"
 							style="width:10%; text-align:right;" />
-						<!-- #38151 update label-->
+						<!-- #38151,#38679 update label-->
 						<p:column rowspan="2"
 							headerText="#{lbl['lbl.sc.total.overall.score']}"
 							style="width:5%; text-align:right;" />
@@ -200,7 +200,7 @@
 
 				<p:column style="text-align:right;">
 					<ui:remove>
-						<!-- #38151 add action popup-->
+						<!-- #38151,#38679 add action popup-->
 						<!-- #40142 -->
 					</ui:remove>
 					<p:commandLink  oncomplete="preferenceMarginSuppDetailsPopup.show(); return false;" 
@@ -239,7 +239,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 					<ui:remove>
-						<!-- #38151 add action link popup & WIP-->
+						<!-- #38151,#38679 add action link popup & WIP-->
 					</ui:remove>
 					<p:commandLink
 						action="#{consolidationReportBackingBean.qualifiedSupplierListPopupScore(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -602,7 +602,7 @@
 	</p:panel>
 
 	<ui:remove>
-		<!-- #38151 datatable value popup-->
+		<!-- #38151,#38679 datatable value popup-->
 		<!-- start -->
 	</ui:remove>
 	<p:dialog id="preferenceMarginSuppDetailstestPopupId"
@@ -673,5 +673,5 @@
 
 		</p:dataTable>
 	</p:dialog>
-	<!-- #38151 datatable value popup - end -->
+	<!-- #38151,#38679 datatable value popup - end -->
 </ui:composition>

@@ -81,7 +81,7 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText maxlength="20" size="20"
 							value="#{smCompExpMB.selectedMaster.loaNo}" /></td>
 				</tr>
 				<tr>
@@ -106,24 +106,26 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
+				<!-- 40978 -->
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
-					<td style="width: 66%"><p:selectOneMenu
+					<td style="width: 66%"><p:selectOneMenu id="paymentMethodId"
 							value="#{smCompExpMB.selectedMaster.paymentMethod.parameterId}">
 							<f:selectItems
 								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypePaymentMethod)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
+				<!-- 9299- 40712, 40978 -->
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:selectOneMenu
+					<td style="width: 66%"><p:selectOneMenu id="procumentModeId"
 							value="#{smCompExpMB.selectedMaster.procumentMode.parameterId}">
 							<f:selectItems
-								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypeProcurementMode)}" />
+								value="#{smCompExpBB.getProcurementMethodDropdownValues(ParameterConst.paramTypeProcurementMethod)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -234,7 +236,7 @@
 							process="@form" update=":form">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
-						</p:commandLink> <p:outputPanel id="smCompExpSuppDocListPanelId">
+						</p:commandLink> <p:graphicImage id="suppDocToolTipsId" value="/css/images/design/tooltips.png" /><!-- 9299 CR p255: supp doc tooltip --> <p:tooltip for="suppDocToolTipsId"><img src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" /></p:tooltip> <p:outputPanel id="smCompExpSuppDocListPanelId">
 							<ui:repeat
 								value="#{smCompExpMB.selectedMaster.compExpMasterDocs}"
 								var="doc">
@@ -404,10 +406,11 @@
 					onclick="confirmDelSuppDocDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
+		<!-- 9299- 40711 -->
 		<p:confirmDialog closable="true"
 			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
 			id="confirmDelSelectedCatId"
-			message="#{lbl['lbl.sm.comp.exp.update.project.cat.code.delete.msg']}" severity="alert"
+			message="#{lbl['lbl.sm.comp.exp.delete.cat.codes.confirm.msg']}" severity="alert"
 			widgetVar="confirmDelSelectedCatDialogWV">
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpCatMaster}"

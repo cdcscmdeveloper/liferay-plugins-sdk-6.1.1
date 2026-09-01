@@ -75,9 +75,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
-	
-	//#38377
-	private String paymentGateway = "Y";
 
 	public PaymentResponseBackingBean(){
 		
@@ -101,11 +98,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		session.removeAttribute("paymentBpmTaskId");
 		session.removeAttribute("paymentBpmPojo");
 		
-		//#38377
-		String payload = httpServletRequest.getParameter("payload");
-		paymentGateway = (payload!=null && !payload.isEmpty())?"Y":"N";
-		log.info("##38377####################@PostConstruct isPaymentGateway:" + paymentGateway);
-		log.info("##38377####################@PostConstruct payload:" + payload);
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
@@ -292,11 +284,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		
-		//#38377
-		String payload = httpServletRequest.getParameter("payload");
-		paymentGateway = (payload!=null && !payload.isEmpty())?"Y":"N";
-		log.info("##38377####################responsePreRender isPaymentGateway:" + paymentGateway);
-		log.info("##38377####################responsePreRender payload:" + payload);
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
@@ -690,7 +677,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info("###############38377 isValidPayment:"+validPayment);
-				if (!"Y".equals(paymentGateway)) {
+				if (SupplierManagementConst.SOFTCERT_PAYMENT.equals(paymentType)) {
 					log.info("###############38377 update payment  paymentOrder.setChannelName:"+paymentOrder.getChannelName());
 				    pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				}
