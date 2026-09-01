@@ -12733,10 +12733,10 @@ public class SpecificationBackingBean extends
 	public void specCommitteBpmTask(String action) {
 		// #39062 Start Vinod 23/09/2025
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			//40724_start
+			//41075- start
 			SpecificationReqDTO specReqDto=new SpecificationReqDTO();
 			specReqDto.setScQt(this.getManagedBean().getQt());
-			this.getManagedBean().setWipStatusMax(getSpecSO().checkWipScoreSettingMax(specReqDto));//40724_End
+			this.getManagedBean().setWipStatusMax(getSpecSO().checkWipScoreSettingMax(specReqDto));//41075- End
 			//#29732 start -set weightage to true, since requirement is mandatory to select financial weightage.
 			if(this.getManagedBean().getWipStatusMax()>=SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
 					&& null != this.getManagedBean().getFinancialScoreSetting()){
