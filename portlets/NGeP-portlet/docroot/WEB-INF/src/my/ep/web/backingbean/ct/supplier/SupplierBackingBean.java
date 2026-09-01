@@ -552,6 +552,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}    
 
+			reqDTO.setPrepareGroupTask(getManagedBean().isPrepareGroupTask()); // 30737
+			
 			changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IChangeBankAccSO.class);
 			resDTO = changeBankAccSO.saveChangeBankAccRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -630,7 +632,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					}
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-		        	log.info(" REVISE + return 5");
+		        	log.info(" BPM_SUBMIT + return 5");
 	                handleInactiveUserValidation(action, selectedInactiveUsers);
 				 }
 	         }
@@ -886,7 +888,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						}
 					 
 					 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-			        	log.info(" REVISE + return 5");
+			        	log.info(" BPM_SUBMIT + return 5");
 		                handleInactiveUserValidation(action, selectedInactiveUsers);
 					 }
 		         }
@@ -897,7 +899,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			
 		}
 	}
-	
+	// getInactiveUsers
 	private List<SelectedInactiveUserDTO> checkInactiveUsers(String roleCode, List<PmUser> users, String docType) {
   		
   	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
