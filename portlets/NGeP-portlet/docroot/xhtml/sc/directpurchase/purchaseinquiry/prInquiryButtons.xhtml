@@ -12,26 +12,41 @@
 		postSignAction="#{purchaseInquiryBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 		enableAutoUpdate="#{purchaseInquiryBackingBean.enableAutoUpdate()}" />
 		
+	<ui:remove>34449 - start (Change Label)</ui:remove>	
 		<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancelPI" value="cancelPI" />
 	<ac:cancelRejectPopup id="#{cancelPI}" widget="cancelPI" width="30%"
 		height="100"
 		okAction="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+		title="#{lbl['lbl.sc.confirmation.cancel']}"
+		content="#{lbl['lbl.sc.confirmation.cancel.message']}" update="@this" />
 		
      <!-- 20190417@asyrafhaziq_12095 - End -->
-     
      <!-- 26129 - Start -->
      <ui:param name="cancelPiPendingSubmission" value="cancelPiPendingSubmission" />
 	 <ac:cancelRejectPopup id="#{cancelPiPendingSubmission}" widget="cancelPiPendingSubmission" width="30%"
 		height="100"
 		okAction="#{purchaseInquiryBackingBean.requisitionerAction('CANCELPI')}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
-     <!-- 26129 - End -->
-		
-
+		title="#{lbl['lbl.sc.confirmation.cancel']}"
+		content="#{lbl['lbl.sc.confirmation.cancel.message']}" update="@this" />
+     <!-- 26129 - End --> <ui:remove>34449 - end</ui:remove>	
+	<ui:remove>34449 - start (New Submit Popup)</ui:remove>
+	<ac:confirmationPopup id="submitPrInquiryConfirmDlgId"
+	    widget="submitPrInquiryConfirmDlg"  width="400" height="100"
+	    okAction="#{purchaseInquiryBackingBean.submitPrInquiryDtl('SUBMIT')}"
+	    title="#{lbl['lbl.sc.confirmation.submit']}"
+	    content="#{lbl['lbl.sc.confirmation.submit.message']}"  update="@form" />
+		<!-- 34449 - End -->	
+	<ui:remove>New Submit supplier Popup</ui:remove>
+	<ac:confirmationPopup id="submitSupplierResponseConfirmDlgId"
+		widget="submitSupplierResponseConfirmDlg"
+		width="400" height="100"
+		okAction="#{purchaseInquiryBackingBean.supplierSubmit()}"
+		okProcess="@form"
+		title="#{lbl['lbl.sc.confirmation.submit']}"
+		content="#{lbl['lbl.sc.confirmation.submit.message']}"
+		update="@form" />	
+	<ui:remove>34449 - end</ui:remove>	
 	<div>
 		<!-- view back button -->
 		<p:commandButton immediate="true" process="@this" partialSubmit="true"
@@ -70,11 +85,9 @@
 					<!-- 26129 - End -->
 					<td style="float:right;">
 						<p:commandButton
-							value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
+							value="#{lbl['lbl.btn.submit']}" type="button"
 							process="@form"
-							action="#{purchaseInquiryBackingBean.submitPrInquiryDtl('SUBMIT')}"
-							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" update="@form" />
+							onclick="submitPrInquiryConfirmDlg.show();" />
 					</td>
 					<c:if test="#{purchaseInquiryBackingBean.managedBean.disProcTyp}" >
 						<td style="float:right;">
@@ -137,15 +150,18 @@
 							action="#{purchaseInquiryBackingBean.supplierSave}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 							<!-- 29557 - remove process="@this"  -->
+						<ui:remove># 34449 - start (Connect Supplier Submit to Popup)</ui:remove>
 						<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" update="@([id$=spkiOutputPanel])"
-								action="#{purchaseInquiryBackingBean.supplierSubmit}"
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-								<f:setPropertyActionListener value="#{bpmAction}"
-									target="#{purchaseInquiryBackingBean.managedBean.action}" />
-							</p:commandButton>
-
-						</c:if></ui:repeat>
+			                 styleClass="ui-button"
+			                 process="@this"
+			                 update="@this"
+			                 oncomplete="submitSupplierResponseConfirmDlg.show();">
+		   				 <f:setPropertyActionListener value="#{bpmAction}"
+		                                			  target="#{purchaseInquiryBackingBean.managedBean.action}" />
+				</p:commandButton>
+						<ui:remove># 34449 - end</ui:remove>
+					</c:if>
+				</ui:repeat>
 				<p:outputPanel id="spkiOutputPanel">
 					<ac:spkiPopup id="spkiPopup"
 						password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"

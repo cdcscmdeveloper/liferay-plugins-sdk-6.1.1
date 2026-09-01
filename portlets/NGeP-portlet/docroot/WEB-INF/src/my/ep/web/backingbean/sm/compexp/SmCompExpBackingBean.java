@@ -209,6 +209,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
 		}
+		// 9299 - #41078: allow Payment Method to be keyed in (dropdown) when empty on WIP/Draft, like Procurement Method (NOT mandatory). Ensure a non-null PmParameter so the data-presence rendering never NPEs.
+		PmParameter paymentMethod = this.getManagedBean().getSelectedDraft().getPaymentMethod();
+		if (paymentMethod == null || paymentMethod.getParameterId() == null || paymentMethod.getParameterId().longValue() == 0L) {
+			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
+		}
 		
 		PmParameter procumentMode = this.getManagedBean().getSelectedDraft().getProcumentMode();
 		if (procumentMode == null
