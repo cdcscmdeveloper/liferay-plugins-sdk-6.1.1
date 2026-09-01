@@ -87,9 +87,9 @@
 			<td>
 				<p:selectOneMenu value="#{itemThRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}" />
+						itemValue="#{FlReportConst.getFlRptGroupNone()}" />
 					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
-						itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+						itemValue="#{FlReportConst.getFlRptGroupDocStatus()}" />
 					<f:selectItem itemLabel="#{lbl['lbl.fl.fulfilment.type']}"
 						itemValue="#{lbl['lbl.fl.fulfilment.type']}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
