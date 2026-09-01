@@ -2550,6 +2550,12 @@ public class LOIDetailBackingBean extends
 			scLoi.setScLoiRemarks(finalScLoiRemarks);
 			//#11134 - remove empty remark - end
 
+			// #21692, #38604 - Start
+			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+				awardDataType = addLastDocumentPayload(scLoi, awardDataType);
+			}
+			// #21692, #38604 - End
+
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
 					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
@@ -6868,4 +6874,13 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	//#21692 - End
+
+	// #21692, #38604 - Start
+	private SCAwardSupplierDataType addLastDocumentPayload(ScLoi scLoi, SCAwardSupplierDataType awardDataType) {
+		if (scLoi.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+			awardDataType.setLastDocument(getQtAwardSO().isLastDocumentLOI(scLoi.getScLoiLoa().getDocId()));
+		}
+		return awardDataType;
+	}
+	// #21692, #38604 - End
 }
