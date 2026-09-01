@@ -2789,6 +2789,12 @@ public class SmPersonnelBackingBean extends
 						.getEpRole())) {
 			getManagedBean().setAccountStatus(
 					DbValueConst.RECORD_STATUS_SUSPENDED);
+//		#40739 START
+		} else if (getManagedBean().getBasicSmPersonnel().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+				&& getManagedBean().getBasicSmPersonnel().getPmUser() != null){
+			getManagedBean().setAccountStatus(
+					DbValueConst.RECORD_STATUS_DELETED);
+//		#40739 END
 		}
 	}
 
@@ -3003,6 +3009,14 @@ public class SmPersonnelBackingBean extends
 				&& getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 			getManagedBean().setDisabledActivateAndDeactivate(true);
 		}
+		
+		// #40739 START
+		if (getManagedBean().getBasicSmPersonnel() != null
+				&& SupplierManagementConst.RECORD_STATUS_DELETED == getManagedBean().getBasicSmPersonnel()
+						.getRecordStatusFlg()) {
+			getManagedBean().setDisabledActivateAndDeactivate(true);
+		}
+		// #40739 END
 	}
 
 	/**

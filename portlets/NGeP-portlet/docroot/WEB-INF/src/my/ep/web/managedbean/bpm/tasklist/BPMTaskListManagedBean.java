@@ -1585,7 +1585,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			// sm module
 			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 			//#40112
-			worklistItemVO.setAiProcessed(mofResDto.getSmAppl() != null && mofResDto.getSmAppl().getAiProcessed() == 2);
+			worklistItemVO.setAiProcessed(mofResDto.getSmAppl() != null && mofResDto.getSmAppl().getAiStatus() == 2);
 			StringBuilder sb = new StringBuilder();
 			logger.info("POC RPA Label Value1 --"+worklistItemVO.getTitle()+"  -- "+worklistItemVO.getDocNumber() + " -- "+ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),

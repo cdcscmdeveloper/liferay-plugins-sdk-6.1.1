@@ -2118,8 +2118,12 @@ public class SpecificationBackingBean extends
 			// #40138 Start Vinod
 			else {
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				// #40998/#10141 - Start
 				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				// #40998/#10141 - End
 					ScQt scQt = this.getManagedBean().getQt();
 					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.TECHNICAL_DOCTYPE);
 				}
@@ -2180,8 +2184,13 @@ public class SpecificationBackingBean extends
 			// #40138 Start Vinod
 			else {
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				//#40998/#10141 - Start
 				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
+						|| currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				// #40998/#10141 - End
+
 					ScQt scQt = this.getManagedBean().getQt();
 					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.FINANCIAL_DOCTYPE);
 				}
@@ -18067,6 +18076,18 @@ if (null != checklist && !checklist.isEmpty()) {
 			return;
 		//�#1873�#34837 -end-
 		
+		// #40998/#10141 - Start
+		boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this.getManagedBean()
+				.isShowInactiveChecklistPopup(), action);
+
+		if (isInactiveChecklistPopup) {
+			RequestContext.getCurrentInstance().execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+			return;
+		}
+		this.getManagedBean().getQt().setInactiveChecklistNotified(false);
+
+		// #40998/#10141 - End
+		
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -23439,8 +23460,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					QTConstants.INACTIVE_CHECKLIST_NOTIFICATION_HIDE);
 			this.getManagedBean().setPreRenderInactiveChecklist(
 					checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(), bpAction));
-		} else {
-			submitSpecMaintenanceDtls(bpAction);
+		} else {// #40998/#10141 - Start
+			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			if (currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				specCommitteMaintenanceBpmTask(bpAction);
+			} else {
+				submitSpecMaintenanceDtls(bpAction);
+			}
+			// #40998/#10141 - End
+
 		}
 	}
 
@@ -23534,11 +23562,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	private void addInactiveChecklistsForPopup(List<ScQtCheckList> currentChecklist,
 			List<ScQtCheckList> inActiveChecklist) {
-		for (ScQtCheckList scQtCheckList : currentChecklist) {
-			if (null != scQtCheckList.getPmDocument() && !scQtCheckList.getPmDocument().isRecordStatus()) {
-				inActiveChecklist.add(scQtCheckList);
+		// #41075 - Start
+		if (currentChecklist != null) {
+			for (ScQtCheckList scQtCheckList : currentChecklist) {
+				if (null != scQtCheckList.getPmDocument() && !scQtCheckList.getPmDocument().isRecordStatus()) {
+					inActiveChecklist.add(scQtCheckList);
+				}
 			}
 		}
+		// #41075 - End
 	}
 
 	// #10141 End Vinod
@@ -25220,8 +25252,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
 		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
 		
-		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc)) 
-				|| (null != publishDate && publishDate.before(effDate))) {
+		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
+			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
