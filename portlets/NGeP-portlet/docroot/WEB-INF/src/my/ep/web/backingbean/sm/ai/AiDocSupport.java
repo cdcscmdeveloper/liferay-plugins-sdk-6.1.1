@@ -77,6 +77,9 @@ public final class AiDocSupport {
 	public static final class AiUserEdit {
 
 		public static final String KEY_TENANCY = "hq";
+		// #40112 - never an NRIC: marks the applicant's EPF tick/untick decision as recorded
+		public static final String KEY_EPF_DECIDED = "_decided";
+		public static final String F_DECIDED = "decided";
 		public static final String F_EPF_NO = "epf_no";
 		public static final String F_NAME = "name";
 		public static final String F_IC = "ic";
@@ -589,7 +592,8 @@ public final class AiDocSupport {
 
 		/**
 		 * Verify an EPF extraction's employer name against the registered company name; sets the verdict flag
-		 * on the DTO. A blank employer name is excluded from the verdict (left valid), as with the other docs.
+		 * on the DTO. Unlike the other docs, a blank employer name counts as a mismatch: its employees are
+		 * dropped from the list and light no icons.
 		 */
 		public static void validateEpf(AiEpfResultDTO ee, String companyName) {
 			if (ee == null) {
