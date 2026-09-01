@@ -7688,8 +7688,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
 			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
 				if (null != rnDtl.getJustificationType() && null != rnDtl.getJustificationType().getReasonId()) {
-					PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-							.getReasonId());
+					PmReason reason = retrieveReasonDtlById(rnDtl.getJustificationType().getReasonId());
 					
 					if (reason == null) {
 						continue;

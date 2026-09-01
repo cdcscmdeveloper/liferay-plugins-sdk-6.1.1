@@ -1587,9 +1587,11 @@ important;
 	background: url('../images/design/icon_info.png') !important;
 }
 
+/* #10141 Vinod Added 'display: flex;' for aligning content in same line for #40925 */
 .ui-messages-error-detail {
 	font-size: 12px;
 	font-weight: bold;
+	display: flex;
 }
 
 /* --------------------------       Ends Error Messages       ------------------------------ */
