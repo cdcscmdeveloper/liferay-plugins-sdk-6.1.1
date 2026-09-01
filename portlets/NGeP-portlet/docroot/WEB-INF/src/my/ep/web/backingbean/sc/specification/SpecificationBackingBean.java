@@ -15888,13 +15888,13 @@ public class SpecificationBackingBean extends
 				List<String> finDocDefKeys = Arrays
 						.asList(SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE,
 								SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE);
-				
 				if (finDocDefKeys.contains(list.getPmDocument().getDocDefinitionKey())
 						&& (null == list.getScQtCheckListValue() || null == list.getScQtCheckListValue().getYear())) {
 					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}else{
+					statusId = QTStatusConst.TS_COMPLETED;
 				}
 				//#40724 - End
-				statusId = QTStatusConst.TS_COMPLETED;
 			}
 			list.setPmStatus(getPmStatusByStatusId(statusId));
 		}
