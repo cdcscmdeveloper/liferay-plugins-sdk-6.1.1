@@ -89,6 +89,10 @@ import org.primefaces.model.TreeNode;
 @SessionScoped
 public class ContractRequestManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	//29728 - start
+  	private boolean isBranchNeedToBeChanged;
+  	private Long branchCode;
+  	//29728 - end
 	
 	public ContractRequestManagedBean(){
 
@@ -3255,6 +3259,37 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 
 	// 28855 - End
+	
+	//29728 - start
+	/**
+	 * @return the isBranchNeedToChange
+	 */
+	public boolean isBranchNeedToBeChanged() {
+		return isBranchNeedToBeChanged;
+	}
+
+	/**
+	 * @param isBranchNeedToBeChanged the isBranchNeedToChange to set
+	 */
+	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
+		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
+	}
+	
+	/**
+	 * @return the branchCode
+	 */
+	public Long getBranchCode() {
+		return branchCode;
+	}
+
+	/**
+	 * @param branchCode the branchCode to set
+	 */
+	public void setBranchCode(Long branchCode) {
+		this.branchCode = branchCode;
+	}
+	
+	//29728 - end
 			
 		
 	//11076 -start
