@@ -148,12 +148,11 @@
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
 					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
-					  disabledSelection="#{!isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
-					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or 
-					  									isDisciplinaryAction or
-					  									suppFinalBiddingBackingBean.supplierRejectEPV(itemSupplier.scQtProposal))}" />			
+					  disabledSelection="#{(suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
+					  							suppFinalBiddingBackingBean.managedBean.readOnly)
+					  						 		or (!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and !suppFinalBiddingBackingBean.managedBean.secretaryUser)
+					  								or isDisciplinaryAction
+					  								or suppFinalBiddingBackingBean.supplierRejectEPV(itemSupplier.scQtProposal)}" />		
 			<ui:remove>21692</ui:remove>	
 			<ui:remove>26247 - end - add isDisciplinaryAction</ui:remove>							
 		</p:dataTable>
