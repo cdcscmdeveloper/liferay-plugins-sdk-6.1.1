@@ -15884,6 +15884,16 @@ public class SpecificationBackingBean extends
 			if (list.isScoringReq()) {
 				statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 			} else if (!list.isScoringReq()) {
+				//#40724 - Start
+				List<String> finDocDefKeys = Arrays
+						.asList(SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE,
+								SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE);
+				
+				if (finDocDefKeys.contains(list.getPmDocument().getDocDefinitionKey())
+						&& (null == list.getScQtCheckListValue() || null == list.getScQtCheckListValue().getYear())) {
+					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}
+				//#40724 - End
 				statusId = QTStatusConst.TS_COMPLETED;
 			}
 			list.setPmStatus(getPmStatusByStatusId(statusId));
