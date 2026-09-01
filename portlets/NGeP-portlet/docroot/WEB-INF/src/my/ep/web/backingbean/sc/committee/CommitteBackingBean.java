@@ -1128,6 +1128,11 @@ public class CommitteBackingBean extends
 			} finally {
 				committeSO=null;
 			}
+			
+			//#35320 - START
+			this.getManagedBean().setViewCommitteePage(true);
+			//#35320 - END
+			
 			// showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
 		}
