@@ -197,6 +197,11 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PAYMENT_MATCH_OFFICER_NAME = "PAYMENT MATCH OFFICER NAME";
 	public static final String FL_RPT_CC_SST_NO = "SST NO";
 	public static final String FL_RPT_CC_CONTRACT_NO = "CONTRACT NO";
+	public static final String FL_RPT_CC_PHYSICAL_CONTRACT_NO = "PHYSICAL CONTRACT NO";
+	public static final String FL_RPT_CC_PHYSICAL_LOA_NO = "PHYSICAL LOA NO";
+	public static final String FL_RPT_CC_FRN_NO = "FRN NO";
+	public static final String FL_RPT_CC_APPROVER_NAME = "APPROVER NAME";
+	public static final String FL_RPT_CC_CANCELLED_BY = "CANCELLED BY";
 	//#41069 end
 	
 	public FlReportConst(){}
@@ -547,6 +552,41 @@ public class FlReportConst implements Serializable {
 	 */
 	public static String getFlRptCcContractNo() {
 		return FL_RPT_CC_CONTRACT_NO;
+	}
+
+	/**
+	 * @return the flRptCcPhysicalContractNo
+	 */
+	public static String getFlRptCcPhysicalContractNo() {
+		return FL_RPT_CC_PHYSICAL_CONTRACT_NO;
+	}
+
+	/**
+	 * @return the flRptCcPhysicalLoaNo
+	 */
+	public static String getFlRptCcPhysicalLoaNo() {
+		return FL_RPT_CC_PHYSICAL_LOA_NO;
+	}
+
+	/**
+	 * @return the flRptCcFrnNo
+	 */
+	public static String getFlRptCcFrnNo() {
+		return FL_RPT_CC_FRN_NO;
+	}
+
+	/**
+	 * @return the flRptCcApproverName
+	 */
+	public static String getFlRptCcApproverName() {
+		return FL_RPT_CC_APPROVER_NAME;
+	}
+
+	/**
+	 * @return the flRptCcCancelledBy
+	 */
+	public static String getFlRptCcCancelledBy() {
+		return FL_RPT_CC_CANCELLED_BY;
 	}
 	
  }
