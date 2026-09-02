@@ -1149,7 +1149,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * EPF rows carry the neutral AI icon (validatedAI 3).
+	 * EPF rows carry the same tick/cross verdict as Bank and Tenancy, on the employer name alone.
 	 * @param appl
 	 */
 	public static void markEpfAiDocs(SmAppl appl){
@@ -1163,23 +1163,23 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			for (SmApplDocFile docFile : suppDoc.getSmApplDocFiles()){
 				if (docFile.getAiApiResponseId() != null){
-					docFile.setValidatedAI(3);
-					docFile.setMappedFieldAI(buildEpfLabel(appl, docFile));
+					markEpfDocFile(appl, docFile);
 				}
 			}
 		}
 	}
 
-	// EPF tooltip for one doc file; null when the response is gone, so the icon renders without a tooltip.
-	private static String buildEpfLabel(SmAppl appl, SmApplDocFile docFile){
+	// EPF verdict and tooltip for one doc file; a response that is gone leaves the row unmarked, as for Bank and Tenancy.
+	private static void markEpfDocFile(SmAppl appl, SmApplDocFile docFile){
 		AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
 				.getById(docFile.getAiApiResponseId());
 		if (response == null){
-			return null;
+			return;
 		}
 		AiEpfResultDTO ee = AiDocParser.toEpf(AiDocParser.parseFields(response.getJsonResponse()));
 		AiDocValidator.validateEpf(ee, appl.getSmSupplier().getCompanyName());
-		return ee.getLabel();
+		docFile.setMappedFieldAI(ee.getLabel());
+		docFile.setValidatedAI(ee.isValidEmployerName() ? 1 : 2); //1-ok, 2-err
 	}
 
 	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<AiBankDocDTO> docEntities){

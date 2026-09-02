@@ -84,7 +84,7 @@
 									rendered="#{smCompExpMB.disableClienType or (!smCompExpMB.disableClienType and 
 								smCompExpMB.selectedDraft.oriAgencyName ne null)}"
 									value="#{smCompExpMB.selectedDraft.agencyName}" />
-								<p:inputText size="60" style="width: auto !important;"
+								<p:inputText maxlength="255" size="60" style="width: auto !important;"
 									rendered="#{!smCompExpMB.disableClienType and smCompExpMB.selectedDraft.oriAgencyName eq null}"
 									value="#{smCompExpMB.selectedDraft.agencyName}" />
 							</p:outputPanel>
@@ -101,7 +101,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:outputPanel
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdQt}">
-							<p:inputText id="fileReferenceNo"
+							<p:inputText maxlength="50" id="fileReferenceNo"
 								label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 								value="#{smCompExpMB.selectedDraft.fileReferenceNo}">
 								<p:ajax event="blur"
@@ -136,7 +136,7 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText maxlength="20"
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm or
 							(smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdCt and
 							smCompExpMB.selectedDraft.loaNo eq null)}"
@@ -168,7 +168,7 @@
 							value="#{smCompExpMB.selectedDraft.contractValue}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText> <p:inputText label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+						</h:outputText> <p:inputText maxlength="22" label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
 							(smCompExpMB.selectedDraft.contractValue eq 0 or smCompExpMB.selectedDraft.contractValue eq null)}"
 							value="#{smCompExpMB.selectedDraft.contractValue}">
@@ -299,7 +299,7 @@
 							<td style="width: 66%"><h:outputText
 									style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 									styleClass="outputLabel-view"
-									value="#{smCompExpMB.selectedDraft.projectLoc}" rendered="#{not empty smCompExpMB.selectedDraft.projectLoc}" /> <p:inputText rendered="#{empty smCompExpMB.selectedDraft.projectLoc}" styleClass="outputLabel-view" value="#{smCompExpMB.selectedDraft.projectLoc}" /><!-- 9299 - #41078 --></td>
+									value="#{smCompExpMB.selectedDraft.projectLoc}" rendered="#{not empty smCompExpMB.selectedDraft.projectLoc}" /> <p:inputText maxlength="300" rendered="#{empty smCompExpMB.selectedDraft.projectLoc}" styleClass="outputLabel-view" value="#{smCompExpMB.selectedDraft.projectLoc}" /><!-- 9299 - #41078 --></td>
 						</tr>
 						<tr>
 							<td style="width: 34%"><p:outputLabel
@@ -308,7 +308,7 @@
 							<td style="width: 66%"><h:outputText
 									style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 									styleClass="outputLabel-view"
-									value="#{smCompExpMB.selectedDraft.workServDesc}" rendered="#{not empty smCompExpMB.selectedDraft.workServDesc}" /> <p:inputText rendered="#{empty smCompExpMB.selectedDraft.workServDesc}" styleClass="outputLabel-view" value="#{smCompExpMB.selectedDraft.workServDesc}" /><!-- 9299 - #41078 --></td>
+									value="#{smCompExpMB.selectedDraft.workServDesc}" rendered="#{not empty smCompExpMB.selectedDraft.workServDesc}" /> <p:inputText maxlength="500" rendered="#{empty smCompExpMB.selectedDraft.workServDesc}" styleClass="outputLabel-view" value="#{smCompExpMB.selectedDraft.workServDesc}" /><!-- 9299 - #41078 --></td>
 						</tr>
 						<tr>
 							<td style="width: 34%"><p:outputLabel
@@ -320,7 +320,7 @@
 									rendered="#{not empty smCompExpMB.selectedDraft.consultantFee}" value="#{smCompExpMB.selectedDraft.consultantFee}">
 									<f:convertNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-								</h:outputText> <p:inputText rendered="#{empty smCompExpMB.selectedDraft.consultantFee}" label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" value="#{smCompExpMB.selectedDraft.consultantFee}"><f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText><!-- 9299 - #41078 --></td>
+								</h:outputText> <p:inputText maxlength="22" rendered="#{empty smCompExpMB.selectedDraft.consultantFee}" label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" value="#{smCompExpMB.selectedDraft.consultantFee}"><f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText><!-- 9299 - #41078 --></td>
 						</tr>
 					</p:outputPanel>
 					<tr>
