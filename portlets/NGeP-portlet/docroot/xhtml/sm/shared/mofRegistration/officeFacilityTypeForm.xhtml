@@ -203,7 +203,7 @@
 							<!-- #40112 -->
 							<p:outputPanel id="ownerNameAiIcon" layout="inline">
 								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
-								rendered="#{backingBean.managedBean.basicCompanyFacility.ownerNameFromAI}" />
+								rendered="#{backingBean.managedBean.basicCompanyFacility.ownerNameFromAI and backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}" />
 							</p:outputPanel>
 								
 								<ac:smFieldChangeAlert
@@ -369,9 +369,14 @@
 									<!-- #39097 & #36718 - Start - add more id id ajax process -->
 									<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 										listener="#{backingBean.onChangeCountry(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-										update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+										update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,companyCntryAiIcon,basicOffFacStateAiIcon,basicOffFacDistAiIcon,basicOffFacCityAiIcon" />
 									<!-- #39097 & #36718 - End  -->
 								</p:selectOneMenu> 
+							<!-- #40112 -->
+							<p:outputPanel id="companyCntryAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryFromAI}" />
+							</p:outputPanel>
 							<!-- #39097 & #34159 - End  -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -422,7 +427,10 @@
 								<!-- #39097 & #36718 - End  -->
 							</p:selectOneMenu>
 							<!-- #40112 -->
-							<p:outputPanel id="basicOffFacStateAiIcon" layout="inline"><p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.stateFromAI}" /></p:outputPanel>
+							<p:outputPanel id="basicOffFacStateAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.stateFromAI}" />
+							</p:outputPanel>
 							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert
 								isShow="#{backingBean.managedBean.showFieldChanges}"
