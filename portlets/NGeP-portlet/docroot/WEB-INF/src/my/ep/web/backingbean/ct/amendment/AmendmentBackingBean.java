@@ -3788,7 +3788,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 		
 		// Include new GST amount if contract value changed by GST
-		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewGstAmount() != null){
+//		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewGstAmount() != null){
+		if(ctAmendment.getNewGstAmount() != null){
 			contractAmt = newContractAmt().add(ctAmendment.getNewGstAmount());
 		}
 		// #24336 - End
@@ -3814,15 +3815,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    CtContractAmount ctContractAmount = ctContractVer.getCtContractAmount();
 
 	    // Include service tax if contract value changed by GST
-	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
+//	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
+	    if (ctAmendment.getNewStaxAmount() != null) {
 	        contractAmount = contractAmount.add(ctAmendment.getNewStaxAmount());
 	    }
 
 	    // Include current GST and STAX amounts if the contract value was not changed due to GST/SST
 	    if (!ctAmendment.isValueChangeByGst()) {
-	        contractAmount = contractAmount
-	                .add(ctContractAmount.getGstAmount())
-	                .add(ctContractAmount.getStaxAmount());
+	        if (ctContractAmount.getGstAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getGstAmount());
+	        }
+
+	        if (ctContractAmount.getStaxAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getStaxAmount());
+	        }
 	    }
 	    // #24336 - End
 
