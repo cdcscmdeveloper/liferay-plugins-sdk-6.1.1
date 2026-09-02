@@ -51,6 +51,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * ManagedBean For Contract Amendment
@@ -134,6 +135,23 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private  boolean prodcollapse=false;
 	private IPagingDataModel<CtContractItem> contractListingPagingDataModel = new ContractListingPagingDataModel();
 	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel =  new ServiceListingPagingDataModel();
+	
+	//Enhancement #26186/#34097 start
+	private boolean disciplinaryAction; 
+	private String disciplinaryActionMsg; 
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	private boolean validationDA;
+	//#29793 start
+	private boolean disciplinaryActionNotification;
+	private boolean disciplinaryActionCancel;
+	private Date disciplinaryActionStartDate;
+	private Date disciplinaryActionEndDate;
+	//#29793 end
+	private String supplierMsg;
+	private boolean supplierBumiCancel;
+	private boolean oldBPMVersion;
+	private boolean wipButtonCancelReject;
+	//#26186/#34097 end
 	
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
@@ -1378,6 +1396,130 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedSearchItem = selectedSearchItem;
 	}
 	//#20997 - End
+	
+	
+	//Enhancement #26186/#34097 start
+	@Override
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+	
+	@Override
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
+
+	public String getDisciplinaryActionMsg() {
+		return disciplinaryActionMsg;
+	}
+
+	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
+		this.disciplinaryActionMsg = disciplinaryActionMsg;
+	}
+	
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+	
+	/**
+	 * @return the validationDA
+	 */
+	public boolean isValidationDA() {
+		return validationDA;
+	}
+	/**
+	 * @param validationDA the validationDA to set
+	 */
+	public void setValidationDA(boolean validationDA) {
+		this.validationDA = validationDA;
+	}
+	//#29793 start
+	public boolean isDisciplinaryActionNotification() {
+		return disciplinaryActionNotification;
+	}
+
+	public void setDisciplinaryActionNotification(boolean disciplinaryActionNotification) {
+		this.disciplinaryActionNotification = disciplinaryActionNotification;
+	}
+	
+	public boolean isDisciplinaryActionCancel() {
+		return disciplinaryActionCancel;
+	}
+
+	public void setDisciplinaryActionCancel(boolean disciplinaryActionCancel) {
+		this.disciplinaryActionCancel = disciplinaryActionCancel;
+	}
+	
+	public Date getDisciplinaryActionStartDate() {
+		return disciplinaryActionStartDate;
+	}
+
+	public void setDisciplinaryActionStartDate(Date disciplinaryActionStartDate) {
+		this.disciplinaryActionStartDate = disciplinaryActionStartDate;
+	}
+	
+	public Date getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(Date disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+	//#29793 end
+	
+	/**
+	 * @return the supplierMsg
+	 */
+	public String getSupplierMsg() {
+		return supplierMsg;
+	}
+	/**
+	 * @param supplierMsg the supplierMsg to set
+	 */
+	public void setSupplierMsg(String supplierMsg) {
+		this.supplierMsg = supplierMsg;
+	}
+	/**
+	 * @return the supplierBumiCancel
+	 */
+	public boolean isSupplierBumiCancel() {
+		return supplierBumiCancel;
+	}
+	/**
+	 * @param supplierBumiCancel the supplierBumiCancel to set
+	 */
+	public void setSupplierBumiCancel(boolean supplierBumiCancel) {
+		this.supplierBumiCancel = supplierBumiCancel;
+	}
+	/**
+	 * @return the oldBPMVersion
+	 */
+	public boolean isOldBPMVersion() {
+		return oldBPMVersion;
+	}
+	/**
+	 * @param oldBPMVersion the oldBPMVersion to set
+	 */
+	public void setOldBPMVersion(boolean oldBPMVersion) {
+		this.oldBPMVersion = oldBPMVersion;
+	}
+	/**
+	 * @return the wipButtonCancelReject
+	 */
+	public boolean isWipButtonCancelReject() {
+		return wipButtonCancelReject;
+	}
+	/**
+	 * @param wipButtonCancelReject the wipButtonCancelReject to set
+	 */
+	public void setWipButtonCancelReject(boolean wipButtonCancelReject) {
+		this.wipButtonCancelReject = wipButtonCancelReject;
+	}
+	//Enhancement #26186/#34097 start
 	
 	//#25956 Start
 	public List<PmUser> getContractAdminlist() {

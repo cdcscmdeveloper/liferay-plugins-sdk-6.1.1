@@ -1370,7 +1370,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 
+			//#26186 start
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				externalContext.redirect(commonUrl + "/" + url + "?taskId="
+						+ taskId +"&claim=" + claim+"&docNo="+docNo+"&taskName=" + taskName);
+			}else{
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
+			}
+			//#26186 end
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
 					+ taskId + "&taskIdPair="+strbuildtask+"&claim=" + claim+"&docNo="+docNo);/*#31422-basri 190821*/
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url

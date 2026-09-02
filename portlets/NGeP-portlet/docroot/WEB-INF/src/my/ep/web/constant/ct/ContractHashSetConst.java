@@ -31,6 +31,17 @@ import my.ep.type.pm.RoleCode;
  *  static final members.
  *  </p>
  *  <p>
+ *  Example usage:
+ *      if (hasAnyRoleUser(ContractHashSetConst.PBQC_ROLES)) {
+ *          // perform PBQC-related logic
+ *      }
+ *  </p>
+ *  Key Design Principles:
+ *  - Performance: Avoids redundant Set instantiation at runtime.
+ *  - Immutability: All collections are wrapped with Collections.unmodifiableSet().
+ *  - Reusability: Exposed as public/protected static final constants for 
+ *                 cross-class accessibility.
+ *  - Readability: Centralized location for managing role-related sets.
  *  Example usage: 
  *  <pre>{@code if (hasAnyRoleUser(ContractHashSetConst.PBQC_ROLES)) {
  *          // perform PBQC-related logic
