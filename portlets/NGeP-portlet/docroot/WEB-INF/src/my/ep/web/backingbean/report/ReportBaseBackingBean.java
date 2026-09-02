@@ -29,9 +29,9 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.report.IReportSectionSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -42,16 +42,13 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.rpt.ReportUtil;
-import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-
 //start #27472
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -508,10 +505,23 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 				userSO.updateLocaleLanguagetoLoginUser(reqDTO,localeLanguage);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new EpException(e.getMessage());
 		}
 	}
 	//30824 END
+	
+	// #40017 START
+	public void executeRefreshPrcRefreshMvMof() {
+		try {
+			IReportSectionSO reportSectionSo = (IReportSectionSO) BusinessDelegate.getInstance().getServiceObject("pm",
+					IReportSectionSO.class);
+			reportSectionSo.callRefreshPrcRefreshMvMof();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	// #40017 END
 }

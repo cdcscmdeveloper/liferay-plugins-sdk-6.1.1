@@ -93,7 +93,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		getCategoryDescrDataModel().resetData();
 	}
 	
-	public void categorySearchAction(String supplierType, String facilityType, String paidUpCapital, String bumiPercentage, String categoryType, String businessTypeCode,String catcodeL1) {
+	public void categorySearchAction(String supplierType, String facilityType, String paidUpCapital, String bumiPercentage, String categoryType, String businessTypeCode,String catcodeL1, Long supplierId) {
 		debugLogger("searchAction");
 		
 		log.info("supplierType: " + supplierType);
@@ -110,6 +110,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		this.getManagedBean().setCategoryType(categoryType);
 		this.getManagedBean().setBusinessTypeCode(businessTypeCode);
 		this.getManagedBean().setCatcodeL1(catcodeL1);
+		
+		//32629 - Start
+		this.getManagedBean().setSupplierId(supplierId);
+		//32629 - End
 		
 		getCategoryDataModel().reloadData();
 	}
@@ -884,4 +888,75 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		categoryResetAction();
 	}
 	
+	//32629 - Start
+		/**
+		 * Removed DA category code from the list.
+		 * 
+		 * @param e
+		 *            -AjaxBehaviorEvent
+		 */
+	public void unSelectDACategories() {
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(getManagedBean().getSelectedCategoryL3().getPmCategoryL2().getCategoryL2Id());
+		reqDTO.setSupplierTypeCode(getManagedBean().getSupplierType());
+		reqDTO.setBusinessTypeCode(getManagedBean().getBusinessTypeCode());
+		if ((SupplierManagementConst.BUSINESS_TYPE_CODE_N).equals(getManagedBean().getCategoryType())) {
+			reqDTO.setIsSpecialCategory(false);
+		} else {
+			reqDTO.setIsSpecialCategory(true);
+		}
+		if ((SupplierManagementConst.BUSINESS_TYPE_CODE_H).equalsIgnoreCase(getManagedBean().getFacilityType())) {
+			reqDTO.setHomeOperated(1);
+		} else {
+			reqDTO.setHomeOperated(0);
+		}
+		if (getManagedBean().getPaidUpCapital() != null) {
+			reqDTO.setPaidCapital(new BigDecimal(getManagedBean().getPaidUpCapital()));
+		}
+
+			//27438, 27613, 27673: Disciplinary Action - start
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			if(currSupp != null && currSupp.getSmAppl() != null){
+
+				//27738 Start - System allow to add 221709 without basic category
+				MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
+				SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(currSupp);
+			reqDTO1.setApplNo(activeAppl.getApplNo());
+				SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
+						.retrieveSmApplWithChildByApplNo(reqDTO1).getSmAppl();
+				currSupp.setSmAppl(srcAppl);
+				
+			List<SmDisciplinaryAction> activeDAs = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+			List<SmSupplierCategory> apprvList = getApprovedCategories(currSupp, activeDAs);
+					getManagedBean().setApprovedCategoryList(apprvList); 
+					
+			checkSelectedL3(activeDAs, srcAppl);
+			//27738 end 
+							}
+		//27438, 27613, 27673: Disciplinary Action - end
+						}
+	//32629 - End
+	//#26238
+	private void checkSelectedL3(List<SmDisciplinaryAction> activeDAs, SmAppl srcAppl){
+		if (getManagedBean().getSelectedCategoryL3() == null){
+			return;
+					}
+		PmCategoryL3 selectedL3 = getManagedBean().getSelectedCategoryL3();
+		Long selectedL3Id = selectedL3.getCategoryL3Id();
+					 
+		List<Long> activeDAL3 = getActiveDACategoryL3Ids(activeDAs, srcAppl.getSmSupplier().getSupplierId());
+		if (activeDAL3.contains(selectedL3Id)){
+								getManagedBean().setSelectedCategoryL3(null);
+							}
+		boolean hasBumiputeraDA = hasActiveBumiputeraDisciplinaryAction(activeDAs);
+
+		if (selectedL3.getBumiPercentage() > SupplierManagementConst.BUMI_PERCENTAGE && (hasBumiputeraDA ||  srcAppl.getSmSupplier().isBumi())){
+												getManagedBean().setSelectedCategoryL3(null);
+											}
+		boolean hasAllBasicMTO = hasAllBasicMTOCodes(getManagedBean().getApprovedCategoryList());
+		if (!hasAllBasicMTO && selectedL3Id == SupplierManagementConst.CAT_L3_347){
+									getManagedBean().setSelectedCategoryL3(null);
+							}
+						}  
+		
 }
