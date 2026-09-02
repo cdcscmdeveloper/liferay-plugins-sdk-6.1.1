@@ -3993,6 +3993,9 @@ public class SmApplicationUtil {
 			reqDTO.setLangCode(CommonConstants.LANGUAGE_CODE_MALAY);
 			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+			
+			log.info("40444 - result count from query - " + resultList.size()); //#40444 - debug
+			
 			if (!EntityHelper.isCollectionEmpty(resultList)
 					&& !resultList.isEmpty()) {
 				retVal = new SmOverlapCategoryVO();
