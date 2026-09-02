@@ -7466,6 +7466,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			retrieveSuppQualificationTabDtl();
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			//29661 && 41163 -start-
+			if(this.getManagedBean().getQt().isPanel()){
+				getPanelCategory();
+			}
+			//29661 && 41163 -end-
+			
 			break;
 		case 2:
 			//Added the validation for committee while save - 13342
