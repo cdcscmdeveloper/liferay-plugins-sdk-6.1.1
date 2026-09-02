@@ -1168,7 +1168,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		return "unspscSingleUpload?faces-redirect=true";
 	}
-	
+
 	public String savetempCode(String outcome) {
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
@@ -4357,48 +4357,32 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	}
 	//[#26282] check for Disciplinary Action - End
 	
-	//34447 Start
+	//#34447 - Start
 	/**
 	 * Validate reject remark before displaying popup
-	 *
-	 *
 	 */
 	public void validateRejectBeforePopup(String popupWidget){
 		String remark = this.getManagedBean().getSelectedRemarks().get(0).getRemark();
 		
 		if (remark == null || remark.trim().length() <= 0){
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							null,
-							MessageUtils.getMessage(
-									MessageConst.ERROR_716024,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())
-									)
-			);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_716024, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 			return;
 		}
 		RequestContext.getCurrentInstance().execute(popupWidget + ".show();");
 	}
+	
 	/**
-	 * Validate Unspsc code field before displaying popup
-	 *
-	 *
+	 * Validate UNSPSC code field before displaying popup
 	 */
 	public void validateSubmitBeforePopup() {
 	    if (!isUnspscSelectionComplete()) {
-	        FacesContext.getCurrentInstance().addMessage(null,
-	            new FacesMessage(
-	                FacesMessage.SEVERITY_ERROR,
-	                null,
-	                MessageUtils.getMessage(
-	                    MessageConst.ERROR_715002,
-	                    MessageUtils.BUNDLE_COMMON_MESSAGES,
-	                    new FacesScopes().getUserLocale())
-	            )
-	        );
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_715002, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 	        return;
 	    }
 	    RequestContext.getCurrentInstance().execute("pendItemCodeCreate_endorsePublishPopup.show();");
@@ -4421,5 +4405,5 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	        || lov.getUnspscTitle().isEmpty()
 	        || lov.getUnspscTitleEng().isEmpty();
 	}
-	//34447 End
+	//#34447 - End
 }
