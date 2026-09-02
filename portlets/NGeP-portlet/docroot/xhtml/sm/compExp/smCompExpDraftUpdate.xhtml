@@ -168,7 +168,7 @@
 							value="#{smCompExpMB.selectedDraft.contractValue}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText> <p:inputText maxlength="22" label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+						</h:outputText> <p:inputText maxlength="14" label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
 							(smCompExpMB.selectedDraft.contractValue eq 0 or smCompExpMB.selectedDraft.contractValue eq null)}"
 							value="#{smCompExpMB.selectedDraft.contractValue}">
@@ -320,7 +320,7 @@
 									rendered="#{not empty smCompExpMB.selectedDraft.consultantFee}" value="#{smCompExpMB.selectedDraft.consultantFee}">
 									<f:convertNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-								</h:outputText> <p:inputText maxlength="22" rendered="#{empty smCompExpMB.selectedDraft.consultantFee}" label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" value="#{smCompExpMB.selectedDraft.consultantFee}"><f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText><!-- 9299 - #41078 --></td>
+								</h:outputText> <p:inputText maxlength="14" rendered="#{empty smCompExpMB.selectedDraft.consultantFee}" label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" value="#{smCompExpMB.selectedDraft.consultantFee}"><f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText><!-- 9299 - #41078 --></td>
 						</tr>
 					</p:outputPanel>
 					<tr>
