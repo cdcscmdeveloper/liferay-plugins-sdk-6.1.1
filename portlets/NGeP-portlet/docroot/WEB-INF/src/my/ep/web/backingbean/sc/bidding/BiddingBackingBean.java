@@ -577,6 +577,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			if (resDto.isSuccessful()) {
 				getManagedBean().setScheduledBid(resDto.getScBidSchedule());
 				getManagedBean().setBidPackages(resDto.getBidPackages());
+				// #28777 & #29729 - Start
+				this.getManagedBean().setBidPackagesDisqualified(resDto.getBidPackagesDisqualified());
+				this.getManagedBean().setDisqualified(resDto.isDisqualified());
+				// #28777 & #29729 - End
 			}
 			QuationTenderReqDTO qtreqDTO = new QuationTenderReqDTO();
 			QuationTenderResDTO qtresDTO = new QuationTenderResDTO();
@@ -901,6 +905,11 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setBidPriceItems(resDTO.getBidPriceItems());
+				// #28777 & 29729 - Start
+				this.getManagedBean().setBidPriceItemsDisqualified(resDTO.getBidPriceItemsDisqualified());
+				this.getManagedBean().setDisqualified(resDTO.isDisqualified());
+				// #28777 & 29729 - End
+
 
 				if (resDTO.getBidPriceItems() != null
 						&& resDTO.getBidPriceItems().size() != 0) {
@@ -1356,4 +1365,35 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		;
 	}
 	// #17376-144 End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if this supplier disqualified
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @return true or false
+	 **/
+	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId);
+	}
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if any zones are disqualified
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @param specZoneId
+	 * @return true or false
+	 **/
+	public Boolean checkZonesDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.flagZonesBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId, specZoneId);
+	}
+	// #28777 & #29729 - End
 }

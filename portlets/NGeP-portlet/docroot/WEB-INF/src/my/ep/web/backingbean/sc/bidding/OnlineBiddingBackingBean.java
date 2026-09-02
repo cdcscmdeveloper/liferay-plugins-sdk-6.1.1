@@ -303,6 +303,33 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 				if (resDTO.getBidPrices() != null) {
 					setBidPrices(resDTO.getBidPrices());
 				}
+				
+				// #28777 & #29729 - Start
+				if (bidSchedule.getScBid() != null && resDTO.getSmSupplier() != null) {
+					Long docId = bidSchedule.getScBid().getDocId();
+					Long supplierId = resDTO.getSmSupplier().getSupplierId();
+
+					if (bidSchedule.getTplSpecZoneDtl() != null) {
+						TplSpecZoneDtl tplSpecZoneDtl = bidSchedule.getTplSpecZoneDtl();
+						Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+						if (checkZonesDisqualifiedSupplierBranchDeleted(docId, supplierId, specZoneId)) {
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+											MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						}
+					} else {
+						if (checkDisqualifiedSupplierBranchDeleted(docId, supplierId)) {
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+											MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						}
+					}
+				}
+				// #28777 & #29729 - End
 			}
 		}
 
@@ -1522,5 +1549,37 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if this supplier disqualified
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @return true or false
+	 **/
+	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId);
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if any zones are disqualified
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @param specZoneId
+	 * @return true or false
+	 **/
+	public Boolean checkZonesDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.flagZonesBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId, specZoneId);
+	}
+	// #28777 & #29729 - End
 
 }
