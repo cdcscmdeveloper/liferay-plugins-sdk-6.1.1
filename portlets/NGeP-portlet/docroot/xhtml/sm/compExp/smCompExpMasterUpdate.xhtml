@@ -45,7 +45,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText id="agencyName" size="60"
+					<td style="width: 66%"><p:inputText maxlength="255" id="agencyName" size="60"
 							style="width: auto !important;"
 							readonly="#{smCompExpMB.selectedMaster.clientType eq null or smCompExpMB.selectedMaster.clientType eq ParameterConst.clientTypeFederal}"
 							value="#{smCompExpMB.selectedMaster.agencyName}" /> <p:outputPanel
@@ -62,7 +62,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:inputText id="fileReferenceNo"
+					<td style="width: 66%"><p:inputText maxlength="50" id="fileReferenceNo"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 							value="#{smCompExpMB.selectedMaster.fileReferenceNo}">
 							<p:ajax event="blur"
@@ -90,7 +90,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputTextarea cols="100"
+					<td style="width: 66%"><p:inputTextarea maxlength="1000" cols="100"
 							style="width: auto !important;"
 							value="#{smCompExpMB.selectedMaster.title}" /></td>
 				</tr>
@@ -99,7 +99,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText maxlength="22"
 							label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
 							value="#{smCompExpMB.selectedMaster.contractValue}">
 							<f:convertNumber
@@ -201,7 +201,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="300"
 								styleClass="outputLabel-view"
 								value="#{smCompExpMB.selectedMaster.projectLoc}" /></td>
 					</tr>
@@ -210,7 +210,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="500"
 								styleClass="outputLabel-view"
 								value="#{smCompExpMB.selectedMaster.workServDesc}" /></td>
 					</tr>
@@ -219,7 +219,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="22"
 								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
 								value="#{smCompExpMB.selectedMaster.consultantFee}">
 								<f:convertNumber
