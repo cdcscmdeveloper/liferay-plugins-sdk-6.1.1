@@ -1172,8 +1172,8 @@ public class ViewApplHistoryBackingBean extends
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 		
-		log.info("40444 - result count from query - " + resultList.size()); //#40444 - debug
-		
+		/*log.info("40444 - result count from query - " + resultList.size());*/ //#40444 - debug
+		//Commented as this line causes an error if no data exist
 		if (!EntityHelper.isCollectionEmpty(resultList)
 				&& resultList.size() > 0) {
 			retVal = new SmOverlapCategoryVO();
@@ -1208,7 +1208,7 @@ public class ViewApplHistoryBackingBean extends
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
-				//applStatus = StringUtils.EMPTY; //#40444
+				applStatus = StringUtils.EMPTY; //#40444
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
@@ -2024,4 +2024,10 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END
+	
+	//#40444 --START
+	public boolean checkOverLappedCategoryExists(SmAppl smAppl) {
+		SmOverlapCategoryVO vo = getOverlapCategoryVO(smAppl);
+		return vo != null && vo.isOverLappedCategoryExist();
+	}//#40444 --END
 }
