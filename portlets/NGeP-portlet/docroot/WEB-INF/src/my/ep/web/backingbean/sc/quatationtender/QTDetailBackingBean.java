@@ -907,9 +907,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#28784
 			checkDemoPresentationByStatus();
 			//#10141 Start Vinod
+			this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+			this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 			if(isSendNotificationButton){
-				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
-				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -15200,12 +15200,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @return boolean
 	 */
 	private static boolean resetCommitteeByStatus(long statusId) {
-        final List<Long> triggerStatuses = Arrays.asList(
-                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-                QTStatusConst.QT_REVISION_PUBLICATION,
-                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
-                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
-        );
+        final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
         return triggerStatuses.contains(statusId);
 	}
 	
