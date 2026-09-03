@@ -51,7 +51,7 @@
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
 			
 			<h:inputHidden id="ai"/>
-			<p:messages id="messages" for="ai" showDetail="true" autoUpdate="true" closable="true"/>
+			<p:messages id="messages" for="ai" showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
 			
 			<h:outputText value="#{lbl['lbl.sm.ai.tnc.instruction']}" rendered="#{cc.attrs.docType eq 'tenancy'}"
 				styleClass="instruction" escape="false"/>
