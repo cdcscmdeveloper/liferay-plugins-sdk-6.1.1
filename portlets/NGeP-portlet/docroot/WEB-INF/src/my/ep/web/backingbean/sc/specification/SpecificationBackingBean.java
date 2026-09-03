@@ -12733,6 +12733,10 @@ public class SpecificationBackingBean extends
 	public void specCommitteBpmTask(String action) {
 		// #39062 Start Vinod 23/09/2025
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			//41075- start
+			SpecificationReqDTO specReqDto=new SpecificationReqDTO();
+			specReqDto.setScQt(this.getManagedBean().getQt());
+			this.getManagedBean().setWipStatusMax(getSpecSO().checkWipScoreSettingMax(specReqDto));//41075- End
 			//#29732 start -set weightage to true, since requirement is mandatory to select financial weightage.
 			if(this.getManagedBean().getWipStatusMax()>=SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
 					&& null != this.getManagedBean().getFinancialScoreSetting()){
@@ -15884,7 +15888,17 @@ public class SpecificationBackingBean extends
 			if (list.isScoringReq()) {
 				statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 			} else if (!list.isScoringReq()) {
-				statusId = QTStatusConst.TS_COMPLETED;
+				//#40724 - Start
+				List<String> finDocDefKeys = Arrays
+						.asList(SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE,
+								SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE);
+				if (finDocDefKeys.contains(list.getPmDocument().getDocDefinitionKey())
+						&& (null == list.getScQtCheckListValue() || null == list.getScQtCheckListValue().getYear())) {
+					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}else{
+					statusId = QTStatusConst.TS_COMPLETED;
+				}
+				//#40724 - End
 			}
 			list.setPmStatus(getPmStatusByStatusId(statusId));
 		}
@@ -24490,8 +24504,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
 		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
 		
-		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc)) 
-				|| (null != publishDate && publishDate.before(effDate))) {
+		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
+			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
