@@ -14634,10 +14634,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	    List<SmSupplierCategory> filteredSmSupplierCategoryList = new ArrayList<>();//#29661 #40093
 
 	    ScQt scQt = getManagedBean().getScQt();
+	    boolean hasQtCategoryCode = false;//#29661 #40096
 		if (null != scQt) {
 			List<ScQtCategory> scQtCategoriesList = getQTSpecSO().retrieveScQtCategorytByQtID(scQt.getQtId());
 			convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList);
+		    hasQtCategoryCode = CollectionUtils.isNotEmpty(scQtCategoriesList);//#29661 #40096
 		}
+		
+		 //#29661 #40096 start
+	    if (!hasQtCategoryCode) {
+	    	this.getManagedBean().setProcurementRelatedCategoryList(new ArrayList<SmSupplierCategory>());
+	    	this.getManagedBean().setShowCategoryCode(false);
+	    }
+	    //#29661 #40096 end
 		
 		List<String> procurementRelatedCategoryCodes = new ArrayList<>();
 		for (SmSupplierCategory supplierCategory : this.getManagedBean().getProcurementRelatedCategoryList()) {
@@ -14661,12 +14670,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		//#41116 start
 		Long currentStatus = null != scLoa.getCurrentStatus() && null != scLoa.getCurrentStatus().getPmStatus()
 				? scLoa.getCurrentStatus().getPmStatus().getStatusId() : scLoa.getPmStatus().getStatusId();
+
+		if (hasQtCategoryCode //#29661 #40096
+				&& QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(currentStatus)) {
+			this.getManagedBean().setShowCategoryCode(true);
+		}
 		//#41116 end
-		boolean showCategoryCode = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
-				QTStatusConst.LOA_PENDING_REVISION, QTStatusConst.LOA_PENDING_APPROVAL,
-				QTStatusConst.LOA_PENDING_REVISION_APPROVAL, QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
-				.contains(currentStatus);
-		this.getManagedBean().setShowCategoryCode(showCategoryCode);
 		// #29661 #40511 end
 	}
 	
