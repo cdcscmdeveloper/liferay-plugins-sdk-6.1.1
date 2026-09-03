@@ -300,7 +300,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	 * @return String(addCatalogView or /xhtml/cm/catalogue/catalogueTaskList.xhtml )
 	 */
 	public String rejectCatalogueItem() {
-		
+
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
 
@@ -401,7 +401,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 
 
 	}
-	
+
 	/**
 	 * Cancel to pending approval item.
 	 * 
@@ -661,7 +661,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 		externalContext.redirect(commonUrl + "/catalogue-maintenance-file");
 	}
 
-	//34447 Start
+	//#34447 - Start
 	/**
 	 * Validate reject remark before displaying popup
 	 *
@@ -674,13 +674,10 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	    String rejectReason = cbb.getManagedBean().getRejectReason();
 
 	    if (rejectReasonIds.isEmpty()) {
-	        FacesContext.getCurrentInstance().addMessage(null,
-	            new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
-	                    MessageConst.ERROR_715057,
-	                    MessageUtils.BUNDLE_COMMON_MESSAGES,
-	                    new FacesScopes().getUserLocale())
-	            )
-	        );
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+							MessageConst.ERROR_715057, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 	        return;
 	    }
 	    for (Object obj : rejectReasonIds) {
@@ -688,17 +685,14 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 
 	        if (id.equals(CmConst.REJECT_REASON_OTHER) &&
 	            (rejectReason == null || rejectReason.isEmpty())) {
-	            FacesContext.getCurrentInstance().addMessage(null,
-	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
-	                        MessageConst.ERROR_715056,
-	                        MessageUtils.BUNDLE_COMMON_MESSAGES,
-	                        new FacesScopes().getUserLocale())
-	                )
-	            );
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+								MessageConst.ERROR_715056, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 	            return;
 	        }
 	    }
 	    RequestContext.getCurrentInstance().execute("rejectCatConfirmPopup.show();");
 	}
-	//34447 End
+	//#34447 - End
 }

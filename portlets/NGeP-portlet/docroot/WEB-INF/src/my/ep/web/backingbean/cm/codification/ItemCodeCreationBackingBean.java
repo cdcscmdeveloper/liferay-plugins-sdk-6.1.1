@@ -653,25 +653,16 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 		}
 	}
 	
-	//34447 Start
+	//#34447 - Start
 	/**
 	 * Validate empty mandatory field before displaying popup
-	 *
-	 *
 	 */
 	public void validateAddUnspscBeforePopup(String popupWidget) {
 	    if (!isUnspscSelectionComplete()) {
-	        FacesContext.getCurrentInstance().addMessage(
-	            null,
-	            new FacesMessage(
-	                FacesMessage.SEVERITY_ERROR,
-	                null,
-	                MessageUtils.getMessage(
-	                    MessageConst.ERROR_715008,
-	                    MessageUtils.BUNDLE_COMMON_MESSAGES,
-	                    new FacesScopes().getUserLocale())
-	            )
-	        );
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 	        return;
 	    }
 	    RequestContext.getCurrentInstance().execute(popupWidget + ".show();");
@@ -694,5 +685,5 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 	        || lov.getUnspscTitle().isEmpty()
 	        || lov.getUnspscTitleEng().isEmpty();
 	}
-	//34447 End
+	//#34447 - End
 }
