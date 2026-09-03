@@ -145,6 +145,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private Map<String, PmFinancialOrg> factoringAccountMap;
 	
 	private boolean reviseInvoice = false;
+	
+	private boolean isSupplementContractComplete = true; //28719
+
 
 	//#35508 start
   	private String originalSupplierInvRef;
@@ -1232,6 +1235,16 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.accountNo = accountNo;
 	}
 	//32967-end
+	
+	//28719-start
+	public boolean isSupplementContractComplete() {
+		return isSupplementContractComplete;
+	}
+
+	public void setSupplementContractComplete(boolean isSupplementContractComplete) {
+		this.isSupplementContractComplete = isSupplementContractComplete;
+	}
+	//28719-end	
 	
 	//#35508 start
 	/**
