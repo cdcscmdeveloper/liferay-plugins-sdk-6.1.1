@@ -393,10 +393,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private List<SmSupplierCategory> addedCategoryList;
 	private List<SmSupplierCategory> procurementRelatedCategoryList;
 	private List<SmSupplierCategory> deletedCategoryList;
-	private boolean categorySelected;
-	private List<ScQtCategory> qtCategoryList;
-	private boolean showCategoryCode = false; 
-	private List<SmSupplierCategory> originalSupplierCategoryList;
+	private boolean showCategoryCode;
 	// #29661 end
 	
 	private SmSupplier tempSmSupplier;	// Bug #40022@Syazani -- 16/02/2026
@@ -2264,22 +2261,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.procurementRelatedCategoryList = procurementRelatedCategoryList;
 	}
 
-	public boolean isCategorySelected() {
-		return categorySelected;
-	}
-
-	public void setCategorySelected(boolean categorySelected) {
-		this.categorySelected = categorySelected;
-	}
-
-	public List<ScQtCategory> getQtCategoryList() {
-		return qtCategoryList;
-	}
-
-	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
-		this.qtCategoryList = qtCategoryList;
-	}
-
 	public List<SmSupplierCategory> getDeletedCategoryList() {
 		return deletedCategoryList;
 	}
@@ -2302,14 +2283,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	public void setShowCategoryCode(boolean showCategoryCode) {
 		this.showCategoryCode = showCategoryCode;
-	}
-
-	public List<SmSupplierCategory> getOriginalSupplierCategoryList() {
-		return originalSupplierCategoryList;
-	}
-
-	public void setOriginalSupplierCategoryList(List<SmSupplierCategory> originalSupplierCategoryList) {
-		this.originalSupplierCategoryList = originalSupplierCategoryList;
 	}
 	//#29661 End
 	// Bug #40022@Syazani -- 16/02/2026 -- Start
