@@ -3751,17 +3751,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//Bug 33096 - shaqimi start
 		BigDecimal ctAmt;
 		if(ctBackingBean.getManagedBean().isViewSCL()){
-			
-//			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
-			
-			//#24336
-			ctAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
-			
+			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
 		} else {
 			
 			//#24336 - Start
 			// Calculate the current contract amount with additions or reductions.
-			BigDecimal baseAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
+			BigDecimal baseAmt = ctContractVer.getCtContractAmount().getContractAmount();
 			BigDecimal addAmt = ctContractVer.getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctContractVer.getCtAmendment().getReductionAmt();
 			
@@ -3793,7 +3788,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 		
 		// Include new GST amount if contract value changed by GST
-		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewGstAmount() != null){
+//		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewGstAmount() != null){
+		if(ctAmendment.getNewGstAmount() != null){
 			contractAmt = newContractAmt().add(ctAmendment.getNewGstAmount());
 		}
 		// #24336 - End
@@ -3811,18 +3807,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return the final contract amount including service tax (if applicable)
 	 */
 	public BigDecimal newOverallContractAmount() {
-		BigDecimal contractAmount = newOverallContractAmt();
-		
-		// #24336 - Start
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		
-		// Include service tax if contract value changed by GST
-		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null){
-			contractAmount = newOverallContractAmt().add(ctAmendment.getNewStaxAmount());
-		}
-		// #24336 - End
-		
-		return contractAmount;
+	    BigDecimal contractAmount = newOverallContractAmt();
+
+	    // #24336 - Start
+	    CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
+	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
+	    CtContractAmount ctContractAmount = ctContractVer.getCtContractAmount();
+
+	    // Include service tax if contract value changed by GST
+//	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
+	    if (ctAmendment.getNewStaxAmount() != null) {
+	        contractAmount = contractAmount.add(ctAmendment.getNewStaxAmount());
+	    }
+
+	    // Include current GST and STAX amounts if the contract value was not changed due to GST/SST
+	    if (!ctAmendment.isValueChangeByGst()) {
+	        if (ctContractAmount.getGstAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getGstAmount());
+	        }
+
+	        if (ctContractAmount.getStaxAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getStaxAmount());
+	        }
+	    }
+	    // #24336 - End
+
+	    return contractAmount;
 	}
 	// End - #29589
 	
