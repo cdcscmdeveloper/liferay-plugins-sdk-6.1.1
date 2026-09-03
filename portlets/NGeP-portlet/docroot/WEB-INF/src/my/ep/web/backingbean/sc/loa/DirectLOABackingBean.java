@@ -57,10 +57,8 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
-import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
-import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -74,7 +72,6 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -102,8 +99,6 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
-import my.ep.dto.sm.search.SupplierCategoryReqDTO;
-import my.ep.dto.sm.search.SupplierCategoryResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
@@ -114,8 +109,6 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -170,7 +163,6 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -230,7 +222,6 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -5530,6 +5521,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// #29766 Start Vinod
 		checkQTTypePk7WpItem();
 		// #29766 End Vinod
+		//#29661 #40096 Start
+		if (!scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)) {
+			getSmSupplierCategory(this.getManagedBean().getScLoa());
+		}else{
+			this.getManagedBean().setShowCategoryCode(true);
+		}
+		//#29661 #40096 End
 
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
@@ -14670,12 +14668,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		//#41116 start
 		Long currentStatus = null != scLoa.getCurrentStatus() && null != scLoa.getCurrentStatus().getPmStatus()
 				? scLoa.getCurrentStatus().getPmStatus().getStatusId() : scLoa.getPmStatus().getStatusId();
-
-		if (hasQtCategoryCode //#29661 #40096
-				&& QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(currentStatus)) {
+		// #41116 end
+				
+		boolean showCategoryCode = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
+				QTStatusConst.LOA_PENDING_REVISION, QTStatusConst.LOA_PENDING_APPROVAL,
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL).contains(currentStatus);
+		if (showCategoryCode
+				|| (hasQtCategoryCode && QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(currentStatus))) {
 			this.getManagedBean().setShowCategoryCode(true);
 		}
-		//#41116 end
 		// #29661 #40511 end
 	}
 	
