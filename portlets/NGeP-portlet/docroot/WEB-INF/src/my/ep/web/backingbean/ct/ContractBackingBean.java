@@ -3566,7 +3566,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),e.getMessage()));
 		}
 	}
-	//#34961 end
+		//#34961 end
 
 	/**
 	 * The method used to render the selected product item information.

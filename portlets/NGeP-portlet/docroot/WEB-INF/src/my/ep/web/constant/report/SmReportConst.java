@@ -78,12 +78,10 @@ public class SmReportConst implements Serializable {
 	
 	// #32521 - START
 	public static final String PARAM_DA_STATUS = "PDASTATUS";
-
 	public static final String PARAM_USER_ID2 = "PUSER2"; // param indicator for
 															// second user_id in
 															// same report.
 	// #32521 - END
-	
 	// #34031 Start
 	public static final String PARAM_VISIT_DATE_FROM = "PFROMVISITDATE";
 	public static final String PARAM_VISIT_DATE_TO = "PTOVISITDATE";
@@ -702,7 +700,6 @@ public class SmReportConst implements Serializable {
 		return SM_APPLICATION_PROCESSED_RPT_VAL;
 	}
 	// #32521 - END
-	
 	// #34031 Start
 	public String getSmRevisitRptVal() {
 		return SM_REVISIT_RPT_VAL;

@@ -68,7 +68,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class QTScheduleDetailBackingBean.
  * 
@@ -76,12 +75,14 @@ import org.primefaces.context.RequestContext;
  */
 @ManagedBean(name = "qTScheduleDetailBackingBean")
 @RequestScoped
-public class QTScheduleDetailBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -774386885300236894L;
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTScheduleDetailBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(QTScheduleDetailBackingBean.class);
 	private Boolean sampleExistCache; // Bug_39486 - Bug_39877
 
 	/**
@@ -980,4 +981,5 @@ public class QTScheduleDetailBackingBean extends
 
         return Boolean.TRUE.equals(sampleExistCache);
     }
+	
 }
