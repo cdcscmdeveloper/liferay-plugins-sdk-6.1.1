@@ -45,7 +45,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText id="agencyName" size="60"
+					<td style="width: 66%"><p:inputText maxlength="255" id="agencyName" size="60"
 							style="width: auto !important;"
 							readonly="#{smCompExpMB.selectedMaster.clientType eq null or smCompExpMB.selectedMaster.clientType eq ParameterConst.clientTypeFederal}"
 							value="#{smCompExpMB.selectedMaster.agencyName}" /> <p:outputPanel
@@ -62,7 +62,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:inputText id="fileReferenceNo"
+					<td style="width: 66%"><p:inputText maxlength="50" id="fileReferenceNo"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 							value="#{smCompExpMB.selectedMaster.fileReferenceNo}">
 							<p:ajax event="blur"
@@ -81,7 +81,8 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<td style="width: 66%"><p:inputText
+					<ui:remove>#9299 - #41104</ui:remove>
+					<td style="width: 66%"><p:inputText maxlength="20" size="20"
 							value="#{smCompExpMB.selectedMaster.loaNo}" /></td>
 				</tr>
 				<tr>
@@ -89,7 +90,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputTextarea cols="100"
+					<td style="width: 66%"><p:inputTextarea maxlength="1000" cols="100"
 							style="width: auto !important;"
 							value="#{smCompExpMB.selectedMaster.title}" /></td>
 				</tr>
@@ -98,7 +99,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText maxlength="14"
 							label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
 							value="#{smCompExpMB.selectedMaster.contractValue}">
 							<f:convertNumber
@@ -200,7 +201,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="300"
 								styleClass="outputLabel-view"
 								value="#{smCompExpMB.selectedMaster.projectLoc}" /></td>
 					</tr>
@@ -209,7 +210,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="500"
 								styleClass="outputLabel-view"
 								value="#{smCompExpMB.selectedMaster.workServDesc}" /></td>
 					</tr>
@@ -218,7 +219,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="14"
 								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
 								value="#{smCompExpMB.selectedMaster.consultantFee}">
 								<f:convertNumber
@@ -236,7 +237,7 @@
 							process="@form" update=":form">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
-						</p:commandLink> <p:outputPanel id="smCompExpSuppDocListPanelId">
+						</p:commandLink> <p:graphicImage id="suppDocToolTipsId" value="/css/images/design/tooltips.png" /><!-- 9299 CR p255: supp doc tooltip --> <p:tooltip for="suppDocToolTipsId"><img src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" /></p:tooltip> <p:outputPanel id="smCompExpSuppDocListPanelId">
 							<ui:repeat
 								value="#{smCompExpMB.selectedMaster.compExpMasterDocs}"
 								var="doc">
