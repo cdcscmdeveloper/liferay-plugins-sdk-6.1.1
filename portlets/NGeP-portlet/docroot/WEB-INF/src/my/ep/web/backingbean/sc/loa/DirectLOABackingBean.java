@@ -6100,15 +6100,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						|| QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(statusId)) {
 					if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 						// 29661 - start
-						List<SmSupplierCategory> deletedSmCategory = this.getManagedBean().getDeletedCategoryList();
-						List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();
-						deleteScQtCategory(deletedSmCategory);
-						insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
+						deleteScQtCategory(getManagedBean().getDeletedCategoryList());
+						insertSupplierCategoryCodeToScQtCategory(getManagedBean().getAddedCategoryList());
 						// 29661 - end
 						messageCode = MessageConst.INFO_700007;
 					} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700008;
 					} else if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+						// 29661 - start
+						deleteScQtCategory(getManagedBean().getDeletedCategoryList());
+						insertSupplierCategoryCodeToScQtCategory(getManagedBean().getAddedCategoryList());
+						// 29661 - end
 						messageCode = MessageConst.INFO_700009;
 					}
 
@@ -14638,14 +14640,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList);
 		    hasQtCategoryCode = CollectionUtils.isNotEmpty(scQtCategoriesList);//#29661 #40096
 		}
-		
-		 //#29661 #40096 start
-	    if (!hasQtCategoryCode) {
-	    	this.getManagedBean().setProcurementRelatedCategoryList(new ArrayList<SmSupplierCategory>());
-	    	this.getManagedBean().setShowCategoryCode(false);
-	    }
-	    //#29661 #40096 end
-		
+
 		List<String> procurementRelatedCategoryCodes = new ArrayList<>();
 		for (SmSupplierCategory supplierCategory : this.getManagedBean().getProcurementRelatedCategoryList()) {
 			procurementRelatedCategoryCodes.add(CustomUtils.getCategoryCode(supplierCategory));
@@ -14670,11 +14665,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				? scLoa.getCurrentStatus().getPmStatus().getStatusId() : scLoa.getPmStatus().getStatusId();
 		// #41116 end
 				
-		boolean showCategoryCode = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
-				QTStatusConst.LOA_PENDING_REVISION, QTStatusConst.LOA_PENDING_APPROVAL,
-				QTStatusConst.LOA_PENDING_REVISION_APPROVAL).contains(currentStatus);
-		if (showCategoryCode
-				|| (hasQtCategoryCode && QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(currentStatus))) {
+		boolean showCategoryCode = Arrays.asList(QTStatusConst.LOA_PENDING_STATUSES).contains(currentStatus);
+		if (!hasQtCategoryCode
+				&& (Arrays.asList(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT,
+						QTStatusConst.LOA_PENDING_VERIFICATION).contains(currentStatus))) {
+			this.getManagedBean().setProcurementRelatedCategoryList(new ArrayList<SmSupplierCategory>());
+			this.getManagedBean().setShowCategoryCode(false);
+		} else if (showCategoryCode || QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(currentStatus)) {
 			this.getManagedBean().setShowCategoryCode(true);
 		}
 		// #29661 #40511 end
@@ -14869,8 +14866,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<SmSupplierCategory> procurementSmCategory = this.getManagedBean().getProcurementRelatedCategoryList();
 
 		if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)
-				&& BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-
+				&& Arrays.asList(BpmOutcomeConst.BPM_SUBMIT, BpmOutcomeConst.BPM_APPROVE).contains(outcome)) {
 			if (CollectionUtils.isEmpty(procurementSmCategory)) {
 				log.info("[1] Validation failed: procurement category list is empty on submit.");
 				throw new EpException(MessageConst.ERROR_760800);
