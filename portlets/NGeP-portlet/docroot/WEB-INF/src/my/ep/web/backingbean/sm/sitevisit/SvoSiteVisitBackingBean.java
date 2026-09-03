@@ -2236,7 +2236,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
 				PmUser currPo = PmCommonUtil.retrieveUserWithPoRoleTaskByLoginId(currPoLoginId);
 				log.info("---Curent PO: " + currPo.getUserName());
-				
+
 				if (currPo.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
 						|| currPo.getPmUserOrgs().get(0).getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
 						|| isExistInPoRoleTask(svTask.getSmAppl().getApplType(), currPo)
@@ -3098,7 +3098,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			for (PmUserOrg userOrg : userlist) {
 				if (userOrg.getPmUserRoles() != null) {
 					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
-						if (userRole.getPmRole().getRoleCode().equals(SupplierManagementConst.PO_HQ) && userRole.getRecordStatusFlg() == 0) {
+						if (userRole.getPmRole().getRoleCode().equals(SupplierManagementConst.PO_HQ)
+								&& userRole.getRecordStatusFlg() == 0) {
 							retVal = true;
 							break;
 						}

@@ -704,7 +704,7 @@ public class QTCommitteBackingBean extends
 				committeeTypes.add(committeeType);	
 			}
 		}
-		
+
 		// 40061 - start
 		List<TabBean> tabBeans = this.getManagedBean().getScCommitteeMemberTabList();
 		List<String> committeeTabs = new ArrayList<>();
