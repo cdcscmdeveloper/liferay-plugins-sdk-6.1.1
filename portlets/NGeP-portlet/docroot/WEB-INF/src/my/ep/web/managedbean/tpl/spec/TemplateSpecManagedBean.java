@@ -61,6 +61,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneQty> zoneQtyForItemHlink;
 	private boolean isComplianceOldNull;
 	// #29187 End Vinod
+	private boolean secretaryValidate;//#21695 use in #28784
 	public TemplateSpecManagedBean() {
 	}
 
@@ -345,5 +346,15 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	//#29187 End Vinod
 	
-	
+	//#28784 - Start
+	public boolean isSecretaryValidate() {
+		return secretaryValidate;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setSecretaryValidate(boolean secretaryValidate) {
+		this.secretaryValidate = secretaryValidate;
+	}
+	//#28784 - End
 }

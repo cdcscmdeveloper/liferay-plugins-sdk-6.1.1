@@ -55,6 +55,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.comparator.WorklistItemVOComparator;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -1300,8 +1301,36 @@ public class SupplierFinalizationBackingBean extends
 		
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
-						 evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
-						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.presentation.demo.stage";
+						//#28784 - Start
+						boolean isQtNewVersion = validateSupportedTask(getManagedBean().getScQt().getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						boolean isItemize = getManagedBean().isItemize();
+						boolean isItemRowSelected = getManagedBean().isItemRowSelect();
+						ScQtRecommend selectedItem = getManagedBean().getSelectedItem();
+						/** Use in #21695, #25138, #25635, #29021
+						if (!isItemize || !isQtNewVersion) {*/
+				    		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+				    	/** Use in #21695, #25138, #25635, #29021
+				    	}
+						else {
+							
+				    		int wipStatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		
+				    		if (wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+				    		} else {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+		
+				        		if (isItemRowSelected && selectedItem != null) {
+				            		selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
+				        		} else {
+				            		getManagedBean().setQualifiedSuppliersByEvalStage(null);
+				            		return;
+				        		}
+				    		}
+						}*/
+						// Set evaluation header (always the same regardless of itemize/WIP status)
+						evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_DEMO_EVAL_STAGE;
+						//#28784 - End
 					 } else {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
 						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
@@ -3156,6 +3185,12 @@ public class SupplierFinalizationBackingBean extends
 				}
 				// #18685 - End.
 			}
+
+			// #28784 -start-
+			if(getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
+			}
+			// #28784 -end-
 			
 		} finally {
 			qtSuppFinalizationSO = null;
@@ -3286,14 +3321,23 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
 		}
+		//#28784 - Start
+		if (SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReport.getTitle())) {
+			reportAttachment.setTempFileName("");
+		}
+		//#28784 - End
 		downloadFile(reportAttachment);
 		
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
-		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-			regenEvaluationDownload(reportAttachment, true);
+		//#28784 - Start
+		if (scQtFinalizationReport.getPmDocument() != null) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+			if (downFilesSize <= SourcingConstants.FILE_SIZE && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+				regenEvaluationDownload(reportAttachment, true);
+			}
 		}
+		//#28784 - End
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
@@ -5739,9 +5783,9 @@ public class SupplierFinalizationBackingBean extends
 					setSelectionMode(finalizationMethod.getParameterCode());
 				}
 				createShortlistedSuppliersDataModel();// 35140
-			}
+			} 
 			
-			setDisableSFJustification();	// Bug #40314@Syazani 18/06/2026
+			setDisableSFJustification();	//40314
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_EVALUATION)) {
 			scQtFinalization.setRePublishOption(null);
@@ -9064,7 +9108,9 @@ public class SupplierFinalizationBackingBean extends
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - Start
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - End
 		}
 	}
 

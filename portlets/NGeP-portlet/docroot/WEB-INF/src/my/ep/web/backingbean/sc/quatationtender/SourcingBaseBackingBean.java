@@ -80,6 +80,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -4089,8 +4090,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
+						boolean isDemoRequired = report.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);//#28784
 
-						if (null != report.getPmDocument()) {
+						// #28784 -start-
+						if (null != report.getPmDocument() || isDemoRequired)
+						// #28784 -end-
+						{
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
@@ -4098,9 +4105,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									iterator.remove();
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-								if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-										|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
+								// #28784 -start-
+								if (SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle())
+										|| SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(report.getPmDocument()
+												.getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(report
+												.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(report
+												.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle()))
+								// #28784 -end-
+								{
 									getManagedBean().getEvaluationReportList().add(report);
 									
 									iterator.remove();
@@ -7115,10 +7130,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
 			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
 					.getDocDefinitionKey() : "";
+					String subStringDemoReport = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);//#28784
 			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
 					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
 					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
-					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT).contains(definitionKey)) {
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT).contains(definitionKey)
+					&& !briefingPaperReport.getTitle().contains(subStringDemoReport)) {//#28784
 				reportList.add(briefingPaperReport);
 			}
 		}
@@ -7223,4 +7240,213 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return "";
 	}
 	// 25791-End	
+	
+	//#28784 - Start
+	/**
+	 * Checking Demo WIP for QT that Republished. If QT was Republished without
+	 * Specification changes, it will go directly to status 60034L. If status is
+	 * 60034L then make sure to check Parent QT for WIP, if Parent QT is WIP
+	 * then Republished will also be WIP.
+	 * 
+	 * @param scQt
+	 * @return
+	 */
+	public boolean checkParentRepublishQT(ScQt scQt) {
+		try {
+			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			reqDTO.setDocId(scQt.getQtId());
+			List<Long> includedStatus = new ArrayList<>();
+			includedStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+			reqDTO.setStatusIds(includedStatus);
+			reqDTO.setCurrent(null);
+
+			List<ScWorkFlowStatus> currentWorkFlowStatus = workFlowStatusSO.retrieveWorkFlowStatus(reqDTO)
+					.getWorkFlowStatusList();
+			// Checking for current QT, if status is 60034L, then it is without Specification changes
+			if (CollectionUtils.isNotEmpty(currentWorkFlowStatus)) {
+				// checking for Parent QT, if WIP then Republished QT will also be WIP
+				return validateSupportedTask(getQTDetailSO().retrieveQtNoByparentQtId(scQt.getParentQtId()),
+						CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "checkParentRepublishQT", scQt.getQtNo(),
+					"checkParentRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+
+		return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	/**
+	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * @param
+	 * @return void
+	 */
+	public void checkDemoVersion(ScQt scQt) {
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	private boolean checkDemoWIP(ScQt scQt) {
+		try {
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			return evaluationSO.checkDemoWip(reqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoWIP",
+					scQt.getQtNo(), "checkDemoWIP", getUserIdSessionFromLoginId(), e);
+		}
+		return true;
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * Only used by demo to ensure that demo pdf/file able to be open even within zip file
+	 * 
+	 * @param zos
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFilesAsZipFile(ZipOutputStream zos,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		String demoKey = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);
+
+	    for (ScAttachment scAttachment : scAttachments) {
+
+	    	try {
+		        if (scAttachment == null || StringUtils.isBlank(scAttachment.getFilePath())) {
+		            continue;
+		        }
+
+		        File file = new File(getActualFilePath(scAttachment));
+		        String pdfEntryName = resolvePdfEntryName(scAttachment, demoKey);
+
+		        if (isDemoReport(scAttachment, demoKey)) {
+		            writeInnerZip(zos, file, pdfEntryName);
+		        } else {
+		            writePdfToOuterZip(zos, file, pdfEntryName);
+		        }
+			} catch (FileNotFoundException fnfe) {
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						"downloadSFAndRecommendationFilesAsZipFile", "",
+						"downloadSFAndRecommendationFilesAsZipFile", getUserIdSessionFromLoginId(), fnfe);
+				continue;
+	        }
+	    }
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private String resolvePdfEntryName(ScAttachment attachment, String demoKey) {
+
+	    String extension = FilenameUtils.getExtension(attachment.getFileName());
+
+	    if (StringUtils.isBlank(attachment.getTempFileName())) {
+	        return attachment.getFileName();
+	    }
+
+	    if (attachment.getTempFileName().contains(demoKey)) {
+	        return SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + "." + extension;
+	    }
+
+	    return attachment.getTempFileName() + "." + extension;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private boolean isDemoReport(ScAttachment attachment, String demoKey) {
+	    return StringUtils.isNotBlank(attachment.getTempFileName())
+	            && attachment.getTempFileName().contains(demoKey);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writeInnerZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    ByteArrayOutputStream innerBaos = new ByteArrayOutputStream();
+
+	    try (ZipOutputStream innerZos = new ZipOutputStream(innerBaos)) {
+	        innerZos.putNextEntry(new ZipEntry(pdfEntryName));
+	        copyFile(file, innerZos);
+	        innerZos.closeEntry();
+	    }
+
+	    zos.putNextEntry(
+	        new ZipEntry(SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + ".zip")
+	    );
+	    zos.write(innerBaos.toByteArray());
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writePdfToOuterZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    zos.putNextEntry(new ZipEntry(pdfEntryName));
+	    copyFile(file, zos);
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void copyFile(File file, OutputStream out) throws IOException {
+
+	    try (BufferedInputStream bis =
+	                 new BufferedInputStream(new FileInputStream(file))) {
+
+	        byte[] buffer = new byte[8192];
+	        int len;
+	        while ((len = bis.read(buffer)) > 0) {
+	            out.write(buffer, 0, len);
+	        }
+	    }
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * To download multiple files.
+	 * 
+	 * @param zipFileName
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		HttpServletResponse response = null;
+		ZipOutputStream zos = null;
+		try {
+			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response = PortalUtil.getHttpServletResponse(portalresponse);
+			String finalFileName = zipFileName + ".zip";
+			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+
+			zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+
+			downloadSFAndRecommendationFilesAsZipFile(zos, scAttachments);
+
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError("QT", "downloadSFAndRecommendationFiles", "",
+					"downloadSFAndRecommendationFiles", getUserIdSessionFromLoginId(), ex);
+		} finally {
+			zos.close();
+			response.flushBuffer();
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	//#28784 - End
 }
