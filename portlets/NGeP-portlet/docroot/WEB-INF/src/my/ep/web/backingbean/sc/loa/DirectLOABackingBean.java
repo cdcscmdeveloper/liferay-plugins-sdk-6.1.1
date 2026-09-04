@@ -2715,6 +2715,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		setDisciplinaryAction(scLoa);// 26247
+		getSmSupplierCategory(scLoa);// 29961
 
 		// #41077: when the supplier actually changes, the Procurement-Related category codes belong to the
 		// old supplier and are invalid for the new one. Reset the category lists so the Category Code side
@@ -2744,7 +2745,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		getManagedBean().setDeletedCategoryList(deletedList);
 		getManagedBean().setProcurementRelatedCategoryList(null);
 		getManagedBean().setAddedCategoryList(null);
-		getManagedBean().setSupplierCategoryList(null);
 	}
 	
 
@@ -5522,10 +5522,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		checkQTTypePk7WpItem();
 		// #29766 End Vinod
 		//#29661 #40096 Start
-		if (!scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)) {
+		Long statusId = scLoa.getPmStatus().getStatusId();
+		if (!QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 			getSmSupplierCategory(this.getManagedBean().getScLoa());
-		}else{
-			this.getManagedBean().setShowCategoryCode(true);
 		}
 		//#29661 #40096 End
 
