@@ -174,16 +174,16 @@
 			<!-- 29550 - start(to cater option displayed by factoring user)-->
 			<td><p:selectOneMenu value="#{mcPoCancelRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 						itemDisabled="#{mcPoCancelRptBB.hasSupplierRole()}"
-      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+      					itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcPhysicalContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcPhysicalLoaNo()}"></f:selectItem>
 					<c:choose>
 						<c:when test="#{flReportBB.hasFactoringUserRole()}">
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
@@ -193,7 +193,7 @@
 						</c:when>
 						<c:otherwise>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-								itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptCcSstNo()}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
 								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 						</c:otherwise>
