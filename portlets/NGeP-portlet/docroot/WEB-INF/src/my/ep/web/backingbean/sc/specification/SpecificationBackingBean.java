@@ -17128,6 +17128,11 @@ public class SpecificationBackingBean extends
 
 	private void setTechncialChecklistEvaluationStatus(
 			List<ScQtCheckList> technicalCheckList) {
+		// #10141 - #41172 Start Vinod
+		if (this.getManagedBean().isSaveForScorePrintBtn()) {
+			return;
+		}
+		// #10141 - #41172 End Vinod
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : technicalCheckList) {
 				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
@@ -17149,6 +17154,11 @@ public class SpecificationBackingBean extends
 
 	private void setFinancialChecklistEvaluationStatus(
 			List<ScQtCheckList> financialCheckList) {
+		// #10141 - #41172 Start Vinod
+		if (this.getManagedBean().isSaveForScorePrintBtn()) {
+			return;
+		}
+		// #10141 - #41172 End Vinod
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
 			for (ScQtCheckList financialcheckList : financialCheckList) {
 				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
@@ -23320,6 +23330,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	public void generateSpecScoreReport() throws IOException {
 		int specZoneTabIndex = this.getManagedBean().getSpecZoneTabIndex();
+		this.getManagedBean().setSaveForScorePrintBtn(true); //#10141 - #41172 added.
 		validatePrepareQtChecklist();
 		
 		this.getManagedBean().setSpecZoneTabIndex(specZoneTabIndex);
