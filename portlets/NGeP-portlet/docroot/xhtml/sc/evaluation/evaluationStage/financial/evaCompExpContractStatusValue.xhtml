@@ -1,0 +1,132 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+    <h:panelGroup rendered="#{!empty cmpContractStatus}">
+	<p:dataTable id="#{cmpExpContSts}" rowIndexVar="index"
+		var="cmpExpStatusValue" value="#{cmpContractStatus}"
+		emptyMessage=""
+		rowKey="#{cmpExpStatusValue}" style="width:100%">
+		<ac:paginator for="#{cmpExpContSts}"></ac:paginator>
+		<p:column style="width:60%;white-space: normal;">
+
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.federal.gov']}"
+					rendered="#{SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE eq docDefinationKey}" />
+				<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.non.federal.gov']}"
+					rendered="#{SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE eq docDefinationKey}" />
+
+			</f:facet>
+			<h:outputText value="#{cmpExpStatusValue.numOfContractsValue}"></h:outputText>
+
+		</p:column>
+		<p:column style="width:10%;white-space: normal;"
+			headerText="#{lbl['lbl.sc.comp.exp.inactive']}">
+			<h:outputText rendered="#{cmpExpStatusValue.format}"
+				value="#{cmpExpStatusValue.inEffectiveContractValue}">
+
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat( CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+
+			<h:outputText rendered="#{!cmpExpStatusValue.format}"
+				value="#{cmpExpStatusValue.inEffectiveContractValue}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT )}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+		</p:column>
+		<p:column style="width:10%;white-space: normal;"
+			headerText="#{lbl['lbl.sc.comp.exp.effective']}">
+			<h:outputText rendered="#{cmpExpStatusValue.format}"
+				value="#{cmpExpStatusValue.effectiveContractValue}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+			<h:outputText rendered="#{!cmpExpStatusValue.format}"
+				value="#{cmpExpStatusValue.effectiveContractValue}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT )}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+		</p:column>
+		<p:column style="width:10%;white-space: normal;"
+			headerText="#{lbl['lbl.sc.comp.exp.expired']}">
+			<h:outputText rendered="#{cmpExpStatusValue.format}"
+				value="#{cmpExpStatusValue.expiredContractValue}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+			<h:outputText rendered="#{!cmpExpStatusValue.format}"
+				value="#{cmpExpStatusValue.expiredContractValue}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT )}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+		</p:column>
+		<p:column style="width:10%;white-space: normal;"
+			headerText="#{lbl['lbl.sc.comp.exp.terminated']}">
+			<h:outputText rendered="#{cmpExpStatusValue.format}"
+				value="#{cmpExpStatusValue.terminatedContractValue}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+			<h:outputText rendered="#{!cmpExpStatusValue.format}"
+				value="#{cmpExpStatusValue.terminatedContractValue}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT )}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+    </h:panelGroup>
+	<h:panelGroup rendered="#{empty cmpContractStatus}">
+
+		<table class="ui-datatable ui-widget"
+			style="width: 100%; border-collapse: collapse;">
+
+			<thead class="ui-datatable-header">
+				<tr class="ui-widget-header">
+					<th style="width: 60%; text-align: left;" class="ui-state-default" ><h:outputText
+							value="#{lbl['lbl.sc.fin.comp.exp.federal.gov']}"
+							rendered="#{SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE eq docDefKey}" />
+
+						<h:outputText
+							value="#{lbl['lbl.sc.fin.comp.exp.non.federal.gov']}"
+							rendered="#{SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE eq docDefKey}" />
+					</th>
+					<th style="width: 10%" class="ui-state-default" ><h:outputText
+							value="#{lbl['lbl.sc.comp.exp.inactive']}" /></th>
+					<th style="width: 10%" class="ui-state-default" ><h:outputText
+							value="#{lbl['lbl.sc.comp.exp.effective']}" /></th>
+					<th style="width: 10%" class="ui-state-default" ><h:outputText
+							value="#{lbl['lbl.sc.comp.exp.expired']}" /></th>
+					<th style="width: 10%" class="ui-state-default"><h:outputText
+							value="#{lbl['lbl.sc.comp.exp.terminated']}" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="width: 60%; padding: 5px;"><h:outputText
+							value="#{lbl['lbl.sc.supplier.proposal.comp.exp.no.of.contract']}" /></td>
+					<td colspan="4" rowspan="2"
+						style="text-align: center; vertical-align: middle;"><h:outputText
+							value="#{lbl['lbl.datatable.msg.no.records.found']}" /></td>
+				</tr>
+				<tr>
+					<td style="padding: 5px;"><h:outputText
+							value="#{lbl['lbl.sc.supplier.proposal.comp.exp.val.contract']}" /></td>
+				</tr>
+			</tbody>
+
+		</table>
+	</h:panelGroup>
+</ui:composition>

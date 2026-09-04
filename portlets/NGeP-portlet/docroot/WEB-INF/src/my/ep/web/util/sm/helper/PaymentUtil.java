@@ -259,7 +259,7 @@ public class PaymentUtil {
     public static String constructJsonPayload(String merchantCode,
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
-			String cancelUrl,String responseUrl,String callbackUrl) {
+			String cancelUrl,String responseUrl,String callbackUrl,String language) {
 		log.info("#38377--responseUrl:"+responseUrl);
 		log.info("#38377--callbackUrl:"+callbackUrl);
 		String payload = null;
@@ -272,6 +272,7 @@ public class PaymentUtil {
 				.append("\",").append("\"responseUrl\":\"").append(responseUrl)
 				.append("\",").append("\"callbackUrl\":\"").append(callbackUrl)
 				.append("\",").append("\"cancelUrl\":\"").append(cancelUrl)
+				.append("\",").append("\"language\":\"").append(language)
 				.append("\",").append("\"merchantCode\":\"")
 				.append(merchantCode).append("\",");
 		try {
@@ -279,8 +280,11 @@ public class PaymentUtil {
 			String amountStr = df.format(amount);
 			sb.append("\"billAmt\":\"").append(amountStr).append("\"")
 					.append("}");
-			payload = encrypt(sb.toString(),
+//			payload = encrypt(sb.toString(),
+//					PasswordUtils.decrypt(clientKey));
+			payload = CryptoUtils.encryptAES(sb.toString(),
 					PasswordUtils.decrypt(clientKey));
+			log.info("######38377 after encrypt payload using AES no padding#####");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -347,10 +351,13 @@ public class PaymentUtil {
 		if (!StringUtils.isBlank(payload)) {
 			try {
 				log.info("#38377 encrypted payload:" + payload);
-				payload = decrypt(payload, PasswordUtils
+//				payload = decrypt(payload, PasswordUtils
+//						.decrypt(EpPropertiesUtils.getInstance().getProperty(
+//								"payment.gov.vkey")));
+				payload = CryptoUtils.decryptAES(payload, PasswordUtils
 						.decrypt(EpPropertiesUtils.getInstance().getProperty(
 								"payment.gov.vkey")));
-				log.info("#38377 decrypted payload:" + payload);
+				log.info("#38377 after decrypted using AES no padding:" + payload);
 				jsonObject = new JSONObject(payload);
 			} catch (Exception e1) {
 				log.info("#38377 error decrypted payload:" + e1.getMessage());

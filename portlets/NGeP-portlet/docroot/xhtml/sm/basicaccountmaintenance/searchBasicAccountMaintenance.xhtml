@@ -149,7 +149,7 @@
 					<p:column headerText="#{lbl['lbl.sm.label.action']}" >
 						<p:commandLink onstart="blockWidget.show()"
 							rendered="#{empty smSupplier.typeDisciplinaryAction
-							or (smSupplier.pendingCancel eq true or smSupplier.pendingBlacklist eq true or smSupplier.pendingSuspend eq true)}"
+							or (smSupplier.pendingCancel eq true or smSupplier.pendingBlacklist eq true or smSupplier.pendingSuspend eq true) or smSupplier.futureImposed eq true}"
 							oncomplete="blockWidget.hide()"
 							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl,'C')}"
 							process="@this" partialSubmit="true" update="@form"
@@ -158,7 +158,7 @@
 						</p:commandLink>
 						<p:commandLink onstart="blockWidget.show()"
 							rendered="#{not empty smSupplier.typeDisciplinaryAction
-							and smSupplier.pendingCancel ne true and smSupplier.pendingBlacklist ne true and smSupplier.pendingSuspend ne true}"
+							and smSupplier.pendingCancel ne true and smSupplier.pendingBlacklist ne true and smSupplier.pendingSuspend ne true and smSupplier.futureImposed eq false}"
 							oncomplete="blockWidget.hide()"
 							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, 'D')}"
 							process="@this" partialSubmit="true" update="@form"
@@ -202,14 +202,17 @@
 							action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}" update="@form" process="@this"/>
 					</td>
 					<td style="white-space: nowrap; float: right;">
+					<!-- #26238 40219 - start -->
 					    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
 					    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{supplierDataMaintenanceBackingBean.showConfirmDialog}" 
-					    	rendered="#{supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"/>
+					    	rendered="#{supplierDataMaintenanceBackingBean.managedBean.flagShowButtonSubmit}"
+					    	disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"/>
 					    <!-- 38417 -->
-					    <p:commandButton value="#{lbl['lbl.btn.close']}" rendered="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+					    <p:commandButton value="#{lbl['lbl.btn.close']}" rendered="#{!supplierDataMaintenanceBackingBean.managedBean.flagShowButtonSubmit}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}"
 								update="@form" process="@this" />
+					<!-- #26238 40219 - end -->
 					</td>
 				</tr>
 			</table>
@@ -850,10 +853,11 @@
 						</p:column>
 						<!-- 39293, 39636 - END -->
 						<!-- 28494, 32279 - end-->
+						<!-- 29659 START -->
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
-							<h:outputText value="#{person.name}" />
+							<h:outputText value="#{person.title.salutationName} #{person.name}" />
 						</p:column>
-				
+						<!-- 29659 END -->
 						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>

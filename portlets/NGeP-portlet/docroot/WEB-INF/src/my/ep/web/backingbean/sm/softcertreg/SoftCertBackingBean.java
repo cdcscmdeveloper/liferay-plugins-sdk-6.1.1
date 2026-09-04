@@ -937,10 +937,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
 		for (SmPersonnel personnel : personnels) {
 			// check for supplier tmp
+			//#10729 - START
 			if (StringUtils.isNotBlank(personnel.getEpRole())
 					&& personnel.getEpRole().equals(
 							RoleCode.SUPPLIER_TEMP.value())
-					&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+					&& (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ || personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED)) {
+			//#10729 - END
 				getManagedBean().setSupplierTmpPersonnel(personnel);
 				getManagedBean().setSoftCertSelect(personnel);
 				getManagedBean().getSoftCertSelectList().add(
@@ -1753,5 +1755,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						.getIdentificationNo());
 		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 	}*/
+	// #10729 Start
+	public boolean isTempSupplierRole() {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean temp;
+		temp = facesScopes.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) ? true : false;
+		return temp;
+	}
+	// #10729 End
 	
 }

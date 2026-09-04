@@ -77,6 +77,9 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 	
 	private Boolean displayResubmitButton; //#31248
 	
+	//#30009
+	private String serviceCodeName;
+	
 	// #34392 - start
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
@@ -454,4 +457,14 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
 	}
 	// #34392 - end
+	
+	// #30009 Start
+	public String getServiceCodeName() {
+		return serviceCodeName;
+	}
+
+	public void setServiceCodeName(String serviceCodeName) {
+		this.serviceCodeName = serviceCodeName;
+	}
+	// #30009 end
 }

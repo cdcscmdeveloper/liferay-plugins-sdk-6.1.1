@@ -404,6 +404,9 @@ public class SmPersonnelBackingBean extends
 
 		getManagedBean()
 				.setBasicSmPersonnelMailingAddress(mailPersonnelAddress);
+		// #36718 - Start
+		getManagedBean().setLatestBasicSmPersonnelMailingAddress(null);
+		// #36718 - End
 		getManagedBean().setBasicSmPersonnelPermanentAddress(
 				permPersonnelAddress);
 		smPersonnel
@@ -933,7 +936,9 @@ public class SmPersonnelBackingBean extends
 	private void validatePostcode(SmAddress srcAddr, SmPersonnelAddress destAddr) {
 		String postcode = srcAddr.getPostcode();
 
-		if (StringUtils.isNotBlank(postcode) && (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
+		// For my country
+		if (srcAddr.getPmCountry().getCountryId().equals(getManagedBean().getMyCountryId()) && StringUtils.isNotBlank(postcode)
+				&& (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
 			destAddr.setSameAsPerm(false);
 			String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
 			throw new EpException(errMsg, null);
@@ -2267,14 +2272,9 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void save() {
 		
-		//#36718 - Start - to validate perm addr postcode since use listener.
-		getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPostcode();
-		if(getManagedBean().getBasicSmPersonnelPermanentAddress() != null){
-			SmAddress addr = getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress();
-			if(addr != null && addr.getPostcode()!= null){
-				checkPostcode(addr.getPostcode());
-			}
-		}
+		//#36718 - Start - to validate perm & Mail addr postcode since use listener.
+		validatePostcode(getManagedBean().getBasicSmPersonnelPermanentAddress());
+		validatePostcode(getManagedBean().getBasicSmPersonnelMailingAddress());
 		//#36718 - End
 		
 		if (getManagedBean().getBasicSmPersonnel() != null && !(getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE)) {
@@ -3636,6 +3636,11 @@ public class SmPersonnelBackingBean extends
 	//start - #34810
 	public void saveUserMOFUpdate(SmPersonnel personnel) {
 	//end - #34810
+		
+		//#36718 - Start
+		validatePostcode(getManagedBean().getBasicSmPersonnelMailingAddress());
+		//#36718 - End
+		
 		//#9569 - Start
 		//to validate if user that admin want to delete or change role doesn't have any pending task - Start
 		//Cannot delete eP Role for {0} as there are pending tasks that belongs to this user.
@@ -4174,6 +4179,15 @@ public class SmPersonnelBackingBean extends
 		}
 		return retVal;
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getBasicSmPersonnel().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getBasicSmPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	//32515 START
 	public Boolean validateSoftcertExpired(SmSoftcertRequest softcertRequest){
@@ -4232,6 +4246,19 @@ public class SmPersonnelBackingBean extends
 	// #28895_35501 End
 	
 	// #36718 - Start
+	/**
+	 * Checking object first before get the Post code value
+	 * @param address
+	 */
+	private void validatePostcode(SmPersonnelAddress address) {
+	    if (address != null) {
+	        SmAddress smAddress = address.getSmAddress();
+	        if (smAddress != null && smAddress.getPostcode() != null) {
+	            checkPostcode(smAddress.getPostcode());
+	        }
+	    }
+	}
+	
 	/**
 	 * To check postcode by using listener
 	 * 

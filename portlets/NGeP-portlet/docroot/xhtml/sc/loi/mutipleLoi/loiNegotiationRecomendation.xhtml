@@ -22,7 +22,7 @@
 		.pr-0{
 			padding-right: 0 !important;
 		}
-		/* 26247 - end */
+		/* 26247 - end */			
 	</style>	
 	
 	<!-- Supplier Details PopUp -->
@@ -31,11 +31,10 @@
 	<h:outputText styleClass="instruction" escape="false" rendered="#{lOIDetailBackingBean.managedBean.displayReviseInstrn}"
 			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
 
-	<ui:remove> #28777#29729 - Start </ui:remove>
+	<ui:remove> 28777,29729 - Start </ui:remove>
 	<ui:param name="isDisqualified"
 		value="#{lOIDetailBackingBean.checkListDisqualifiedSupplierBranchDeleted(lOIDetailBackingBean.managedBean.scQt.qtId)}"></ui:param>
-	<ui:remove> #28777#29729 - End </ui:remove>
-
+	<ui:remove> 28777,29729 - End </ui:remove>
 
 	<p:outputPanel id="itemSupplierPanel">
 
@@ -54,23 +53,23 @@
 							</p:tabMenu>
 						</td>
 					</c:if>
-					<td class="tdWidth"><ui:remove> #28777#29729 - Start </ui:remove>
+					<td class="tdWidth"><ui:remove> 28777,29729 - Start </ui:remove>
 						<c:if
 							test="#{lOIDetailBackingBean.checkInstructionSupplierBranchDeleted(lOIDetailBackingBean.managedBean.scQt.qtId)}">
 							<h:outputText styleClass="instruction"
 								value="#{lbl['lbl.sc.branch.related.deleted.instruction']} "
 								escape="false" />
-						</c:if> <ui:remove> #28777#29729 - End </ui:remove> <h:outputText
+						</c:if> <ui:remove> 28777,29729 - End </ui:remove> <h:outputText
 							styleClass="instruction"
 							value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
 							escape="false" /> <h:outputText styleClass="instruction"
 							value="#{lOIDetailBackingBean.managedBean.scQt.closingDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-						</h:outputText> <ui:remove> #28777#29729 - Start </ui:remove> <h:outputText
+						</h:outputText> <ui:remove> 28777,29729 - Start </ui:remove> <h:outputText
 							escape="false" value="#{lbl['lbl.sc.list.qualified.supplier']}"
 							style="font-weight:bold; font-size: 15px;"
-							rendered="#{isDisqualified}" /> <ui:remove> #28777#29729 - End </ui:remove>
+							rendered="#{isDisqualified}" /> <ui:remove> 28777,29729 - End </ui:remove>
 
 						<p:dataTable id="recommendTblPkg" var="supplierDtl"
 							value="#{lOIDetailBackingBean.managedBean.recommendedSupplierList}"
@@ -96,7 +95,7 @@
 								style="text-align:center;">
 								<p:commandLink
 									oncomplete="suppDetailsPopup.show(); return false;"
-									process="@this" update="@([id$=suppDetailsPopupId])">
+											   process="@this" update="@([id$=suppDetailsPopupId])">
 									<p:graphicImage library="/css/images/design/evaluate.png"
 										title="#{lbl['lbl.sc.view.companyinfo']}"
 										style="vertical-align:middle" />
@@ -107,7 +106,7 @@
 										value="#{supplierDtl.qtEvaluationResult.scQtProposal.supplierNo}" />
 								</p:commandLink>
 
-								<ui:remove> #28777#29729 - Start </ui:remove>
+								<ui:remove> 28777,29729 - Start </ui:remove>
 								<p:spacer width="15" height="15" />
 								<p:commandLink process="@this"
 									action="#{lOIDetailBackingBean.showSupplierBranchList(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -115,7 +114,7 @@
 									oncomplete="suppBranchListPopup.show();">
 									<h:graphicImage value="/css/images/exclam-info.png" />
 								</p:commandLink>
-								<ui:remove> #28777#29729 - End </ui:remove>
+								<ui:remove> 28777,29729 - End </ui:remove>
 
 							</p:column>
 
@@ -134,13 +133,25 @@
 								</h:outputText>
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.total.score']}"
+							<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
+							<p:column headerText="#{lbl['lbl.sc.mloi.overall.score']}"
 								style="text-align: right;">
+								<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
+								<p:commandLink action ="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId,null)}" 
+	 											  rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}" process="@this" update="@([id$=SuppScoreDetailsPopupId])" styleClass="commandLink" >
+							
 								<h:outputText value="#{supplierDtl.totalScore}">
 									<f:convertNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(
 																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 								</h:outputText>
+								</p:commandLink>
+								<h:outputText value="#{supplierDtl.totalScore}" rendered="#{lOIDetailBackingBean.managedBean.weightage35384WIP}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(
+																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+								</h:outputText>
+								<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.ranking']}"
@@ -151,7 +162,6 @@
 																				CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 								</h:outputText>
 							</p:column>
-
 							<ui:remove>26247 - start</ui:remove>
 							<ui:param name="supplier"
 								value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
@@ -172,7 +182,7 @@
 								<ac:disciplinaryActionYesNo
 									supplier="#{supplier}" index="#{rowIndex}"/>
 							</p:column>
-							<ui:remove>26247 - end</ui:remove>
+							<ui:remove>26247 - end</ui:remove>							
 							
 							<p:column selectionMode="single"
 								styleClass="td-check-box-spacing"
@@ -213,7 +223,7 @@
 								style="text-align:center;">
 								<p:dataList var="recommendedSuppl"
 									value="#{item.awardSupplierList}" type="none"
-									rendered="#{isPendingNegotiationStatus}">
+											rendered="#{isPendingNegotiationStatus}">
 									<p:column>
 										<ui:remove>
 											31061 - SHAFFUL (Added filter disciplinaryAction)
@@ -222,18 +232,18 @@
 											value="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatus}"
 											disabled="#{!isPendingNegotiationStatus or 
 															!(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded) or lOIDetailBackingBean.managedBean.readOnly
-															or lOIDetailBackingBean.disabledQTProcess(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
-															or recommendedSuppl.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq
-												  				SourcingConstants.extendProposalValidityPeriodRejected}" 										
+														or lOIDetailBackingBean.disabledQTProcess(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
+														or recommendedSuppl.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq
+												  				SourcingConstants.extendProposalValidityPeriodRejected}"
 															style="margin-right:1px !important;"><ui:remove>26247 - disabledQTProcess, 21692</ui:remove>
 											<p:ajax event="change" partialSubmit="true" process="@this"
-												update="@this, @([id$=recommendTbl])"
-												listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(
+													update="@this, @([id$=recommendTbl])"
+													listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(
 																						item,recommendedSuppl.scQtRecommendDtl.get(0))}" />
 										</p:selectBooleanCheckbox>
 										<p:commandLink
 											oncomplete="suppDetailsPopup.show(); return false;"
-											disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
+										disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 											process="@this" update="@([id$=suppDetailsPopupId])">
 											<p:graphicImage library="/css/images/design/evaluate.png"
 												title="#{lbl['lbl.sc.view.companyinfo']}"
@@ -245,7 +255,7 @@
 												value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
 
-										<ui:remove> #28777#29729 - Start </ui:remove>
+										<ui:remove> 28777,29729 - Start </ui:remove>
 										<p:spacer width="15" height="15" />
 										<p:commandLink process="@this"
 											action="#{lOIDetailBackingBean.showSupplierBranchList(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -253,7 +263,7 @@
 											oncomplete="suppBranchListPopup.show();">
 											<h:graphicImage value="/css/images/exclam-info.png" />
 										</p:commandLink>
-										<ui:remove> #28777#29729 - End </ui:remove>
+										<ui:remove> 28777,29729 - End </ui:remove>
 
 										<br />
 									</p:column>
@@ -261,7 +271,7 @@
 
 								<p:dataList var="recommendedSuppl"
 									value="#{item.awardSupplierList}" type="none"
-									rendered="#{!isPendingNegotiationStatus}">
+											rendered="#{!isPendingNegotiationStatus}">
 									<p:column
 										rendered="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
 										<p:commandLink
@@ -278,7 +288,7 @@
 												value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
 										
-										<ui:remove> #28777#29729 - Start </ui:remove>
+									    <ui:remove> 28777,29729 - Start </ui:remove>
 										<p:spacer width="15" height="15" />
 										<p:commandLink process="@this"
 											action="#{lOIDetailBackingBean.showSupplierBranchList(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -286,7 +296,7 @@
 											oncomplete="suppBranchListPopup.show();">
 											<h:graphicImage value="/css/images/exclam-info.png" />
 										</p:commandLink>
-										<ui:remove> #28777#29729 - End </ui:remove>
+										<ui:remove> 28777,29729 - End </ui:remove>
 										
 										<br />
 									</p:column>
@@ -361,22 +371,44 @@
 								</ui:repeat>
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.total.score']}"
+							<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
+						    <!-- #38151,#38679 update label-->
+							<p:column headerText="#{lbl['lbl.sc.total.overall.score']}"
 								style="text-align: right;">
-								<ui:repeat var="recommendedSuppl"
-									value="#{item.awardSupplierList}">
-									<h:outputText value="#{recommendedSuppl.totalScore}"
-										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
-										<f:convertNumber
-											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-									</h:outputText>
+							<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
+								rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}">
+									<p:commandLink
+										action="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId,item.requestItem.requestNoteItemId)}"
+										process="@this" update="@([id$=SuppScoreDetailsPopupId])"
+										rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}"
+										styleClass="commandLink">
+
+										<h:outputText value="#{recommendedSuppl.totalScore}"
+											rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
+											<f:convertNumber
+												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+										</h:outputText>
+									
+
 									<h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
-								</ui:repeat>
-							</p:column>
+								</p:commandLink>
 
-							<p:column headerText="#{lbl['lbl.sc.ranking']}"
-								style="text-align: center;">
+								</p:dataList>
+										<h:outputText value="#{recommendedSuppl.totalScore}"
+											rendered="#{lOIDetailBackingBean.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}">
+											<f:convertNumber
+												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+										</h:outputText>
+									
+
+									<h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{lOIDetailBackingBean.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}" />
+								
+							</p:column>
+							<ui:remove><!-- #38151,#38679 datatable value popup--></ui:remove>
+
+							<p:column headerText="#{lbl['lbl.sc.ranking']}" style="text-align: center;">
 								<ui:repeat var="recommendedSuppl"
 									value="#{item.awardSupplierList}">
 									<h:outputText value="#{recommendedSuppl.evalRank}"
@@ -414,7 +446,7 @@
 											value="#{item.awardSupplierList}" type="none">
 											<p:column>
 												<h:inputText id="awardQty"
-													readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
+												readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
 													value="#{recommendedSuppl.scQtRecommendDtl.get(0).awardQty}"
 													maxlength="14" size="6"
 													rendered="#{isPendingNegotiationStatus and
@@ -460,13 +492,13 @@
 																	item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) 
 															and (item.activeSupplierCount lt 2) }" />
 								</h:panelGroup>
-							</p:column>
-							<ui:remove>#33267 - Start</ui:remove>
+							</p:column>						
+							<ui:remove>#33267 - Start</ui:remove>	
 							<p:column selectionMode="multiple"
 								disabledSelection="#{empty item.awardSupplierList}"
 								styleClass="td-check-box-spacing"
 								rendered="#{isPendingNegotiationStatus}" />
-							<ui:remove>#33267 - End</ui:remove>
+							<ui:remove>#33267 - End</ui:remove>	
 						</p:dataTable> <h:panelGrid border="0" cellpadding="0" cellspacing="0"
 							width="100%" columns="2" columnClasses="columnWidth20"
 							rendered="#{isPendingNegotiationStatus and 
@@ -488,13 +520,13 @@
 								</p:selectOneMenu>
 
 								<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
-									disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
+								disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 									process="@this" partialSubmit="true"
 									action="#{lOIDetailBackingBean.awardSupplierEvent}"
 									update="recommendTbl" />
 							</h:column>
 
-						</h:panelGrid> <ui:remove> #28777#29729 - Start </ui:remove> <h:outputText
+						</h:panelGrid> <ui:remove> 28777,29729 - Start </ui:remove> <h:outputText
 							escape="false"
 							value="#{lbl['lbl.sc.list.disqualified.supplier']}"
 							style="font-weight:bold; font-size: 15px;"
@@ -626,7 +658,7 @@
 											<h:outputText
 												value="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
-
+										
 										<p:spacer width="15" height="15" />
 										<p:commandLink process="@this"
 											action="#{lOIDetailBackingBean.showSupplierBranchList(recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
@@ -884,7 +916,7 @@
 									rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or lOIDetailBackingBean.managedBean.multiLOIZoneDetails.get(lOIDetailBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 									value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 							</p:column>
-						</p:dataTable> <ui:remove> #28777#29729 - End </ui:remove></td>
+						</p:dataTable> <ui:remove> 28777,29729 - End </ui:remove></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -895,4 +927,80 @@
 		remarkList="#{lOIDetailBackingBean.managedBean.scQtCommittee.qtCommitteRemarks}"
 		showAttachment="false"
 		readonly="#{lOIDetailBackingBean.managedBean.readOnly}" />
+
+	<ui:remove>
+		<!-- #38151,#38679 datatable value popup-->
+		<!-- start -->
+	</ui:remove>
+	<p:dialog id="SuppScoreDetailsPopupId"
+		widgetVar="SuppScoreDetailsPopup" position="center" modal="true"
+		dynamic="true" styleClass="pop_up_top" width="950" resizable="false"
+		header="#{lbl['lbl.sc.total.overall.score.percentage']}">
+
+		<p:dataTable id="qualifiedSupplierss" var="qualifiedSupp"
+			widgetVar="shortlistedSuppDtls"
+			value="#{lOIDetailBackingBean.managedBean.weightageScoreBeans}"
+			emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
+			editable="true" lazy="true" rowIndexVar="rowIndex" rows="10"
+			style="width:100%;" rowKey="#{qualifiedSupp}">
+			<ac:paginator for="qualifiedSuppliers" />
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column colspan="2"
+						headerText="#{lbl['lbl.sc.eval.score.popup']}" />
+					<p:column colspan="2"
+						headerText="#{lbl['lbl.sc.rec.weightage.overall.score.popup']}" />
+					<p:column rowspan="2"
+						headerText="#{lbl['lbl.sc.total.overall.score']}" />
+				</p:row>
+				<p:row>
+					<p:column colspan="1"
+						headerText="#{lbl['lbl.sc.eval.tec.score.popup']}" />
+					<p:column colspan="1"
+						headerText="#{lbl['lbl.sc.eval.fin.score.popup']}" />
+					<p:column colspan="1">
+						<f:facet name="header">
+							<h:outputText
+								value="#{lbl['lbl.sc.eval.tec.score.popup']}(#{lOIDetailBackingBean.managedBean.overallTechnicalRecommendationPercent}%)" />
+						</f:facet>
+					</p:column>
+					<p:column colspan="1">
+						<f:facet name="header">
+							<h:outputText
+								value="#{lbl['lbl.sc.eval.fin.score.popup']}(#{lOIDetailBackingBean.managedBean.overallFinancialRecommendationPercent}%)" />
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{qualifiedSupp.technicalTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{qualifiedSupp.financialTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{qualifiedSupp.recommendationTechnicalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{qualifiedSupp.recommendationFinancialScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{qualifiedSupp.recommendationTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:dialog>
+	<ui:remove>
+		<!-- #38151,#38679 datatable value popup-->
+		<!-- end -->
+	</ui:remove>
 </ui:composition>

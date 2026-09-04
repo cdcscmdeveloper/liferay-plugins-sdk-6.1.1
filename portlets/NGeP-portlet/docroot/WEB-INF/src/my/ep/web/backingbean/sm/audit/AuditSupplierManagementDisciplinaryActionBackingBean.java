@@ -69,7 +69,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 		remark(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 		// #28895_35501_DA - Updated FRS - Start
-		if (isBlacklist) {
+		if (isBlacklist || mBean.isOwnerChange()) { // 40078, 26238
 			ownerList(auDetails, mBean);
 		}
 		// #28895_35501_DA - Updated FRS - End

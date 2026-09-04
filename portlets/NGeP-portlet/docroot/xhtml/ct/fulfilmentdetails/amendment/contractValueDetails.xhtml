@@ -1,0 +1,250 @@
+<!-- #24336 -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel id="contractValuePanel" rendered="#{amendmentBackingBean.getAmendValue(1) || ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" 
+		header="#{lbl['lbl.ct.menu.contract.value']}" toggleable="true" toggleSpeed="500">
+	
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidthChangeContractValue">
+			
+			<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="overallAmount" styleClass="ppRightBtn change-contract-value-inputtext"
+					value="#{amendmentBackingBean.getApplicableOverallContractAmount()}" disabled="true">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.overall.amt']}" />
+				<p:message for="overallAmount" display="icon" />
+			</h:panelGrid>
+
+			<p:outputLabel value="#{lbl['lbl.ct.type.change.contract.value']}" styleClass="required" />
+			<h:panelGrid columns="4">
+				<p:selectOneRadio id="reduction" styleClass="reduction-type-radio" 
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reduction}" layout="pageDirection"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"> 
+					<f:selectItem itemLabel="#{lbl['lbl.ct.radio.reduction']}" itemValue="true" />
+					<f:selectItem itemLabel="#{lbl['lbl.ct.radio.addition']}" itemValue="false" />
+					<p:ajax update="contractValuePanel" event="change" process="@this" 
+						listener="#{amendmentBackingBean.handleContractValueTypeChange}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				</p:selectOneRadio>
+			</h:panelGrid>
+
+			<br/>
+			<p:spacer height="1" />
+		
+			<p:outputLabel value="#{lbl['lbl.ct.total.contract.utilization']}" style="font-weight: bold; text-decoration:underline;" />
+			<p:spacer width="1" />
+
+			<p:outputLabel value="#{lbl['lbl.ct.total.usage.with']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="usageWith" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true" value="#{amendmentBackingBean.getPendingTransactionAmount()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.utilization.pending.payment']}" />
+				<p:spacer width="1" />
+				<p:message for="usageWith" display="icon" />
+			</h:panelGrid>
+
+			<p:outputLabel value="#{lbl['lbl.ct.total.usage.before']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="usageBefore" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true" value="#{amendmentBackingBean.getAmountBeforePendingPayment()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.utilization.before.pending.payment']}" />
+				<p:spacer width="1" />
+				<p:message for="usageBefore" display="icon" />
+			</h:panelGrid>
+
+			<p:outputLabel value="#{lbl['lbl.ct.total.contract.reduced']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="contractReduced" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true" value="#{amendmentBackingBean.getReducibleContractAmount()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.utilization.amount.reduced']}" />
+				<p:spacer width="1" />
+				<p:message for="contractReduced" display="icon" />
+			</h:panelGrid>
+
+			<p:outputLabel value="#{lbl['lbl.ct.maximum.additional']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="maxAdditional" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
+					value="#{amendmentBackingBean.getMaxAdditionalValue()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.utilization.maximum.additional']}" />
+				<p:spacer width="1" />
+				<p:message for="maxAdditional" display="icon" />
+			</h:panelGrid>
+
+			<br/>
+			<p:spacer height="1" />
+
+			<p:outputLabel value="#{lbl['lbl.ct.total.change.contract.amt']}" style="font-weight: bold; text-decoration:underline;" />
+			<p:spacer width="1" />
+
+			<p:outputLabel value="#{lbl['lbl.ct.total.reduction.contract.amt']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="reductionAmt" styleClass="ppRightBtn change-contract-value-inputtext"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reductionAmt}"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableReductionContractAmount}"
+					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<p:ajax event="blur" update="reductionAmt, addValue, overallAmt, newAmtEffDate" process="@this"
+						listener="#{amendmentBackingBean.changeReductionValue}" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.reduction.contract.amount']}" />
+				<p:spacer width="1" />
+				<p:message for="reductionAmt" display="icon" />
+			</h:panelGrid>
+
+			<p:outputLabel value="#{lbl['lbl.ct.total.additional.contract.amt']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="addValueTxt" styleClass="ppRightBtn change-contract-value-inputtext"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableAdditionContractAmount}" 
+					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
+					<!-- Enhancement 15851 - shaqimi -->
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<p:ajax event="blur" update="addValueTxt, addValue, overallAmt, addPercentage, newAmtEffDate" process="@this"
+						listener="#{amendmentBackingBean.changeAdditionalValue}" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.contract.amount']}" />
+				<p:spacer width="1" />
+				<p:message for="addValueTxt" display="icon" />
+			</h:panelGrid>
+
+			<p:outputLabel value="#{lbl['lbl.ct.additional.percentage']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="addPercentage" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
+					value="#{amendmentBackingBean.getAdditionalPercentage()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.contract.percentage']}" />
+					<p:spacer width="1" />
+					<p:message for="addPercentage" display="icon" />
+			</h:panelGrid>	
+
+			<br/>
+			<p:spacer height="1" />
+		
+		</h:panelGrid>
+
+		<!-- Change of contract value caused by GST/SST -->
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidthChangeContractValue" 
+			rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}">
+		
+			<p:outputLabel value="#{lbl['lbl.ct.gst.sst']}" style="font-weight: bold; text-decoration:underline;" />
+			<p:spacer width="1" />
+
+			<p:outputLabel value="#{lbl['lbl.ct.new.gst.amt']}" />
+			<h:panelGrid columns="5">
+				<!-- #24336 remove rendered gstCheckingGUI-->
+				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn change-contract-value-inputtext" maxlength="18"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
+					or ctBackingBean.managedBean.disableGstAmount}"
+					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
+					<!-- Enhancement 15851 - shaqimi -->
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<p:ajax event="blur" update="newGstAmtTxt, overallAmt, newAmtEffDate" process="@this" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" listener="#{amendmentBackingBean.changeGstValue}" />
+				</p:inputText>
+				<p:message for="newGstAmtTxt" display="icon" />
+				<!-- #24336 remove inputText N/A-->
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.new.gst.amt']}" />
+			</h:panelGrid>
+
+			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" />
+			<h:panelGrid columns="5">
+				<!-- #24336 remove rendered staxCheckingGUI-->
+				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn change-contract-value-inputtext" maxlength="18"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
+					or ctBackingBean.managedBean.disableStaxAmount}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}"
+					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
+					<!-- Enhancement 15851 - shaqimi -->
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<p:ajax event="blur" update="newStaxAmtTxt, overallAmt, newAmtEffDate" process="@this" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" listener="#{amendmentBackingBean.changeStaxValue}" />
+				</p:inputText>
+				<p:message for="newStaxAmtTxt" display="icon" />
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.new.stax.amt']}" />
+			</h:panelGrid>
+
+			<br/>
+			<p:spacer height="1" />
+
+		</h:panelGrid>
+
+		<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidthChangeContractValue">
+
+			<p:outputLabel value="#{lbl['lbl.ct.current.contract.amt']}" style="font-weight: bold; text-decoration:underline;" />
+			<p:spacer width="1" />
+
+			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" />
+			<h:panelGrid columns="4">
+				<p:inputText id="addValue" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
+					value="#{amendmentBackingBean.newContractAmt()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.contract.amount']}" />
+			</h:panelGrid>
+
+			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}"/>
+			<h:panelGrid columns="4">
+				<p:inputText id="overallAmt" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
+					value="#{amendmentBackingBean.newOverallContractAmount()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.overall.contract.amt']}" />
+			</h:panelGrid>
+			
+			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt.eff.date']}" />
+			<h:panelGrid columns="4" styleClass="top-aligned-columns">
+				<p:calendar id="newAmtEffDate" showOn="button" readonlyInput="true"
+					styleClass="calanderWidth110"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL 
+								or ctBackingBean.managedBean.disableNewCtAmountEffDate}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newAmtEffDate}"
+					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}">
+					<p:ajax event="dateSelect" update="newAmtEffDate" process="@this" listener="#{amendmentBackingBean.handleNewAmtEffDate()}" />
+				</p:calendar>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
+			</h:panelGrid>
+
+		</h:panelGrid>
+	
+	</p:panel>
+
+</ui:composition>

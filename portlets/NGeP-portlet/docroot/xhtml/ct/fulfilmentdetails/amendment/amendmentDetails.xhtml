@@ -30,7 +30,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.extension']}" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<f:verbatim/>
+			<f:verbatim />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}"
@@ -46,7 +46,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.item.price']}" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<f:verbatim/>
+			<f:verbatim />
 		    <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
@@ -63,7 +63,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.quantity']}" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<f:verbatim/>
+			<f:verbatim />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
 				    or ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange
@@ -73,7 +73,8 @@
 				    	and !ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt)
 				    	or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  ><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change"  update=":form:amend" process="@form"
+					<!-- #24336 change 'update' attribute -->
+					<p:ajax event="change"  update=":form" process="@form"
 						listener="#{amendmentBackingBean.onChangeValueChecked}"
 					  	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
 					</p:selectBooleanCheckbox>
@@ -83,7 +84,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.contract.amount']}" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<f:verbatim/>
+			<f:verbatim />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" ><!-- Enhancement 15851 - shaqimi -->
@@ -96,7 +97,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.clause']}" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<f:verbatim/>
+			<f:verbatim />
 			
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}"
@@ -110,12 +111,12 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.value.by.gst']}" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<f:verbatim/>
+			<f:verbatim />
 			<h:panelGrid columns="2">
 			<p:spacer width="25" />
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.change.value.by.gst']}" escape="false"/>
 			</h:panelGrid>
-			<f:verbatim/>
+			<f:verbatim />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}" ><!-- Enhancement 15851 - shaqimi -->
@@ -135,9 +136,9 @@
 				<p:inputText id="txtfrno" style="width:650px;" label="#{lbl['lbl.ct.file.ref.no']}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" 
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" maxlength="100" /><!-- Enhancement 15851 - shaqimi -->
-				<p:spacer width="1"/>
+				<p:spacer width="1" />
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
-			    <p:spacer width="1"/>
+			    <p:spacer width="1" />
 				<p:message for="txtfrno" display="icon" />
 			</h:panelGrid>			
 				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}"  styleClass="required"/>
@@ -209,41 +210,21 @@
 			<p:inputText id="extEndDate" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
 			    disabled="true" style="width:90px;" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			</p:inputText>
-		
-			<p:outputLabel value="#{lbl['lbl.ct.additional.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>			
-			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
-				<p:inputText id="addValueTxt" styleClass="ppRightBtn" style="width:80px;"  
-				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
-				   disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
-					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					 <p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this" listener="#{amendmentBackingBean.changeAdditionalValue}"
-					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
-				</p:inputText>
-				<p:spacer width="1"/>
-			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.contract.amount']}" />
-			    <p:spacer width="1"/>
-				<p:message for="addValueTxt" display="icon" />
-			</h:panelGrid>
+			</p:inputText>	
 			
-			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
-				<p:inputText id="addValue" styleClass="ppRightBtn" style="width:90px;" disabled="true"
-					value="#{amendmentBackingBean.newContractAmt()}" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-				<p:spacer width="1"/>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.contract.amount']}" />
-			</h:panelGrid>			
-		
-			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.getAmendValue(2)}"  style="float:right;">
-				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
+			<!-- #24336 - Start-->
+			<h:panelGrid columns="2" style="float:right;" rendered="#{amendmentBackingBean.showEffectiveDateInput}">
+				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" styleClass="required" />
 			</h:panelGrid>
-			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(2)}" >
-				<p:calendar style="width:80px;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
-			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-				    label="#{lbl['lbl.ct.effective.date']}" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
+			<!-- #24336 - End-->
+
+			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.showEffectiveDateInput}">
+				<!-- #24336 add styleClass-->
+				<p:calendar styleClass="calanderWidth110" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
+			    	required="true" 
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+				    label="#{lbl['lbl.ct.effective.date']}" 
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
 				    mindate="#{amendmentBackingBean.managedBean.newAmendmentEffDate}"
 				    rendered="#{!ctBackingBean.managedBean.disableAmendDetails and !ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
@@ -255,79 +236,32 @@
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	  			</p:inputText>
-				<p:spacer width="1"/>
-			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
-			    <p:spacer width="1"/>
+				<p:spacer width="1" />
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.effective.date']}" />
+			    <p:spacer width="1" />
 			   <p:message for="edateCal1" display="icon" />	
 			</h:panelGrid>
 			
 			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
-				!amendmentBackingBean.getAmendValue(2)}"/>
+				!amendmentBackingBean.getAmendValue(2)}" />
 			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
-				!amendmentBackingBean.getAmendValue(2)}"/>
-			
-			<p:outputLabel value="#{lbl['lbl.ct.new.gst.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>	
-			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
-				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
-				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
-				   disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
-				   		or ctBackingBean.managedBean.disableGstAmount}"
-				   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"><!-- Enhancement 15851 - shaqimi -->
-					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
-					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
-				</p:inputText>
-				<p:message for="newGstAmtTxt" display="icon" />
-				<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
-	   				 rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
-				</p:inputText>
-				<p:spacer width="1"/>
-			    <p:graphicImage id="iconToolTipGst" value="/css/images/design/tooltips.png" /> 
-				  	<p:tooltip id="gstTooltipSource" for="iconToolTipGst" style="max-width: 450px; z-index: 9999;">
-						<h:outputText id="gstLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.additional.new.gst.amt']}" />
-					</p:tooltip>
-			</h:panelGrid>
-			
-							
-			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>	
-			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
-				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
-				   disabled = "#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
-				   		or ctBackingBean.managedBean.disableStaxAmount}"
-				   		rendered="#{ctBackingBean.managedBean.staxCheckingGUI}" 
-				   		value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}"><!-- Enhancement 15851 - shaqimi -->
-					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					 <p:ajax event="blur" update="newStaxAmtTxt, overallAmt" process="@this" 
-					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
-				</p:inputText>
-				<p:message for="newStaxAmtTxt" display="icon" />
-				<p:spacer width="1"/>
-			    <p:graphicImage id="iconToolTipSst" value="/css/images/design/tooltips.png" /> 
-				  	<p:tooltip id="sstTooltipSource" for="iconToolTipSst" style="max-width: 500px; z-index: 9999;">
-						<h:outputText id="sstLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.additional.new.stax.amt']}" />
-					</p:tooltip>
-			</h:panelGrid>
-			
-			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
-				<p:inputText id="overallAmt" styleClass="ppRightBtn" style="width:90px;" disabled="true"
-					value="#{amendmentBackingBean.newOverallContractAmount()}" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-				<p:spacer width="1"/>
-			    <p:graphicImage id="iconToolTipAmt" value="/css/images/design/tooltips.png" /> 
-				  	<p:tooltip id="amtTooltipSource" for="iconToolTipAmt">
-						<h:outputText id="amtLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.new.overall.contract.amt']}" />
-					</p:tooltip>
-			</h:panelGrid>	
-			
+				!amendmentBackingBean.getAmendValue(2)}" />
 			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
-				!amendmentBackingBean.getAmendValue(3)}"/>
+				!amendmentBackingBean.getAmendValue(3)}" />
 					
 		</h:panelGrid>
+
+	<!-- START 24336 -->
+	</p:panel>
+
+	<ui:include src="contractValueDetails.xhtml" />
+
+	<p:panel id="approvingAuthority" header="#{lbl['lbl.ct.menu.approving.authority']}" toggleable="true" toggleSpeed="500">
+	<!-- END 24336 -->
+
 		<h:panelGrid id="approvingAuthorityPanel" columns="2" style="width:100%" columnClasses="columnWidth170">
-				<p:outputLabel value="#{lbl['lbl.ct.approving.authority']}"  styleClass="required" rendered="#{amendmentBackingBean.getAmendValue(3)}"/>
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+				<p:outputLabel value="#{lbl['lbl.ct.approving.authority']}"  styleClass="required" /> <!-- #24336 remove rendered -->
+			<h:panelGrid columns="3"> <!-- #24336 remove rendered -->
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
@@ -335,38 +269,59 @@
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.mof']}" style="text-align:left" />
 			</h:panelGrid>
-			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+			<f:verbatim /> <!-- #24336 remove rendered-->
+			<h:panelGrid columns="4"> <!-- #24336 remove rendered-->
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
-					<p:ajax event="change" update=":form:secretryDropDownPanel" process="@all"
+					<p:ajax event="change" update="secretryDropDownPanel" process="@this"
 					   onstart="blockWidget.show();" 
-					   oncomplete="blockWidget.hide();"/>
+					   oncomplete="blockWidget.hide();"
+					   listener="#{amendmentBackingBean.resetPbqcAuthoritySelection}" /> <!-- #24336 -->
 				</p:selectBooleanCheckbox><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.pbqc']}" style="text-align:left" />
+
+				<!-- #24336 - Start -->
+				<p:outputLabel value="#{lbl['lbl.ct.committee.type']}" style="text-align:left" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.committee.type']}" />
+				<!-- #24336 - End -->
+
 			</h:panelGrid>
-			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
-				<p:selectBooleanCheckbox
-					id ="approverAuthorityReq"
+			<f:verbatim /> <!-- #24336 remove rendered-->
+
+			<!-- #24336 - Start -->
+			<h:panelGroup id="secretryDropDownPanel">
+				
+				<h:panelGrid rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}" >
+					<p:selectOneRadio id="committeeType" styleClass="committee-type-radio" layout="pageDirection"
+						value="#{amendmentBackingBean.managedBean.committeeType}" disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
+						<f:selectItems value="#{amendmentBackingBean.getCommitteeTypeSelectItems()}" />
+						<p:ajax event="change" update="secretaryPanel" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+					</p:selectOneRadio>
+				</h:panelGrid>
+
+				<h:panelGrid id="secretaryPanel" columns="3" columnClasses="columnWidth170" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
+					<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
+					<p:spacer width="2" />
+					<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}"
+						label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;"
+						disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.managedBean.committeeType eq null}">
+						<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+			</h:panelGroup>
+			<f:verbatim/>
+			<!-- #24336 - End -->
+
+			<h:panelGrid columns="3"> <!-- #24336 remove rendered -->
+				<p:selectBooleanCheckbox id="approverAuthorityReq"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
-					disabled="#{!amendmentBackingBean.isContractAmountAmend() or ctBackingBean.managedBean.viewSCL}" /><!-- Enhancement 15851 - shaqimi -->
+					disabled="#{!amendmentBackingBean.isContractAmountAmend() or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableAmendDetails}" /><!-- Enhancement 15851 - shaqimi, Redmine- #40000 -->
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.contract.approval']}" style="text-align:left" />
 			</h:panelGrid>
 		</h:panelGrid>
-				
-		<h:panelGroup id="secretryDropDownPanel" rendered="#{!ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
-			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170" rendered="#{amendmentBackingBean.getAmendValue(3) and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
-				<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
-				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}" 
-					label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;" disabled="#{ctBackingBean.managedBean.viewSCL}">
-		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
-		       	</p:selectOneMenu>
-		  	</h:panelGrid>
-		</h:panelGroup>
 		
 		<h:panelGroup id="approvalLetterPanel">
 			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}">
@@ -379,43 +334,46 @@
 		     		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName}" 
 		           		rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath != null}"
 		          		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath, ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName)}" />					
-		     		<p:spacer width="3"/>
+		     		<p:spacer width="3" />
 		         	<p:commandLink onclick="deleteApprovalLetterDlg.show();" 
 			           rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath != null}"
 			           disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			      	</p:commandLink>
-			      	<p:spacer width="1"/>
+			      	<p:spacer width="1" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approval.letter']}" />
 				</h:panelGroup>
     		</h:panelGrid> 
   		</h:panelGroup>
-   		<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
-    		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-      		<div class="ppRightBtn">
-		 		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		   			update=":form:uploadApprovalLetter, :form:uploadApprovalLetterDlg" 
-		 			action="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.contractVer.approvalLetterAttachement)}" oncomplete="deleteApprovalLetterDlg.hide();"/>
-				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" type="button" />
-			</div>
-   		</p:confirmDialog>
-  		<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg" modal="true" resizable="false"
-	   		width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-	   		onShow="singleUploadListener(approvalLetterUploadWV);">
-			<p:ajax event="close" />
-			<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false" id="approvalLetterId"
-				fileUploadListener="#{ctBackingBean.fileUpload}"  showButtons="false"
-				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
-				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="approvalLetterUploadWV"
-				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-				update="uploadApprovalLetter" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
-			</p:fileUpload>
-			<f:facet name="footer">
-			<div class="ppRightBtn">
-		    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadApprovalLetterDlg.hide();" />
-   			</div>
-   			</f:facet>
-		</p:dialog>
-	</p:panel>
+
+	</p:panel> <!-- #24336 -->
+	
+	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+				update=":form:uploadApprovalLetter, :form:uploadApprovalLetterDlg" 
+				action="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.contractVer.approvalLetterAttachement)}" oncomplete="deleteApprovalLetterDlg.hide();"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" type="button" />
+		</div>
+	</p:confirmDialog>
+	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg" modal="true" resizable="false"
+		width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+		onShow="singleUploadListener(approvalLetterUploadWV);">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false" id="approvalLetterId"
+			fileUploadListener="#{ctBackingBean.fileUpload}"  showButtons="false"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="approvalLetterUploadWV"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+			update="uploadApprovalLetter" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadApprovalLetterDlg.hide();" />
+		</div>
+		</f:facet>
+	</p:dialog>
+	
 </ui:composition>

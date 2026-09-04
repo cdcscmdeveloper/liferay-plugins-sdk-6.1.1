@@ -136,8 +136,7 @@
 					oncomplete="blockWidget.hide()"
 					update=":form" process="@this"
 					action="#{backingBean.otherDescriptionEdit(catBean)}"
-					rendered="#{(catBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-					catBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+					rendered="#{backingBean.rulesEditOtherDescription(catBean, SupplierManagementConst.SECTION_MAIN)}">
 					<p:graphicImage
 						value="/css/images/design/edit.png"
 						title="#{lbl['lbl.sm.edit']}"
@@ -487,8 +486,6 @@
 				</p:outputLabel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;">
-				<h:outputText value="#{lbl['lbl.sm.no.available']}"
-					rendered="#{empty aprvdCatNBean.otherDesc}" />
 				<!-- 36504 - START -->
 				<p:inputTextarea id="otherDesc2" maxlength="5000"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
@@ -503,15 +500,14 @@
 				<p:graphicImage
 						value="/css/images/design/icon_alert.png"
 						style="float:right;"
-						rendered="#{not empty catBean.smSuppCatOtherDescHistory}" />
+						rendered="#{not empty aprvdCatNBean.smSuppCatOtherDescHistory}" />
 				<p:commandLink
 					partialSubmit="true"
 					onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					update=":form" process="@this"
 					action="#{backingBean.otherDescriptionEdit(aprvdCatNBean)}"
-					rendered="#{(aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-					aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+					rendered="#{backingBean.rulesEditOtherDescription(aprvdCatNBean, SupplierManagementConst.SECTION_MAIN)}">
 					<p:graphicImage
 						value="/css/images/design/edit.png"
 						title="#{lbl['lbl.sm.edit']}"
@@ -549,12 +545,6 @@
 		update="@form"/>
 		
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory
-		categoryCodeList="#{backingBean.managedBean.activeCategoryList}"
-		applNo="#{backingBean.managedBean.smAppl.applNo}"
-		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
-		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"
-		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
 	<ac:otherDescriptionEdit />
     <!-- 36504 - END -->
 </ui:composition>

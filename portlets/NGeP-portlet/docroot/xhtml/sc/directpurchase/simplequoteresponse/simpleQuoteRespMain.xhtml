@@ -7,8 +7,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
+		<ui:remove>#5426 start - start</ui:remove>
 		<p:messages showDetail="true" autoUpdate="#{simpleQuoteBackingBean.managedBean.autoUpdate}" closable="true"
-			severity="error, info" showSummary="false" />
+			severity="error, info" showSummary="false" rendered="#{param['javax.faces.source'] ne poll.clientId}"/>
+		<ui:remove>#5426 - end</ui:remove>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>

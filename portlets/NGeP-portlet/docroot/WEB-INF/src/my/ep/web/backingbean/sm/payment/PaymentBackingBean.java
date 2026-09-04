@@ -372,6 +372,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					+ resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			
+			//#38377 (reload from DB if email updated using my account menu)
+			pmUser = SmCommonUtil.getUserByUserId(pmUser.getUserId());
 
 			this.getManagedBean().setOrderId(
 					resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
@@ -428,7 +431,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 							.getManagedBean().getBillDesc(), this
 							.getManagedBean().getCountry(),
 							this.getCancelUrl(), this.responseUrl,
-							this.callbackUrl));
+							this.callbackUrl, new FacesScopes().getUserLocale()
+									.getLanguage()));
 			log.info("#38377##########"+this.getManagedBean().getPayLoad());
 			
 			return "paymentRequestSubmission";

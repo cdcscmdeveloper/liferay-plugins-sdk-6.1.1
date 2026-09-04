@@ -82,6 +82,15 @@ import my.ep.web.vo.SmSectionEditorVO;
 import org.apache.commons.lang3.StringUtils;
 //#34031
 import my.ep.persistence.entity.sm.SmRevisit;
+// #9299 - Start
+import my.ep.biz.service.sm.compexp.ISmCompExpSO;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.sm.compexp.SmCompExpReqDTO;
+import my.ep.persistence.entity.sm.SmCompExpMaster;
+import my.ep.persistence.logging.LogKey;
+import my.ep.util.SLAUtils;
+//#9299 - End
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -365,7 +374,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupplier;
 	private boolean otherDescChangeSupPO;
 	private boolean otherDescChangeSupApprover;
+	private boolean otherDescChangeMaintenance;
+	private boolean authoriseUser;
 	private String otherDescEdited;
+	private String otherDescOld;
+	private SmSupplierCategory historySuppCategory;
+	private SmSupplierCategory selectedCategory;
+	private List<SmSupplierCategory> historyOtherDescList;
+	private List<SmSupplierCategory> supProfileHistoryOtherDesc;
 	// 36504 - END
 	
 	public String getSupportingDocMode() {
@@ -403,6 +419,10 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmRevisit currentSmRevisit;
 	// #34031 End=
 	private Long currRegStatusId;
+	// #9299 Start
+	private transient IPagingDataModel<SmCompExpMaster> masterAllDataModel = new MasterAllPagingDataModel();
+	private LogKey logKey = new LogKey();
+	// #9299 End
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2748,6 +2768,142 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
 		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
 	}
+	
+	/**
+	 * @return the historySuppCategory
+	 */
+	public SmSupplierCategory getHistorySuppCategory() {
+		return historySuppCategory;
+	}
+
+	/**
+	 * @param historySuppCategory the historySuppCategory to set
+	 */
+	public void setHistorySuppCategory(SmSupplierCategory historySuppCategory) {
+		this.historySuppCategory = historySuppCategory;
+	}
+	
+	/**
+	 * @return the selectedCategory
+	 */
+	public SmSupplierCategory getSelectedCategory() {
+		return selectedCategory;
+	}
+
+	/**
+	 * @param selectedCategory the selectedCategory to set
+	 */
+	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
+		this.selectedCategory = selectedCategory;
+	}
+	
+	/**
+	 * @return the historyOtherDescList
+	 */
+	public List<SmSupplierCategory> getHistoryOtherDescList() {
+		return historyOtherDescList;
+	}
+
+	/**
+	 * @param historyOtherDescList the historyOtherDescList to set
+	 */
+	public void setHistoryOtherDescList(
+			List<SmSupplierCategory> historyOtherDescList) {
+		this.historyOtherDescList = historyOtherDescList;
+	}
+	
+	/**
+	 * @return the otherDescOld
+	 */
+	public String getOtherDescOld() {
+		return otherDescOld;
+	}
+
+	/**
+	 * @param otherDescOld the otherDescOld to set
+	 */
+	public void setOtherDescOld(String otherDescOld) {
+		this.otherDescOld = otherDescOld;
+	}
+	
+	/**
+	 * @return the otherDescChangeMaintenance
+	 */
+	public boolean isOtherDescChangeMaintenance() {
+		return otherDescChangeMaintenance;
+	}
+
+	/**
+	 * @param otherDescChangeMaintenance the otherDescChangeMaintenance to set
+	 */
+	public void setOtherDescChangeMaintenance(boolean otherDescChangeMaintenance) {
+		this.otherDescChangeMaintenance = otherDescChangeMaintenance;
+	}
+	
+	/**
+	 * @return the supProfileHistoryOtherDesc
+	 */
+	public List<SmSupplierCategory> getSupProfileHistoryOtherDesc() {
+		return supProfileHistoryOtherDesc;
+	}
+
+	/**
+	 * @param supProfileHistoryOtherDesc the supProfileHistoryOtherDesc to set
+	 */
+	public void setSupProfileHistoryOtherDesc(
+			List<SmSupplierCategory> supProfileHistoryOtherDesc) {
+		this.supProfileHistoryOtherDesc = supProfileHistoryOtherDesc;
+	}
+	
+	/**
+	 * @return the authoriseUser
+	 */
+	public boolean isAuthoriseUser() {
+		return authoriseUser;
+	}
+
+	/**
+	 * @param authoriseUser the authoriseUser to set
+	 */
+	public void setAuthoriseUser(boolean authoriseUser) {
+		this.authoriseUser = authoriseUser;
+	}
 	// 36504 - END
 	
+	// 9299 - Start
+	private class MasterAllPagingDataModel extends PagingDataModel<SmCompExpMaster> {
+
+		private static final long serialVersionUID = 1L;
+
+		public MasterAllPagingDataModel() {
+			super("MasterAllDataTable", true);
+		}
+
+		@Override
+		public ISearchResultBean<SmCompExpMaster> pageChangeListener(ISearchBean<SmCompExpMaster> searchBean) {
+
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setSupplierId(getSmSupplier().getSupplierId());
+
+			try {
+				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return smCompExpSo.retriveSmCompExpMasterAllList(reqDTO, searchBean).getMasterResultBean();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", getSmSupplier().getSupplierId().toString(),
+						"ISmCompExpSO", logKey.getUserId(), e);
+				throw new EpException(MessageConst.ERROR_000001);
+			}
+		}
+
+	}
+
+	public IPagingDataModel<SmCompExpMaster> getMasterAllDataModel() {
+		return masterAllDataModel;
+	}
+
+	public void setMasterAllDataModel(IPagingDataModel<SmCompExpMaster> masterAllDataModel) {
+		this.masterAllDataModel = masterAllDataModel;
+	}
+	// 9299 - END
+
 }
