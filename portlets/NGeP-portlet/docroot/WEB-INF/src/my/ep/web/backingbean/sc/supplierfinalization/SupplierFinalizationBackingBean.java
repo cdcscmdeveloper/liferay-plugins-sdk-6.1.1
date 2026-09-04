@@ -1069,20 +1069,66 @@ public class SupplierFinalizationBackingBean extends
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getReasonCodeCheckboxValues(String categoryCode) {
-		SelectItem[] items = null;
-		try {
-			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(categoryCode);
+	    SelectItem[] items = null;
 
-			items = new SelectItem[reasonDescs.size()];
-			int i = 0;
-			for (PmReasonDesc reasonDesc : reasonDescs) {
-				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-		return items;
+	    try {
+	        List<PmReasonDesc> reasonDescs =
+	            ReasonHelper.getInstance().getReasonDescList(categoryCode);
+
+	        // Sort Others to the bottom
+	        Collections.sort(reasonDescs, new Comparator<PmReasonDesc>() {
+
+	            @Override
+	            public int compare(PmReasonDesc o1, PmReasonDesc o2) {
+
+	                String code1 = o1.getPmReason().getReasonCode();
+	                String code2 = o2.getPmReason().getReasonCode();
+
+	                boolean isOthers1 =
+	                    JUSTIFICATION_OTHERS.equalsIgnoreCase(code1);
+
+	                boolean isOthers2 =
+	                    JUSTIFICATION_OTHERS.equalsIgnoreCase(code2);
+
+	                if (isOthers1 && !isOthers2) {
+	                    return 1;
+	                }
+
+	                if (!isOthers1 && isOthers2) {
+	                    return -1;
+	                }
+
+	                return 0;
+	            }
+	        });
+
+	        items = new SelectItem[reasonDescs.size()];
+
+	        int i = 0;
+
+	        for (PmReasonDesc reasonDesc : reasonDescs) {
+
+	            items[i++] = new SelectItem(
+	                reasonDesc.getPmReason().getReasonCode(),
+	                reasonDesc.getReasonDesc()
+	            );
+	        }
+
+	    } catch (Exception e) {
+
+	        log.error(e.getMessage());
+
+	        FacesContext.getCurrentInstance().addMessage(
+	            null,
+	            new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                e.toString(),
+	                e.getMessage()
+	            )
+	        );
+	    }
+
+	    return items;
 	}
 	//#34860 End
 	
@@ -4874,7 +4920,6 @@ return	remarksNotFound;
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
-		List<ScAttachment> attachments = new ArrayList<>(); //#25651
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getDocumentList());
@@ -4899,29 +4944,10 @@ return	remarksNotFound;
 				}
 			}
 		}
-		
-		//#25651 - Start
-		attachments.addAll(scAttachments);
-		List<Object[]> reportDetailList = reportDetailAttachmentType();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
-			for(ScQtFinalizationReportDetail finalizationreport:scQtFinalizationReportDetail){
-				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport.getDefinationType().getParameterCode())){
-					for (Object[] reportDetail : reportDetailList) {
-						String codeReportName = (String) reportDetail[0];
-						String fileReportName = (String) reportDetail[1];
-					    if(codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())){
-					    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
-					    }
-					}
-				}
-			}
-		}
-		//#25651 - Start
 
 		// Generate all the reports before submission
-		if (!skipDownload) { // 38523
-			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
+		if (!skipDownload) {
+			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
 	}
@@ -13498,12 +13524,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	public void checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority() {
 
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());		 
+		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+		// #27502 -start-
 		boolean isBpkCentralContract = isBpkCentralContract(qtBackingBean.getManagedBean().getQt());
 
 		if (isBpkCentralContract) {
 			return;
 		}
+		// #27502 -end-
 
 		final boolean isItemize = getManagedBean().isItemize();
 		final String committeeType = getManagedBean().getCommitteeType();
@@ -13597,7 +13625,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByItem",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByItem",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -13638,7 +13668,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {	
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByPackage",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByPackage",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 
