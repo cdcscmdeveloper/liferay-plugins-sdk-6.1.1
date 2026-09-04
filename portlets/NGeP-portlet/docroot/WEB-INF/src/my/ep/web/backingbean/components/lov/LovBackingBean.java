@@ -47,6 +47,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.report.ct.CtReportBackingBean; //#29416
 import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBackingBean; //#29416
+import my.ep.web.backingbean.report.ct.cc.ContractItemUsageMonitoringDtlsBackingBean; //#34889
 import my.ep.web.bean.LovBean;
 import my.ep.web.bean.LovColumnBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -105,6 +106,8 @@ public class LovBackingBean implements Serializable {
 	private final String itemUsageMonitoringBeanId = "CT_CONTRACT_ITEM_USAGE_MONITORING";
 	private LovBean lovBeanReset = new LovBean();
 	// End - #29416
+	ContractItemUsageMonitoringDtlsBackingBean  ccContractItemUsageMonitoringDtlsReportBB = new ContractItemUsageMonitoringDtlsBackingBean(); //#34889
+
 	
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
@@ -229,7 +232,9 @@ public class LovBackingBean implements Serializable {
 					searchBean.setDocNo(ctReportBB.getManagedBean().getContractNo());
 				} else if (ccContractItemMonitoringRptBB.getManagedBean().getContractNo() != null) {
 					searchBean.setDocNo(ccContractItemMonitoringRptBB.getManagedBean().getContractNo());
-				}
+				} else if (ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) { //#34889
+					searchBean.setDocNo(ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo()); //#34889
+				} //#34889
 
 				if (getLovBeanReset().isResetFlag()) {
 					searchBean.setResetAction(true);
@@ -401,11 +406,9 @@ public class LovBackingBean implements Serializable {
 						String expression = "";
 						if (unitExp != null && nameExp != null) {
 							expression = String.format(
-									"#{entity.%s} #{entity.%s}<br/>#{entity.%s}",
-									itemCodeExp, unitExp, nameExp);
+									"#{entity.%s} #{entity.%s}<br/>#{entity.%s}", itemCodeExp, unitExp, nameExp);
 						} else if (unitExp != null) {
-							expression = String.format("#{entity.%s} #{entity.%s}",
-									itemCodeExp, unitExp);
+							expression = String.format("#{entity.%s} #{entity.%s}", itemCodeExp, unitExp);
 						} else {
 							expression = String.format("#{entity.%s}", itemCodeExp);
 						}
@@ -429,14 +432,16 @@ public class LovBackingBean implements Serializable {
 //			initSearchBean();
 //		}
 		resetAction();
-		// Start - #29416
+		// Start - #29416 || #34889
 		if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 			boolean handledError = false;
 			if ("ctReportBB".equalsIgnoreCase(backingBean)) {
 				handledError = ctReportBB.validateBeforeExecuteLov(getContractNo());
 			} else if ("ccContractItemMonitoringRptBB".equalsIgnoreCase(backingBean)) {
 				handledError = ccContractItemMonitoringRptBB.validateBeforeExecuteLov(getContractNo());
-			}
+			} else if ("ccContractItemUsageMonitoringDtlsReportBB".equals(backingBean)){ //#34889
+				handledError = ccContractItemUsageMonitoringDtlsReportBB.validateBeforeExecuteLov(getContractNo()); //#34889
+			} //#34889
 
 			if (handledError) {
 				// Set a callback parameter to indicate an error
@@ -446,7 +451,7 @@ public class LovBackingBean implements Serializable {
 				RequestContext.getCurrentInstance().addCallbackParam("lovValidationError", false);
 			}
 		}
-		// End - #29416
+		// End - #29416 || #34889
 	}
 	
 	/**
@@ -738,6 +743,7 @@ public class LovBackingBean implements Serializable {
 		if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 			ctReportBB.getManagedBean().setLovItemReportNameTriggered(true);
 			ccContractItemMonitoringRptBB.getManagedBean().setLovItemReportNameTriggered(true);
+			ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setLovItemReportNameTriggered(true); //#34889
 		}
 		// End - #29416
 		if(this.getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
@@ -795,6 +801,7 @@ public class LovBackingBean implements Serializable {
 					&& itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 				ctReportBB.resetSearch();
 				ccContractItemMonitoringRptBB.resetSearch();
+				ccContractItemUsageMonitoringDtlsReportBB.resetSearch(); //#34889
 			}
 			// End - #29416
 			if(selectedEntities != null && !selectedEntities.isEmpty()) {
@@ -979,6 +986,12 @@ public class LovBackingBean implements Serializable {
 	}
 	// End - #29416
 	
+	// Start - #34889
+	public void allMinistrySelection() {
+		ccContractItemUsageMonitoringDtlsReportBB.selectAllMinistry();
+	}
+	// End - #34889
+	
 	private void enableDisplayResult() {
 		getLovBean().setDisplayResultWhenFirstLoad(true);
 	}
@@ -1066,7 +1079,16 @@ public class LovBackingBean implements Serializable {
 		this.persistedEntities = persistedEntities;
 	}
 	//20200909@akmal - Enhancement28951 - End
-	// Start - #29416
+	
+	// Start Fix - #34889
+	public boolean isCentralItemUsageMonitoringDetailsReport() {
+		boolean isCheckValidity = ctReportBB.isCentralItemUsageMonitoringDtls();
+		return isCheckValidity;
+	}
+
+	// End Fix - #34889
+	
+	// Start - #29416 || #34889
 	public String getContractNo() {
 		String contractNo = "";
 		if (ctReportBB != null && ctReportBB.getManagedBean().getContractNo() != null) {
@@ -1074,11 +1096,14 @@ public class LovBackingBean implements Serializable {
 		} else if (ccContractItemMonitoringRptBB != null
 				&& ccContractItemMonitoringRptBB.getManagedBean().getContractNo() != null) {
 			contractNo = ccContractItemMonitoringRptBB.getManagedBean().getContractNo();
-		}
+		} else if (ccContractItemUsageMonitoringDtlsReportBB != null
+				&& ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) { //#34889
+			contractNo = ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo(); //#34889
+		} //#34889
 		return contractNo;
 	}
 
-	// End - #29416
+	// End - #29416 || #34889
 
 	// Start - #29416
 	public IPagingDataModel<AutUser> getSearchDataModelMultiSelection() {

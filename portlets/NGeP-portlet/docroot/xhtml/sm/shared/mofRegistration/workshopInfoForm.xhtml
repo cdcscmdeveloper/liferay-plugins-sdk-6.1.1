@@ -115,7 +115,7 @@
 
 	</p:panel>
 	<!-- 29379 - Site Visit Grouping Enhancement -28775 -->
-	<p:dialog width="1200px" height="500px"
+	<p:dialog width="#{backingBean.managedBean.smAppl.siteVisitGroup ? '1200px' : '700px'}" height="500px"
 		header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="workShopDialog">
@@ -296,7 +296,10 @@
 	
 			</table>
 			<!-- 29379 - Site Visit Grouping Enhancement -28775 -->
-			<ui:include src="/xhtml/sm/shared/mofRegistration/employeeInfoForm.xhtml" />
+			<ui:fragment rendered="#{backingBean.managedBean.smAppl.siteVisitGroup}">
+				<ui:include src="/xhtml/sm/shared/mofRegistration/employeeInfoForm.xhtml" />
+			</ui:fragment>
+			<!-- 28775 - end -->
 			<br />
 			<div align="right">
 				<!-- #34159 - START - add param disablevalidation, #28775 -->
@@ -327,11 +330,10 @@
 		content="#{lbl['lbl.msg.confirm.delete']}"
 		update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" />
 
-	<!-- 29379 - Site Visit Grouping Enhancement -28775  START-->
 	<ac:confirmationPopup id="empDeletePopUpId" widget="empDeletePopUp"
+		loadingWidget="workShopBlockWidget"
 		okAction="backingBean.removeEmployee()" width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}"
-		update=":#{p:component('pnlEmployeeInfo')}" />
-	<!-- 29379 - Site Visit Grouping Enhancement -28775  END-->
+		update="@([id$=pnlEmployeeInfo])" />
 </ui:composition>

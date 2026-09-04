@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -31,7 +32,6 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
@@ -154,6 +154,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Node;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
@@ -2407,15 +2410,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
 
-		//#21692 - Start
-		String hostUrl = "";
-		if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
-			hostUrl = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl");
-		} else {
-			FacesScopes fs = new FacesScopes();
-			hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();
-		}
-		//#21692 - End
+		FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() + ":"
+				+ fs.getRequest().getServerPort();
 		boolean isLocLevelDistrictContainsDivision = false;	// Bug #38731@Syazani 20/08/2025
 		context.put("hostUrl", hostUrl);
 
@@ -2775,14 +2772,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			quationTenderReqDTO.setScReports(reports);
 			qtDocumentSO.saveReportAndAttachment(quationTenderReqDTO);
 			
-		}
-		//#21692 - Start 
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
-		}
-		//#21692 - End
-		finally {
+		} finally {
 			qtDocumentSO = null;
 		}
 		
@@ -3062,127 +3052,202 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 		return configRuleValue;
 	}
-	
-	private TplDocMaster cloneDocMasterDocSectionDetails(TplDocMaster templateDocMaster,ScQtDocReport scQtDocReport){
+
+	private TplDocMaster cloneDocMasterDocSectionDetails(TplDocMaster templateDocMaster, ScQtDocReport scQtDocReport) {
 		// clone TplDocMaster Details
-				TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster
-						.cloneEntity();
-				tplDocMaster.setDocMasterId(null);
-				tplDocMaster.setOrgProfile(null);
-				tplDocMaster.setTplDocSections(null);
-				// tplDocMaster.setTplDocSectionCollection(null);
-				tplDocMaster.setDocTitle(scQtDocReport.getTitle());
-				tplDocMaster.setDocName(scQtDocReport.getTitle());
+		TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster.cloneEntity();
+		boolean isNeedToModify = isNeedToModify(tplDocMaster); // #38714
 
-				setUserDetails(tplDocMaster);
+		tplDocMaster.setDocMasterId(null);
+		tplDocMaster.setOrgProfile(null);
+		tplDocMaster.setTplDocSections(null);
+		tplDocMaster.setDocTitle(scQtDocReport.getTitle());
+		tplDocMaster.setDocName(scQtDocReport.getTitle());
 
-				// clone tplDocSection Details
-				/*
-				 * tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
-				 * List<TplDocSection> docSections =
-				 * templateDocMaster.getTplDocSections(); for (TplDocSection
-				 * tplDocSection : docSections) { TplDocSection section =
-				 * (TplDocSection) tplDocSection.cloneEntity();
-				 * section.setDocSectionId(null); section.setParent(null); //
-				 * Temporarily am setting null, need to confirm once
-				 * section.setTplDocMaster(tplDocMaster);
-				 * 
-				 * setUserDetails(section);
-				 * tplDocMaster.getTplDocSections().add(section); }
-				 */
+		setUserDetails(tplDocMaster);
 
-				tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
-				Map<TplDocSection, TplDocSection> originalToCloneMap = new HashMap<>(); //#34873
-				List<TplDocSection> docSectionCOllection = templateDocMaster
-						.getTplDocSectionCollection();
-				for (TplDocSection tplDocSection : docSectionCOllection) {
-					TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
-					//log.info("===doc section name"+section.getSectionTitle()+"section content"+section.getSectionContent());
-					if(TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE.equalsIgnoreCase(section.getSectionTitle())){
-						String title=TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE+TemplateDocConst.PARAM_SPACE+getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), myLocale).toUpperCase();
-						section.setSectionName(title);
-						section.setSectionTitle(title);
-					}
-					section.setDocSectionId(null);
-					//#34873
-					//section.setParent(null); // Temporarily am setting null, need to
-												// confirm once
-					section.setTplDocMaster(tplDocMaster);
+		tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
 
-					setUserDetails(section);
-					tplDocMaster.getTplDocSectionCollection().add(section);
-					originalToCloneMap.put(tplDocSection, section); //#34873
-				}
-				
-				//#34873 - start
-				for (TplDocSection section : tplDocMaster.getTplDocSectionCollection()) {
-			        TplDocSection originalParent = section.getParent();
-			        if (originalParent != null) {
-			            TplDocSection cloneParent = originalToCloneMap.get(originalParent);
-			            section.setParent(cloneParent);
-			        }
-			    }
-				//#34873 - end
+		Map<TplDocSection, TplDocSection> originalToCloneMap = new HashMap<>(); // #34873
+		List<TplDocSection> docSectionCOllection = templateDocMaster.getTplDocSectionCollection();
 
-				// Procurement Category
-				PmParameter procurementCategory = scQtDocReport.getScQt()
-						.getPmProcurementCategory();
-				tplDocMaster.setProcurementCategory(procurementCategory);
+		for (TplDocSection tplDocSection : docSectionCOllection) {
+			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
 
-				// Process Type
-				PmParameter processType = getPmParameter(
-						ParameterTypeConst.TPL_DOC_PROCESS_TYPE,
-						ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
-				tplDocMaster.setProcessType(processType);
+			if (TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE.equalsIgnoreCase(section.getSectionTitle())) {
+				String title = TemplateDocConst.PARAM_DOC_SECTION_HEADER_TITLE + TemplateDocConst.PARAM_SPACE
+						+ getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), myLocale).toUpperCase();
+				section.setSectionName(title);
+				section.setSectionTitle(title);
+			}
 
-				// Template Type
-				PmParameter templateType = getPmParameter(
-						ParameterTypeConst.TEMPLATE_TYPE,
-						ParameterConst.TEMPLATE_TYPE_MINISTRY);
-				tplDocMaster.setTemplateType(templateType);
+			section.setDocSectionId(null);
+			// #34873
+			// section.setParent(null); // Temporarily am setting null, need to confirm once
+			section.setTplDocMaster(tplDocMaster);
 
-				// Item Type - Service & Product
-				PmParameter itemType = null;
-				if (procurementCategory.getParameterCode().equals(
-						ParameterConst.PROCUREMENT_CATEGORY_BAHAN_MENTAH)
-						|| procurementCategory
-								.getParameterCode()
-								.equals(ParameterConst.PROCUREMENT_CATEGORY_KAWALAN_KESELAMATAN)
-						|| procurementCategory.getParameterCode().equals(
-								ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN)
-						|| procurementCategory.getParameterCode().equals(
-								ParameterConst.PROCUREMENT_CATEGORY_MTO)
-						|| procurementCategory
-								.getParameterCode()
-								.equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN_PEMINDAHAN_BARANG)
-						|| procurementCategory.getParameterCode().equals(
-								ParameterConst.PROCUREMENT_CATEGORY_HIRE_PURCHASE)) {
-					itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE,
-							ParameterConst.ITEM_TYPE_SERVICE);
-				} else if (procurementCategory.getParameterCode().equals(
-						ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
-						|| procurementCategory
-								.getParameterCode()
-								.equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
-						|| procurementCategory.getParameterCode().equals(
-								ParameterConst.PROCUREMENT_CATEGORY_ICT)
-						|| procurementCategory.getParameterCode().equals(
-								ParameterConst.PROCUREMENT_CATEGORY_OTHERS)
-						|| procurementCategory.getParameterCode().equals(
-								ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)) {
-					itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE,
-							ParameterConst.ITEM_TYPE_PRODUCT);
-				}
-				tplDocMaster.setItemTypeId(itemType);
+			// #38714 -start-
+			// Check Content to update
+			if (isNeedToModify) {
+				updateContent(section);
+			}
+			// #38714 -end-
 
-				// Status
-				tplDocMaster.setPmStatus(getPmStatusByStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT));
+			setUserDetails(section);
+			tplDocMaster.getTplDocSectionCollection().add(section);
+			originalToCloneMap.put(tplDocSection, section); // #34873
+		}
 
-				tplDocMaster.setScReport(scQtDocReport);
-				
-				return tplDocMaster;
+		// #34873 - start
+		for (TplDocSection section : tplDocMaster.getTplDocSectionCollection()) {
+			TplDocSection originalParent = section.getParent();
+			if (originalParent != null) {
+				TplDocSection cloneParent = originalToCloneMap.get(originalParent);
+				section.setParent(cloneParent);
+			}
+		}
+		// #34873 - end
+
+		// Procurement Category
+		PmParameter procurementCategory = scQtDocReport.getScQt().getPmProcurementCategory();
+		tplDocMaster.setProcurementCategory(procurementCategory);
+
+		// Process Type
+		PmParameter processType = getPmParameter(ParameterTypeConst.TPL_DOC_PROCESS_TYPE,
+				ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+		tplDocMaster.setProcessType(processType);
+
+		// Template Type
+		PmParameter templateType = getPmParameter(ParameterTypeConst.TEMPLATE_TYPE,
+				ParameterConst.TEMPLATE_TYPE_MINISTRY);
+		tplDocMaster.setTemplateType(templateType);
+
+		// Item Type - Service & Product
+		PmParameter itemType = null;
+		if (procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_BAHAN_MENTAH)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_KAWALAN_KESELAMATAN)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_MTO)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN_PEMINDAHAN_BARANG)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_HIRE_PURCHASE)) {
+			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_SERVICE);
+		} else if (procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_ICT)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_OTHERS)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)) {
+			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_PRODUCT);
+		}
+		tplDocMaster.setItemTypeId(itemType);
+
+		// Status
+		tplDocMaster.setPmStatus(getPmStatusByStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT));
+
+		tplDocMaster.setScReport(scQtDocReport);
+
+		return tplDocMaster;
 	}
-	
+
+	// #38714 - Start
+	/**
+	 * @param obj
+	 */
+	private static void updateContent(TplDocSection obj) {
+
+		if (obj.getSectionContent() != null && !obj.getSectionContent().isEmpty()) {
+
+			obj.setSectionContent(normalizeContentWithJustify(obj.getSectionContent()));
+		}
+	}
+	// #38714 -end-
+
+	// #38714 -start-
+	/**
+	 * @param tplDocMaster
+	 * @return
+	 */
+	private static boolean isNeedToModify(TplDocMaster tplDocMaster) {
+
+		String processType = tplDocMaster.getProcessType().getParameterCode();
+		String procurementCategory = tplDocMaster.getProcurementCategory().getParameterCode();
+
+		if (!tplDocMaster.isRecordStatus() || processType == null || procurementCategory == null) {
+			return false;
+		}
+
+		// Define allowed pairs (processType - list of procurement categories)
+		Map<String, List<String>> allowedPairs = new HashMap<>();
+		allowedPairs.put(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD,
+				Arrays.asList(ParameterConst.PROCUREMENT_CATEGORY_OTHERS));
+
+		List<String> allowedCategories = allowedPairs.get(processType);
+		if (allowedCategories == null) {
+			return false;
+		}
+
+		String doctitle = TemplateDocConst.PARAM_DOCTITLE_QT + TemplateDocConst.PARAM_SPACE
+				+ TemplateDocConst.PARAM_HIGH_FUN + TemplateDocConst.PARAM_SPACE
+				+ TemplateDocConst.PARAM_DOCTITLE_QT_QUOTATION;
+
+		if (doctitle.equalsIgnoreCase(tplDocMaster.getDocName())) {
+
+			// Case-insensitive check
+			for (String allowedCategory : allowedCategories) {
+				if (allowedCategory.equalsIgnoreCase(procurementCategory)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+	// #38714 -end-
+
+	// #38714 -start-
+	/**
+	 * @param content
+	 * @return
+	 */
+	private static String normalizeContentWithJustify(String content) {
+		if (content == null || content.trim().isEmpty()) {
+			return "";
+		}
+
+		Document doc = Jsoup.parseBodyFragment(content);
+		StringBuilder finalHtml = new StringBuilder();
+
+		// Temporary buffer to accumulate consecutive non-<br> nodes
+		StringBuilder textBuffer = new StringBuilder();
+
+		for (Node node : doc.body().childNodes()) {
+			if (node.nodeName().equals("br")) {
+				// Flush accumulated text before adding <br>
+				if (textBuffer.length() > 0) {
+					finalHtml.append("<div style=\"text-align: justify;\">").append(textBuffer.toString().trim())
+							.append("</div>");
+					textBuffer.setLength(0); // reset buffer
+				}
+				// Convert <br> to <div><br /></div>
+				finalHtml.append("<div><br /></div>");
+			} else {
+				// Accumulate text or inline HTML
+				textBuffer.append(node.outerHtml());
+			}
+		}
+
+		// Flush remaining text
+		if (textBuffer.length() > 0) {
+			finalHtml.append("<div style=\"text-align: justify;\">").append(textBuffer.toString().trim())
+					.append("</div>");
+		}
+
+		return finalHtml.toString();
+	}
+	// #38714 - End
+
 	// Bug #36702@Syazani 28/11/2024 -- Start
 	private void splitBriefingZoneBeanText(BriefingZoneBean zoneBean) {
 		List<ScQtBsvDtl> briefingLst = zoneBean.getBriefingList();

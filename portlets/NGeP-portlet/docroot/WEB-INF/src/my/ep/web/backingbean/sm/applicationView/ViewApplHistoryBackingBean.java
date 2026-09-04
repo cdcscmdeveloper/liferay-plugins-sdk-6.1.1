@@ -508,11 +508,22 @@ public class ViewApplHistoryBackingBean extends BaseReviewApplicationBackingBean
 			smAppl.setWorkflowStatus(sts.getPmStatus());
 			/*smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) ? getApplicationStatus(sts
 					.getPmStatus(), smAppl) : status);*/
-			//25792  - start
-			smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) || "N/A".equalsIgnoreCase(status) ? getApplicationStatus(sts
-					.getPmStatus(), smAppl) : status);
-			//25792 - end
-
+			// 40121 - START 
+			String RegisterStatus = ResourceBundleUtils.getMessage("lbl.sm.mof.status.registered",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			String noAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			if(smAppl.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED && 
+					status.equalsIgnoreCase(RegisterStatus)) {
+				smAppl.setWorkflowStatusDesc(noAvailable);
+			} else {
+				//25792  - start
+				smAppl.setWorkflowStatusDesc(StringUtils.isBlank(status) || "N/A".equalsIgnoreCase(status) ? getApplicationStatus(sts
+						.getPmStatus(), smAppl) : status);
+				//25792 - end
+			}
+			// 40121 - END
+			
 			if (rejectedStatus.contains(sts.getPmStatus().getStatusId()
 					.toString())) {
 				getManagedBean().setResubmitUrl(
@@ -1399,6 +1410,8 @@ public class ViewApplHistoryBackingBean extends BaseReviewApplicationBackingBean
 		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
 		Long supplierId = appl[11] != null ? Long.valueOf(appl[11].toString()) : 0L;
 		String latestAppl = null;
+		String noAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		
 		if (appl.length > 16) {
 			latestAppl = String.valueOf(appl[16]);
@@ -1406,13 +1419,13 @@ public class ViewApplHistoryBackingBean extends BaseReviewApplicationBackingBean
 			latestAppl =String.valueOf(appl[15]);
 		}
 		
-		if (mofNo.equals(SupplierManagementConst.NA_STATUS) && recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED))) {
+		if (mofNo.equalsIgnoreCase(noAvailable) && recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED))) {
 			MofAccountReqDTO reqMofDTO = new MofAccountReqDTO();
 			reqMofDTO.setSupplierId(supplierId);
 			reqMofDTO.setApplId(Long.parseLong(latestAppl));
 			MofAccountResDTO mofAccount = SmCommonUtil.getMofAccountBySuppIdAndApplId(reqMofDTO);
 			
-			if (mofAccount != null) {
+			if (mofAccount.getMofAccount() != null) {
 				mofNo = mofAccount.getMofAccount().getMofNo();
 			}
 		}
@@ -1426,6 +1439,7 @@ public class ViewApplHistoryBackingBean extends BaseReviewApplicationBackingBean
 				: new BigDecimal(0);
 		String applType = appl[1] != null ? (String) appl[1] : "";
 		String suppType = appl[2] != null ? (String) appl[2] : "";
+		String deletedStatus = appl[6] != null ? (String) appl[6] : "";
 		// 40110, 26238 - START
 		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
 		String applId = appl[10] != null ? String.valueOf(appl[10]) : "";
@@ -1440,8 +1454,11 @@ public class ViewApplHistoryBackingBean extends BaseReviewApplicationBackingBean
 		Locale locale = new FacesScopes().getUserLocale();
 		 String notAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-
-		if (recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED)) && latestAppl.equals(applId)){
+		 String deletedStatusLbl = ResourceBundleUtils.getMessage("lbl.sm.deleted.by.disciplinary.action",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		 
+		if (recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED)) && latestAppl.equals(applId) &&
+				!deletedStatusLbl.equalsIgnoreCase(deletedStatus)){
 			return notAvailable;
 		} else if (suppStatDec.toString().equals("5") && applType.equals("O")
 				&& suppType.equals("B")) {

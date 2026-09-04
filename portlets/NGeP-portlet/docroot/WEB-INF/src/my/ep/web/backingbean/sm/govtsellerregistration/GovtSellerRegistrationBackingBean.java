@@ -1043,11 +1043,13 @@ public class GovtSellerRegistrationBackingBean extends
 		setSmApplBeforeSubmit();
 		if (SmServiceLookup.getRegistrationSO()
 				.createSupplier(getRegistrationReqDTO()).isSuccessful()) {
+			//14623 - start : tukar ayat
 			SmCommonUtil.redirectToPage("/xhtml/sm/onlinereg/outputMsg",
-					MessageConst.INFO_721012, new String[] {
+					MessageConst.INFO_722685, new String[] {
 							getManagedBean().getSmPersonnel().getEmail(),
 							SmRuleHelper.getInstance().getEmailActivationDays()
 									+ "" }, null);
+			//14623 - end
 		} else {
 			throw new EpException(MessageConst.ERROR_721006);
 		}
@@ -1942,6 +1944,23 @@ public class GovtSellerRegistrationBackingBean extends
 	}
 	//13320-End
 	
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getSmPersonnel().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getSmPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+
+	public void onChangeConfirmEmail() {
+		String email = this.getManagedBean().getConfirmEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().setConfirmEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	//#34400
 	public void onCallFirstUserTncDialog(){
 		getManagedBean().setAggreeDeclareAdmin(false);

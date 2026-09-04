@@ -2884,16 +2884,6 @@ public class PmCommonUtil implements Serializable{
 		return resDTO.getUserRole();
 	}
 	
-	/* 27827 - START */
-	public static PmOrgProfile retrieveOrgProfileDtlByName(String name) {
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgName(name);
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileByName(reqDTO);
-		return orgResDTO.getPmOrgProfile();
-	}
-	/* 27827 - END */
-	
 	//START #27472 get list of roles
 	public static List<PmUserRole> getUserRolesByUserId(Long userId) {
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2905,6 +2895,41 @@ public class PmCommonUtil implements Serializable{
 		return userSO.retrieveUserRoleListByUserIds(reqDTO).getUserRoleList();
 	}
 	//END #27472
+	
+	// 34795 -start
+	public static PmUser retrieveUserWithPoRoleTaskByLoginId(String loginId) {
+		PmUser pmUser = new PmUser();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setLoginId(loginId);
+			reqDTO.setLoadPmPoRoleTask(true);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+			resDTO = userSO.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				pmUser = resDTO.getPmUser();
+			}
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770053, new String[] { loginId.toString(), e.getMessage() });
+		} finally {
+			userSO = null;
+		}
+		return pmUser;
+	}
+	// 34795 -end
+	
+	/* 27827 - START */
+	public static PmOrgProfile retrieveOrgProfileDtlByName(String name) {
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgName(name);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileByName(reqDTO);
+		return orgResDTO.getPmOrgProfile();
+	}
+	/* 27827 - END */
 	
 	//#32705 - Start
 	public static String getTypeOfCertIssuer(String idNo,

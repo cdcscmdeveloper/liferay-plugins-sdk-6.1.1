@@ -2,7 +2,9 @@ package my.ep.web.backingbean.pm.location;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -15,6 +17,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -23,6 +26,7 @@ import my.ep.biz.service.pm.common.location.ILocationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -43,6 +47,9 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+//#29642 Start
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+//#29642 End
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.VPmLocation;
 import my.ep.persistence.logging.LogKey;
@@ -50,6 +57,8 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMLocationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
@@ -57,6 +66,9 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+//#29642 Start
+import my.ep.web.util.pm.helper.ParameterHelper;
+//#29642 End
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -104,6 +116,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public void searchLocation() {
 		this.getManagedBean().setLazy(true);
+		//#29642 Start
+		if(this.getManagedBean().getLocationSearchBean().getLocationType() == null){
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.pm.location.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+
+		}
+		//#29642 End
 		searchLocation.reloadData();
 	}
 
@@ -206,7 +226,17 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							getManagedBean().getLocationSearchBean()
 									.getLocationName(), true));
 		}
+		//#29642 Start
+		if (lSearchBean.getAdditionalLocationName() != null
+				&& lSearchBean.getAdditionalLocationName().trim().length() > 0) {
 
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("locationName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getLocationSearchBean()
+									.getAdditionalLocationName(), true));
+		}
+		//#29642 End
 		if (lSearchBean.getRecordStatus() != null
 				&& lSearchBean.getRecordStatus().trim().length() > 0) {
 		searchBean.getDataFilterBeans().add(
@@ -219,7 +249,18 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								.value(), new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE))));
 			 
 		 }
-
+		//#29642 Start
+		if (lSearchBean.getAdditionalLocationType() != null && lSearchBean.getRecordAdditional().trim().length() > 0) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("additionalLocationType", SearchOperator.OPERATOR_EQUALS.value(), lSearchBean
+							.getAdditionalLocationType()));
+		} else {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("locationType", SearchOperator.OPERATOR_IN.value(), new ArrayList<String>(
+							Arrays.asList(ParameterConst.LOCATION_LEVEL_STATE, ParameterConst.LOCATION_LEVEL_DIVISION,
+									ParameterConst.LOCATION_LEVEL_DISTRICT, ParameterConst.LOCATION_LEVEL_CITY))));
+		}
+		//#29642 End
 		return searchBean;
 	}
 
@@ -248,6 +289,11 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		new LogKey(loginSessionUserId);
 		log.info("32753 UserId: " + loginSessionUserId);
 		//#32753 - END
+		/** AUDIT 28895_35509 START **/
+		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IAuditPMSO.class);
+		AuditPMBackingBeanTemplate auTemplate = new AuditPMLocationBackingBean();
+		/** AUDIT 28895_35509 START END **/
 		
 		String message = null;
 		String[] messageParam = null;
@@ -276,6 +322,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				
 				reqDTO.setPmState(state);
 				locationMsgId = getManagedBean().getState().getStateId(); // #34445
+				/************ AUDIT #28895_35509 START *************/
+				reqDTO.setStateId(getManagedBean().getState().getStateId());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getState().getStateId() != null) {
+					getManagedBean().setStateOldVal(stateSO.retriveStateDetailsByID(reqDTO));
+				}
+				/************ END AUDIT #28895_35509 END *************/
 				StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
 	        
 				if (resDTO.isSuccessful()) {
@@ -287,6 +339,13 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							this.getManagedBean().getState()
 							.getStateName()};
 					locationId = getManagedBean().getState().getStateId();
+					/************ AUDIT #28895_35509 START *************/
+
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+						getManagedBean().setResState(resDTO.getPmState());
+						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
+					}
+					/************ END AUDIT #28895_35509 END *************/
 					
 				}
 			} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(getManagedBean().getSelectedType())) {
@@ -312,6 +371,13 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				reqDTO.setPmDivision(division);
 				reqDTO.setStateId(division.getPmState().getStateId());
 				locationMsgId = getManagedBean().getDivision().getDivisionId(); //#34445
+				/************ AUDIT #28895_35509 START *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)
+						&& getManagedBean().getDivision().getDivisionId() != null) {
+					reqDTO.setDivisionId(getManagedBean().getDivision().getDivisionId());
+					getManagedBean().setDivisionOldVal(divisionSO.retrieveDivisionById(reqDTO));
+				}
+				/************ END AUDIT #28895_35509 END *************/
 				DivisionResDTO resDTO = divisionSO.saveOrUpdateDivision(reqDTO);			
 				if (resDTO.isSuccessful()) {
 					message = getManagedBean().getDivision().isBrandNew() 
@@ -321,6 +387,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 									new FacesScopes().getUserLocale()),
 									this.getManagedBean().getDivision().getDivisionName()};	
 					locationId = getManagedBean().getDivision().getDivisionId();
+					/************ AUDIT #28895_35509 START *************/
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+						StateResDTO stateResDTO = stateSO.retrieveStateByStateId(reqDTO.getStateId());
+						getManagedBean().setState(stateResDTO.getPmState());
+						getManagedBean().setResDivision(resDTO.getPmDivision());
+						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
+					}
+					/************ END AUDIT #28895_35509 END *************/
 				}
 			} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(getManagedBean().getSelectedType())) {
 					DistrictReqDTO reqDTO = new DistrictReqDTO();
@@ -354,6 +428,13 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					reqDTO.setStateId(district.getPmState().getStateId());
 					reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
 					locationMsgId = getManagedBean().getDistrict().getDistrictId(); //#34445
+					/************ AUDIT #28895_35509 *************/
+					reqDTO.setDistrictId(getManagedBean().getDistrict().getDistrictId());
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)
+							&& getManagedBean().getDistrict().getDistrictId() != null) {
+						getManagedBean().setDistrictOldVal(districtSO.retriveDistrictByID(reqDTO));
+					}
+					/************ END AUDIT #28895_35509 *************/
 					DistrictResDTO resDTO  = districtSO.saveOrUpdateDistrict(reqDTO);
 					if (resDTO.isSuccessful()) {
 						message = getManagedBean().getDistrict().isBrandNew() 
@@ -363,6 +444,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								new FacesScopes().getUserLocale()),
 								this.getManagedBean().getDistrict().getDistrictName()};
 						locationId = getManagedBean().getDistrict().getDistrictId();
+						/************ AUDIT #28895_35509 *************/
+						if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+							getManagedBean().setResDistrict(resDTO.getPmDistrict());
+							auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
+						}
+						/************ END AUDIT #28895_35509 *************/
 					}
 			} else if (ParameterConst.LOCATION_LEVEL_CITY.equals(getManagedBean().getSelectedType())) {
 					CityReqDTO reqDTO = new CityReqDTO();
@@ -386,6 +473,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					reqDTO.setPmCity(city);
 					reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
 					locationMsgId = getManagedBean().getCity().getCityId(); //#34445
+					/************ AUDIT #28895_35509 *************/
+					reqDTO.setCityId(getManagedBean().getCity().getCityId());
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getCity().getCityId() != null) {
+						getManagedBean().setCityOldVal(citySO.retriveCityById(reqDTO));
+					}
+					/************ END AUDIT #28895_35509 *************/
 					CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
 					if (resDTO.isSuccessful()) {
 						message = getManagedBean().getCity().isBrandNew() 
@@ -395,6 +488,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								new FacesScopes().getUserLocale()),
 								this.getManagedBean().getCity().getCityName()};
 						locationId = getManagedBean().getCity().getCityId();
+						/************ AUDIT #28895_35509 *************/
+						if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+							getManagedBean().setResCity(resDTO.getPmCity());
+							auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
+						}
+						/************ END AUDIT #28895_35509 *************/
 					}
 			}
 			if(message != null && messageParam != null) {	
@@ -433,6 +532,21 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			return null;
 		}
 		//#34445 End
+	}
+	
+	/** #35509 getCountryAuditVal() START **/
+	private void getCountryAuditVal(Long selectedCountryId) {
+		retrieveCountryList();
+		
+		Map<Long, PmCountry> countryMap = new HashMap<>();
+		for (PmCountry country : getManagedBean().getCountries()) {
+			countryMap.put(country.getCountryId(), country);
+		}
+
+		PmCountry selectedCountry = countryMap.get(selectedCountryId);
+		if (selectedCountry != null) {
+			getManagedBean().setResCountry(selectedCountry);
+		}
 	}
 
 	/**
@@ -615,6 +729,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		getManagedBean().setStates(resDTO.getStateList());
+		
+		/* #35509 PM Start */
+		getCountryAuditVal(countryId);
+		/* #35509 PM End */
 	}
 
 	public void retrieveDivisionList(AjaxBehaviorEvent e) {
@@ -662,6 +780,18 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		DistrictResDTO districtResDTO = districtSO
 				.retriveDistrictListByStateID(districtReqDTO);
 		getManagedBean().setDistricts(districtResDTO.getDistrictList());
+		
+		/* #35509 PM Start */
+		Map<Long, PmState> stateMap = new HashMap<>();
+		for (PmState state : getManagedBean().getStates()) {
+			stateMap.put(state.getStateId(), state);
+		}
+
+		PmState selectedSate = stateMap.get(stateId);
+		if (selectedSate != null) {
+			getManagedBean().setResState(selectedSate);
+		}
+		/* #35509 PM End */
 
 	}
 
@@ -689,6 +819,83 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		return PmCommonUtil.getCommonStatusOptions();
 	}
+	
+	//#29642 Start
+	public SelectItem[] getDropdownCodeValuesAdditionalLocation(String parameterType, String parameterCode) {
+		
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(PmParameterDesc.class,
+				"tdDropdownCodeValuesAdditionalLocation");
+
+
+		if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
+							ParameterConst.LOCATION_LEVEL_STATE));
+
+		} else if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(new ArrayList<String>(Arrays.asList(new String[] { ParameterConst.LOCATION_LEVEL_STATE,
+					ParameterConst.LOCATION_LEVEL_DIVISION })));
+
+			searchBean.getDataFilterBeans().add(bean);
+
+		} else if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_CITY)) {
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(new ArrayList<String>(Arrays.asList(new String[] { ParameterConst.LOCATION_LEVEL_STATE,
+					ParameterConst.LOCATION_LEVEL_DIVISION, ParameterConst.LOCATION_LEVEL_DISTRICT})));
+
+			searchBean.getDataFilterBeans().add(bean);
+		}
+
+		return getDropdownCodeValuesBySearchBeanAddLoc(parameterType, searchBean);
+	}
+
+	public SelectItem[] getDropdownCodeValuesBySearchBeanAddLoc(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			if (parameterType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)) {
+				items = new SelectItem[parameterDescs.size()];
+			 } else {
+				items = new SelectItem[parameterDescs.size() + 1];
+			 }
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(),
+						parameterDesc.getCodeName());
+			 }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	public void changeLocationType(){
+		log.info("changeLocationType" );
+		this.getManagedBean().getLocationSearchBean().setRecordAdditional(null);
+	}
+	//#29642 End
+	
+
 
 	/**
 	 * reset search bean fields

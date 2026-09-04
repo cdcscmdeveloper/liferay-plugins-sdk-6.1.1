@@ -212,9 +212,20 @@
 						<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
 						validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" required="true">	
 						<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-						<p:ajax event="change" process="@this"  update="basicBUEmail"/> 
+						<ui:remove>#28720 Start</ui:remove>
+						<p:ajax event="change" process="@this"
+							listener="#{smPersonnelBackingBean.onChangeEmail()}"
+							update="basicBUEmail" />
+						<ui:remove>#28720 End</ui:remove>
 						</p:inputText>
-							
+						<ui:remove>#28720 Start</ui:remove>
+						<p:graphicImage id="toolTipIcon"
+							value="/css/images/design/tooltips.png" />
+						<p:tooltip id="sourceTooltip" for="toolTipIcon">
+							<h:outputText id="sourceLabel" escape="false"
+								value="#{lbl['lbl.sm.email.change.tooltip']}" />
+						</p:tooltip>
+						<ui:remove>#28720 End</ui:remove>
 						<p:message id="basicBUEmailMsg" for="basicBUEmail" showSummary="true" showDetail="false" display="icon" />
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /> <p:outputLabel
@@ -224,10 +235,10 @@
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}"
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}"
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}"
-							isMobile="true" required="true"
+							isMobile="true" hideTelco="true" required="true"
 							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}"
-							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /></td>
+							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /></td> 
+							<!-- telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" /></td> --> <!-- 40200 -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -1292,6 +1303,10 @@
 			</p:outputPanel>
 		</p:dialog>
 		</p:panel>
-		
+		<ui:remove>#28720 Start</ui:remove>
+		<ac:smEmailAlertPopup bBean="#{backingBean}"
+			title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+			btnOkLabel="#{lbl['lbl.btn.ok']}" />
+		<ui:remove>#28720 End</ui:remove>
 	</ui:define>
 </ui:composition>

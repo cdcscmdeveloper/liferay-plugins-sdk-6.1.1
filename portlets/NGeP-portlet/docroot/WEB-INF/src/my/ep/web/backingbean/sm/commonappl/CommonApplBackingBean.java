@@ -263,6 +263,9 @@ public class CommonApplBackingBean extends
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
+				// #39771 & 40081 START
+				appl.setProcessingOfficerProcess(smObj.getProcessingOfficerProcess());
+				// #39771 & 40081 END
 
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// smSupplier , smAppl of the managedBean

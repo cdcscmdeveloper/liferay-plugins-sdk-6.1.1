@@ -218,6 +218,7 @@
 						<p:column headerText="#{lbl['lbl.sc.mof.no']}" style="width:10%">
 							<h:outputText value="#{quoteSupplier.mofNumber}" />
 						</p:column>
+						<ui:remove>#26284 - start</ui:remove>
 						<p:column style="white-space:normal;text-align:center;width:20%;">
 							<f:facet name="header" style="white-space:normal;">
 								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
@@ -231,6 +232,7 @@
 							</p:commandLink>
 							<h:outputText rendered="#{quoteSupplier.smSupplier ne null and !simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>									   
 						</p:column>
+						<ui:remove>#26284 - end</ui:remove>
 					</p:dataTable>
 
 					<c:if test="#{isEditable}">
@@ -365,7 +367,7 @@
 			</p:tabView>
 		</h:panelGroup>
 	</p:panel>
-	<ui:remove> #32643 #32642 - start 	</ui:remove>
+	<ui:remove>#26284 - start</ui:remove>
 	<ac:disciplinaryActionHistory voList="#{simpleQuoteBackingBean.managedBean.disciplineVOs}" btnView="true"/>
-	<ui:remove> #32643 #32642 - end 	</ui:remove>
+    <ui:remove>#26284 - end</ui:remove>
 </ui:composition>

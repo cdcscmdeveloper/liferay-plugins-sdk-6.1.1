@@ -78,7 +78,8 @@
 				</p:column>
 
 
-				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				<ui:remove><!-- #38151,#38679 (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 					style="text-align:right">
 					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
 				</p:column>
@@ -157,7 +158,8 @@
 				</p:column>
 
 				<ui:remove>#29187 Added width Vinod</ui:remove>
-				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				<ui:remove><!-- #38151,#38679 (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 					style="width:25%;white-space: normal;text-align:right">
 				<ui:remove>#29187 Added width Vinod</ui:remove>
 					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
@@ -176,7 +178,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.disqualified']}" />
 					</f:facet>
-					<h:outputText value="#{evaluationBackingBean.isDisqialifiedByCompliance(disQualifiedSupplier) ? lbl['lbl.sc.eva.disqualified.supplier.disqualified.message'] : ''}"/>
+					<h:outputText value="#{evaluationBackingBean.isDisqualifiedByCompliance(disQualifiedSupplier) ? lbl['lbl.sc.eva.disqualified.supplier.disqualified.message'] : ''}"/>
 				</p:column>
 				<ui:remove>#29187 End Vinod</ui:remove>
 

@@ -39,7 +39,7 @@
 		<p:panel id="UserProfile" toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sm.userprofile.add.new']}" rendered="#{!smPersonnelBackingBean.managedBean.editMode}"/>
-				<h:outputText value="#{lbl['lbl.sm.userprofile.edit']}" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
+				<h:outputText value="#{lbl['lbl.sm.person.info.hdr']}" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
 			</f:facet>
 			<table style="width: 100%">
 				<tr>
@@ -203,7 +203,20 @@
 							size="40" required="true">
 							<f:validateRegex
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<ui:remove>#28720 Start</ui:remove>
+							<p:ajax event="change" process="@this"
+									listener="#{smPersonnelBackingBean.onChangeEmail()}"
+									update="basicBUEmail" />
+							<ui:remove>#28720 End</ui:remove>
 							</p:inputText>
+							<ui:remove>#28720 Start</ui:remove>
+							<p:graphicImage id="toolTipIcon"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip id="sourceTooltip" for="toolTipIcon">
+								<h:outputText id="sourceLabel" escape="false"
+									value="#{lbl['lbl.sm.email.change.tooltip']}" />
+							</p:tooltip>
+							<ui:remove>#28720 End</ui:remove>
 						<p:message id="basicBUEmailMsg" for="basicBUEmail"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
@@ -236,9 +249,9 @@
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}" 
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}" 
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}" 
-							isMobile="true" required="true"
-							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" />
+							isMobile="true" hideTelco="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" />
+							<!-- telcoId="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileTelcoId}" /> --> <!-- 40200 -->
 					</td>
 				</tr>
 				
@@ -745,6 +758,11 @@
 					oncomplete="confirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
+		<ui:remove>#28720 Start</ui:remove>
+		<ac:smEmailAlertPopup bBean="#{backingBean}"
+			title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+			btnOkLabel="#{lbl['lbl.btn.ok']}" />
+		<ui:remove>#28720 End</ui:remove>
 		<!-- #34400 -->
 		<ac:confirmationPopupSM id="confirmSaveDlg" widget="confirmSaveDlg"
 			okAction="smPersonnelBackingBean.save"

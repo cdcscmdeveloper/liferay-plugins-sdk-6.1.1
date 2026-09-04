@@ -18,13 +18,26 @@
 		<ui:remove>#18685 - start </ui:remove>
 		<c:if test="#{!consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
-			<ui:remove> 28777,29729 - Start </ui:remove>
-			<c:if
-				test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
-				<h:outputText styleClass="instruction" escape="false"
-					value="#{lbl['lbl.sc.branch.related.deleted.instruction.four']}" />
-			</c:if>
-			<ui:remove> 28777,29729 - End </ui:remove>
+			<ui:remove> 28777,29729,30432 - Start </ui:remove>
+			<c:choose>
+				<c:when test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+					<h:outputText styleClass="instruction" escape="false"
+						value="#{lbl['lbl.sc.branch.related.deleted.instruction.four']}" />
+					<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
+						<ui:param name="number" value="5." /> 
+						<ui:param name="includePopup" value="#{includePopup}" />
+						<ui:param name="break" value="&lt;br/&gt;" />
+					</ui:include>
+				</c:when>
+				<c:otherwise>
+					<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"> 
+						<ui:param name="number" value="4." /> 
+						<ui:param name="includePopup" value="#{includePopup}" />
+						<ui:param name="break" value="&lt;br/&gt;" />
+					</ui:include>
+				</c:otherwise>
+			</c:choose>
+			<ui:remove> 28777,29729,30432 - End </ui:remove>
 			<ui:remove>21692 - Start</ui:remove>
 			<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
 				<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
@@ -71,7 +84,10 @@
 						<ui:remove>#11134 -end-</ui:remove>
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
+						<!-- #38151,#38679 update label-->
+						<p:column rowspan="2"
+							headerText="#{lbl['lbl.sc.total.overall.score']}"
+							style="width:5%; text-align:right;" />
 						<ui:remove>#29021 - start  </ui:remove>
 						<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!consolidationReportBackingBean.evaluateWIP(consolidationReportBackingBean.managedBean.scQt)}">
 							<f:facet name="header">
@@ -198,11 +214,25 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
+					<ui:remove>
+						<!-- #38151,#38679 add action link popup & WIP-->
+					</ui:remove>
+					<p:commandLink
+						action="#{consolidationReportBackingBean.qualifiedSupplierListPopupScore(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+						process="@this"
+						update="@([id$=preferenceMarginSuppDetailstestPopupId])"
+						styleClass="commandLink"
+						rendered="#{!consolidationReportBackingBean.managedBean.weightage35384WIP}">
+						<h:outputText value="#{qualifiedSupp.totalScore}"
+							rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice ne 0}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+						</h:outputText>
+					</p:commandLink>
 					<h:outputText value="#{qualifiedSupp.totalScore}"
-						rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice ne 0}">
+						rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice ne 0 and consolidationReportBackingBean.managedBean.weightage35384WIP}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-						<!-- #21695 End -->
 					</h:outputText>
 				</p:column>
 	
@@ -399,22 +429,25 @@
 				</p:column>
 
 				<p:column style="text-align:right;">
+					<ui:remove>
+						<!-- #38151,#38679 add action popup-->
+						<!-- #40142 -->
+					</ui:remove>
 					<p:commandLink
-						oncomplete="preferenceMarginSuppDetailsPopup.show(); return false;"
-						rendered="#{!consolidationReportBackingBean.managedBean.itemized and disqualifiedSupp.proposalAmount ne null}"
+						action="#{consolidationReportBackingBean.qualifiedSupplierListPopupScore(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+						rendered="#{!consolidationReportBackingBean.managedBean.itemized and qualifiedSupp.proposalAmount ne null}"
 						process="@this"
 						update="@([id$=preferenceMarginSuppDetailsPopupId])">
-						<f:setPropertyActionListener value="#{disqualifiedSupp}"
+						<f:setPropertyActionListener value="#{qualifiedSupp}"
 							target="#{suppFinalizationBackingBean.managedBean.preferenceMarginDtls}" />
 						<!--  #29466 - START -->
 						<f:setPropertyActionListener
 							value="#{consolidationReportBackingBean.managedBean.scQt}"
 							target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
 						<!--  #29466 - END -->
-						<h:outputText
-							value="#{disqualifiedSupp.proposalAmount.proposalAmt}"
+						<h:outputText value="#{qualifiedSupp.proposalAmount.proposalAmt}"
 							rendered="#{!consolidationReportBackingBean.managedBean.itemized  
-								  					and disqualifiedSupp.proposalAmount ne null}">
+								  					and qualifiedSupp.proposalAmount ne null}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -526,4 +559,78 @@
 			
 		</p:outputPanel>
 	</p:panel>
+	
+	<ui:remove>
+		<!-- #38151,#38679 datatable value popup-->
+		<!-- start -->
+	</ui:remove>
+	<p:dialog id="preferenceMarginSuppDetailstestPopupId"
+		widgetVar="preferenceMarginSuppDetailstestPopup" position="center"
+		modal="true" dynamic="true" styleClass="pop_up_top" width="950"
+		resizable="false"
+		header="#{lbl['lbl.sc.total.overall.score.percentage']}">
+		<p:dataTable id="weightageScores" var="weightageScore"
+			widgetVar="shortlistedWeightageScore"
+			value="#{consolidationReportBackingBean.managedBean.weightageScoreBeans}"
+			emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
+			editable="true" lazy="true" rowIndexVar="index" rows="10"
+			style="width:100%;" rowKey="#{weightageScore}">
+
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column colspan="2"
+						headerText="#{lbl['lbl.sc.eval.score.popup']}" />
+					<p:column colspan="2"
+						headerText="#{lbl['lbl.sc.rec.weightage.overall.score.popup']}" />
+					<p:column rowspan="2"
+						headerText="#{lbl['lbl.sc.total.overall.score']}" />
+				</p:row>
+				<p:row>
+					<p:column colspan="1"
+						headerText="#{lbl['lbl.sc.eval.tec.score.popup']}" />
+					<p:column colspan="1"
+						headerText="#{lbl['lbl.sc.eval.fin.score.popup']}" />
+					<p:column colspan="1">
+						<f:facet name="header">
+							<h:outputText
+								value="#{lbl['lbl.sc.eval.tec.score.popup']} (#{consolidationReportBackingBean.managedBean.overallTechnicalRecommendationPercent}%)" />
+						</f:facet>
+					</p:column>
+					<p:column colspan="1">
+						<f:facet name="header">
+							<h:outputText
+								value="#{lbl['lbl.sc.eval.fin.score.popup']} (#{consolidationReportBackingBean.managedBean.overallFinancialRecommendationPercent}%)" />
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{weightageScore.technicalTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{weightageScore.financialTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{weightageScore.recommendationTechnicalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{weightageScore.recommendationFinancialScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align:center;">
+				<h:outputText value="#{weightageScore.recommendationTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+		</p:dataTable>
+	</p:dialog>
+	<!-- #38151,#38679 datatable value popup - end -->
 </ui:composition>

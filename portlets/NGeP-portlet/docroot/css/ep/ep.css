@@ -3739,3 +3739,9 @@ table.rptTbl {
 	font-weight:bold;
 }
 /* 26247 - end */
+
+/* 30479 - start */
+.columnWidthSize16 {
+	width: 16%;
+}
+/* 30479 - end */

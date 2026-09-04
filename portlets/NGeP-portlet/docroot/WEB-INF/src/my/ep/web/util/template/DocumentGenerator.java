@@ -198,15 +198,8 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 					
 			//#25142 - end
 				// #26130 - start
-				//#21692 - Start
 				String fontPath = "";
-				String getPortalBaseURL = "";
-				if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
-					getPortalBaseURL = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_BASE_URL);
-				} else {
-					getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
-				}
-				//#21692 - End
+				String getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
 
 				fontPath = getPortalBaseURL + "/NGeP-portlet/resources/fonts/Arial.ttf";
 
