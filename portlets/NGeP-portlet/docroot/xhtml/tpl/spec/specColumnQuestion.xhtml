@@ -188,9 +188,9 @@
 					style="min-width:0px !important;width:50px; text-align:right;"
 					value="#{question.clUomFrequency}"
 					rendered="#{isQuestionTypeItem and isShowService}"
-					required="#{isValidationReq}" maxlength="5"
+					required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"
-					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
+					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 --> <ui:remove>39230</ui:remove>
 					<ac:validateNumber maxIntegerDigits="7"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					<p:ajax partialSubmit="true" process="@this"
