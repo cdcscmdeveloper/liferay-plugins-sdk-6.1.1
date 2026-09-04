@@ -77,6 +77,9 @@ public final class AiDocSupport {
 	public static final class AiUserEdit {
 
 		public static final String KEY_TENANCY = "hq";
+		// #40112 - never an NRIC: marks the applicant's EPF tick/untick decision as recorded
+		public static final String KEY_EPF_DECIDED = "_decided";
+		public static final String F_DECIDED = "decided";
 		public static final String F_EPF_NO = "epf_no";
 		public static final String F_NAME = "name";
 		public static final String F_IC = "ic";
@@ -589,7 +592,8 @@ public final class AiDocSupport {
 
 		/**
 		 * Verify an EPF extraction's employer name against the registered company name; sets the verdict flag
-		 * on the DTO. A blank employer name is excluded from the verdict (left valid), as with the other docs.
+		 * on the DTO. Unlike the other docs, a blank employer name counts as a mismatch: its employees are
+		 * dropped from the list and light no icons.
 		 */
 		public static void validateEpf(AiEpfResultDTO ee, String companyName) {
 			if (ee == null) {
@@ -609,22 +613,22 @@ public final class AiDocSupport {
 			if (EntityHelper.isCollectionEmpty(docEntities)) {
 				return;
 			}
-			Map<String, Long> supplierAccounts = collectSupplierAccounts(appl);
-			Set<Long> supplierOrgIds = new HashSet<>(supplierAccounts.values());
+			Map<String, String> supplierAccounts = collectSupplierAccounts(appl);
+			Set<String> supplierOrgNames = new HashSet<>(supplierAccounts.values());
 			List<PmFinancialOrg> candidates = candidateFinancialOrgs(appl);
 			String companyNameSupp = appl.getSmSupplier().getCompanyName();
 
 			// the flags live on each record, so a repeated account still has to be verified on its own file
 			for (AiBankDocDTO entity : docEntities) {
 				for (AiBankDocDTO.AiBankStatementDTO bank : entity.getBankStatements()) {
-					validateBankRecord(bank, supplierAccounts, supplierOrgIds, candidates, companyNameSupp);
+					validateBankRecord(bank, supplierAccounts, supplierOrgNames, candidates, companyNameSupp);
 				}
 			}
 		}
 
-		// Account number -> chosen financial org id, over every bank keyed in at Bank Information.
-		private static Map<String, Long> collectSupplierAccounts(SmAppl appl) {
-			Map<String, Long> supplierAccounts = new HashMap<>();
+		// Account number -> chosen bank's canonical name, over every bank keyed in at Bank Information.
+		private static Map<String, String> collectSupplierAccounts(SmAppl appl) {
+			Map<String, String> supplierAccounts = new HashMap<>();
 			if (EntityHelper.isCollectionEmpty(appl.getSmSupplierBanks())) {
 				return supplierAccounts;
 			}
@@ -634,7 +638,7 @@ public final class AiDocSupport {
 				if (StringUtils.isEmpty(accountNo) || suppBank.getPmFinancialOrg() == null) {
 					continue;
 				}
-				supplierAccounts.put(accountNo, suppBank.getPmFinancialOrg().getFinancialOrgId());
+				supplierAccounts.put(accountNo, canonicalizeCompanyName(suppBank.getPmFinancialOrg().getFinOrgName()));
 			}
 			return supplierAccounts;
 		}
@@ -651,7 +655,9 @@ public final class AiDocSupport {
 			if (serviceTypes.isEmpty()) {
 				addBankServiceTypes(serviceTypes, null);
 			}
-			Map<Long, PmFinancialOrg> candidates = new HashMap<>();
+			// #40112 - keyed by canonical name, not id: PM_FINANCIAL_ORG holds the same bank under several ids,
+			// and identical names would otherwise cancel each other out on the runner-up margin below
+			Map<String, PmFinancialOrg> candidates = new HashMap<>();
 			for (String serviceType : serviceTypes) {
 				FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 				reqDTO.setServiceType(serviceType);
@@ -661,7 +667,7 @@ public final class AiDocSupport {
 					continue;
 				}
 				for (PmFinancialOrg org : resDTO.getFinancialOrgList()) {
-					candidates.put(org.getFinancialOrgId(), org);
+					candidates.put(canonicalizeCompanyName(org.getFinOrgName()), org);
 				}
 			}
 			return new ArrayList<>(candidates.values());
@@ -679,23 +685,23 @@ public final class AiDocSupport {
 		}
 
 		private static void validateBankRecord(AiBankDocDTO.AiBankStatementDTO bank,
-				Map<String, Long> supplierAccounts, Set<Long> supplierOrgIds,
+				Map<String, String> supplierAccounts, Set<String> supplierOrgNames,
 				List<PmFinancialOrg> candidates, String companyNameSupp) {
 			String companyNameJson = bank.getAccountHolderName();
-			Long resolvedOrgId = resolveFinancialOrg(bank.getBankName(), candidates);
-			Long chosenOrgId = supplierAccounts.get(normalizeAccountNo(bank.getAccountNo()));
+			String resolvedOrgName = resolveFinancialOrgName(bank.getBankName(), candidates);
+			String chosenOrgName = supplierAccounts.get(normalizeAccountNo(bank.getAccountNo()));
 			// a field the OCR did not read is not a mismatch, so it keeps its valid verdict
 			boolean hasBankName = !StringUtils.isBlank(bank.getBankName());
 			boolean hasAccountNo = !StringUtils.isBlank(bank.getAccountNo());
-			if (chosenOrgId == null) {
+			if (chosenOrgName == null) {
 				if (hasAccountNo) {
 					bank.setValidAccountNo(false);
 				}
 				// no account to anchor on, so the name only has to be one of the banks the supplier keyed in
-				if (hasBankName && (resolvedOrgId == null || !supplierOrgIds.contains(resolvedOrgId))) {
+				if (hasBankName && (resolvedOrgName == null || !supplierOrgNames.contains(resolvedOrgName))) {
 					bank.setValidBankName(false);
 				}
-			} else if (hasBankName && !chosenOrgId.equals(resolvedOrgId)) {
+			} else if (hasBankName && !chosenOrgName.equals(resolvedOrgName)) {
 				bank.setValidBankName(false);
 			}
 			// only a name that was actually extracted can mismatch the registered one
@@ -806,13 +812,14 @@ public final class AiDocSupport {
 		}
 
 		/**
-		 * Resolve an extracted bank name to one PM_FINANCIAL_ORG row. Tokens are weighted by how rare they are
-		 * across the candidate list, so shared boilerplate such as BANK or BERHAD cannot carry a match on its own.
+		 * Resolve an extracted bank name to one candidate bank's canonical name. Tokens are weighted by how rare
+		 * they are across the candidate list, so shared boilerplate such as BANK or BERHAD cannot carry a match on
+		 * its own. The verdict is the name rather than the id, because one bank owns several PM_FINANCIAL_ORG rows.
 		 * @param extractedName
 		 * @param candidates
-		 * @return the financial org id, or null when nothing clears both the floor and the runner-up
+		 * @return the canonical bank name, or null when nothing clears both the floor and the runner-up
 		 */
-		public static Long resolveFinancialOrg(String extractedName, List<PmFinancialOrg> candidates) {
+		public static String resolveFinancialOrgName(String extractedName, List<PmFinancialOrg> candidates) {
 			Set<String> queryTokens = new HashSet<>(tokenize(extractedName));
 			if (queryTokens.isEmpty() || EntityHelper.isCollectionEmpty(candidates)) {
 				return null;
@@ -848,7 +855,7 @@ public final class AiDocSupport {
 			if (bestOrg == null || best < MIN_BANK_MATCH_SCORE || best - runnerUp < MIN_BANK_MATCH_MARGIN) {
 				return null;
 			}
-			return bestOrg.getFinancialOrgId();
+			return canonicalizeCompanyName(bestOrg.getFinOrgName());
 		}
 
 		private static Map<String, Integer> documentFrequency(List<PmFinancialOrg> pool) {
