@@ -7,7 +7,7 @@
 	
 	<ui:remove>#RUU Start</ui:remove>
 	<p:panel header="#{lbl['lbl.sm.payment.details']}"
-		rendered="#{backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'A'}"
+		rendered="#{!backingBean.managedBean.smAppl.applType ne 'C'}"
 		toggleable="true" >
 	<ui:remove>#RUU End</ui:remove>
 		

@@ -2224,12 +2224,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 			// set payment details section only for supplier and application type is
 			// NEW or RENEW
-			// #RUU Start
-			if (getManagedBean().isSupplierUser() 
-					&& (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-							|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || getManagedBean().getSmAppl()
-							.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES))) {
-				calculatePayment();
+		// #RUU Start
+		if (getManagedBean().isSupplierUser() && !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				checkLateRenewal();
+			}
+			calculatePayment();
 			// #RUU End
 				getManagedBean().setApplDeclarationAlertMsg(
 						SmCommonUtil.getMessage(
@@ -20242,33 +20242,55 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#40801 END
 	// #RUU Start
+	private void checkLateRenewal() {
+		long diff = getManagedBean().getSmAppl().getSmSupplier().getSmMofAccount().getExpDate().getTime()
+				- (new Timestamp(System.currentTimeMillis())).getTime();
+		if (diff < 120) {
+			getManagedBean().setLateRenewFee(true);
+		}
+	}
+	
 	private void calculatePayment() {
-		SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
-		paymentVO.setDetails(getParameterDesc(
-				ParameterTypeConst.SUPP_PAYMENT_ITEM,
-				SupplierManagementConst.MOF_PAYMENT));
-		paymentVO.setPrice(SmRuleHelper.getInstance().getRegistrationFee());
-		paymentVO.setTotalAmount(paymentVO.getPrice());
-		getManagedBean().setPaymentDetailsVOList(
-				new ArrayList<SmPaymentDetailsVO>());
-		getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+		String regDetails = "";
+		String proDetails = "";
+		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			regDetails = getParameterDesc(ParameterTypeConst.SUPP_PAYMENT_ITEM, SupplierManagementConst.MOF_PAYMENT);
+			proDetails = getParameterDesc(ParameterTypeConst.SUPP_PAYMENT_ITEM, SupplierManagementConst.PROCESSING_PAYMENT);
+		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+			regDetails = "MOF Registration Fee (Add Category)";
+			proDetails = "MOF Processing Fee (Add Category)";
+		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			regDetails = "MOF Registration Fee (Bumiputera Status Application Application)";
+			proDetails = "MOF Processing Fee (Bumiputera Status Application Application)";
+		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			regDetails = "MOF Registration Fee (Update MOF Profile)";
+			proDetails = "MOF Processing Fee (Update MOF Profile)";
+		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			regDetails = "MOF Registration Fee (Renewal)";
+			proDetails = "MOF Processing Fee (Renewal)";
+		}
 
-		paymentVO = new SmPaymentDetailsVO();
-		paymentVO.setDetails(getParameterDesc(
-				ParameterTypeConst.SUPP_PAYMENT_ITEM,
-				SupplierManagementConst.PROCESSING_PAYMENT));
-		paymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
-		paymentVO.setTotalAmount(paymentVO.getPrice());
-		getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+		getManagedBean().setPaymentDetailsVOList(new ArrayList<SmPaymentDetailsVO>());
+		
+		SmPaymentDetailsVO regPaymentVO = new SmPaymentDetailsVO();
+		regPaymentVO.setDetails(regDetails);
+		regPaymentVO.setPrice(new BigDecimal(600));
+		regPaymentVO.setTotalAmount(regPaymentVO.getPrice());	
+		getManagedBean().getPaymentDetailsVOList().add(regPaymentVO);
+
+		SmPaymentDetailsVO proPaymentVO = new SmPaymentDetailsVO();
+		proPaymentVO.setDetails(proDetails);
+		proPaymentVO.setPrice(new BigDecimal(100));
+		proPaymentVO.setTotalAmount(proPaymentVO.getPrice());
+		getManagedBean().getPaymentDetailsVOList().add(proPaymentVO);
 
 		getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
 		getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
 		getManagedBean().setGstPercentageLabels(
-				SmCommonUtil.getMessage("lbl.sm.gst.percent",
-						new String[] { getManagedBean().getGstAmount()
-								.toString() }));
+				SmCommonUtil.getMessage("lbl.sm.gst.percent", new String[] { getManagedBean().getGstAmount().toString() }));
 
 		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
+		
 		if(null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()){
 			if(getManagedBean().getSmAppl().getApplCategoryType().equalsIgnoreCase("N")){
 				countNormalCatCode();
@@ -20281,7 +20303,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getPaymentDetailsVOList()) {
 			getManagedBean().setTotalPaymentAmount(
 					getManagedBean().getTotalPaymentAmount().add(
-							paymentDetailsVO.getPrice()));
+							paymentDetailsVO.getTotalAmount()));
 		}
 		getManagedBean().setTotalPaymentAmount(
 				getManagedBean().getTotalPaymentAmount().setScale(2,
@@ -20291,14 +20313,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void countSpecialCatCode() {
 		int count = getManagedBean().getActiveCategoryList().size();
 		if (count > 0) {
-			SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
-			paymentVO = new SmPaymentDetailsVO();
-			paymentVO.setDetails("Special Category Fee");
-			paymentVO.setPrice(new BigDecimal(count * 1000));
-			paymentVO.setQuantity(count);
-			paymentVO.setHasQuantity(true);
-			paymentVO.setTotalAmount(paymentVO.getPrice());
-			getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+			SmPaymentDetailsVO sPaymentVO = new SmPaymentDetailsVO();
+			sPaymentVO = new SmPaymentDetailsVO();
+			sPaymentVO.setDetails("Special Category Fee");
+			sPaymentVO.setPrice(new BigDecimal(1200));
+			sPaymentVO.setQuantity(count);
+			sPaymentVO.setHasQuantity(true);
+			sPaymentVO.setTotalAmount(sPaymentVO.getPrice().multiply(BigDecimal.valueOf(count)));
+			getManagedBean().getPaymentDetailsVOList().add(sPaymentVO);
 		}
 		
 	}
@@ -20311,14 +20333,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			count = getManagedBean().getApprovedCategoryList().size() + getManagedBean().getActiveCategoryList().size() - 15;
 		}
 		if (count > 0) {
-			SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
-			paymentVO = new SmPaymentDetailsVO();
-			paymentVO.setDetails("Normal Category Fee");
-			paymentVO.setPrice(new BigDecimal(count * 1000));
-			paymentVO.setQuantity(count);
-			paymentVO.setHasQuantity(true);
-			paymentVO.setTotalAmount(paymentVO.getPrice());
-			getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+			SmPaymentDetailsVO nPaymentVO = new SmPaymentDetailsVO();
+			nPaymentVO = new SmPaymentDetailsVO();
+			nPaymentVO.setDetails("Normal Category Fee");
+			nPaymentVO.setPrice(new BigDecimal(200));
+			nPaymentVO.setQuantity(count);
+			nPaymentVO.setHasQuantity(true);
+			nPaymentVO.setTotalAmount(nPaymentVO.getPrice().multiply(BigDecimal.valueOf(count)));
+			getManagedBean().getPaymentDetailsVOList().add(nPaymentVO);
 		}
 	}
 	// #RUU End

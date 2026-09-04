@@ -5609,7 +5609,7 @@ public class SmApplicationUtil {
 		} else if(applType.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
 			final int year = -365;
 			if(diffDays > renewMonth * days){
-				throw new EpException(MessageConst.ERROR_722501, new String[] {String.valueOf(renewMonth)});
+//				throw new EpException(MessageConst.ERROR_722501, new String[] {String.valueOf(renewMonth)});
 			} else if(diffDays < year){
 				throw new EpException(MessageConst.ERROR_722502);
 			}
