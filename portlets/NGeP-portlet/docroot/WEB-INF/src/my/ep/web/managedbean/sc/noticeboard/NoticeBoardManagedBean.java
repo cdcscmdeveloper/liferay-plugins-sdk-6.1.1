@@ -12,6 +12,7 @@ package my.ep.web.managedbean.sc.noticeboard;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -203,6 +205,10 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean hideZoneBSVRegisterBtn;
 
 	// #28777 & #29729 - End
+	
+	// #29624 - start
+	private List<ScLoa> scLoaList = new ArrayList<>();
+	// #29624 - end
 	
 	private Map<BigDecimal, Date> amendmentBSVDateMap; //#28188
 	
@@ -1422,5 +1428,15 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.amendmentBSVDateMap = amendmentBSVDateMap;
 	}
 	//#28188 - End
+	
+	// #29624 - start
+	public List<ScLoa> getScLoaList() {
+		return scLoaList;
+	}
+
+	public void setScLoaList(List<ScLoa> scLoaList) {
+		this.scLoaList = scLoaList;
+	}
+	// #29624 - end
 	
 }

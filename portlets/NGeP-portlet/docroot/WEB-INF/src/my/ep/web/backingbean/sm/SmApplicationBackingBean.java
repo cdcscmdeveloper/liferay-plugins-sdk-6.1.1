@@ -17583,6 +17583,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = getManagedBean().getSelectedShareHolder().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			getManagedBean().getSelectedShareHolder().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	private void updateCompanyExpCatNames(SmCompanyExperience exp) {
 		if (EntityHelper.isCollectionEmpty(exp.getSmCompanyExperienceCats())) {

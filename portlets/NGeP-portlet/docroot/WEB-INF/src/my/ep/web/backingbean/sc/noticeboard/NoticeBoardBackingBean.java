@@ -96,6 +96,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -3064,6 +3065,7 @@ public class NoticeBoardBackingBean extends
 		boolean isRefinalized = getQTAwardSO().isQtRefinalized(awardReqDTO).isRefinalized();
 		
 		List<AwardedItemsBean> awardedItemList = new ArrayList<>();
+		List<ScLoa> tempScLoaList = new ArrayList<>(); // #29624
 		//Bug #32512 start
 		boolean isLoaRejected = false; 
 		this.getManagedBean().setSupplierName(null);
@@ -3080,8 +3082,19 @@ public class NoticeBoardBackingBean extends
 			if (!isLoaRejected){
 				if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 						.equalsIgnoreCase(pmParameter.getParameterCode())) {
-					this.getManagedBean().setSupplierName(
-							scLoa.getScLoiLoa().getSupplierName());
+					// #29624 - start
+					if (CollectionUtils.isEmpty(tempScLoaList)) {
+						ScLoa tempScLoa = new ScLoa();
+						ScLoiLoa tempScLoiLoa = new ScLoiLoa();
+						tempScLoiLoa.setSupplierName(scLoa.getScLoiLoa().getSupplierName());
+						tempScLoa.setLoaAmt(scLoa.getLoaAmt());
+						tempScLoa.setScLoiLoa(tempScLoiLoa);
+
+						tempScLoaList.add(tempScLoa);
+						this.getManagedBean().setScLoaList(tempScLoaList);
+					}
+					// #29624 end
+
 					
 				} else {
 					for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
@@ -3089,6 +3102,7 @@ public class NoticeBoardBackingBean extends
 						ScRequestItem reqItem = scLoiLoaItem.getScRequestItem();
 						awardedItem.setItemName(reqItem.getItemName());
 						awardedItem.setSupplierName(scLoiLoaItem.getScLoa().getScLoiLoa().getSupplierName());
+						awardedItem.setLoaAmount(scLoiLoaItem.getScLoa().getLoaAmt()); // #29624
 						// By Loa
 						awardedItem.setPriceByLoa(TemplateSpecHelper.getInstance()
 								.calcTotalAmount(reqItem.getTplSpecQuestion(),
