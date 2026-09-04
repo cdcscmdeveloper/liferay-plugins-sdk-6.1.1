@@ -1389,11 +1389,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setStoreFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
-		// 34303 - Start
+		//34303 - Start, 28775 - Site Visit Grouping Enhancement - 28775
 		getManagedBean().getStoreFacilitiesVOList()
 				.addAll(getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
-		// 34303 - End
+		//34303 - End, 28775 - Site Visit Grouping Enhancement - 28775
 		getManagedBean().setFactoryFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
@@ -2464,12 +2464,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (supplier == null){
 			return "";
 		}
-		// #38962 - START
+		// #38962, #40110 - START
+		SmAppl appl = getManagedBean().getSmAppl() != null ? getManagedBean().getSmAppl() : supplier.getSmAppl();
 		String pending = checkNonActiveDAWithPending(supplier);
-		if (StringUtils.isNotBlank(pending)) {
+		if (StringUtils.isNotBlank(pending) && appl != null
+				&& !SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(appl.getSupplierType())) {
 			return pending;
 		}
-		// #38962 - END
+		// #38962, #40110 - END
 		if (!supplier.isFutureImposed() && !StringUtils.isEmpty(supplier.getTypeDisciplinaryAction())){
 			return getSupplierAccountStatusDA(supplier);
 		}
@@ -2477,7 +2479,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			return getSupplierAccountStatusMOF(supplier);
 		}
 		//#34319
-		SmAppl appl = getManagedBean().getSmAppl() != null ? getManagedBean().getSmAppl() : supplier.getSmAppl();
 		if (supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_CANCELLED) 
 				&& appl.getPmStatus().getStatusId().equals(
 						my.ep.constant.sm.SupplierManagementConst.PM_STATUS_CANCELLED_PREREGISTRATION_ACCOUNT)){
@@ -4995,6 +4996,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 	//#32008 - end	
+	//29380 - Site Visit Grouping Enhancement -28775 - start
+	/**
+	 * @param catL3
+	 * @return other description for category code
+	 */
+	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return null;
+		}
+		return SmApplicationUtil.getCategoryCodeOtherDesc(
+				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
+	}
+	//29380 - Site Visit Grouping Enhancement -28775 - end
 	// #28895_35501 Start - AUDIT TRAIL SM
 	/**
 	 * Check if user have access to Audit Trail page

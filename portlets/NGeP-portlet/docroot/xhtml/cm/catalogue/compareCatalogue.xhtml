@@ -289,6 +289,11 @@
 		<ui:include src="/xhtml/sc/directpurchase/requestnote/addToCartPopup.xhtml" />
 		<ui:include
 			src="/xhtml/sc/directpurchase/searchcatalogue/recentPricePopup.xhtml" />
+		<ui:remove>#26284 - Start</ui:remove>
+		<ac:disciplinaryActionHistory
+			voList="#{catalogueBackingBean.managedBean.disciplineVOs}"
+			btnView="true" />
+		<ui:remove>#26284 - End</ui:remove>
 	</ui:define>
 
 </ui:composition>

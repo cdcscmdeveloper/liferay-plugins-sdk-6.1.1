@@ -20,6 +20,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationPengesyoranRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
@@ -92,6 +93,11 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private boolean isProcCategoryMedicine;
 	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
+	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disQualifiedSuppliersDataModel;
+	// #28777 & #29729 - End
 	
 	private boolean isSetNull ; //Bug #31364
 	private boolean isDemoReq; // #28784
@@ -588,6 +594,26 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 			List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks) {
 		this.finalizationPengreysonremarks = finalizationPengreysonremarks;
 	}
+	
+	// #28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisQualifiedSuppliersDataModel() {
+		return disQualifiedSuppliersDataModel;
+	}
+
+	public void setDisQualifiedSuppliersDataModel(
+			IPagingDataModel<ScQtEvaluationResultDtl> disQualifiedSuppliersDataModel) {
+		this.disQualifiedSuppliersDataModel = disQualifiedSuppliersDataModel;
+	}
+
+	// #28777 & #29729 - End
 
 	public boolean isSetNull() {
 		return isSetNull;
