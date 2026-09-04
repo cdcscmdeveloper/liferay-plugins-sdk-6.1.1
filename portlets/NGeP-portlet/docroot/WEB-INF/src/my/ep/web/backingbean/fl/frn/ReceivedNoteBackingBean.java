@@ -203,7 +203,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				}
 				// 36247-End
 				
-				// 31788
+				// 31788 - START
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
 					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -248,6 +248,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 										.getOrgName() });
 					}
 				}
+				// #31788 - END
 			}
 			
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -302,8 +303,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			
-			// 31788 - start
-			// Check new user need to be assigned
+			// #31788 - Update reqDTO if new user to be reassigned
 			if(getManagedBean().isAssignNewUser()){
 				reqDTO.setAssignNewUser(Boolean.TRUE);
 				reqDTO.setNewUser(getManagedBean().getNewUser());
@@ -338,7 +338,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 						messageId = MessageConst.INFO_745016;
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-						// #31788
+						// #31788 - Message ID for reassign new user
 						if(getManagedBean().isAssignNewUser()) {
 							messageId = MessageConst.INFO_700128;
 						} else {
@@ -371,7 +371,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 										MessageUtils.BUNDLE_COMMON_MESSAGES, 
 										new FacesScopes().getUserLocale())));
 					}else{
-						// #31788
+						// #31788 - acknowledgement message assign new user.
 						if (getManagedBean().isAssignNewUser()) {
 							FacesContext.getCurrentInstance().addMessage(
 									null,
@@ -848,7 +848,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
-			// #31788 - Validate existing officer active/inactive
+			// #31788 - Validate selected acknowledge officer
 			if (getManagedBean().getFulfilmentNote().getApproverId() != null) {
 				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
@@ -2347,11 +2347,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
 
-	// #31788
+	// #31788 - Get Org Profile ID by RO Address
 	private Long getOrgProfileByReceivingOfficerAddress(FlFulfilmentNote fulfilmentNote){
 		Long orgProfileId = fulfilmentNote.getFlRequest().getPreparedOrgProfile().getOrgProfileId();
 		FlDeliveryAddress flDelAddress = fulfilmentNote.getFlDeliveryOrder().getFlDeliveryAddress();
-		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
+		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) {
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setAddressTypeId(flDelAddress.getReceivingGrp().getAddressTypeId());
