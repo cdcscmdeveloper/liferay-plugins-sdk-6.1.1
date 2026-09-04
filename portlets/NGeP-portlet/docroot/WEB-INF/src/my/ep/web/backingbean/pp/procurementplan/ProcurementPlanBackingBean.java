@@ -3552,8 +3552,39 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				// Acknowledgement/Alert Message Start
 				// Original SP status (String) - used by existing DTOs and legacy flow.
 				String spStatus = inactiveUserResDTO.getStatus();
+
+				if (StringUtils.isBlank(spStatus)) {
+
+					Exception ex = new Exception("Inactive user SP returned empty P_STATUS.");
+
+					SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "savePlan",
+							ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+							new FacesScopes().getUserSessionBean().getUserId(), ex);
+
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, inactiveUserResDTO.getMessage()));
+
+					return null;
+				}
+				
 				// Numeric SP status - used for comparison with PrcCheckUserProfileStatus constants
-				int spStatusInt = Integer.parseInt(spStatus);
+				int spStatusInt;
+
+				try {
+
+					spStatusInt = Integer.parseInt(spStatus);
+
+				} catch (NumberFormatException e) {
+
+					SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "savePlan",
+							ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+							new FacesScopes().getUserSessionBean().getUserId(), e);
+
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, inactiveUserResDTO.getMessage()));
+
+					return null;
+				}
 
 				// Get data output from Stored Procedure (SP)
 				log.info("===== INACTIVE SP OUTPUT DATA START =====");
