@@ -2447,11 +2447,6 @@ public class CommitteBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 	
-	private ICommitteSO getCommitteeSO(){
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-	}
-
 	/**
 	 * Gets the parameter so.
 	 *

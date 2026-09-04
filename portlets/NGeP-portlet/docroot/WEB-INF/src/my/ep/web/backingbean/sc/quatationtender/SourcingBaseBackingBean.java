@@ -68,6 +68,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
@@ -110,6 +111,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -122,6 +125,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
@@ -142,6 +146,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.helper.InactiveUserValidator;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -160,6 +165,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
@@ -247,6 +253,7 @@ import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -988,6 +995,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 	}
 	// 12471 - end
+	
+	// 33222 - start
+	protected IScActorSO getScActorSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScActorSO.class);
+	}
+	
+	protected ICommitteSO getCommitteeSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+	}
+	// 33222 - end
+	
 	/**
 	 * To initialize remarks.
 	 * 
@@ -9187,4 +9206,134 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// 28188 -end-
 
+	
+	/**
+	 * #33222 - Check Availability of user status, role code and group
+	 * @param QuationTenderReqDTO
+	 * @return InactiveUserResDTO
+	 */
+	public InactiveUserResDTO checkActiveUser(QuationTenderReqDTO qtReq) {
+
+		/* SP Return Status
+		 * P_STATUS - User is active/not active
+		 * P_NEXT_ACTIVE_USER_LOGINID - Login ID of the next available active user identified 
+		 * P_NEXT_ACTIVE_USER_USERID - User ID of the next available active user identified
+		 * P_MSG - Message returned by the procedure indicating the verification or processing result
+		 */
+		
+		InactiveUserReqDTO userReqDto = new InactiveUserReqDTO();
+		ScQt qt = qtReq.getQtdetail();
+		PmUser user = qtReq.getPmUser();
+		userReqDto.setDocNo(qt.getQtNo());
+		userReqDto.setDocType(qt.getQtType());
+		userReqDto.setUserIds(user.getUserId().toString());
+		userReqDto.setUserRoleCode(qtReq.getRoleCode());
+		userReqDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+		userReqDto.setOrgProfileId(qt.getOrgProfileId());
+		InactiveUserResDTO userResDto = getUserSOGlobal().checkInactiveUserBySP(userReqDto);
+		
+		return userResDto;
+	}
+	// 33222 - start
+	/**
+	 * Validate committee member for profile and role status
+	 * @param scQt
+	 * @param qtCommittee
+	 */
+	public void validateCommitteeUsers(ScQt scQt, ScQtCommittee qtCommittee) {
+		ScCommittee committee = qtCommittee.getScCommittee();
+		List<ScCommitteeMember> committeeMembers = committee.getScCommitteeMembers();
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+		reqDTO.setDocNo(scQt.getQtNo());
+		reqDTO.setOrgProfileId(scQt.getOrgProfileId());
+		Locale locale = this.getFacesScopesGen().getUserLocale();
+		List<String> inactiveUsers = new ArrayList<>();
+		Set<String> roles = new HashSet<>();
+		List<String> roleToSkip = new ArrayList<>();
+		String taskName = this.getManagedBean().getTaskName();
+		if (Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP).contains(taskName)) {
+			roleToSkip.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+		}
+		for (ScCommitteeMember committeeMember : committeeMembers) {
+			PmParameter committeeRole = committeeMember.getMemberRole();
+			if (CollectionUtils.isNotEmpty(roleToSkip) && roleToSkip.contains(committeeRole.getParameterCode())) {
+				continue;
+			}
+			reqDTO.setUserIds(String.valueOf(committeeMember.getPmUser().getUserId()));
+			String roleExt = SourcingConstants.ROLE_EXT_MAP.get(committeeMember.getMemberRole().getParameterCode());
+			reqDTO.setUserRoleCode(committee.getCommitteeType().getParameterCode().concat(roleExt));
+			committeeMember.setUserInactive(!InactiveUserValidator.getInstance().validateUsers(reqDTO));
+			if (committeeMember.isUserInactive()) {
+				String roleDesc = this.getParameterDesc(committeeRole, locale);
+				String normalizedString = SourcingConstants.STRING_DICTIONARY.get(roleDesc);
+				if (null != normalizedString) {
+					roleDesc = normalizedString;
+				}
+				roles.add(roleDesc);
+				inactiveUsers.add(roleDesc + " " + committeeMember.getPmUser().getUserName());
+			}
+		}
+ 
+		if (CollectionUtils.isNotEmpty(inactiveUsers)) {
+			String inactiveUserStrs = StringUtils.join(inactiveUsers, ", ");
+			String committeeDesc = this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType(), locale);
+			String roleDescs = StringUtils.join(roles, ", ");
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_761002, new String[] { inactiveUserStrs,
+					committeeDesc, roleDescs }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+
+		}
+	}
+	// 33222 - end
+	
+	// 33222 - start
+	/**
+	 * Find sc actor using qtid and rolecodes.
+	 * @param qtId
+	 * @param roleCode
+	 * @return
+	 */
+	public ScActor getActorByQtIdAndRoleCode(Long qtId, String roleCode) {
+		ScActorReqDTO reqDTO = new ScActorReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		reqDTO.setDocId(qtId);
+		reqDTO.setRoleCode(roleCode);
+
+		return getScActorSO().retrieveActorByTypeIdAndRoleCode(reqDTO).getScActor();
+	}
+	// 33222 - end
+	
+	// 33222 - start
+	/**
+	 * Validate profile and role status for deskofficer
+	 * 
+	 * @param scQt
+	 */
+	public String validateDeskofficerProfileRoleStatus(ScQt scQt, boolean rerouteWhenAvailable) {
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO(true);
+		String deskofficerRoleCode = RoleCode.DESK_OFFICER.value();
+		reqDTO.setDocNo(scQt.getQtNo());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		reqDTO.setOrgProfileId(scQt.getOrgProfileId());
+		ScActor deskofficerActor = getActorByQtIdAndRoleCode(scQt.getQtId(), deskofficerRoleCode);
+		reqDTO.setUserIds(deskofficerActor.getUserId().toString());
+		reqDTO.setUserRoleCode(deskofficerRoleCode);
+		Locale locale = this.getFacesScopesGen().getUserLocale();
+		InactiveUserResDTO resDTO = InactiveUserValidator.getInstance().evaluateUsers(reqDTO);
+		String status = resDTO.getStatus();
+		if ("5".equals(status)) {
+			String roleDesc = RoleHelper.getInstance().getRoleDescByCode(deskofficerRoleCode).getRoleName();
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_700128, new String[] { roleDesc,
+					scQt.getOwnerOrgProfile().getOrgName() }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		} else if (!"1".equals(status)) {
+			if (!rerouteWhenAvailable) {
+				throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_761000, new String[] {
+						deskofficerActor.getUserName(), scQt.getOwnerOrgProfile().getOrgName() },
+						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			}
+
+			return resDTO.getUserIds().split(",")[0];
+		}
+		return null;
+	}
+	// 33222 - end
 }

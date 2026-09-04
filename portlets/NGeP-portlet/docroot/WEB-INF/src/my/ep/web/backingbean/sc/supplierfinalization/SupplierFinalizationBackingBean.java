@@ -10621,12 +10621,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						IQTSuppFinalizationSO.class);
 	}
 	
-	private ICommitteSO getCommitteeSO(){
-		return BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						ICommitteSO.class);
-	}
-	
 	/**
 	 * @method returns eval Type Item.
 	 */

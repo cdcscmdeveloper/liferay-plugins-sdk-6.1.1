@@ -6118,6 +6118,27 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 //			}
 			//#26474 -end-
 			
+			// 33222 - start
+			String taskName = this.getManagedBean().getTaskName();
+			if (Arrays.asList(SCProcessNameConst.APPROVE_MANUAL_LOA, SCProcessNameConst.ACCEPT_MANUAL_LOA).contains(
+					taskName)
+					&& Arrays.asList(BpmOutcomeConst.BPM_ACCEPT, BpmOutcomeConst.BPM_REVISE).contains(outcome)) {
+				try {
+					String deskofficerUserId = validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(),
+							true);
+					reqDTO.setReplacementDeskofficer(deskofficerUserId);
+				} catch (Exception e) {
+					if (!BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
+						throw e;
+					}
+				}
+
+			} else if (Arrays.asList(SCProcessNameConst.VERIFY_MANUAL_LOA, SCProcessNameConst.VERIFY_LOA).contains(
+					taskName)) {
+				validateContractAdminProfileRoleStatus(scLoa);
+			}
+			// 33222 - end
+			
 			// remove empty remark - start
 			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
 			List<ScLoaRemark> finalScLoaRemarks = new ArrayList<>();

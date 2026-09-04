@@ -2315,11 +2315,6 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setMemberHistoryPaginator(selectedHistoryMember);
 	}
 	
-	private ICommitteSO getCommitteeSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-	}
-    
     private void restoreUnconfirmChanges(){
     	if(this.getManagedBean().getCommitteeMemberActivity() == null){
     		this.getManagedBean().setCommitteeMemberActivity(new ArrayList<ScCommitteeMember>());
@@ -2446,6 +2441,7 @@ public class EvaluationMeetingBackingBean extends
 	 * Determine the popup that should appear upon submission.
 	 */
 	public void resolveSubmitMeetingDialog() {
+		this.validateCommitteeUsers(this.getManagedBean().getQt(), this.getManagedBean().getScQtCommittee()); // 33222
 		if (isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()) && this.getManagedBean().isValidFor25037()) {
 			RequestContext.getCurrentInstance().execute("confirmSubmitToApproverPopup.show();");
 		} else {

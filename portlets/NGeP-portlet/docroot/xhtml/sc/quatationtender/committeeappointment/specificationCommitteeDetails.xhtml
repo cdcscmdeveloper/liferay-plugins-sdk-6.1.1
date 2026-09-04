@@ -92,6 +92,8 @@
 					<h:outputText value="#{lbl['lbl.sc.role']}" />
 				</f:facet>
 				<ui:param name="filteredRoles" value="#{approvalBackingBean.managedBean.roleFilterList}"/>
+				<ui:remove>33322 start</ui:remove>
+				<span style="display:inline-block; min-width: 70px;">
 				<ui:fragment rendered="#{(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole)) and isCommitteeAppointmentMenuTab}"><ui:remove>//29464</ui:remove>
 					<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 							value="#{specificationcommittee.memberRoleId}"
@@ -112,6 +114,13 @@
 				<ui:fragment rendered="#{!(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole)) or !isCommitteeAppointmentMenuTab}"><ui:remove>//29464</ui:remove>
 					<h:outputText value="#{qTCommitteBackingBean.getParameterDesc(specificationcommittee.memberRole)}" />
 				</ui:fragment>
+				</span>
+				<span style="display:inline-block;margin-left: 10px;">
+				<ui:fragment rendered="#{specificationcommittee.userInactive}">
+					<ac:inactiveUserTooltip/>
+				</ui:fragment>
+				</span>
+				<ui:remove>33222 start</ui:remove>
 			</p:column>
 		</p:dataTable>
 		<!-- #12471 Start -->
