@@ -179,6 +179,8 @@ public class DPConstants {
 	public static final Long VALUE_OF_ONE = 1L;
 	// 33224 - end
 
+	//34449 - start
+	public static final String DIALOG_MESSAGE_CANCEL_SHOW = "cancelDlg.show()";
 	// 26059 - end
 	private DPConstants() {
 		// This constructor is intentionally left empty
