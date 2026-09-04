@@ -82,6 +82,7 @@
 
 
  <!--  #29705 remove --> 
+ <!-- #34860 Start -->
 		<p:panel id="panelJustificationId"
 			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true">
 			<table style="width: 100%;">
@@ -109,8 +110,10 @@
 							display="icon" /></td>
 					<!-- #34860 End -->		
 				</tr>
-			</table>
-			<h:panelGroup id="panelWithJustificationTxtId">
+				<tr>
+				<td style="width: 20%;vertical-align:top; padding-top:5px; margin-left: 55px;"></td>
+				<td style="margin-left: 55px;">
+				<h:panelGroup id="panelWithJustificationTxtId">
 				<c:if
 					test="#{suppFinalizationBackingBean.managedBean.renderjustificationTextbox}">
 					<table>
@@ -129,8 +132,11 @@
 					</table>
 				</c:if>
 			</h:panelGroup>
+				</td>
+				</tr>
+			</table>
 		</p:panel>
-
+<!-- #34860 End -->	
 		<p:panel header="#{lbl['lbl.sc.committee.endorsement.report']}"
 			toggleable="true" rendered="#{!readOnly}">
 
