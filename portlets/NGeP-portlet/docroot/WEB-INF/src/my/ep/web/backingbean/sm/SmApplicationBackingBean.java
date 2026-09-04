@@ -19477,6 +19477,12 @@ public class SmApplicationBackingBean extends
             return country;
         }
 
+        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
+
+        if (country != null && !country.isEmpty()) {
+            return country;
+        }
+
         return SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
 	}
 	
