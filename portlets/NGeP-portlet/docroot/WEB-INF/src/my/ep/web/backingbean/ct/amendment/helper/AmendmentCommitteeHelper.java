@@ -335,7 +335,7 @@ public class AmendmentCommitteeHelper {
 	private boolean loaAmountQCBCommitteeWIP() {
 		long loaAmt = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue();
 		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
-				&& loaAmt >= 20000L && loaAmt <= 50000L;
+				&& loaAmt >= ContractConst.COMMITTEE_20000 && loaAmt <= ContractConst.COMMITTEE_50000;
 	}
 
 	/**
