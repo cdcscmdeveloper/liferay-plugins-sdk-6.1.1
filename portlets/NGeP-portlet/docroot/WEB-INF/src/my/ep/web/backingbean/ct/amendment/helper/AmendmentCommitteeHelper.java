@@ -9,6 +9,7 @@ import org.primefaces.context.RequestContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -322,7 +323,7 @@ public class AmendmentCommitteeHelper {
 	private boolean loaAmountQCBCommitteeWIP() {
 		long loaAmt = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue();
 		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
-				&& loaAmt >= 20000L && loaAmt <= 50000L;
+				&& loaAmt >= ContractConst.COMMITTEE_20000 && loaAmt <= ContractConst.COMMITTEE_50000;
 	}
 
 	/**
