@@ -24,9 +24,11 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -40,9 +42,12 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -68,6 +73,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
@@ -1429,6 +1435,9 @@ public class ConsolidationReportBackingBean extends
 			List<ScQtRecommend> items) {
 		List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
 		List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = null;
+		
+		ScQt scQt = getManagedBean().getScQt();//#28777&#29729
+		
 		SuppFinalizationResDTO resDTO = getQualifiedSuppliersWithDORank(
 				specZoneDtl, null);
 

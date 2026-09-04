@@ -88,6 +88,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
