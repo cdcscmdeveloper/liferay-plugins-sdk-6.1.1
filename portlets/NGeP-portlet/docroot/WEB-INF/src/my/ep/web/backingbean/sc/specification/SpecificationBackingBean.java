@@ -17128,11 +17128,6 @@ public class SpecificationBackingBean extends
 
 	private void setTechncialChecklistEvaluationStatus(
 			List<ScQtCheckList> technicalCheckList) {
-		// #10141 - #41172 Start Vinod
-		if (this.getManagedBean().isSaveForScorePrintBtn()) {
-			return;
-		}
-		// #10141 - #41172 End Vinod
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : technicalCheckList) {
 				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
@@ -17154,11 +17149,6 @@ public class SpecificationBackingBean extends
 
 	private void setFinancialChecklistEvaluationStatus(
 			List<ScQtCheckList> financialCheckList) {
-		// #10141 - #41172 Start Vinod
-		if (this.getManagedBean().isSaveForScorePrintBtn()) {
-			return;
-		}
-		// #10141 - #41172 End Vinod
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
 			for (ScQtCheckList financialcheckList : financialCheckList) {
 				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
@@ -17187,6 +17177,11 @@ public class SpecificationBackingBean extends
 	private void validateTechnicalUserScoringAttachment(
 			boolean isTechnicalUserScoringSchema) {
 
+		// #10141 - #41172 Start Vinod
+		if (this.getManagedBean().isSaveForScorePrintBtn()) {
+			return;
+		}
+		// #10141 - #41172 End Vinod
 		if (isTechnicalUserScoringSchema) {
 			if (null == this.getManagedBean().getQt()
 					.getTechnicalUserScoringSchemaAttachment()) {
@@ -17204,6 +17199,11 @@ public class SpecificationBackingBean extends
 	 */
 	private void validateFinancialUserScoringAttachment(
 			boolean isFinancialUserScoringSchema) {
+		// #10141 - #41172 Start Vinod
+		if (this.getManagedBean().isSaveForScorePrintBtn()) {
+			return;
+		}
+		// #10141 - #41172 End Vinod
 		if (isFinancialUserScoringSchema) {
 			if (null == this.getManagedBean().getQt()
 					.getFinancialUserScoringSchemaAttachment()) {
