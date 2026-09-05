@@ -3245,8 +3245,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType){
 		SelectItem[] items = null;
 		
-		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
+		// #35320 - Start
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
+			// #35320 - End
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
 			//Enhancement #21691 - start -
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
@@ -6948,6 +6951,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		switch (committeeType) {
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE: // #35320
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
 		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
@@ -7453,7 +7457,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			downloadSFAndRecommendationFilesAsZipFile(zos, scAttachments);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "downloadSFAndRecommendationFiles", "",
+					"downloadSFAndRecommendationFiles", getUserIdSessionFromLoginId(), ex);
 		} finally {
 			zos.close();
 			response.flushBuffer();
