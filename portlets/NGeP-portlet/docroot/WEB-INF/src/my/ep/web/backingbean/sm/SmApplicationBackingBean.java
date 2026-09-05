@@ -10733,6 +10733,20 @@ public class SmApplicationBackingBean extends
 			SmCommonUtil.setRoleName(getManagedBean().getSmAppl().getSupplierType(),getManagedBean().getSmAppl().getSmPersonnels());
 		} finally {
 			initNonMandatoryAndMandatoryDocs();
+			//#40112 - start
+			if (getManagedBean().isSupplierUser()){
+				if (SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC.equalsIgnoreCase(currentPageType)){
+					SmAIDocBackingBean.loadTenancyDocs(getManagedBean().getSmAppl());
+					SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+				} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL.equalsIgnoreCase(currentPageType)){
+					SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
+					SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
+				} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS.equalsIgnoreCase(currentPageType)){
+					SmAIDocBackingBean.attachPendingAiFiles(getManagedBean().getSmAppl());
+					SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
+				}
+			}
+			//#40112 - end
 		}
 		
 		// start #28689 - set percentage to 0.000 if null
@@ -11309,6 +11323,9 @@ public class SmApplicationBackingBean extends
 	private void updateRegistrationStatus(SmApplSectionReview latestPOChange) {
 	    Long currentRegStatusId = getCurrRegStatusId();
 	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
+	    if(prevRegStatusId == null){
+	    	prevRegStatusId = currentRegStatusId;
+	    }
 	    
 	    // S1125: Simplified boolean expressions
 	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);

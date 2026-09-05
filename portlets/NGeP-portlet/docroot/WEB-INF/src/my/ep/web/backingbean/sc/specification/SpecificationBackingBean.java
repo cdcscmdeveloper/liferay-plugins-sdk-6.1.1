@@ -12733,6 +12733,10 @@ public class SpecificationBackingBean extends
 	public void specCommitteBpmTask(String action) {
 		// #39062 Start Vinod 23/09/2025
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			//41075- start
+			SpecificationReqDTO specReqDto=new SpecificationReqDTO();
+			specReqDto.setScQt(this.getManagedBean().getQt());
+			this.getManagedBean().setWipStatusMax(getSpecSO().checkWipScoreSettingMax(specReqDto));//41075- End
 			//#29732 start -set weightage to true, since requirement is mandatory to select financial weightage.
 			if(this.getManagedBean().getWipStatusMax()>=SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
 					&& null != this.getManagedBean().getFinancialScoreSetting()){
@@ -17173,6 +17177,11 @@ public class SpecificationBackingBean extends
 	private void validateTechnicalUserScoringAttachment(
 			boolean isTechnicalUserScoringSchema) {
 
+		// #10141 - #41172 Start Vinod
+		if (this.getManagedBean().isSaveForScorePrintBtn()) {
+			return;
+		}
+		// #10141 - #41172 End Vinod
 		if (isTechnicalUserScoringSchema) {
 			if (null == this.getManagedBean().getQt()
 					.getTechnicalUserScoringSchemaAttachment()) {
@@ -17190,6 +17199,11 @@ public class SpecificationBackingBean extends
 	 */
 	private void validateFinancialUserScoringAttachment(
 			boolean isFinancialUserScoringSchema) {
+		// #10141 - #41172 Start Vinod
+		if (this.getManagedBean().isSaveForScorePrintBtn()) {
+			return;
+		}
+		// #10141 - #41172 End Vinod
 		if (isFinancialUserScoringSchema) {
 			if (null == this.getManagedBean().getQt()
 					.getFinancialUserScoringSchemaAttachment()) {
@@ -23316,6 +23330,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	public void generateSpecScoreReport() throws IOException {
 		int specZoneTabIndex = this.getManagedBean().getSpecZoneTabIndex();
+		this.getManagedBean().setSaveForScorePrintBtn(true); //#10141 - #41172 added.
 		validatePrepareQtChecklist();
 		
 		this.getManagedBean().setSpecZoneTabIndex(specZoneTabIndex);
