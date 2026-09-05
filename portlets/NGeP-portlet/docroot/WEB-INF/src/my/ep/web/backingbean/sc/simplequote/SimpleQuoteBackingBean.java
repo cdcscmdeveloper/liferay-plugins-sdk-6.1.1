@@ -1715,7 +1715,7 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			//#39230 - Start			
+			//#39230 - Start
 			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
 				throw new EpException(MessageConst.ERROR_760824);
 			} else {

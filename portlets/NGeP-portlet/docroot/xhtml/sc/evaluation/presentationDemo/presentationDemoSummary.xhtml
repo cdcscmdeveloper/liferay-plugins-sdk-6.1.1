@@ -11,9 +11,7 @@
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText
-				value="#{lbl['lbl.sc.eva.qualified.supplier.list.presentation.demo.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.qualified.supplier.list.presentation.demo.stage.tooltip']}" />
+				value="#{lbl['lbl.demo.overall.summary']}" />
 		</f:facet>
 
 		<p:dataTable var="finEvaluationqualifiedSupplier" rows="10"
@@ -24,6 +22,12 @@
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="qualifiedListId" />
 
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}"
+				style="text-align:right">
+
+				<h:outputText value="#{finEvaluationqualifiedSupplier.evalRank}"></h:outputText>
+			</p:column>
 			<ui:remove><!-- 6906 - start note 212 --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty finEvaluationqualifiedSupplier.qtEvaluationResult.scQtProposal.supplierRejectionRemark}" />
@@ -45,18 +49,21 @@
 				</table>
 			</p:column>
 			<ui:remove><!-- 6906 - end note 212 --></ui:remove>
-
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:30%; text-align:center;">
-
-				<h:outputText
-					value="#{finEvaluationqualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
-
-
+			<p:column headerText="#{evaluationBackingBean.managedBean.totalScoreLabel}"
+				style="white-space: normal;text-align:center">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(finEvaluationqualifiedSupplier)}"></h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{evaluationBackingBean.managedBean.maxItemAllOtherElementsScoreLabel}"
+				style="white-space: normal;text-align:center">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="text-align:right">
+			<p:column style="width:25%;text-align:right">
+				<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+						<ac:iconTooltip value="#{evaluationBackingBean.managedBean.tooltipDemo}" />
+					</f:facet>
 				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 
@@ -92,9 +99,7 @@
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.presentation.demo.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.presentation.demo.stage.tooltip']}" />
+				value="#{lbl['lbl.demo.not.overall.summary']}" />
 		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier" rows="10"
@@ -125,9 +130,22 @@
 				</table>
 			</p:column>
 			<ui:remove><!-- 6906 - end note 233--></ui:remove>
+			
+			<p:column headerText="#{evaluationBackingBean.managedBean.totalScoreLabel}"
+				style="white-space: normal;text-align:center">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(disQualifiedSupplier)}"></h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{evaluationBackingBean.managedBean.maxItemAllOtherElementsScoreLabel}"
+				style="white-space: normal;text-align:center">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(disQualifiedSupplier)}"></h:outputText>
+			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="text-align:right">
+			<p:column style="width:25%;text-align:right">
+				<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+						<ac:iconTooltip value="#{evaluationBackingBean.managedBean.tooltipDemo}" />
+					</f:facet>
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 

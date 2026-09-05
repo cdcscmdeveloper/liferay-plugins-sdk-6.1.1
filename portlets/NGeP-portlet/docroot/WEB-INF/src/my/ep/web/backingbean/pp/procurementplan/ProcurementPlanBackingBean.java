@@ -8890,7 +8890,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    return StringUtils.isBlank(remark.getRemark());
 	}
 	//#39764 - End
-	
+
 	//#39693_40086 - Start
 	private boolean isGroupOrgTypeKumpPtjAndMinistryHierarchy(String groupOrgType) {
 		return groupOrgType != null

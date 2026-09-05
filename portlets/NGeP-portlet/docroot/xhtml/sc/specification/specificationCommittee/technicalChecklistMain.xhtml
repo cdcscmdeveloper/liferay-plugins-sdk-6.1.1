@@ -52,11 +52,11 @@
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<!-- #15391 #11104 (add SP) -start- -->
+				<!-- #28784, #15391 #11104 (add SP) -start- -->
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
-					disabled="#{(specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()) and !specificationBackingBean.managedBean.isChecklist()}"
+					disabled="#{(stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and specificationBackingBean.managedBean.qt.demoRequired eq 'true' and specificationBackingBean.managedBean.newVersion) or (specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()) and !specificationBackingBean.managedBean.isChecklist()}"
 					rendered="#{stageTwoTechnical.manditory !='true' and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
-				<!-- #15391 #11104 -end- -->
+				<!-- #28784, #15391 #11104 -end- -->
 					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
@@ -97,10 +97,13 @@
  
 				<ui:fragment rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.qtChecklistId eq null}">
 				<h:panelGroup id="technicalChecklistTitleHeader">
+					<!-- 28784 -start- -->					
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"
+						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 or 
+						stageTwoTechnical.title eq null}"
 						value="#{stageTwoTechnical.title}" size="35" maxlength="1000"
 						validator="#{specificationBackingBean.isContentExistUnicode}">
+					<!-- 28784 -end- -->
 						<p:ajax event="change" process="@this,technicalChecklistTitleHeader" partialSubmit="true"
 							update="technicalChecklisttypes"
 							listener="#{specificationBackingBean.technicalCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
@@ -127,14 +130,20 @@
 
 				<h:panelGroup id="technicalChecklisttypes">
 
-                  <ui:remove> #11104 - start </ui:remove>
+                  <ui:remove> #28784, #11104 - start </ui:remove>
 					<ui:fragment
-						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE')) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq 'TS' or (stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and specificationBackingBean.managedBean.sampleShowHide)))}"><!-- 11104wip -->
+						rendered="#{(stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo
+						or (stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq ParameterConst.documentDefinitionTypeTrustGate
+						or stageTwoTechnical.pmDocument.docDefinitionKey eq ParameterConst.documentDefinitionTypePlacehodler1
+						or stageTwoTechnical.pmDocument.docDefinitionKey eq ParameterConst.documentDefinitionTypePlacehodler2
+						or stageTwoTechnical.pmDocument.docDefinitionKey eq ParameterConst.documentDefinitionTypePlacehodler3))
+						or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification
+						or (stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and specificationBackingBean.managedBean.sampleShowHide)))}"><!-- 11104wip -->
 
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 					</ui:fragment>
-                <ui:remove> #11104 - end </ui:remove>
+                <ui:remove> #28784, #11104 - end </ui:remove>
 
 					<ui:fragment
 						rendered="#{(stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null))}">
@@ -168,8 +177,10 @@
 					</ui:fragment>
 					
                   <ui:remove> #11104 - start </ui:remove>
+					<!-- 28784 - Start- -->
 					<ui:fragment
-						rendered="#{stageTwoTechnical.pmDocument eq null and (stageTwoTechnical.definationType.parameterCode ne ParameterConst.documentDefinitionTypeTemplateSpecification)}"><!-- 11104wip -->
+						rendered="#{stageTwoTechnical.definationType.parameterCode ne 'PD' and stageTwoTechnical.pmDocument eq null and (stageTwoTechnical.definationType.parameterCode ne ParameterConst.documentDefinitionTypeTemplateSpecification)}"><!-- 11104wip -->
+					<!-- 28784 - End- -->
 						 <ui:remove> #11104 - end </ui:remove>
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu style="width:170px;" required="true"
@@ -386,6 +397,31 @@
 						<f:setPropertyActionListener value="#{stageTwoTechnical}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 					</p:commandLink>
+				
+					<!-- START #28784 -->
+					<p:commandLink
+						rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD' and
+						specificationBackingBean.managedBean.newVersion}"
+						action="#{specificationBackingBean.demoTechnicalTemplatelist()}"
+						update="@([id$=demoSpecTempId])"
+						disabled="#{specificationBackingBean.isTSChecklistCompleted()}"> <!--#28784--> 		 			
+						<ui:fragment
+							rendered="#{(specificationBackingBean.isQTStatusChecklistScoring() and  specificationBackingBean.isAllTSDemoChecklistCompleted()) or 
+							(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or
+							(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and 
+							specificationBackingBean.managedBean.specMaintenance)}">
+							<h:graphicImage value="/css/images/design/edit.png" />
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or 
+								(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and 
+							!specificationBackingBean.managedBean.specMaintenance))}">
+							<h:graphicImage value="/css/images/design/ico-view.png" />
+						</ui:fragment>
+						<f:setPropertyActionListener value="#{stageTwoTechnical}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+					</p:commandLink>
+					<!-- END #28784 -->
 				</h:panelGroup>
 				
 			</p:column>

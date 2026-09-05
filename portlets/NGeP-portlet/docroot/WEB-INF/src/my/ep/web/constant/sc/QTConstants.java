@@ -405,6 +405,8 @@ public interface QTConstants {
 	// #36757 Start Vinod
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 End Vinod
+	
+	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
 
 	// #29732 -Start
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";

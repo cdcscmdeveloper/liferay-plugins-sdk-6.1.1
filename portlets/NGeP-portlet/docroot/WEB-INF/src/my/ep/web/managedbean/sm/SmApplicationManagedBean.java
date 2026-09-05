@@ -663,7 +663,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String removedRoleMsg;
 	private boolean latestApplHasPrevRole;
 	// #40031 - End
-	
+
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
