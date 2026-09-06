@@ -3042,6 +3042,10 @@ public class QTDetailBackingBean extends
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
+		// #35320 - Start
+		resetFinalizationCommittee(scQt, currentStatusId);
+		// #35320 - End
+		
 		if (finalizationSecratary == null
 				&& isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
 			ICommitteSO committeSO;
@@ -3074,6 +3078,66 @@ public class QTDetailBackingBean extends
 
 		return finalizationSecratary;
 	}
+
+	// #35320 - Start;
+	/**
+	 * #35320
+	 * Resets the finalization committee and secretary when the quotation
+	 * is finalized by a supported quotation committee and the current status
+	 * is a trigger status.
+	 *
+	 * @param scQt the quotation object to be updated
+	 * @param currentStatusId the current quotation status identifier
+	 */
+	private void resetFinalizationCommittee(ScQt scQt, Long currentStatusId) {
+	    if (!isValidFinalizationCommittee(scQt)) {
+	        return;
+	    }
+
+	    if (!isQuotationCommittee(scQt.getFinalizationCommitte())) {
+	        return;
+	    }
+
+	    if (!resetCommitteeByStatus(currentStatusId)) {
+	        return;
+	    }
+
+	    scQt.setFinalizationCommitte(new PmParameter());
+	    scQt.setFinalizationSecratery(new PmUser());
+	    this.getManagedBean().setQt(scQt);
+	}
+
+	/**
+	 * #35320
+	 * Checks whether the quotation has a valid finalization committee
+	 * and parameter code.
+	 *
+	 * @param scQt the quotation object
+	 * @return {@code true} if the committee and parameter code are present;
+	 *         {@code false} otherwise
+	 */
+	private boolean isValidFinalizationCommittee(ScQt scQt) {
+	    return scQt != null
+	            && scQt.getFinalizationCommitte() != null
+	            && scQt.getFinalizationCommitte().getParameterCode() != null;
+	}
+
+	/**
+	 * #35320
+	 * Determines whether the supplied parameter represents one of the
+	 * supported quotation committee types.
+	 *
+	 * @param committee the finalization committee parameter
+	 * @return {@code true} if the committee is quotation committee A or B;
+	 *         {@code false} otherwise
+	 */
+	private boolean isQuotationCommittee(PmParameter committee) {
+	    String parameterCode = committee.getParameterCode();
+
+	    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(parameterCode)
+	            || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameterCode);
+	}
+	// #35320 - End;
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -7069,6 +7133,10 @@ public class QTDetailBackingBean extends
 	public String cancelQtDetails() {
 		debugLogger("cancelQtDetails");
 		IQTDetailSO detailSO;
+		
+		// #35320 - Start
+		this.getManagedBean().setAfterSF(false);
+		// #35320 - End
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -7096,6 +7164,17 @@ public class QTDetailBackingBean extends
 				TabBean tabBean = new TabBean(null, null, qtApproval,
 						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
+				
+				// #35320 - Start
+				if (isQTStatusGreaterThanOrEquals(scQt.getQtStatus().getStatusId(),
+						QTStatusConst.QT_SUPPLIER_FINALIZATION)) {
+					this.getManagedBean().setAfterSF(true);
+
+					ScQtApproval approval = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval();
+					List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
+					approverSettings.get(0).setCommitteeType(scQt.getFinalizationCommitte());
+					approverSettings.get(0).setPmUser(scQt.getFinalizationSecratery());
+				}// #35320 - End
 			} else {
 				// #9019 -start-
 				// null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
@@ -12355,4 +12434,14 @@ public class QTDetailBackingBean extends
 		}
 	}
 	// #28784 note-#634 - End
+
+	/**
+	 * #35320 - Start 
+	 * @param statusId
+	 * @return boolean
+	 */
+	private static boolean resetCommitteeByStatus(long statusId) {
+        final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
+        return triggerStatuses.contains(statusId);
+	}//#35320 - End 
 }
