@@ -688,8 +688,7 @@
 							style="width:10%; text-align:right;" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}"
 							style="width:5%; text-align:right;" />
-						<p:column rowspan="2" style="width:5%; text-align:center;"
-							rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
+						<p:column rowspan="2" style="width:5%; text-align:center;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.rating']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -851,8 +850,7 @@
 														CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column style="text-align:center;"
-					rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
+				<p:column style="text-align:center;">
 					<h:outputText
 						value="#{empty shortlistedSuppDisqualified.totalRating? 0: shortlistedSuppDisqualified.totalRating}" />
 				</p:column>
