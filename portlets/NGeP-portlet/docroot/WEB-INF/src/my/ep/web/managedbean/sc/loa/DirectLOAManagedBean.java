@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
@@ -342,6 +343,10 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private boolean requiredAgreementChange = false;
 
 	// #25726 END
+	
+	//#11134/#41092 -start-
+	private List<ScLoaRemark> supplierRemarks;
+	//#11134/#41092 -end-	
 
 	/**
 	 * Gets the spki backing bean.
@@ -2079,5 +2084,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	// #25726 END
+	
+	// #11134/#41092 -start-
+	public List<ScLoaRemark> getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+	// #11134/#41092 -end-
 
 }
