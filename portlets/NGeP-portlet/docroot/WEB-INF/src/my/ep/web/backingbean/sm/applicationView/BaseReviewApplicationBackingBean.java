@@ -4811,4 +4811,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		});
 	}
 	// #34031#note-111 : Issue 20 - End
+	
+	//#40444 --START
+	public boolean checkOverLappedCategoryExists(SmAppl smAppl) {
+		SmOverlapCategoryVO vo = getOverlapCategoryVO(smAppl);
+		return vo != null && vo.isOverLappedCategoryExist();
+	}//#40444 --END
 }
