@@ -18167,19 +18167,6 @@ public class SpecificationBackingBean extends
 		
 		// #40998/#10141 -  End
 		
-		// #40998/#10141 - Start 
-		boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
-				.getManagedBean().isShowInactiveChecklistPopup(), action);
-
-		if (isInactiveChecklistPopup) {
-			RequestContext.getCurrentInstance()
-			.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
-			return;
-		}
-			this.getManagedBean().getQt().setInactiveChecklistNotified(false);
-		
-		// #40998/#10141 -  End
-		
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
