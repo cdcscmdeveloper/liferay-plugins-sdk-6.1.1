@@ -31,14 +31,14 @@
 		content="#{lbl['lbl.sc.confirmation.cancel.message']}" update="@this" />
      <!-- 26129 - End --> <ui:remove>34449 - end</ui:remove>	
 	<ui:remove>34449 - start (New Submit Popup)</ui:remove>
-	<ac:confirmationPopup id="submitPrInquiryConfirmDlgId"
+	<ac:confirmationPopupSM id="submitPrInquiryConfirmDlgId"
 	    widget="submitPrInquiryConfirmDlg"  width="400" height="100"
 	    okAction="#{purchaseInquiryBackingBean.submitPrInquiryDtl('SUBMIT')}"
 	    title="#{lbl['lbl.sc.confirmation.submit']}"
 	    content="#{lbl['lbl.sc.confirmation.submit.message']}"  update="@form" />
 		<!-- 34449 - End -->	
 	<ui:remove>New Submit supplier Popup</ui:remove>
-	<ac:confirmationPopup id="submitSupplierResponseConfirmDlgId"
+	<ac:confirmationPopupSM id="submitSupplierResponseConfirmDlgId"
 		widget="submitSupplierResponseConfirmDlg"
 		width="400" height="100"
 		okAction="#{purchaseInquiryBackingBean.supplierSubmit()}"
