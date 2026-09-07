@@ -102,7 +102,7 @@
 							onclick="blockWidget.show();"
 							oncomplete="submitConfirmPopUp.hide(); blockWidget.hide();"
 							partialSubmit="true" process="@this"
-							update="@([id$=selectedCategoryTable]) @([id$=supplierPnlId])"
+							update="@([id$=supplierPnlId]), [id$=panelResult])"
 							action="#{directLOABackingBean.addToProcurementRelatedCategory()}" />
 						<p:commandButton value="#{lbl['lbl.btn.no']}"
 							onclick="submitConfirmPopUp.hide();" type="button"
@@ -197,7 +197,7 @@
 							onclick="blockWidget.show();"
 							oncomplete="deleteConfirmPopUp.hide(); blockWidget.hide();"
 							partialSubmit="true" process="@this"
-							update="@([id$=selectedCategoryTable],[id$=supplierPnlId])"
+							update="@([id$=supplierPnlId], [id$=panelResult])"
 							action="#{directLOABackingBean.deleteProcurementRelatedCategory()}" />
 						<p:commandButton value="#{lbl['lbl.btn.no']}"
 							onclick="deleteConfirmPopUp.hide();" type="button"
