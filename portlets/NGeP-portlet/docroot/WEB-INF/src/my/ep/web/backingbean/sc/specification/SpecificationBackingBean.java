@@ -2094,8 +2094,10 @@ public class SpecificationBackingBean extends
 			// #40138 Start Vinod
 			else {
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.SE_PENDING_SUBMISSION,
+						QTStatusConst.SE_PENDING_REVISION).contains(currentStatusId)) {
 					ScQt scQt = this.getManagedBean().getQt();
 					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.TECHNICAL_DOCTYPE);
 				}
@@ -2157,10 +2159,10 @@ public class SpecificationBackingBean extends
 			else {
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 				//#40998/#10141 - Start
-				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-						|| currentStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
-						|| currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.SE_PENDING_SUBMISSION,
+						QTStatusConst.SE_PENDING_REVISION).contains(currentStatusId)) {
 				//#40998/#10141 - End
 					ScQt scQt = this.getManagedBean().getQt();
 					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.FINANCIAL_DOCTYPE);
@@ -23254,8 +23256,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					defType)
 					|| (Arrays.asList(
 							QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST)
-							.contains(docDefKey) && techChecklist
-							.isScoringReq())) {
+							.contains(docDefKey) || (docDefKey
+							.equalsIgnoreCase(QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TL) && techChecklist
+							.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = techChecklist.getQtChecklistId();
 				String title = techChecklist.getTitle();
@@ -23299,7 +23302,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					defType)
 					|| (Arrays.asList(
 							QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST)
-							.contains(docDefKey) && finChecklist.isScoringReq())) {
+							.contains(docDefKey) || (Arrays
+							.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ)
+							.contains(docDefKey) && finChecklist.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = finChecklist.getQtChecklistId();
 				String title = finChecklist.getTitle();
