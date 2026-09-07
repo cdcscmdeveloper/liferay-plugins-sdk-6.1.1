@@ -137,7 +137,9 @@
 				</table>
 				<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 					toggleable="true">
+					<!-- #41185: bound the category-code table height and make its body scrollable so all Project Category Codes are reachable inside the view popup (the dialog itself does not scroll, so a long list was clipped off-screen). -->
 					<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
+						scrollable="true" scrollHeight="200" style="width: 100%;"
 						value="#{cc.attrs.mBean.selectedMaster.compExpMasterCats}"
 						var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
 						<ac:paginator for="smCompExpCatCodes" />
