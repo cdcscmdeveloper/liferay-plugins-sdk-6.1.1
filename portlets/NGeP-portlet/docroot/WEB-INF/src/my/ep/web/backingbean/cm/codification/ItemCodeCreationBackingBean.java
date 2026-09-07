@@ -24,7 +24,10 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.primefaces.context.RequestContext; //#34447
+//34447 Start
+import org.apache.commons.lang.StringUtils; 
+import org.primefaces.context.RequestContext;
+//34447 End
 //35503 Start
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.cm.AuditCMConst;
@@ -682,9 +685,9 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 
 	private boolean isAnyFieldEmpty(CmUnspsc lov) {
 	    return lov == null
-	    	|| lov.getUnspscCode() == null || lov.getUnspscCode().isEmpty()
-	        || lov.getUnspscTitle() == null || lov.getUnspscTitle().isEmpty()
-	        || lov.getUnspscTitleEng() == null || lov.getUnspscTitleEng().isEmpty();
+	            || StringUtils.isBlank(lov.getUnspscCode())
+	            || StringUtils.isBlank(lov.getUnspscTitle())
+	            || StringUtils.isBlank(lov.getUnspscTitleEng());
 	}
 	//#34447 - End
 }
