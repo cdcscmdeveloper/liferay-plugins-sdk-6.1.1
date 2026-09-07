@@ -4860,6 +4860,37 @@ public class SpecificationBackingBean extends
 			List<ScQtCheckList> checklist) {
 		ScQtCheckList list = checklist.get(index);
 
+		if (null != list.getTitle()) {
+			// #41151 - a title matching a standard checklist document must be
+			// added via the Standard Checklist button, which links pmDocument
+			// and drives the doc-group auto-pairing (e.g. Kunci Kira-Kira
+			// Tahunan <-> Aset dan Liabiliti). Keying it in manually here
+			// creates a same-titled row with no pmDocument, which then (a)
+			// hides the real standard document from the Standard Checklist
+			// picker (checkPmDocumentsExistInMainList matches by title alone)
+			// and (b) leaves the checklist permanently unresolved at
+			// evaluation time, where retrieveAllFinancialChecklist() only
+			// matches a row whose pmDocument is set.
+			procurementCategoryCode(this.getManagedBean().getQt());
+			DocumentReqDTO stdDocReqDTO = new DocumentReqDTO();
+			stdDocReqDTO.setProcurementCatCode(this.getManagedBean()
+					.getProcuremntCategory());
+			stdDocReqDTO
+					.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST);
+			DocumentResDTO stdDocResDTO = getDocumentSO()
+					.retrieveDocumentCheckList(stdDocReqDTO);
+			if (null != stdDocResDTO
+					&& CollectionUtils.isNotEmpty(stdDocResDTO.getDocumentList())) {
+				for (PmDocument document : stdDocResDTO.getDocumentList()) {
+					if (list.getTitle().equals(document.getDocName())) {
+						throw new EpException(
+								list.getTitle()
+										+ " is a standard checklist document. Please remove this item and add it via Standard Checklist instead.");
+					}
+				}
+			}
+		}
+
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
 
