@@ -462,7 +462,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
     private boolean newPK7Code = Boolean.FALSE;
 	private ScQuoteSupplier tempScQuoteSupplier = null;
 	private String wipReasonCategory;
+	private Long currentReasonId;
+	private String inactiveJustificationRemark;
+	private SelectItem[] inactiveJustDropdown = null; 
 	//27868 & 35321 - end
+	
+	// #5426 - start
+	private Long remainingMinute;
+	private Long remainingHour;
+	private Long remainingDay;
+	private Long remainingInterval;
+	private String remainingTimeMsg;
+	// #5426 - end
 	
 	private Boolean deleteBusinessNature = false;
 	/**
@@ -2949,6 +2960,101 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setWipReasonCategory(String wipReasonCategory) {
 		this.wipReasonCategory = wipReasonCategory;
 	}
+	
+	public Long getCurrentReasonId() {
+		return currentReasonId;
+	}
+
+	public void setCurrentReasonId(Long currentReasonId) {
+		this.currentReasonId = currentReasonId;
+	}
+	
+	public String getInactiveJustificationRemark() {
+		return inactiveJustificationRemark;
+	}
+
+	public void setInactiveJustificationRemark(String inactiveJustificationRemark) {
+		this.inactiveJustificationRemark = inactiveJustificationRemark;
+	}
+	
+	public SelectItem[] getInactiveJustDropdown() {
+		return inactiveJustDropdown;
+	}
+
+	public void setInactiveJustDropdown(SelectItem[] inactiveJustDropdown) {
+		this.inactiveJustDropdown = inactiveJustDropdown;
+	}
 	//27868 & 35321 - end
 	
+	//5426 - start
+	/**
+	 * @return the remainingMinute
+	 */
+	public Long getRemainingMinute() {
+		return remainingMinute;
+	}
+
+	/**
+	 * @param remainingMinute the remainingMinute to set
+	 */
+	public void setRemainingMinute(Long remainingMinute) {
+		this.remainingMinute = remainingMinute;
+	}
+
+	/**
+	 * @return the remainingHour
+	 */
+	public Long getRemainingHour() {
+		return remainingHour;
+	}
+
+	/**
+	 * @param remainingHour the remainingHour to set
+	 */
+	public void setRemainingHour(Long remainingHour) {
+		this.remainingHour = remainingHour;
+	}
+
+	/**
+	 * @return the remainingDay
+	 */
+	public Long getRemainingDay() {
+		return remainingDay;
+	}
+
+	/**
+	 * @param remainingDay the remainingDay to set
+	 */
+	public void setRemainingDay(Long remainingDay) {
+		this.remainingDay = remainingDay;
+	}
+
+	/**
+	 * @return the remainingInterval
+	 */
+	public Long getRemainingInterval() {
+		return remainingInterval;
+	}
+
+	/**
+	 * @param remainingInterval the remainingInterval to set
+	 */
+	public void setRemainingInterval(Long remainingInterval) {
+		this.remainingInterval = remainingInterval;
+	}
+
+	/**
+	 * @return the remainingTimeMsg
+	 */
+	public String getRemainingTimeMsg() {
+		return remainingTimeMsg;
+	}
+
+	/**
+	 * @param remainingTimeMsg the remainingTimeMsg to set
+	 */
+	public void setRemainingTimeMsg(String remainingTimeMsg) {
+		this.remainingTimeMsg = remainingTimeMsg;
+	}
+	//5426 - end
 }

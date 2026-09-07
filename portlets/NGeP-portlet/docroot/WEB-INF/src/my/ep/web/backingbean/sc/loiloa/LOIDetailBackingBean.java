@@ -43,7 +43,6 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#38151
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -119,7 +118,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
@@ -1719,11 +1717,6 @@ public class LOIDetailBackingBean extends
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-	}
-	
-	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 	}
 
 	/**
@@ -7727,7 +7720,7 @@ public class LOIDetailBackingBean extends
 	//#21692 - End
 	
 	//#38151 - Start
-	public void qualifiedSupplierListPopupScore(Long supplierId) {
+	public void qualifiedSupplierListPopupScore(Long supplierId, Long requestItemID) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -7771,7 +7764,7 @@ public class LOIDetailBackingBean extends
 		} else {
 
 			for (ScQtRecommend recommendList : this.getManagedBean().getRecommendList()) {
-				if (recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
+				if (null == selectedZoneId || recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
 					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
 
 				}
@@ -7782,6 +7775,7 @@ public class LOIDetailBackingBean extends
 		if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)) {
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
+			requestItemID = null;
 		} else if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM)) {
 			//if WIP cannot use Evalstage TI have to change T, 4serangkai deployment only can use TI
 			//evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
@@ -7800,7 +7794,7 @@ public class LOIDetailBackingBean extends
 
 			}
 		} else {
-			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
+			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null,requestItemID);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				//BigDecimal supplierNo = (BigDecimal) row[1];
@@ -7809,7 +7803,7 @@ public class LOIDetailBackingBean extends
 				BigDecimal reqItemId = (BigDecimal) row[6];
 				// Handle each row
 				if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
-						&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue())) {
+						&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() || requestItemID == reqItemId.longValue())) {
 					totalScoreTecEval = supplierTotalScore;
 					break;
 				}
@@ -7845,18 +7839,22 @@ public class LOIDetailBackingBean extends
 
 
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
+				selectedZoneId,requestItemID);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
 			//BigDecimal supplierNo = (BigDecimal) row[1];
 			BigDecimal supplierTotalScore = (BigDecimal) row[3];
 			String evalStage = row[4].toString();
+			BigDecimal selectedZone = (BigDecimal) row[5];
 			BigDecimal reqItemId = (BigDecimal) row[6];
 			// Handle each row
 
 			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageF)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue())) {
+					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue() 
+					|| requestItemID == reqItemId.longValue() && (null != selectedZoneId && selectedZone.longValue() == selectedZoneId)
+					|| null == selectedZoneId)) {
+
 				totalScoreFinEval = supplierTotalScore;
 				break;
 			}

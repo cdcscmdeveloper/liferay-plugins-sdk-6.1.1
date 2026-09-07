@@ -302,7 +302,14 @@ public interface QTConstants {
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
 	public static final String CLOSE_CLONE_LOA_SPEC_POPUP = "cloneLoaSpec.hide()";
+	public static final String LBL_TPL_SPEC_CONTENT_QUANTITY = "lbl.tpl.spec.content.quantity";
+	public static final int DIRECT_LOA_TAB_INDEX_THREE=3;
 	//#29468 End Vinod
+	
+	// #40974  - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	// #40974  - End
 	
 	// 21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
@@ -374,6 +381,14 @@ public interface QTConstants {
 	
 	public static final String SERVICE_OBJECT_CC = "cc";
 	
+	// 12471 - start
+	public static final String MEMBER_INFO_POPUP = "memberInfoPopUp.show()";
+	public static final String LABEL_TEXT_SELECT = "lbl.txt.select";
+	public static final String DATATABLE_EXISTINGCOMMITTEESEARCHID = "existingcommitteesearchid";
+	public static final String DATATABLE_EXISTINGMEMBERTBL = "existingMemberTbl";
+	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
+	// 12471 - end
+
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
 	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
@@ -427,6 +442,10 @@ public interface QTConstants {
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FN = "FN";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_PC = "PC";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_AL = "AL";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE = "FGE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE = "FNE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_CH = "CH";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_SD = "SD";
 	public static final String[] TECHNICAL_CHECKLIST_SELECT_LIST = new String[]{
 		TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
 		TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
@@ -437,11 +456,20 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_CH,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_SD
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
+	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 30px;\"></span></div>";
+	public static final String SPAN_ERROR_CONTENT_OPEN = "<div><span style=\"position: relative;right: 30px;\">";
+	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span></div></div>";
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION_HIDE = "inActiveChecklistNotification.hide()";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECMAINT = "lbl.sc.spec.confirm.inactive.techfin.checklist.specmaint";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -498,7 +526,7 @@ public interface QTConstants {
 			
 	// 25791-End
 	
-	//#38151
+	//#38151 & #38679
 	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
 	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
@@ -554,6 +582,10 @@ public interface QTConstants {
 	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
 
 	// 29661- end-
+	
+	// 28188 -start-
+	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
+	// 28188 -end-
 
 	// #39113 Start Vinod 25/09/2025
 	public static final String LBL_SC_REMARK = "lbl.sc.remark";

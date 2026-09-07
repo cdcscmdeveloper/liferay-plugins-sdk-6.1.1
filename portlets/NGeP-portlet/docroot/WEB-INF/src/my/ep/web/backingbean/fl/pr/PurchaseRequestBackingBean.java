@@ -1368,13 +1368,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		populateItemsForSelectedAddress();
 		// #27476 start
-		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
-			validateThresholdPK7AndSpecialItem();
-		} else {
-			checkPRThresholdPerItem();
+		String procType = getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode();
+		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+		        || procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+		    validateThresholdPK7AndSpecialItem();
+		} else if (!procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) { //#31344 - Exclude check threshold item for G2G
+		    checkPRThresholdPerItem();
 		}
 		// #27476 end
 	}
@@ -1546,7 +1545,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
 										.getUserLocale())));
 
-			} else {
+			} else if (!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){ //#31344 - Exclude check threshold item for G2G
 				checkPRThresholdPerItem();
 			}
 		}
@@ -5072,10 +5072,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 		
 		catalogueReqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
-		catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
-		CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
-		skuDesc = catalogueResDTO.getSkuNumber();
+		//40227-Start
+		if(scRequestItem.getCmItem()!=null){
+			catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
+			catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
+			CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
+			skuDesc = catalogueResDTO.getSkuNumber();
+		}
+		//40227-End
+		
 		//29396-end
 		
 		return skuDesc;
@@ -5606,6 +5611,19 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 			// #31344
 		}
+		
+		// agency validation
+		Set<String> outcomeAgencyValidation = new HashSet<>();
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_SUBMIT);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_APPROVE);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_REVISE);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_SAVE);
+
+		if (outcomeAgencyValidation.contains(action)
+				&& getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			validateAgencyValidationByReason();
+		}
 
 		// supplier acc type validation
 		validatePRSupplierAccType();
@@ -5678,8 +5696,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_ACTIVE);
 		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_CANCELLED);
 
+		Set<Integer> recordStatusMofCheck = new HashSet<>();
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_SUSPENDED);
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_DELETED);
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_EXPIRED);
+
 		// MOF deleted checks
-		if (mofStatus == DbValueConst.RECORD_STATUS_DELETED) {
+		if (recordStatusMofCheck.contains(mofStatus)) {
 
 			if (recordBasicMofCheck.contains(supplierStatus)) {
 				buildErrorMessageSupplierAccountTypeNonApplicable();
@@ -5830,7 +5853,37 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 		return pmReason;
 	}
+	
+	/**
+	 * agency validation for special item PR
+	 */
+	public void validateAgencyValidationByReason() {
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IReasonSO.class);
 
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(getPMReasonForThreshold().getReasonId());
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+
+		if (reasonSO.isAgencyValidatedRequiredForReason(reqDTO)) {
+			if (!reasonSO.isAgencyValidatedForReason(reqDTO)) {
+				if (isFlFulfilmentApprover()) {
+					throw new EpException(MessageConst.ERROR_740082, new String[] {
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgCode(),
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+							getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+							getManagedBean().getReason() });
+				} else if (isFlFulfilmentRequisitioner()) {
+					throw new EpException(MessageConst.ERROR_740081, new String[] {
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgCode(),
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+							getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+							getManagedBean().getReason() });
+				}
+			}
+
+		}
+	}
 	// #27476 end
 	
 	// #31344 start

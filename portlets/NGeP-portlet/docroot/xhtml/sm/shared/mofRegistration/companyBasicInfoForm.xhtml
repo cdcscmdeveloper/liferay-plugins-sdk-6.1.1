@@ -60,7 +60,18 @@
 							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}" 
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}"/>
 					</td>
-					
+					<!-- #33783 - start -->
+					<c:if test="#{backingBean.managedBean.smAppl.smSupplier.businessType == 'I'
+								or backingBean.managedBean.smAppl.smSupplier.businessType == 'J'}">
+					<td><p:outputLabel value="#{lbl['lbl.sm.clbg']}"/></td>
+					<td><p:selectOneRadio value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM eq
+										SupplierManagementConst.COMPANY_TYPE_CLBG}" disabled="true">
+							<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false"/>
+						</p:selectOneRadio>
+					</td>
+					</c:if>
+					<!-- #33783 - end  -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}" /></td>
 					<td>
 					<c:if test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">

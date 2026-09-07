@@ -406,10 +406,12 @@
 			label="#{lbl['lbl.tpl.spec.content.price.type']}">
 			<f:selectItems
 				value="#{templateSpecBackingBean.getPriceTypeDropdownList(templateSpecBean.specMaster)}" />
+			<ui:remove>#29468 Start Vinod added questionTbl to update for total amount.</ui:remove>
 			<p:ajax event="change"
 				listener="#{templateSpecBackingBean.priceTypeChange(templateSpecBean, question)}"
 				partialSubmit="true" process="@this"
-				update="priceTypeMsg, qtyPG, @([id$=estPG],[id$=ratePerUomPG])" />
+				update="priceTypeMsg, qtyPG, @([id$=estPG],[id$=ratePerUomPG],[id$=questionTbl])" />
+			<ui:remove>#29468 End Vinod</ui:remove>
 		</h:selectOneMenu>
 		<p:message id="priceTypeMsg" for="priceType" display="icon" />
 	</p:column>

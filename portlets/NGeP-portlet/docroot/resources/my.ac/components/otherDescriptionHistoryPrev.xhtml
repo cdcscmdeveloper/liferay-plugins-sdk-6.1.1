@@ -2,7 +2,6 @@
   <cc:interface>
     <cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.other.desc.history.header']}" />
     <cc:attribute name="categoryCodeList" type="java.util.List" required="true" />
-    <cc:attribute name="applNo" type="java.lang.String" required="true" />
     <cc:attribute name="otherDescChangePO" type="java.lang.Boolean" />
     <cc:attribute name="otherDescChangeApprover" type="java.lang.Boolean" />
     <cc:attribute name="otherDescChangeSupplier" type="java.lang.Boolean" />
@@ -35,44 +34,35 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.application.no']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText value="#{cc.attrs.applNo}" />
+							<h:outputText value="#{otherDescBean.applNoHistory}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText value="#{otherDescBean.createdDate}">
+							 <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}">
 								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
 							</h:outputText>
 						</p:column>
 						<p:column
-							headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
-								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'ONE')}" />
+							headerText="#{lbl['lbl.sm.other.desc.history.action.by']}"
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}"
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
-							headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
-								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'TWO')}" />
+							headerText="#{lbl['lbl.sm.other.desc.history.other.description']}"
+							style="width : 15% !important; vertical-align:top;">
+					        <h:outputText
+					            value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'THREE')}" 
+					            style="white-space: pre-wrap;" />
 						</p:column>
 						<p:column
-							headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
-								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'THREE')}" />
-						</p:column>
-						<p:column
-							headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}"
+							headerText="#{lbl['lbl.sm.other.desc.history.role']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 							<h:outputText
 								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FOUR')}" />
-						</p:column>
-						<p:column
-							headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}"
-							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText
-								value="#{supplierDataMaintenanceBackingBean.getOtherDescVal(otherDescBean, 'FIVE')}" />
 						</p:column>
 					</p:dataTable>
 					<br />
@@ -89,15 +79,11 @@
               </p:column>
               <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
               </p:column>
-              <p:column headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.by']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
               </p:column>
-              <p:column headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.other.description']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
               </p:column>
-              <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-              </p:column>
-              <p:column headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-              </p:column>
-              <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.role']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
               </p:column>
             </p:dataTable>
             <br />
