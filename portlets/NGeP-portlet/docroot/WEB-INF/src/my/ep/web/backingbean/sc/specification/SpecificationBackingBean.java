@@ -2159,10 +2159,10 @@ public class SpecificationBackingBean extends
 			else {
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 				//#40998/#10141 - Start
-				if (currentStatusId.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-						|| currentStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
-						|| currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.SE_PENDING_SUBMISSION,
+						QTStatusConst.SE_PENDING_REVISION).contains(currentStatusId)) {
 				//#40998/#10141 - End
 					ScQt scQt = this.getManagedBean().getQt();
 					checkAndUpdateNewMandatoryChecklist(scQt, SourcingConstants.FINANCIAL_DOCTYPE);
