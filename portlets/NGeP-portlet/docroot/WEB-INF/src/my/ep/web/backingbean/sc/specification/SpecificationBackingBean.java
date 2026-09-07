@@ -23978,8 +23978,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& null != finChecklist.getPmDocument().getDocDefinitionKey() ? finChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| (Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey) && finChecklist
-							.isScoringReq())) {
+					|| (Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey) || (Arrays
+							.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ).contains(docDefKey) && finChecklist
+							.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = finChecklist.getQtChecklistId();
 				String title = finChecklist.getTitle();
