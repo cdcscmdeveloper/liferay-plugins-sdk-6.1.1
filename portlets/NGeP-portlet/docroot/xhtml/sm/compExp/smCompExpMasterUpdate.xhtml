@@ -219,9 +219,9 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText maxlength="14"
-								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
-								value="#{smCompExpMB.selectedMaster.consultantFee}">
+						<td style="width: 66%"><p:inputText maxlength="14" style="width:auto !important;"
+								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" style="width:auto !important;"
+								value="#{smCompExpMB.selectedMaster.consultantFee}" style="width:auto !important;">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
