@@ -23256,8 +23256,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					defType)
 					|| (Arrays.asList(
 							QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST)
-							.contains(docDefKey) && techChecklist
-							.isScoringReq())) {
+							.contains(docDefKey) || (docDefKey
+							.equalsIgnoreCase(QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TL) && techChecklist
+							.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = techChecklist.getQtChecklistId();
 				String title = techChecklist.getTitle();
