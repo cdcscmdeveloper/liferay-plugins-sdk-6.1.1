@@ -188,7 +188,7 @@
 	      					itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 						<f:selectItem
 							itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-							itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+							itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
 							itemValue="#{FlReportConst.getFlRptCcSstNo()}"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
@@ -198,9 +198,9 @@
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 							itemValue="#{FlReportConst.getFlRptCcPhysicalLoaNo()}"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.recieveofficername']}"
-							itemValue="#{lbl['lbl.rpt.recieveofficername']}"></f:selectItem>
+							itemValue="#{FlReportConst.getFlRptReceivingOfficerName()}"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.ackofficername']}"
-							itemValue="#{lbl['lbl.rpt.ackofficername']}"></f:selectItem>
+							itemValue="#{FlReportConst.getFlRptAcknowledgedOfficerName()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
