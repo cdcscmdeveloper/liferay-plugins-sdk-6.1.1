@@ -256,13 +256,13 @@
 					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" partialSubmit="true"
 					process="@form" update="@form"
-					action="#{specificationBackingBean.specCommitteBpmTask(bpAction)}" />
+					action="#{specificationBackingBean.submitAction(bpAction)}" />
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
 					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" partialSubmit="true"
 					process="@form" update="@form"
-					action="#{specificationBackingBean.submitSpecMaintenanceDtls('Submit')}" />
+					action="#{specificationBackingBean.okActionForSpecMaintenance('Submit')}" />
 			</div>
 		</p:dialog>
 		<ui:remove> #10141 End Vinod </ui:remove>
