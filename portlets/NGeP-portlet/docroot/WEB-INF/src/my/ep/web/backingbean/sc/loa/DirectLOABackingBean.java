@@ -9477,8 +9477,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		//#26770 Note-#548 - Start
-		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
-		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		fileNo = fileNo.trim().replaceAll("", SSTConstant.PROTEGE_LOWERCASE_E);
+		fileNo = fileNo.trim().replaceAll("", SSTConstant.PROTEGE_UPPERCASE_E);
 		//#26770 Note-#548 - End
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
@@ -9541,8 +9541,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
 		title = title.replaceAll(">", SSTConstant.GREATER_THAN_SYMBOL);
 		title = title.replaceAll("\r\n", SSTConstant.BREAKLINE);
-		title = title.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
-		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		title = title.replaceAll("", SSTConstant.PROTEGE_LOWERCASE_E);
+		title = title.replaceAll("", SSTConstant.PROTEGE_UPPERCASE_E);
 		// 26770 - end
 		context.put("loaTitle", title);
 		
@@ -14659,21 +14659,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	    sortCategoryCodes(filteredSmSupplierCategoryList);
 		this.getManagedBean().setSupplierCategoryList(filteredSmSupplierCategoryList);
 
-
-		// #29661 #40511 Start
-		List<SmSupplierCategory> supplierList = new ArrayList<SmSupplierCategory>(filteredSmSupplierCategoryList);
-		List<SmSupplierCategory> originalList = new ArrayList<SmSupplierCategory>(filteredSmSupplierCategoryList);
-		this.getManagedBean().setSupplierCategoryList(supplierList);// #29661 #40093
-		this.getManagedBean().setOriginalSupplierCategoryList(originalList);
-		// #29661 #41032 Start
-		Long currentStatus = scLoa.getCurrentStatus().getPmStatus().getStatusId();
-		if (Arrays.asList(QTStatusConst.LOA_PENDING_STATUSES).contains(currentStatus)
-				&& !QTStatusConst.LOA_PENDING_VERIFICATION.equals(currentStatus)) {
-			this.getManagedBean().setShowCategoryCode(true);
-		}// #29661 #41032 End
-
-		removeAddedCategoryCode();
-
 		//#41116 start
 		Long currentStatus = null != scLoa.getCurrentStatus() && null != scLoa.getCurrentStatus().getPmStatus()
 				? scLoa.getCurrentStatus().getPmStatus().getStatusId() : scLoa.getPmStatus().getStatusId();
@@ -14688,7 +14673,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		} else if (showCategoryCode || QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(currentStatus)) {
 			this.getManagedBean().setShowCategoryCode(true);
 		}
-
 		// #29661 #40511 end
 	}
 	
@@ -14949,7 +14933,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	
 	// #29766 Start Vinod
 	/**
-	 * This method will check QT Type ’PK 7/WP Item’ and will show warning.
+	 * This method will check QT Type PK 7/WP Item and will show warning.
 	 * 
 	 * @param
 	 * @return
