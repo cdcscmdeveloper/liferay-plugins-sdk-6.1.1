@@ -898,9 +898,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#28784
 			checkDemoPresentationByStatus();
 			//#10141 Start Vinod
+			this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+			this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 			if(isSendNotificationButton){
-				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
-				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -909,10 +909,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										.getManagedBean().getInActiveChecklistNotificationText() },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
-				return;
-			} else if (!isSendNotificationButton && inactiveCLWarn) {
-				checkInactiveChecklistAndDisplayWarning(this.getManagedBean()
-						.getTaskName());
 				return;
 			}
 			//#10141 End Vinod
