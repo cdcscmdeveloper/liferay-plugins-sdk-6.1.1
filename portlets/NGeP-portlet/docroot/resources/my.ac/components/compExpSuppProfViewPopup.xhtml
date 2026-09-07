@@ -17,7 +17,7 @@
 			header="#{lbl['lbl.sm.comp.exp.master.list.panel']}"
 			widgetVar="compExpSuppProfViewPopupWV" modal="true"
 			styleClass="pop_up_top" position="top" width="700px">
-			<div align="center">
+			<div align="center" style="height: 90vh; overflow-y: auto;"><!-- #41185 -->
 				<table>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -172,9 +172,7 @@
 				</table>
 				<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 					toggleable="true">
-					<!-- #41185: bound the category-code table height and make its body scrollable so all Project Category Codes are reachable inside the view popup (the dialog itself does not scroll, so a long list was clipped off-screen). -->
 					<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
-						scrollable="true" scrollHeight="200" style="width: 100%;"
 						value="#{cc.attrs.mBean.selectedMaster.compExpMasterCats}"
 						var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
 						<ac:paginator for="smCompExpCatCodes" />
