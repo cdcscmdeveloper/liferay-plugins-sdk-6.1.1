@@ -681,9 +681,10 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 	}
 
 	private boolean isAnyFieldEmpty(CmUnspsc lov) {
-	    return lov.getUnspscCode().isEmpty()
-	        || lov.getUnspscTitle().isEmpty()
-	        || lov.getUnspscTitleEng().isEmpty();
+	    return lov == null
+	    	|| lov.getUnspscCode() == null || lov.getUnspscCode().isEmpty()
+	        || lov.getUnspscTitle() == null || lov.getUnspscTitle().isEmpty()
+	        || lov.getUnspscTitleEng() == null || lov.getUnspscTitleEng().isEmpty();
 	}
 	//#34447 - End
 }

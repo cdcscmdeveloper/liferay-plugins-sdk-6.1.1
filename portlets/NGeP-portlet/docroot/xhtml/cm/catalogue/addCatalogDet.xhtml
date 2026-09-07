@@ -38,7 +38,8 @@
 
 				<!-- 34447 Start -->
 				<p:commandButton value="#{lbl['lbl.btn.reject']}"
-					actionListener="#{reviewCatBackingBean.validateRejectBeforePopup}"/>
+					action="#{reviewCatBackingBean.validateRejectBeforePopup}"
+					update="@form"/>
 				<!-- 34447 End -->
 			</h:panelGroup>
 
