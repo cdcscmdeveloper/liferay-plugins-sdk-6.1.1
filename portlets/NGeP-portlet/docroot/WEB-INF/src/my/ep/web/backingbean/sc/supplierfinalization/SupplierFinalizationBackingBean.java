@@ -6533,9 +6533,7 @@ public class SupplierFinalizationBackingBean extends
 		String selectionMode = null;
 		if (isQTRefinalized() || ParameterConst.RECOMMEND_BY_AWARD
 							.equals(finalizationMethod)) {
-			this.getManagedBean().setSingleAward(true);
-			
-			selectionMode = QTConstants.SF_SINGLE;
+			selectionMode = checkForSelectionMLOI(finalizationMethod);//#40396
 		} else if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(finalizationMethod)) {
 			setOnlineBiddingFlag();
@@ -12791,6 +12789,18 @@ public class SupplierFinalizationBackingBean extends
 		} else {
 			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
 			this.getManagedBean().setSingleAward(true);
+		}
+	}
+	//#40396 - End
+	
+	//#40396 - Start
+	private String checkForSelectionMLOI(String finalizationMethodStr) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setMultipleLoi(true);
+			return QTConstants.SF_MULTIPLE;
+		} else {
+			this.getManagedBean().setSingleAward(true);
+			return QTConstants.SF_SINGLE;
 		}
 	}
 	//#40396 - End
