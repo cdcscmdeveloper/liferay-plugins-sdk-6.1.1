@@ -3013,15 +3013,22 @@ public class SupplierFinalizationBackingBean extends
 				} finally {
 					committeeSO = null;
 				}
-				
-				if (!isCurrentCommitteeAuthorisedToSubmit) {
-					//#35320 - Start
+
+				// 39077 -start-
+				boolean isBriefMsgShow = this.getManagedBean().isReviseBriefMsg();
+				boolean isMessageShow = !isCurrentCommitteeAuthorisedToSubmit && !isBriefMsgShow;
+
+				if (isMessageShow) {
+					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
+
+					// #35320 - Start
 					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 
 					throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode,
 							String.valueOf(totalIntendedPrice.intValue()) });
 					// #35320 - End
 				}
+				// 39077 -end-
 			}
 
 			//#26169 - START
@@ -10387,14 +10394,21 @@ public class SupplierFinalizationBackingBean extends
 					committeeSO = null;
 				}
 
-				if (!isCurrentCommitteeAuthorisedToSubmit) {
-					//#35320 - Start
+				// 39077 -start-
+				boolean isBriefMsgShow = this.getManagedBean().isReviseBriefMsg();
+				boolean isMessageShow = !isCurrentCommitteeAuthorisedToSubmit && !isBriefMsgShow;
+
+				if (isMessageShow) {
+					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
+
+					// #35320 - Start
 					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 
 					throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode,
 							String.valueOf(totalIntendedPrice.intValue()) });
 					// #35320 - End
 				}
+				// 39077 -end-
 			}
 
 			if (getManagedBean().isSubmit() && !getManagedBean().isInitialDecisionFwdToBPK() && isRecommendByAward()
