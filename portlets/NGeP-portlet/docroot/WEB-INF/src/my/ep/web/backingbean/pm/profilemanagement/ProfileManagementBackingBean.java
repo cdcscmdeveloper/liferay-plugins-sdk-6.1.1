@@ -3077,7 +3077,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
 			
-			PmUserOrg oldPmUserOrg = !this.getManagedBean().getSelectedUser().isBrandNew() ? 
+			// #40810 Start
+			PmUserOrg oldPmUserOrg = !userOrg.isBrandNew() ? 
 					PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(this.getManagedBean().getSelectedUser().getUserId(),
 							 this.getManagedBean().getSelectedUserOrg().getUserOrgId()) : null;
 			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
@@ -3230,6 +3231,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				
 				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					this.getManagedBean().setUserGrpBrandNew(true); // 40810
 					this.getManagedBean().setBrandNewUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
@@ -4319,6 +4321,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return null;
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		// selectedUserOrg.email
+		String email = this.getManagedBean().getSelectedUserOrg().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			this.getManagedBean().getSelectedUserOrg().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	//#29594 - START
 	public String retrieveMinistryName() {

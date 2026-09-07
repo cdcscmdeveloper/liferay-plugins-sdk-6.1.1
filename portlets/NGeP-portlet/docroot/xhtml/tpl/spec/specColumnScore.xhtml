@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<!-- #38151 --> 
+	<!-- #38151,#38679 --> 
 	<ui:param name="isWeightageNot35384WIP" 
 			  value="#{templateSpecBackingBean.hasWeightage(templateSpecBean) and !templateSpecBackingBean.managedBean.weightage35384WIP}"/>	
 	<ui:param name="isWeightage35384WIP" 
@@ -35,7 +35,7 @@
 				onmouseout="limitTextArea(this,500);">
 			</h:outputText>
 
-			<!-- #38151 --> 
+			<!-- #38151,#38679 --> 
 			<h:outputText value="#{tplSpecAnswer.autoScore / (isWeightageNot35384WIP ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}" 
 			rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or 
 			isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
@@ -59,7 +59,7 @@
 			    <!-- #35293 -End- -->
 			</h:outputText>
 
-			<ui:remove>	<!-- #38151 --> </ui:remove>			
+			<ui:remove>	<!-- #38151,#38679 --> </ui:remove>			
 			 <h:outputText value="/" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' or tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}"></h:outputText> 
 				<ui:remove><!-- #38151 Start command link--></ui:remove>
 				<p:commandLink process="@this" oncomplete="specScorePopup#{row}.show();" update="@([id$=specScorePopupId])" rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean) and isSpecTypeTechnical and !templateSpecBackingBean.managedBean.weightage35384WIP }">
@@ -76,7 +76,7 @@
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 			 </h:outputText>
-			<ui:remove>	<!-- #38151 --> </ui:remove>			
+			<ui:remove>	<!-- #38151,#38679 --> </ui:remove>			
 			
 			<c:if test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"

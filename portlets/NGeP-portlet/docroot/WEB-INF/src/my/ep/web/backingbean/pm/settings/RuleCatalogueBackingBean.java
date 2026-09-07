@@ -1398,7 +1398,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
 				.getConfigRuleDescList()) {
 
-			//sortConfigRuleValueList(ruleTypeDesc.getRuleType().getConfigRuleValues()); //#35323
+			sortConfigRuleValueList(ruleTypeDesc.getRuleType().getConfigRuleValues()); //#35323
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
 					.getParameterCode().equals("C")) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc
@@ -1435,8 +1435,9 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			// check validation
 			
 			// 29669,29641,30672 start
-			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P") 
+			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P")
 					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
+
 				//#35323 and sonarLint fixing - Start
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
 					if (ruleTypeValue.getRecordStatusFlg() == 0) {// if is inActive one go to next record
@@ -1447,6 +1448,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				//#35323 and sonarLint fixing - End
 			}
 			// 29669,29641,30672 end
+			
 			// 29650 start
 			if (ruleTypeDesc.getRuleType().getRangeType() == 3) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
@@ -1716,7 +1718,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			
 			//#35323 - Start
 			this.getManagedBean().setNewPRList(false);
-			//sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
+			sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
 				loadPRValues();
 			}
@@ -5982,12 +5984,13 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
         	} else {
         		getManagedBean().setLOPOSelected(false);
         	}
+        	
+    		//#35323 - Start
+    		if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(selectedRuleType)) {
+    			loadPRValues();
+    		}
+    		//#35323 - End
         }
-		//#35323 - Start
-		if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(selectedRuleType)) {
-			loadPRValues();
-		}
-		//#35323 - End
         //#36738 Start
         Long ruleTypeId = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
         if (this.getManagedBean().getOriginalConfigRuleValueMap() != null && this.getManagedBean().getOriginalConfigRuleValueMap().containsKey(ruleTypeId)){
@@ -6497,7 +6500,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType()
 				.setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
-		//sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
+		sortConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()); //#35323
 	}
 
 	/**

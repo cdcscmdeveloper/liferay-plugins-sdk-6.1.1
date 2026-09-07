@@ -823,8 +823,11 @@ private class SpecMaintenanceSearchQtDataModel extends
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() 
-				|| null != publishDate && publishDate.before(effDate)) {
+		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
+		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
+		
+		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
+			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
@@ -844,5 +847,39 @@ private class SpecMaintenanceSearchQtDataModel extends
 		}
 		return Boolean.FALSE;
 	}
-	//#38151 end
+	
+	private boolean specStatusEndorseRev(Date effTimestamp) {
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatus(this.getManagedBean().getQt().getQtId());
+			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
+
+	private boolean specStatusPendingDocRev(Date effTimestamp) {
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatusPenDoc(this.getManagedBean().getQt().getQtId());
+			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
+	//#38151 & #38679 end
 }

@@ -6012,6 +6012,7 @@ public class SupplierFinalizationBackingBean extends
 				createShortlistedSuppliersDataModel();// 35140
 			} 
 			
+			setDisableSFJustification();	//40314
 			//#28834 - Start
 			if(scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION)){
 				this.getManagedBean().setDisableJustifications(false);
@@ -12149,7 +12150,7 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		String committeeType = getManagedBean().getCommitteeType();
 
-		BigDecimal committeeThreshold = getThresholdFor(committeeType);
+		BigDecimal committeeThreshold = getThresholdForCommittee(committeeType);
 		if (committeeThreshold == null) {
 			return false;
 		}
@@ -12281,7 +12282,7 @@ public class SupplierFinalizationBackingBean extends
 	 *            committee type identifier
 	 * @return corresponding price threshold or {@code null} if unknown
 	 */
-	public static BigDecimal getThresholdFor(String committeeType) {
+	public static BigDecimal getThresholdForCommittee(String committeeType) {
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
@@ -12381,7 +12382,7 @@ public class SupplierFinalizationBackingBean extends
 
 		final boolean isItemize = getManagedBean().isItemize();
 		final String committeeType = getManagedBean().getCommitteeType();
-		final BigDecimal committeeThreshold = getThresholdFor(committeeType);
+		final BigDecimal committeeThreshold = getThresholdForCommittee(committeeType);
 
 		boolean exceed = isItemize ? checkItemizedOffersExceedThreshold(committeeThreshold)
 				: checkPackageOffersExceedThreshold(committeeThreshold);
@@ -12471,7 +12472,9 @@ public class SupplierFinalizationBackingBean extends
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByItem",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByItem",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -12512,7 +12515,9 @@ public class SupplierFinalizationBackingBean extends
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {	
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByPackage",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByPackage",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 
