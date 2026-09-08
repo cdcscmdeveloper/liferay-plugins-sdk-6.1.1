@@ -2601,10 +2601,11 @@ public class NoticeBoardBackingBean extends
 						attendance.setEmail(smPersonal.getEmail());
 						
 						// #30447 - Start
-						attendance.setSalutation(setSalutationSupplierName(smPersonal.getIdentificationNo()));
+						attendance.setSalutation(setSalutationSupplierName(smPersonal.getIdentificationNo(), smPersonal.getName()));
 						// #30447 - End
 						
 						attendance.setName(smPersonal.getName());
+						
 						attendance.setBsvRegistration(bsvRegistration);
 						setUserDetails(attendance);
 						bsvAttandances.add(attendance);
@@ -2620,7 +2621,7 @@ public class NoticeBoardBackingBean extends
 							bsvAttandances.remove(extAttandance);
 	
 							// #30447 - Start
-							extAttandance.setSalutation(setSalutationSupplierName(extAttandance.getIcPassPort()));
+							extAttandance.setSalutation(setSalutationSupplierName(extAttandance.getIcPassPort(), extAttandance.getName()));
 							// #30447 - End
 						}
 						bsvAttandances.add(extAttandance);
@@ -3653,10 +3654,13 @@ public class NoticeBoardBackingBean extends
 	 * @param identificationNo
 	 * @return salutationName
 	 */
-	public String setSalutationSupplierName(String identificationNo) {
+	public String setSalutationSupplierName(String identificationNo, String name) {
 		String salutation = supplierSalutation(identificationNo);
 		if (StringUtils.isNotBlank(salutation)) {
-			return salutation;
+			if( StringUtils.isNotBlank(name) && name.equals(name.toUpperCase())){
+				return StringUtils.upperCase(salutation);
+			} 
+		return salutation;
 		}
 		return StringUtils.EMPTY;
 	}
