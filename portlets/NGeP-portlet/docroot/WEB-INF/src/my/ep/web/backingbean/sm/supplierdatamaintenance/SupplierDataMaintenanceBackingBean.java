@@ -831,6 +831,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		} catch (RuntimeException e) {
 			SLAUtils.getInstance().logSLAError("SM", "supplier", getManagedBean().getSmAppl().getApplNo(),
 					"SupplierDataMaintenanceBackingBean", (new LogKey()).getUserId(), e);
+			throw e;
 		}
 		getManagedBean().setWarningExist(false);
 		getManagedBean().setDisplaySearchPage(true);
@@ -3517,8 +3518,18 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void saveOtherDescriptionEdit() {
 		try {
+			
+			// #37605 - START
+			if(!SmApplicationUtil.convertToAscii(getManagedBean().getOtherDescEdited())){
+				throw new EpException(MessageConst.ERROR_760555);
+			}
+			// #37605 - END
+			
+			String roleCode = "";
 			List<SmAppl> smApplList = new ArrayList<>();
 			List<SmSuppCatOtherDescHistoryReqDTO> supplierEditList = new ArrayList<>();
+			Long userId = getUserIdSessionFromLoginId();
+			roleCode = SmApplicationUtil.epRoleNameByUserId(userId).getPmRole().getRoleCode();
 
 			smApplList.add(getManagedBean().getHistorySuppCategory().getSmAppl());
 			
@@ -3526,8 +3537,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setOtherDesc(getManagedBean().getOtherDescEdited());
 			reqDTO.setSmAppl(getManagedBean().getHistorySuppCategory().getSmAppl());
 			reqDTO.setSmSupplierCategory(getManagedBean().getHistorySuppCategory());
-			reqDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			reqDTO.setCreatedBy(userId);
+			reqDTO.setChangeBy(reqDTO.getCreatedBy());
 			reqDTO.setRoleType(SupplierManagementConst.APPROVER_SDM);
+			reqDTO.setRoleCode(roleCode);
 			reqDTO.setSdm(true);
 
 		    List<SmSuppCatOtherDescHistory> history = new ArrayList<>(); 
@@ -3553,13 +3566,22 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			
 			if (history.isEmpty()) {
+				Long createdBy = 0L;
+				
+				if(getManagedBean().getHistorySuppCategory().getSmAppl() != null) {
+					createdBy = getManagedBean().getHistorySuppCategory().getSmAppl().getCreatedBy();
+				}
+				
+				roleCode = SmApplicationUtil.epRoleNameByUserId(createdBy).getPmRole().getRoleCode();
 				
 				SmSuppCatOtherDescHistoryReqDTO suppReqDTO = new SmSuppCatOtherDescHistoryReqDTO();
 				suppReqDTO.setSmAppl(reqDTO.getSmAppl());
 				suppReqDTO.setSmSupplierCategory(reqDTO.getSmSupplierCategory());
-				suppReqDTO.setCreatedBy(getManagedBean().getHistorySuppCategory().getCreatedBy());
+				suppReqDTO.setCreatedBy(createdBy);
+				suppReqDTO.setChangeBy(reqDTO.getChangeBy());
 				suppReqDTO.setRoleType(SupplierManagementConst.SUPPLIER_DATA);
 				suppReqDTO.setOtherDesc(getManagedBean().getHistorySuppCategory().getOtherDesc());
+				suppReqDTO.setRoleCode(roleCode);
 				suppReqDTO.setSdm(true);
 				
 				supplierEditList.add(suppReqDTO);
@@ -3709,7 +3731,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		} else if (roleApprover || roleSupApprover || roleApproverSDMA || roleApproverSDM) {
 			roleDesc = epRoleName(SupplierManagementConst.APPROVER_HQ);
 		} else if (roleSupplier || roleSupplierData) {
-			roleDesc = epRoleNameByUserId(history.getCreatedBy());
+			roleDesc = SmApplicationUtil.epRoleNameByUserId(history.getCreatedBy()).getRoleName();
 		}
 		
 		return roleDesc;
@@ -3740,33 +3762,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		PmRoleDesc pmRoleDesc = resDTO.getPmRoleDesc();
 		if (pmRoleDesc != null) {
 			return pmRoleDesc.getRoleName();
-		}
-
-		return null;
-	}
-	
-	/**
-	 * Retrieves the localized active role description for the specified user.
-	 *
-	 * This method queries the Profile Management service using the current
-	 * user's locale to obtain the active role description of the specified user.
-	 * If an active role exists, its description is returned; otherwise,
-	 * {@code null} is returned.
-	 *
-	 * @param userId the unique identifier of the user
-	 * @return the localized active role description of the user, or
-	 *         {@code null} if no active role is found
-	 */
-	private static String epRoleNameByUserId(Long userId) {
-
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		String roleDesc = userSO.retrieveActiveRoleDescByUserId(userId, language);
-		if (roleDesc != null) {
-			return roleDesc;
 		}
 
 		return null;

@@ -52,9 +52,7 @@
 
 						<p:selectBooleanCheckbox value="#{categorySM.selected}"
 							id="categorySelect">
-							<p:ajax partialSubmit="true" process="@this"
-								update="@([id$=openCategoryCodesPanel])"
-								listener="#{directLOABackingBean.selectCategory}" event="change" />
+							<p:ajax update="@([id$=openCategoryCodesPanel])" />
 						</p:selectBooleanCheckbox>
 					</p:column>
 
@@ -80,8 +78,12 @@
 
 					<p:column headerText="#{lbl['lbl.sc.category.type']}"
 						style="width:10%;white-space:normal;">
-						<h:outputText
-							value="#{directLOABackingBean.getParameterDesc(categorySM.pmCategoryL3.categoryTypeCode)}" />
+						<!-- #41103 start -->
+						<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+							rendered="#{not directLOABackingBean.isSpecialCategoryType(categorySM.pmCategoryL3)}" />
+						<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+							rendered="#{directLOABackingBean.isSpecialCategoryType(categorySM.pmCategoryL3)}" />
+						<!-- #41103 end -->
 					</p:column>
 
 				</p:dataTable>
@@ -89,7 +91,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" id="okButton"
 						onclick="submitConfirmPopUp.show();" rendered="#{editable}"
-						disabled="#{!directLOABackingBean.managedBean.categorySelected}" />
+						disabled="#{!directLOABackingBean.isSelected(directLOABackingBean.managedBean.supplierCategoryList)}" />
 				</div>
 				<p:dialog id="submitConfirmId" widgetVar="submitConfirmPopUp"
 					header="#{lbl['lbl.sc.category.code.confirmation']}" 
@@ -100,7 +102,7 @@
 							onclick="blockWidget.show();"
 							oncomplete="submitConfirmPopUp.hide(); blockWidget.hide();"
 							partialSubmit="true" process="@this"
-							update="@([id$=selectedCategoryTable]) @([id$=supplierPnlId])"
+							update="@([id$=supplierPnlId]), [id$=panelResult])"
 							action="#{directLOABackingBean.addToProcurementRelatedCategory()}" />
 						<p:commandButton value="#{lbl['lbl.btn.no']}"
 							onclick="submitConfirmPopUp.hide();" type="button"
@@ -146,9 +148,7 @@
 
 						<p:selectBooleanCheckbox value="#{categorySelected.selected}"
 							id="categorySelect">
-							<p:ajax partialSubmit="true" process="@this"
-								update="@([id$=panelResult])"
-								listener="#{directLOABackingBean.deleteCategory}" event="change" />
+							<p:ajax update="@([id$=panelResult])"/>
 						</p:selectBooleanCheckbox>
 					</p:column>
 
@@ -173,8 +173,12 @@
 
 					<p:column headerText="#{lbl['lbl.sc.category.type']}"
 						style="width:10%;white-space:normal;">
-						<h:outputText
-							value="#{directLOABackingBean.getParameterDesc(categorySelected.pmCategoryL3.categoryTypeCode)}" />
+						<!-- #41103 start -->
+						<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+							rendered="#{not directLOABackingBean.isSpecialCategoryType(categorySelected.pmCategoryL3)}" />
+						<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+							rendered="#{directLOABackingBean.isSpecialCategoryType(categorySelected.pmCategoryL3)}" />
+						<!-- #41103 end -->
 					</p:column>
 
 				</p:dataTable>
@@ -182,7 +186,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.delete']}" id="deleteButton"
 						onclick="deleteConfirmPopUp.show();" rendered="#{editable}"
-						disabled="#{!directLOABackingBean.managedBean.categorySelected}" />
+						disabled="#{!directLOABackingBean.isSelected(directLOABackingBean.managedBean.procurementRelatedCategoryList)}" />
 				</div>
 				<p:dialog id="deleteConfirmId" widgetVar="deleteConfirmPopUp"
 					header="#{lbl['lbl.sc.category.code.confirmation.delete']}"
@@ -193,7 +197,7 @@
 							onclick="blockWidget.show();"
 							oncomplete="deleteConfirmPopUp.hide(); blockWidget.hide();"
 							partialSubmit="true" process="@this"
-							update="@([id$=selectedCategoryTable],[id$=supplierPnlId])"
+							update="@([id$=supplierPnlId], [id$=panelResult])"
 							action="#{directLOABackingBean.deleteProcurementRelatedCategory()}" />
 						<p:commandButton value="#{lbl['lbl.btn.no']}"
 							onclick="deleteConfirmPopUp.hide();" type="button"
