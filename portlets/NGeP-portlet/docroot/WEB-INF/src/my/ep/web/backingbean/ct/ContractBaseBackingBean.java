@@ -60,6 +60,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	 * Logger instance.
 	 */
 	public static Logger log = EpLogger.getLogger(ContractBaseBackingBean.class);
+	
+	private static final Map<Long, String> CONFIRMATION_MSGS = buildConfirmationMsgs(); // #34442
 
 	/**
 	 * This method used to retrieve login user information.
@@ -254,18 +256,15 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	 */
 	public String getConfirmationContent(String key, String value) {
 		String message = "";
-		try{
-			message = ResourceBundleUtils.getMessage(
-				getConfirmationMsgs(Long.parseLong(key)),
-		        new String[]{value},
-		        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-		        new FacesScopes().getUserLocale()
-		    );
-		}catch(Exception e){
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getConfirmationContent(String key, String value)", 
-					key, "ContractBaseBackingBean", getUserIdSessionFromLoginId(), e);
+		try {
+			message = ResourceBundleUtils.getMessage(getConfirmationMsgs(Long.parseLong(key)), new String[] { value },
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					"getConfirmationContent(String key, String value)", key, "ContractBaseBackingBean",
+					getUserIdSessionFromLoginId(), e);
 		}
-		
+
 		return message.replace("<br/>", System.lineSeparator());
 	}
 	
@@ -277,23 +276,25 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	 */
 	public String getConfirmationContent(String key) {
 		String message = "";
-		
-		try{
-			message = ResourceBundleUtils.getMessage(
-					getConfirmationMsgs(Long.parseLong(key)),
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()
-				);
-		}catch(Exception e){
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getConfirmationContent(String key)", 
-					key, "ContractBaseBackingBean", getUserIdSessionFromLoginId(), e);
+
+		try {
+			message = ResourceBundleUtils.getMessage(getConfirmationMsgs(Long.parseLong(key)),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					"getConfirmationContent(String key)", key, "ContractBaseBackingBean",
+					getUserIdSessionFromLoginId(), e);
 		}
-		
+
 		return message.replace("<br/>", System.lineSeparator());
 	}
 	
-	public String getConfirmationMsgs(Long key){
-		final Map<Long, String> confirmationMsgs = new HashMap<>(); //34442, 40554
+	public String getConfirmationMsgs(Long key) {
+		return CONFIRMATION_MSGS.get(key);
+	}
+	
+	private static Map<Long, String> buildConfirmationMsgs() {
+		Map<Long, String> confirmationMsgs = new HashMap<>();
 
 		confirmationMsgs.put(ContractStatusConst.FD_PENDING_CONTRACT_CREATION, "lbl.ct.fd.bond.confirm");
 		confirmationMsgs.put(ContractStatusConst.FD_PENDING_REVISION, "lbl.ct.fd.bond.confirm");
@@ -323,8 +324,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		confirmationMsgs.put(ContractStatusConst.FA_PENDING_VERIFICATION, "lbl.ct.fa.scl.verify.ack.confirm");
 		confirmationMsgs.put(ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_APPROVAL, "lbl.ct.sa.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_REVISION_APPROVAL, "lbl.ct.sa.app.confirm");
-		
-		return confirmationMsgs.get(key);
+
+		return Collections.unmodifiableMap(confirmationMsgs);
 	}
 	//34442 - end
 	
