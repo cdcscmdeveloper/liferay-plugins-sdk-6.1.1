@@ -1703,6 +1703,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean saveForSendNotification;
 	private ScAttachment scoreAttachment;
 	private boolean preRenderInactiveChecklist;
+	private boolean saveForScorePrintBtn;
 	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
@@ -11540,6 +11541,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPreRenderInactiveChecklist(boolean preRenderInactiveChecklist) {
 		this.preRenderInactiveChecklist = preRenderInactiveChecklist;
 	}
+
+	public boolean isSaveForScorePrintBtn() {
+		return saveForScorePrintBtn;
+	}
+
+	public void setSaveForScorePrintBtn(boolean saveForScorePrintBtn) {
+		this.saveForScorePrintBtn = saveForScorePrintBtn;
+	}
+	
 	// #10141 - end
 		
 		//#9019 - Start (Harun) 08082022 Missing remarks issue
