@@ -426,23 +426,6 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 		this.oldSelectedUser = oldSelectedUser;
 	}
 	// #28895_35501 End
-	//26247 - start
-	public String getQtDisciplinaryActionMsg() {
-		return qtDisciplinaryActionMsg;
-	}
-
-	public void setQtDisciplinaryActionMsg(String qtDisciplinaryActionMsg) {
-		this.qtDisciplinaryActionMsg = qtDisciplinaryActionMsg;
-	}
-
-	public Long getQtId() {
-		return qtId;
-	}
-
-	public void setQtId(Long qtId) {
-		this.qtId = qtId;
-	}
-	//26247 - end
 
 	//#26186 start
 	/**
