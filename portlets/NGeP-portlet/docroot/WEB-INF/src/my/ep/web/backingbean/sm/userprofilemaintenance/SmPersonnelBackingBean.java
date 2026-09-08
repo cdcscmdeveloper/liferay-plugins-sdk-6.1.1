@@ -3012,8 +3012,7 @@ public class SmPersonnelBackingBean extends
 		
 		// #40739 START
 		if (getManagedBean().getBasicSmPersonnel() != null
-				&& SupplierManagementConst.RECORD_STATUS_DELETED == getManagedBean().getBasicSmPersonnel()
-						.getRecordStatusFlg()) {
+				&& getManagedBean().getAccountStatus() == SupplierManagementConst.RECORD_STATUS_DELETED) {
 			getManagedBean().setDisabledActivateAndDeactivate(true);
 		}
 		// #40739 END
