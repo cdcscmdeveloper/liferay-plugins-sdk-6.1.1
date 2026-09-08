@@ -87,6 +87,8 @@ import my.ep.dto.osb.sc.DPOsbReqDTO; //#25790
 import my.ep.dto.osb.sc.DPOsbResDTO; //#25790
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#33224
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#33224
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -132,6 +134,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg; //#27868
+import my.ep.persistence.entity.pm.authorization.PmUserRole; //#33224
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason; //#27868
