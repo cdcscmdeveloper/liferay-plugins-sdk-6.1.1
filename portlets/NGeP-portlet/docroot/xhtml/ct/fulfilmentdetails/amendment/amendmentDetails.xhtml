@@ -251,7 +251,7 @@
 					<!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" listener="#{amendmentBackingBean.changeAmendmentEffDate}"
-						update=":form:itemId,:form:serviceId" />
+						update=":form:itemId,:form:serviceId,newAmtEffDate" />
 				</p:calendar>
 				<p:inputText disabled="true" style="width:90px;"
 					rendered="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"

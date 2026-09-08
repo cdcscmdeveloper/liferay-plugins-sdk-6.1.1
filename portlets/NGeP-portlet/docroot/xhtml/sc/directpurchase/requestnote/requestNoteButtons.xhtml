@@ -194,22 +194,22 @@
 		</div>
 		<ui:remove>34449 - start</ui:remove>
 		<ui:remove> Popup Submit Action </ui:remove>
-		<ac:confirmationPopup id="submitConformDlgRn"
+		<ac:confirmationPopupSM id="submitConformDlgRn"
 			widget="submitConformDlg" width="400" height="100"
 			okAction="#{requestNoteBackingBean.managedBean.assignMethod}"
 			title="#{lbl['lbl.sc.header.message.submit']}"
 			content="#{lbl['lbl.sc.confirmation.message.submit']}" update="@form" />
-		<ac:confirmationPopup id="cancelDlgRn"
+		<ac:confirmationPopupSM id="cancelDlgRn"
 			widget="cancelDlg" width="400" height="100"
 			okAction="#{requestNoteBackingBean.cancel}"
 			title="#{lbl['lbl.sc.header.message.cancel']}"
 			content="#{lbl['lbl.sc.confirmation.message.cancel']}" update="@form" />	
-		<ac:confirmationPopup id="reviseDlgRn"
+		<ac:confirmationPopupSM id="reviseDlgRn"
 			widget="reviseDlg" width="400" height="100"
 			okAction="#{requestNoteBackingBean.managedBean.reviseMethod}"
 			title="#{lbl['lbl.sc.header.message.revise']}"
 			content="#{lbl['lbl.sc.confirmation.message.revise']}" update="@form" />
-		<ac:confirmationPopup id="approveDlgRn"
+		<ac:confirmationPopupSM id="approveDlgRn"
 			widget="approveDlg" width="400" height="100"
 			okAction="#{requestNoteBackingBean.managedBean.approveMethod}"
 			title="#{lbl['lbl.sc.header.message.approve']}"
