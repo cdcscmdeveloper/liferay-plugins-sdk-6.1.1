@@ -6927,6 +6927,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					.setCategoryCodeSearchCondition(categoryCodeCondition);
 			proposalReqDTO.setClientType(clinetType);
 			proposalReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			//29661 && 41170 -start-
+			proposalReqDTO.setScQt(scQt);
+			//29661 && 41170 -end-
 			return proposalSO.retrieveCompanyExpDetails(proposalReqDTO);
 
 		} catch (Exception e) {
