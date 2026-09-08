@@ -3416,6 +3416,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.getSpecMaster().setTotalEstAmount(totalEstAmount);
 			}
 		}
+		templateSpecBean.setSelectedSpecQuestion(null); //#40402
 	}
 	// #25039 End - version zonal
 	/** #21695 FARID START */
@@ -5751,7 +5752,7 @@ public class TemplateSpecBackingBean extends
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
-		boolean manSpec = false;
+		boolean mandatorySpec = false;
 		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId() ? this.getManagedBean()
@@ -5767,12 +5768,12 @@ public class TemplateSpecBackingBean extends
 				String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
 				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
 				if (questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && isMandatorySpec) {
-					manSpec = true;
+					mandatorySpec = true;
 					break;
 				}
 			}
 		}
-		return manSpec;
+		return mandatorySpec;
 	}
 	// #29187 End Vinod
 	// #29187 Start Vinod
@@ -5830,7 +5831,6 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void itemComplianceChangeControl(ValueChangeEvent event) {
-		log.info("New: " + event.getNewValue() + ", Old: " + event.getOldValue());
 		if (event.getOldValue() == null) {
 			getManagedBean().setComplianceOldNull(true);
 		} else {
@@ -5899,7 +5899,7 @@ public class TemplateSpecBackingBean extends
 	// #39210 End Vinod 3/10/2025
 	
 
-	//#38151 Start
+	//#38151 & #38679 Start
 
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -5935,7 +5935,7 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 	}
-	//#38151 End
+	//#38151 & #38679 End
 	
 	
 	// #35293 - Start

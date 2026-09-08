@@ -6918,13 +6918,18 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			proposalReqDTO.setSupplierId(supplierId);
-			proposalReqDTO.setYear(year.intValue());
+			//Bug #40833 - Start
+			proposalReqDTO.setYear(year != null ? year.intValue() : null);
+			//Bug #40833 - End
 			proposalReqDTO.setApplId(applId);
 			proposalReqDTO.setCategoryL3Codes(getCategoryL3Codes(scQt));
 			proposalReqDTO
 					.setCategoryCodeSearchCondition(categoryCodeCondition);
 			proposalReqDTO.setClientType(clinetType);
 			proposalReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			//29661 && 41170 -start-
+			proposalReqDTO.setScQt(scQt);
+			//29661 && 41170 -end-
 			return proposalSO.retrieveCompanyExpDetails(proposalReqDTO);
 
 		} catch (Exception e) {

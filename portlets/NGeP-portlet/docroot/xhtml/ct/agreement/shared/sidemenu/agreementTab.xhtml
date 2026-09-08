@@ -138,5 +138,20 @@
 			</div>
 		</p:confirmDialog>
 		<!-- #29417 end-->
+		<!-- #34442 - start -->
+		<p:dialog id="submitConfirmDlgId" widgetVar="submitConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line; text-align:center;"
+				value="#{agreementBackingBean.confirmationContentMsg}" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="submitConfirmDlg.hide();gpki_dlg.show();" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="submitConfirmDlg.hide()" type="button" />
+			</div>
+		</p:dialog>
+		<!-- #34442 - end -->
 	</ui:define>
 </ui:composition>

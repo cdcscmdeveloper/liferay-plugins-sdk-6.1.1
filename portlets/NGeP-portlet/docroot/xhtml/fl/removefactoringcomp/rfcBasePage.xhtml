@@ -94,7 +94,7 @@
 		<ui:remove>#34443 start</ui:remove>
 		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.reject.dialogue.rfc']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true" 
@@ -109,7 +109,7 @@
 		<p:confirmDialog
 			message="#{lbl['lbl.fl.confirmation.ack.dialogue.rfc']}"
 			severity="alert" widgetVar="ackRFCConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
 					update="@form"

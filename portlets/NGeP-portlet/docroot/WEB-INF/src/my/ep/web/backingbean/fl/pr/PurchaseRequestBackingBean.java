@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.fl.pr;
 
@@ -39,6 +39,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -78,6 +79,8 @@ import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.ct.circular.CircularReqDTO;
+import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
@@ -161,6 +164,9 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
@@ -180,6 +186,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
@@ -1366,13 +1373,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		populateItemsForSelectedAddress();
 		// #27476 start
-		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
-			validateThresholdPK7AndSpecialItem();
-		} else {
-			checkPRThresholdPerItem();
+		String procType = getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode();
+		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+		        || procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+		    validateThresholdPK7AndSpecialItem();
+		} else if (!procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) { //#31344 - Exclude check threshold item for G2G
+		    checkPRThresholdPerItem();
 		}
 		// #27476 end
 	}
@@ -1544,7 +1550,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
 										.getUserLocale())));
 
-			} else {
+			} else if (!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){ //#31344 - Exclude check threshold item for G2G
 				checkPRThresholdPerItem();
 			}
 		}
@@ -5585,12 +5592,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param action
 	 */
 	private void validatePK7forPRAction(String action) {
-		if (getManagedBean().getReason() != null) {
-			Set<String> outcomeCheckReason = new HashSet<>();
 
-			outcomeCheckReason.add(BpmOutcomeConst.BPM_SUBMIT);
-			outcomeCheckReason.add(BpmOutcomeConst.BPM_APPROVE);
-			outcomeCheckReason.add(BpmOutcomeConst.BPM_REVISE);
+		Set<String> outcomeCheckReason = new HashSet<>();
+
+		outcomeCheckReason.add(BpmOutcomeConst.BPM_SUBMIT);
+		outcomeCheckReason.add(BpmOutcomeConst.BPM_APPROVE);
+		outcomeCheckReason.add(BpmOutcomeConst.BPM_REVISE);
+
+		if (getManagedBean().getReason() != null) {
 
 			if (outcomeCheckReason.contains(action)
 					&& getPMReasonForThreshold().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
@@ -5603,14 +5612,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 
 		// check for exceed threshold
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
-				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			if(getManagedBean().isPRExceedThreshold()){
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if (getManagedBean().isPRExceedThreshold()) {
 				buildErrorMessageForExceedThreshold(true);
-			} else if(getManagedBean().isExceedBpkThreshold()) {
+			} else if (getManagedBean().isExceedBpkThreshold()) {
 				buildErrorMessageForExceedBpkThreshold(true);
 			}
 			// #31344
+		}
+
+		// agency validation
+		Set<String> outcomeAgencyValidation = new HashSet<>();
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_SUBMIT);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_APPROVE);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_REVISE);
+		outcomeAgencyValidation.add(BpmOutcomeConst.BPM_SAVE);
+		
+		if (outcomeAgencyValidation.contains(action)
+				&& getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			validateAgencyValidationByReason();
 		}
 
 		// supplier acc type validation
@@ -5683,9 +5704,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_SUSPENDED);
 		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_ACTIVE);
 		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_CANCELLED);
-
+		
+		Set<Integer> recordStatusMofCheck = new HashSet<>();
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_SUSPENDED);
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_DELETED);
+		recordStatusMofCheck.add(DbValueConst.RECORD_STATUS_EXPIRED);
+		
 		// MOF deleted checks
-		if (mofStatus == DbValueConst.RECORD_STATUS_DELETED) {
+		if (recordStatusMofCheck.contains(mofStatus)) {
 
 			if (recordBasicMofCheck.contains(supplierStatus)) {
 				buildErrorMessageSupplierAccountTypeNonApplicable();
@@ -5835,6 +5861,34 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 
 		return pmReason;
+	}
+	
+	public void validateAgencyValidationByReason() {
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(getPMReasonForThreshold().getReasonId());
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+
+		if (reasonSO.isAgencyValidatedRequiredForReason(reqDTO)) {
+			if (!reasonSO.isAgencyValidatedForReason(reqDTO)) {
+				if (isFlFulfilmentApprover()) {
+					throw new EpException(MessageConst.ERROR_740082, new String[] {
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgCode(),
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+							getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+							getManagedBean().getReason() });
+				} else if (isFlFulfilmentRequisitioner()) {
+					throw new EpException(MessageConst.ERROR_740081, new String[] {
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgCode(),
+							getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+							getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+							getManagedBean().getReason() });
+				}
+			}
+
+		}
 	}
 
 	// #27476 end
@@ -6056,4 +6110,151 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 	}
 	// #34443 end
+	
+	// #36503 - start
+	/**
+	 * Route to Panel Circular Page from Purchase Request.
+	 * 
+	 * @return page url
+	 */
+	public String gotoCicularPanel() {
+		PanelBackingBean panelBB = new PanelBackingBean();
+		createPanelCircularViewBean(panelBB);
+		Long circularVerId = getPanelCircularVerId();
+
+		if (circularVerId != null && circularVerId.longValue() != 0) {
+			return panelBB.gotoCommonViewPage(circularVerId);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Initialize PanelBackingBean for Panel Circular view navigation from
+	 * Purchase Request module.
+	 * 
+	 * @param panelBB
+	 *            PanelBackingBean instance
+	 */
+	private void createPanelCircularViewBean(PanelBackingBean panelBB) {
+		panelBB.getManagedBean().setAction("view");
+		panelBB.getManagedBean().setViewContract(true);
+		panelBB.getManagedBean().setOutComes(new String[] {});
+		panelBB.getManagedBean().setFromCircularNotice(false);
+		panelBB.getManagedBean().setDifferentModule(false);
+		panelBB.getManagedBean().setGotoPreviewPage(NAV_TO_CREATE_PURCHASE_REQUEST);
+	}
+
+	/**
+	 * Retrieve Circular Version ID for Panel Circular navigation. Priority: 1.
+	 * Retrieve from Fulfilment Request 2. Retrieve from managed bean
+	 * CtCircularPanel 3. Retrieve from managed bean CtCircularVer
+	 * 
+	 * @return circular version ID, or null if not found
+	 */
+	private Long getPanelCircularVerId() {
+		Long circularVerId = getPanelCircularVerIdFromRequest();
+
+		if (circularVerId != null) {
+			return circularVerId;
+		}
+
+		circularVerId = getCtCircularPanelVerId();
+
+		if (circularVerId != null) {
+			return circularVerId;
+		}
+
+		return getCtCircularVerId();
+	}
+
+	/**
+	 * Retrieve Circular Version ID based on Fulfilment Request ID.
+	 * 
+	 * @return circular version ID, or null if no circular is found
+	 */
+	private Long getPanelCircularVerIdFromRequest() {
+		FlFulfilmentRequest fulfilmentRequest = getManagedBean().getFulfilmentRequest();
+
+		if (fulfilmentRequest != null && fulfilmentRequest.getFulfilmentReqId() != null) {
+			IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlRequestId(fulfilmentRequest.getFulfilmentReqId());
+
+			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveCircularVerByFlRequestId(reqDTO);
+			CtCircularVer circularVer = resDTO != null ? resDTO.getCircularVer() : null;
+
+			if (circularVer != null && circularVer.getCircularVerId() != null) {
+				getManagedBean().setCtCircularPanel(circularVer);
+				return circularVer.getCircularVerId();
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieve Circular Version ID from selected Panel Circular.
+	 * 
+	 * @return circular version ID, or null if unavailable
+	 */
+	private Long getCtCircularPanelVerId() {
+		CtCircularVer ctCircularPanel = getManagedBean().getCtCircularPanel();
+
+		if (ctCircularPanel != null) {
+			return ctCircularPanel.getCircularVerId();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieve Circular Version ID from selected Circular Version.
+	 * 
+	 * @return circular version ID, or null if unavailable
+	 */
+	private Long getCtCircularVerId() {
+		CtCircularVer ctCircularVer = getManagedBean().getCtCircularVer();
+
+		if (ctCircularVer != null) {
+			return ctCircularVer.getCircularVerId();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Determine whether the Purchase Request is associated with an active Panel
+	 * Circular record. If a valid Panel Circular exists, the corresponding
+	 * circular number will be populated into the managed bean.
+	 * 
+	 * @return true if an active Panel Circular record exists, false otherwise
+	 */
+	public boolean isCircularPanel() {
+		FlFulfilmentRequest fulfilmentRequest = getManagedBean().getFulfilmentRequest();
+
+		if (fulfilmentRequest != null && fulfilmentRequest.getFulfilmentReqId() != null) {
+			IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlRequestId(fulfilmentRequest.getFulfilmentReqId());
+
+			FulfilmentResDTO panelDTO = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
+
+			if (panelDTO != null && panelDTO.isPanel()) {
+				FulfilmentResDTO circularDTO = fulfilmentRequestSO.retrieveCircularNoByFlRequestId(reqDTO);
+
+				if (circularDTO != null && circularDTO.getCircularNo() != null) {
+					getManagedBean().setCircularNo(circularDTO.getCircularNo());
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+	// #36503 - end
 }

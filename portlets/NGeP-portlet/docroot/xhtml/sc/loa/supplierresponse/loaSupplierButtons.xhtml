@@ -82,7 +82,7 @@
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
 											partialSubmit="true" process="@all"
-											action="#{lOADetailBackingBean.updateReviseBPMTaskActionWithoutQt(bpmAction)}"
+											action="#{lOADetailBackingBean.constructResubmitDialogMessage(bpmAction)}"
 											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 											<f:setPropertyActionListener value="#{bpmAction}"
 												target="#{lOADetailBackingBean.managedBean.action}" />
@@ -91,7 +91,7 @@
 										</p:commandButton>
 									</h:panelGroup>
 									<!-- End #22211 -->
-									<!-- Enhancement #21573 -->
+										<!-- Enhancement #21573 -->
 									<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and !isLoaReviseStatus and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
@@ -115,7 +115,16 @@
 											partialSubmit="true" process="@all" update="@form" />
 									</h:panelGroup>
 								</ui:repeat>
-								<h:panelGroup rendered="#{!isLoaReviseStatus}">
+									<ui:remove>34449 - start</ui:remove>
+									<ui:remove> Popup Submit Action </ui:remove>
+									<ac:confirmationPopupSM id="resubmitConformDlg"
+										widget="resubmitConformDlg" width="400" height="100"
+										okAction="#{lOADetailBackingBean.managedBean.resubmitMethod}"
+										title="#{lbl['lbl.sc.header.message.submit']}"
+										content="#{lbl['lbl.sc.loa.confirmation.resubmit.message']}"
+										update="@form" />
+									<ui:remove>344449 - end</ui:remove>
+									<h:panelGroup rendered="#{!isLoaReviseStatus}">
 									<ac:spkiPopup id="spkiPopup"
 									password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
 									challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"

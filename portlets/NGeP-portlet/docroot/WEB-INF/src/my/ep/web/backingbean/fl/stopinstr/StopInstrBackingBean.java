@@ -1053,6 +1053,10 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String confirmDialogueTrigger(String action) throws Exception {
 		validateStopFulfilment(action);
+		
+	    setTextBeforeSign(action);
+	    getManagedBean().setButtonAction(action);
+	    
 		String dialogCommand;
 		switch (action) {
 		case BpmOutcomeConst.BPM_STOP_FULFILMENT:

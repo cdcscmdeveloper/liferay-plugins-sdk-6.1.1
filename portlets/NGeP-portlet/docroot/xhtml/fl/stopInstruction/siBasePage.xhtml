@@ -167,20 +167,14 @@
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
 			</div>
 		</p:dialog>
-		<!--#26279 Start-->
-		<ac:disciplinaryActionHistory voList="#{stopInstrBB.managedBean.disciplinaryActionVO}" 
-		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
-		<!--#26279 End-->
-		<!-- #31344 Start -->
-		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
-		<!-- #31344 End -->
 		<ui:remove>#34443 start</ui:remove>
-		<p:confirmDialog
+		<p:confirmDialog id="cancelConfirmId"
 			message="#{lbl['lbl.fl.confirmation.cancel.dialogue.sd']}"
-			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true" 
+			header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@none" 
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmCancel)}"
 					onstart="cancelConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -188,12 +182,13 @@
 					onclick="cancelConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<p:confirmDialog
+		<p:confirmDialog id="submitConfirmId"
 			message="#{lbl['lbl.fl.confirmation.submit.dialogue.sd']}"
 			severity="alert" widgetVar="submitConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@none" 
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmSubmit)}"
 					onstart="submitConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -201,12 +196,13 @@
 					onclick="submitConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<p:confirmDialog
+		<p:confirmDialog id="stopFlConfirmId"
 			message="#{lbl['lbl.fl.confirmation.submit.dialogue.sd']}"
 			severity="alert" widgetVar="stopFlConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@none" 
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmStopFulfilment)}"
 					onstart="stopFlConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -214,13 +210,13 @@
 					onclick="stopFlConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<p:confirmDialog
+		<p:confirmDialog id="approveConfirmId"
 			message="#{lbl['lbl.fl.confirmation.approve.dialogue.sd']}"
 			severity="alert" widgetVar="approveConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
-					update="@form"
+					update="@none"
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmApprove)}"
 					onstart="approveConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -228,13 +224,13 @@
 					onclick="approveConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<p:confirmDialog
+		<p:confirmDialog id="rejectConfirmId"
 			message="#{lbl['lbl.fl.confirmation.reject.dialogue.sd']}"
 			severity="alert" widgetVar="rejectConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
-					update="@form"
+					update="@none"
 					action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmReject)}"
 					onstart="rejectConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -242,6 +238,14 @@
 					onclick="rejectConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<ui:remove>#34443 end</ui:remove>	
+		<ui:remove>#34443 end</ui:remove>
+		<ac:lovPopup />
+		<!--#26279 Start-->
+		<ac:disciplinaryActionHistory voList="#{stopInstrBB.managedBean.disciplinaryActionVO}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
+		<!--#26279 End-->
+		<!-- #31344 Start -->
+		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+		<!-- #31344 End -->	
 	</ui:define>
 </ui:composition>
