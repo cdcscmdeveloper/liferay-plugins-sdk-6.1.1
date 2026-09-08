@@ -452,7 +452,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			
 			// 30737 - END
 			reqDTO.setScLoa(getContractVer().getCtContract().getLoa());
-			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveUserRevise());
+			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveActor());
 			// 30737 - END
 
 			resDTO = contractTerminationSO.saveContractTerminationDetails(reqDTO);
@@ -624,55 +624,42 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		//#30737 - Start
 		String docType = ctBB.getManagedBean().getContractVer().getDocType();
 		
-		//TODO - SUBMIT in validation + save/submit
+		//SUBMIT
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			
 			String approverType = determineRoleCode();
-	        /**if (ctContract.getContractType().getParameterCode()
-	        		.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-	        	approverType = RoleCode.CT_APPROVER.value();
-	        } else {
-	        	approverType = RoleCode.BPK_CC_APPROVER.value();
-	        }*/
-	        
-	        List<SelectedInactiveUserDTO> selectedInactiveUsers = // change name selectedInactiveUsers
+	        List<SelectedInactiveUserDTO> selectedUsers = // change name selectedInactiveUsers
 	        		getInactiveUsers(approverType, getSelectedUsers(), docType, null);
-	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
+	        handleInactiveUserValidation(outcome, selectedUsers);
 	        
-			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			log.info(" action : "+outcome);
 		}
-		//TODO - REVISE in validation + approve/revise
-	
+		// approve/revise
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
 				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-			
 			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-			List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
+			List<SelectedInactiveUserDTO> selectedActor = new ArrayList<>();
 			
-			inactiveUsersForRevise = getInactiveUsersForRevise(
+			selectedActor = getInactiveUsersForRevise(
 					ctContractVer.getContractVerId(),
 					ctContractVer.getCtContract().getContractType().getParameterCode(), 
 					ctContractVer.getDocType());
 			
-			 if (!inactiveUsersForRevise.isEmpty()) {
+			 if (!selectedActor.isEmpty()) {
 				 Long userStatus = null;
-				 
-				 for(SelectedInactiveUserDTO inactiveActor : inactiveUsersForRevise){
-					 userStatus = inactiveActor.getStatus();
-					 this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
+				 for(SelectedInactiveUserDTO inActiveActor : selectedActor){
+					 userStatus = inActiveActor.getStatus();
+					 this.getManagedBean().setInactiveActor(inActiveActor.getStatus());
 					 break;
 					}
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 		        	log.info("INACTIVE_USER_5 REVISE + return 5");
-	                handleInactiveUserValidation(outcome, inactiveUsersForRevise);
+	                handleInactiveUserValidation(outcome, selectedActor);
 				 }
             }
-				
 			log.info("INACTIVE_USER action : "+outcome);
 		}
 		//#30737 - End
-		
 	}
 	
 	/**

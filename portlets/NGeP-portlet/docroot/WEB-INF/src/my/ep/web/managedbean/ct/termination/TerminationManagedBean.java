@@ -65,7 +65,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private CtContractVer contractVer;
 	
 	//30737 - start
-	private Long inactiveUserRevise;
+	private Long inactiveActor;
 	//30737 - end
 
 	/**
@@ -414,12 +414,12 @@ public class TerminationManagedBean extends BaseManagedBean {
 	}
 
 	//30737 - start
-	public Long getInactiveUserRevise() {
-		return inactiveUserRevise;
+	public Long getInactiveActor() {
+		return inactiveActor;
 	}
 
-	public void setInactiveUserRevise(Long inactiveUserRevise) {
-		this.inactiveUserRevise = inactiveUserRevise;
+	public void setInactiveActor(Long inactiveActor) {
+		this.inactiveActor = inactiveActor;
 	}
 	//307307- end
 	
