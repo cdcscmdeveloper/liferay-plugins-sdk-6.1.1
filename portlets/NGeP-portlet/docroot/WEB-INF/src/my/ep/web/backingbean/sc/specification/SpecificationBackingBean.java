@@ -12199,9 +12199,8 @@ if (null != checklist && !checklist.isEmpty()) {
 					if (null == finProposal.getPmDocument()
 							&& null != finProposal.getTitle()
 							&& stdDocNames.contains(finProposal.getTitle())) {
-						throw new EpException(
-								finProposal.getTitle()
-										+ " is a standard checklist document. Please remove this item and add it via Standard Checklist instead.");
+						throw new EpException(MessageConst.ERR_760833,
+								new String[] { finProposal.getTitle() });
 					}
 				}
 			}
