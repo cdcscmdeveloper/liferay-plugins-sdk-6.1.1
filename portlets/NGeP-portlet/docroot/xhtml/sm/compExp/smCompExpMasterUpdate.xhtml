@@ -81,7 +81,6 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<ui:remove>#9299 - #41104</ui:remove>
 					<td style="width: 66%"><p:inputText maxlength="20" size="20"
 							value="#{smCompExpMB.selectedMaster.loaNo}" /></td>
 				</tr>
@@ -220,6 +219,7 @@
 								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
 						<td style="width: 66%"><p:inputText maxlength="14"
+								style="width:auto !important;"
 								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
 								value="#{smCompExpMB.selectedMaster.consultantFee}">
 								<f:convertNumber
