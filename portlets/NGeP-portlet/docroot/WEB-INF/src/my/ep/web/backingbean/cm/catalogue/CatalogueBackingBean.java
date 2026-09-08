@@ -11762,4 +11762,67 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.declareChecked = declareChecked;
 	}
 	//#30457 - farid - end
+	
+	// 26284 - Start
+	/**
+	 * Retrieves and sets the disciplinary action details for the supplier
+	 * associated with the given quote supplier.
+	 * 
+	 * This method checks if the provided {@link ScQuoteSupplier} contains a
+	 * valid {@link SmSupplier}. If so, it retrieves the disciplinary action
+	 * details for the supplier using the
+	 * {@link #getDisciplinaryActionVO(SmSupplier)} method. If the disciplinary
+	 * action data exists, it sets the result into the managed bean. Otherwise,
+	 * it sets an empty list. It also triggers the display of the disciplinary
+	 * action history dialog.
+	 * 
+	 * @param scQuoteSupp
+	 *            the {@link ScQuoteSupplier} object that contains the supplier
+	 *            whose disciplinary actions need to be retrieved. If the
+	 *            supplier is null or there are no disciplinary actions, an
+	 *            empty list will be set in the managed bean.
+	 */
+	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {
+		try {
+			SmSupplier currSupp = smSupplier;
+			if (currSupp != null) {
+				List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
+				if (!EntityHelper.isCollectionEmpty(voList)
+						&& voList.size() > 0) {
+					getManagedBean().setDisciplineVOs(voList);
+				} else {
+					getManagedBean().setDisciplineVOs(
+							new ArrayList<DisciplinaryActionVO>());
+				}
+			} else {
+				getManagedBean().setDisciplineVOs(
+						new ArrayList<DisciplinaryActionVO>());
+			}
+			// #32643,32642 - Start
+			RequestContext.getCurrentInstance().execute(
+					"disciplinaryActionHistoryDlg.show();");
+			// #32643,32642 - End
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE,
+					"supplierDisciplinaryActionInfo", StringUtils.EMPTY,
+					"supplierDisciplinaryActionInfo",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		return supplierDataMaintenanceSO
+				.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO)
+				.isDisciplinaryActionActiveDp();
+	}
+	// 26284 - End
+	
+	
 }
