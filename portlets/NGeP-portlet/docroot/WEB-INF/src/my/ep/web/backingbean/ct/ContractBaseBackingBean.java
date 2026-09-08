@@ -248,11 +248,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	
 	//34442 - start
 	/**
-	 * Retrieve fulfilment with bond confirmation message by passing in contractNo
+	 * Retrieve fulfillment with bond confirmation message by passing in contractNo
 	 * 
 	 * @param key the statusId to find label values for use
 	 * @param value the Contract Number
-	 * @return Fulfiment with Bond Confirmation message
+	 * @return Fulfillment with Bond Confirmation message
 	 */
 	public String getConfirmationContent(String key, String value) {
 		String message = "";
@@ -272,7 +272,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	 * Retrieve confirmation message
 	 * 
 	 * @param key the statusId to find label values for use
-	 * @return Fulfiment with Bond Confirmation message
+	 * @return Fulfillment with Bond Confirmation message
 	 */
 	public String getConfirmationContent(String key) {
 		String message = "";
@@ -289,6 +289,14 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		return message.replace("<br/>", System.lineSeparator());
 	}
 	
+	/**
+	 * Returns the resource bundle message key for the confirmation prompt
+	 * associated with the given contract status code.
+	 *
+	 * @param key the contract status code (see {@link ContractStatusConst})
+	 * @return the message key for the confirmation text, or {@code null}
+	 *         if no confirmation message is defined for the given status
+	 */
 	public String getConfirmationMsgs(Long key) {
 		return CONFIRMATION_MSGS.get(key);
 	}
