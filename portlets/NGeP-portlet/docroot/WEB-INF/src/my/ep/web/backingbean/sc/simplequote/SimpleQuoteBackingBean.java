@@ -1761,16 +1761,20 @@ public class SimpleQuoteBackingBean extends
 					if (ParameterConst.PROC_TYPE_G2G.equals(quote
 							.getProcurementType().getParameterCode())) {
 						// govt sellers
-						//40234 - start
-						if ((getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty())
-						        && getManagedBean().getSupplierList() != null
-						        && !getManagedBean().getSupplierList().isEmpty()) {
-						    quote.getScQuoteSuppliers().clear();
-						}
-						//40234 - end
+						//#40654 - start
+						// Copy into `suppliers` BEFORE clearing. Several paths alias supplierList /
+						// govtSellers to the SAME List instance as scQuoteSuppliers (see :403, :406,
+						// :3172), so clearing first would empty the source we are about to copy from.
 						if (getManagedBean().getGovtSellers() != null) {
 							suppliers.addAll(getManagedBean().getGovtSellers());
 						}
+						// Rebuild authoritatively from govtSellers alone: the #40234 conditional
+						// clear never fired, because procTypeRadioButtonEvent had already emptied
+						// supplierList by the time Save ran, so the stale supplier survived.
+						if (quote.getScQuoteSuppliers() != null) {
+						    quote.getScQuoteSuppliers().clear();
+						}
+						//#40654 - end
 					}
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
@@ -1786,18 +1790,18 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - end				
 					else {
 						// by supplier
-						//40234 - start
-						if ((getManagedBean().getSupplierList() == null || getManagedBean().getSupplierList().isEmpty())
-						        && getManagedBean().getGovtSellers() != null
-						        && !getManagedBean().getGovtSellers().isEmpty()) {
-						    quote.getScQuoteSuppliers().clear();
-						    getManagedBean().getSupplierList().clear();
-						}
-						//40234 - end
+						//#40654 - start
+						// Copy into `suppliers` BEFORE clearing. Several paths alias supplierList /
+						// govtSellers to the SAME List instance as scQuoteSuppliers (see :403, :406,
+						// :3172), so clearing first would empty the source we are about to copy from.
 						if (getManagedBean().getSupplierList() != null) {
-							suppliers
-									.addAll(getManagedBean().getSupplierList());
+							suppliers.addAll(getManagedBean().getSupplierList());
 						}
+						// Rebuild authoritatively from supplierList alone; see the G2G leg above.
+						if (quote.getScQuoteSuppliers() != null) {
+						    quote.getScQuoteSuppliers().clear();
+						}
+						//#40654 - end
 					}
 				}
 
@@ -3002,9 +3006,12 @@ public class SimpleQuoteBackingBean extends
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			//40234 - start
 			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
-				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
+				getManagedBean().getSupplierList().clear();
 		    }
 			//40234 - end
+			//#40654 - start
+			purgeSuppliersNotMatchingProcType(true);
+			//#40654 - end
 			getGovtSellerCriteria();
 		} else {
 			//40234 - start
@@ -3014,9 +3021,25 @@ public class SimpleQuoteBackingBean extends
 		    	removeGovtSellerFromSupplierList(getManagedBean().getGovtSellers());
 		    }
 			//40234 - end
+			//#40654 - start - also purge the persisted collection, excluding
+			// Special Item / PK7 which may legitimately hold both kinds (#27868)
+			if (!ParameterConst.PROC_TYPE_SPECIAL_ITEM.equalsIgnoreCase(procurementType)
+					&& !ParameterConst.PROC_TYPE_PK7.equalsIgnoreCase(procurementType)) {
+				purgeSuppliersNotMatchingProcType(false);
+			}
+			//#40654 - end
 		    getSupplierListCriteria();
 		}
 		// #28536 - end
+		//#40654 - start
+		// procurementTypeEvent() above has just changed locAndBusinessFlag / g2GFlag,
+		// which decide WHICH tabs of the supplier-criteria tabView are rendered. The
+		// previously active index can then point past the end of the new tab set, so
+		// the tabView comes back with no tab selected and the table looks collapsed
+		// until the user clicks a tab header. Reset to the first rendered tab, the
+		// same way byLocAndBusinessEvent() does when it changes the tab set.
+		getManagedBean().setTabActiveIndex(0);
+		//#40654 - end
 	}
 
 	/**
@@ -3040,7 +3063,18 @@ public class SimpleQuoteBackingBean extends
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
 		// 27868 - end
-		
+		//#40654 - start
+		// These three are derived from the selected reason's supplier-account-type
+		// restrictions and are only meaningful for Special Item / PK7. Without a
+		// clean slate they leak across a procurement-type change, so the Agency tab
+		// kept rendering under Normal after leaving Special Item. Every Special Item
+		// and PK7 path re-derives them through inactiveReasonChecking(), so resetting
+		// here is safe - the same reset procurementTypeBackProcess() already does.
+		getManagedBean().setIncludeMofSupplier(Boolean.FALSE);
+		getManagedBean().setIncludeBasicSupplier(Boolean.FALSE);
+		getManagedBean().setIncludeG2gSupplier(Boolean.FALSE);
+		//#40654 - end
+
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -10181,24 +10215,58 @@ public class SimpleQuoteBackingBean extends
 	    profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
 
 	    OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
+	    //#40654 - start - an unresolvable supplier id must skip that supplier,
+	    // not NPE and abort the whole procurement-type switch
+	    if (orgProfileResDTO == null) {
+	        return false;
+	    }
+	    //#40654 - end
 	    PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
 
 	    return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
 	}
-	/**
-	 * To remove non g2g supplier from govt list when change procurement type
-	 * 
-	 * 
-	 * @param suppliers
-	 */
-	private void removeSupplierListFromGovtSeller(List<ScQuoteSupplier> suppliers) {
-		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+	//40234 - end
 
-		for (ScQuoteSupplier supplier : suppliers) {
-				suppliersToRemove.add(supplier);
+	//#40654 - start
+	/**
+	 * Removes, from the quote's persisted supplier collection, every supplier that
+	 * does not belong to the procurement type the user has just switched to.
+	 *
+	 * <p>The UI lists (supplierList / govtSellers) were already purged on a
+	 * procurement-type switch, but scQuoteSuppliers - the collection that is
+	 * actually persisted - was not, so a supplier chosen under the previous type
+	 * survived Save. That is the #40654 leak: a G2G quote kept its K-Contractor.
+	 *
+	 * <p>Callers must not invoke this for Special Item / PK7: #27868 lets those
+	 * procurement types hold govt sellers and ordinary suppliers together.
+	 *
+	 * @param isG2g true when switching into G2G, false when switching out of it
+	 */
+	private void purgeSuppliersNotMatchingProcType(boolean isG2g) {
+		ScQuote quote = getManagedBean().getScQuote();
+		if (quote == null || CollectionUtils.isEmpty(quote.getScQuoteSuppliers())) {
+			return;
 		}
 
-		suppliers.removeAll(suppliersToRemove);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+		for (ScQuoteSupplier supplier : quote.getScQuoteSuppliers()) {
+			if (isGovtSeller(supplier, orgProfileSO) != isG2g) {
+				suppliersToRemove.add(supplier);
+			}
+		}
+
+		if (!suppliersToRemove.isEmpty()) {
+			quote.getScQuoteSuppliers().removeAll(suppliersToRemove);
+			if (getManagedBean().getSupplierList() != null) {
+				getManagedBean().getSupplierList().removeAll(suppliersToRemove);
+			}
+			if (getManagedBean().getGovtSellers() != null) {
+				getManagedBean().getGovtSellers().removeAll(suppliersToRemove);
+			}
+		}
 	}
-	//40234 - end
+	//#40654 - end
 }
