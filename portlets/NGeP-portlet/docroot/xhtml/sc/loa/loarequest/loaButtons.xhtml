@@ -40,12 +40,18 @@
 					and !(!qtLOABackingBean.managedBean.ableToSubmitLOA and lOADetailBackingBean.isApproverAbleToSave())}" process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 
-				<p:commandButton value="#{lbl['lbl.btn.submit']} **%##SUBMIT>##test9970-N"
+				<ui:remove>#34444 START</ui:remove>
+				<ui:param name="popupMsgActionBtn"
+					value="#{lOADetailBackingBean.submitConformationForLampiranA3()}" />
+					<ui:remove>#34444 END</ui:remove>
+				<p:commandButton
+					value="#{lbl['lbl.btn.submit']} **%##SUBMIT>##test9970-N"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
-					 process="@form"
+					process="@form"
 					action="#{lOADetailBackingBean.constructSubmitDialogMesssageLoa()}"
 					update="@form" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
+					oncomplete="blockWidget.hide();" />
+				<ui:remove>#21692</ui:remove>
 				<ui:remove>START - #33639 (by include another checking by LOA Doc Type during render the cancel button)</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isPendingSubmissionStatus and !isSqStillValid and isDocTypePurchaseRequest}"
@@ -150,7 +156,7 @@
 									onstart="blockWidget.show();cd.show();"
 									oncomplete="blockWidget.hide();" />
 								<p:confirmDialog
-									message="#{lbl['lbl.sc.loa.supplier.reviseDocument']}"
+									message="#{lbl['lbl.sc.loa.supplier.reviseDocument']} +*90091!"
 									header="#{lbl['lbl.sc.dialog.cofirm.header']}"
 									severity="alert" widgetVar="cd">
 									<div class="ppRightBtn">
@@ -165,7 +171,7 @@
 											oncomplete="cd.hide();" />
 									</div>
 								</p:confirmDialog>
-								<p:commandButton value="#{lbl[buttonLabel]}"
+								<p:commandButton value="#{lbl[buttonLabel]} +776#_N!"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{!isPendingVerification and isSqStillValid}"
 									oncomplete="blockWidget.hide();"
@@ -184,6 +190,11 @@
 									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
+								
+								<ui:remove>#34444 START</ui:remove>
+								<ui:param name="popupMsgActionBtn"
+									value="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}" />
+								<ui:remove>#34444 END</ui:remove>
 								<ui:remove>21692 - Start</ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]} ##test12111-N"
 									styleClass="ui-button" onstart="blockWidget.show();"
@@ -196,7 +207,7 @@
 								<ui:remove>21692 - End</ui:remove>
 	
 								<ui:remove> #29007 Vinod Start changed action </ui:remove>
-								<p:commandButton value="#{lbl[buttonLabel]}"
+								<p:commandButton value="#{lbl[buttonLabel]} +78901A"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{isPendingVerification and isSqStillValid}"
 									oncomplete="blockWidget.hide();"
@@ -374,4 +385,13 @@
 		title="#{lbl['lbl.sc.header.message.reject']}"
 		content="#{lbl['lbl.sc.loa.cancel.dialog.confirm.reject.message']}" update="@form" />				
 	<ui:remove>34449 - end</ui:remove>
+
+	<ui:remove>#34444 Start Ann</ui:remove>
+	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+		widget="popupConfirmInfoDlg"
+		okAction="#{popupMsgActionBtn}"
+		title="#{lOADetailBackingBean.managedBean.confirmTitle}"
+		content="#{lOADetailBackingBean.managedBean.confirmContent}"
+		update="@all" okProcess="@this"/>
+	<ui:remove>#34444 End Ann</ui:remove>
 </ui:composition>

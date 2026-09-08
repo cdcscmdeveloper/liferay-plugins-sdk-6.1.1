@@ -4377,7 +4377,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
         		// 27868 - start
         		validateReasonStatus(scLoa);
         		// 27868 - end
-				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
+//				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
+        		//34444 - START
+        		getManagedBean().setBtnAction("APPROVELOA");
+        		RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
+        		//34444 -  END
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
@@ -13499,7 +13503,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * Trigger the LOA submit confirmation dialog.
 	 */
 	public void constructSubmitDialogMesssageLoa(){
-		RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+		//#34444 - START
+		getManagedBean().setBtnAction("SUBMISSIONLOA");
+		RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
 	}
 	
 	/**
