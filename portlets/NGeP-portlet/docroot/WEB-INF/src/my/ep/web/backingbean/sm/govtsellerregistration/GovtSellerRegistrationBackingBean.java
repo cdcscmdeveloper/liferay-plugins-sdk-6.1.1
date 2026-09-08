@@ -2127,15 +2127,6 @@ public class GovtSellerRegistrationBackingBean extends
 	}
 	//13320-End
 	
-	//14685 - START
-	public void showMessageToggle(){
-		if(this.getManagedBean().isShowMessage()){
-			this.getManagedBean().setShowMessage(false);
-		}else{
-			this.getManagedBean().setShowMessage(true);
-		}
-	}
-	//14685 - END
 	// #28720 Start
 	public void onChangeEmail() {
 		String email = this.getManagedBean().getSmPersonnel().getEmail().toLowerCase();

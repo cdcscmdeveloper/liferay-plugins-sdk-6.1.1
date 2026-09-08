@@ -831,6 +831,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		} catch (RuntimeException e) {
 			SLAUtils.getInstance().logSLAError("SM", "supplier", getManagedBean().getSmAppl().getApplNo(),
 					"SupplierDataMaintenanceBackingBean", (new LogKey()).getUserId(), e);
+			throw e;
 		}
 		getManagedBean().setWarningExist(false);
 		getManagedBean().setDisplaySearchPage(true);
@@ -3517,6 +3518,12 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void saveOtherDescriptionEdit() {
 		try {
+			
+			// #37605 - START
+			if(!SmApplicationUtil.convertToAscii(getManagedBean().getOtherDescEdited())){
+				throw new EpException(MessageConst.ERROR_760555);
+			}
+			// #37605 - END
 			
 			String roleCode = "";
 			List<SmAppl> smApplList = new ArrayList<>();

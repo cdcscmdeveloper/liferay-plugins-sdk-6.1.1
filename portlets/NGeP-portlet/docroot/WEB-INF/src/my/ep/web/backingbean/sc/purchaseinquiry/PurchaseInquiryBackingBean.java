@@ -329,7 +329,6 @@ public class PurchaseInquiryBackingBean extends
 		getManagedBean().getSupplierItemZonalPromotionPrices().clear();
 		getManagedBean().getSupplierItemZonalTierStandardPrices().clear();
 		getManagedBean().getSupplierItemZonalTierPromotionPrices().clear();
-		getManagedBean().getDeleteSessionSupplierItemPrices().clear();
 		
 		CatalogueResDTO supplierResDTO = null;
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
@@ -802,9 +801,9 @@ public class PurchaseInquiryBackingBean extends
 				}
 				// 27868 - start
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateReasonStatus(requestNoteDtls);
 					validateUserProfileAgencyForSpecialItem(requestNoteDtls);
 				}
+				validateReasonStatus(requestNoteDtls);
 				validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
 				// 27868 - end
 				// Add selected supplier item.
@@ -855,10 +854,10 @@ public class PurchaseInquiryBackingBean extends
 				requestNote.setRequestNoteDtls(Arrays.asList(requestNoteDtl));
 				
 				// 27868 - start
-				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateReasonStatus(requestNote.getRequestNoteDtls());
+				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {					
 					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());
 				}
+				validateReasonStatus(requestNote.getRequestNoteDtls());
 				validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
 						scRequestSupplierItem);
 				// 27868 - end
@@ -1111,7 +1110,7 @@ public class PurchaseInquiryBackingBean extends
 				.getScRequestSupplierItem();
 		
 		// update pricing
-		updatePricing(scRequestSupplierItem);
+		//updatePricing(scRequestSupplierItem);//#29557
 		
 		finalizeRemarks(prInquiry.getRemarks());
 
@@ -1146,7 +1145,7 @@ public class PurchaseInquiryBackingBean extends
 		// updating price
 		List<ScRequestSupplierItem> scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
 		scRequestSupplierItems.add(scRequestSupplierItem);
-		prInquiry.setScRequestSupplierItems(scRequestSupplierItems);
+		//prInquiry.setScRequestSupplierItems(scRequestSupplierItems); //#29557
 
 		prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
 		reqDTO.setPrInquiryDetail(prInquiry);
@@ -1316,10 +1315,10 @@ public class PurchaseInquiryBackingBean extends
 			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
 				finalizeWIPDropdownPK7();
 			} else {
-				getManagedBean()
-						.setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
-				inactiveReasonChecking();
+				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));				
 			}
+			
+			inactiveReasonChecking();
 			// 27868 - end
 		} // 27868 - start
 		else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
@@ -3130,8 +3129,9 @@ public class PurchaseInquiryBackingBean extends
 	                && scSupplierItemPrice.getPricing().getPrice() == null) {
 	            scSupplierItemPrice.setPricing(null);
 	        }
-	        scSupplierItemPrice.setRecordStatusFlg(0);
 	    }
+
+	    getPrInquirySO().deleteSupplierItemPrices(scSupplierItemPriceList);
 
 	    FacesContext fc = FacesContext.getCurrentInstance();
 	    getManagedBean().setNavToPreviousPage(fc.getViewRoot().getViewId());
@@ -3208,21 +3208,6 @@ public class PurchaseInquiryBackingBean extends
 				.getSupplierItemZonalTierStandardPrices());
 		scSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_TIER_PROMOTION_PRICE, this.getManagedBean()
 				.getSupplierItemZonalTierPromotionPrices());
-
-
-		HashMap<Long, List<ScSupplierItemPrice>> deleteSupplierItemPriceListing = new HashMap<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-		deleteSupplierItemPriceListing.put(PriceTypeConstants.TIER_STANDARD_PRICE, this.getManagedBean()
-				.getDeleteSupplierItemTierStandardPrices());
-		deleteSupplierItemPriceListing.put(PriceTypeConstants.TIER_PROMOTION_PRICE, this.getManagedBean()
-				.getDeleteSupplierItemTierPromotionPrices());
-		deleteSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_STANDARD_PRICE, this.getManagedBean()
-				.getDeleteSupplierItemZonalStandardPrices());
-		deleteSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_PROMOTION_PRICE, this.getManagedBean()
-				.getDeleteSupplierItemZonalPromotionPrices());
-		deleteSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_TIER_STANDARD_PRICE, this.getManagedBean()
-				.getDeleteSupplierItemZonalTierStandardPrices());
-		deleteSupplierItemPriceListing.put(PriceTypeConstants.ZONAL_TIER_PROMOTION_PRICE, this.getManagedBean()
-				.getDeleteSupplierItemZonalTierPromotionPrices());
 
 		// save for type 01
 		if (!this.getManagedBean().getSupplierItemNormalPrices().isEmpty()) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024] - #36312 - Sqube DP Master Code Smell Major G97
@@ -3315,13 +3300,7 @@ public class PurchaseInquiryBackingBean extends
 						onChangeNewPrice(scSupplierItemPrice.getPriceType().getParameterCode(),
 								scSupplierItemPrice.getItemPrice(), BigDecimal.ZERO);
 				}
-
-				if (deleteSupplierItemPriceListing.get(currentKey) != null
-						&& !deleteSupplierItemPriceListing.get(currentKey).isEmpty()) {
-					deleteScSupplierItemPrices(deleteSupplierItemPriceListing.get(currentKey));
-					prInquiryReqDTO.getSupplierItemPrices().addAll(deleteSupplierItemPriceListing.get(currentKey));
-				}
-
+				
 				List<ScSupplierItemPrice> addedScSupplierItemPrice = getPrInquirySO().saveSupplierItemPrices(prInquiryReqDTO);
 
 				if (i == 0)
@@ -3337,13 +3316,6 @@ public class PurchaseInquiryBackingBean extends
 				else if (i == 5)
 					this.getManagedBean().setSupplierItemZonalTierPromotionPrices(addedScSupplierItemPrice);
 			}
-			
-			if (deleteSupplierItemPriceListing.get(currentKey) != null && !deleteSupplierItemPriceListing.get(currentKey).isEmpty()) {
-				PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
-				deleteScSupplierItemPrices(deleteSupplierItemPriceListing.get(currentKey));
-				prInquiryReqDTO.setSupplierItemPrices(deleteSupplierItemPriceListing.get(currentKey));
-				getPrInquirySO().saveSupplierItemPrices(prInquiryReqDTO);
-			}
 		}
 		
 		if(outcome.equals("SUBMIT")){
@@ -3352,21 +3324,20 @@ public class PurchaseInquiryBackingBean extends
 	}
 	
 	/**
-	 * Marks the given supplier item prices as deleted by setting their
-	 * record status flag to inactive (0).
-	 * <p>
-	 * If a supplier item price has no pricing information or its pricing
-	 * contains a {@code null} price value, the pricing reference is cleared
-	 * before marking the record as deleted.
-	 *
-	 * @param scSupplierItemPriceList the list of supplier item prices to be marked as deleted
+	 * To deleteScSupplierItemPrices.
 	 */
-	public void deleteScSupplierItemPrices(List<ScSupplierItemPrice> scSupplierItemPriceList) {			
-		for (ScSupplierItemPrice item : scSupplierItemPriceList) {
-			if (item.getPricing() == null || (item.getPricing() != null && item.getPricing().getPrice() == null)) {
-				item.setPricing(null);
+	public void deleteScSupplierItemPrices(List<ScSupplierItemPrice> deleteScSupplierItemPrices) {
+
+		if (deleteScSupplierItemPrices != null && !deleteScSupplierItemPrices.isEmpty()) {
+			for (ScSupplierItemPrice deleteScSupplierItemPrice : deleteScSupplierItemPrices) {
+				if (deleteScSupplierItemPrice.getPricing() == null) {
+					deleteScSupplierItemPrice.setPricing(null);
+				} else if (deleteScSupplierItemPrice.getPricing().getPrice() == null) {
+					deleteScSupplierItemPrice.setPricing(null);
+				}
 			}
-			item.setRecordStatusFlg(0);
+
+			getPrInquirySO().deleteSupplierItemPrices(deleteScSupplierItemPrices);
 		}
 	}
 	
@@ -3531,13 +3502,8 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-		if (this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices() != null
-				&& !this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices().isEmpty()) {
-			this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices().addAll(deleteScSupplierItemPrices);
-		} else {
-			this.getManagedBean().setDeleteSupplierItemZonalTierStandardPrices(deleteScSupplierItemPrices);
-		}
-
+		this.getManagedBean().setDeleteSupplierItemZonalTierStandardPrices(deleteScSupplierItemPrices);
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemZonalTierStandardPrices());
 		this.getManagedBean().setSupplierItemZonalTierStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalTierStandardPrices().size() == 0){
@@ -3715,13 +3681,8 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 
-		if (this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices() != null
-				&& !this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices().isEmpty()) {
-			this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices().addAll(deleteScSupplierItemPrices);
-		} else {
-			this.getManagedBean().setDeleteSupplierItemZonalTierPromotionPrices(deleteScSupplierItemPrices);
-		}
-
+		this.getManagedBean().setDeleteSupplierItemZonalTierPromotionPrices(deleteScSupplierItemPrices);
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemZonalTierPromotionPrices());
 		this.getManagedBean().setSupplierItemZonalTierPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalTierPromotionPrices().size() == 0){
@@ -3857,13 +3818,8 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-		if (this.getManagedBean().getDeleteSupplierItemZonalStandardPrices() != null
-				&& !this.getManagedBean().getDeleteSupplierItemZonalStandardPrices().isEmpty()) {
-			this.getManagedBean().getDeleteSupplierItemZonalStandardPrices().addAll(deleteScSupplierItemPrices);
-		} else {
-			this.getManagedBean().setDeleteSupplierItemZonalStandardPrices(deleteScSupplierItemPrices);
-		}
-
+		this.getManagedBean().setDeleteSupplierItemZonalStandardPrices(deleteScSupplierItemPrices);
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemZonalStandardPrices());
 		this.getManagedBean().setSupplierItemZonalStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalStandardPrices().size() == 0){
@@ -3997,13 +3953,8 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-		if (this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices() != null
-				&& !this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices().isEmpty()) {
-			this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices().addAll(deleteScSupplierItemPrices);
-		} else {
-			this.getManagedBean().setDeleteSupplierItemZonalPromotionPrices(deleteScSupplierItemPrices);
-		}
-
+		this.getManagedBean().setDeleteSupplierItemZonalPromotionPrices(deleteScSupplierItemPrices);
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemZonalPromotionPrices());
 		this.getManagedBean().setSupplierItemZonalPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemZonalPromotionPrices().size() == 0){
@@ -4152,13 +4103,8 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		
-		if (this.getManagedBean().getDeleteSupplierItemTierStandardPrices() != null
-				&& !this.getManagedBean().getDeleteSupplierItemTierStandardPrices().isEmpty()) {
-			this.getManagedBean().getDeleteSupplierItemTierStandardPrices().addAll(deleteScSupplierItemPrices);
-		} else {
-			this.getManagedBean().setDeleteSupplierItemTierStandardPrices(deleteScSupplierItemPrices);
-		}
-
+		this.getManagedBean().setDeleteSupplierItemTierStandardPrices(deleteScSupplierItemPrices);
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemTierStandardPrices());
 		this.getManagedBean().setSupplierItemTierStandardPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemTierStandardPrices().size() == 0){
@@ -4301,13 +4247,8 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 
-		if (this.getManagedBean().getDeleteSupplierItemTierPromotionPrices() != null
-				&& !this.getManagedBean().getDeleteSupplierItemTierPromotionPrices().isEmpty()) {
-			this.getManagedBean().getDeleteSupplierItemTierPromotionPrices().addAll(deleteScSupplierItemPrices);
-		} else {
-			this.getManagedBean().setDeleteSupplierItemTierPromotionPrices(deleteScSupplierItemPrices);
-		}
-
+		this.getManagedBean().setDeleteSupplierItemTierPromotionPrices(deleteScSupplierItemPrices);
+		deleteScSupplierItemPrices(this.getManagedBean().getDeleteSupplierItemTierPromotionPrices());
 		this.getManagedBean().setSupplierItemTierPromotionPrices(mainScSupplierItemPrices);
 		
 		if (this.getManagedBean().getSupplierItemTierPromotionPrices().size() == 0){
@@ -4516,7 +4457,13 @@ public class PurchaseInquiryBackingBean extends
 		if (null != getManagedBean().getRequestNoteDtl().getJustificationType()) {
 			PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
 					.getReasonId());
-			if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
+			
+			if (reason == null) {
+				return;
+			}
+			boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+			
+			if (!reasonStatus && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
 				for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
 					throw new EpException(MessageConst.ERROR_760716, new String[] {
 							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
@@ -4966,9 +4913,9 @@ public class PurchaseInquiryBackingBean extends
 		if (reason == null) {
 			return;
 		}
-
-		boolean isInactive = !reason.isRecordStatus();
-		boolean isActiveButMissingAsIs = reason.isRecordStatus() && !isAsIsReasonIncludedInDropdown();
+		boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+		boolean isInactive = !reasonStatus;
+		boolean isActiveButMissingAsIs = reasonStatus && !isAsIsReasonIncludedInDropdown();
 
 		if (isInactive || isActiveButMissingAsIs) {
 			getManagedBean().setReasonCodeInActive(true);
@@ -4978,6 +4925,20 @@ public class PurchaseInquiryBackingBean extends
 				getManagedBean().setInActiveReasonDesc(reasonDesc);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Retrieves the PK7 reason status by reason ID.
+	 *
+	 * @param reasonId
+	 *            the reason ID
+	 * @return true if the reason is active, otherwise false
+	 */
+	private boolean retrievePK7ReasonStatus(Long reasonId) {
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		return reqSO.getPK7ReasonStatus(reasonId);
 	}
 
 	/**
