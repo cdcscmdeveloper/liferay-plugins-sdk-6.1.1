@@ -15,6 +15,7 @@ import javax.portlet.PortletRequest;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -33,6 +34,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
+import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -442,7 +444,6 @@ public class ViewSuppProfileBackingBean extends
 			        }
 			    }
 	}
-<<<<<<< HEAD
 	
 	// 26247 - start	
 	/**
@@ -463,10 +464,7 @@ public class ViewSuppProfileBackingBean extends
 		if (DisciplinaryActionUtils.evaluateCancellationBlacklist(supplier)) {
 			messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
 		}
-=======
->>>>>>> branch 'prd_v1.155.0_DA' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 
-<<<<<<< HEAD
 		List<String> cancelledCategoryCodes = new ArrayList<>();
 		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
 
@@ -572,6 +570,4 @@ public class ViewSuppProfileBackingBean extends
 		return messageSb.toString();
 	}
 	// 26247 - end
-=======
->>>>>>> branch 'prd_v1.155.0_DA' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 }
