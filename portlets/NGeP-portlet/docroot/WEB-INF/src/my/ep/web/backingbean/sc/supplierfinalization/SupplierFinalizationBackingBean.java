@@ -7983,9 +7983,18 @@ return	remarksNotFound;
 		String selectionMode = null;
 		if (isQTRefinalized() || ParameterConst.RECOMMEND_BY_AWARD
 							.equals(finalizationMethod)) {
-			this.getManagedBean().setSingleAward(true);
-			
-			selectionMode = QTConstants.SF_SINGLE;
+			//#40396 - Start
+			if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+						.equals(finalizationMethod)) {
+				this.getManagedBean().setMultipleLoi(true);
+				
+				selectionMode = QTConstants.SF_MULTIPLE;
+			} else {
+				this.getManagedBean().setSingleAward(true);
+				
+				selectionMode = QTConstants.SF_SINGLE;
+			}
+			//#40396 - End
 		} else if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(finalizationMethod)) {
 			setOnlineBiddingFlag();
