@@ -1071,20 +1071,66 @@ public class SupplierFinalizationBackingBean extends
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getReasonCodeCheckboxValues(String categoryCode) {
-		SelectItem[] items = null;
-		try {
-			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(categoryCode);
+	    SelectItem[] items = null;
 
-			items = new SelectItem[reasonDescs.size()];
-			int i = 0;
-			for (PmReasonDesc reasonDesc : reasonDescs) {
-				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-		return items;
+	    try {
+	        List<PmReasonDesc> reasonDescs =
+	            ReasonHelper.getInstance().getReasonDescList(categoryCode);
+
+	        // Sort Others to the bottom
+	        Collections.sort(reasonDescs, new Comparator<PmReasonDesc>() {
+
+	            @Override
+	            public int compare(PmReasonDesc o1, PmReasonDesc o2) {
+
+	                String code1 = o1.getPmReason().getReasonCode();
+	                String code2 = o2.getPmReason().getReasonCode();
+
+	                boolean isOthers1 =
+	                    JUSTIFICATION_OTHERS.equalsIgnoreCase(code1);
+
+	                boolean isOthers2 =
+	                    JUSTIFICATION_OTHERS.equalsIgnoreCase(code2);
+
+	                if (isOthers1 && !isOthers2) {
+	                    return 1;
+	                }
+
+	                if (!isOthers1 && isOthers2) {
+	                    return -1;
+	                }
+
+	                return 0;
+	            }
+	        });
+
+	        items = new SelectItem[reasonDescs.size()];
+
+	        int i = 0;
+
+	        for (PmReasonDesc reasonDesc : reasonDescs) {
+
+	            items[i++] = new SelectItem(
+	                reasonDesc.getPmReason().getReasonCode(),
+	                reasonDesc.getReasonDesc()
+	            );
+	        }
+
+	    } catch (Exception e) {
+
+	        log.error(e.getMessage());
+
+	        FacesContext.getCurrentInstance().addMessage(
+	            null,
+	            new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                e.toString(),
+	                e.getMessage()
+	            )
+	        );
+	    }
+
+	    return items;
 	}
 	//#34860 End
 	

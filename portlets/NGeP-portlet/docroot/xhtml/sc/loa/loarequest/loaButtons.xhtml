@@ -349,37 +349,37 @@
 	<ui:remove>#21692</ui:remove>
 	<ui:remove>34449 - start</ui:remove>
 	<ui:remove> Popup Submit Action </ui:remove>
-	<ac:confirmationPopup id="submitConformDlgLoa"
+	<ac:confirmationPopupSM id="submitConformDlgLoa"
 		widget="submitConformDlg" width="400" height="100"
 		okAction="#{lOADetailBackingBean.submitConformationForLampiranA3()}"
 		title="#{lbl['lbl.sc.header.message.submit']}"
 		content="#{lbl['lbl.sc.loa.confirmation.submit.message']}" update="@form" />
 	
-	<ac:confirmationPopup id="cancelDlgLoa"
+	<ac:confirmationPopupSM id="cancelDlgLoa"
 			widget="cancelDlg" width="400" height="100"
 			okAction="#{lOADetailBackingBean.managedBean.cancelMethod}"
 			title="#{lbl['lbl.sc.header.message.cancel']}"
 			content="#{lbl['lbl.sc.loa.confirmation.cancel.message']}" update="@form" />		
 			
-	<ac:confirmationPopup id="submitConformDlgReviseLoa"
+	<ac:confirmationPopupSM id="submitConformDlgReviseLoa"
 		widget="submitConformDlgRevise" width="400" height="100"
 		okAction="#{lOADetailBackingBean.managedBean.submitMethod}"
 		title="#{lbl['lbl.sc.header.message.submit']}"
 		content="#{lbl['lbl.sc.loa.confirmation.submit.message']}" update="@form" />	
 		
-	<ac:confirmationPopup id="reviseDlgLoa"
+	<ac:confirmationPopupSM id="reviseDlgLoa"
 		widget="reviseDlg" width="400" height="100"
 		okAction="#{lOADetailBackingBean.managedBean.reviseMethod}"
 		title="#{lbl['lbl.sc.header.message.revise']}"
 		content="#{lbl['lbl.sc.loa.confirmation.revise.message']}" update="@form" />
 		
-	<ac:confirmationPopup id="verifyDlgLoa"
+	<ac:confirmationPopupSM id="verifyDlgLoa"
 		widget="verifyDlg" width="400" height="100"
 		okAction="#{lOADetailBackingBean.managedBean.verifyMethod}"
 		title="#{lbl['lbl.sc.header.message.verify']}"
 		content="#{lbl['lbl.sc.loa.confirmation.verify.message']}" update="@form" />
 		
-	<ac:confirmationPopup id="rejectDlgLoa"
+	<ac:confirmationPopupSM id="rejectDlgLoa"
 		widget="rejectDlg" width="400" height="100"
 		okAction="#{lOADetailBackingBean.managedBean.rejectMethod}"
 		title="#{lbl['lbl.sc.header.message.reject']}"

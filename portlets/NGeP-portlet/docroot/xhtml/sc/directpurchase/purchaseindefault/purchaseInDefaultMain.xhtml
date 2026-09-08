@@ -162,7 +162,7 @@
 			</table>
 			<ui:remove> 34449 - Popup button from bpm</ui:remove>
 			<p:outputPanel id="pidConformDlgWrapper">
-				<ac:confirmationPopup id="pidConformDlgPid" widget="pidConformDlg"
+				<ac:confirmationPopupSM id="pidConformDlgPid" widget="pidConformDlg"
 					width="400" height="100"
 					okAction="#{purchaseInDefaultBackingBean.approverAction(purchaseInDefaultBackingBean.managedBean.selectedAction)}"
 					title="#{purchaseInDefaultBackingBean.managedBean.confirmationMessageTitle}"
@@ -201,7 +201,7 @@
 		<ui:remove> 9133, 34449 - end</ui:remove>
 		<ui:remove>34449 - start</ui:remove>
 		<ui:remove> Popup Submit Action </ui:remove>
-		<ac:confirmationPopup id="submitConformDlgPid"
+		<ac:confirmationPopupSM id="submitConformDlgPid"
 			widget="submitConformDlg" width="400" height="100"
 			okAction="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
 			title="#{lbl['lbl.sc.header.message.submit']}"

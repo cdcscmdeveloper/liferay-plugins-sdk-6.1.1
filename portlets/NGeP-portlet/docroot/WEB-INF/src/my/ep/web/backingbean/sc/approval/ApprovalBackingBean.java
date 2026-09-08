@@ -4039,9 +4039,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 		
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
+		// #35500 EPV 7th Sep Start
+		String fcCode = scQt.getFinalizationCommitte().getParameterCode().toUpperCase();
+		if (fcCode.contains("FPB")) {
+			auditResDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+		} else {
+			auditResDTO.setRoleCode(RoleCode.PPB_SECRETARY.value());
+		}
 		Long userId = getUserIdSessionFromLoginId();
-		ScActor scActor = getActorByQtIdAndUserId(scQt.getQtId(),userId);
-		auditResDTO.setRoleCode(scActor.getRoleCode());//#35500 fix 31st March
+		// #35500 EPV 7th Sep End
 		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
