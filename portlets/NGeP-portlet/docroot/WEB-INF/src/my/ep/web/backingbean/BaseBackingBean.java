@@ -4963,5 +4963,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		codificationBB.getManagedBean().setHideExtension(itemName.trim().isEmpty());
 	}
 	//End - #31341
+	
+	// 29661 - start
+	public <ENTITY_CLASS extends BaseEntity> boolean isSelected(List<ENTITY_CLASS> list) {
+		for (ENTITY_CLASS entity : list) {
+			if (entity.isSelected()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// 29661 - end
 }
 

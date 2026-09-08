@@ -556,6 +556,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			if (this.getManagedBean().isDraftUpdate()) {
 				this.getManagedBean().getSmCompExpDocList().add(docFile);
 			} else if (this.getManagedBean().isMasterUpdate()) {
+				// #9299 - #41162: set the owning-side back-reference on the re-uploaded doc so the
+				// non-null COMP_EXP_MASTER_ID is populated on merge. Without this, deleting the
+				// company experience (deleteMaster merges selectedMaster directly, without the
+				// save-path re-wiring in resolveMasterCategoryDetails) cascade-persists this doc
+				// with a null parent FK -> ORA-01400 -> ERR-000001.
+				docFile.setCompExpMaster(this.getManagedBean().getSelectedMaster());
 				this.getManagedBean().getSelectedMaster().getCompExpMasterDocs().add(docFile);
 			} else if (this.getManagedBean().isMasterNew()) {
 				this.getManagedBean().getNewMaster().getCompExpMasterDocs().add(docFile);

@@ -87,10 +87,10 @@ import my.ep.dto.osb.sc.DPOsbReqDTO; //#25790
 import my.ep.dto.osb.sc.DPOsbResDTO; //#25790
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#33224
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#33224
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#33224
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#33224
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -136,7 +136,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg; //#27868
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.authorization.PmUserRole; //#33224
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason; //#27868
@@ -1198,7 +1198,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// 26284 - Start
 		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
-		    
 			// 33224 - Start
 			checkInactiveUserAction(scRequestNote, RoleCode.RN_APPROVER.value());
 			// 33224 - End
@@ -2375,17 +2374,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			//#33224 - Start
-			RequestNoteReqDTO inactiveUserReqDTO = new RequestNoteReqDTO();
+			InactiveUserResDTO inactiveUserResDTO = new InactiveUserResDTO();
 			PmUser userDetail = new PmUser();
 			String[] paramMessage = new String[3];	
 			Boolean inactiveFlag = false; // to determine current user inactive
 
 			log.info("--- 33224 (- Method: checkInactiveUserAction Start ---");
 			if ((outcome.equals(BpmOutcomeConst.BPM_REVISE))){
-				inactiveUserReqDTO = checkInactiveUserAction(requestNote, RoleCode.REQUISITIONER.value());
+				inactiveUserResDTO = checkInactiveUserAction(requestNote, RoleCode.REQUISITIONER.value());
 				log.info("--- 33224 (- Method: before checkInactiveUserAction End ---");
+				log.info("--- 33224 (- Method: before checkInactiveUserAction End status ---" + inactiveUserResDTO.getStatus());
 			
-				/*if(!DPConstants.RESPONSE_ACTIVE_USER.equals(inactiveUserResDTO.getStatus())){
+				if(!DPConstants.RESPONSE_ACTIVE_USER.equals(inactiveUserResDTO.getStatus())){
 			    	
 			    	log.info("checkInactiveRequisitioner - LoginIds: " + inactiveUserResDTO.getLoginIds());
 			        log.info("checkInactiveRequisitioner - userIDs: " + inactiveUserResDTO.getUserIds());
@@ -2398,7 +2398,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					paramMessage[2] = userDetail.getUserName();
 					
 					inactiveFlag = true;
-				}else if (DPConstants.RESPONSE_NO_ACTIVE_USER.equals(inactiveUserResDTO.getStatus())) {
+				    }
+			    
+				    else if (DPConstants.RESPONSE_NO_ACTIVE_USER.equals(inactiveUserResDTO.getStatus())) {
 				     
 				    	PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(requestNote.getPmOrgProfile().getOrgProfileId());
 						String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
@@ -2406,10 +2408,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				    	throw new EpException(MessageConst.ERROR_700128, new String[] {
 								getParameterDesc(RoleCode.REQUISITIONER.value(), ministryName) });
-				}*/
+				    }		
 
 			}
 			log.info("--- 33224 (- Method: checkInactiveUserAction End ---");
+				    
+			
 			//#33224 -End
 
 			FacesScopes facesScopes = new FacesScopes();
@@ -2438,15 +2442,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			// 12183 - End
 			// 33224 - Start
-			if(inactiveUserReqDTO.getIsInactiveFlag()){
-				requestNoteReqDTO.setReqLoginId(userDetail.getLoginId());
-				requestNoteReqDTO.setReqUserId(String.valueOf(userDetail.getUserId()));
-				requestNoteReqDTO.setReqUserName(userDetail.getUserName());
-			}
-			else{
-				
-			}
-			
+			requestNoteReqDTO.setReqLoginId(userDetail.getLoginId());
+			requestNoteReqDTO.setReqUserId(String.valueOf(userDetail.getUserId()));
+			requestNoteReqDTO.setReqUserName(userDetail.getUserName());
 			// 33224 - Start
 
 			// #31874 - Start
@@ -2507,12 +2505,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
-				} else if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && inactiveFlag.equals(Boolean.FALSE)) {
+				} else if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && inactiveFlag.equals(Boolean.FALSE)) {// 33224  -- Gate 3
 					// 26059 - start - replace with original code
 					successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 					// 26059 - end
-					
 				} else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && inactiveFlag.equals(Boolean.TRUE)) {	
 				// 33224 - start - replace new message code user inactive				
 					successMessage(MessageConst.INFO_700128,paramMessage);
@@ -9255,140 +9252,114 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 	}
 	//34449 - end
-
-	//33224 start
+	
+	// 33224 start
 	/**
 	 * Validates if the current user inactive.
-	 *
-	 * @param requestNote The {@link ScRequestNote} containing the current user info to validate.
-	 * @param nextUserRole containing the expected role for the next user.
+	 * 
+	 * @param requestNote
+	 *            The {@link ScRequestNote} containing the current user info to
+	 *            validate.
+	 * @param nextUserRole
+	 *            containing the expected role for the next user.
 	 * 
 	 * @return InactiveUserResDTO status and list of the next active user.
 	 */
-	@SuppressWarnings("null")
-	public RequestNoteReqDTO checkInactiveUserAction(ScRequestNote requestNote, String nextUserRole) {
-	
-    if (requestNote == null || requestNote.getCreatedBy() == null) {
-        log.info("checkInactiveUserAction - no requisitioner found, skipping check");
-        return null;
-    }
-    
-    Long requisitionerUserId = null;
-    
-    if(nextUserRole.equals(RoleCode.REQUISITIONER.value())){
-    	requisitionerUserId = requestNote.getCreatedBy();
-    }
-    
-    log.info("checkInactiveUserAction - checking requisitioner userId: " + requisitionerUserId);
+	public InactiveUserResDTO checkInactiveUserAction(ScRequestNote requestNote, String nextUserRole) {
 
-    IUserSO userSO = BusinessDelegate.getInstance()
-            .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-    
-    UserReqDTO userReqDTO = new UserReqDTO();
-    RequestNoteReqDTO rnInactiveDTO = new RequestNoteReqDTO();
-    Boolean isreq = false;
-    Long orgProfileId =0L;
-    PmUser userDetail = new PmUser();
-    String[] paramMessage = null;
-    
-    userReqDTO.setUserId(requisitionerUserId);
-    UserResDTO resDTO = userSO.retrieveUserByUserId(userReqDTO);
-    
-    if(!resDTO.getPmUser().getPmUserOrgs().isEmpty()){
-    	for (PmUserOrg org : resDTO.getPmUser().getPmUserOrgs()){
-    		if(org.getRecordStatusFlg() == 1){
-    		
-    		orgProfileId = org.getPmOrgProfile().getOrgProfileId();
-    		
-    		isreq = checkUserRole(org);
-    	}
-      }
-    }
+		if (requestNote == null || requestNote.getCreatedBy() == null) {
+			log.info("checkInactiveRequisitioner - no requisitioner found, skipping check");
+			return null;
+		}
 
-    InactiveUserReqDTO inactiveUserReqDTO = new InactiveUserReqDTO();
-    inactiveUserReqDTO.setUserIds(requisitionerUserId.toString());
-    inactiveUserReqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
-    inactiveUserReqDTO.setDocNo(requestNote.getRequestNoteNo());
-    inactiveUserReqDTO.setUserRoleCode(isreq? RoleCode.REQUISITIONER.value(): nextUserRole); //to modify based on rolecode field in param
-    inactiveUserReqDTO.setOrgProfileId(orgProfileId);
+		Long requisitionerUserId = requestNote.getCreatedBy();
+		log.info("checkInactiveRequisitioner - checking requisitioner userId: " + requisitionerUserId);
 
-    InactiveUserResDTO inactiveUserResDTO = userSO.checkInactiveUserBySP(inactiveUserReqDTO);
-    log.info("checkInactiveUserAction - nextUserRole: " + nextUserRole);
-    log.info("rn checkInactiveUserAction - status: " + inactiveUserResDTO.getStatus()
-            + ", message: " + inactiveUserResDTO.getMessage());
-    
-    
-    if(!DPConstants.RESPONSE_ACTIVE_USER.equals(inactiveUserResDTO.getStatus())){
-    	
-    	log.info("checkInactiveUserAction - LoginIds: " + inactiveUserResDTO.getLoginIds());
-        log.info("checkInactiveUserAction - userIDs: " + inactiveUserResDTO.getUserIds());
-	        
-        userDetail = getUserById(Long.parseLong(extractUserId(inactiveUserResDTO.getUserIds())));
-        log.info("checkInactiveUserAction - getUserName: " + userDetail.getUserName()); 
-        
-		paramMessage[0] = ParameterConst.DOCTYPE_REQUEST_NOTE;
-		paramMessage[1] = requestNote.getRequestNoteNo();
-		paramMessage[2] = userDetail.getUserName();
-		
-		rnInactiveDTO.setIsInactiveFlag(true);
-		rnInactiveDTO.setParamMessage(paramMessage);
-		
-	}else if (DPConstants.RESPONSE_NO_ACTIVE_USER.equals(inactiveUserResDTO.getStatus())) {
-	     
-	    	PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(requestNote.getPmOrgProfile().getOrgProfileId());
-			String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-	        log.info("checkInactiveUserAction - ministryName");
-	
-	    	throw new EpException(MessageConst.ERROR_700128, new String[] {
-					getParameterDesc(RoleCode.REQUISITIONER.value(), ministryName) });
-	}else{
-		
-	}
-        
-    return rnInactiveDTO;
-	}
-	
-	/** to trim user id
-	 * @param input
-	 * @return
-	 */
-	public static String extractUserId(String input) {
-	    if (input == null || input.trim().isEmpty()) {
-	        return "";
-	    }
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 
-	    int index = input.indexOf(',');
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(requisitionerUserId);
+		UserResDTO resDTO = userSO.retrieveUserByUserId(userReqDTO);
+		Boolean isreq = false;
+		Long orgProfileId = 0L;
 
-	    if (index != -1) {
-	        return input.substring(0, index).trim();
-	    }
+		if (!resDTO.getPmUser().getPmUserOrgs().isEmpty()) {
+			for (PmUserOrg org : resDTO.getPmUser().getPmUserOrgs()) {
+				if (org.getRecordStatusFlg() == 1) {
 
-	    return input.trim();
+					orgProfileId = org.getPmOrgProfile().getOrgProfileId();
+
+					isreq = checkUserRole(org);
+				}
+			}
+		}
+
+		InactiveUserReqDTO inactiveUserReqDTO = new InactiveUserReqDTO();
+		inactiveUserReqDTO.setUserIds(requisitionerUserId.toString());
+		inactiveUserReqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
+		inactiveUserReqDTO.setDocNo(requestNote.getRequestNoteNo());
+		inactiveUserReqDTO.setUserRoleCode(isreq ? RoleCode.REQUISITIONER.value() : nextUserRole); // to
+																									// modify
+																									// based
+																									// on
+																									// rolecode
+																									// field
+																									// in
+																									// param
+		inactiveUserReqDTO.setOrgProfileId(orgProfileId);
+
+		InactiveUserResDTO inactiveUserResDTO = userSO.checkInactiveUserBySP(inactiveUserReqDTO);
+		log.info("checkInactiveRequisitioner - nextUserRole: " + nextUserRole);
+		log.info("rn checkInactiveRequisitioner - status: " + inactiveUserResDTO.getStatus() + ", message: "
+				+ inactiveUserResDTO.getMessage());
+
+		return inactiveUserResDTO;
 	}
 
-	/** to check user role after call sp check inactive
+	/**
+	 * to check user role after call sp check inactive
+	 * 
 	 * @param org
 	 * @return
 	 */
 	private Boolean checkUserRole(PmUserOrg org) {
 		Boolean isReqUser = false;
-		
-		if (org.getPmUserRoles() != null && !org.getPmUserRoles().isEmpty()) {
-		    for (PmUserRole userRole : org.getPmUserRoles()) {
-		        log.info("checkInactiveRequisitioner - checking role: "
-		                + userRole.getPmRole().getRoleCode());
 
-		        if (RoleCode.REQUISITIONER.value()
-		                .equalsIgnoreCase(userRole.getPmRole().getRoleCode())
-		                && userRole.isRecordStatus()) {
-		            // found active requisitioner role
-		        	isReqUser = true;
-		            log.info("checkInactiveRequisitioner - active requisitioner role found");
-		            break;
-		        }
-		    }
+		if (org.getPmUserRoles() != null && !org.getPmUserRoles().isEmpty()) {
+			for (PmUserRole userRole : org.getPmUserRoles()) {
+				log.info("checkInactiveRequisitioner - checking role: " + userRole.getPmRole().getRoleCode());
+
+				if (RoleCode.REQUISITIONER.value().equalsIgnoreCase(userRole.getPmRole().getRoleCode())
+						&& userRole.isRecordStatus()) {
+					// found active requisitioner role
+					isReqUser = true;
+					log.info("checkInactiveRequisitioner - active requisitioner role found");
+					break;
+				}
+			}
 		}
 		return isReqUser;
-	}			
-	//33224 end
+	}
+
+	/**
+	 * to trim user id
+	 * 
+	 * @param input
+	 * @return
+	 */
+	public static String extractUserId(String input) {
+		if (input == null || input.trim().isEmpty()) {
+			return "";
+		}
+
+		int index = input.indexOf(',');
+
+		if (index != -1) {
+			return input.substring(0, index).trim();
+		}
+
+		return input.trim();
+	}
+	// 33224 end
 }
