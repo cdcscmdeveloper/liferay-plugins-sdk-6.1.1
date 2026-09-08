@@ -550,6 +550,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//38255-Start
 	private List<ScheduleInfo> schInfo;
 	//38255-End
+	
+	//26284 - Start
+	private String disciplinaryActionstartDate;
+	private String disciplinaryActionEndDate;
+	private boolean disciplinaryActionWarning = false;
+	//26284 - End
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -2005,6 +2011,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel.add(ResourceBundleUtils.getMessage(
 				"lbl.cm.basic.item.spec", //#30457 - change label
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		// 26284 - Start
+		compareLabel.add(ResourceBundleUtils.getMessage(
+				"lbl.sc.discipline.action.taken",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		// 26284 - End
 
 		return compareLabel;
 	}
@@ -4375,4 +4386,31 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			this.schInfo = schInfo;
 		}
 		//38255-End
+		
+	// 26284 - Start
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionstartDate;
+	}
+
+	public void setDisciplinaryActionStartDate(
+			String disciplinaryActionstartDate) {
+		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
+	}
+
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	// 26284 - End
 }

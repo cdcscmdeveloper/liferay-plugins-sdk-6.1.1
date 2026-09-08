@@ -442,6 +442,7 @@ public class ViewSuppProfileBackingBean extends
 			        }
 			    }
 	}
+<<<<<<< HEAD
 	
 	// 26247 - start	
 	/**
@@ -462,7 +463,10 @@ public class ViewSuppProfileBackingBean extends
 		if (DisciplinaryActionUtils.evaluateCancellationBlacklist(supplier)) {
 			messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
 		}
+=======
+>>>>>>> branch 'prd_v1.155.0_DA' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 
+<<<<<<< HEAD
 		List<String> cancelledCategoryCodes = new ArrayList<>();
 		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
 
@@ -568,4 +572,6 @@ public class ViewSuppProfileBackingBean extends
 		return messageSb.toString();
 	}
 	// 26247 - end
+=======
+>>>>>>> branch 'prd_v1.155.0_DA' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 }

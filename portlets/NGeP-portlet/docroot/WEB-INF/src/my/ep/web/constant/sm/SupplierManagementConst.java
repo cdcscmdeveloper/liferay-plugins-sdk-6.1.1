@@ -1591,4 +1591,45 @@ public class SupplierManagementConst {
 		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
 	}
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
+	// #29156(26238) - START
+	public String getSM_MOF_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	// #29156 -START
+	// #29156(26238) - START
+	
+	
+	// 28278(26238) - START
+	public String getMOF_STATUS_DELETED() {
+		return MOF_STATUS_DELETED;
+	}
+
+	public String getMOF_STATUS_CANCELLED() {
+		return MOF_STATUS_CANCELLED;
+	}
+	// 28278(26238) - END
+	
+	// #29156(26238) -START
+	public String getMOF_STATUS_DELETED_SUPPLIER() {
+		return MOF_STATUS_DELETED_SUPPLIER;
+	}
+
+	public String getMOF_STATUS_EXPIRED_SYSTEM() {
+		return MOF_STATUS_EXPIRED_SYSTEM;
+	}
+	// #29156(26238) -END
+	
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public String getSM_BASIC_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 }

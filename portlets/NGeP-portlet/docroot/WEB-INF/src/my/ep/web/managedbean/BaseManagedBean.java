@@ -1047,8 +1047,8 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
-	
-		// 37925 START
+
+	// 37925 START
 	public String getStrLabelCountryOrigin() {
 		return strLabelCountryOrigin;
 	}
@@ -1093,7 +1093,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.newVersion = newVersion;
 	}
 	//#28784 - End
-	
 	
 
 	/**

@@ -833,6 +833,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
 			
+			//#26284 - Start
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))
+					&& requestNote != null) {
+				checkSupplierDisciplinaryAction(requestNote);
+			}
+			//#26284 -End
+			
 			// reRecommend
 			requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 			requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
@@ -1048,6 +1055,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isDeliveryTermPrompt = Boolean.FALSE;		
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		
+		// 26284 - Start
+		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
+		    checkSupplierDisciplinaryAction(scRequestNote);
+			// 27868 - start
+		    validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
+		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+					getManagedBean().getRequestSupplierItem());
+			// 27868 - end
+		}
+		// 26284 - End
 		parseRequestNote(scRequestNote, outcome);
 		
 		scRequestNote.setWorkFlowStatuses(null);
@@ -1982,6 +2000,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//#31679 - Start	  		 	  	   	
   	   	if(requestNoteReqDTO.getRequestNote() != null){
   	   		
+  	   		//#26284 - Start
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))){
+				checkSupplierDisciplinaryAction(scRequestNote);
+			}
+			//#26284 -End
+			
   	   		log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: approverAction Start ---");
   	   		
 	  	  	if(getManagedBean().getCurrentStatusId() != null && outcome != null  ){
@@ -6050,4 +6074,294 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// end - #25790
+	
+	// 26284 - Start
+	/**
+	 * Retrieves and sets the disciplinary action history for the given
+	 * supplier. This method fetches the disciplinary action details for the
+	 * specified {@link SmSupplier} and updates the managed bean with the
+	 * retrieved data. If no disciplinary actions are found, an empty list is
+	 * set. Finally, it triggers the display of the disciplinary action history
+	 * dialog.
+	 * 
+	 * @param smSupplier
+	 *            the supplier whose disciplinary action history needs to be
+	 *            retrieved.
+	 */
+	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {
+		try {
+			SmSupplier currSupp = smSupplier;
+			if (currSupp != null) {
+				List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
+				if (!voList.isEmpty()) {
+					getManagedBean().setDisciplineVOs(voList);
+				} else {
+					getManagedBean().setDisciplineVOs(
+							new ArrayList<DisciplinaryActionVO>());
+				}
+			} else {
+				getManagedBean().setDisciplineVOs(
+						new ArrayList<DisciplinaryActionVO>());
+			}
+			// #32643,32642 - Start
+			RequestContext.getCurrentInstance().execute(
+					"disciplinaryActionHistoryDlg.show()");
+			// #32643,32642 - End
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE,
+					"supplierDisciplinaryActionInfo", StringUtils.EMPTY,
+					"supplierDisciplinaryActionInfo",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	/**
+	 * Checks if the given supplier has an active disciplinary action.
+	 * 
+	 * @param supplier
+	 *            the {@link SmSupplier} whose disciplinary action status needs
+	 *            to be checked.
+	 * @return {@code true} if the supplier has an active disciplinary action,
+	 *         {@code false} otherwise.
+	 */
+	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
+		try {
+			ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISupplierDataMaintenanceSO.class);
+
+			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+			reqDTO.setSupplier(supplier);
+			return supplierDataMaintenanceSO
+					.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO)
+					.isDisciplinaryActionActiveDp();
+		} catch (Exception e) {
+			String exceptionSupplierId = supplier != null ? Long
+					.toString(supplier.getSupplierId()) : StringUtils.EMPTY;
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE,
+					"getDisciplinaryActionActive", exceptionSupplierId,
+					"getDisciplinaryActionActive",
+					getUserIdSessionFromLoginId(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * Checks the disciplinary action status for suppliers associated with the
+	 * given request note.
+	 * 
+	 * @param requestNote
+	 *            the {@link ScRequestNote} object containing details about the
+	 *            request note, including its associated supplier items.
+	 */
+	public void checkSupplierDisciplinaryAction(ScRequestNote requestNote) {
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+
+		List<ScRequestNoteDtl> requestNoteDtls = requestNote
+				.getRequestNoteDtls();
+		if (!requestNoteDtls.isEmpty()) {
+			for (ScRequestNoteDtl rnDtl : requestNoteDtls) { // Maximum record
+																// in PDS 1072
+				SmSupplier smSupplier = getSmSupplier(rnDtl);
+				reqDTO.setSupplier(smSupplier != null ? smSupplier : null);
+				checkSupplierAvailability(reqDTO, supplierDataMaintenanceSO,
+						rnDtl);
+			}
+		}
+	}
+
+	/**
+	 * Retrieves the SmSupplier from the given ScRequestNoteDtl object.
+	 * 
+	 * This method checks if the ScRequestSupplierItem of the provided
+	 * ScRequestNoteDtl is not null, and if so, returns the associated
+	 * SmSupplier. Otherwise, it returns null.
+	 * 
+	 * @param rnDtl
+	 *            The ScRequestNoteDtl object containing the
+	 *            ScRequestSupplierItem.
+	 * @return The SmSupplier associated with the ScRequestSupplierItem, or null
+	 *         if it doesn't exist.
+	 */
+	private SmSupplier getSmSupplier(ScRequestNoteDtl rnDtl) {
+		if (rnDtl.getScRequestSupplierItem() != null) {
+			return rnDtl.getScRequestSupplierItem().getSmSupplier();
+		}
+		return null;
+	}
+
+	/**
+	 * Validates if a supplier account (MOF or Basic) is inactive due to
+	 * disciplinary actions.
+	 * 
+	 * This method determines whether the supplier account is a MOF account or a
+	 * Basic account, retrieves its record status, and checks if the account is
+	 * inactive (canceled or blacklisted) based on the supplier's disciplinary
+	 * actions. If the account is inactive and subject to disciplinary actions,
+	 * an exception is thrown with the supplier name included in the error
+	 * message.
+	 * 
+	 * @param reqDTO
+	 *            the request DTO containing the supplier ID used to fetch
+	 *            account details
+	 * @param supplierDataMaintenanceSO
+	 *            the service object used for retrieving supplier data and
+	 *            disciplinary actions
+	 * @param rnDtl
+	 *            the request note details, containing supplier information such
+	 *            as the supplier's name
+	 * @throws EpException
+	 *             if the account is inactive due to disciplinary actions. The
+	 *             exception message includes the supplier name if available.
+	 */
+	public void checkSupplierAvailability(SupplierDataMaintenanceReqDTO reqDTO,
+			ISupplierDataMaintenanceSO supplierDataMaintenanceSO,
+			ScRequestNoteDtl rnDtl) {
+		SmMofAccount mofAccount = supplierDataMaintenanceSO
+				.retrieveMofSupplierBySupplierId(reqDTO).getSmMofAccount();
+		SmSupplier smSupplier = reqDTO.getSupplier();
+
+		if (mofAccount != null || smSupplier != null) {
+			// Check DA Active
+			SupplierDataMaintenanceResDTO responseDtoActive = supplierDataMaintenanceSO
+					.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO);
+			processDisciplinaryActions(responseDtoActive, rnDtl,
+					DisciplinaryActionContext.ACTIVE);
+
+			// Check DA is Deleted Due Or Pending Transaction (just for Cancel
+			// Registration and Blacklist Owner)
+			SupplierDataMaintenanceResDTO responseDtoAfterEnded = supplierDataMaintenanceSO
+					.retrieveActiveDisciplinaryActionCancelOrBlacklistBySupplierDp(reqDTO);
+			processDisciplinaryActions(responseDtoAfterEnded, rnDtl,
+					DisciplinaryActionContext.AFTER_ENDED);
+		}
+	}
+
+	/**
+	 * Processes a list of disciplinary actions and triggers an error message if
+	 * conditions are met.
+	 * 
+	 * @param actions
+	 *            the list of {@link SmDisciplinaryAction} objects to process.
+	 * @param recordStatus
+	 *            the record status flag to check against disciplinary actions.
+	 * @param rnDtl
+	 *            the {@link ScRequestNoteDtl} object used for generating error
+	 *            messages.
+	 */
+	private void processDisciplinaryActions(
+			SupplierDataMaintenanceResDTO responseDto, ScRequestNoteDtl rnDtl,
+			DisciplinaryActionContext context) {
+		if (responseDto.getSmDisciplinaryActions() != null) {
+			for (SmDisciplinaryAction action : responseDto
+					.getSmDisciplinaryActions()) {
+				if (checkDisciplinaryActionStatusFlag(action)) {
+					errorMessage(rnDtl, responseDto, context);
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Determines if an error should be triggered based on the record status and
+	 * disciplinary action.
+	 * 
+	 * @param recordStatus
+	 *            the record status flag to evaluate.
+	 * @param action
+	 *            the {@link SmDisciplinaryAction} object containing
+	 *            disciplinary action details.
+	 * @return {@code true} if the conditions for triggering an error are met;
+	 *         {@code false} otherwise.
+	 */
+	private boolean checkDisciplinaryActionStatusFlag(
+			SmDisciplinaryAction action) {
+		if (isCancelledOrBlacklist(action)) {
+			return true;
+		}
+		return checkIfSuspend(action);
+	}
+
+	/**
+	 * Checks if the record status is either CANCELLED or EXPIRED, and if the
+	 * disciplinary action meets conditions for cancelling registration or
+	 * blacklisting the owner.
+	 * 
+	 * @param recordStatus
+	 *            the record status flag to evaluate.
+	 * @param action
+	 *            the {@link SmDisciplinaryAction} object containing
+	 *            disciplinary action details.
+	 * @return {@code true} if the record status is CANCELLED or EXPIRED with
+	 *         disqualifying conditions; {@code false} otherwise.
+	 */
+	private boolean isCancelledOrBlacklist(SmDisciplinaryAction action) {
+		return (action.isCancelRegistration() || action.isBlacklistOwner());
+	}
+
+	/**
+	 * Checks if the disciplinary action meets any of the conditions for
+	 * suspension, cancellation, or blacklisting.
+	 * 
+	 * @param action
+	 *            the {@link SmDisciplinaryAction} object containing
+	 *            disciplinary action details.
+	 * @return {@code true} if the action indicates suspension, cancellation, or
+	 *         blacklisting; {@code false} otherwise.
+	 */
+	private boolean checkIfSuspend(SmDisciplinaryAction action) {
+		return action.isSuspendRegistration();
+	}
+
+	/**
+	 * Throws an exception with the specified error code and supplier details.
+	 * 
+	 * @param errorCode
+	 *            the error code to include in the exception.
+	 * @param rnDtl
+	 *            the {@link ScRequestNoteDtl} object containing supplier
+	 *            details.
+	 * @throws EpException
+	 *             always thrown with the error code and supplier name.
+	 */
+	private void errorMessage(ScRequestNoteDtl rnDtl,
+			SupplierDataMaintenanceResDTO responseDto,
+			DisciplinaryActionContext context) {
+		String supplierName = rnDtl.getScRequestSupplierItem().getSmSupplier() != null ? rnDtl
+				.getScRequestSupplierItem().getSmSupplier().getCompanyName()
+				: StringUtils.EMPTY;
+
+		if (context == DisciplinaryActionContext.ACTIVE) {
+			if (responseDto.isDisciplinaryActionDeletedDue()) {
+				throw new EpException(MessageConst.ERROR_760701,
+						new String[] { supplierName });
+			} else if (responseDto.isDisciplinaryActionPendingTransaction()) {
+				throw new EpException(MessageConst.ERROR_760500,
+						new String[] { supplierName });
+			} else {
+				throw new EpException(MessageConst.ERROR_760500,
+						new String[] { supplierName });
+			}
+		} else if (context == DisciplinaryActionContext.AFTER_ENDED) {
+			if (responseDto.isDisciplinaryActionPendingTransaction()
+					|| responseDto.isDisciplinaryActionDeletedDue()) {
+				throw new EpException(MessageConst.ERROR_760500,
+						new String[] { supplierName });
+			}
+		}
+	}
+
+	public enum DisciplinaryActionContext {
+		ACTIVE, // Normal active check
+		AFTER_ENDED // Cancel Registration / Blacklist Owner
+	}
+
+	// 26284 - End
 }
