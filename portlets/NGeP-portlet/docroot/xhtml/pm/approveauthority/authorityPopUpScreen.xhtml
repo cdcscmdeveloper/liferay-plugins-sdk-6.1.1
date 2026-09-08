@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:dialog id="updateCommitteeDialog" header="#{lbl['lbl.pm.approveAuthority.update']}" modal="true"
-		widgetVar="updateCommitteeDialog" dynamic="true" width="800px" position="339,300" >
+		widgetVar="updateCommitteeDialog" dynamic="true" width="900px" position="339,300" >
 		<p:messages id="committeeMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error" />
 		<p:panel id="updateCommitteePanel" toggleable="true">
 			<h:panelGroup id="committeePopupPanel">
@@ -20,7 +20,7 @@
 		 			</td>
 		 			<td>
 		 				<p:inputText id="comName" styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.approveAuthority.name']}" maxLength="150" size="50"
+							label="#{lbl['lbl.pm.approveAuthority.name']}" maxlength="150" size="50"
 							value="#{ApproveAuthorityBackingBean.managedBean.updateAuthCommittee.committeeName}" />
 						<ac:iconTooltip value="#{lbl['lbl.pm.approveAuthority.tooltip']}" />
 		 			</td>
