@@ -22,11 +22,6 @@
 			.ui-fileupload td.start {
 		        display: none;
 		    }
-
-			/* #40112 - keep a tall dialog (many EPF personnel + several docs) inside the viewport */
-			.aiDlgFit .ui-dialog-content {
-				max-height: 70vh;
-			}
 		</style>
 		
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
@@ -42,9 +37,9 @@
 		</p:dialog>
 		
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
-			dynamic="true" resizable="false" width="700px" 
+			dynamic="true" resizable="true" width="700px" height="500px"
 			header="#{lbl['lbl.btn.upload.doc']}"
-			styleClass="pop_up_top aiDlgFit">
+			styleClass="pop_up_top">
 			
 		<p:outputPanel id="pnl#{cc.attrs.aiDlg}" layout="block">
 		
