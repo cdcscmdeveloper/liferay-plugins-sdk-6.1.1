@@ -15,39 +15,36 @@
 
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			showSummary="false"></p:messages>
-		
+
 		<h:panelGroup id="extensionFlowReviewID">
-		
+
+
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 
 					<ui:param name="buttonLabel"
 						value="lbl.bpm.action.#{action}" />
-	
-						<!-- 34447  Start -->
+
+						<!-- 34447 Start -->
 						<p:commandButton
     						value="#{!unspscCodeBackingBean.managedBean.renderV2
               					? lbl[buttonLabel]
               					: lbl['lbl.cm.endorseandpublish']}"
     						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'SUBMIT'}"
     						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >= 1}"
-    						onclick="pendExtCodeApp_endorsePublishDlg.show();"/>
+    						onclick="pendExtCodeApp_endorsePublishDlg.show();" />
 
 						<p:commandButton
 						    value="#{lbl[buttonLabel]}"
-						    rendered="#{bpmTasklistBackingBean.managedBean.claim
-						        and action == 'RECOMMEND_TO_SUPPLIER'}"
+						    rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}"
 						    disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() != 1}"
-						    onclick="pendExtCodeApp_recommendToSupplierDlg.show();"
-						    type="button" />
+						    onclick="pendExtCodeApp_recommendToSupplierDlg.show();" type="button" />
 
 						<p:commandButton
 						    value="#{lbl[buttonLabel]}"
-						    rendered="#{bpmTasklistBackingBean.managedBean.claim
-						        and action == 'REVISE'}"
-						    action="#{unspscCodeBackingBean.bpmTesting(action)}"
-						    update="@form" />
+						    rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'REVISE'}"
+						    action="#{unspscCodeBackingBean.bpmTesting(action)}" update="@form" />
 						<!-- 34447 End -->
 				</ui:repeat>
 
@@ -76,7 +73,7 @@
 					update="@form">
 				</ac:confirmationPopupCM>
 				<!-- 34447 End -->
-
+				
 				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
 					action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
 					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
@@ -284,7 +281,7 @@
 
 
 		</h:panelGroup>
-				<h:panelGroup id="recommendPanelId">
+			<h:panelGroup id="recommendPanelId">
 					<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true"  rendered="#{unspscCodeBackingBean.managedBean.isShowRecommend() and unspscCodeBackingBean.managedBean.renderV2}">
 				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
 					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"

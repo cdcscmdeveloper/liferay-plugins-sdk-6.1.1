@@ -18,8 +18,7 @@
                  <p:commandButton value="#{lbl['lbl.cm.create.publish']}"
                    id="btnSubmit"
                    disabled="#{extensionCodeCreationBackingBean.managedBean.disableSelectBtn}"
-                   update="@form"
-                   oncomplete="extensionCodeCreation.show();"/>
+                   update="@form" oncomplete="extensionCodeCreation.show();" />
                  <!-- 34447 End -->
 
 				<div style="float: left; clear: both;">
@@ -28,7 +27,7 @@
 					</p:commandButton>
 				</div>
 			</div>
-			
+
 			<!-- 34447 Start -->
 			<p:blockUI block="cmExtensionRequestFormID" widgetVar="pageBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
@@ -127,7 +126,6 @@
 				<ui:include src="requestExtensionCodeCreationPopUp.xhtml" />
 			</p:dialog>
 		</h:panelGroup>
-
 	</ui:define>
 
 </ui:composition>

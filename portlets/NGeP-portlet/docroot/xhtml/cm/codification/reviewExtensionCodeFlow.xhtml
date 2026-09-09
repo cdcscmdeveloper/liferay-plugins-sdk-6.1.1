@@ -14,36 +14,34 @@
 	<ui:define name="contentSection">
 			<p:messages showDetail="true" autoUpdate="true" closable="true"
 			showSummary="true"></p:messages>
-		
+
 		<h:panelGroup id="extensionFlowReviewID">
 
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
-
 					<!-- 34447 Start -->
 					<p:commandButton value="#{lbl[lblBpmBtn]}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT'}"
 						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
-						onclick="revExtCode_submitToSupplierPopup.show();"/>
+						onclick="revExtCode_submitToSupplierPopup.show();" />
 
 					<p:commandButton value="#{lbl['lbl.bpm.action.RECOMMEND_TO_SUPPLIER']}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}"
 						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() !=1}"
-						onclick="revExtCode_recommendSupplierPopup.show();"/>
+						onclick="revExtCode_recommendSupplierPopup.show();" />
 
 					<p:commandButton value="#{lbl['lbl.bpm.action.REJECT']}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'REJECT'}"
 						actionListener="#{unspscCodeBackingBean.validateRejectBeforePopup('revExtCode_rejectConfirmPopup')}"
-						process="@form"
-						update="@form"/>
+						process="@form" update="@form" />
 					<!-- 34447 End -->
 				</ui:repeat>
 
 				<!-- 34447 Start -->
 				<p:blockUI block="extensionFlowReviewID" widgetVar="pageBlockWidget">
-					<p:graphicImage value="/css/images/ajax-loader.gif"/>
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
 				</p:blockUI>
 
 				<ac:confirmationPopupCM
@@ -202,7 +200,7 @@
 				</p:dataTable>
 
 			</p:panel>
-				
+
 		</h:panelGroup>
 		<h:panelGroup id="recommendPanelId">
 					<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true"  rendered="#{unspscCodeBackingBean.managedBean.isShowRecommend() and unspscCodeBackingBean.managedBean.renderV2 }">
@@ -245,7 +243,7 @@
 				<ui:include src="codiRemarks.xhtml"/> 
 			</p:panel>
 		</h:panelGroup>
-		
+
 	</ui:define>
 
 </ui:composition>

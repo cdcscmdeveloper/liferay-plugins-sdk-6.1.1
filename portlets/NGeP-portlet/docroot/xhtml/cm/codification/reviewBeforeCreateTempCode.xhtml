@@ -24,14 +24,13 @@
 					<p:commandButton value="#{lbl['lbl.cm.endorseandpublish']}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.itemType=='S' and unspscCodeBackingBean.managedBean.renderV2 }"
 						actionListener="#{unspscCodeBackingBean.validateSubmitBeforePopup}"
-						disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
-						update="@form" />
+						disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}" update="@form" />
 
 					<p:commandButton
 					    disabled="#{action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
 					    value="#{lbl[lblBpmBtn]}"
 					    rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}"
-					    oncomplete="pendItemCodeCreate_recommendSupplierPopup.show();"/>
+					    oncomplete="pendItemCodeCreate_recommendSupplierPopup.show();" />
 
 					<p:commandButton
 					    disabled="#{action == 'SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
@@ -39,13 +38,12 @@
 					    rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'SUBMIT' and
 					    ((unspscCodeBackingBean.managedBean.requestCode.itemType=='P' and unspscCodeBackingBean.managedBean.renderV2)
 					    or !unspscCodeBackingBean.managedBean.renderV2)}"
-					    action="#{unspscCodeBackingBean.savetempCode(action)}"
-					    update="@form"/>
+					    action="#{unspscCodeBackingBean.savetempCode(action)}" update="@form" />
 
 					<p:commandButton
 					    value="#{lbl[lblBpmBtn]}"
 					    rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'REJECT' }"
-					    actionListener="#{unspscCodeBackingBean.validateRejectBeforePopup('pendItemCodeCreate_rejectConfirmPopup')}"/>
+					    actionListener="#{unspscCodeBackingBean.validateRejectBeforePopup('pendItemCodeCreate_rejectConfirmPopup')}" />
 					<!-- 34447 End -->
 				</ui:repeat>
 
@@ -89,7 +87,7 @@
 					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
 					update="@form"></p:commandButton>
 			</div>
-		
+
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
 			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
@@ -403,6 +401,7 @@
 			</p:panel>
 			
 		</h:panelGroup>
+
 
 	</ui:define>
 

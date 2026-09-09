@@ -36,14 +36,13 @@
 				<p:commandButton
 				    value="#{lbl['lbl.cm.create.publish']}"
 				    actionListener="#{itemCodeCreationBackingBean.validateAddUnspscBeforePopup('createItem')}"
-				    process="@form"
-				    update="@form"/>
+				    process="@form" update="@form" />
 	            <!-- 34447 End -->
-			  </td>
+			</td>
 			</tr>
 			</table> 
 			<br />
-			
+
 			<!-- 34447 Start -->
 			<p:blockUI block="cmUNSPSCSingleUploadID" widgetVar="pageBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
@@ -59,7 +58,7 @@
 				update="@form">
 			</ac:confirmationPopupCM>
 			<!-- 34447 End -->
-			
+
 			<p:panel header="#{lbl['lbl.cm.create.UNSPSC.code']}"
 				toggleable="true">
 
@@ -192,11 +191,14 @@
 						</p:column>
 						
 					</p:row>
+
+
 				</p:panelGrid>
 
 			</p:panel>
-
+			
 			</h:panelGroup>
+
 	</ui:define>
 
 
