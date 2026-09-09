@@ -80,7 +80,14 @@
         			</h:commandLink>
 				</p:column>
 				<p:column style="width:5%;text-align:center;">
-					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}">
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}"
+						rendered="#{empty cc.attrs.updateId}">
+						<p:graphicImage value="/css/images/design/trash.png" />
+					</p:commandLink>
+					<!-- #40112 -->
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this"
+						update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
+						rendered="#{not empty cc.attrs.updateId}">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>

@@ -539,6 +539,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		FacesContext.getCurrentInstance().addMessage("ai", new FacesMessage(severity, null, detail));
 	}
 
+	/**
+	 * True while the AI Assistant dialog holds messages of its own. The page-level p:messages shows
+	 * every clientId, so it repeats them above the form unless it is switched to globalOnly.
+	 * docType is set by initContext, so it is null on Supporting Documents, where the bank messages
+	 * also carry the "ai" clientId but have no dialog to render them.
+	 * @return
+	 */
+	public boolean isAiMessagePending(){
+		return docType != null && FacesContext.getCurrentInstance().getMessages("ai").hasNext();
+	}
+
 	private static boolean hasErrorMessage(){
 		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
 		while (it.hasNext()){
@@ -921,15 +932,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				per.setEpfNoAI(emp.getKwspNumber());
 			}
 
+			// the NRIC is what matched this employee to the personnel, so it is AI-verified on its
+			// own; nesting it under the name check let an edited name switch the IC icon off too
+			if (!edited.contains(AiUserEdit.F_IC)){
+				per.setIcAI(emp.getNricNumber());
+			}
+
 			String aiName = emp.getEmployeeName();
 			if (aiName != null && per.getName() != null
-					&& per.getName().trim().equalsIgnoreCase(aiName.trim())){
-				if (!edited.contains(AiUserEdit.F_NAME)){
-					per.setNameAI(aiName);
-				}
-				if (!edited.contains(AiUserEdit.F_IC)){
-					per.setIcAI(emp.getNricNumber());
-				}
+					&& per.getName().trim().equalsIgnoreCase(aiName.trim())
+					&& !edited.contains(AiUserEdit.F_NAME)){
+				per.setNameAI(aiName);
 			}
 		}
 	}
@@ -1123,12 +1136,16 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	/**
 	 * An EPF or Tenancy doc uploaded via the AI Assistant cannot be deleted from the Supporting Documents listing.
+	 * The _ai marker still answers "uploaded from the AI Assistant dialog?" and is not replaceable by the
+	 * response id; the id is ANDed on top to answer "is that response still alive?", because a resubmit
+	 * clones the file name but not the response and the clone would otherwise never be deletable.
 	 * @param doc
 	 * @param file
 	 * @return
 	 */
 	public static boolean isAiSuppDocDeleteLocked(SmApplSupportDoc doc, SmApplDocFile file){
-		if (file == null || !isAiAssistantUpload(file.getFileName())
+		if (file == null || file.getAiApiResponseId() == null
+				|| !isAiAssistantUpload(file.getFileName())
 				|| doc == null || doc.getPmDocument() == null){
 			return false;
 		}
