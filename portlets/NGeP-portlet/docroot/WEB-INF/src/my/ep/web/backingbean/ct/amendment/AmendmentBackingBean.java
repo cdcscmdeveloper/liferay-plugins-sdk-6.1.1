@@ -9767,7 +9767,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Checks whether the current user is the Contract Approver */
 	private boolean isCtApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value());
+	    String roleCode = getApproverRoleCode();
+	    return roleCode != null && getFacesScopes().hasRoleUser(roleCode);
 	}
 	
 	/**
