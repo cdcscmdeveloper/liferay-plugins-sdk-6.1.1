@@ -539,6 +539,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		FacesContext.getCurrentInstance().addMessage("ai", new FacesMessage(severity, null, detail));
 	}
 
+	/**
+	 * True while the AI Assistant dialog holds messages of its own. The page-level p:messages shows
+	 * every clientId, so it repeats them above the form unless it is switched to globalOnly.
+	 * docType is set by initContext, so it is null on Supporting Documents, where the bank messages
+	 * also carry the "ai" clientId but have no dialog to render them.
+	 * @return
+	 */
+	public boolean isAiMessagePending(){
+		return docType != null && FacesContext.getCurrentInstance().getMessages("ai").hasNext();
+	}
+
 	private static boolean hasErrorMessage(){
 		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
 		while (it.hasNext()){
@@ -589,7 +600,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		Map<String, SmPersonnel> personnels = new HashMap<>();
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			personnels.put(per.getIdentificationNo(), per);
+			personnels.put(AiDocValidator.normalizeNric(per.getIdentificationNo()), per);
 		}
 		
 		//check for dupe IC
@@ -876,7 +887,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 		Map<String, SmPersonnel> byNric = new HashMap<>();
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			byNric.put(per.getIdentificationNo(), per);
+			byNric.put(AiDocValidator.normalizeNric(per.getIdentificationNo()), per);
 		}
 
 		String companyName = appl.getSmSupplier() != null ? appl.getSmSupplier().getCompanyName() : null;
@@ -921,15 +932,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				per.setEpfNoAI(emp.getKwspNumber());
 			}
 
+			// the NRIC is what matched this employee to the personnel, so it is AI-verified on its
+			// own; nesting it under the name check let an edited name switch the IC icon off too
+			if (!edited.contains(AiUserEdit.F_IC)){
+				per.setIcAI(per.getIdentificationNo());
+			}
+
 			String aiName = emp.getEmployeeName();
-			if (aiName != null && per.getName() != null
-					&& per.getName().trim().equalsIgnoreCase(aiName.trim())){
-				if (!edited.contains(AiUserEdit.F_NAME)){
-					per.setNameAI(aiName);
-				}
-				if (!edited.contains(AiUserEdit.F_IC)){
-					per.setIcAI(emp.getNricNumber());
-				}
+			// the OCR keeps the statement's own line breaks inside a name, so compare canonically
+			if (AiDocValidator.normalizedEquals(per.getName(), aiName)
+					&& !edited.contains(AiUserEdit.F_NAME)){
+				per.setNameAI(per.getName());
 			}
 		}
 	}
@@ -966,7 +979,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		boolean changed = false;
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			String key = per.getIcAI() != null ? per.getIcAI() : per.getIdentificationNo();
+			String key = AiDocValidator.normalizeNric(
+					per.getIcAI() != null ? per.getIcAI() : per.getIdentificationNo());
 			if (!extracted.contains(key)){
 				continue;
 			}
@@ -1115,7 +1129,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		if (personnel.getIdentificationNo() != null
-				&& aiNrics.contains(personnel.getIdentificationNo().trim())){
+				&& aiNrics.contains(AiDocValidator.normalizeNric(personnel.getIdentificationNo()))){
 			return;
 		}
 		throw new EpException(SmCommonUtil.getMessage("lbl.sm.ai.epf.personnel.notexist", null));
@@ -1123,12 +1137,16 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	/**
 	 * An EPF or Tenancy doc uploaded via the AI Assistant cannot be deleted from the Supporting Documents listing.
+	 * The _ai marker still answers "uploaded from the AI Assistant dialog?" and is not replaceable by the
+	 * response id; the id is ANDed on top to answer "is that response still alive?", because a resubmit
+	 * clones the file name but not the response and the clone would otherwise never be deletable.
 	 * @param doc
 	 * @param file
 	 * @return
 	 */
 	public static boolean isAiSuppDocDeleteLocked(SmApplSupportDoc doc, SmApplDocFile file){
-		if (file == null || !isAiAssistantUpload(file.getFileName())
+		if (file == null || file.getAiApiResponseId() == null
+				|| !isAiAssistantUpload(file.getFileName())
 				|| doc == null || doc.getPmDocument() == null){
 			return false;
 		}
