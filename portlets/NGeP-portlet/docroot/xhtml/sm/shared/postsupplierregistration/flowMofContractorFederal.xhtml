@@ -32,8 +32,10 @@
 		<div class="flow-chart-left flowInactive">
 		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 		
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowInactive">
-		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
+		<div class="bg"><div class="no">7</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;</p></div>
+		<!-- #10729 end -->
 	</c:if>
 	<!-- FLOW STATUS 1 - END -->
 
@@ -62,8 +64,10 @@
 		<div class="flow-chart-left flowInactive">
 		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 		
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowInactive">
-		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
+		<div class="bg"><div class="no">7</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;</p></div>
+		<!-- #10729 end -->
 	</c:if>
 	<!-- FLOW STATUS 2 - END -->
 
@@ -90,8 +94,10 @@
 		<div class="flow-chart-left flowInactive">
 		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 		
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowInactive">
-		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
+		<div class="bg"><div class="no">7</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;</p></div>
+		<!-- #10729 end -->
 	</c:if>
 	<!-- FLOW STATUS 3 - END -->
 
@@ -120,8 +126,10 @@
 		<div class="flow-chart-left flowInactive">
 		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 		
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowInactive">
-		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
+		<div class="bg"><div class="no">7</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;</p></div>
+		<!-- #10729 end -->
 	</c:if>
 	<!-- FLOW STATUS 4 - END -->
 
@@ -149,8 +157,10 @@
 		<div class="flow-chart-left flowInactive">
 		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 		
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowInactive">
-		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
+		<div class="bg"><div class="no">7</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;</p></div>
+		<!-- #10729 end -->
 	</c:if>
 	<!-- FLOW STATUS 5 - END -->
 	
@@ -178,8 +188,10 @@
 				action="#{postSupplierRegBB.pageNavigate}" process="@this"/></p>
 		</div>
 	
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowInactive">
-		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
+		<div class="bg"><div class="no">7</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;</p></div>
+		<!-- #10729 end -->
 	</c:if>
 	<!-- FLOW STATUS 6 - END -->
 	
@@ -203,20 +215,22 @@
 		<div class="flow-chart-left flowInactive">
 		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 
+		<!-- #10729 start -->
 		<div class="flow-chart-left flowActive">
-			<div class="bg"><div class="no">7</div></div><p>
+			<div class="bg"><div class="no">7</div></div><p style="top: 1px">
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
 				(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
-				#{lbl['lbl.sm.basic.softcert.request']}
+				#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;
 			</c:if>
 			
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertProsseingStatus()) and 
 						(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus())}">
-				<p:commandLink styleClass="current-link" value="#{lbl['lbl.sm.basic.softcert.request']}" 
+				<p:commandLink styleClass="current-link" value="#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;" 
 				action="#{postSupplierRegBB.pageNavigate}" />
 			</c:if>
 			</p>
 		</div>
+		<!-- #10729 end -->
 	</c:if>
 	</div>
 	</div>

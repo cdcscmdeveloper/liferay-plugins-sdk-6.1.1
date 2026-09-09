@@ -23,6 +23,7 @@ public class AwardedItemsBean implements Serializable {
 	private BigDecimal priceByLoa;
 	private BigDecimal priceByProposal;
 	private BigDecimal priceByBidding;
+	private BigDecimal loaAmount; // #29624
 
 	/**
 	 * @return the itemName
@@ -98,4 +99,13 @@ public class AwardedItemsBean implements Serializable {
 		this.priceByBidding = priceByBidding;
 	}
 
+	// #29624 - start
+	public BigDecimal getLoaAmount() {
+		return loaAmount;
+	}
+
+	public void setLoaAmount(BigDecimal loaAmount) {
+		this.loaAmount = loaAmount;
+	}
+	// #29624 - end
 }
