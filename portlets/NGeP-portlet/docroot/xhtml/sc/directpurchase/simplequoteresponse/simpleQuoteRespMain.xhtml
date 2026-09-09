@@ -44,6 +44,15 @@
 					action="#{simpleQuoteBackingBean.backMenuToPrevious}" />
 			</div>	
 			</div>
+			
+	<ui:remove>34449 - Start (Add new Submit Popup)</ui:remove>
+			<ac:confirmationPopupSM id="submitSQConfirmDlgId"
+		    widget="submitSQConfirmDlg" width="400" height="120"
+		    okAction="#{simpleQuoteBackingBean.supplierSubmit()}"  
+		    title="#{lbl['lbl.sc.confirmation.submit']}"
+		    content="#{lbl['lbl.sc.confirmation.submit.message']}"
+		    update="@form" />					
+	<ui:remove>34449 - End</ui:remove>
 	</p:outputPanel>
 		<div class="ppRightBtn">
 			<p:outputPanel autoUpdate="false">					
@@ -52,14 +61,14 @@
 					oncomplete="blockWidget.hide();"
 					rendered="#{simpleQuoteBackingBean.managedBean.saveButtonFlg}"
 					action="#{simpleQuoteBackingBean.supplierSave}" />
-
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@form"
+			<ui:remove>34449 - Start (Connect Popup to button)</ui:remove>
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@this"
 					partialSubmit="true"
-					action="#{simpleQuoteBackingBean.supplierSubmit}"
-					update="spkiOutputPanel" onclick="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
+					onclick="submitSQConfirmDlg.show(); return false;"
+					update="spkiOutputPanel" 
 					rendered="#{simpleQuoteBackingBean.managedBean.submitButtonFlg}">
 				</p:commandButton> 
+			<ui:remove>34449 - End</ui:remove>
 			</p:outputPanel>
 		</div><br />
 		<ui:include src="/xhtml/sc/directpurchase/simplequoteresponse/simpleQuoteRespHeader.xhtml" />

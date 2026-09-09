@@ -1391,7 +1391,7 @@ public class RuleCatalogueBackingBean extends
 								if(zone.getZoneId().equals(cfRuleValue.getZoneId())){
 									orgProfileReqDTO.getPmOrgProfile().getPmZone();
 									orgProfileReqDTO.getPmOrgProfile().setPmZone(zone);
-									orgProfileReqDTO.getPmOrgProfile().setBpk(true);
+									//orgProfileReqDTO.getPmOrgProfile().setBpk(true); #27827
 									orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
 								}
 							}
@@ -5446,6 +5446,7 @@ public class RuleCatalogueBackingBean extends
 				newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
 				newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
 				newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
+				newRuleValue.setPtjId(orgProfile); //#27827
 				index = configRuleType.getConfigRuleValues().size();
 				configRuleType.getConfigRuleValues().add(index, newRuleValue);
 			}
