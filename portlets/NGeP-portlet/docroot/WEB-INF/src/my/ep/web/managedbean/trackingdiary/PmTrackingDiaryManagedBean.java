@@ -130,7 +130,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 	private boolean isBiddingUrl = Boolean.FALSE; // 25791
 
-
 	public String getBackURL() {
 		return backURL;
 	}
