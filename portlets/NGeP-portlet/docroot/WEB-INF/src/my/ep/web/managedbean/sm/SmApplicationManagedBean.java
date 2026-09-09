@@ -695,8 +695,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String removedRoleMsg;
 	private boolean latestApplHasPrevRole;
 	// #40031 - End
-	// #RUU
+	// #RUU Start
 	private boolean lateRenewFee;
+	private int cancelledFee;
+	// #RUU Start
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4941,6 +4943,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setLateRenewFee(boolean lateRenewFee) {
 		this.lateRenewFee = lateRenewFee;
+	}
+
+	public int getCancelledFee() {
+		return cancelledFee;
+	}
+
+	public void setCancelledFee(int cancelledFee) {
+		this.cancelledFee = cancelledFee;
 	}
 	// #RUU End
 }

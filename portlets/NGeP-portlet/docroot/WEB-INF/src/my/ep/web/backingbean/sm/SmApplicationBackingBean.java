@@ -6790,7 +6790,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						if (cat.isCancelCategory() && currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
 							validCat = true;
 						} else {
-							throw new EpException(MessageConst.ERROR_722563);
+							// #RUU Start
+//							throw new EpException(MessageConst.ERROR_722563);
+							getManagedBean().setCancelledFee(+1);
+							validCat = true;
+							// #RUU End
 						}
 						// 29952 - End		
 					} else {
@@ -20367,7 +20371,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		int totalCount = approvedCount + activeCount;
 		if (totalCount > 15) {
 			if (getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-					|| getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+					|| getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || approvedCount <= 15) {
 				totalCount = totalCount - 15;
 			} else {
 				totalCount = activeCount;
