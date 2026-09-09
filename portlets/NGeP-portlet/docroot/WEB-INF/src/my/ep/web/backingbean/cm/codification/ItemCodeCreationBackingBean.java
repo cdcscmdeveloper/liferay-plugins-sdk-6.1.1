@@ -24,10 +24,10 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-//34447 Start
+//#34447 Start
 import org.apache.commons.lang.StringUtils; 
 import org.primefaces.context.RequestContext;
-//34447 End
+//#34447 End
 //35503 Start
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.cm.AuditCMConst;
@@ -655,7 +655,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			e.printStackTrace();
 		}
 	}
-	
+
 	//#34447 - Start
 	/**
 	 * Validate empty mandatory field before displaying popup
@@ -666,7 +666,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 							MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-	        return;
+			return;
 	    }
 	    RequestContext.getCurrentInstance().execute(popupWidget + ".show();");
 	}

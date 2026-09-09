@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1 . 00    
  *    
- * Copyright  2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -666,8 +666,6 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	//#34447 - Start
     /**
      * Validate reject remark before displaying popup
-     *
-     *
      */
     @ManagedProperty(value = "#{catalogueBackingBean}")
     private CatalogueBackingBean catalogueBackingBean;
@@ -679,26 +677,22 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
     public String validateRejectBeforePopup() {
         ArrayList<Long> rejectReasonIds = catalogueBackingBean.getManagedBean().getRejectReasonIds();
         String rejectReason = catalogueBackingBean.getManagedBean().getRejectReason();
-        if (rejectReasonIds.isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
-                            MessageUtils.getMessage(
-                            MessageConst.ERROR_715057,
-                            MessageUtils.BUNDLE_COMMON_MESSAGES,
-                            new FacesScopes().getUserLocale())));
-            return null;
-        }
+		if (rejectReasonIds.isEmpty()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+							MessageConst.ERROR_715057, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			return null;
+		}
         for (Object obj : rejectReasonIds) {
             Long id = Long.valueOf(String.valueOf(obj));
             if (id.equals(CmConst.REJECT_REASON_OTHER) &&
                 (rejectReason == null || rejectReason.isEmpty())) {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
-                                MessageUtils.getMessage(
-                                MessageConst.ERROR_715056,
-                                MessageUtils.BUNDLE_COMMON_MESSAGES,
-                                new FacesScopes().getUserLocale())));
-                return null;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+								MessageConst.ERROR_715056, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+				return null;
             }
         }
         RequestContext.getCurrentInstance().execute("rejectCatConfirmPopup.show();");
