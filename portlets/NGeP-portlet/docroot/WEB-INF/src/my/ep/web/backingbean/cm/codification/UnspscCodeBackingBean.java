@@ -4401,9 +4401,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	}
 
 	private boolean isAnyFieldEmpty(CmUnspsc lov) {
-	    return lov.getUnspscCode().isEmpty()
-	        || lov.getUnspscTitle().isEmpty()
-	        || lov.getUnspscTitleEng().isEmpty();
+	    return lov == null
+	            || StringUtils.isBlank(lov.getUnspscCode())
+	            || StringUtils.isBlank(lov.getUnspscTitle())
+	            || StringUtils.isBlank(lov.getUnspscTitleEng());
 	}
 	//#34447 - End
 }
