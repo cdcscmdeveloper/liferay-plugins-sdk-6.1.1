@@ -60,7 +60,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText id="agencyName" size="60"
+					<td style="width: 66%"><p:inputText maxlength="255" id="agencyName" size="60"
 							style="width: auto !important;"
 							readonly="#{smCompExpMB.newMaster.clientType eq null or smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeFederal}"
 							value="#{smCompExpMB.newMaster.agencyName}" /> <p:outputPanel
@@ -89,7 +89,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:inputText id="fileReferenceNo"
+					<td style="width: 66%"><p:inputText maxlength="50" id="fileReferenceNo"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 							value="#{smCompExpMB.newMaster.fileReferenceNo}">
 							<p:ajax event="blur"
@@ -130,7 +130,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText maxlength="14"
 							style="width: auto !important;"
 							label="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
 							value="#{smCompExpMB.newMaster.contractValue}">
@@ -149,6 +149,7 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
+				<!-- 9299- 40712 -->
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel
@@ -156,7 +157,7 @@
 					<td style="width: 66%"><p:selectOneMenu
 							value="#{smCompExpMB.newMaster.procumentMode.parameterId}">
 							<f:selectItems
-								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypeProcurementMode)}" />
+								value="#{smCompExpBB.getProcurementMethodDropdownValues(ParameterConst.paramTypeProcurementMethod)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -227,7 +228,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="300"
 								styleClass="outputLabel-view"
 								value="#{smCompExpMB.newMaster.projectLoc}" /></td>
 					</tr>
@@ -236,7 +237,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="500"
 								styleClass="outputLabel-view"
 								value="#{smCompExpMB.newMaster.workServDesc}" /></td>
 					</tr>
@@ -245,7 +246,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="14"
 								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
 								value="#{smCompExpMB.newMaster.consultantFee}">
 								<f:convertNumber
@@ -257,8 +258,9 @@
 		</div>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
+			<!-- 9299 - 40715 -->
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sm.comp.exp.add.new.cat.code.instruction']}" />
+				value="#{lbl['lbl.sm.comp.exp.add.new.cat.code.instruction']}" escape="false"/>
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
 				value="#{smCompExpMB.newMaster.compExpMasterCats}"
 				var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
@@ -353,7 +355,7 @@
 					process="@form" update=":form">
 					<p:graphicImage value="/css/images/design/upload.png"
 						style="margin-right:2px;" />
-				</p:commandLink> <p:outputPanel id="smCompExpSuppDocListPanelId">
+				</p:commandLink> <p:graphicImage id="suppDocToolTipsId" value="/css/images/design/tooltips.png" /><!-- 9299 CR p255: supp doc tooltip --> <p:tooltip for="suppDocToolTipsId"><img src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" /></p:tooltip> <p:outputPanel id="smCompExpSuppDocListPanelId">
 					<ui:repeat value="#{smCompExpMB.newMaster.compExpMasterDocs}"
 						var="doc">
 						<br />
@@ -395,10 +397,11 @@
 				value="#{lbl['lbl.sm.comp.exp.add.new.cancel']}" />
 		</div>
 		<ac:smPtjPopup okAction="smCompExpBB.selectAgencyAction" />
+		<!-- 9299 - 40711 -->
 		<p:confirmDialog closable="true"
 			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
 			id="confirmDelSelectedCatId"
-			message="#{lbl['lbl.sm.comp.exp.update.project.cat.code.delete.msg']}" severity="alert"
+			message="#{lbl['lbl.sm.comp.exp.delete.cat.codes.confirm.msg']}" severity="alert"
 			widgetVar="confirmDelSelectedCatDialogWV">
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpCatMaster}"

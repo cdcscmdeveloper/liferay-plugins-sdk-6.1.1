@@ -89,7 +89,7 @@
 				</p:outputLabel>
 				<!-- 30865,32298 End -->
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space: pre-line;vertical-align: top;">  <!-- 36504 -->
 				<h:outputText value="#{lbl['lbl.sm.no.available']}"
 					rendered="#{empty aprvdCatBean.otherDesc}" />
 				<h:outputText value="#{aprvdCatBean.otherDesc}"
@@ -132,7 +132,7 @@
 								<p:commandLink onstart="blockWidget.show()"
 									oncomplete="blockWidget.hide()"
 									action="#{backingBean.otherDescriptionHistory}" process="@this"
-									partialSubmit="true" update=":form:tt:catCodeInfPan">
+									partialSubmit="true" update="@form">
 									<u><h:outputText
 											value="#{lbl['lbl.sm.other.desc.history.here']}"
 											style="color:blue;" escape="false" /></u>
@@ -374,7 +374,7 @@
 
 	<!-- 36504 - START -->
 	<ac:otherDescriptionHistory
-		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
+		categoryCodeList="#{backingBean.managedBean.activeCategoryList}"
 		applNo="#{backingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
 		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"

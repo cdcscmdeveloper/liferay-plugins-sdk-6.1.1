@@ -63,9 +63,11 @@
 				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
 		<ac:smPanel id="tt">
+			<!-- #40112 -->
 			<p:messages id="messages" showDetail="true" escape="false"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				closable="true" showSummary="false" />
+				closable="true" showSummary="false"
+				globalOnly="#{smAIDocBackingBean.aiMessagePending}" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1CompanyInfo.xhtml" />

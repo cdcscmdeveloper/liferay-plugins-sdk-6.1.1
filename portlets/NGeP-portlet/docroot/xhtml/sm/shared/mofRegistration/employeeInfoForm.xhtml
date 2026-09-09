@@ -140,10 +140,10 @@
 					id="addEmpBtnId" update=":#{p:component('empInfoId')}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					process="@this,:#{p:component('workShopBlockPanel')}"
+					process="@this,:#{p:component('empInfoId')}"
 					disabled="#{empty backingBean.managedBean.selectedWorkers}"
 					id="deleteEmpBtnId" oncomplete="empDeletePopUp.show()"
-					update="@this">
+					update="@this,:#{p:component('workShopDialogMsg')}">
 				</p:commandButton>
 			</div>
 		</p:outputPanel>
