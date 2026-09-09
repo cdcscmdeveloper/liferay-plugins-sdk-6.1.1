@@ -22,11 +22,6 @@
 			.ui-fileupload td.start {
 		        display: none;
 		    }
-
-			/* #40112 - keep a tall dialog (many EPF personnel + several docs) inside the viewport */
-			.aiDlgFit .ui-dialog-content {
-				max-height: 70vh;
-			}
 		</style>
 		
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
@@ -42,16 +37,16 @@
 		</p:dialog>
 		
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
-			dynamic="true" resizable="false" width="700px" 
+			dynamic="true" resizable="true" width="700px" height="500px"
 			header="#{lbl['lbl.btn.upload.doc']}"
-			styleClass="pop_up_top aiDlgFit">
+			styleClass="pop_up_top">
 			
 		<p:outputPanel id="pnl#{cc.attrs.aiDlg}" layout="block">
 		
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
 			
 			<h:inputHidden id="ai"/>
-			<p:messages id="messages" for="ai" showDetail="true" autoUpdate="true" closable="true"/>
+			<p:messages id="messages" for="ai" showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
 			
 			<h:outputText value="#{lbl['lbl.sm.ai.tnc.instruction']}" rendered="#{cc.attrs.docType eq 'tenancy'}"
 				styleClass="instruction" escape="false"/>
@@ -80,7 +75,14 @@
         			</h:commandLink>
 				</p:column>
 				<p:column style="width:5%;text-align:center;">
-					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}">
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}"
+						rendered="#{empty cc.attrs.updateId}">
+						<p:graphicImage value="/css/images/design/trash.png" />
+					</p:commandLink>
+					<!-- #40112 -->
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this"
+						update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
+						rendered="#{not empty cc.attrs.updateId}">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>

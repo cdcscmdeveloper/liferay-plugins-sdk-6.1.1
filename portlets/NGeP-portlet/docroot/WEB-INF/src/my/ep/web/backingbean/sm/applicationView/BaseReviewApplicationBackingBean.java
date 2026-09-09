@@ -5018,6 +5018,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				RequestContext.getCurrentInstance().execute(
 						"overlapCategoryDialog.show();");
 			}
+			//#40444, #41174 --START
+			public boolean checkOverLappedCategoryExists(SmAppl smAppl) {
+				SmOverlapCategoryVO vo = getOverlapCategoryVO(smAppl);
+				return vo != null && vo.isOverLappedCategoryExist();
+			}//#40444, #41174 --END
+			
 			private SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
 				SmOverlapCategoryVO retVal = null;
 				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
