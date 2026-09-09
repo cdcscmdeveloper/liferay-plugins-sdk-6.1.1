@@ -428,7 +428,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
-						if (getManagedBean().isAssignNewUser()) { // #31788 - message id for new assign user
+						if (getManagedBean().isAssignNewUser()) { // #31788 - Message ID for new assign user
 							messageId = MessageConst.INFO_700128;
 						} else {
 							messageId = MessageConst.INFO_700043;
@@ -436,7 +436,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						}
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-						if (getManagedBean().isAssignNewUser()) { // #31788 - message id for new assign user
+						if (getManagedBean().isAssignNewUser()) { // #31788 - Message ID for new assign user
 							messageId = MessageConst.INFO_700128;
 						} else {
 							messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
@@ -447,7 +447,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						messageId = MessageConst.INFO_700005;
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					}
-					if (reqDTO.isAssignNewUser()) { // #31788 - tracking diary new assign user
+					if (reqDTO.isAssignNewUser()) { // #31788 - acknowledgement message assign new user.
 						messageId = MessageConst.INFO_700128;
 						FacesContext.getCurrentInstance().addMessage(
 								null,
@@ -1189,8 +1189,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			UserResDTO userResDTO = userSO.validateUserAlt(userReqDTO);
 			if (userResDTO.getUserStatus().equals(2)) {
 				getManagedBean().setAssignNewUser(Boolean.TRUE);
-//				UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
-//				getManagedBean().setNewUser(availableUser.getPmUser());
 			} else if (userResDTO.getUserStatus().equals(0)) {
 				PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
 				throw new EpException(MessageConst.ERROR_740130,

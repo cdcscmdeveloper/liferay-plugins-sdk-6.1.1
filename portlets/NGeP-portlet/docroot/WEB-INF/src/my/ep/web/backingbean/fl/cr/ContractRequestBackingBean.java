@@ -425,7 +425,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			//26646-end
 			
-			// 31788 - Check new user need to be assigned
+			// #31788 - Update reqDTO if new user to be reassigned
 			if(getManagedBean().isAssignNewUser()){
 				reqDTO.setAssignNewUser(Boolean.TRUE);
 				reqDTO.setNewUser(getManagedBean().getNewUser());
@@ -442,7 +442,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					// #31788
+					// #31788 - Message ID for reassign new user
 					if(getManagedBean().isAssignNewUser()) {
 						messageId = MessageConst.INFO_700128;
 					} else {
@@ -453,7 +453,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
 				}
-				// 31788 - acknowledgement message assign new user.
+				// #31788 - acknowledgement message assign new user.
 				if (getManagedBean().isAssignNewUser()) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
@@ -5393,7 +5393,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						}
 					}
 				} else {
-					//#31788 - validate previous selected approver inactive.
+					//#31788 - validate selected fl approver active/inactive.
 					if (getManagedBean().getFlRequest().getApproverId() != null) {
 						userSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -5439,7 +5439,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
-					// #31788
+					// #31788 - validate requisitioner active/inactive
 					userSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
@@ -5994,7 +5994,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 			if(resDTO.getAddressTypeList().isEmpty()){
-				// 31788 - Update new alert message when no exist receiving officer
+				// #31788 - Update alert message when receiving officer is not exist
 				throw new EpException(MessageConst.ERROR_745077, new String[]{delAddr.getFlAddress().getAddressName()});
 			}
 		}
