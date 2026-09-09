@@ -3859,7 +3859,6 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
 		//13362
-		
 		// #39422 - Start - Add checking
 		if (managedBean.getApplnOverLapRemarks() == null || managedBean.getApplnOverLapRemarks().isEmpty()) {
 			managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
@@ -3996,100 +3995,86 @@ public class SmApplicationUtil {
 			reqDTO.setLangCode(CommonConstants.LANGUAGE_CODE_MALAY);
 			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-			
-			log.info("40444 - result count from query - " + resultList.size()); //#40444 - debug
-			
 			if (!EntityHelper.isCollectionEmpty(resultList)
 					&& !resultList.isEmpty()) {
 				retVal = new SmOverlapCategoryVO();
 				retVal.setOverlapCategoryMalayList(getOverlapCategoryVOList(
 						resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage()));
 			}
-		}else{
-		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
-		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
-				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-		if (!EntityHelper.isCollectionEmpty(resultList)
-				&& !resultList.isEmpty()) {
-			retVal = new SmOverlapCategoryVO();
-			retVal.setOverLappedCategoryExist(true);
-			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
-					"lbl.sm.category.overlappingMsg", null)
-					+ "<br />"
-					+ getOverlappedCategoryMsg(resultList));
-			Locale loc = new Locale("ms", "MY");
-			ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg",
-					null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-			retVal.setOverLappedCategoryRemarks(ResourceBundleUtils.getMessage(
-					"lbl.sm.category.overlappingMsg", null,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
-					+ System.lineSeparator()
-					+ System.lineSeparator()
-					+ getOverlappedCategoryRemarks(resultList));
-			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-					resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage())); //ganti dgn overlap lang
-			
-			//13362 - START setApplnOverlapRemarks
-			String companyName = "";
-			String mofNo = "";
-			String catCode = "";
-			String catCodeCombine = "";
-			//#39679 - Start
-			Set<String> catCodeList = new HashSet<>();
-			boolean duplicateCatCode = false;
-			//#39679 - End
-			int index = 0;
-			
-			if(resultList != null){
-				for (Object[] arrI : resultList){ 
-					catCode = arrI[0].toString() + arrI[1] + arrI[2];
-					//#39679 - Start
-					if(arrI[4].toString().equalsIgnoreCase(companyName)){
-						duplicateCatCode = checkDuplicateCatCode(catCodeList, catCode);
-					}else{
-						catCodeList = new HashSet<>();
-					}
-					catCodeList.add(catCode);
-					//#39679 - End
-					if("".equalsIgnoreCase(companyName)){
-						companyName = arrI[4].toString();
-						log.info("MOF NO == "+arrI[5]);
-						
-						// #39422 - Start - Change null to N/A
-						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
-						// #39422 - End -
-						catCodeCombine += companyName + ", " +  mofNo + ", " + " (";
-						index ++;
-					}
-					if (index == 1){
-						catCodeCombine = catCodeCombine + catCode;
-					}
-					if(arrI[4].toString().equalsIgnoreCase(companyName) && index != 1){
-						//#39679 - Start
-						if(!duplicateCatCode){
-							catCodeCombine = catCodeCombine + ", " + catCode;	
+		} else {
+			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
+			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO().retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+			if (!EntityHelper.isCollectionEmpty(resultList) && !resultList.isEmpty()) {
+				retVal = new SmOverlapCategoryVO();
+				retVal.setOverLappedCategoryExist(true);
+				retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage("lbl.sm.category.overlappingMsg", null) + "<br />" + getOverlappedCategoryMsg(resultList));
+				Locale loc = new Locale("ms", "MY");
+				ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg", null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
+				retVal.setOverLappedCategoryRemarks(ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg",
+						null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc) + System.lineSeparator()
+						+ System.lineSeparator() + getOverlappedCategoryRemarks(resultList));
+				retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage())); // ganti dgn overlap lang
+
+				// 13362 - START setApplnOverlapRemarks
+				String companyName = "";
+				String mofNo = "";
+				String catCode = "";
+				String catCodeCombine = "";
+				// #39679 - Start
+				Set<String> catCodeList = new HashSet<>();
+				boolean duplicateCatCode = false;
+				// #39679 - End
+				int index = 0;
+
+				if (resultList != null) {
+					for (Object[] arrI : resultList) {
+						catCode = arrI[0].toString() + arrI[1] + arrI[2];
+						// #39679 - Start
+						if (arrI[4].toString().equalsIgnoreCase(companyName)) {
+							duplicateCatCode = checkDuplicateCatCode(catCodeList, catCode);
+						} else {
+							catCodeList = new HashSet<>();
 						}
-						//#39679 - End
-					}else{
-						companyName = arrI[4].toString();
-						log.info("MOF NO == "+arrI[5]);
-						// #39422 - Start - Change null to N/A
-						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
-						// #39422 - End -
-						
-						if (index == 1){
-							catCodeCombine = catCodeCombine + "";
+						catCodeList.add(catCode);
+						// #39679 - End
+						if ("".equalsIgnoreCase(companyName)) {
+							companyName = arrI[4].toString();
+							log.info("MOF NO == " + arrI[5]);
+							// #39422 - Start - Change null to N/A
+							mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
+							// #39422 - End -
+							catCodeCombine += companyName + ", " + mofNo + ", " + " (";
 							index++;
-						}else{
-							catCodeCombine = catCodeCombine + ")," + " " + companyName + ", " +  mofNo + ", " + " (" + catCode;
 						}
-					}	
+						if (index == 1) {
+							catCodeCombine = catCodeCombine + catCode;
+						}
+						if (arrI[4].toString().equalsIgnoreCase(companyName) && index != 1) {
+							// #39679 - Start
+							if (!duplicateCatCode) {
+								catCodeCombine = catCodeCombine + ", " + catCode;
+							}
+							// #39679 - End
+						} else {
+							companyName = arrI[4].toString();
+							log.info("MOF NO == " + arrI[5]);
+							// #39422 - Start - Change null to N/A
+							mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
+							// #39422 - End -
+
+							if (index == 1) {
+								catCodeCombine = catCodeCombine + "";
+								index++;
+							} else {
+								catCodeCombine = catCodeCombine + ")," + " " + companyName + ", " + mofNo + ", " + " (" + catCode;
+							}
+						}
+					}
+					catCodeCombine = catCodeCombine + "" + ")";
+					retVal.setApplnOverLapRemarks(catCodeCombine);
 				}
-				catCodeCombine = catCodeCombine + "" + ")";
-				retVal.setApplnOverLapRemarks(catCodeCombine);
+				// 13362 - END
 			}
-			//13362 - END
-		}
 		}
 		return retVal;
 	}
