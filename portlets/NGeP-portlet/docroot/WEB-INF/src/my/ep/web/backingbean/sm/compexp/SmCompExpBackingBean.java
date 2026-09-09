@@ -557,6 +557,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			if (this.getManagedBean().isDraftUpdate()) {
 				this.getManagedBean().getSmCompExpDocList().add(docFile);
 			} else if (this.getManagedBean().isMasterUpdate()) {
+				//#9299 - #41162 - Start
+				docFile.setCompExpMaster(this.getManagedBean().getSelectedMaster());
 				this.getManagedBean().getSelectedMaster().getCompExpMasterDocs().add(docFile);
 			} else if (this.getManagedBean().isMasterNew()) {
 				this.getManagedBean().getNewMaster().getCompExpMasterDocs().add(docFile);

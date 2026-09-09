@@ -907,9 +907,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#28784
 			checkDemoPresentationByStatus();
 			//#10141 Start Vinod
+			this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+			this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 			if(isSendNotificationButton){
-				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
-				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -7368,6 +7368,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			retrieveSuppQualificationTabDtl();
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			//29661 && 41163 -start-
+			if(this.getManagedBean().getQt().isPanel()){
+				getPanelCategory();
+			}
+			//29661 && 41163 -end-
+			
 			break;
 		case 2:
 			//Added the validation for committee while save - 13342
@@ -7843,6 +7849,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//#35285 & #25635 - End
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
+					setOtherApprovalLoaded();// 12471
 					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
 					}
