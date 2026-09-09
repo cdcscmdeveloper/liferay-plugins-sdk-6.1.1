@@ -112,7 +112,7 @@
 							oncomplete="circularSearchBlk.hide();" process="@all"
 							rendered="#{(!circularBackingBean.managedBean.trackingDiarySearch
                 				and data.ctCircular.recordStatusFlg == 1
-                				and circularBackingBean.isUpdateStatusAllowed(data.status.statusId)
+                				and circularBackingBean.isUpdateStatusAllowed(data.status.statusId , data.ctCircular.circularType)
                 				and circularBackingBean.isUpdateCircularTypeAllowed(data.ctCircular.circularType))}"
 							action="#{circularBackingBean.gotoPage('update', data.ctCircular.latestCircularVer.circularVerId)}">
 						</p:menuitem>
