@@ -34,6 +34,17 @@
 		loadingWidget="blockWidget" />
 	<!-- 34445 end -->
 	
+	<!-- 34445 start -->
+	<ac:confirmationPopupSM id="saveGstInfoDlg" widget="saveGstInfoDlg"
+		okAction="ruleCatalogueBackingBean.saveDesignatedArea"
+		okProcess=":form:settingTabId:gstId"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.save.msg']}" 
+		update=":form:settingTabId:gstId"
+		loadingWidget="blockWidget" />
+	<!-- 34445 end -->
+	
 	<p:dataTable id="designatedAreaTbl" var="daObj" rows="10"
 		widgetVar="designatedAreaTblWidVar"
 		value="#{ruleCatalogueBackingBean.managedBean.daValidityList}"

@@ -149,6 +149,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
     //33238 start
     private List<SelectItem> factoringAccList;
     //33238 end
+	private boolean isSupplementContractComplete = true; //28719
+
 
 	//#35508 start
   	private String originalSupplierInvRef;
@@ -1246,6 +1248,16 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.accountNo = accountNo;
 	}
 	//32967-end
+	
+	//28719-start
+	public boolean isSupplementContractComplete() {
+		return isSupplementContractComplete;
+	}
+
+	public void setSupplementContractComplete(boolean isSupplementContractComplete) {
+		this.isSupplementContractComplete = isSupplementContractComplete;
+	}
+	//28719-end	
 	
 	//#35508 start
 	/**
