@@ -177,11 +177,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			
-			// 31788 - Check new user need to be assigned
+			// #31788 - Start update reqDTO for new user
 			if(getManagedBean().isAssignNewUser()){
 				reqDTO.setAssignNewUser(Boolean.TRUE);
 				reqDTO.setNewUser(getManagedBean().getNewUser());
 			}
+			// #31788 - End
 
 			FulfilmentResDTO resDTO;//36386
 			reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
@@ -238,7 +239,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 						messageId = MessageConst.INFO_745015;
 					}
 				} 
-				// 31788 - acknowledgement message assign new user.
+				// #31788 - acknowledgement message assign new user.
 				if (getManagedBean().isAssignNewUser()) {
 					messageId = MessageConst.INFO_700128;
 					FacesContext.getCurrentInstance().addMessage(
@@ -614,6 +615,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				
 				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
 				getManagedBean().getApproverList().addAll(approverUserList);
+				
+				//#31788 - start assign new user if needed
+				if(getManagedBean().isAssignNewUser()){
+					getManagedBean().setNewUser(approverUserList.get(0));
+				}
+				//#31788 - end
 			}
 		}
 
@@ -1148,7 +1155,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			}
 		}
 		
-		// #31788 - Supplier Stop Fulfilment -> Check FL Approver Status -> Reassigned new user if inactive -> no user available, block (alert message)
+		// #31788 - Start validate fl approver status
 		if (hasSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
 			FlStopInstr stopInstr = getManagedBean().getStopInstr();
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1168,8 +1175,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
 			if (resDTO.getUserStatus().equals(2)) {
 				getManagedBean().setAssignNewUser(Boolean.TRUE);
-				UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
-				getManagedBean().setNewUser(availableUser.getPmUser());
 			} else if (resDTO.getUserStatus().equals(0)) {
 				PmOrgProfile orgProfile = stopInstr.getFlRequest().getPreparedOrgProfile();
 				throw new EpException(MessageConst.ERROR_740130,
@@ -1177,6 +1182,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()) });
 			}
 		}
+		// #31788 - End
 	}
 	// #34443 end
 }
