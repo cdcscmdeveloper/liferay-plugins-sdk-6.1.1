@@ -4885,6 +4885,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	//#41151 - Start
 	/**
 	 * Standard financial checklist document names for the qt's procurement
 	 * category. A manually keyed row carrying one of these titles has no
@@ -4911,6 +4912,7 @@ public class SpecificationBackingBean extends
 		}
 		return stdDocNames;
 	}
+	//#41151 - End
 
 	/**
 	 * Technical checklist drop down action change.Event handle change Action
