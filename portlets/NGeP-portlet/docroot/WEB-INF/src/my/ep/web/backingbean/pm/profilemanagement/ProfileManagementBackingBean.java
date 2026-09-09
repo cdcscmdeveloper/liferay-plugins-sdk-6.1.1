@@ -1075,7 +1075,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		getManagedBean().setRoleTabActiveIndex(1);
 
 	}
-	   
+
 	//#36489,#40780 - Start
 	/**
 	 * check if user still have:
