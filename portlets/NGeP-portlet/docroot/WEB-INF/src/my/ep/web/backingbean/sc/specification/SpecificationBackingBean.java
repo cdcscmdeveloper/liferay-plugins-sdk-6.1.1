@@ -25344,6 +25344,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
 			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
+		} else if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) 
+						|| (createdDate.before(effTimestamp) && null != publishDate && publishDate.before(effDate))) {
+			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
 	
