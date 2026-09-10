@@ -26,9 +26,11 @@
 			<h:outputText
 				rendered="#{viewSmApplBackingBean.managedBean.supplierUser}"
 				value="#{lbl['lbl.sm.comp.exp.new.version.application.status.supplier']}" />
-			<h:outputText
-				rendered="#{viewSmApplBackingBean.managedBean.approverUser or viewSmApplBackingBean.managedBean.poUser}"
-				value="#{lbl['lbl.sm.comp.exp.new.version.application.status.ups']}" />
+			<!-- #41186 Start -->
+			<h:outputText 
+				rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}"
+				value="#{lbl['lbl.sm.comp.exp.new.version.application.status.ups']}" /> 
+			<!-- #41186 End -->
 		</p:panel>
 	</c:if>
 	<c:if

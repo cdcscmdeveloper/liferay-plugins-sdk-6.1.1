@@ -764,22 +764,18 @@ public class CircularBackingBean extends CircularBaseBackingBean<CircularManaged
 	 * @return {@code true} if the circular can be updated; otherwise
 	 *         {@code false}
 	 */
-	public boolean isUpdateStatusAllowed(Long statusId) {
+	public boolean isUpdateStatusAllowed(Long statusId, String circularType) {
 
 		if (statusId == null) {
 			return false;
 		}
 		// update process for PQ and MQ
-		if (isPanelAdmin()) {
+		if (isPanelAdmin() && ContractConst.CIRCULAR_DOC_TYPE_PANEL.equalsIgnoreCase(circularType)) {
 			return isPqUpdateStatusAllowed(statusId) || isMqUpdateStatusAllowed(statusId);
-		}
-
-		// update process for CQ
-		if (isCentralContractAdmin()) {
+		} else {
+			// update process for CQ
 			return isCqUpdateStatusAllowed(statusId);
 		}
-
-		return false;
 	}
 	
 	/**
