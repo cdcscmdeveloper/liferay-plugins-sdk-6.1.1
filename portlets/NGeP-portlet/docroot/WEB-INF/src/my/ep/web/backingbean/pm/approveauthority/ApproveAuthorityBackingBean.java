@@ -17,6 +17,7 @@ import my.ep.biz.service.pm.common.approveauthority.IApproveAuthorityCommitteeSO
 import my.ep.biz.service.pm.common.approveauthority.IApproveAuthoritySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
 import my.ep.exception.EpException;
@@ -26,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmRemarkAuthority;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.approveauthority.ApproveAuthorityManagedBean;
@@ -82,8 +84,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAIN);
-		} catch (Exception e) {
-			throw e;
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
+					ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+					"preLoadApproveAuthority", null, ex);
 		}
 	}
 	
@@ -227,8 +231,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 					this.getManagedBean().setListAuthCommittee(pmAuth.getPmAuthorityCommittee());
 				}
 			}
-		} catch (Exception e) {
-			log.error(e);
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
+					ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+					"reloadApproveAuthority", authCommittee.getAuthCommitteeId(), ex);
 		}
 	}
 	
@@ -283,9 +289,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	 * This updateAuthCommittee method is to update committee at pm_authority_committee
 	 */
 	public void updateAuthCommittee(){
+		
+		PmAuthorityCommittee popUpCommittee = this.getManagedBean().getUpdateAuthCommittee();
+		
 		try{
-			PmAuthorityCommittee popUpCommittee = this.getManagedBean().getUpdateAuthCommittee();
-
 			FacesContext fc = FacesContext.getCurrentInstance();
 			boolean hasError = false;
 			if(StringUtils.isBlank(popUpCommittee.getCommitteeName())){
@@ -344,8 +351,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 					RequestContext.getCurrentInstance().execute("updateCommitteeDialog.hide()");
 				}
 			}
-		} catch (Exception e){
-			throw e;
+		} catch (Exception ex){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+				"updateAuthCommittee", popUpCommittee.getAuthCommitteeId(), ex);
 		}
 	}
 	
