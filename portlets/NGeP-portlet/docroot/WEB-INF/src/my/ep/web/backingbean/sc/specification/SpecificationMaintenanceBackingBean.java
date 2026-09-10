@@ -911,8 +911,12 @@ public boolean isSpecCommittee() {
 		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
 		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
 		
-		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc)) 
-				|| (null != publishDate && publishDate.before(effDate))) {
+		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
+			// null != publishDate && publishDate.before(effDate)
+			this.getManagedBean().setWeightage35384WIP(true);
+		} else if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() 
+						|| createdDate.before(effTimestamp) && null != publishDate && publishDate.before(effDate))) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}

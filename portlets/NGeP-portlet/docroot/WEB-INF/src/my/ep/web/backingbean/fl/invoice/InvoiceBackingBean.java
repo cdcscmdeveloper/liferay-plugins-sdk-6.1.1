@@ -212,6 +212,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				validateOrderFulfiledAndDOFRNPendingCancellation();
 			}
 			//36754 -end
+			
+			//40793 -start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+				validatePOCOCurrentStatus(action, getManagedBean().getInvoice().getInvoiceId());
+			}
+			//40793 -end
+			
 			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
 				//32967-start
 				if(null != getManagedBean().getAccountNo()){
@@ -2749,4 +2756,34 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}	
 	}
 	//36754 -End
+	
+	//40793-start
+	/**
+	 * validate current POCO work flow status
+	 * 
+	 * @param action
+	 * @param invoiceId
+	 * @throws EpException
+	 *             if not allow to proceed
+	 * 
+	 */
+	private void validatePOCOCurrentStatus(String action, Long invoiceId) {
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlOrderId(getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType());
+		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_INVOICE);
+		reqDTO.setActionCode(action);
+		reqDTO.setInvoiceId(invoiceId);
+
+		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
+
+		Boolean allowToProceed = resDTO.isFlag();
+		if (!allowToProceed) {
+			throw new EpException(MessageConst.ERROR_740069);
+		}
+	}
+	//40793-end
 }

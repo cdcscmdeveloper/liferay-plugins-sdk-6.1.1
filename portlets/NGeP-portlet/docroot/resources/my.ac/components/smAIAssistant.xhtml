@@ -37,7 +37,7 @@
 		</p:dialog>
 		
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
-			dynamic="true" resizable="false" width="700px" 
+			dynamic="true" resizable="true" width="700px" height="500px"
 			header="#{lbl['lbl.btn.upload.doc']}"
 			styleClass="pop_up_top">
 			
@@ -46,7 +46,7 @@
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
 			
 			<h:inputHidden id="ai"/>
-			<p:messages id="messages" for="ai" showDetail="true" autoUpdate="true" closable="true"/>
+			<p:messages id="messages" for="ai" showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
 			
 			<h:outputText value="#{lbl['lbl.sm.ai.tnc.instruction']}" rendered="#{cc.attrs.docType eq 'tenancy'}"
 				styleClass="instruction" escape="false"/>
@@ -54,13 +54,35 @@
 				styleClass="instruction" escape="false"/>
 			<br/><br/>
 			<p:dataTable id="docs#{cc.attrs.aiDlg}" var="doc" value="#{ai.getDocs()}" emptyMessage="">
+				<p:column style="width:5%;text-align:center;"
+					rendered="#{cc.attrs.docType eq 'epf'}">
+					<p:outputPanel rendered="#{ai.getEpfDocVerdict(doc) eq 1}">
+						<p:graphicImage id="imgAiEpf1" value="/css/images/ai/yes.png" />
+						<p:tooltip for="imgAiEpf1">
+							<p:outputLabel escape="false" value="#{ai.getEpfDocLabel(doc)}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{ai.getEpfDocVerdict(doc) eq 2}">
+						<p:graphicImage id="imgAiEpf2" value="/css/images/ai/no.png" />
+						<p:tooltip for="imgAiEpf2" rendered="#{not empty ai.getEpfDocLabel(doc)}">
+							<p:outputLabel escape="false" value="#{ai.getEpfDocLabel(doc)}"/>
+						</p:tooltip>
+					</p:outputPanel>
+				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.sme.supp.doc.name']}">
 					<h:commandLink id="file" value="#{doc.fileName}" >
             			<p:fileDownload value="#{ai.commonDownload(doc.filePath, doc.fileName)}" />
         			</h:commandLink>
 				</p:column>
 				<p:column style="width:5%;text-align:center;">
-					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}">
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}"
+						rendered="#{empty cc.attrs.updateId}">
+						<p:graphicImage value="/css/images/design/trash.png" />
+					</p:commandLink>
+					<!-- #40112 -->
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this"
+						update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
+						rendered="#{not empty cc.attrs.updateId}">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>
@@ -82,11 +104,7 @@
 				showButtons="false"
 				onstart="block#{cc.attrs.aiDlg}.show()"
 				oncomplete="block#{cc.attrs.aiDlg}.hide();"/>
-
-			<p:spacer height="10" />
-			<hr style="border: 0; border-top: 1px solid #ddd;" />
-			<p:spacer height="10" />
-
+			
 			<p:outputPanel id="result#{cc.attrs.aiDlg}">
 				<!-- epf -->
 				<p:outputPanel rendered="#{ai.postAI and cc.attrs.docType eq 'epf'}">

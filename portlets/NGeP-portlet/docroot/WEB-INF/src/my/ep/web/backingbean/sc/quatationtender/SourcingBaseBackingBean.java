@@ -899,8 +899,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 38523, #35320  - end
-
-
+	
+	// 29661 - start
+	protected IQTSpecSO getQTSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	// 29661 - end
+	
+	// 29661 - start
+	protected ICategoryCodeSO getCategoryCodeSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICategoryCodeSO.class);
+	}
+	// 29661 - end
 	/**
 	 * To initialize remarks.
 	 * 
@@ -7692,6 +7703,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (null == ctContractver) {
 			newCtContractver.setCtTermination(new CtTermination());
 		} else {
+			//41079 && 29661 -start-
+			if(null==ctContractver.getCtTermination()){
+				ctContractver.setCtTermination(new CtTermination());
+			}
+			//41079 && 29661 -end-
 			return ctContractver;
 		}
 
@@ -7997,7 +8013,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (SmCompExpMasterDoc compExpDocs : supportingDocuments) {
 				ScLoaReportAttachment attachemnt = new ScLoaReportAttachment();
 				attachemnt.setFileName(compExpDocs.getFileName());
-				attachemnt.setFilePath(compExpDocs.getFilePath());
+				attachemnt.setFilePath(compExpDocs.getFilePath() + compExpDocs.getFileName()); //#41093
 				attachmentList.add(attachemnt);
 
 			}
