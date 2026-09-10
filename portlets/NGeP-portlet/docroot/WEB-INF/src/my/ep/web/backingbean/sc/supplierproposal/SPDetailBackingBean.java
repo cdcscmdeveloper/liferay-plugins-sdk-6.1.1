@@ -6571,4 +6571,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 	}
 	//#21695 - End
+	
+	// #41190 - Start - the supplier-info reminder poll (interval="1") must only exist while the QT is in proposal preparation.
+	public boolean supplierInfoReminderStage() {
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt != null ? scQt.getQtStatus() : null;
+		return qtStatus != null && QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId());
+	}
+		// #41190 - End
 }
