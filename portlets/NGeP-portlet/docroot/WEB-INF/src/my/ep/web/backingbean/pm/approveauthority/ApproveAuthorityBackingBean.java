@@ -86,8 +86,8 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAIN);
 		} catch (Exception ex) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
-					ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
-					"preLoadApproveAuthority", null, ex);
+				ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+				"preLoadApproveAuthority", null, ex);
 		}
 	}
 	
@@ -140,6 +140,11 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				"apprAuthorityTblWidVar.paginator.endLink.click()");
 	}
 
+	/**
+	 * Returns the list of active and inactive result statuses.
+	 *
+	 * @return an array of SelectItem containing active and inactive statuses
+	 */
 	public SelectItem[] getResultStatusList() {
 		SelectItem[] items = new SelectItem[2];
 		items[0] = new SelectItem(1, ResourceBundleUtils.getMessage("lbl.pm.active",
@@ -163,8 +168,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			if(authCommitteeList != null && !authCommitteeList.isEmpty()){
 				saveAuthCommittee(authCommitteeList);
 			}
-		} catch (Exception e){
-			throw e;
+		} catch (Exception ex){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+				"saveNewCommittee", null, ex);
 		}
 		return NAV_TO_MAIN;
 	}
