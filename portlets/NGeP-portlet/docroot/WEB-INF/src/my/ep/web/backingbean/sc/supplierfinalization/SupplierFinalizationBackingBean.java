@@ -4974,7 +4974,7 @@ return	remarksNotFound;
 	/**
 	 * @throws Exception
 	 */
-	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {
+	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {// 38523
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
@@ -5004,7 +5004,7 @@ return	remarksNotFound;
 		}
 
 		// Generate all the reports before submission
-		if (!skipDownload) {
+		if (!skipDownload) { // 38523
 			downloadAllFiles(SourcingConstants.WIP_LAPORAN_KERTAS_TAKLIMAT, scAttachments);	//#25651
 		}
 		// #18685 - End.
