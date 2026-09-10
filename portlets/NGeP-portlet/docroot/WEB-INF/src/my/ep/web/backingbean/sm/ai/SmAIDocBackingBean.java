@@ -551,9 +551,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	private static boolean hasErrorMessage(){
+		String soft = AiDocParser.label("lbl.sm.ai.epf.mismatch");
 		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
 		while (it.hasNext()){
-			if (it.next().getSeverity() == FacesMessage.SEVERITY_ERROR){
+			FacesMessage msg = it.next();
+			if (msg.getSeverity() == FacesMessage.SEVERITY_ERROR
+					&& !StringUtils.equals(msg.getDetail(), soft)){
 				return true;
 			}
 		}
@@ -1439,9 +1442,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				hasWrongCompanyName = true;
 			}
 		}
-		// a warning, not an error: the file's employees are dropped instead, so the rest stay submittable
 		if(hasWrongCompanyName){
-			addMessageOnce(FacesMessage.SEVERITY_WARN, "lbl.sm.ai.epf.mismatch");
+			addMessageOnce(FacesMessage.SEVERITY_ERROR, "lbl.sm.ai.epf.mismatch");
 		}
 	}
 	
