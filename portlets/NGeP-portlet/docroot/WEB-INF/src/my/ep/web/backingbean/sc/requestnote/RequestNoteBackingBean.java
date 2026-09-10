@@ -952,7 +952,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setCounterReason(0);//#27868
 
 		RequestNoteReqDTO inactiveUserReqDTO = new RequestNoteReqDTO(); //#33224
-		String[] paramMessage = new String[3]; //#33224
+		//String[] paramMessage = new String[3]; //#33224
 
 		try {
 			if (getManagedBean().getPrInquiryId() != null) {
@@ -994,6 +994,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
 			// 33224 (G3) - Start
+			log.info("--- 33224 inactiveUserReqDTO.getIsInactiveFlag(): " + inactiveUserReqDTO.getIsInactiveFlag());
 			if(inactiveUserReqDTO.getIsInactiveFlag()){
 		     requestNoteReqDTO.setReqOrgProfileId(inactiveUserReqDTO.getReqOrgProfileId());
 			 requestNoteReqDTO.setReqLoginId(inactiveUserReqDTO.getReqLoginId());
@@ -1076,6 +1077,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
+				} else if (inactiveUserReqDTO.getIsInactiveFlag()) {
+					//#33224 (G3) start
+					successMessage(MessageConst.INFO_700128,inactiveUserReqDTO.getParamMessage(), Boolean.TRUE);
+					//#33224 (G3) end
 				} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()) {
 					successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
@@ -2496,12 +2501,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// 26059 - start - replace with original code
 					successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
-					// 26059 - end
-
-					
+					// 26059 - end					
 				} else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && inactiveUserReqDTO.getIsInactiveFlag().equals(Boolean.TRUE)) {	
 				// 33224 - start - replace new message code user inactive				
-					successMessage(MessageConst.INFO_700128,paramMessage);
+					successMessage(MessageConst.INFO_700128,inactiveUserReqDTO.getParamMessage(), Boolean.TRUE);
 				// 33224 - end 
 				} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700011, ParameterTypeConst.DOCUMENT_TYPES,
@@ -9251,10 +9254,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public RequestNoteReqDTO checkInactiveUserAction(ScRequestNote requestNote, String outcomeBpm) {
 	
 	    Long checkUserId = null;
+	    UserReqDTO userReqDTO = new UserReqDTO();
+	    RequestNoteReqDTO rnInactiveDTO = new RequestNoteReqDTO();
+	    Boolean isreq = false;
+	    Long orgProfileId =0L;
+	    PmUser userDetail = new PmUser();
+	    String[] paramMessage = null;
 	    
-	    if(outcomeBpm.equals(BpmOutcomeConst.BPM_SUBMIT)){
-			PmUser user = new FacesScopes().getUserSessionBean();
-			checkUserId = user.getUserId();
+	    rnInactiveDTO.setIsInactiveFlag(false);
+
+	    if(BpmOutcomeConst.BPM_SUBMIT.equals(outcomeBpm)){
+			//PmUser user = requestNote.getApprover();
+			//checkUserId = user.getUserId();
+			checkUserId = requestNote.getApprover().getUserId();
 		}
 		else if (requestNote == null || requestNote.getCreatedBy() == null) {
 				log.info("checkInactiveUserAction - no user found, skipping check");
@@ -9263,21 +9275,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		else{
 			checkUserId = requestNote.getCreatedBy();
 		}
-	    
-	    log.info("checkInactiveUserAction - checking userId: " + checkUserId);
-	
+	    	
 	    IUserSO userSO = BusinessDelegate.getInstance()
 	            .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	    
-	    UserReqDTO userReqDTO = new UserReqDTO();
-	    RequestNoteReqDTO rnInactiveDTO = new RequestNoteReqDTO();
-	    Boolean isreq = false;
-	    Long orgProfileId =0L;
-	    PmUser userDetail = new PmUser();
-	    String[] paramMessage = null;
-	    
+	    	    
 	    userReqDTO.setUserId(checkUserId);
 	    UserResDTO resDTO = userSO.retrieveUserByUserId(userReqDTO);
+	    
 	    if(!resDTO.getPmUser().getPmUserOrgs().isEmpty()){
 	    	for (PmUserOrg org : resDTO.getPmUser().getPmUserOrgs()){
 	    		if(org.getRecordStatusFlg() == 1){
@@ -9288,14 +9292,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	}
 	      }
 	    }
-	
+	    	
 	    InactiveUserReqDTO inactiveUserReqDTO = new InactiveUserReqDTO();
 	    inactiveUserReqDTO.setUserIds(checkUserId.toString());
 	    inactiveUserReqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
 	    inactiveUserReqDTO.setDocNo(requestNote.getRequestNoteNo());
 	    inactiveUserReqDTO.setUserRoleCode(isreq? RoleCode.REQUISITIONER.value(): RoleCode.RN_APPROVER.value()); //to modify based on rolecode field in param
 	    inactiveUserReqDTO.setOrgProfileId(orgProfileId);
-	
+	    
+	    log.info("checkInactiveUserAction - checking userId: " + checkUserId);
+	    log.info("checkInactiveUserAction - orgProfileId: " + orgProfileId);
+	    log.info("checkInactiveUserAction - inactiveUserReqDTO.getUserRoleCode: " + inactiveUserReqDTO.getUserRoleCode());
+	    log.info("checkInactiveUserAction - inactiveUserReqDTO.getDocType: " + inactiveUserReqDTO.getDocType());
+	    log.info("checkInactiveUserAction - inactiveUserReqDTO.getUserRoleCode: " + inactiveUserReqDTO.getUserRoleCode());
+
 	    InactiveUserResDTO inactiveUserResDTO = userSO.checkInactiveUserBySP(inactiveUserReqDTO);
 	    log.info("checkInactiveUserAction - nextUserRole: " + inactiveUserReqDTO.getUserRoleCode());
 	    log.info("rn checkInactiveUserAction - status: " + inactiveUserResDTO.getStatus()
