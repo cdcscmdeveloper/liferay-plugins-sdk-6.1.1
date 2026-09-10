@@ -10113,7 +10113,7 @@ public class SupplierFinalizationBackingBean extends
 					CommitteReqDTO commReqDTO = new CommitteReqDTO();
 					commReqDTO.setSupplierFinalization(true);
 					commReqDTO.setQtId(getManagedBean().getScQt().getQtId());
-					commReqDTO.setTotalAwardedPrice(totalIntendedPrice);
+					commReqDTO.setTotalAwardedPrice(BigDecimal.ZERO.compareTo(totalIntendedPrice) == 0 ? null : totalIntendedPrice);//#39077
 
 					CommitteResDTO commResDTO = committeeSO.retrieveFinalizationCommitteeType(commReqDTO);
 
