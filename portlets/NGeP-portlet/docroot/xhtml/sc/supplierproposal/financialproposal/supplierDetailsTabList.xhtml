@@ -66,9 +66,9 @@
 		</tr>
 	</table>
 	<!-- #25089@hatta - start -->
-	<!-- #41190 - only poll during proposal preparation; on the evaluation screen
-	     this 1s poll kept refreshing the page and wiping the score-saved message -->
+	<!-- #41190 -start- -->
 	<c:if test="#{supplierProposalDetailBackingBean.managedBean.supplierInfoActiveIndex eq 0 and supplierProposalDetailBackingBean.supplierInfoReminderStage}">
+	    <!-- #41190 -end- -->
             <p:poll interval="1" listener="#{supplierProposalDetailBackingBean.dafaultPopUpSupplierInfo}" widgetVar="stopPoller"/>
     </c:if> 
 	<p:dialog id="popUpInfoDlg" widgetVar="popUpInfoDlg"
