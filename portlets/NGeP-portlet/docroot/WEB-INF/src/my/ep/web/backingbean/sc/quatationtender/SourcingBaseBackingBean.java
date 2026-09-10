@@ -190,6 +190,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
@@ -5336,6 +5338,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
+	//#25651 - Start
+	
+	/**
+	 * Delete reports upload file.Event handle to delete upload file in
+	 * reports tab.
+	 * @param delEntity
+	 *               (BaseEntity delEntity).
+	 */
+	public void deleteReportDetailsUploadFile(BaseEntity delEntity) {
+		log.debug("deleteUploadFile");
+		
+		try{
+		log.debug("deleteReportsUploadFile");
+		ScQtFinalizationReportDetail selectedEvaluationReport = getManagedBean()
+				.getSelectedBriefingReportDetail();
+		selectedEvaluationReport.setScQtFinalizationReportDetailAttachment(null);
+		 getManagedBean()
+			.setSelectedBriefingReportDetail(selectedEvaluationReport);
+		}finally{
+		
+		}
+
+	}
+	
+	//#25651 - End
+	
 	/**
 	 * @param finalizationReports
 	 * @param scQt 
@@ -5593,6 +5621,62 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	//#25651 - Start
+	/**
+	 *reports file upload.to upload files for manual added reports.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void reportDetailsUploadAttachment(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReportDetail briefingReport = getManagedBean()
+					.getSelectedBriefingReportDetail();
+			ScQtFinalizationReportDetailAttachment reportAttachment = briefingReport
+					.getScQtFinalizationReportDetailAttachment();
+			if (null == reportAttachment) {
+				reportAttachment = new ScQtFinalizationReportDetailAttachment();
+				reportAttachment.setScQtFinalizationReportDetail(briefingReport);
+				briefingReport
+						.setScQtFinalizationReportDetailAttachment(reportAttachment);
+			} else {
+				reportAttachment.setScQtFinalizationReportDetail(briefingReport);
+				briefingReport
+						.setScQtFinalizationReportDetailAttachment(reportAttachment);
+			}
+			
+			int index = 0;
+			
+			if (CollectionUtils.isNotEmpty(getManagedBean().getScQtFinalizationReportDetail())
+			    && this.getManagedBean().getScQtFinalizationReportDetail().size() > 0) {
+			  for (ScQtFinalizationReportDetail finalizationReport : getManagedBean().getScQtFinalizationReportDetail()) {
+			    if (finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+			      index++;
+			    }
+			  }
+			}
+			reportAttachment.setDocNo(getManagedBean().getDocNo());
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			String fileName = scAttachment.getFileName();
+			
+			if (index >= 0 && fileName != null) {
+              reportAttachment.setFileName(index + UNDER_SCORE
+                      + fileName);
+			}
+			
+			briefingReport.setScQtFinalizationReportDetailAttachment(reportAttachment);
+		
+		}
+	}
+	//#25651 - End
+	
 	// 18685 - START.
 	/**
 	 * @param reportTitle
@@ -5661,6 +5745,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+	
+	//#25651 - Start
+	/**
+	 * delete existing report details records from database.
+	 *  
+	 */
+	public void deleteReportDetailsTabDtls() {
+		List<ScQtFinalizationReportDetail> removeFinalizationReports = getManagedBean()
+				.getRemoveFinalizationReportDetails();
+		if (null == removeFinalizationReports) {
+			removeFinalizationReports = new ArrayList<ScQtFinalizationReportDetail>();
+			getManagedBean()
+			.setRemoveFinalizationReportDetails(removeFinalizationReports);
+		}
+		markDeleteSelectedRowsAction(getManagedBean()
+				.getScQtFinalizationReportDetail(), removeFinalizationReports);
+		if(CollectionUtils.isNotEmpty(removeFinalizationReports)){
+			getManagedBean()
+			.setRemoveFinalizationReportDetails(removeFinalizationReports);
+		}
+
+	}
+	//#25651 - End
 	
 	// 18685 - START.
 	/**
@@ -8812,6 +8919,34 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportDetailList;
 	}
 
+	// #25651 - End
+	
+	// #25651 - Start
+	public void saveFinalizationReportDetails() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+		List<ScQtFinalizationReportDetail> finalizationReportList = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+
+		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		reqDTO.setFinalizationReportDetailList(finalizationReportList);
+		reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		if (CollectionUtils.isNotEmpty(getManagedBean().getRemoveFinalizationReportDetails())) {
+			List<ScQtFinalizationReportDetail> localReports = new ArrayList<>();
+			for (ScQtFinalizationReportDetail finalizationReport : getManagedBean().getRemoveFinalizationReportDetails()) {
+				if (null != finalizationReport.getQtReportId() && !finalizationReport.isBrandNew()) {
+					finalizationReport.setDeleted(true);
+					localReports.add(finalizationReport);
+				}
+
+			}
+			reqDTO.setToBeRemovedReportDetailList(localReports);
+		}
+		qtSuppFinalizationSO.saveReportDetails(reqDTO);
+	    getManagedBean().setRemoveFinalizationReportDetails(null);
+
+	}
 	// #25651 - End
 	
 	// #28188 - Start

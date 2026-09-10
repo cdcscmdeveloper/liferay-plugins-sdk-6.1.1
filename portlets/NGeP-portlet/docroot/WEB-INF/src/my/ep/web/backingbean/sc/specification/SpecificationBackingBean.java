@@ -4885,6 +4885,35 @@ public class SpecificationBackingBean extends
 
 	}
 
+	//#41151 - Start
+	/**
+	 * Standard financial checklist document names for the qt's procurement
+	 * category. A manually keyed row carrying one of these titles has no
+	 * pmDocument, so it hides the real document from the Standard Checklist
+	 * picker and stays unresolved at evaluation.
+	 * 
+	 * @return Set<String>
+	 */
+	private Set<String> standardFinancialChecklistNames() {
+		procurementCategoryCode(this.getManagedBean().getQt());
+		DocumentReqDTO stdDocReqDTO = new DocumentReqDTO();
+		stdDocReqDTO.setProcurementCatCode(this.getManagedBean()
+				.getProcuremntCategory());
+		stdDocReqDTO
+				.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST);
+		DocumentResDTO stdDocResDTO = getDocumentSO()
+				.retrieveDocumentCheckList(stdDocReqDTO);
+		Set<String> stdDocNames = new LinkedHashSet<String>();
+		if (null != stdDocResDTO
+				&& CollectionUtils.isNotEmpty(stdDocResDTO.getDocumentList())) {
+			for (PmDocument document : stdDocResDTO.getDocumentList()) {
+				stdDocNames.add(document.getDocName());
+			}
+		}
+		return stdDocNames;
+	}
+	//#41151 - End
+
 	/**
 	 * Technical checklist drop down action change.Event handle change Action
 	 * dropdown in Technical Checklist.
@@ -12163,6 +12192,21 @@ if (null != checklist && !checklist.isEmpty()) {
 	private void validatePrepareQtChecklist() {
 		System.out.println("inside prepare...");
 		try {
+			//#41151 - Start
+			Set<String> stdDocNames = standardFinancialChecklistNames();
+			List<ScQtCheckList> finProposalList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if (CollectionUtils.isNotEmpty(finProposalList)) {
+				for (ScQtCheckList finProposal : finProposalList) {
+					if (null == finProposal.getPmDocument()
+							&& null != finProposal.getTitle()
+							&& stdDocNames.contains(finProposal.getTitle())) {
+						throw new EpException(MessageConst.ERR_760833,
+								new String[] { finProposal.getTitle() });
+					}
+				}
+			}
+			//#41151 - End
 			System.out.println("before prepare...");
 			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -25299,6 +25343,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		
 		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
 			//null != publishDate && publishDate.before(effDate)
+			this.getManagedBean().setWeightage35384WIP(true);
+		} else if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) 
+						|| (createdDate.before(effTimestamp) && null != publishDate && publishDate.before(effDate))) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}

@@ -551,9 +551,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	private static boolean hasErrorMessage(){
+		String soft = AiDocParser.label("lbl.sm.ai.epf.mismatch");
 		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
 		while (it.hasNext()){
-			if (it.next().getSeverity() == FacesMessage.SEVERITY_ERROR){
+			FacesMessage msg = it.next();
+			if (msg.getSeverity() == FacesMessage.SEVERITY_ERROR
+					&& !StringUtils.equals(msg.getDetail(), soft)){
 				return true;
 			}
 		}
@@ -600,7 +603,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		Map<String, SmPersonnel> personnels = new HashMap<>();
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			personnels.put(per.getIdentificationNo(), per);
+			personnels.put(AiDocValidator.normalizeNric(per.getIdentificationNo()), per);
 		}
 		
 		//check for dupe IC
@@ -887,7 +890,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 		Map<String, SmPersonnel> byNric = new HashMap<>();
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			byNric.put(per.getIdentificationNo(), per);
+			byNric.put(AiDocValidator.normalizeNric(per.getIdentificationNo()), per);
 		}
 
 		String companyName = appl.getSmSupplier() != null ? appl.getSmSupplier().getCompanyName() : null;
@@ -935,14 +938,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			// the NRIC is what matched this employee to the personnel, so it is AI-verified on its
 			// own; nesting it under the name check let an edited name switch the IC icon off too
 			if (!edited.contains(AiUserEdit.F_IC)){
-				per.setIcAI(emp.getNricNumber());
+				per.setIcAI(per.getIdentificationNo());
 			}
 
 			String aiName = emp.getEmployeeName();
-			if (aiName != null && per.getName() != null
-					&& per.getName().trim().equalsIgnoreCase(aiName.trim())
+			// the OCR keeps the statement's own line breaks inside a name, so compare canonically
+			if (AiDocValidator.normalizedEquals(per.getName(), aiName)
 					&& !edited.contains(AiUserEdit.F_NAME)){
-				per.setNameAI(aiName);
+				per.setNameAI(per.getName());
 			}
 		}
 	}
@@ -979,7 +982,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		boolean changed = false;
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			String key = per.getIcAI() != null ? per.getIcAI() : per.getIdentificationNo();
+			String key = AiDocValidator.normalizeNric(
+					per.getIcAI() != null ? per.getIcAI() : per.getIdentificationNo());
 			if (!extracted.contains(key)){
 				continue;
 			}
@@ -1128,7 +1132,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		if (personnel.getIdentificationNo() != null
-				&& aiNrics.contains(personnel.getIdentificationNo().trim())){
+				&& aiNrics.contains(AiDocValidator.normalizeNric(personnel.getIdentificationNo()))){
 			return;
 		}
 		throw new EpException(SmCommonUtil.getMessage("lbl.sm.ai.epf.personnel.notexist", null));
@@ -1438,9 +1442,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				hasWrongCompanyName = true;
 			}
 		}
-		// a warning, not an error: the file's employees are dropped instead, so the rest stay submittable
 		if(hasWrongCompanyName){
-			addMessageOnce(FacesMessage.SEVERITY_WARN, "lbl.sm.ai.epf.mismatch");
+			addMessageOnce(FacesMessage.SEVERITY_ERROR, "lbl.sm.ai.epf.mismatch");
 		}
 	}
 	
