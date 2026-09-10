@@ -1944,6 +1944,23 @@ public class GovtSellerRegistrationBackingBean extends
 	}
 	//13320-End
 	
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getSmPersonnel().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getSmPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+
+	public void onChangeConfirmEmail() {
+		String email = this.getManagedBean().getConfirmEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().setConfirmEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	//#34400
 	public void onCallFirstUserTncDialog(){
 		getManagedBean().setAggreeDeclareAdmin(false);

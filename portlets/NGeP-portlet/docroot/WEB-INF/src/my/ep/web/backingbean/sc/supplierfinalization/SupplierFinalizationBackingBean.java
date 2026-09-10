@@ -6533,9 +6533,7 @@ public class SupplierFinalizationBackingBean extends
 		String selectionMode = null;
 		if (isQTRefinalized() || ParameterConst.RECOMMEND_BY_AWARD
 							.equals(finalizationMethod)) {
-			this.getManagedBean().setSingleAward(true);
-			
-			selectionMode = QTConstants.SF_SINGLE;
+			selectionMode = checkForSelectionMLOI(finalizationMethod);//#40396
 		} else if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(finalizationMethod)) {
 			setOnlineBiddingFlag();
@@ -12152,7 +12150,7 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		String committeeType = getManagedBean().getCommitteeType();
 
-		BigDecimal committeeThreshold = getThresholdFor(committeeType);
+		BigDecimal committeeThreshold = getThresholdForCommittee(committeeType);
 		if (committeeThreshold == null) {
 			return false;
 		}
@@ -12284,7 +12282,7 @@ public class SupplierFinalizationBackingBean extends
 	 *            committee type identifier
 	 * @return corresponding price threshold or {@code null} if unknown
 	 */
-	public static BigDecimal getThresholdFor(String committeeType) {
+	public static BigDecimal getThresholdForCommittee(String committeeType) {
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
@@ -12384,7 +12382,7 @@ public class SupplierFinalizationBackingBean extends
 
 		final boolean isItemize = getManagedBean().isItemize();
 		final String committeeType = getManagedBean().getCommitteeType();
-		final BigDecimal committeeThreshold = getThresholdFor(committeeType);
+		final BigDecimal committeeThreshold = getThresholdForCommittee(committeeType);
 
 		boolean exceed = isItemize ? checkItemizedOffersExceedThreshold(committeeThreshold)
 				: checkPackageOffersExceedThreshold(committeeThreshold);
@@ -12474,7 +12472,9 @@ public class SupplierFinalizationBackingBean extends
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByItem",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByItem",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -12515,7 +12515,9 @@ public class SupplierFinalizationBackingBean extends
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {	
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByPackage",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByPackage",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 
@@ -12787,6 +12789,18 @@ public class SupplierFinalizationBackingBean extends
 		} else {
 			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
 			this.getManagedBean().setSingleAward(true);
+		}
+	}
+	//#40396 - End
+	
+	//#40396 - Start
+	private String checkForSelectionMLOI(String finalizationMethodStr) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setMultipleLoi(true);
+			return QTConstants.SF_MULTIPLE;
+		} else {
+			this.getManagedBean().setSingleAward(true);
+			return QTConstants.SF_SINGLE;
 		}
 	}
 	//#40396 - End

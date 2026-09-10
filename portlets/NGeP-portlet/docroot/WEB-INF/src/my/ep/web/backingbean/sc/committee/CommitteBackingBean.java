@@ -144,6 +144,7 @@ public class CommitteBackingBean extends
 	// 35320 - START
 	/** The Constant NAV_TO_FINALIZATION_COMMITTEE_MAINTENANCE. */
 	private static final String NAV_TO_COMMITTEE_MAINTENANCE = "/xhtml/sc/committe/finalCommitteeMaintenance.xhtml";
+	private static final String NAV_TO_COMMITTEE_ADD_SCREEN = "xhtml/sc/committe/committeeMaintenanceAddScreen.xhtml";
 	// 35320 - END
 		
 	/** The Constant logger. */
@@ -1127,6 +1128,11 @@ public class CommitteBackingBean extends
 			} finally {
 				committeSO=null;
 			}
+			
+			//#35320 - START
+			this.getManagedBean().setViewCommitteePage(true);
+			//#35320 - END
+			
 			// showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
 		}
@@ -2599,7 +2605,7 @@ public class CommitteBackingBean extends
 	 * @return boolean isCommitteeRecordStatusActive
 	 */
 	public boolean isLatestCommitteeRecordStatusActive(TplCommittee committee) {
-		debugLogger("isLatestCommitteeRecordStatusActive");
+
 		if (null == committee) {
 			return false;
 		}
@@ -2782,7 +2788,6 @@ public class CommitteBackingBean extends
 	 * @return an array of SelectItem representing the available roles
 	 */
 	public SelectItem[] getRoleList() {
-		debugLogger("getRoleList");
 
 		SelectItem[] items = getDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
 
@@ -2806,7 +2811,6 @@ public class CommitteBackingBean extends
 	 *            the committee member whose role is being changed
 	 */
 	public void onRoleChange(TplCommMember committeemember) {
-		debugLogger("onRoleChange");
 
 		Long selectedRoleId = committeemember.getMemberRole().getParameterId();
 		PmParameter selectedRole = ParameterHelper.getInstance().getPmParameterById(selectedRoleId);
@@ -2815,7 +2819,7 @@ public class CommitteBackingBean extends
 			committeemember.setMemberRole(selectedRole);
 		}
 
-		if (null != selectedRole && (!"Member".equalsIgnoreCase(selectedRole.getParameterCode()))) {
+		if (null != selectedRole && (!SourcingConstants.MEMBER.equalsIgnoreCase(selectedRole.getParameterCode()))) {
 			committeemember.setRepresentativeTypeId(null);
 		}
 	}
@@ -2830,7 +2834,7 @@ public class CommitteBackingBean extends
 	 *             if no user is selected or if duplicate members are found.
 	 */
 	public void okFinalizeCommitteeAction() {
-		debugLogger("okFinalizeCommitteeAction");
+
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 
 		TplCommittee tplCommittee = this.getManagedBean().getTplCommittee();
@@ -2919,9 +2923,9 @@ public class CommitteBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		if (StringUtils.isBlank(user)) {
-			addFacesMessage(fc, MessageConst.ERROR_760450, null);
+			addFacesMessage(fc, MessageConst.ERROR_760802, null);
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "xhtml/sc/committe/committeeMaintenanceAddScreen.xhtml");
+					.handleNavigation(fc, null, NAV_TO_COMMITTEE_ADD_SCREEN);
 
 		} else {
 			searchUserAction();
@@ -3069,9 +3073,9 @@ public class CommitteBackingBean extends
 		for (PmUserOrg pmUserOrg : userOrgs) {
 			PmOrgProfile pmOrgProfile = pmUserOrg.getPmOrgProfile();
 
-			if (pmOrgProfile != null && pmOrgProfile.getParentOrgProfile() != null)
+			if (pmOrgProfile != null && pmOrgProfile.getParentOrgProfile() != null) {
 				minstryProfiles.add(pmOrgProfile.getParentOrgProfile().getParentOrgProfile());
-
+			}
 		}
 		iUserSO = null;
 		getManagedBean().setMinstryList(minstryProfiles);
@@ -3085,8 +3089,8 @@ public class CommitteBackingBean extends
 	 *
 	 * @param titleName the title name
 	 */
-	public void addTplCommitteMember(String titleName) {
-		debugLogger("addTplCommitteMember");
+	public void addTplCommitteeMember(String titleName) {
+
 		IPagingDataModel<PmUser> userSearhQCDataModel = getManagedBean().getUserSearchQCDataModel();
 		if (userSearhQCDataModel == null) {
 			this.getManagedBean().setUserSearchQCDataModel(
@@ -3161,8 +3165,10 @@ public class CommitteBackingBean extends
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
 
-				mofReqDTO.setOrgName(ParameterConst.KEMENTERIAN_KEWANGAN_MALAYSIA);
-				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByName(mofReqDTO);
+				//#35320 - Start
+				mofReqDTO.setOrgCode(ParameterConst.MOF_ORG_CODE);
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				//#35320 - End
 				reqDTO.setPmOrgProfile(mofResDTO.getPmOrgProfile());
 			} else {
 				PmOrgProfile pmOrgProfile = getManagedBean().getMinstryList().get(0);
@@ -3293,6 +3299,15 @@ public class CommitteBackingBean extends
 								new FacesScopes().getUserLocale())));
 				return NAV_TO_COMMITTEE_MAINTENANCE;
 			}
+		} catch(EpException epx) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							epx.getMessage(), epx.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} catch(Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
+					"CommitteBackingBean.updateTplCommitteDetails", null, ex);
 		} finally {
 			committeSo = null;
 		}
@@ -3355,12 +3370,12 @@ public class CommitteBackingBean extends
 	
 	// #35320 - START
 	private String getTplCommitteeRoleCode(){
-		return getTplCommitteMemberByUserId().getRoleCode();
+		return getTplCommitteeMemberByUserId().getRoleCode();
 	}
 	// #35320 - END
 	
 	// #35320 - START
-	private CommitteResDTO getTplCommitteMemberByUserId() {
+	private CommitteResDTO getTplCommitteeMemberByUserId() {
 		
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();	
@@ -3406,6 +3421,7 @@ public class CommitteBackingBean extends
 		for (TplCommMember commMember : scCommMember) {
 			if (commMember.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				hasChairperson = true;
+				break;
 			}
 		}
 		return hasChairperson;
