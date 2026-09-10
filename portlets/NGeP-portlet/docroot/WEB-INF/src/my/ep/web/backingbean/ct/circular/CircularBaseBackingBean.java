@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.ct.circular;
 
 
+import java.util.Collections;//34442
 import java.util.HashMap;//34442
 import java.util.Map;//34442
 
@@ -36,7 +37,9 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	public static Logger log = EpLogger.getLogger(CircularBaseBackingBean.class);
 	
 	private PmOrgProfile ownerOrgProfile;
-
+	
+	private static final Map<Long, String> CONFIRMATION_MSGS = buildConfirmationMsgs(); // #34442
+	
 	/**
 	 * This method used to initiate FacesScopes
 	 * instances of current request
@@ -67,17 +70,17 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
-		CircularBackingBean circularBB = new CircularBackingBean();
 		Long orgProfileId = null;
-		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-		if (userResDTO != null && userResDTO.isSuccessful() && userResDTO.getUserOrgList() != null) {
-			for (PmUserOrg orgProfile : userResDTO.getUserOrgList()) {
-				if (orgProfile != null && orgProfile.getPmOrgProfile() != null) {
-					orgProfileId = orgProfile.getPmOrgProfile().getOrgProfileId();
-					circularBB.getManagedBean().setUserPTJProfile(orgProfileId);
-					setOwnerOrgProfile(orgProfile.getPmOrgProfile());
-					break;
+		if (getFacesScopes().getUserSessionBean().getUserId() != null) {
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			if (userResDTO != null && userResDTO.isSuccessful() && userResDTO.getUserOrgList() != null) {
+				for (PmUserOrg orgProfile : userResDTO.getUserOrgList()) {
+					if (orgProfile != null && orgProfile.getPmOrgProfile() != null) {
+						orgProfileId = orgProfile.getPmOrgProfile().getOrgProfileId();
+						setOwnerOrgProfile(orgProfile.getPmOrgProfile());
+						break;
+					}
 				}
 			}
 		}
@@ -132,22 +135,26 @@ public class CircularBaseBackingBean<T extends BaseManagedBean > extends BaseBac
 	 *         if no confirmation message is defined for the given status
 	 */
 	public String getConfirmationMsgs(Long key) {
-		final Map<Long, String> confirmationMsgs = new HashMap<>();
+		return CONFIRMATION_MSGS.get(key);
+	}
+	
+	private static Map<Long, String> buildConfirmationMsgs() {
+		Map<Long, String> confirmationMsgs = new HashMap<>();
 
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_APPROVAL, "lbl.ct.cq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_REVISION_APPROVAL, "lbl.ct.cq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL, "lbl.ct.cq.upd.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.cq.upd.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.CR_PENDING_APPROVAL, "lbl.ct.cq.cancel.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION_APPROVAL, "lbl.ct.cq.cancel.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_APPROVAL, "lbl.ct.pq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_REVISION_APPROVAL, "lbl.ct.pq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION, "lbl.ct.pq.cancel.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION_APPROVAL, "lbl.ct.pq.cancel.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.MQ_PENDING_APPROVAL, "lbl.ct.pq.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.MQ_PENDING_REVISION_APPROVAL, "lbl.ct.pq.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.MQ_PENDING_UPDATE_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.MQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
 
-		return confirmationMsgs.get(key);
+		return Collections.unmodifiableMap(confirmationMsgs);
 	}
 	//34442 - end
 

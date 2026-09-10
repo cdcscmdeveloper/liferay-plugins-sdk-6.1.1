@@ -144,6 +144,7 @@ import my.ep.persistence.entity.pm.map.PmPK7Mapping;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScAssignItemDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -828,6 +829,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param RequestNoteResDTO
 	 *            requestNoteResDTO
 	 */
+	@SuppressWarnings("null")
 	private void reloadRequestNoteForCodification(RequestNoteResDTO requestNoteResDTO) {
 		debugLogger("reloadRequestNoteForCodification");
 		ScRequestNote requestNote = null;
@@ -848,12 +850,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		//#26059 - Start
-		if(requestNoteResDTO.getAssignItemDtl()!=null){
-			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
-		}
-		
 		if(requestNoteResDTO.getQuote() !=null){
 			scQuote = requestNoteResDTO.getQuote();
+		}
+			
+		Map<Long, ScAssignItemDtl> assignItemDtlMap = new HashMap<>();
+		if (CollectionUtils.isNotEmpty(requestNoteDtlList)) {
+			List<Long> requestItemIds = new ArrayList<>();
+			
+			for (ScRequestNoteDtl dtl : requestNoteDtlList) {
+				if (dtl.getRequestItem() != null && dtl.getRequestItem().getRequestNoteItemId() != null) {
+					requestItemIds.add(dtl.getRequestItem().getRequestNoteItemId());
+				}
+			}
+			
+			if (!requestItemIds.isEmpty()) {
+				assignItemDtlMap = getRequestNoteSO().fetchBulkAssignmentDetails(requestItemIds);
+			}
 		}
 		//#26059 - End
 
@@ -861,7 +874,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
 
 		getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));
-
+		
 		// CHECK VALIDITY PID
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		try {
@@ -897,7 +910,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//#26059 - Start
 					CommonUtils commonUtils = new CommonUtils();
 					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
-					compareItemName(requestItem,scQuote);
+					
+					ScAssignItemDtl cachedAssignDtl = assignItemDtlMap.get(requestItem.getRequestNoteItemId());
+					compareItemName(requestItem,scQuote,cachedAssignDtl);
 					//#26059 - End
 				}
 			}
@@ -930,6 +945,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		getManagedBean().setCounter(0);//#27868
+		getManagedBean().setCounterReason(0);//#27868
 		try {
 			if (getManagedBean().getPrInquiryId() != null) {
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
@@ -1142,8 +1159,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			RequestContext.getCurrentInstance().execute("cancelRN.show()");
 		} else if (outcome.equals(BpmOutcomeConst.BPM_REJECT)) {
 			RequestContext.getCurrentInstance().execute("rejectRN.show()");
-		} else {
-			submitAction(outcome);
+		} else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){ //#34449
+			constructConfirmationMessageSubmit(false); //#34449
+		}else {
+			constructReviseConfirmationMessage(outcome);
 		}
 	}
 
@@ -1165,9 +1184,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
 		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
-		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());				
-		    }
+		    validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
 		    validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
 					getManagedBean().getRequestSupplierItem());
 			// 27868 - end
@@ -1453,6 +1470,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ThresholdData thresholdData = new ThresholdData(); // #26059 , #27868
 		Map<Long, ThresholdDataReason> thresholdDataReasonMap = new HashMap<>();// #26059 , #27868
 		Map<String, BigDecimal> totalByExtensionCode = new HashMap<>();// ##27868
+		getManagedBean().setExceededAmountAlerted(Boolean.FALSE);// #26059 , #27868
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
@@ -1465,30 +1483,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Date createdDate = requestNote.getPmOrgProfile().getCreatedDate();
 			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
 			// #27868, #26059  - start
-			if (thresholdData.count > 0) {
-				// #27868 - start
+			if (thresholdData.count > 0 || hasThresholdDataReasonMap()) {
 				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-				triggerAlert(outcome, thresholdData, ptjName);
-				// #27868 - end
-			}
-			if (hasThresholdDataReasonMap()) {				
-				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-				triggerAlertOnReason(outcome, ptjName);				
+
+				if (thresholdData.count > 0) {
+					triggerAlert(outcome, thresholdData, ptjName);
+				}
+
+				if (hasThresholdDataReasonMap()) {
+					triggerAlertOnReason(outcome, ptjName);
+				}
+
 			}
 			// #27868, #26059  - end
 			else if (getManagedBean().getRequestNote() != null
 					&& getManagedBean().getRequestNote().getRequestNoteId() != null) { // #27868
 				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
-
-				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+				for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNote().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(null);
 					scRequestNoteDtl.setBpkThresholdDecision(null);
 				}
-
-				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
 			}
 			// #26059 - end
 		}
@@ -1699,12 +1713,170 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNoteDtls(updateScRequestNoteDtlList);
 		try {
 			requestNoteSO.updateRequestNoteDetail(requestNoteReqDTO);
+			
+			RequestNoteReqDTO scRequestNoteReqDTO = new RequestNoteReqDTO();
+			scRequestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(scRequestNoteReqDTO);
+
+			List<ScRequestNoteDtl> tempList = getManagedBean().getRequestNote().getRequestNoteDtls();
+			List<ScRequestNoteDtl> dbList = requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls();
+			List<ScRequestNoteDtl> mergeList = mergeRequestNoteDtl(dbList,tempList);
+
+			getManagedBean().getRequestNote().getRequestNoteDtls().clear();
+			getManagedBean().getRequestNote().getRequestNoteDtls().addAll(mergeList);
+			
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean", getManagedBean().getRequestNote().getRequestNoteNo(),
 					"updateScRequestNoteDtl", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
+	
+	/**
+	 * Merge DB and temp lists by PK.
+	 *
+	 * @param dbList existing DB records
+	 * @param tempList managed bean records
+	 * @return merged list with updates and new items
+	 */
+	public List<ScRequestNoteDtl> mergeRequestNoteDtl(List<ScRequestNoteDtl> dbList, List<ScRequestNoteDtl> tempList) {
+
+		if (dbList == null)
+			return tempList;
+		if (tempList == null || tempList.isEmpty())
+			return dbList;
+
+		List<ScRequestNoteDtl> result = new ArrayList<>(dbList.size() + tempList.size());
+		Map<Long, ScRequestNoteDtl> tempMap = new HashMap<>(tempList.size());
+		
+		mergeAndAppendRequestNoteDtl(dbList, tempList, result, tempMap);
+
+		return result;
+	}
+
+	/**
+	 * Merge DB list with temp list using PK mapping.
+	 *
+	 * @param dbList existing DB records
+	 * @param tempList managed bean records
+	 * @param result output merged list
+	 * @param tempMap temporary map for lookup
+	 */
+	private void mergeAndAppendRequestNoteDtl(List<ScRequestNoteDtl> dbList, List<ScRequestNoteDtl> tempList, List<ScRequestNoteDtl> result,
+			Map<Long, ScRequestNoteDtl> tempMap) {
+		// build map once
+		for (ScRequestNoteDtl temp : tempList) {
+			Long id = temp.getRequestNoteDtlId();
+			if (id != null) {
+				tempMap.put(id, temp);
+			}
+		}
+
+		// merge
+		for (ScRequestNoteDtl db : dbList) {
+
+			Long pk = db.getRequestNoteDtlId();
+
+			if (pk != null) {
+				ScRequestNoteDtl temp = tempMap.remove(pk);
+
+				if (temp != null) {
+					copyChangedFields(db, temp);
+				}
+			}
+
+			result.add(db);
+		}
+
+		// add remaining temp (new records + null PK)
+		for (ScRequestNoteDtl temp : tempList) {
+			if (temp.getRequestNoteDtlId() == null || tempMap.containsKey(temp.getRequestNoteDtlId())) {
+				result.add(temp);
+			}
+		}
+	}
+
+	/**
+	 * Copy non-null and changed values.
+	 *
+	 * @param target DB entity
+	 * @param source managed bean entity
+	 */
+	private void copyChangedFields(ScRequestNoteDtl target, ScRequestNoteDtl source) {
+
+		if (target == null || source == null)
+			return;
+		if (source.getScRequestSupplierItem() != null
+				&& (target.getScRequestSupplierItem() == null || !target.getScRequestSupplierItem().equals(
+						source.getScRequestSupplierItem()))) {
+			target.setScRequestSupplierItem(source.getScRequestSupplierItem());
+		}
+		if (source.getRequestItem() != null
+				&& (target.getRequestItem() == null || !target.getRequestItem().equals(source.getRequestItem()))) {
+			target.setRequestItem(source.getRequestItem());
+		}
+		if (source.getFulfilmentType() != null
+				&& (target.getFulfilmentType() == null || !target.getFulfilmentType()
+						.equals(source.getFulfilmentType()))) {
+			target.setFulfilmentType(source.getFulfilmentType());
+		}
+		if (source.getPriceType() != null
+				&& (target.getPriceType() == null || !target.getPriceType().equals(source.getPriceType()))) {
+			target.setPriceType(source.getPriceType());
+		}
+		if (source.getAssignedUser() != null
+				&& (target.getAssignedUser() == null || !target.getAssignedUser().equals(source.getAssignedUser()))) {
+			target.setAssignedUser(source.getAssignedUser());
+		}
+		if (source.getDeliverTerm() != null
+				&& (target.getDeliverTerm() == null || !target.getDeliverTerm().equals(source.getDeliverTerm()))) {
+			target.setDeliverTerm(source.getDeliverTerm());
+		}
+		if (source.getvCmSupplierItem() != null
+				&& (target.getvCmSupplierItem() == null || !target.getvCmSupplierItem().equals(
+						source.getvCmSupplierItem()))) {
+			target.setvCmSupplierItem(source.getvCmSupplierItem());
+		}
+		if (source.getPriceTypeId() != null
+				&& (target.getPriceTypeId() == null || !target.getPriceTypeId().equals(source.getPriceTypeId()))) {
+			target.setPriceTypeId(source.getPriceTypeId());
+		}
+		if (source.getProcTypeCategoryId() != null
+				&& (target.getProcTypeCategoryId() == null || !target.getProcTypeCategoryId().equals(
+						source.getProcTypeCategoryId()))) {
+			target.setProcTypeCategoryId(source.getProcTypeCategoryId());
+		}
+		if (source.getConditionField() != null
+				&& (target.getConditionField() == null || !target.getConditionField()
+						.equals(source.getConditionField()))) {
+			target.setConditionField(source.getConditionField());
+		}
+		if (source.getPiRequestSupplierItem() != null
+				&& (target.getPiRequestSupplierItem() == null || !target.getPiRequestSupplierItem().equals(
+						source.getPiRequestSupplierItem()))) {
+			target.setPiRequestSupplierItem(source.getPiRequestSupplierItem());
+		}
+		if (source.getTotalPricePerItem() != null
+				&& (target.getTotalPricePerItem() == null || !target.getTotalPricePerItem().equals(
+						source.getTotalPricePerItem()))) {
+			target.setTotalPricePerItem(source.getTotalPricePerItem());
+		}
+		if (source.getTotalPricePerItemRounded() != null
+				&& (target.getTotalPricePerItemRounded() == null || !target.getTotalPricePerItemRounded().equals(
+						source.getTotalPricePerItemRounded()))) {
+			target.setTotalPricePerItemRounded(source.getTotalPricePerItemRounded());
+		}
+		if (target.isShowPurchaseInquiry() != source.isShowPurchaseInquiry()) {
+			target.setShowPurchaseInquiry(source.isShowPurchaseInquiry());
+		}
+		if (target.isProdAndServiceFlag() != source.isProdAndServiceFlag()) {
+			target.setProdAndServiceFlag(source.isProdAndServiceFlag());
+		}
+		if (target.isReRecommend() != source.isReRecommend()) {
+			target.setReRecommend(source.isReRecommend());
+		}
+	}
+
 	/**
 	 * Checks if any detail in the list has a BPK threshold decision.
 	 * @param scRequestNoteDtlList List of request note details.
@@ -7325,7 +7497,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				group.setAccumulativeAmountPerItemGroup(totalAmt);
 				
@@ -7725,7 +7897,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				flReqDTO.setYear(cal.get(Calendar.YEAR));
 				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
 
@@ -7911,7 +8083,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 				// changes to calculate per ptj per item per year
 				// using 8 digit
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
 				
@@ -8388,10 +8560,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
 		for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
 			if (null != rnDtl.getJustificationType() && null != rnDtl.getJustificationType().getReasonId()) {
-				PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-						.getReasonId());
+				PmReason reason = retrieveReasonDtlById(rnDtl.getJustificationType().getReasonId());
 
-				if (reason != null && !reason.isRecordStatus()) {
+				if (reason == null) {
+					continue;
+				}
+				
+				boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
+				if (!reasonStatus) {
 					throw new EpException(MessageConst.ERROR_760718, new String[] {
 							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
 									.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
@@ -8399,6 +8575,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			}
 		}
+	}
+	
+	/**
+	 * Retrieves the PK7 reason status by reason ID.
+	 *
+	 * @param reasonId
+	 *            the reason ID
+	 * @return true if the reason is active, otherwise false
+	 */
+	private boolean retrievePK7ReasonStatus(Long reasonId) {
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		return reqSO.getPK7ReasonStatus(reasonId);
 	}
 	
 	/**
@@ -8717,10 +8906,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			return false;
 		}
 
-		if (getManagedBean().isExistInAssignItemDetail()) {
-			return true;
-		}
-
 		ScRequestItem item = requestNoteDtl.getRequestItem();
 		CmItem cmItem = item.getCmItem();
 		return isValidExtensionLength(cmItem.getExtensionCode());
@@ -8766,14 +8951,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * 
 	 * @param requestItem
 	 *            the request item containing the CmItem to compare and update
+	 * @param scQuote
+	 * @param assignItemDtl
+	 *        
 	 */
-	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote) {
+	public void compareItemName(ScRequestItem requestItem , ScQuote scQuote , ScAssignItemDtl assignItemDtl) {
 		if (requestItem == null || requestItem.getCmItem() == null) {
 			return;
 		}
 
-		if (getManagedBean().isExistInAssignItemDetail()) {
-			return;
+		if(assignItemDtl !=null){
+			if(requestItem.getRequestNoteItemId().equals(assignItemDtl.getScRequestItem().getRequestNoteItemId())){
+				return;
+			}
 		}
 		
 		if(scQuote !=null && scQuote.isPanel() && DbValueConst.ITEM_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId()) && requestItem.getCmItem() !=null){
@@ -8921,5 +9111,72 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    }
 
 	    return false; 
-	}		 
+	}
+
+	// 41034 - start
+	/**
+	 * Sorts Request Note remarks in descending order by created date (latest
+	 * first).
+	 * 
+	 * @return
+	 */
+	public List<ScRequestNoteRemark> getSortedRequestNoteRemarksByDate() {
+		// Null check for request note
+		if (getManagedBean().getRequestNote() == null) {
+			return Collections.emptyList();
+		}
+
+		List<ScRequestNoteRemark> remarks = getManagedBean().getRequestNote().getRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScRequestNoteRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScRequestNoteRemark>() {
+			@Override
+			public int compare(ScRequestNoteRemark r1, ScRequestNoteRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+		return sortedList;
+	}
+	// 41034 - end
+	
+	//34449 - start
+	
+	/**
+	 * Prepares the submit action based on whether the task ID is empty
+	 * and opens the submit confirmation dialog.
+	 *
+	 * @param isTaskIdEmpty true if the task ID is empty; false otherwise
+	 */
+	public void constructConfirmationMessageSubmit(boolean isTaskIdEmpty ){
+		
+		if (isTaskIdEmpty){
+			getManagedBean().setAssignMethod("requestNoteBackingBean.submitAction('')");
+		}else{
+			getManagedBean().setAssignMethod("requestNoteBackingBean.submitAction('SUBMIT')");
+		}
+		
+		RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+	}
+	
+	/**
+	 * Construct Revise and Approve dialog message
+	 * @param outcome
+	 */
+	public void constructReviseConfirmationMessage (String outcome) {
+		
+		if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+			RequestContext.getCurrentInstance().execute("approveDlg.show()");
+			getManagedBean().setApproveMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		} else {
+			RequestContext.getCurrentInstance().execute("reviseDlg.show()");
+			getManagedBean().setReviseMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		}
+		
+	}
+	//34449 - end
 }

@@ -93,11 +93,12 @@
 						<ui:fragment rendered="#{bpmAction ne '~'}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-                            <ui:remove><!-- #29732 add disable--></ui:remove>                      
+                            <ui:remove><!-- #29732 add disable--></ui:remove>  
+							<ui:remove>#10141 Added disableButtonForInactiveChecklist Vinod</ui:remove>                    
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" style="float:right;"
-								disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"						
+								disabled ="#{(specificationBackingBean.managedBean.disableButtonForInactiveChecklist or specificationBackingBean.managedBean.checkUserCanRevise) and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"						
 								action="#{specificationBackingBean.specCommitteMaintenanceBpmTask(bpmAction)}" />
 								
 						</ui:fragment>
@@ -254,13 +255,13 @@
 					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" partialSubmit="true"
 					process="@form" update="@form"
-					action="#{specificationBackingBean.specCommitteBpmTask(bpAction)}" />
+					action="#{specificationBackingBean.submitAction(bpAction)}" />
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
 					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" partialSubmit="true"
 					process="@form" update="@form"
-					action="#{specificationBackingBean.submitSpecMaintenanceDtls('Submit')}" />
+					action="#{specificationBackingBean.okActionForSpecMaintenance('Submit')}" />
 			</div>
 		</p:dialog>
 		<ui:remove> #10141 End Vinod </ui:remove>
