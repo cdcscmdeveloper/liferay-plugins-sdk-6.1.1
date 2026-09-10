@@ -49,6 +49,14 @@ public class ActionPopupMessageKeys {
      // ===== APPROVELOA =====
         TITLE_KEYS.put("APPROVELOA", "lbl.sc.popup.confirm.loa.approve.header");
         CONTENT_KEYS.put("APPROVELOA", "lbl.sc.popup.confirm.loa.approve.content");
+        
+     // ===== SUBMISSIONLOA =====
+        TITLE_KEYS.put("SUBMISSIONLOI", "lbl.sc.popup.confirm.loi.submission.header");
+        CONTENT_KEYS.put("SUBMISSIONLOI", "lbl.sc.popup.confirm.loi.submission.content");
+        
+     // ===== APPROVELOI =====
+        TITLE_KEYS.put("APPROVELOI", "lbl.sc.popup.confirm.loi.approve.header");
+        CONTENT_KEYS.put("APPROVELOI", "lbl.sc.popup.confirm.loi.approve.content");
     }
     
     /**

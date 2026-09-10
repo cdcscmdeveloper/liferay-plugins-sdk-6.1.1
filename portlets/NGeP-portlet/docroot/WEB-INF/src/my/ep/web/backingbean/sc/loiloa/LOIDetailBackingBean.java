@@ -469,8 +469,9 @@ public class LOIDetailBackingBean extends
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale());
 		getManagedBean().setLoiSupplierProposalspec(message);
-					ScLoi scLoi = getManagedBean().getScLoi();
-					Long statusId =scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+					Long statusId = 62707L;
+					ScLoi scLoi = getManagedBean().getScLoi();  //62707L
+					 statusId =scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		isSupplierEPVStatusRejected(scLoi);// #21692
 		getSupplierRejectProposalValidityExtensionNotification(scLoi);// #21692
 		
@@ -2964,7 +2965,7 @@ public class LOIDetailBackingBean extends
 	 *            the digi sign
 	 * @return AwardSupplierResDTO
 	 */
-	private AwardSupplierResDTO updateBPMTask(String outcome,
+	public AwardSupplierResDTO updateBPMTask(String outcome,
 			PmDigiSign digiSign) {
 		debugLogger("updateBPMTask");
 		AwardSupplierResDTO awardSupplierResDTO = null;
@@ -3121,10 +3122,10 @@ public class LOIDetailBackingBean extends
 						scLoi.getLoiNo(), Boolean.TRUE);
 				}
 			}
+			return awardSupplierResDTO;
 		} finally {
 			// iqtAwardSO = null;
 		}
-		return awardSupplierResDTO;
 	}
 	
 	/**
@@ -3192,6 +3193,13 @@ public class LOIDetailBackingBean extends
 			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 		} else {
+			//#34444 - Start
+			//getManagedBean().setBtnAction("SUBMISSIONLOI");
+			//getManagedBean().prepareAction("SUBMISSIONLOI");
+//			getManagedBean().setAction(outcome);
+//			RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show();");
+			//RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+			//#34444 - End
 			updateBPMTask(outcome, null);
 		}
 	}
@@ -7832,6 +7840,7 @@ public class LOIDetailBackingBean extends
 			ScLoi scLoi = getManagedBean().getScLoi();
 			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
 			String bpmAction = outcome;
+			this.getManagedBean().setAction(outcome);
 
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				String decision = this.getManagedBean().getDecisionCode();

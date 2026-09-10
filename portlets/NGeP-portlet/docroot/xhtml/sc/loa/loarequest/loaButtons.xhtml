@@ -45,7 +45,7 @@
 					value="#{lOADetailBackingBean.submitConformationForLampiranA3()}" />
 					<ui:remove>#34444 END</ui:remove>
 				<p:commandButton
-					value="#{lbl['lbl.btn.submit']} **%##SUBMIT>##test9970-N"
+					value="#{lbl['lbl.btn.submit']} +SUBMIT_test9970-N"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
 					process="@form"
 					action="#{lOADetailBackingBean.constructSubmitDialogMesssageLoa()}"
@@ -392,6 +392,6 @@
 		okAction="#{popupMsgActionBtn}"
 		title="#{lOADetailBackingBean.managedBean.confirmTitle}"
 		content="#{lOADetailBackingBean.managedBean.confirmContent}"
-		update="@all" okProcess="@this"/>
+		update="@form" okProcess="@form"/>
 	<ui:remove>#34444 End Ann</ui:remove>
 </ui:composition>

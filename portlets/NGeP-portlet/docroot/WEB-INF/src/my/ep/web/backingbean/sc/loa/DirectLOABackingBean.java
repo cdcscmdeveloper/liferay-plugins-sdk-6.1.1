@@ -5820,6 +5820,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setAction(outcome);
 				getManagedBean().setBtnAction("SUBMISSIONLOA");
 				RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
+				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 				//34444 END
 				
 				// #29007 End Vinod
