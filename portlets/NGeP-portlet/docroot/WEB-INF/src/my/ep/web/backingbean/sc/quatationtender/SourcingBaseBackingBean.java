@@ -8949,6 +8949,38 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// #25651 - End
 	
+	// #25651 - Start
+	public void addDocumentDetailList(ScQt scqt) {
+	
+		List<ScQtFinalizationReportDetail> newBPReportDetailList = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+		if (newBPReportDetailList == null) {
+			newBPReportDetailList = new ArrayList<>();
+		}
+		ScQtFinalizationReportDetail report = new ScQtFinalizationReportDetail();
+		report.setDocCategory(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+		ScQtFinalization scQtFinalization = scqt.getFinalization();
+		if (scQtFinalization == null) {
+			scQtFinalization = new ScQtFinalization();
+		}
+		report.setScQtFinalization(scQtFinalization);
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			report.setDefinationType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+		newBPReportDetailList.add(report);
+	}
+	// #25651 - End
+	
 	// #28188 - Start
 	/**
 	 * Group and sort briefingsitevist details.
