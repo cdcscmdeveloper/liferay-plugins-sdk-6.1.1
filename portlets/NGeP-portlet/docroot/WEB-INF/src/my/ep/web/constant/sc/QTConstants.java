@@ -446,18 +446,6 @@ public interface QTConstants {
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE = "FNE";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_CH = "CH";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_SD = "SD";
-	public static final String[] TECHNICAL_CHECKLIST_SELECT_LIST = new String[]{
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_NE
-	};
-	public static final String[] FINANCIAL_CHECKLIST_SELECT_LIST = new String[]{
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE
-	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
 	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 30px;\"></span></div>";
 	public static final String SPAN_ERROR_CONTENT_OPEN = "<div><span style=\"position: relative;right: 30px;\">";
