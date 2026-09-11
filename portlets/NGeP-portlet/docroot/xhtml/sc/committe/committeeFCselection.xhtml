@@ -18,10 +18,12 @@
 			<!-- #35320 - end : add condition -->
 			
 		</div>
+		<ui:remove>#37809 Start Vinod Added Sorting</ui:remove>
 		<p:dataTable id="fcMembersId" rowKey="#{committeemember}"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
+			value="#{committeBackingBean.sortScCommitteeMembers(committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers)}"
 			var="committeemember" rowIndexVar="index" editable="true" rows="10">
+			<ui:remove>#37809 End Vinod</ui:remove>
 
 		<!-- 	<p:ajax event="rowSelect"
 				listener="#{committeBackingBean.selectMemberEvent}"
@@ -45,6 +47,12 @@
 			</p:column>
 
 			<ac:paginator for="fcMembersId" />
+			
+			<ui:remove>#37809 Start Vinod</ui:remove>
+			<p:column style="width:2%">
+				<h:outputText value="#{index+1}" />
+			</p:column>
+			<ui:remove>#37809 End Vinod</ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{committeemember.memberName}" style="white-space: normal;" />
@@ -115,6 +123,12 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 		
+			<ui:remove>#37809 Start Vinod</ui:remove>
+			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" 
+				rendered="#{committeBackingBean.managedBean.viewCommitteePage and committeBackingBean.managedBean.updateFCChairperson}"
+				styleClass="BtnSpacing" onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{committeBackingBean.navigateToUpdateMember('update')}" />
+			<ui:remove>#37809 End Vinod</ui:remove>
 			<!-- #35320 - start : add condition -->
 			<p:commandButton id="quotationcommitteeadd" styleClass="BtnSpacing"
 				value="#{lbl['lbl.btn.add']}" process="@this"

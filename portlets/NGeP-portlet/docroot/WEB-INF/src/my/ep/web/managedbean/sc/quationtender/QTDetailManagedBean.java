@@ -1946,6 +1946,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #33787 Start Vinod
 	private boolean minPaidUpCapitalWIP;
 	// #33787 End Vinod
+	// #37809 Start Vinod
+	/** The user search committee data model. */
+	private IPagingDataModel<PmUser> userSearchFcSecretaryDataModel;
+	private boolean fcSecretarySelected;
+	private PmUser fcSecretaryUser;
+	private PmUser selectedFcSecretaryUser;
+	private boolean disableFinalizationCommittee;
+	private boolean ministryNotNegeri;
+	// #37809 End Vinod
 
 	//28895 - 35500 start
 	/** The newly added sc qt committee */
@@ -12568,6 +12577,56 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.deleteZonesTreeNodes = deleteZonesTreeNodes;
 	}
 	//37851 --  End
+	// #37809 Start Vinod
+	public boolean isFcSecretarySelected() {
+		return fcSecretarySelected;
+	}
+
+	public void setFcSecretarySelected(boolean fcSecretarySelected) {
+		this.fcSecretarySelected = fcSecretarySelected;
+	}
+
+	public IPagingDataModel<PmUser> getUserSearchFcSecretaryDataModel() {
+		return userSearchFcSecretaryDataModel;
+	}
+
+	public void setUserSearchFcSecretaryDataModel(IPagingDataModel<PmUser> userSearchFcSecretaryDataModel) {
+		this.userSearchFcSecretaryDataModel = userSearchFcSecretaryDataModel;
+	}
+
+	public PmUser getFcSecretaryUser() {
+		return fcSecretaryUser;
+	}
+
+	public void setFcSecretaryUser(PmUser fcSecretaryUser) {
+		this.fcSecretaryUser = fcSecretaryUser;
+	}
+
+	public PmUser getSelectedFcSecretaryUser() {
+		return selectedFcSecretaryUser;
+	}
+
+	public void setSelectedFcSecretaryUser(PmUser selectedFcSecretaryUser) {
+		this.selectedFcSecretaryUser = selectedFcSecretaryUser;
+	}
+
+	public boolean isDisableFinalizationCommittee() {
+		return disableFinalizationCommittee;
+	}
+
+	public void setDisableFinalizationCommittee(boolean disableFinalizationCommittee) {
+		this.disableFinalizationCommittee = disableFinalizationCommittee;
+	}
+	
+	public boolean isMinistryNotNegeri() {
+		return ministryNotNegeri;
+	}
+
+	public void setMinistryNotNegeri(boolean ministryNotNegeri) {
+		this.ministryNotNegeri = ministryNotNegeri;
+	}
+	
+	// #37809 End Vinod
 
 	//#38107 - Start
 	public boolean isReseteGPACurrentArea() {

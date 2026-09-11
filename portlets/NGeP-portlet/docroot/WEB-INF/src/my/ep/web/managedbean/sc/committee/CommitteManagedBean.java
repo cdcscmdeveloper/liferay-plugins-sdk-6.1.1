@@ -296,6 +296,12 @@ public class CommitteManagedBean extends BaseManagedBean {
 	/** The to be del tpl committe members. */
 	private List<TplCommMember> toBeDelTplCommitteMembers;
 	//35320 - END
+	// #37809 Start Vinod
+	/** The role code for search. */
+	private String roleCode;
+	private boolean updateFCChairperson;
+	private boolean enableUpdateButton;
+	// #37809 End Vinod
 	
 	
 	
@@ -1596,4 +1602,30 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.toBeDelTplCommitteMembers = toBeDelTplCommitteMembers;
 	}
 	//#35320 - END
+	// #37809 Start Vinod
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
+
+	public boolean isUpdateFCChairperson() {
+		return updateFCChairperson;
+	}
+
+	public void setUpdateFCChairperson(boolean updateFCChairperson) {
+		this.updateFCChairperson = updateFCChairperson;
+	}
+
+	public boolean isEnableUpdateButton() {
+		return enableUpdateButton;
+	}
+
+	public void setEnableUpdateButton(boolean enableUpdateButton) {
+		this.enableUpdateButton = enableUpdateButton;
+	}
+	
+	// #37809 End Vinod
 }

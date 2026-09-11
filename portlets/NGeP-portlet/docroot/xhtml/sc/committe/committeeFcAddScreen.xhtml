@@ -13,12 +13,108 @@
 		<p:messages id="committeemessagesid" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false"
 			severity="error, info" />
+		<ui:remove>#37809 Start Vinod</ui:remove>
+		<p:blockUI block=":form:newProfile" widgetVar="blockWidgetPopup">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif" />
+		</p:blockUI>
+		<ui:remove>#37809 Start Vinod</ui:remove>
 		<h:panelGroup id="newProfile" style="width:100%;margin-top:10px;">
 			<c:if
 				test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 				<p:panel id="userTblid" header="#{lbl['lbl.btn.search']}"
 					toggleable="true">
 					<table style="width: 100%;">
+						<ui:remove>#37809 Start Vinod</ui:remove>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.role']}" /></td>
+							<td colspan="3"><p:selectOneRadio id="searchRoleId"
+									disabled="#{committeBackingBean.managedBean.updateFCChairperson}"
+									value="#{committeBackingBean.managedBean.committeeSearchBean.searchRoleId}">
+									<p:ajax onstart="blockWidgetPopup.show()"
+										update="userTblid userexistid"
+										listener="#{committeBackingBean.searchRoleChangeListener}" />
+									<p:ajax oncomplete="blockWidgetPopup.hide()" 
+										update="userTblid userexistid"
+										listener="#{committeBackingBean.resetCommitteeSearchBean(committeBackingBean.managedBean.qt)}" />
+									<f:selectItems
+										value="#{committeBackingBean.getRoleListForAdd()}" />
+								</p:selectOneRadio></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committee.add.member.search.org.cat']}" /></td>
+							<td colspan="3"><p:selectOneRadio id="orgCatRad"
+									value="#{committeBackingBean.managedBean.committeeSearchBean.orgCat}">
+									<p:ajax onstart="blockWidgetPopup.show()"
+										oncomplete="blockWidgetPopup.hide()"
+										update="userTblid userexistid"
+										listener="#{committeBackingBean.reset}" />
+									<f:selectItems
+										value="#{committeBackingBean.getOrgCatList()}" />
+								</p:selectOneRadio></td>
+						</tr>
+						<c:if
+							test="#{committeBackingBean.managedBean.committeeSearchBean.orgCat eq ParameterConst.orgCategoryPtj}">
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
+								<td><p:selectOneMenu id="ministryDD"
+										value="#{committeBackingBean.managedBean.committeeSearchBean.ministry}">
+										<p:ajax onstart="blockWidgetPopup.show()"
+											oncomplete="blockWidgetPopup.hide()" update="PtjGroupDD PtjDD"
+											listener="#{committeBackingBean.onChangeDD(ParameterConst.orgTypeMinistry)}" />
+										<f:selectItems
+											value="#{committeBackingBean.managedBean.ministryDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.ptj.group']}" /></td>
+								<td><p:selectOneMenu id="PtjGroupDD"
+										value="#{committeBackingBean.managedBean.committeeSearchBean.ptjGroup}">
+										<p:ajax onstart="blockWidgetPopup.show()"
+											oncomplete="blockWidgetPopup.hide()" update="PtjDD"
+											listener="#{committeBackingBean.onChangeDD(ParameterConst.orgTypePtjGroup)}" />
+										<f:selectItems
+											value="#{committeBackingBean.managedBean.ptjGroupDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.ptj']}" /></td>
+								<td><p:selectOneMenu id="PtjDD"
+										value="#{committeBackingBean.managedBean.committeeSearchBean.ptj}">
+										<f:selectItems
+											value="#{committeBackingBean.managedBean.ptjDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+						</c:if>
+						<c:if
+							test="#{committeBackingBean.managedBean.committeeSearchBean.orgCat eq ParameterConst.orgCategoryOthers}">
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.org.type']}" /></td>
+								<td><p:selectOneMenu id="orgTypeDD" required="true"
+										label="#{lbl['lbl.sc.committee.add.member.search.org.type']}"
+										value="#{committeBackingBean.managedBean.committeeSearchBean.orgType}">
+										<p:ajax onstart="blockWidgetPopup.show()"
+											oncomplete="blockWidgetPopup.hide()" update="orgNameDD"
+											listener="#{committeBackingBean.onChangeDD(ParameterTypeConst.organisationTypes)}" />
+										<f:selectItems
+											value="#{committeBackingBean.managedBean.orgTypeDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.org.name']}" /></td>
+								<td><p:selectOneMenu id="orgNameDD"
+										value="#{committeBackingBean.managedBean.committeeSearchBean.orgName}">
+										<f:selectItems
+											value="#{committeBackingBean.managedBean.orgNameDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+						</c:if>
+						<ui:remove>#37809 Start Vinod</ui:remove>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>

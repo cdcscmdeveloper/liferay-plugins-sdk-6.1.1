@@ -26,11 +26,13 @@
 			</tr>
 		</table>
 		<ui:fragment rendered="#{!showHistory}">
+		<ui:remove>#37809 Start Vinod Added Sorting</ui:remove>
 		<p:dataTable id="specificationcommitteeid" styleClass="clonetecid"
-			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
+			value="#{qTCommitteBackingBean.sortScCommitteeMembers(committe.scCommitteeMembers)}" var="specificationcommittee"
 			rowIndexVar="index" rowKey="#{specificationcommittee}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{selectedCommittee}">
+			<ui:remove>#37809 End Vinod</ui:remove>
            
 				
 					<p:column style="width:3px;text-align:center;" rendered="#{isEnablChkBoxes}">
@@ -45,6 +47,12 @@
 					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
+			
+			<ui:remove>#37809 Start Vinod</ui:remove>
+			<p:column style="width:2%">
+				<h:outputText value="#{index+1}" />
+			</p:column>
+			<ui:remove>#37809 End Vinod</ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 					<!-- #12471 Start -->

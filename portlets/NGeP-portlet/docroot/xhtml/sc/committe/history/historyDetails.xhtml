@@ -9,12 +9,20 @@
 	<h:panelGroup id="hisDtlPG">
 		<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
 			toggleable="true">
+			<ui:remove>#37809 Start Vinod Added Sorting</ui:remove>
 			<p:dataTable id="hisMembers" var="scCommitteeMember"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scCommitteeMembers}"
+				value="#{committeBackingBean.sortScCommitteeMembers(committeBackingBean.managedBean.selectedHistoryCommittee.scCommitteeMembers)}"
 				rowIndexVar="index">
+				<ui:remove>#37809 End Vinod</ui:remove>
 
 				<ac:paginator for="hisMembers" />
+				
+				<ui:remove>#37809 Start Vinod</ui:remove>
+				<p:column style="width:2%">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<ui:remove>#37809 End Vinod</ui:remove>
 
 				<p:column headerText="#{lbl['lbl.sc.name']}" style="width: 15%">
 					<h:outputText value="#{scCommitteeMember.memberName}"

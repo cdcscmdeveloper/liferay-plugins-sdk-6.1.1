@@ -197,15 +197,18 @@
 					<table>
 						<tr>
 							<td>
+								<ui:remove>#37809 Start Vinod Added onstart and oncomplete</ui:remove>
 								<p:selectOneRadio id="reason" layout="grid" columns="1" 
 										required="true" label="#{lbl['lbl.sc.reason']}"
 										value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}"
 										disabled="#{!isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen() or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
 									<f:selectItems value="#{suppFinalizationBackingBean.getReasonRadioBtn()}"/>
 									<p:ajax event="change" partialSubmit="true" process="@this" 
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 											listener="#{suppFinalizationBackingBean.changeReasonEvent}" 
 											update="@([id$=highAuthGrid])"/>
 								</p:selectOneRadio> 
+								<ui:remove>#37809 End Vinod</ui:remove>
 								
 								<p:message id="reasonMsg" for="reason" display="icon" />
 							</td>
@@ -224,38 +227,42 @@
 						styleClass="mandatory" />
 				</h:column>
 
-				<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
-					<p:selectOneMenu id="finalizationCommittee"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterId}"
-						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}"
+				<ui:remove>#37809 Start Vinod</ui:remove>
+				<ui:remove>Removed old dropdown fields and added new button changes</ui:remove>
+				<h:column id="finalizationCommittee" rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
+					<ui:include src="addHigherAuthoritySecretaryPopup.xhtml" /> 
+					<ui:include src="higherAuthoritySecretaryDetails.xhtml" />
+					<ac:confirmationPopup id="haSecretaryDeleteid"
+						widget="haSecretaryDeletePopUp" width="450" height="100"
+						okAction="suppFinalizationBackingBean.deleteHigherSecretary()"
+						title="#{lbl['lbl.txt.delete']}"
+						content="#{lbl['lbl.msg.confirm.delete']}" process="@this"
+						partialSubmit="true" update="@all" />
+					<ui:param name="isHASecEmpty" value="#{empty suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userName}" />
+					<p:commandButton id="haSecBtn"
+						value="#{lbl['lbl.sc.committee.finalization.add.secretary.name.btn']}"
+						rendered="#{isHASecEmpty}"
 						disabled="#{!isSecretaryUser or 
 										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId 
 										or suppFinalizationBackingBean.isQTMaintenanceScreen()
-										or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
-						<f:selectItems
-							value="#{suppFinalizationBackingBean.getFinalizationCommitteeDropDown()}" />
-						<p:ajax event="change" update="@([id$=committeeSecretary],[id$=reasonLabel],[id$=reason])" 
-							listener="#{suppFinalizationBackingBean.finalizationCommitteeEvent}"
-							process="@this" />
-					</p:selectOneMenu>
-					<p:selectOneMenu id="committeeSecretary"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId}"
-						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}" 
-						disabled="#{!isSecretaryUser or 
-										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId
+										or supplierFinalizationReadOnly}"
+						action="#{suppFinalizationBackingBean.addFinalizationSecretatyAction()}"
+						oncomplete="addHigherAuthority.show();" />
+					<p:commandLink id="haSecName"
+						rendered="#{!isHASecEmpty}"
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userName}"
+						onclick="haSecDetailsPopUp.show();" />
+					<p:commandLink  id="haSecDelBtn"
+						onclick="haSecretaryDeletePopUp.show();"
+						rendered="#{!isHASecEmpty and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" 
+						process="@this" partialSubmit="true"
+						update="@([id$=finalizationCommittee])"
+						disabled="#{!isSecretaryUser
 										or suppFinalizationBackingBean.isQTMaintenanceScreen()
-										or supplierFinalizationReadOnly}" 
-						rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}"><!-- 6906 note 117 -->
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems var="usersSecretary"
-							value="#{suppFinalizationBackingBean.retrieveCommitteeSecretary(
-											suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterCode)}"
-							itemLabel="#{usersSecretary.userName}" itemValue="#{usersSecretary.userId}" />
-					</p:selectOneMenu>
-					<p:message id="finalizationCommitteeMsg"
-							for="finalizationCommittee" display="icon" />
-					<p:message id="committeeSecretaryMsg" 
-							for="committeeSecretary" display="icon" />
+										or supplierFinalizationReadOnly}">
+			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 	</p:commandLink>
+				<ui:remove>#37809 End Vinod</ui:remove>
 				</h:column>
 				
 				<h:column rendered="#{suppFinalizationBackingBean.managedBean.forwardToBpk}">

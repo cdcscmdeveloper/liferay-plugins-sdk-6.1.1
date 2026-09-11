@@ -171,6 +171,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
@@ -180,10 +181,12 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -2332,6 +2335,14 @@ public class SupplierFinalizationBackingBean extends
 						navigateToSupplierFinalizationTab();
 						throw new EpException(MessageConst.ERROR_760385);
 					}
+					// #37809 Start Vinod
+					if(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
+							.equals(decisionTypeCode) && 
+							(scQtFinalization.getReason() != null || 
+								scQtFinalization.getReason().getReasonId() != null)){
+						validateHigherAuthority(scQtFinalization);
+					}
+					// #37809 End Vinod
 						// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
 					if (!this.getManagedBean().isInitialDecisionFwdToBPK()
 							&& this.getManagedBean().getScQt().isBpkFinalizationReq()
@@ -3567,6 +3578,15 @@ return	remarksNotFound;
 								navigateToSupplierFinalizationTab();
 								throw new EpException(MessageConst.ERROR_760385);
 							}
+							// #37809 Start Vinod
+							if(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
+									.equals(decisionTypeCode) && 
+									(scQtFinalization.getReason() != null || 
+										scQtFinalization.getReason().getReasonId() != null)){
+								validateHigherAuthority(scQtFinalization);
+							}
+							// #37809 End Vinod
+							
 							// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
 						if (!this.getManagedBean().isInitialDecisionFwdToBPK()
 								&& this.getManagedBean().getScQt().isBpkFinalizationReq()
@@ -6977,29 +6997,19 @@ return	remarksNotFound;
 		}
 		
 		SelectItem[] items = null;
-		if (CollectionUtils.isNotEmpty(
-				finalizationCommitteeList)) {
-			if (!finalizationCommitteeList.contains(
-					SourcingConstants.FC_COMMITTEE_TYPE_MOF)) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_IN.value(),
-								finalizationCommitteeList));
-				items = getDropdownValuesBySearchBean(
-							ParameterTypeConst.SC_COMMITTEE_TYPE, searchBean);
-			} else {
-				items = new SelectItem[2];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-								"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								(new FacesScopes()).getUserLocale()));					
-				items[1] = new SelectItem(SourcingConstants.FC_COMMITTEE_TYPE_MOF, SourcingConstants.FC_COMMITTEE_TYPE_MOF);
-			}
+		// #37809 Start Vinod
+		if (CollectionUtils.isNotEmpty(finalizationCommitteeList)
+				&& !finalizationCommitteeList.contains(SourcingConstants.FC_COMMITTEE_TYPE_MOF)) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+							finalizationCommitteeList));
+			SelectItem[] committeeTypes = getDropdownValuesBySearchBean(ParameterTypeConst.SC_COMMITTEE_TYPE, searchBean);
+			items = Arrays.copyOfRange(committeeTypes, 1, committeeTypes.length);
 		} else {
 			items = new SelectItem[1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-							"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							(new FacesScopes()).getUserLocale()));
+			items[0] = new SelectItem(SourcingConstants.FC_COMMITTEE_TYPE_MOF, SourcingConstants.FC_COMMITTEE_TYPE_MOF);
 		}
+		// #37809 End Vinod
 		
 		return items;
 	}
@@ -7187,6 +7197,12 @@ return	remarksNotFound;
 			scQtFinalization.setHigherSecretaryStr(null);
 		}
 		getManagedBean().setForwardToBpk(isForwardToBPK);
+		
+		// #37809 Start Vinod
+		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getCommitteeSearchBean() != null ? this
+				.getManagedBean().getCommitteeSearchBean() : new UserCommitteeSearchBean();
+		this.getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
+		// #37809 End Vinod
 	}	
 		
 	private String[] retrieveHigherCommittees(PmReason reason) {
@@ -14269,6 +14285,350 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return reasonDescs;
 	}
 	//#34860 End
+
+	// #37809 Start Vinod
+	public void addFinalizationSecretatyAction() {
+		ScQt scQt = getManagedBean().getScQt();
+		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getCommitteeSearchBean() != null ? this
+				.getManagedBean().getCommitteeSearchBean() : new UserCommitteeSearchBean();
+
+		SelectItem[] finalizationCommittees = getFinalizationCommitteeDropDown();
+		updateFinalizationCommittee(finalizationCommittees, null);
+		boolean isDoSBHorSWK = checkDeskOfficerSabhaOrSarawakWithCommitteeTypes(finalizationCommittees);
+		if (isDoSBHorSWK) {
+			userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_OTHERS);
+		} else {
+			userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
+		}
+
+		this.getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
+		updateFcSecretaryDataModel(this.getManagedBean().getCommitteeSearchBean());
+
+		resetCommitteeSearchBean(scQt);
+		removeSelectAllFromDD();
+		String tabTitle = getParameterDesc(scQt.getFinalizationCommitte());
+		getManagedBean().setTabTitle(tabTitle);
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	private void updateFcSecretaryDataModel(UserCommitteeSearchBean userCommitteeSearchBean) {
+		IPagingDataModel<PmUser> userSearchCommitteeDataModel = getManagedBean()
+				.getUserSearchHigherAuthoritySecretaryDataModel();
+
+		if (null == userSearchCommitteeDataModel) {
+			getManagedBean().setUserSearchHigherAuthoritySecretaryDataModel(
+					new UserSearchHigherAuthoritySecretaryDataModel(QTConstants.DATATABLE_EXISTINGCOMMITTEESEARCHID,
+							userCommitteeSearchBean));
+		}
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	private void updateFinalizationCommittee(SelectItem[] fcCommitteeTypes, Long finalizationCommitteeTypeId) {
+		boolean isDoSBHorSWK = checkDeskOfficerSabhaOrSarawakWithCommitteeTypes(fcCommitteeTypes);
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+
+		for (SelectItem item : fcCommitteeTypes) {
+			Long commTypeId = Long.valueOf(item.getValue().toString());
+
+			if ((commTypeId != null && finalizationCommitteeTypeId != null && commTypeId
+					.equals(finalizationCommitteeTypeId))
+					|| (commTypeId != null && finalizationCommitteeTypeId == null && !isDoSBHorSWK)) {
+				this.getManagedBean().getCommitteeSearchBean().setFinalizationCommitteeTypeId(commTypeId);
+				PmParameter higherCommitte = ParameterHelper.getInstance().getPmParameterById(commTypeId);
+				scQtFinalization.setHigherCommitte(higherCommitte);
+				break;
+			}
+		}
+
+		if (finalizationCommitteeTypeId == null) {
+			getManagedBean().setFinalizationSecratary(fcCommitteeTypes);
+		}
+
+		if (!isDoSBHorSWK) {
+			getManagedBean().setDisableFinalizationCommittee(true);
+		}
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	private boolean checkDeskOfficerSabhaOrSarawakWithCommitteeTypes(SelectItem[] fcCommitteeTypes) {
+		if (fcCommitteeTypes != null 
+				&& fcCommitteeTypes.length > 1) {
+			for (SelectItem item : fcCommitteeTypes) {
+				Long commTypeId = Long.valueOf(item.getValue().toString());
+				PmParameter commTypeCode = commTypeId != null ? ParameterHelper.getInstance().getPmParameterById(
+						commTypeId) : null;
+
+				if (commTypeCode != null
+						&& (StringUtils.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH,
+								commTypeCode.getParameterCode()) || StringUtils.equals(
+								ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK,
+								commTypeCode.getParameterCode()))) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	private void removeSelectAllFromDD() {
+		if (null == getManagedBean().getMinistryDDList() || null == getManagedBean().getPtjGroupDDList()
+				|| null == getManagedBean().getPtjDDList()) {
+			return;
+		}
+		SelectItem[] ministryDD = Arrays.copyOfRange(getManagedBean().getMinistryDDList(), 1, getManagedBean()
+				.getMinistryDDList().length);
+		SelectItem[] ptjGroupDD = Arrays.copyOfRange(getManagedBean().getPtjGroupDDList(), 1, getManagedBean()
+				.getPtjGroupDDList().length);
+		SelectItem[] ptjDD = Arrays.copyOfRange(getManagedBean().getPtjDDList(), 1,
+				getManagedBean().getPtjDDList().length);
+
+		getManagedBean().setMinistryDDList(ministryDD);
+		getManagedBean().setPtjGroupDDList(ptjGroupDD);
+		getManagedBean().setPtjDDList(ptjDD);
+
+		PmOrgProfile orgProfile = getManagedBean().getScQt().getPmOrgProfile();
+		if (!StringUtils.equals(orgProfile.getPmOrgValidity().getOrgCode(), "900")) {
+			getManagedBean().setMinistryNotNegeri(true);
+		}
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	public void finalizationCommitteeTypeChange(AjaxBehaviorEvent event) {
+		ScQt scQt = getManagedBean().getScQt();
+		Long finalizationCommitteeTypeId = (Long) event.getComponent().getAttributes()
+				.get(QTConstants.TEMPLATE_CHANGE_VALUE);
+
+		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getCommitteeSearchBean();
+		updateFcSecretaryDataModel(userCommitteeSearchBean);
+
+		SelectItem[] fcCommitteeTypes = getManagedBean().getFinalizationSecratary();
+		updateFinalizationCommittee(fcCommitteeTypes, finalizationCommitteeTypeId);
+
+		PmParameter finalizationCommitte = scQt.getFinalizationCommitte();
+		if (finalizationCommitte.getParameterCode().equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)
+				|| finalizationCommitte.getParameterCode().equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD)) {
+			userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
+		} else {
+			userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_OTHERS);
+		}
+
+		this.resetHigherSecretarySearchCriteriaAction();
+		removeSelectAllFromDD();
+		String tabTitle = getParameterDesc(scQt.getFinalizationCommitte());
+		getManagedBean().setTabTitle(tabTitle);
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	/**
+	 * Search user action.
+	 */
+	public void searchHigherSecretaryUserAction() {
+		UserCommitteeSearchBean searchBean = this.getManagedBean().getCommitteeSearchBean();
+		if (null == searchBean) {
+			return;
+		}
+
+		getManagedBean().getUserSearchHigherAuthoritySecretaryDataModel().reloadData();
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	public void deleteHigherSecretary() {
+		if (this.getManagedBean().getScQtFinalization().getHigherSecretary() != null) {
+			this.getManagedBean().getScQtFinalization().setHigherSecretary(null);
+		}
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	/**
+	 * The Class UserSearchHigherAuthoritySecretaryDataModel.
+	 */
+	private class UserSearchHigherAuthoritySecretaryDataModel extends PagingDataModel<PmUser> {
+
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/** The user committee search bean. */
+		private UserCommitteeSearchBean userCommitteeSearchBean;
+
+		/**
+		 * Instantiates a new user committee paging data model.
+		 * 
+		 * @param componentId
+		 *            the component id
+		 * @param userCommitteeSearchBean
+		 *            the user committee search bean
+		 */
+		public UserSearchHigherAuthoritySecretaryDataModel(String componentId,
+				UserCommitteeSearchBean userCommitteeSearchBean) {
+			super(componentId, false);
+			this.userCommitteeSearchBean = userCommitteeSearchBean;
+			getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		protected ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+
+			ICommitteSO committeSO;
+			try {
+				committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				committeReqDTO.setScQt(getManagedBean().getScQt());
+
+				if (null != userCommitteeSearchBean) {
+					populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
+					populateOrganizationSearchCriteria(userCommitteeSearchBean, searchBean);
+				}
+				committeReqDTO.setUserSearchBean(searchBean);
+				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
+				return committeSO.retrieveUserListWithSearchBean(committeReqDTO).getUserResultBean();
+			} catch (Exception e) {
+				ScQt scQt = getManagedBean().getScQt();
+				String qtNo = null != scQt ? scQt.getQtNo() : "";
+				SLAUtils.getInstance().logSLAError(
+						SLALogConstant.QT_MODULE,
+						SLALogConstant.QT_COMMITTEE_BACKINGBEAN,
+						qtNo,
+						SLALogConstant.QT_USER_FC_SECRETARY_PAGING_DATA_MODEL.concat(
+								SLALogConstant.QT_SLA_DOT_SEPARATOR).concat(SLALogConstant.QT_PAGE_CHANGE_LISTENER),
+						getUserIdSessionFromLoginId(), e);
+			}
+			return null;
+		}
+
+		private void populateUserSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean,
+				ISearchBean<PmUser> userSearchBean) {
+			String name = userCommitteeSearchBean.getName();
+			if (StringUtils.isNotBlank(name)) {
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTConstants.USER_NAME, SearchOperator.OPERATOR_LIKE.value(), name, true));
+			}
+			String identificationNo = userCommitteeSearchBean.getIdentificationNo();
+			if (StringUtils.isNotBlank(identificationNo)) {
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTConstants.IDENTIFICATION_NO, SearchOperator.OPERATOR_LIKE.value(),
+								identificationNo, true));
+			}
+			String identificationType = userCommitteeSearchBean.getIdentificationType();
+			if (StringUtils.isNotBlank(identificationType)) {
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTSearchBeanConst.SEARCH_IDENTIFICATIONCODE_PARAMETERCODE,
+								SearchOperator.OPERATOR_EQUALS.value(), identificationType, true));
+			}
+		}
+
+		private void populateOrganizationSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean,
+				ISearchBean<PmUser> userSearchBean) {
+			String orgCategory = null == userCommitteeSearchBean.getOrgCat() ? "" : userCommitteeSearchBean.getOrgCat();
+			if (ParameterConst.ORG_CATEGORY_PTJ.equalsIgnoreCase(orgCategory)) {
+				String ministry = userCommitteeSearchBean.getMinistry();
+				if (StringUtils.isNotBlank(ministry)) {
+					userSearchBean.getDataFilterBeans().add(
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE
+									.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
+									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+									SearchOperator.OPERATOR_EQUALS.value(), ministry, true));
+				}
+				String ptjGroup = userCommitteeSearchBean.getPtjGroup();
+				if (StringUtils.isNotBlank(ptjGroup)) {
+					userSearchBean.getDataFilterBeans().add(
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE
+									.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
+									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+									SearchOperator.OPERATOR_EQUALS.value(), ptjGroup, true));
+				}
+				String ptj = userCommitteeSearchBean.getPtj();
+				if (StringUtils.isNotBlank(ptj)) {
+					userSearchBean.getDataFilterBeans().add(
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE
+									.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
+									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+									SearchOperator.OPERATOR_EQUALS.value(), ptj, true));
+				}
+
+			}
+		}
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	public void selectedHigherSecretary(PmUser selectedHigherSecretary) {
+		if (selectedHigherSecretary.isSelected()) {
+			selectedHigherSecretary.setSelected(true);
+			getManagedBean().setSelectedHigherSecretary(selectedHigherSecretary);
+		} else {
+			selectedHigherSecretary.setSelected(false);
+			getManagedBean().setSelectedHigherSecretary(null);
+		}
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	public void okHigherSecretaryAction() {
+		PmUser selectedUser = getManagedBean().getSelectedHigherSecretary();
+
+		if (selectedUser != null) {
+			this.getManagedBean().getScQtFinalization().setHigherSecretary(selectedUser);
+			getManagedBean().setSelectedHigherSecretary(null);
+		}
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	public void cancleHigherSecretaryAction() {
+		getManagedBean().setSelectedHigherSecretary(null);
+	}
+
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	/**
+	 * Reset.
+	 */
+	public void resetHigherSecretarySearchCriteriaAction() {
+		resetCommitteeSearchBean(this.getManagedBean().getScQt());
+		getManagedBean().getUserSearchHigherAuthoritySecretaryDataModel().resetData();
+	}
+	// #37809 End Vinod
+	// #37809 Start Vinod
+	private void validateHigherAuthority(ScQtFinalization scQtFinalization) {
+		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
+		if (!ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
+			return;
+		}
+
+		boolean isHigherAuthDtlsNull = scQtFinalization.getHigherCommitte() == null 
+				|| scQtFinalization.getHigherCommitte().getParameterId() == null
+				|| scQtFinalization.getHigherSecretary() == null
+				|| scQtFinalization.getHigherSecretary().getUserId() == null;
+
+		if (isHigherAuthDtlsNull) {
+			navigateToSupplierFinalizationTab();
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_SF_HIGHER_AUTHORITY, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+	}
+	// #37809 End Vinod
 	
 	//#40396 - Start
 	private void checkForMLOI(String finalizationMethodStr) {

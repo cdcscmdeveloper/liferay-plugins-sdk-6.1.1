@@ -595,6 +595,11 @@ public interface QTConstants {
 	public static final String LBL_SC_REMARK = "lbl.sc.remark";
 	public static final String REMARK_MESSAGE_ID = "remarkMsg";
 	// #39113 End Vinod 25/09/2025
+	// #37809 Start Vinod
+	public static final String LBL_SC_COMMITTEE_ADD_MEMBER_SEARCH_PTJ_FULL = "lbl.sc.committee.add.member.search.ptj.full";
+	public static final String LBL_SC_COMMITTEE_ADD_MEMBER_SEARCH_OTHER = "lbl.sc.committee.add.member.search.other";
+	public static final String LBL_SC_SF_HIGHER_AUTHORITY = "lbl.sc.sf.higher.authority";
+	// #37809 End Vinod
 	
 	// #29580-start
 	public static final String RPT_PREPARATION_LBL = "lbl.rpt.preparation";

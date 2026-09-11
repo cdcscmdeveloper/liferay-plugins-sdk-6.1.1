@@ -138,6 +138,10 @@ public class SLALogConstant {
 	public static final String QT_LOI_DETAIL_BACKINGBEAN = "LOIDetailBackingBean";
 	public static final String QT_SELECTALL  = "selectAll";
 	// 34491 - end
+	// #37809 Start Vinod
+	public static final String QT_USER_FC_SECRETARY_PAGING_DATA_MODEL = "UserFcSecretaryPagingDataModel";
+
+	// #37809 End Vinod
 	
 	private SLALogConstant(){
 		

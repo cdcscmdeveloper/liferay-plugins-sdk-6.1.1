@@ -51,6 +51,13 @@ public class UserCommitteeSearchBean implements Serializable {
  
 	// #12471 End
 
+	// #37809 Start Vinod
+	/** The Finalization Committee type id. */
+	private Long finalizationCommitteeTypeId;
+	/** The Search Role id. */
+	private Long searchRoleId;
+	// #37809 End Vinod
+
 	/**
 	 * Instantiates a new user committee search bean.
 	 */
@@ -227,4 +234,34 @@ public class UserCommitteeSearchBean implements Serializable {
 	}
 	// #12471 End
 
+	// #37809 Start Vinod
+	/**
+	 * Gets the Finalization Committee type id.
+	 * 
+	 * @return the Finalization Committee type id.
+	 */
+	public Long getFinalizationCommitteeTypeId() {
+		return finalizationCommitteeTypeId;
+	}
+
+	/**
+	 * Sets the Finalization Committee type id.
+	 * 
+	 * @param orgName
+	 *            the new Finalization Committee type id.
+	 */
+	public void setFinalizationCommitteeTypeId(Long finalizationCommitteeTypeId) {
+		this.finalizationCommitteeTypeId = finalizationCommitteeTypeId;
+	}
+
+	public Long getSearchRoleId() {
+		return searchRoleId;
+	}
+
+	public void setSearchRoleId(Long searchRoleId) {
+		this.searchRoleId = searchRoleId;
+	}
+	
+	// #37809 End Vinod
+	
 }

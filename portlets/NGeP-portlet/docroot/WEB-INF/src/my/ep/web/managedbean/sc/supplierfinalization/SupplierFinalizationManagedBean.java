@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAuthority;
 import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmReason;
@@ -370,6 +371,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#35320 - Start
 	private String selectedSupplierOfferedPrice;
 	//#35320 - End
+		
+	// #37809 Start Vinod
+	/** The user search committee data model. */
+	private IPagingDataModel<PmUser> userSearchHigherAuthoritySecretaryDataModel;
+	/** The selected pm user. */
+	private List<PmUser> selectedPmUser;
+	/** The tab title. */
+	private String tabTitle;
+	/** The finalization secratary. */
+	private SelectItem[] finalizationSecratary;
+	private PmUser selectedHigherSecretary;
+	private boolean ministryNotNegeri;
+	private boolean disableFinalizationCommittee;
+	// #37809 End Vinod
 	//#34860 Start
 	private List<String> justificationReasonList;
 	private List<ScQtFinalJustification> finalJustificationList;
@@ -2803,6 +2818,66 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
 	}//#35320 - End
+
+	// #37809 Start Vinod
+	public IPagingDataModel<PmUser> getUserSearchHigherAuthoritySecretaryDataModel() {
+		return userSearchHigherAuthoritySecretaryDataModel;
+	}
+
+	public void setUserSearchHigherAuthoritySecretaryDataModel(
+			IPagingDataModel<PmUser> userSearchHigherAuthoritySecretaryDataModel) {
+		this.userSearchHigherAuthoritySecretaryDataModel = userSearchHigherAuthoritySecretaryDataModel;
+	}
+	
+	public boolean isMinistryNotNegeri() {
+		return ministryNotNegeri;
+	}
+
+	public void setMinistryNotNegeri(boolean ministryNotNegeri) {
+		this.ministryNotNegeri = ministryNotNegeri;
+	}
+
+	public PmUser getSelectedHigherSecretary() {
+		return selectedHigherSecretary;
+	}
+
+	public void setSelectedHigherSecretary(PmUser selectedHigherSecretary) {
+		this.selectedHigherSecretary = selectedHigherSecretary;
+	}
+
+	public List<PmUser> getSelectedPmUser() {
+		return selectedPmUser;
+	}
+
+	public void setSelectedPmUser(List<PmUser> selectedPmUser) {
+		this.selectedPmUser = selectedPmUser;
+	}
+
+	public String getTabTitle() {
+		return tabTitle;
+	}
+
+	public void setTabTitle(String tabTitle) {
+		this.tabTitle = tabTitle;
+	}
+
+	public SelectItem[] getFinalizationSecratary() {
+		return finalizationSecratary;
+	}
+
+	public void setFinalizationSecratary(SelectItem[] finalizationSecratary) {
+		this.finalizationSecratary = finalizationSecratary;
+	}
+
+	public boolean isDisableFinalizationCommittee() {
+		return disableFinalizationCommittee;
+	}
+
+	public void setDisableFinalizationCommittee(boolean disableFinalizationCommittee) {
+		this.disableFinalizationCommittee = disableFinalizationCommittee;
+	}
+	
+	// #37809 End Vinod
 
 	//#34860 Start
 	public List<String> getJustificationReasonList() {
