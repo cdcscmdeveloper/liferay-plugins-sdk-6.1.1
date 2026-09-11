@@ -2887,6 +2887,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	// End - #36503
 	
 	// 31788 - START
+	/**
+	 * Validate User for YEP
+	 */
 	public void validateUserYep(){
 		IFulfilmentOrderSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
@@ -3008,6 +3011,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 	}
 	
+	/**
+	 * Validate govt seller
+	 * @param userSO
+	 * @param userId
+	 */
 	public void validateGovSeller(IUserSO userSO, Long userId) {
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(userId);
