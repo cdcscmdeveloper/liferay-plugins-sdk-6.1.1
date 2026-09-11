@@ -4051,17 +4051,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	}
 	
 	// #30447 - formating and remove duplication salutation start
-	public String getFormattedChequeSignatoryName() {
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    SmChequeSignatory rowItem = (SmChequeSignatory) context.getExternalContext().getRequestMap().get("cheque");
+	public String getFormattedChequeSignatoryName(SmChequeSignatory rowItem) {
 
 	    if (rowItem == null || rowItem.getSmPersonnel() == null) {
 	        return "";
 	    }
-	    
+
 	    String name = StringUtils.trimToEmpty(rowItem.getSmPersonnel().getName());
 	    String salutation = "";
-	    
+
 	    if (rowItem.getSmPersonnel().getTitle() != null) {
 	        salutation = StringUtils.trimToEmpty(rowItem.getSmPersonnel().getTitle().getSalutationName());
 	    }
@@ -4069,12 +4067,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	    if (name.isEmpty() || salutation.isEmpty()) {
 	        return name;
 	    }
+
 	    if (StringUtils.startsWithIgnoreCase(name, salutation)) {
 	        return name;
 	    }
+
 	    if (name.equals(name.toUpperCase())) {
 	        salutation = salutation.toUpperCase();
 	    }
+
 	    return salutation + " " + name;
 	}
 	// #30447 - formating and remove duplication salutation end

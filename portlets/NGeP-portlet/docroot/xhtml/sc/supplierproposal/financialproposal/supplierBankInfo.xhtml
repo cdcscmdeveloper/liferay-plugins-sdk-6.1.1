@@ -51,7 +51,7 @@
 					<!-- #30447 start -->
 					<!-- <h:outputText value="#{cheque.smPersonnel.title.salutationName.concat(' ').concat(cheque.smPersonnel.name)}"></h:outputText> -->
 					<!-- #30447 - upperCase salutation check start -->
-					<h:outputText value="#{supplierProposalDetailBackingBean.formattedChequeSignatoryName}"></h:outputText>
+					<h:outputText value="#{supplierProposalDetailBackingBean.formattedChequeSignatoryName(cheque)}"></h:outputText>
 					<!-- #30447 - upperCase salutation check end -->
 					<!-- #30447 end -->
 				</p:column>

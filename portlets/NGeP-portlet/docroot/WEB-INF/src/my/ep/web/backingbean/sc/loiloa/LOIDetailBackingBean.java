@@ -786,6 +786,9 @@ public class LOIDetailBackingBean extends
 	}
 	
 	public String getFormattedNameWithSalutation(String name,String salutation) {
+		name = StringUtils.trimToEmpty(name);
+		salutation = StringUtils.trimToEmpty(salutation);
+		
         if (name.isEmpty() || salutation.isEmpty()) {
             return name;
         }
