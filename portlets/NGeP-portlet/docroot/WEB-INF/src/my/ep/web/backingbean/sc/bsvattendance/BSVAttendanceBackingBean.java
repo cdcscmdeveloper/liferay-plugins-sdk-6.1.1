@@ -1,4 +1,4 @@
-/* Copyright © 2014 Archisoft. All rights reserved. */
+/* Copyright  2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.bsvattendance;
 
 import java.io.FileNotFoundException;
@@ -1027,29 +1027,29 @@ public class BSVAttendanceBackingBean extends
 		}
 		return salutationName;
 	}
-
 	// #30447 - End
-	
+
 	// #30447 - Start
 	/**
-	 * To set salutation name for supplier
+	 * To set salutation name for supplier.
+	 * UpperCase salutation check.
 	 * 
 	 * @param identificationNo
 	 * @return salutationName
 	 */
-	//	 #30447 - upperCase salutation check start
 	public String setSalutationSupplierName(String identificationNo, String name) {	
 		String salutation = supplierSalutation(identificationNo);
+
 		if (StringUtils.isNotBlank(salutation)) {
-			if( StringUtils.isNotBlank(name) && name.equals(name.toUpperCase())){
+			if ( StringUtils.isNotBlank(name) && name.equals(name.toUpperCase())) {
 				return StringUtils.upperCase(salutation);
 			}
-	//	 #30447 - upperCase salutation check end
+
 			return salutation;
 		}
+		
 		return StringUtils.EMPTY;
 	}
-
 	// #30447 - End
 
 	private void getAttandanceDtlsBySelectedRegistartion(
