@@ -106,9 +106,11 @@
 			</td>
 			<td>
 				<!-- #30447 start -->
-				<p:inputText size="50"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.pmContactUserID.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactPerson)}"
+				<!-- #30447 - upperCase salutation check start -->
+					<p:inputText size="50"
+					value="#{lOIDetailBackingBean.formattedContactPerson}"
 					disabled="true" />
+				<!-- #30447 - upperCase salutation check end -->
 				<!-- #30447 end -->
 			</td>
 			<td>
