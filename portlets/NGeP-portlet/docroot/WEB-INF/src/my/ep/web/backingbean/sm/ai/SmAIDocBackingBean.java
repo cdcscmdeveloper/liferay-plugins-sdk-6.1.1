@@ -865,6 +865,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (AIApiResponse response : responses){
 			JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 			if (fields == null){
+				// nothing mappable in the file: cross the row rather than leave it blank
+				markProjectedFile(appl, response, AiDocParser.label("lbl.sm.ai.doc.invalid"), 2);
 				continue;
 			}
 			AiTenancyDTO te = AiDocParser.toTenancy(fields);
@@ -1461,9 +1463,44 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public int getEpfDocVerdict(AIApiResponse doc){
 		AiEpfResultDTO ee = findEpfResult(doc);
 		if (ee == null){
-			return 0;
+			// the file went through OCR but nothing came back to map: that is a cross, not a blank cell
+			return 2;
 		}
 		return ee.isValidEmployerName() ? 1 : 2;
+	}
+
+	/**
+	 * Verdict icon for one uploaded file, whatever the dialog's document type.
+	 * 1 = mapped, 2 = wrong company or nothing mappable, 0 = nothing to show.
+	 * @param doc
+	 * @return
+	 */
+	public int getDocVerdict(AIApiResponse doc){
+		if (TYPE_EPF.equals(docType)){
+			return getEpfDocVerdict(doc);
+		}
+		if (TYPE_TENANCY.equals(docType)){
+			return (tenancy == null || blockSubmit) ? 2 : 1;
+		}
+		return 0;
+	}
+
+	/**
+	 * Tooltip for that icon: why the file was crossed, blank when it mapped cleanly.
+	 * @param doc
+	 * @return
+	 */
+	public String getDocLabel(AIApiResponse doc){
+		if (TYPE_EPF.equals(docType)){
+			return getEpfDocLabel(doc);
+		}
+		if (TYPE_TENANCY.equals(docType)){
+			if (tenancy == null){
+				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+			}
+			return blockSubmit ? AiDocParser.label("lbl.sm.ai.tnc.mismatch") : "";
+		}
+		return "";
 	}
 
 	/**
@@ -1473,7 +1510,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 */
 	public String getEpfDocLabel(AIApiResponse doc){
 		AiEpfResultDTO ee = findEpfResult(doc);
-		return ee == null ? "" : ee.getLabel();
+		return ee == null ? AiDocParser.label("lbl.sm.ai.doc.invalid") : ee.getLabel();
 	}
 
 	private AiEpfResultDTO findEpfResult(AIApiResponse doc){
@@ -1564,7 +1601,27 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return tenancy;
 	}
 
+	/**
+	 * A tick means "this employee is on the application", so one deleted from the personnel list
+	 * must come back unticked. The list only ever holds employees a submit already added, so an
+	 * entry with no personnel behind it was deleted since.
+	 * @return
+	 */
 	public List<AiEpfResultDTO.AiEmployeeDTO> getSelectedEmployees() {
+		if (EntityHelper.isCollectionEmpty(selectedEmployees) || smAppl == null){
+			return selectedEmployees;
+		}
+		Set<String> onAppl = new HashSet<>();
+		if (!EntityHelper.isCollectionEmpty(smAppl.getSmPersonnels())){
+			for (SmPersonnel per : smAppl.getSmPersonnels()){
+				onAppl.add(AiDocValidator.normalizeNric(per.getIdentificationNo()));
+			}
+		}
+		for (Iterator<AiEpfResultDTO.AiEmployeeDTO> it = selectedEmployees.iterator(); it.hasNext();){
+			if (!onAppl.contains(AiDocValidator.normalizeNric(it.next().getNricNumber()))){
+				it.remove();
+			}
+		}
 		return selectedEmployees;
 	}
 
