@@ -131,6 +131,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplAuditors;
@@ -6790,11 +6791,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						if (cat.isCancelCategory() && currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
 							validCat = true;
 						} else {
-							// #RUU Start
+							// #RUU
 //							throw new EpException(MessageConst.ERROR_722563);
-							getManagedBean().setCancelledFee(+1);
 							validCat = true;
-							// #RUU End
 						}
 						// 29952 - End		
 					} else {
@@ -12240,6 +12239,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								MessageConst.INFO_700030,
 								new String[] { applNo });
 					}
+					createCatPyBill(reqDTO);
 				} else if (res
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT)) {
 					if (getManagedBean().getBpmTaskName() != null
@@ -20333,12 +20333,43 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
 		countNormalCatCode();
 		countSpecialCatCode();
+		countCancelledCatCode();
 
 		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
 				.getPaymentDetailsVOList()) {
 			getManagedBean().setTotalPaymentAmount(
 					getManagedBean().getTotalPaymentAmount().add(
 							paymentDetailsVO.getTotalAmount()));
+		}
+	}
+	
+	private void countCancelledCatCode() {
+		getManagedBean().setCancelledFee(0);
+		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
+			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
+				compareCatCode(cat);
+			}
+		}
+		
+		if (getManagedBean().getCancelledFee() > 0) {
+			SmPaymentDetailsVO cPaymentVO = new SmPaymentDetailsVO();
+			cPaymentVO = new SmPaymentDetailsVO();
+			cPaymentVO.setDetails("Re-Add Category Fee");
+			cPaymentVO.setPrice(new BigDecimal(1000));
+			cPaymentVO.setQuantity(getManagedBean().getCancelledFee());
+			cPaymentVO.setHasQuantity(true);
+			cPaymentVO.setTotalAmount(cPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getCancelledFee())));
+			getManagedBean().getPaymentDetailsVOList().add(cPaymentVO);
+		}
+	}
+	
+	private void compareCatCode(SmSupplierCategory activeCat) {
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+			if (cat.getPmCategoryL3().getCategoryL3Id().equals(activeCat.getPmCategoryL3().getCategoryL3Id())
+					&& cat.getCancelledDate() != null) {
+				getManagedBean().setCancelledFee(getManagedBean().getCancelledFee()+1);
+				break;
+			}
 		}
 	}
 	
@@ -20413,6 +20444,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			nPaymentVO.setTotalAmount(nPaymentVO.getPrice().multiply(BigDecimal.valueOf(totalCount)));
 			getManagedBean().getPaymentDetailsVOList().add(nPaymentVO);
 		}
+	}
+
+	private void createCatPyBill(ReviewApplicationReqDTO reqDTO) {
+//		List<PyBillDtl>
 	}
 	// #RUU End
 }
