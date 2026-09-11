@@ -813,7 +813,7 @@ public class CircularBackingBean extends CircularBaseBackingBean<CircularManaged
 				|| statusId.equals(ContractStatusConst.CQ_UPDATE_REJECTED)) {
 			return true;
 		}
-		return statusId.equals(ContractStatusConst.MQ_UPDATE_CANCELLED) || statusId.equals(ContractStatusConst.MQ_CANCEL_REQUEST_REJECTED);
+		return statusId.equals(ContractStatusConst.CQ_UPDATE_CANCELLED) || statusId.equals(ContractStatusConst.CQ_CANCEL_REQUEST_REJECTED);
 	}
 
 	/**
