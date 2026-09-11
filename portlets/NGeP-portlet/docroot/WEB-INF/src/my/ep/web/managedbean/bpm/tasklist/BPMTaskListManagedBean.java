@@ -67,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sm.SmAppl;	//#40112
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -382,6 +383,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return null;
 	}
 	
+	//#40112 - start
+	private boolean isAiTaskIcon(SmAppl appl, Integer docStatus) {
+		if (appl == null || appl.getAiStatus() != 2 || docStatus == null) {
+			return false;
+		}
+		long statusId = docStatus.longValue();
+		return statusId == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION
+				|| statusId == SupplierManagementConst.PM_STATUS_PENDING_SUPP_DOC_VERIFICATION;
+	}
+	//#40112 - end
+
 	private MofRegistrationResDTO retriveCompanyNameByApplicationId(long applId) {
 		IMofRegistrationSO mofRegistrationSO = null;
 
@@ -1572,7 +1584,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			// sm module
 			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 			//#40112
-			worklistItemVO.setAiProcessed(mofResDto.getSmAppl() != null && mofResDto.getSmAppl().getAiStatus() == 2);
+			worklistItemVO.setAiProcessed(isAiTaskIcon(mofResDto.getSmAppl(), worklistItemVO.getDocStatus()));
 			StringBuilder sb = new StringBuilder();
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
