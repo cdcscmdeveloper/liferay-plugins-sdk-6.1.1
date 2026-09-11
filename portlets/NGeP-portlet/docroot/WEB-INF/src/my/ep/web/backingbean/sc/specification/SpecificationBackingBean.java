@@ -15881,9 +15881,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				if (finDocDefKeys.contains(list.getPmDocument().getDocDefinitionKey())
 						&& (null == list.getScQtCheckListValue() || null == list.getScQtCheckListValue().getYear())) {
 					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}else{
+					statusId = QTStatusConst.TS_COMPLETED;
 				}
 				//#40724 - End
-				statusId = QTStatusConst.TS_COMPLETED;
 			}
 			list.setPmStatus(getPmStatusByStatusId(statusId));
 		}
