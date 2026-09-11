@@ -22843,6 +22843,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				return true;
 			}
 		}
+		removeInactiveChecklists();
+
+		return false;
+	}
+
+	/**
+	 * Drops the inactive checklists already confirmed by the user from the
+	 * technical and financial proposal lists, and keeps them for deletion.
+	 */
+	private void removeInactiveChecklists() {
 		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
 		
 		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
@@ -22867,8 +22877,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
-		
-		return false;
 	}
 
 	// #10141 End Vinod
