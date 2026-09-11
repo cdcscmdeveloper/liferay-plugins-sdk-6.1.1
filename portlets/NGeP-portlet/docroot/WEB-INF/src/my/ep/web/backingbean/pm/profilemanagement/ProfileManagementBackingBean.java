@@ -1089,7 +1089,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public void orgUnitStatusChange() {
 		logger.info("orgUnitStatusChange");
 		if (!validateUserOrg()) {
-			logger.info("orgUnitStatusChange - validateUserOrg returned false");
 			return;
 		}
 
@@ -1098,37 +1097,28 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		Long userId = this.getManagedBean().getSelectedUser().getUserId();
 		EpException pendingDocumentException;
 
-		logger.info("Selected User Org status: " + status);
 		if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
 			// revert it to active
 			if (isAnyPendingTaskForUser(loginId)) {
-				logger.info("orgUnitStatusChange 1 - Pending task found");
 				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				// hit error and exit
 				throw new EpException(MessageConst.ERROR_770167);
 			} else if ((pendingDocumentException = isAnyPendingDocForUserRole(validateUserOrgandRole(), userId)) != null) {
-				logger.info("orgUnitStatusChange 2 - Pending document found");
 				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				// hit error and exit
 				throw pendingDocumentException;
 			} else {
 				String[] activeUserGroup = isActiveUserGroupUser();
 				if (activeUserGroup != null) {
-					logger.info("orgUnitStatusChange 3 - Active user group found");
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					throw new EpException(MessageConst.ERROR_770202, activeUserGroup);
 				}
 				boolean validGovtSeller = validateUserOrgProfileAndStatus();
-				logger.info("validateUserOrgProfileAndStatus result: " + validGovtSeller);
 				if (validGovtSeller) {
-					logger.info("orgUnitStatusChange 4 - Before checkIsActiveGovtSellerUser");
 					checkIsActiveGovtSellerUser();
-					logger.info("orgUnitStatusChange 4 - After checkIsActiveGovtSellerUser");
 				}
-				logger.info("Before inactiveUserOrgRoleAndReceivingAddress");
 				// if inactive set expire Date to SyetemDate
 				inactiveUserOrgRoleAndReceivingAddress(status);
-				logger.info("After inactiveUserOrgRoleAndReceivingAddress");
 			}
 		}
 		//#35489 - Start

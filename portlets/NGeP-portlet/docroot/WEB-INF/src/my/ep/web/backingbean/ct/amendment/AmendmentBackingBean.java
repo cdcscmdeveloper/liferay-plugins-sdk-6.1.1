@@ -9767,7 +9767,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Checks whether the current user is the Contract Approver */
 	private boolean isCtApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value());
+	    String roleCode = getApproverRoleCode();
+	    return roleCode != null && getFacesScopes().hasRoleUser(roleCode);
 	}
 	
 	/**
@@ -9894,7 +9895,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ScQt scQt = ctContractVer.getCtContract().getQuotationTender();
 			
 			if(scQt != null){
-				CommitteeMemberInfoResDTO cmiRes = contractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId(), SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
+				CommitteeMemberInfoResDTO cmiRes = contractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId());
 				if(cmiRes != null){
 					
 					// tick checkbox Committee Type

@@ -113,6 +113,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -4048,6 +4049,36 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 		return NAV_TO_SUPPLIER_DETAILS_PAGE;
 	}
+	
+	// #30447 - formating and remove duplication salutation start
+	public String getFormattedChequeSignatoryName(SmChequeSignatory rowItem) {
+
+	    if (rowItem == null || rowItem.getSmPersonnel() == null) {
+	        return "";
+	    }
+
+	    String name = StringUtils.trimToEmpty(rowItem.getSmPersonnel().getName());
+	    String salutation = "";
+
+	    if (rowItem.getSmPersonnel().getTitle() != null) {
+	        salutation = StringUtils.trimToEmpty(rowItem.getSmPersonnel().getTitle().getSalutationName());
+	    }
+
+	    if (name.isEmpty() || salutation.isEmpty()) {
+	        return name;
+	    }
+
+	    if (StringUtils.startsWithIgnoreCase(name, salutation)) {
+	        return name;
+	    }
+
+	    if (name.equals(name.toUpperCase())) {
+	        salutation = salutation.toUpperCase();
+	    }
+
+	    return salutation + " " + name;
+	}
+	// #30447 - formating and remove duplication salutation end
 
 	/**
 	 * Gets the GST info.
