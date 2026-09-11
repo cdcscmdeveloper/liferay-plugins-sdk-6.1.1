@@ -3788,8 +3788,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 		
 		// Include new GST amount if contract value changed by GST
-//		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewGstAmount() != null){
-		if(ctAmendment.getNewGstAmount() != null){
+		// Keep isValueChangeByGst() check to prevent unnecessary NewGstAmount updates when GstAmount has a value.
+		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewGstAmount() != null){
 			contractAmt = newContractAmt().add(ctAmendment.getNewGstAmount());
 		}
 		// #24336 - End
@@ -3815,8 +3815,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    CtContractAmount ctContractAmount = ctContractVer.getCtContractAmount();
 
 	    // Include service tax if contract value changed by GST
-//	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
-	    if (ctAmendment.getNewStaxAmount() != null) {
+	    // Keep isValueChangeByGst() check to prevent unnecessary NewStaxAmount updates when StaxAmount has a value.
+	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
 	        contractAmount = contractAmount.add(ctAmendment.getNewStaxAmount());
 	    }
 
@@ -5338,6 +5338,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				changeSelectedItemMaxQtyAmendDate(this.getManagedBean().getSelectedItem());				  
 			}
 		}
+		
+		//#24336 - Start
+		// Update NewAmtEffDate with AmendmentEffDate when AmendmentEffDate changes
+		// and the new overall contract amount remains the same.
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if(amendment != null && amendment.isValueChange()){
+			BigDecimal newOverallCtAmount = newOverallContractAmount().setScale(2, RoundingMode.HALF_UP);
+			if (!isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+				amendment.setNewAmtEffDate(amendment.getAmendmentEffDate());
+			}
+		}
+		//#24336 - End
 	}
 	
 	/**
@@ -9505,7 +9517,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getMaxAdditionalValue() {
 		BigDecimal maxAdditionalValue = BigDecimal.ZERO;
-		BigDecimal ctAmount = getApplicableOverallContractAmount();
+		BigDecimal ctAmount = getApplicableOriginalContractAmount();
 		if (ctAmount != null && ctAmount.compareTo(BigDecimal.ZERO) > 0) {
 			maxAdditionalValue = ctAmount.multiply(CommonConstants.MAX_ADDITIONAL_RATE);
 		}
@@ -9518,7 +9530,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getAdditionalPercentage() {
 		BigDecimal additionalPercentage = BigDecimal.ZERO;
-		BigDecimal ctAmount = getApplicableOverallContractAmount();
+		BigDecimal ctAmount = getApplicableOriginalContractAmount();
 		BigDecimal addition = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
 		if (ctAmount != null && addition != null && ctAmount.compareTo(BigDecimal.ZERO) != 0) {
 	        additionalPercentage = addition
@@ -9541,10 +9553,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// new overall contract amount is different from overall contact amount
 		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
 			
+			//get selected/updated value
 			newAmtEffDate = ctAmendment.getNewAmtEffDate();
 			
 			boolean isDisableNewCtAmountEffDate = contractManagedBean.isDisableNewCtAmountEffDate();
-			if(newAmtEffDate == null || isDisableNewCtAmountEffDate == true){
+			if(newAmtEffDate == null || isDisableNewCtAmountEffDate){
 				newAmtEffDate = new Date();
 			}
 			
@@ -9553,7 +9566,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		// same as overall contract amount	
 		} else {
-			newAmtEffDate = retrieveNewEffDate();
+			
+			Date effDate = ctAmendment.getAmendmentEffDate();
+			if(effDate != null){
+				newAmtEffDate = effDate;
+			} else {
+				newAmtEffDate = new Date();
+			}
 			
 			// Disable date input
 			contractManagedBean.setDisableNewCtAmountEffDate(true);
@@ -9633,7 +9652,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public BigDecimal getReducibleContractAmount() {
 		BigDecimal amount;
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
-			BigDecimal ctAmount = getApplicableOverallContractAmount();
+			BigDecimal ctAmount = getApplicableOriginalContractAmount();
 		    BigDecimal pendingAmount = getPendingTransactionAmount();
 		    BigDecimal prePaymentAmount = getAmountBeforePendingPayment();
 
@@ -9748,7 +9767,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Checks whether the current user is the Contract Approver */
 	private boolean isCtApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value());
+	    String roleCode = getApproverRoleCode();
+	    return roleCode != null && getFacesScopes().hasRoleUser(roleCode);
 	}
 	
 	/**
@@ -9830,6 +9850,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private void initCommitteeType(String taskId) {
 
 	    String committeeType = getManagedBean().getCommitteeType();
+	    Long secretaryId = getManagedBean().getSecretaryId();
 
 	    // New record
 	    if (taskId == null || taskId.trim().length() == 0) {
@@ -9840,13 +9861,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        }
 	        return;
 	    }
+	    
+	    // Saved record but Secretary has not been selected/saved yet
+	    if (secretaryId == null) {
+	        handleOriginalDeskOfficerCommitteeQT();
+	        return;
+	    }
 
-	    // Saved record
+	    // Keep the existing saved committee type
 	    boolean isPbqcAuthorityReq = ctBackingBean.getManagedBean()
 	            .getContractVer()
 	            .getCtAmendment()
 	            .isPbqcAuthorityReq();
-
 	    if (isPbqcAuthorityReq) {
 	        // Existing saved committee type
 	        mapCommitteeType();
@@ -9869,7 +9895,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ScQt scQt = ctContractVer.getCtContract().getQuotationTender();
 			
 			if(scQt != null){
-				CommitteeMemberInfoResDTO cmiRes = contractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId(), SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
+				CommitteeMemberInfoResDTO cmiRes = contractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId());
 				if(cmiRes != null){
 					
 					// tick checkbox Committee Type
@@ -9939,13 +9965,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
         getManagedBean().setSecretaryId(null);
 	}
 		
-	public BigDecimal getApplicableOverallContractAmount() {
+	public BigDecimal getApplicableOriginalContractAmount() {
 		
 		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
 	    CtContractVer ctContractVer = contractManagedBean.getContractVer();
 
 	    // Default overall contract amount with current version
-	    BigDecimal contractAmount = getOverallContractAmount(ctContractVer.getCtContractAmount());
+	    BigDecimal contractAmount = ctContractVer.getCtContractAmount().getContractAmount();
 
 	    // Only override if View SCL is true
 	    if (contractManagedBean.isViewSCL()) {
@@ -9964,7 +9990,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        contractReqDTO.setContractVerId(previousContractVerId);
 	        CtContractVer previousContractVer = contractSO.retrieveContractVer(contractReqDTO).getCtContractVer();
 
-	        contractAmount = getOverallContractAmount(previousContractVer.getCtContractAmount());
+	        contractAmount = previousContractVer.getCtContractAmount().getContractAmount();
 	    }
 	    return contractAmount;
 	}

@@ -73,7 +73,7 @@
 	    
      	</h:panelGroup>
      	
-		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
+			<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
 			widgetVar="documentWidget" style="width:100%;" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationBackingBean.managedBean.scQtEvaluationReportList}"
@@ -93,6 +93,12 @@
 					disabled="true"
 					rendered="#{scQtEvaluationReport.definationType.parameterCode ne 'UP'}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{scQtEvaluationReport.selected}"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationReportsFilesDownloadIds])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -122,7 +128,7 @@
 					oncomplete="reportContentPopupDlg.show(); return false;">
 					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
 						target="#{evaluationBackingBean.managedBean.selectedReport}" />
-					<h:graphicImage value="/css/images/design/edit.png"  
+					<h:graphicImage value="/css/images/design/edit.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
 				<p:commandLink
@@ -136,14 +142,64 @@
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
 				</ui:fragment>
-		
+				<ui:fragment
+						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
+						<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
+							popupWidgetVar="evaluationManualReportUploadWidget"
+							attachment="#{scQtEvaluationReport.scQtEvaluationReportAttachment}"
+							readonly="#{evaluationBackingBean.managedBean.readOnly}"
+							deleteFileUploadListener="evaluationBackingBean.deleteReportsUploadFile"
+							rowIndex="#{rowIndex}"> <!-- 14102022@syazani - Bug #34083 -->
+							<f:setPropertyActionListener for="actionEvent"
+								value="#{scQtEvaluationReport}"
+								target="#{evaluationBackingBean.managedBean.selectedReport}" />
+						</ac:scSingleFileUploadButton>
+					</ui:fragment>
 			</p:column>
 		</p:dataTable>
+		
+		<ui:remove> 25651 - Start </ui:remove>  
+		<c:if test="#{!evaluationBackingBean.checkWipExistingEvaluationReports()}">    
+		<ui:remove> 25651 - End </ui:remove>  
+		         
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
+				action="#{evaluationBackingBean.downloadAllReports}"
+					styleClass="BtnSpacing" />
+					
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					styleClass="BtnSpacing" process="@this, evaluationreport"
+					partialSubmit="true" action="#{evaluationBackingBean.addDocumentList}"
+					oncomplete="documentWidget.paginator.endLink.click();"
+					update="@([id$=evaluationreport])" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					styleClass="BtnSpacing"
+					disabled="#{evaluationBackingBean.deleteselectedList(evaluationBackingBean.managedBean.scQtEvaluationReportList)}"
+					process="@this,evaluationReportsFilesDownloadIds" partialSubmit="true"
+					oncomplete="evaluationReportsDeletePopUp.show();"
+					update="@([id$=#{evaluationReportListDeleteId}])">
+		
+				</p:commandButton>
+			</div>
+			<ui:param name="evaluationReportListDeleteId"
+				value="evaluationReportListDeleteId"></ui:param>
+				<ac:confirmationPopup id="#{evaluationReportListDeleteId}"
+				widget="evaluationReportsDeletePopUp" width="450" height="100"
+				okAction="evaluationBackingBean.deleteReportsTabDtls"
+				title="#{lbl['lbl.sc.content']}"
+				content="#{lbl['lbl.sc.dialog.confirm.message']}"
+				update="@([id$=evaluationReportsFilesDownloadIds])" />
+			 
+		 <ui:remove> 25651 - Start </ui:remove>  	 
+		 </c:if>
+		 <ui:remove> 25651 - End </ui:remove>  
+		
     </p:panel>
       
     <ui:remove> 25651 - Start </ui:remove>  
     <p:panel id="evaluationReportsDetailFilesDownloadIds"
-		header="#{lbl['lbl.sc.report.section']}" toggleable="true">
+		header="#{lbl['lbl.sc.report.section']}" toggleable="true" rendered="#{evaluationBackingBean.checkWipExistingEvaluationReports()}">
 	  
 	    <h:outputText styleClass="instruction" value="#{lbl[evaluationBackingBean.getLabelReportDetailInstruction('edit','download.report.section')]}" escape="false" rendered="#{evaluationBackingBean.getStatusReportDetailInstruction()}"  />
 	    <h:outputText styleClass="instruction" value="#{lbl[evaluationBackingBean.getLabelReportDetailInstruction('view','download.report.section')]}" escape="false" rendered="#{!evaluationBackingBean.getStatusReportDetailInstruction()}"  />
@@ -221,8 +277,8 @@
 				
 				<ui:fragment
 					rendered="#{scQtEvaluationReportDetail.definationType.parameterCode eq 'UP'}">
-					<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
-						popupWidgetVar="evaluationManualReportUploadWidget"
+					<ac:scSingleFileUploadButton id="evaluationReportDetailUploadBtn"
+						popupWidgetVar="evaluationManualReportDetailUploadWidget"
 						attachment="#{scQtEvaluationReportDetail.scQtEvaluationReportDetailAttachment}"
 						readonly="#{evaluationBackingBean.managedBean.readOnly}"
 						deleteFileUploadListener="evaluationBackingBean.deleteReportsUploadFile"
@@ -236,16 +292,16 @@
 			</p:column>
 		</p:dataTable>
 		
-				<div class="ppRightBtn">
+	  <div class="ppRightBtn">
+				
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
-			action="#{evaluationBackingBean.downloadAllReports}"
-				styleClass="BtnSpacing" />
-			
+					action="#{evaluationBackingBean.downloadAllReportDetails}"
+						styleClass="BtnSpacing" />
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 			disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				styleClass="BtnSpacing" process="@this, evaluationreportdetail"
-				partialSubmit="true" action="#{evaluationBackingBean.addDocumentList}"
+				partialSubmit="true" action="#{evaluationBackingBean.addDocumentDetailList}"
 				oncomplete="documentWidget.paginator.endLink.click();"
 				update="@([id$=evaluationreportdetail])" />
 				
@@ -253,16 +309,16 @@
 				styleClass="BtnSpacing"
 				disabled="#{evaluationBackingBean.deleteselectedList(evaluationBackingBean.managedBean.scQtEvaluationReportDetailList)}"
 				process="@this,evaluationReportsDetailFilesDownloadIds" partialSubmit="true"
-				oncomplete="evaluationReportsDeletePopUp.show();"
-				update="@([id$=#{evaluationReportListDeleteId}])">
+				oncomplete="evaluationReportDetailsDeletePopUp.show();"
+				update="@([id$=#{evaluationReportDetailListDeleteId}])">
 
 			</p:commandButton>
 			
-		    <ui:param name="evaluationReportListDeleteId"
-			value="evaluationReportListDeleteId"></ui:param>
-			<ac:confirmationPopup id="#{evaluationReportListDeleteId}"
-			widget="evaluationReportsDeletePopUp" width="450" height="100"
-			okAction="evaluationBackingBean.deleteReportsTabDtls"
+		    <ui:param name="evaluationReportDetailListDeleteId"
+			value="evaluationReportDetailListDeleteId"></ui:param>
+			<ac:confirmationPopup id="#{evaluationReportDetailListDeleteId}"
+			widget="evaluationReportDetailsDeletePopUp" width="450" height="100"
+			okAction="evaluationBackingBean.deleteReportDetailsTabDtls"
 			title="#{lbl['lbl.sc.content']}"
 			content="#{lbl['lbl.sc.dialog.confirm.message']}"
 			update="@([id$=evaluationReportsDetailFilesDownloadIds])" />
