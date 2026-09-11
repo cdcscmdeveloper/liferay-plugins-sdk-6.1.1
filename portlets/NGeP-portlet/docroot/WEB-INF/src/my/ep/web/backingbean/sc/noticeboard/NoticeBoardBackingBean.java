@@ -2409,6 +2409,7 @@ public class NoticeBoardBackingBean extends
 
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 
+					// 28188 -start-
 					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 					briefingReqDTO.setQtId(scQt.getQtId());
 					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
