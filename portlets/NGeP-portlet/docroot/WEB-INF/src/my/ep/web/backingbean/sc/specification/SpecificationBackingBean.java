@@ -2501,8 +2501,8 @@ public class SpecificationBackingBean extends
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
 			// #40846,#10141 - Start
-			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true
-					: false;
+			// #41039 sonarqube issue
+			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition);
 			// #40846,#10141 - End
 
 			//#25138 - add if() condition - start
