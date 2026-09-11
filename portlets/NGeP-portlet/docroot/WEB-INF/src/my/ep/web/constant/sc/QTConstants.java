@@ -39,6 +39,7 @@ public interface QTConstants {
 	public static final String MAINT_EPV_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovalEpv.xhtml";//#21692 add new page for history
 	public static final String EXTEND_PROPOSAL_VALIDITY_SUPPLIER_ACCEPTANCE = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";//#21692 supplier screen
 	public static final String EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";//#21692 approval screen
+	public static final String MAINT_EGPA_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovaleGPA.xhtml";//#38107
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -309,7 +310,15 @@ public interface QTConstants {
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
 	public static final String CLOSE_CLONE_LOA_SPEC_POPUP = "cloneLoaSpec.hide()";
+	public static final String LBL_TPL_SPEC_CONTENT_QUANTITY = "lbl.tpl.spec.content.quantity";
+	public static final int DIRECT_LOA_TAB_INDEX_THREE=3;
 	//#29468 End Vinod
+	
+	// #40974 - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	// #40974 - End
+
 	
 	// #33831 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
@@ -459,21 +468,35 @@ public interface QTConstants {
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FN = "FN";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_PC = "PC";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_AL = "AL";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE = "FGE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE = "FNE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_CH = "CH";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_SD = "SD";
 	public static final String[] TECHNICAL_CHECKLIST_SELECT_LIST = new String[]{
 		TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
 		TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_NE,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TL
+		TECH_CHECKLIST_DOC_DEFINATION_KEY_NE
 	};
 	public static final String[] FINANCIAL_CHECKLIST_SELECT_LIST = new String[]{
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE
+	};
+	public static final String[] FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ = new String[]{
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_CH,
+		FIN_CHECKLIST_DOC_DEFINATION_KEY_SD
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
+	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 30px;\"></span></div>";
+	public static final String SPAN_ERROR_CONTENT_OPEN = "<div><span style=\"position: relative;right: 30px;\">";
+	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span></div></div>";
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION_HIDE = "inActiveChecklistNotification.hide()";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECMAINT = "lbl.sc.spec.confirm.inactive.techfin.checklist.specmaint";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -524,7 +547,7 @@ public interface QTConstants {
 			
 	// 25791-End
 	
-	//#38151
+	//#38151 & #38679
 	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
 	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
@@ -602,7 +625,10 @@ public interface QTConstants {
 	public static final String RPT_DROPDOWN_CANCELLED_LBL = "lbl.rpt.drpdown.cancelledLabel";
 	public static final String RPT_ALL_LBL = "lbl.rpt.all";
 	// #29580-end
-	//#10098 Start 
-	public static final String QT_AUTOSAVE_POPUP = "confirmAutosave.show()";
-	//#10098 end
+
+	// 28188 -start-
+	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
+	// 28188 -end-
+
+
 }
