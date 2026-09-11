@@ -767,7 +767,9 @@ public class LOIDetailBackingBean extends
 
         return getFormattedNameWithSalutation(name, salutation);
 	}
+	// # 30447 - end
 	
+	// # 30447 - start
 	public String getFormattedContractSignerUserName() {
 		//check null
         if (this.getManagedBean() == null 
@@ -784,7 +786,9 @@ public class LOIDetailBackingBean extends
         
         return getFormattedNameWithSalutation(name, salutation);
 	}
+	// # 30447 - end
 	
+	// # 30447 - start
 	public String getFormattedNameWithSalutation(String name,String salutation) {
 		name = StringUtils.trimToEmpty(name);
 		salutation = StringUtils.trimToEmpty(salutation);
