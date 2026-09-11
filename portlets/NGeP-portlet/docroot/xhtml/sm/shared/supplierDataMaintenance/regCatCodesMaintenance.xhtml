@@ -8,24 +8,19 @@
 	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true" id="catcodeMainPanelId">
 		<!-- 36504 - START -->
-		<p:outputPanel align="left" rendered="#{backingBean.managedBean.otherDescChangeSupplier}">
+		<p:outputPanel align="left" rendered="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeSupplier}">
 			<table style="width: 100%">
 				<tr>
 					<td>
-						<h:outputText
-							value="#{lbl['lbl.sm.other.desc.history.click']}"
+						<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
 							escape="false" />
-						<p:commandLink
-							onstart="blockWidget.show()"
+						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{backingBean.otherDescriptionHistory}"
-							process="@this"
-							partialSubmit="true"
-							update=":form">
+							action="#{supplierDataMaintenanceBackingBean.otherDescriptionHistoryMaintenance}" process="@this"
+							partialSubmit="true" update=":form">
 							<u><h:outputText
 									value="#{lbl['lbl.sm.other.desc.history.here']}"
-									style="color:blue;"
-									escape="false" /></u>
+									style="color:blue;" escape="false" /></u>
 						</p:commandLink>
 						<p:spacer width="2" />
 						<h:outputText
@@ -156,12 +151,12 @@
 	</p:confirmDialog>
 	
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory
-		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
-		applNo="#{backingBean.managedBean.smAppl.applNo}"
-		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
-		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"
-		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
+	<ac:otherDescriptionHistoryMaintenance
+		categoryCodeList="#{supplierDataMaintenanceBackingBean.managedBean.historyOtherDescList}"
+		applNo="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applNo}"
+		otherDescChangePO="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeSupplier}"  />
 	<!-- 36504 - END -->
    	
 </ui:composition>

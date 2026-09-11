@@ -23,6 +23,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.bean.ManagedProperty; //#34447
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -69,6 +70,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 import my.ep.exception.EpException;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean; //#34447
 
 
 /**
@@ -660,4 +662,41 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 				.getExternalContext();
 		externalContext.redirect(commonUrl + "/catalogue-maintenance-file");
 	}
+
+	//#34447 - Start
+    /**
+     * Validate reject remark before displaying popup
+     */
+    @ManagedProperty(value = "#{catalogueBackingBean}")
+    private CatalogueBackingBean catalogueBackingBean;
+
+    public void setCatalogueBackingBean(CatalogueBackingBean catalogueBackingBean) {
+        this.catalogueBackingBean = catalogueBackingBean;
+    }
+
+    public String validateRejectBeforePopup() {
+        ArrayList<Long> rejectReasonIds = catalogueBackingBean.getManagedBean().getRejectReasonIds();
+        String rejectReason = catalogueBackingBean.getManagedBean().getRejectReason();
+		if (rejectReasonIds.isEmpty()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+							MessageConst.ERROR_715057, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			return null;
+		}
+        for (Object obj : rejectReasonIds) {
+            Long id = Long.valueOf(String.valueOf(obj));
+            if (id.equals(CmConst.REJECT_REASON_OTHER) &&
+                (rejectReason == null || rejectReason.isEmpty())) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+								MessageConst.ERROR_715056, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+				return null;
+            }
+        }
+        RequestContext.getCurrentInstance().execute("rejectCatConfirmPopup.show();");
+        return null;
+    }
+    //#34447 - End
 }

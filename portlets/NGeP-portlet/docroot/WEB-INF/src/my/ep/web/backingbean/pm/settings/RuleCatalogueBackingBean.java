@@ -1391,7 +1391,7 @@ public class RuleCatalogueBackingBean extends
 								if(zone.getZoneId().equals(cfRuleValue.getZoneId())){
 									orgProfileReqDTO.getPmOrgProfile().getPmZone();
 									orgProfileReqDTO.getPmOrgProfile().setPmZone(zone);
-									orgProfileReqDTO.getPmOrgProfile().setBpk(true);
+									//orgProfileReqDTO.getPmOrgProfile().setBpk(true); #27827
 									orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
 								}
 							}
@@ -1797,12 +1797,10 @@ public class RuleCatalogueBackingBean extends
 
 			}
 
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
-								getActionDesc(messageId, msgParam), fee
-										.getRecordStatusFlg().longValue()));
+				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForFeeExemption(
+						fee, getActionDesc(messageId, msgParam), fee.getRecordStatusFlg().longValue()));
 			}
 			/************ AUDIT #28895_35509 *************/
 			// Audit Get deleted value for orgType
@@ -1822,18 +1820,13 @@ public class RuleCatalogueBackingBean extends
 			/************ END AUDIT #28895_35509 *************/
 		}
 		statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(Long
-				.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		reqDTO.setStatus(statusResDTO.getPmStatus() != null ? statusResDTO
-				.getPmStatus() : new PmStatus());
+		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
+		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+		reqDTO.setStatus(statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus());
 		reqDTO.setUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
 		try {
-			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IFeeExemptionSO.class);
+			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
 			/************ AUDIT #28895_35509 *************/
@@ -1987,7 +1980,7 @@ public class RuleCatalogueBackingBean extends
 							fee.getItemId().getItemName() };
 				}
 			}
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -2304,7 +2297,7 @@ public class RuleCatalogueBackingBean extends
 							fee.getRequestItemId().getItemName() };
 				}
 			}
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -2495,7 +2488,7 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 
-			if (messageId != null & msgParam != null) {
+			if (messageId != null && msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
@@ -3839,7 +3832,7 @@ public class RuleCatalogueBackingBean extends
 							.getLocationName() };
 				}
 
-				if (messageId != null & msgParam != null) {
+				if (messageId != null && msgParam != null) {
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyForDesignatedArea(
@@ -5453,6 +5446,7 @@ public class RuleCatalogueBackingBean extends
 				newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
 				newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
 				newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
+				newRuleValue.setPtjId(orgProfile); //#27827
 				index = configRuleType.getConfigRuleValues().size();
 				configRuleType.getConfigRuleValues().add(index, newRuleValue);
 			}
@@ -5803,6 +5797,7 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
+		// #27827 to be deployed together - START
 		// search via desc
 		if (StringUtils.isNotBlank(searchRuleDesc)) {
 			List<PmConfigRuleValue> byDesc = searchByRuleValueDesc(originalList, searchRuleDesc, false);
@@ -5822,6 +5817,7 @@ public class RuleCatalogueBackingBean extends
 				resultList.retainAll(byZone);
 			}
 		}
+		// #27827 to be deployed together - END
 
 		// search via effective date and expiry date (exact date if only one, between if both)
 		if (searchEffDate != null || searchExpDate != null) {
@@ -5882,6 +5878,7 @@ public class RuleCatalogueBackingBean extends
 		return searchRuleTypeValueList;
 	}
 	
+	// #27827 to be deployed together - START
 	/**
 	 * #36738
 	 * filter rule values by description
@@ -5936,6 +5933,7 @@ public class RuleCatalogueBackingBean extends
 			return configRuleValuesList;
 		}
 	}
+	// #27827 to be deployed together - END
 	
 	/**
 	 * #36738

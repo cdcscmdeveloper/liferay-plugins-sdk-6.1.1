@@ -68,6 +68,7 @@ import my.ep.util.BpmCommonUtils; // Fix - #31962
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#30910
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
@@ -110,6 +111,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	private ContractBackingBean ctBB = null;
 	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+	
+	private String confirmationContentMsg;//34442 
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -388,6 +391,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		try {
 			contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			resDTO = contractSupplierSO.retrieveFactoringRequest(reqDTO);
+			//Start Fix - #41062
+			if(reqDTO.getDocType() == null){
+				reqDTO.setDocType(resDTO.getDocType());
+			}
+			//End Fix - #41062
 			getManagedBean().setFactoring(resDTO.getFactoring());
 			getManagedBean().setCtContract(resDTO.getFactoring().getCtContract());
 			if (resDTO.getFactoring().getCtContract().getLatestContractVer() != null) {
@@ -886,7 +894,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			// 34442 - start
+			if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+				setConfirmationContentMsg(getConfirmationContent(String.valueOf(getManagedBean().getFactoring()
+						.getStatus().getStatusId()), getManagedBean().getContractNo()));
+				RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			// 34442 - end
+			
 			return null;
 		}else if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
 			validateFactoringRequest(outcome);	
@@ -1764,8 +1782,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
-	
+
 	//#30910 start
+	/**
+	 * Check factoring bank status whether the bank still active or not.
+	 * 
+	 * @return true if the bank still active, otherwise false.
+	 */
 	public boolean  checkFactoringCompanyStatus(){
 		boolean statusFactoringCompany = false;
 		boolean statusFactoringFinAcc = false;
@@ -1775,7 +1798,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		FinancialOrgResDTO resDTO = null;
 		
 		try{
-			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
 			reqDTO = new FinancialOrgReqDTO();
 			reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
 			resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
@@ -1792,14 +1815,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			reqDTO.setAccountNo(financialAccountNo);
 			
-			resDTO = financialOrgSO.retriveFinAccByFinOrgIdAccNo(reqDTO);
+			resDTO = financialOrgSO.retrieveFinAccByFinOrgIdAccNo(reqDTO);
 			if (resDTO.getPmFinancialAcc()!=null 
 					&& financialAccountNo.equals(resDTO.getPmFinancialAcc().getAccountNo().trim())){
 				statusFactoringFinAcc = true;
 			}
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, "SupplierBackingBean",
+					"", "checkFactoringCompanyStatus",
+					getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 
@@ -1878,5 +1904,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 	}
 	//#15851 end	
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
 
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

@@ -24,20 +24,15 @@
 				<table style="width: 100%">
 					<tr>
 						<td>
-							<h:outputText
-								value="#{lbl['lbl.sm.other.desc.history.click']}"
+							<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
 								escape="false" />
-							<p:commandLink
-								onstart="blockWidget.show()"
+							<p:commandLink onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
-								action="#{backingBean.otherDescriptionHistory}"
-								process="@this"
-								partialSubmit="true"
-								update="@form">
+								action="#{backingBean.otherDescriptionHistoryPrev}" process="@this"
+								partialSubmit="true" update="@form">
 								<u><h:outputText
 										value="#{lbl['lbl.sm.other.desc.history.here']}"
-										style="color:blue;"
-										escape="false" /></u>
+										style="color:blue;" escape="false" /></u>
 							</p:commandLink>
 							<p:spacer width="2" />
 							<h:outputText
@@ -105,33 +100,28 @@
 							rendered="#{empty aprvdCatBean.otherDesc}" />
 						<!-- 36504 - START -->
 						<h:outputText value="#{aprvdCatBean.otherDesc}"
-								rendered="#{not empty aprvdCatBean.otherDesc and
+							rendered="#{not empty aprvdCatBean.otherDesc and
 							not (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and
-							(backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}"  />
+							(backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
 						<p:inputTextarea id="otherDescTxt1" maxlength="5000"
 							style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 							rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
-							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" 
-							autoResize="false" readonly="true" > <!-- #36289, #37605 -->
+							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20"
+							autoResize="false" readonly="true">
+							<!-- #36289, #37605 -->
 						</p:inputTextarea>
-						<br/>
-						<p:graphicImage
-								value="/css/images/design/icon_alert.png"
-								style="float:right;"
-								rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
-						<p:commandLink
-							partialSubmit="true"
-							onstart="blockWidget.show()"
-							oncomplete="blockWidget.hide()"
-							update=":form" process="@this"
+						<br />
+						<p:graphicImage value="/css/images/design/icon_alert.png"
+							style="float:right;"
+							rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
+						<p:commandLink partialSubmit="true" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()" update=":form" process="@this"
 							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
 							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
-							<p:graphicImage
-								value="/css/images/design/edit.png"
-								title="#{lbl['lbl.sm.edit']}"
-								style="float:right;" />
+							<p:graphicImage value="/css/images/design/edit.png"
+								title="#{lbl['lbl.sm.edit']}" style="float:right;" />
 						</p:commandLink>
 						<!-- 36504 - END -->
 					</p:outputPanel>
@@ -155,7 +145,8 @@
 							update=":form" process="@this"
 							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
 							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or 
+							backingBean.managedBean.approverUser)}">
 							<p:graphicImage
 								value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"
@@ -255,6 +246,7 @@
 					</p:selectOneRadio>
 				</p:column>
 				<!-- 32348,37605 START - adjust width -->
+				<!-- 40836 START - remove update form -->
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width:250px;vertical-align: top;" rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:inputTextarea autoResize="false" value="#{aprvdCatBean.poRemarks}" maxlength="2000" disabled="#{aprvdCatBean.cancelCategory}"
 						rendered="#{backingBean.managedBean.poUser}" style="white-space:normal; width: 95%"
@@ -262,7 +254,7 @@
 						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{aprvdCatBean.pmCategoryL1.categoryL1Code} 
 						#{aprvdCatBean.pmCategoryL2.categoryL2Code} #{aprvdCatBean.pmCategoryL3.categoryL3Code} "
 						id="poCatRDecisionRmrk">
-						<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
+						<p:ajax process="@this" />
 						<f:validateLength maximum="2000" />
 					</p:inputTextarea>
 					<p:inputTextarea autoResize="false" value="#{aprvdCatBean.approverRemarks}" disabled="#{aprvdCatBean.cancelCategory}"
@@ -273,9 +265,10 @@
 						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{aprvdCatBean.pmCategoryL1.categoryL1Code} 
 						#{aprvdCatBean.pmCategoryL2.categoryL2Code} #{aprvdCatBean.pmCategoryL3.categoryL3Code} "
 						maxlength="2000">
-						<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
+						<p:ajax process="@this" />
 						<f:validateLength maximum="2000" />
 					</p:inputTextarea>
+				<!-- 40836 END - remove update form -->
 				<!-- 32348 END - adjust width -->
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.prevDecision']}" rendered="#{backingBean.managedBean.smAppl.resubmit}"
@@ -528,8 +521,8 @@
 	</p:confirmDialog>
 	
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory
-		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
+	<ac:otherDescriptionHistoryPrev
+		categoryCodeList="#{backingBean.managedBean.previousCategoryList}"
 		applNo="#{backingBean.managedBean.smAppl.applNo}"
 		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
 		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"

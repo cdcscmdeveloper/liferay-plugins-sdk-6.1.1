@@ -148,8 +148,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			// Contract Management
 			temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, "central-contract-circular");
 			temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
+			temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY, "panel-circular"); //#37620,#34367
 			temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME + ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, "central-contract-circular");
 			temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME + ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
+			temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME + ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY, "panel-circular"); //#37620,#34367
 			temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME, "cancel-circular-approval");
 			temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME + CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 			temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME + CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
@@ -237,6 +239,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.PREPARE_QT_DETAILS, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//#38107 - Start
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QUOTATION_TENDER_EGPA)
+					+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//#38107 - End
 			
 			temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME + SCProcessNameConst.APPROVE_BUDGET, SourcingConstants.NAV_PAGE_QT_APPROVAL);
 			temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME + SCProcessNameConst.APPROVE_BPK, SourcingConstants.NAV_PAGE_QT_APPROVAL);
@@ -633,9 +639,12 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					"central-contract-circular");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_PANEL_CIRCULAR,
 					"panel-circular");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY,
+					"panel-circular"); //#37620,#34367
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME)+ ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR,
 					"central-contract-circular");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME)+ ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME)+ ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY, "panel-circular"); //#37620,#34367
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME),
 					"cancel-circular-approval");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)+ CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME,
@@ -746,6 +755,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					)+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					)+ SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//#38107 - Start
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_EGPA + SCProcessNameConst.REVISE_QT_SCHEDULE,
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//#38107 - End
 			
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
 					)+ SCProcessNameConst.APPROVE_BUDGET,

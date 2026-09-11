@@ -34,13 +34,15 @@
 					#{receivedNoteBackingBean.getStatusDescById(receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId)}
 				</td>	
 			</tr>
+			<!-- 35571 start -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
 				<td class="header-info-text" colspan="3">
-					#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}
+					#{receivedNoteBackingBean.retrievePtjNameByUserLogin(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName)}
 				</td>
 			</tr>
+			<!-- 35571 end -->
 		</table>
 	</div>
 	<p:spacer height="10px" />

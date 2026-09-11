@@ -1881,7 +1881,8 @@ public class QTCommitteBackingBean extends
 		//28895 - 35500 start
 		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberAuditTrailList())
 				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();	
-		List<ScCommitteeMember> deletedCommitteeMembers = new ArrayList<>();
+		List<ScCommitteeMember> deletedCommitteeMembers = CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedScCommitteeMemberAuditTrailList())
+				? this.getManagedBean().getDeletedScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 fix 15th May
 		//28895 - 35500 end
 		
 		if (committeeMembers == null) {

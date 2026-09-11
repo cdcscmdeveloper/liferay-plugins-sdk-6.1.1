@@ -49,6 +49,26 @@
 	  </p:panel>
 	</c:if>
 	<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
+	
+		<!-- #34442 - start -->
+		<p:dialog id="approvalConfirmDlgId" widgetVar="approvalConfirmDlg"
+			header="#{lbl['lbl.msg.confirm.cancel.header']}"
+			closable="true" draggable="false" resizable="false" modal="true"
+			style="max-width:700px;">
+			<h:outputText style="display:block; margin-bottom:10px; white-space:pre-line; text-align:center;"
+				value="#{panelBackingBean.confirmationContentMsg}" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update=""
+					partialSubmit="true" process="@this"
+    				action="#{panelBackingBean.saveCancelCircularReq()}"
+    				onstart="approvalConfirmDlg.hide();blockWidget.show();" 
+    				oncomplete="blockWidget.hide();">
+				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="approvalConfirmDlg.hide()" type="button" />
+			</div>
+		</p:dialog>
+		<!-- #34442 - end -->
 	    
   </ui:define>
 </ui:composition>				

@@ -418,7 +418,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String supplierAccountTypeErrorMessage;
 	private PmOrgProfile selectedPtj;
 	private PmOrgProfile ministryOrgProfile;
-	private Integer saveIndex; 
+	private Integer saveIndex;
+	private Map<Long, Object> thresholdDataReasonGroupMap;	
+	private Integer currentGroupIndex = 0;
     //27868 - end
 	
 	//#26059 - Start
@@ -428,9 +430,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean containRejectDecision = Boolean.FALSE;
     private List<CommodityGroup> commodityGroups =	new ArrayList<>();
     private	Integer	counter = 0;
+    private Integer counterReason = 0;
     private boolean existInAssignItemDetail = Boolean.FALSE;
     private ScQuote scQuote;
+    private String selectedBpmAction;
   //#26059 - End
+    
+    //34449 - start
+    private String assignMethod; 
+    private String reviseMethod;
+    private String approveMethod;
+    //34449 - end
     
     /**
      * Instantiates a new request note managed bean.
@@ -2532,6 +2542,29 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSaveIndex(Integer saveIndex) {
 		this.saveIndex = saveIndex;
 	}
+	
+	
+	/**
+	 * @return the thresholdDataReasonGroupMap
+	 */
+	public Map<Long, Object> getThresholdDataReasonGroupMap() {
+	    return thresholdDataReasonGroupMap;
+	}
+
+	/**
+	 * @param thresholdDataReasonGroupMap the thresholdDataReasonGroupMap to set
+	 */
+	public void setThresholdDataReasonGroupMap(Map<Long, Object> thresholdDataReasonGroupMap) {
+	    this.thresholdDataReasonGroupMap = thresholdDataReasonGroupMap;
+	}
+	
+	public Integer getCurrentGroupIndex() {
+		return currentGroupIndex;
+	}
+
+	public void setCurrentGroupIndex(Integer currentGroupIndex) {
+		this.currentGroupIndex = currentGroupIndex;
+	}
 	//27868 - end
 	// #26059 - start
 	/**
@@ -2633,6 +2666,26 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.counter = counter;
 	}
 	
+	
+	/**
+	 * Retrieves the current counter reason value.
+	 * 
+	 * @return The counter reason value as an {@link Integer}.
+	 */
+	public Integer getCounterReason() {
+		return counterReason;
+	}
+
+	/**
+	 * Sets the counter reason value.
+	 * 
+	 * @param counter
+	 *            The counter reason value to set.
+	 */
+	public void setCounterReason(Integer counterReason) {
+		this.counterReason = counterReason;
+	}
+	
 	/**
 	 * Checks if any item has a reject decision.
 	 */
@@ -2674,7 +2727,65 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setScQuote(ScQuote scQuote) {
 		this.scQuote = scQuote;
 	}
-	
-	
+
+	/**
+	 * @return the selectedBpmAction
+	 */
+	public String getSelectedBpmAction() {
+		return selectedBpmAction;
+	}
+
+	/**
+	 * @param selectedBpmAction the selectedBpmAction to set
+	 */
+	public void setSelectedBpmAction(String selectedBpmAction) {
+		this.selectedBpmAction = selectedBpmAction;
+	}
+
 	// #26059 - end
+	
+	//34449 - start
+	/**
+	 * @return the assignMethod
+	 */
+	public String getAssignMethod() {
+		return assignMethod;
+	}
+
+	/**
+	 * @param assignMethod the assignMethod to set
+	 */
+	public void setAssignMethod(String assignMethod) {
+		this.assignMethod = assignMethod;
+	}
+
+	/**
+	 * @return the reviseMethod
+	 */
+	public String getReviseMethod() {
+		return reviseMethod;
+	}
+
+	/**
+	 * @param reviseMethod the reviseMethod to set
+	 */
+	public void setReviseMethod(String reviseMethod) {
+		this.reviseMethod = reviseMethod;
+	}
+
+	/**
+	 * @return the approveMethod
+	 */
+	public String getApproveMethod() {
+		return approveMethod;
+	}
+
+	/**
+	 * @param approveMethod the approveMethod to set
+	 */
+	public void setApproveMethod(String approveMethod) {
+		this.approveMethod = approveMethod;
+	}
+
+	//34449 - end
 }
