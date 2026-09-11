@@ -625,6 +625,9 @@ public interface QTConstants {
 	public static final String RPT_DROPDOWN_CANCELLED_LBL = "lbl.rpt.drpdown.cancelledLabel";
 	public static final String RPT_ALL_LBL = "lbl.rpt.all";
 	// #29580-end
+	//#10098 Start 
+	public static final String QT_AUTOSAVE_POPUP = "confirmAutosave.show()";
+	//#10098 end
 
 	// 28188 -start-
 	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
