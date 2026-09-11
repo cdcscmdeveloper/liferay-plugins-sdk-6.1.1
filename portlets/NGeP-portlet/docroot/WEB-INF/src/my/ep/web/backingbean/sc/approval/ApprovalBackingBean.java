@@ -4029,7 +4029,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
 		// #35500 EPV 7th Sep Start
 		String fcCode = scQt.getFinalizationCommitte().getParameterCode().toUpperCase();
-		if (fcCode.contains("FPB")) {
+		if (fcCode.contains("FSB") || fcCode.contains("FSW")) {
 			auditResDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
 		} else {
 			auditResDTO.setRoleCode(RoleCode.PPB_SECRETARY.value());
