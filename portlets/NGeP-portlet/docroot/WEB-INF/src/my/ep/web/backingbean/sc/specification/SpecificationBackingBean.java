@@ -371,6 +371,14 @@ public class SpecificationBackingBean extends
 	// #40846,#10141 - Start
 	private static final String TAB_CHANGE = "tabChange";
 
+	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_AL,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CH,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_SD));
+
 	// #40846,#10141 - End
 
 	/**
@@ -24041,9 +24049,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& null != finChecklist.getPmDocument().getDocDefinitionKey() ? finChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| (Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey) || (Arrays
-							.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ).contains(docDefKey) && finChecklist
-							.isScoringReq()))) {
+					|| (Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey) || (FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ
+							.contains(docDefKey) && finChecklist.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = finChecklist.getQtChecklistId();
 				String title = finChecklist.getTitle();
