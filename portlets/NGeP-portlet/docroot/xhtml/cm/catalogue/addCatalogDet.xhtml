@@ -35,10 +35,10 @@
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.catalogueAdmin and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus!='U'}">
 				<p:commandButton value="#{lbl['lbl.btn.approve']}"
-					actionListener="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
+					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
 				<!-- 34447 Start -->
 				<p:commandButton value="#{lbl['lbl.btn.reject']}"
-					action="#{reviewCatBackingBean.validateRejectBeforePopup}" update="@form" />
+					actionListener="#{reviewCatBackingBean.validateRejectBeforePopup}" update="@form" />
 				<!-- 34447 End -->
 			</h:panelGroup>
 
