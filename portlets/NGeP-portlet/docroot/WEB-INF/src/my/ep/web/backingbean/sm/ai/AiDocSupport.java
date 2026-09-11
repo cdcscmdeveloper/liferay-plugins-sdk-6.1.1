@@ -1013,6 +1013,10 @@ public final class AiDocSupport {
 		 * employee rows carry no verdict of their own and are not rendered here.
 		 */
 		public String getLabel() {
+			// nothing mapped out of this file, same verdict as Bank and Tenancy report
+			if (employerName == null && getEmployees().isEmpty()) {
+				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+			}
 			StringBuilder sb = new StringBuilder();
 			if (employerName != null) {
 				String s = AiDocParser.label("lbl.cm.company.name") + ": " + employerName + BR;
