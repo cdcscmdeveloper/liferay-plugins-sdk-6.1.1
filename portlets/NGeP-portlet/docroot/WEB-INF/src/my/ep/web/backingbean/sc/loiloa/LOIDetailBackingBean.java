@@ -748,6 +748,60 @@ public class LOIDetailBackingBean extends
 		return null;
 	}
 	
+	// #30447 - upperCase salutation check start
+	public String getFormattedContactPerson() {
+	    // check object null
+	    if (this.getManagedBean() == null 
+	        || this.getManagedBean().getScLoi() == null 
+	        || this.getManagedBean().getScLoi().getScSupplierAddress() == null) {
+	        return "";
+	    }
+	    
+	    String name = StringUtils.trimToEmpty(this.getManagedBean().getScLoi().getScSupplierAddress().getContactPerson());
+	    
+	    String salutation = "";
+	    if (this.getManagedBean().getScLoi().getScSupplierAddress().getPmContactUserID() != null 
+	        && this.getManagedBean().getScLoi().getScSupplierAddress().getPmContactUserID().getSalutationCode() != null) {
+	        salutation = StringUtils.trimToEmpty(this.getManagedBean().getScLoi().getScSupplierAddress().getPmContactUserID().getSalutationCode().getSalutationName());
+	    }
+
+        return getFormattedNameWithSalutation(name, salutation);
+	}
+	
+	public String getFormattedContractSignerUserName() {
+		//check null
+        if (this.getManagedBean() == null 
+            || this.getManagedBean().getContractSignerUser() == null) {
+            return "";
+        }
+        
+        String name = StringUtils.trimToEmpty(this.getManagedBean().getContractSignerUser().getUserName());
+        
+        String salutation = "";
+        if (this.getManagedBean().getContractSignerUser().getSalutationCode() != null) {
+            salutation = StringUtils.trimToEmpty(this.getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName());
+        }
+        
+        return getFormattedNameWithSalutation(name, salutation);
+	}
+	
+	public String getFormattedNameWithSalutation(String name,String salutation) {
+		name = StringUtils.trimToEmpty(name);
+		salutation = StringUtils.trimToEmpty(salutation);
+		
+        if (name.isEmpty() || salutation.isEmpty()) {
+            return name;
+        }
+        if (StringUtils.startsWithIgnoreCase(name, salutation)) {
+            return name;
+        }
+        if (name.equals(name.toUpperCase())) {
+            salutation = salutation.toUpperCase();
+        }
+        return salutation + " " + name;
+	}
+	// #30447 - upperCase salutation check end
+	
 	/**
 	 * Pre render page navigation to multiple loi page based on task id
 	 * 
