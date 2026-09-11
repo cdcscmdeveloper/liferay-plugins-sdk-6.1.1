@@ -458,13 +458,6 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE
 	};
-	public static final String[] FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ = new String[]{
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_CH,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_SD
-	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
 	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 30px;\"></span></div>";
 	public static final String SPAN_ERROR_CONTENT_OPEN = "<div><span style=\"position: relative;right: 30px;\">";
