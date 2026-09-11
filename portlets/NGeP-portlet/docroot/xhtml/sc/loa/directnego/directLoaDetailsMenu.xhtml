@@ -1243,12 +1243,14 @@ a:hover.blue_font {
 			</tr>
 		</table>
 	</p:panel>
+	<!-- #11134/#41092 -start- -->
 	<p:outputPanel id="remarksPanel">
-		<ac:scRemarkAndAttachment rendered="#{not empty directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
-			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+		<ac:scRemarkAndAttachment rendered="#{not empty directLOABackingBean.managedBean.supplierRemarks}"
+			remarkList="#{directLOABackingBean.managedBean.supplierRemarks}"
 			showAttachment="false" 
 			readonly="true" />
 	</p:outputPanel>	      
+	<!-- #11134/#41092 -end- -->
 	<!-- #25726 START -->
 	<p:confirmDialog id="qtChangeAgreementReqDlg" widgetVar="qtChangeAgreementReqDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">
