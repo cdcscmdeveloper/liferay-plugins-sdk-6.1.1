@@ -27,7 +27,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+// #10098 Start Vinod 11092026
 import javax.el.ELContext;
+// #10098 End Vinod 11092026
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -2040,9 +2042,11 @@ public class TemplateSpecBackingBean extends
 						+ "scoringSetPopup.hide()");
 		// #10098 Start Vinod
 		if (templateSpecBean.isTechTemplateUpdateFromQT() || templateSpecBean.isFinTemplateUpdateFromQT()) {
+			// #10098 Start Vinod 11092026
 			ELContext elContext = FacesContext.getCurrentInstance().getELContext();
 			SpecificationBackingBean specBean = (SpecificationBackingBean) elContext.getELResolver().getValue(
 					elContext, null, "specificationBackingBean");
+			// #10098 End Vinod 11092026
 			String docType = templateSpecBean.isTechTemplateUpdateFromQT() ? QTConstants.TECHNICAL_DOC_TYPE
 					: QTConstants.FINANCIAL_DOC_TYPE;
 			specBean.saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, docType);
@@ -3404,9 +3408,11 @@ public class TemplateSpecBackingBean extends
 						+ "zoneEstimationPopup.hide()");
 		// #10098 Start Vinod
 		if (templateSpecBean.isFinTemplateUpdateFromQT()) {
+			// #10098 Start Vinod 11092026
 			ELContext elContext = FacesContext.getCurrentInstance().getELContext();
 			SpecificationBackingBean specBean = (SpecificationBackingBean) elContext.getELResolver().getValue(
 					elContext, null, "specificationBackingBean");
+			// #10098 End Vinod 11092026
 			specBean.saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, QTConstants.FINANCIAL_DOC_TYPE);
 		}
 		// #10098 End Vinod

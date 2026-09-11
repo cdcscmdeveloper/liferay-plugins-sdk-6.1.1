@@ -10995,7 +10995,7 @@ private void retriveCommitteeRemarksList(){
 		return evalResDTO;
 	}
 
-	// #10098 Start Vinod
+	// #10098 Start Vinod 11092026
 	/**
 	 * Autosave the evaluation template checklist on the 15 minute poll.
 	 */
@@ -11010,7 +11010,7 @@ private void retriveCommitteeRemarksList(){
 					qtNo, SLALogConstant.QT_AUTOSAVE_TEMPLATE_CHECKLIST, getUserIdSessionFromLoginId(), e);
 		}
 	}
-	// #10098 End Vinod
+	// #10098 End Vinod 11092026
 
 	/**
 	 * Revise proposal evaluation.Event handle when member revise in evaluation.

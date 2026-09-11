@@ -7828,7 +7828,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
 				// #10098 Start Vinod
-				if (StringUtils.isEmpty(this.getManagedBean().getQt().getQtNo())) {
+				if (StringUtils.isEmpty(this.getManagedBean().getQt().getQtNo())) { //#10098 Vinod 11092026
 					RequestContext.getCurrentInstance().execute(QTConstants.QT_AUTOSAVE_POPUP); // new dialog
 					activeIndex = priviousIndex; // To Stay in QT Details screen.
 				}
