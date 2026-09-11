@@ -84,6 +84,7 @@ public class SLALogConstant {
 	// #10098 Start Vinod
 	public static final String QT_AUTOSAVE_QT_DETAILS_ACTION = "autosaveQtDetailsAction";
 	public static final String QT_SAVE_SIDE_MENU_QT_DETAILS_ACTION = "saveSidemenuQtDetailsAction";
+	public static final String QT_AUTOSAVE_TEMPLATE_CHECKLIST = "autoSaveTemplateChecklist";
 	// #10098 End Vinod
 	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";
 	public static final String QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL= "getDropdownValuesBySearchBeanForPartial";

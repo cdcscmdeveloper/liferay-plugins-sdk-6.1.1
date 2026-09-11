@@ -10995,6 +10995,23 @@ private void retriveCommitteeRemarksList(){
 		return evalResDTO;
 	}
 
+	// #10098 Start Vinod
+	/**
+	 * Autosave the evaluation template checklist on the 15 minute poll.
+	 */
+	public void autoSaveTemplateChecklist() {
+		try {
+			saveTempleateSpecDtls();
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getScQt() != null
+					&& this.getManagedBean().getScQt().getQtNo() != null ? this.getManagedBean().getScQt().getQtNo()
+					: " ";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_AUTOSAVE_TEMPLATE_CHECKLIST, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #10098 End Vinod
+
 	/**
 	 * Revise proposal evaluation.Event handle when member revise in evaluation.
 	 * 
