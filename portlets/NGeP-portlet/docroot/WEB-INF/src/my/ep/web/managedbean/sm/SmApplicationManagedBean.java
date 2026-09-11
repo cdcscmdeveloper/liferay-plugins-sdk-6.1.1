@@ -697,8 +697,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #40031 - End
 	// #RUU Start
 	private boolean lateRenewFee;
-	private int cancelledFee;
-	// #RUU Start
+	private int normalCodeCount;
+	private int specialCodeCount;
+	private int cancelledCount;
+	// #RUU End
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4945,12 +4947,28 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.lateRenewFee = lateRenewFee;
 	}
 
-	public int getCancelledFee() {
-		return cancelledFee;
+	public int getNormalCodeCount() {
+		return normalCodeCount;
 	}
 
-	public void setCancelledFee(int cancelledFee) {
-		this.cancelledFee = cancelledFee;
+	public void setNormalCodeCount(int normalCodeCount) {
+		this.normalCodeCount = normalCodeCount;
+	}
+
+	public int getSpecialCodeCount() {
+		return specialCodeCount;
+	}
+
+	public void setSpecialCodeCount(int specialCodeCount) {
+		this.specialCodeCount = specialCodeCount;
+	}
+
+	public int getCancelledCount() {
+		return cancelledCount;
+	}
+
+	public void setCancelledCount(int cancelledCount) {
+		this.cancelledCount = cancelledCount;
 	}
 	// #RUU End
 }

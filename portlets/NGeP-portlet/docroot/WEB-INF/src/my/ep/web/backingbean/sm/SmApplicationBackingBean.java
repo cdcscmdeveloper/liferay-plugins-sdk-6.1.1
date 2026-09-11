@@ -131,7 +131,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
-import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplAuditors;
@@ -254,6 +253,8 @@ import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
+// #RUU
+import my.ep.persistence.entity.py.PyBillDtl;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -12160,6 +12161,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.updateSmSupplierInfo(getManagedBean(), reqDTO);
 			}
 			log.info("<<< #30929: SmApplicationBackingBean.submitPOorApproverReviewToBPM() - finish >>>");
+			createCatPyBill(reqDTO);
 		} 
 		
 		//#12483 - START
@@ -12239,7 +12241,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								MessageConst.INFO_700030,
 								new String[] { applNo });
 					}
-					createCatPyBill(reqDTO);
 				} else if (res
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT)) {
 					if (getManagedBean().getBpmTaskName() != null
@@ -20331,9 +20332,42 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 
 		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
+		
 		countNormalCatCode();
+		if (getManagedBean().getNormalCodeCount() > 0) {
+			SmPaymentDetailsVO nPaymentVO = new SmPaymentDetailsVO();
+			nPaymentVO = new SmPaymentDetailsVO();
+			nPaymentVO.setDetails("Normal Category Fee");
+			nPaymentVO.setPrice(new BigDecimal(200));
+			nPaymentVO.setQuantity(getManagedBean().getNormalCodeCount());
+			nPaymentVO.setHasQuantity(true);
+			nPaymentVO.setTotalAmount(nPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getNormalCodeCount())));
+			getManagedBean().getPaymentDetailsVOList().add(nPaymentVO);
+		}
+		
 		countSpecialCatCode();
+		if (getManagedBean().getSpecialCodeCount() > 0) {
+			SmPaymentDetailsVO sPaymentVO = new SmPaymentDetailsVO();
+			sPaymentVO = new SmPaymentDetailsVO();
+			sPaymentVO.setDetails("Special Category Fee");
+			sPaymentVO.setPrice(new BigDecimal(1200));
+			sPaymentVO.setQuantity(getManagedBean().getSpecialCodeCount());
+			sPaymentVO.setHasQuantity(true);
+			sPaymentVO.setTotalAmount(sPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getSpecialCodeCount())));
+			getManagedBean().getPaymentDetailsVOList().add(sPaymentVO);
+		}
+		
 		countCancelledCatCode();
+		if (getManagedBean().getCancelledCount() > 0) {
+			SmPaymentDetailsVO cPaymentVO = new SmPaymentDetailsVO();
+			cPaymentVO = new SmPaymentDetailsVO();
+			cPaymentVO.setDetails("Re-Add Category Fee");
+			cPaymentVO.setPrice(new BigDecimal(1000));
+			cPaymentVO.setQuantity(getManagedBean().getCancelledCount());
+			cPaymentVO.setHasQuantity(true);
+			cPaymentVO.setTotalAmount(cPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getCancelledCount())));
+			getManagedBean().getPaymentDetailsVOList().add(cPaymentVO);
+		}
 
 		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
 				.getPaymentDetailsVOList()) {
@@ -20341,66 +20375,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					getManagedBean().getTotalPaymentAmount().add(
 							paymentDetailsVO.getTotalAmount()));
 		}
-	}
-	
-	private void countCancelledCatCode() {
-		getManagedBean().setCancelledFee(0);
-		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
-			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
-				compareCatCode(cat);
-			}
-		}
-		
-		if (getManagedBean().getCancelledFee() > 0) {
-			SmPaymentDetailsVO cPaymentVO = new SmPaymentDetailsVO();
-			cPaymentVO = new SmPaymentDetailsVO();
-			cPaymentVO.setDetails("Re-Add Category Fee");
-			cPaymentVO.setPrice(new BigDecimal(1000));
-			cPaymentVO.setQuantity(getManagedBean().getCancelledFee());
-			cPaymentVO.setHasQuantity(true);
-			cPaymentVO.setTotalAmount(cPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getCancelledFee())));
-			getManagedBean().getPaymentDetailsVOList().add(cPaymentVO);
-		}
-	}
-	
-	private void compareCatCode(SmSupplierCategory activeCat) {
-		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
-			if (cat.getPmCategoryL3().getCategoryL3Id().equals(activeCat.getPmCategoryL3().getCategoryL3Id())
-					&& cat.getCancelledDate() != null) {
-				getManagedBean().setCancelledFee(getManagedBean().getCancelledFee()+1);
-				break;
-			}
-		}
-	}
-	
-	private void countSpecialCatCode() {
-		int count = 0;
-		if (getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-				&& null != getManagedBean().getApprovedCategoryList() && !getManagedBean().getApprovedCategoryList().isEmpty()) {
-			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
-				if (cat.isSpecialCategory()) {
-					count++;
-				}
-			}
-		}
-		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
-			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
-				if (cat.isSpecialCategory()) {
-					count++;
-				}
-			}
-		}
-		if (count > 0) {
-			SmPaymentDetailsVO sPaymentVO = new SmPaymentDetailsVO();
-			sPaymentVO = new SmPaymentDetailsVO();
-			sPaymentVO.setDetails("Special Category Fee");
-			sPaymentVO.setPrice(new BigDecimal(1200));
-			sPaymentVO.setQuantity(count);
-			sPaymentVO.setHasQuantity(true);
-			sPaymentVO.setTotalAmount(sPaymentVO.getPrice().multiply(BigDecimal.valueOf(count)));
-			getManagedBean().getPaymentDetailsVOList().add(sPaymentVO);
-		}
-		
 	}
 	
 	private void countNormalCatCode() {
@@ -20433,21 +20407,51 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		} else {
 			totalCount = 0;
 		}
-
-		if (totalCount > 0) {
-			SmPaymentDetailsVO nPaymentVO = new SmPaymentDetailsVO();
-			nPaymentVO = new SmPaymentDetailsVO();
-			nPaymentVO.setDetails("Normal Category Fee");
-			nPaymentVO.setPrice(new BigDecimal(200));
-			nPaymentVO.setQuantity(totalCount);
-			nPaymentVO.setHasQuantity(true);
-			nPaymentVO.setTotalAmount(nPaymentVO.getPrice().multiply(BigDecimal.valueOf(totalCount)));
-			getManagedBean().getPaymentDetailsVOList().add(nPaymentVO);
+		getManagedBean().setNormalCodeCount(totalCount);
+	}
+	
+	private void countSpecialCatCode() {
+		int count = 0;
+		if (getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				&& null != getManagedBean().getApprovedCategoryList() && !getManagedBean().getApprovedCategoryList().isEmpty()) {
+			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+				if (cat.isSpecialCategory()) {
+					count++;
+				}
+			}
+		}
+		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
+			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
+				if (cat.isSpecialCategory()) {
+					count++;
+				}
+			}
+		}
+		getManagedBean().setSpecialCodeCount(count);
+	}
+	
+	private void countCancelledCatCode() {
+		getManagedBean().setCancelledCount(0);
+		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
+			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
+				compareCatCode(cat);
+			}
+		}
+	}
+	
+	private void compareCatCode(SmSupplierCategory activeCat) {
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+			if (cat.getPmCategoryL3().getCategoryL3Id().equals(activeCat.getPmCategoryL3().getCategoryL3Id())
+					&& cat.getCancelledDate() != null) {
+				getManagedBean().setCancelledCount(getManagedBean().getCancelledCount()+1);
+				break;
+			}
 		}
 	}
 
 	private void createCatPyBill(ReviewApplicationReqDTO reqDTO) {
-//		List<PyBillDtl>
+		List<PyBillDtl> catPyBillList = new ArrayList<PyBillDtl>();
+		
 	}
 	// #RUU End
 }
