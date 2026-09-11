@@ -7831,8 +7831,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if (null == this.getManagedBean().getQt().getQtNo()) {
 					RequestContext.getCurrentInstance().execute(QTConstants.QT_AUTOSAVE_POPUP); // new dialog
 					activeIndex = priviousIndex; // To Stay in QT Details screen.
-				} else {
-					saveSidemenuQtDetailsAction(reqDTO);
 				}
 				// #10098 End Vinod
 				switch (priviousIndex) {
@@ -7931,6 +7929,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					break;
 				}
+				// #10098 Start Vinod 11092026
+				// autosave once the leaving tab has filled the dto
+				if (null != this.getManagedBean().getQt().getQtNo()) {
+					saveSidemenuQtDetailsAction(reqDTO);
+				}
+				// #10098 End Vinod 11092026
 			}
 // #29732 reOpen Fix - remove code
 			switch (activeIndex) {

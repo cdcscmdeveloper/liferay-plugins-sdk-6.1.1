@@ -1364,6 +1364,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The active index. */
 	private int activeIndex;
 
+	// #10098 Start Vinod 11092026
+	/** The side menu index pending autosave confirmation. */
+	private String indexForAutoSave;
+	// #10098 End Vinod 11092026
+
 	/** The ct panel zones. */
 	private List<CtPanelZone> ctPanelZones;
 
@@ -3668,6 +3673,27 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setActiveIndex(int activeIndex) {
 		this.activeIndex = activeIndex;
 	}
+
+	// #10098 Start Vinod 11092026
+	/**
+	 * Gets the side menu index pending autosave confirmation.
+	 * 
+	 * @return the index for auto save
+	 */
+	public String getIndexForAutoSave() {
+		return indexForAutoSave;
+	}
+
+	/**
+	 * Sets the side menu index pending autosave confirmation.
+	 * 
+	 * @param indexForAutoSave
+	 *            the new index for auto save
+	 */
+	public void setIndexForAutoSave(String indexForAutoSave) {
+		this.indexForAutoSave = indexForAutoSave;
+	}
+	// #10098 End Vinod 11092026
 
 	/**
 	 * Gets the sub tab index.
