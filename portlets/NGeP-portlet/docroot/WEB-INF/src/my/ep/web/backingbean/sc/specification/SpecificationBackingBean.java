@@ -371,6 +371,20 @@ public class SpecificationBackingBean extends
 	// #40846,#10141 - Start
 	private static final String TAB_CHANGE = "tabChange";
 
+	private static final List<String> TECHNICAL_CHECKLIST_SELECT_LIST = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_NE));
+
+	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE));
+
 	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ = Collections
 			.unmodifiableList(Arrays.asList(
 					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
@@ -24006,7 +24020,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& null != techChecklist.getPmDocument().getDocDefinitionKey() ? techChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| (Arrays.asList(QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST).contains(docDefKey) || (docDefKey
+					|| (TECHNICAL_CHECKLIST_SELECT_LIST.contains(docDefKey) || (docDefKey
 							.equalsIgnoreCase(QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TL) && techChecklist
 							.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
@@ -24049,7 +24063,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& null != finChecklist.getPmDocument().getDocDefinitionKey() ? finChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| (Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey) || (FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ
+					|| (FINANCIAL_CHECKLIST_SELECT_LIST.contains(docDefKey) || (FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ
 							.contains(docDefKey) && finChecklist.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = finChecklist.getQtChecklistId();
