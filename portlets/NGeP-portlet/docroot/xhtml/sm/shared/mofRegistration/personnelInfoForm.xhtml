@@ -48,6 +48,7 @@
 		/* Button text alignment */
 		.ui-button.ai-assistant-btn .ui-button-text {
 			display: inline-flex !important;
+			white-space: nowrap !important;
 			align-items: center !important;
 			vertical-align: middle !important;
 			gap: 3px !important;
@@ -581,7 +582,7 @@
 			toggleable="true" id="smPersonnelParentPan">
 			<!-- #40112 - start -->
 			<p:outputPanel rendered="#{backingBean.showEpfAiBtn}">
-				<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" style="width: 150px;" onclick="epfAI.show()" immediate="true">
+				<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" style="min-width: 150px;" onclick="epfAI.show()" immediate="true">
 					<p:ajax partialSubmit="true" process="@this" />
 				</p:commandButton>
 				<p:graphicImage id="ttepfAI" value="/css/images/design/tooltips.png" />
