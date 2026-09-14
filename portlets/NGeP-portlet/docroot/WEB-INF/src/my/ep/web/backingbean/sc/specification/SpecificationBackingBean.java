@@ -8677,6 +8677,7 @@ public class SpecificationBackingBean extends
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
+			technical.setOverallOtherFlag(Boolean.TRUE);
 			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 			if (null != passingScore
 					&& technical.getOverallTechnical().intValue() < passingScore
@@ -8704,6 +8705,7 @@ public class SpecificationBackingBean extends
 					.intValue();
 			technical.setOverallFin(new BigDecimal(financialScore));
 			this.getManagedBean().setRecommendationPackageScore(technical);
+			this.getManagedBean().getRecommendationPackageScore().setOverallOtherFlag(true);
 			int local = technical.getOverallTechnical().intValue()
 					+ technical.getOverallFin().intValue();
 
@@ -11991,6 +11993,14 @@ public class SpecificationBackingBean extends
 						        ? itemScoreSetting.getOverallFin()
 						        : packageScoreSetting.getOverallFin()
 						);
+				
+				//#38151 Apply a flag to recognize in specification maintenance data wip before and after revise.
+				newItemScoreSetting.setOverallOtherFlag(
+				        this.getManagedBean().isWeightage35384WIP()
+				            ? null
+				            : Boolean.TRUE
+				    );
+
 				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
 				itemScoreSetting = newItemScoreSetting;
 			}//#28784 - end
@@ -17068,6 +17078,7 @@ public class SpecificationBackingBean extends
 				recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
 				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
 				//#38151 && 40044 -start-
+				recommendationItem.setOverallOtherFlag(true);
 				recommendationItem.setOverallOtherTechnical(BigDecimal.ZERO);
 				recommendationItem.setOverallOtherFin(BigDecimal.ZERO);
 				//#38151 && 40044 -end-
@@ -24508,31 +24519,23 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		this.getManagedBean().setZoneQtyHasZeroVal(templateSpecSO.validateQuantityItem(this.getManagedBean().getQt().getQtId()));	
 	}
 	// #38679
-	
-	// #38151 start
-	public boolean checkWeightage35384WIPbyStatus() {
-		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currentStatusId) 
-				|| QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currentStatusId) 
-				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId)
-				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
 
-	// #38151 end
 
 	// #38151 && 40044 Start
-	public void checkWeightage35384WIP() {
+	public void checkWeightage35384WIP() { 
 		
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
+		
+		IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);//34852_start
+		SpecificationReqDTO specReqDto=new SpecificationReqDTO();
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(specReqDto));//34852_End
+		
 		ScQt qt = this.getManagedBean().getQt();
-		Date publishDate = qt.getPublishDate();
+		
+		boolean checkStatusWip = checkWipScoreSettingFlag(qt.getQtId());
 		Date createdDate = qt.getCreatedDate();
 
 		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -24544,54 +24547,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
-		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
-		
-		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
+		if ((createdDate.before(effTimestamp) && !checkStatusWip)) {
 			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
-		} else if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) 
-						|| (createdDate.before(effTimestamp) && null != publishDate && publishDate.before(effDate))) {
-			this.getManagedBean().setWeightage35384WIP(true);
-		}
+		} 
 	}
-	
-	private boolean specStatusEndorseRev(Date effTimestamp) {
-		
-		IScWorkFlowStatusSO workFlowStatusSO;
-		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatus(this.getManagedBean().getQt().getQtId());
-			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
-				return Boolean.TRUE;
-			}else{
-				return Boolean.FALSE;
-			}
-			
-			 
-		} finally {
-			workFlowStatusSO = null;
-		}
-	}
-
-	private boolean specStatusPendingDocRev(Date effTimestamp) {
-		
-		IScWorkFlowStatusSO workFlowStatusSO;
-		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatusPenDoc(this.getManagedBean().getQt().getQtId());
-			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
-				return Boolean.TRUE;
-			}else{
-				return Boolean.FALSE;
-			}
-			
-			 
-		} finally {
-			workFlowStatusSO = null;
-		}
+	private boolean checkWipScoreSettingFlag(Long qtId) {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		return specSo.checkWipScoreFlag(qtId);
 	}
 	// #38151 End
 	
