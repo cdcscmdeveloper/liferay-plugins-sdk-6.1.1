@@ -86,6 +86,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -555,6 +556,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private String disciplinaryActionstartDate;
 	private String disciplinaryActionEndDate;
 	private boolean disciplinaryActionWarning = false;
+	private List<DisciplinaryActionVO> disciplineVOs;
 	//26284 - End
 
 	private class ExpiredSearchPagingDataModel extends
@@ -4411,6 +4413,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
 		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
 	}
 	// 26284 - End
 }
