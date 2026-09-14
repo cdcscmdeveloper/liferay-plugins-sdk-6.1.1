@@ -592,6 +592,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				// ticking nothing is still a decision - re-derive the icons against the new latches
 				validateEPF(appl);
 			}
+			// the decision is latched, so a reopened dialog starts unticked
+			selectedEmployees = null;
 		} else if (TYPE_TENANCY.equals(docType)){
 			submitTenancy();
 		}
@@ -1601,27 +1603,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return tenancy;
 	}
 
-	/**
-	 * A tick means "this employee is on the application", so one deleted from the personnel list
-	 * must come back unticked. The list only ever holds employees a submit already added, so an
-	 * entry with no personnel behind it was deleted since.
-	 * @return
-	 */
 	public List<AiEpfResultDTO.AiEmployeeDTO> getSelectedEmployees() {
-		if (EntityHelper.isCollectionEmpty(selectedEmployees) || smAppl == null){
-			return selectedEmployees;
-		}
-		Set<String> onAppl = new HashSet<>();
-		if (!EntityHelper.isCollectionEmpty(smAppl.getSmPersonnels())){
-			for (SmPersonnel per : smAppl.getSmPersonnels()){
-				onAppl.add(AiDocValidator.normalizeNric(per.getIdentificationNo()));
-			}
-		}
-		for (Iterator<AiEpfResultDTO.AiEmployeeDTO> it = selectedEmployees.iterator(); it.hasNext();){
-			if (!onAppl.contains(AiDocValidator.normalizeNric(it.next().getNricNumber()))){
-				it.remove();
-			}
-		}
 		return selectedEmployees;
 	}
 
