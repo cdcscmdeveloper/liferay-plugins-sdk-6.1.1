@@ -192,6 +192,7 @@
 			<portlet id="maintenanceRequestRevision"/>
 			<!-- 25037 - end -->
 			<portlet id="demoInvitation"/><!-- #28784 -->
+			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->	
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
