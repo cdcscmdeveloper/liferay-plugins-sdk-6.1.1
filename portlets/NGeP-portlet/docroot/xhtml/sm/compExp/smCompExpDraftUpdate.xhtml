@@ -551,8 +551,8 @@
 				escape="false" />
 			<!--  9299 - 40830 -->
 			<div  style="text-align:right; margin-top:10px;">
-				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"
-					onclick="delDuplicateDialogWV.hide();"
+				<!-- #9299 - #41245 -->
+				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}" onclick="delDuplicateSmDialogWV.hide();"
 					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 					process="@form" update=":form"
 					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
