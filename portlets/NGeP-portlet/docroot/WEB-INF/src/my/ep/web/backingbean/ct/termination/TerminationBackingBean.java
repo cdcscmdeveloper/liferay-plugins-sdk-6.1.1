@@ -653,7 +653,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					}
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-		        	log.info("INACTIVE_USER_5 REVISE + return 5");
+		        	log.info("INACTIVE_USER_5 + return 5");
 	                handleInactiveUserValidation(outcome, selectedActor);
 				 }
             }
