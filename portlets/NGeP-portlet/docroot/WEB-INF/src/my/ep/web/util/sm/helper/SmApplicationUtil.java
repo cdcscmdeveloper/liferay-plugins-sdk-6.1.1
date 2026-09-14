@@ -5610,6 +5610,7 @@ public class SmApplicationUtil {
 			final int year = -365;
 			if(diffDays > renewMonth * days){
 				// #RUU
+				// Renewal block
 //				throw new EpException(MessageConst.ERROR_722501, new String[] {String.valueOf(renewMonth)});
 			} else if(diffDays < year){
 				throw new EpException(MessageConst.ERROR_722502);
@@ -14606,10 +14607,9 @@ public class SmApplicationUtil {
 	 */
 	public static boolean getPaymentMode(SmAppl smAppl) {
 		boolean payReq = false;
-		if (smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-				|| smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+		// #RUU
+		// Enable Registration and Additional Fee for all Application
+		if (!smAppl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 			payReq = true;
 		}
 		return payReq;

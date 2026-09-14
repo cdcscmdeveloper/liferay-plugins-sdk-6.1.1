@@ -2227,6 +2227,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// set payment details section only for supplier and application type is
 			// NEW or RENEW
 		// #RUU Start
+		// Payment list for Payment Summary
 		if (getManagedBean().isSupplierUser() && !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 			if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
 				checkLateRenewal();
@@ -3377,7 +3378,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		// 37925 END
 		// #RUU Start
+		// Payment list for Payment Summary
 		if (getManagedBean().isSupplierUser() && outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) {
+			if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				checkLateRenewal();
+			}
 			calculatePayment();
 		}
 		// #RUU End
@@ -6793,6 +6798,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							validCat = true;
 						} else {
 							// #RUU
+							// Removed code block
 //							throw new EpException(MessageConst.ERROR_722563);
 							validCat = true;
 						}
@@ -20273,6 +20279,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#40801 END
 	// #RUU Start
+	// Check if supplier should be charge for Late Fee
 	private void checkLateRenewal() {
 		getManagedBean().setLateRenewFee(false);
 		long diff = (getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getExpDate().getTime() - (new Timestamp(System.currentTimeMillis()))
@@ -20282,6 +20289,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	
+	// Payment list for Payment Summary
 	private void calculatePayment() {
 		String regDetails = "";
 		String proDetails = "";
@@ -20377,6 +20385,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	
+	// Count normal code to be charged
 	private void countNormalCatCode() {
 		int approvedCount = 0;
 		if (null != getManagedBean().getApprovedCategoryList() && !getManagedBean().getApprovedCategoryList().isEmpty()) {
@@ -20410,6 +20419,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setNormalCodeCount(totalCount);
 	}
 	
+	// Count special code to be charged
 	private void countSpecialCatCode() {
 		int count = 0;
 		if (getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
@@ -20430,6 +20440,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setSpecialCodeCount(count);
 	}
 	
+	// Count added code that have been removed previously to be charged
 	private void countCancelledCatCode() {
 		getManagedBean().setCancelledCount(0);
 		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
@@ -20439,6 +20450,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	
+	// Compare added code with previously removed code
 	private void compareCatCode(SmSupplierCategory activeCat) {
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 			if (cat.getPmCategoryL3().getCategoryL3Id().equals(activeCat.getPmCategoryL3().getCategoryL3Id())
@@ -20449,9 +20461,65 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 
+	// Bill for additonal Fee
 	private void createCatPyBill(ReviewApplicationReqDTO reqDTO) {
 		List<PyBillDtl> catPyBillList = new ArrayList<PyBillDtl>();
 		
+		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			checkLateRenewal();
+		}
+		if(getManagedBean().isLateRenewFee()){
+			PyBillDtl latePyBill = new PyBillDtl();
+			PmParameter itemCode = new PmParameter();
+			itemCode.setParameterId(457L);
+			latePyBill.setItemCode(itemCode); 
+			latePyBill.setItemDesc("MOF Late Fee (Renewal)");
+			BigDecimal itemPrice = new BigDecimal(300);
+			latePyBill.setItemPrice(itemPrice);
+			latePyBill.setItemQty(0);
+			catPyBillList.add(latePyBill);
+		}
+		
+		countNormalCatCode();
+		if (getManagedBean().getNormalCodeCount() > 0) {
+			PyBillDtl nPyBill = new PyBillDtl();
+			PmParameter itemCode = new PmParameter();
+			itemCode.setParameterId(457L);
+			nPyBill.setItemCode(itemCode); 
+			nPyBill.setItemDesc("Normal Category Fee");
+			BigDecimal itemPrice = new BigDecimal(200);
+			nPyBill.setItemPrice(itemPrice.multiply(BigDecimal.valueOf(getManagedBean().getNormalCodeCount())));
+			nPyBill.setItemQty(getManagedBean().getNormalCodeCount());
+			catPyBillList.add(nPyBill);
+		}
+		
+		countSpecialCatCode();
+		if (getManagedBean().getSpecialCodeCount() > 0) {
+			PyBillDtl sPyBill = new PyBillDtl();
+			PmParameter itemCode = new PmParameter();
+			itemCode.setParameterId(457L);
+			sPyBill.setItemCode(itemCode); 
+			sPyBill.setItemDesc("Special Category Fee");
+			BigDecimal itemPrice = new BigDecimal(1200);
+			sPyBill.setItemPrice(itemPrice.multiply(BigDecimal.valueOf(getManagedBean().getSpecialCodeCount())));
+			sPyBill.setItemQty(getManagedBean().getCancelledCount());
+			catPyBillList.add(sPyBill);
+		}
+		
+		countCancelledCatCode();
+		if (getManagedBean().getCancelledCount() > 0) {
+			PyBillDtl sPyBill = new PyBillDtl();
+			PmParameter itemCode = new PmParameter();
+			itemCode.setParameterId(457L);
+			sPyBill.setItemCode(itemCode); 
+			sPyBill.setItemDesc("Re-Add Category Fee");
+			BigDecimal itemPrice = new BigDecimal(1000);
+			sPyBill.setItemPrice(itemPrice.multiply(BigDecimal.valueOf(getManagedBean().getCancelledCount())));
+			sPyBill.setItemQty(getManagedBean().getCancelledCount());
+			catPyBillList.add(sPyBill);
+		}
+		
+		reqDTO.setPyBillDtls(catPyBillList);
 	}
 	// #RUU End
 }

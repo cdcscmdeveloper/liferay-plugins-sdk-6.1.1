@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<ui:remove>#RUU Start</ui:remove>
+	<ui:remove>#RUU Start : Display payment summary for all application</ui:remove>
 	<p:panel header="#{lbl['lbl.sm.payment.details']}"
 		rendered="#{!backingBean.managedBean.smAppl.applType ne 'C'}"
 		toggleable="true" >
@@ -55,7 +55,7 @@
 			</p:column>
 			
 			<p:column style="text-align:right !important;">
-				<ui:remove>#RUU Start</ui:remove>
+				<ui:remove>#RUU Start: Display quantity in Payment Summary</ui:remove>
 				<h:outputText rendered="#{itemLs.hasQuantity}"
 					value="#{itemLs.quantity}" />
 				<h:outputText rendered="#{!itemLs.hasQuantity}" value="-" />
