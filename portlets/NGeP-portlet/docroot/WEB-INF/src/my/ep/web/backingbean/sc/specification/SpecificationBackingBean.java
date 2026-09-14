@@ -2501,8 +2501,8 @@ public class SpecificationBackingBean extends
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
 			// #40846,#10141 - Start
-			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true
-					: false;
+			// #41039 sonarqube issue
+			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition);
 			// #40846,#10141 - End
 
 			//#25138 - add if() condition - start
@@ -3096,7 +3096,8 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFinancialScoring(newFinancialScoring);
 				}// #33525 - End
 				// Bug #35688@Syazani 10/07/2024 -- Start
-				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024/ // #40846,#10141 
+				// #41040 sonarqube issue
+				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition);	// Bug #35688@Syazani 10/07/2024/ // #40846,#10141 
 				finWeightageSum(isNotThrow);
 				// Bug #35688@Syazani 10/07/2024 -- End
 				localChecklist = null;
@@ -15881,9 +15882,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				if (finDocDefKeys.contains(list.getPmDocument().getDocDefinitionKey())
 						&& (null == list.getScQtCheckListValue() || null == list.getScQtCheckListValue().getYear())) {
 					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}else{
+					statusId = QTStatusConst.TS_COMPLETED;
 				}
 				//#40724 - End
-				statusId = QTStatusConst.TS_COMPLETED;
 			}
 			list.setPmStatus(getPmStatusByStatusId(statusId));
 		}
