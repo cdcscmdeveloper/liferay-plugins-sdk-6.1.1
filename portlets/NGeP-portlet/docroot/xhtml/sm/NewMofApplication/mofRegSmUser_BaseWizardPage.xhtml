@@ -407,10 +407,10 @@
 				</div>
 
 			</p:confirmDialog>
-			<!-- #17906 - bank tab -->
+			<!-- #17906 - bank tab --><!-- #40112 -->
 			<p:messages id="messages" showDetail="true" showSummary="false"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				closable="true" escape="false" globalOnly="#{backingBean.managedBean.tabActiveIndex eq 4}"/>
+				closable="true" escape="false" globalOnly="#{backingBean.managedBean.tabActiveIndex eq 4 or smAIDocBackingBean.aiMessagePending}"/>
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1CompanyInfo.xhtml" />

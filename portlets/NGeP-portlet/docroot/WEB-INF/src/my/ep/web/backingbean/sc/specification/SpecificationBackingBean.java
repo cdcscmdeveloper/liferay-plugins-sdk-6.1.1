@@ -357,6 +357,28 @@ public class SpecificationBackingBean extends
 
 	// #48486,#10141 - Start
 	private static final String TAB_CHANGE = "tabChange";
+
+	private static final List<String> TECHNICAL_CHECKLIST_SELECT_LIST = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_NE));
+
+	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE));
+
+	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_AL,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CH,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_SD));
 	// #48486,#10141 - End
 	/**
 	 * Instantiates a new specification backing bean.
@@ -22843,6 +22865,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				return true;
 			}
 		}
+		removeInactiveChecklists();
+
+		return false;
+	}
+
+	/**
+	 * Drops the inactive checklists already confirmed by the user from the
+	 * technical and financial proposal lists, and keeps them for deletion.
+	 */
+	private void removeInactiveChecklists() {
 		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
 		
 		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
@@ -22867,8 +22899,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
-		
-		return false;
 	}
 
 	// #10141 End Vinod
@@ -23254,8 +23284,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(
 					defType)
-					|| (Arrays.asList(
-							QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST)
+					|| (TECHNICAL_CHECKLIST_SELECT_LIST
 							.contains(docDefKey) || (docDefKey
 							.equalsIgnoreCase(QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TL) && techChecklist
 							.isScoringReq()))) {
@@ -23300,10 +23329,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(
 					defType)
-					|| (Arrays.asList(
-							QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST)
-							.contains(docDefKey) || (Arrays
-							.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ)
+					|| (FINANCIAL_CHECKLIST_SELECT_LIST
+							.contains(docDefKey) || (FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ
 							.contains(docDefKey) && finChecklist.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = finChecklist.getQtChecklistId();
@@ -24522,6 +24549,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		
 		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
 			//null != publishDate && publishDate.before(effDate)
+			this.getManagedBean().setWeightage35384WIP(true);
+		} else if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) 
+						|| (createdDate.before(effTimestamp) && null != publishDate && publishDate.before(effDate))) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}

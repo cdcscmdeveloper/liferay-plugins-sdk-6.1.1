@@ -4327,6 +4327,7 @@ public class SmApplicationBackingBean extends
 				setApplicationShareHolders(getManagedBean().getSmAppl()
 						.getSmPersonnels());
 			}
+			reattachSelectedShareHolder();	//#40112
 			retrieveBusinessTypeList();
 			assignSupplierBusinessType(getManagedBean().getSmAppl()
 					.getSmSupplier());
@@ -8573,11 +8574,13 @@ public class SmApplicationBackingBean extends
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
 			SmAIDocBackingBean.latchUserEdit(getManagedBean().getSmAppl());	//#40112
 		} catch (Exception e) {
-			//log.info("error to save appl no:"
-				//	+ getManagedBean().getSmAppl().getApplNo(), e);
+			log.info("error to save appl no:"
+					+ getManagedBean().getSmAppl().getApplNo(), e);
 		} finally {
 
 			retriveLatestApplAfterUpdate("", "");
+
+			reseedAiState();	//#40112
 
 			// set section editor VO after update
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
@@ -8586,6 +8589,46 @@ public class SmApplicationBackingBean extends
 			setBranchDisplayTable(); //29727 , 34135
 		}
 	}
+
+	//#40112 - start
+	// retriveLatestApplAfterUpdate() swaps in a fresh appl graph, so every @Transient AI field is
+	// null again; re-derive them here so no caller has to remember.
+	private void reseedAiState() {
+		String pageType = getManagedBean().getCurrentPageType();
+		if (!getManagedBean().isSupplierUser() || pageType == null) {
+			return;
+		}
+		if (SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC.equalsIgnoreCase(pageType)) {
+			SmAIDocBackingBean.loadTenancyDocs(getManagedBean().getSmAppl());
+			SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+		} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL.equalsIgnoreCase(pageType)) {
+			SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
+			SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
+		} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS.equalsIgnoreCase(pageType)) {
+			SmAIDocBackingBean.attachPendingAiFiles(getManagedBean().getSmAppl());
+			SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
+		}
+	}
+	//#40112 - end
+
+	//#40112 - start
+	// the appl graph was just replaced, so a selectedShareHolder kept from the previous read is
+	// detached; merging it on the next save fails with an OptimisticLockException
+	private void reattachSelectedShareHolder() {
+		SmPersonnel selected = getManagedBean().getSelectedShareHolder();
+		if (selected == null || selected.getPersonnelId() == null
+				|| EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+						.getSmPersonnels())) {
+			return;
+		}
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			if (selected.getPersonnelId().equals(per.getPersonnelId())) {
+				getManagedBean().setSelectedShareHolder(per);
+				return;
+			}
+		}
+	}
+	//#40112 - end
 
 	/**
 	 * Update category record status if category record status is 1 and
