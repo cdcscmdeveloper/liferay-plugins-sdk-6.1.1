@@ -1,16 +1,27 @@
 package my.ep.web.util.cm.helper;
 
+import java.util.List; //#26282
+
+import org.apache.log4j.Logger; //#26282
+
 import my.ep.constant.cm.CmConst;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
+//#26282 - Start
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
+//#26282 - End
 import my.ep.type.pm.RoleCode;
 
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmApplicationUtil; //#26282
 
 public class CmApplicationUtil {
 	
+	private static Logger log = Logger.getLogger(CmApplicationUtil.class);	//[#26282]
+
 	public static CmTrackingDairyVO assignTrackingDairyValues(CmSupplierItem cmSupplierItem, String actionDesc,
 			PmStatus status) {
 		CmTrackingDairyVO trckVO = new CmTrackingDairyVO();
@@ -62,5 +73,34 @@ public class CmApplicationUtil {
 				return RoleCode.MOF_SUPPLIER_USER.value();
 			}
 	return null;	
+	}
+
+	//[#26282] and SonarLint Issues Fixing...
+	/**
+	 * 
+	 * @param supplierId
+	 * @return disciplinaryActList
+	 */
+	public static List<SmDisciplinaryAction> checkForDisciplinaryAction(Long supplierId) {
+		SmSupplier smSupplier;
+
+		if(supplierId == null) {
+			//get supplier details base on user login	
+			SmApplicationUtil.getInstance();
+			smSupplier = SmApplicationUtil.getCurrentSupplier();
+		} else {
+			smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(supplierId);
+		}
+
+		log.info("[#26282] - Supplier ID is: " + smSupplier.getSupplierId());
+		
+		List<SmDisciplinaryAction> disciplinaryActList = null;
+		
+		if(smSupplier.getSupplierId() != null) {
+			disciplinaryActList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForCMCD(smSupplier);
+		}
+
+		return disciplinaryActList;
 	}
 }
