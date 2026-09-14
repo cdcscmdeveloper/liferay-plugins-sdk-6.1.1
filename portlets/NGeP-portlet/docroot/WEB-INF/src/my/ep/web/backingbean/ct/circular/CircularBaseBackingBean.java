@@ -75,6 +75,8 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	
 	private PmOrgProfile ownerOrgProfile;
 	
+	private static final Map<Long, String> CONFIRMATION_MSGS = buildConfirmationMsgs(); // #34442
+		
 	/**
 	 * This method used to initiate FacesScopes
 	 * instances of current request
@@ -170,22 +172,26 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	 *         if no confirmation message is defined for the given status
 	 */
 	public String getConfirmationMsgs(Long key) {
-		final Map<Long, String> confirmationMsgs = new HashMap<>();
+		return CONFIRMATION_MSGS.get(key);
+	}
+	
+	private static Map<Long, String> buildConfirmationMsgs() {
+		Map<Long, String> confirmationMsgs = new HashMap<>();
 
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_APPROVAL, "lbl.ct.cq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_REVISION_APPROVAL, "lbl.ct.cq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL, "lbl.ct.cq.upd.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.cq.upd.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.CR_PENDING_APPROVAL, "lbl.ct.cq.cancel.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION_APPROVAL, "lbl.ct.cq.cancel.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_APPROVAL, "lbl.ct.pq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_REVISION_APPROVAL, "lbl.ct.pq.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
 		confirmationMsgs.put(ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION, "lbl.ct.pq.cancel.rev.app.confirm");
-		confirmationMsgs.put(ContractStatusConst.CR_PENDING_REVISION_APPROVAL, "lbl.ct.pq.cancel.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.MQ_PENDING_APPROVAL, "lbl.ct.pq.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.MQ_PENDING_REVISION_APPROVAL, "lbl.ct.pq.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.MQ_PENDING_UPDATE_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
+		confirmationMsgs.put(ContractStatusConst.MQ_PENDING_UPDATE_REVISION_APPROVAL, "lbl.ct.pq.upd.rev.app.confirm");
 
-		return confirmationMsgs.get(key);
+		return Collections.unmodifiableMap(confirmationMsgs);
 	}
 	//34442 - end
 

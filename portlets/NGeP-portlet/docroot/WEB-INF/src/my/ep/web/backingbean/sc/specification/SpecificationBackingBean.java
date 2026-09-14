@@ -371,6 +371,28 @@ public class SpecificationBackingBean extends
 	// #40846,#10141 - Start
 	private static final String TAB_CHANGE = "tabChange";
 
+	private static final List<String> TECHNICAL_CHECKLIST_SELECT_LIST = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_NE));
+
+	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE));
+
+	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_AL,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CH,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_SD));
+
 	// #40846,#10141 - End
 
 	/**
@@ -2501,8 +2523,8 @@ public class SpecificationBackingBean extends
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
 			// #40846,#10141 - Start
-			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true
-					: false;
+			// #41039 sonarqube issue
+			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition);
 			// #40846,#10141 - End
 
 			//#25138 - add if() condition - start
@@ -3096,7 +3118,8 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFinancialScoring(newFinancialScoring);
 				}// #33525 - End
 				// Bug #35688@Syazani 10/07/2024 -- Start
-				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024/ // #40846,#10141 
+				// #41040 sonarqube issue
+				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition);	// Bug #35688@Syazani 10/07/2024/ // #40846,#10141 
 				finWeightageSum(isNotThrow);
 				// Bug #35688@Syazani 10/07/2024 -- End
 				localChecklist = null;
@@ -4884,6 +4907,35 @@ public class SpecificationBackingBean extends
 				.set(index, list);
 
 	}
+
+	//#41151 - Start
+	/**
+	 * Standard financial checklist document names for the qt's procurement
+	 * category. A manually keyed row carrying one of these titles has no
+	 * pmDocument, so it hides the real document from the Standard Checklist
+	 * picker and stays unresolved at evaluation.
+	 * 
+	 * @return Set<String>
+	 */
+	private Set<String> standardFinancialChecklistNames() {
+		procurementCategoryCode(this.getManagedBean().getQt());
+		DocumentReqDTO stdDocReqDTO = new DocumentReqDTO();
+		stdDocReqDTO.setProcurementCatCode(this.getManagedBean()
+				.getProcuremntCategory());
+		stdDocReqDTO
+				.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST);
+		DocumentResDTO stdDocResDTO = getDocumentSO()
+				.retrieveDocumentCheckList(stdDocReqDTO);
+		Set<String> stdDocNames = new LinkedHashSet<String>();
+		if (null != stdDocResDTO
+				&& CollectionUtils.isNotEmpty(stdDocResDTO.getDocumentList())) {
+			for (PmDocument document : stdDocResDTO.getDocumentList()) {
+				stdDocNames.add(document.getDocName());
+			}
+		}
+		return stdDocNames;
+	}
+	//#41151 - End
 
 	/**
 	 * Technical checklist drop down action change.Event handle change Action
@@ -12163,6 +12215,21 @@ if (null != checklist && !checklist.isEmpty()) {
 	private void validatePrepareQtChecklist() {
 		System.out.println("inside prepare...");
 		try {
+			//#41151 - Start
+			Set<String> stdDocNames = standardFinancialChecklistNames();
+			List<ScQtCheckList> finProposalList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if (CollectionUtils.isNotEmpty(finProposalList)) {
+				for (ScQtCheckList finProposal : finProposalList) {
+					if (null == finProposal.getPmDocument()
+							&& null != finProposal.getTitle()
+							&& stdDocNames.contains(finProposal.getTitle())) {
+						throw new EpException(MessageConst.ERR_760833,
+								new String[] { finProposal.getTitle() });
+					}
+				}
+			}
+			//#41151 - End
 			System.out.println("before prepare...");
 			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -15829,7 +15896,18 @@ if (null != checklist && !checklist.isEmpty()) {
 			if (list.isScoringReq()) {
 				statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 			} else if (!list.isScoringReq()) {
-				statusId = QTStatusConst.TS_COMPLETED;
+				//#40724 - Start
+				List<String> finDocDefKeys = Arrays
+						.asList(SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE,
+								SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE);
+				
+				if (finDocDefKeys.contains(list.getPmDocument().getDocDefinitionKey())
+						&& (null == list.getScQtCheckListValue() || null == list.getScQtCheckListValue().getYear())) {
+					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}else{
+					statusId = QTStatusConst.TS_COMPLETED;
+				}
+				//#40724 - End
 			}
 			list.setPmStatus(getPmStatusByStatusId(statusId));
 		}
@@ -17108,6 +17186,11 @@ if (null != checklist && !checklist.isEmpty()) {
 	private void validateTechnicalUserScoringAttachment(
 			boolean isTechnicalUserScoringSchema) {
 
+		// #10141 - #41172 Start Vinod
+		if (this.getManagedBean().isSaveForScorePrintBtn()) {
+			return;
+		}
+		// #10141 - #41172 End Vinod
 		if (isTechnicalUserScoringSchema) {
 			if (null == this.getManagedBean().getQt()
 					.getTechnicalUserScoringSchemaAttachment()) {
@@ -17125,6 +17208,11 @@ if (null != checklist && !checklist.isEmpty()) {
 	 */
 	private void validateFinancialUserScoringAttachment(
 			boolean isFinancialUserScoringSchema) {
+		// #10141 - #41172 Start Vinod
+		if (this.getManagedBean().isSaveForScorePrintBtn()) {
+			return;
+		}
+		// #10141 - #41172 End Vinod
 		if (isFinancialUserScoringSchema) {
 			if (null == this.getManagedBean().getQt()
 					.getFinancialUserScoringSchemaAttachment()) {
@@ -23518,6 +23606,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				return true;
 			}
 		}
+		removeInactiveChecklists();
+
+		return false;
+	}
+
+	/**
+	 * Drops the inactive checklists already confirmed by the user from the
+	 * technical and financial proposal lists, and keeps them for deletion.
+	 */
+	private void removeInactiveChecklists() {
 		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
 		
 		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
@@ -23542,8 +23640,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
-		
-		return false;
 	}
 
 	// #10141 End Vinod
@@ -23926,7 +24022,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& null != techChecklist.getPmDocument().getDocDefinitionKey() ? techChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| Arrays.asList(QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST).contains(docDefKey)) {
+					|| (TECHNICAL_CHECKLIST_SELECT_LIST.contains(docDefKey) || (docDefKey
+							.equalsIgnoreCase(QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TL) && techChecklist
+							.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = techChecklist.getQtChecklistId();
 				String title = techChecklist.getTitle();
@@ -23967,7 +24065,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& null != finChecklist.getPmDocument().getDocDefinitionKey() ? finChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey)) {
+					|| (FINANCIAL_CHECKLIST_SELECT_LIST.contains(docDefKey) || (FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ
+							.contains(docDefKey) && finChecklist.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = finChecklist.getQtChecklistId();
 				String title = finChecklist.getTitle();
@@ -23998,6 +24097,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	public void generateSpecScoreReport() throws IOException {
 		int specZoneTabIndex = this.getManagedBean().getSpecZoneTabIndex();
+		this.getManagedBean().setSaveForScorePrintBtn(true); //#10141 - #41172 added.
 		validatePrepareQtChecklist();
 		
 		this.getManagedBean().setSpecZoneTabIndex(specZoneTabIndex);
@@ -24179,6 +24279,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public void downloadTechnicalChecklistSummaryReport() throws IOException {
 		List<ScQtCheckList> scQtChecklistTech = this.getManagedBean().getTechChecklistPreview();
 		validatePrepareQtChecklist();
+		 // #41066 - Start
+		if (this.getManagedBean().isMaintanceFlow()) {
+			checkSpecMaintenanceChecklist();
+		}
+		 // #41066 - End
 
 		this.getManagedBean().setTechChecklistPreview(scQtChecklistTech);
 
@@ -24227,6 +24332,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getTechChecklistPreview(), false);
 		validatePrepareQtChecklist();
+		 // #41066 - Start
+		if (this.getManagedBean().isMaintanceFlow()) {
+			checkSpecMaintenanceChecklist();
+		}
+		 // #41066 - End
 		technicalCheckListPreview();
 	}
 
@@ -24245,6 +24355,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public void downloadFinancialChecklistSummaryReport() throws IOException {
 		List<ScQtCheckList> scQtChecklistFin = this.getManagedBean().getFinChecklistPreview();
 		validatePrepareQtChecklist();
+		 // #41066 - Start
+		if (this.getManagedBean().isMaintanceFlow()) {
+			checkSpecMaintenanceChecklist();
+		}
+		 // #41066 - End
 
 		this.getManagedBean().setFinChecklistPreview(scQtChecklistFin);
 
@@ -24293,6 +24408,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getFinChecklistPreview(), false);
 		validatePrepareQtChecklist();
+		 // #41066 - Start
+		if (this.getManagedBean().isMaintanceFlow()) {
+			checkSpecMaintenanceChecklist();
+		}
+		 // #41066 - End
 		financialCheckListPreview();
 	}
 
@@ -25255,6 +25375,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
 			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
+		} else if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) 
+						|| (createdDate.before(effTimestamp) && null != publishDate && publishDate.before(effDate))) {
+			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
 	
@@ -25344,6 +25467,35 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		               && getManagedBean().getSpecMaintenanceScreen() != getSpecMaintenance()));
 	}
 	// #40245 - end
+	
+	// #41066 - Start
+	/**
+	 * Check Spec maintenance checklist
+	 */
+	private void checkSpecMaintenanceChecklist() {
+		ScQt scQt = this.getManagedBean().getQt();
+		if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())
+				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId())) {
+			this.getManagedBean().setGenInfo(true);
+			if (QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
+				this.getManagedBean().setGenInfo(false);
+			}
+		}
+		if ((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(scQt.getQtStatus().getStatusId()))) {																								// reschedule
+			this.getManagedBean().setChecklist(true);
+			if (QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
+				this.getManagedBean().setChecklist(false);
+			}
+		}
+	}
+	 // #41066 - End
 	
 	//#25651 - Start
 	/**
