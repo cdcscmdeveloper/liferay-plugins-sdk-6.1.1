@@ -151,6 +151,7 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<ui:remove>#41069 start</ui:remove>
 			<td colspan="2"><p:selectOneMenu
 					value="#{doCancelRptBB.managedBean.group}">
 
@@ -174,6 +175,7 @@
 						itemValue="#{FlReportConst.getFlRptCcPhysicalLoaNo()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+				<ui:remove>#41069 end</ui:remove>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>

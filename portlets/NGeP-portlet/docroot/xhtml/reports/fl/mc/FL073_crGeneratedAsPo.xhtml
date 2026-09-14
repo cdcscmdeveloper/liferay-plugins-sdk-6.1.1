@@ -146,13 +146,15 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
-			<td>
-				<p:selectOneMenu value="#{mcCrGenAsPoRptBB.managedBean.group}">
+			<ui:remove>#41069 start</ui:remove>
+			<td><p:selectOneMenu
+					value="#{mcCrGenAsPoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.flContractRequest']}"
 						itemValue="#{lbl['lbl.rpt.flContractRequest']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+					<f:selectItem
+						itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 						itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 						itemValue="#{FlReportConst.getFlRptCcPhysicalContractNo()}"></f:selectItem>
@@ -162,12 +164,12 @@
 						itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{FlReportConst.getFlRptCcPhysicalLoaNo()}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
 						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
-      					itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
-			</td>
+				</p:selectOneMenu></td>
+			<ui:remove>#41069 end</ui:remove>
 		</tr>
 		<tr>
 			<td>

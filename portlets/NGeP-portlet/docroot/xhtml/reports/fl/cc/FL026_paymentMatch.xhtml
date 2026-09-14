@@ -238,6 +238,7 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<!-- 29550 - start(to cater option displayed by factoring user & supplier)-->
+			<ui:remove>#41069 start</ui:remove>
 			<td><p:selectOneMenu value="#{pmRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
@@ -289,6 +290,7 @@
 					</c:choose>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+				<ui:remove>#41069 end</ui:remove>
 			<c:if
 				test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>

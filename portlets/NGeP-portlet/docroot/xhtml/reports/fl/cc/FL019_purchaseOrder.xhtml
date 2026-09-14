@@ -218,10 +218,12 @@
 							</p:selectOneMenu></td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<!-- 29550 - start(to cater option displayed by factoring user)-->
+			<ui:remove>#41069 start</ui:remove>
 			<td><p:selectOneMenu value="#{poRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{poRptBB.hasSupplierRole()}"
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+						itemDisabled="#{poRptBB.hasSupplierRole()}"
 						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{FlReportConst.getFlRptCcContractNo()}"></f:selectItem>
@@ -235,15 +237,19 @@
 								itemValue="#{lbl['lbl.rpt.itmName']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
 								itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
+							<f:selectItem
+								itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
 								itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-								itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
+								itemValue="#{lbl['FlReportConst.getFlRptCcApproverName()']}"></f:selectItem>
+							<f:selectItem
+								itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+								itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
+							<f:selectItem
+								itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
 								itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
+							<f:selectItem
+								itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
 								itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
@@ -254,9 +260,10 @@
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
 								itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
 						</c:otherwise>
-					</c:choose>	
+					</c:choose>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+				<ui:remove>#41069 end</ui:remove>
 			<!-- 29550 - end -->
 		</tr>
 		<tr>

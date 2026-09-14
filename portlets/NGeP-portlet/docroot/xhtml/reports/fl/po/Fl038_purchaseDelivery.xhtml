@@ -124,12 +124,15 @@
 								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
 							</p:selectOneMenu></td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
-			<td colspan="2"><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+			<ui:remove>#41069 start</ui:remove>
+			<td colspan="2"><p:selectOneMenu
+					value="#{reportBackingBean.flGroupOne}">
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{pdRptBB.hasSupplierRole()}"
-						itemValue="#{FlReportConst.()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+						itemDisabled="#{pdRptBB.hasSupplierRole()}"
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
 						itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.do.poco.no']}"
@@ -138,6 +141,7 @@
 						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+			<ui:remove>#41069 start</ui:remove>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>

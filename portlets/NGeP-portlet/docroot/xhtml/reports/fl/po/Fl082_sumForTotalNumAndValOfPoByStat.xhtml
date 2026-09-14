@@ -113,6 +113,7 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<ui:remove>#41069 start</ui:remove>
 			<td><p:selectOneMenu
 					value="#{poSumTotalNumValofPoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
@@ -124,12 +125,13 @@
 						itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
 						itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.purchaseorder.status']}"
-						itemValue="#{lbl['lbl.fl.purchaseorder.status']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
 						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
 						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+			<ui:remove>#41069 end</ui:remove>
 		</tr>
 		<tr>
 			<td>

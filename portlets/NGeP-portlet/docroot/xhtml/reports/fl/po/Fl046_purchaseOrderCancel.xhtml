@@ -133,6 +133,7 @@
 				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}" /></td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<!-- 29550 - start(to cater option displayed by factoring user)-->
+			<ui:remove>#41069 start</ui:remove>
 			<td><p:selectOneMenu
 					value="#{poPurCancelRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
@@ -146,10 +147,10 @@
 								itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
 								itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-								itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptCcApproverName()}"></f:selectItem>
 							<f:selectItem
 								itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 							<f:selectItem
 								itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
 								itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
@@ -167,6 +168,7 @@
 					</c:choose>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+				<ui:remove>#41069 end</ui:remove>
 			<!-- 29550 - end -->
 		</tr>
 		<tr>

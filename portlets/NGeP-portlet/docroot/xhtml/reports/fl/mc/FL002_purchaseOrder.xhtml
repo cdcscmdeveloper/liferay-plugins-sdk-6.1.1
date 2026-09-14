@@ -196,14 +196,15 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
+			<ui:remove>#41069 start</ui:remove>
 			<td>
-				<!-- 29550 - start(to cater option displayed by factoring user)-->
-				<p:selectOneMenu value="#{mcPoRptBB.managedBean.group}">
+				<!-- 29550 - start(to cater option displayed by factoring user)--> <p:selectOneMenu
+					value="#{mcPoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
 						itemDisabled="#{mcPoRptBB.hasSupplierRole()}"
-      					itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{FlReportConst.getFlRptCcContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
@@ -217,10 +218,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.itmName']}"
 								itemValue="#{lbl['lbl.rpt.itmName']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-								itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+								itemValue="#{FlReportConst.getFlRptCcApproverName()}"></f:selectItem>
+							<f:selectItem
+								itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 								itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
+							<f:selectItem
+								itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
 								itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
@@ -231,9 +234,9 @@
 						</c:otherwise>
 					</c:choose>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
-				<!-- 29550 - End -->
+				</p:selectOneMenu> <!-- 29550 - End -->
 			</td>
+			<ui:remove>#41069 end</ui:remove>
 			<td>
 				<p:outputLabel
 					value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />

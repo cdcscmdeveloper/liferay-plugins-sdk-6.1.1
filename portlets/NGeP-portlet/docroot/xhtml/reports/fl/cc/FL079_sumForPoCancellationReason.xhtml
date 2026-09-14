@@ -159,6 +159,7 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<ui:remove>#41069 start</ui:remove>
 			<td><p:selectOneMenu
 					value="#{ccSumForPoCancelReasonRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
@@ -185,6 +186,7 @@
 						itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+			<ui:remove>#41069 end</ui:remove>
 		</tr>
 		<tr>
 			<td>

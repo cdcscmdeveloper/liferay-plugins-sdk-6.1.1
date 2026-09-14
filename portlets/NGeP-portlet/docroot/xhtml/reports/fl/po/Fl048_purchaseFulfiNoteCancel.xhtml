@@ -128,10 +128,12 @@
 				</p:inputText>
 				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}" /></td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<ui:remove>#41069 start</ui:remove>
 			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{purFRNCancelRptBB.hasSupplierRole()}"
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+						itemDisabled="#{purFRNCancelRptBB.hasSupplierRole()}"
 						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.do.poco.no']}"
 						itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
@@ -141,6 +143,7 @@
 						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+			<ui:remove>#41069 end</ui:remove>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
