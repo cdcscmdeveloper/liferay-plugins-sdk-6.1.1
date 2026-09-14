@@ -3657,8 +3657,10 @@ public class NoticeBoardBackingBean extends
 	 */
 	public String setSalutationSupplierName(String identificationNo, String name) {
 		String salutation = supplierSalutation(identificationNo);
+		String upperCaseRegex = "[\\p{Lu} -]+";
+		
 		if (StringUtils.isNotBlank(salutation)) {
-			if( StringUtils.isNotBlank(name) && name.equals(name.toUpperCase())){
+			if( StringUtils.isNotBlank(name) && name.matches(upperCaseRegex)){
 				return StringUtils.upperCase(salutation);
 			} 
 		return salutation;

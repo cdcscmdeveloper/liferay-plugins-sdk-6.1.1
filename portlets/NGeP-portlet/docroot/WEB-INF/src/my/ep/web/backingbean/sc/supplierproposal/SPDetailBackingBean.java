@@ -3964,7 +3964,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #30447 - Start
 					String newName = personnel.getName();
 					String salutation = supplierSalutation(personnel.getIdentificationNo());
-					newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+					String upperCaseRegex = "[\\p{Lu} -]+";
+					
+					if (StringUtils.isNotBlank(salutation)) {
+					    String formattedSalutation = newName.matches(upperCaseRegex) 
+					        ? StringUtils.upperCase(salutation) 
+					        : salutation;
+					        
+					    newName = formattedSalutation + " " + newName;
+					}
+
 					personnel.setName(newName);
 					// #30447 - End
 					
@@ -4049,36 +4058,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 		return NAV_TO_SUPPLIER_DETAILS_PAGE;
 	}
-	
-	// #30447 - formating and remove duplication salutation start
-	public String getFormattedChequeSignatoryName(SmChequeSignatory rowItem) {
-
-	    if (rowItem == null || rowItem.getSmPersonnel() == null) {
-	        return "";
-	    }
-
-	    String name = StringUtils.trimToEmpty(rowItem.getSmPersonnel().getName());
-	    String salutation = "";
-
-	    if (rowItem.getSmPersonnel().getTitle() != null) {
-	        salutation = StringUtils.trimToEmpty(rowItem.getSmPersonnel().getTitle().getSalutationName());
-	    }
-
-	    if (name.isEmpty() || salutation.isEmpty()) {
-	        return name;
-	    }
-
-	    if (StringUtils.startsWithIgnoreCase(name, salutation)) {
-	        return name;
-	    }
-
-	    if (name.equals(name.toUpperCase())) {
-	        salutation = salutation.toUpperCase();
-	    }
-
-	    return salutation + " " + name;
-	}
-	// #30447 - formating and remove duplication salutation end
 
 	/**
 	 * Gets the GST info.
@@ -4980,8 +4959,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 		if (pmUser != null) {
 			// #30447 - start
+			String upperCaseRegex = "[\\p{Lu} -]+";
+
 			if (pmUser.getSalutationCode() != null) {
-				context.put("salutation", pmUser.getSalutationCode().getSalutationName());
+				    String formattedSalutation = pmUser.getUserName().matches(upperCaseRegex) 
+				        ? StringUtils.upperCase(pmUser.getSalutationCode().getSalutationName()) 
+				        : pmUser.getSalutationCode().getSalutationName();
+				        
+					context.put("salutation", formattedSalutation);				
 			}
 			// #30447 - end
 			context.put("userName", pmUser.getUserName());
