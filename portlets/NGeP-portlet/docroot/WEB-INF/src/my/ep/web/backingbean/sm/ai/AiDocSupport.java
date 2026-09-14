@@ -381,7 +381,8 @@ public final class AiDocSupport {
 				if ("KWSP_number".equals(type)) {
 					emp.setKwspNumber(value);
 				} else if ("NRIC_number".equals(type)) {
-					emp.setNricNumber(value);
+					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
+					emp.setNricNumber(AiDocValidator.normalizeNric(value));
 				} else if ("employee_name".equals(type)) {
 					emp.setEmployeeName(value);
 				}
@@ -763,6 +764,19 @@ public final class AiDocSupport {
 			return accountNo.replaceAll("[^0-9]", "");
 		}
 
+		/**
+		 * A Malaysian NRIC is 12 digits; the dashes and spaces are only how it gets printed on
+		 * the statement, so match on the digits alone.
+		 * @param nric
+		 * @return digits only, empty when there are none
+		 */
+		public static String normalizeNric(String nric) {
+			if (StringUtils.isBlank(nric)) {
+				return "";
+			}
+			return nric.replaceAll("[^0-9]", "");
+		}
+
 		public static List<String> tokenize(String name) {
 			List<String> tokens = new ArrayList<>();
 			String canonical = canonicalizeCompanyName(name);
@@ -999,6 +1013,10 @@ public final class AiDocSupport {
 		 * employee rows carry no verdict of their own and are not rendered here.
 		 */
 		public String getLabel() {
+			// nothing mapped out of this file, same verdict as Bank and Tenancy report
+			if (employerName == null && getEmployees().isEmpty()) {
+				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+			}
 			StringBuilder sb = new StringBuilder();
 			if (employerName != null) {
 				String s = AiDocParser.label("lbl.cm.company.name") + ": " + employerName + BR;
