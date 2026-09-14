@@ -717,7 +717,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			String approverType = determineRoleCode();
 			
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
+	        		checkUserStatus(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
 	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 		}
 		//#30737 - End

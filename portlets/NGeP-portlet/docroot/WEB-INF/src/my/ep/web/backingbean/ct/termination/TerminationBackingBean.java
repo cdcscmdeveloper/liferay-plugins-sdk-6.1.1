@@ -628,7 +628,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			String approverType = determineRoleCode();
 	        List<SelectedInactiveUserDTO> selectedUsers = // change name selectedInactiveUsers
-	        		getInactiveUsers(approverType, getSelectedUsers(), docType, null);
+	        		checkUserStatus(approverType, getSelectedUsers(), docType, null);
 	        handleInactiveUserValidation(outcome, selectedUsers);
 	        
 			log.info(" action : "+outcome);

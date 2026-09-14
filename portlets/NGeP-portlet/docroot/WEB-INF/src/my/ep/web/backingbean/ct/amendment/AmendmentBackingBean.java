@@ -10529,7 +10529,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(!committeeChairpersons.isEmpty()) {
 			log.info("xoxoxoxoxo committeeChairpersons is not empty");
 			log.info("xoxoxoxoxo chairperson type : "+getManagedBean().getCommitteeType()+ "_CHAIRPERSON");
-			selectedInactiveUsers.addAll(getInactiveUsers(
+			selectedInactiveUsers.addAll(checkUserStatus(
 					getManagedBean().getCommitteeType()+ "_CHAIRPERSON", 
 					committeeChairpersons,
 					getContractVer().getDocType(),
@@ -10539,7 +10539,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(!committeeMembers.isEmpty()) {
 			log.info("xoxoxoxoxo committeeMembers is not empty");
 			log.info("xoxoxoxoxo member type : "+getManagedBean().getCommitteeType()+ "_MEMBER");
-			selectedInactiveUsers.addAll(getInactiveUsers(
+			selectedInactiveUsers.addAll(checkUserStatus(
 					getManagedBean().getCommitteeType()+"_MEMBER", 
 					committeeMembers, 
 					getContractVer().getDocType(),
@@ -10592,7 +10592,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    List<PmUser> selectedUsers = determineUsers(action, taskName, isApprovalReq);
 	    log.info("xoxoxoxoxooxoxo selectedUsers : " + selectedUsers.size());
 
-	    return getInactiveUsers(
+	    return checkUserStatus(
 	            roleCode,
 	            selectedUsers,
 	            getContractVer().getDocType(),

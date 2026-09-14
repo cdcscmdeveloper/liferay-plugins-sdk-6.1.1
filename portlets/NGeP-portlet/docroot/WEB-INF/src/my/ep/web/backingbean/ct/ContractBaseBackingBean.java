@@ -684,13 +684,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
           
 	        List<PmUser> users = new ArrayList<PmUser>();
 	        users.add(ctActor.getUser());
-	        return getInactiveUsers(userRole, users, docType, null);
+	        return checkUserStatus(userRole, users, docType, null);
   		}
 	      
 	    return new ArrayList<>();
   	}
   	
-  	protected List<SelectedInactiveUserDTO> getInactiveUsers(String roleCode, List<PmUser> users, String docType, String memberRoleCode) {
+  	protected List<SelectedInactiveUserDTO> checkUserStatus(String roleCode, List<PmUser> users, String docType, String memberRoleCode) {
   		
   	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 

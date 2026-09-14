@@ -2089,7 +2089,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    log.info("xoxoxoxoxooxoxo action : SUBMIT");
 
 		    List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(determineContractApproverRole(), getSelectedUsers(), ctContractVer.getDocType(), null);
+	        		checkUserStatus(determineContractApproverRole(), getSelectedUsers(), ctContractVer.getDocType(), null);
 	        handleInactiveUserValidation(action, selectedInactiveUsers);
 		}
 		

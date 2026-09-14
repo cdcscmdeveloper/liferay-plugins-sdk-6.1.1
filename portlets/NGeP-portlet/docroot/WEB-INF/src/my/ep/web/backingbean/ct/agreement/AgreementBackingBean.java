@@ -1012,7 +1012,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			String approverType = determineRoleCode();
 			
 	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		getInactiveUsers(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
+	        		checkUserStatus(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
 	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
 		}
 		
