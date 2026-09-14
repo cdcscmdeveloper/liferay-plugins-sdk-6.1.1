@@ -2264,7 +2264,6 @@ public class SmApplicationBackingBean extends
 							if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType()) && getManagedBean().isDisAllowOwnerEdit()) {
 								String[] copyProp = { "companyName", "robExpiryDate", "annualRevenue", "businessDesc", "revenueSsmNull", "robExpirySsmNull",
 										"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM", "registerAdressSSM", "ssmCompanyCountry" };
-								
 								EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean().getSmAppl().getSmCompanyBasic(), copyProp);
 							} else { 
 								String[] copyProp = { "companyName", "robExpiryDate", "authorizedCapital", "nonBumiEquity", "annualRevenue", "bumiEquity",
@@ -2993,9 +2992,11 @@ public class SmApplicationBackingBean extends
 	 */
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
-		
-		//#36483 - START
+
+		//#36483 - START,#37925 checking null
 		if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
+				&& getManagedBean().getBasicCompanyFacility() != null 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType() != null 
 				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
 				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
@@ -5000,13 +5001,13 @@ public class SmApplicationBackingBean extends
 		boolean showPopup = false;
 
 		if (!StringUtils.equals(dropdownRole, getManagedBean().getPrevRole()) && StringUtils.isNotBlank(getManagedBean().getPrevRole())) {
-			
+
 			String msg = ResourceBundleUtils.getMessage("lbl.sm.dialog.confirm.applRemoverole",
 					new String[] { getEpRoleDescByRoleCode(getManagedBean().getPrevRole()) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 
-		    getManagedBean().setRemovedRoleMsg(msg);
-		    showPopup = true;
+			getManagedBean().setRemovedRoleMsg(msg);
+			showPopup = true;
 		}
 		// #40031 - End
 				
@@ -5047,7 +5048,7 @@ public class SmApplicationBackingBean extends
 			appl = SmCommonUtil.getLatestRejectedApplBySupplier(getManagedBean().getSmSupplier());
 			personnels = appl.getSmPersonnels();
 		}
-		
+
 		if (personnels != null && !personnels.isEmpty()) {
 			for (SmPersonnel person : personnels) {
 				if (StringUtils.equals(person.getIdentificationNo(), personnel.getIdentificationNo()) && StringUtils.isNotBlank(person.getEpRole())) {
@@ -5057,7 +5058,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 	}
-	
+
 	/**
 	 * revert back role on its original role
 	 * 
@@ -5066,6 +5067,7 @@ public class SmApplicationBackingBean extends
 	public void revertRole(String role) {
 		getManagedBean().getSelectedShareHolder().setEpRole(role);
 	}
+
 	// #40031 - End
 
 	/**
@@ -9402,7 +9404,7 @@ public class SmApplicationBackingBean extends
 			initialPmStatusId = bpmAppl.getPmStatus().getStatusId();
 		}
 		// #40031 - End
-		
+				
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -11478,7 +11480,6 @@ public class SmApplicationBackingBean extends
 				regStatus = SmApplicationUtil.setApplicationApproveStatus(getManagedBean().getSmAppl(), pmStatId);
 				reqDTO.setPaymentReqd(SmApplicationUtil.getPaymentMode(getManagedBean().getSmAppl()));
 			}
-
 			if (regStatus == null && !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				throw new EpException(MessageConst.ERROR_722662);
 			}
@@ -16222,8 +16223,7 @@ public class SmApplicationBackingBean extends
 				//#30660 end
 			}
 			//#27165
-			
-			if(dontGetSsmData){
+			if(dontGetSsmData){	
 				String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","ssmCompanyCountry"};
 				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);														
 			}
@@ -17370,7 +17370,6 @@ public class SmApplicationBackingBean extends
 		return sb.toString();
 	}
 	//#32008 - END
-	
 	//#28175 - start
 	/**
 	 * @param cat
@@ -18396,7 +18395,6 @@ public class SmApplicationBackingBean extends
 	    }
 	}
 	//#38927 END
-	
 	//#39282
 	/**
 	 * To generate unique file name yyyyMMdd_HHmmss

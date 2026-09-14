@@ -19930,4 +19930,20 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 	//#28784 - End
+
+	// #40245 - start
+	public boolean isCreateSpecificationVisible() {
+		return !getManagedBean().getQt().isPanel()
+				&& (getManagedBean().isChecklist() || ((!getManagedBean().isReadOnly() || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision()) && getManagedBean()
+						.getSpecMaintenanceScreen() != getSpecMaintenance()));
+	}
+	// #40245 -end-
+
+	// #40245 -start-
+	public boolean isAddPanelItemVisible() {
+		return getManagedBean().getQt().isPanel()
+				&& (getManagedBean().isChecklist() || ((!getManagedBean().isReadOnly() || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision()) && getManagedBean()
+						.getSpecMaintenanceScreen() != getSpecMaintenance()));
+	}
+	// #40245 - end
 }
